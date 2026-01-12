@@ -116,3 +116,65 @@ export const logoStyles = {
   },
   gap: '16px',
 } as const;
+
+// =============================================================================
+// Brand Colors - DIGILIST
+// =============================================================================
+
+/**
+ * Brand color palette
+ * Use CSS custom properties: var(--brand-navy), var(--brand-blue), etc.
+ */
+export const brandColors = {
+  navy: {
+    hex: '#1F2F6E',
+    oklch: 'oklch(0.28 0.09 264)',
+    usage: 'Core trust color',
+  },
+  blue: {
+    hex: '#2F55A4',
+    oklch: 'oklch(0.45 0.12 262)',
+    usage: 'Primary interaction',
+  },
+  aqua: {
+    hex: '#9EDBE5',
+    oklch: 'oklch(0.82 0.08 205)',
+    usage: 'Availability/calm',
+  },
+  ice: {
+    hex: '#D6F3F6',
+    oklch: 'oklch(0.94 0.03 205)',
+    usage: 'Surfaces/backgrounds',
+  },
+  green: {
+    hex: '#8BC34A',
+    oklch: 'oklch(0.72 0.14 130)',
+    usage: 'Location/success',
+  },
+  white: {
+    hex: '#FFFFFF',
+    oklch: 'oklch(1.0 0 0)',
+    usage: 'Contrast',
+  },
+  charcoal: {
+    hex: '#0F172A',
+    oklch: 'oklch(0.15 0.02 264)',
+    usage: 'Text/dark UI',
+  },
+} as const;
+
+/**
+ * CSS custom properties for brand colors
+ * Add to :root in your CSS
+ */
+export const brandColorsCss = `
+:root {
+  --brand-navy: #1F2F6E;
+  --brand-blue: #2F55A4;
+  --brand-aqua: #9EDBE5;
+  --brand-ice: #D6F3F6;
+  --brand-green: #8BC34A;
+  --brand-white: #FFFFFF;
+  --brand-charcoal: #0F172A;
+}
+` as const;

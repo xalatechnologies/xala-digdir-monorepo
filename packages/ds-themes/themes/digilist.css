@@ -1,0 +1,88 @@
+/**
+ * DIGILIST Theme
+ *
+ * Custom brand colors for the DIGILIST booking platform.
+ * Extends Digdir Designsystemet with DIGILIST brand identity.
+ *
+ * Colors use OKLCH for perceptual uniformity.
+ */
+
+:root {
+  /* =========================================================================
+   * Brand Colors - DIGILIST
+   * ========================================================================= */
+  --brand-navy: #1F2F6E;      /* oklch(0.28 0.09 264) - Core trust color */
+  --brand-blue: #2F55A4;      /* oklch(0.45 0.12 262) - Primary interaction */
+  --brand-aqua: #9EDBE5;      /* oklch(0.82 0.08 205) - Availability/calm */
+  --brand-ice: #D6F3F6;       /* oklch(0.94 0.03 205) - Surfaces/backgrounds */
+  --brand-green: #8BC34A;     /* oklch(0.72 0.14 130) - Location/success */
+  --brand-white: #FFFFFF;     /* oklch(1.0 0 0) - Contrast */
+  --brand-charcoal: #0F172A;  /* oklch(0.15 0.02 264) - Text/dark UI */
+
+  /* =========================================================================
+   * Accent Color Overrides (Primary = Brand Blue)
+   * ========================================================================= */
+  --ds-color-accent-base-default: var(--brand-blue);
+  --ds-color-accent-base-hover: #264785;
+  --ds-color-accent-base-active: #1E3A6E;
+  --ds-color-accent-surface-default: #EEF4FC;
+  --ds-color-accent-surface-hover: #DCE8F8;
+  --ds-color-accent-surface-active: #C5D9F3;
+  --ds-color-accent-border-default: var(--brand-blue);
+  --ds-color-accent-border-subtle: #A8C4E8;
+  --ds-color-accent-text-default: var(--brand-blue);
+  --ds-color-accent-text-subtle: #4A6FB8;
+  --ds-color-accent-contrast-default: var(--brand-white);
+
+  /* =========================================================================
+   * Success Color Overrides (Brand Green)
+   * ========================================================================= */
+  --ds-color-success-base-default: var(--brand-green);
+  --ds-color-success-base-hover: #7AB33D;
+  --ds-color-success-base-active: #6A9E35;
+  --ds-color-success-surface-default: #F2F9EC;
+  --ds-color-success-surface-hover: #E5F3D9;
+  --ds-color-success-surface-active: #D4EBC2;
+  --ds-color-success-border-default: var(--brand-green);
+  --ds-color-success-border-subtle: #B8DA8F;
+  --ds-color-success-text-default: #5C8A2E;
+  --ds-color-success-text-subtle: #6E9D3A;
+  --ds-color-success-contrast-default: var(--brand-white);
+
+  /* =========================================================================
+   * Neutral Color Tweaks
+   * ========================================================================= */
+  --ds-color-neutral-text-default: var(--brand-charcoal);
+  --ds-color-neutral-text-subtle: #475569;
+  --ds-color-neutral-background-default: #FAFBFC;
+  --ds-color-neutral-surface-default: var(--brand-white);
+  --ds-color-neutral-surface-hover: #F8FAFC;
+  --ds-color-neutral-surface-active: #F1F5F9;
+  --ds-color-neutral-border-default: #E2E8F0;
+  --ds-color-neutral-border-subtle: #F1F5F9;
+
+  /* =========================================================================
+   * Focus Ring (Brand Aqua)
+   * ========================================================================= */
+  --ds-color-focus-inner: var(--brand-aqua);
+  --ds-color-focus-outer: var(--brand-navy);
+}
+
+/* Dark Mode Adjustments */
+[data-color-scheme="dark"] {
+  --ds-color-accent-base-default: #5A8AD4;
+  --ds-color-accent-surface-default: #1A2744;
+  --ds-color-accent-text-default: #7BA3E0;
+
+  --ds-color-success-base-default: #9FD05E;
+  --ds-color-success-surface-default: #1C2A18;
+  --ds-color-success-text-default: #B3DC7E;
+
+  --ds-color-neutral-text-default: #F8FAFC;
+  --ds-color-neutral-text-subtle: #94A3B8;
+  --ds-color-neutral-background-default: #0F172A;
+  --ds-color-neutral-surface-default: #1E293B;
+  --ds-color-neutral-surface-hover: #334155;
+  --ds-color-neutral-border-default: #334155;
+  --ds-color-neutral-border-subtle: #1E293B;
+}

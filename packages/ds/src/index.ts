@@ -147,6 +147,8 @@ export {
   emptyStateStyles,
   buttonTextColors,
   logoStyles,
+  brandColors,
+  brandColorsCss,
 } from './utils';
 
 // =============================================================================
