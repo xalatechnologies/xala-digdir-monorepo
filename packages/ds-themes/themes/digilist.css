@@ -3,6 +3,10 @@
  *
  * Brand colors from digilist.no
  * Navy #1F2F6E | Blue #2F55A4 | Aqua #9EDBE5 | Green #8BC34A
+ *
+ * This theme extends Digdir Designsystemet with DIGILIST brand identity.
+ * - --ds-* tokens: Digdir overrides for component styling
+ * - --digilist-* tokens: Custom app-level tokens (sidebar, charts, animations)
  */
 
 :root {
@@ -15,7 +19,7 @@
   /* --foreground: 222 47% 11% Deep charcoal */
 
   /* =========================================================================
-   * Accent/Primary Color (Brand Blue #2F55A4)
+   * Digdir Overrides: Accent/Primary Color (Brand Blue #2F55A4)
    * ========================================================================= */
   --ds-color-accent-base-default: #2F55A4;
   --ds-color-accent-base-hover: #264785;
@@ -30,7 +34,7 @@
   --ds-color-accent-contrast-default: #FFFFFF;
 
   /* =========================================================================
-   * Success Color (Brand Green #8BC34A)
+   * Digdir Overrides: Success Color (Brand Green #8BC34A)
    * ========================================================================= */
   --ds-color-success-base-default: #8BC34A;
   --ds-color-success-base-hover: #7AB33D;
@@ -45,7 +49,7 @@
   --ds-color-success-contrast-default: #FFFFFF;
 
   /* =========================================================================
-   * Neutral Colors (Charcoal text, clean backgrounds)
+   * Digdir Overrides: Neutral Colors (Charcoal text, clean backgrounds)
    * ========================================================================= */
   --ds-color-neutral-text-default: #0F172A;
   --ds-color-neutral-text-subtle: #475569;
@@ -57,29 +61,113 @@
   --ds-color-neutral-border-subtle: #F1F5F9;
 
   /* =========================================================================
-   * Info Color (Brand Aqua #9EDBE5)
+   * Digdir Overrides: Info Color (Brand Aqua #9EDBE5)
    * ========================================================================= */
   --ds-color-info-base-default: #9EDBE5;
   --ds-color-info-surface-default: #E8F7F9;
   --ds-color-info-text-default: #1F2F6E;
 
   /* =========================================================================
-   * Focus Ring (Brand Blue)
+   * Digdir Overrides: Warning Color
+   * ========================================================================= */
+  --ds-color-warning-base-default: #F59E0B;
+  --ds-color-warning-surface-default: #FFFBEB;
+  --ds-color-warning-text-default: #B45309;
+
+  /* =========================================================================
+   * Digdir Overrides: Danger/Destructive Color
+   * ========================================================================= */
+  --ds-color-danger-base-default: #EF4444;
+  --ds-color-danger-surface-default: #FEF2F2;
+  --ds-color-danger-text-default: #DC2626;
+
+  /* =========================================================================
+   * Digdir Overrides: Focus Ring (Brand Blue)
    * ========================================================================= */
   --ds-color-focus-inner: #9EDBE5;
   --ds-color-focus-outer: #2F55A4;
 
   /* =========================================================================
-   * Typography
+   * Digdir Overrides: Typography
    * ========================================================================= */
   --ds-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* =========================================================================
+   * DIGILIST Custom: Sidebar Tokens
+   * ========================================================================= */
+  --digilist-sidebar-background: #FFFFFF;
+  --digilist-sidebar-foreground: #0F172A;
+  --digilist-sidebar-primary: #2F55A4;
+  --digilist-sidebar-primary-foreground: #FFFFFF;
+  --digilist-sidebar-accent: #F1F5F9;
+  --digilist-sidebar-accent-foreground: #0F172A;
+  --digilist-sidebar-border: #E2E8F0;
+  --digilist-sidebar-ring: #2F55A4;
+
+  /* =========================================================================
+   * DIGILIST Custom: Chart Colors
+   * ========================================================================= */
+  --digilist-chart-1: #2F55A4;  /* Primary Blue */
+  --digilist-chart-2: #8BC34A;  /* Success Green */
+  --digilist-chart-3: #8B5CF6;  /* Purple */
+  --digilist-chart-4: #F59E0B;  /* Warning Orange */
+  --digilist-chart-5: #9EDBE5;  /* Aqua */
+
+  /* =========================================================================
+   * DIGILIST Custom: Typography Tokens
+   * ========================================================================= */
+  --digilist-text-base: 1.0625rem;
+  --digilist-text-lg: 1.125rem;
+  --digilist-text-xl: 1.25rem;
+  --digilist-line-height: 1.55;
+  --digilist-letter-spacing: 0.01em;
+
+  /* =========================================================================
+   * DIGILIST Custom: Control Heights
+   * ========================================================================= */
+  --digilist-control-height-sm: 2.5rem;
+  --digilist-control-height-md: 2.875rem;
+  --digilist-control-height-lg: 3.25rem;
+
+  /* =========================================================================
+   * DIGILIST Custom: Animation Tokens
+   * ========================================================================= */
+  --digilist-animation-duration-fast: 150ms;
+  --digilist-animation-duration-normal: 300ms;
+  --digilist-animation-duration-slow: 500ms;
+  --digilist-animation-duration-slower: 700ms;
+  --digilist-animation-delay-fast: 100ms;
+  --digilist-animation-delay-normal: 200ms;
+  --digilist-animation-delay-slow: 400ms;
+  --digilist-animation-delay-slower: 600ms;
+  --digilist-animation-delay-slowest: 800ms;
+
+  /* =========================================================================
+   * DIGILIST Custom: Effect Sizes (orbs, blur)
+   * ========================================================================= */
+  --digilist-size-orb-large: 32rem;
+  --digilist-size-orb-medium: 24rem;
+  --digilist-size-orb-small: 16rem;
+  --digilist-size-blur-large: 100px;
+  --digilist-size-blur-medium: 60px;
+  --digilist-size-blur-small: 30px;
+
+  /* =========================================================================
+   * DIGILIST Custom: Border Radius
+   * ========================================================================= */
+  --digilist-radius: 0.75rem;
+  --digilist-radius-sm: 0.5rem;
+  --digilist-radius-lg: 1rem;
+  --digilist-radius-full: 9999px;
 }
 
 /* =========================================================================
  * Dark Mode
  * ========================================================================= */
 [data-color-scheme="dark"] {
-  /* Primary becomes Aqua in dark mode */
+  /* =========================================================================
+   * Digdir Overrides: Primary becomes Aqua in dark mode
+   * ========================================================================= */
   --ds-color-accent-base-default: #9EDBE5;
   --ds-color-accent-base-hover: #B5E4EC;
   --ds-color-accent-base-active: #7CCDD9;
@@ -92,13 +180,31 @@
   --ds-color-accent-text-subtle: #7CCDD9;
   --ds-color-accent-contrast-default: #0F172A;
 
-  /* Success stays green */
+  /* =========================================================================
+   * Digdir Overrides: Success stays green
+   * ========================================================================= */
   --ds-color-success-base-default: #9FD05E;
   --ds-color-success-surface-default: #1C2A18;
   --ds-color-success-text-default: #B3DC7E;
   --ds-color-success-contrast-default: #0F172A;
 
-  /* Neutral for dark mode */
+  /* =========================================================================
+   * Digdir Overrides: Warning
+   * ========================================================================= */
+  --ds-color-warning-base-default: #FBBF24;
+  --ds-color-warning-surface-default: #422006;
+  --ds-color-warning-text-default: #FCD34D;
+
+  /* =========================================================================
+   * Digdir Overrides: Danger/Destructive
+   * ========================================================================= */
+  --ds-color-danger-base-default: #F87171;
+  --ds-color-danger-surface-default: #450A0A;
+  --ds-color-danger-text-default: #FCA5A5;
+
+  /* =========================================================================
+   * Digdir Overrides: Neutral for dark mode
+   * ========================================================================= */
   --ds-color-neutral-text-default: #F8FAFC;
   --ds-color-neutral-text-subtle: #94A3B8;
   --ds-color-neutral-background-default: #0F172A;
@@ -108,7 +214,37 @@
   --ds-color-neutral-border-default: #334155;
   --ds-color-neutral-border-subtle: #1E293B;
 
-  /* Focus */
+  /* =========================================================================
+   * Digdir Overrides: Info (Aqua)
+   * ========================================================================= */
+  --ds-color-info-base-default: #9EDBE5;
+  --ds-color-info-surface-default: #0C4A5E;
+  --ds-color-info-text-default: #B5E4EC;
+
+  /* =========================================================================
+   * Digdir Overrides: Focus
+   * ========================================================================= */
   --ds-color-focus-inner: #9EDBE5;
   --ds-color-focus-outer: #1F2F6E;
+
+  /* =========================================================================
+   * DIGILIST Custom: Sidebar (Dark)
+   * ========================================================================= */
+  --digilist-sidebar-background: #1F2F6E;  /* Navy */
+  --digilist-sidebar-foreground: #F8FAFC;
+  --digilist-sidebar-primary: #9EDBE5;     /* Aqua */
+  --digilist-sidebar-primary-foreground: #0F172A;
+  --digilist-sidebar-accent: #243350;
+  --digilist-sidebar-accent-foreground: #F8FAFC;
+  --digilist-sidebar-border: #334155;
+  --digilist-sidebar-ring: #9EDBE5;
+
+  /* =========================================================================
+   * DIGILIST Custom: Chart Colors (Dark - brighter variants)
+   * ========================================================================= */
+  --digilist-chart-1: #9EDBE5;  /* Aqua (swapped for visibility) */
+  --digilist-chart-2: #9FD05E;  /* Bright Green */
+  --digilist-chart-3: #A78BFA;  /* Light Purple */
+  --digilist-chart-4: #FBBF24;  /* Bright Orange */
+  --digilist-chart-5: #2F55A4;  /* Blue */
 }
