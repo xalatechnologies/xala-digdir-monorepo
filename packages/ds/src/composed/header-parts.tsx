@@ -1398,7 +1398,7 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   onLogout,
   loginText = 'Logg inn',
   logoutText = 'Logg ut',
-  color = 'success'
+  color = 'accent'
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
