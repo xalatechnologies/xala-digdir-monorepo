@@ -116,6 +116,16 @@ const listingTypeLabels: Record<string, string> = {
   OTHER: 'Annet',
 };
 
+// Listing type colors for badges
+const listingTypeColors: Record<string, string> = {
+  SPACE: 'accent',
+  RESOURCE: 'info',
+  EVENT: 'success',
+  SERVICE: 'warning',
+  VEHICLE: 'brand1',
+  OTHER: 'neutral',
+};
+
 export function ListingCard({
   id,
   name,
@@ -176,6 +186,9 @@ export function ListingCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         borderRadius: '12px',
         border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'rgba(0,0,0,0.08)'}`,
@@ -214,38 +227,11 @@ export function ListingCard({
 
         {/* Category badge */}
         {showTypeBadge && (
-          <span style={{
-            position: 'absolute',
-            top: '12px',
-            left: '12px',
-            padding: '6px 14px',
-            fontSize: '12px',
-            fontWeight: 600,
-            backgroundColor: 'var(--ds-color-accent-base-default)',
-            color: 'var(--ds-color-accent-contrast-default)',
-            borderRadius: '6px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px'
-          }}>
-            {type}
-          </span>
-        )}
-
-        {/* Availability badge */}
-        {showAvailabilityBadge && !available && (
-          <span style={{
-            position: 'absolute',
-            top: '12px',
-            left: type.length > 8 ? '130px' : '100px',
-            padding: '6px 12px',
-            fontSize: '11px',
-            fontWeight: 600,
-            backgroundColor: 'var(--ds-color-danger-base-default)',
-            color: 'white',
-            borderRadius: '6px'
-          }}>
-            Fullt booket
-          </span>
+          <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
+            <Tag data-size="sm" data-color="accent" style={{ paddingInline: '0.75rem' }}>
+              {type}
+            </Tag>
+          </div>
         )}
 
         {/* Action buttons */}
@@ -315,15 +301,15 @@ export function ListingCard({
             gap: '4px',
             padding: '6px 10px',
             backgroundColor: 'rgba(255,255,255,0.95)',
-            borderRadius: '6px',
-            fontSize: '13px',
-            fontWeight: 600,
+            borderRadius: 'var(--ds-border-radius-md)',
+            fontSize: 'var(--ds-font-size-sm)',
+            fontWeight: 'var(--ds-font-weight-semibold)',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
+          } as React.CSSProperties}>
             <StarIcon />
             {rating}
             {reviewCount !== undefined && (
-              <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 400 }}>
+              <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 'var(--ds-font-weight-regular)' } as React.CSSProperties}>
                 ({reviewCount})
               </span>
             )}
@@ -332,28 +318,28 @@ export function ListingCard({
       </div>
 
       {/* Content */}
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{
-          margin: '0 0 8px 0',
-          fontSize: '1rem',
-          fontWeight: 600,
+          margin: '0 0 10px 0',
+          fontSize: 'var(--ds-font-size-md)',
+          fontWeight: 'var(--ds-font-weight-semibold)',
           color: 'var(--ds-color-neutral-text-default)',
-          lineHeight: 1.4,
-          fontFamily: 'var(--ds-font-family, inherit)'
-        }}>
+          lineHeight: 'var(--ds-line-height-sm)',
+          fontFamily: 'var(--ds-font-family)'
+        } as React.CSSProperties}>
           {name}
         </h3>
 
         {showLocation && (
           <p style={{
-            margin: '0 0 10px 0',
-            fontSize: '0.875rem',
+            margin: '0 0 12px 0',
+            fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            fontFamily: 'var(--ds-font-family, inherit)'
-          }}>
+            fontFamily: 'var(--ds-font-family)'
+          } as React.CSSProperties}>
             <MapPinIcon />
             {location}
           </p>
@@ -361,15 +347,16 @@ export function ListingCard({
 
         {showDescription && (
           <p style={{
-            margin: '0 0 14px 0',
-            fontSize: '0.875rem',
+            margin: '0 0 20px 0',
+            fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
-            lineHeight: 1.5,
+            lineHeight: 'var(--ds-line-height-md)',
+            minHeight: '4.5em',
             display: '-webkit-box',
-            WebkitLineClamp: 2,
+            WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            fontFamily: 'var(--ds-font-family, inherit)'
+            fontFamily: 'var(--ds-font-family)'
           } as React.CSSProperties}>
             {description}
           </p>
@@ -381,7 +368,7 @@ export function ListingCard({
             display: 'flex',
             flexWrap: 'nowrap',
             gap: '8px',
-            marginBottom: '14px',
+            marginBottom: '18px',
             overflow: 'hidden'
           }}>
             {facilities.slice(0, maxFacilities).map((facility) => (
@@ -403,33 +390,35 @@ export function ListingCard({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingTop: '14px',
-            borderTop: '0.5px solid rgba(0,0,0,0.06)'
+            margin: 'auto -24px -24px -24px',
+            padding: '14px 24px',
+            backgroundColor: 'rgba(0,0,0,0.02)',
+            borderTop: '1px solid rgba(0,0,0,0.04)'
           }}>
             {showCapacity && capacity !== undefined && (
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '0.875rem',
+                fontSize: 'var(--ds-font-size-sm)',
                 color: 'var(--ds-color-neutral-text-subtle)',
-                fontFamily: 'var(--ds-font-family, inherit)'
-              }}>
+                fontFamily: 'var(--ds-font-family)'
+              } as React.CSSProperties}>
                 <UserIcon />
                 {capacity} personer
               </div>
             )}
             {showListingType && listingType && (
-              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: '0.75rem' }}>
+              <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: '0.75rem' }}>
                 {listingTypeLabels[listingType] || listingType}
               </Tag>
             )}
             {showPrice && price !== undefined && (
               <span style={{
-                fontSize: '0.8125rem',
+                fontSize: 'var(--ds-font-size-sm)',
                 color: 'var(--ds-color-neutral-text-subtle)',
-                fontFamily: 'var(--ds-font-family, inherit)'
-              }}>
+                fontFamily: 'var(--ds-font-family)'
+              } as React.CSSProperties}>
                 fra {price} {currency}/{priceUnit}
               </span>
             )}
