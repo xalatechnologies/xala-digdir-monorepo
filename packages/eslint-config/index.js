@@ -1,4 +1,15 @@
 import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import { rules as digdirRules } from './rules/index.js';
+
+// Digdir Design System ESLint Plugin
+export const digdirPlugin = {
+  meta: {
+    name: '@xala/eslint-plugin-digdir',
+    version: '1.0.0',
+  },
+  rules: digdirRules,
+};
 
 export const base = [
   js.configs.recommended,
@@ -17,6 +28,8 @@ export const base = [
         MutationObserver: 'readonly',
         requestAnimationFrame: 'readonly',
         clearTimeout: 'readonly',
+        setTimeout: 'readonly',
+        process: 'readonly',
       },
     },
     rules: {
@@ -25,11 +38,34 @@ export const base = [
   },
 ];
 
-// Repository-wide guardrails
+// TypeScript configuration
+export const typescript = [
+  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-unused-vars': 'off', // Use TypeScript version instead
+    },
+  },
+];
+
+// Repository-wide guardrails (import restrictions)
 export const guardrails = [
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -57,12 +93,70 @@ export const guardrails = [
   },
 ];
 
-// App-specific rules
+// Digdir design token rules configuration
+export const designTokens = [
+  {
+    files: ['**/*.{tsx,jsx}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/no-hardcoded-colors': 'error',
+      'digdir/no-hardcoded-spacing': 'warn',
+      'digdir/no-hardcoded-typography': 'warn',
+      'digdir/no-hardcoded-border-radius': 'warn',
+    },
+  },
+];
+
+// Digdir component pattern rules configuration
+export const componentPatterns = [
+  {
+    files: ['**/*.{tsx,jsx}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/as-child-single-child': 'error',
+      'digdir/require-button-type': 'error',
+      'digdir/require-interactive-labels': 'warn',
+    },
+  },
+];
+
+// Digdir component usage suggestions
+export const componentSuggestions = [
+  {
+    files: ['apps/**/*.{tsx,jsx}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/prefer-ds-components': 'warn',
+      'digdir/require-provider': 'warn',
+    },
+  },
+];
+
+// Complete Digdir scanner configuration (all rules)
+export const digdirScanner = [
+  ...designTokens,
+  ...componentPatterns,
+  ...componentSuggestions,
+];
+
+// App-specific rules (includes guardrails + scanner + TypeScript)
 export const apps = [
   ...base,
+  ...typescript,
+  ...guardrails,
+  ...digdirScanner,
   {
     files: ['apps/**/*.{ts,tsx,js,jsx}'],
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -77,4 +171,33 @@ export const apps = [
       ],
     },
   },
+  {
+    // Ignore declaration files
+    ignores: ['**/*.d.ts'],
+  },
 ];
+
+// Strict mode (all rules as errors)
+export const strict = [
+  {
+    files: ['**/*.{tsx,jsx}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/no-hardcoded-colors': 'error',
+      'digdir/no-hardcoded-spacing': 'error',
+      'digdir/no-hardcoded-typography': 'error',
+      'digdir/no-hardcoded-border-radius': 'error',
+      'digdir/as-child-single-child': 'error',
+      'digdir/require-button-type': 'error',
+      'digdir/require-interactive-labels': 'error',
+      'digdir/prefer-ds-components': 'error',
+      'digdir/require-provider': 'error',
+    },
+  },
+];
+
+// Export individual rules for custom configurations
+export { digdirRules as rules };

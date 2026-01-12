@@ -7,6 +7,12 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier -w .",
+    "scan": "node ./packages/eslint-config/scanner.js",
+    "scan:strict": "node ./packages/eslint-config/scanner.js --strict",
+    "scan:tokens": "node ./packages/eslint-config/scanner.js --tokens",
+    "scan:components": "node ./packages/eslint-config/scanner.js --components",
+    "scan:a11y": "node ./packages/eslint-config/scanner.js --a11y",
+    "scan:fix": "node ./packages/eslint-config/scanner.js --fix",
     "tokens:create": "node ./packages/ds-themes/scripts/tokens-create.mjs",
     "tokens:build": "node ./packages/ds-themes/scripts/tokens-build.mjs"
   },
@@ -16,6 +22,7 @@
     "@eslint/js": "^9.10.0",
     "eslint": "^9.10.0",
     "prettier": "^3.3.3",
+    "puppeteer": "^24.35.0",
     "turbo": "^2.0.0",
     "typescript": "^5.6.3"
   }
