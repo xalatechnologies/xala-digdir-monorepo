@@ -1,88 +1,114 @@
 /**
  * DIGILIST Theme
  *
- * Custom brand colors for the DIGILIST booking platform.
- * Extends Digdir Designsystemet with DIGILIST brand identity.
- *
- * Colors use OKLCH for perceptual uniformity.
+ * Brand colors from digilist.no
+ * Navy #1F2F6E | Blue #2F55A4 | Aqua #9EDBE5 | Green #8BC34A
  */
 
 :root {
   /* =========================================================================
-   * Brand Colors - DIGILIST
+   * Brand Colors (HSL values for reference)
    * ========================================================================= */
-  --brand-navy: #1F2F6E;      /* oklch(0.28 0.09 264) - Core trust color */
-  --brand-blue: #2F55A4;      /* oklch(0.45 0.12 262) - Primary interaction */
-  --brand-aqua: #9EDBE5;      /* oklch(0.82 0.08 205) - Availability/calm */
-  --brand-ice: #D6F3F6;       /* oklch(0.94 0.03 205) - Surfaces/backgrounds */
-  --brand-green: #8BC34A;     /* oklch(0.72 0.14 130) - Location/success */
-  --brand-white: #FFFFFF;     /* oklch(1.0 0 0) - Contrast */
-  --brand-charcoal: #0F172A;  /* oklch(0.15 0.02 264) - Text/dark UI */
+  /* --primary: 213 51% 41%    #2F55A4 - Digilist Blue */
+  /* --accent:  189 66% 76%    #9EDBE5 - Aqua */
+  /* --success: 88 50% 53%     #8BC34A - Green */
+  /* --foreground: 222 47% 11% Deep charcoal */
 
   /* =========================================================================
-   * Accent Color Overrides (Primary = Brand Blue)
+   * Accent/Primary Color (Brand Blue #2F55A4)
    * ========================================================================= */
-  --ds-color-accent-base-default: var(--brand-blue);
+  --ds-color-accent-base-default: #2F55A4;
   --ds-color-accent-base-hover: #264785;
   --ds-color-accent-base-active: #1E3A6E;
-  --ds-color-accent-surface-default: #EEF4FC;
-  --ds-color-accent-surface-hover: #DCE8F8;
-  --ds-color-accent-surface-active: #C5D9F3;
-  --ds-color-accent-border-default: var(--brand-blue);
-  --ds-color-accent-border-subtle: #A8C4E8;
-  --ds-color-accent-text-default: var(--brand-blue);
+  --ds-color-accent-surface-default: #EEF3FB;
+  --ds-color-accent-surface-hover: #DCE6F6;
+  --ds-color-accent-surface-active: #C5D6F0;
+  --ds-color-accent-border-default: #2F55A4;
+  --ds-color-accent-border-subtle: #A8C0E5;
+  --ds-color-accent-text-default: #2F55A4;
   --ds-color-accent-text-subtle: #4A6FB8;
-  --ds-color-accent-contrast-default: var(--brand-white);
+  --ds-color-accent-contrast-default: #FFFFFF;
 
   /* =========================================================================
-   * Success Color Overrides (Brand Green)
+   * Success Color (Brand Green #8BC34A)
    * ========================================================================= */
-  --ds-color-success-base-default: var(--brand-green);
+  --ds-color-success-base-default: #8BC34A;
   --ds-color-success-base-hover: #7AB33D;
   --ds-color-success-base-active: #6A9E35;
-  --ds-color-success-surface-default: #F2F9EC;
-  --ds-color-success-surface-hover: #E5F3D9;
-  --ds-color-success-surface-active: #D4EBC2;
-  --ds-color-success-border-default: var(--brand-green);
-  --ds-color-success-border-subtle: #B8DA8F;
+  --ds-color-success-surface-default: #F4F9ED;
+  --ds-color-success-surface-hover: #E8F3DB;
+  --ds-color-success-surface-active: #D8EBC4;
+  --ds-color-success-border-default: #8BC34A;
+  --ds-color-success-border-subtle: #BCE09A;
   --ds-color-success-text-default: #5C8A2E;
   --ds-color-success-text-subtle: #6E9D3A;
-  --ds-color-success-contrast-default: var(--brand-white);
+  --ds-color-success-contrast-default: #FFFFFF;
 
   /* =========================================================================
-   * Neutral Color Tweaks
+   * Neutral Colors (Charcoal text, clean backgrounds)
    * ========================================================================= */
-  --ds-color-neutral-text-default: var(--brand-charcoal);
+  --ds-color-neutral-text-default: #0F172A;
   --ds-color-neutral-text-subtle: #475569;
-  --ds-color-neutral-background-default: #FAFBFC;
-  --ds-color-neutral-surface-default: var(--brand-white);
+  --ds-color-neutral-background-default: #FFFFFF;
+  --ds-color-neutral-surface-default: #FFFFFF;
   --ds-color-neutral-surface-hover: #F8FAFC;
   --ds-color-neutral-surface-active: #F1F5F9;
   --ds-color-neutral-border-default: #E2E8F0;
   --ds-color-neutral-border-subtle: #F1F5F9;
 
   /* =========================================================================
-   * Focus Ring (Brand Aqua)
+   * Info Color (Brand Aqua #9EDBE5)
    * ========================================================================= */
-  --ds-color-focus-inner: var(--brand-aqua);
-  --ds-color-focus-outer: var(--brand-navy);
+  --ds-color-info-base-default: #9EDBE5;
+  --ds-color-info-surface-default: #E8F7F9;
+  --ds-color-info-text-default: #1F2F6E;
+
+  /* =========================================================================
+   * Focus Ring (Brand Blue)
+   * ========================================================================= */
+  --ds-color-focus-inner: #9EDBE5;
+  --ds-color-focus-outer: #2F55A4;
+
+  /* =========================================================================
+   * Typography
+   * ========================================================================= */
+  --ds-font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Dark Mode Adjustments */
+/* =========================================================================
+ * Dark Mode
+ * ========================================================================= */
 [data-color-scheme="dark"] {
-  --ds-color-accent-base-default: #5A8AD4;
+  /* Primary becomes Aqua in dark mode */
+  --ds-color-accent-base-default: #9EDBE5;
+  --ds-color-accent-base-hover: #B5E4EC;
+  --ds-color-accent-base-active: #7CCDD9;
   --ds-color-accent-surface-default: #1A2744;
-  --ds-color-accent-text-default: #7BA3E0;
+  --ds-color-accent-surface-hover: #243350;
+  --ds-color-accent-surface-active: #2E3F5C;
+  --ds-color-accent-border-default: #9EDBE5;
+  --ds-color-accent-border-subtle: #5A8A94;
+  --ds-color-accent-text-default: #9EDBE5;
+  --ds-color-accent-text-subtle: #7CCDD9;
+  --ds-color-accent-contrast-default: #0F172A;
 
+  /* Success stays green */
   --ds-color-success-base-default: #9FD05E;
   --ds-color-success-surface-default: #1C2A18;
   --ds-color-success-text-default: #B3DC7E;
+  --ds-color-success-contrast-default: #0F172A;
 
+  /* Neutral for dark mode */
   --ds-color-neutral-text-default: #F8FAFC;
   --ds-color-neutral-text-subtle: #94A3B8;
   --ds-color-neutral-background-default: #0F172A;
   --ds-color-neutral-surface-default: #1E293B;
   --ds-color-neutral-surface-hover: #334155;
+  --ds-color-neutral-surface-active: #475569;
   --ds-color-neutral-border-default: #334155;
   --ds-color-neutral-border-subtle: #1E293B;
+
+  /* Focus */
+  --ds-color-focus-inner: #9EDBE5;
+  --ds-color-focus-outer: #1F2F6E;
 }
