@@ -21,9 +21,12 @@ import {
   FilterIcon,
   Drawer,
   DrawerSection,
-  DrawerItem
+  DrawerItem,
+  ListingCard,
+  ListingGrid,
+  ListingToolbar
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 
@@ -58,12 +61,117 @@ const demoSearchResults: SearchResultGroup[] = [
 
 // Filter options
 const venueTypes = [
-  { id: 'all', label: 'Alle', count: 7 },
+  { id: 'all', label: 'Alle', count: 8 },
   { id: 'idrettshall', label: 'Idrettshall', count: 3 },
-  { id: 'moterom', label: 'Møterom', count: 1 },
-  { id: 'svommebasseng', label: 'Svømmebasseng', count: 1 },
+  { id: 'moterom', label: 'Møterom', count: 2 },
+  { id: 'svommebasseng', label: 'Svømmebasseng', count: 2 },
   { id: 'utendors', label: 'Utendørs', count: 1 },
-  { id: 'kulturhus', label: 'Kulturhus', count: 1 },
+];
+
+// Demo venues
+const venues = [
+  {
+    id: '1',
+    name: 'Bragernes Møterom',
+    type: 'Møterom',
+    listingType: 'SPACE' as const,
+    location: 'Nedre Storgate 15',
+    description: 'Profesjonelt møterom i hjertet av Drammen. Utstyrt med moderne teknologi for presentasjoner og videokonferanser.',
+    facilities: ['Projektor', 'Tavle', 'WiFi'],
+    moreFacilities: 2,
+    capacity: 25,
+    price: 450,
+    priceUnit: 'time',
+    rating: 4.8,
+    reviewCount: 24,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop'
+  },
+  {
+    id: '2',
+    name: 'Solberghallen',
+    type: 'Idrettshall',
+    listingType: 'SPACE' as const,
+    location: 'Gamle Riksvei 102A, 3057 Solbergelva',
+    description: 'Solberghallen er en moderne idrettshall for innedretter, foreninger og arrangementer.',
+    facilities: ['Garderober', 'Dusj', 'Fotball'],
+    moreFacilities: 1,
+    capacity: 100,
+    price: 1200,
+    priceUnit: 'time',
+    rating: 4.6,
+    reviewCount: 18,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop'
+  },
+  {
+    id: '3',
+    name: 'Drammen Svømmehall',
+    type: 'Svømmehall',
+    listingType: 'SPACE' as const,
+    location: 'Danvikgata 40, 3045 Drammen',
+    description: 'Moderne svømmeanlegg med 25m basseng, barnebasseng og badstue.',
+    facilities: ['25m basseng', 'Barnebasseng', 'Badstue'],
+    moreFacilities: 3,
+    capacity: 80,
+    price: 180,
+    priceUnit: 'person',
+    rating: 4.9,
+    reviewCount: 56,
+    available: false,
+    image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop'
+  },
+  {
+    id: '4',
+    name: 'Konnerud Idrettshall',
+    type: 'Idrettshall',
+    listingType: 'SPACE' as const,
+    location: 'Konnerudgata 45, 3045 Drammen',
+    description: 'Stor idrettshall med plass til flere aktiviteter samtidig. Perfekt for lag og foreninger.',
+    facilities: ['Garderober', 'Tribuner', 'Parkering'],
+    moreFacilities: 2,
+    capacity: 200,
+    price: 1500,
+    priceUnit: 'time',
+    rating: 4.5,
+    reviewCount: 32,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1519766304817-4f37bda74a26?w=600&h=400&fit=crop'
+  },
+  {
+    id: '5',
+    name: 'Sentrum Møtelokale',
+    type: 'Møterom',
+    listingType: 'SPACE' as const,
+    location: 'Bragernes Torg 12',
+    description: 'Moderne møtelokale midt i sentrum. Ideelt for workshops og seminarer.',
+    facilities: ['AV-utstyr', 'Whiteboard', 'Kaffe'],
+    moreFacilities: 1,
+    capacity: 40,
+    price: 650,
+    priceUnit: 'time',
+    rating: 4.7,
+    reviewCount: 15,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=400&fit=crop'
+  },
+  {
+    id: '6',
+    name: 'Fjell Svømmehall',
+    type: 'Svømmehall',
+    listingType: 'SPACE' as const,
+    location: 'Fjellveien 8, 3050 Drammen',
+    description: 'Familievennlig svømmehall med flere bassenger og vannlek for barn.',
+    facilities: ['Vannlek', 'Stupetårn', 'Kafé'],
+    moreFacilities: 2,
+    capacity: 120,
+    price: 150,
+    priceUnit: 'person',
+    rating: 4.4,
+    reviewCount: 42,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=600&h=400&fit=crop'
+  },
 ];
 
 export function App() {
@@ -78,6 +186,7 @@ export function App() {
   // Filter drawer state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [selectedTypes, setSelectedTypes] = React.useState<string[]>(['all']);
+  const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
   // Simulated search function
   const handleSearchChange = (value: string) => {
@@ -286,154 +395,46 @@ export function App() {
         </Drawer>
 
         <ContentLayout>
-          <main id="main" style={{ padding: 'var(--ds-spacing-6)' }}>
-            {/* Filter toggle button */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              marginBottom: 'var(--ds-spacing-6)'
-            }}>
-              <Button
-                variant="secondary"
-                onClick={() => setIsFilterOpen(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <FilterIcon size={18} />
-                Filtre
-                {activeFilterCount > 0 && (
-                  <span style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    minWidth: '20px',
-                    height: '20px',
-                    padding: '0 6px',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    backgroundColor: 'var(--ds-color-accent-base-default)',
-                    color: 'var(--ds-color-accent-contrast-default)',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                  }}>
-                    {activeFilterCount}
-                  </span>
-                )}
-              </Button>
-              <span style={{
-                fontSize: 'var(--ds-font-size-sm)',
-                color: 'var(--ds-color-neutral-text-subtle)'
-              }}>
-                Viser 6 lokaler
-              </span>
-            </div>
+          <main id="main" style={{ padding: '24px' }}>
+            <ListingToolbar
+              count={venues.length}
+              countLabel="listings"
+              activeFilterCount={activeFilterCount}
+              onFilterClick={() => setIsFilterOpen(true)}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              showViewToggle={true}
+              availableViews={['grid', 'list', 'map']}
+            />
 
-            {/* Page content */}
-            <Heading
-              level={1}
-              data-size="lg"
-              style={{
-                marginBottom: 'var(--ds-spacing-4)',
-                color: 'var(--ds-color-neutral-text-default)'
-              }}
-            >
-              Finn lokaler
-            </Heading>
-            <Paragraph
-              data-size="md"
-              style={{
-                color: 'var(--ds-color-neutral-text-subtle)',
-                marginBottom: 'var(--ds-spacing-8)'
-              }}
-            >
-              Bla gjennom tilgjengelige lokaler og book direkte
-            </Paragraph>
-
-            {/* Venue cards placeholder */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '24px'
-            }}>
-              {['Demo Bibliotek', 'Demo Fotballbane', 'Demo Idrettshall', 'Demo Kulturhus', 'Demo Møtesenter', 'Demo Svømmehall'].map((venue) => (
-                <div
-                  key={venue}
-                  style={{
-                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-lg)',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    overflow: 'hidden',
-                    transition: 'box-shadow 0.2s ease, transform 0.2s ease',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = 'none';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  {/* Image placeholder */}
-                  <div style={{
-                    height: '160px',
-                    backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--ds-color-neutral-text-subtle)'
-                  }}>
-                    <MapPinIcon size={32} />
-                  </div>
-                  {/* Content */}
-                  <div style={{ padding: '16px' }}>
-                    <h3 style={{
-                      margin: '0 0 8px 0',
-                      fontSize: 'var(--ds-font-size-md)',
-                      fontWeight: 600,
-                      color: 'var(--ds-color-neutral-text-default)'
-                    }}>
-                      {venue}
-                    </h3>
-                    <p style={{
-                      margin: '0 0 12px 0',
-                      fontSize: 'var(--ds-font-size-sm)',
-                      color: 'var(--ds-color-neutral-text-subtle)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      <MapPinIcon size={14} />
-                      Oslo
-                    </p>
-                    <p style={{
-                      margin: 0,
-                      fontSize: 'var(--ds-font-size-sm)',
-                      color: 'var(--ds-color-neutral-text-subtle)'
-                    }}>
-                      Moderne lokale med gode fasiliteter. Perfekt for arrangementer.
-                    </p>
-                    <div style={{
-                      marginTop: '12px',
-                      paddingTop: '12px',
-                      borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: 'var(--ds-font-size-xs)',
-                      color: 'var(--ds-color-neutral-text-subtle)'
-                    }}>
-                      <UserIcon size={14} />
-                      Kapasitet: 100 personer
-                    </div>
-                  </div>
-                </div>
+            <ListingGrid columns={3} gap={32}>
+              {venues.map((venue) => (
+                <ListingCard
+                  key={venue.id}
+                  id={venue.id}
+                  name={venue.name}
+                  type={venue.type}
+                  listingType={venue.listingType}
+                  location={venue.location}
+                  description={venue.description}
+                  image={venue.image}
+                  facilities={venue.facilities}
+                  moreFacilities={venue.moreFacilities}
+                  capacity={venue.capacity}
+                  price={venue.price}
+                  priceUnit={venue.priceUnit}
+                  // rating={venue.rating} // TODO: Enable when rating system is ready
+                  // reviewCount={venue.reviewCount}
+                  available={venue.available}
+                  showRating={false}
+                  showPrice={false}
+                  showListingType={true}
+                  onClick={(id) => console.log('Navigate to listing:', id)}
+                  onFavorite={(id) => console.log('Toggle favorite:', id)}
+                  onShare={(id) => console.log('Share listing:', id)}
+                />
               ))}
-            </div>
+            </ListingGrid>
           </main>
         </ContentLayout>
       </div>

@@ -145,6 +145,19 @@ export type {
   LayoutGridProps
 } from './primitives';
 
+// Blocks - Business logic components
+export {
+  ListingCard,
+  ListingGrid,
+  ListingToolbar
+} from './blocks';
+export type {
+  ListingCardProps,
+  ListingGridProps,
+  ListingToolbarProps,
+  ViewMode
+} from './blocks';
+
 // =============================================================================
 // Design System Utilities & Tokens
 // =============================================================================

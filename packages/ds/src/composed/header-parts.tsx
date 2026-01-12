@@ -1400,134 +1400,49 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   logoutText = 'Logg ut',
   color = 'accent'
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
+  // Build data-color props conditionally to avoid TypeScript issues
+  const colorProps = color !== 'neutral' ? { 'data-color': color } : {};
 
-  const colors = {
-    success: {
-      bg: 'var(--ds-color-success-base-default)',
-      bgHover: 'var(--ds-color-success-base-hover)',
-      bgActive: 'var(--ds-color-success-base-active)',
-      text: '#ffffff',
-    },
-    accent: {
-      bg: 'var(--ds-color-accent-base-default)',
-      bgHover: 'var(--ds-color-accent-base-hover)',
-      bgActive: 'var(--ds-color-accent-base-active)',
-      text: 'var(--ds-color-accent-contrast-default)',
-    },
-    neutral: {
-      bg: 'var(--ds-color-neutral-surface-hover)',
-      bgHover: 'var(--ds-color-neutral-surface-active)',
-      bgActive: 'var(--ds-color-neutral-border-default)',
-      text: 'var(--ds-color-neutral-text-default)',
-    },
-  };
-
-  const currentColor = colors[color];
-
-  // Logged in state - show user info
+  // Logged in state - show user info with Button
   if (isLoggedIn && userName) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        {...colorProps}
         onClick={onLogout}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
-        onMouseDown={() => setIsPressed(true)}
-        onMouseUp={() => setIsPressed(false)}
         aria-label={`Logget inn som ${userName}. Klikk for å logge ut.`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          padding: '8px 16px 8px 10px',
-          border: 'none',
-          borderRadius: 'var(--ds-border-radius-md)',
-          backgroundColor: isPressed
-            ? currentColor.bgActive
-            : isHovered
-              ? currentColor.bgHover
-              : currentColor.bg,
-          color: currentColor.text,
-          fontSize: 'var(--ds-font-size-sm)',
-          fontWeight: 600,
-          cursor: 'pointer',
-          transition: 'all 0.15s ease',
-          transform: isPressed ? 'scale(0.98)' : 'scale(1)',
-        }}
+        style={{ paddingInline: '1.25rem' }}
       >
-        {/* Avatar or icon */}
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt=""
             style={{
-              width: '28px',
-              height: '28px',
+              width: '20px',
+              height: '20px',
               borderRadius: 'var(--ds-border-radius-full)',
               objectFit: 'cover',
-              border: '2px solid rgba(255,255,255,0.3)',
             }}
           />
         ) : (
-          <span style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '28px',
-            height: '28px',
-            borderRadius: 'var(--ds-border-radius-full)',
-            backgroundColor: 'rgba(255,255,255,0.2)',
-          }}>
-            <UserIcon size={16} aria-hidden />
-          </span>
+          <UserIcon size={20} aria-hidden />
         )}
-        <span style={{
-          maxWidth: '120px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          {userName}
-        </span>
-      </button>
+        {userName}
+      </Button>
     );
   }
 
   // Logged out state - show login button
   return (
-    <button
-      type="button"
+    <Button
+      variant="primary"
+      {...colorProps}
       onClick={onLogin}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
-      onMouseDown={() => setIsPressed(true)}
-      onMouseUp={() => setIsPressed(false)}
       aria-label={loginText}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '10px 18px',
-        border: 'none',
-        borderRadius: 'var(--ds-border-radius-md)',
-        backgroundColor: isPressed
-          ? currentColor.bgActive
-          : isHovered
-            ? currentColor.bgHover
-            : currentColor.bg,
-        color: currentColor.text,
-        fontSize: 'var(--ds-font-size-sm)',
-        fontWeight: 600,
-        cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        transform: isPressed ? 'scale(0.98)' : 'scale(1)',
-        boxShadow: isHovered ? '0 4px 12px rgba(0,0,0,0.15)' : '0 2px 4px rgba(0,0,0,0.1)',
-      }}
+      style={{ paddingInline: '1.25rem' }}
     >
-      <UserIcon size={18} aria-hidden />
+      <UserIcon size={20} aria-hidden />
       {loginText}
-    </button>
+    </Button>
   );
 };
