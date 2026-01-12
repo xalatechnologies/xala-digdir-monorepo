@@ -346,6 +346,12 @@ export function App() {
   const [selectedTypes, setSelectedTypes] = React.useState<string[]>(['all']);
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
+  // Pagination - 2 rows at a time (6 items with 3 columns)
+  const ITEMS_PER_PAGE = 6;
+  const [visibleCount, setVisibleCount] = React.useState(ITEMS_PER_PAGE);
+  const visibleListings = listings.slice(0, visibleCount);
+  const hasMore = visibleCount < listings.length;
+
   // Simulated search function
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -408,6 +414,11 @@ export function App() {
 
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme}>
+      <style>{`
+        *, *::before, *::after {
+          transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+        }
+      `}</style>
       <div style={{
         minHeight: '100vh',
         backgroundColor: 'var(--ds-color-neutral-background-default)',
@@ -566,7 +577,7 @@ export function App() {
             />
 
             <ListingGrid columns={3} gap={32}>
-              {listings.map((listing) => (
+              {visibleListings.map((listing) => (
                 <ListingCard
                   key={listing.id}
                   id={listing.id}
@@ -593,6 +604,23 @@ export function App() {
                 />
               ))}
             </ListingGrid>
+
+            {/* Show more button */}
+            {hasMore && (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '32px'
+              }}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
+                  style={{ paddingInline: '2rem' }}
+                >
+                  Vis flere ({listings.length - visibleCount} igjen)
+                </Button>
+              </div>
+            )}
           </main>
         </ContentLayout>
       </div>
