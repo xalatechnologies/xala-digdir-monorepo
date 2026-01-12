@@ -60,7 +60,7 @@ export { AppShell } from './shells';
 export type { AppShellProps } from './shells';
 
 // Composed - Mid-level components
-export { 
+export {
   ContentLayout,
   ContentSection,
   PageHeader,
@@ -75,7 +75,11 @@ export {
   HeaderLoginButton,
   Navigation,
   NavigationLink,
-  FilterBar
+  FilterBar,
+  Drawer,
+  DrawerSection,
+  DrawerItem,
+  DrawerEmptyState
 } from './composed';
 export type {
   ContentLayoutProps,
@@ -93,7 +97,13 @@ export type {
   NavigationLinkProps,
   FilterBarProps,
   SearchResultItem,
-  SearchResultGroup
+  SearchResultGroup,
+  DrawerProps,
+  DrawerPosition,
+  DrawerSize,
+  DrawerSectionProps,
+  DrawerItemProps,
+  DrawerEmptyStateProps
 } from './composed';
 
 // Primitives - Low-level building blocks

@@ -46,3 +46,14 @@ export type { NavigationProps, NavigationLinkProps } from './navigation';
 // Filter Bar
 export { FilterBar } from './filter-bar';
 export type { FilterBarProps } from './filter-bar';
+
+// Drawer / Slide Panel
+export { Drawer, DrawerSection, DrawerItem, DrawerEmptyState } from './Drawer';
+export type {
+  DrawerProps,
+  DrawerPosition,
+  DrawerSize,
+  DrawerSectionProps,
+  DrawerItemProps,
+  DrawerEmptyStateProps
+} from './Drawer';
