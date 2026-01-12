@@ -1,20 +1,22 @@
 {
-  "name": "@xala/api",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "fastify-api-example",
+  "version": "1.0.0",
+  "description": "Example Fastify API using @xalatechnologies/platform adapters",
+  "main": "dist/main.js",
   "scripts": {
-    "dev": "node --watch --loader ts-node/esm src/index.ts",
-    "build": "tsc -b",
-    "lint": "eslint src --ext .ts,.js"
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "fastify": "^4.28.1"
+    "@xalatechnologies/platform": "^3.0.0",
+    "fastify": "^5.2.0",
+    "fastify-plugin": "^5.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
-    "ts-node": "^10.9.2",
-    "eslint": "^9.10.0",
-    "@xala/eslint-config": "workspace:*"
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   }
 }

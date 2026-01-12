@@ -148,11 +148,13 @@ export type {
 // Blocks - Business logic components
 export {
   ListingCard,
+  ListingListItem,
   ListingGrid,
   ListingToolbar
 } from './blocks';
 export type {
   ListingCardProps,
+  ListingListItemProps,
   ListingGridProps,
   ListingToolbarProps,
   ViewMode

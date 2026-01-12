@@ -7,6 +7,9 @@
 export { ListingCard } from './ListingCard';
 export type { ListingCardProps } from './ListingCard';
 
+export { ListingListItem } from './ListingListItem';
+export type { ListingListItemProps } from './ListingListItem';
+
 export { ListingGrid } from './ListingGrid';
 export type { ListingGridProps } from './ListingGrid';
 

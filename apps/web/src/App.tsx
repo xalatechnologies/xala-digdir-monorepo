@@ -23,6 +23,7 @@ import {
   DrawerSection,
   DrawerItem,
   ListingCard,
+  ListingListItem,
   ListingGrid,
   ListingToolbar
 } from '@xala/ds';
@@ -68,6 +69,9 @@ const venueTypes = [
   { id: 'utendors', label: 'Utendørs', count: 1 },
 ];
 
+// Mapbox token from environment
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
 // Demo listings - various types according to schema
 const listings = [
   // SPACE listings
@@ -86,7 +90,9 @@ const listings = [
     rating: 4.8,
     reviewCount: 24,
     available: true,
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
+    latitude: 59.7439,
+    longitude: 10.2045
   },
   {
     id: '2',
@@ -103,7 +109,9 @@ const listings = [
     rating: 4.6,
     reviewCount: 18,
     available: true,
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop',
+    latitude: 59.7312,
+    longitude: 10.1523
   },
   {
     id: '3',
@@ -120,7 +128,9 @@ const listings = [
     rating: 4.9,
     reviewCount: 56,
     available: false,
-    image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop',
+    latitude: 59.7401,
+    longitude: 10.1892
   },
   // RESOURCE listings
   {
@@ -138,7 +148,9 @@ const listings = [
     rating: 4.7,
     reviewCount: 12,
     available: true,
-    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&h=400&fit=crop',
+    latitude: 59.7425,
+    longitude: 10.2038
   },
   {
     id: '5',
@@ -155,7 +167,9 @@ const listings = [
     rating: 4.5,
     reviewCount: 8,
     available: true,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop',
+    latitude: 59.7448,
+    longitude: 10.2112
   },
   {
     id: '6',
@@ -172,7 +186,9 @@ const listings = [
     rating: 4.8,
     reviewCount: 22,
     available: true,
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop',
+    latitude: 59.7389,
+    longitude: 10.1956
   },
   // EVENT listings
   {
@@ -190,7 +206,9 @@ const listings = [
     rating: 4.9,
     reviewCount: 45,
     available: true,
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop',
+    latitude: 59.7441,
+    longitude: 10.2048
   },
   {
     id: '8',
@@ -207,7 +225,9 @@ const listings = [
     rating: 4.6,
     reviewCount: 19,
     available: true,
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop',
+    latitude: 59.7462,
+    longitude: 10.1978
   },
   {
     id: '9',
@@ -224,7 +244,9 @@ const listings = [
     rating: 4.8,
     reviewCount: 67,
     available: false,
-    image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop',
+    latitude: 59.7398,
+    longitude: 10.2089
   },
   // SERVICE listings
   {
@@ -242,7 +264,9 @@ const listings = [
     rating: 4.9,
     reviewCount: 34,
     available: true,
-    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop',
+    latitude: 59.7456,
+    longitude: 10.2134
   },
   {
     id: '11',
@@ -259,7 +283,9 @@ const listings = [
     rating: 4.7,
     reviewCount: 28,
     available: true,
-    image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&h=400&fit=crop',
+    latitude: 59.7478,
+    longitude: 10.1923
   },
   {
     id: '12',
@@ -276,7 +302,9 @@ const listings = [
     rating: 4.8,
     reviewCount: 52,
     available: true,
-    image: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&h=400&fit=crop',
+    latitude: 59.7412,
+    longitude: 10.2067
   },
   // VEHICLE listings
   {
@@ -294,7 +322,9 @@ const listings = [
     rating: 4.6,
     reviewCount: 31,
     available: true,
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+    latitude: 59.7435,
+    longitude: 10.2025
   },
   {
     id: '14',
@@ -311,7 +341,9 @@ const listings = [
     rating: 4.5,
     reviewCount: 18,
     available: true,
-    image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&h=400&fit=crop',
+    latitude: 59.7367,
+    longitude: 10.2145
   },
   {
     id: '15',
@@ -328,7 +360,9 @@ const listings = [
     rating: 4.7,
     reviewCount: 14,
     available: false,
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop',
+    latitude: 59.7289,
+    longitude: 10.1834
   },
 ];
 
@@ -567,7 +601,7 @@ export function App() {
           <main id="main" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
             <ListingToolbar
               count={listings.length}
-              countLabel="listings"
+              countLabel="lokaler"
               activeFilterCount={activeFilterCount}
               onFilterClick={() => setIsFilterOpen(true)}
               viewMode={viewMode}
@@ -576,34 +610,67 @@ export function App() {
               availableViews={['grid', 'list', 'map']}
             />
 
-            <ListingGrid columns={3} gap={32}>
-              {visibleListings.map((listing) => (
-                <ListingCard
-                  key={listing.id}
-                  id={listing.id}
-                  name={listing.name}
-                  type={listing.type}
-                  listingType={listing.listingType}
-                  location={listing.location}
-                  description={listing.description}
-                  image={listing.image}
-                  facilities={listing.facilities}
-                  moreFacilities={listing.moreFacilities}
-                  capacity={listing.capacity}
-                  price={listing.price}
-                  priceUnit={listing.priceUnit}
-                  // rating={listing.rating} // TODO: Enable when rating system is ready
-                  // reviewCount={listing.reviewCount}
-                  available={listing.available}
-                  showRating={false}
-                  showPrice={false}
-                  showListingType={true}
-                  onClick={(id) => console.log('Navigate to listing:', id)}
-                  onFavorite={(id) => console.log('Toggle favorite:', id)}
-                  onShare={(id) => console.log('Share listing:', id)}
-                />
-              ))}
-            </ListingGrid>
+            {viewMode === 'grid' ? (
+              <ListingGrid columns={3} gap={32}>
+                {visibleListings.map((listing) => (
+                  <ListingCard
+                    key={listing.id}
+                    id={listing.id}
+                    name={listing.name}
+                    type={listing.type}
+                    listingType={listing.listingType}
+                    location={listing.location}
+                    description={listing.description}
+                    image={listing.image}
+                    facilities={listing.facilities}
+                    moreFacilities={listing.moreFacilities}
+                    capacity={listing.capacity}
+                    price={listing.price}
+                    priceUnit={listing.priceUnit}
+                    available={listing.available}
+                    showRating={false}
+                    showPrice={false}
+                    showListingType={true}
+                    onClick={(id) => console.log('Navigate to listing:', id)}
+                    onFavorite={(id) => console.log('Toggle favorite:', id)}
+                    onShare={(id) => console.log('Share listing:', id)}
+                  />
+                ))}
+              </ListingGrid>
+            ) : viewMode === 'list' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {visibleListings.map((listing) => (
+                  <ListingListItem
+                    key={listing.id}
+                    id={listing.id}
+                    name={listing.name}
+                    type={listing.type}
+                    listingType={listing.listingType}
+                    location={listing.location}
+                    description={listing.description}
+                    image={listing.image}
+                    facilities={listing.facilities}
+                    moreFacilities={listing.moreFacilities}
+                    capacity={listing.capacity}
+                    latitude={listing.latitude}
+                    longitude={listing.longitude}
+                    mapboxToken={MAPBOX_TOKEN}
+                    showListingType={true}
+                    showMap={true}
+                    onClick={(id) => console.log('Navigate to listing:', id)}
+                    onFavorite={(id) => console.log('Toggle favorite:', id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                padding: '48px',
+                textAlign: 'center',
+                color: 'var(--ds-color-neutral-text-subtle)'
+              }}>
+                Kartvisning kommer snart...
+              </div>
+            )}
 
             {/* Show more button */}
             {hasMore && (
