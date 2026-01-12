@@ -1,7 +1,20 @@
 /* Minimal global styles allowed by guardrails:
    - font-feature-settings recommended by Designsystemet
+   - CSS reset for body margins
    - no custom component styling
 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
 html {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-feature-settings: "cv05" 1; /* per Designsystemet guidance */
