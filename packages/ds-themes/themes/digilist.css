@@ -23,19 +23,19 @@
   /* --foreground: oklch(0.20 0.02 264)  #0F172A - Charcoal */
 
   /* =========================================================================
-   * Digdir Overrides: Accent/Primary Color (Brand Blue)
+   * Digdir Overrides: Accent/Primary Color (Brand Blue #2F55A4)
    * ========================================================================= */
-  --ds-color-accent-base-default: oklch(0.45 0.12 262);
-  --ds-color-accent-base-hover: oklch(0.40 0.11 262);
-  --ds-color-accent-base-active: oklch(0.35 0.10 262);
-  --ds-color-accent-surface-default: oklch(0.96 0.02 262);
-  --ds-color-accent-surface-hover: oklch(0.93 0.03 262);
-  --ds-color-accent-surface-active: oklch(0.90 0.04 262);
-  --ds-color-accent-border-default: oklch(0.45 0.12 262);
-  --ds-color-accent-border-subtle: oklch(0.75 0.06 262);
-  --ds-color-accent-text-default: oklch(0.45 0.12 262);
-  --ds-color-accent-text-subtle: oklch(0.55 0.10 262);
-  --ds-color-accent-contrast-default: oklch(0.98 0 0);
+  --ds-color-accent-base-default: #2F55A4;
+  --ds-color-accent-base-hover: #264785;
+  --ds-color-accent-base-active: #1E3A6E;
+  --ds-color-accent-surface-default: #EEF3FB;
+  --ds-color-accent-surface-hover: #DCE6F6;
+  --ds-color-accent-surface-active: #C5D6F0;
+  --ds-color-accent-border-default: #2F55A4;
+  --ds-color-accent-border-subtle: #A8C0E5;
+  --ds-color-accent-text-default: #2F55A4;
+  --ds-color-accent-text-subtle: #4A6FB8;
+  --ds-color-accent-contrast-default: #FFFFFF;
 
   /* =========================================================================
    * Digdir Overrides: Success Color (Brand Green)
@@ -182,19 +182,19 @@
  * ========================================================================= */
 [data-color-scheme="dark"] {
   /* =========================================================================
-   * Digdir Overrides: Primary becomes Aqua in dark mode
+   * Digdir Overrides: Primary becomes Aqua in dark mode (#9EDBE5)
    * ========================================================================= */
-  --ds-color-accent-base-default: oklch(0.82 0.08 205);
-  --ds-color-accent-base-hover: oklch(0.87 0.06 205);
-  --ds-color-accent-base-active: oklch(0.77 0.09 205);
-  --ds-color-accent-surface-default: oklch(0.25 0.04 264);
-  --ds-color-accent-surface-hover: oklch(0.30 0.05 264);
-  --ds-color-accent-surface-active: oklch(0.35 0.05 264);
-  --ds-color-accent-border-default: oklch(0.82 0.08 205);
-  --ds-color-accent-border-subtle: oklch(0.55 0.05 205);
-  --ds-color-accent-text-default: oklch(0.82 0.08 205);
-  --ds-color-accent-text-subtle: oklch(0.77 0.07 205);
-  --ds-color-accent-contrast-default: oklch(0.20 0.02 264);
+  --ds-color-accent-base-default: #9EDBE5;
+  --ds-color-accent-base-hover: #B5E4EC;
+  --ds-color-accent-base-active: #7CCDD9;
+  --ds-color-accent-surface-default: #1A2744;
+  --ds-color-accent-surface-hover: #243350;
+  --ds-color-accent-surface-active: #2E3F5C;
+  --ds-color-accent-border-default: #9EDBE5;
+  --ds-color-accent-border-subtle: #5A8A94;
+  --ds-color-accent-text-default: #9EDBE5;
+  --ds-color-accent-text-subtle: #7CCDD9;
+  --ds-color-accent-contrast-default: #0F172A;
 
   /* =========================================================================
    * Digdir Overrides: Success stays green
