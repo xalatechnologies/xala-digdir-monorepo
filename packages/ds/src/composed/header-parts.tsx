@@ -69,8 +69,8 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
             {title && (
               <span style={{
                 fontWeight: 700,
-                fontSize: 'var(--ds-font-size-lg)',
-                lineHeight: '1.2',
+                fontSize: '24px',
+                lineHeight: '1.1',
                 letterSpacing: '0.02em',
                 color: 'var(--ds-color-neutral-text-default)'
               }}>
@@ -80,10 +80,10 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
             {subtitle && (
               <span style={{
                 fontWeight: 500,
-                fontSize: 'var(--ds-font-size-xs)',
+                fontSize: '16px',
                 lineHeight: '1.2',
-                opacity: 0.6,
-                letterSpacing: '0.08em',
+                opacity: 0.55,
+                letterSpacing: '0.06em',
                 textTransform: 'uppercase',
                 color: 'var(--ds-color-neutral-text-subtle)'
               }}>
@@ -531,14 +531,14 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
             display: 'flex',
             alignItems: 'center',
             gap: '16px',
-            padding: '14px 24px',
+            padding: '12px 20px',
             cursor: 'pointer',
-            backgroundColor: isSelected ? 'var(--ds-color-accent-surface-default)' : 'transparent',
+            backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.03)' : 'transparent',
             borderLeft: isSelected ? '3px solid var(--ds-color-accent-base-default)' : '3px solid transparent',
-            transition: 'all 0.12s ease',
-            marginLeft: '4px',
-            marginRight: '4px',
-            borderRadius: isSelected ? 'var(--ds-border-radius-md)' : '0',
+            transition: 'all 0.1s ease',
+            marginLeft: '8px',
+            marginRight: '8px',
+            borderRadius: 'var(--ds-border-radius-md)',
           }}
         >
           {/* Icon Container */}
@@ -591,10 +591,10 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           {/* Meta badge */}
           {item.meta && (
             <span style={{
-              padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+              padding: '4px 10px',
               backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-active)',
               borderRadius: 'var(--ds-border-radius-full)',
-              fontSize: 'var(--ds-font-size-xs)',
+              fontSize: '11px',
               fontWeight: 500,
               color: isSelected ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
               flexShrink: 0,
@@ -607,11 +607,11 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           {/* Shortcut badge */}
           {item.shortcut && (
             <kbd style={{
-              padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-              backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-active)',
+              padding: '4px 8px',
+              backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-default)',
               borderRadius: 'var(--ds-border-radius-sm)',
-              fontSize: 'var(--ds-font-size-xs)',
-              fontWeight: 600,
+              fontSize: '11px',
+              fontWeight: 500,
               color: isSelected ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
               fontFamily: 'inherit',
               flexShrink: 0,
@@ -669,8 +669,8 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 'var(--ds-spacing-10)',
-            gap: 'var(--ds-spacing-4)',
+            padding: '48px 32px',
+            gap: '16px',
             color: 'var(--ds-color-neutral-text-subtle)',
           }}>
             <SearchEmptyIcon />
@@ -679,7 +679,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 fontSize: 'var(--ds-font-size-md)',
                 fontWeight: 600,
                 color: 'var(--ds-color-neutral-text-default)',
-                marginBottom: 'var(--ds-spacing-2)',
+                marginBottom: '8px',
               }}>
                 {noResultsText}
               </div>
@@ -1408,7 +1408,7 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
       bg: 'var(--ds-color-success-base-default)',
       bgHover: 'var(--ds-color-success-base-hover)',
       bgActive: 'var(--ds-color-success-base-active)',
-      text: 'var(--ds-color-success-contrast-default)',
+      text: '#ffffff',
     },
     accent: {
       bg: 'var(--ds-color-accent-base-default)',

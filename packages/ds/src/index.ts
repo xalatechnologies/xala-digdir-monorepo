@@ -124,7 +124,7 @@ export {
   SettingsIcon,
   LayoutGrid // For backward compatibility
 } from './primitives';
-export type { 
+export type {
   ContainerProps,
   GridProps,
   StackProps,
@@ -134,6 +134,20 @@ export type {
   BadgeProps,
   LayoutGridProps
 } from './primitives';
+
+// =============================================================================
+// Design System Utilities & Tokens
+// =============================================================================
+export {
+  cn,
+  spacing,
+  interactiveBackgrounds,
+  badgeStyles,
+  menuItemStyles,
+  emptyStateStyles,
+  buttonTextColors,
+  logoStyles,
+} from './utils';
 
 // =============================================================================
 // CSS Import Policy
