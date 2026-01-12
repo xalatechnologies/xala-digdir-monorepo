@@ -7,8 +7,11 @@
  * This theme extends Digdir Designsystemet with DIGILIST brand identity.
  * - --ds-* tokens: Digdir overrides for component styling
  * - --digilist-* tokens: Custom app-level tokens (sidebar, charts, animations)
+ *
+ * Uses @layer ds.theme.color to properly override Digdir's theme layer.
  */
 
+@layer ds.theme.color {
 :root {
   /* =========================================================================
    * Brand Colors (HSL values for reference)
@@ -248,3 +251,4 @@
   --digilist-chart-4: #FBBF24;  /* Bright Orange */
   --digilist-chart-5: #2F55A4;  /* Blue */
 }
+} /* End @layer ds.theme.color */
