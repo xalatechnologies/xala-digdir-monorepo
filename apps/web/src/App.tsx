@@ -159,6 +159,7 @@ export function App() {
                 userName={isLoggedIn ? 'Ola Nordmann' : undefined}
                 onLogin={() => setIsLoggedIn(true)}
                 onLogout={() => setIsLoggedIn(false)}
+                color="accent"
               />
             </HeaderActions>
           }
