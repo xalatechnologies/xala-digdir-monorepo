@@ -22,6 +22,7 @@ export {
   HeaderSearch,
   HeaderActions,
   HeaderActionButton,
+  HeaderIconButton,
   HeaderThemeToggle,
   HeaderLanguageSwitch,
   HeaderLoginButton
@@ -30,6 +31,7 @@ export type {
   HeaderLogoProps,
   HeaderSearchProps,
   HeaderActionsProps,
+  HeaderIconButtonProps,
   HeaderThemeToggleProps,
   HeaderLanguageSwitchProps,
   HeaderLoginButtonProps,

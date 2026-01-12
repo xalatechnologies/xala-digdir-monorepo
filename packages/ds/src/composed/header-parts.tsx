@@ -49,7 +49,7 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--ds-spacing-3)',
+          gap: '16px',
           color: 'var(--ds-color-neutral-text-default)',
           textDecoration: 'none',
         }}
@@ -1048,7 +1048,138 @@ export const HeaderActionButton = forwardRef<HTMLButtonElement, React.ComponentP
 
 HeaderActionButton.displayName = 'HeaderActionButton';
 
-// Theme Toggle Button using Digdir Button
+// =============================================================================
+// Header Icon Button with Badge Support
+// =============================================================================
+
+export interface HeaderIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Icon to display
+   */
+  icon: React.ReactNode;
+
+  /**
+   * Badge count (shows notification badge if > 0)
+   */
+  badge?: number;
+
+  /**
+   * Maximum badge count to display (shows "99+" if exceeded)
+   * @default 99
+   */
+  maxBadge?: number;
+
+  /**
+   * Badge color variant
+   * @default 'danger'
+   */
+  badgeColor?: 'danger' | 'accent' | 'success' | 'warning';
+
+  /**
+   * Size of the button
+   * @default 'md'
+   */
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export const HeaderIconButton = forwardRef<HTMLButtonElement, HeaderIconButtonProps>(
+  ({ icon, badge, maxBadge = 99, badgeColor = 'danger', size = 'md', className, style, ...props }, ref) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [isPressed, setIsPressed] = useState(false);
+
+    const sizes = {
+      sm: { button: '36px', icon: 18, badge: '16px', badgeFont: '10px' },
+      md: { button: '44px', icon: 22, badge: '18px', badgeFont: '11px' },
+      lg: { button: '52px', icon: 26, badge: '20px', badgeFont: '12px' },
+    };
+
+    const badgeColors = {
+      danger: 'var(--ds-color-danger-base-default)',
+      accent: 'var(--ds-color-accent-base-default)',
+      success: 'var(--ds-color-success-base-default)',
+      warning: 'var(--ds-color-warning-base-default)',
+    };
+
+    const currentSize = sizes[size];
+    const displayBadge = badge !== undefined && badge > 0;
+    const badgeText = badge && badge > maxBadge ? `${maxBadge}+` : badge?.toString();
+
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={className}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
+        onMouseDown={() => setIsPressed(true)}
+        onMouseUp={() => setIsPressed(false)}
+        style={{
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: currentSize.button,
+          height: currentSize.button,
+          border: 'none',
+          borderRadius: 'var(--ds-border-radius-md)',
+          backgroundColor: isPressed
+            ? 'var(--ds-color-neutral-surface-active)'
+            : isHovered
+              ? 'var(--ds-color-neutral-surface-hover)'
+              : 'transparent',
+          color: 'var(--ds-color-neutral-text-default)',
+          cursor: 'pointer',
+          transition: 'all 0.15s ease',
+          transform: isPressed ? 'scale(0.95)' : 'scale(1)',
+          ...style,
+        }}
+        {...props}
+      >
+        <span style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'transform 0.15s ease',
+          transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+        }}>
+          {icon}
+        </span>
+
+        {/* Badge */}
+        {displayBadge && (
+          <span style={{
+            position: 'absolute',
+            top: '4px',
+            right: '4px',
+            minWidth: currentSize.badge,
+            height: currentSize.badge,
+            padding: '0 5px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: badgeColors[badgeColor],
+            color: 'white',
+            fontSize: currentSize.badgeFont,
+            fontWeight: 700,
+            borderRadius: 'var(--ds-border-radius-full)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+            transition: 'transform 0.15s ease',
+          }}>
+            {badgeText}
+          </span>
+        )}
+      </button>
+    );
+  }
+);
+
+HeaderIconButton.displayName = 'HeaderIconButton';
+
+// =============================================================================
+// Theme Toggle Button - Enhanced with animations
+// =============================================================================
+
 export interface HeaderThemeToggleProps {
   /**
    * Current theme
@@ -1067,25 +1198,59 @@ export interface HeaderThemeToggleProps {
 }
 
 export const HeaderThemeToggle: React.FC<HeaderThemeToggleProps> = ({ onToggle, isDark = false }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+
   return (
-    <Button
-      variant="tertiary"
-      icon
+    <button
       type="button"
       onClick={onToggle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
       aria-label={isDark ? 'Bytt til lyst tema' : 'Bytt til mørkt tema'}
       title={isDark ? 'Bytt til lyst tema' : 'Bytt til mørkt tema'}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '44px',
+        height: '44px',
+        border: 'none',
+        borderRadius: 'var(--ds-border-radius-md)',
+        backgroundColor: isPressed
+          ? 'var(--ds-color-neutral-surface-active)'
+          : isHovered
+            ? 'var(--ds-color-neutral-surface-hover)'
+            : 'transparent',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        transform: isPressed ? 'scale(0.95)' : 'scale(1)',
+      }}
     >
-      {isDark ? (
-        <SunIcon size={22} aria-hidden style={{ color: 'var(--ds-color-neutral-text-default)' }} />
-      ) : (
-        <MoonIcon size={22} aria-hidden style={{ color: 'var(--ds-color-neutral-text-default)' }} />
-      )}
-    </Button>
+      <span style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'transform 0.3s ease',
+        transform: isHovered ? 'rotate(15deg) scale(1.1)' : 'rotate(0deg) scale(1)',
+        color: isDark ? 'var(--ds-color-warning-text-default)' : 'var(--ds-color-neutral-text-default)',
+      }}>
+        {isDark ? (
+          <SunIcon size={22} aria-hidden />
+        ) : (
+          <MoonIcon size={22} aria-hidden />
+        )}
+      </span>
+    </button>
   );
 };
 
-// Language Switch - DIGILIST style with proper Digdir spacing
+// =============================================================================
+// Language Switch - Enhanced DIGILIST style
+// =============================================================================
+
 export interface HeaderLanguageSwitchProps {
   /**
    * Current language
@@ -1096,63 +1261,90 @@ export interface HeaderLanguageSwitchProps {
    * On switch callback
    */
   onSwitch?: (lang: string) => void;
+
+  /**
+   * Available languages
+   * @default [{ code: 'no', label: 'NO' }, { code: 'en', label: 'EN' }]
+   */
+  languages?: Array<{ code: string; label: string }>;
 }
 
-export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({ language = 'no', onSwitch }) => {
+const LanguageButton: React.FC<{
+  code: string;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}> = ({ code, label, isActive, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '2px',
-      padding: 'var(--ds-spacing-1)',
-      backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-      borderRadius: 'var(--ds-border-radius-md)',
-    }}>
-      <button
-        type="button"
-        onClick={() => onSwitch?.('no')}
-        aria-label="Norsk"
-        aria-pressed={language === 'no'}
-        style={{
-          padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-          border: 'none',
-          borderRadius: 'var(--ds-border-radius-sm)',
-          backgroundColor: language === 'no' ? 'var(--ds-color-neutral-surface-default)' : 'transparent',
-          color: language === 'no' ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-          fontWeight: 600,
-          fontSize: '13px',
-          cursor: 'pointer',
-          transition: 'all 0.15s ease',
-          boxShadow: language === 'no' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-        }}
-      >
-        NO
-      </button>
-      <button
-        type="button"
-        onClick={() => onSwitch?.('en')}
-        aria-label="English"
-        aria-pressed={language === 'en'}
-        style={{
-          padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-          border: 'none',
-          borderRadius: 'var(--ds-border-radius-sm)',
-          backgroundColor: language === 'en' ? 'var(--ds-color-neutral-surface-default)' : 'transparent',
-          color: language === 'en' ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-          fontWeight: 600,
-          fontSize: '13px',
-          cursor: 'pointer',
-          transition: 'all 0.15s ease',
-          boxShadow: language === 'en' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-        }}
-      >
-        EN
-      </button>
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      aria-label={code === 'no' ? 'Norsk' : code === 'en' ? 'English' : label}
+      aria-pressed={isActive}
+      style={{
+        padding: '8px 14px',
+        border: 'none',
+        borderRadius: 'var(--ds-border-radius-sm)',
+        backgroundColor: isActive
+          ? 'var(--ds-color-neutral-surface-default)'
+          : isHovered
+            ? 'var(--ds-color-neutral-surface-active)'
+            : 'transparent',
+        color: isActive
+          ? 'var(--ds-color-neutral-text-default)'
+          : 'var(--ds-color-neutral-text-subtle)',
+        fontWeight: 600,
+        fontSize: 'var(--ds-font-size-sm)',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+        transform: isHovered && !isActive ? 'scale(1.02)' : 'scale(1)',
+      }}
+    >
+      {label}
+    </button>
+  );
+};
+
+export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({
+  language = 'no',
+  onSwitch,
+  languages = [{ code: 'no', label: 'NO' }, { code: 'en', label: 'EN' }]
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '2px',
+        padding: '4px',
+        backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+        borderRadius: 'var(--ds-border-radius-md)',
+      }}
+      role="group"
+      aria-label="Velg språk"
+    >
+      {languages.map((lang) => (
+        <LanguageButton
+          key={lang.code}
+          code={lang.code}
+          label={lang.label}
+          isActive={language === lang.code}
+          onClick={() => onSwitch?.(lang.code)}
+        />
+      ))}
     </div>
   );
 };
 
-// Login Button using Digdir Button - DIGILIST style (green)
+// =============================================================================
+// Login Button - Enhanced DIGILIST style with user dropdown support
+// =============================================================================
+
 export interface HeaderLoginButtonProps {
   /**
    * User is logged in
@@ -1163,6 +1355,11 @@ export interface HeaderLoginButtonProps {
    * User name
    */
   userName?: string | undefined;
+
+  /**
+   * User avatar URL
+   */
+  avatarUrl?: string;
 
   /**
    * On login callback
@@ -1179,40 +1376,158 @@ export interface HeaderLoginButtonProps {
    * @default 'Logg inn'
    */
   loginText?: string;
+
+  /**
+   * Logout text
+   * @default 'Logg ut'
+   */
+  logoutText?: string;
+
+  /**
+   * Color variant
+   * @default 'success'
+   */
+  color?: 'success' | 'accent' | 'neutral';
 }
 
 export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   isLoggedIn,
   userName,
+  avatarUrl,
   onLogin,
   onLogout,
-  loginText = 'Logg inn'
+  loginText = 'Logg inn',
+  logoutText = 'Logg ut',
+  color = 'success'
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+
+  const colors = {
+    success: {
+      bg: 'var(--ds-color-success-base-default)',
+      bgHover: 'var(--ds-color-success-base-hover)',
+      bgActive: 'var(--ds-color-success-base-active)',
+      text: 'var(--ds-color-success-contrast-default)',
+    },
+    accent: {
+      bg: 'var(--ds-color-accent-base-default)',
+      bgHover: 'var(--ds-color-accent-base-hover)',
+      bgActive: 'var(--ds-color-accent-base-active)',
+      text: 'var(--ds-color-accent-contrast-default)',
+    },
+    neutral: {
+      bg: 'var(--ds-color-neutral-surface-hover)',
+      bgHover: 'var(--ds-color-neutral-surface-active)',
+      bgActive: 'var(--ds-color-neutral-border-default)',
+      text: 'var(--ds-color-neutral-text-default)',
+    },
+  };
+
+  const currentColor = colors[color];
+
+  // Logged in state - show user info
   if (isLoggedIn && userName) {
     return (
-      <Button
-        variant="primary"
+      <button
         type="button"
         onClick={onLogout}
-        data-color="success"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
+        onMouseDown={() => setIsPressed(true)}
+        onMouseUp={() => setIsPressed(false)}
         aria-label={`Logget inn som ${userName}. Klikk for å logge ut.`}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '8px 16px 8px 10px',
+          border: 'none',
+          borderRadius: 'var(--ds-border-radius-md)',
+          backgroundColor: isPressed
+            ? currentColor.bgActive
+            : isHovered
+              ? currentColor.bgHover
+              : currentColor.bg,
+          color: currentColor.text,
+          fontSize: 'var(--ds-font-size-sm)',
+          fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'all 0.15s ease',
+          transform: isPressed ? 'scale(0.98)' : 'scale(1)',
+        }}
       >
-        <UserIcon size={18} aria-hidden />
-        {userName}
-      </Button>
+        {/* Avatar or icon */}
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt=""
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: 'var(--ds-border-radius-full)',
+              objectFit: 'cover',
+              border: '2px solid rgba(255,255,255,0.3)',
+            }}
+          />
+        ) : (
+          <span style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '28px',
+            height: '28px',
+            borderRadius: 'var(--ds-border-radius-full)',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+          }}>
+            <UserIcon size={16} aria-hidden />
+          </span>
+        )}
+        <span style={{
+          maxWidth: '120px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>
+          {userName}
+        </span>
+      </button>
     );
   }
 
+  // Logged out state - show login button
   return (
-    <Button
-      variant="primary"
+    <button
       type="button"
       onClick={onLogin}
-      data-color="success"
-      aria-label="Logg inn"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
+      aria-label={loginText}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '10px 18px',
+        border: 'none',
+        borderRadius: 'var(--ds-border-radius-md)',
+        backgroundColor: isPressed
+          ? currentColor.bgActive
+          : isHovered
+            ? currentColor.bgHover
+            : currentColor.bg,
+        color: currentColor.text,
+        fontSize: 'var(--ds-font-size-sm)',
+        fontWeight: 600,
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        transform: isPressed ? 'scale(0.98)' : 'scale(1)',
+        boxShadow: isHovered ? '0 4px 12px rgba(0,0,0,0.15)' : '0 2px 4px rgba(0,0,0,0.1)',
+      }}
     >
       <UserIcon size={18} aria-hidden />
       {loginText}
-    </Button>
+    </button>
   );
 };

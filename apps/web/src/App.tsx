@@ -4,11 +4,11 @@ import {
   HeaderLogo,
   HeaderSearch,
   HeaderActions,
+  HeaderIconButton,
   HeaderThemeToggle,
   HeaderLanguageSwitch,
   HeaderLoginButton,
   ContentLayout,
-  Button,
   Heading,
   Paragraph,
   ShoppingCartIcon,
@@ -116,9 +116,11 @@ export function App() {
           sticky={true}
           logo={
             <HeaderLogo
+              src="/logo.svg"
               title="DIGILIST"
               subtitle="ENKEL BOOKING"
               href="/"
+              height="56px"
             />
           }
           search={
@@ -135,7 +137,7 @@ export function App() {
             />
           }
           actions={
-            <HeaderActions spacing="var(--ds-spacing-3)">
+            <HeaderActions spacing="12px">
               <HeaderLanguageSwitch
                 language={language}
                 onSwitch={(lang) => setLanguage(lang as 'en' | 'no')}
@@ -144,15 +146,14 @@ export function App() {
                 onToggle={handleThemeToggle}
                 isDark={isDarkTheme}
               />
-              <Button
-                variant="tertiary"
-                icon
-                type="button"
+              <HeaderIconButton
+                icon={<ShoppingCartIcon size={22} />}
+                badge={2}
+                badgeColor="accent"
                 aria-label="Handlekurv"
-                title="Handlekurv"
-              >
-                <ShoppingCartIcon size={22} aria-hidden style={{ color: 'var(--ds-color-neutral-text-default)' }} />
-              </Button>
+                title="Handlekurv (2 varer)"
+                onClick={() => console.log('Cart clicked')}
+              />
               <HeaderLoginButton
                 isLoggedIn={isLoggedIn}
                 userName={isLoggedIn ? 'Ola Nordmann' : undefined}
