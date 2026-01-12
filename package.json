@@ -1,0 +1,22 @@
+{
+  "name": "xala-digdir-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier -w .",
+    "tokens:create": "node ./packages/ds-themes/scripts/tokens-create.mjs",
+    "tokens:build": "node ./packages/ds-themes/scripts/tokens-build.mjs"
+  },
+  "devDependencies": {
+    "@digdir/designsystemet-css": "1.9.0",
+    "@digdir/designsystemet-react": "^1.9.0",
+    "@eslint/js": "^9.10.0",
+    "eslint": "^9.10.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.0",
+    "typescript": "^5.6.3"
+  }
+}

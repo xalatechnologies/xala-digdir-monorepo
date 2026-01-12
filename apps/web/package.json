@@ -1,0 +1,28 @@
+{
+  "name": "@xala/web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@xala/ds": "workspace:*",
+    "@xala/ds-themes": "workspace:*",
+    "@xala/ds-registry": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.8",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^9.10.0",
+    "@xala/eslint-config": "workspace:*"
+  }
+}

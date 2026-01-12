@@ -1,0 +1,10 @@
+{
+  "name": "@xala/eslint-config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "index.js",
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  }
+}

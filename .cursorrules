@@ -1,0 +1,21 @@
+# Cursor Rules for Xala Digdir Monorepo
+
+## Core Rules
+- Follow AI_RULES.md strictly
+- Apps must NOT import @digdir/* packages directly
+- Import @xala/ds/styles exactly once in main.tsx
+- No custom UI components in apps - use only @xala/ds exports
+- Use DesignsystemetProvider for theme switching
+- Follow asChild pattern: only one child allowed
+- Use data attributes: data-color-scheme, data-size, data-typography
+
+## Architecture
+- pnpm workspaces with Turborepo
+- Vite + React + TypeScript for web
+- Fastify for API
+- ESLint guardrails enforce import restrictions
+
+## Theme Support
+- Themes: digdir, altinn, uutilsynet, portal
+- Runtime theme switching via provider
+- Single CSS import rule strictly enforced

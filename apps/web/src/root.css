@@ -1,0 +1,8 @@
+/* Minimal global styles allowed by guardrails:
+   - font-feature-settings recommended by Designsystemet
+   - no custom component styling
+*/
+html {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-feature-settings: "cv05" 1; /* per Designsystemet guidance */
+}

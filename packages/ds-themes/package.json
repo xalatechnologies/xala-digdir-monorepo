@@ -1,0 +1,19 @@
+{
+  "name": "@xala/ds-themes",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./themes/*": "./themes/*"
+  },
+  "dependencies": {
+    "@digdir/designsystemet-theme": "^1.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  }
+}
