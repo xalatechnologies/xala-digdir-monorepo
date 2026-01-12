@@ -1,8 +1,8 @@
 /**
  * DIGILIST Theme
  *
- * Brand colors from digilist.no
- * Navy #1F2F6E | Blue #2F55A4 | Aqua #9EDBE5 | Green #8BC34A
+ * Brand colors from digilist.no using OKLCH for perceptual uniformity.
+ * Navy oklch(0.28 0.09 264) | Blue oklch(0.45 0.12 262) | Aqua oklch(0.82 0.08 205) | Green oklch(0.72 0.14 130)
  *
  * This theme extends Digdir Designsystemet with DIGILIST brand identity.
  * - --ds-* tokens: Digdir overrides for component styling
@@ -14,81 +14,82 @@
 @layer ds.theme.color {
 :root {
   /* =========================================================================
-   * Brand Colors (HSL values for reference)
+   * Brand Colors (OKLCH Reference)
    * ========================================================================= */
-  /* --primary: 213 51% 41%    #2F55A4 - Digilist Blue */
-  /* --accent:  189 66% 76%    #9EDBE5 - Aqua */
-  /* --success: 88 50% 53%     #8BC34A - Green */
-  /* --foreground: 222 47% 11% Deep charcoal */
+  /* --primary:    oklch(0.45 0.12 262)  #2F55A4 - Digilist Blue */
+  /* --info:       oklch(0.82 0.08 205)  #9EDBE5 - Aqua */
+  /* --success:    oklch(0.72 0.14 130)  #8BC34A - Green */
+  /* --navy:       oklch(0.28 0.09 264)  #1F2F6E - Core trust */
+  /* --foreground: oklch(0.20 0.02 264)  #0F172A - Charcoal */
 
   /* =========================================================================
-   * Digdir Overrides: Accent/Primary Color (Brand Blue #2F55A4)
+   * Digdir Overrides: Accent/Primary Color (Brand Blue)
    * ========================================================================= */
-  --ds-color-accent-base-default: #2F55A4;
-  --ds-color-accent-base-hover: #264785;
-  --ds-color-accent-base-active: #1E3A6E;
-  --ds-color-accent-surface-default: #EEF3FB;
-  --ds-color-accent-surface-hover: #DCE6F6;
-  --ds-color-accent-surface-active: #C5D6F0;
-  --ds-color-accent-border-default: #2F55A4;
-  --ds-color-accent-border-subtle: #A8C0E5;
-  --ds-color-accent-text-default: #2F55A4;
-  --ds-color-accent-text-subtle: #4A6FB8;
-  --ds-color-accent-contrast-default: #FFFFFF;
+  --ds-color-accent-base-default: oklch(0.45 0.12 262);
+  --ds-color-accent-base-hover: oklch(0.40 0.11 262);
+  --ds-color-accent-base-active: oklch(0.35 0.10 262);
+  --ds-color-accent-surface-default: oklch(0.96 0.02 262);
+  --ds-color-accent-surface-hover: oklch(0.93 0.03 262);
+  --ds-color-accent-surface-active: oklch(0.90 0.04 262);
+  --ds-color-accent-border-default: oklch(0.45 0.12 262);
+  --ds-color-accent-border-subtle: oklch(0.75 0.06 262);
+  --ds-color-accent-text-default: oklch(0.45 0.12 262);
+  --ds-color-accent-text-subtle: oklch(0.55 0.10 262);
+  --ds-color-accent-contrast-default: oklch(0.98 0 0);
 
   /* =========================================================================
-   * Digdir Overrides: Success Color (Brand Green #8BC34A)
+   * Digdir Overrides: Success Color (Brand Green)
    * ========================================================================= */
-  --ds-color-success-base-default: #8BC34A;
-  --ds-color-success-base-hover: #7AB33D;
-  --ds-color-success-base-active: #6A9E35;
-  --ds-color-success-surface-default: #F4F9ED;
-  --ds-color-success-surface-hover: #E8F3DB;
-  --ds-color-success-surface-active: #D8EBC4;
-  --ds-color-success-border-default: #8BC34A;
-  --ds-color-success-border-subtle: #BCE09A;
-  --ds-color-success-text-default: #5C8A2E;
-  --ds-color-success-text-subtle: #6E9D3A;
-  --ds-color-success-contrast-default: #FFFFFF;
+  --ds-color-success-base-default: oklch(0.72 0.14 130);
+  --ds-color-success-base-hover: oklch(0.67 0.13 130);
+  --ds-color-success-base-active: oklch(0.62 0.12 130);
+  --ds-color-success-surface-default: oklch(0.97 0.03 130);
+  --ds-color-success-surface-hover: oklch(0.94 0.05 130);
+  --ds-color-success-surface-active: oklch(0.91 0.07 130);
+  --ds-color-success-border-default: oklch(0.72 0.14 130);
+  --ds-color-success-border-subtle: oklch(0.82 0.08 130);
+  --ds-color-success-text-default: oklch(0.50 0.12 130);
+  --ds-color-success-text-subtle: oklch(0.58 0.11 130);
+  --ds-color-success-contrast-default: oklch(1.0 0 0);
 
   /* =========================================================================
-   * Digdir Overrides: Neutral Colors (Charcoal text, clean backgrounds)
+   * Digdir Overrides: Neutral Colors
    * ========================================================================= */
-  --ds-color-neutral-text-default: #0F172A;
-  --ds-color-neutral-text-subtle: #475569;
-  --ds-color-neutral-background-default: #FFFFFF;
-  --ds-color-neutral-surface-default: #FFFFFF;
-  --ds-color-neutral-surface-hover: #F8FAFC;
-  --ds-color-neutral-surface-active: #F1F5F9;
-  --ds-color-neutral-border-default: #E2E8F0;
-  --ds-color-neutral-border-subtle: #F1F5F9;
+  --ds-color-neutral-text-default: oklch(0.20 0.02 264);
+  --ds-color-neutral-text-subtle: oklch(0.45 0.02 260);
+  --ds-color-neutral-background-default: oklch(0.99 0 0);
+  --ds-color-neutral-surface-default: oklch(0.99 0 0);
+  --ds-color-neutral-surface-hover: oklch(0.98 0 0);
+  --ds-color-neutral-surface-active: oklch(0.96 0 0);
+  --ds-color-neutral-border-default: oklch(0.90 0 0);
+  --ds-color-neutral-border-subtle: oklch(0.96 0 0);
 
   /* =========================================================================
-   * Digdir Overrides: Info Color (Brand Aqua #9EDBE5)
+   * Digdir Overrides: Info Color (Brand Aqua)
    * ========================================================================= */
-  --ds-color-info-base-default: #9EDBE5;
-  --ds-color-info-surface-default: #E8F7F9;
-  --ds-color-info-text-default: #1F2F6E;
+  --ds-color-info-base-default: oklch(0.82 0.08 205);
+  --ds-color-info-surface-default: oklch(0.96 0.02 205);
+  --ds-color-info-text-default: oklch(0.28 0.09 264);
 
   /* =========================================================================
    * Digdir Overrides: Warning Color
    * ========================================================================= */
-  --ds-color-warning-base-default: #F59E0B;
-  --ds-color-warning-surface-default: #FFFBEB;
-  --ds-color-warning-text-default: #B45309;
+  --ds-color-warning-base-default: oklch(0.75 0.15 80);
+  --ds-color-warning-surface-default: oklch(0.98 0.03 80);
+  --ds-color-warning-text-default: oklch(0.50 0.12 80);
 
   /* =========================================================================
    * Digdir Overrides: Danger/Destructive Color
    * ========================================================================= */
-  --ds-color-danger-base-default: #EF4444;
-  --ds-color-danger-surface-default: #FEF2F2;
-  --ds-color-danger-text-default: #DC2626;
+  --ds-color-danger-base-default: oklch(0.55 0.19 33);
+  --ds-color-danger-surface-default: oklch(0.97 0.02 33);
+  --ds-color-danger-text-default: oklch(0.50 0.18 33);
 
   /* =========================================================================
-   * Digdir Overrides: Focus Ring (Brand Blue)
+   * Digdir Overrides: Focus Ring
    * ========================================================================= */
-  --ds-color-focus-inner: #9EDBE5;
-  --ds-color-focus-outer: #2F55A4;
+  --ds-color-focus-inner: oklch(0.82 0.08 205);
+  --ds-color-focus-outer: oklch(0.45 0.12 262);
 
   /* =========================================================================
    * Digdir Overrides: Typography
@@ -98,23 +99,23 @@
   /* =========================================================================
    * DIGILIST Custom: Sidebar Tokens
    * ========================================================================= */
-  --digilist-sidebar-background: #FFFFFF;
-  --digilist-sidebar-foreground: #0F172A;
-  --digilist-sidebar-primary: #2F55A4;
-  --digilist-sidebar-primary-foreground: #FFFFFF;
-  --digilist-sidebar-accent: #F1F5F9;
-  --digilist-sidebar-accent-foreground: #0F172A;
-  --digilist-sidebar-border: #E2E8F0;
-  --digilist-sidebar-ring: #2F55A4;
+  --digilist-sidebar-background: oklch(0.99 0 0);
+  --digilist-sidebar-foreground: oklch(0.20 0.02 264);
+  --digilist-sidebar-primary: oklch(0.45 0.12 262);
+  --digilist-sidebar-primary-foreground: oklch(0.98 0 0);
+  --digilist-sidebar-accent: oklch(0.96 0 0);
+  --digilist-sidebar-accent-foreground: oklch(0.20 0.02 264);
+  --digilist-sidebar-border: oklch(0.90 0 0);
+  --digilist-sidebar-ring: oklch(0.45 0.12 262);
 
   /* =========================================================================
    * DIGILIST Custom: Chart Colors
    * ========================================================================= */
-  --digilist-chart-1: #2F55A4;  /* Primary Blue */
-  --digilist-chart-2: #8BC34A;  /* Success Green */
-  --digilist-chart-3: #8B5CF6;  /* Purple */
-  --digilist-chart-4: #F59E0B;  /* Warning Orange */
-  --digilist-chart-5: #9EDBE5;  /* Aqua */
+  --digilist-chart-1: oklch(0.45 0.12 262);  /* Primary Blue */
+  --digilist-chart-2: oklch(0.72 0.14 130);  /* Success Green */
+  --digilist-chart-3: oklch(0.55 0.20 300);  /* Purple */
+  --digilist-chart-4: oklch(0.75 0.15 80);   /* Warning Orange */
+  --digilist-chart-5: oklch(0.82 0.08 205);  /* Aqua */
 
   /* =========================================================================
    * DIGILIST Custom: Typography Tokens
@@ -171,84 +172,84 @@
   /* =========================================================================
    * Digdir Overrides: Primary becomes Aqua in dark mode
    * ========================================================================= */
-  --ds-color-accent-base-default: #9EDBE5;
-  --ds-color-accent-base-hover: #B5E4EC;
-  --ds-color-accent-base-active: #7CCDD9;
-  --ds-color-accent-surface-default: #1A2744;
-  --ds-color-accent-surface-hover: #243350;
-  --ds-color-accent-surface-active: #2E3F5C;
-  --ds-color-accent-border-default: #9EDBE5;
-  --ds-color-accent-border-subtle: #5A8A94;
-  --ds-color-accent-text-default: #9EDBE5;
-  --ds-color-accent-text-subtle: #7CCDD9;
-  --ds-color-accent-contrast-default: #0F172A;
+  --ds-color-accent-base-default: oklch(0.82 0.08 205);
+  --ds-color-accent-base-hover: oklch(0.87 0.06 205);
+  --ds-color-accent-base-active: oklch(0.77 0.09 205);
+  --ds-color-accent-surface-default: oklch(0.25 0.04 264);
+  --ds-color-accent-surface-hover: oklch(0.30 0.05 264);
+  --ds-color-accent-surface-active: oklch(0.35 0.05 264);
+  --ds-color-accent-border-default: oklch(0.82 0.08 205);
+  --ds-color-accent-border-subtle: oklch(0.55 0.05 205);
+  --ds-color-accent-text-default: oklch(0.82 0.08 205);
+  --ds-color-accent-text-subtle: oklch(0.77 0.07 205);
+  --ds-color-accent-contrast-default: oklch(0.20 0.02 264);
 
   /* =========================================================================
    * Digdir Overrides: Success stays green
    * ========================================================================= */
-  --ds-color-success-base-default: #9FD05E;
-  --ds-color-success-surface-default: #1C2A18;
-  --ds-color-success-text-default: #B3DC7E;
-  --ds-color-success-contrast-default: #0F172A;
+  --ds-color-success-base-default: oklch(0.77 0.14 130);
+  --ds-color-success-surface-default: oklch(0.25 0.05 130);
+  --ds-color-success-text-default: oklch(0.82 0.10 130);
+  --ds-color-success-contrast-default: oklch(0.20 0.02 264);
 
   /* =========================================================================
    * Digdir Overrides: Warning
    * ========================================================================= */
-  --ds-color-warning-base-default: #FBBF24;
-  --ds-color-warning-surface-default: #422006;
-  --ds-color-warning-text-default: #FCD34D;
+  --ds-color-warning-base-default: oklch(0.80 0.15 80);
+  --ds-color-warning-surface-default: oklch(0.25 0.08 80);
+  --ds-color-warning-text-default: oklch(0.85 0.12 80);
 
   /* =========================================================================
    * Digdir Overrides: Danger/Destructive
    * ========================================================================= */
-  --ds-color-danger-base-default: #F87171;
-  --ds-color-danger-surface-default: #450A0A;
-  --ds-color-danger-text-default: #FCA5A5;
+  --ds-color-danger-base-default: oklch(0.70 0.15 33);
+  --ds-color-danger-surface-default: oklch(0.22 0.08 33);
+  --ds-color-danger-text-default: oklch(0.80 0.12 33);
 
   /* =========================================================================
    * Digdir Overrides: Neutral for dark mode
    * ========================================================================= */
-  --ds-color-neutral-text-default: #F8FAFC;
-  --ds-color-neutral-text-subtle: #94A3B8;
-  --ds-color-neutral-background-default: #0F172A;
-  --ds-color-neutral-surface-default: #1E293B;
-  --ds-color-neutral-surface-hover: #334155;
-  --ds-color-neutral-surface-active: #475569;
-  --ds-color-neutral-border-default: #334155;
-  --ds-color-neutral-border-subtle: #1E293B;
+  --ds-color-neutral-text-default: oklch(0.98 0 0);
+  --ds-color-neutral-text-subtle: oklch(0.70 0.01 260);
+  --ds-color-neutral-background-default: oklch(0.20 0.02 264);
+  --ds-color-neutral-surface-default: oklch(0.25 0.02 260);
+  --ds-color-neutral-surface-hover: oklch(0.32 0.02 260);
+  --ds-color-neutral-surface-active: oklch(0.40 0.02 260);
+  --ds-color-neutral-border-default: oklch(0.32 0.02 260);
+  --ds-color-neutral-border-subtle: oklch(0.25 0.02 260);
 
   /* =========================================================================
    * Digdir Overrides: Info (Aqua)
    * ========================================================================= */
-  --ds-color-info-base-default: #9EDBE5;
-  --ds-color-info-surface-default: #0C4A5E;
-  --ds-color-info-text-default: #B5E4EC;
+  --ds-color-info-base-default: oklch(0.82 0.08 205);
+  --ds-color-info-surface-default: oklch(0.30 0.06 205);
+  --ds-color-info-text-default: oklch(0.87 0.06 205);
 
   /* =========================================================================
    * Digdir Overrides: Focus
    * ========================================================================= */
-  --ds-color-focus-inner: #9EDBE5;
-  --ds-color-focus-outer: #1F2F6E;
+  --ds-color-focus-inner: oklch(0.82 0.08 205);
+  --ds-color-focus-outer: oklch(0.28 0.09 264);
 
   /* =========================================================================
    * DIGILIST Custom: Sidebar (Dark)
    * ========================================================================= */
-  --digilist-sidebar-background: #1F2F6E;  /* Navy */
-  --digilist-sidebar-foreground: #F8FAFC;
-  --digilist-sidebar-primary: #9EDBE5;     /* Aqua */
-  --digilist-sidebar-primary-foreground: #0F172A;
-  --digilist-sidebar-accent: #243350;
-  --digilist-sidebar-accent-foreground: #F8FAFC;
-  --digilist-sidebar-border: #334155;
-  --digilist-sidebar-ring: #9EDBE5;
+  --digilist-sidebar-background: oklch(0.28 0.09 264);
+  --digilist-sidebar-foreground: oklch(0.98 0 0);
+  --digilist-sidebar-primary: oklch(0.82 0.08 205);
+  --digilist-sidebar-primary-foreground: oklch(0.20 0.02 264);
+  --digilist-sidebar-accent: oklch(0.30 0.05 264);
+  --digilist-sidebar-accent-foreground: oklch(0.98 0 0);
+  --digilist-sidebar-border: oklch(0.32 0.02 260);
+  --digilist-sidebar-ring: oklch(0.82 0.08 205);
 
   /* =========================================================================
    * DIGILIST Custom: Chart Colors (Dark - brighter variants)
    * ========================================================================= */
-  --digilist-chart-1: #9EDBE5;  /* Aqua (swapped for visibility) */
-  --digilist-chart-2: #9FD05E;  /* Bright Green */
-  --digilist-chart-3: #A78BFA;  /* Light Purple */
-  --digilist-chart-4: #FBBF24;  /* Bright Orange */
-  --digilist-chart-5: #2F55A4;  /* Blue */
+  --digilist-chart-1: oklch(0.82 0.08 205);  /* Aqua (swapped for visibility) */
+  --digilist-chart-2: oklch(0.77 0.14 130);  /* Bright Green */
+  --digilist-chart-3: oklch(0.70 0.15 300);  /* Light Purple */
+  --digilist-chart-4: oklch(0.80 0.15 80);   /* Bright Orange */
+  --digilist-chart-5: oklch(0.45 0.12 262);  /* Blue */
 }
 } /* End @layer ds.theme.color */
