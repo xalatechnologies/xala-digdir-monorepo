@@ -5,6 +5,7 @@
  * Supports images, ratings, pricing, facilities, and action buttons.
  */
 import * as React from 'react';
+import { Tag } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 
 export interface ListingCardProps {
@@ -177,11 +178,13 @@ export function ListingCard({
       style={{
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         borderRadius: '12px',
-        border: `1px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'var(--ds-color-neutral-border-subtle)'}`,
+        border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'rgba(0,0,0,0.08)'}`,
         overflow: 'hidden',
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: onClick ? 'pointer' : 'default',
-        boxShadow: isHovered ? '0 12px 32px rgba(0,0,0,0.12)' : '0 1px 3px rgba(0,0,0,0.04)',
+        boxShadow: isHovered
+          ? '0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)'
+          : '0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
         transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
       }}
     >
@@ -376,39 +379,20 @@ export function ListingCard({
         {showFacilities && facilities.length > 0 && (
           <div style={{
             display: 'flex',
-            flexWrap: 'wrap',
+            flexWrap: 'nowrap',
             gap: '8px',
-            marginBottom: '14px'
+            marginBottom: '14px',
+            overflow: 'hidden'
           }}>
             {facilities.slice(0, maxFacilities).map((facility) => (
-              <span
-                key={facility}
-                style={{
-                  padding: '4px 10px',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  backgroundColor: 'var(--ds-color-accent-surface-default)',
-                  color: 'var(--ds-color-accent-text-default)',
-                  borderRadius: '16px',
-                  fontFamily: 'var(--ds-font-family, inherit)'
-                }}
-              >
+              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: '0.75rem', flexShrink: 0 }}>
                 {facility}
-              </span>
+              </Tag>
             ))}
             {moreFacilities > 0 && (
-              <span
-                style={{
-                  padding: '4px 10px',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  color: 'var(--ds-color-accent-text-default)',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--ds-font-family, inherit)'
-                }}
-              >
+              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: '0.75rem', flexShrink: 0 }}>
                 +{moreFacilities} mer
-              </span>
+              </Tag>
             )}
           </div>
         )}
@@ -420,7 +404,7 @@ export function ListingCard({
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingTop: '14px',
-            borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
+            borderTop: '0.5px solid rgba(0,0,0,0.06)'
           }}>
             {showCapacity && capacity !== undefined && (
               <div style={{
@@ -436,17 +420,9 @@ export function ListingCard({
               </div>
             )}
             {showListingType && listingType && (
-              <span style={{
-                padding: '4px 10px',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                color: 'var(--ds-color-neutral-text-default)',
-                borderRadius: '4px',
-                fontFamily: 'var(--ds-font-family, inherit)'
-              }}>
+              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: '0.75rem' }}>
                 {listingTypeLabels[listingType] || listingType}
-              </span>
+              </Tag>
             )}
             {showPrice && price !== undefined && (
               <span style={{

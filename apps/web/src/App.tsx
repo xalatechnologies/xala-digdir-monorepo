@@ -68,8 +68,9 @@ const venueTypes = [
   { id: 'utendors', label: 'Utendørs', count: 1 },
 ];
 
-// Demo venues
-const venues = [
+// Demo listings - various types according to schema
+const listings = [
+  // SPACE listings
   {
     id: '1',
     name: 'Bragernes Møterom',
@@ -121,56 +122,213 @@ const venues = [
     available: false,
     image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop'
   },
+  // RESOURCE listings
   {
     id: '4',
-    name: 'Konnerud Idrettshall',
-    type: 'Idrettshall',
-    listingType: 'SPACE' as const,
-    location: 'Konnerudgata 45, 3045 Drammen',
-    description: 'Stor idrettshall med plass til flere aktiviteter samtidig. Perfekt for lag og foreninger.',
-    facilities: ['Garderober', 'Tribuner', 'Parkering'],
-    moreFacilities: 2,
-    capacity: 200,
-    price: 1500,
-    priceUnit: 'time',
-    rating: 4.5,
-    reviewCount: 32,
+    name: 'Projektor og lerret',
+    type: 'AV-utstyr',
+    listingType: 'RESOURCE' as const,
+    location: 'Drammen Bibliotek',
+    description: 'Profesjonell projektor med stort lerret. Perfekt for presentasjoner og filmvisninger.',
+    facilities: ['4K oppløsning', 'HDMI', 'Fjernkontroll'],
+    moreFacilities: 0,
+    capacity: 1,
+    price: 200,
+    priceUnit: 'dag',
+    rating: 4.7,
+    reviewCount: 12,
     available: true,
-    image: 'https://images.unsplash.com/photo-1519766304817-4f37bda74a26?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&h=400&fit=crop'
   },
   {
     id: '5',
-    name: 'Sentrum Møtelokale',
-    type: 'Møterom',
-    listingType: 'SPACE' as const,
-    location: 'Bragernes Torg 12',
-    description: 'Moderne møtelokale midt i sentrum. Ideelt for workshops og seminarer.',
-    facilities: ['AV-utstyr', 'Whiteboard', 'Kaffe'],
-    moreFacilities: 1,
-    capacity: 40,
-    price: 650,
-    priceUnit: 'time',
-    rating: 4.7,
-    reviewCount: 15,
+    name: 'PA-anlegg komplett',
+    type: 'Lydutstyr',
+    listingType: 'RESOURCE' as const,
+    location: 'Kulturhuset Drammen',
+    description: 'Komplett PA-anlegg med mikrofoner, miksebord og høyttalere for arrangementer.',
+    facilities: ['2x høyttalere', 'Miksebord', '4x mikrofoner'],
+    moreFacilities: 3,
+    capacity: 1,
+    price: 800,
+    priceUnit: 'dag',
+    rating: 4.5,
+    reviewCount: 8,
     available: true,
-    image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop'
   },
   {
     id: '6',
-    name: 'Fjell Svømmehall',
-    type: 'Svømmehall',
-    listingType: 'SPACE' as const,
-    location: 'Fjellveien 8, 3050 Drammen',
-    description: 'Familievennlig svømmehall med flere bassenger og vannlek for barn.',
-    facilities: ['Vannlek', 'Stupetårn', 'Kafé'],
-    moreFacilities: 2,
-    capacity: 120,
+    name: 'Kajakk dobbeltseter',
+    type: 'Vannsport',
+    listingType: 'RESOURCE' as const,
+    location: 'Drammenselva Padleklubb',
+    description: 'Stabil dobbelkajakk perfekt for turer på Drammenselva. Inkluderer årer og redningsvester.',
+    facilities: ['2 årer', 'Redningsvester', 'Tørrpose'],
+    moreFacilities: 0,
+    capacity: 2,
+    price: 350,
+    priceUnit: 'dag',
+    rating: 4.8,
+    reviewCount: 22,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop'
+  },
+  // EVENT listings
+  {
+    id: '7',
+    name: 'Yoga i parken',
+    type: 'Trening',
+    listingType: 'EVENT' as const,
+    location: 'Bragernes Torg',
+    description: 'Utendørs yoga-klasse for alle nivåer. Ta med egen matte eller lån på stedet.',
+    facilities: ['Instruktør', 'Utlånsmatter', 'Parkering'],
+    moreFacilities: 0,
+    capacity: 30,
     price: 150,
     priceUnit: 'person',
-    rating: 4.4,
-    reviewCount: 42,
+    rating: 4.9,
+    reviewCount: 45,
     available: true,
-    image: 'https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=600&h=400&fit=crop'
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop'
+  },
+  {
+    id: '8',
+    name: 'Keramikk-kurs for nybegynnere',
+    type: 'Kurs',
+    listingType: 'EVENT' as const,
+    location: 'Drammens Kunstverksted',
+    description: '3-timers introduksjonskurs i dreiing og glasering. Alt materiale inkludert.',
+    facilities: ['Materiale inkl.', 'Forkle', 'Brenning'],
+    moreFacilities: 1,
+    capacity: 8,
+    price: 650,
+    priceUnit: 'person',
+    rating: 4.6,
+    reviewCount: 19,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop'
+  },
+  {
+    id: '9',
+    name: 'Sommerkonsert: Drammens Storband',
+    type: 'Konsert',
+    listingType: 'EVENT' as const,
+    location: 'Union Scene',
+    description: 'Storband-konsert med klassiske jazz-standarder og moderne arrangementer.',
+    facilities: ['Sitteplasser', 'Bar', 'Garderobe'],
+    moreFacilities: 0,
+    capacity: 250,
+    price: 350,
+    priceUnit: 'person',
+    rating: 4.8,
+    reviewCount: 67,
+    available: false,
+    image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop'
+  },
+  // SERVICE listings
+  {
+    id: '10',
+    name: 'Personlig trener - Ole Berg',
+    type: 'PT',
+    listingType: 'SERVICE' as const,
+    location: 'SATS Drammen',
+    description: 'Sertifisert personlig trener med 10 års erfaring. Spesialisert på styrketrening og vektnedgang.',
+    facilities: ['Treningsprogram', 'Kostholdsråd', 'Oppfølging'],
+    moreFacilities: 1,
+    capacity: 1,
+    price: 750,
+    priceUnit: 'time',
+    rating: 4.9,
+    reviewCount: 34,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop'
+  },
+  {
+    id: '11',
+    name: 'Gitarlærer - Lise Haugen',
+    type: 'Musikk',
+    listingType: 'SERVICE' as const,
+    location: 'Drammen Kulturskole',
+    description: 'Gitarundervisning for barn og voksne. Klassisk, akustisk og elektrisk gitar.',
+    facilities: ['Lånegitar', 'Noter inkl.', 'Øvingsrom'],
+    moreFacilities: 0,
+    capacity: 1,
+    price: 450,
+    priceUnit: 'time',
+    rating: 4.7,
+    reviewCount: 28,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&h=400&fit=crop'
+  },
+  {
+    id: '12',
+    name: 'Fotograf - Bryllup & Events',
+    type: 'Foto',
+    listingType: 'SERVICE' as const,
+    location: 'Drammen og omegn',
+    description: 'Profesjonell fotograf for bryllup, konfirmasjon og bedriftsarrangementer.',
+    facilities: ['Redigering inkl.', 'Digitale filer', 'Album'],
+    moreFacilities: 2,
+    capacity: 1,
+    price: 8500,
+    priceUnit: 'dag',
+    rating: 4.8,
+    reviewCount: 52,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&h=400&fit=crop'
+  },
+  // VEHICLE listings
+  {
+    id: '13',
+    name: 'Elektrisk varebil',
+    type: 'Varebil',
+    listingType: 'VEHICLE' as const,
+    location: 'Drammen sentrum',
+    description: 'Miljøvennlig elektrisk varebil for flytting og transport. Rekkevidde 250 km.',
+    facilities: ['GPS', 'Lastestropper', 'Tralle'],
+    moreFacilities: 1,
+    capacity: 2,
+    price: 890,
+    priceUnit: 'dag',
+    rating: 4.6,
+    reviewCount: 31,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop'
+  },
+  {
+    id: '14',
+    name: 'Elsykkel - Bysykkel',
+    type: 'Sykkel',
+    listingType: 'VEHICLE' as const,
+    location: 'Drammen Stasjon',
+    description: 'Komfortabel elsykkel for bytur eller lengre turer langs Drammenselva.',
+    facilities: ['Hjelm inkl.', 'Lås', 'Kurv'],
+    moreFacilities: 0,
+    capacity: 1,
+    price: 250,
+    priceUnit: 'dag',
+    rating: 4.5,
+    reviewCount: 18,
+    available: true,
+    image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&h=400&fit=crop'
+  },
+  {
+    id: '15',
+    name: 'Minibuss 9-seter',
+    type: 'Minibuss',
+    listingType: 'VEHICLE' as const,
+    location: 'Gulskogen',
+    description: 'Romslig minibuss perfekt for familieturer, lagsport eller gruppereiser.',
+    facilities: ['Aircondition', 'Bluetooth', 'Bagasjerom'],
+    moreFacilities: 2,
+    capacity: 9,
+    price: 1400,
+    priceUnit: 'dag',
+    rating: 4.7,
+    reviewCount: 14,
+    available: false,
+    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop'
   },
 ];
 
@@ -394,10 +552,10 @@ export function App() {
           </DrawerSection>
         </Drawer>
 
-        <ContentLayout>
-          <main id="main" style={{ padding: '24px' }}>
+        <ContentLayout maxWidth="1440px" padding="0 var(--ds-spacing-8)">
+          <main id="main" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
             <ListingToolbar
-              count={venues.length}
+              count={listings.length}
               countLabel="listings"
               activeFilterCount={activeFilterCount}
               onFilterClick={() => setIsFilterOpen(true)}
@@ -408,24 +566,24 @@ export function App() {
             />
 
             <ListingGrid columns={3} gap={32}>
-              {venues.map((venue) => (
+              {listings.map((listing) => (
                 <ListingCard
-                  key={venue.id}
-                  id={venue.id}
-                  name={venue.name}
-                  type={venue.type}
-                  listingType={venue.listingType}
-                  location={venue.location}
-                  description={venue.description}
-                  image={venue.image}
-                  facilities={venue.facilities}
-                  moreFacilities={venue.moreFacilities}
-                  capacity={venue.capacity}
-                  price={venue.price}
-                  priceUnit={venue.priceUnit}
-                  // rating={venue.rating} // TODO: Enable when rating system is ready
-                  // reviewCount={venue.reviewCount}
-                  available={venue.available}
+                  key={listing.id}
+                  id={listing.id}
+                  name={listing.name}
+                  type={listing.type}
+                  listingType={listing.listingType}
+                  location={listing.location}
+                  description={listing.description}
+                  image={listing.image}
+                  facilities={listing.facilities}
+                  moreFacilities={listing.moreFacilities}
+                  capacity={listing.capacity}
+                  price={listing.price}
+                  priceUnit={listing.priceUnit}
+                  // rating={listing.rating} // TODO: Enable when rating system is ready
+                  // reviewCount={listing.reviewCount}
+                  available={listing.available}
                   showRating={false}
                   showPrice={false}
                   showListingType={true}
