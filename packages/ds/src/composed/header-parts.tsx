@@ -772,7 +772,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: showDropdown ? 'var(--ds-color-neutral-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
+              backgroundColor: showDropdown ? 'var(--ds-color-neutral-surface-default)' : 'rgba(0, 0, 0, 0.05)',
               border: showDropdown ? '1px solid var(--ds-color-neutral-border-default)' : '1px solid transparent',
               borderBottom: showDropdown ? '1px solid var(--ds-color-neutral-border-subtle)' : '1px solid transparent',
               borderRadius: showDropdown ? 'var(--ds-border-radius-lg) var(--ds-border-radius-lg) 0 0' : 'var(--ds-border-radius-lg)',
