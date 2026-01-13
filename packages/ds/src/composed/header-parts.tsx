@@ -82,12 +82,18 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
             />
           )}
           {(title || subtitle) && (
-            <div className={textClassName} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+            <div className={textClassName} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: '0',
+              marginTop: '2px'
+            }}>
               {title && (
                 <span style={{
                   fontWeight: 'var(--ds-font-weight-bold)' as unknown as number,
                   fontSize: 'var(--ds-font-size-xl)',
-                  lineHeight: 'var(--ds-line-height-tight)',
+                  lineHeight: '1.1',
                   letterSpacing: 'var(--ds-letter-spacing-normal)',
                   color: 'var(--ds-color-neutral-text-default)'
                 }}>
@@ -97,9 +103,10 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
               {subtitle && (
                 <span style={{
                   fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
-                  fontSize: 'var(--ds-font-size-md)',
-                  lineHeight: 'var(--ds-line-height-snug)',
-                  opacity: 0.55,
+                  fontSize: 'var(--ds-font-size-sm)',
+                  lineHeight: '1.1',
+                  marginTop: '1px',
+                  opacity: 0.6,
                   letterSpacing: 'var(--ds-letter-spacing-wide)',
                   textTransform: 'uppercase',
                   color: 'var(--ds-color-neutral-text-subtle)'

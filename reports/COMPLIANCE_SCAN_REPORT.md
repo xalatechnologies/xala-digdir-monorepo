@@ -11,16 +11,16 @@
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
 | Hardcoded Colors | 0 | high | ✅ Clean |
-| Hardcoded Spacing | 9 | high | ❌ Needs Fix |
+| Hardcoded Spacing | 1 | high | ⚠️ Minor |
 | Hardcoded Typography | 0 | medium | ✅ Clean |
 | Hardcoded Border Radius | 0 | medium | ✅ Clean |
 | Raw HTML Layouts in Apps | 3 | medium | ⚠️ Minor |
-| Hardcoded Dimensions | 8 | low | ❌ Needs Fix |
+| Hardcoded Dimensions | 6 | low | ❌ Needs Fix |
 | Hardcoded Breakpoints | 0 | low | ✅ Clean |
 | SVG Hardcoded Colors | 2 | low | ⚠️ Minor |
 
-**Total Issues:** 22
-**High Severity:** 9
+**Total Issues:** 12
+**High Severity:** 1
 
 ---
 
@@ -38,7 +38,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 9
+**Issues Found:** 1
 
 ### Findings by File
 
@@ -47,24 +47,6 @@
 | Line | Issue | Content |
 |------|-------|--------|
 | 231 | Pixel spacing | `border-top: 1px solid var(--ds-color-neutral-borde...` |
-
-#### `apps/web/src/App.js`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 420 | Pixel spacing | `padding-left: 24px !important;...` |
-| 421 | Pixel spacing | `padding-right: 24px !important;...` |
-| 426 | Pixel spacing | `padding-left: 24px !important;...` |
-| 427 | Pixel spacing | `padding-right: 24px !important;...` |
-
-#### `apps/web/src/App.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 467 | Pixel spacing | `padding-left: 24px !important;...` |
-| 468 | Pixel spacing | `padding-right: 24px !important;...` |
-| 473 | Pixel spacing | `padding-left: 24px !important;...` |
-| 474 | Pixel spacing | `padding-right: 24px !important;...` |
 
 ---
 
@@ -110,7 +92,7 @@
 
 **Severity:** LOW
 **Recommendation:** Consider using tokens or calc() with tokens
-**Issues Found:** 8
+**Issues Found:** 6
 
 ### Findings by File
 
@@ -127,13 +109,6 @@
 | 129 | Dimension in px | `@media (max-width: 599px) {...` |
 | 159 | Dimension in px | `maxWidth: '520px',...` |
 | 160 | Dimension in px | `minWidth: '80px'...` |
-
-#### `apps/web/src/App.js`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 414 | Dimension in px | `@media (max-width: 599px) {...` |
-| 441 | Dimension in px | `@media (min-width: 600px) {...` |
 
 #### `apps/web/src/App.tsx`
 
@@ -174,13 +149,13 @@
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 9 hardcoded spacing issues
+- [ ] Fix 1 hardcoded spacing issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 3 raw html layouts in apps issues
 
 ### Priority 3 (Low Severity / Acceptable)
-- [ ] Review 8 hardcoded dimensions issues
+- [ ] Review 6 hardcoded dimensions issues
 - [ ] Review 2 svg hardcoded colors issues
 
 ---

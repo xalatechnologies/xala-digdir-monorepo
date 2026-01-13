@@ -462,16 +462,16 @@ export function App() {
             .header-search-desktop { display: none !important; }
             .mobile-search-wrapper { display: block !important; }
 
-            /* Mobile padding for header - 24px on each side */
+            /* Mobile padding for header */
             header .ds-container {
-              padding-left: 24px !important;
-              padding-right: 24px !important;
+              padding-left: var(--ds-spacing-6) !important;
+              padding-right: var(--ds-spacing-6) !important;
             }
 
-            /* Mobile padding for main content - 24px on each side */
+            /* Mobile padding for main content */
             .main-content-layout {
-              padding-left: 24px !important;
-              padding-right: 24px !important;
+              padding-left: var(--ds-spacing-6) !important;
+              padding-right: var(--ds-spacing-6) !important;
             }
 
             /* Ensure all child elements respect the container padding */

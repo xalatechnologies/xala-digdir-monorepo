@@ -70,6 +70,50 @@
   }
 
   /* ==========================================================================
+   * LIGHTER SURFACE COLORS
+   *
+   * Override neutral-surface-hover to be lighter for card footers,
+   * search bars, and input backgrounds.
+   * ========================================================================== */
+
+  :root, [data-color-scheme="light"] {
+    /* Lighter surface for resting backgrounds (card footer, search bar) */
+    --ds-color-neutral-surface-subtle: #f5f6f8;
+    /* Override hover to be lighter - using previous tinted value */
+    --ds-color-neutral-surface-hover: #eceef2;
+  }
+
+  [data-color-scheme="dark"] {
+    --ds-color-neutral-surface-subtle: rgba(255, 255, 255, 0.04);
+    --ds-color-neutral-surface-hover: rgba(255, 255, 255, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --ds-color-neutral-surface-subtle: rgba(255, 255, 255, 0.04);
+      --ds-color-neutral-surface-hover: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  /* ==========================================================================
+   * BUTTON BORDER RADIUS
+   *
+   * Add slightly more rounded corners to buttons (+5px from default)
+   * ========================================================================== */
+
+  /* Apply rounded corners only to standalone buttons, not toggle groups */
+  .ds-button {
+    border-radius: calc(var(--ds-border-radius-md) + 5px);
+  }
+
+  /* Reset radius for toggle group buttons to preserve their connected appearance */
+  .ds-toggle-group .ds-button,
+  .ds-togglegroup .ds-button,
+  [class*="toggle-group"] .ds-button {
+    border-radius: var(--ds-border-radius-md) !important;
+  }
+
+  /* ==========================================================================
    * DARK MODE PRIMARY COLOR SWITCH
    *
    * Digilist brand requirement: Primary switches from Blue to Aqua in dark mode.
@@ -298,6 +342,27 @@
 @media (min-width: 1024px) {
   .ds-grid-responsive {
     --_grid-columns: var(--_grid-lg, 3);
+  }
+}
+
+/* ==========================================================================
+ * LISTING GRID - STRICT RESPONSIVE COLUMNS
+ * 3 columns (large 1024px+), 2 columns (tablet 640-1023px), 1 column (mobile <640px)
+ * ========================================================================== */
+
+.listing-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .listing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .listing-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
