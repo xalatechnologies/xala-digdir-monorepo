@@ -73,7 +73,7 @@ export function ListingToolbar({
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         {onFilterClick && (
-          <Button variant="secondary" onClick={onFilterClick} style={{ paddingInline: '1.25rem' }}>
+          <Button variant="secondary" onClick={onFilterClick}>
             <FilterIcon size={18} aria-hidden />
             Filtre
             {activeFilterCount > 0 && (

@@ -482,6 +482,11 @@ export function App() {
               padding-left: 0 !important;
               padding-right: 0 !important;
             }
+
+            /* Hide view toggle on mobile - only show grid view */
+            .listing-toolbar .ds-toggle-group {
+              display: none !important;
+            }
           }
           @media (min-width: 600px) {
             .mobile-search-wrapper { display: none !important; }
@@ -643,7 +648,8 @@ export function App() {
               onFilterClick={() => setIsFilterOpen(true)}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              showViewToggle={false}
+              showViewToggle={true}
+              className="listing-toolbar"
             />
 
             {viewMode === 'grid' ? (

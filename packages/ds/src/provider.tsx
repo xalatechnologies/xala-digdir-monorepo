@@ -98,7 +98,7 @@ export function DesignsystemetProvider({
   children,
   theme = DEFAULT_THEME,
   colorScheme = 'auto',
-  size = 'auto',
+  size = 'md',
   typography = 'primary',
   rootAs: Root = 'div',
 }: DesignsystemetProviderProps) {

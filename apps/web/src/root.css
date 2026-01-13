@@ -2,11 +2,12 @@
    - font-feature-settings recommended by Designsystemet
    - CSS reset for body margins
    - no custom component styling
+
+   IMPORTANT: Do NOT use `padding: 0` on * selector as it breaks
+   Digdir design system component padding (buttons, inputs, etc.)
 */
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html, body, #root {

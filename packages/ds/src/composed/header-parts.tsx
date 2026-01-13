@@ -1438,6 +1438,7 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   const colorProps = color !== 'neutral' ? { 'data-color': color } : {};
 
   // Logged in state - show user info with Button
+  // Uses standard Digdir Button - no custom styles needed
   if (isLoggedIn && userName) {
     return (
       <Button
@@ -1445,7 +1446,6 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
         {...colorProps}
         onClick={onLogout}
         aria-label={`Logget inn som ${userName}. Klikk for å logge ut.`}
-        style={{ paddingInline: '1.25rem' }}
       >
         {avatarUrl ? (
           <img
@@ -1467,13 +1467,13 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   }
 
   // Logged out state - show login button
+  // Uses standard Digdir Button - no custom styles needed
   return (
     <Button
       variant="primary"
       {...colorProps}
       onClick={onLogin}
       aria-label={loginText}
-      style={{ paddingInline: '1.25rem' }}
     >
       <UserIcon size={20} aria-hidden />
       {loginText}
