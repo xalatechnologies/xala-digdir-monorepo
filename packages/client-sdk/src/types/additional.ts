@@ -47,7 +47,6 @@ export interface SeasonalLeaseQueryParams extends BaseQueryParams {
   status?: SeasonalLeaseStatus;
   organizationId?: string;
   listingId?: string;
-  [key: string]: string | number | boolean | undefined;
 }
 
 // =============================================================================
@@ -62,9 +61,6 @@ export interface Conversation extends TenantEntity {
   unreadCount: number;
   lastMessageAt?: string;
   lastMessagePreview?: string;
-  // Joined fields
-  userName?: string;
-  lastMessage?: string;
 }
 
 export interface Message {
@@ -77,8 +73,6 @@ export interface Message {
   attachments?: string[];
   readAt?: string;
   createdAt: string;
-  // Alias field for sender
-  sender?: string;
 }
 
 export interface CreateConversationDTO {
@@ -96,7 +90,6 @@ export interface SendMessageDTO {
 export interface ConversationQueryParams extends BaseQueryParams {
   status?: ConversationStatus;
   unreadOnly?: boolean;
-  [key: string]: string | number | boolean | undefined;
 }
 
 // =============================================================================
@@ -111,9 +104,6 @@ export interface DashboardKPIs {
   monthRevenue: number;
   previousMonthRevenue: number;
   revenueGrowth: number;
-  // Additional fields for reports
-  periodRevenue?: number;
-  revenueChange?: number;
   topListings: Array<{
     id: string;
     name: string;
@@ -152,26 +142,11 @@ export interface BookingReport {
 
 export interface ReportQueryParams {
   period?: ReportPeriod;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   listingId?: string;
   organizationId?: string;
-  [key: string]: string | number | boolean | undefined;
 }
-
-export interface BookingStats {
-  totalBookings: number;
-  confirmedBookings: number;
-  pendingBookings: number;
-  cancelledBookings: number;
-  totalRevenue: number;
-  averageBookingValue: number;
-  averageDuration?: number;
-  peakHours: Array<{ hour: number; count: number }>;
-  peakDays: Array<{ day: string; count: number }>;
-}
-
-export type ExportFormat = 'csv' | 'xlsx' | 'pdf';
 
 // =============================================================================
 // Audit

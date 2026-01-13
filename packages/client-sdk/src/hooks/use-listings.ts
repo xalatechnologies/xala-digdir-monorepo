@@ -6,14 +6,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 import { listingService, publicListingService } from '../services/listing.service';
-import type {
-  ListingQueryParams,
-  CreateListingDTO,
+import type { 
+  ListingQueryParams, 
+  CreateListingDTO, 
   UpdateListingDTO,
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
-import { transformListing, transformListings } from '../types/listing';
 
 // ============================================================================
 // Authenticated Listing Hooks
@@ -30,46 +29,12 @@ export function useListings(params?: ListingQueryParams) {
 }
 
 /**
- * Get paginated listings transformed to UI format
- */
-export function useUiListings(params?: ListingQueryParams) {
-  return useQuery({
-    queryKey: [...queryKeys.listings.list(params), 'ui'],
-    queryFn: async () => {
-      const response = await listingService.getAll(params);
-      // Ensure we have valid data array
-      const listings = Array.isArray(response?.data) ? response.data : [];
-      return {
-        ...response,
-        data: transformListings(listings),
-      };
-    },
-  });
-}
-
-/**
  * Get single listing by ID
  */
 export function useListing(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: queryKeys.listings.detail(id),
     queryFn: () => listingService.getById(id),
-    enabled: !!id && (options?.enabled ?? true),
-  });
-}
-
-/**
- * Get single listing by ID transformed to UI format
- */
-export function useUiListing(id: string, options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: [...queryKeys.listings.detail(id), 'ui'],
-    queryFn: async () => {
-      const response = await listingService.getById(id);
-      return {
-        data: transformListing(response.data),
-      };
-    },
     enabled: !!id && (options?.enabled ?? true),
   });
 }
@@ -171,7 +136,7 @@ export function usePublishListing() {
  */
 export function useArchiveListing() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
     mutationFn: (id: string) => listingService.archive(id),
     onSuccess: (_, id) => {
@@ -182,75 +147,44 @@ export function useArchiveListing() {
 }
 
 /**
- * Upload media files to listing
- */
-export function useUploadListingMedia() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, files }: { id: string; files: File[] }) =>
-      listingService.uploadMedia(id, files),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
-    },
-  });
-}
-
-/**
- * Delete media from listing
- */
-export function useDeleteListingMedia() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
-      listingService.removeMedia(listingId, mediaId),
-    onSuccess: (_, { listingId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
-    },
-  });
-}
-
-/**
- * Reorder listing media
- */
-export function useReorderListingMedia() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ listingId, mediaIds }: { listingId: string; mediaIds: string[] }) =>
-      listingService.reorderMedia(listingId, mediaIds),
-    onSuccess: (_, { listingId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
-    },
-  });
-}
-
-/**
- * Set cover image for listing
- */
-export function useSetListingCover() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
-      listingService.setCoverImage(listingId, mediaId),
-    onSuccess: (_, { listingId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
-    },
-  });
-}
-
-/**
- * Duplicate a listing
+ * Duplicate listing mutation
  */
 export function useDuplicateListing() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: ({ id, name }: { id: string; name?: string }) =>
-      listingService.duplicate(id, name),
+    mutationFn: (id: string) => listingService.duplicate(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Unpublish listing mutation
+ */
+export function useUnpublishListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => listingService.unpublish(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Restore archived listing mutation
+ */
+export function useRestoreListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => listingService.restore(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
@@ -271,44 +205,12 @@ export function usePublicListings(params?: PublicListingParams) {
 }
 
 /**
- * Get public listings transformed to UI format
- */
-export function usePublicUiListings(params?: PublicListingParams) {
-  return useQuery({
-    queryKey: [...queryKeys.public.listings(params), 'ui'],
-    queryFn: async () => {
-      const response = await publicListingService.getListings(params);
-      return {
-        ...response,
-        data: transformListings(response.data),
-      };
-    },
-  });
-}
-
-/**
  * Get public listing by ID
  */
 export function usePublicListing(id: string) {
   return useQuery({
     queryKey: queryKeys.public.listing(id),
     queryFn: () => publicListingService.getListing(id),
-    enabled: !!id,
-  });
-}
-
-/**
- * Get public listing by ID transformed to UI format
- */
-export function usePublicUiListing(id: string) {
-  return useQuery({
-    queryKey: [...queryKeys.public.listing(id), 'ui'],
-    queryFn: async () => {
-      const response = await publicListingService.getListing(id);
-      return {
-        data: transformListing(response.data),
-      };
-    },
     enabled: !!id,
   });
 }

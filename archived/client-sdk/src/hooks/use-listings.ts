@@ -1,0 +1,369 @@
+/**
+ * Listing Hooks
+ * Single Responsibility: React Query hooks for listings
+ */
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from './query-keys';
+import { listingService, publicListingService } from '../services/listing.service';
+import type {
+  ListingQueryParams,
+  CreateListingDTO,
+  UpdateListingDTO,
+  AvailabilityQueryParams,
+  PublicListingParams
+} from '../types/listing';
+import { transformListing, transformListings } from '../types/listing';
+
+// ============================================================================
+// Authenticated Listing Hooks
+// ============================================================================
+
+/**
+ * Get paginated listings
+ */
+export function useListings(params?: ListingQueryParams) {
+  return useQuery({
+    queryKey: queryKeys.listings.list(params),
+    queryFn: () => listingService.getAll(params),
+  });
+}
+
+/**
+ * Get paginated listings transformed to UI format
+ */
+export function useUiListings(params?: ListingQueryParams) {
+  return useQuery({
+    queryKey: [...queryKeys.listings.list(params), 'ui'],
+    queryFn: async () => {
+      const response = await listingService.getAll(params);
+      // Ensure we have valid data array
+      const listings = Array.isArray(response?.data) ? response.data : [];
+      return {
+        ...response,
+        data: transformListings(listings),
+      };
+    },
+  });
+}
+
+/**
+ * Get single listing by ID
+ */
+export function useListing(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.listings.detail(id),
+    queryFn: () => listingService.getById(id),
+    enabled: !!id && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get single listing by ID transformed to UI format
+ */
+export function useUiListing(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: [...queryKeys.listings.detail(id), 'ui'],
+    queryFn: async () => {
+      const response = await listingService.getById(id);
+      return {
+        data: transformListing(response.data),
+      };
+    },
+    enabled: !!id && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get listing by slug
+ */
+export function useListingBySlug(slug: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.listings.slug(slug),
+    queryFn: () => listingService.getBySlug(slug),
+    enabled: !!slug && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get listing availability
+ */
+export function useListingAvailability(id: string, params: AvailabilityQueryParams) {
+  return useQuery({
+    queryKey: queryKeys.listings.availability(id, params),
+    queryFn: () => listingService.getAvailability(id, params),
+    enabled: !!id && !!params.startDate,
+  });
+}
+
+/**
+ * Get listing statistics
+ */
+export function useListingStats(id: string) {
+  return useQuery({
+    queryKey: queryKeys.listings.stats(id),
+    queryFn: () => listingService.getStats(id),
+    enabled: !!id,
+  });
+}
+
+/**
+ * Create listing mutation
+ */
+export function useCreateListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: CreateListingDTO) => listingService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Update listing mutation
+ */
+export function useUpdateListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateListingDTO }) => 
+      listingService.update(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Delete listing mutation
+ */
+export function useDeleteListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => listingService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.all });
+    },
+  });
+}
+
+/**
+ * Publish listing mutation
+ */
+export function usePublishListing() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => listingService.publish(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Archive listing mutation
+ */
+export function useArchiveListing() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => listingService.archive(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Upload media files to listing
+ */
+export function useUploadListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, files }: { id: string; files: File[] }) =>
+      listingService.uploadMedia(id, files),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+    },
+  });
+}
+
+/**
+ * Delete media from listing
+ */
+export function useDeleteListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
+      listingService.removeMedia(listingId, mediaId),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Reorder listing media
+ */
+export function useReorderListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaIds }: { listingId: string; mediaIds: string[] }) =>
+      listingService.reorderMedia(listingId, mediaIds),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Set cover image for listing
+ */
+export function useSetListingCover() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
+      listingService.setCoverImage(listingId, mediaId),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Duplicate a listing
+ */
+export function useDuplicateListing() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name?: string }) =>
+      listingService.duplicate(id, name),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+// ============================================================================
+// Public Listing Hooks (No Auth)
+// ============================================================================
+
+/**
+ * Get public listings
+ */
+export function usePublicListings(params?: PublicListingParams) {
+  return useQuery({
+    queryKey: queryKeys.public.listings(params),
+    queryFn: () => publicListingService.getListings(params),
+  });
+}
+
+/**
+ * Get public listings transformed to UI format
+ */
+export function usePublicUiListings(params?: PublicListingParams) {
+  return useQuery({
+    queryKey: [...queryKeys.public.listings(params), 'ui'],
+    queryFn: async () => {
+      const response = await publicListingService.getListings(params);
+      return {
+        ...response,
+        data: transformListings(response.data),
+      };
+    },
+  });
+}
+
+/**
+ * Get public listing by ID
+ */
+export function usePublicListing(id: string) {
+  return useQuery({
+    queryKey: queryKeys.public.listing(id),
+    queryFn: () => publicListingService.getListing(id),
+    enabled: !!id,
+  });
+}
+
+/**
+ * Get public listing by ID transformed to UI format
+ */
+export function usePublicUiListing(id: string) {
+  return useQuery({
+    queryKey: [...queryKeys.public.listing(id), 'ui'],
+    queryFn: async () => {
+      const response = await publicListingService.getListing(id);
+      return {
+        data: transformListing(response.data),
+      };
+    },
+    enabled: !!id,
+  });
+}
+
+/**
+ * Get public availability
+ */
+export function usePublicAvailability(listingId: string, params: AvailabilityQueryParams) {
+  return useQuery({
+    queryKey: queryKeys.public.availability(listingId, params),
+    queryFn: () => publicListingService.getAvailability(listingId, params),
+    enabled: !!listingId && !!params.startDate,
+  });
+}
+
+/**
+ * Get public categories
+ */
+export function usePublicCategories() {
+  return useQuery({
+    queryKey: queryKeys.public.categories(),
+    queryFn: () => publicListingService.getCategories(),
+    staleTime: 60 * 60 * 1000, // 1 hour
+  });
+}
+
+/**
+ * Get cities with listings
+ */
+export function usePublicCities() {
+  return useQuery({
+    queryKey: queryKeys.public.cities(),
+    queryFn: () => publicListingService.getCities(),
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
+/**
+ * Get municipalities
+ */
+export function usePublicMunicipalities() {
+  return useQuery({
+    queryKey: queryKeys.public.municipalities(),
+    queryFn: () => publicListingService.getMunicipalities(),
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
+/**
+ * Get featured listings
+ */
+export function useFeaturedListings() {
+  return useQuery({
+    queryKey: queryKeys.public.featured(),
+    queryFn: () => publicListingService.getFeatured(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}

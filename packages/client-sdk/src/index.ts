@@ -1,10 +1,10 @@
 /**
  * @digilist/client-sdk
- * Type-safe SDK for the Digilist Backoffice API
+ * Enterprise-grade type-safe SDK for the Digilist Backoffice API
  * 
  * @example
  * ```typescript
- * import { initializeClient, listingService, useListings } from '@digilist/client-sdk';
+ * import { initializeClient, listingService, useListings, realtimeClient } from '@digilist/client-sdk';
  * 
  * // Initialize client
  * initializeClient({
@@ -20,6 +20,10 @@
  *   const { data, isLoading } = useListings();
  *   ...
  * }
+ * 
+ * // Real-time events via WebSocket
+ * realtimeClient.connect({ url: 'wss://api.digilist.no/ws/audit' });
+ * realtimeClient.onAudit((event) => console.log('Audit:', event));
  * ```
  */
 
@@ -35,7 +39,6 @@ export {
   isClientInitialized,
   createClient,
   resetClient,
-  isUsingMockData,
 } from './core/client-factory';
 
 export type {
@@ -52,14 +55,22 @@ export { FetchHttpClient } from './core/fetch-client';
 // Types - All type definitions
 export * from './types';
 
-// Services - Domain services
+// Services - Domain services (24 services)
 export * from './services';
 
 // Hooks - React Query hooks (requires React and @tanstack/react-query)
 export * from './hooks';
 
-// Utils - Formatting utilities (Norwegian locale)
-export * from './utils';
+// Realtime - WebSocket client for real-time events
+export {
+  realtimeClient,
+  createAuditWebSocketUrl,
+  createTenantWebSocketUrl,
+} from './realtime';
+export type {
+  RealtimeEventType,
+  RealtimeEvent,
+  RealtimeEventHandler,
+  RealtimeClientConfig,
+} from './realtime';
 
-// Realtime - WebSocket/polling event system
-export * from './realtime';

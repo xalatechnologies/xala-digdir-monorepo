@@ -1,6 +1,7 @@
 /**
  * Services Index
  * Exports all service instances and classes
+ * Types are exported from ./types folder
  */
 
 // Base service for extending
@@ -34,14 +35,14 @@ export {
 
 // Integrations
 export {
-  SettingsService,
+  SettingsService as IntegrationSettingsService,
   RcoService,
   VismaService,
   BrregService,
   NifService,
   VippsService,
   CalendarSyncService,
-  settingsService,
+  settingsService as integrationSettingsService,
   rcoService,
   vismaService,
   brregService,
@@ -50,17 +51,43 @@ export {
   calendarSyncService
 } from './integration.service';
 
-// Reports
-export { reportsService } from './reports.service';
+// ============================================================================
+// Enterprise Services (service instances only - types from ./types)
+// ============================================================================
 
-// Seasonal Leases
-export { seasonalLeaseService } from './seasonal-lease.service';
+// Audit
+export { auditService } from './audit.service';
+
+// Allocations (standalone)
+export { allocationService as standaloneAllocationService } from './allocation.service';
 
 // Conversations
 export { conversationService } from './conversation.service';
 
-// Audit
-export { AuditService, auditService } from './audit.service';
+// Notifications
+export { notificationService } from './notification.service';
 
-// Blocks (Calendar blocking)
-export { BlockService, blockService } from './block.service';
+// Settings
+export { settingsService } from './settings.service';
+
+// Reports
+export { reportsService } from './reports.service';
+
+// Tenant
+export { tenantService } from './tenant.service';
+
+// Dashboard
+export { dashboardService } from './dashboard.service';
+
+// Seasonal Lease
+export { seasonalLeaseService } from './seasonal-lease.service';
+
+// Discount Codes
+export { discountCodeService } from './discount-code.service';
+
+// Widgets
+export { widgetService } from './widget.service';
+
+// Monitoring
+export { monitoringService } from './monitoring.service';
+

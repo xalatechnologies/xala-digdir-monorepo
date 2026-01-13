@@ -1,105 +1,99 @@
 /**
  * Audit Service
- * Single Responsibility: Handle all audit-related API operations
+ * Provides access to audit logs and real-time audit events
  */
+import { getClient } from '../core/client-factory';
 
-import { BaseService } from './base.service';
-import type { AuditEvent, AuditQueryParams } from '../types/additional';
-import type { PaginatedResponse, SingleResponse } from '../types/enums';
+export interface AuditLogEntry {
+  id: string;
+  tenantId: string | null;
+  userId: string | null;
+  action: string;
+  resource: string;
+  resourceId: string | null;
+  severity: 'debug' | 'info' | 'warning' | 'error' | 'critical';
+  metadata: Record<string, unknown>;
+  ipAddress: string | null;
+  userAgent: string | null;
+  timestamp: string;
+}
 
-export class AuditService extends BaseService {
-  constructor() {
-    super('/api/audit');
-  }
+export interface AuditQueryParams {
+  resource?: string;
+  action?: string;
+  userId?: string;
+  resourceId?: string;
+  severity?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface AuditStats {
+  total: number;
+  last24Hours: number;
+  byResource: Record<string, number>;
+  byAction: Record<string, number>;
+  bySeverity: Record<string, number>;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+class AuditService {
+  private basePath = '/api/audit';
 
   /**
-   * Get paginated audit events
+   * Get audit logs with optional filtering
    */
-  async getAll(params?: AuditQueryParams): Promise<PaginatedResponse<AuditEvent>> {
-    return this.client.get(this.buildPath(), {
-      params: params as Record<string, string | number | boolean>
+  async getAll(params: AuditQueryParams = {}): Promise<PaginatedResponse<AuditLogEntry>> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) queryParams.set(key, String(value));
     });
+    
+    const url = queryParams.toString() 
+      ? `${this.basePath}?${queryParams.toString()}`
+      : this.basePath;
+    
+    return getClient().get<PaginatedResponse<AuditLogEntry>>(url);
   }
 
   /**
    * Get single audit event by ID
    */
-  async getById(id: string): Promise<SingleResponse<AuditEvent>> {
-    return this.client.get(this.buildPath(`/${id}`));
+  async getById(id: string): Promise<{ data: AuditLogEntry }> {
+    return getClient().get<{ data: AuditLogEntry }>(`${this.basePath}/${id}`);
   }
 
   /**
-   * Get audit events for a specific resource
+   * Get audit statistics for the last 24 hours
    */
-  async getByResource(
-    resource: string,
-    resourceId: string,
-    params?: Omit<AuditQueryParams, 'resource' | 'resourceId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.client.get(this.buildPath(), {
-      params: {
-        resource,
-        resourceId,
-        ...params,
-      } as Record<string, string | number | boolean>,
-    });
+  async getStats(): Promise<{ data: AuditStats }> {
+    return getClient().get<{ data: AuditStats }>(`${this.basePath}/stats`);
   }
 
   /**
-   * Get audit events for a listing
+   * Get audit logs for a specific resource
    */
-  async getListingAudit(
-    listingId: string,
-    params?: Omit<AuditQueryParams, 'resource' | 'resourceId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.getByResource('listing', listingId, params);
+  async getByResource(resource: string, params: Omit<AuditQueryParams, 'resource'> = {}): Promise<PaginatedResponse<AuditLogEntry>> {
+    return this.getAll({ ...params, resource });
   }
 
   /**
-   * Get audit events for a booking
+   * Get audit logs for a specific user
    */
-  async getBookingAudit(
-    bookingId: string,
-    params?: Omit<AuditQueryParams, 'resource' | 'resourceId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.getByResource('booking', bookingId, params);
-  }
-
-  /**
-   * Get audit events for an organization
-   */
-  async getOrganizationAudit(
-    organizationId: string,
-    params?: Omit<AuditQueryParams, 'resource' | 'resourceId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.getByResource('organization', organizationId, params);
-  }
-
-  /**
-   * Get audit events for a user
-   */
-  async getUserAudit(
-    userId: string,
-    params?: Omit<AuditQueryParams, 'resource' | 'resourceId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.getByResource('user', userId, params);
-  }
-
-  /**
-   * Get audit events by user who performed the action
-   */
-  async getByActor(
-    actorUserId: string,
-    params?: Omit<AuditQueryParams, 'userId'>
-  ): Promise<PaginatedResponse<AuditEvent>> {
-    return this.client.get(this.buildPath(), {
-      params: {
-        userId: actorUserId,
-        ...params,
-      } as Record<string, string | number | boolean>,
-    });
+  async getByUser(userId: string, params: Omit<AuditQueryParams, 'userId'> = {}): Promise<PaginatedResponse<AuditLogEntry>> {
+    return this.getAll({ ...params, userId });
   }
 }
 
-// Singleton instance
 export const auditService = new AuditService();

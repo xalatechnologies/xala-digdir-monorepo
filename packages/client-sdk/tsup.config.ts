@@ -7,7 +7,7 @@ export default defineConfig({
     'types/index': 'src/types/index.ts',
   },
   format: ['cjs', 'esm'],
-  dts: false, // Using tsc for declarations due to composite mode
+  dts: true,
   splitting: false,
   sourcemap: true,
   clean: true,

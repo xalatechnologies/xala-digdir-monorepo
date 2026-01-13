@@ -4,14 +4,13 @@
  */
 
 import { BaseService } from './base.service';
-import type {
-  Listing,
-  ListingQueryParams,
-  CreateListingDTO,
+import type { 
+  Listing, 
+  ListingQueryParams, 
+  CreateListingDTO, 
   UpdateListingDTO,
   ListingAvailability,
   ListingStats,
-  ListingMedia,
   Category,
   City,
   Municipality,
@@ -99,36 +98,10 @@ export class ListingService extends BaseService {
   }
 
   /**
-   * Add media to listing (by URL)
+   * Add media to listing
    */
   async addMedia(id: string, urls: string[]): Promise<SuccessResponse> {
     return this.client.post(this.buildPath(`/${id}/media`), { urls });
-  }
-
-  /**
-   * Upload media files to listing
-   * @param id - Listing ID
-   * @param files - Array of files to upload
-   * @returns Upload result with media IDs and URLs
-   */
-  async uploadMedia(id: string, files: File[]): Promise<SingleResponse<ListingMedia[]>> {
-    const formData = new FormData();
-    files.forEach((file, index) => {
-      formData.append(`files[${index}]`, file);
-    });
-
-    // Direct fetch for multipart/form-data
-    const response = await fetch(`${this.buildPath(`/${id}/media/upload`)}`, {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
-    }
-
-    return response.json();
   }
 
   /**
@@ -139,30 +112,24 @@ export class ListingService extends BaseService {
   }
 
   /**
-   * Reorder media for listing
-   * @param id - Listing ID
-   * @param mediaIds - Array of media IDs in desired order
+   * Duplicate listing
    */
-  async reorderMedia(id: string, mediaIds: string[]): Promise<SuccessResponse> {
-    return this.client.put(this.buildPath(`/${id}/media/reorder`), { mediaIds });
+  async duplicate(id: string): Promise<SingleResponse<Listing>> {
+    return this.client.post(this.buildPath(`/${id}/duplicate`));
   }
 
   /**
-   * Set cover image for listing
-   * @param id - Listing ID
-   * @param mediaId - Media ID to set as cover
+   * Unpublish listing (set to draft)
    */
-  async setCoverImage(id: string, mediaId: string): Promise<SuccessResponse> {
-    return this.client.put(this.buildPath(`/${id}/media/${mediaId}/cover`));
+  async unpublish(id: string): Promise<SuccessResponse> {
+    return this.client.put(this.buildPath(`/${id}/unpublish`));
   }
 
   /**
-   * Duplicate a listing
-   * @param id - Listing ID to duplicate
-   * @param name - Optional new name for the duplicate
+   * Restore archived listing
    */
-  async duplicate(id: string, name?: string): Promise<SingleResponse<Listing>> {
-    return this.client.post(this.buildPath(`/${id}/duplicate`), name ? { name } : undefined);
+  async restore(id: string): Promise<SuccessResponse> {
+    return this.client.put(this.buildPath(`/${id}/restore`));
   }
 }
 

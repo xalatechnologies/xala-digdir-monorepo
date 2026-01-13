@@ -4,18 +4,17 @@
  */
 
 import { BaseService } from './base.service';
-import type {
-  Booking,
-  BookingQueryParams,
-  CreateBookingDTO,
+import type { 
+  Booking, 
+  BookingQueryParams, 
+  CreateBookingDTO, 
   UpdateBookingDTO,
   CancelBookingDTO,
   BookingPricing,
   CalendarEvent,
   CalendarQueryParams,
   Allocation,
-  CreateAllocationDTO,
-  UpdateAllocationDTO
+  CreateAllocationDTO
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
@@ -158,24 +157,10 @@ export class AllocationService extends BaseService {
   }
 
   /**
-   * Get single allocation by ID
-   */
-  async getById(id: string): Promise<SingleResponse<Allocation>> {
-    return this.client.get(this.buildPath(`/${id}`));
-  }
-
-  /**
    * Create allocation (block time)
    */
   async create(data: CreateAllocationDTO): Promise<SingleResponse<Allocation>> {
     return this.client.post(this.buildPath(), data);
-  }
-
-  /**
-   * Update allocation
-   */
-  async update(id: string, data: UpdateAllocationDTO): Promise<SingleResponse<Allocation>> {
-    return this.client.put(this.buildPath(`/${id}`), data);
   }
 
   /**

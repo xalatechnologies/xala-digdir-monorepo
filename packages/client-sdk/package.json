@@ -1,7 +1,7 @@
 {
   "name": "@digilist/client-sdk",
-  "version": "1.0.0",
-  "description": "Type-safe SDK for the Digilist Backoffice API",
+  "version": "1.1.0",
+  "description": "Enterprise-grade type-safe SDK for the Digilist API with 24 services, WebSocket realtime, and React Query hooks",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -20,6 +20,11 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.mjs",
       "require": "./dist/types/index.js"
+    },
+    "./services": {
+      "types": "./dist/services/index.d.ts",
+      "import": "./dist/services/index.mjs",
+      "require": "./dist/services/index.js"
     }
   },
   "files": [
@@ -27,14 +32,14 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json",
+    "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "npm run build && npm run test"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
@@ -53,6 +58,7 @@
     "@tanstack/react-query": "^5.62.16",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
+    "@vitest/coverage-v8": "^3.0.4",
     "react": "^19.0.0",
     "tsup": "^8.5.1",
     "typescript": "^5.7.3",
@@ -60,17 +66,24 @@
   },
   "keywords": [
     "digilist",
+    "xala",
     "sdk",
     "api-client",
     "react-query",
     "booking",
-    "norwegian"
+    "norwegian",
+    "typescript"
   ],
-  "author": "Xala Technologies",
+  "author": "Xala Technologies <engineering@xalatechnologies.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xalatechnologies/digilist-sdk"
+    "url": "https://github.com/xalatechnologies/xala-sdk.git",
+    "directory": "src/client-sdk"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   },
   "engines": {
     "node": ">=18.0.0"

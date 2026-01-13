@@ -1338,59 +1338,56 @@ export function BookingsPage() {
                               <>
                                 <Button
                                   type="button"
-                                  variant="primary"
+                                  variant="secondary"
                                   data-color="brand1"
-                                  data-size="sm"
+                                  data-size="md"
                                   onClick={() => handleConfirm(booking.id)}
                                   disabled={confirmBooking.isPending}
                                   aria-label="Godkjenn"
                                   title="Godkjenn booking"
                                 >
-                                  <CheckIcon style={{ width: '16px', height: '16px' }} />
+                                  <CheckIcon />
                                 </Button>
                                 <Button
                                   type="button"
-                                  variant="primary"
+                                  variant="secondary"
                                   data-color="danger"
-                                  data-size="sm"
+                                  data-size="md"
                                   onClick={() => handleCancel(booking.id)}
                                   disabled={cancelBooking.isPending}
                                   aria-label="Avvis"
                                   title="Avvis booking"
                                 >
-                                  <CloseIcon style={{ width: '16px', height: '16px' }} />
+                                  <CloseIcon />
                                 </Button>
                               </>
                             )}
-                            <Dropdown.TriggerContext>
-                              <Dropdown.Trigger asChild>
-                                <Button
-                                  type="button"
-                                  variant="primary"
-                                  data-color="neutral"
-                                  data-size="sm"
-                                  aria-label="Flere valg"
-                                >
-                                  <MoreVerticalIcon style={{ width: '14px', height: '14px' }} />
-                                </Button>
-                              </Dropdown.Trigger>
-                              <Dropdown placement="bottom-end">
-                                <Dropdown.List>
+                            <Button
+                              type="button"
+                              variant="primary"
+                              data-size="md"
+                              icon
+                              aria-label="Flere valg"
+                              popovertarget={`dropdown-${booking.id}`}
+                            >
+                              <MoreVerticalIcon />
+                            </Button>
+                            <Dropdown id={`dropdown-${booking.id}`} placement="bottom-end">
+                              <Dropdown.List>
+                                <Dropdown.Item>
+                                  <Dropdown.Button onClick={() => setSelectedBooking(booking)}>
+                                    Se detaljer
+                                  </Dropdown.Button>
+                                </Dropdown.Item>
+                                {booking.status !== 'cancelled' && (
                                   <Dropdown.Item>
-                                    <Dropdown.Button onClick={() => setSelectedBooking(booking)}>
-                                      Se detaljer
+                                    <Dropdown.Button onClick={() => handleCancel(booking.id)}>
+                                      Kanseller
                                     </Dropdown.Button>
                                   </Dropdown.Item>
-                                  {booking.status !== 'cancelled' && (
-                                    <Dropdown.Item>
-                                      <Dropdown.Button onClick={() => handleCancel(booking.id)}>
-                                        Kanseller
-                                      </Dropdown.Button>
-                                    </Dropdown.Item>
-                                  )}
-                                </Dropdown.List>
-                              </Dropdown>
-                            </Dropdown.TriggerContext>
+                                )}
+                              </Dropdown.List>
+                            </Dropdown>
                           </div>
                         </Table.Cell>
                       </Table.Row>
