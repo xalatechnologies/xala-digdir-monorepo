@@ -290,7 +290,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
    */
   ```
 
-### 13. Extension Documentation
+### 14. Extension Documentation
 
 - [ ] **If new tokens created, document them**
   ```css
@@ -304,7 +304,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
 
 ## Final Checklist
 
-### 14. Pre-Commit
+### 15. Pre-Commit
 
 - [ ] **Run full scan**
   ```bash
@@ -321,7 +321,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
   pnpm build
   ```
 
-### 15. Commit
+### 16. Commit
 
 - [ ] **Commit message follows convention**
   ```
