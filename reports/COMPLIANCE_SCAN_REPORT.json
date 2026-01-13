@@ -3,6 +3,34 @@
     "count": 0,
     "files": {}
   },
+  "hardcodedFontFamily": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedLetterSpacing": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedLineHeight": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedBoxShadow": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedZIndex": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedTransition": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedOpacity": {
+    "count": 0,
+    "files": {}
+  },
   "hardcodedSpacing": {
     "count": 0,
     "files": {}
@@ -28,6 +56,30 @@
     "files": {}
   },
   "svgHardcodedColors": {
+    "count": 0,
+    "files": {}
+  },
+  "touchTargetSize": {
+    "count": 0,
+    "files": {}
+  },
+  "missingButtonType": {
+    "count": 0,
+    "files": {}
+  },
+  "inlineImportantOverride": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedGap": {
+    "count": 0,
+    "files": {}
+  },
+  "inconsistentIconSize": {
+    "count": 0,
+    "files": {}
+  },
+  "rawDivWithClickHandler": {
     "count": 0,
     "files": {}
   }

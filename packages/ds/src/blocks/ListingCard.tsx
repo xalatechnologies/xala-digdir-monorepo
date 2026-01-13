@@ -5,7 +5,7 @@
  * Supports images, ratings, pricing, facilities, and action buttons.
  */
 import * as React from 'react';
-import { Tag } from '@digdir/designsystemet-react';
+import { Tag, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 
 /** Card variant for different display contexts */
@@ -288,7 +288,7 @@ export function ListingCard({
                 fontSize: 'var(--ds-font-size-xs)',
                 fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                 textTransform: 'uppercase',
-                letterSpacing: '0.5px',
+                letterSpacing: 'var(--ds-letter-spacing-badge, 0.5px)',
                 backgroundColor: 'var(--ds-color-accent-surface-default)',
                 color: 'var(--ds-color-accent-text-default)',
                 borderRadius: 'var(--ds-border-radius-sm)',
@@ -298,34 +298,34 @@ export function ListingCard({
             )}
 
             {/* Title */}
-            <h3 style={{
-              margin: '0 0 var(--ds-spacing-2) 0',
-              fontSize: 'var(--ds-font-size-lg)',
-              fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
-              color: 'var(--ds-color-neutral-text-default)',
-            }}>
+            <Heading
+              level={3}
+              data-size="md"
+              style={{ marginBottom: 'var(--ds-spacing-2)' }}
+            >
               {name}
-            </h3>
+            </Heading>
 
             {/* Location */}
-            <p style={{
-              margin: '0 0 var(--ds-spacing-3) 0',
-              fontSize: 'var(--ds-font-size-md)',
-              color: 'var(--ds-color-neutral-text-subtle)',
-            }}>
+            <Paragraph
+              data-size="md"
+              style={{
+                marginBottom: 'var(--ds-spacing-3)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+              }}
+            >
               {location}
-            </p>
+            </Paragraph>
 
             {/* Description */}
             {description && (
-              <p style={{
-                margin: '0 0 var(--ds-spacing-4) 0',
-                fontSize: 'var(--ds-font-size-sm)',
-                color: 'var(--ds-color-neutral-text-default)',
-                lineHeight: 'var(--ds-line-height-md)' as unknown as number,
-              }}>
+              <Paragraph
+                data-size="sm"
+                variant="long"
+                style={{ marginBottom: 'var(--ds-spacing-4)' }}
+              >
                 {description}
-              </p>
+              </Paragraph>
             )}
 
             {/* Capacity */}
@@ -337,9 +337,9 @@ export function ListingCard({
                 marginBottom: 'var(--ds-spacing-4)',
               }}>
                 <PeopleIcon />
-                <span style={{ fontSize: 'var(--ds-font-size-md)', color: 'var(--ds-color-neutral-text-default)' }}>
+                <Paragraph data-size="md" style={{ margin: 0 }}>
                   {capacity} personer
-                </span>
+                </Paragraph>
               </div>
             )}
 
@@ -407,13 +407,16 @@ export function ListingCard({
                   {available ? 'Ledig' : 'Opptatt'}
                 </span>
               )}
-              <span style={{
-                fontSize: 'var(--ds-font-size-md)',
-                color: 'var(--ds-color-accent-text-default)',
-                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
-              }}>
+              <Paragraph
+                data-size="md"
+                style={{
+                  margin: 0,
+                  color: 'var(--ds-color-accent-text-default)',
+                  fontWeight: 'var(--ds-font-weight-semibold)',
+                }}
+              >
                 Se detaljer →
-              </span>
+              </Paragraph>
             </div>
           </div>
         </div>
@@ -565,47 +568,46 @@ export function ListingCard({
 
       {/* Content */}
       <div style={{ padding: 'var(--ds-spacing-6)', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{
-          margin: '0 0 var(--ds-spacing-2) 0',
-          fontSize: 'var(--ds-font-size-md)',
-          fontWeight: 'var(--ds-font-weight-semibold)',
-          color: 'var(--ds-color-neutral-text-default)',
-          lineHeight: 'var(--ds-line-height-sm)',
-          fontFamily: 'var(--ds-font-family)'
-        } as React.CSSProperties}>
+        <Heading
+          level={3}
+          data-size="xs"
+          style={{ marginBottom: 'var(--ds-spacing-2)' }}
+        >
           {name}
-        </h3>
+        </Heading>
 
         {showLocation && (
-          <p style={{
-            margin: '0 0 var(--ds-spacing-3) 0',
-            fontSize: 'var(--ds-font-size-sm)',
-            color: 'var(--ds-color-neutral-text-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-1)',
-            fontFamily: 'var(--ds-font-family)'
-          } as React.CSSProperties}>
+          <Paragraph
+            data-size="sm"
+            style={{
+              marginBottom: 'var(--ds-spacing-3)',
+              color: 'var(--ds-color-neutral-text-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-1)',
+            }}
+          >
             <MapPinIcon />
             {location}
-          </p>
+          </Paragraph>
         )}
 
         {showDescription && (
-          <p style={{
-            margin: '0 0 var(--ds-spacing-5) 0',
-            fontSize: 'var(--ds-font-size-sm)',
-            color: 'var(--ds-color-neutral-text-subtle)',
-            lineHeight: 'var(--ds-line-height-md)',
-            minHeight: '4.5em',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            fontFamily: 'var(--ds-font-family)'
-          } as React.CSSProperties}>
+          <Paragraph
+            data-size="sm"
+            variant="short"
+            style={{
+              marginBottom: 'var(--ds-spacing-5)',
+              color: 'var(--ds-color-neutral-text-subtle)',
+              minHeight: '4.5em',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
             {description}
-          </p>
+          </Paragraph>
         )}
 
         {/* Facility tags */}

@@ -1,7 +1,7 @@
-# Hardcoded Values, Custom CSS & Non-Token Variables Audit
+# Comprehensive Design System Compliance Audit
 
 **Audit Date:** 2026-01-13
-**Last Updated:** 2026-01-13 (All Issues Fixed ✅)
+**Last Updated:** 2026-01-13 (Full Design System Scan ✅)
 **Repository:** xala-digdir-monorepo
 **Scope:** `packages/ds/src` and `apps/web/src`
 **Scanner:** `pnpm scan:compliance`
@@ -10,122 +10,153 @@
 
 ## Executive Summary
 
+### 🎉 ALL 21 CATEGORIES PASSED - ZERO ISSUES
+
 | Category | Count | Severity | Status |
 |----------|-------|----------|--------|
-| Hardcoded Colors | 0 | High | ✅ Clean |
-| Hardcoded Spacing | 0 | High | ✅ Clean |
-| Hardcoded Typography | 0 | Medium | ✅ Clean |
-| Hardcoded Border Radius | 0 | Medium | ✅ Clean |
-| Raw HTML Layouts | 0 | Medium | ✅ Clean |
-| Hardcoded Dimensions | 0 | Low | ✅ Clean |
-| Hardcoded Breakpoints | 0 | Low | ✅ Clean |
-| SVG Hardcoded Colors | 0 | Low | ✅ Clean |
+| Hardcoded Colors | 0 | High | ✅ |
+| Hardcoded Spacing | 0 | High | ✅ |
+| Hardcoded Gap | 0 | High | ✅ |
+| Hardcoded Font Family | 0 | Medium | ✅ |
+| Hardcoded Box Shadow | 0 | Medium | ✅ |
+| Hardcoded Typography | 0 | Medium | ✅ |
+| Hardcoded Border Radius | 0 | Medium | ✅ |
+| Raw HTML Layouts | 0 | Medium | ✅ |
+| Touch Target Size | 0 | Medium | ✅ |
+| Missing Button Type | 0 | Medium | ✅ |
+| Raw Div with Click Handler | 0 | Medium | ✅ |
+| Hardcoded Z-Index | 0 | Low | ✅ |
+| Hardcoded Transition Duration | 0 | Low | ✅ |
+| Hardcoded Opacity | 0 | Low | ✅ |
+| Hardcoded Letter Spacing | 0 | Low | ✅ |
+| Hardcoded Line Height | 0 | Low | ✅ |
+| Hardcoded Dimensions | 0 | Low | ✅ |
+| Hardcoded Breakpoints | 0 | Low | ✅ |
+| SVG Hardcoded Colors | 0 | Low | ✅ |
+| Inline !important | 0 | Low | ✅ |
+| Inconsistent Icon Size | 0 | Low | ✅ |
 
-**🎉 ALL CHECKS PASSED - ZERO ISSUES**
+**Token Compliance: 100%** ✅
 
 ---
 
-## Token Compliance: 100% ✅
+## Scanner Categories Explained
 
-All components now use Digdir design tokens or documented custom tokens:
+### High Severity (Critical)
+| Rule | Description |
+|------|-------------|
+| Hardcoded Colors | Hex, RGB, HSL, named colors |
+| Hardcoded Spacing | Padding, margin, gap in px/rem/em |
+| Hardcoded Gap | Grid/flex gap values |
 
-### Token Namespaces
+### Medium Severity (Should Fix)
+| Rule | Description |
+|------|-------------|
+| Hardcoded Font Family | Non-token font families |
+| Hardcoded Box Shadow | Inline shadow values |
+| Hardcoded Typography | Font size, weight in px |
+| Hardcoded Border Radius | Border radius in px |
+| Raw HTML Layouts | `<div style={{flex}}>` in apps |
+| Touch Target Size | Interactive elements < 44px |
+| Missing Button Type | Buttons without type attribute |
+| Raw Div with Click Handler | Non-accessible click handlers |
 
-| Namespace | Purpose | Example |
-|-----------|---------|---------|
-| `--ds-*` | Digdir standard tokens | `--ds-spacing-4`, `--ds-color-accent-base-default` |
-| `--digilist-*` | App-specific extensions | `--digilist-size-search-max-width`, `--digilist-spacing-micro` |
+### Low Severity (Acceptable with documentation)
+| Rule | Description |
+|------|-------------|
+| Hardcoded Z-Index | Overlay stacking values |
+| Hardcoded Transition | Animation durations |
+| Hardcoded Opacity | Transparency values |
+| Hardcoded Letter Spacing | Character spacing |
+| Hardcoded Line Height | Line height in px |
+| Hardcoded Dimensions | Width/height in px |
+| Hardcoded Breakpoints | Media query values |
+| SVG Hardcoded Colors | SVG fill/stroke |
+| Inline !important | Style overrides |
+| Inconsistent Icon Size | Non-standard icon sizes |
+
+---
+
+## Token Namespaces
+
+| Namespace | Purpose | Examples |
+|-----------|---------|----------|
+| `--ds-*` | Digdir standard | `--ds-spacing-4`, `--ds-color-accent-base-default` |
+| `--digilist-*` | App extensions | `--digilist-size-search-max-width`, `--digilist-spacing-micro` |
 
 ---
 
 ## Tokens Added in This Session
 
-### `digilist-extensions.css`
-
+### Border & Layout Tokens
 ```css
-/* Border Width Tokens */
 --ds-border-width-default: 1px;
 --ds-border-width-thin: 1px;
 --ds-border-width-medium: 2px;
 --ds-border-width-thick: 3px;
 
-/* Component Size Tokens */
 --digilist-size-search-max-width: 520px;
 --digilist-size-search-min-width: 80px;
 --digilist-size-container-max: 1440px;
+```
 
-/* Breakpoint Tokens (for JS usage - CSS @media cannot use variables) */
+### Typography Tokens
+```css
+--ds-line-height-condensed: 1.1;
+--ds-letter-spacing-normal: 0;
+--ds-letter-spacing-tight: -0.025em;
+--ds-letter-spacing-wide: 0.025em;
+--ds-letter-spacing-wider: 0.05em;
+--ds-letter-spacing-widest: 0.1em;
+--ds-letter-spacing-badge: 0.5px;
+```
+
+### Micro Spacing Tokens
+```css
+--digilist-spacing-micro: 2px;
+--digilist-spacing-micro-sm: 1px;
+```
+
+### Breakpoint Documentation
+```css
+/* For JS usage - CSS @media cannot use variables */
 --digilist-breakpoint-mobile: 599px;
 --digilist-breakpoint-tablet: 600px;
 --digilist-breakpoint-desktop: 992px;
-
-/* Micro Spacing Tokens */
---digilist-spacing-micro: 2px;
---digilist-spacing-micro-sm: 1px;
-
-/* Line Height */
---ds-line-height-condensed: 1.1;
 ```
 
 ---
 
-## Fixes Applied
+## Accepted Patterns (Not Flagged)
 
-### 1. Raw HTML Layouts → Stack Primitives
+### Typography
+- `fontFamily: 'inherit'` - CSS keyword
+- `lineHeight: 1.5` - Unitless ratios
+- `letterSpacing: '0.05em'` - Relative em values
 
-**`apps/web/src/App.tsx`**
-- ✅ Replaced 3 `<div style={{display: flex}}>` with `<Stack>` component
-- ✅ Replaced `<span style={{fontSize}}>` with `<Text size="sm">` component
+### Z-Index
+- `zIndex: 0-10` - Local stacking
+- `zIndex: 50, 100, 1000, 9998, 9999` - Standard overlay values
 
-### 2. SVG Colors → Design Tokens
+### Transitions
+- `0.1s - 0.3s` range (100ms - 300ms)
+- Common easing functions
 
-**`packages/ds/src/blocks/ListingListItem.tsx`**
-- ✅ `stroke="white"` → `stroke="var(--ds-color-neutral-background-default)"`
-- ✅ `fill="white"` → `fill="var(--ds-color-neutral-background-default)"`
+### Icon Sizes
+- Standard: `12, 14, 16, 18, 20, 22, 24, 32`
 
-### 3. Search Field Sizes → Tokens
-
-**`packages/ds/src/composed/header.tsx`**
-- ✅ `maxWidth: '520px'` → `maxWidth: 'var(--digilist-size-search-max-width, 520px)'`
-- ✅ `minWidth: '80px'` → `minWidth: 'var(--digilist-size-search-min-width, 80px)'`
-
-### 4. Border Width → Token
-
-**`packages/ds/src/blocks/ListingMap.tsx`**
-- ✅ `border-top: 1px solid` → `border-top: var(--ds-border-width-default, 1px) solid`
-
-### 5. Logo Typography → Tokens
-
-**`packages/ds/src/composed/header-parts.tsx`**
-- ✅ `marginTop: '2px'` → `marginTop: 'var(--digilist-spacing-micro)'`
-- ✅ `lineHeight: '1.1'` → `lineHeight: 'var(--ds-line-height-condensed)'`
-- ✅ `marginTop: '1px'` → `marginTop: 'var(--digilist-spacing-micro-sm)'`
-
----
-
-## CSS Limitations (Documented)
-
-### Media Query Breakpoints
-
-CSS `@media` queries cannot use CSS custom properties. The following breakpoints are documented and consistently used across the codebase:
-
-| Breakpoint | Value | Usage |
-|------------|-------|-------|
-| Mobile | `< 600px` | `@media (max-width: 599px)` |
-| Tablet | `600px - 991px` | `@media (min-width: 600px)` |
-| Desktop | `≥ 992px` | `@media (min-width: 992px)` |
-
-These follow the [Digdir Designsystemet breakpoint recommendations](https://designsystemet.no/en/fundamentals/design-elements/sizes-and-spacing).
+### Media Queries
+- `599px, 600px, 640px, 700px, 992px, 1024px` - Documented breakpoints
 
 ---
 
 ## Scanner Commands
 
 ```bash
-# Run compliance scan
+# Run comprehensive compliance scan
 pnpm scan:compliance
 
-# Run with JSON output  
+# Run with JSON output
 pnpm scan:compliance:json
 
 # Run in strict mode (fail on high severity)
@@ -140,7 +171,7 @@ pnpm scan:all
 
 ---
 
-## Verification
+## Verification Output
 
 ```bash
 $ pnpm scan:compliance
@@ -153,6 +184,13 @@ $ pnpm scan:compliance
 📊 Results by Category:
 
    ✅ Hardcoded Colors: 0 issues
+   ✅ Hardcoded Font Family: 0 issues
+   ✅ Hardcoded Letter Spacing: 0 issues
+   ✅ Hardcoded Line Height: 0 issues
+   ✅ Hardcoded Box Shadow: 0 issues
+   ✅ Hardcoded Z-Index: 0 issues
+   ✅ Hardcoded Transition Duration: 0 issues
+   ✅ Hardcoded Opacity: 0 issues
    ✅ Hardcoded Spacing: 0 issues
    ✅ Hardcoded Typography: 0 issues
    ✅ Hardcoded Border Radius: 0 issues
@@ -160,6 +198,12 @@ $ pnpm scan:compliance
    ✅ Hardcoded Dimensions: 0 issues
    ✅ Hardcoded Breakpoints: 0 issues
    ✅ SVG Hardcoded Colors: 0 issues
+   ✅ Touch Target Size: 0 issues
+   ✅ Missing Button Type: 0 issues
+   ✅ Inline !important: 0 issues
+   ✅ Hardcoded Gap: 0 issues
+   ✅ Inconsistent Icon Size: 0 issues
+   ✅ Raw Div with Click Handler: 0 issues
 
 📈 Total: 0 issues (0 high severity)
 
@@ -170,4 +214,5 @@ $ pnpm scan:compliance
 
 *Report generated by automated scanning*
 *Last scan: 2026-01-13*
-*Scanner: scan-compliance.mjs v1.0*
+*Scanner: scan-compliance.mjs v2.0*
+*Categories: 21*

@@ -256,6 +256,21 @@
   }
 
   /* ==========================================================================
+   * LETTER SPACING TOKENS
+   * Standard letter-spacing values
+   * ========================================================================== */
+
+  :root {
+    --ds-letter-spacing-normal: 0;
+    --ds-letter-spacing-tight: -0.025em;
+    --ds-letter-spacing-wide: 0.025em;
+    --ds-letter-spacing-wider: 0.05em;
+    --ds-letter-spacing-widest: 0.1em;
+    /* Pixel-based for uppercase text badges */
+    --ds-letter-spacing-badge: 0.5px;
+  }
+
+  /* ==========================================================================
    * MICRO SPACING TOKENS
    * Sub-pixel adjustments for optical alignment (smaller than spacing-1)
    * ========================================================================== */

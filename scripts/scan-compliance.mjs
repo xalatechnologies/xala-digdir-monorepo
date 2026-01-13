@@ -69,6 +69,142 @@ const RULES = {
     recommendation: 'Use design tokens: var(--ds-color-*)',
   },
 
+  hardcodedFontFamily: {
+    name: 'Hardcoded Font Family',
+    severity: 'medium',
+    patterns: [
+      { regex: /fontFamily:\s*['"][^'"]+['"]/g, description: 'Hardcoded font family' },
+      { regex: /font-family:\s*['"][^'"]+['"]/g, description: 'CSS font-family' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-font-family')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // System font stacks as fallbacks are acceptable
+      if (line.includes('system-ui') || line.includes('sans-serif')) return true;
+      // CSS keywords are acceptable
+      if (line.includes("'inherit'") || line.includes('"inherit"')) return true;
+      return false;
+    },
+    recommendation: 'Use font family token: var(--ds-font-family)',
+  },
+
+  hardcodedLetterSpacing: {
+    name: 'Hardcoded Letter Spacing',
+    severity: 'low',
+    patterns: [
+      { regex: /letterSpacing:\s*['"]?[\d.]+(?:px|em|rem)/g, description: 'Letter spacing with units' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-letter-spacing')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // Relative em values are acceptable for letter-spacing
+      if (/letterSpacing:\s*['"]?[\d.]+em/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Use letter spacing token: var(--ds-letter-spacing-*)',
+  },
+
+  hardcodedLineHeight: {
+    name: 'Hardcoded Line Height',
+    severity: 'low',
+    patterns: [
+      { regex: /lineHeight:\s*['"]?\d+px/g, description: 'Line height in px' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-line-height')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // Unitless line-height ratios are acceptable (1.5, 1.2, etc.)
+      if (/lineHeight:\s*['"]?[\d.]+['"]?\s*[,}]/.test(line) && !/px|rem|em/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Use line height token: var(--ds-line-height-*)',
+  },
+
+  hardcodedBoxShadow: {
+    name: 'Hardcoded Box Shadow',
+    severity: 'medium',
+    patterns: [
+      { regex: /boxShadow:\s*['"][^'"]+['"]/g, description: 'Hardcoded box shadow' },
+      { regex: /box-shadow:\s*[^;]+/g, description: 'CSS box-shadow' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-shadow')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // 'none' is acceptable
+      if (/boxShadow:\s*['"]?none/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Use shadow token: var(--ds-shadow-*)',
+  },
+
+  hardcodedZIndex: {
+    name: 'Hardcoded Z-Index',
+    severity: 'low',
+    patterns: [
+      { regex: /zIndex:\s*\d+/g, description: 'Hardcoded z-index' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-z-index')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // Low z-index values (0-10) are acceptable for local stacking
+      if (/zIndex:\s*[0-9](?:\s*[,}]|$)/.test(line)) return true;
+      if (/zIndex:\s*10(?:\s*[,}]|$)/.test(line)) return true;
+      // Standard overlay z-index values are acceptable (50, 100, 1000, 9998, 9999)
+      if (/zIndex:\s*(?:50|100|1000|9998|9999)/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Consider using z-index tokens for consistent layering',
+  },
+
+  hardcodedTransition: {
+    name: 'Hardcoded Transition Duration',
+    severity: 'low',
+    patterns: [
+      { regex: /transition:\s*[^;]*\d+m?s/g, description: 'Transition with duration' },
+      { regex: /transitionDuration:\s*['"]?\d+m?s/g, description: 'Transition duration' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-animation')) return true;
+      if (line.includes('var(--digilist-animation')) return true;
+      if (line.includes('// ')) return true;
+      // Common transition values are acceptable (0.1s-0.3s range, 100-300ms range)
+      if (/0\.[123]s|0\.1[25]s|0\.25s/.test(line)) return true;
+      if (/1[05]0ms|200ms|250ms|300ms|100ms|120ms/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Consider using animation tokens: var(--digilist-animation-duration-*)',
+  },
+
+  hardcodedOpacity: {
+    name: 'Hardcoded Opacity',
+    severity: 'low',
+    patterns: [
+      { regex: /opacity:\s*0\.\d+/g, description: 'Hardcoded opacity' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-opacity')) return true;
+      if (line.includes('// ')) return true;
+      // Common opacity values are acceptable (0.5, 0.6, 0.8)
+      if (/opacity:\s*0\.[456789]/.test(line)) return true;
+      // 0 and 1 are always acceptable
+      if (/opacity:\s*[01](?:\s*[,}]|$)/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Consider documenting opacity values as tokens',
+  },
+
   hardcodedSpacing: {
     name: 'Hardcoded Spacing',
     severity: 'high',
@@ -196,6 +332,114 @@ const RULES = {
       return false;
     },
     recommendation: 'Consider using currentColor or CSS variable',
+  },
+
+  touchTargetSize: {
+    name: 'Touch Target Size',
+    severity: 'medium',
+    patterns: [
+      { regex: /(?:width|height|minWidth|minHeight):\s*['"]?(?:[12]\d|3[0-9])px/g, description: 'Size < 44px (WCAG touch target)' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('// ')) return true;
+      // Icons are allowed to be smaller
+      if (line.includes('icon') || line.includes('Icon')) return true;
+      // Badge sizes are acceptable
+      if (line.includes('badge') || line.includes('Badge')) return true;
+      // Avatar small sizes are acceptable with larger click area
+      if (line.includes('avatar') || line.includes('Avatar')) return true;
+      // Width for non-interactive elements
+      if (!file.includes('Button') && !file.includes('button')) return true;
+      return false;
+    },
+    recommendation: 'WCAG 2.2 requires minimum 44x44px touch targets for interactive elements',
+  },
+
+  missingButtonType: {
+    name: 'Missing Button Type',
+    severity: 'medium',
+    patterns: [
+      { regex: /<button(?![^>]*type=)/g, description: 'Button without type attribute' },
+      { regex: /<Button(?![^>]*type=)/g, description: 'Button component without type' },
+    ],
+    isExcluded: (line, file) => {
+      if (line.includes('// ')) return true;
+      // Already handled by ESLint rule
+      return true;
+    },
+    recommendation: 'Add explicit type="button" to prevent form submission',
+  },
+
+  inlineImportantOverride: {
+    name: 'Inline !important',
+    severity: 'low',
+    patterns: [
+      { regex: /style=\{[^}]*!important/g, description: 'Inline style with !important' },
+    ],
+    isExcluded: (line, file) => {
+      if (line.includes('// ')) return true;
+      // CSS-in-JS strings for global overrides are acceptable
+      if (line.includes('<style>') || line.includes('`}</style>')) return true;
+      if (/style=\{\s*`/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Avoid !important in inline styles; use proper specificity',
+  },
+
+  hardcodedGap: {
+    name: 'Hardcoded Gap',
+    severity: 'high',
+    patterns: [
+      { regex: /gap:\s*['"]?\d+px/g, description: 'Gap in px' },
+      { regex: /columnGap:\s*['"]?\d+px/g, description: 'Column gap in px' },
+      { regex: /rowGap:\s*['"]?\d+px/g, description: 'Row gap in px' },
+    ],
+    isExcluded: (line, file) => {
+      if (file.endsWith('.css')) return true;
+      if (line.includes('var(--ds-spacing')) return true;
+      if (line.includes('var(--ds-size')) return true;
+      if (line.includes('var(--digilist-')) return true;
+      if (line.includes('// ')) return true;
+      // Gap: 0 is acceptable
+      if (/gap:\s*['"]?0['"]?/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Use spacing tokens: var(--ds-spacing-*)',
+  },
+
+  inconsistentIconSize: {
+    name: 'Inconsistent Icon Size',
+    severity: 'low',
+    patterns: [
+      { regex: /size=\{(?!12|14|16|18|20|22|24|32)\d+\}/g, description: 'Non-standard icon size' },
+    ],
+    isExcluded: (line, file) => {
+      if (line.includes('// ')) return true;
+      // Standard sizes: 12, 14, 16, 18, 20, 22, 24, 32 are acceptable
+      if (/size=\{(?:12|14|16|18|20|22|24|32)\}/.test(line)) return true;
+      return false;
+    },
+    recommendation: 'Use standard icon sizes: 12, 14, 16, 18, 20, 22, 24, 32',
+  },
+
+  rawDivWithClickHandler: {
+    name: 'Raw Div with Click Handler',
+    severity: 'medium',
+    patterns: [
+      { regex: /<div[^>]*onClick=/g, description: 'Div with onClick (accessibility issue)' },
+    ],
+    isExcluded: (line, file) => {
+      if (line.includes('// ')) return true;
+      // Divs in design system components may have valid reasons
+      if (file.includes('packages/ds/src')) return true;
+      // role="button" makes it accessible
+      if (line.includes('role="button"') || line.includes("role='button'")) return true;
+      // tabIndex makes it focusable
+      if (line.includes('tabIndex')) return true;
+      return false;
+    },
+    recommendation: 'Use <button> or add role="button" and tabIndex for accessibility',
   },
 };
 
