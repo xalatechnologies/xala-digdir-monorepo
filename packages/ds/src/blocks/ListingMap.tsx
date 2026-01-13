@@ -228,7 +228,7 @@ export function ListingMap({
       background-color: transparent !important;
     }
     .mapboxgl-ctrl-group button + button {
-      border-top: 1px solid var(--ds-color-neutral-border-subtle, rgba(255, 255, 255, 0.1)) !important;
+      border-top: var(--ds-border-width-default, 1px) solid var(--ds-color-neutral-border-subtle, rgba(255, 255, 255, 0.1)) !important;
     }
     .mapboxgl-ctrl-group button:hover {
       background-color: var(--ds-color-neutral-surface-hover, rgba(255, 255, 255, 0.1)) !important;

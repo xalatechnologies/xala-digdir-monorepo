@@ -22,7 +22,9 @@ import {
   ListingListItem,
   ListingGrid,
   ListingToolbar,
-  ListingMap
+  ListingMap,
+  Stack,
+  Text
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
@@ -549,14 +551,14 @@ export function App() {
           mobilePosition="bottom"
           mobileSize="lg"
           footer={
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-              <div style={{
-                fontSize: 'var(--ds-font-size-sm)',
-                color: 'var(--ds-color-neutral-text-subtle)',
-                textAlign: 'center'
-              }}>
+            <Stack spacing="var(--ds-spacing-3)">
+              <Text 
+                size="sm" 
+                color="var(--ds-color-neutral-text-subtle)"
+                style={{ textAlign: 'center' }}
+              >
                 Viser 6 lokaler
-              </div>
+              </Text>
               <Button
                 type="button"
                 variant="primary"
@@ -565,11 +567,11 @@ export function App() {
               >
                 Vis resultater
               </Button>
-            </div>
+            </Stack>
           }
         >
           <DrawerSection title="Type anlegg" collapsible>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
+            <Stack spacing="var(--ds-spacing-1)">
               {venueTypes.map((type) => (
                 <DrawerItem
                   key={type.id}
@@ -580,19 +582,16 @@ export function App() {
                       aria-label={type.label}
                     />
                   }
-                  right={<span style={{ fontSize: 'var(--ds-font-size-sm)' }}>({type.count})</span>}
+                  right={<Text size="sm">({type.count})</Text>}
                   onClick={() => handleTypeToggle(type.id)}
                   selected={selectedTypes.includes(type.id)}
                 >
-                  <span style={{
-                    fontSize: 'var(--ds-font-size-sm)',
-                    color: 'var(--ds-color-neutral-text-default)'
-                  }}>
+                  <Text size="sm" color="var(--ds-color-neutral-text-default)">
                     {type.label}
-                  </span>
+                  </Text>
                 </DrawerItem>
               ))}
-            </div>
+            </Stack>
           </DrawerSection>
 
           <DrawerSection title="Område" collapsible defaultCollapsed>
@@ -680,7 +679,7 @@ export function App() {
                 ))}
               </ListingGrid>
             ) : viewMode === 'list' ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+              <Stack spacing="var(--ds-spacing-4)">
                 {visibleListings.map((listing) => (
                   <ListingListItem
                     key={listing.id}
@@ -703,7 +702,7 @@ export function App() {
                     onFavorite={(id) => console.log('Toggle favorite:', id)}
                   />
                 ))}
-              </div>
+              </Stack>
             ) : (
               <ListingMap
                 listings={listings

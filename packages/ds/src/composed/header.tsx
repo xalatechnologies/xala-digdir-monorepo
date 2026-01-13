@@ -156,8 +156,8 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
               {search && (
                 <div className="header-search-wrapper" style={{
                   flex: '1 1 auto',
-                  maxWidth: '520px',
-                  minWidth: '80px'
+                  maxWidth: 'var(--digilist-size-search-max-width, 520px)',
+                  minWidth: 'var(--digilist-size-search-min-width, 80px)'
                 }}>
                   {search}
                 </div>

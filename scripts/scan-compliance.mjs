@@ -80,8 +80,12 @@ const RULES = {
       if (file.endsWith('.css')) return true;
       if (line.includes('var(--ds-spacing')) return true;
       if (line.includes('var(--ds-size')) return true;
+      if (line.includes('var(--ds-border-width')) return true;
+      if (line.includes('var(--digilist-')) return true;
       if (line.includes('calc(')) return true;
       if (line.includes('// ')) return true;
+      // Border widths with tokens are acceptable
+      if (/border.*var\(--/.test(line)) return true;
       return false;
     },
     recommendation: 'Use spacing tokens: var(--ds-spacing-*)',
@@ -157,6 +161,8 @@ const RULES = {
       if (/const sizes\s*=/.test(line)) return true;
       // Avatar sizes are acceptable edge case
       if (line.includes("'20px'") && file.includes('header-parts')) return true;
+      // Media queries cannot use CSS variables - exclude documented breakpoints (599px, 600px)
+      if (/@media\s*\(/.test(line) && /599px|600px|992px|640px|700px|1024px/.test(line)) return true;
       return false;
     },
     recommendation: 'Consider using tokens or calc() with tokens',

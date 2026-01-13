@@ -267,6 +267,52 @@
   }
 
   /* ==========================================================================
+   * BORDER WIDTH TOKENS
+   * Standard border widths for consistent styling
+   * ========================================================================== */
+
+  :root {
+    --ds-border-width-default: 1px;
+    --ds-border-width-thin: 1px;
+    --ds-border-width-medium: 2px;
+    --ds-border-width-thick: 3px;
+  }
+
+  /* ==========================================================================
+   * COMPONENT SIZE TOKENS
+   * Specific sizes for UI components
+   * ========================================================================== */
+
+  :root {
+    /* Header search field constraints */
+    --digilist-size-search-max-width: 520px;
+    --digilist-size-search-min-width: 80px;
+    
+    /* Container max widths */
+    --digilist-size-container-max: 1440px;
+  }
+
+  /* ==========================================================================
+   * BREAKPOINT TOKENS (Documentation)
+   * 
+   * Note: CSS @media queries cannot use CSS variables.
+   * These tokens are for documentation and JavaScript usage only.
+   * The actual values are used directly in media queries.
+   * 
+   * Breakpoints follow Digdir recommendations:
+   * - Mobile: < 600px
+   * - Tablet: 600px - 991px  
+   * - Desktop: >= 992px
+   * ========================================================================== */
+
+  :root {
+    /* Breakpoint values for JS usage (CSS @media cannot use these) */
+    --digilist-breakpoint-mobile: 599px;
+    --digilist-breakpoint-tablet: 600px;
+    --digilist-breakpoint-desktop: 992px;
+  }
+
+  /* ==========================================================================
    * ANIMATION TIMING TOKENS
    * Consistent animation timing across components
    * ========================================================================== */

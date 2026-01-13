@@ -381,9 +381,9 @@ export function ListingListItem({
                 flexDirection: 'column',
                 alignItems: 'center'
               }}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--ds-color-accent-base-default)" stroke="white" strokeWidth="1.5">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--ds-color-accent-base-default)" stroke="var(--ds-color-neutral-background-default)" strokeWidth="1.5">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3" fill="white" stroke="var(--ds-color-accent-base-default)" strokeWidth="2"/>
+                  <circle cx="12" cy="10" r="3" fill="var(--ds-color-neutral-background-default)" stroke="var(--ds-color-accent-base-default)" strokeWidth="2"/>
                 </svg>
               </div>
             </div>
