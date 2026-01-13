@@ -92,7 +92,57 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
   }
   ```
 
-### 5. Accessibility
+### 5. Typography
+
+- [ ] **Use Digdir typography components for text content**
+  ```tsx
+  import { Heading, Paragraph } from '@digdir/designsystemet-react';
+  ```
+
+- [ ] **Headings: Use `<Heading>` component**
+  ```tsx
+  // ❌ Wrong
+  <h3 style={{ fontSize: 'var(--ds-font-size-md)' }}>Title</h3>
+
+  // ✅ Correct
+  <Heading level={3} data-size="sm">Title</Heading>
+  ```
+
+- [ ] **Body text: Use `<Paragraph>` component**
+  ```tsx
+  // ❌ Wrong
+  <p style={{ fontSize: 'var(--ds-font-size-sm)' }}>Text</p>
+
+  // ✅ Correct
+  <Paragraph data-size="sm">Text</Paragraph>
+  ```
+
+- [ ] **Choose appropriate sizes**
+  | Content | Heading size | Paragraph size |
+  |---------|--------------|----------------|
+  | Page title | `xl` - `2xl` | - |
+  | Section title | `md` - `lg` | - |
+  | Card title | `xs` - `sm` | - |
+  | Body text | - | `md` |
+  | Secondary text | - | `sm` |
+  | Captions | - | `xs` |
+
+- [ ] **Customize with style prop when needed**
+  ```tsx
+  <Paragraph
+    data-size="sm"
+    style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
+  >
+    Muted description
+  </Paragraph>
+  ```
+
+- [ ] **Use inline styles ONLY for special cases:**
+  - Status indicators with semantic colors
+  - Text inside flex containers with icons
+  - Animated/transitioning text
+
+### 6. Accessibility
 
 - [ ] **Semantic HTML**
   - Use appropriate elements (`<button>`, `<nav>`, `<main>`, etc.)
@@ -112,7 +162,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
   - Use `--ds-color-focus-outer` for focus rings
   - Never remove focus outlines without replacement
 
-### 6. TypeScript
+### 7. TypeScript
 
 - [ ] **Define props interface**
   ```typescript
@@ -138,7 +188,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
 
 ## Code Quality Checklist
 
-### 7. Pattern Compliance
+### 8. Pattern Compliance
 
 - [ ] **No hardcoded values**
   ```tsx
@@ -164,7 +214,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
   </Button>
   ```
 
-### 8. Run Scanners
+### 9. Run Scanners
 
 - [ ] **Token scanner**
   ```bash
@@ -182,7 +232,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
 
 ## Testing Checklist
 
-### 9. Visual Testing
+### 10. Visual Testing
 
 - [ ] **Light mode appearance**
   - Set `data-color-scheme="light"`
@@ -197,13 +247,13 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
   - Toggle system preference
   - Verify smooth transition
 
-### 10. Responsive Testing
+### 11. Responsive Testing
 
 - [ ] **Desktop (1024px+)**
 - [ ] **Tablet (640px - 1023px)**
 - [ ] **Mobile (< 640px)**
 
-### 11. Interactive Testing
+### 12. Interactive Testing
 
 - [ ] **Hover states**
 - [ ] **Focus states**
@@ -214,7 +264,7 @@ A step-by-step checklist for creating new UI components that comply with Digdir 
 
 ## Documentation Checklist
 
-### 12. Component Documentation
+### 13. Component Documentation
 
 - [ ] **JSDoc comments on props**
   ```typescript

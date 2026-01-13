@@ -7,10 +7,11 @@ This guide explains how to use design tokens in the Digilist application, follow
 1. [Overview](#overview)
 2. [Token Architecture](#token-architecture)
 3. [Available Tokens](#available-tokens)
-4. [Token-First Workflow](#token-first-workflow)
-5. [Creating Extension Tokens](#creating-extension-tokens)
-6. [Dark Mode Support](#dark-mode-support)
-7. [Examples](#examples)
+4. [Typography Components](#typography-components)
+5. [Token-First Workflow](#token-first-workflow)
+6. [Creating Extension Tokens](#creating-extension-tokens)
+7. [Dark Mode Support](#dark-mode-support)
+8. [Examples](#examples)
 
 ---
 
@@ -161,6 +162,152 @@ Design tokens are the single source of truth for visual design decisions. They e
 --ds-shadow-dropdown    /* Dropdown/popover */
 --ds-shadow-header      /* Header shadow */
 --ds-shadow-focus-ring  /* Focus indicator */
+```
+
+---
+
+## Typography Components
+
+**Important:** For text content, prefer Digdir's typography components over inline-styled HTML elements.
+
+### Why Use Typography Components?
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Digdir Components** | Auto-responsive, built-in styles, semantic | Less control |
+| **Inline Styles + Tokens** | Full control | More code, manual responsive |
+
+**Recommendation:** Use `<Heading>` and `<Paragraph>` components for most text. Use inline styles only for special cases.
+
+### Heading Component
+
+```tsx
+import { Heading } from '@digdir/designsystemet-react';
+
+// Semantic level + visual size
+<Heading level={1} data-size="xl">Page Title</Heading>
+<Heading level={2} data-size="md">Section Title</Heading>
+<Heading level={3} data-size="xs">Card Title</Heading>
+```
+
+**Size Options:** `'2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'`
+
+| data-size | Use Case |
+|-----------|----------|
+| `2xs` | Fine print |
+| `xs` | Card titles, compact UI |
+| `sm` | Subsections |
+| `md` | Section titles (default) |
+| `lg` | Important headings |
+| `xl` | Page titles |
+| `2xl` | Hero titles |
+
+### Paragraph Component
+
+```tsx
+import { Paragraph } from '@digdir/designsystemet-react';
+
+// Basic
+<Paragraph>Body text</Paragraph>
+
+// With size
+<Paragraph data-size="sm">Small text</Paragraph>
+
+// With line-height variant
+<Paragraph variant="long">Long-form content with more line spacing</Paragraph>
+<Paragraph variant="short">Compact text</Paragraph>
+```
+
+**Size Options:** `'xs' | 'sm' | 'md' | 'lg' | 'xl'`
+**Variants:** `'short' | 'default' | 'long'`
+
+### Real-World Example: Card Component
+
+```tsx
+// ❌ Before: Inline styles
+<div>
+  <h3 style={{
+    fontSize: 'var(--ds-font-size-md)',
+    fontWeight: 'var(--ds-font-weight-semibold)',
+    color: 'var(--ds-color-neutral-text-default)',
+  }}>
+    {title}
+  </h3>
+  <p style={{
+    fontSize: 'var(--ds-font-size-sm)',
+    color: 'var(--ds-color-neutral-text-subtle)',
+  }}>
+    {description}
+  </p>
+</div>
+
+// ✅ After: Digdir components
+<div>
+  <Heading level={3} data-size="sm">
+    {title}
+  </Heading>
+  <Paragraph
+    data-size="sm"
+    style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
+  >
+    {description}
+  </Paragraph>
+</div>
+```
+
+### Customizing Components
+
+Add styles for colors or spacing while keeping component benefits:
+
+```tsx
+// Muted text color
+<Paragraph
+  data-size="sm"
+  style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
+>
+  Secondary text
+</Paragraph>
+
+// Custom spacing
+<Heading
+  level={3}
+  data-size="xs"
+  style={{ marginBottom: 'var(--ds-spacing-2)' }}
+>
+  Card Title
+</Heading>
+
+// With icon in flex container
+<Paragraph
+  data-size="sm"
+  style={{
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-1)',
+  }}
+>
+  <MapPinIcon /> {location}
+</Paragraph>
+```
+
+### When NOT to Use Typography Components
+
+Use inline styles with tokens only for:
+
+- **Status indicators** with semantic colors (success/danger text)
+- **Highly custom layouts** where component resets interfere
+- **Animation/transition** text that needs precise control
+- **Badge/tag content** inside other components
+
+Even then, use tokens for values:
+```tsx
+<span style={{
+  fontSize: 'var(--ds-font-size-xs)',
+  color: 'var(--ds-color-success-text-default)',
+}}>
+  Available
+</span>
 ```
 
 ---

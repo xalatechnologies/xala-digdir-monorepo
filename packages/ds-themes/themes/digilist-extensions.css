@@ -271,6 +271,42 @@
   }
 
   /* ==========================================================================
+   * LISTING GRID RESPONSIVE STYLES
+   * Enforces max 3 columns on desktop, 2 on tablet, 1 on mobile
+   * ========================================================================== */
+
+  /* Desktop: max 3 columns */
+  @media (min-width: 992px) {
+    .listing-grid[data-max-columns="3"] {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    .listing-grid[data-max-columns="2"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .listing-grid[data-max-columns="1"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Tablet: max 2 columns */
+  @media (min-width: 600px) and (max-width: 991px) {
+    .listing-grid[data-max-columns="3"],
+    .listing-grid[data-max-columns="2"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .listing-grid[data-max-columns="1"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Mobile: 1 column */
+  @media (max-width: 599px) {
+    .listing-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ==========================================================================
    * MICRO SPACING TOKENS
    * Sub-pixel adjustments for optical alignment (smaller than spacing-1)
    * ========================================================================== */

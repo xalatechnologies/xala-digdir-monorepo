@@ -301,3 +301,154 @@ When creating new components in `@xala/ds`:
 | Small radius | `var(--ds-border-radius-sm)` |
 | Medium radius | `var(--ds-border-radius-md)` |
 | Pill/full radius | `var(--ds-border-radius-full)` |
+
+---
+
+## Digdir Typography Components
+
+**CRITICAL: Use Digdir's `<Heading>` and `<Paragraph>` components instead of styled HTML elements.**
+
+### Why Use Typography Components?
+
+1. **Automatic responsive scaling** - Respects app's `data-size` mode (sm/md/lg)
+2. **Built-in styles** - Font size, weight, line-height handled automatically
+3. **Semantic markup** - Proper heading hierarchy for accessibility
+4. **Consistency** - Matches Digdir ecosystem patterns
+5. **Less code** - No inline style objects needed
+
+### Heading Component
+
+```tsx
+import { Heading } from '@digdir/designsystemet-react';
+
+// Basic usage
+<Heading level={1}>Page Title</Heading>
+<Heading level={2}>Section Title</Heading>
+<Heading level={3}>Card Title</Heading>
+
+// With size override (visual size independent of semantic level)
+<Heading level={3} data-size="xs">Small Card Title</Heading>
+<Heading level={2} data-size="lg">Large Section Title</Heading>
+```
+
+**Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `level` | `1-6` | `2` | Semantic heading level (h1-h6) |
+| `data-size` | `'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'md'` | Visual size |
+
+### Paragraph Component
+
+```tsx
+import { Paragraph } from '@digdir/designsystemet-react';
+
+// Basic usage
+<Paragraph>Body text content</Paragraph>
+
+// With size
+<Paragraph data-size="sm">Small text</Paragraph>
+<Paragraph data-size="lg">Large text</Paragraph>
+
+// With variant for different line-heights
+<Paragraph variant="short">Short paragraph</Paragraph>
+<Paragraph variant="long">Long paragraph with more line-height</Paragraph>
+```
+
+**Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data-size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | - | Text size |
+| `variant` | `'short' \| 'default' \| 'long'` | `'default'` | Line-height variant |
+
+### Migration: Inline Styles → Components
+
+```tsx
+// ❌ WRONG - Inline styles (even with tokens)
+<h3 style={{
+  fontSize: 'var(--ds-font-size-md)',
+  fontWeight: 'var(--ds-font-weight-semibold)',
+  lineHeight: 'var(--ds-line-height-sm)',
+  color: 'var(--ds-color-neutral-text-default)',
+}}>
+  Card Title
+</h3>
+
+<p style={{
+  fontSize: 'var(--ds-font-size-sm)',
+  color: 'var(--ds-color-neutral-text-subtle)',
+}}>
+  Description text
+</p>
+
+// ✅ CORRECT - Digdir components
+<Heading level={3} data-size="sm">
+  Card Title
+</Heading>
+
+<Paragraph
+  data-size="sm"
+  style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
+>
+  Description text
+</Paragraph>
+```
+
+### When to Use Each
+
+| Content Type | Component | Example |
+|-------------|-----------|---------|
+| Page title | `<Heading level={1}>` | Main page heading |
+| Section title | `<Heading level={2}>` | Content sections |
+| Card/item title | `<Heading level={3}>` | ListingCard name |
+| Subsection | `<Heading level={4-6}>` | Nested content |
+| Body text | `<Paragraph>` | Descriptions, content |
+| Small text | `<Paragraph data-size="sm">` | Metadata, captions |
+| Long content | `<Paragraph variant="long">` | Articles, descriptions |
+
+### Customizing Typography Components
+
+Override specific styles while keeping component benefits:
+
+```tsx
+// Custom color
+<Paragraph
+  data-size="sm"
+  style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
+>
+  Muted text
+</Paragraph>
+
+// Custom margin
+<Heading
+  level={3}
+  data-size="xs"
+  style={{ marginBottom: 'var(--ds-spacing-2)' }}
+>
+  Title with spacing
+</Heading>
+
+// Flex container integration
+<Paragraph
+  data-size="sm"
+  style={{
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-1)',
+  }}
+>
+  <Icon /> Text with icon
+</Paragraph>
+```
+
+### Size Mapping Reference
+
+| data-size | Approximate px | Use Case |
+|-----------|---------------|----------|
+| `2xs` | ~12px | Fine print, badges |
+| `xs` | ~14px | Compact UI, metadata |
+| `sm` | ~16px | Secondary text, descriptions |
+| `md` | ~18px | Body text (default) |
+| `lg` | ~21px | Emphasized text |
+| `xl` | ~24px | Subheadings |
+| `2xl` | ~30px | Page titles |
