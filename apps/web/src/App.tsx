@@ -77,6 +77,34 @@ const listingTypeOptions = [
   { id: 'VEHICLE', label: 'Kjøretøy' },
 ];
 
+// Capacity range options
+const capacityOptions = [
+  { id: 'all', label: 'Alle størrelser', min: 0, max: Infinity },
+  { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
+  { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
+  { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
+  { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
+  { id: '100+', label: 'Over 100 personer', min: 101, max: Infinity },
+];
+
+// Extract unique facilities from listings
+const getAllFacilities = () => {
+  const facilitySet = new Set<string>();
+  listings.forEach(l => l.facilities?.forEach(f => facilitySet.add(f)));
+  return Array.from(facilitySet).sort();
+};
+
+// Extract unique areas/locations from listings
+const getLocationAreas = () => {
+  const areas: { id: string; label: string }[] = [
+    { id: 'all', label: 'Alle områder' },
+    { id: 'drammen', label: 'Drammen sentrum' },
+    { id: 'solbergelva', label: 'Solbergelva' },
+    { id: 'gulskogen', label: 'Gulskogen' },
+  ];
+  return areas;
+};
+
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -388,14 +416,50 @@ export function App() {
   const [listingType, setListingType] = React.useState<ListingType | 'ALL'>('ALL');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
-  // Get counts for each listing type
-  const typeCounts = React.useMemo(() => getListingTypeCounts(), []);
+  // Additional filters
+  const [selectedArea, setSelectedArea] = React.useState<string>('all');
+  const [selectedCapacity, setSelectedCapacity] = React.useState<string>('all');
+  const [selectedFacilities, setSelectedFacilities] = React.useState<string[]>([]);
 
-  // Filter listings by listing type
+  // "Show more" state for filter sections
+  const [showMoreCapacity, setShowMoreCapacity] = React.useState(false);
+  const [showMoreFacilities, setShowMoreFacilities] = React.useState(false);
+  const MAX_VISIBLE_ITEMS = 4;
+
+  // Get filter options
+  const typeCounts = React.useMemo(() => getListingTypeCounts(), []);
+  const allFacilities = React.useMemo(() => getAllFacilities(), []);
+  const locationAreas = React.useMemo(() => getLocationAreas(), []);
+
+  // Filter listings by all criteria
   const filteredListings = React.useMemo(() => {
-    if (listingType === 'ALL') return listings;
-    return listings.filter(l => l.listingType === listingType);
-  }, [listingType]);
+    return listings.filter(l => {
+      // Filter by listing type
+      if (listingType !== 'ALL' && l.listingType !== listingType) return false;
+
+      // Filter by area/location
+      if (selectedArea !== 'all') {
+        const locationLower = l.location.toLowerCase();
+        if (selectedArea === 'drammen' && !locationLower.includes('drammen') && !locationLower.includes('storgate') && !locationLower.includes('danvik') && !locationLower.includes('bragernes')) return false;
+        if (selectedArea === 'solbergelva' && !locationLower.includes('solbergelva') && !locationLower.includes('solberg')) return false;
+        if (selectedArea === 'gulskogen' && !locationLower.includes('gulskogen')) return false;
+      }
+
+      // Filter by capacity
+      if (selectedCapacity !== 'all') {
+        const capacityOption = capacityOptions.find(c => c.id === selectedCapacity);
+        if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
+      }
+
+      // Filter by facilities (all selected must be present)
+      if (selectedFacilities.length > 0) {
+        const listingFacilities = l.facilities || [];
+        if (!selectedFacilities.every(f => listingFacilities.includes(f))) return false;
+      }
+
+      return true;
+    });
+  }, [listingType, selectedArea, selectedCapacity, selectedFacilities]);
 
   // Pagination - 2 rows at a time (6 items with 3 columns)
   const ITEMS_PER_PAGE = 6;
@@ -403,10 +467,10 @@ export function App() {
   const visibleListings = filteredListings.slice(0, visibleCount);
   const hasMore = visibleCount < filteredListings.length;
 
-  // Reset visible count when filter changes
+  // Reset visible count when any filter changes
   React.useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
-  }, [listingType]);
+  }, [listingType, selectedArea, selectedCapacity, selectedFacilities]);
 
   // Simulated search function
   const handleSearchChange = (value: string) => {
@@ -455,7 +519,11 @@ export function App() {
     setListingType(typeId as ListingType | 'ALL');
   };
 
-  const activeFilterCount = listingType !== 'ALL' ? 1 : 0;
+  const activeFilterCount =
+    (listingType !== 'ALL' ? 1 : 0) +
+    (selectedArea !== 'all' ? 1 : 0) +
+    (selectedCapacity !== 'all' ? 1 : 0) +
+    selectedFacilities.length;
 
   const isDarkTheme = colorScheme === 'dark';
 
@@ -609,33 +677,104 @@ export function App() {
           </DrawerSection>
 
           <DrawerSection title="Område" collapsible defaultCollapsed>
-            <div style={{
-              padding: 'var(--ds-spacing-2) 0',
-              fontSize: 'var(--ds-font-size-sm)',
-              color: 'var(--ds-color-neutral-text-subtle)'
-            }}>
-              Velg område for å filtrere lokaler
-            </div>
+            <Stack spacing="var(--ds-spacing-1)">
+              {locationAreas.map((area) => (
+                <DrawerItem
+                  key={area.id}
+                  left={
+                    <Checkbox
+                      checked={selectedArea === area.id}
+                      onChange={() => setSelectedArea(area.id)}
+                      aria-label={area.label}
+                    />
+                  }
+                  onClick={() => setSelectedArea(area.id)}
+                  selected={selectedArea === area.id}
+                >
+                  <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                    {area.label}
+                  </Text>
+                </DrawerItem>
+              ))}
+            </Stack>
           </DrawerSection>
 
           <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
-            <div style={{
-              padding: 'var(--ds-spacing-2) 0',
-              fontSize: 'var(--ds-font-size-sm)',
-              color: 'var(--ds-color-neutral-text-subtle)'
-            }}>
-              Filtrer etter antall personer
-            </div>
+            <Stack spacing="var(--ds-spacing-1)">
+              {(showMoreCapacity ? capacityOptions : capacityOptions.slice(0, MAX_VISIBLE_ITEMS)).map((cap) => (
+                <DrawerItem
+                  key={cap.id}
+                  left={
+                    <Checkbox
+                      checked={selectedCapacity === cap.id}
+                      onChange={() => setSelectedCapacity(cap.id)}
+                      aria-label={cap.label}
+                    />
+                  }
+                  onClick={() => setSelectedCapacity(cap.id)}
+                  selected={selectedCapacity === cap.id}
+                >
+                  <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                    {cap.label}
+                  </Text>
+                </DrawerItem>
+              ))}
+              {capacityOptions.length > MAX_VISIBLE_ITEMS && (
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }}
+                  onClick={() => setShowMoreCapacity(!showMoreCapacity)}
+                >
+                  {showMoreCapacity ? 'Vis mindre' : `Vis ${capacityOptions.length - MAX_VISIBLE_ITEMS} flere`}
+                </Button>
+              )}
+            </Stack>
           </DrawerSection>
 
           <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
-            <div style={{
-              padding: 'var(--ds-spacing-2) 0',
-              fontSize: 'var(--ds-font-size-sm)',
-              color: 'var(--ds-color-neutral-text-subtle)'
-            }}>
-              Velg ønskede fasiliteter
-            </div>
+            <Stack spacing="var(--ds-spacing-1)">
+              {(showMoreFacilities ? allFacilities : allFacilities.slice(0, MAX_VISIBLE_ITEMS)).map((facility) => (
+                <DrawerItem
+                  key={facility}
+                  left={
+                    <Checkbox
+                      checked={selectedFacilities.includes(facility)}
+                      onChange={() => {
+                        setSelectedFacilities(prev =>
+                          prev.includes(facility)
+                            ? prev.filter(f => f !== facility)
+                            : [...prev, facility]
+                        );
+                      }}
+                      aria-label={facility}
+                    />
+                  }
+                  onClick={() => {
+                    setSelectedFacilities(prev =>
+                      prev.includes(facility)
+                        ? prev.filter(f => f !== facility)
+                        : [...prev, facility]
+                    );
+                  }}
+                  selected={selectedFacilities.includes(facility)}
+                >
+                  <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                    {facility}
+                  </Text>
+                </DrawerItem>
+              ))}
+              {allFacilities.length > MAX_VISIBLE_ITEMS && (
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }}
+                  onClick={() => setShowMoreFacilities(!showMoreFacilities)}
+                >
+                  {showMoreFacilities ? 'Vis mindre' : `Vis ${allFacilities.length - MAX_VISIBLE_ITEMS} flere`}
+                </Button>
+              )}
+            </Stack>
           </DrawerSection>
         </Drawer>
 
