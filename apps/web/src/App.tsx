@@ -21,11 +21,10 @@ import {
   ListingCard,
   ListingListItem,
   ListingGrid,
-  FilterBar,
+  ListingToolbar,
   ListingMap,
   Stack,
-  Text,
-  mockFilterData
+  Text
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode, ListingType } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
@@ -60,13 +59,22 @@ const demoSearchResults: SearchResultGroup[] = [
   }
 ];
 
-// Filter options
-const venueTypes = [
-  { id: 'all', label: 'Alle', count: 8 },
-  { id: 'idrettshall', label: 'Idrettshall', count: 3 },
-  { id: 'moterom', label: 'Møterom', count: 2 },
-  { id: 'svommebasseng', label: 'Svømmebasseng', count: 2 },
-  { id: 'utendors', label: 'Utendørs', count: 1 },
+// Filter options - listing types with dynamic counts
+const getListingTypeCounts = () => {
+  const counts: Record<string, number> = { ALL: listings.length };
+  listings.forEach(l => {
+    counts[l.listingType] = (counts[l.listingType] || 0) + 1;
+  });
+  return counts;
+};
+
+const listingTypeOptions = [
+  { id: 'ALL', label: 'Alle' },
+  { id: 'SPACE', label: 'Lokaler' },
+  { id: 'RESOURCE', label: 'Ressurser' },
+  { id: 'EVENT', label: 'Arrangementer' },
+  { id: 'SERVICE', label: 'Tjenester' },
+  { id: 'VEHICLE', label: 'Kjøretøy' },
 ];
 
 // Mapbox token from environment
@@ -375,14 +383,13 @@ export function App() {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // Filter drawer state (for secondary filters)
+  // Filter drawer state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
-  const [selectedTypes, setSelectedTypes] = React.useState<string[]>(['all']);
+  const [listingType, setListingType] = React.useState<ListingType | 'ALL'>('ALL');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
-  // Primary listing type filter
-  const [listingType, setListingType] = React.useState<ListingType | 'ALL'>('ALL');
-  const [venueTypeFilter, setVenueTypeFilter] = React.useState<string>('all');
+  // Get counts for each listing type
+  const typeCounts = React.useMemo(() => getListingTypeCounts(), []);
 
   // Filter listings by listing type
   const filteredListings = React.useMemo(() => {
@@ -444,19 +451,11 @@ export function App() {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
   };
 
-  const handleTypeToggle = (typeId: string) => {
-    if (typeId === 'all') {
-      setSelectedTypes(['all']);
-    } else {
-      const newTypes = selectedTypes.filter(t => t !== 'all');
-      if (newTypes.includes(typeId)) {
-        const filtered = newTypes.filter(t => t !== typeId);
-        setSelectedTypes(filtered.length > 0 ? filtered : ['all']);
-      } else {
-        setSelectedTypes([...newTypes, typeId]);
-      }
-    }
+  const handleTypeSelect = (typeId: string) => {
+    setListingType(typeId as ListingType | 'ALL');
   };
+
+  const activeFilterCount = listingType !== 'ALL' ? 1 : 0;
 
   const isDarkTheme = colorScheme === 'dark';
 
@@ -567,12 +566,12 @@ export function App() {
           mobileSize="lg"
           footer={
             <Stack spacing="var(--ds-spacing-3)">
-              <Text 
-                size="sm" 
+              <Text
+                size="sm"
                 color="var(--ds-color-neutral-text-subtle)"
                 style={{ textAlign: 'center' }}
               >
-                Viser 6 lokaler
+                Viser {filteredListings.length} resultater
               </Text>
               <Button
                 type="button"
@@ -585,21 +584,21 @@ export function App() {
             </Stack>
           }
         >
-          <DrawerSection title="Type anlegg" collapsible>
+          <DrawerSection title="Type" collapsible>
             <Stack spacing="var(--ds-spacing-1)">
-              {venueTypes.map((type) => (
+              {listingTypeOptions.map((type) => (
                 <DrawerItem
                   key={type.id}
                   left={
                     <Checkbox
-                      checked={selectedTypes.includes(type.id)}
-                      onChange={() => handleTypeToggle(type.id)}
+                      checked={listingType === type.id}
+                      onChange={() => handleTypeSelect(type.id)}
                       aria-label={type.label}
                     />
                   }
-                  right={<Text size="sm">({type.count})</Text>}
-                  onClick={() => handleTypeToggle(type.id)}
-                  selected={selectedTypes.includes(type.id)}
+                  right={<Text size="sm">({typeCounts[type.id] || 0})</Text>}
+                  onClick={() => handleTypeSelect(type.id)}
+                  selected={listingType === type.id}
                 >
                   <Text size="sm" color="var(--ds-color-neutral-text-default)">
                     {type.label}
@@ -655,27 +654,15 @@ export function App() {
               />
             </div>
 
-            <FilterBar
-              primaryFilter={{
-                value: listingType,
-                options: mockFilterData.listingTypes(),
-                onChange: setListingType,
-                label: 'Type',
-              }}
-              filters={[
-                {
-                  id: 'venueType',
-                  label: 'Kategori',
-                  type: 'select',
-                  options: mockFilterData.venueTypes(),
-                  value: venueTypeFilter,
-                  onChange: (val) => setVenueTypeFilter(val as string),
-                },
-              ]}
-              resultsCount={filteredListings.length}
-              resultsLabel="resultater"
+            <ListingToolbar
+              count={filteredListings.length}
+              countLabel="resultater"
+              activeFilterCount={activeFilterCount}
+              onFilterClick={() => setIsFilterOpen(true)}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
+              showViewToggle={true}
+              className="listing-toolbar"
             />
 
             {viewMode === 'grid' ? (
