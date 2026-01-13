@@ -81,6 +81,9 @@ export function ListingsPage(): React.ReactElement {
     return mockListings;
   }, [apiListingsData, isMockMode]);
 
+  // Check if we're actually using API data (for error message display)
+  const isUsingApiData = !isMockMode && apiListingsData?.data && apiListingsData.data.length > 0;
+
   // Filter drawer state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [listingType, setListingType] = React.useState<ListingType | 'ALL'>('ALL');
@@ -451,8 +454,8 @@ export function ListingsPage(): React.ReactElement {
             </div>
           )}
 
-          {/* API Error State - only show if not in mock mode */}
-          {!isMockMode && apiError && !isApiLoading && (
+          {/* API Error State - only show if not in mock mode AND not using API data */}
+          {!isMockMode && apiError && !isApiLoading && !isUsingApiData && (
             <div style={{
               padding: 'var(--ds-spacing-4)',
               marginBottom: 'var(--ds-spacing-4)',

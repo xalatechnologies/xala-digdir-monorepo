@@ -206,47 +206,57 @@ function ActivityItem({ title, description, time, status }: ActivityItemProps) {
   );
 }
 
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 1) return 'Akkurat nå';
+  if (diffMins < 60) return `For ${diffMins} minutt${diffMins === 1 ? '' : 'er'} siden`;
+  if (diffHours < 24) return `For ${diffHours} time${diffHours === 1 ? '' : 'r'} siden`;
+  return `For ${diffDays} dag${diffDays === 1 ? '' : 'er'} siden`;
+}
+
+function mapBookingStatusToActivity(status: string): 'pending' | 'approved' | 'rejected' {
+  switch (status) {
+    case 'pending':
+      return 'pending';
+    case 'confirmed':
+      return 'approved';
+    case 'cancelled':
+    case 'rejected':
+      return 'rejected';
+    default:
+      return 'pending';
+  }
+}
+
 export function DashboardPage() {
   const { user, isAdmin, isSaksbehandler } = useAuth();
   const navigate = useNavigate();
   const { data: pendingBookings, isLoading: loadingPending } = useBookings({ status: 'pending' });
   const { data: confirmedBookings, isLoading: loadingConfirmed } = useBookings({ status: 'confirmed' });
   const { data: cancelledBookings, isLoading: loadingCancelled } = useBookings({ status: 'cancelled' });
+  // Fetch recent bookings for activity feed (last 10 regardless of status)
+  const { data: recentBookingsData, isLoading: loadingRecent } = useBookings({ limit: 10 });
 
-  const isLoading = loadingPending || loadingConfirmed || loadingCancelled;
+  const isLoading = loadingPending || loadingConfirmed || loadingCancelled || loadingRecent;
 
   const pendingCount = pendingBookings?.meta?.total ?? 0;
   const confirmedCount = confirmedBookings?.meta?.total ?? 0;
   const cancelledCount = cancelledBookings?.meta?.total ?? 0;
   const totalCount = pendingCount + confirmedCount + cancelledCount;
 
-  // Mock recent activity data
-  const recentActivity: ActivityItemProps[] = [
-    {
-      title: 'Booking #2847',
-      description: 'Storhallen A - Nordre Follo IL',
-      time: 'For 5 minutter siden',
-      status: 'pending',
-    },
-    {
-      title: 'Booking #2846',
-      description: 'Møterom 3B - Kommunestyret',
-      time: 'For 15 minutter siden',
-      status: 'approved',
-    },
-    {
-      title: 'Booking #2845',
-      description: 'Kulturhuset Scene - Privat arrangement',
-      time: 'For 1 time siden',
-      status: 'rejected',
-    },
-    {
-      title: 'Booking #2844',
-      description: 'Gymsalen - Skolen Idrettslag',
-      time: 'For 2 timer siden',
-      status: 'approved',
-    },
-  ];
+  // Transform recent bookings to activity items
+  const recentActivity: ActivityItemProps[] = (recentBookingsData?.data ?? []).slice(0, 4).map((booking) => ({
+    title: `Booking #${booking.id.slice(-4)}`,
+    description: `${booking.listingName || booking.listingId} - ${booking.userName || 'Ukjent'}`,
+    time: formatTimeAgo(booking.createdAt),
+    status: mapBookingStatusToActivity(booking.status),
+  }));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>

@@ -164,7 +164,11 @@ export {
   VideoIcon,
   InfoIcon,
   CloseIcon,
-  SparklesIcon
+  SparklesIcon,
+  UsersIcon,
+  CheckCircleIcon,
+  StarIcon,
+  ShieldIcon,
 } from './primitives';
 export type {
   ContainerProps,

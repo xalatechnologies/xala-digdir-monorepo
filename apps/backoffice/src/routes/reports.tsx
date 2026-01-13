@@ -1,50 +1,470 @@
-import { Card, Heading, Paragraph } from '@xala/ds';
+import { useState, useMemo } from 'react';
+import { Card, Heading, Paragraph, Button, Badge, Spinner } from '@xala/ds';
+import {
+  useDashboardKPIs,
+  useUsageReport,
+  useRevenueReport,
+  useBookingStats,
+  useExportReport,
+  type ReportPeriod,
+  type ExportFormat,
+} from '@xala/sdk';
 
-const ChartIcon = () => (
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="20" x2="18" y2="10" />
-    <line x1="12" y1="20" x2="12" y2="4" />
-    <line x1="6" y1="20" x2="6" y2="14" />
+const DownloadIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
   </svg>
 );
 
+const CalendarIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+const periodLabels: Record<ReportPeriod, string> = {
+  day: 'Dag',
+  week: 'Uke',
+  month: 'Måned',
+  quarter: 'Kvartal',
+  year: 'År',
+};
+
+function formatCurrency(value: number): string {
+  return value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK', minimumFractionDigits: 0 });
+}
+
+function formatPercent(value: number): string {
+  return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+}
+
+// Simple bar chart component
+function BarChart({ data, maxValue }: { data: { label: string; value: number }[]; maxValue?: number }) {
+  const max = maxValue || Math.max(...data.map((d) => d.value), 1);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+      {data.map((item, idx) => (
+        <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+          <div style={{ width: '80px', fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', textAlign: 'right' }}>
+            {item.label}
+          </div>
+          <div style={{ flex: 1, height: '24px', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-sm)', overflow: 'hidden' }}>
+            <div
+              style={{
+                height: '100%',
+                width: `${(item.value / max) * 100}%`,
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+                borderRadius: 'var(--ds-border-radius-sm)',
+                transition: 'width 0.3s ease',
+              }}
+            />
+          </div>
+          <div style={{ width: '60px', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+            {item.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function ReportsPage() {
+  const [period, setPeriod] = useState<ReportPeriod>('month');
+  const [dateRange, setDateRange] = useState(() => {
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(start.getMonth() - 1);
+    return {
+      startDate: start.toISOString().split('T')[0],
+      endDate: end.toISOString().split('T')[0],
+    };
+  });
+
+  // Fetch data from API
+  const { data: kpisData, isLoading: isLoadingKPIs } = useDashboardKPIs();
+  const kpis = kpisData?.data;
+
+  const { data: usageData, isLoading: isLoadingUsage } = useUsageReport({
+    period,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const usageReport = usageData?.data ?? [];
+
+  const { data: revenueData, isLoading: isLoadingRevenue } = useRevenueReport({
+    period,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const revenueReport = revenueData?.data ?? [];
+
+  const { data: statsData, isLoading: isLoadingStats } = useBookingStats({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const bookingStats = statsData?.data;
+
+  const exportReport = useExportReport();
+
+  // Transform usage data for chart
+  const usageChartData = useMemo(() => {
+    return usageReport.slice(0, 10).map((item) => ({
+      label: item.listingName || item.listingId,
+      value: item.totalHours || 0,
+    }));
+  }, [usageReport]);
+
+  // Transform revenue data for chart
+  const revenueChartData = useMemo(() => {
+    return revenueReport.slice(0, 10).map((item) => ({
+      label: item.period || '',
+      value: item.totalRevenue || 0,
+    }));
+  }, [revenueReport]);
+
+  const handleExport = (format: ExportFormat, type: 'usage' | 'revenue' | 'bookings') => {
+    exportReport.mutate({
+      type,
+      format,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
+  };
+
+  const isLoading = isLoadingKPIs || isLoadingUsage || isLoadingRevenue || isLoadingStats;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          Rapporter
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          Oversikt og statistikk over bookinger og bruk.
-        </Paragraph>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
+            Rapporter
+          </Heading>
+          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
+            Oversikt og statistikk over bookinger og bruk.
+          </Paragraph>
+        </div>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="md"
+            onClick={() => handleExport('xlsx', 'usage')}
+            disabled={exportReport.isPending}
+          >
+            <DownloadIcon />
+            Eksporter Excel
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="md"
+            onClick={() => handleExport('pdf', 'usage')}
+            disabled={exportReport.isPending}
+          >
+            <DownloadIcon />
+            Eksporter PDF
+          </Button>
+        </div>
       </div>
 
-      <Card
-        style={{
-          padding: 'var(--ds-spacing-12)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          gap: 'var(--ds-spacing-4)',
-        }}
-      >
-        <div style={{ color: 'var(--ds-color-neutral-text-subtle)', opacity: 0.5 }}>
-          <ChartIcon />
+      {/* Period Controls */}
+      <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+              <CalendarIcon />
+              <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Periode:</span>
+            </div>
+            <input
+              type="date"
+              value={dateRange.startDate}
+              onChange={(e) => setDateRange((prev) => ({ ...prev, startDate: e.target.value }))}
+              style={{
+                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                border: '1px solid var(--ds-color-neutral-border-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+            />
+            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>til</span>
+            <input
+              type="date"
+              value={dateRange.endDate}
+              onChange={(e) => setDateRange((prev) => ({ ...prev, endDate: e.target.value }))}
+              style={{
+                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                border: '1px solid var(--ds-color-neutral-border-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+            {(Object.keys(periodLabels) as ReportPeriod[]).map((p) => (
+              <Button
+                key={p}
+                type="button"
+                variant={period === p ? 'primary' : 'tertiary'}
+                data-size="sm"
+                onClick={() => setPeriod(p)}
+              >
+                {periodLabels[p]}
+              </Button>
+            ))}
+          </div>
         </div>
-        <Heading level={2} data-size="md" style={{ margin: 0 }}>
-          Rapporter kommer snart
-        </Heading>
-        <Paragraph
-          data-size="sm"
-          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, maxWidth: '400px' }}
-        >
-          Vi jobber med å utvikle rapporter og statistikk for bookinger, bruk og inntekter.
-          Denne funksjonen vil være tilgjengelig i en fremtidig oppdatering.
-        </Paragraph>
       </Card>
+
+      {isLoading ? (
+        <Card style={{ padding: 'var(--ds-spacing-12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Spinner />
+        </Card>
+      ) : (
+        <>
+          {/* KPI Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-4)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                Aktive lokaler
+              </Paragraph>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)' }}>
+                <Heading level={2} data-size="xl" style={{ margin: 0 }}>
+                  {kpis?.activeListings ?? 0}
+                </Heading>
+              </div>
+            </Card>
+
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                Ventende forespørsler
+              </Paragraph>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)' }}>
+                <Heading level={2} data-size="xl" style={{ margin: 0 }}>
+                  {kpis?.pendingRequests ?? 0}
+                </Heading>
+                {(kpis?.pendingRequests ?? 0) > 0 && (
+                  <Badge data-color="warning" data-size="sm">Krever handling</Badge>
+                )}
+              </div>
+            </Card>
+
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                Bookinger i dag
+              </Paragraph>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)' }}>
+                <Heading level={2} data-size="xl" style={{ margin: 0 }}>
+                  {kpis?.todayBookings ?? 0}
+                </Heading>
+              </div>
+            </Card>
+
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                Omsetning denne {periodLabels[period].toLowerCase()}en
+              </Paragraph>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)' }}>
+                <Heading level={2} data-size="xl" style={{ margin: 0 }}>
+                  {formatCurrency(kpis?.periodRevenue ?? 0)}
+                </Heading>
+                {kpis?.revenueChange !== undefined && (
+                  <Badge data-color={kpis.revenueChange >= 0 ? 'success' : 'danger'} data-size="sm">
+                    {formatPercent(kpis.revenueChange)}
+                  </Badge>
+                )}
+              </div>
+            </Card>
+          </div>
+
+          {/* Charts Section */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
+            {/* Usage Chart */}
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+                <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+                  Bruk per lokale (timer)
+                </Heading>
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  data-size="sm"
+                  onClick={() => handleExport('csv', 'usage')}
+                  disabled={exportReport.isPending}
+                >
+                  <DownloadIcon />
+                  CSV
+                </Button>
+              </div>
+              {usageChartData.length > 0 ? (
+                <BarChart data={usageChartData} />
+              ) : (
+                <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+                  Ingen bruksdata for valgt periode.
+                </Paragraph>
+              )}
+            </Card>
+
+            {/* Revenue Chart */}
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+                <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+                  Omsetning over tid
+                </Heading>
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  data-size="sm"
+                  onClick={() => handleExport('csv', 'revenue')}
+                  disabled={exportReport.isPending}
+                >
+                  <DownloadIcon />
+                  CSV
+                </Button>
+              </div>
+              {revenueChartData.length > 0 ? (
+                <BarChart data={revenueChartData} maxValue={Math.max(...revenueChartData.map((d) => d.value))} />
+              ) : (
+                <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+                  Ingen omsetningsdata for valgt periode.
+                </Paragraph>
+              )}
+            </Card>
+          </div>
+
+          {/* Booking Statistics */}
+          <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+            <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+              Bookingstatistikk
+            </Heading>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 'var(--ds-spacing-4)' }}>
+              <div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Totalt antall
+                </Paragraph>
+                <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
+                  {bookingStats?.totalBookings ?? 0}
+                </Heading>
+              </div>
+              <div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Bekreftet
+                </Paragraph>
+                <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
+                  {bookingStats?.confirmedBookings ?? 0}
+                </Heading>
+              </div>
+              <div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Venter
+                </Paragraph>
+                <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-warning-text-default)' }}>
+                  {bookingStats?.pendingBookings ?? 0}
+                </Heading>
+              </div>
+              <div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Kansellert
+                </Paragraph>
+                <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-danger-text-default)' }}>
+                  {bookingStats?.cancelledBookings ?? 0}
+                </Heading>
+              </div>
+              <div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Gj.snitt varighet
+                </Paragraph>
+                <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
+                  {bookingStats?.averageDuration ? `${bookingStats.averageDuration.toFixed(1)}t` : '-'}
+                </Heading>
+              </div>
+            </div>
+          </Card>
+
+          {/* Top Listings */}
+          {usageReport.length > 0 && (
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+                Mest brukte lokaler
+              </Heading>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                {usageReport.slice(0, 5).map((item, idx) => (
+                  <div
+                    key={item.listingId}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                      backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-neutral-border-subtle)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+                      <div
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: 'var(--ds-border-radius-full)',
+                          backgroundColor: 'var(--ds-color-accent-surface-default)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 'var(--ds-font-size-sm)',
+                          fontWeight: 'var(--ds-font-weight-bold)',
+                          color: 'var(--ds-color-accent-text-default)',
+                        }}
+                      >
+                        {idx + 1}
+                      </div>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {item.listingName || item.listingId}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                          Timer
+                        </Paragraph>
+                        <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {item.totalHours?.toFixed(1) ?? 0}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                          Bookinger
+                        </Paragraph>
+                        <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {item.bookingCount ?? 0}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                          Utnyttelse
+                        </Paragraph>
+                        <Badge data-color={
+                          (item.utilizationRate ?? 0) >= 70 ? 'success' :
+                          (item.utilizationRate ?? 0) >= 40 ? 'warning' : 'neutral'
+                        } data-size="sm">
+                          {item.utilizationRate?.toFixed(0) ?? 0}%
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+        </>
+      )}
     </div>
   );
 }

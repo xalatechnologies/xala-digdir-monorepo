@@ -1,39 +1,23 @@
-import { useState } from 'react';
-import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
+import { useState, useEffect } from 'react';
+import { Card, Heading, Paragraph, Button, Badge, Spinner } from '@xala/ds';
+import {
+  useConversations,
+  useMessages,
+  useSendMessage,
+  useMarkMessagesRead,
+  type Conversation,
+  type Message,
+} from '@xala/sdk';
 
-// Mock data
-interface Conversation {
-  id: string;
-  userName: string;
-  organization?: string;
-  bookingId?: string;
-  lastMessage: string;
-  lastMessageTime: string;
-  unreadCount: number;
-  status: 'active' | 'resolved';
+function formatTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
 }
 
-interface Message {
-  id: string;
-  sender: 'user' | 'admin';
-  senderName: string;
-  content: string;
-  timestamp: string;
+function formatDateTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleString('nb-NO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
-
-const mockConversations: Conversation[] = [
-  { id: '1', userName: 'Nordre Follo IL', organization: 'Nordre Follo IL', bookingId: 'BOK-2847', lastMessage: 'Kan vi flytte bookingen til torsdag i stedet?', lastMessageTime: '2024-01-13 10:30', unreadCount: 2, status: 'active' },
-  { id: '2', userName: 'Erik Hansen', bookingId: 'REQ-2845', lastMessage: 'Ja, vi har projektor tilgjengelig i rommet.', lastMessageTime: '2024-01-13 09:15', unreadCount: 0, status: 'active' },
-  { id: '3', userName: 'Ski Håndball', organization: 'Ski Håndball', bookingId: 'BOK-2844', lastMessage: 'Tusen takk for hjelpen!', lastMessageTime: '2024-01-12 16:45', unreadCount: 0, status: 'resolved' },
-  { id: '4', userName: 'Vestby Korps', organization: 'Vestby Korps', bookingId: 'REQ-2840', lastMessage: 'Vi trenger informasjon om strømuttak i lokalet.', lastMessageTime: '2024-01-12 14:20', unreadCount: 1, status: 'active' },
-  { id: '5', userName: 'Mari Olsen', bookingId: 'REQ-2842', lastMessage: 'Kan jeg få bekreftelse på bookingen?', lastMessageTime: '2024-01-11 11:00', unreadCount: 1, status: 'active' },
-];
-
-const mockMessages: Message[] = [
-  { id: '1', sender: 'user', senderName: 'Nordre Follo IL', content: 'Hei! Vi har en booking på mandag, men det har oppstått en konflikt. Kan vi flytte bookingen til torsdag i stedet?', timestamp: '2024-01-13 10:15' },
-  { id: '2', sender: 'admin', senderName: 'Kari Nordmann', content: 'Hei! La meg sjekke tilgjengeligheten for torsdag. Hvilket tidspunkt passer for dere?', timestamp: '2024-01-13 10:20' },
-  { id: '3', sender: 'user', senderName: 'Nordre Follo IL', content: 'Samme tidspunkt som opprinnelig, 17:00-20:00. Er det ledig?', timestamp: '2024-01-13 10:30' },
-];
 
 const SendIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -43,10 +27,77 @@ const SendIcon = () => (
 );
 
 export function MessagesPage() {
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(mockConversations[0] ?? null);
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const unreadTotal = mockConversations.reduce((sum, c) => sum + c.unreadCount, 0);
+  // Fetch conversations from API
+  const { data: conversationsData, isLoading: isLoadingConversations } = useConversations();
+  const conversations = conversationsData?.data ?? [];
+
+  // Fetch messages for selected conversation
+  const { data: messagesData, isLoading: isLoadingMessages } = useMessages(
+    { conversationId: selectedConversationId! },
+    !!selectedConversationId
+  );
+  const messages = messagesData?.data ?? [];
+
+  // Mutations
+  const sendMessage = useSendMessage();
+  const markAsRead = useMarkMessagesRead();
+
+  // Auto-select first conversation
+  useEffect(() => {
+    if (conversations.length > 0 && !selectedConversationId) {
+      setSelectedConversationId(conversations[0].id);
+    }
+  }, [conversations, selectedConversationId]);
+
+  // Mark messages as read when conversation is selected
+  useEffect(() => {
+    if (selectedConversationId) {
+      const conversation = conversations.find((c) => c.id === selectedConversationId);
+      if (conversation && conversation.unreadCount > 0) {
+        markAsRead.mutate(selectedConversationId);
+      }
+    }
+  }, [selectedConversationId, conversations]);
+
+  const selectedConversation = conversations.find((c) => c.id === selectedConversationId);
+
+  // Filter conversations by search query
+  const filteredConversations = searchQuery
+    ? conversations.filter(
+        (c) =>
+          c.userName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : conversations;
+
+  const unreadTotal = conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
+
+  const handleSendMessage = () => {
+    if (!messageInput.trim() || !selectedConversationId) return;
+
+    sendMessage.mutate(
+      {
+        conversationId: selectedConversationId,
+        content: messageInput.trim(),
+      },
+      {
+        onSuccess: () => {
+          setMessageInput('');
+        },
+      }
+    );
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)', height: 'calc(100vh - 200px)' }}>
@@ -73,6 +124,8 @@ export function MessagesPage() {
             <input
               type="text"
               placeholder="Søk i samtaler..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 width: '100%',
                 padding: 'var(--ds-spacing-3)',
@@ -83,54 +136,66 @@ export function MessagesPage() {
             />
           </div>
           <div style={{ flex: 1, overflow: 'auto' }}>
-            {mockConversations.map((conversation) => (
-              <div
-                key={conversation.id}
-                onClick={() => setSelectedConversation(conversation)}
-                style={{
-                  padding: 'var(--ds-spacing-4)',
-                  borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                  cursor: 'pointer',
-                  backgroundColor: selectedConversation?.id === conversation.id
-                    ? 'var(--ds-color-accent-surface-default)'
-                    : 'transparent',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-1)' }}>
-                  <span style={{ fontWeight: 'var(--ds-font-weight-medium)', fontSize: 'var(--ds-font-size-sm)' }}>
-                    {conversation.userName}
-                  </span>
-                  <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {conversation.lastMessageTime.split(' ')[1]}
-                  </span>
-                </div>
-                {conversation.bookingId && (
-                  <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {conversation.bookingId}
-                  </Paragraph>
-                )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Paragraph
-                    data-size="sm"
-                    style={{
-                      margin: 0,
-                      color: 'var(--ds-color-neutral-text-subtle)',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      flex: 1,
-                    }}
-                  >
-                    {conversation.lastMessage}
-                  </Paragraph>
-                  {conversation.unreadCount > 0 && (
-                    <Badge data-color="danger" data-size="sm" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
-                      {conversation.unreadCount}
-                    </Badge>
-                  )}
-                </div>
+            {isLoadingConversations ? (
+              <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
+                <Spinner />
               </div>
-            ))}
+            ) : filteredConversations.length === 0 ? (
+              <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+                <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  {searchQuery ? 'Ingen samtaler funnet.' : 'Ingen samtaler ennå.'}
+                </Paragraph>
+              </div>
+            ) : (
+              filteredConversations.map((conversation) => (
+                <div
+                  key={conversation.id}
+                  onClick={() => setSelectedConversationId(conversation.id)}
+                  style={{
+                    padding: 'var(--ds-spacing-4)',
+                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    cursor: 'pointer',
+                    backgroundColor: selectedConversationId === conversation.id
+                      ? 'var(--ds-color-accent-surface-default)'
+                      : 'transparent',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-1)' }}>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)', fontSize: 'var(--ds-font-size-sm)' }}>
+                      {conversation.userName || 'Ukjent bruker'}
+                    </span>
+                    <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {conversation.lastMessageAt ? formatTime(conversation.lastMessageAt) : ''}
+                    </span>
+                  </div>
+                  {conversation.bookingId && (
+                    <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {conversation.bookingId}
+                    </Paragraph>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Paragraph
+                      data-size="sm"
+                      style={{
+                        margin: 0,
+                        color: 'var(--ds-color-neutral-text-subtle)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        flex: 1,
+                      }}
+                    >
+                      {conversation.lastMessage || 'Ingen meldinger'}
+                    </Paragraph>
+                    {(conversation.unreadCount || 0) > 0 && (
+                      <Badge data-color="danger" data-size="sm" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
+                        {conversation.unreadCount}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </Card>
 
@@ -142,7 +207,7 @@ export function MessagesPage() {
               <div style={{ padding: 'var(--ds-spacing-4)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                    {selectedConversation.userName}
+                    {selectedConversation.userName || 'Ukjent bruker'}
                   </Heading>
                   {selectedConversation.bookingId && (
                     <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -157,38 +222,50 @@ export function MessagesPage() {
 
               {/* Messages */}
               <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-                {mockMessages.map((message) => (
-                  <div
-                    key={message.id}
-                    style={{
-                      display: 'flex',
-                      justifyContent: message.sender === 'admin' ? 'flex-end' : 'flex-start',
-                    }}
-                  >
+                {isLoadingMessages ? (
+                  <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
+                    <Spinner />
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+                    <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                      Ingen meldinger ennå. Start samtalen!
+                    </Paragraph>
+                  </div>
+                ) : (
+                  messages.map((message) => (
                     <div
+                      key={message.id}
                       style={{
-                        maxWidth: '70%',
-                        padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                        borderRadius: 'var(--ds-border-radius-lg)',
-                        backgroundColor: message.sender === 'admin'
-                          ? 'var(--ds-color-accent-surface-default)'
-                          : 'var(--ds-color-neutral-surface-hover)',
+                        display: 'flex',
+                        justifyContent: message.sender === 'admin' ? 'flex-end' : 'flex-start',
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
-                        <span style={{ fontSize: 'var(--ds-font-size-xs)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {message.senderName}
-                        </span>
-                        <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginLeft: 'var(--ds-spacing-3)' }}>
-                          {message.timestamp.split(' ')[1]}
-                        </span>
+                      <div
+                        style={{
+                          maxWidth: '70%',
+                          padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                          borderRadius: 'var(--ds-border-radius-lg)',
+                          backgroundColor: message.sender === 'admin'
+                            ? 'var(--ds-color-accent-surface-default)'
+                            : 'var(--ds-color-neutral-surface-hover)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
+                          <span style={{ fontSize: 'var(--ds-font-size-xs)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                            {message.senderName || (message.sender === 'admin' ? 'Admin' : 'Bruker')}
+                          </span>
+                          <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginLeft: 'var(--ds-spacing-3)' }}>
+                            {formatTime(message.createdAt)}
+                          </span>
+                        </div>
+                        <Paragraph data-size="sm" style={{ margin: 0 }}>
+                          {message.content}
+                        </Paragraph>
                       </div>
-                      <Paragraph data-size="sm" style={{ margin: 0 }}>
-                        {message.content}
-                      </Paragraph>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
 
               {/* Message Input */}
@@ -198,6 +275,7 @@ export function MessagesPage() {
                   placeholder="Skriv en melding..."
                   value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   style={{
                     flex: 1,
                     padding: 'var(--ds-spacing-3)',
@@ -206,16 +284,22 @@ export function MessagesPage() {
                     fontSize: 'var(--ds-font-size-sm)',
                   }}
                 />
-                <Button type="button" variant="primary" data-size="md">
+                <Button
+                  type="button"
+                  variant="primary"
+                  data-size="md"
+                  onClick={handleSendMessage}
+                  disabled={!messageInput.trim() || sendMessage.isPending}
+                >
                   <SendIcon />
-                  Send
+                  {sendMessage.isPending ? 'Sender...' : 'Send'}
                 </Button>
               </div>
             </>
           ) : (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Velg en samtale for å se meldinger
+                {isLoadingConversations ? 'Laster samtaler...' : 'Velg en samtale for å se meldinger'}
               </Paragraph>
             </div>
           )}

@@ -1,4 +1,6 @@
-import { Card, Heading, Paragraph, Button, Badge, Table, Dropdown } from '@xala/ds';
+import { useMemo } from 'react';
+import { Card, Heading, Paragraph, Button, Badge, Table, Dropdown, Spinner } from '@xala/ds';
+import { useSeasonalLeases, useOrganizations, useListings, type SeasonalLease, type SeasonalLeaseStatus } from '@xala/sdk';
 
 const PlusIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -15,38 +17,77 @@ const MoreIcon = () => (
   </svg>
 );
 
-// Mock data
-interface SeasonLease {
-  id: string;
-  organization: string;
-  listingName: string;
-  period: string;
-  weekdays: string[];
-  timeSlot: string;
-  status: 'active' | 'upcoming' | 'expired';
-  price: number;
+// Map weekday numbers to Norwegian abbreviations (0 = Sunday, 1 = Monday, etc.)
+const weekdayNames: Record<number, string> = {
+  0: 'Søn',
+  1: 'Man',
+  2: 'Tir',
+  3: 'Ons',
+  4: 'Tor',
+  5: 'Fre',
+  6: 'Lør',
+};
+
+function formatWeekdays(weekdays: number[]): string[] {
+  return weekdays.map((day) => weekdayNames[day] || '');
 }
 
-const mockSeasonLeases: SeasonLease[] = [
-  { id: 'SES-001', organization: 'Nordre Follo IL', listingName: 'Storhallen A', period: '01.01 - 30.06.2024', weekdays: ['Man', 'Ons'], timeSlot: '17:00-20:00', status: 'active', price: 45000 },
-  { id: 'SES-002', organization: 'Ski Håndball', listingName: 'Storhallen A', period: '01.01 - 30.06.2024', weekdays: ['Tir', 'Tor'], timeSlot: '16:00-19:00', status: 'active', price: 42000 },
-  { id: 'SES-003', organization: 'Ås Turnforening', listingName: 'Gymsalen', period: '01.01 - 30.06.2024', weekdays: ['Man', 'Ons', 'Fre'], timeSlot: '15:00-18:00', status: 'active', price: 38000 },
-  { id: 'SES-004', organization: 'Langhus Fotball', listingName: 'Kunstgressbanen', period: '01.04 - 30.09.2024', weekdays: ['Man', 'Ons', 'Fre'], timeSlot: '17:00-20:00', status: 'upcoming', price: 55000 },
-  { id: 'SES-005', organization: 'Vestby Korps', listingName: 'Aulaen', period: '01.08 - 31.12.2023', weekdays: ['Tir'], timeSlot: '18:00-21:00', status: 'expired', price: 15000 },
-];
+function formatPeriod(startDate: string, endDate: string): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  return `${start.toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit' })} - ${end.toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+}
 
-function StatusBadge({ status }: { status: SeasonLease['status'] }) {
-  const config: Record<SeasonLease['status'], { color: 'success' | 'info' | 'neutral'; label: string }> = {
+function formatTimeSlot(startTime: string, endTime: string): string {
+  return `${startTime}-${endTime}`;
+}
+
+function StatusBadge({ status }: { status: SeasonalLeaseStatus }) {
+  const config: Record<SeasonalLeaseStatus, { color: 'success' | 'info' | 'neutral' | 'warning'; label: string }> = {
     active: { color: 'success', label: 'Aktiv' },
-    upcoming: { color: 'info', label: 'Kommende' },
+    pending: { color: 'warning', label: 'Venter' },
     expired: { color: 'neutral', label: 'Utløpt' },
+    terminated: { color: 'neutral', label: 'Avsluttet' },
   };
-  return <Badge data-color={config[status].color} data-size="sm">{config[status].label}</Badge>;
+  const cfg = config[status] || { color: 'neutral', label: status };
+  return <Badge data-color={cfg.color} data-size="sm">{cfg.label}</Badge>;
 }
 
 export function SeasonsPage() {
-  const activeCount = mockSeasonLeases.filter((s) => s.status === 'active').length;
-  const upcomingCount = mockSeasonLeases.filter((s) => s.status === 'upcoming').length;
+  // Fetch seasonal leases from API
+  const { data: leasesData, isLoading } = useSeasonalLeases();
+  const leases = leasesData?.data ?? [];
+
+  // Fetch organizations and listings for name lookups
+  const { data: orgsData } = useOrganizations();
+  const { data: listingsData } = useListings();
+
+  const organizations = orgsData?.data ?? [];
+  const listings = listingsData?.data ?? [];
+
+  // Create lookup maps
+  const orgMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    organizations.forEach((org) => {
+      map[org.id] = org.name;
+    });
+    return map;
+  }, [organizations]);
+
+  const listingMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    listings.forEach((listing) => {
+      map[listing.id] = listing.name;
+    });
+    return map;
+  }, [listings]);
+
+  // Calculate statistics
+  const activeCount = leases.filter((l) => l.status === 'active').length;
+  const pendingCount = leases.filter((l) => l.status === 'pending').length;
+  const totalRevenue = leases
+    .filter((l) => l.status === 'active' || l.status === 'pending')
+    .reduce((sum, l) => sum + (l.totalPrice || 0), 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
@@ -100,10 +141,10 @@ export function SeasonsPage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Kommende
+                Venter godkjenning
               </Paragraph>
               <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-                {upcomingCount}
+                {pendingCount}
               </Heading>
             </div>
             <div
@@ -111,13 +152,13 @@ export function SeasonsPage() {
                 width: '48px',
                 height: '48px',
                 borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-info-surface-default)',
+                backgroundColor: 'var(--ds-color-warning-surface-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ds-color-info-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ds-color-warning-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
@@ -132,7 +173,7 @@ export function SeasonsPage() {
                 Total omsetning
               </Paragraph>
               <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-                {mockSeasonLeases.filter((s) => s.status !== 'expired').reduce((sum, s) => sum + s.price, 0).toLocaleString('nb-NO')} kr
+                {totalRevenue.toLocaleString('nb-NO')} kr
               </Heading>
             </div>
             <div
@@ -157,78 +198,90 @@ export function SeasonsPage() {
 
       {/* Table */}
       <Card style={{ padding: 0, overflow: 'hidden' }}>
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.HeaderCell>ID</Table.HeaderCell>
-              <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-              <Table.HeaderCell>Lokale</Table.HeaderCell>
-              <Table.HeaderCell>Periode</Table.HeaderCell>
-              <Table.HeaderCell>Ukedager</Table.HeaderCell>
-              <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Pris</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {mockSeasonLeases.map((lease) => (
-              <Table.Row key={lease.id}>
-                <Table.Cell>
-                  <span style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)' }}>
-                    {lease.id}
-                  </span>
-                </Table.Cell>
-                <Table.Cell>
-                  <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                    {lease.organization}
-                  </span>
-                </Table.Cell>
-                <Table.Cell>{lease.listingName}</Table.Cell>
-                <Table.Cell>{lease.period}</Table.Cell>
-                <Table.Cell>
-                  <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
-                    {lease.weekdays.map((day) => (
-                      <Badge key={day} data-color="neutral" data-size="sm">
-                        {day}
-                      </Badge>
-                    ))}
-                  </div>
-                </Table.Cell>
-                <Table.Cell>{lease.timeSlot}</Table.Cell>
-                <Table.Cell>
-                  <StatusBadge status={lease.status} />
-                </Table.Cell>
-                <Table.Cell>{lease.price.toLocaleString('nb-NO')} kr</Table.Cell>
-                <Table.Cell>
-                  <Dropdown.TriggerContext>
-                    <Dropdown.Trigger asChild>
-                      <Button type="button" variant="tertiary" data-size="sm" aria-label="Handlinger">
-                        <MoreIcon />
-                      </Button>
-                    </Dropdown.Trigger>
-                    <Dropdown placement="bottom-end">
-                      <Dropdown.List>
-                        <Dropdown.Item>
-                          <Dropdown.Button>Rediger</Dropdown.Button>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <Dropdown.Button>Se i kalender</Dropdown.Button>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <Dropdown.Button>Forleng avtale</Dropdown.Button>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <Dropdown.Button>Avslutt avtale</Dropdown.Button>
-                        </Dropdown.Item>
-                      </Dropdown.List>
-                    </Dropdown>
-                  </Dropdown.TriggerContext>
-                </Table.Cell>
+        {isLoading ? (
+          <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Spinner />
+          </div>
+        ) : leases.length === 0 ? (
+          <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+            <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              Ingen sesongleieavtaler funnet.
+            </Paragraph>
+          </div>
+        ) : (
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.HeaderCell>ID</Table.HeaderCell>
+                <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+                <Table.HeaderCell>Lokale</Table.HeaderCell>
+                <Table.HeaderCell>Periode</Table.HeaderCell>
+                <Table.HeaderCell>Ukedager</Table.HeaderCell>
+                <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Pris</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+            </Table.Head>
+            <Table.Body>
+              {leases.map((lease) => (
+                <Table.Row key={lease.id}>
+                  <Table.Cell>
+                    <span style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)' }}>
+                      {lease.id.slice(0, 8)}
+                    </span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {orgMap[lease.organizationId] || lease.organizationId}
+                    </span>
+                  </Table.Cell>
+                  <Table.Cell>{listingMap[lease.listingId] || lease.listingId}</Table.Cell>
+                  <Table.Cell>{formatPeriod(lease.startDate, lease.endDate)}</Table.Cell>
+                  <Table.Cell>
+                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flexWrap: 'wrap' }}>
+                      {formatWeekdays(lease.weekdays).map((day, idx) => (
+                        <Badge key={idx} data-color="neutral" data-size="sm">
+                          {day}
+                        </Badge>
+                      ))}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>{formatTimeSlot(lease.startTime, lease.endTime)}</Table.Cell>
+                  <Table.Cell>
+                    <StatusBadge status={lease.status} />
+                  </Table.Cell>
+                  <Table.Cell>{(lease.totalPrice || 0).toLocaleString('nb-NO')} kr</Table.Cell>
+                  <Table.Cell>
+                    <Dropdown.TriggerContext>
+                      <Dropdown.Trigger asChild>
+                        <Button type="button" variant="tertiary" data-size="sm" aria-label="Handlinger">
+                          <MoreIcon />
+                        </Button>
+                      </Dropdown.Trigger>
+                      <Dropdown placement="bottom-end">
+                        <Dropdown.List>
+                          <Dropdown.Item>
+                            <Dropdown.Button>Rediger</Dropdown.Button>
+                          </Dropdown.Item>
+                          <Dropdown.Item>
+                            <Dropdown.Button>Se i kalender</Dropdown.Button>
+                          </Dropdown.Item>
+                          <Dropdown.Item>
+                            <Dropdown.Button>Forleng avtale</Dropdown.Button>
+                          </Dropdown.Item>
+                          <Dropdown.Item>
+                            <Dropdown.Button>Avslutt avtale</Dropdown.Button>
+                          </Dropdown.Item>
+                        </Dropdown.List>
+                      </Dropdown>
+                    </Dropdown.TriggerContext>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        )}
       </Card>
     </div>
   );

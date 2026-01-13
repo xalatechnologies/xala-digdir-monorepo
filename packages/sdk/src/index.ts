@@ -50,11 +50,21 @@ export type {
   ListingStatus,
   PricingUnit,
   BookingStatus,
-  
+  AllocationStatus,
+  SeasonalLeaseStatus,
+  ConversationStatus,
+  MessageSender,
+  ReportPeriod,
+  ReportType,
+  ExportFormat,
+  OrganizationStatus,
+  UserRole,
+  UserStatus,
+
   // Response wrappers
   PaginatedResponse,
   SingleResponse,
-  
+
   // Domain types
   Pricing,
   Tenant,
@@ -62,16 +72,58 @@ export type {
   ListingMetadata,
   Booking,
   User,
-  
+
+  // Calendar types
+  CalendarEvent,
+  TimeSlot,
+
+  // Seasonal lease types
+  SeasonalLease,
+
+  // Conversation types
+  Conversation,
+  Message,
+
+  // Report types
+  UsageReport,
+  RevenueReport,
+  BookingStats,
+  OrganizationReport,
+  DashboardKPIs,
+
+  // Organization types
+  Organization,
+  OrganizationMember,
+
+  // User types
+  BackofficeUser,
+
   // Query params
   ListingQueryParams,
   BookingQueryParams,
-  
+  CalendarQueryParams,
+  AvailabilityQueryParams,
+  SeasonalLeaseQueryParams,
+  ConversationQueryParams,
+  MessageQueryParams,
+  ReportQueryParams,
+  OrganizationQueryParams,
+  UserQueryParams,
+
   // DTOs
   CreateListingDTO,
   UpdateListingDTO,
   CreateBookingDTO,
-  
+  CreateAllocationDTO,
+  CreateSeasonalLeaseDTO,
+  UpdateSeasonalLeaseDTO,
+  CreateMessageDTO,
+  CreateConversationDTO,
+  CreateOrganizationDTO,
+  UpdateOrganizationDTO,
+  CreateUserDTO,
+  UpdateUserDTO,
+
   // UI types
   UiListing,
 } from './types/api';
@@ -86,7 +138,7 @@ export {
   // Tenants
   getTenants,
   getTenant,
-  
+
   // Listings
   getListings,
   getListing,
@@ -95,16 +147,64 @@ export {
   publishListing,
   archiveListing,
   deleteListing,
-  
+
   // Bookings
   getBookings,
   getBooking,
   createBooking,
   cancelBooking,
   confirmBooking,
-  
+
   // Health
   checkHealth,
+
+  // Calendar
+  getCalendarEvents,
+  getAvailableSlots,
+  createAllocation,
+  deleteAllocation,
+
+  // Seasonal Leases
+  getSeasonalLeases,
+  getSeasonalLease,
+  createSeasonalLease,
+  updateSeasonalLease,
+  terminateSeasonalLease,
+
+  // Conversations
+  getConversations,
+  getConversation,
+  getMessages,
+  createConversation,
+  sendMessage,
+  resolveConversation,
+  markMessagesRead,
+
+  // Reports
+  getUsageReport,
+  getRevenueReport,
+  getBookingStats,
+  getOrganizationReport,
+  getDashboardKPIs,
+  exportReport,
+
+  // Organizations
+  getOrganizations,
+  getOrganization,
+  createOrganization,
+  updateOrganization,
+  getOrganizationMembers,
+  addOrganizationMember,
+  removeOrganizationMember,
+
+  // Users
+  getUsers,
+  getUser,
+  getCurrentUser,
+  createUser,
+  updateUser,
+  deactivateUser,
+  reactivateUser,
 } from './services/api';
 
 // =============================================================================
@@ -134,3 +234,69 @@ export {
   useCancelBooking,
   useConfirmBooking,
 } from './hooks/useBookings';
+
+export {
+  // Calendar
+  calendarKeys,
+  useCalendarEvents,
+  useAvailableSlots,
+  useCreateAllocation,
+  useDeleteAllocation,
+} from './hooks/useCalendar';
+
+export {
+  // Seasonal Leases
+  seasonalLeaseKeys,
+  useSeasonalLeases,
+  useSeasonalLease,
+  useCreateSeasonalLease,
+  useUpdateSeasonalLease,
+  useTerminateSeasonalLease,
+} from './hooks/useSeasonalLeases';
+
+export {
+  // Conversations
+  conversationKeys,
+  useConversations,
+  useConversation,
+  useMessages,
+  useCreateConversation,
+  useSendMessage,
+  useResolveConversation,
+  useMarkMessagesRead,
+} from './hooks/useConversations';
+
+export {
+  // Reports
+  reportKeys,
+  useDashboardKPIs,
+  useUsageReport,
+  useRevenueReport,
+  useBookingStats,
+  useOrganizationReport,
+  useExportReport,
+} from './hooks/useReports';
+
+export {
+  // Organizations
+  organizationKeys,
+  useOrganizations,
+  useOrganization,
+  useOrganizationMembers,
+  useCreateOrganization,
+  useUpdateOrganization,
+  useAddOrganizationMember,
+  useRemoveOrganizationMember,
+} from './hooks/useOrganizations';
+
+export {
+  // Users
+  userKeys,
+  useUsers,
+  useUser,
+  useCurrentUser,
+  useCreateUser,
+  useUpdateUser,
+  useDeactivateUser,
+  useReactivateUser,
+} from './hooks/useUsers';

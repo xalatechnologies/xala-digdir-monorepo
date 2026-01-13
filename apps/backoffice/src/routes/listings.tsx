@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -8,32 +8,16 @@ import {
   Badge,
   Table,
   Dropdown,
+  Spinner,
 } from '@xala/ds';
-import type { ListingType, ListingStatus } from '@xala/sdk';
-
-// Mock data for listings
-interface ListingItem {
-  id: string;
-  name: string;
-  type: ListingType;
-  price: number;
-  priceUnit: string;
-  status: ListingStatus;
-  updatedAt: string;
-  assignee: string;
-}
-
-const mockListings: ListingItem[] = [
-  { id: '1', name: 'Storhallen A', type: 'SPACE', price: 500, priceUnit: 'time', status: 'published', updatedAt: '2024-01-10', assignee: 'Kari N.' },
-  { id: '2', name: 'Møterom 3B', type: 'SPACE', price: 200, priceUnit: 'time', status: 'published', updatedAt: '2024-01-09', assignee: 'Ola H.' },
-  { id: '3', name: 'Gymsalen', type: 'SPACE', price: 400, priceUnit: 'time', status: 'draft', updatedAt: '2024-01-08', assignee: 'Kari N.' },
-  { id: '4', name: 'Konferanserom', type: 'SPACE', price: 300, priceUnit: 'time', status: 'archived', updatedAt: '2024-01-05', assignee: 'Ola H.' },
-  { id: '5', name: 'Projektor HD', type: 'RESOURCE', price: 50, priceUnit: 'dag', status: 'published', updatedAt: '2024-01-10', assignee: 'Kari N.' },
-  { id: '6', name: 'Lydanlegg', type: 'RESOURCE', price: 100, priceUnit: 'dag', status: 'published', updatedAt: '2024-01-09', assignee: 'Ola H.' },
-  { id: '7', name: 'Stoler (sett à 20)', type: 'RESOURCE', price: 150, priceUnit: 'dag', status: 'draft', updatedAt: '2024-01-07', assignee: 'Kari N.' },
-  { id: '8', name: 'Rengjøring', type: 'SERVICE', price: 800, priceUnit: 'booking', status: 'published', updatedAt: '2024-01-10', assignee: 'Kari N.' },
-  { id: '9', name: 'Vaktmester', type: 'SERVICE', price: 500, priceUnit: 'time', status: 'published', updatedAt: '2024-01-08', assignee: 'Ola H.' },
-];
+import {
+  useListings,
+  usePublishListing,
+  useArchiveListing,
+  type ListingType,
+  type ListingStatus,
+  type Listing,
+} from '@xala/sdk';
 
 const PlusIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -64,11 +48,24 @@ function StatusBadge({ status }: { status: ListingStatus }) {
   return <Badge data-color={colors[status]} data-size="sm">{labels[status]}</Badge>;
 }
 
+function formatPrice(listing: Listing): string {
+  const price = listing.pricing?.basePrice ?? listing.pricing?.hourlyRate ?? 0;
+  const unit = listing.pricing?.unit === 'hour' ? 'time' : listing.pricing?.unit === 'day' ? 'dag' : 'booking';
+  return `${price} kr/${unit}`;
+}
+
 type TabType = 'space' | 'resource' | 'service';
 
 export function ListingsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('space');
+
+  // Fetch all listings from API
+  const { data: listingsData, isLoading } = useListings();
+  const allListings = listingsData?.data ?? [];
+
+  const publishListing = usePublishListing();
+  const archiveListing = useArchiveListing();
 
   const typeMap: Record<TabType, ListingType> = {
     space: 'SPACE',
@@ -76,14 +73,28 @@ export function ListingsPage() {
     service: 'SERVICE',
   };
 
-  const filteredListings = mockListings.filter(
-    (l) => l.type === typeMap[activeTab]
-  );
+  // Filter listings by type
+  const filteredListings = useMemo(() => {
+    return allListings.filter((l) => l.type === typeMap[activeTab]);
+  }, [allListings, activeTab]);
 
-  const tabCounts = {
-    space: mockListings.filter((l) => l.type === 'SPACE').length,
-    resource: mockListings.filter((l) => l.type === 'RESOURCE').length,
-    service: mockListings.filter((l) => l.type === 'SERVICE').length,
+  // Calculate tab counts
+  const tabCounts = useMemo(() => ({
+    space: allListings.filter((l) => l.type === 'SPACE').length,
+    resource: allListings.filter((l) => l.type === 'RESOURCE').length,
+    service: allListings.filter((l) => l.type === 'SERVICE').length,
+  }), [allListings]);
+
+  const handlePublish = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await publishListing.mutateAsync(id);
+  };
+
+  const handleArchive = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Er du sikker på at du vil arkivere denne oppføringen?')) {
+      await archiveListing.mutateAsync(id);
+    }
   };
 
   return (
@@ -140,91 +151,99 @@ export function ListingsPage() {
       </div>
 
       {/* Table */}
-      <Card style={{ padding: 0, overflow: 'hidden' }}>
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.HeaderCell>Navn</Table.HeaderCell>
-              <Table.HeaderCell>Pris</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Sist endret</Table.HeaderCell>
-              <Table.HeaderCell>Ansvarlig</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {filteredListings.map((listing) => (
-              <Table.Row
-                key={listing.id}
-                onClick={() => navigate(`/listings/${listing.id}`)}
-                style={{ cursor: 'pointer' }}
-              >
-                <Table.Cell>
-                  <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                    {listing.name}
-                  </span>
-                </Table.Cell>
-                <Table.Cell>
-                  {listing.price} kr/{listing.priceUnit}
-                </Table.Cell>
-                <Table.Cell>
-                  <StatusBadge status={listing.status} />
-                </Table.Cell>
-                <Table.Cell>
-                  {new Date(listing.updatedAt).toLocaleDateString('nb-NO')}
-                </Table.Cell>
-                <Table.Cell>{listing.assignee}</Table.Cell>
-                <Table.Cell>
-                  <Dropdown.TriggerContext>
-                    <Dropdown.Trigger asChild>
-                      <Button
-                        type="button"
-                        variant="tertiary"
-                        data-size="sm"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label="Handlinger"
-                      >
-                        <MoreIcon />
-                      </Button>
-                    </Dropdown.Trigger>
-                    <Dropdown placement="bottom-end">
-                      <Dropdown.List>
-                        <Dropdown.Item>
-                          <Dropdown.Button onClick={() => navigate(`/listings/${listing.id}`)}>
-                            Rediger
-                          </Dropdown.Button>
-                        </Dropdown.Item>
-                        {listing.status === 'draft' && (
-                          <Dropdown.Item>
-                            <Dropdown.Button>Publiser</Dropdown.Button>
-                          </Dropdown.Item>
-                        )}
-                        {listing.status === 'published' && (
-                          <Dropdown.Item>
-                            <Dropdown.Button>Avpubliser</Dropdown.Button>
-                          </Dropdown.Item>
-                        )}
-                        <Dropdown.Item>
-                          <Dropdown.Button>Kopier</Dropdown.Button>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <Dropdown.Button>Arkiver</Dropdown.Button>
-                        </Dropdown.Item>
-                      </Dropdown.List>
-                    </Dropdown>
-                  </Dropdown.TriggerContext>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </Card>
-
-      {filteredListings.length === 0 && (
+      {isLoading ? (
+        <Card style={{ padding: 'var(--ds-spacing-8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Spinner />
+        </Card>
+      ) : filteredListings.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
             Ingen {activeTab === 'space' ? 'lokaler' : activeTab === 'resource' ? 'utstyr' : 'tjenester'} funnet.
           </Paragraph>
+        </Card>
+      ) : (
+        <Card style={{ padding: 0, overflow: 'hidden' }}>
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>Pris</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Sist endret</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {filteredListings.map((listing) => (
+                <Table.Row
+                  key={listing.id}
+                  onClick={() => navigate(`/listings/${listing.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Table.Cell>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {listing.name}
+                    </span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {formatPrice(listing)}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <StatusBadge status={listing.status} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {new Date(listing.updatedAt).toLocaleDateString('nb-NO')}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Dropdown.TriggerContext>
+                      <Dropdown.Trigger asChild>
+                        <Button
+                          type="button"
+                          variant="tertiary"
+                          data-size="sm"
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label="Handlinger"
+                        >
+                          <MoreIcon />
+                        </Button>
+                      </Dropdown.Trigger>
+                      <Dropdown placement="bottom-end">
+                        <Dropdown.List>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => navigate(`/listings/${listing.id}`)}>
+                              Rediger
+                            </Dropdown.Button>
+                          </Dropdown.Item>
+                          {listing.status === 'draft' && (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={(e) => handlePublish(listing.id, e)}>
+                                Publiser
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          )}
+                          {listing.status === 'published' && (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={(e) => handleArchive(listing.id, e)}>
+                                Avpubliser
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          )}
+                          <Dropdown.Item>
+                            <Dropdown.Button>Kopier</Dropdown.Button>
+                          </Dropdown.Item>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={(e) => handleArchive(listing.id, e)}>
+                              Arkiver
+                            </Dropdown.Button>
+                          </Dropdown.Item>
+                        </Dropdown.List>
+                      </Dropdown>
+                    </Dropdown.TriggerContext>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         </Card>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Card,
   Heading,
@@ -14,6 +14,7 @@ import {
   useConfirmBooking,
   useCancelBooking,
   type BookingStatus,
+  type Booking,
 } from '@xala/sdk';
 
 const statusLabels: Record<BookingStatus, string> = {
@@ -29,18 +30,6 @@ const statusColors: Record<BookingStatus, 'warning' | 'success' | 'neutral' | 'i
   cancelled: 'neutral',
   completed: 'info',
 };
-
-// Mock data for when API fails or returns empty
-const mockBookings = [
-  { id: 'BOK-2847', userName: 'Nordre Follo IL', listingName: 'Storhallen A', startTime: '2024-01-20 18:00', endTime: '2024-01-20 21:00', status: 'confirmed' as BookingStatus, totalPrice: 1500, paymentStatus: 'paid' },
-  { id: 'BOK-2846', userName: 'Ski Håndball', listingName: 'Storhallen A', startTime: '2024-01-21 17:00', endTime: '2024-01-21 20:00', status: 'confirmed' as BookingStatus, totalPrice: 1500, paymentStatus: 'paid' },
-  { id: 'BOK-2845', userName: 'Erik Hansen', listingName: 'Møterom 3B', startTime: '2024-01-22 10:00', endTime: '2024-01-22 12:00', status: 'pending' as BookingStatus, totalPrice: 400, paymentStatus: 'unpaid' },
-  { id: 'BOK-2844', userName: 'Ås Turnforening', listingName: 'Gymsalen', startTime: '2024-01-23 16:00', endTime: '2024-01-23 19:00', status: 'confirmed' as BookingStatus, totalPrice: 1200, paymentStatus: 'paid' },
-  { id: 'BOK-2843', userName: 'Langhus Fotball', listingName: 'Kunstgressbanen', startTime: '2024-01-24 17:00', endTime: '2024-01-24 19:00', status: 'pending' as BookingStatus, totalPrice: 800, paymentStatus: 'unpaid' },
-  { id: 'BOK-2842', userName: 'Mari Olsen', listingName: 'Konferanserom', startTime: '2024-01-25 09:00', endTime: '2024-01-25 12:00', status: 'cancelled' as BookingStatus, totalPrice: 600, paymentStatus: 'refunded' },
-  { id: 'BOK-2841', userName: 'Vestby Korps', listingName: 'Aulaen', startTime: '2024-01-26 14:00', endTime: '2024-01-26 17:00', status: 'confirmed' as BookingStatus, totalPrice: 900, paymentStatus: 'paid' },
-  { id: 'BOK-2840', userName: 'Ås Kultur', listingName: 'Storhallen A', startTime: '2024-01-27 10:00', endTime: '2024-01-27 16:00', status: 'confirmed' as BookingStatus, totalPrice: 3000, paymentStatus: 'partial' },
-];
 
 const MoreIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -76,17 +65,20 @@ function PaymentBadge({ status }: { status: string }) {
 
 export function BookingsPage() {
   const [statusFilter, setStatusFilter] = useState<BookingStatus | undefined>(undefined);
-  const { isLoading } = useBookings(
+
+  // Fetch bookings from API with optional status filter
+  const { data: bookingsData, isLoading } = useBookings(
     statusFilter ? { status: statusFilter } : undefined
   );
+  const bookings = bookingsData?.data ?? [];
+
+  // Fetch counts for each status for filter badges
+  const { data: pendingData } = useBookings({ status: 'pending' });
+  const { data: confirmedData } = useBookings({ status: 'confirmed' });
+  const { data: cancelledData } = useBookings({ status: 'cancelled' });
+
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
-
-  // Use mock data for now since API might not have bookings
-  // Always use mock data for display - API data would need mapping to display format
-  const filteredBookings = statusFilter
-    ? mockBookings.filter(b => b.status === statusFilter)
-    : mockBookings;
 
   const handleConfirm = async (id: string) => {
     await confirmBooking.mutateAsync(id);
@@ -106,16 +98,26 @@ export function BookingsPage() {
   };
 
   const formatTime = (dateString: string) => {
-    return dateString.includes(' ') ? dateString.split(' ')[1] : dateString.slice(11, 16);
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Stats
-  const stats = {
-    total: mockBookings.length,
-    confirmed: mockBookings.filter(b => b.status === 'confirmed').length,
-    pending: mockBookings.filter(b => b.status === 'pending').length,
-    revenue: mockBookings.filter(b => b.status === 'confirmed').reduce((sum, b) => sum + b.totalPrice, 0),
-  };
+  // Calculate stats from API data
+  const stats = useMemo(() => {
+    const pendingCount = pendingData?.meta?.total ?? 0;
+    const confirmedCount = confirmedData?.meta?.total ?? 0;
+    const cancelledCount = cancelledData?.meta?.total ?? 0;
+    const confirmedBookings = confirmedData?.data ?? [];
+    const revenue = confirmedBookings.reduce((sum, b) => sum + (b.totalPrice ?? 0), 0);
+
+    return {
+      total: pendingCount + confirmedCount + cancelledCount,
+      confirmed: confirmedCount,
+      pending: pendingCount,
+      cancelled: cancelledCount,
+      revenue,
+    };
+  }, [pendingData, confirmedData, cancelledData]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
@@ -206,6 +208,13 @@ export function BookingsPage() {
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
           <Spinner aria-label="Laster bookinger..." data-size="lg" />
         </div>
+      ) : bookings.length === 0 ? (
+        <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            Ingen bookinger funnet
+            {statusFilter && ` med status "${statusLabels[statusFilter]}"`}.
+          </Paragraph>
+        </Card>
       ) : (
         <Card style={{ padding: 0, overflow: 'hidden' }}>
           <Table>
@@ -222,19 +231,19 @@ export function BookingsPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {filteredBookings.map((booking) => (
+              {bookings.map((booking) => (
                 <Table.Row key={booking.id}>
                   <Table.Cell>
                     <span style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)' }}>
-                      {booking.id}
+                      {booking.id.slice(-8)}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
                     <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {booking.userName}
+                      {booking.userName || booking.userId || 'Ukjent'}
                     </span>
                   </Table.Cell>
-                  <Table.Cell>{booking.listingName}</Table.Cell>
+                  <Table.Cell>{booking.listingName || booking.listingId}</Table.Cell>
                   <Table.Cell>
                     <div>
                       <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>
@@ -251,10 +260,10 @@ export function BookingsPage() {
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <PaymentBadge status={booking.paymentStatus} />
+                    <PaymentBadge status={booking.paymentStatus || 'unpaid'} />
                   </Table.Cell>
                   <Table.Cell>
-                    {booking.totalPrice.toLocaleString('nb-NO')} kr
+                    {(booking.totalPrice ?? 0).toLocaleString('nb-NO')} kr
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
@@ -316,15 +325,6 @@ export function BookingsPage() {
               ))}
             </Table.Body>
           </Table>
-        </Card>
-      )}
-
-      {filteredBookings.length === 0 && (
-        <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Ingen bookinger funnet
-            {statusFilter && ` med status "${statusLabels[statusFilter]}"`}.
-          </Paragraph>
         </Card>
       )}
     </div>
