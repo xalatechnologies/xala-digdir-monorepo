@@ -21,12 +21,13 @@ import {
   ListingCard,
   ListingListItem,
   ListingGrid,
-  ListingToolbar,
+  FilterBar,
   ListingMap,
   Stack,
-  Text
+  Text,
+  mockFilterData
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
+import type { SearchResultItem, SearchResultGroup, ViewMode, ListingType } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 
@@ -374,16 +375,31 @@ export function App() {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // Filter drawer state
+  // Filter drawer state (for secondary filters)
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [selectedTypes, setSelectedTypes] = React.useState<string[]>(['all']);
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
+  // Primary listing type filter
+  const [listingType, setListingType] = React.useState<ListingType | 'ALL'>('ALL');
+  const [venueTypeFilter, setVenueTypeFilter] = React.useState<string>('all');
+
+  // Filter listings by listing type
+  const filteredListings = React.useMemo(() => {
+    if (listingType === 'ALL') return listings;
+    return listings.filter(l => l.listingType === listingType);
+  }, [listingType]);
+
   // Pagination - 2 rows at a time (6 items with 3 columns)
   const ITEMS_PER_PAGE = 6;
   const [visibleCount, setVisibleCount] = React.useState(ITEMS_PER_PAGE);
-  const visibleListings = listings.slice(0, visibleCount);
-  const hasMore = visibleCount < listings.length;
+  const visibleListings = filteredListings.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredListings.length;
+
+  // Reset visible count when filter changes
+  React.useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE);
+  }, [listingType]);
 
   // Simulated search function
   const handleSearchChange = (value: string) => {
@@ -443,7 +459,6 @@ export function App() {
   };
 
   const isDarkTheme = colorScheme === 'dark';
-  const activeFilterCount = selectedTypes.includes('all') ? 0 : selectedTypes.length;
 
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
@@ -640,15 +655,27 @@ export function App() {
               />
             </div>
 
-            <ListingToolbar
-              count={listings.length}
-              countLabel="lokaler"
-              activeFilterCount={activeFilterCount}
-              onFilterClick={() => setIsFilterOpen(true)}
+            <FilterBar
+              primaryFilter={{
+                value: listingType,
+                options: mockFilterData.listingTypes(),
+                onChange: setListingType,
+                label: 'Type',
+              }}
+              filters={[
+                {
+                  id: 'venueType',
+                  label: 'Kategori',
+                  type: 'select',
+                  options: mockFilterData.venueTypes(),
+                  value: venueTypeFilter,
+                  onChange: (val) => setVenueTypeFilter(val as string),
+                },
+              ]}
+              resultsCount={filteredListings.length}
+              resultsLabel="resultater"
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              showViewToggle={true}
-              className="listing-toolbar"
             />
 
             {viewMode === 'grid' ? (
@@ -742,7 +769,7 @@ export function App() {
                   onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
                   style={{ paddingInline: 'var(--ds-spacing-8)' }}
                 >
-                  Vis flere ({listings.length - visibleCount} igjen)
+                  Vis flere ({filteredListings.length - visibleCount} igjen)
                 </Button>
               </div>
             )}
