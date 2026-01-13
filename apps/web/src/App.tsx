@@ -464,14 +464,14 @@ export function App() {
 
             /* Mobile padding for header */
             header .ds-container {
-              padding-left: var(--ds-spacing-6) !important;
-              padding-right: var(--ds-spacing-6) !important;
+              padding-left: var(--ds-spacing-4) !important;
+              padding-right: var(--ds-spacing-4) !important;
             }
 
             /* Mobile padding for main content */
             .main-content-layout {
-              padding-left: var(--ds-spacing-6) !important;
-              padding-right: var(--ds-spacing-6) !important;
+              padding-left: var(--ds-spacing-4) !important;
+              padding-right: var(--ds-spacing-4) !important;
             }
 
             /* Ensure all child elements respect the container padding */
