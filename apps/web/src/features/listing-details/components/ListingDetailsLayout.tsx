@@ -4,13 +4,12 @@
  * Thin composition layer that assembles all listing detail components
  * into the full page layout. Follows the structure:
  * - Header block (under slideshow)
- * - Full-width tabs
+ * - Pill-style tabs
  * - Tab content with sidebar widgets in Overview
  * - Full-width booking section
  */
 
 import * as React from 'react';
-import { Tabs } from '@digdir/designsystemet-react';
 import { RequireAuthModal, ShareSheet } from '@xala/ds';
 import type { Listing } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
@@ -51,6 +50,49 @@ export interface ListingDetailsLayoutProps {
 }
 
 // =============================================================================
+// Tab Button Component
+// =============================================================================
+
+interface TabButtonProps {
+  id: string;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function TabButton({ id, label, isActive, onClick }: TabButtonProps): React.ReactElement {
+  return (
+    <button
+      type="button"
+      role="tab"
+      id={`tab-${id}`}
+      aria-selected={isActive}
+      aria-controls={`panel-${id}`}
+      onClick={onClick}
+      className="listing-tab-button"
+      style={{
+        flex: 1,
+        minWidth: '80px',
+        padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+        borderRadius: 'var(--ds-border-radius-md)',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: 'var(--ds-font-size-sm)',
+        fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+        transition: 'all 0.2s ease',
+        backgroundColor: isActive ? '#1E3A5F' : 'transparent',
+        color: isActive ? 'white' : '#64748B',
+        textAlign: 'center',
+        boxShadow: isActive ? '0 1px 3px rgba(0, 0, 0, 0.1)' : 'none',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
+// =============================================================================
 // Component
 // =============================================================================
 
@@ -74,7 +116,6 @@ export function ListingDetailsLayout({
   // Subscribe to real-time updates
   useRealtimeUpdates(listing.id, (event) => {
     if (event.type === 'LISTING_UPDATED') {
-      // Could trigger a refetch or show a toast
       console.log('[REALTIME] Listing updated:', event);
     }
   });
@@ -88,7 +129,6 @@ export function ListingDetailsLayout({
 
   // Handle share action
   const handleShare = React.useCallback(async () => {
-    // Log view intent
     await logAuditEvent('LISTING_SHARED', listing.tenantId, listing.id, userId);
 
     if (isNativeShareAvailable()) {
@@ -120,6 +160,14 @@ export function ListingDetailsLayout({
     onFavoriteToggle();
   }, [isAuthenticated, onFavoriteToggle]);
 
+  // Tab configuration
+  const tabs = [
+    { id: 'overview', label: 'Oversikt' },
+    { id: 'activity', label: presenter.activityTabConfig.labelKey },
+    { id: 'rules', label: 'Retningslinjer' },
+    { id: 'faq', label: 'FAQ' },
+  ];
+
   return (
     <div className={className}>
       {/* Header Block */}
@@ -133,27 +181,61 @@ export function ListingDetailsLayout({
         onAuthRequired={handleAuthRequired}
       />
 
-      {/* Full-width Tabs */}
-      <Tabs
-        value={activeTab}
-        onChange={setActiveTab}
-        style={{ marginTop: 'var(--ds-spacing-4)' }}
+      {/* Pill-style Tabs */}
+      <div
+        className="listing-tabs-container"
+        style={{
+          marginTop: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+          borderRadius: 'var(--ds-border-radius-lg)',
+          padding: 'var(--ds-spacing-1)',
+          border: '1px solid var(--ds-color-neutral-border-subtle)',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+        }}
       >
-        <Tabs.List>
-          <Tabs.Tab value="overview">Oversikt</Tabs.Tab>
-          <Tabs.Tab value="activity">{presenter.activityTabConfig.labelKey}</Tabs.Tab>
-          <Tabs.Tab value="rules">Regler</Tabs.Tab>
-          <Tabs.Tab value="faq">FAQ</Tabs.Tab>
-        </Tabs.List>
+        <div
+          role="tablist"
+          aria-label="Listing tabs"
+          className="listing-tabs"
+          style={{
+            display: 'flex',
+            gap: 'var(--ds-spacing-1)',
+            minWidth: 'max-content',
+          }}
+        >
+          {tabs.map((tab) => (
+            <TabButton
+              key={tab.id}
+              id={tab.id}
+              label={tab.label}
+              isActive={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+            />
+          ))}
+        </div>
+      </div>
 
-        {/* Tab Panels */}
-        <Tabs.Panel value="overview">
+      {/* Tab Panels */}
+      <div
+        style={{
+          marginTop: 'var(--ds-spacing-6)',
+          padding: 'var(--ds-spacing-6)',
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+          borderRadius: 'var(--ds-border-radius-lg)',
+          border: '1px solid var(--ds-color-neutral-border-subtle)',
+        }}
+      >
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
           <div
+            id="panel-overview"
+            role="tabpanel"
+            aria-labelledby="tab-overview"
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 320px',
-              gap: 'var(--ds-spacing-6)',
-              marginTop: 'var(--ds-spacing-6)',
+              gridTemplateColumns: '1fr 400px',
+              gap: 'var(--ds-spacing-8)',
             }}
             className="listing-content-grid"
           >
@@ -162,6 +244,7 @@ export function ListingDetailsLayout({
               <OverviewTab
                 metadata={listing.metadata}
                 listingType={listing.type}
+                {...(listing.keyFacts.capacity !== undefined ? { capacity: listing.keyFacts.capacity } : {})}
               />
             </div>
 
@@ -186,44 +269,59 @@ export function ListingDetailsLayout({
                 />
               )}
 
-              {/* Opening Hours (facilities only) */}
+              {/* Opening Hours */}
               {presenter.showOpeningHours && listing.openingHours && (
                 <OpeningHoursWidget openingHours={listing.openingHours} />
               )}
             </aside>
           </div>
-        </Tabs.Panel>
+        )}
 
-        <Tabs.Panel value="activity">
-          <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
+        {/* Activity Tab */}
+        {activeTab === 'activity' && (
+          <div
+            id="panel-activity"
+            role="tabpanel"
+            aria-labelledby="tab-activity"
+          >
             <ActivityTab
               {...(listing.activityData ? { activityData: listing.activityData } : {})}
               listingType={listing.type}
             />
           </div>
-        </Tabs.Panel>
+        )}
 
-        <Tabs.Panel value="rules">
-          <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
+        {/* Rules Tab */}
+        {activeTab === 'rules' && (
+          <div
+            id="panel-rules"
+            role="tabpanel"
+            aria-labelledby="tab-rules"
+          >
             <RulesTab
               rules={listing.metadata.rules}
               listingType={listing.type}
             />
           </div>
-        </Tabs.Panel>
+        )}
 
-        <Tabs.Panel value="faq">
-          <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
+        {/* FAQ Tab */}
+        {activeTab === 'faq' && (
+          <div
+            id="panel-faq"
+            role="tabpanel"
+            aria-labelledby="tab-faq"
+          >
             <FaqTab
               faq={listing.metadata.faq}
               listingType={listing.type}
             />
           </div>
-        </Tabs.Panel>
-      </Tabs>
+        )}
+      </div>
 
       {/* Full-width Booking Section */}
-      <div style={{ marginTop: 'var(--ds-spacing-8)' }}>
+      <div id="booking-section" style={{ marginTop: 'var(--ds-spacing-8)' }}>
         <BookingWidgetPlacement
           {...(listing.bookingConfig ? { bookingConfig: listing.bookingConfig } : {})}
           {...(listing.pricing ? { pricing: listing.pricing } : {})}
@@ -237,7 +335,6 @@ export function ListingDetailsLayout({
         onClose={() => setShowAuthModal(false)}
         onLogin={() => {
           setShowAuthModal(false);
-          // Navigate to login with redirect
           window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
         }}
         onRegister={() => {
@@ -257,14 +354,13 @@ export function ListingDetailsLayout({
           ...(shareData.description ? { description: shareData.description } : {}),
         }}
         onShare={(platform) => {
-          // Map platform to our ShareMedium and track
           handleShareFromSheet(platform as ShareMedium);
         }}
       />
 
       {/* Responsive styles */}
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
           .listing-content-grid {
             grid-template-columns: 1fr !important;
           }

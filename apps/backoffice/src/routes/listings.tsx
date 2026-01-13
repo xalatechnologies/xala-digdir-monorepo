@@ -1,224 +1,248 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Table,
-  Dropdown,
-  Spinner,
-  ListingStatusBadge,
-  PlusIcon,
-  MoreVerticalIcon,
-} from '@xala/ds';
-import {
-  useListings,
-  usePublishListing,
-  useArchiveListing,
-  type ListingType,
-  type ListingStatus,
-  type Listing,
-} from '@digilist/client-sdk';
+/**
+ * Listings Routes
+ * Page components for the listings module
+ */
 
-function formatPrice(listing: Listing): string {
-  const price = listing.pricing?.basePrice ?? listing.pricing?.hourlyRate ?? 0;
-  const unit = listing.pricing?.unit === 'hour' ? 'time' : listing.pricing?.unit === 'day' ? 'dag' : 'booking';
-  return `${price} kr/${unit}`;
+import { useParams, useNavigate } from 'react-router-dom';
+import { Heading, Paragraph, Button, Card, Spinner, ChevronLeftIcon } from '@xala/ds';
+import { ListingsListView } from '../features/listings/components/list/ListingsListView';
+import { ListingWizard } from '../features/listings/components/wizard';
+import { useListingBySlug, useListing } from '@digilist/client-sdk';
+
+/**
+ * Listings Page - Main list view with filtering and search
+ */
+export function ListingsPage() {
+  return <ListingsListView />;
 }
 
-type TabType = 'space' | 'resource' | 'service';
+/**
+ * Listing Edit Page - Multi-step wizard for create/edit
+ */
+export function ListingEditPage() {
+  const { slug } = useParams<{ slug: string }>();
 
-export function ListingsPage() {
+  return <ListingWizard slug={slug} />;
+}
+
+/**
+ * Listing Detail Page - Read-only view with audit trail
+ * TODO: Replace with full ListingDetailView component in Phase 5
+ */
+export function ListingDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabType>('space');
 
-  // Fetch all listings from API
-  const { data: listingsData, isLoading } = useListings();
-  const allListings = listingsData?.data ?? [];
+  // Check if the param looks like a UUID (ID) or a slug
+  const isUuid = slug?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
 
-  const publishListing = usePublishListing();
-  const archiveListing = useArchiveListing();
+  // Fetch listing data by slug or ID
+  const slugQuery = useListingBySlug(slug || '', {
+    enabled: !!slug && !isUuid,
+  });
 
-  const typeMap: Record<TabType, ListingType> = {
-    space: 'SPACE',
-    resource: 'RESOURCE',
-    service: 'SERVICE',
-  };
+  const idQuery = useListing(slug || '', {
+    enabled: !!slug && !!isUuid,
+  });
 
-  // Filter listings by type
-  const filteredListings = useMemo(() => {
-    return allListings.filter((l) => l.type === typeMap[activeTab]);
-  }, [allListings, activeTab]);
+  const data = isUuid ? idQuery.data : slugQuery.data;
+  const isLoading = isUuid ? idQuery.isLoading : slugQuery.isLoading;
+  const listing = data?.data;
 
-  // Calculate tab counts
-  const tabCounts = useMemo(() => ({
-    space: allListings.filter((l) => l.type === 'SPACE').length,
-    resource: allListings.filter((l) => l.type === 'RESOURCE').length,
-    service: allListings.filter((l) => l.type === 'SERVICE').length,
-  }), [allListings]);
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 'var(--ds-spacing-10)',
+          minHeight: '400px',
+        }}
+      >
+        <Spinner aria-label="Laster..." />
+      </div>
+    );
+  }
 
-  const handlePublish = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    await publishListing.mutateAsync(id);
-  };
-
-  const handleArchive = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (window.confirm('Er du sikker på at du vil arkivere denne oppføringen?')) {
-      await archiveListing.mutateAsync(id);
-    }
-  };
+  if (!listing) {
+    return (
+      <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+        <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+          Utleieobjekt ikke funnet
+        </Heading>
+        <Paragraph
+          data-size="sm"
+          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-4)' }}
+        >
+          Objektet du leter etter finnes ikke eller du har ikke tilgang.
+        </Paragraph>
+        <Button type="button" variant="primary" onClick={() => navigate('/listings')}>
+          Tilbake til liste
+        </Button>
+      </Card>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Lokaler & Ressurser
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            Administrer lokaler, utstyr og tjenester som kan leies ut.
-          </Paragraph>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+          <Button
+            type="button"
+            variant="tertiary"
+            onClick={() => navigate('/listings')}
+            aria-label="Tilbake til liste"
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <div>
+            <Heading level={1} data-size="lg" style={{ margin: 0 }}>
+              {listing.name}
+            </Heading>
+            <Paragraph
+              data-size="sm"
+              style={{
+                color: 'var(--ds-color-neutral-text-subtle)',
+                margin: 0,
+                marginTop: 'var(--ds-spacing-1)',
+              }}
+            >
+              {listing.type} • {listing.status}
+            </Paragraph>
+          </div>
         </div>
-        <Button type="button" variant="primary" data-size="md">
-          <PlusIcon />
-          Opprett ny
+        <Button
+          type="button"
+          variant="primary"
+          onClick={() => navigate(`/listings/${listing.slug}`)}
+        >
+          Rediger
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div
+      {/* Placeholder Content */}
+      <Card
         style={{
-          display: 'flex',
-          gap: 'var(--ds-spacing-1)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          paddingBottom: 'var(--ds-spacing-1)',
+          padding: 'var(--ds-spacing-6)',
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
         }}
       >
-        <Button
-          type="button"
-          variant={activeTab === 'space' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setActiveTab('space')}
-        >
-          Lokaler ({tabCounts.space})
-        </Button>
-        <Button
-          type="button"
-          variant={activeTab === 'resource' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setActiveTab('resource')}
-        >
-          Utstyr ({tabCounts.resource})
-        </Button>
-        <Button
-          type="button"
-          variant={activeTab === 'service' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setActiveTab('service')}
-        >
-          Tjenester ({tabCounts.service})
-        </Button>
-      </div>
+        <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+          Detaljer
+        </Heading>
 
-      {/* Table */}
-      {isLoading ? (
-        <Card style={{ padding: 'var(--ds-spacing-8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spinner />
-        </Card>
-      ) : filteredListings.length === 0 ? (
-        <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Ingen {activeTab === 'space' ? 'lokaler' : activeTab === 'resource' ? 'utstyr' : 'tjenester'} funnet.
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 'var(--ds-spacing-4)',
+          }}
+        >
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Navn
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {listing.name}
+            </Paragraph>
+          </div>
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Type
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {listing.type}
+            </Paragraph>
+          </div>
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Status
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {listing.status}
+            </Paragraph>
+          </div>
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Kapasitet
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {listing.capacity || 'Ikke angitt'}
+            </Paragraph>
+          </div>
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Opprettet
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {new Date(listing.createdAt).toLocaleDateString('nb-NO')}
+            </Paragraph>
+          </div>
+          <div>
+            <Paragraph
+              data-size="xs"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}
+            >
+              Sist oppdatert
+            </Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>
+              {new Date(listing.updatedAt).toLocaleDateString('nb-NO')}
+            </Paragraph>
+          </div>
+        </div>
+      </Card>
+
+      {/* Description */}
+      {listing.description && (
+        <Card
+          style={{
+            padding: 'var(--ds-spacing-6)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+          }}
+        >
+          <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+            Beskrivelse
+          </Heading>
+          <Paragraph data-size="sm" style={{ margin: 0 }}>
+            {listing.description}
           </Paragraph>
         </Card>
-      ) : (
-        <Card style={{ padding: 0, overflow: 'hidden' }}>
-          <Table>
-            <Table.Head>
-              <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Pris</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Sist endret</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {filteredListings.map((listing) => (
-                <Table.Row
-                  key={listing.id}
-                  onClick={() => navigate(`/listings/${listing.id}`)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <Table.Cell>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {listing.name}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {formatPrice(listing)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <ListingStatusBadge status={listing.status} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {new Date(listing.updatedAt).toLocaleDateString('nb-NO')}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Dropdown.TriggerContext>
-                      <Dropdown.Trigger asChild>
-                        <Button
-                          type="button"
-                          variant="tertiary"
-                          data-size="sm"
-                          onClick={(e) => e.stopPropagation()}
-                          aria-label="Handlinger"
-                        >
-                          <MoreVerticalIcon />
-                        </Button>
-                      </Dropdown.Trigger>
-                      <Dropdown placement="bottom-end">
-                        <Dropdown.List>
-                          <Dropdown.Item>
-                            <Dropdown.Button onClick={() => navigate(`/listings/${listing.id}`)}>
-                              Rediger
-                            </Dropdown.Button>
-                          </Dropdown.Item>
-                          {listing.status === 'draft' && (
-                            <Dropdown.Item>
-                              <Dropdown.Button onClick={(e) => handlePublish(listing.id, e)}>
-                                Publiser
-                              </Dropdown.Button>
-                            </Dropdown.Item>
-                          )}
-                          {listing.status === 'published' && (
-                            <Dropdown.Item>
-                              <Dropdown.Button onClick={(e) => handleArchive(listing.id, e)}>
-                                Avpubliser
-                              </Dropdown.Button>
-                            </Dropdown.Item>
-                          )}
-                          <Dropdown.Item>
-                            <Dropdown.Button>Kopier</Dropdown.Button>
-                          </Dropdown.Item>
-                          <Dropdown.Item>
-                            <Dropdown.Button onClick={(e) => handleArchive(listing.id, e)}>
-                              Arkiver
-                            </Dropdown.Button>
-                          </Dropdown.Item>
-                        </Dropdown.List>
-                      </Dropdown>
-                    </Dropdown.TriggerContext>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-        </Card>
       )}
+
+      {/* Audit Trail Placeholder */}
+      <Card
+        style={{
+          padding: 'var(--ds-spacing-6)',
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+        }}
+      >
+        <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+          Endringslogg
+        </Heading>
+        <Paragraph
+          data-size="sm"
+          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
+        >
+          Audit trail vil vises her når Phase 5 er implementert.
+        </Paragraph>
+      </Card>
     </div>
   );
 }

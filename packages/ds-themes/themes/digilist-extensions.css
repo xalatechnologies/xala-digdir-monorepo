@@ -81,6 +81,10 @@
     --ds-color-neutral-surface-subtle: #f5f6f8;
     /* Override hover to be lighter - using previous tinted value */
     --ds-color-neutral-surface-hover: #eceef2;
+
+    /* CRITICAL: Ensure white text on accent (blue) backgrounds */
+    --ds-color-accent-contrast-default: #FFFFFF;
+    --ds-color-accent-base-contrast-default: #FFFFFF;
   }
 
   [data-color-scheme="dark"] {

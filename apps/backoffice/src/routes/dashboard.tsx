@@ -17,12 +17,15 @@ import {
   type ActivityItemProps,
 } from '@xala/ds';
 import { useBookings } from '@digilist/client-sdk';
+import { useT, useLocale } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 export function DashboardPage(): React.ReactElement {
   const { user, isAdmin, isSaksbehandler } = useAuth();
   const navigate = useNavigate();
+  const t = useT();
+  const { locale } = useLocale();
   const { data: pendingBookings, isLoading: loadingPending } = useBookings({ status: 'pending' });
   const { data: confirmedBookings, isLoading: loadingConfirmed } = useBookings({ status: 'confirmed' });
   const { data: cancelledBookings, isLoading: loadingCancelled } = useBookings({ status: 'cancelled' });
@@ -39,7 +42,7 @@ export function DashboardPage(): React.ReactElement {
   // Transform recent bookings to activity items
   const recentActivity: ActivityItemProps[] = (recentBookingsData?.data ?? []).slice(0, 4).map((booking) => ({
     title: `Booking #${booking.id.slice(-4)}`,
-    description: `${booking.listingName || booking.listingId} - ${booking.userName || 'Ukjent'}`,
+    description: `${booking.listingName || booking.listingId} - ${booking.userName || t('booking.unknown')}`,
     time: formatTimeAgo(booking.createdAt),
     status: mapBookingStatusToActivity(booking.status),
   }));
@@ -50,14 +53,14 @@ export function DashboardPage(): React.ReactElement {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Velkommen tilbake, {user?.name.split(' ')[0]}
+            {t('dashboard.welcomeBack', { name: user?.name.split(' ')[0] || '' })}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
             {isAdmin
-              ? 'Du har full tilgang til alle funksjoner i systemet.'
+              ? t('dashboard.fullAccess')
               : isSaksbehandler
-              ? 'Her er en oversikt over dagens oppgaver.'
-              : 'Du er logget inn.'}
+              ? t('dashboard.taskOverview')
+              : t('dashboard.loggedIn')}
           </Paragraph>
         </div>
         {pendingCount > 0 && (
@@ -67,7 +70,7 @@ export function DashboardPage(): React.ReactElement {
             data-color="accent"
             onClick={() => navigate('/bookings?status=pending')}
           >
-            Behandle {pendingCount} ventende
+            {t('dashboard.processPending', { count: pendingCount })}
             <ArrowRightIcon />
           </Button>
         )}
@@ -76,7 +79,7 @@ export function DashboardPage(): React.ReactElement {
       {/* Stats grid */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label="Laster statistikk..." data-size="lg" />
+          <Spinner aria-label={t('dashboard.loadingStats')} data-size="lg" />
         </div>
       ) : (
         <div
@@ -87,32 +90,32 @@ export function DashboardPage(): React.ReactElement {
           }}
         >
           <StatCard
-            title="Ventende bookinger"
+            title={t('dashboard.pendingBookings')}
             value={pendingCount}
-            description="Krever din behandling"
+            description={t('dashboard.requiresAction')}
             color="var(--ds-color-warning-text-default)"
             icon={<ClockIcon />}
             {...(pendingCount > 0 && { trend: { value: 12, isPositive: false as boolean } })}
           />
           <StatCard
-            title="Godkjente"
+            title={t('dashboard.approved')}
             value={confirmedCount}
-            description="Denne måneden"
+            description={t('dashboard.thisMonth')}
             color="var(--ds-color-success-text-default)"
             icon={<CheckCircleIcon />}
             trend={{ value: 8, isPositive: true }}
           />
           <StatCard
-            title="Avslått"
+            title={t('dashboard.rejected')}
             value={cancelledCount}
-            description="Denne måneden"
+            description={t('dashboard.thisMonth')}
             color="var(--ds-color-danger-text-default)"
             icon={<XCircleIcon />}
           />
           <StatCard
-            title="Totalt"
+            title={t('dashboard.total')}
             value={totalCount}
-            description="Alle bookinger"
+            description={t('dashboard.allBookings')}
             icon={<CalendarIcon />}
             trend={{ value: 15, isPositive: true }}
           />
@@ -131,10 +134,10 @@ export function DashboardPage(): React.ReactElement {
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
             <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-              Siste aktivitet
+              {t('dashboard.recentActivity')}
             </Heading>
             <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigate('/bookings')}>
-              Se alle
+              {t('common.seeAll')}
             </Button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
@@ -148,7 +151,7 @@ export function DashboardPage(): React.ReactElement {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <Card style={{ padding: 'var(--ds-spacing-5)' }}>
             <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-              Hurtighandlinger
+              {t('dashboard.quickActions')}
             </Heading>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
               <Button
@@ -158,7 +161,7 @@ export function DashboardPage(): React.ReactElement {
                 onClick={() => navigate('/bookings?status=pending')}
               >
                 <ClockIcon />
-                Behandle ventende
+                {t('dashboard.processPendingBtn')}
               </Button>
               <Button
                 type="button"
@@ -167,7 +170,7 @@ export function DashboardPage(): React.ReactElement {
                 onClick={() => navigate('/bookings')}
               >
                 <CalendarIcon />
-                Se alle bookinger
+                {t('dashboard.viewAllBookings')}
               </Button>
               {isAdmin && (
                 <Button
@@ -177,7 +180,7 @@ export function DashboardPage(): React.ReactElement {
                   onClick={() => navigate('/users')}
                 >
                   <UsersIcon size={20} />
-                  Administrer brukere
+                  {t('dashboard.manageUsers')}
                 </Button>
               )}
             </div>
@@ -195,14 +198,14 @@ export function DashboardPage(): React.ReactElement {
                 }}
               />
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Alle systemer operative
+                {t('dashboard.systemStatus')}
               </Paragraph>
             </div>
             <Paragraph
               data-size="xs"
               style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginTop: 'var(--ds-spacing-2)' }}
             >
-              Sist oppdatert: {new Date().toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}
+              {t('dashboard.lastUpdated')}: {new Date().toLocaleTimeString(locale === 'nb' ? 'nb-NO' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
             </Paragraph>
           </Card>
         </div>

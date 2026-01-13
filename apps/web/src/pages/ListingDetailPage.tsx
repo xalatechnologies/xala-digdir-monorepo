@@ -1,8 +1,8 @@
 /**
  * ListingDetailPage
  *
- * Full listing detail page with all tabs and booking functionality.
- * Fetches real listing data from API via @digilist/client-sdk.
+ * Full listing detail page with tabs matching the Digilist design.
+ * Structure: Breadcrumb -> ImageSlider -> Header -> Tabs -> Content + Sidebar -> Calendar
  */
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -10,30 +10,16 @@ import {
   ContentLayout,
   Breadcrumb,
   ImageSlider,
-  ListingDetailHeader,
-  FacilityChips,
-  AdditionalServicesList,
-  ContactInfoCard,
-  LocationCard,
-  OpeningHoursCard,
   UnifiedBookingEngine,
-  GuidelinesTab,
-  FAQTab,
-  ListingTabs,
-  TabContent,
-  TabEmptyState,
   RequireAuthModal,
   Heading,
   Paragraph,
   Spinner,
-  SparklesIcon,
   determineBookingMode,
 } from '@xala/ds';
 import type {
-  ListingDetail,
   BreadcrumbItem,
   GalleryImage,
-  Facility,
   AdditionalService,
   OpeningHoursDay,
   GuidelineSection,
@@ -43,21 +29,172 @@ import type {
   BookingFormData,
   AvailabilitySlot,
   BookingPriceUnit,
-  KeyFact,
-  TabConfig,
-  ShareData,
 } from '@xala/ds';
-import { useListing, type Listing } from '@digilist/client-sdk';
+import {
+  usePublicListing,
+  type Listing,
+} from '@digilist/client-sdk';
 
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-/**
- * Transform API Listing to ListingDetail format used by components
- */
+// =============================================================================
+// Icons
+// =============================================================================
+
+function CheckIcon({ size = 16, color = 'currentColor' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+function UsersIcon({ size = 24 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function MailIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+      <polyline points="22,6 12,13 2,6" />
+    </svg>
+  );
+}
+
+function PhoneIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+
+function MapPinIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+function ClockIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function HeartIcon({ size = 20, filled = false }: { size?: number; filled?: boolean }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+function ShareIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+    </svg>
+  );
+}
+
+// Facility Icons
+function ProjectorIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="10" rx="2" />
+      <circle cx="8" cy="12" r="2" />
+      <path d="M18 12h.01" />
+    </svg>
+  );
+}
+
+function WhiteboardIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="14" rx="2" />
+      <path d="M3 17h18" />
+    </svg>
+  );
+}
+
+function WifiIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+      <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+      <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+      <circle cx="12" cy="20" r="1" />
+    </svg>
+  );
+}
+
+function VideoIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="23 7 16 12 23 17 23 7" />
+      <rect x="1" y="5" width="15" height="14" rx="2" />
+    </svg>
+  );
+}
+
+// =============================================================================
+// Types
+// =============================================================================
+
+interface ListingDetail {
+  id: string;
+  name: string;
+  category: string;
+  listingType?: string;
+  location: string;
+  description?: string;
+  images: GalleryImage[];
+  facilities: { id: string; label: string }[];
+  capacity?: number;
+  additionalServices?: AdditionalService[];
+  contact?: {
+    email?: string;
+    phone?: string;
+    name?: string;
+  };
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+  openingHours?: OpeningHoursDay[];
+  price?: number;
+  priceUnit?: string;
+  currency?: string;
+  guidelines?: GuidelineSection[];
+  faq?: FAQItem[];
+}
+
+// =============================================================================
+// Transform Functions
+// =============================================================================
+
 function transformApiListingToDetail(apiListing: Listing): ListingDetail {
-  // Cast to Record for flexible property access - API metadata can have arbitrary fields
   const metadata = (apiListing.metadata || {}) as Record<string, unknown>;
+  const location = metadata.location as Record<string, unknown> | undefined;
 
   // Transform images
   const images: GalleryImage[] = (apiListing.images || []).map((src: string, index: number) => ({
@@ -67,31 +204,29 @@ function transformApiListingToDetail(apiListing: Listing): ListingDetail {
     thumbnail: src.replace(/w=\d+/, 'w=200').replace(/h=\d+/, 'h=150'),
   }));
 
-  // Transform facilities
-  const facilitiesArray = metadata.facilities as string[] | undefined;
-  const facilities: Facility[] = (facilitiesArray || []).map((label: string, index: number) => ({
+  // Transform facilities (from amenities)
+  const amenities = metadata.amenities as string[] | undefined;
+  const facilities = (amenities || []).map((label: string, index: number) => ({
     id: `facility-${index}`,
     label,
   }));
 
   // Build location string
-  const location = [metadata.address, metadata.postalCode, metadata.city]
-    .filter(Boolean)
-    .join(', ') || 'Ukjent adresse';
+  const locationString = location
+    ? [location.address, location.postalCode, location.city].filter(Boolean).join(', ')
+    : 'Ukjent adresse';
 
-  // Build the result with required fields
   const result: ListingDetail = {
     id: apiListing.id,
     name: apiListing.name,
     category: (metadata.category as string) || apiListing.type || 'Lokale',
     listingType: apiListing.type,
-    location,
+    location: locationString,
     description: apiListing.description || '',
     images,
     facilities,
   };
 
-  // Add optional fields only if they have values
   if (apiListing.capacity) {
     result.capacity = apiListing.capacity;
   }
@@ -103,20 +238,23 @@ function transformApiListingToDetail(apiListing: Listing): ListingDetail {
   }
 
   // Contact info
-  const contactInfo = buildContactInfo(metadata);
-  if (Object.keys(contactInfo).length > 0) {
-    result.contact = contactInfo;
+  if (metadata.contactEmail || metadata.contactPhone) {
+    const contact: { email?: string; phone?: string; name?: string } = {};
+    if (metadata.contactEmail) contact.email = metadata.contactEmail as string;
+    if (metadata.contactPhone) contact.phone = metadata.contactPhone as string;
+    if (metadata.contactName) contact.name = metadata.contactName as string;
+    result.contact = contact;
   }
 
   // Coordinates
-  if (typeof metadata.latitude === 'number' && typeof metadata.longitude === 'number') {
+  if (location && typeof location.lat === 'number' && typeof location.lng === 'number') {
     result.coordinates = {
-      latitude: metadata.latitude,
-      longitude: metadata.longitude,
+      latitude: location.lat,
+      longitude: location.lng,
     };
   }
 
-  // Opening hours - use provided or default
+  // Opening hours
   result.openingHours = buildOpeningHours(metadata);
 
   // Price info
@@ -140,117 +278,70 @@ function buildOpeningHours(metadata: Record<string, unknown>): OpeningHoursDay[]
   const openingHoursData = metadata.openingHours as Record<string, { open: string; close: string }> | undefined;
 
   if (openingHoursData) {
+    const grouped: Record<string, string[]> = {};
     const dayNames: Record<string, string> = {
-      monday: 'Mandag',
-      tuesday: 'Tirsdag',
-      wednesday: 'Onsdag',
-      thursday: 'Torsdag',
-      friday: 'Fredag',
-      saturday: 'Lørdag',
-      sunday: 'Søndag',
+      monday: 'Mandag', tuesday: 'Tirsdag', wednesday: 'Onsdag',
+      thursday: 'Torsdag', friday: 'Fredag', saturday: 'Lørdag', sunday: 'Søndag',
     };
 
-    return Object.entries(openingHoursData).map(([day, hours]) => ({
-      day: dayNames[day] || day,
-      hours: hours.open && hours.close ? `${hours.open} - ${hours.close}` : 'Stengt',
-      isClosed: !hours.open || !hours.close,
+    // Group days with same hours
+    Object.entries(openingHoursData).forEach(([day, hours]) => {
+      const timeStr = hours.open && hours.close ? `${hours.open} - ${hours.close}` : 'Stengt';
+      if (!grouped[timeStr]) grouped[timeStr] = [];
+      grouped[timeStr].push(dayNames[day] || day);
+    });
+
+    return Object.entries(grouped).map(([hours, days]) => ({
+      day: days.join(', '),
+      hours,
+      isClosed: hours === 'Stengt',
     }));
   }
 
-  // Default opening hours
   return [
     { day: 'Mandag-Fredag', hours: '08:00 - 22:00' },
-    { day: 'Lørdag', hours: '09:00 - 18:00' },
-    { day: 'Søndag', hours: 'Stengt', isClosed: true },
+    { day: 'Lørdag', hours: '09:00 - 20:00' },
+    { day: 'Søndag', hours: '10:00 - 18:00' },
   ];
 }
 
 function mapPriceUnit(unit: string): string {
   const unitMap: Record<string, string> = {
-    hour: 'time',
-    day: 'dag',
-    week: 'uke',
-    month: 'måned',
-    event: 'arrangement',
+    hour: 'time', day: 'dag', week: 'uke', month: 'måned', event: 'arrangement',
   };
   return unitMap[unit] || unit;
 }
 
-function buildContactInfo(metadata: Record<string, unknown>): NonNullable<ListingDetail['contact']> {
-  const contact: NonNullable<ListingDetail['contact']> = {};
-  if (typeof metadata.contactEmail === 'string') {
-    contact.email = metadata.contactEmail;
-  }
-  if (typeof metadata.contactPhone === 'string') {
-    contact.phone = metadata.contactPhone;
-  }
-  if (typeof metadata.contactName === 'string') {
-    contact.name = metadata.contactName;
-  }
-  return contact;
-}
-
 // Default guidelines if not provided by API
 const defaultGuidelines: GuidelineSection[] = [
-  {
-    id: 'cancellation',
-    title: 'Avbestilling',
-    content: 'Avbestilling må skje senest 24 timer før reservert tidspunkt. Ved senere avbestilling belastes 50% av totalpris.',
-  },
-  {
-    id: 'damages',
-    title: 'Skader',
-    content: 'Leietaker er ansvarlig for eventuelle skader på lokalet eller utstyr som oppstår under leieperioden.',
-  },
-  {
-    id: 'cleaning',
-    title: 'Renhold',
-    content: 'Lokalet skal forlates i ryddig stand. Søppel kastes i anviste beholdere.',
-  },
+  { id: 'cancellation', title: 'Avbestilling', content: 'Avbestilling må skje senest 24 timer før reservert tidspunkt.' },
+  { id: 'damages', title: 'Skader', content: 'Leietaker er ansvarlig for eventuelle skader på lokalet eller utstyr.' },
+  { id: 'cleaning', title: 'Renhold', content: 'Lokalet skal forlates i ryddig stand.' },
 ];
 
 // Default FAQ if not provided by API
 const defaultFaq: FAQItem[] = [
-  {
-    id: 'how-to-book',
-    question: 'Hvordan booker jeg?',
-    answer: 'Velg ønskede tidspunkter i kalenderen, fyll ut kontaktinformasjon, og bekreft bookingen.',
-  },
-  {
-    id: 'cancellation-policy',
-    question: 'Hva er avbestillingsreglene?',
-    answer: 'Du kan avbestille gratis inntil 24 timer før reservert tidspunkt.',
-  },
+  { id: 'how-to-book', question: 'Hvordan booker jeg?', answer: 'Velg ønskede tidspunkter i kalenderen og bekreft bookingen.' },
+  { id: 'cancellation-policy', question: 'Hva er avbestillingsreglene?', answer: 'Du kan avbestille gratis inntil 24 timer før.' },
 ];
 
-// Generate mock availability slots for the calendar
+// Generate mock availability slots
 function generateMockAvailabilitySlots(startDate: Date): AvailabilitySlot[] {
   const slots: AvailabilitySlot[] = [];
-
   for (let day = 0; day < 7; day++) {
     const date = new Date(startDate);
     date.setDate(date.getDate() + day);
-
     for (let hour = 8; hour <= 19; hour++) {
-      // Randomly assign status, but more likely to be available
-      const random = Math.random();
-      let status: 'available' | 'occupied' | 'blocked' | 'past';
-
-      // Check if this is in the past
       const slotDate = new Date(date);
       slotDate.setHours(hour, 0, 0, 0);
       const now = new Date();
-
+      let status: 'available' | 'occupied' | 'blocked' | 'past';
       if (slotDate < now) {
         status = 'past';
-      } else if (random < 0.65) {
-        status = 'available';
-      } else if (random < 0.85) {
-        status = 'occupied';
       } else {
-        status = 'blocked';
+        const random = Math.random();
+        status = random < 0.65 ? 'available' : random < 0.85 ? 'occupied' : 'blocked';
       }
-
       slots.push({
         id: `${date.toISOString().split('T')[0]}-${hour}`,
         date: new Date(date),
@@ -260,32 +351,21 @@ function generateMockAvailabilitySlots(startDate: Date): AvailabilitySlot[] {
       });
     }
   }
-
   return slots;
 }
 
-// Create booking config from listing data
+// Create booking config
 function createBookingConfig(listing: ListingDetail): BookingConfig {
   const listingType = (listing.listingType || 'SPACE') as BookingConfig['listingType'];
   const priceUnit = (listing.priceUnit || 'time') as BookingPriceUnit;
-
-  // Map Norwegian price unit to English
   const unitMap: Record<string, BookingPriceUnit> = {
-    'time': 'hour',
-    'dag': 'day',
-    'uke': 'week',
-    'måned': 'month',
-    'arrangement': 'booking',
-    'hour': 'hour',
-    'day': 'day',
-    'week': 'week',
-    'month': 'month',
+    'time': 'hour', 'dag': 'day', 'uke': 'week', 'måned': 'month',
+    'hour': 'hour', 'day': 'day', 'week': 'week', 'month': 'month',
   };
-
   const normalizedUnit = unitMap[priceUnit] || 'hour';
   const mode = determineBookingMode(listingType, normalizedUnit);
 
-  const config: BookingConfig = {
+  return {
     listingId: listing.id,
     listingType,
     mode,
@@ -315,209 +395,87 @@ function createBookingConfig(listing: ListingDetail): BookingConfig {
     slotDurationMinutes: 60,
     bufferMinutes: 0,
   };
-
-  // Add optional maxAttendees if listing has capacity
-  if (listing.capacity !== undefined) {
-    config.rules.maxAttendees = listing.capacity;
-  }
-
-  return config;
 }
 
 // Mock listing data
 const mockListingDetail: ListingDetail = {
   id: '1',
-  name: 'Bragernes Møterom',
-  category: 'Møterom',
+  name: 'Møterom 101',
+  category: 'Rom',
   listingType: 'SPACE',
-  location: 'Nedre Storgate 15, 3017 Drammen',
-  description: `Profesjonelt møterom i hjertet av Drammen. Utstyrt med moderne teknologi for presentasjoner og videokonferanser.
-
-Rommet er perfekt for møter, workshops og presentasjoner. Med plass til opptil 25 personer og alt nødvendig utstyr inkludert, kan du fokusere på det som er viktig.
-
-Vi tilbyr fleksible bookingmuligheter fra timebasert leie til hele dager. Kaffe og te er inkludert, og catering kan bestilles som tilleggstjeneste.`,
+  location: 'Storgata 1, 0155 Oslo',
+  description: 'Dette er et eksempel på beskrivelse av fasiliteten. Her kan det stå informasjon om rommet, utstyret eller tjenesten som listes.',
   images: [
-    {
-      id: '1',
-      src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=900&fit=crop',
-      alt: 'Møterom hovedbilde',
-      thumbnail:
-        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&h=150&fit=crop',
-    },
-    {
-      id: '2',
-      src: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&h=900&fit=crop',
-      alt: 'Møterom interiør',
-      thumbnail:
-        'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=200&h=150&fit=crop',
-    },
-    {
-      id: '3',
-      src: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1600&h=900&fit=crop',
-      alt: 'Møterom utsikt',
-      thumbnail:
-        'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=200&h=150&fit=crop',
-    },
-    {
-      id: '4',
-      src: 'https://images.unsplash.com/photo-1462826303086-329426d1aef5?w=1600&h=900&fit=crop',
-      alt: 'Presentasjonsområde',
-      thumbnail:
-        'https://images.unsplash.com/photo-1462826303086-329426d1aef5?w=200&h=150&fit=crop',
-    },
-    {
-      id: '5',
-      src: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=1600&h=900&fit=crop',
-      alt: 'Arbeidsområde',
-      thumbnail:
-        'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=200&h=150&fit=crop',
-    },
+    { id: '1', src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=900&fit=crop', alt: 'Møterom', thumbnail: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&h=150&fit=crop' },
+    { id: '2', src: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&h=900&fit=crop', alt: 'Møterom 2', thumbnail: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=200&h=150&fit=crop' },
+    { id: '3', src: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1600&h=900&fit=crop', alt: 'Møterom 3', thumbnail: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=200&h=150&fit=crop' },
   ],
-  capacity: 25,
+  capacity: 50,
   facilities: [
     { id: 'projector', label: 'Projektor' },
     { id: 'whiteboard', label: 'Tavle' },
     { id: 'wifi', label: 'WiFi' },
     { id: 'video', label: 'Videokonferanse' },
-    { id: 'coffee', label: 'Kaffemaskin' },
-    { id: 'ac', label: 'Klimaanlegg' },
   ],
   additionalServices: [
-    {
-      id: 'catering',
-      name: 'Catering',
-      description: 'Lunsj og forfriskninger',
-      price: 250,
-      currency: 'NOK',
-    },
-    {
-      id: 'parking',
-      name: 'Parkering',
-      description: 'Reservert parkeringsplass',
-      price: 100,
-      currency: 'NOK',
-    },
-    {
-      id: 'tech-support',
-      name: 'Teknisk støtte',
-      description: 'Dedikert tekniker på stedet',
-      price: 500,
-      currency: 'NOK',
-    },
+    { id: 'extra-time', name: 'Ekstra tid', description: 'Forleng bookingen med 30 minutter', price: 200, currency: 'NOK' },
+    { id: 'equipment', name: 'Utstyr', description: 'Inkluderer ballnett, musikanlegg og annet utstyr', price: 150, currency: 'NOK' },
+    { id: 'caretaker', name: 'Vaktmesterhjelp', description: 'Hjelp med oppsett og nedrigg av utstyr', price: 300, currency: 'NOK' },
+    { id: 'security', name: 'Sikkerhet', description: 'Vaktmester til stede under hele arrangementet', price: 500, currency: 'NOK' },
   ],
-  contact: {
-    email: 'booking@bragernes-moterom.no',
-    phone: '+47 32 12 34 56',
-    name: 'Kari Nordmann',
-  },
-  coordinates: {
-    latitude: 59.7439,
-    longitude: 10.2045,
-  },
+  contact: { email: 'kontakt@digilist.no', phone: '+47 12 34 56 78' },
+  coordinates: { latitude: 59.9139, longitude: 10.7522 },
   openingHours: [
     { day: 'Mandag-Fredag', hours: '08:00 - 22:00' },
-    { day: 'Lørdag', hours: '09:00 - 18:00' },
-    { day: 'Søndag', hours: 'Stengt', isClosed: true },
+    { day: 'Lørdag', hours: '09:00 - 20:00' },
+    { day: 'Søndag', hours: '10:00 - 18:00' },
   ],
-  price: 450,
+  price: 500,
   priceUnit: 'time',
   currency: 'NOK',
-  guidelines: [
-    {
-      id: 'cancellation',
-      title: 'Avbestilling',
-      content:
-        'Avbestilling må skje senest 24 timer før reservert tidspunkt. Ved senere avbestilling belastes 50% av totalpris. Ved uteblivelse uten varsel belastes full pris.',
-    },
-    {
-      id: 'damages',
-      title: 'Skader',
-      content:
-        'Leietaker er ansvarlig for eventuelle skader på lokalet eller utstyr som oppstår under leieperioden. Vennligst meld fra om skader umiddelbart.',
-    },
-    {
-      id: 'cleaning',
-      title: 'Renhold',
-      content:
-        'Lokalet skal forlates i ryddig stand. Søppel kastes i anviste beholdere. Ekstra rengjøring vil bli fakturert.',
-    },
-    {
-      id: 'rules',
-      title: 'Husregler',
-      content:
-        'Røyking er ikke tillatt. Kjæledyr er ikke tillatt med mindre avtalt på forhånd. Støynivå skal holdes på et akseptabelt nivå.',
-    },
-    {
-      id: 'safety',
-      title: 'Sikkerhet',
-      content:
-        'Nødutganger og brannslokkingsutstyr skal ikke blokkeres. Gjør deg kjent med rømningsveier ved ankomst. Ved brannalarm, forlat bygget umiddelbart.',
-    },
-  ],
-  faq: [
-    {
-      id: 'how-to-book',
-      question: 'Hvordan booker jeg?',
-      answer:
-        'Velg ønskede tidspunkter i kalenderen, fyll ut kontaktinformasjon, og bekreft bookingen. Du vil motta en bekreftelse på e-post.',
-    },
-    {
-      id: 'cancellation-policy',
-      question: 'Hva er avbestillingsreglene?',
-      answer:
-        'Du kan avbestille gratis inntil 24 timer før reservert tidspunkt. Ved senere avbestilling belastes 50% av totalpris.',
-    },
-    {
-      id: 'parking',
-      question: 'Er det tilgjengelig parkering?',
-      answer:
-        'Ja, det finnes parkeringshus i nærheten. Du kan også bestille reservert parkeringsplass som tilleggstjeneste.',
-    },
-    {
-      id: 'extend-booking',
-      question: 'Kan jeg forlenge bookingen?',
-      answer:
-        'Ja, du kan forlenge bookingen så lenge det er ledige tidspunkter. Kontakt oss for å gjøre endringer i en eksisterende booking.',
-    },
-    {
-      id: 'equipment',
-      question: 'Hva er inkludert i prisen?',
-      answer:
-        'Prisen inkluderer bruk av møterommet med alt standardutstyr: projektor, tavle, WiFi og videokonferanseutstyr. Kaffe og te er også inkludert.',
-    },
-  ],
+  guidelines: defaultGuidelines,
+  faq: defaultFaq,
 };
+
+// =============================================================================
+// Facility Icon Mapper
+// =============================================================================
+
+function getFacilityIcon(label: string): React.ReactElement {
+  const lowerLabel = label.toLowerCase();
+  if (lowerLabel.includes('projektor') || lowerLabel.includes('projector')) return <ProjectorIcon size={14} />;
+  if (lowerLabel.includes('tavle') || lowerLabel.includes('whiteboard')) return <WhiteboardIcon size={14} />;
+  if (lowerLabel.includes('wifi') || lowerLabel.includes('internet')) return <WifiIcon size={14} />;
+  if (lowerLabel.includes('video') || lowerLabel.includes('konferanse')) return <VideoIcon size={14} />;
+  return <CheckIcon size={14} />;
+}
+
+// =============================================================================
+// Main Component
+// =============================================================================
 
 export function ListingDetailPage(): React.ReactElement {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   // Fetch listing data from API
-  const { data: apiResponse, isLoading, error } = useListing(params.id || '');
+  const { data: apiResponse, isLoading, error } = usePublicListing(params.id || '');
 
-  // State for booking flow with UnifiedBookingEngine
+  // State
+  const [activeTab, setActiveTab] = React.useState('overview');
   const [currentBookingStep, setCurrentBookingStep] = React.useState(0);
   const [selectedServices, setSelectedServices] = React.useState<string[]>([]);
-  const [calendarStartDate, setCalendarStartDate] = React.useState(() => {
+  const [calendarStartDate] = React.useState(() => {
     const today = new Date();
-    // Start from Monday of current week
     const day = today.getDay();
     const diff = today.getDate() - day + (day === 0 ? -6 : 1);
     return new Date(today.setDate(diff));
   });
-
-  // Active tab state
-  const [activeTab, setActiveTab] = React.useState('overview');
-
-  // Favorites state
   const [isFavorited, setIsFavorited] = React.useState(false);
-  const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
   const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const isAuthenticated = false;
 
-  // Mock auth state - in production this would come from auth context
-  const isAuthenticated = false; // Set to false to test auth gating
-
-  // Transform API data to ListingDetail format, or use mock data as fallback
+  // Transform API data to ListingDetail format
   const listing: ListingDetail = React.useMemo(() => {
     if (apiResponse?.data) {
       return transformApiListingToDetail(apiResponse.data);
@@ -525,179 +483,22 @@ export function ListingDetailPage(): React.ReactElement {
     return mockListingDetail;
   }, [apiResponse]);
 
-  // Generate availability slots for current week
-  const availabilitySlots = React.useMemo(
-    () => generateMockAvailabilitySlots(calendarStartDate),
-    [calendarStartDate]
-  );
+  // Generate availability slots
+  const availabilitySlots = React.useMemo(() => generateMockAvailabilitySlots(calendarStartDate), [calendarStartDate]);
 
-  // Create booking configuration from listing
-  const bookingConfig = React.useMemo(
-    () => createBookingConfig(listing),
-    [listing]
-  );
+  // Create booking configuration
+  const bookingConfig = React.useMemo(() => createBookingConfig(listing), [listing]);
 
-  // Handle service selection - useCallback to maintain stable reference
-  const handleServiceSelect = React.useCallback((serviceId: string, selected: boolean) => {
-    setSelectedServices((prev) =>
-      selected ? [...prev, serviceId] : prev.filter((id) => id !== serviceId)
-    );
-  }, []);
-
-  // Build key facts from listing
-  const keyFacts = React.useMemo((): KeyFact[] => {
-    const facts: KeyFact[] = [];
-
-    if (listing.capacity) {
-      facts.push({
-        type: 'capacity',
-        label: 'Kapasitet',
-        value: `${listing.capacity} personer`,
-      });
-    }
-
-    if (listing.price) {
-      facts.push({
-        type: 'bookingMode',
-        label: 'Pris',
-        value: `${listing.price} kr/${listing.priceUnit || 'time'}`,
-      });
-    }
-
-    return facts;
-  }, [listing]);
-
-  // Share data
-  const shareData: ShareData = React.useMemo(() => ({
-    url: typeof window !== 'undefined' ? window.location.href : '',
-    title: listing.name,
-    description: listing.description?.slice(0, 150) || `Book ${listing.name}`,
-  }), [listing]);
-
-  // Build tab configuration
-  const tabConfig: TabConfig[] = React.useMemo(() => [
-    {
-      id: 'overview',
-      label: 'Oversikt',
-      visible: true,
-      content: (
-        <TabContent>
-          {/* Description */}
-          <section>
-            <Heading
-              level={2}
-              data-size="sm"
-              style={{
-                marginBottom: 'var(--ds-spacing-3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-2)',
-              }}
-            >
-              <SparklesIcon size={20} style={{ color: 'var(--ds-color-accent-base-default)' }} />
-              Beskrivelse
-            </Heading>
-            <Paragraph
-              data-size="sm"
-              style={{
-                whiteSpace: 'pre-line',
-                color: 'var(--ds-color-neutral-text-default)',
-                lineHeight: '1.7',
-              }}
-            >
-              {listing.description}
-            </Paragraph>
-          </section>
-
-          {/* Facilities */}
-          {listing.facilities.length > 0 && (
-            <section>
-              <Heading
-                level={3}
-                data-size="xs"
-                style={{ marginBottom: 'var(--ds-spacing-3)' }}
-              >
-                Fasiliteter
-              </Heading>
-              <FacilityChips facilities={listing.facilities} />
-            </section>
-          )}
-
-          {/* Additional Services */}
-          {listing.additionalServices && listing.additionalServices.length > 0 && (
-            <section>
-              <Heading
-                level={3}
-                data-size="xs"
-                style={{ marginBottom: 'var(--ds-spacing-3)' }}
-              >
-                Tilleggstjenester
-              </Heading>
-              <AdditionalServicesList
-                services={listing.additionalServices}
-                selectedServices={selectedServices}
-                onServiceSelect={handleServiceSelect}
-                title=""
-              />
-            </section>
-          )}
-        </TabContent>
-      ),
-    },
-    {
-      id: 'guidelines',
-      label: 'Retningslinjer',
-      visible: !!listing.guidelines && listing.guidelines.length > 0,
-      content: listing.guidelines ? (
-        <TabContent>
-          <GuidelinesTab sections={listing.guidelines} />
-        </TabContent>
-      ) : (
-        <TabEmptyState
-          title="Ingen retningslinjer"
-          description="Det er ikke lagt til retningslinjer for dette lokalet."
-        />
-      ),
-    },
-    {
-      id: 'faq',
-      label: 'Spørsmål',
-      visible: !!listing.faq && listing.faq.length > 0,
-      ...(listing.faq && listing.faq.length > 0 ? { badge: listing.faq.length } : {}),
-      content: listing.faq ? (
-        <TabContent>
-          <FAQTab items={listing.faq} />
-        </TabContent>
-      ) : (
-        <TabEmptyState
-          title="Ingen spørsmål"
-          description="Det er ikke lagt til ofte stilte spørsmål for dette lokalet."
-        />
-      ),
-    },
-  ], [listing, selectedServices, handleServiceSelect]);
-
-  // Log API errors but fall back to mock data instead of showing error page
+  // Log API errors
   React.useEffect(() => {
-    if (error) {
-      console.warn('API error loading listing, using mock data:', error);
-    }
+    if (error) console.warn('API error loading listing, using mock data:', error);
   }, [error]);
 
-  // Show loading state - AFTER all hooks are defined
+  // Loading state
   if (isLoading) {
     return (
       <ContentLayout maxWidth="1440px" className="main-content-layout">
-        <main
-          id="main"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '60vh',
-            padding: 'var(--ds-spacing-8)',
-          }}
-        >
+        <main id="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', padding: 'var(--ds-spacing-8)' }}>
           <div style={{ textAlign: 'center' }}>
             <Spinner aria-label="Laster innhold..." />
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -709,417 +510,494 @@ export function ListingDetailPage(): React.ReactElement {
     );
   }
 
-  // Breadcrumb items - defined after hooks to use listing.name
+  // Breadcrumb items
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Hjem', href: '/', onClick: () => navigate('/') },
-    { label: 'Fasiliteter', href: '/', onClick: () => navigate('/') },
+    { label: 'Fasiliteter', href: '/listings', onClick: () => navigate('/listings') },
     { label: listing.name },
   ];
 
-  // Handle favorite toggle
-  const handleFavoriteToggle = async () => {
-    setIsFavoriteLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setIsFavorited((prev) => !prev);
-      // In production: auditLog({ type: isFavorited ? 'FAVORITE_REMOVED' : 'FAVORITE_ADDED', listingId: listing.id });
-    } finally {
-      setIsFavoriteLoading(false);
-    }
-  };
-
-  // Handle booking submission from UnifiedBookingEngine
+  // Handle booking submission
   const handleBookingSubmit = async (selection: BookingSelection, formData: BookingFormData) => {
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // In production, this would send the booking to the API
     console.log('Booking submitted:', { selection, formData, listingId: listing.id });
-
-    // The UnifiedBookingEngine handles the success state internally
   };
+
+  // Tabs
+  const tabs = [
+    { id: 'overview', label: 'Oversikt' },
+    { id: 'calendar', label: 'Aktivitetskalender' },
+    { id: 'guidelines', label: 'Retningslinjer' },
+    { id: 'faq', label: 'FAQ' },
+  ];
 
   return (
     <ContentLayout maxWidth="1440px" className="main-content-layout">
-      <main
-        id="main"
-        style={{
-          paddingTop: 'var(--ds-spacing-4)',
-          paddingBottom: 'var(--ds-spacing-8)',
-        }}
-      >
+      <main id="main" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
         {/* Breadcrumb */}
         <Breadcrumb items={breadcrumbItems} />
 
-        {/* Image Slider with arrows and dots */}
+        {/* Image Slider */}
         <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
-          <ImageSlider
-            images={listing.images}
-            height={480}
-            showArrows
-            showDots
-            showThumbnails
-            showCounter
-            enableFullscreen
-          />
+          <ImageSlider images={listing.images} height={420} showArrows showDots showThumbnails showCounter enableFullscreen />
         </div>
 
-        {/* Header with enhanced features */}
+        {/* Header */}
         <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
-          <ListingDetailHeader
-            category={listing.category}
-            listingType={listing.listingType}
-            title={listing.name}
-            location={listing.location}
-            keyFacts={keyFacts}
-            isFavorited={isFavorited}
-            isAuthenticated={isAuthenticated}
-            isFavoriteLoading={isFavoriteLoading}
-            onFavorite={handleFavoriteToggle}
-            onAuthRequired={() => setShowAuthModal(true)}
-            shareData={shareData}
-            shareUtmParams={{
-              source: 'listing_detail',
-              medium: 'web',
-              campaign: 'share',
-            }}
-            onShare={() => {
-              // Audit log share event
-              console.log('Share tracked:', listing.id);
-            }}
-          />
-        </div>
+          {/* Category Badge */}
+          <span style={{
+            display: 'inline-block',
+            padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+            border: '1px solid var(--ds-color-neutral-border-default)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            fontSize: 'var(--ds-font-size-sm)',
+            color: 'var(--ds-color-neutral-text-default)',
+            marginBottom: 'var(--ds-spacing-2)',
+          }}>
+            {listing.category}
+          </span>
 
-        {/* Auth Required Modal for Favorites */}
-        <RequireAuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onLogin={() => {
-            setShowAuthModal(false);
-            // Navigate to login
-            navigate('/login?redirect=' + encodeURIComponent(window.location.pathname));
-          }}
-          onRegister={() => {
-            setShowAuthModal(false);
-            navigate('/register?redirect=' + encodeURIComponent(window.location.pathname));
-          }}
-          actionContext="favorite"
-        />
-
-        {/* Main Content Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 380px',
-            gap: 'var(--ds-spacing-6)',
-            marginTop: 'var(--ds-spacing-6)',
-          }}
-          className="listing-detail-content"
-        >
-          {/* Left Column - Main Content */}
-          <div>
-            {/* Enhanced Tabs using ListingTabs component */}
-            <div className="elegant-tabs">
-              <ListingTabs
-                tabs={tabConfig}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                variant="subtle"
-              />
-            </div>
-
-            {/* Unified Booking Engine - Adaptive to listing type */}
-            <div id="booking-section" style={{ marginTop: 'var(--ds-spacing-8)' }}>
-              <UnifiedBookingEngine
-                config={bookingConfig}
-                listingName={listing.name}
-                {...(listing.images[0]?.src ? { listingImage: listing.images[0].src } : {})}
-                availableSlots={availabilitySlots}
-                additionalServices={listing.additionalServices || []}
-                currentStep={currentBookingStep}
-                onStepChange={setCurrentBookingStep}
-                onSubmit={handleBookingSubmit}
-              />
+          {/* Title Row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 'var(--ds-spacing-2)' }}>
+            <Heading level={1} data-size="lg" style={{ margin: 0 }}>
+              {listing.name}
+            </Heading>
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+              <button
+                type="button"
+                onClick={() => isAuthenticated ? setIsFavorited(!isFavorited) : setShowAuthModal(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 'var(--ds-spacing-2)',
+                  color: isFavorited ? 'var(--ds-color-danger-base-default)' : 'var(--ds-color-neutral-text-subtle)',
+                }}
+                aria-label={isFavorited ? 'Fjern fra favoritter' : 'Legg til favoritter'}
+              >
+                <HeartIcon filled={isFavorited} />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigator.share?.({ title: listing.name, url: window.location.href })}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 'var(--ds-spacing-2)',
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                }}
+                aria-label="Del"
+              >
+                <ShareIcon />
+              </button>
             </div>
           </div>
 
+          {/* Location */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <MapPinIcon size={16} />
+            <Paragraph data-size="sm" style={{ margin: 0 }}>{listing.location}</Paragraph>
+          </div>
+        </div>
+
+        {/* Pill Tabs */}
+        <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', paddingBottom: 'var(--ds-spacing-3)' }}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: 'var(--ds-spacing-3) var(--ds-spacing-5)',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 'var(--ds-font-weight-medium)',
+                  transition: 'all 0.2s ease',
+                  backgroundColor: activeTab === tab.id ? 'var(--ds-color-accent-base-default)' : 'transparent',
+                  color: activeTab === tab.id ? 'white' : 'var(--ds-color-neutral-text-subtle)',
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--ds-spacing-6)', marginTop: 'var(--ds-spacing-6)' }} className="listing-detail-grid">
+          {/* Left Column - Tab Content */}
+          <div>
+            {/* Overview Tab */}
+            {activeTab === 'overview' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+                {/* Description */}
+                <section>
+                  <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                    Beskrivelse
+                  </Heading>
+                  <Paragraph data-size="md" style={{ margin: 0, lineHeight: '1.6', color: 'var(--ds-color-neutral-text-default)' }}>
+                    {listing.description}
+                  </Paragraph>
+                </section>
+
+                {/* Capacity Card */}
+                {listing.capacity && (
+                  <section>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--ds-spacing-4)',
+                      padding: 'var(--ds-spacing-4)',
+                      backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-lg)',
+                      border: '1px solid var(--ds-color-neutral-border-subtle)',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '48px',
+                        height: '48px',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        color: 'var(--ds-color-accent-base-default)',
+                      }}>
+                        <UsersIcon size={24} />
+                      </div>
+                      <div>
+                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          Maks tillatt
+                        </Paragraph>
+                        <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                          {listing.capacity} personer
+                        </Paragraph>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {/* Facilities */}
+                {listing.facilities.length > 0 && (
+                  <section>
+                    <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      Fasiliteter
+                    </Paragraph>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
+                      {listing.facilities.map((facility) => (
+                        <span
+                          key={facility.id}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 'var(--ds-spacing-2)',
+                            padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                            border: '1px solid var(--ds-color-neutral-border-default)',
+                            borderRadius: 'var(--ds-border-radius-full)',
+                            fontSize: 'var(--ds-font-size-sm)',
+                            color: 'var(--ds-color-neutral-text-default)',
+                          }}
+                        >
+                          {getFacilityIcon(facility.label)}
+                          {facility.label}
+                        </span>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Additional Services */}
+                {listing.additionalServices && listing.additionalServices.length > 0 && (
+                  <section>
+                    <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      Tilleggstjenester
+                    </Paragraph>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                      {listing.additionalServices.map((service) => {
+                        const isSelected = selectedServices.includes(service.id);
+                        return (
+                          <div
+                            key={service.id}
+                            onClick={() => setSelectedServices(prev => isSelected ? prev.filter(id => id !== service.id) : [...prev, service.id])}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setSelectedServices(prev => isSelected ? prev.filter(id => id !== service.id) : [...prev, service.id]);
+                              }
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 'var(--ds-spacing-3)',
+                              padding: 'var(--ds-spacing-4)',
+                              backgroundColor: isSelected ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-background-default)',
+                              border: `1px solid ${isSelected ? 'var(--ds-color-accent-border-default)' : 'var(--ds-color-neutral-border-subtle)'}`,
+                              borderRadius: 'var(--ds-border-radius-lg)',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                            }}
+                          >
+                            {/* Green Check Icon */}
+                            <div style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '24px',
+                              height: '24px',
+                              flexShrink: 0,
+                              color: 'var(--ds-color-success-base-default)',
+                            }}>
+                              <CheckIcon size={20} color="var(--ds-color-success-base-default)" />
+                            </div>
+
+                            {/* Content */}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', color: 'var(--ds-color-neutral-text-default)' }}>
+                                {service.name}
+                              </Paragraph>
+                              {service.description && (
+                                <Paragraph data-size="xs" style={{ margin: 'var(--ds-spacing-1) 0 0 0', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                                  {service.description}
+                                </Paragraph>
+                              )}
+                            </div>
+
+                            {/* Price Badge */}
+                            <div style={{
+                              padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                              backgroundColor: 'var(--ds-color-accent-surface-default)',
+                              borderRadius: 'var(--ds-border-radius-md)',
+                              color: 'var(--ds-color-accent-base-default)',
+                              fontSize: 'var(--ds-font-size-sm)',
+                              fontWeight: 'var(--ds-font-weight-semibold)',
+                              flexShrink: 0,
+                            }}>
+                              +{service.price} kr
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
+              </div>
+            )}
+
+            {/* Guidelines Tab */}
+            {activeTab === 'guidelines' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                {listing.guidelines?.map((guideline) => (
+                  <div key={guideline.id} style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                    borderRadius: 'var(--ds-border-radius-lg)',
+                    border: '1px solid var(--ds-color-neutral-border-subtle)',
+                  }}>
+                    <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                      {guideline.title}
+                    </Heading>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {guideline.content}
+                    </Paragraph>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* FAQ Tab */}
+            {activeTab === 'faq' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                {listing.faq?.map((item) => (
+                  <details key={item.id} style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                    borderRadius: 'var(--ds-border-radius-lg)',
+                    border: '1px solid var(--ds-color-neutral-border-subtle)',
+                  }}>
+                    <summary style={{
+                      cursor: 'pointer',
+                      fontWeight: 'var(--ds-font-weight-medium)',
+                      color: 'var(--ds-color-neutral-text-default)',
+                    }}>
+                      {item.question}
+                    </summary>
+                    <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {item.answer}
+                    </Paragraph>
+                  </details>
+                ))}
+              </div>
+            )}
+
+            {/* Calendar Tab - Show booking engine */}
+            {activeTab === 'calendar' && (
+              <div>
+                <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  Se tilgjengelige tidspunkter i kalenderen under.
+                </Paragraph>
+              </div>
+            )}
+          </div>
+
           {/* Right Column - Sidebar */}
-          <aside
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--ds-spacing-4)',
-              position: 'sticky',
-              top: 'calc(var(--header-height, 70px) + var(--ds-spacing-4))',
-              alignSelf: 'start',
-              height: 'fit-content',
-            }}
-          >
-            {/* Contact Info */}
+          <aside style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+            {/* Contact Info Card */}
             {listing.contact && (
-              <ContactInfoCard
-                {...(listing.contact.email && { email: listing.contact.email })}
-                {...(listing.contact.phone && { phone: listing.contact.phone })}
-                {...(listing.contact.name && { contactName: listing.contact.name })}
-              />
+              <div style={{
+                padding: 'var(--ds-spacing-4)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                borderRadius: 'var(--ds-border-radius-lg)',
+                border: '1px solid var(--ds-color-neutral-border-subtle)',
+              }}>
+                <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                  Kontaktinformasjon
+                </Paragraph>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                  {listing.contact.email && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+                      <div style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        <MailIcon />
+                      </div>
+                      <div>
+                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>E-post</Paragraph>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{listing.contact.email}</Paragraph>
+                      </div>
+                    </div>
+                  )}
+                  {listing.contact.phone && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+                      <div style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        <PhoneIcon />
+                      </div>
+                      <div>
+                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Telefon</Paragraph>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{listing.contact.phone}</Paragraph>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
 
-            {/* Location Map */}
-            {listing.coordinates && (
-              <LocationCard
-                address={listing.location}
-                latitude={listing.coordinates.latitude}
-                longitude={listing.coordinates.longitude}
-                mapboxToken={MAPBOX_TOKEN}
-              />
-            )}
+            {/* Location Map Card */}
+            <div style={{
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
+              borderRadius: 'var(--ds-border-radius-lg)',
+              border: '1px solid var(--ds-color-neutral-border-subtle)',
+              overflow: 'hidden',
+            }}>
+              <div style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                <MapPinIcon size={16} />
+                <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                  Lokasjon
+                </Paragraph>
+              </div>
+              {listing.coordinates ? (
+                <div>
+                  <a
+                    href={`https://www.google.com/maps?q=${listing.coordinates.latitude},${listing.coordinates.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'block', padding: 'var(--ds-spacing-2) var(--ds-spacing-4)', fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-accent-base-default)' }}
+                  >
+                    View larger map
+                  </a>
+                  <div style={{ height: '180px', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
+                    {MAPBOX_TOKEN ? (
+                      <img
+                        src={`https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+3b82f6(${listing.coordinates.longitude},${listing.coordinates.latitude})/${listing.coordinates.longitude},${listing.coordinates.latitude},14,0/340x180@2x?access_token=${MAPBOX_TOKEN}`}
+                        alt="Map"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        <span>Kart</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  <span>Kart ikke tilgjengelig</span>
+                </div>
+              )}
+            </div>
 
-            {/* Opening Hours */}
+            {/* Opening Hours Card */}
             {listing.openingHours && listing.openingHours.length > 0 && (
-              <OpeningHoursCard hours={listing.openingHours} />
+              <div style={{
+                padding: 'var(--ds-spacing-4)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                borderRadius: 'var(--ds-border-radius-lg)',
+                border: '1px solid var(--ds-color-neutral-border-subtle)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+                  <ClockIcon size={16} />
+                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Åpningstider
+                  </Paragraph>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                  {listing.openingHours.map((day, index) => (
+                    <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-default)' }}>
+                        {day.day}
+                      </Paragraph>
+                      <Paragraph data-size="sm" style={{ margin: 0, color: day.isClosed ? 'var(--ds-color-neutral-text-subtle)' : 'var(--ds-color-accent-base-default)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {day.hours}
+                      </Paragraph>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </aside>
         </div>
 
-        {/* Enhanced Responsive CSS and Animations */}
+        {/* Booking Calendar Section (Full Width) */}
+        <div id="booking-section" style={{ marginTop: 'var(--ds-spacing-8)' }}>
+          <UnifiedBookingEngine
+            config={bookingConfig}
+            listingName={listing.name}
+            {...(listing.images[0]?.src ? { listingImage: listing.images[0].src } : {})}
+            availableSlots={availabilitySlots}
+            additionalServices={listing.additionalServices || []}
+            currentStep={currentBookingStep}
+            onStepChange={setCurrentBookingStep}
+            onSubmit={handleBookingSubmit}
+          />
+        </div>
+
+        {/* Auth Modal */}
+        <RequireAuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onLogin={() => { setShowAuthModal(false); navigate('/login?redirect=' + encodeURIComponent(window.location.pathname)); }}
+          onRegister={() => { setShowAuthModal(false); navigate('/register?redirect=' + encodeURIComponent(window.location.pathname)); }}
+          actionContext="favorite"
+        />
+
+        {/* Responsive Styles */}
         <style>{`
-          /* Fade-in animation */
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          /* Section animations */
-          .listing-detail-content > div,
-          .listing-detail-content > aside {
-            animation: fadeInUp 0.5s ease-out forwards;
-          }
-
-          .listing-detail-content > aside {
-            animation-delay: 0.1s;
-          }
-
-          /* Tab panel animations */
-          [role="tabpanel"] > div {
-            animation: fadeInUp 0.3s ease-out;
-          }
-
-          /* Card hover effects */
-          .price-summary-card,
-          .contact-info-card,
-          .location-card,
-          .opening-hours-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-          }
-
-          .price-summary-card:hover,
-          .contact-info-card:hover,
-          .location-card:hover,
-          .opening-hours-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--ds-shadow-md);
-          }
-
-          /* ═══════════════════════════════════════════════════════════
-             Professional Tabs - Clean Underline Style
-             ═══════════════════════════════════════════════════════════ */
-
-          .elegant-tabs {
-            margin-bottom: var(--ds-spacing-6);
-          }
-
-          .elegant-tabs [role="tablist"] {
-            display: flex !important;
-            gap: 0 !important;
-            background: transparent !important;
-            border: none !important;
-            border-bottom: 1px solid var(--ds-color-neutral-border-subtle) !important;
-            border-radius: 0 !important;
-            padding: 0 !important;
-          }
-
-          /* Base tab styling */
-          .elegant-tabs [role="tab"] {
-            flex: 1;
-            padding: var(--ds-spacing-4) var(--ds-spacing-5) !important;
-            background-color: transparent !important;
-            border: none !important;
-            border-bottom: 3px solid transparent !important;
-            border-radius: 0 !important;
-            margin-bottom: -1px !important;
-            color: var(--ds-color-neutral-text-subtle) !important;
-            font-weight: var(--ds-font-weight-medium) !important;
-            font-size: var(--ds-font-size-sm) !important;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s ease !important;
-            white-space: nowrap;
-          }
-
-          /* Tab content wrapper with icon */
-          .elegant-tabs .tab-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--ds-spacing-2);
-          }
-
-          .elegant-tabs .tab-content svg {
-            opacity: 0.5;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-          }
-
-          /* Hover state for unselected tabs */
-          .elegant-tabs [role="tab"]:hover:not([aria-selected="true"]) {
-            color: var(--ds-color-neutral-text-default) !important;
-            border-bottom-color: var(--ds-color-neutral-border-default) !important;
-          }
-
-          .elegant-tabs [role="tab"]:hover:not([aria-selected="true"]) .tab-content svg {
-            opacity: 0.7;
-          }
-
-          /* Selected tab - accent underline */
-          .elegant-tabs [role="tab"][aria-selected="true"] {
-            color: var(--ds-color-accent-base-default) !important;
-            font-weight: var(--ds-font-weight-semibold) !important;
-            border-bottom-color: var(--ds-color-accent-base-default) !important;
-            background-color: transparent !important;
-          }
-
-          .elegant-tabs [role="tab"][aria-selected="true"] .tab-content svg {
-            opacity: 1;
-            color: var(--ds-color-accent-base-default);
-          }
-
-          /* Focus state */
-          .elegant-tabs [role="tab"]:focus-visible {
-            outline: 2px solid var(--ds-color-focus-outer) !important;
-            outline-offset: -2px !important;
-          }
-
-          /* Facility chips styling */
-          .facility-chip {
-            transition: all 0.2s ease !important;
-          }
-
-          .facility-chip:hover {
-            border-color: var(--ds-color-accent-border-subtle) !important;
-            transform: translateY(-1px);
-            box-shadow: var(--ds-shadow-sm) !important;
-          }
-
-          /* Service card hover */
-          .service-card:hover {
-            border-color: var(--ds-color-accent-border-default) !important;
-            box-shadow: var(--ds-shadow-md) !important;
-          }
-
-          /* Booking section styling */
-          .booking-section {
-            box-shadow: var(--ds-shadow-sm);
-            transition: box-shadow 0.3s ease;
-          }
-
-          .booking-section:hover {
-            box-shadow: var(--ds-shadow-md);
-          }
-
-          /* Responsive breakpoints */
           @media (max-width: 991px) {
-            .listing-detail-content {
+            .listing-detail-grid {
               grid-template-columns: 1fr !important;
-            }
-
-            .listing-detail-content > aside {
-              position: static !important;
-              order: -1;
-            }
-
-            .booking-section {
-              margin-left: calc(-1 * var(--ds-spacing-4));
-              margin-right: calc(-1 * var(--ds-spacing-4));
-              border-radius: 0 !important;
             }
           }
 
           @media (max-width: 599px) {
-            /* Image slider mobile adjustments */
             .image-slider {
               margin-left: calc(-1 * var(--ds-spacing-4));
               margin-right: calc(-1 * var(--ds-spacing-4));
               border-radius: 0 !important;
             }
-
-            .image-slider-main {
-              border-radius: 0 !important;
-            }
-
-            /* Calendar responsive */
-            .availability-calendar-grid {
-              font-size: var(--ds-font-size-xs);
-              overflow-x: auto;
-            }
-
-            /* Hide thumbnails on mobile */
-            .image-slider-thumbnails {
-              display: none !important;
-            }
-
-            /* Tabs stay horizontal on mobile, just smaller */
-            .elegant-tabs [role="tab"] {
-              padding: var(--ds-spacing-3) var(--ds-spacing-2) !important;
-              font-size: var(--ds-font-size-xs) !important;
-            }
-
-            .elegant-tabs .tab-content svg {
-              display: none;
-            }
-
-            /* Facility grid on mobile - 2 columns */
-            .facility-chips {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            /* Header layout on mobile */
-            .listing-detail-header > div:nth-child(2) {
-              flex-direction: column;
-              align-items: flex-start !important;
-            }
-          }
-
-          /* Smooth scrolling */
-          html {
-            scroll-behavior: smooth;
-          }
-
-          /* Focus states for accessibility */
-          .availability-calendar-cell:focus {
-            outline: 2px solid var(--ds-color-focus-outer);
-            outline-offset: -2px;
-            z-index: 1;
-          }
-
-          /* Button hover enhancements */
-          button[type="button"] {
-            transition: all 0.2s ease !important;
-          }
-
-          /* Chip/tag hover effects */
-          .facility-chip {
-            transition: transform 0.2s ease, background-color 0.2s ease;
-          }
-
-          .facility-chip:hover {
-            transform: translateY(-1px);
           }
         `}</style>
       </main>

@@ -18,12 +18,15 @@ import {
   useConfirmBooking,
   useCancelBooking,
   type BookingStatus,
-  type Booking,
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
+import { useT, useLocale } from '@xala/i18n';
 
 export function BookingsPage() {
+  const t = useT();
+  const { locale } = useLocale();
+  const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
   const [statusFilter, setStatusFilter] = useState<BookingStatus | undefined>(undefined);
 
   // Fetch bookings from API with optional status filter
@@ -45,7 +48,7 @@ export function BookingsPage() {
   };
 
   const handleCancel = async (id: string) => {
-    if (window.confirm('Er du sikker på at du vil kansellere denne bookingen?')) {
+    if (window.confirm(t('bookings.confirmCancel'))) {
       await cancelBooking.mutateAsync(id);
     }
   };
@@ -56,7 +59,7 @@ export function BookingsPage() {
     const confirmedCount = confirmedData?.meta?.total ?? 0;
     const cancelledCount = cancelledData?.meta?.total ?? 0;
     const confirmedBookings = confirmedData?.data ?? [];
-    const revenue = confirmedBookings.reduce((sum, b) => sum + (b.totalPrice ?? 0), 0);
+    const revenue = confirmedBookings.reduce<number>((sum, b) => sum + (Number(b.totalPrice) || 0), 0);
 
     return {
       total: pendingCount + confirmedCount + cancelledCount,
@@ -72,10 +75,10 @@ export function BookingsPage() {
       {/* Header */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          Bookinger
+          {t('bookings.title')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          Oversikt over alle bekreftede og ventende bookinger.
+          {t('bookings.subtitle')}
         </Paragraph>
       </div>
 
@@ -83,7 +86,7 @@ export function BookingsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-4)' }}>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Totalt bookinger
+            {t('bookings.totalBookings')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
             {stats.total}
@@ -91,7 +94,7 @@ export function BookingsPage() {
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Bekreftede
+            {t('bookings.confirmed')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-success-text-default)' }}>
             {stats.confirmed}
@@ -99,7 +102,7 @@ export function BookingsPage() {
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Ventende
+            {t('bookings.pending')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-warning-text-default)' }}>
             {stats.pending}
@@ -107,10 +110,10 @@ export function BookingsPage() {
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Total omsetning
+            {t('bookings.totalRevenue')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-            {stats.revenue.toLocaleString('nb-NO')} kr
+            {stats.revenue.toLocaleString(formatLocale)} kr
           </Heading>
         </Card>
       </div>
@@ -123,7 +126,7 @@ export function BookingsPage() {
           data-size="sm"
           onClick={() => setStatusFilter(undefined)}
         >
-          Alle ({stats.total})
+          {t('bookings.all')} ({stats.total})
         </Button>
         <Button
           type="button"
@@ -131,7 +134,7 @@ export function BookingsPage() {
           data-size="sm"
           onClick={() => setStatusFilter('pending')}
         >
-          Venter ({stats.pending})
+          {t('bookings.waiting')} ({stats.pending})
         </Button>
         <Button
           type="button"
@@ -139,7 +142,7 @@ export function BookingsPage() {
           data-size="sm"
           onClick={() => setStatusFilter('confirmed')}
         >
-          Bekreftet ({stats.confirmed})
+          {t('booking.confirmed')} ({stats.confirmed})
         </Button>
         <Button
           type="button"
@@ -147,20 +150,20 @@ export function BookingsPage() {
           data-size="sm"
           onClick={() => setStatusFilter('cancelled')}
         >
-          Kansellert
+          {t('booking.cancelled')}
         </Button>
       </div>
 
       {/* Table */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label="Laster bookinger..." data-size="lg" />
+          <Spinner aria-label={t('bookings.loadingBookings')} data-size="lg" />
         </div>
       ) : bookings.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-            Ingen bookinger funnet
-            {statusFilter && ` med status "${statusFilter}"`}.
+            {t('bookings.noBookings')}
+            {statusFilter && ` ${t('bookings.noBookingsWithStatus', { status: statusFilter })}`}
           </Paragraph>
         </Card>
       ) : (
@@ -168,14 +171,14 @@ export function BookingsPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Booking-ID</Table.HeaderCell>
-                <Table.HeaderCell>Bruker / Org</Table.HeaderCell>
-                <Table.HeaderCell>Ressurs</Table.HeaderCell>
-                <Table.HeaderCell>Tidsrom</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Betaling</Table.HeaderCell>
-                <Table.HeaderCell>Pris</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '120px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell>{t('bookings.bookingId')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('bookings.userOrg')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('bookings.resource')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('bookings.timespan')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('bookings.payment')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.price')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '120px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -188,7 +191,7 @@ export function BookingsPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {booking.userName || booking.userId || 'Ukjent'}
+                      {booking.userName || booking.userId || t('common.unknown')}
                     </span>
                   </Table.Cell>
                   <Table.Cell>{booking.listingName || booking.listingId}</Table.Cell>
@@ -209,7 +212,7 @@ export function BookingsPage() {
                     <PaymentStatusBadge status={booking.paymentStatus || 'unpaid'} />
                   </Table.Cell>
                   <Table.Cell>
-                    {(booking.totalPrice ?? 0).toLocaleString('nb-NO')} kr
+                    {(Number(booking.totalPrice) || 0).toLocaleString(formatLocale)} kr
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
@@ -221,7 +224,7 @@ export function BookingsPage() {
                             data-size="sm"
                             onClick={() => handleConfirm(booking.id)}
                             disabled={confirmBooking.isPending}
-                            title="Bekreft"
+                            title={t('common.confirm')}
                           >
                             <CheckIcon />
                           </Button>
@@ -231,7 +234,7 @@ export function BookingsPage() {
                             data-size="sm"
                             onClick={() => handleCancel(booking.id)}
                             disabled={cancelBooking.isPending}
-                            title="Kanseller"
+                            title={t('common.cancel')}
                           >
                             <CloseIcon />
                           </Button>
@@ -239,27 +242,27 @@ export function BookingsPage() {
                       )}
                       <Dropdown.TriggerContext>
                         <Dropdown.Trigger asChild>
-                          <Button type="button" variant="tertiary" data-size="sm" aria-label="Flere valg">
+                          <Button type="button" variant="tertiary" data-size="sm" aria-label={t('common.moreOptions')}>
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
                         <Dropdown placement="bottom-end">
                           <Dropdown.List>
                             <Dropdown.Item>
-                              <Dropdown.Button>Se detaljer</Dropdown.Button>
+                              <Dropdown.Button>{t('bookings.viewDetails')}</Dropdown.Button>
                             </Dropdown.Item>
                             <Dropdown.Item>
-                              <Dropdown.Button>Endre</Dropdown.Button>
+                              <Dropdown.Button>{t('common.change')}</Dropdown.Button>
                             </Dropdown.Item>
                             <Dropdown.Item>
-                              <Dropdown.Button>Se fakturagrunnlag</Dropdown.Button>
+                              <Dropdown.Button>{t('bookings.viewInvoice')}</Dropdown.Button>
                             </Dropdown.Item>
                             <Dropdown.Item>
-                              <Dropdown.Button>Se tilgang (låssystem)</Dropdown.Button>
+                              <Dropdown.Button>{t('bookings.viewAccess')}</Dropdown.Button>
                             </Dropdown.Item>
                             {booking.status !== 'cancelled' && (
                               <Dropdown.Item>
-                                <Dropdown.Button>Avbryt booking</Dropdown.Button>
+                                <Dropdown.Button>{t('bookings.cancelBooking')}</Dropdown.Button>
                               </Dropdown.Item>
                             )}
                           </Dropdown.List>

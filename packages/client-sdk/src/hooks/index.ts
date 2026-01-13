@@ -30,6 +30,11 @@ export {
   useDeleteListing,
   usePublishListing,
   useArchiveListing,
+  useUploadListingMedia,
+  useDeleteListingMedia,
+  useReorderListingMedia,
+  useSetListingCover,
+  useDuplicateListing,
   usePublicListings,
   usePublicUiListings,
   usePublicListing,
@@ -139,3 +144,16 @@ export {
   useSendMessage,
   useMarkMessagesRead
 } from './use-conversations';
+
+// Audit hooks
+export {
+  useAuditLog,
+  useAuditEvent,
+  useInfiniteAuditLog,
+  useListingAudit,
+  useBookingAudit,
+  useOrganizationAudit,
+  useUserAudit,
+  useActorAudit,
+  useInfiniteListingAudit
+} from './use-audit';

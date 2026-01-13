@@ -5,10 +5,7 @@ import {
   useMessages,
   useSendMessage,
   useMarkMessagesRead,
-  type Conversation,
-  type Message,
   formatTime,
-  formatDateTime,
 } from '@digilist/client-sdk';
 
 export function MessagesPage() {
@@ -22,8 +19,8 @@ export function MessagesPage() {
 
   // Fetch messages for selected conversation
   const { data: messagesData, isLoading: isLoadingMessages } = useMessages(
-    { conversationId: selectedConversationId! },
-    !!selectedConversationId
+    selectedConversationId!,
+    { enabled: !!selectedConversationId }
   );
   const messages = messagesData?.data ?? [];
 
@@ -34,7 +31,10 @@ export function MessagesPage() {
   // Auto-select first conversation
   useEffect(() => {
     if (conversations.length > 0 && !selectedConversationId) {
-      setSelectedConversationId(conversations[0].id);
+      const firstConversation = conversations[0];
+      if (firstConversation) {
+        setSelectedConversationId(firstConversation.id);
+      }
     }
   }, [conversations, selectedConversationId]);
 
@@ -123,7 +123,7 @@ export function MessagesPage() {
           <div style={{ flex: 1, overflow: 'auto' }}>
             {isLoadingConversations ? (
               <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-                <Spinner />
+                <Spinner aria-label="Laster samtaler..." />
               </div>
             ) : filteredConversations.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -209,7 +209,7 @@ export function MessagesPage() {
               <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
                 {isLoadingMessages ? (
                   <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                    <Spinner />
+                    <Spinner aria-label="Laster meldinger..." />
                   </div>
                 ) : messages.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>

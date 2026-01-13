@@ -2,6 +2,7 @@
  * ListingsPage
  *
  * Main listings page with filters, search, and grid/list/map views.
+ * Uses API data from @digilist/client-sdk.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,10 +23,15 @@ import {
   Text,
   HeaderSearch,
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup, ViewMode, ListingType } from '@xala/ds';
-import { useUiListings, isUsingMockData } from '@digilist/client-sdk';
-import type { UiListing } from '@digilist/client-sdk';
-import { demoSearchResults, mockListings, listingTypeOptions, capacityOptions } from '../data/mock-data';
+import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
+import {
+  usePublicUiListings,
+  usePublicCities,
+  LISTING_TYPE_OPTIONS,
+  CAPACITY_OPTIONS,
+} from '@digilist/client-sdk';
+import type { UiListing, ListingType } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -46,43 +52,37 @@ const getAllFacilities = (listingsData: UiListing[]) => {
   return Array.from(facilitySet).sort();
 };
 
-// Extract unique areas/locations from listings
-const getLocationAreas = () => {
-  const areas: { id: string; label: string }[] = [
-    { id: 'all', label: 'Alle områder' },
-    { id: 'drammen', label: 'Drammen sentrum' },
-    { id: 'solbergelva', label: 'Solbergelva' },
-    { id: 'gulskogen', label: 'Gulskogen' },
-  ];
-  return areas;
+// Extract unique cities/locations from listings
+const getUniqueCities = (listingsData: UiListing[]) => {
+  const citySet = new Set<string>();
+  listingsData.forEach(l => {
+    if (l.location) {
+      // Extract city from address or use location directly
+      const city = l.location.split(',').pop()?.trim() || l.location;
+      if (city) citySet.add(city);
+    }
+  });
+  return Array.from(citySet).sort();
 };
 
 export function ListingsPage(): React.ReactElement {
   const navigate = useNavigate();
+  const t = useT();
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // Check if running in mock mode (no license key)
-  const isMockMode = isUsingMockData();
+  // Fetch public listings from API
+  const { data: listingsResponse, isLoading, error } = usePublicUiListings();
 
-  // Fetch listings from API (disabled in mock mode)
-  const { data: apiListingsData, isLoading: isApiLoading, error: apiError } = useUiListings({
-    status: 'published',
-  });
+  // Fetch cities for location filter
+  const { data: citiesResponse } = usePublicCities();
 
-  // Use API data if available, otherwise use mock data as fallback
+  // Extract listings from response
   const listings: UiListing[] = React.useMemo(() => {
-    if (!isMockMode && apiListingsData?.data && apiListingsData.data.length > 0) {
-      return apiListingsData.data;
-    }
-    // Use mock data
-    return mockListings;
-  }, [apiListingsData, isMockMode]);
-
-  // Check if we're actually using API data (for error message display)
-  const isUsingApiData = !isMockMode && apiListingsData?.data && apiListingsData.data.length > 0;
+    return listingsResponse?.data || [];
+  }, [listingsResponse]);
 
   // Filter drawer state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -104,7 +104,26 @@ export function ListingsPage(): React.ReactElement {
   // Get filter options
   const typeCounts = React.useMemo(() => getListingTypeCounts(listings), [listings]);
   const allFacilities = React.useMemo(() => getAllFacilities(listings), [listings]);
-  const locationAreas = React.useMemo(() => getLocationAreas(), []);
+
+  // Build location areas from API cities or extract from listings
+  const locationAreas = React.useMemo(() => {
+    const areas: { id: string; label: string }[] = [{ id: 'all', label: t('listings.allAreas') }];
+
+    if (citiesResponse?.data && citiesResponse.data.length > 0) {
+      // Use cities from API
+      citiesResponse.data.forEach(city => {
+        areas.push({ id: city.slug, label: city.name });
+      });
+    } else {
+      // Fall back to extracting unique cities from listings
+      const uniqueCities = getUniqueCities(listings);
+      uniqueCities.forEach(city => {
+        areas.push({ id: city.toLowerCase().replace(/\s+/g, '-'), label: city });
+      });
+    }
+
+    return areas;
+  }, [citiesResponse, listings, t]);
 
   // Filter listings by all criteria
   const filteredListings = React.useMemo(() => {
@@ -115,14 +134,14 @@ export function ListingsPage(): React.ReactElement {
       // Filter by area/location
       if (selectedArea !== 'all') {
         const locationLower = l.location.toLowerCase();
-        if (selectedArea === 'drammen' && !locationLower.includes('drammen') && !locationLower.includes('storgate') && !locationLower.includes('danvik') && !locationLower.includes('bragernes')) return false;
-        if (selectedArea === 'solbergelva' && !locationLower.includes('solbergelva') && !locationLower.includes('solberg')) return false;
-        if (selectedArea === 'gulskogen' && !locationLower.includes('gulskogen')) return false;
+        const areaLower = selectedArea.replace(/-/g, ' ');
+        // Check if location contains the selected area
+        if (!locationLower.includes(areaLower)) return false;
       }
 
       // Filter by capacity
       if (selectedCapacity !== 'all') {
-        const capacityOption = capacityOptions.find(c => c.id === selectedCapacity);
+        const capacityOption = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);
         if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
       }
 
@@ -147,7 +166,7 @@ export function ListingsPage(): React.ReactElement {
     setVisibleCount(ITEMS_PER_PAGE);
   }, [listingType, selectedArea, selectedCapacity, selectedFacilities]);
 
-  // Simulated search function
+  // Search function - filters listings by name, location, description
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
 
@@ -158,22 +177,31 @@ export function ListingsPage(): React.ReactElement {
 
     setIsSearching(true);
 
-    // Simulate API delay
-    setTimeout(() => {
-      const query = value.toLowerCase();
-      const filtered = demoSearchResults
-        .map(group => ({
-          ...group,
-          items: group.items.filter(item =>
-            item.label.toLowerCase().includes(query) ||
-            item.description?.toLowerCase().includes(query)
-          )
-        }))
-        .filter(group => group.items.length > 0);
+    // Search through listings
+    const query = value.toLowerCase();
+    const matchingListings = listings.filter(listing =>
+      listing.name.toLowerCase().includes(query) ||
+      listing.location.toLowerCase().includes(query) ||
+      listing.description.toLowerCase().includes(query) ||
+      listing.type.toLowerCase().includes(query)
+    );
 
-      setSearchResults(filtered);
-      setIsSearching(false);
-    }, 200);
+    // Format as search result groups
+    const results: SearchResultGroup[] = matchingListings.length > 0
+      ? [{
+          id: 'listings',
+          label: t('nav.listings'),
+          items: matchingListings.slice(0, 5).map(listing => ({
+            id: listing.id,
+            label: listing.name,
+            description: listing.location,
+            meta: listing.type,
+          })),
+        }]
+      : [];
+
+    setSearchResults(results);
+    setIsSearching(false);
   };
 
   const handleSearch = (value: string) => {
@@ -181,7 +209,11 @@ export function ListingsPage(): React.ReactElement {
   };
 
   const handleResultSelect = (result: SearchResultItem) => {
-    console.log('Selected result:', result);
+    // Navigate to the selected listing
+    const listing = listings.find(l => l.id === result.id);
+    if (listing) {
+      navigate(`/listing/${listing.slug || listing.id}`);
+    }
     setSearchQuery('');
     setSearchResults([]);
   };
@@ -207,7 +239,7 @@ export function ListingsPage(): React.ReactElement {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title="Filtre"
+        title={t('common.filters')}
         icon={<FilterIcon size={20} />}
         position="left"
         size="sm"
@@ -220,7 +252,7 @@ export function ListingsPage(): React.ReactElement {
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
-              Viser {filteredListings.length} resultater
+              {t('listings.showingResults', { count: filteredListings.length })}
             </Text>
             <Button
               type="button"
@@ -228,14 +260,14 @@ export function ListingsPage(): React.ReactElement {
               style={{ width: '100%' }}
               onClick={() => setIsFilterOpen(false)}
             >
-              Vis resultater
+              {t('common.viewResults')}
             </Button>
           </Stack>
         }
       >
-        <DrawerSection title="Type" collapsible>
+        <DrawerSection title={t('listings.type')} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
-            {(showMoreType ? listingTypeOptions : listingTypeOptions.slice(0, MAX_VISIBLE_ITEMS)).map((type, index) => (
+            {(showMoreType ? LISTING_TYPE_OPTIONS : LISTING_TYPE_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((type, index) => (
               <div
                 key={type.id}
                 style={{
@@ -262,7 +294,7 @@ export function ListingsPage(): React.ReactElement {
                 </DrawerItem>
               </div>
             ))}
-            {listingTypeOptions.length > MAX_VISIBLE_ITEMS && (
+            {LISTING_TYPE_OPTIONS.length > MAX_VISIBLE_ITEMS && (
               <Button
                 type="button"
                 variant="tertiary"
@@ -273,13 +305,13 @@ export function ListingsPage(): React.ReactElement {
                 }}
                 onClick={() => setShowMoreType(!showMoreType)}
               >
-                {showMoreType ? 'Vis mindre' : `Vis ${listingTypeOptions.length - MAX_VISIBLE_ITEMS} flere`}
+                {showMoreType ? t('common.showLess') : `${t('common.showMore')} (${LISTING_TYPE_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Område" collapsible defaultCollapsed>
+        <DrawerSection title={t('listings.area')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreArea ? locationAreas : locationAreas.slice(0, MAX_VISIBLE_ITEMS)).map((area, index) => (
               <div
@@ -318,15 +350,15 @@ export function ListingsPage(): React.ReactElement {
                 }}
                 onClick={() => setShowMoreArea(!showMoreArea)}
               >
-                {showMoreArea ? 'Vis mindre' : `Vis ${locationAreas.length - MAX_VISIBLE_ITEMS} flere`}
+                {showMoreArea ? t('common.showLess') : `${t('common.showMore')} (${locationAreas.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
+        <DrawerSection title={t('listings.capacity')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
-            {(showMoreCapacity ? capacityOptions : capacityOptions.slice(0, MAX_VISIBLE_ITEMS)).map((cap, index) => (
+            {(showMoreCapacity ? CAPACITY_OPTIONS : CAPACITY_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((cap, index) => (
               <div
                 key={cap.id}
                 style={{
@@ -352,7 +384,7 @@ export function ListingsPage(): React.ReactElement {
                 </DrawerItem>
               </div>
             ))}
-            {capacityOptions.length > MAX_VISIBLE_ITEMS && (
+            {CAPACITY_OPTIONS.length > MAX_VISIBLE_ITEMS && (
               <Button
                 type="button"
                 variant="tertiary"
@@ -363,13 +395,13 @@ export function ListingsPage(): React.ReactElement {
                 }}
                 onClick={() => setShowMoreCapacity(!showMoreCapacity)}
               >
-                {showMoreCapacity ? 'Vis mindre' : `Vis ${capacityOptions.length - MAX_VISIBLE_ITEMS} flere`}
+                {showMoreCapacity ? t('common.showLess') : `${t('common.showMore')} (${CAPACITY_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
+        <DrawerSection title={t('listings.facilities')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreFacilities ? allFacilities : allFacilities.slice(0, MAX_VISIBLE_ITEMS)).map((facility, index) => (
               <div
@@ -420,7 +452,7 @@ export function ListingsPage(): React.ReactElement {
                 }}
                 onClick={() => setShowMoreFacilities(!showMoreFacilities)}
               >
-                {showMoreFacilities ? 'Vis mindre' : `Vis ${allFacilities.length - MAX_VISIBLE_ITEMS} flere`}
+                {showMoreFacilities ? t('common.showLess') : `${t('common.showMore')} (${allFacilities.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
@@ -432,7 +464,7 @@ export function ListingsPage(): React.ReactElement {
           {/* Mobile search - shown above filter bar on mobile */}
           <div className="mobile-search-wrapper" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             <HeaderSearch
-              placeholder="Søk lokaler..."
+              placeholder={t('listings.search')}
               value={searchQuery}
               onSearchChange={handleSearchChange}
               onSearch={handleSearch}
@@ -442,8 +474,8 @@ export function ListingsPage(): React.ReactElement {
             />
           </div>
 
-          {/* API Loading State */}
-          {!isMockMode && isApiLoading && (
+          {/* Loading State */}
+          {isLoading && (
             <div style={{
               display: 'flex',
               justifyContent: 'center',
@@ -451,43 +483,43 @@ export function ListingsPage(): React.ReactElement {
               padding: 'var(--ds-spacing-8)',
               color: 'var(--ds-color-neutral-text-subtle)'
             }}>
-              <Text size="md">Laster lokaler...</Text>
+              <Text size="md">{t('listings.loading')}</Text>
             </div>
           )}
 
-          {/* API Error State - only show if not in mock mode AND not using API data */}
-          {!isMockMode && apiError && !isApiLoading && !isUsingApiData && (
+          {/* Error State */}
+          {error && !isLoading && (
             <div style={{
               padding: 'var(--ds-spacing-4)',
               marginBottom: 'var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-warning-background-subtle)',
+              backgroundColor: 'var(--ds-color-danger-background-subtle)',
               borderRadius: 'var(--ds-border-radius-md)',
-              border: '1px solid var(--ds-color-warning-border-subtle)'
+              border: '1px solid var(--ds-color-danger-border-subtle)'
             }}>
-              <Text size="sm" color="var(--ds-color-warning-text-default)">
-                Kunne ikke laste data fra API. Viser demo-data.
+              <Text size="sm" color="var(--ds-color-danger-text-default)">
+                {t('listings.error')}
               </Text>
             </div>
           )}
 
-          {/* Mock Mode Indicator (development) */}
-          {isMockMode && import.meta.env.DEV && (
+          {/* Empty State */}
+          {!isLoading && !error && listings.length === 0 && (
             <div style={{
-              padding: 'var(--ds-spacing-3)',
-              marginBottom: 'var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-info-background-subtle)',
+              padding: 'var(--ds-spacing-8)',
+              textAlign: 'center',
+              backgroundColor: 'var(--ds-color-neutral-surface-default)',
               borderRadius: 'var(--ds-border-radius-md)',
-              border: '1px solid var(--ds-color-info-border-subtle)'
+              border: '1px solid var(--ds-color-neutral-border-subtle)'
             }}>
-              <Text size="sm" color="var(--ds-color-info-text-default)">
-                Demo-modus: Viser eksempeldata. Legg til VITE_LICENSE_KEY for å koble til API.
+              <Text size="md" color="var(--ds-color-neutral-text-subtle)">
+                {t('listings.noListings')}
               </Text>
             </div>
           )}
 
           <ListingToolbar
             count={filteredListings.length}
-            countLabel="resultater"
+            countLabel={t('common.results')}
             activeFilterCount={activeFilterCount}
             onFilterClick={() => setIsFilterOpen(true)}
             viewMode={viewMode}
@@ -568,7 +600,7 @@ export function ListingsPage(): React.ReactElement {
                   facilities: l.facilities,
                   available: l.available,
                 }))}
-              mapboxToken={MAPBOX_TOKEN}
+              mapboxToken={MAPBOX_TOKEN || ''}
               height="calc(100vh - 250px)"
               onListingClick={handleListingClick}
             />
@@ -587,7 +619,7 @@ export function ListingsPage(): React.ReactElement {
                 onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
                 style={{ paddingInline: 'var(--ds-spacing-8)' }}
               >
-                Vis flere ({filteredListings.length - visibleCount} igjen)
+                {t('listings.showMore', { remaining: filteredListings.length - visibleCount })}
               </Button>
             </div>
           )}

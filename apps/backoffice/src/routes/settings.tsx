@@ -1,17 +1,20 @@
 import { Card, Heading, Paragraph } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 export function SettingsPage() {
+  const t = useT();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       <div>
         <Heading level={2} data-size="md">
-          Systeminnstillinger
+          {t('settings.systemSettings')}
         </Heading>
         <Paragraph
           data-size="sm"
           style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
         >
-          Konfigurer systeminnstillinger og regler
+          {t('settings.configureSystem')}
         </Paragraph>
       </div>
 
@@ -24,49 +27,49 @@ export function SettingsPage() {
       >
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Heading level={3} data-size="sm">
-            Bookingsregler
+            {t('settings.bookingRules')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}
           >
-            Konfigurer regler for automatisk godkjenning, avbestillingsfrister og tilgangsregler.
+            {t('settings.bookingRulesDesc')}
           </Paragraph>
         </Card>
 
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Heading level={3} data-size="sm">
-            Prissetting
+            {t('settings.pricing')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}
           >
-            Sett priser for ulike lokaler, brukergrupper og tidspunkter.
+            {t('settings.pricingDesc')}
           </Paragraph>
         </Card>
 
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Heading level={3} data-size="sm">
-            Integrasjoner
+            {t('settings.integrations')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}
           >
-            Administrer integrasjoner med låssystemer, kalender og regnskapssystemer.
+            {t('settings.integrationsDesc')}
           </Paragraph>
         </Card>
 
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Heading level={3} data-size="sm">
-            E-postvarsler
+            {t('settings.emailNotifications')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}
           >
-            Tilpass e-postmaler og varslingsinnstillinger.
+            {t('settings.emailNotificationsDesc')}
           </Paragraph>
         </Card>
       </div>
@@ -79,13 +82,13 @@ export function SettingsPage() {
         }}
       >
         <Heading level={3} data-size="sm">
-          Under utvikling
+          {t('settings.underDevelopment')}
         </Heading>
         <Paragraph
           data-size="sm"
           style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}
         >
-          Innstillingssiden er under utvikling. Flere konfigurasjonsalternativer kommer snart.
+          {t('settings.underDevelopmentDesc')}
         </Paragraph>
       </Card>
     </div>

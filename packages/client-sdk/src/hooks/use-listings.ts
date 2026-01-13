@@ -37,9 +37,11 @@ export function useUiListings(params?: ListingQueryParams) {
     queryKey: [...queryKeys.listings.list(params), 'ui'],
     queryFn: async () => {
       const response = await listingService.getAll(params);
+      // Ensure we have valid data array
+      const listings = Array.isArray(response?.data) ? response.data : [];
       return {
         ...response,
-        data: transformListings(response.data),
+        data: transformListings(listings),
       };
     },
   });
@@ -169,11 +171,86 @@ export function usePublishListing() {
  */
 export function useArchiveListing() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => listingService.archive(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
+    },
+  });
+}
+
+/**
+ * Upload media files to listing
+ */
+export function useUploadListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, files }: { id: string; files: File[] }) =>
+      listingService.uploadMedia(id, files),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+    },
+  });
+}
+
+/**
+ * Delete media from listing
+ */
+export function useDeleteListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
+      listingService.removeMedia(listingId, mediaId),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Reorder listing media
+ */
+export function useReorderListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaIds }: { listingId: string; mediaIds: string[] }) =>
+      listingService.reorderMedia(listingId, mediaIds),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Set cover image for listing
+ */
+export function useSetListingCover() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listingId, mediaId }: { listingId: string; mediaId: string }) =>
+      listingService.setCoverImage(listingId, mediaId),
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
+  });
+}
+
+/**
+ * Duplicate a listing
+ */
+export function useDuplicateListing() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name?: string }) =>
+      listingService.duplicate(id, name),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });

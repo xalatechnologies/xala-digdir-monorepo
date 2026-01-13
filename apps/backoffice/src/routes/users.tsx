@@ -1,4 +1,5 @@
 import { Card, Heading, Paragraph, Spinner, Table, Badge } from '@xala/ds';
+import { useT, useLocale } from '@xala/i18n';
 import type { BackofficeRole } from '../hooks/useAuth';
 
 // Mock data until API is connected
@@ -8,48 +9,50 @@ const mockUsers = [
   { id: '3', name: 'Per Olsen', email: 'per@kommune.no', role: 'saksbehandler' as BackofficeRole },
 ];
 
-const roleLabels: Record<BackofficeRole, string> = {
-  admin: 'Administrator',
-  saksbehandler: 'Saksbehandler',
-};
-
 const roleColors: Record<BackofficeRole, string> = {
   admin: 'accent',
   saksbehandler: 'info',
 };
 
 export function UsersPage() {
+  const t = useT();
+  const { locale } = useLocale();
   const isLoading = false;
   const users = mockUsers;
+
+  const roleLabels: Record<BackofficeRole, string> = {
+    admin: t('users.admin'),
+    saksbehandler: t('users.caseWorker'),
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <Heading level={2} data-size="md">
-            Brukeradministrasjon
+            {t('users.subtitle')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
           >
-            Administrer brukere og roller
+            {t('users.manageRoles')}
           </Paragraph>
         </div>
       </div>
 
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label="Laster brukere..." data-size="lg" />
+          <Spinner aria-label={t('users.loadingUsers')} data-size="lg" />
         </div>
       ) : users.length > 0 ? (
         <Card style={{ overflow: 'hidden' }}>
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>E-post</Table.HeaderCell>
-                <Table.HeaderCell>Rolle</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('users.email')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('users.role')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -70,7 +73,7 @@ export function UsersPage() {
       ) : (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Ingen brukere funnet.
+            {t('users.noUsers')}
           </Paragraph>
         </Card>
       )}

@@ -58,3 +58,6 @@ export { seasonalLeaseService } from './seasonal-lease.service';
 
 // Conversations
 export { conversationService } from './conversation.service';
+
+// Audit
+export { AuditService, auditService } from './audit.service';

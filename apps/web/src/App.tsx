@@ -16,46 +16,49 @@ import {
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
+import { I18nProvider, useT, useLocale, type SupportedLocale } from '@xala/i18n';
 import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPageV2 } from './pages/ListingDetailPageV2';
 
-// Demo search data
-const demoSearchResults: SearchResultGroup[] = [
-  {
-    id: 'actions',
-    label: 'Hurtighandlinger',
-    items: [
-      { id: 'new-booking', label: 'Ny booking', description: 'Opprett en ny booking', icon: <CalendarIcon size={18} />, shortcut: '⌘N' },
-      { id: 'settings', label: 'Innstillinger', description: 'Åpne innstillinger', icon: <SettingsIcon size={18} />, shortcut: '⌘,' },
-    ]
-  },
-  {
-    id: 'locations',
-    label: 'Steder',
-    items: [
-      { id: 'oslo', label: 'Oslo', description: 'Hovedkontor', icon: <MapPinIcon size={18} />, meta: '12 bookinger' },
-      { id: 'bergen', label: 'Bergen', description: 'Vestlandskontor', icon: <MapPinIcon size={18} />, meta: '8 bookinger' },
-      { id: 'trondheim', label: 'Trondheim', description: 'Midtbykontor', icon: <MapPinIcon size={18} />, meta: '5 bookinger' },
-    ]
-  },
-  {
-    id: 'users',
-    label: 'Brukere',
-    items: [
-      { id: 'user-1', label: 'Ola Nordmann', description: 'ola@example.com', icon: <UserIcon size={18} /> },
-      { id: 'user-2', label: 'Kari Hansen', description: 'kari@example.com', icon: <UserIcon size={18} /> },
-    ]
-  }
-];
+function AppContent() {
+  const t = useT();
+  const { locale, setLocale } = useLocale();
 
-export function App() {
   const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>('light');
-  const [language, setLanguage] = React.useState<'en' | 'no'>('no');
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
+
+  // Demo search data with translations
+  const demoSearchResults: SearchResultGroup[] = [
+    {
+      id: 'actions',
+      label: t('listings.quickActions'),
+      items: [
+        { id: 'new-booking', label: t('listings.newBooking'), description: t('listings.newBooking'), icon: <CalendarIcon size={18} />, shortcut: '⌘N' },
+        { id: 'settings', label: t('nav.settings'), description: t('listings.openSettings'), icon: <SettingsIcon size={18} />, shortcut: '⌘,' },
+      ]
+    },
+    {
+      id: 'locations',
+      label: t('listings.locations'),
+      items: [
+        { id: 'oslo', label: 'Oslo', description: t('listings.headquarters'), icon: <MapPinIcon size={18} />, meta: `12 ${t('listings.bookings')}` },
+        { id: 'bergen', label: 'Bergen', description: 'Vestlandskontor', icon: <MapPinIcon size={18} />, meta: `8 ${t('listings.bookings')}` },
+        { id: 'trondheim', label: 'Trondheim', description: 'Midtbykontor', icon: <MapPinIcon size={18} />, meta: `5 ${t('listings.bookings')}` },
+      ]
+    },
+    {
+      id: 'users',
+      label: t('listings.users'),
+      items: [
+        { id: 'user-1', label: 'Ola Nordmann', description: 'ola@example.com', icon: <UserIcon size={18} /> },
+        { id: 'user-2', label: 'Kari Hansen', description: 'kari@example.com', icon: <UserIcon size={18} /> },
+      ]
+    }
+  ];
 
   // Simulated search function
   const handleSearchChange = (value: string) => {
@@ -98,6 +101,10 @@ export function App() {
 
   const handleThemeToggle = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+  };
+
+  const handleLanguageSwitch = (lang: string) => {
+    setLocale(lang as SupportedLocale);
   };
 
   const isDarkTheme = colorScheme === 'dark';
@@ -165,7 +172,7 @@ export function App() {
             search={
               <div className="header-search-desktop">
                 <HeaderSearch
-                  placeholder="Søk"
+                  placeholder={t('common.search')}
                   value={searchQuery}
                   onSearchChange={handleSearchChange}
                   onSearch={handleSearch}
@@ -180,8 +187,8 @@ export function App() {
             actions={
               <HeaderActions spacing="12px">
                 <HeaderLanguageSwitch
-                  language={language}
-                  onSwitch={(lang) => setLanguage(lang as 'en' | 'no')}
+                  language={locale === 'nb' ? 'no' : 'en'}
+                  onSwitch={handleLanguageSwitch}
                 />
                 <HeaderThemeToggle
                   onToggle={handleThemeToggle}
@@ -205,6 +212,14 @@ export function App() {
         </div>
       </BrowserRouter>
     </DesignsystemetProvider>
+  );
+}
+
+export function App() {
+  return (
+    <I18nProvider>
+      <AppContent />
+    </I18nProvider>
   );
 }
 

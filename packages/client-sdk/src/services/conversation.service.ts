@@ -35,8 +35,8 @@ class ConversationService extends BaseService {
   }
 
   async markAsRead(conversationId: string): Promise<void> {
-    return this.client.post(this.buildPath(`/${conversationId}/mark-read`), {});
+    return this.client.put(this.buildPath(`/${conversationId}/read`), {});
   }
 }
 
-export const conversationService = new ConversationService('/conversations');
+export const conversationService = new ConversationService('/api/conversations');

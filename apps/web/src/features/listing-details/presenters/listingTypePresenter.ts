@@ -131,7 +131,7 @@ const facilityConfig: ListingTypeConfig = {
     },
   ],
   activityTab: {
-    labelKey: 'tabs.activity.facility',
+    labelKey: 'Aktivitetskalender',
     type: 'events',
     showCalendar: true,
     showTimeline: true,
@@ -197,7 +197,7 @@ const equipmentConfig: ListingTypeConfig = {
     },
   ],
   activityTab: {
-    labelKey: 'tabs.activity.equipment',
+    labelKey: 'Utleiehistorikk',
     type: 'rentals',
     showCalendar: false,
     showTimeline: true,
@@ -256,7 +256,7 @@ const eventConfig: ListingTypeConfig = {
     },
   ],
   activityTab: {
-    labelKey: 'tabs.activity.event',
+    labelKey: 'Økter',
     type: 'sessions',
     showCalendar: true,
     showTimeline: false,
@@ -316,7 +316,7 @@ const otherConfig: ListingTypeConfig = {
     },
   ],
   activityTab: {
-    labelKey: 'tabs.activity.other',
+    labelKey: 'Aktivitet',
     type: 'rentals',
     showCalendar: false,
     showTimeline: true,
