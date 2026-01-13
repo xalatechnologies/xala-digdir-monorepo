@@ -12,6 +12,7 @@ import {
   XCircleIcon,
   MessageSquareIcon,
   MoreVerticalIcon,
+  useDialog,
 } from '@xala/ds';
 import {
   useBookings,
@@ -33,6 +34,7 @@ export function RequestsPage() {
 
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
+  const { confirm } = useDialog();
 
   // For now, all pending bookings are in "pending" state
   // In a real implementation, you might have a separate field for "needs_info"
@@ -49,7 +51,14 @@ export function RequestsPage() {
   };
 
   const handleReject = async (id: string) => {
-    if (window.confirm('Er du sikker på at du vil avslå denne forespørselen?')) {
+    const confirmed = await confirm({
+      title: 'Avslå forespørsel',
+      description: 'Er du sikker på at du vil avslå denne forespørselen?',
+      confirmText: 'Avslå',
+      cancelText: 'Avbryt',
+      variant: 'danger',
+    });
+    if (confirmed) {
       await cancelBooking.mutateAsync(id);
     }
   };

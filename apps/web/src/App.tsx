@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
   HeaderSearch,
   HeaderActions,
   HeaderThemeToggle,
-  HeaderLanguageSwitch,
   HeaderLoginButton,
   CalendarIcon,
   UserIcon,
@@ -16,20 +15,28 @@ import {
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
-import { I18nProvider, useT, useLocale, type SupportedLocale } from '@xala/i18n';
+import { I18nProvider, useT } from '@xala/i18n';
 import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPageV2 } from './pages/ListingDetailPageV2';
+import { LoginPage } from './pages/login';
 
-function AppContent() {
+// Layout with header for main pages
+function MainLayout() {
   const t = useT();
-  const { locale, setLocale } = useLocale();
+  const navigate = useNavigate();
 
-  const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>('light');
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  // Check for logged in user on mount
+  React.useEffect(() => {
+    const savedUser = localStorage.getItem('web_user');
+    if (savedUser) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   // Demo search data with translations
   const demoSearchResults: SearchResultGroup[] = [
@@ -99,15 +106,119 @@ function AppContent() {
     setSearchResults([]);
   };
 
-  const handleThemeToggle = () => {
-    setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+  const handleLogin = () => {
+    navigate('/login');
   };
 
-  const handleLanguageSwitch = (lang: string) => {
-    setLocale(lang as SupportedLocale);
+  const handleLogout = () => {
+    localStorage.removeItem('web_user');
+    setIsLoggedIn(false);
   };
 
-  const isDarkTheme = colorScheme === 'dark';
+  // Get logged in user name
+  const getUserName = () => {
+    const savedUser = localStorage.getItem('web_user');
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        return user.name;
+      } catch {
+        return undefined;
+      }
+    }
+    return undefined;
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: 'var(--ds-color-neutral-background-default)',
+      margin: 0,
+      padding: 0
+    }}>
+      {/* CSS for mobile-specific styles */}
+      <style>{`
+        @media (max-width: 599px) {
+          .header-search-desktop { display: none !important; }
+          .mobile-search-wrapper { display: block !important; }
+
+          /* Mobile padding for header */
+          header .ds-container {
+            padding-left: var(--ds-spacing-4) !important;
+            padding-right: var(--ds-spacing-4) !important;
+          }
+
+          /* Mobile padding for main content */
+          .main-content-layout {
+            padding-left: var(--ds-spacing-4) !important;
+            padding-right: var(--ds-spacing-4) !important;
+          }
+
+          /* Ensure all child elements respect the container padding */
+          .main-content-layout > main {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+
+          /* Hide view toggle on mobile - only show grid view */
+          .listing-toolbar .ds-toggle-group {
+            display: none !important;
+          }
+        }
+        @media (min-width: 600px) {
+          .mobile-search-wrapper { display: none !important; }
+        }
+      `}</style>
+
+      <AppHeader
+        sticky={true}
+        logo={
+          <HeaderLogo
+            src="/logo.svg"
+            title="DIGILIST"
+            subtitle="ENKEL BOOKING"
+            href="/"
+            height="56px"
+            hideTextOnMobile={true}
+          />
+        }
+        search={
+          <div className="header-search-desktop">
+            <HeaderSearch
+              placeholder={t('common.search')}
+              value={searchQuery}
+              onSearchChange={handleSearchChange}
+              onSearch={handleSearch}
+              results={searchResults}
+              onResultSelect={handleResultSelect}
+              isLoading={isSearching}
+              showShortcut={true}
+              enableGlobalShortcut={true}
+            />
+          </div>
+        }
+        actions={
+          <HeaderActions spacing="12px">
+            <HeaderLoginButton
+              isLoggedIn={isLoggedIn}
+              userName={getUserName()}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              color="accent"
+            />
+          </HeaderActions>
+        }
+      />
+
+      <Outlet />
+    </div>
+  );
+}
+
+// App content with theme provider
+function AppContent() {
+  const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
+  const [colorScheme] = React.useState<'light' | 'dark'>('light');
 
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
@@ -116,106 +227,16 @@ function AppContent() {
           transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
         }
       `}</style>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <div style={{
-          minHeight: '100vh',
-          backgroundColor: 'var(--ds-color-neutral-background-default)',
-          margin: 0,
-          padding: 0
-        }}>
-          {/* CSS for mobile-specific styles */}
-          <style>{`
-            @media (max-width: 599px) {
-              .header-search-desktop { display: none !important; }
-              .mobile-search-wrapper { display: block !important; }
+      <Routes>
+        {/* Login page - no header */}
+        <Route path="/login" element={<LoginPage />} />
 
-              /* Mobile padding for header */
-              header .ds-container {
-                padding-left: var(--ds-spacing-4) !important;
-                padding-right: var(--ds-spacing-4) !important;
-              }
-
-              /* Mobile padding for main content */
-              .main-content-layout {
-                padding-left: var(--ds-spacing-4) !important;
-                padding-right: var(--ds-spacing-4) !important;
-              }
-
-              /* Ensure all child elements respect the container padding */
-              .main-content-layout > main {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-              }
-
-              /* Hide view toggle on mobile - only show grid view */
-              .listing-toolbar .ds-toggle-group {
-                display: none !important;
-              }
-            }
-            @media (min-width: 600px) {
-              .mobile-search-wrapper { display: none !important; }
-            }
-          `}</style>
-
-          <AppHeader
-            sticky={true}
-            logo={
-              <HeaderLogo
-                src="/logo.svg"
-                title="DIGILIST"
-                subtitle="ENKEL BOOKING"
-                href="/"
-                height="56px"
-                hideTextOnMobile={true}
-              />
-            }
-            search={
-              <div className="header-search-desktop">
-                <HeaderSearch
-                  placeholder={t('common.search')}
-                  value={searchQuery}
-                  onSearchChange={handleSearchChange}
-                  onSearch={handleSearch}
-                  results={searchResults}
-                  onResultSelect={handleResultSelect}
-                  isLoading={isSearching}
-                  showShortcut={true}
-                  enableGlobalShortcut={true}
-                />
-              </div>
-            }
-            actions={
-              <HeaderActions spacing="12px">
-                <HeaderLanguageSwitch
-                  language={locale === 'nb' ? 'no' : 'en'}
-                  onSwitch={handleLanguageSwitch}
-                />
-                <HeaderThemeToggle
-                  onToggle={handleThemeToggle}
-                  isDark={isDarkTheme}
-                />
-                <HeaderLoginButton
-                  isLoggedIn={isLoggedIn}
-                  userName={isLoggedIn ? 'Ola Nordmann' : undefined}
-                  onLogin={() => setIsLoggedIn(true)}
-                  onLogout={() => setIsLoggedIn(false)}
-                  color="accent"
-                />
-              </HeaderActions>
-            }
-          />
-
-          <Routes>
-            <Route path="/" element={<ListingsPage />} />
-            <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+        {/* Main pages with header */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<ListingsPage />} />
+          <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
+        </Route>
+      </Routes>
     </DesignsystemetProvider>
   );
 }
@@ -223,7 +244,14 @@ function AppContent() {
 export function App() {
   return (
     <I18nProvider>
-      <AppContent />
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <AppContent />
+      </BrowserRouter>
     </I18nProvider>
   );
 }

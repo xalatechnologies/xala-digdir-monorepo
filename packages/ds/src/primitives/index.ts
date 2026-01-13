@@ -83,6 +83,7 @@ export {
   MicrosoftIcon,
   GoogleIcon,
   BankIdIcon,
+  VippsIcon,
   SendIcon,
   OrganizationIcon,
 } from './icons';

@@ -10,6 +10,7 @@ import {
   LoginOption,
   IdPortenIcon,
   MicrosoftIcon,
+  VippsIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
@@ -63,8 +64,9 @@ export function LoginPage(): React.ReactElement {
     <LoginLayout
       brandName="DIGILIST"
       brandTagline="ENKEL BOOKING"
+      logoHref="/"
       title="Logg inn"
-      subtitle="Velg innloggingsmetode i henhold til kommunens retningslinjer."
+      subtitle="Velg innloggingsmetode for å fortsette."
       panelTitle="Booking"
       panelSubtitle="En helhetlig bookingløsning"
       panelDescription="Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering."
@@ -74,6 +76,12 @@ export function LoginPage(): React.ReactElement {
       copyright="© 2026 Digilist. Alle rettigheter reservert."
     >
       <LoginOption
+        icon={<VippsIcon />}
+        title="Vipps"
+        description="Rask og enkel innlogging med Vipps"
+        onClick={() => login('vipps')}
+      />
+      <LoginOption
         icon={<IdPortenIcon />}
         title="ID-porten"
         description="Personlig innlogging med BankID"
@@ -82,7 +90,7 @@ export function LoginPage(): React.ReactElement {
       <LoginOption
         icon={<MicrosoftIcon />}
         title="Microsoft"
-        description="Single Sign-On (SSO)"
+        description="For ansatte med organisasjonskonto"
         onClick={() => login('microsoft')}
       />
     </LoginLayout>

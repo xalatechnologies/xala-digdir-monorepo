@@ -256,6 +256,8 @@ export interface LoginLayoutProps {
   brandName?: string;
   /** Brand tagline */
   brandTagline?: string;
+  /** URL to navigate to when clicking the logo */
+  logoHref?: string;
   /** Login form title */
   title?: string;
   /** Login form subtitle */
@@ -291,6 +293,7 @@ export function LoginLayout({
   logo,
   brandName = 'DIGILIST',
   brandTagline = 'ENKEL BOOKING',
+  logoHref,
   title = 'Logg inn',
   subtitle = 'Velg innloggingsmetode for å fortsette.',
   children,
@@ -335,41 +338,88 @@ export function LoginLayout({
         >
           {/* Logo/Brand */}
           <div style={{ marginBottom: 'var(--ds-spacing-10)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
-              {logo || (
-                <img
-                  src="/logo.svg"
-                  alt={brandName}
-                  style={{
-                    height: '80px',
-                    width: 'auto',
-                  }}
-                />
-              )}
-              <div>
-                <div
-                  style={{
-                    fontSize: '1.75rem',
-                    fontWeight: 'var(--ds-font-weight-bold)',
-                    color: 'var(--ds-color-accent-base-default)',
-                    lineHeight: 1.1,
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {brandName}
+            {logoHref ? (
+              <a
+                href={logoHref}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--ds-spacing-4)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {logo || (
+                  <img
+                    src="/logo.svg"
+                    alt={brandName}
+                    style={{
+                      height: '80px',
+                      width: 'auto',
+                    }}
+                  />
+                )}
+                <div>
+                  <div
+                    style={{
+                      fontSize: '1.75rem',
+                      fontWeight: 'var(--ds-font-weight-bold)',
+                      color: 'var(--ds-color-accent-base-default)',
+                      lineHeight: 1.1,
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    {brandName}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 'var(--ds-font-size-sm)',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                      letterSpacing: '0.1em',
+                      marginTop: 'var(--ds-spacing-1)',
+                    }}
+                  >
+                    {brandTagline}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontSize: 'var(--ds-font-size-sm)',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                    letterSpacing: '0.1em',
-                    marginTop: 'var(--ds-spacing-1)',
-                  }}
-                >
-                  {brandTagline}
+              </a>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                {logo || (
+                  <img
+                    src="/logo.svg"
+                    alt={brandName}
+                    style={{
+                      height: '80px',
+                      width: 'auto',
+                    }}
+                  />
+                )}
+                <div>
+                  <div
+                    style={{
+                      fontSize: '1.75rem',
+                      fontWeight: 'var(--ds-font-weight-bold)',
+                      color: 'var(--ds-color-accent-base-default)',
+                      lineHeight: 1.1,
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    {brandName}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 'var(--ds-font-size-sm)',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                      letterSpacing: '0.1em',
+                      marginTop: 'var(--ds-spacing-1)',
+                    }}
+                  >
+                    {brandTagline}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Login section */}

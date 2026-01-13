@@ -60,3 +60,6 @@ export * from './hooks';
 
 // Utils - Formatting utilities (Norwegian locale)
 export * from './utils';
+
+// Realtime - WebSocket/polling event system
+export * from './realtime';

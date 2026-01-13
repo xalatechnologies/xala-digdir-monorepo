@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider } from '@xala/ds';
+import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
@@ -11,7 +11,6 @@ import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
 import { CalendarPage } from './routes/calendar';
-import { RequestsPage } from './routes/requests';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
@@ -24,6 +23,7 @@ export function App() {
   return (
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme="light" size="md">
+      <DialogProvider>
       <ErrorBoundary>
       <ToastProvider>
       <BrowserRouter
@@ -50,7 +50,7 @@ export function App() {
               <Route path="listings/:slug" element={<ListingEditPage />} />
               <Route path="listings/:slug/view" element={<ListingDetailPage />} />
               <Route path="calendar" element={<CalendarPage />} />
-              <Route path="requests" element={<RequestsPage />} />
+              <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
               <Route path="seasons" element={<SeasonsPage />} />
               <Route path="messages" element={<MessagesPage />} />
@@ -87,6 +87,7 @@ export function App() {
       </BrowserRouter>
       </ToastProvider>
       </ErrorBoundary>
+      </DialogProvider>
       </DesignsystemetProvider>
     </I18nProvider>
   );

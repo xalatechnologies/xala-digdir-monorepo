@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 
 export function SettingsPage() {
   const t = useT();
-  const { locale, setLocale } = useLocale();
+  const { locale } = useLocale();
   const { user, logout } = useAuth();
 
   return (
@@ -68,6 +68,7 @@ export function SettingsPage() {
               {locale === 'nb' ? 'Norsk (Bokmål)' : 'English'}
             </Paragraph>
           </div>
+          {/* TODO: Re-enable when localization is fully implemented
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Button
               type="button"
@@ -86,6 +87,7 @@ export function SettingsPage() {
               English
             </Button>
           </div>
+          */}
         </div>
 
         {/* Notifications Setting */}

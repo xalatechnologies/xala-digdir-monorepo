@@ -323,6 +323,7 @@ export function ListingDetailsLayout({
       {/* Full-width Booking Section */}
       <div id="booking-section" style={{ marginTop: 'var(--ds-spacing-8)' }}>
         <BookingWidgetPlacement
+          listingId={listing.id}
           {...(listing.bookingConfig ? { bookingConfig: listing.bookingConfig } : {})}
           {...(listing.pricing ? { pricing: listing.pricing } : {})}
           {...(onBookingClick ? { onBookClick: onBookingClick } : {})}

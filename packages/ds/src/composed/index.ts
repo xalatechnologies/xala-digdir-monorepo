@@ -83,3 +83,16 @@ export type { BreadcrumbProps } from './Breadcrumb';
 // Booking Stepper
 export { BookingStepper } from './BookingStepper';
 export type { BookingStepperProps } from './BookingStepper';
+
+// Dialogs
+export { 
+  ConfirmDialog, 
+  AlertDialog, 
+  DialogProvider, 
+  useDialog 
+} from './dialogs';
+export type { 
+  ConfirmDialogProps, 
+  AlertDialogProps, 
+  DialogVariant 
+} from './dialogs';

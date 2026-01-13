@@ -81,7 +81,12 @@ export {
   DrawerItem,
   DrawerEmptyState,
   Breadcrumb,
-  BookingStepper
+  BookingStepper,
+  // Dialogs
+  DialogProvider,
+  useDialog,
+  ConfirmDialog,
+  AlertDialog,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -121,7 +126,11 @@ export type {
   DrawerItemProps,
   DrawerEmptyStateProps,
   BreadcrumbProps,
-  BookingStepperProps
+  BookingStepperProps,
+  // Dialog Types
+  ConfirmDialogProps,
+  AlertDialogProps,
+  DialogVariant,
 } from './composed';
 
 // Primitives - Low-level building blocks
@@ -191,6 +200,7 @@ export {
   MicrosoftIcon,
   GoogleIcon,
   BankIdIcon,
+  VippsIcon,
   SendIcon,
   OrganizationIcon,
 } from './primitives';

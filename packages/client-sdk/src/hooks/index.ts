@@ -149,15 +149,20 @@ export {
   useDeleteSeasonalLease
 } from './use-seasonal-leases';
 
-// Conversation hooks
+// Conversation hooks (with real-time support)
 export {
   conversationKeys,
+  messageEvents,
   useConversations,
   useConversation,
   useMessages,
   useCreateConversation,
   useSendMessage,
-  useMarkMessagesRead
+  useMarkMessagesRead,
+  useUnreadCount,
+  useMessageSubscription,
+  useRealtimeMessages,
+  useNotifications
 } from './use-conversations';
 
 // Audit hooks

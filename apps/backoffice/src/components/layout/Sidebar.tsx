@@ -4,7 +4,6 @@ import {
   HomeIcon,
   BuildingIcon,
   CalendarIcon,
-  InboxIcon,
   BookOpenIcon,
   RepeatIcon,
   MessageIcon,
@@ -159,8 +158,7 @@ export function Sidebar() {
       items: [
         { name: 'Listings', description: 'Administrer utleieobjekter', href: '/listings', icon: <BuildingIcon /> },
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
-        { name: 'Forespørsler', description: 'Ventende godkjenninger', href: '/requests', icon: <InboxIcon />, badge: 8, badgeColor: 'warning' },
-        { name: 'Bookinger', description: 'Alle reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 12, badgeColor: 'accent' },
+        { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
       ],
     },

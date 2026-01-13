@@ -7,6 +7,7 @@ import {
   Spinner,
   Table,
   BookingStatusBadge,
+  useDialog,
 } from '@xala/ds';
 import {
   useMyBookings,
@@ -38,9 +39,17 @@ export function BookingsPage() {
   const { data: cancelledData } = useMyBookings({ status: 'cancelled' });
 
   const cancelBooking = useCancelBooking();
+  const { confirm } = useDialog();
 
   const handleCancel = async (id: string) => {
-    if (window.confirm(t('bookings.confirmCancel'))) {
+    const confirmed = await confirm({
+      title: t('bookings.cancelBooking'),
+      description: t('bookings.confirmCancel'),
+      confirmText: t('bookings.cancel'),
+      cancelText: t('common.abort'),
+      variant: 'danger',
+    });
+    if (confirmed) {
       await cancelBooking.mutateAsync(id);
     }
   };

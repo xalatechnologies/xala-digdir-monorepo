@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider } from '@xala/ds';
+import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
@@ -16,6 +16,7 @@ export function App() {
   return (
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme="light" size="md">
+      <DialogProvider>
       <BrowserRouter
         future={{
           v7_startTransition: true,
@@ -45,6 +46,7 @@ export function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      </DialogProvider>
       </DesignsystemetProvider>
     </I18nProvider>
   );

@@ -560,11 +560,11 @@ export const GoogleIcon = ({ size = 40, className }: AuthIconProps): React.React
 
 // BankID Icon (Norwegian bank identity)
 export const BankIdIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 40 40" 
-    fill="none" 
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 40 40"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     aria-label="BankID"
@@ -574,6 +574,28 @@ export const BankIdIcon = ({ size = 40, className }: AuthIconProps): React.React
     <rect x="12" y="24" width="4" height="4" fill="white"/>
     <rect x="20" y="14" width="4" height="14" fill="white"/>
     <path d="M28 14h-4v14h4c2.2 0 4-3.1 4-7s-1.8-7-4-7z" fill="white"/>
+  </svg>
+);
+
+// Vipps Icon (Norwegian mobile payment)
+export const VippsIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 40 40"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="Vipps"
+  >
+    <rect width="40" height="40" rx="8" fill="#FF5B24" />
+    <path
+      d="M12 13L20 27L28 13"
+      stroke="white"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
