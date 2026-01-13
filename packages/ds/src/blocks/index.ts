@@ -110,3 +110,20 @@ export type {
   LoginFooterLinkProps, 
   LoginLayoutProps 
 } from './LoginComponents';
+
+// Dashboard Components
+export {
+  StatCard,
+  ActivityItem,
+  ActivityFeed,
+  QuickActionCard,
+  formatTimeAgo,
+  mapBookingStatusToActivity,
+} from './DashboardComponents';
+export type {
+  StatCardProps,
+  ActivityItemProps,
+  ActivityStatus,
+  ActivityFeedProps,
+  QuickActionProps,
+} from './DashboardComponents';

@@ -239,7 +239,13 @@ export {
   FeatureItem,
   IntegrationBadge,
   LoginFooterLink,
-  LoginLayout
+  LoginLayout,
+  StatCard,
+  ActivityItem,
+  ActivityFeed,
+  QuickActionCard,
+  formatTimeAgo,
+  mapBookingStatusToActivity
 } from './blocks';
 export type {
   ListingCardProps,
@@ -287,7 +293,12 @@ export type {
   FeatureItemProps,
   IntegrationBadgeProps,
   LoginFooterLinkProps,
-  LoginLayoutProps
+  LoginLayoutProps,
+  StatCardProps,
+  ActivityItemProps,
+  ActivityStatus,
+  ActivityFeedProps,
+  QuickActionProps
 } from './blocks';
 
 // Listing Detail Types
