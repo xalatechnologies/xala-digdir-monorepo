@@ -305,3 +305,180 @@
     --ds-color-accent-contrast-default: #0F172A;
   }
 }
+
+/* =========================================================================
+ * RESPONSIVE EXECUTION LAYER
+ *
+ * Implements official Digdir Designsystemet responsive pattern using
+ * [data-size="auto"] with viewport-based switching at 600px/992px.
+ * ========================================================================= */
+
+/* =========================================================================
+ * Auto size mode: viewport-based switching (official Digdir pattern)
+ * ========================================================================= */
+[data-size="auto"] {
+  --ds-size: var(--ds-size--sm);
+}
+@media (min-width: 600px) {
+  [data-size="auto"] {
+    --ds-size: var(--ds-size--md);
+  }
+}
+@media (min-width: 992px) {
+  [data-size="auto"] {
+    --ds-size: var(--ds-size--lg);
+  }
+}
+
+/* =========================================================================
+ * Layout tokens
+ * ========================================================================= */
+:root {
+  --ds-layout-max-content: 1440px;
+  --ds-touch-target-min: 44px;
+}
+
+/* =========================================================================
+ * Size mode tokens: md (default)
+ * ========================================================================= */
+:root, [data-size="md"] {
+  --ds-size-container-padding: var(--ds-spacing-6);
+  --ds-size-gap-default: var(--ds-spacing-6);
+  --ds-size-header-height: 72px;
+}
+
+/* =========================================================================
+ * Size mode tokens: sm (mobile)
+ * ========================================================================= */
+[data-size="sm"] {
+  --ds-size-container-padding: var(--ds-spacing-4);
+  --ds-size-gap-default: var(--ds-spacing-4);
+  --ds-size-header-height: 56px;
+}
+
+/* =========================================================================
+ * Size mode tokens: lg (desktop)
+ * ========================================================================= */
+[data-size="lg"] {
+  --ds-size-container-padding: var(--ds-spacing-8);
+  --ds-size-gap-default: var(--ds-spacing-8);
+  --ds-size-header-height: 80px;
+}
+
+/* =========================================================================
+ * Auto mode: viewport-based token switching
+ * ========================================================================= */
+@media (max-width: 599px) {
+  [data-size="auto"] {
+    --ds-size-container-padding: var(--ds-spacing-4);
+    --ds-size-gap-default: var(--ds-spacing-4);
+    --ds-size-header-height: 56px;
+  }
+}
+@media (min-width: 600px) and (max-width: 991px) {
+  [data-size="auto"] {
+    --ds-size-container-padding: var(--ds-spacing-6);
+    --ds-size-gap-default: var(--ds-spacing-6);
+    --ds-size-header-height: 72px;
+  }
+}
+@media (min-width: 992px) {
+  [data-size="auto"] {
+    --ds-size-container-padding: var(--ds-spacing-8);
+    --ds-size-gap-default: var(--ds-spacing-8);
+    --ds-size-header-height: 80px;
+  }
+}
+
+/* =========================================================================
+ * Container Query: Responsive Grid
+ * ========================================================================= */
+.ds-grid-responsive {
+  --_grid-columns: var(--_grid-sm, 1);
+}
+@container ds-container (min-width: 600px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-md, 2);
+  }
+}
+@container ds-container (min-width: 900px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-lg, 3);
+  }
+}
+
+/* Media query fallback for browsers without container query support */
+@media (min-width: 640px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-md, 2);
+  }
+}
+@media (min-width: 1024px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-lg, 3);
+  }
+}
+
+/* =========================================================================
+ * ListingListItem Mobile Responsive Override
+ * ========================================================================= */
+@media (max-width: 700px) {
+  .listing-list-item {
+    flex-direction: column !important;
+  }
+  .listing-list-item > div:first-child {
+    width: 100% !important;
+    min-width: unset !important;
+    max-height: 200px;
+  }
+  /* Hide map section on mobile */
+  .listing-list-item > div:last-child:not(:nth-child(2)) {
+    display: none !important;
+  }
+}
+
+/* =========================================================================
+ * Main Content Layout - default padding
+ * ========================================================================= */
+.main-content-layout {
+  padding: 0 var(--ds-spacing-6);
+}
+
+/* =========================================================================
+ * Mobile Padding Override - ensure consistent padding on all containers
+ * ========================================================================= */
+@media (max-width: 599px) {
+  /* Force minimum container padding on mobile - use spacing-6 for comfortable edge distance */
+  [data-size] {
+    --ds-size-container-padding: var(--ds-spacing-6);
+  }
+
+  /* Main content layout padding on mobile */
+  .main-content-layout {
+    padding: 0 var(--ds-spacing-6) !important;
+  }
+
+  /* Header container padding on mobile */
+  header .ds-container {
+    padding-left: var(--ds-spacing-6) !important;
+    padding-right: var(--ds-spacing-6) !important;
+  }
+
+  /* Listing grid - full width within padded container */
+  .listing-grid {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Toolbar full width */
+  .listing-toolbar {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+
+  /* Mobile search wrapper */
+  .mobile-search-wrapper {
+    padding: 0;
+  }
+}

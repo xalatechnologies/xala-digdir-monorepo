@@ -8,10 +8,10 @@
  * @example
  * ```tsx
  * import { DesignsystemetProvider } from '@xala/ds';
- * 
+ *
  * function App() {
  *   return (
- *     <DesignsystemetProvider theme="digdir" colorScheme="auto" size="md">
+ *     <DesignsystemetProvider theme="digdir" colorScheme="auto" size="auto">
  *       <YourApp />
  *     </DesignsystemetProvider>
  *   );
@@ -28,8 +28,9 @@ export type ColorScheme = 'light' | 'dark' | 'auto';
 
 /**
  * Available size modes for component scaling.
+ * 'auto' enables viewport-based responsive switching.
  */
-export type DsSize = 'sm' | 'md' | 'lg';
+export type DsSize = 'sm' | 'md' | 'lg' | 'auto';
 
 /**
  * Available typography presets.
@@ -97,7 +98,7 @@ export function DesignsystemetProvider({
   children,
   theme = DEFAULT_THEME,
   colorScheme = 'auto',
-  size = 'md',
+  size = 'auto',
   typography = 'primary',
   rootAs: Root = 'div',
 }: DesignsystemetProviderProps) {

@@ -66,7 +66,8 @@ export const ContentLayout = forwardRef<HTMLDivElement, ContentLayoutProps>(
       lg: '80px'
     };
 
-    const containerStyle = {
+    const containerStyle: React.CSSProperties = {
+      containerName: 'ds-content',
       paddingTop: headerOffsets[headerOffset],
       ...style
     };

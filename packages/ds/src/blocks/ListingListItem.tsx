@@ -159,6 +159,7 @@ export function ListingListItem({
       onMouseLeave={() => setIsHovered(false)}
       style={{
         display: 'flex',
+        flexWrap: 'wrap',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         borderRadius: '12px',
         border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'rgba(0,0,0,0.08)'}`,

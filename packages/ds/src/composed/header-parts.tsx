@@ -40,59 +40,77 @@ export interface HeaderLogoProps extends React.HTMLAttributes<HTMLDivElement> {
    * Link href for logo
    */
   href?: string;
+
+  /**
+   * Hide title and subtitle on mobile (shows only icon)
+   * @default false
+   */
+  hideTextOnMobile?: boolean;
 }
 
 export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
-  ({ src, title, subtitle, height = '32px', href, className, style, ...props }, ref) => {
+  ({ src, title, subtitle, height = '32px', href, hideTextOnMobile = false, className, style, ...props }, ref) => {
+    // Generate unique ID for CSS class
+    const textClassName = hideTextOnMobile ? 'header-logo-text' : undefined;
+
     const content = (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-          color: 'var(--ds-color-neutral-text-default)',
-          textDecoration: 'none',
-        }}
-      >
-        {src && (
-          <img
-            src={src}
-            alt=""
-            style={{ height, width: 'auto' }}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
+      <>
+        {hideTextOnMobile && (
+          <style>{`
+            @media (max-width: 599px) {
+              .header-logo-text { display: none !important; }
+            }
+          `}</style>
         )}
-        {(title || subtitle) && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {title && (
-              <span style={{
-                fontWeight: 700,
-                fontSize: '24px',
-                lineHeight: '1.1',
-                letterSpacing: '0.02em',
-                color: 'var(--ds-color-neutral-text-default)'
-              }}>
-                {title}
-              </span>
-            )}
-            {subtitle && (
-              <span style={{
-                fontWeight: 500,
-                fontSize: '16px',
-                lineHeight: '1.2',
-                opacity: 0.55,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                color: 'var(--ds-color-neutral-text-subtle)'
-              }}>
-                {subtitle}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            color: 'var(--ds-color-neutral-text-default)',
+            textDecoration: 'none',
+          }}
+        >
+          {src && (
+            <img
+              src={src}
+              alt=""
+              style={{ height, width: 'auto' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          )}
+          {(title || subtitle) && (
+            <div className={textClassName} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              {title && (
+                <span style={{
+                  fontWeight: 700,
+                  fontSize: '24px',
+                  lineHeight: '1.1',
+                  letterSpacing: '0.02em',
+                  color: 'var(--ds-color-neutral-text-default)'
+                }}>
+                  {title}
+                </span>
+              )}
+              {subtitle && (
+                <span style={{
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  lineHeight: '1.2',
+                  opacity: 0.55,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ds-color-neutral-text-subtle)'
+                }}>
+                  {subtitle}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </>
     );
 
     if (href) {
@@ -1315,29 +1333,45 @@ export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({
   onSwitch,
   languages = [{ code: 'no', label: 'NO' }, { code: 'en', label: 'EN' }]
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Simple toggle between first two languages
+  const handleToggle = () => {
+    const currentIndex = languages.findIndex(l => l.code === language);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    onSwitch?.(languages[nextIndex].code);
+  };
+
+  const currentLang = languages.find(l => l.code === language) || languages[0];
+
   return (
-    <div
+    <button
+      type="button"
+      onClick={handleToggle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      aria-label={`Språk: ${currentLang.label}. Klikk for å bytte.`}
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '2px',
-        padding: '4px',
-        backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+        justifyContent: 'center',
+        padding: '8px 14px',
+        border: 'none',
         borderRadius: 'var(--ds-border-radius-md)',
+        backgroundColor: isHovered
+          ? 'var(--ds-color-neutral-surface-hover)'
+          : 'var(--ds-color-neutral-surface-default)',
+        color: 'var(--ds-color-neutral-text-default)',
+        fontWeight: 600,
+        fontSize: 'var(--ds-font-size-sm)',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+        minWidth: '48px',
       }}
-      role="group"
-      aria-label="Velg språk"
     >
-      {languages.map((lang) => (
-        <LanguageButton
-          key={lang.code}
-          code={lang.code}
-          label={lang.label}
-          isActive={language === lang.code}
-          onClick={() => onSwitch?.(lang.code)}
-        />
-      ))}
-    </div>
+      {currentLang.label}
+    </button>
   );
 };
 

@@ -50,6 +50,8 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     ...props
   }, ref) => {
     const containerStyle: React.CSSProperties = {
+      containerType: 'inline-size',
+      containerName: 'ds-container',
       maxWidth: fluid ? 'none' : maxWidth,
       margin: '0 auto',
       padding: typeof padding === 'number' ? `${padding}px` : padding,
@@ -58,7 +60,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
       paddingTop: py ? (typeof py === 'number' ? `${py}px` : py) : undefined,
       paddingBottom: py ? (typeof py === 'number' ? `${py}px` : py) : undefined,
       ...style
-    };
+    } as React.CSSProperties;
 
     return (
       <div

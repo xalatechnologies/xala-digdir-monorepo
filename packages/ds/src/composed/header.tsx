@@ -68,7 +68,7 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
     search,
     actions,
     sticky = true,
-    height = '80px',
+    height = 'var(--ds-size-header-height, 72px)',
     showSkipLink = true,
     skipLinkTarget = '#main',
     skipLinkText = 'Hopp til hovedinnhold',
@@ -125,14 +125,25 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
           </a>
         )}
         <header ref={ref} className={className} style={headerStyle} {...props}>
-          <Container maxWidth="1440px" padding="0 var(--ds-spacing-8)">
+          <style>{`
+            @media (max-width: 599px) {
+              .header-row {
+                gap: var(--ds-spacing-3) !important;
+              }
+              .header-actions {
+                gap: var(--ds-spacing-2) !important;
+              }
+              .header-search-wrapper { display: none !important; }
+            }
+          `}</style>
+          <Container maxWidth="1440px" padding="0 var(--ds-size-container-padding, var(--ds-spacing-6))">
             {/* Single row: Logo | Search | Actions */}
-            <div style={{
+            <div className="header-row" style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               height,
-              gap: 'var(--ds-spacing-8)'
+              gap: 'var(--ds-spacing-6)'
             }}>
               {/* Left: Logo */}
               <div style={{
@@ -143,16 +154,17 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
 
               {/* Center: Search */}
               {search && (
-                <div style={{
+                <div className="header-search-wrapper" style={{
                   flex: '1 1 auto',
-                  maxWidth: '520px'
+                  maxWidth: '520px',
+                  minWidth: '80px'
                 }}>
                   {search}
                 </div>
               )}
 
               {/* Right: Actions */}
-              <div style={{
+              <div className="header-actions" style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 'var(--ds-spacing-3)',

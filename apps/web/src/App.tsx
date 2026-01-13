@@ -459,6 +459,35 @@ export function App() {
         margin: 0,
         padding: 0
       }}>
+        {/* CSS for mobile-specific styles */}
+        <style>{`
+          @media (max-width: 599px) {
+            .header-search-desktop { display: none !important; }
+            .mobile-search-wrapper { display: block !important; }
+
+            /* Mobile padding for header - 24px on each side */
+            header .ds-container {
+              padding-left: 24px !important;
+              padding-right: 24px !important;
+            }
+
+            /* Mobile padding for main content - 24px on each side */
+            .main-content-layout {
+              padding-left: 24px !important;
+              padding-right: 24px !important;
+            }
+
+            /* Ensure all child elements respect the container padding */
+            .main-content-layout > main {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+            }
+          }
+          @media (min-width: 600px) {
+            .mobile-search-wrapper { display: none !important; }
+          }
+        `}</style>
+
         <AppHeader
           sticky={true}
           logo={
@@ -468,20 +497,23 @@ export function App() {
               subtitle="ENKEL BOOKING"
               href="/"
               height="56px"
+              hideTextOnMobile={true}
             />
           }
           search={
-            <HeaderSearch
-              placeholder="Søk"
-              value={searchQuery}
-              onSearchChange={handleSearchChange}
-              onSearch={handleSearch}
-              results={searchResults}
-              onResultSelect={handleResultSelect}
-              isLoading={isSearching}
-              showShortcut={true}
-              enableGlobalShortcut={true}
-            />
+            <div className="header-search-desktop">
+              <HeaderSearch
+                placeholder="Søk"
+                value={searchQuery}
+                onSearchChange={handleSearchChange}
+                onSearch={handleSearch}
+                results={searchResults}
+                onResultSelect={handleResultSelect}
+                isLoading={isSearching}
+                showShortcut={true}
+                enableGlobalShortcut={true}
+              />
+            </div>
           }
           actions={
             <HeaderActions spacing="12px">
@@ -492,14 +524,6 @@ export function App() {
               <HeaderThemeToggle
                 onToggle={handleThemeToggle}
                 isDark={isDarkTheme}
-              />
-              <HeaderIconButton
-                icon={<ShoppingCartIcon size={22} />}
-                badge={2}
-                badgeColor="accent"
-                aria-label="Handlekurv"
-                title="Handlekurv (2 varer)"
-                onClick={() => console.log('Cart clicked')}
               />
               <HeaderLoginButton
                 isLoggedIn={isLoggedIn}
@@ -597,8 +621,21 @@ export function App() {
           </DrawerSection>
         </Drawer>
 
-        <ContentLayout maxWidth="1440px" padding="0 var(--ds-spacing-8)">
+        <ContentLayout maxWidth="1440px" className="main-content-layout">
           <main id="main" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
+            {/* Mobile search - shown above filter bar on mobile */}
+            <div className="mobile-search-wrapper" style={{ marginBottom: '16px' }}>
+              <HeaderSearch
+                placeholder="Søk lokaler..."
+                value={searchQuery}
+                onSearchChange={handleSearchChange}
+                onSearch={handleSearch}
+                results={searchResults}
+                onResultSelect={handleResultSelect}
+                isLoading={isSearching}
+              />
+            </div>
+
             <ListingToolbar
               count={listings.length}
               countLabel="lokaler"
@@ -606,12 +643,11 @@ export function App() {
               onFilterClick={() => setIsFilterOpen(true)}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              showViewToggle={true}
-              availableViews={['grid', 'list', 'map']}
+              showViewToggle={false}
             />
 
             {viewMode === 'grid' ? (
-              <ListingGrid columns={3} gap={32}>
+              <ListingGrid minCardWidth={300}>
                 {visibleListings.map((listing) => (
                   <ListingCard
                     key={listing.id}
