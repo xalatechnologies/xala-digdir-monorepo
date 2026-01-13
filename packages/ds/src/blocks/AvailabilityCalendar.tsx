@@ -248,18 +248,24 @@ export function AvailabilityCalendar({
             {/* Header row */}
             <div
               style={{
-                backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
                 borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 'var(--ds-font-size-xs)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                color: 'var(--ds-color-neutral-text-subtle)',
               }}
-            />
+            >
+              Tid
+            </div>
             {weekDates.map((date, i) => (
               <div
                 key={i}
                 style={{
                   padding: 'var(--ds-spacing-2)',
-                  backgroundColor: isToday(date)
-                    ? 'var(--ds-color-accent-surface-default)'
-                    : 'var(--ds-color-neutral-surface-hover)',
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
                   borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
                   textAlign: 'center',
                 }}
@@ -269,22 +275,32 @@ export function AvailabilityCalendar({
                   style={{
                     margin: 0,
                     fontWeight: 'var(--ds-font-weight-medium)',
+                    color: 'var(--ds-color-neutral-text-subtle)',
+                  }}
+                >
+                  {dayNames[date.getDay()]}
+                </Paragraph>
+                <Paragraph
+                  data-size="sm"
+                  style={{
+                    margin: 0,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     color: isToday(date)
-                      ? 'var(--ds-color-accent-text-default)'
+                      ? 'var(--ds-color-accent-base-default)'
                       : 'var(--ds-color-neutral-text-default)',
                   }}
                 >
-                  {dayNames[date.getDay()]} {date.getDate()}
+                  {date.getDate()}
                 </Paragraph>
                 {isToday(date) && (
                   <Paragraph
                     data-size="xs"
                     style={{
                       margin: 0,
-                      color: 'var(--ds-color-accent-text-subtle)',
+                      color: 'var(--ds-color-accent-base-default)',
                     }}
                   >
-                    I dag
+                    i dag
                   </Paragraph>
                 )}
               </div>
@@ -346,55 +362,66 @@ export function AvailabilityCalendar({
                     }
                   };
 
+                  // Display time in the cell
+                  const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
+
                   return (
                     <div
                       key={dayIndex}
-                      className="availability-calendar-cell"
-                      data-status={status}
-                      onClick={isClickable && slot ? () => onSlotClick?.(slot) : undefined}
-                      role={isClickable ? 'button' : undefined}
-                      tabIndex={isClickable ? 0 : undefined}
-                      onKeyDown={
-                        isClickable && slot
-                          ? (e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                onSlotClick?.(slot);
-                              }
-                            }
-                          : undefined
-                      }
-                      aria-label={`${dayNamesFull[date.getDay()]} ${date.getDate()} kl ${hour}:00 - ${getStatusLabel(status)}`}
                       style={{
-                        padding: 'var(--ds-spacing-2)',
-                        backgroundColor: getCellColor(status),
-                        color: getTextColor(status),
-                        fontSize: 'var(--ds-font-size-xs)',
-                        textAlign: 'center',
-                        cursor: isClickable ? 'pointer' : 'default',
-                        transition: 'all 0.2s ease',
-                        borderBottom: hour < endHour ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
-                        borderRight: dayIndex < 6 ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
+                        padding: 'var(--ds-spacing-1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minHeight: '40px',
-                        fontWeight: status === 'selected' ? 'var(--ds-font-weight-medium)' : 'normal',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (isClickable) {
-                          e.currentTarget.style.opacity = '0.8';
-                          e.currentTarget.style.transform = 'scale(1.02)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (isClickable) {
-                          e.currentTarget.style.opacity = '1';
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }
+                        minHeight: '44px',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
                       }}
                     >
-                      {getStatusLabel(status)}
+                      <div
+                        className="availability-calendar-cell"
+                        data-status={status}
+                        onClick={isClickable && slot ? () => onSlotClick?.(slot) : undefined}
+                        role={isClickable ? 'button' : undefined}
+                        tabIndex={isClickable ? 0 : undefined}
+                        onKeyDown={
+                          isClickable && slot
+                            ? (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  onSlotClick?.(slot);
+                                }
+                              }
+                            : undefined
+                        }
+                        aria-label={`${dayNamesFull[date.getDay()]} ${date.getDate()} kl ${hour}:00 - ${getStatusLabel(status)}`}
+                        style={{
+                          width: '100%',
+                          padding: 'var(--ds-spacing-2)',
+                          backgroundColor: getCellColor(status),
+                          color: getTextColor(status),
+                          fontSize: 'var(--ds-font-size-xs)',
+                          textAlign: 'center',
+                          cursor: isClickable ? 'pointer' : 'default',
+                          transition: 'all 0.15s ease',
+                          borderRadius: 'var(--ds-border-radius-sm)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'var(--ds-font-weight-medium)',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (isClickable) {
+                            e.currentTarget.style.opacity = '0.85';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (isClickable) {
+                            e.currentTarget.style.opacity = '1';
+                          }
+                        }}
+                      >
+                        {timeLabel}
+                      </div>
                     </div>
                   );
                 })}
@@ -402,29 +429,43 @@ export function AvailabilityCalendar({
             ))}
           </div>
 
-          {/* Legend */}
+          {/* Legend - "Forklaring" */}
           <div
             style={{
               display: 'flex',
-              gap: 'var(--ds-spacing-4)',
-              marginTop: 'var(--ds-spacing-3)',
-              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-5)',
+              marginTop: 'var(--ds-spacing-4)',
+              padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
+              border: '1px solid var(--ds-color-neutral-border-subtle)',
+              borderRadius: 'var(--ds-border-radius-md)',
             }}
           >
+            <Paragraph
+              data-size="sm"
+              style={{
+                margin: 0,
+                fontWeight: 'var(--ds-font-weight-medium)',
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              Forklaring
+            </Paragraph>
             {(['available', 'occupied', 'selected', 'unavailable'] as TimeSlotStatus[]).map(
               (status) => {
                 const getLegendColor = (s: TimeSlotStatus) => {
                   switch (s) {
                     case 'available':
-                      return 'var(--ds-color-success-surface-default)';
+                      return 'var(--ds-color-success-base-default)';
                     case 'occupied':
-                      return 'var(--ds-color-danger-surface-default)';
+                      return 'var(--ds-color-danger-base-default)';
                     case 'selected':
-                      return 'var(--ds-color-accent-surface-default)';
+                      return 'var(--ds-color-accent-base-default)';
                     case 'unavailable':
-                      return 'var(--ds-color-neutral-surface-hover)';
+                      return 'var(--ds-color-neutral-border-default)';
                     default:
-                      return 'var(--ds-color-neutral-surface-hover)';
+                      return 'var(--ds-color-neutral-border-default)';
                   }
                 };
 
@@ -439,18 +480,17 @@ export function AvailabilityCalendar({
                   >
                     <div
                       style={{
-                        width: 'var(--ds-spacing-4)',
-                        height: 'var(--ds-spacing-4)',
-                        borderRadius: 'var(--ds-border-radius-sm)',
+                        width: 12,
+                        height: 12,
+                        borderRadius: 'var(--ds-border-radius-full)',
                         backgroundColor: getLegendColor(status),
-                        border: '1px solid var(--ds-color-neutral-border-subtle)',
                       }}
                     />
                     <Paragraph
-                      data-size="xs"
+                      data-size="sm"
                       style={{
                         margin: 0,
-                        color: 'var(--ds-color-neutral-text-subtle)',
+                        color: 'var(--ds-color-neutral-text-default)',
                       }}
                     >
                       {getStatusLabel(status)}
