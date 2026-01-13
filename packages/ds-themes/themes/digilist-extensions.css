@@ -246,6 +246,27 @@
   }
 
   /* ==========================================================================
+   * LINE HEIGHT TOKENS
+   * Additional line-height values for tight text layouts
+   * ========================================================================== */
+
+  :root {
+    /* Condensed line-height for logo text and tight headings */
+    --ds-line-height-condensed: 1.1;
+  }
+
+  /* ==========================================================================
+   * MICRO SPACING TOKENS
+   * Sub-pixel adjustments for optical alignment (smaller than spacing-1)
+   * ========================================================================== */
+
+  :root {
+    /* Micro spacing for fine-tuning optical alignment */
+    --digilist-spacing-micro: 2px;
+    --digilist-spacing-micro-sm: 1px;
+  }
+
+  /* ==========================================================================
    * ANIMATION TIMING TOKENS
    * Consistent animation timing across components
    * ========================================================================== */
