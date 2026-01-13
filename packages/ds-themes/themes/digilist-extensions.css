@@ -364,6 +364,26 @@
   }
 
   /* ==========================================================================
+   * LOGIN PAGE TOKENS
+   * Tokens for the split login page with image overlay
+   * ========================================================================== */
+
+  :root {
+    /* Image overlay gradient (dark to allow white text readability) */
+    --digilist-login-overlay-gradient: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.25) 100%
+    );
+
+    /* Text colors for overlay section (white text on dark background) */
+    --digilist-login-overlay-text: rgba(255, 255, 255, 1);
+    --digilist-login-overlay-text-muted: rgba(255, 255, 255, 0.85);
+    --digilist-login-overlay-bullet: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==========================================================================
    * ANIMATION TIMING TOKENS
    * Consistent animation timing across components
    * ========================================================================== */
@@ -510,4 +530,207 @@
     padding-left: var(--ds-spacing-4) !important;
     padding-right: var(--ds-spacing-4) !important;
   }
+}
+
+/* ==========================================================================
+ * LISTING DETAIL PAGE TOKENS
+ * Tokens for the listing detail page components
+ * ========================================================================== */
+
+@layer ds.app {
+  :root {
+    /* Image gallery */
+    --digilist-gallery-hero-ratio: 7fr;
+    --digilist-gallery-thumb-ratio: 3fr;
+    --digilist-gallery-thumb-height: 120px;
+    --digilist-gallery-counter-bg: rgba(0, 0, 0, 0.6);
+    --digilist-gallery-gap: var(--ds-spacing-3);
+
+    /* Calendar cell states */
+    --digilist-calendar-cell-available: var(--ds-color-success-surface-default);
+    --digilist-calendar-cell-occupied: var(--ds-color-danger-surface-default);
+    --digilist-calendar-cell-selected: var(--ds-color-accent-surface-default);
+    --digilist-calendar-cell-unavailable: var(--ds-color-neutral-surface-hover);
+
+    /* Calendar sizing */
+    --digilist-calendar-cell-height: 48px;
+    --digilist-calendar-time-column-width: 60px;
+    --digilist-calendar-day-header-height: 56px;
+
+    /* Calendar cell text colors */
+    --digilist-calendar-text-available: var(--ds-color-success-text-default);
+    --digilist-calendar-text-occupied: var(--ds-color-danger-text-default);
+    --digilist-calendar-text-selected: var(--ds-color-accent-text-default);
+
+    /* Stepper */
+    --digilist-stepper-circle-size: 32px;
+    --digilist-stepper-line-height: 2px;
+
+    /* Detail page layout */
+    --digilist-detail-sidebar-width: 320px;
+    --digilist-detail-content-gap: var(--ds-spacing-6);
+  }
+
+  [data-color-scheme="dark"] {
+    --digilist-gallery-counter-bg: rgba(0, 0, 0, 0.8);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --digilist-gallery-counter-bg: rgba(0, 0, 0, 0.8);
+    }
+  }
+}
+
+/* ==========================================================================
+ * LISTING DETAIL PAGE RESPONSIVE LAYOUT
+ * Two-column layout with sidebar
+ * ========================================================================== */
+
+.listing-detail-layout {
+  display: grid;
+  gap: var(--digilist-detail-content-gap, var(--ds-spacing-6));
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 992px) {
+  .listing-detail-layout {
+    grid-template-columns: 1fr var(--digilist-detail-sidebar-width, 320px);
+  }
+}
+
+/* ==========================================================================
+ * IMAGE GALLERY RESPONSIVE
+ * Hero + thumbnails layout
+ * ========================================================================== */
+
+.image-gallery {
+  display: grid;
+  gap: var(--digilist-gallery-gap, var(--ds-spacing-3));
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .image-gallery {
+    grid-template-columns: var(--digilist-gallery-hero-ratio, 7fr) var(--digilist-gallery-thumb-ratio, 3fr);
+  }
+}
+
+.image-gallery-thumbnails {
+  display: flex;
+  flex-direction: row;
+  gap: var(--ds-spacing-2);
+  overflow-x: auto;
+}
+
+@media (min-width: 600px) {
+  .image-gallery-thumbnails {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+}
+
+/* ==========================================================================
+ * AVAILABILITY CALENDAR RESPONSIVE
+ * Time grid layout
+ * ========================================================================== */
+
+.availability-calendar-grid {
+  display: grid;
+  grid-template-columns: var(--digilist-calendar-time-column-width, 60px) repeat(7, 1fr);
+  overflow-x: auto;
+}
+
+@media (max-width: 599px) {
+  .availability-calendar-grid {
+    min-width: 600px;
+  }
+}
+
+.availability-calendar-cell {
+  height: var(--digilist-calendar-cell-height, 48px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.availability-calendar-cell[data-status="available"] {
+  background-color: var(--digilist-calendar-cell-available);
+  color: var(--digilist-calendar-text-available);
+}
+
+.availability-calendar-cell[data-status="occupied"] {
+  background-color: var(--digilist-calendar-cell-occupied);
+  color: var(--digilist-calendar-text-occupied);
+  cursor: not-allowed;
+}
+
+.availability-calendar-cell[data-status="selected"] {
+  background-color: var(--digilist-calendar-cell-selected);
+  color: var(--digilist-calendar-text-selected);
+}
+
+.availability-calendar-cell[data-status="unavailable"] {
+  background-color: var(--digilist-calendar-cell-unavailable);
+  color: var(--ds-color-neutral-text-subtle);
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+ * BOOKING STEPPER
+ * Horizontal step indicator
+ * ========================================================================== */
+
+.booking-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-2);
+}
+
+.booking-stepper-step {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-2);
+}
+
+.booking-stepper-circle {
+  width: var(--digilist-stepper-circle-size, 32px);
+  height: var(--digilist-stepper-circle-size, 32px);
+  border-radius: var(--ds-border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  border: 2px solid var(--ds-color-neutral-border-default);
+  background-color: var(--ds-color-neutral-background-default);
+  color: var(--ds-color-neutral-text-subtle);
+  transition: all 0.2s ease;
+}
+
+.booking-stepper-circle[data-state="active"] {
+  border-color: var(--ds-color-accent-base-default);
+  background-color: var(--ds-color-accent-base-default);
+  color: var(--ds-color-accent-base-contrast-default);
+}
+
+.booking-stepper-circle[data-state="completed"] {
+  border-color: var(--ds-color-success-base-default);
+  background-color: var(--ds-color-success-base-default);
+  color: var(--ds-color-success-base-contrast-default);
+}
+
+.booking-stepper-line {
+  flex: 1;
+  height: var(--digilist-stepper-line-height, 2px);
+  background-color: var(--ds-color-neutral-border-default);
+  min-width: var(--ds-spacing-4);
+}
+
+.booking-stepper-line[data-state="completed"] {
+  background-color: var(--ds-color-success-base-default);
 }

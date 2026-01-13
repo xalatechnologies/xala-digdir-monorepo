@@ -10,13 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.0.0",
     "@xala/ds": "workspace:*",
     "@xala/ds-registry": "workspace:*",
     "@xala/ds-themes": "workspace:*",
+    "@xala/sdk": "workspace:*",
     "mapbox-gl": "^3.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-map-gl": "^8.1.0"
+    "react-map-gl": "^8.1.0",
+    "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.5",

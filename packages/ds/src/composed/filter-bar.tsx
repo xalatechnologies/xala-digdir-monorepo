@@ -174,14 +174,22 @@ export const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
                     </Select>
                   )}
                   {filter.type === 'multiselect' && filter.options && (
-                    <Select
+                    <select
                       multiple
-                      value={Array.isArray(filter.value) ? filter.value : []}
+                      value={Array.isArray(filter.value) ? filter.value.map(String) : []}
                       onChange={(e) => {
                         const selected = Array.from(e.target.selectedOptions, (option) => option.value);
                         filter.onChange(selected);
                       }}
-                      style={{ width: '100%' }}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--ds-spacing-2)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        border: '1px solid var(--ds-color-neutral-border-default)',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        fontSize: 'var(--ds-font-size-sm)',
+                        minHeight: '80px',
+                      }}
                     >
                       {filter.options.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -189,7 +197,7 @@ export const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
                           {option.count !== undefined ? ` (${option.count})` : ''}
                         </option>
                       ))}
-                    </Select>
+                    </select>
                   )}
                   {filter.helpText && (
                     <div style={{

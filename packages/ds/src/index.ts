@@ -79,7 +79,9 @@ export {
   Drawer,
   DrawerSection,
   DrawerItem,
-  DrawerEmptyState
+  DrawerEmptyState,
+  Breadcrumb,
+  BookingStepper
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -117,7 +119,9 @@ export type {
   DrawerSize,
   DrawerSectionProps,
   DrawerItemProps,
-  DrawerEmptyStateProps
+  DrawerEmptyStateProps,
+  BreadcrumbProps,
+  BookingStepperProps
 } from './composed';
 
 // Primitives - Low-level building blocks
@@ -146,7 +150,21 @@ export {
   BellIcon,
   HeartIcon,
   SettingsIcon,
-  LayoutGrid // For backward compatibility
+  LayoutGrid, // For backward compatibility
+  CheckIcon,
+  PhoneIcon,
+  MailIcon,
+  ClockIcon,
+  ShareIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ProjectorIcon,
+  WifiIcon,
+  BoardIcon,
+  VideoIcon,
+  InfoIcon,
+  CloseIcon,
+  SparklesIcon
 } from './primitives';
 export type {
   ContainerProps,
@@ -165,7 +183,20 @@ export {
   ListingListItem,
   ListingGrid,
   ListingToolbar,
-  ListingMap
+  ListingMap,
+  ImageGallery,
+  ImageSlider,
+  ListingDetailHeader,
+  CapacityCard,
+  FacilityChips,
+  AdditionalServicesList,
+  ContactInfoCard,
+  LocationCard,
+  OpeningHoursCard,
+  AvailabilityCalendar,
+  GuidelinesTab,
+  FAQTab,
+  PriceSummaryCard
 } from './blocks';
 export type {
   ListingCardProps,
@@ -175,8 +206,41 @@ export type {
   ListingToolbarProps,
   ListingMapProps,
   MapListing,
-  ViewMode
+  ViewMode,
+  ImageGalleryProps,
+  ImageSliderProps,
+  ListingDetailHeaderProps,
+  CapacityCardProps,
+  FacilityChipsProps,
+  AdditionalServicesListProps,
+  ContactInfoCardProps,
+  LocationCardProps,
+  OpeningHoursCardProps,
+  AvailabilityCalendarProps,
+  GuidelinesTabProps,
+  FAQTabProps,
+  PriceSummaryCardProps,
+  PriceLineItem
 } from './blocks';
+
+// Listing Detail Types
+export type {
+  TimeSlotStatus,
+  GalleryImage,
+  Facility,
+  AdditionalService,
+  ContactInfo,
+  Coordinates,
+  OpeningHoursDay,
+  TimeSlot,
+  BreadcrumbItem,
+  BookingStep,
+  BookingDetails,
+  BookingState,
+  GuidelineSection,
+  FAQItem,
+  ListingDetail
+} from './types/listing-detail';
 
 // =============================================================================
 // Design System Utilities & Tokens

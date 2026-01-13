@@ -75,3 +75,11 @@ export type {
   DrawerItemProps,
   DrawerEmptyStateProps
 } from './Drawer';
+
+// Breadcrumb
+export { Breadcrumb } from './Breadcrumb';
+export type { BreadcrumbProps } from './Breadcrumb';
+
+// Booking Stepper
+export { BookingStepper } from './BookingStepper';
+export type { BookingStepperProps } from './BookingStepper';

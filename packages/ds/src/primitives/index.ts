@@ -42,7 +42,21 @@ export {
   ShoppingCartIcon,
   BellIcon,
   HeartIcon,
-  SettingsIcon
+  SettingsIcon,
+  CheckIcon,
+  PhoneIcon,
+  MailIcon,
+  ClockIcon,
+  ShareIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ProjectorIcon,
+  WifiIcon,
+  BoardIcon,
+  VideoIcon,
+  InfoIcon,
+  CloseIcon,
+  SparklesIcon
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility
