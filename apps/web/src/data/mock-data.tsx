@@ -77,7 +77,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
     latitude: 59.7439,
-    longitude: 10.2045
+    longitude: 10.2045,
+    slug: 'bragernes-moterom'
   },
   {
     id: '2',
@@ -96,7 +97,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop',
     latitude: 59.7312,
-    longitude: 10.1523
+    longitude: 10.1523,
+    slug: 'solberghallen'
   },
   {
     id: '3',
@@ -115,7 +117,8 @@ export const mockListings: UiListing[] = [
     available: false,
     image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=600&h=400&fit=crop',
     latitude: 59.7401,
-    longitude: 10.1892
+    longitude: 10.1892,
+    slug: 'drammen-svommehall'
   },
   // RESOURCE listings
   {
@@ -135,7 +138,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&h=400&fit=crop',
     latitude: 59.7425,
-    longitude: 10.2038
+    longitude: 10.2038,
+    slug: 'projektor-og-lerret'
   },
   {
     id: '5',
@@ -154,7 +158,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop',
     latitude: 59.7448,
-    longitude: 10.2112
+    longitude: 10.2112,
+    slug: 'pa-anlegg-komplett'
   },
   {
     id: '6',
@@ -173,7 +178,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop',
     latitude: 59.7389,
-    longitude: 10.1956
+    longitude: 10.1956,
+    slug: 'kajakk-dobbeltseter'
   },
   // EVENT listings
   {
@@ -193,7 +199,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop',
     latitude: 59.7441,
-    longitude: 10.2048
+    longitude: 10.2048,
+    slug: 'yoga-i-parken'
   },
   {
     id: '8',
@@ -212,6 +219,7 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop',
     latitude: 59.7462,
+    slug: 'keramikk-kurs-nybegynnner',
     longitude: 10.1978
   },
   {
@@ -231,7 +239,8 @@ export const mockListings: UiListing[] = [
     available: false,
     image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=400&fit=crop',
     latitude: 59.7398,
-    longitude: 10.2089
+    longitude: 10.2089,
+    slug: 'sommerkonsert-drammens-storband'
   },
   // SERVICE listings
   {
@@ -251,7 +260,8 @@ export const mockListings: UiListing[] = [
     available: true,
     image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop',
     latitude: 59.7456,
-    longitude: 10.2134
+    longitude: 10.2134,
+    slug: 'personlig-trener-ole-berg'
   },
   {
     id: '11',
@@ -269,6 +279,7 @@ export const mockListings: UiListing[] = [
     reviewCount: 28,
     available: true,
     image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&h=400&fit=crop',
+    slug: 'gitarlaerer-lise-haugen',
     latitude: 59.7478,
     longitude: 10.1923
   },

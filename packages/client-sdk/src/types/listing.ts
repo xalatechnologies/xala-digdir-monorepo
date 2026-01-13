@@ -191,6 +191,7 @@ export interface UiListing {
   image: string;
   latitude?: number;
   longitude?: number;
+  slug?: string;
 }
 
 /**
@@ -231,6 +232,7 @@ export function transformListing(listing: Listing): UiListing {
     reviewCount: 0, // Not in metadata yet
     available: listing.status === 'published',
     image: listing.images?.[0] || '/placeholder.jpg',
+    slug: listing.slug,
   };
 
   // Only add optional properties if they have values

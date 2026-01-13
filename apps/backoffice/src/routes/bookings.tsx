@@ -6,8 +6,12 @@ import {
   Button,
   Spinner,
   Table,
-  Badge,
   Dropdown,
+  BookingStatusBadge,
+  PaymentStatusBadge,
+  CheckIcon,
+  CloseIcon,
+  MoreVerticalIcon,
 } from '@xala/ds';
 import {
   useBookings,
@@ -15,53 +19,9 @@ import {
   useCancelBooking,
   type BookingStatus,
   type Booking,
+  formatDate,
+  formatTime,
 } from '@digilist/client-sdk';
-
-const statusLabels: Record<BookingStatus, string> = {
-  pending: 'Venter',
-  confirmed: 'Bekreftet',
-  cancelled: 'Kansellert',
-  completed: 'Fullført',
-};
-
-const statusColors: Record<BookingStatus, 'warning' | 'success' | 'neutral' | 'info'> = {
-  pending: 'warning',
-  confirmed: 'success',
-  cancelled: 'neutral',
-  completed: 'info',
-};
-
-const MoreIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="12" cy="5" r="1" />
-    <circle cx="12" cy="19" r="1" />
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-const XIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-function PaymentBadge({ status }: { status: string }) {
-  const config: Record<string, { color: 'success' | 'warning' | 'neutral' | 'danger'; label: string }> = {
-    paid: { color: 'success', label: 'Betalt' },
-    unpaid: { color: 'warning', label: 'Ikke betalt' },
-    partial: { color: 'warning', label: 'Delvis betalt' },
-    refunded: { color: 'neutral', label: 'Refundert' },
-  };
-  const cfg = config[status] || { color: 'neutral', label: status };
-  return <Badge data-color={cfg.color} data-size="sm">{cfg.label}</Badge>;
-}
 
 export function BookingsPage() {
   const [statusFilter, setStatusFilter] = useState<BookingStatus | undefined>(undefined);
@@ -88,18 +48,6 @@ export function BookingsPage() {
     if (window.confirm('Er du sikker på at du vil kansellere denne bookingen?')) {
       await cancelBooking.mutateAsync(id);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('nb-NO', {
-      day: 'numeric',
-      month: 'short',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
   };
 
   // Calculate stats from API data
@@ -212,7 +160,7 @@ export function BookingsPage() {
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
             Ingen bookinger funnet
-            {statusFilter && ` med status "${statusLabels[statusFilter]}"`}.
+            {statusFilter && ` med status "${statusFilter}"`}.
           </Paragraph>
         </Card>
       ) : (
@@ -255,12 +203,10 @@ export function BookingsPage() {
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <Badge data-color={statusColors[booking.status]} data-size="sm">
-                      {statusLabels[booking.status]}
-                    </Badge>
+                    <BookingStatusBadge status={booking.status} />
                   </Table.Cell>
                   <Table.Cell>
-                    <PaymentBadge status={booking.paymentStatus || 'unpaid'} />
+                    <PaymentStatusBadge status={booking.paymentStatus || 'unpaid'} />
                   </Table.Cell>
                   <Table.Cell>
                     {(booking.totalPrice ?? 0).toLocaleString('nb-NO')} kr
@@ -287,14 +233,14 @@ export function BookingsPage() {
                             disabled={cancelBooking.isPending}
                             title="Kanseller"
                           >
-                            <XIcon />
+                            <CloseIcon />
                           </Button>
                         </>
                       )}
                       <Dropdown.TriggerContext>
                         <Dropdown.Trigger asChild>
                           <Button type="button" variant="tertiary" data-size="sm" aria-label="Flere valg">
-                            <MoreIcon />
+                            <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
                         <Dropdown placement="bottom-end">

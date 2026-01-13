@@ -17,7 +17,7 @@ import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { ListingsPage } from './pages/ListingsPage';
-import { ListingDetailPage } from './pages/ListingDetailPage';
+import { ListingDetailPageV2 } from './pages/ListingDetailPageV2';
 
 // Demo search data
 const demoSearchResults: SearchResultGroup[] = [
@@ -200,7 +200,7 @@ export function App() {
 
           <Routes>
             <Route path="/" element={<ListingsPage />} />
-            <Route path="/listing/:id" element={<ListingDetailPage />} />
+            <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
           </Routes>
         </div>
       </BrowserRouter>

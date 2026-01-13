@@ -191,6 +191,8 @@ export {
   MicrosoftIcon,
   GoogleIcon,
   BankIdIcon,
+  SendIcon,
+  OrganizationIcon,
 } from './primitives';
 export type {
   ContainerProps,

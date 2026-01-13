@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Card, Heading, Paragraph, Button, Table, Dropdown, Spinner, SeasonalLeaseStatusBadge, PlusIcon, MoreVerticalIcon } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Table, Dropdown, Spinner, Badge, SeasonalLeaseStatusBadge, PlusIcon, MoreVerticalIcon } from '@xala/ds';
 import {
   useSeasonalLeases,
   useOrganizations,
@@ -208,14 +208,14 @@ export function SeasonsPage() {
                   </Table.Cell>
                   <Table.Cell>{formatTimeSlot(lease.startTime, lease.endTime)}</Table.Cell>
                   <Table.Cell>
-                    <StatusBadge status={lease.status} />
+                    <SeasonalLeaseStatusBadge status={lease.status} />
                   </Table.Cell>
                   <Table.Cell>{(lease.totalPrice || 0).toLocaleString('nb-NO')} kr</Table.Cell>
                   <Table.Cell>
                     <Dropdown.TriggerContext>
                       <Dropdown.Trigger asChild>
                         <Button type="button" variant="tertiary" data-size="sm" aria-label="Handlinger">
-                          <MoreIcon />
+                          <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
                       <Dropdown placement="bottom-end">

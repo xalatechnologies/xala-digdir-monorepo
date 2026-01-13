@@ -83,6 +83,8 @@ export {
   MicrosoftIcon,
   GoogleIcon,
   BankIdIcon,
+  SendIcon,
+  OrganizationIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility

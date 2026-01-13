@@ -5,10 +5,12 @@ import {
   Heading,
   Paragraph,
   Button,
-  Badge,
   Table,
   Dropdown,
   Spinner,
+  ListingStatusBadge,
+  PlusIcon,
+  MoreVerticalIcon,
 } from '@xala/ds';
 import {
   useListings,
@@ -18,35 +20,6 @@ import {
   type ListingStatus,
   type Listing,
 } from '@digilist/client-sdk';
-
-const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-
-const MoreIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="12" cy="5" r="1" />
-    <circle cx="12" cy="19" r="1" />
-  </svg>
-);
-
-function StatusBadge({ status }: { status: ListingStatus }) {
-  const colors: Record<ListingStatus, 'success' | 'warning' | 'neutral'> = {
-    published: 'success',
-    draft: 'warning',
-    archived: 'neutral',
-  };
-  const labels: Record<ListingStatus, string> = {
-    published: 'Publisert',
-    draft: 'Utkast',
-    archived: 'Arkivert',
-  };
-  return <Badge data-color={colors[status]} data-size="sm">{labels[status]}</Badge>;
-}
 
 function formatPrice(listing: Listing): string {
   const price = listing.pricing?.basePrice ?? listing.pricing?.hourlyRate ?? 0;
@@ -189,7 +162,7 @@ export function ListingsPage() {
                     {formatPrice(listing)}
                   </Table.Cell>
                   <Table.Cell>
-                    <StatusBadge status={listing.status} />
+                    <ListingStatusBadge status={listing.status} />
                   </Table.Cell>
                   <Table.Cell>
                     {new Date(listing.updatedAt).toLocaleDateString('nb-NO')}
@@ -204,7 +177,7 @@ export function ListingsPage() {
                           onClick={(e) => e.stopPropagation()}
                           aria-label="Handlinger"
                         >
-                          <MoreIcon />
+                          <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
                       <Dropdown placement="bottom-end">

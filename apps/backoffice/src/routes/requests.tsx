@@ -199,7 +199,7 @@ export function RequestsPage() {
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <StatusBadge status="pending" />
+                    <RequestStatusBadge status="pending" />
                   </Table.Cell>
                   <Table.Cell>
                     {formatDateTime(request.createdAt)}
@@ -214,7 +214,7 @@ export function RequestsPage() {
                         onClick={() => handleApprove(request.id)}
                         disabled={confirmBooking.isPending}
                       >
-                        <CheckIcon />
+                        <CheckCircleIcon />
                       </Button>
                       <Button
                         type="button"
@@ -224,15 +224,15 @@ export function RequestsPage() {
                         onClick={() => handleReject(request.id)}
                         disabled={cancelBooking.isPending}
                       >
-                        <XIcon />
+                        <XCircleIcon />
                       </Button>
                       <Button type="button" variant="tertiary" data-size="sm" title="Send melding">
-                        <MessageIcon />
+                        <MessageSquareIcon />
                       </Button>
                       <Dropdown.TriggerContext>
                         <Dropdown.Trigger asChild>
                           <Button type="button" variant="tertiary" data-size="sm" aria-label="Flere valg">
-                            <MoreIcon />
+                            <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
                         <Dropdown placement="bottom-end">

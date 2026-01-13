@@ -190,8 +190,9 @@ export function ListingsPage(): React.ReactElement {
     setListingType(typeId as ListingType | 'ALL');
   };
 
-  const handleListingClick = (id: string) => {
-    navigate(`/listing/${id}`);
+  const handleListingClick = (id: string, slug?: string) => {
+    // Use slug if available, otherwise fall back to ID
+    navigate(`/listing/${slug || id}`);
   };
 
   const activeFilterCount =
@@ -516,7 +517,7 @@ export function ListingsPage(): React.ReactElement {
                   showRating={false}
                   showPrice={false}
                   showListingType={true}
-                  onClick={handleListingClick}
+                  onClick={(id) => handleListingClick(id, listing.slug)}
                   onFavorite={(id) => console.log('Toggle favorite:', id)}
                   onShare={(id) => console.log('Share listing:', id)}
                 />
@@ -539,10 +540,10 @@ export function ListingsPage(): React.ReactElement {
                   capacity={listing.capacity}
                   {...(listing.latitude !== undefined && { latitude: listing.latitude })}
                   {...(listing.longitude !== undefined && { longitude: listing.longitude })}
-                  mapboxToken={MAPBOX_TOKEN}
+                  mapboxToken={MAPBOX_TOKEN || ''}
                   showListingType={true}
                   showMap={Boolean(listing.latitude && listing.longitude)}
-                  onClick={handleListingClick}
+                  onClick={(id) => handleListingClick(id, listing.slug)}
                   onFavorite={(id) => console.log('Toggle favorite:', id)}
                 />
               ))}
