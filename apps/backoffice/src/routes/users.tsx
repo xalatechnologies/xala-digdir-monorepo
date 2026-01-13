@@ -1,5 +1,5 @@
 import { Card, Heading, Paragraph, Spinner, Table, Badge } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
+import { useT } from '@xala/i18n';
 import type { BackofficeRole } from '../hooks/useAuth';
 
 // Mock data until API is connected
@@ -16,7 +16,6 @@ const roleColors: Record<BackofficeRole, string> = {
 
 export function UsersPage() {
   const t = useT();
-  const { locale } = useLocale();
   const isLoading = false;
   const users = mockUsers;
 

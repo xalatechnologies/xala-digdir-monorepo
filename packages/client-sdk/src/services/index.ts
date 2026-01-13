@@ -61,3 +61,6 @@ export { conversationService } from './conversation.service';
 
 // Audit
 export { AuditService, auditService } from './audit.service';
+
+// Blocks (Calendar blocking)
+export { BlockService, blockService } from './block.service';

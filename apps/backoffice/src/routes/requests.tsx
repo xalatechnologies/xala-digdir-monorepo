@@ -17,7 +17,6 @@ import {
   useBookings,
   useConfirmBooking,
   useCancelBooking,
-  type Booking,
   formatTime,
   formatDate,
   formatDateTime,
@@ -145,7 +144,7 @@ export function RequestsPage() {
       {/* Table */}
       {isLoading ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spinner />
+          <Spinner aria-label="Laster forespørsler..." />
         </Card>
       ) : filteredRequests.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

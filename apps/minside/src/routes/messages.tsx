@@ -1,5 +1,15 @@
 import { useState, useRef, useEffect, type ChangeEvent, type KeyboardEvent } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner, SearchIcon } from '@xala/ds';
+import { 
+  Card, 
+  Heading, 
+  Paragraph, 
+  Button, 
+  Spinner, 
+  SearchIcon,
+  SendIcon,
+  MessageSquareIcon,
+  OrganizationIcon,
+} from '@xala/ds';
 import { useConversations, useMessages, useSendMessage, type Conversation, type Message, formatTime } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
@@ -18,11 +28,11 @@ export function MessagesPage() {
 
   // Filter conversations by search
   const filteredConversations = conversations.filter((c: Conversation) =>
-    !searchQuery || c.subject?.toLowerCase().includes(searchQuery.toLowerCase())
+    !searchQuery || (c.subject && c.subject.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   // Get messages for selected conversation
-  const { data: messagesData, isLoading: loadingMessages } = useMessages(selectedConversationId!, {
+  const { data: messagesData, isLoading: loadingMessages } = useMessages(selectedConversationId ?? '', {
     enabled: !!selectedConversationId,
   });
   const messages = messagesData?.data ?? [];
@@ -52,7 +62,7 @@ export function MessagesPage() {
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
           {t('minside.messages')}
         </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
+        <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
           {t('minside.messagesDesc')}
         </Paragraph>
       </div>
@@ -100,7 +110,20 @@ export function MessagesPage() {
               </div>
             ) : filteredConversations.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto var(--ds-spacing-4)',
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                }}>
+                  <MessageSquareIcon />
+                </div>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
                   {t('messages.noConversations')}
                 </Paragraph>
               </div>
@@ -116,46 +139,69 @@ export function MessagesPage() {
                     backgroundColor: selectedConversationId === conversation.id
                       ? 'var(--ds-color-accent-surface-default)'
                       : 'transparent',
+                    borderLeft: selectedConversationId === conversation.id
+                      ? '3px solid var(--ds-color-accent-base-default)'
+                      : '3px solid transparent',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {conversation.subject || t('messages.unknownUser')}
-                    </Paragraph>
-                    {conversation.unreadCount && conversation.unreadCount > 0 && (
-                      <div
-                        style={{
-                          minWidth: '20px',
-                          height: '20px',
-                          borderRadius: 'var(--ds-border-radius-full)',
-                          backgroundColor: 'var(--ds-color-accent-base-default)',
-                          color: 'white',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 'var(--ds-font-size-xs)',
-                          fontWeight: 'var(--ds-font-weight-bold)',
-                        }}
-                      >
-                        {conversation.unreadCount}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: 'var(--ds-border-radius-full)',
+                      backgroundColor: 'var(--ds-color-brand-1-surface-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--ds-color-brand-1-base-default)',
+                      flexShrink: 0,
+                    }}>
+                      <OrganizationIcon />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, color: 'var(--ds-color-neutral-text-default)' }}>
+                          {String(conversation.subject || t('messages.unknownUser'))}
+                        </Paragraph>
+                        {conversation.unreadCount && conversation.unreadCount > 0 && (
+                          <div
+                            style={{
+                              minWidth: '20px',
+                              height: '20px',
+                              borderRadius: 'var(--ds-border-radius-full)',
+                              backgroundColor: 'var(--ds-color-danger-base-default)',
+                              color: 'white',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: 'var(--ds-font-size-xs)',
+                              fontWeight: 700,
+                              padding: '0 var(--ds-spacing-1)',
+                            }}
+                          >
+                            {conversation.unreadCount}
+                          </div>
+                        )}
                       </div>
-                    )}
+                      {conversation.lastMessage && (
+                        <Paragraph
+                          data-size="xs"
+                          style={{
+                            margin: 0,
+                            marginTop: 'var(--ds-spacing-1)',
+                            color: 'var(--ds-color-neutral-text-default)',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {typeof conversation.lastMessage === 'object' && conversation.lastMessage !== null
+                            ? String((conversation.lastMessage as { content?: string }).content || '')
+                            : String(conversation.lastMessage)}
+                        </Paragraph>
+                      )}
+                    </div>
                   </div>
-                  {conversation.lastMessage && (
-                    <Paragraph
-                      data-size="xs"
-                      style={{
-                        margin: 0,
-                        marginTop: 'var(--ds-spacing-1)',
-                        color: 'var(--ds-color-neutral-text-subtle)',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {conversation.lastMessage}
-                    </Paragraph>
-                  )}
                 </div>
               ))
             )}
@@ -171,22 +217,52 @@ export function MessagesPage() {
                 style={{
                   padding: 'var(--ds-spacing-4)',
                   borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--ds-spacing-3)',
                 }}
               >
-                <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                  {selectedConversation.subject || t('messages.unknownUser')}
-                </Heading>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: 'var(--ds-color-brand-1-surface-default)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--ds-color-brand-1-base-default)',
+                }}>
+                  <OrganizationIcon />
+                </div>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+                    {String(selectedConversation.subject || t('messages.unknownUser'))}
+                  </Heading>
+                </div>
               </div>
 
               {/* Messages */}
-              <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+              <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }}>
                 {loadingMessages ? (
                   <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
                     <Spinner aria-label={t('messages.loadingConversations')} data-size="md" />
                   </div>
                 ) : messages.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-                    <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                    <div style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: 'var(--ds-border-radius-full)',
+                      backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto var(--ds-spacing-4)',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                    }}>
+                      <MessageSquareIcon />
+                    </div>
+                    <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
                       {t('messages.noMessagesYet')}
                     </Paragraph>
                   </div>
@@ -208,19 +284,20 @@ export function MessagesPage() {
                               padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
                               borderRadius: 'var(--ds-border-radius-lg)',
                               backgroundColor: isOwnMessage
-                                ? 'var(--ds-color-accent-surface-default)'
-                                : 'var(--ds-color-neutral-surface-hover)',
+                                ? 'var(--ds-color-brand-1-base-default)'
+                                : 'var(--ds-color-neutral-background-default)',
+                              color: isOwnMessage ? 'white' : 'var(--ds-color-neutral-text-default)',
                             }}
                           >
-                            <Paragraph data-size="sm" style={{ margin: 0 }}>
-                              {message.content}
+                            <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit' }}>
+                              {String(message.content)}
                             </Paragraph>
                             <Paragraph
                               data-size="xs"
                               style={{
                                 margin: 0,
                                 marginTop: 'var(--ds-spacing-1)',
-                                color: 'var(--ds-color-neutral-text-subtle)',
+                                opacity: 0.7,
                                 textAlign: 'right',
                               }}
                             >
@@ -266,6 +343,7 @@ export function MessagesPage() {
                   onClick={handleSendMessage}
                   disabled={!newMessage.trim() || sendMessageMutation.isPending}
                 >
+                  <SendIcon />
                   {t('messages.send')}
                 </Button>
               </div>
@@ -275,11 +353,26 @@ export function MessagesPage() {
               style={{
                 flex: 1,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                backgroundColor: 'var(--ds-color-neutral-background-subtle)',
               }}
             >
-              <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 'var(--ds-spacing-4)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+              }}>
+                <MessageSquareIcon />
+              </div>
+              <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
                 {t('messages.selectConversation')}
               </Paragraph>
             </div>

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon, Dialog } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
 import { useCalendarEvents, useListings, type CalendarEvent, type Listing, formatWeekRange } from '@digilist/client-sdk';
+import { CreateBlockModal, EventDrawer, useCalendarPermissions } from '../features/calendar';
 
 type ViewType = 'day' | 'week' | 'month';
 
@@ -25,16 +26,6 @@ function getEventColor(status: CalendarEvent['status']): EventColors {
   }
 }
 
-function getStatusLabel(status: string): string {
-  const normalizedStatus = status?.toLowerCase() || '';
-  switch (normalizedStatus) {
-    case 'confirmed': return 'Bekreftet';
-    case 'pending': return 'Venter';
-    case 'blocked': return 'Sperret';
-    case 'maintenance': return 'Vedlikehold';
-    default: return status;
-  }
-}
 
 function getWeekStart(date: Date): Date {
   const d = new Date(date);
@@ -51,22 +42,18 @@ function getDaysInMonth(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
-function formatTime(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long' });
-}
-
 export function CalendarPage() {
   const [view, setView] = useState<ViewType>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedListing, setSelectedListing] = useState<string | undefined>(undefined);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Block modal state
+  const [isCreateBlockOpen, setIsCreateBlockOpen] = useState(false);
+
+  // Permissions
+  const permissions = useCalendarPermissions();
 
   // Update current time every minute
   useEffect(() => {
@@ -560,10 +547,17 @@ export function CalendarPage() {
           </Paragraph>
         </div>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-          <Button type="button" variant="primary" data-size="md">
-            <PlusIcon />
-            Opprett booking
-          </Button>
+          {permissions.canCreateBlock && (
+            <Button
+              type="button"
+              variant="primary"
+              data-size="md"
+              onClick={() => setIsCreateBlockOpen(true)}
+            >
+              <PlusIcon />
+              Opprett blokkering
+            </Button>
+          )}
         </div>
       </div>
 
@@ -665,79 +659,20 @@ export function CalendarPage() {
         </Card>
       )}
 
-      {/* Event Detail Dialog */}
-      <Dialog open={!!selectedEvent} onClose={() => setSelectedEvent(null)}>
-        {selectedEvent && (
-          <>
-            <Dialog.Block>
-              <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                {selectedEvent.title || selectedEvent.userName || 'Booking'}
-              </Heading>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                  borderRadius: 'var(--ds-border-radius-sm)',
-                  backgroundColor: getEventColor(selectedEvent.status).bg,
-                  border: `1px solid ${getEventColor(selectedEvent.status).border}`,
-                  marginBottom: 'var(--ds-spacing-4)',
-                }}
-              >
-                <span style={{ fontSize: 'var(--ds-font-size-xs)', color: getEventColor(selectedEvent.status).text }}>
-                  {getStatusLabel(selectedEvent.status)}
-                </span>
-              </div>
+      {/* Event Detail Drawer */}
+      <EventDrawer
+        isOpen={!!selectedEvent}
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                {selectedEvent.listingName && (
-                  <div>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Lokale</Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0 }}>{selectedEvent.listingName}</Paragraph>
-                  </div>
-                )}
-                <div>
-                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Dato</Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    {formatDate(selectedEvent.start || selectedEvent.startTime || '')}
-                  </Paragraph>
-                </div>
-                <div>
-                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Tid</Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    {formatTime(selectedEvent.start || selectedEvent.startTime || '')} - {formatTime(selectedEvent.end || selectedEvent.endTime || '')}
-                  </Paragraph>
-                </div>
-                {selectedEvent.userName && (
-                  <div>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Booket av</Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0 }}>{selectedEvent.userName}</Paragraph>
-                  </div>
-                )}
-                {selectedEvent.organizationName && (
-                  <div>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Organisasjon</Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0 }}>{selectedEvent.organizationName}</Paragraph>
-                  </div>
-                )}
-              </div>
-            </Dialog.Block>
-            <Dialog.Block>
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-                <Button type="button" variant="secondary" onClick={() => setSelectedEvent(null)}>
-                  Lukk
-                </Button>
-                {selectedEvent.bookingId && (
-                  <Button type="button" variant="primary" onClick={() => window.location.href = `/bookings/${selectedEvent.bookingId}`}>
-                    Se booking
-                  </Button>
-                )}
-              </div>
-            </Dialog.Block>
-          </>
-        )}
-      </Dialog>
+      {/* Create Block Modal */}
+      <CreateBlockModal
+        isOpen={isCreateBlockOpen}
+        onClose={() => setIsCreateBlockOpen(false)}
+        initialListingId={selectedListing}
+        initialDate={currentDate}
+      />
     </div>
   );
 }

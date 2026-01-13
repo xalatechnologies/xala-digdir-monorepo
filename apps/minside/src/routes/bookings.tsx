@@ -6,10 +6,7 @@ import {
   Button,
   Spinner,
   Table,
-  Dropdown,
   BookingStatusBadge,
-  MoreVerticalIcon,
-  CloseIcon,
 } from '@xala/ds';
 import {
   useMyBookings,
@@ -198,7 +195,7 @@ export function BookingsPage() {
                     {(booking.totalPrice ?? 0).toLocaleString(locale === 'en' ? 'en-US' : 'nb-NO')} kr
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
+                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                       {booking.status !== 'cancelled' && (
                         <Button
                           type="button"
@@ -206,30 +203,17 @@ export function BookingsPage() {
                           data-size="sm"
                           onClick={() => handleCancel(booking.id)}
                           disabled={cancelBooking.isPending}
-                          title={t('common.cancel')}
                         >
-                          <CloseIcon />
+                          {t('common.cancel')}
                         </Button>
                       )}
-                      <Dropdown.TriggerContext>
-                        <Dropdown.Trigger asChild>
-                          <Button type="button" variant="tertiary" data-size="sm" aria-label={t('common.moreOptions')}>
-                            <MoreVerticalIcon />
-                          </Button>
-                        </Dropdown.Trigger>
-                        <Dropdown placement="bottom-end">
-                          <Dropdown.List>
-                            <Dropdown.Item>
-                              <Dropdown.Button>{t('bookings.viewDetails')}</Dropdown.Button>
-                            </Dropdown.Item>
-                            {booking.status === 'confirmed' && (
-                              <Dropdown.Item>
-                                <Dropdown.Button>{t('bookings.viewAccess')}</Dropdown.Button>
-                              </Dropdown.Item>
-                            )}
-                          </Dropdown.List>
-                        </Dropdown>
-                      </Dropdown.TriggerContext>
+                      <Button
+                        type="button"
+                        variant="tertiary"
+                        data-size="sm"
+                      >
+                        {t('common.details')}
+                      </Button>
                     </div>
                   </Table.Cell>
                 </Table.Row>

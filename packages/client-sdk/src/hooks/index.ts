@@ -62,9 +62,24 @@ export {
   useCalendarEvents,
   useAvailabilitySlots,
   useAllocations,
+  useAllocation,
   useCreateAllocation,
+  useUpdateAllocation,
   useDeleteAllocation
 } from './use-bookings';
+
+// Block hooks (Calendar blocking)
+export {
+  useBlocks,
+  useBlock,
+  useListingBlocks,
+  useCheckConflicts,
+  useCreateBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useCancelBlock,
+  useBulkDeleteBlocks
+} from './use-blocks';
 
 // Organization & User hooks
 export {

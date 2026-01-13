@@ -90,6 +90,21 @@ export const queryKeys = {
     all: ['allocations'] as const,
     list: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
       [...queryKeys.allocations.all, 'list', params] as const,
+    detail: (id: string) => [...queryKeys.allocations.all, 'detail', id] as const,
+  },
+
+  // =========================================================================
+  // Block Keys (Calendar Blocking)
+  // =========================================================================
+  blocks: {
+    all: ['blocks'] as const,
+    lists: () => [...queryKeys.blocks.all, 'list'] as const,
+    list: (params?: { listingId?: string; blockType?: string; status?: string; from?: string; to?: string }) =>
+      [...queryKeys.blocks.lists(), params] as const,
+    details: () => [...queryKeys.blocks.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.blocks.details(), id] as const,
+    conflicts: (params: { listingId: string; startTime: string; endTime: string }) =>
+      [...queryKeys.blocks.all, 'conflicts', params] as const,
   },
 
   // =========================================================================

@@ -137,3 +137,105 @@ export interface CreateAllocationDTO {
     weekdays?: number[];
   };
 }
+
+export interface UpdateAllocationDTO {
+  startTime?: string | Date;
+  endTime?: string | Date;
+  title?: string;
+  status?: AllocationStatus;
+  notes?: string;
+}
+
+// =============================================================================
+// Block Types (Calendar Blocking)
+// =============================================================================
+
+export type BlockType = 'maintenance' | 'closed' | 'hold' | 'emergency' | 'internal';
+export type BlockStatus = 'active' | 'cancelled';
+
+export interface RecurrenceRule {
+  frequency: 'daily' | 'weekly' | 'monthly';
+  interval: number;
+  weekdays?: number[];        // 0=Sun, 1=Mon, 2=Tue, etc.
+  endDate?: string;
+  exceptions?: string[];      // Dates to skip (ISO format)
+}
+
+export interface Block extends TenantEntity {
+  listingId: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  blockType: BlockType;
+  status: BlockStatus;
+  notes?: string;
+  recurrenceRule?: RecurrenceRule;
+  createdBy: string;
+  // Joined fields from API
+  listingName?: string;
+  createdByName?: string;
+}
+
+export interface CreateBlockDTO {
+  listingId: string;
+  title: string;
+  startTime: string | Date;
+  endTime: string | Date;
+  blockType: BlockType;
+  notes?: string;
+  recurrence?: RecurrenceRule;
+  allDay?: boolean;
+  notifyAffectedUsers?: boolean;
+}
+
+export interface UpdateBlockDTO {
+  title?: string;
+  startTime?: string | Date;
+  endTime?: string | Date;
+  blockType?: BlockType;
+  notes?: string;
+  recurrence?: RecurrenceRule;
+  allDay?: boolean;
+}
+
+export interface BlockQueryParams extends BaseQueryParams {
+  listingId?: string;
+  blockType?: BlockType;
+  status?: BlockStatus;
+  from?: string;
+  to?: string;
+}
+
+// =============================================================================
+// Conflict Detection Types
+// =============================================================================
+
+export type ConflictType = 'booking' | 'block' | 'allocation' | 'seasonal';
+
+export interface Conflict {
+  type: ConflictType;
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  resolvable: boolean;
+  details?: {
+    userName?: string;
+    organizationName?: string;
+    status?: string;
+  };
+}
+
+export interface ConflictCheckParams {
+  listingId: string;
+  startTime: string;
+  endTime: string;
+  excludeId?: string;         // Exclude this block ID from check (for updates)
+  recurring?: RecurrenceRule;
+}
+
+export interface ConflictCheckResult {
+  hasConflicts: boolean;
+  conflicts: Conflict[];
+  canOverride: boolean;       // True if admin can force-create despite conflicts
+}

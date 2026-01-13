@@ -3,6 +3,8 @@ import { DesignsystemetProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
+import { ToastProvider } from './providers/ToastProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -22,7 +24,14 @@ export function App() {
   return (
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme="light" size="md">
-      <BrowserRouter>
+      <ErrorBoundary>
+      <ToastProvider>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -76,6 +85,8 @@ export function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      </ToastProvider>
+      </ErrorBoundary>
       </DesignsystemetProvider>
     </I18nProvider>
   );

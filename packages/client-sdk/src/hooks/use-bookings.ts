@@ -11,12 +11,13 @@ import {
   allocationService, 
   availabilityService 
 } from '../services/booking.service';
-import type { 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import type {
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
-  CreateAllocationDTO
+  CreateAllocationDTO,
+  UpdateAllocationDTO
 } from '../types/booking';
 
 // ============================================================================
@@ -229,11 +230,39 @@ export function useCreateAllocation() {
 }
 
 /**
+ * Get single allocation by ID
+ */
+export function useAllocation(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.allocations.detail(id),
+    queryFn: () => allocationService.getById(id),
+    enabled: !!id && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Update allocation mutation
+ */
+export function useUpdateAllocation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateAllocationDTO }) =>
+      allocationService.update(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.allocations.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.allocations.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
  * Delete allocation mutation
  */
 export function useDeleteAllocation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => allocationService.delete(id),
     onSuccess: () => {

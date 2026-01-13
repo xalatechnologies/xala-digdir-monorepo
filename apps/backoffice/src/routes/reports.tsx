@@ -36,24 +36,29 @@ export function ReportsPage() {
   const { data: kpisData, isLoading: isLoadingKPIs } = useDashboardKPIs();
   const kpis = kpisData?.data;
 
-  const { data: usageData, isLoading: isLoadingUsage } = useUsageReport({
+  const usageParams = {
     period,
-    startDate: dateRange.startDate,
-    endDate: dateRange.endDate,
-  });
-  const usageReport = usageData?.data ?? [];
+    ...(dateRange.startDate && { startDate: dateRange.startDate }),
+    ...(dateRange.endDate && { endDate: dateRange.endDate }),
+  };
+  const { data: usageData, isLoading: isLoadingUsage } = useUsageReport(usageParams);
+  const usageReportRaw = usageData?.data;
+  const usageReport = Array.isArray(usageReportRaw) ? usageReportRaw : [];
 
-  const { data: revenueData, isLoading: isLoadingRevenue } = useRevenueReport({
+  const revenueParams = {
     period,
-    startDate: dateRange.startDate,
-    endDate: dateRange.endDate,
-  });
-  const revenueReport = revenueData?.data ?? [];
+    ...(dateRange.startDate && { startDate: dateRange.startDate }),
+    ...(dateRange.endDate && { endDate: dateRange.endDate }),
+  };
+  const { data: revenueData, isLoading: isLoadingRevenue } = useRevenueReport(revenueParams);
+  const revenueReportRaw = revenueData?.data;
+  const revenueReport = Array.isArray(revenueReportRaw) ? revenueReportRaw : [];
 
-  const { data: statsData, isLoading: isLoadingStats } = useBookingStats({
-    startDate: dateRange.startDate,
-    endDate: dateRange.endDate,
-  });
+  const bookingStatsParams = {
+    ...(dateRange.startDate && { startDate: dateRange.startDate }),
+    ...(dateRange.endDate && { endDate: dateRange.endDate }),
+  };
+  const { data: statsData, isLoading: isLoadingStats } = useBookingStats(bookingStatsParams);
   const bookingStats = statsData?.data;
 
   const exportReport = useExportReport();
@@ -78,8 +83,10 @@ export function ReportsPage() {
     exportReport.mutate({
       type,
       format,
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
+      params: {
+        ...(dateRange.startDate && { startDate: dateRange.startDate }),
+        ...(dateRange.endDate && { endDate: dateRange.endDate }),
+      },
     });
   };
 
@@ -171,7 +178,7 @@ export function ReportsPage() {
 
       {isLoading ? (
         <Card style={{ padding: 'var(--ds-spacing-12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spinner />
+          <Spinner aria-label="Laster rapporter..." />
         </Card>
       ) : (
         <>
@@ -276,7 +283,7 @@ export function ReportsPage() {
                 </Button>
               </div>
               {revenueChartData.length > 0 ? (
-                <BarChart data={revenueChartData} maxValue={Math.max(...revenueChartData.map((d) => d.value))} />
+                <BarChart data={revenueChartData} maxValue={Math.max(...revenueChartData.map((d: { label: string; value: number }) => d.value))} />
               ) : (
                 <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
                   Ingen omsetningsdata for valgt periode.

@@ -249,6 +249,9 @@ export function BookingWidgetPlacement({
 }: BookingWidgetPlacementProps): React.ReactElement {
   const isBookable = bookingConfig?.enabled !== false && bookingConfig?.mode !== 'NONE';
 
+  // Current booking step (0 = select, 1 = details, 2 = confirm, 3 = done)
+  const [currentStep, setCurrentStep] = React.useState(0);
+
   // Mobile detection state
   const [isMobile, setIsMobile] = React.useState(false);
 
@@ -340,8 +343,7 @@ export function BookingWidgetPlacement({
   // Calendar expanded state
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
 
-  // Selected time and duration for simplified mobile view
-  const [selectedTime, setSelectedTime] = React.useState<string>('');
+  // Selected duration for simplified mobile view
   const [selectedDuration, setSelectedDuration] = React.useState<number>(60); // minutes
 
   // Check for mobile on mount and resize
@@ -356,6 +358,37 @@ export function BookingWidgetPlacement({
 
   // Generate week data with opening hours support
   const weekData = React.useMemo(() => generateMockWeekData(weekStart, openingHours, busySlots), [weekStart, openingHours, busySlots]);
+
+  // Calculate all slots that should be highlighted based on selected bookings and their durations
+  const highlightedSlots = React.useMemo(() => {
+    const highlighted = new Set<string>();
+
+    selectedSlots.forEach(slotKey => {
+      const parts = slotKey.split('-');
+      const dayIdx = parseInt(parts[0] ?? '0', 10);
+      const timeStr = parts[1] ?? '08:00';
+      const details = slotDetails[slotKey] ?? { duration: 60 };
+      const duration = details.duration;
+
+      // Parse start time
+      const [startH, startM] = timeStr.split(':').map(Number);
+      const startMins = (startH ?? 0) * 60 + (startM ?? 0);
+
+      // Calculate how many 30-minute slots this booking covers
+      const slotsCount = Math.ceil(duration / 30);
+
+      // Add all slots in the range to highlighted set
+      for (let i = 0; i < slotsCount; i++) {
+        const slotMins = startMins + (i * 30);
+        const slotH = Math.floor(slotMins / 60);
+        const slotM = slotMins % 60;
+        const slotTime = `${slotH.toString().padStart(2, '0')}:${slotM.toString().padStart(2, '0')}`;
+        highlighted.add(`${dayIdx}-${slotTime}`);
+      }
+    });
+
+    return highlighted;
+  }, [selectedSlots, slotDetails]);
 
   // Auto-scroll to first available time slot
   React.useEffect(() => {
@@ -525,7 +558,7 @@ export function BookingWidgetPlacement({
           Book dette lokalet
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.9 }}>
-          Steg 1 av 4
+          Steg {currentStep + 1} av 4
         </Paragraph>
       </div>
 
@@ -540,6 +573,8 @@ export function BookingWidgetPlacement({
           }}
         >
           {bookingSteps.map((step, index) => {
+            const isActive = index === currentStep;
+            const isCompleted = index < currentStep;
             const isFirst = index === 0;
 
             return (
@@ -562,7 +597,7 @@ export function BookingWidgetPlacement({
                       right: '50%',
                       width: '100%',
                       height: '2px',
-                      backgroundColor: 'var(--ds-color-neutral-border-subtle)',
+                      backgroundColor: isCompleted ? 'var(--ds-color-success-base-default)' : 'var(--ds-color-neutral-border-subtle)',
                       zIndex: 0,
                     }}
                   />
@@ -578,17 +613,29 @@ export function BookingWidgetPlacement({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: isFirst ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-surface-default)',
-                    color: isFirst ? 'var(--ds-color-accent-contrast-default)' : 'var(--ds-color-neutral-text-subtle)',
-                    border: isFirst ? 'none' : '2px solid var(--ds-color-neutral-border-subtle)',
+                    backgroundColor: isCompleted
+                      ? 'var(--ds-color-success-base-default)'
+                      : isActive
+                        ? 'var(--ds-color-accent-base-default)'
+                        : 'var(--ds-color-neutral-surface-default)',
+                    color: isCompleted || isActive
+                      ? 'var(--ds-color-accent-contrast-default)'
+                      : 'var(--ds-color-neutral-text-subtle)',
+                    border: isCompleted || isActive ? 'none' : '2px solid var(--ds-color-neutral-border-subtle)',
                     position: 'relative',
                     zIndex: 1,
                   }}
                 >
-                  {step.id === 'select' && <CalendarIcon size={18} />}
-                  {step.id === 'details' && <DetailsIcon size={18} />}
-                  {step.id === 'confirm' && <CheckCircleIcon size={18} />}
-                  {step.id === 'done' && <CheckCircleIcon size={18} />}
+                  {isCompleted ? (
+                    <CheckCircleIcon size={18} />
+                  ) : (
+                    <>
+                      {step.id === 'select' && <CalendarIcon size={18} />}
+                      {step.id === 'details' && <DetailsIcon size={18} />}
+                      {step.id === 'confirm' && <CheckCircleIcon size={18} />}
+                      {step.id === 'done' && <CheckCircleIcon size={18} />}
+                    </>
+                  )}
                 </div>
 
                 {/* Label */}
@@ -598,8 +645,8 @@ export function BookingWidgetPlacement({
                   style={{
                     margin: 0,
                     marginTop: 'var(--ds-spacing-2)',
-                    color: isFirst ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-                    fontWeight: isFirst ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)',
+                    color: isActive || isCompleted ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
+                    fontWeight: isActive ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)',
                     textAlign: 'center',
                     maxWidth: '90px',
                     lineHeight: 'var(--ds-line-height-condensed)',
@@ -849,7 +896,7 @@ export function BookingWidgetPlacement({
                 .slice(0, isCalendarExpanded ? undefined : 12)
                 .map((slot, slotIndex) => {
                   const slotKey = `${mobileDayIndex}-${slot.time}`;
-                  const isSelected = selectedTime === slot.time && selectedSlots.has(slotKey);
+                  const isHighlighted = highlightedSlots.has(slotKey);
                   const isAvailable = slot.status === 'available';
 
                   return (
@@ -858,7 +905,6 @@ export function BookingWidgetPlacement({
                       type="button"
                       onClick={() => {
                         if (isAvailable) {
-                          setSelectedTime(slot.time);
                           handleSlotClick(mobileDayIndex, slot.time, slot.status);
                         }
                       }}
@@ -866,15 +912,15 @@ export function BookingWidgetPlacement({
                       style={{
                         padding: 'var(--ds-spacing-3)',
                         borderRadius: 'var(--ds-border-radius-md)',
-                        border: isSelected
+                        border: isHighlighted
                           ? '2px solid var(--ds-color-accent-base-default)'
                           : '1px solid var(--ds-color-neutral-border-subtle)',
-                        backgroundColor: isSelected
+                        backgroundColor: isHighlighted
                           ? 'var(--ds-color-accent-base-default)'
                           : isAvailable
                             ? 'var(--ds-color-neutral-background-default)'
                             : 'var(--ds-color-danger-surface-default)',
-                        color: isSelected
+                        color: isHighlighted
                           ? 'var(--ds-color-accent-contrast-default)'
                           : isAvailable
                             ? 'var(--ds-color-neutral-text-default)'
@@ -1064,8 +1110,8 @@ export function BookingWidgetPlacement({
                     if (!slot) return null;
 
                     const slotKey = `${dayIndex}-${slot.time}`;
-                    const isSelected = selectedSlots.has(slotKey);
-                    const effectiveStatus: SlotStatus = isSelected ? 'selected' : slot.status;
+                    const isHighlighted = highlightedSlots.has(slotKey);
+                    const effectiveStatus: SlotStatus = isHighlighted ? 'selected' : slot.status;
                     const colors = slotColors[effectiveStatus];
                     const isClickable = slot.status === 'available';
 
@@ -1219,7 +1265,6 @@ export function BookingWidgetPlacement({
                   const dayIdxStr = parts[0] ?? '0';
                   const timeStr = parts[1] ?? '';
                   const dayIdx = parseInt(dayIdxStr, 10);
-                  const day = weekData[dayIdx];
                   const details = slotDetails[slotKey] ?? { duration: 60, purpose: '', showPurpose: false, attendees: '', activityType: '' };
 
                   // Calculate end time based on duration
@@ -1287,12 +1332,13 @@ export function BookingWidgetPlacement({
                               justifyContent: 'center',
                               width: '32px',
                               height: '32px',
-                              border: 'none',
-                              backgroundColor: 'rgba(255,255,255,0.2)',
+                              border: '1px solid var(--ds-color-accent-contrast-default)',
+                              backgroundColor: 'transparent',
                               cursor: 'pointer',
                               color: 'var(--ds-color-accent-contrast-default)',
                               borderRadius: 'var(--ds-border-radius-full)',
                               transition: 'all 150ms ease',
+                              opacity: 0.7,
                             }}
                           >
                             ✕
@@ -1306,8 +1352,8 @@ export function BookingWidgetPlacement({
                         <div
                           style={{
                             display: 'flex',
+                            flexDirection: 'column',
                             alignItems: 'center',
-                            justifyContent: 'center',
                             gap: 'var(--ds-spacing-3)',
                             padding: 'var(--ds-spacing-4)',
                             backgroundColor: 'var(--ds-color-neutral-surface-default)',
@@ -1315,64 +1361,67 @@ export function BookingWidgetPlacement({
                             marginBottom: 'var(--ds-spacing-4)',
                           }}
                         >
-                          <button
-                            type="button"
-                            onClick={() => adjustSlotTime(slotKey, -30)}
-                            aria-label="30 minutter tidligere"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: '44px',
-                              height: '44px',
-                              borderRadius: 'var(--ds-border-radius-full)',
-                              border: '2px solid var(--ds-color-neutral-border-default)',
-                              backgroundColor: 'var(--ds-color-neutral-background-default)',
-                              cursor: 'pointer',
-                              fontSize: 'var(--ds-font-size-xl)',
-                              fontWeight: 'var(--ds-font-weight-bold)',
-                              color: 'var(--ds-color-neutral-text-default)',
-                              transition: 'all 150ms ease',
-                            }}
-                          >
-                            −
-                          </button>
-                          <div style={{ textAlign: 'center', minWidth: '160px' }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 'var(--ds-spacing-2)' }}>
-                              <Heading level={2} data-size="xl" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-base-default)' }}>
-                                {timeStr}
-                              </Heading>
-                              <span style={{ fontSize: 'var(--ds-font-size-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>–</span>
-                              <Heading level={2} data-size="xl" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-base-default)' }}>
-                                {endTime}
-                              </Heading>
-                            </div>
-                            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}>
+                          {/* Time row - centered */}
+                          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 'var(--ds-spacing-2)' }}>
+                            <Heading level={2} data-size="xl" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-base-default)' }}>
+                              {timeStr}
+                            </Heading>
+                            <span style={{ fontSize: 'var(--ds-font-size-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>–</span>
+                            <Heading level={2} data-size="xl" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-base-default)' }}>
+                              {endTime}
+                            </Heading>
+                          </div>
+
+                          {/* Duration adjustment row with +/- buttons */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+                            <button
+                              type="button"
+                              onClick={() => adjustSlotTime(slotKey, -30)}
+                              aria-label="30 minutter tidligere"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: 'var(--ds-border-radius-full)',
+                                border: '2px solid var(--ds-color-neutral-border-default)',
+                                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                cursor: 'pointer',
+                                fontSize: 'var(--ds-font-size-lg)',
+                                fontWeight: 'var(--ds-font-weight-bold)',
+                                color: 'var(--ds-color-neutral-text-default)',
+                                transition: 'all 150ms ease',
+                              }}
+                            >
+                              −
+                            </button>
+                            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', minWidth: '80px', textAlign: 'center' }}>
                               {details.duration} minutter
                             </Paragraph>
+                            <button
+                              type="button"
+                              onClick={() => adjustSlotTime(slotKey, 30)}
+                              aria-label="30 minutter senere"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: 'var(--ds-border-radius-full)',
+                                border: '2px solid var(--ds-color-neutral-border-default)',
+                                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                cursor: 'pointer',
+                                fontSize: 'var(--ds-font-size-lg)',
+                                fontWeight: 'var(--ds-font-weight-bold)',
+                                color: 'var(--ds-color-neutral-text-default)',
+                                transition: 'all 150ms ease',
+                              }}
+                            >
+                              +
+                            </button>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => adjustSlotTime(slotKey, 30)}
-                            aria-label="30 minutter senere"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: '44px',
-                              height: '44px',
-                              borderRadius: 'var(--ds-border-radius-full)',
-                              border: '2px solid var(--ds-color-neutral-border-default)',
-                              backgroundColor: 'var(--ds-color-neutral-background-default)',
-                              cursor: 'pointer',
-                              fontSize: 'var(--ds-font-size-xl)',
-                              fontWeight: 'var(--ds-font-weight-bold)',
-                              color: 'var(--ds-color-neutral-text-default)',
-                              transition: 'all 150ms ease',
-                            }}
-                          >
-                            +
-                          </button>
                         </div>
 
                         {/* Duration Selector */}
@@ -1632,26 +1681,57 @@ export function BookingWidgetPlacement({
         style={{
           padding: 'var(--ds-spacing-4)',
           borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+          display: 'flex',
+          gap: 'var(--ds-spacing-3)',
         }}
       >
+        {/* Back button (only show on steps > 0) */}
+        {currentStep > 0 && (
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="lg"
+            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+            style={{
+              padding: 'var(--ds-spacing-4)',
+              fontSize: 'var(--ds-font-size-md)',
+              fontWeight: 'var(--ds-font-weight-medium)',
+            }}
+          >
+            Tilbake
+          </Button>
+        )}
         <Button
           type="button"
           variant="primary"
           data-size="lg"
           data-color="accent"
-          onClick={onBookClick}
-          disabled={!isBookable || selectedSlots.size === 0}
+          onClick={() => {
+            if (currentStep < 3) {
+              setCurrentStep(prev => prev + 1);
+            }
+            if (onBookClick && currentStep === 2) {
+              onBookClick();
+            }
+          }}
+          disabled={!isBookable || (currentStep === 0 && selectedSlots.size === 0)}
           aria-label={isBookable ? 'Fortsett til neste steg' : 'Lokalet er ikke tilgjengelig for booking'}
           style={{
-            width: '100%',
+            flex: 1,
             padding: 'var(--ds-spacing-4)',
             fontSize: 'var(--ds-font-size-md)',
             fontWeight: 'var(--ds-font-weight-semibold)',
           }}
         >
-          {selectedSlots.size > 0
+          {currentStep === 0 && selectedSlots.size > 0
             ? `Fortsett med ${selectedSlots.size} valgte tidspunkt${selectedSlots.size > 1 ? 'er' : ''}`
-            : 'Velg tidspunkt for å fortsette'}
+            : currentStep === 0
+              ? 'Velg tidspunkt for å fortsette'
+              : currentStep === 2
+                ? 'Bekreft booking'
+                : currentStep === 3
+                  ? 'Ferdig'
+                  : 'Fortsett'}
         </Button>
       </div>
 

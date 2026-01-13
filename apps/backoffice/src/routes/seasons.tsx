@@ -4,9 +4,6 @@ import {
   useSeasonalLeases,
   useOrganizations,
   useListings,
-  type SeasonalLease,
-  type SeasonalLeaseStatus,
-  weekdayNames,
   formatWeekdays,
   formatPeriod,
   formatTimeSlot,
@@ -159,7 +156,7 @@ export function SeasonsPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Spinner />
+            <Spinner aria-label="Laster sesongleie..." />
           </div>
         ) : leases.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
