@@ -2,40 +2,53 @@
  * ListingDetailHeader
  *
  * Header section for listing detail page showing category, title,
- * capacity, location, and action buttons (favorite, share).
+ * key facts, location, and action buttons (favorite, share).
+ *
+ * Supports both simple usage with capacity prop and advanced usage
+ * with keyFacts array for type-specific information display.
  */
 import * as React from 'react';
 import { Tag, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import { MapPinIcon, HeartIcon, ShareIcon } from '../primitives/icons';
-
-// Users icon for capacity
-function UsersIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
+import { MapPinIcon, ShareIcon } from '../primitives/icons';
+import { KeyFactsRow, type KeyFact } from './KeyFactsRow';
+import { FavoriteButton } from './FavoriteButton';
+import { ShareButton, type ShareData, type SharePlatform } from './ShareButton';
 
 export interface ListingDetailHeaderProps {
   /** Category label (e.g., "Rom", "Møterom") */
   category: string;
+  /** Listing type for styling (e.g., "SPACE", "EQUIPMENT") */
+  listingType?: string;
   /** Listing title */
   title: string;
   /** Location address */
   location: string;
-  /** Capacity (number of people) */
+  /** Capacity (number of people) - simple mode */
   capacity?: number;
+  /** Key facts to display - advanced mode */
+  keyFacts?: KeyFact[];
   /** Callback when favorite button is clicked */
   onFavorite?: () => void;
-  /** Callback when share button is clicked */
-  onShare?: () => void;
+  /** Callback when share is initiated */
+  onShare?: (platform?: SharePlatform) => void;
   /** Whether the listing is favorited */
   isFavorited?: boolean;
+  /** Whether user is authenticated (for favorite gating) */
+  isAuthenticated?: boolean;
+  /** Callback when unauthenticated user tries to favorite */
+  onAuthRequired?: () => void;
+  /** Favorite loading state */
+  isFavoriteLoading?: boolean;
+  /** Share data for the share sheet */
+  shareData?: ShareData;
+  /** UTM parameters for share tracking */
+  shareUtmParams?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    content?: string;
+  };
   /** Custom class name */
   className?: string;
 }
@@ -45,153 +58,177 @@ export interface ListingDetailHeaderProps {
  *
  * @example
  * ```tsx
+ * // Simple usage with capacity
  * <ListingDetailHeader
  *   category="Rom"
  *   title="Møterom 101"
  *   location="Storgata 1, 0155 Oslo"
  *   capacity={25}
  *   onFavorite={() => console.log('Favorited')}
- *   onShare={() => console.log('Shared')}
+ * />
+ *
+ * // Advanced usage with key facts
+ * <ListingDetailHeader
+ *   category="Rom"
+ *   listingType="SPACE"
+ *   title="Møterom 101"
+ *   location="Storgata 1, 0155 Oslo"
+ *   keyFacts={[
+ *     { type: 'capacity', label: 'Kapasitet', value: '25 personer' },
+ *     { type: 'area', label: 'Areal', value: '120 m²' },
+ *     { type: 'bookingMode', label: 'Booking', value: 'Timebasert' },
+ *   ]}
+ *   isFavorited={true}
+ *   isAuthenticated={true}
+ *   onFavorite={() => toggleFavorite()}
+ *   shareData={{ url: 'https://...', title: 'Møterom 101' }}
  * />
  * ```
  */
 export function ListingDetailHeader({
   category,
+  listingType,
   title,
   location,
   capacity,
+  keyFacts,
   onFavorite,
   onShare,
   isFavorited = false,
+  isAuthenticated = true,
+  onAuthRequired,
+  isFavoriteLoading = false,
+  shareData,
+  shareUtmParams,
   className,
 }: ListingDetailHeaderProps): React.ReactElement {
+  // Build key facts from capacity if not provided
+  const effectiveKeyFacts = React.useMemo((): KeyFact[] => {
+    if (keyFacts && keyFacts.length > 0) {
+      return keyFacts;
+    }
+    if (capacity) {
+      return [
+        {
+          type: 'capacity',
+          label: 'Kapasitet',
+          value: `${capacity} pers`,
+        },
+      ];
+    }
+    return [];
+  }, [keyFacts, capacity]);
+
+  // Get tag color based on listing type
+  const getTypeColor = (): 'neutral' | 'first' | 'second' | 'third' => {
+    switch (listingType) {
+      case 'SPACE':
+        return 'first';
+      case 'RESOURCE':
+        return 'second';
+      case 'EVENT':
+        return 'third';
+      case 'SERVICE':
+        return 'first';
+      default:
+        return 'neutral';
+    }
+  };
+
   return (
     <div
       className={cn('listing-detail-header', className)}
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--ds-spacing-2)',
+        gap: 'var(--ds-spacing-3)',
       }}
     >
-      {/* Category badge */}
-      <Tag
-        data-size="sm"
-        data-color="neutral"
-        style={{ alignSelf: 'flex-start' }}
-      >
-        {category}
-      </Tag>
-
-      {/* Title row with capacity and actions */}
+      {/* Top row: Category badge + Actions */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          gap: 'var(--ds-spacing-4)',
+          alignItems: 'center',
           flexWrap: 'wrap',
+          gap: 'var(--ds-spacing-2)',
         }}
       >
-        {/* Title */}
-        <Heading
-          level={1}
-          data-size="xl"
-          style={{ margin: 0, flex: '1 1 auto' }}
+        {/* Category badge */}
+        <Tag
+          data-size="sm"
+          data-color={getTypeColor()}
         >
-          {title}
-        </Heading>
+          {category}
+        </Tag>
 
-        {/* Right side: Capacity + Actions */}
+        {/* Action buttons */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-3)',
-            flexShrink: 0,
+            gap: 'var(--ds-spacing-2)',
           }}
         >
-          {/* Capacity badge */}
-          {capacity && (
-            <div
+          {(onFavorite || onAuthRequired) && (
+            <FavoriteButton
+              isFavorited={isFavorited}
+              isAuthenticated={isAuthenticated}
+              isLoading={isFavoriteLoading}
+              onToggle={onFavorite || (() => {})}
+              onAuthRequired={onAuthRequired || (() => {})}
+              variant="icon"
+              size="md"
+            />
+          )}
+          {shareData ? (
+            <ShareButton
+              shareData={shareData}
+              utmParams={shareUtmParams || {}}
+              variant="icon"
+              size="md"
+              {...(onShare ? { onShare: (platform?: SharePlatform) => onShare(platform) } : {})}
+            />
+          ) : onShare ? (
+            <button
+              type="button"
+              onClick={() => { onShare(); }}
+              aria-label="Del"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 'var(--ds-spacing-2)',
-                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-info-surface-default)',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                border: '1px solid var(--ds-color-neutral-border-default)',
                 borderRadius: 'var(--ds-border-radius-full)',
-                color: 'var(--ds-color-info-text-default)',
-                fontSize: 'var(--ds-font-size-sm)',
-                fontWeight: 'var(--ds-font-weight-medium)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
             >
-              <UsersIcon size={16} />
-              <span>{capacity} pers</span>
-            </div>
-          )}
-
-          {/* Action buttons */}
-          {(onFavorite || onShare) && (
-            <div
-              style={{
-                display: 'flex',
-                gap: 'var(--ds-spacing-2)',
-              }}
-            >
-              {onFavorite && (
-                <button
-                  type="button"
-                  onClick={onFavorite}
-                  aria-label={isFavorited ? 'Fjern fra favoritter' : 'Legg til favoritter'}
-                  aria-pressed={isFavorited}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                    backgroundColor: isFavorited
-                      ? 'var(--ds-color-danger-surface-default)'
-                      : 'var(--ds-color-neutral-background-default)',
-                    color: isFavorited
-                      ? 'var(--ds-color-danger-base-default)'
-                      : 'var(--ds-color-neutral-text-subtle)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <HeartIcon size={18} />
-                </button>
-              )}
-              {onShare && (
-                <button
-                  type="button"
-                  onClick={onShare}
-                  aria-label="Del"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                    backgroundColor: 'var(--ds-color-neutral-background-default)',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <ShareIcon size={16} />
-                </button>
-              )}
-            </div>
-          )}
+              <ShareIcon size={16} />
+            </button>
+          ) : null}
         </div>
       </div>
+
+      {/* Title */}
+      <Heading
+        level={1}
+        data-size="xl"
+        style={{ margin: 0 }}
+      >
+        {title}
+      </Heading>
+
+      {/* Key Facts Row */}
+      {effectiveKeyFacts.length > 0 && (
+        <KeyFactsRow
+          facts={effectiveKeyFacts}
+          variant="default"
+        />
+      )}
 
       {/* Location */}
       <Paragraph

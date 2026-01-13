@@ -1,0 +1,139 @@
+/**
+ * Booking Types
+ * Single Responsibility: All booking-related type definitions
+ */
+
+import type { TenantEntity, BookingStatus, PaymentStatus, AllocationStatus, BaseQueryParams } from './enums';
+
+// =============================================================================
+// Booking Entity
+// =============================================================================
+
+export interface BookingMetadata {
+  attendees?: number;
+  equipment?: string[];
+  recurring?: boolean;
+  frequency?: string;
+  weekdays?: number[];
+}
+
+export interface Booking extends TenantEntity {
+  listingId: string;
+  userId: string;
+  organizationId?: string;
+  status: BookingStatus;
+  paymentStatus?: PaymentStatus;
+  startTime: string;
+  endTime: string;
+  quantity?: number;
+  totalPrice: string;
+  currency: string;
+  notes?: string;
+  metadata?: BookingMetadata;
+  // Joined/computed fields from API
+  userName?: string;
+  listingName?: string;
+  organizationName?: string;
+}
+
+// =============================================================================
+// Booking DTOs
+// =============================================================================
+
+export interface CreateBookingDTO {
+  listingId: string;
+  startTime: string | Date;
+  endTime: string | Date;
+  userId?: string;
+  notes?: string;
+  totalPrice?: number;
+  metadata?: BookingMetadata;
+}
+
+export interface UpdateBookingDTO {
+  startTime?: string | Date;
+  endTime?: string | Date;
+  notes?: string;
+  metadata?: BookingMetadata;
+}
+
+export interface CancelBookingDTO {
+  reason?: string;
+}
+
+export interface BookingQueryParams extends BaseQueryParams {
+  status?: BookingStatus;
+  listingId?: string;
+  userId?: string;
+  organizationId?: string;
+  from?: string;
+  to?: string;
+}
+
+// =============================================================================
+// Booking Related Types
+// =============================================================================
+
+export interface BookingPricing {
+  listingId: string;
+  startTime: string;
+  endTime: string;
+  durationHours: number;
+  basePrice: number;
+  discount: number;
+  totalPrice: number;
+  currency: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  listingId: string;
+  listingName?: string;
+  title?: string;
+  start: string;
+  end: string;
+  // Alias properties for compatibility
+  startTime?: string;
+  endTime?: string;
+  status: string;
+  bookingId?: string;
+  userName?: string;
+  organizationName?: string;
+  color?: string;
+}
+
+export interface CalendarQueryParams {
+  listingId?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+// =============================================================================
+// Allocation Types
+// =============================================================================
+
+export interface Allocation extends TenantEntity {
+  listingId: string;
+  bookingId?: string;
+  startTime: string;
+  endTime: string;
+  quantity?: number;
+  allocationType?: 'BOOKING' | 'BLOCK' | 'MAINTENANCE' | 'SEASONAL';
+  status: AllocationStatus;
+  title?: string;
+  notes?: string;
+}
+
+export interface CreateAllocationDTO {
+  listingId: string;
+  startTime: string | Date;
+  endTime: string | Date;
+  title?: string;
+  status?: AllocationStatus;
+  notes?: string;
+  recurring?: {
+    frequency: 'daily' | 'weekly' | 'monthly';
+    endDate: string;
+    weekdays?: number[];
+  };
+}

@@ -2,7 +2,7 @@
  * ListingDetailPage
  *
  * Full listing detail page with all tabs and booking functionality.
- * Fetches real listing data from API via @xala/sdk.
+ * Fetches real listing data from API via @digilist/client-sdk.
  */
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -16,24 +16,21 @@ import {
   ContactInfoCard,
   LocationCard,
   OpeningHoursCard,
-  BookingStepper,
-  AvailabilityCalendar,
+  UnifiedBookingEngine,
   GuidelinesTab,
   FAQTab,
-  BookingFormModal,
-  BookingConfirmation,
-  BookingSuccess,
-  Tabs,
+  ListingTabs,
+  TabContent,
+  TabEmptyState,
+  RequireAuthModal,
   Heading,
   Paragraph,
-  Button,
   Spinner,
   SparklesIcon,
+  determineBookingMode,
 } from '@xala/ds';
 import type {
   ListingDetail,
-  TimeSlot,
-  BookingStep,
   BreadcrumbItem,
   GalleryImage,
   Facility,
@@ -41,9 +38,16 @@ import type {
   OpeningHoursDay,
   GuidelineSection,
   FAQItem,
-  BookingDetails,
+  BookingConfig,
+  BookingSelection,
+  BookingFormData,
+  AvailabilitySlot,
+  BookingPriceUnit,
+  KeyFact,
+  TabConfig,
+  ShareData,
 } from '@xala/ds';
-import { useListing, type Listing } from '@xala/sdk';
+import { useListing, type Listing } from '@digilist/client-sdk';
 
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -52,10 +56,11 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
  * Transform API Listing to ListingDetail format used by components
  */
 function transformApiListingToDetail(apiListing: Listing): ListingDetail {
-  const metadata = apiListing.metadata || {};
+  // Cast to Record for flexible property access - API metadata can have arbitrary fields
+  const metadata = (apiListing.metadata || {}) as Record<string, unknown>;
 
   // Transform images
-  const images: GalleryImage[] = (apiListing.images || []).map((src, index) => ({
+  const images: GalleryImage[] = (apiListing.images || []).map((src: string, index: number) => ({
     id: `${index + 1}`,
     src,
     alt: `${apiListing.name} - Bilde ${index + 1}`,
@@ -218,36 +223,36 @@ const defaultFaq: FAQItem[] = [
   },
 ];
 
-// Mock booking steps
-const bookingSteps: BookingStep[] = [
-  { id: 'select', label: 'Velg tidspunkter' },
-  { id: 'details', label: 'Detaljer og vilkår' },
-  { id: 'confirm', label: 'Bekreft' },
-  { id: 'send', label: 'Send' },
-];
-
-// Generate mock time slots for the calendar
-function generateMockTimeSlots(startDate: Date): TimeSlot[] {
-  const slots: TimeSlot[] = [];
+// Generate mock availability slots for the calendar
+function generateMockAvailabilitySlots(startDate: Date): AvailabilitySlot[] {
+  const slots: AvailabilitySlot[] = [];
 
   for (let day = 0; day < 7; day++) {
     const date = new Date(startDate);
     date.setDate(date.getDate() + day);
 
-    for (let hour = 8; hour <= 17; hour++) {
+    for (let hour = 8; hour <= 19; hour++) {
       // Randomly assign status, but more likely to be available
       const random = Math.random();
-      let status: 'available' | 'occupied' | 'unavailable';
-      if (random < 0.6) {
+      let status: 'available' | 'occupied' | 'blocked' | 'past';
+
+      // Check if this is in the past
+      const slotDate = new Date(date);
+      slotDate.setHours(hour, 0, 0, 0);
+      const now = new Date();
+
+      if (slotDate < now) {
+        status = 'past';
+      } else if (random < 0.65) {
         status = 'available';
       } else if (random < 0.85) {
         status = 'occupied';
       } else {
-        status = 'unavailable';
+        status = 'blocked';
       }
 
       slots.push({
-        id: `${date.toISOString()}-${hour}`,
+        id: `${date.toISOString().split('T')[0]}-${hour}`,
         date: new Date(date),
         startTime: `${hour.toString().padStart(2, '0')}:00`,
         endTime: `${(hour + 1).toString().padStart(2, '0')}:00`,
@@ -257,6 +262,66 @@ function generateMockTimeSlots(startDate: Date): TimeSlot[] {
   }
 
   return slots;
+}
+
+// Create booking config from listing data
+function createBookingConfig(listing: ListingDetail): BookingConfig {
+  const listingType = (listing.listingType || 'SPACE') as BookingConfig['listingType'];
+  const priceUnit = (listing.priceUnit || 'time') as BookingPriceUnit;
+
+  // Map Norwegian price unit to English
+  const unitMap: Record<string, BookingPriceUnit> = {
+    'time': 'hour',
+    'dag': 'day',
+    'uke': 'week',
+    'måned': 'month',
+    'arrangement': 'booking',
+    'hour': 'hour',
+    'day': 'day',
+    'week': 'week',
+    'month': 'month',
+  };
+
+  const normalizedUnit = unitMap[priceUnit] || 'hour';
+  const mode = determineBookingMode(listingType, normalizedUnit);
+
+  const config: BookingConfig = {
+    listingId: listing.id,
+    listingType,
+    mode,
+    pricing: {
+      basePrice: listing.price || 0,
+      currency: listing.currency || 'NOK',
+      unit: normalizedUnit,
+      vatPercentage: 25,
+    },
+    rules: {
+      requireApproval: false,
+      minLeadTimeHours: 24,
+      maxAdvanceDays: 90,
+      cancellationPolicy: 'moderate',
+      freeCancellationHours: 48,
+      allowSameDayBooking: true,
+    },
+    schedule: [
+      { dayOfWeek: 1, isOpen: true, openTime: '08:00', closeTime: '22:00' },
+      { dayOfWeek: 2, isOpen: true, openTime: '08:00', closeTime: '22:00' },
+      { dayOfWeek: 3, isOpen: true, openTime: '08:00', closeTime: '22:00' },
+      { dayOfWeek: 4, isOpen: true, openTime: '08:00', closeTime: '22:00' },
+      { dayOfWeek: 5, isOpen: true, openTime: '08:00', closeTime: '22:00' },
+      { dayOfWeek: 6, isOpen: true, openTime: '09:00', closeTime: '18:00' },
+      { dayOfWeek: 0, isOpen: false },
+    ],
+    slotDurationMinutes: 60,
+    bufferMinutes: 0,
+  };
+
+  // Add optional maxAttendees if listing has capacity
+  if (listing.capacity !== undefined) {
+    config.rules.maxAttendees = listing.capacity;
+  }
+
+  return config;
 }
 
 // Mock listing data
@@ -430,9 +495,8 @@ export function ListingDetailPage(): React.ReactElement {
   // Fetch listing data from API
   const { data: apiResponse, isLoading, error } = useListing(params.id || '');
 
-  // State for booking flow
+  // State for booking flow with UnifiedBookingEngine
   const [currentBookingStep, setCurrentBookingStep] = React.useState(0);
-  const [selectedSlots, setSelectedSlots] = React.useState<TimeSlot[]>([]);
   const [selectedServices, setSelectedServices] = React.useState<string[]>([]);
   const [calendarStartDate, setCalendarStartDate] = React.useState(() => {
     const today = new Date();
@@ -442,20 +506,16 @@ export function ListingDetailPage(): React.ReactElement {
     return new Date(today.setDate(diff));
   });
 
-  // Booking modal and form state
-  const [showBookingModal, setShowBookingModal] = React.useState(false);
-  const [bookingDetails, setBookingDetails] = React.useState<BookingDetails | null>(null);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [bookingReference, setBookingReference] = React.useState<string | null>(null);
-
-  // Generate time slots for current week
-  const timeSlots = React.useMemo(
-    () => generateMockTimeSlots(calendarStartDate),
-    [calendarStartDate]
-  );
-
   // Active tab state
   const [activeTab, setActiveTab] = React.useState('overview');
+
+  // Favorites state
+  const [isFavorited, setIsFavorited] = React.useState(false);
+  const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+
+  // Mock auth state - in production this would come from auth context
+  const isAuthenticated = false; // Set to false to test auth gating
 
   // Transform API data to ListingDetail format, or use mock data as fallback
   const listing: ListingDetail = React.useMemo(() => {
@@ -465,15 +525,166 @@ export function ListingDetailPage(): React.ReactElement {
     return mockListingDetail;
   }, [apiResponse]);
 
+  // Generate availability slots for current week
+  const availabilitySlots = React.useMemo(
+    () => generateMockAvailabilitySlots(calendarStartDate),
+    [calendarStartDate]
+  );
+
+  // Create booking configuration from listing
+  const bookingConfig = React.useMemo(
+    () => createBookingConfig(listing),
+    [listing]
+  );
+
+  // Handle service selection - useCallback to maintain stable reference
+  const handleServiceSelect = React.useCallback((serviceId: string, selected: boolean) => {
+    setSelectedServices((prev) =>
+      selected ? [...prev, serviceId] : prev.filter((id) => id !== serviceId)
+    );
+  }, []);
+
+  // Build key facts from listing
+  const keyFacts = React.useMemo((): KeyFact[] => {
+    const facts: KeyFact[] = [];
+
+    if (listing.capacity) {
+      facts.push({
+        type: 'capacity',
+        label: 'Kapasitet',
+        value: `${listing.capacity} personer`,
+      });
+    }
+
+    if (listing.price) {
+      facts.push({
+        type: 'bookingMode',
+        label: 'Pris',
+        value: `${listing.price} kr/${listing.priceUnit || 'time'}`,
+      });
+    }
+
+    return facts;
+  }, [listing]);
+
+  // Share data
+  const shareData: ShareData = React.useMemo(() => ({
+    url: typeof window !== 'undefined' ? window.location.href : '',
+    title: listing.name,
+    description: listing.description?.slice(0, 150) || `Book ${listing.name}`,
+  }), [listing]);
+
+  // Build tab configuration
+  const tabConfig: TabConfig[] = React.useMemo(() => [
+    {
+      id: 'overview',
+      label: 'Oversikt',
+      visible: true,
+      content: (
+        <TabContent>
+          {/* Description */}
+          <section>
+            <Heading
+              level={2}
+              data-size="sm"
+              style={{
+                marginBottom: 'var(--ds-spacing-3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+              }}
+            >
+              <SparklesIcon size={20} style={{ color: 'var(--ds-color-accent-base-default)' }} />
+              Beskrivelse
+            </Heading>
+            <Paragraph
+              data-size="sm"
+              style={{
+                whiteSpace: 'pre-line',
+                color: 'var(--ds-color-neutral-text-default)',
+                lineHeight: '1.7',
+              }}
+            >
+              {listing.description}
+            </Paragraph>
+          </section>
+
+          {/* Facilities */}
+          {listing.facilities.length > 0 && (
+            <section>
+              <Heading
+                level={3}
+                data-size="xs"
+                style={{ marginBottom: 'var(--ds-spacing-3)' }}
+              >
+                Fasiliteter
+              </Heading>
+              <FacilityChips facilities={listing.facilities} />
+            </section>
+          )}
+
+          {/* Additional Services */}
+          {listing.additionalServices && listing.additionalServices.length > 0 && (
+            <section>
+              <Heading
+                level={3}
+                data-size="xs"
+                style={{ marginBottom: 'var(--ds-spacing-3)' }}
+              >
+                Tilleggstjenester
+              </Heading>
+              <AdditionalServicesList
+                services={listing.additionalServices}
+                selectedServices={selectedServices}
+                onServiceSelect={handleServiceSelect}
+                title=""
+              />
+            </section>
+          )}
+        </TabContent>
+      ),
+    },
+    {
+      id: 'guidelines',
+      label: 'Retningslinjer',
+      visible: !!listing.guidelines && listing.guidelines.length > 0,
+      content: listing.guidelines ? (
+        <TabContent>
+          <GuidelinesTab sections={listing.guidelines} />
+        </TabContent>
+      ) : (
+        <TabEmptyState
+          title="Ingen retningslinjer"
+          description="Det er ikke lagt til retningslinjer for dette lokalet."
+        />
+      ),
+    },
+    {
+      id: 'faq',
+      label: 'Spørsmål',
+      visible: !!listing.faq && listing.faq.length > 0,
+      ...(listing.faq && listing.faq.length > 0 ? { badge: listing.faq.length } : {}),
+      content: listing.faq ? (
+        <TabContent>
+          <FAQTab items={listing.faq} />
+        </TabContent>
+      ) : (
+        <TabEmptyState
+          title="Ingen spørsmål"
+          description="Det er ikke lagt til ofte stilte spørsmål for dette lokalet."
+        />
+      ),
+    },
+  ], [listing, selectedServices, handleServiceSelect]);
+
   // Log API errors but fall back to mock data instead of showing error page
-  // This provides a better UX while the API is being fixed
   React.useEffect(() => {
     if (error) {
       console.warn('API error loading listing, using mock data:', error);
     }
   }, [error]);
 
-  // Show loading state
+  // Show loading state - AFTER all hooks are defined
   if (isLoading) {
     return (
       <ContentLayout maxWidth="1440px" className="main-content-layout">
@@ -498,104 +709,35 @@ export function ListingDetailPage(): React.ReactElement {
     );
   }
 
-  // Breadcrumb items
+  // Breadcrumb items - defined after hooks to use listing.name
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Hjem', href: '/', onClick: () => navigate('/') },
     { label: 'Fasiliteter', href: '/', onClick: () => navigate('/') },
     { label: listing.name },
   ];
 
-  // Handle slot click
-  const handleSlotClick = (slot: TimeSlot) => {
-    setSelectedSlots((prev) => {
-      const exists = prev.some(
-        (s) =>
-          new Date(s.date).toDateString() ===
-            new Date(slot.date).toDateString() &&
-          s.startTime === slot.startTime
-      );
-
-      if (exists) {
-        return prev.filter(
-          (s) =>
-            !(
-              new Date(s.date).toDateString() ===
-                new Date(slot.date).toDateString() &&
-              s.startTime === slot.startTime
-            )
-        );
-      } else {
-        return [...prev, slot];
-      }
-    });
+  // Handle favorite toggle
+  const handleFavoriteToggle = async () => {
+    setIsFavoriteLoading(true);
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsFavorited((prev) => !prev);
+      // In production: auditLog({ type: isFavorited ? 'FAVORITE_REMOVED' : 'FAVORITE_ADDED', listingId: listing.id });
+    } finally {
+      setIsFavoriteLoading(false);
+    }
   };
 
-  // Handle week navigation
-  const handleWeekChange = (direction: 'prev' | 'next') => {
-    setCalendarStartDate((prev) => {
-      const newDate = new Date(prev);
-      newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
-      return newDate;
-    });
-  };
-
-  // Handle service selection
-  const handleServiceSelect = (serviceId: string, selected: boolean) => {
-    setSelectedServices((prev) =>
-      selected ? [...prev, serviceId] : prev.filter((id) => id !== serviceId)
-    );
-  };
-
-  // Handle opening the booking modal (Step 1 -> Step 2)
-  const handleContinueToDetails = () => {
-    setShowBookingModal(true);
-  };
-
-  // Handle booking form confirmation (Step 2 -> Step 3)
-  const handleBookingFormConfirm = (details: BookingDetails) => {
-    setBookingDetails(details);
-    setShowBookingModal(false);
-    setCurrentBookingStep(2); // Move to confirmation step
-  };
-
-  // Handle going back to form from confirmation
-  const handleBackToForm = () => {
-    setShowBookingModal(true);
-    setCurrentBookingStep(1);
-  };
-
-  // Handle final booking submission (Step 3 -> Step 4)
-  const handleFinalConfirm = async () => {
-    setIsSubmitting(true);
-
+  // Handle booking submission from UnifiedBookingEngine
+  const handleBookingSubmit = async (selection: BookingSelection, formData: BookingFormData) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // Generate reference number
-    const ref = `BK-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    setBookingReference(ref);
-    setIsSubmitting(false);
-    setCurrentBookingStep(3); // Move to success step
-  };
+    // In production, this would send the booking to the API
+    console.log('Booking submitted:', { selection, formData, listingId: listing.id });
 
-  // Handle starting a new booking
-  const handleNewBooking = () => {
-    setCurrentBookingStep(0);
-    setSelectedSlots([]);
-    setSelectedServices([]);
-    setBookingDetails(null);
-    setBookingReference(null);
-  };
-
-  // Handle going back to listing overview
-  const handleBackToListing = () => {
-    setCurrentBookingStep(0);
-    setSelectedSlots([]);
-    setSelectedServices([]);
-    setBookingDetails(null);
-    setBookingReference(null);
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The UnifiedBookingEngine handles the success state internally
   };
 
   return (
@@ -623,17 +765,47 @@ export function ListingDetailPage(): React.ReactElement {
           />
         </div>
 
-        {/* Header */}
+        {/* Header with enhanced features */}
         <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
           <ListingDetailHeader
             category={listing.category}
+            listingType={listing.listingType}
             title={listing.name}
             location={listing.location}
-            {...(listing.capacity ? { capacity: listing.capacity } : {})}
-            onFavorite={() => console.log('Toggle favorite')}
-            onShare={() => console.log('Share listing')}
+            keyFacts={keyFacts}
+            isFavorited={isFavorited}
+            isAuthenticated={isAuthenticated}
+            isFavoriteLoading={isFavoriteLoading}
+            onFavorite={handleFavoriteToggle}
+            onAuthRequired={() => setShowAuthModal(true)}
+            shareData={shareData}
+            shareUtmParams={{
+              source: 'listing_detail',
+              medium: 'web',
+              campaign: 'share',
+            }}
+            onShare={() => {
+              // Audit log share event
+              console.log('Share tracked:', listing.id);
+            }}
           />
         </div>
+
+        {/* Auth Required Modal for Favorites */}
+        <RequireAuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onLogin={() => {
+            setShowAuthModal(false);
+            // Navigate to login
+            navigate('/login?redirect=' + encodeURIComponent(window.location.pathname));
+          }}
+          onRegister={() => {
+            setShowAuthModal(false);
+            navigate('/register?redirect=' + encodeURIComponent(window.location.pathname));
+          }}
+          actionContext="favorite"
+        />
 
         {/* Main Content Grid */}
         <div
@@ -647,320 +819,29 @@ export function ListingDetailPage(): React.ReactElement {
         >
           {/* Left Column - Main Content */}
           <div>
-            {/* Enhanced Tabs - Elegant Underline Style */}
+            {/* Enhanced Tabs using ListingTabs component */}
             <div className="elegant-tabs">
-              <Tabs
-                defaultValue="overview"
-                value={activeTab}
-                onChange={setActiveTab}
-              >
-                <Tabs.List>
-                  <Tabs.Tab value="overview">
-                    <span className="tab-content">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <line x1="9" y1="9" x2="15" y2="9" />
-                        <line x1="9" y1="13" x2="15" y2="13" />
-                        <line x1="9" y1="17" x2="12" y2="17" />
-                      </svg>
-                      Oversikt
-                    </span>
-                  </Tabs.Tab>
-                  <Tabs.Tab value="guidelines">
-                    <span className="tab-content">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="16" y1="13" x2="8" y2="13" />
-                        <line x1="16" y1="17" x2="8" y2="17" />
-                      </svg>
-                      Retningslinjer
-                    </span>
-                  </Tabs.Tab>
-                  <Tabs.Tab value="faq">
-                    <span className="tab-content">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                        <circle cx="12" cy="17" r="0.5" fill="currentColor" />
-                      </svg>
-                      Spørsmål
-                    </span>
-                  </Tabs.Tab>
-                </Tabs.List>
-
-                {/* Overview Tab */}
-                <Tabs.Panel value="overview">
-                  <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
-                    {/* Description */}
-                    <section>
-                      <Heading
-                        level={2}
-                        data-size="sm"
-                        style={{
-                          marginBottom: 'var(--ds-spacing-3)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 'var(--ds-spacing-2)',
-                        }}
-                      >
-                        <SparklesIcon size={20} style={{ color: 'var(--ds-color-accent-base-default)' }} />
-                        Beskrivelse
-                      </Heading>
-                      <Paragraph
-                        data-size="sm"
-                        style={{
-                          whiteSpace: 'pre-line',
-                          color: 'var(--ds-color-neutral-text-default)',
-                          lineHeight: '1.7',
-                        }}
-                      >
-                        {listing.description}
-                      </Paragraph>
-                    </section>
-
-                    {/* Facilities */}
-                    {listing.facilities.length > 0 && (
-                      <section style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                        <Heading
-                          level={3}
-                          data-size="xs"
-                          style={{ marginBottom: 'var(--ds-spacing-3)' }}
-                        >
-                          Fasiliteter
-                        </Heading>
-                        <FacilityChips facilities={listing.facilities} />
-                      </section>
-                    )}
-
-                    {/* Additional Services */}
-                    {listing.additionalServices &&
-                      listing.additionalServices.length > 0 && (
-                        <section style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                          <Heading
-                            level={3}
-                            data-size="xs"
-                            style={{ marginBottom: 'var(--ds-spacing-3)' }}
-                          >
-                            Tilleggstjenester
-                          </Heading>
-                          <AdditionalServicesList
-                            services={listing.additionalServices}
-                            selectedServices={selectedServices}
-                            onServiceSelect={handleServiceSelect}
-                            title=""
-                          />
-                        </section>
-                      )}
-                  </div>
-                </Tabs.Panel>
-
-                {/* Guidelines Tab */}
-                <Tabs.Panel value="guidelines">
-                  <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
-                    {listing.guidelines && (
-                      <GuidelinesTab sections={listing.guidelines} />
-                    )}
-                  </div>
-                </Tabs.Panel>
-
-                {/* FAQ Tab */}
-                <Tabs.Panel value="faq">
-                  <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
-                    {listing.faq && <FAQTab items={listing.faq} />}
-                  </div>
-                </Tabs.Panel>
-              </Tabs>
-            </div>
-
-            {/* Booking Section - Step-based Flow */}
-            <div
-              id="booking-calendar"
-              style={{
-                marginTop: 'var(--ds-spacing-8)',
-                padding: 'var(--ds-spacing-6)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-xl)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)',
-              }}
-              className="booking-section"
-            >
-              {/* Section Header */}
-              <div style={{ marginBottom: 'var(--ds-spacing-5)' }}>
-                <Heading
-                  level={2}
-                  data-size="lg"
-                  style={{ margin: 0 }}
-                >
-                  Ledighetskalender
-                </Heading>
-                <Paragraph
-                  data-size="sm"
-                  style={{
-                    margin: 0,
-                    marginTop: 'var(--ds-spacing-2)',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                  }}
-                >
-                  Legg inn din reservasjon raskt og enkelt på 4 steg.
-                </Paragraph>
-              </div>
-
-              {/* Booking Stepper */}
-              <BookingStepper
-                steps={bookingSteps}
-                currentStep={currentBookingStep}
-                onStepClick={(index) => {
-                  // Allow going back to previous steps
-                  if (index < currentBookingStep) {
-                    if (index === 0) {
-                      // Going back to slot selection
-                      setCurrentBookingStep(0);
-                    } else if (index === 1 && bookingDetails) {
-                      // Going back to form
-                      setShowBookingModal(true);
-                    } else if (index === 2 && bookingDetails) {
-                      // Going to confirmation
-                      setCurrentBookingStep(2);
-                    }
-                  }
-                }}
+              <ListingTabs
+                tabs={tabConfig}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                variant="subtle"
               />
-
-              {/* Step Content */}
-              <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                {/* Step 1: Select Time Slots */}
-                {currentBookingStep === 0 && (
-                  <>
-                    <AvailabilityCalendar
-                      startDate={calendarStartDate}
-                      timeSlots={timeSlots}
-                      selectedSlots={selectedSlots}
-                      onSlotClick={handleSlotClick}
-                      onWeekChange={handleWeekChange}
-                      showTips={false}
-                    />
-
-                    {/* Selected Slots Summary */}
-                    {selectedSlots.length > 0 && (
-                      <div
-                        style={{
-                          marginTop: 'var(--ds-spacing-5)',
-                          padding: 'var(--ds-spacing-4)',
-                          backgroundColor: 'var(--ds-color-accent-surface-default)',
-                          borderRadius: 'var(--ds-border-radius-lg)',
-                        }}
-                      >
-                        <Heading
-                          level={3}
-                          data-size="xs"
-                          style={{
-                            marginBottom: 'var(--ds-spacing-3)',
-                            color: 'var(--ds-color-accent-text-default)',
-                          }}
-                        >
-                          Valgte tidspunkter ({selectedSlots.length})
-                        </Heading>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: 'var(--ds-spacing-2)',
-                          }}
-                        >
-                          {selectedSlots.map((slot) => (
-                            <div
-                              key={slot.id}
-                              style={{
-                                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                                backgroundColor: 'var(--ds-color-accent-base-default)',
-                                borderRadius: 'var(--ds-border-radius-full)',
-                                color: 'var(--ds-color-accent-contrast-default)',
-                              }}
-                            >
-                              <Paragraph
-                                data-size="xs"
-                                style={{
-                                  margin: 0,
-                                  fontWeight: 'var(--ds-font-weight-medium)',
-                                }}
-                              >
-                                {new Date(slot.date).toLocaleDateString('nb-NO', {
-                                  weekday: 'short',
-                                  day: 'numeric',
-                                  month: 'short',
-                                })}{' '}
-                                kl. {slot.startTime}
-                              </Paragraph>
-                            </div>
-                          ))}
-                        </div>
-                        <Button
-                          type="button"
-                          variant="primary"
-                          data-color="accent"
-                          style={{
-                            marginTop: 'var(--ds-spacing-4)',
-                            width: '100%',
-                          }}
-                          onClick={handleContinueToDetails}
-                        >
-                          Fortsett til detaljer
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {/* Step 2: Confirmation Review */}
-                {currentBookingStep === 2 && bookingDetails && (
-                  <BookingConfirmation
-                    bookingDetails={bookingDetails}
-                    selectedSlots={selectedSlots}
-                    selectedServices={selectedServices}
-                    availableServices={listing.additionalServices}
-                    listingName={listing.name}
-                    basePrice={listing.price}
-                    currency={listing.currency}
-                    isSubmitting={isSubmitting}
-                    onBack={handleBackToForm}
-                    onConfirm={handleFinalConfirm}
-                  />
-                )}
-
-                {/* Step 3: Success */}
-                {currentBookingStep === 3 && bookingDetails && (
-                  <BookingSuccess
-                    bookingReference={bookingReference || undefined}
-                    bookingDetails={bookingDetails}
-                    listingName={listing.name}
-                    venueEmail={listing.contact?.email}
-                    venuePhone={listing.contact?.phone}
-                    onBackToListing={handleBackToListing}
-                    onNewBooking={handleNewBooking}
-                  />
-                )}
-              </div>
             </div>
 
-            {/* Booking Form Modal */}
-            <BookingFormModal
-              open={showBookingModal}
-              onClose={() => {
-                setShowBookingModal(false);
-                if (!bookingDetails) {
-                  setCurrentBookingStep(0);
-                }
-              }}
-              selectedSlots={selectedSlots}
-              selectedServices={selectedServices}
-              availableServices={listing.additionalServices}
-              listingName={listing.name}
-              basePrice={listing.price}
-              currency={listing.currency}
-              maxCapacity={listing.capacity}
-              onConfirm={handleBookingFormConfirm}
-            />
+            {/* Unified Booking Engine - Adaptive to listing type */}
+            <div id="booking-section" style={{ marginTop: 'var(--ds-spacing-8)' }}>
+              <UnifiedBookingEngine
+                config={bookingConfig}
+                listingName={listing.name}
+                {...(listing.images[0]?.src ? { listingImage: listing.images[0].src } : {})}
+                availableSlots={availabilitySlots}
+                additionalServices={listing.additionalServices || []}
+                currentStep={currentBookingStep}
+                onStepChange={setCurrentBookingStep}
+                onSubmit={handleBookingSubmit}
+              />
+            </div>
           </div>
 
           {/* Right Column - Sidebar */}

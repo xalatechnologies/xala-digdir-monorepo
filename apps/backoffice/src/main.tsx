@@ -1,16 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { initializeSdk } from '@xala/sdk';
+import { initializeClient } from '@digilist/client-sdk';
 
 import '@xala/ds/styles';
 import './root.css';
 import { App } from './App';
 
 // Initialize SDK with configuration
-// Note: Using mock auth for now - these values will be used when real API is connected
-initializeSdk({
-  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+initializeClient({
+  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
   tenantId: import.meta.env.VITE_TENANT_ID || 'default',
   licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
 });

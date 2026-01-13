@@ -70,15 +70,20 @@ function formatTimeSlots(slots: TimeSlot[]): string[] {
 
   return Array.from(byDate.entries()).map(([_dateKey, dateSlots]) => {
     const sorted = dateSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-    const date = new Date(sorted[0].date);
+    const firstSlot = sorted[0];
+    const lastSlot = sorted[sorted.length - 1];
+    if (!firstSlot || !lastSlot) {
+      return 'Ingen tidspunkter';
+    }
+    const date = new Date(firstSlot.date);
     const dateStr = date.toLocaleDateString('nb-NO', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
     });
-    const startTime = sorted[0].startTime;
-    const lastSlot = sorted[sorted.length - 1];
-    const endTime = lastSlot.endTime || `${parseInt(lastSlot.startTime.split(':')[0]) + 1}:00`;
+    const startTime = firstSlot.startTime;
+    const hourPart = lastSlot.startTime.split(':')[0] ?? '0';
+    const endTime = lastSlot.endTime || `${parseInt(hourPart) + 1}:00`;
 
     return `${dateStr}, kl. ${startTime} - ${endTime}`;
   });

@@ -23,8 +23,8 @@ import {
   HeaderSearch,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode, ListingType } from '@xala/ds';
-import { useUiListings, isUsingMockData } from '@xala/sdk';
-import type { UiListing } from '@xala/sdk';
+import { useUiListings, isUsingMockData } from '@digilist/client-sdk';
+import type { UiListing } from '@digilist/client-sdk';
 import { demoSearchResults, mockListings, listingTypeOptions, capacityOptions } from '../data/mock-data';
 
 // Mapbox token from environment

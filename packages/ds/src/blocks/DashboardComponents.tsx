@@ -5,9 +5,10 @@
  * stat cards, activity feeds, and quick actions.
  */
 import * as React from 'react';
-import { Card, Heading, Paragraph, Badge } from '@digdir/designsystemet-react';
+import { Card, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { TrendUpIcon, TrendDownIcon } from '../primitives/icons';
 import { cn } from '../utils';
+import { StatusTag, type BadgeColor } from './StatusBadges';
 
 // =============================================================================
 // StatCard - KPI/Metric Display Card
@@ -141,7 +142,7 @@ const statusLabels: Record<ActivityStatus, string> = {
   rejected: 'Avslått',
 };
 
-const statusBadgeColors: Record<ActivityStatus, 'warning' | 'success' | 'danger'> = {
+const statusBadgeColors: Record<ActivityStatus, BadgeColor> = {
   pending: 'warning',
   approved: 'success',
   rejected: 'danger',
@@ -186,9 +187,9 @@ export function ActivityItem({
           >
             {title}
           </Paragraph>
-          <Badge data-color={badgeColor} data-size="sm">
+          <StatusTag color={badgeColor} size="sm">
             {statusLabels[status]}
-          </Badge>
+          </StatusTag>
         </div>
         <Paragraph
           data-size="xs"

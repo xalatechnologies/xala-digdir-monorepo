@@ -23,6 +23,6 @@
   "include": ["src"],
   "references": [
     { "path": "../../packages/ds" },
-    { "path": "../../packages/sdk" }
+    { "path": "../../packages/client-sdk" }
   ]
 }

@@ -6,19 +6,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@xala/ds/styles';
 
 // Initialize SDK with single-tenant configuration
-import { initializeSdk } from '@xala/sdk';
+import { initializeClient, isUsingMockData } from '@digilist/client-sdk';
 
-const licenseKey = import.meta.env.VITE_LICENSE_KEY || '';
-const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
-
-initializeSdk({
-  apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
+initializeClient({
+  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
   tenantId: import.meta.env.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  licenseKey,
-  useMockData,
+  licenseKey: import.meta.env.VITE_LICENSE_KEY || '',
 });
 
-if (useMockData) {
+if (isUsingMockData()) {
   console.info('[SDK] Running in mock data mode. Set VITE_LICENSE_KEY to enable API.');
 }
 

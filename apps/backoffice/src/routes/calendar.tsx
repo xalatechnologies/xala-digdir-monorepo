@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner } from '@xala/ds';
-import { useCalendarEvents, useListings, type CalendarEvent } from '@xala/sdk';
+import { useCalendarEvents, useListings, type CalendarEvent } from '@digilist/client-sdk';
 
 const ChevronLeftIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

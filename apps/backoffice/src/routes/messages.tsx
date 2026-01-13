@@ -7,7 +7,7 @@ import {
   useMarkMessagesRead,
   type Conversation,
   type Message,
-} from '@xala/sdk';
+} from '@digilist/client-sdk';
 
 function formatTime(dateString: string): string {
   const date = new Date(dateString);

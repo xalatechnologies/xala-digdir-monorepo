@@ -127,3 +127,61 @@ export type {
   ActivityFeedProps,
   QuickActionProps,
 } from './DashboardComponents';
+
+// Status Badge Components
+export {
+  StatusTag,
+  BookingStatusBadge,
+  PaymentStatusBadge,
+  ListingStatusBadge,
+  RequestStatusBadge,
+  SeasonalLeaseStatusBadge,
+  OrganizationStatusBadge,
+  UserStatusBadge,
+  GenericStatusBadge,
+  statusConfigs,
+} from './StatusBadges';
+export type {
+  StatusTagProps,
+  BadgeColor,
+  StatusBadgeConfig,
+  BookingStatusType,
+  BookingStatusBadgeProps,
+  PaymentStatusType,
+  PaymentStatusBadgeProps,
+  ListingStatusType,
+  ListingStatusBadgeProps,
+  RequestStatusType,
+  RequestStatusBadgeProps,
+  SeasonalLeaseStatusType,
+  SeasonalLeaseStatusBadgeProps,
+  OrganizationStatusType,
+  OrganizationStatusBadgeProps,
+  UserStatusType,
+  UserStatusBadgeProps,
+  GenericStatusBadgeProps,
+} from './StatusBadges';
+
+// Chart Components
+export { BarChart, VerticalBarChart } from './BarChart';
+export type {
+  BarChartDataItem,
+  BarChartProps,
+  VerticalBarChartProps,
+} from './BarChart';
+
+// Auth UI Components
+export {
+  LoadingScreen,
+  AccessDeniedScreen,
+  NotFoundScreen,
+  ErrorScreen,
+  PermissionGate,
+} from './AuthComponents';
+export type {
+  LoadingScreenProps,
+  AccessDeniedScreenProps,
+  NotFoundScreenProps,
+  ErrorScreenProps,
+  PermissionGateProps,
+} from './AuthComponents';

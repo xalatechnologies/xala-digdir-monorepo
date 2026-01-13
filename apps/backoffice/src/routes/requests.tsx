@@ -9,7 +9,7 @@ import {
   Dropdown,
   Spinner,
 } from '@xala/ds';
-import { useBookings, useConfirmBooking, useCancelBooking, type Booking } from '@xala/sdk';
+import { useBookings, useConfirmBooking, useCancelBooking, type Booking } from '@digilist/client-sdk';
 
 type RequestStatus = 'pending' | 'needs_info';
 

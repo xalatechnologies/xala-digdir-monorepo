@@ -11,13 +11,12 @@ import {
   Paragraph,
   Textfield,
   Textarea,
-  Select,
   Checkbox,
   Button,
-  NativeSelect,
+  Select,
 } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import { CalendarIcon, UsersIcon, ClockIcon, CloseIcon } from '../primitives/icons';
+import { CalendarIcon, ClockIcon, CloseIcon } from '../primitives/icons';
 import type { TimeSlot, BookingDetails, ActivityType, AdditionalService } from '../types/listing-detail';
 
 export interface BookingFormModalProps {
@@ -83,12 +82,17 @@ function formatSelectedSlots(slots: TimeSlot[]): { date: string; timeRange: stri
   })))];
 
   // Get time range
-  const startTime = sorted[0].startTime;
+  const firstSlot = sorted[0];
   const lastSlot = sorted[sorted.length - 1];
-  const endTime = lastSlot.endTime || `${parseInt(lastSlot.startTime.split(':')[0]) + 1}:00`;
+  if (!firstSlot || !lastSlot) {
+    return { date: 'Ingen valgt', timeRange: '' };
+  }
+  const startTime = firstSlot.startTime;
+  const hourPart = lastSlot.startTime.split(':')[0] ?? '0';
+  const endTime = lastSlot.endTime || `${parseInt(hourPart) + 1}:00`;
 
   return {
-    date: dates.length === 1 ? dates[0] : `${dates.length} dager valgt`,
+    date: dates.length === 1 ? dates[0] ?? 'Ukjent dato' : `${dates.length} dager valgt`,
     timeRange: `${startTime} - ${endTime}`
   };
 }
@@ -350,11 +354,11 @@ export function BookingFormModal({
               />
               <div style={{ marginTop: 'var(--ds-spacing-3)' }}>
                 <Checkbox
+                  aria-label="Vis formål i kalender"
                   checked={formData.showPurposeInCalendar || false}
                   onChange={(e) => updateField('showPurposeInCalendar', e.target.checked)}
-                >
-                  Vis formål i kalender
-                </Checkbox>
+                />
+                <span style={{ marginLeft: 'var(--ds-spacing-2)' }}>Vis formål i kalender</span>
               </div>
             </div>
 
@@ -368,11 +372,11 @@ export function BookingFormModal({
             >
               <div style={{ gridColumn: 'span 2' }}>
                 <Checkbox
+                  aria-label="Book flere dager"
                   checked={formData.bookMultipleDays || false}
                   onChange={(e) => updateField('bookMultipleDays', e.target.checked)}
-                >
-                  Book flere dager?
-                </Checkbox>
+                />
+                <span style={{ marginLeft: 'var(--ds-spacing-2)' }}>Book flere dager?</span>
                 {formData.bookMultipleDays && (
                   <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Du kan velge flere dager i kalenderen etter at du har sendt denne forespørselen.
@@ -406,17 +410,27 @@ export function BookingFormModal({
                 )}
               </div>
               <div>
-                <NativeSelect
-                  label="Type aktivitet"
+                <label style={{ display: 'block', fontSize: 'var(--ds-font-size-sm)', marginBottom: 'var(--ds-spacing-2)' }}>
+                  Type aktivitet
+                </label>
+                <select
                   value={formData.activityType || 'meeting'}
-                  onChange={(e) => updateField('activityType', e.target.value as ActivityType)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateField('activityType', e.target.value as ActivityType)}
+                  style={{
+                    width: '100%',
+                    padding: 'var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-neutral-border-default)',
+                    fontSize: 'var(--ds-font-size-md)',
+                    backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  }}
                 >
                   {activityTypeOptions.map(opt => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
                     </option>
                   ))}
-                </NativeSelect>
+                </select>
               </div>
             </div>
 
@@ -472,8 +486,11 @@ export function BookingFormModal({
 
             {/* Description */}
             <div>
+              <label style={{ display: 'block', fontSize: 'var(--ds-font-size-sm)', marginBottom: 'var(--ds-spacing-2)' }}>
+                Kort beskrivelse (valgfritt)
+              </label>
               <Textarea
-                label="Kort beskrivelse (valgfritt)"
+                aria-label="Kort beskrivelse"
                 value={formData.notes || ''}
                 onChange={(e) => updateField('notes', e.target.value)}
                 placeholder="Beskriv kort hva bookingen gjelder eller andre relevante detaljer..."
@@ -483,6 +500,7 @@ export function BookingFormModal({
 
             {/* Terms */}
             <div
+              id="terms-label"
               style={{
                 padding: 'var(--ds-spacing-4)',
                 backgroundColor: 'var(--ds-color-neutral-surface-default)',
@@ -494,6 +512,7 @@ export function BookingFormModal({
                 checked={formData.acceptedTerms}
                 onChange={(e) => updateField('acceptedTerms', e.target.checked)}
                 error={!!errors.acceptedTerms}
+                aria-labelledby="terms-label"
               >
                 Jeg godtar vilkår og betingelser for booking
               </Checkbox>

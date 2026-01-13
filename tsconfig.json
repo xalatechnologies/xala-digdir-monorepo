@@ -20,9 +20,8 @@
     { "path": "./packages/ds-themes" },
     { "path": "./packages/ds-registry" },
     { "path": "./packages/eslint-config" },
-    { "path": "./packages/sdk" },
+    { "path": "./packages/client-sdk" },
     { "path": "./apps/web" },
-    { "path": "./apps/api" },
     { "path": "./apps/backoffice" }
   ]
 }

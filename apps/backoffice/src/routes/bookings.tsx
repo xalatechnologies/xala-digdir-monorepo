@@ -15,7 +15,7 @@ import {
   useCancelBooking,
   type BookingStatus,
   type Booking,
-} from '@xala/sdk';
+} from '@digilist/client-sdk';
 
 const statusLabels: Record<BookingStatus, string> = {
   pending: 'Venter',

@@ -6,7 +6,7 @@
 import React from 'react';
 import { CalendarIcon, UserIcon, SettingsIcon, MapPinIcon } from '@xala/ds';
 import type { SearchResultGroup } from '@xala/ds';
-import type { UiListing } from '@xala/sdk';
+import type { UiListing } from '@digilist/client-sdk';
 
 // Demo search data
 export const demoSearchResults: SearchResultGroup[] = [

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Card, Heading, Paragraph, Button, Badge, Table, Dropdown, Spinner } from '@xala/ds';
-import { useSeasonalLeases, useOrganizations, useListings, type SeasonalLease, type SeasonalLeaseStatus } from '@xala/sdk';
+import { useSeasonalLeases, useOrganizations, useListings, type SeasonalLease, type SeasonalLeaseStatus } from '@digilist/client-sdk';
 
 const PlusIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
