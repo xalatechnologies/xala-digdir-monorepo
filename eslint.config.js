@@ -1,6 +1,7 @@
-import { guardrails, digdirScanner } from './packages/eslint-config/index.js';
+import { guardrails, digdirScanner, typescript } from './packages/eslint-config/index.js';
 
 export default [
+  ...typescript,
   ...guardrails,
   ...digdirScanner,
   {

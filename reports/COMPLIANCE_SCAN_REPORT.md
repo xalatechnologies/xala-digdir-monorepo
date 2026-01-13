@@ -1,0 +1,207 @@
+# Designsystemet Compliance Scan Report
+
+**Scan Date:** 2026-01-13
+**Repository:** xala-digdir-monorepo
+**Scanned Directories:** packages/ds/src, apps/web/src
+
+---
+
+## Executive Summary
+
+| Category | Issues | Severity | Status |
+|----------|--------|----------|--------|
+| Hardcoded Colors | 0 | high | ✅ Clean |
+| Hardcoded Spacing | 9 | high | ❌ Needs Fix |
+| Hardcoded Typography | 0 | medium | ✅ Clean |
+| Hardcoded Border Radius | 0 | medium | ✅ Clean |
+| Raw HTML Layouts in Apps | 3 | medium | ⚠️ Minor |
+| Hardcoded Dimensions | 8 | low | ❌ Needs Fix |
+| Hardcoded Breakpoints | 0 | low | ✅ Clean |
+| SVG Hardcoded Colors | 2 | low | ⚠️ Minor |
+
+**Total Issues:** 22
+**High Severity:** 9
+
+---
+
+## Hardcoded Colors
+
+**Severity:** HIGH
+**Recommendation:** Use design tokens: var(--ds-color-*)
+**Issues Found:** 0
+
+✅ No issues found.
+
+---
+
+## Hardcoded Spacing
+
+**Severity:** HIGH
+**Recommendation:** Use spacing tokens: var(--ds-spacing-*)
+**Issues Found:** 9
+
+### Findings by File
+
+#### `packages/ds/src/blocks/ListingMap.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 231 | Pixel spacing | `border-top: 1px solid var(--ds-color-neutral-borde...` |
+
+#### `apps/web/src/App.js`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 420 | Pixel spacing | `padding-left: 24px !important;...` |
+| 421 | Pixel spacing | `padding-right: 24px !important;...` |
+| 426 | Pixel spacing | `padding-left: 24px !important;...` |
+| 427 | Pixel spacing | `padding-right: 24px !important;...` |
+
+#### `apps/web/src/App.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 467 | Pixel spacing | `padding-left: 24px !important;...` |
+| 468 | Pixel spacing | `padding-right: 24px !important;...` |
+| 473 | Pixel spacing | `padding-left: 24px !important;...` |
+| 474 | Pixel spacing | `padding-right: 24px !important;...` |
+
+---
+
+## Hardcoded Typography
+
+**Severity:** MEDIUM
+**Recommendation:** Use typography tokens: var(--ds-font-size-*), var(--ds-font-weight-*)
+**Issues Found:** 0
+
+✅ No issues found.
+
+---
+
+## Hardcoded Border Radius
+
+**Severity:** MEDIUM
+**Recommendation:** Use border radius tokens: var(--ds-border-radius-*)
+**Issues Found:** 0
+
+✅ No issues found.
+
+---
+
+## Raw HTML Layouts in Apps
+
+**Severity:** MEDIUM
+**Recommendation:** Use layout primitives: <Stack>, <Grid>, <Flex>
+**Issues Found:** 3
+
+### Findings by File
+
+#### `apps/web/src/App.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 552 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 572 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 683 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+---
+
+## Hardcoded Dimensions
+
+**Severity:** LOW
+**Recommendation:** Consider using tokens or calc() with tokens
+**Issues Found:** 8
+
+### Findings by File
+
+#### `packages/ds/src/composed/header-parts.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 60 | Dimension in px | `@media (max-width: 599px) {...` |
+
+#### `packages/ds/src/composed/header.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 129 | Dimension in px | `@media (max-width: 599px) {...` |
+| 159 | Dimension in px | `maxWidth: '520px',...` |
+| 160 | Dimension in px | `minWidth: '80px'...` |
+
+#### `apps/web/src/App.js`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 414 | Dimension in px | `@media (max-width: 599px) {...` |
+| 441 | Dimension in px | `@media (min-width: 600px) {...` |
+
+#### `apps/web/src/App.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 461 | Dimension in px | `@media (max-width: 599px) {...` |
+| 488 | Dimension in px | `@media (min-width: 600px) {...` |
+
+---
+
+## Hardcoded Breakpoints
+
+**Severity:** LOW
+**Recommendation:** Note: CSS media queries cannot use variables. Document breakpoints.
+**Issues Found:** 0
+
+✅ No issues found.
+
+---
+
+## SVG Hardcoded Colors
+
+**Severity:** LOW
+**Recommendation:** Consider using currentColor or CSS variable
+**Issues Found:** 2
+
+### Findings by File
+
+#### `packages/ds/src/blocks/ListingListItem.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 384 | SVG stroke="white" | `<svg width="32" height="32" viewBox="0 0 24 24" fi...` |
+| 386 | SVG fill="white" | `<circle cx="12" cy="10" r="3" fill="white" stroke=...` |
+
+---
+
+## Action Items
+
+### Priority 1 (High Severity)
+- [ ] Fix 9 hardcoded spacing issues
+
+### Priority 2 (Medium Severity)
+- [ ] Fix 3 raw html layouts in apps issues
+
+### Priority 3 (Low Severity / Acceptable)
+- [ ] Review 8 hardcoded dimensions issues
+- [ ] Review 2 svg hardcoded colors issues
+
+---
+
+## Scanner Commands
+
+```bash
+# Run compliance scan
+pnpm scan:compliance
+
+# Run with JSON output
+pnpm scan:compliance:json
+
+# Run in strict mode (fail on high severity)
+pnpm scan:compliance:strict
+
+# Run all scanners
+pnpm scan:all
+```
+
+---
+
+*Generated by scan-compliance.mjs*
+*Date: 2026-01-13*

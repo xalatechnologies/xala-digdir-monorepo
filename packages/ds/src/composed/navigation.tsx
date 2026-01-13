@@ -57,16 +57,16 @@ export const NavigationLink = forwardRef<HTMLAnchorElement, NavigationLinkProps>
         ref={ref}
         className={cn('ds-navigation-link', active && 'ds-navigation-link--active', className)}
         style={{
-          color: active 
-            ? 'var(--ds-colors-text-default)' 
-            : 'var(--ds-colors-text-default)',
+          color: active
+            ? 'var(--ds-color-neutral-text-default)'
+            : 'var(--ds-color-neutral-text-default)',
           textDecoration: 'none',
-          fontWeight: active ? 600 : 400,
-          padding: '8px 12px',
-          borderRadius: '4px',
+          fontWeight: active ? 'var(--ds-font-weight-semibold)' as unknown as number : 'var(--ds-font-weight-regular)' as unknown as number,
+          padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+          borderRadius: 'var(--ds-border-radius-sm)',
           transition: 'all 0.2s',
           ...(active && {
-            backgroundColor: 'var(--ds-colors-surface-selected)'
+            backgroundColor: 'var(--ds-color-accent-surface-default)'
           }),
           ...style
         }}

@@ -58,9 +58,9 @@ export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      marginBottom: 32,
-      paddingBottom: bordered ? 24 : 0,
-      borderBottom: bordered ? '1px solid var(--ds-color-neutral-40)' : 'none',
+      marginBottom: 'var(--ds-spacing-8)',
+      paddingBottom: bordered ? 'var(--ds-spacing-6)' : 0,
+      borderBottom: bordered ? '1px solid var(--ds-color-neutral-border-default)' : 'none',
       ...style
     };
 
@@ -68,9 +68,9 @@ export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(
       <div ref={ref} className={className} style={headerStyle} {...props}>
         <div style={{ flex: 1, minWidth: 0 }}>
           {breadcrumb && (
-            <div style={{ marginBottom: 8 }}>{breadcrumb}</div>
+            <div style={{ marginBottom: 'var(--ds-spacing-2)' }}>{breadcrumb}</div>
           )}
-          <Heading level={level} style={{ marginBottom: subtitle ? 8 : 0 }}>
+          <Heading level={level} style={{ marginBottom: subtitle ? 'var(--ds-spacing-2)' : 0 }}>
             {title}
           </Heading>
           {subtitle && (
@@ -82,7 +82,7 @@ export const PageHeader = forwardRef<HTMLDivElement, PageHeaderProps>(
         </div>
         
         {actions && (
-          <div style={{ marginLeft: 24, flexShrink: 0 }}>
+          <div style={{ marginLeft: 'var(--ds-spacing-6)', flexShrink: 0 }}>
             {actions}
           </div>
         )}

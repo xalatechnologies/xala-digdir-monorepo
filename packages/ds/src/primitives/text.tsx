@@ -45,30 +45,30 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>(
     const getStyles = () => {
       const base: React.CSSProperties = {
         margin: 0,
-        color: color || 'var(--ds-colors-text-default)',
+        color: color || 'var(--ds-color-neutral-text-default)',
       };
 
-      // Size mapping
+      // Size mapping using design tokens
       const sizes = {
-        xs: { fontSize: '12px', lineHeight: '16px' },
-        sm: { fontSize: '14px', lineHeight: '20px' },
-        md: { fontSize: '16px', lineHeight: '24px' },
-        lg: { fontSize: '18px', lineHeight: '28px' },
-        xl: { fontSize: '20px', lineHeight: '30px' },
+        xs: { fontSize: 'var(--ds-font-size-xs)', lineHeight: 'var(--ds-line-height-tight, 1.3)' },
+        sm: { fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-snug, 1.4)' },
+        md: { fontSize: 'var(--ds-font-size-md)', lineHeight: 'var(--ds-line-height-normal, 1.5)' },
+        lg: { fontSize: 'var(--ds-font-size-lg)', lineHeight: 'var(--ds-line-height-relaxed, 1.55)' },
+        xl: { fontSize: 'var(--ds-font-size-xl)', lineHeight: 'var(--ds-line-height-relaxed, 1.5)' },
       };
 
-      // Weight mapping
+      // Weight mapping using design tokens
       const weights = {
-        normal: 400,
-        medium: 500,
-        semibold: 600,
-        bold: 700,
+        normal: 'var(--ds-font-weight-regular)',
+        medium: 'var(--ds-font-weight-medium)',
+        semibold: 'var(--ds-font-weight-semibold)',
+        bold: 'var(--ds-font-weight-bold)',
       };
 
       return {
         ...base,
         ...sizes[size],
-        fontWeight: weights[weight],
+        fontWeight: weights[weight] as unknown as number,
       };
     };
 

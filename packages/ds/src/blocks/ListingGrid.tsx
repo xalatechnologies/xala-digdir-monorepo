@@ -41,11 +41,11 @@ export function ListingGrid({
     ? (typeof gap === 'number' ? `${gap}px` : gap)
     : 'var(--ds-size-gap-default, 32px)';
 
-  // For auto-fit with max columns constraint, we calculate the minimum width
-  // to ensure no more than maxColumns can fit
+  // For auto-fit with max columns constraint, we use minmax with a calculated minimum
+  // This ensures cards never get smaller than minCardWidth while respecting maxColumns
   const gridTemplateColumns = useFixedColumns
     ? `repeat(${columns}, 1fr)`
-    : `repeat(auto-fit, minmax(max(${minCardWidth}px, calc((100% - ${maxColumns - 1} * 32px) / ${maxColumns})), 1fr))`;
+    : `repeat(auto-fit, minmax(min(100%, ${minCardWidth}px), 1fr))`;
 
   return (
     <div

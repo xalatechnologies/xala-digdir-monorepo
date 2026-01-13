@@ -121,7 +121,7 @@ const getPositionStyles = (
     overflow: 'hidden',
   };
 
-  const shadow = isOpen ? '0 25px 50px -12px rgba(0, 0, 0, 0.25)' : 'none';
+  const shadow = isOpen ? 'var(--ds-shadow-lg, 0 25px 50px -12px var(--ds-color-neutral-border-default))' : 'none';
 
   switch (position) {
     case 'left':
@@ -353,7 +353,7 @@ export function Drawer({
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            backgroundColor: 'var(--ds-color-neutral-background-backdrop, rgba(0, 0, 0, 0.4))',
             backdropFilter: 'blur(2px)',
             opacity: isOpen ? 1 : 0,
             visibility: isOpen ? 'visible' : 'hidden',
@@ -381,12 +381,12 @@ export function Drawer({
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            padding: '12px 0 8px',
+            padding: 'var(--ds-spacing-3) 0 var(--ds-spacing-2)',
             flexShrink: 0,
           }}>
             <div style={{
-              width: '40px',
-              height: '4px',
+              width: 'var(--ds-spacing-10)',
+              height: 'var(--ds-spacing-1)',
               backgroundColor: 'var(--ds-color-neutral-border-default)',
               borderRadius: 'var(--ds-border-radius-full, 9999px)',
             }} />
@@ -399,12 +399,12 @@ export function Drawer({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '16px 20px',
+            padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
             borderBottom: '1px solid var(--ds-color-neutral-border-default)',
             flexShrink: 0,
-            gap: '12px',
+            gap: 'var(--ds-spacing-3)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', flex: 1 }}>
               {icon && (
                 <span style={{ color: 'var(--ds-color-accent-text-default)', display: 'flex' }}>
                   {icon}
@@ -413,7 +413,7 @@ export function Drawer({
               <h2 style={{
                 margin: 0,
                 fontSize: 'var(--ds-font-size-md, 1.125rem)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                 color: 'var(--ds-color-neutral-text-default)',
               }}>
                 {title}
@@ -423,11 +423,11 @@ export function Drawer({
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minWidth: '20px',
-                  height: '20px',
-                  padding: '0 6px',
-                  fontSize: '11px',
-                  fontWeight: 600,
+                  minWidth: 'var(--ds-spacing-5)',
+                  height: 'var(--ds-spacing-5)',
+                  padding: '0 var(--ds-spacing-2)',
+                  fontSize: 'var(--ds-font-size-xs)',
+                  fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                   backgroundColor: 'var(--ds-color-accent-base-default)',
                   color: 'var(--ds-color-accent-contrast-default)',
                   borderRadius: 'var(--ds-border-radius-full, 9999px)',
@@ -444,8 +444,8 @@ export function Drawer({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '32px',
-                height: '32px',
+                width: 'var(--ds-spacing-8)',
+                height: 'var(--ds-spacing-8)',
                 border: 'none',
                 borderRadius: 'var(--ds-border-radius-md, 5px)',
                 backgroundColor: 'transparent',
@@ -476,7 +476,7 @@ export function Drawer({
         {footer && (
           <div style={{
             flexShrink: 0,
-            padding: '16px 20px',
+            padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
             borderTop: '1px solid var(--ds-color-neutral-border-default)',
             backgroundColor: 'var(--ds-color-neutral-surface-default)',
           }}>
@@ -545,7 +545,7 @@ export function DrawerSection({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '12px 20px',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-5)',
             cursor: collapsible ? 'pointer' : 'default',
             transition: 'background-color 0.15s ease',
             backgroundColor: 'transparent',
@@ -560,14 +560,14 @@ export function DrawerSection({
           <div>
             <span style={{
               fontSize: 'var(--ds-font-size-sm, 0.875rem)',
-              fontWeight: 600,
+              fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
               color: 'var(--ds-color-neutral-text-default)',
             }}>
               {title}
             </span>
             {description && (
               <p style={{
-                margin: '2px 0 0 0',
+                margin: 'var(--ds-spacing-1) 0 0 0',
                 fontSize: 'var(--ds-font-size-xs, 0.75rem)',
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}>
@@ -588,7 +588,7 @@ export function DrawerSection({
         </div>
       )}
       {(!collapsible || !isCollapsed) && (
-        <div style={{ padding: title ? '0 20px 16px' : '16px 20px' }}>
+        <div style={{ padding: title ? '0 var(--ds-spacing-5) var(--ds-spacing-4)' : 'var(--ds-spacing-4) var(--ds-spacing-5)' }}>
           {children}
         </div>
       )}
@@ -628,8 +628,8 @@ export function DrawerItem({
   const style: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    padding: '10px 20px',
+    gap: 'var(--ds-spacing-3)',
+    padding: 'var(--ds-spacing-3) var(--ds-spacing-5)',
     cursor: isInteractive ? 'pointer' : 'default',
     opacity: disabled ? 0.5 : 1,
     backgroundColor: selected
@@ -700,31 +700,31 @@ export function DrawerEmptyState({
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '48px 24px',
+      padding: 'var(--ds-spacing-12) var(--ds-spacing-6)',
       textAlign: 'center',
     }}>
       {icon && (
         <div style={{
           color: 'var(--ds-color-neutral-text-subtle)',
-          marginBottom: '16px',
+          marginBottom: 'var(--ds-spacing-4)',
         }}>
           {icon}
         </div>
       )}
       <span style={{
         fontSize: 'var(--ds-font-size-md, 1rem)',
-        fontWeight: 600,
+        fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
         color: 'var(--ds-color-neutral-text-default)',
-        marginBottom: '4px',
+        marginBottom: 'var(--ds-spacing-1)',
       }}>
         {title}
       </span>
       {description && (
         <p style={{
-          margin: '0 0 16px 0',
+          margin: '0 0 var(--ds-spacing-4) 0',
           fontSize: 'var(--ds-font-size-sm, 0.875rem)',
           color: 'var(--ds-color-neutral-text-subtle)',
-          maxWidth: '280px',
+          maxWidth: 'var(--ds-size-empty-state-max-width, 280px)',
         }}>
           {description}
         </p>

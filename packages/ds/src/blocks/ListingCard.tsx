@@ -78,7 +78,7 @@ export interface ListingCardProps {
 }
 
 const StarIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" strokeWidth="2">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--ds-color-warning-base-default)" stroke="var(--ds-color-warning-base-default)" strokeWidth="2">
     <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
   </svg>
 );
@@ -216,11 +216,11 @@ export function ListingCard({
         className={cn('listing-card listing-card--detailed', className)}
         style={{
           position: 'relative',
-          width: '520px',
+          width: 'var(--ds-size-card-detailed, 520px)',
           maxWidth: '95vw',
           backgroundColor: 'var(--ds-color-neutral-background-default)',
           borderRadius: 'var(--ds-border-radius-lg)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          boxShadow: 'var(--ds-shadow-lg, 0 20px 60px var(--ds-color-neutral-border-default))',
           overflow: 'hidden',
         }}
       >
@@ -232,28 +232,28 @@ export function ListingCard({
             aria-label="Lukk"
             style={{
               position: 'absolute',
-              top: '12px',
-              right: '12px',
+              top: 'var(--ds-spacing-3)',
+              right: 'var(--ds-spacing-3)',
               zIndex: 10,
-              width: '40px',
-              height: '40px',
+              width: 'var(--ds-spacing-10)',
+              height: 'var(--ds-spacing-10)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2px solid rgba(255,255,255,0.3)',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(0,0,0,0.6)',
-              color: '#ffffff',
+              border: '2px solid var(--ds-color-neutral-border-subtle)',
+              borderRadius: 'var(--ds-border-radius-full)',
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
+              color: 'var(--ds-color-neutral-text-default)',
               cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+              boxShadow: 'var(--ds-shadow-md, 0 4px 12px var(--ds-color-neutral-border-default))',
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)';
+              e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
               e.currentTarget.style.transform = 'scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.6)';
+              e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-background-default)';
               e.currentTarget.style.transform = 'scale(1)';
             }}
           >
@@ -272,21 +272,21 @@ export function ListingCard({
               alt={name}
               style={{
                 width: '100%',
-                height: '240px',
+                height: 'var(--ds-size-image-detailed, 240px)',
                 objectFit: 'cover',
               }}
             />
           )}
 
-          <div style={{ padding: '20px' }}>
+          <div style={{ padding: 'var(--ds-spacing-5)' }}>
             {/* Listing type badge */}
             {listingType && (
               <span style={{
                 display: 'inline-block',
-                marginBottom: '12px',
-                padding: '6px 14px',
-                fontSize: '13px',
-                fontWeight: 600,
+                marginBottom: 'var(--ds-spacing-3)',
+                padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+                fontSize: 'var(--ds-font-size-xs)',
+                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                 textTransform: 'uppercase',
                 letterSpacing: '0.5px',
                 backgroundColor: 'var(--ds-color-accent-surface-default)',
@@ -299,9 +299,9 @@ export function ListingCard({
 
             {/* Title */}
             <h3 style={{
-              margin: '0 0 8px 0',
-              fontSize: '1.5rem',
-              fontWeight: 600,
+              margin: '0 0 var(--ds-spacing-2) 0',
+              fontSize: 'var(--ds-font-size-lg)',
+              fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
               color: 'var(--ds-color-neutral-text-default)',
             }}>
               {name}
@@ -309,8 +309,8 @@ export function ListingCard({
 
             {/* Location */}
             <p style={{
-              margin: '0 0 12px 0',
-              fontSize: '1.125rem',
+              margin: '0 0 var(--ds-spacing-3) 0',
+              fontSize: 'var(--ds-font-size-md)',
               color: 'var(--ds-color-neutral-text-subtle)',
             }}>
               {location}
@@ -319,10 +319,10 @@ export function ListingCard({
             {/* Description */}
             {description && (
               <p style={{
-                margin: '0 0 16px 0',
-                fontSize: '1rem',
+                margin: '0 0 var(--ds-spacing-4) 0',
+                fontSize: 'var(--ds-font-size-sm)',
                 color: 'var(--ds-color-neutral-text-default)',
-                lineHeight: 1.6,
+                lineHeight: 'var(--ds-line-height-md)' as unknown as number,
               }}>
                 {description}
               </p>
@@ -333,11 +333,11 @@ export function ListingCard({
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                marginBottom: '16px',
+                gap: 'var(--ds-spacing-2)',
+                marginBottom: 'var(--ds-spacing-4)',
               }}>
                 <PeopleIcon />
-                <span style={{ fontSize: '1.125rem', color: 'var(--ds-color-neutral-text-default)' }}>
+                <span style={{ fontSize: 'var(--ds-font-size-md)', color: 'var(--ds-color-neutral-text-default)' }}>
                   {capacity} personer
                 </span>
               </div>
@@ -348,15 +348,15 @@ export function ListingCard({
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '8px',
-                marginBottom: '16px',
+                gap: 'var(--ds-spacing-2)',
+                marginBottom: 'var(--ds-spacing-4)',
               }}>
                 {facilities.slice(0, 4).map((facility, idx) => (
                   <span
                     key={idx}
                     style={{
-                      padding: '8px 14px',
-                      fontSize: '0.9375rem',
+                      padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                      fontSize: 'var(--ds-font-size-sm)',
                       backgroundColor: 'var(--ds-color-neutral-surface-hover)',
                       color: 'var(--ds-color-neutral-text-default)',
                       borderRadius: 'var(--ds-border-radius-sm)',
@@ -367,8 +367,8 @@ export function ListingCard({
                 ))}
                 {facilities.length > 4 && (
                   <span style={{
-                    padding: '8px 14px',
-                    fontSize: '0.9375rem',
+                    padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                    fontSize: 'var(--ds-font-size-sm)',
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}>
                     +{facilities.length - 4}
@@ -382,24 +382,24 @@ export function ListingCard({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingTop: '16px',
+              paddingTop: 'var(--ds-spacing-4)',
               borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
             }}>
               {available !== undefined && (
                 <span style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  fontSize: '1.125rem',
+                  gap: 'var(--ds-spacing-2)',
+                  fontSize: 'var(--ds-font-size-md)',
                   color: available
                     ? 'var(--ds-color-success-text-default)'
                     : 'var(--ds-color-danger-text-default)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
                 }}>
                   <span style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
+                    width: 'var(--ds-spacing-3)',
+                    height: 'var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-full)',
                     backgroundColor: available
                       ? 'var(--ds-color-success-base-default)'
                       : 'var(--ds-color-danger-base-default)',
@@ -408,9 +408,9 @@ export function ListingCard({
                 </span>
               )}
               <span style={{
-                fontSize: '1.125rem',
+                fontSize: 'var(--ds-font-size-md)',
                 color: 'var(--ds-color-accent-text-default)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
               }}>
                 Se detaljer →
               </span>
@@ -433,14 +433,14 @@ export function ListingCard({
         flexDirection: 'column',
         height: '100%',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderRadius: '12px',
-        border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'rgba(0,0,0,0.08)'}`,
+        borderRadius: 'var(--ds-border-radius-lg)',
+        border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'var(--ds-color-neutral-border-subtle)'}`,
         overflow: 'hidden',
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: onClick ? 'pointer' : 'default',
         boxShadow: isHovered
-          ? '0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08)'
-          : '0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+          ? 'var(--ds-shadow-md, 0 12px 32px var(--ds-color-neutral-border-default))'
+          : 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))',
         transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
       }}
     >
@@ -464,14 +464,15 @@ export function ListingCard({
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)'
+            background: 'linear-gradient(to top, var(--ds-color-neutral-background-default) 0%, transparent 50%)',
+            opacity: 0.4,
           }} />
         )}
 
         {/* Category badge */}
         {showTypeBadge && (
-          <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-            <Tag data-size="sm" data-color="accent" style={{ paddingInline: '0.75rem' }}>
+          <div style={{ position: 'absolute', top: 'var(--ds-spacing-3)', left: 'var(--ds-spacing-3)' }}>
+            <Tag data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
               {type}
             </Tag>
           </div>
@@ -481,26 +482,27 @@ export function ListingCard({
         {(showFavoriteButton || showShareButton) && (
           <div style={{
             position: 'absolute',
-            top: '12px',
-            right: '12px',
+            top: 'var(--ds-spacing-3)',
+            right: 'var(--ds-spacing-3)',
             display: 'flex',
-            gap: '8px'
+            gap: 'var(--ds-spacing-2)'
           }}>
           {showFavoriteButton && onFavorite && (
             <button
+              type="button"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: 'var(--ds-spacing-9)',
+                height: 'var(--ds-spacing-9)',
                 border: 'none',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
                 color: isFavorited ? 'var(--ds-color-danger-base-default)' : 'var(--ds-color-neutral-text-subtle)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
               }}
               onClick={handleFavorite}
               title="Legg til favoritter"
@@ -510,19 +512,20 @@ export function ListingCard({
           )}
           {showShareButton && onShare && (
             <button
+              type="button"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '36px',
-                height: '36px',
+                width: 'var(--ds-spacing-9)',
+                height: 'var(--ds-spacing-9)',
                 border: 'none',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
                 color: 'var(--ds-color-neutral-text-subtle)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
               }}
               onClick={handleShare}
               title="Del"
@@ -537,17 +540,17 @@ export function ListingCard({
         {showRating && rating !== undefined && (
           <div style={{
             position: 'absolute',
-            bottom: '12px',
-            left: '12px',
+            bottom: 'var(--ds-spacing-3)',
+            left: 'var(--ds-spacing-3)',
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
-            padding: '6px 10px',
-            backgroundColor: 'rgba(255,255,255,0.95)',
+            gap: 'var(--ds-spacing-1)',
+            padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+            backgroundColor: 'var(--ds-color-neutral-background-default)',
             borderRadius: 'var(--ds-border-radius-md)',
             fontSize: 'var(--ds-font-size-sm)',
             fontWeight: 'var(--ds-font-weight-semibold)',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
           } as React.CSSProperties}>
             <StarIcon />
             {rating}
@@ -561,9 +564,9 @@ export function ListingCard({
       </div>
 
       {/* Content */}
-      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: 'var(--ds-spacing-6)', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{
-          margin: '0 0 10px 0',
+          margin: '0 0 var(--ds-spacing-2) 0',
           fontSize: 'var(--ds-font-size-md)',
           fontWeight: 'var(--ds-font-weight-semibold)',
           color: 'var(--ds-color-neutral-text-default)',
@@ -575,12 +578,12 @@ export function ListingCard({
 
         {showLocation && (
           <p style={{
-            margin: '0 0 12px 0',
+            margin: '0 0 var(--ds-spacing-3) 0',
             fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: 'var(--ds-spacing-1)',
             fontFamily: 'var(--ds-font-family)'
           } as React.CSSProperties}>
             <MapPinIcon />
@@ -590,7 +593,7 @@ export function ListingCard({
 
         {showDescription && (
           <p style={{
-            margin: '0 0 20px 0',
+            margin: '0 0 var(--ds-spacing-5) 0',
             fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             lineHeight: 'var(--ds-line-height-md)',
@@ -610,17 +613,17 @@ export function ListingCard({
           <div style={{
             display: 'flex',
             flexWrap: 'nowrap',
-            gap: '8px',
-            marginBottom: '18px',
+            gap: 'var(--ds-spacing-2)',
+            marginBottom: 'var(--ds-spacing-4)',
             overflow: 'hidden'
           }}>
             {facilities.slice(0, maxFacilities).map((facility) => (
-              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: '0.75rem', flexShrink: 0 }}>
+              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
                 {facility}
               </Tag>
             ))}
             {moreFacilities > 0 && (
-              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: '0.75rem', flexShrink: 0 }}>
+              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
                 +{moreFacilities} mer
               </Tag>
             )}
@@ -633,16 +636,16 @@ export function ListingCard({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            margin: 'auto -24px -24px -24px',
-            padding: '14px 24px',
-            backgroundColor: 'rgba(0,0,0,0.02)',
-            borderTop: '1px solid rgba(0,0,0,0.04)'
+            margin: 'auto calc(var(--ds-spacing-6) * -1) calc(var(--ds-spacing-6) * -1) calc(var(--ds-spacing-6) * -1)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-6)',
+            backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+            borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
           }}>
             {showCapacity && capacity !== undefined && (
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: 'var(--ds-spacing-1)',
                 fontSize: 'var(--ds-font-size-sm)',
                 color: 'var(--ds-color-neutral-text-subtle)',
                 fontFamily: 'var(--ds-font-family)'
@@ -652,7 +655,7 @@ export function ListingCard({
               </div>
             )}
             {showListingType && listingType && (
-              <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: '0.75rem' }}>
+              <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)' }}>
                 {listingTypeLabels[listingType] || listingType}
               </Tag>
             )}

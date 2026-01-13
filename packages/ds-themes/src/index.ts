@@ -1,36 +1,55 @@
 /**
  * Theme registry for runtime tenant branding switching.
- * 
+ *
  * This module provides theme URLs that allow applications to swap themes
- * by changing a single <link> tag. This approach respects Designsystemet's
- * requirement that theme CSS should only be loaded once per application.
- * 
+ * by loading CSS files. Themes can be a single file or an array of files
+ * (base + extensions). This approach respects Designsystemet's requirement
+ * that theme CSS should only be loaded once per application.
+ *
  * @example
  * ```typescript
- * import { THEMES, DEFAULT_THEME } from '@xala/ds-themes';
- * 
- * // Load the default theme
- * const themeUrl = THEMES[DEFAULT_THEME];
+ * import { THEMES, DEFAULT_THEME, getThemeUrls } from '@xala/ds-themes';
+ *
+ * // Get theme URLs (always returns array)
+ * const urls = getThemeUrls(DEFAULT_THEME);
  * ```
  */
-// Official Digdir themes
-const digdirThemeUrl = '/node_modules/@digdir/designsystemet-theme/brand/digdir.css';
-const altinnThemeUrl = '/node_modules/@digdir/designsystemet-theme/brand/altinn.css';
-const uutilsynetThemeUrl = '/node_modules/@digdir/designsystemet-theme/brand/uutilsynet.css';
-const portalThemeUrl = '/node_modules/@digdir/designsystemet-theme/brand/portal.css';
 
-// Custom DIGILIST theme (extends digdir with brand colors)
-const digilistThemeUrl = '/node_modules/@xala/ds-themes/themes/digilist.css';
+// Official Digdir themes from npm package
+const OFFICIAL_THEMES = {
+  digdir: '/node_modules/@digdir/designsystemet-theme/brand/digdir.css',
+  altinn: '/node_modules/@digdir/designsystemet-theme/brand/altinn.css',
+  uutilsynet: '/node_modules/@digdir/designsystemet-theme/brand/uutilsynet.css',
+  portal: '/node_modules/@digdir/designsystemet-theme/brand/portal.css',
+};
+
+// Custom DIGILIST theme: CLI-generated base + app extensions
+const DIGILIST_THEME = [
+  '/node_modules/@xala/ds-themes/generated/digilist.css',      // CLI-generated base
+  '/node_modules/@xala/ds-themes/themes/digilist-extensions.css', // App-specific tokens
+];
 
 export type ThemeId = 'digdir' | 'altinn' | 'uutilsynet' | 'portal' | 'digilist';
 
-export const THEMES: Record<ThemeId, string> = {
-  digdir: digdirThemeUrl,
-  altinn: altinnThemeUrl,
-  uutilsynet: uutilsynetThemeUrl,
-  portal: portalThemeUrl,
-  digilist: digilistThemeUrl,
+/**
+ * Theme CSS files. Can be single file (string) or multiple files (array).
+ * Multiple files are loaded in order: base theme first, then extensions.
+ */
+export const THEMES: Record<ThemeId, string | string[]> = {
+  digdir: OFFICIAL_THEMES.digdir,
+  altinn: OFFICIAL_THEMES.altinn,
+  uutilsynet: OFFICIAL_THEMES.uutilsynet,
+  portal: OFFICIAL_THEMES.portal,
+  digilist: DIGILIST_THEME,
 };
 
-// DIGILIST is now the default theme
+/**
+ * Get theme URLs as an array (for consistent handling).
+ */
+export function getThemeUrls(themeId: ThemeId): string[] {
+  const theme = THEMES[themeId];
+  return Array.isArray(theme) ? theme : [theme];
+}
+
+// DIGILIST is the default theme
 export const DEFAULT_THEME: ThemeId = 'digilist';

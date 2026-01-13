@@ -66,7 +66,7 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
+            gap: 'var(--ds-spacing-4)',
             color: 'var(--ds-color-neutral-text-default)',
             textDecoration: 'none',
           }}
@@ -85,10 +85,10 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
             <div className={textClassName} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
               {title && (
                 <span style={{
-                  fontWeight: 700,
-                  fontSize: '24px',
-                  lineHeight: '1.1',
-                  letterSpacing: '0.02em',
+                  fontWeight: 'var(--ds-font-weight-bold)' as unknown as number,
+                  fontSize: 'var(--ds-font-size-xl)',
+                  lineHeight: 'var(--ds-line-height-tight)',
+                  letterSpacing: 'var(--ds-letter-spacing-normal)',
                   color: 'var(--ds-color-neutral-text-default)'
                 }}>
                   {title}
@@ -96,11 +96,11 @@ export const HeaderLogo = forwardRef<HTMLDivElement, HeaderLogoProps>(
               )}
               {subtitle && (
                 <span style={{
-                  fontWeight: 500,
-                  fontSize: '16px',
-                  lineHeight: '1.2',
+                  fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
+                  fontSize: 'var(--ds-font-size-md)',
+                  lineHeight: 'var(--ds-line-height-snug)',
                   opacity: 0.55,
-                  letterSpacing: '0.06em',
+                  letterSpacing: 'var(--ds-letter-spacing-wide)',
                   textTransform: 'uppercase',
                   color: 'var(--ds-color-neutral-text-subtle)'
                 }}>
@@ -445,12 +445,15 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      if (selectedIndex >= 0 && flatResults[selectedIndex]) {
-        handleResultSelect(flatResults[selectedIndex]);
-      } else {
-        onSearch?.(value);
-        setIsOpen(false);
+      if (selectedIndex >= 0) {
+        const selectedResult = flatResults[selectedIndex];
+        if (selectedResult) {
+          handleResultSelect(selectedResult);
+          return;
+        }
       }
+      onSearch?.(value);
+      setIsOpen(false);
     };
 
     const handleClear = useCallback(() => {
@@ -508,9 +511,12 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           );
           break;
         case 'Enter':
-          if (selectedIndex >= 0 && flatResults[selectedIndex]) {
-            e.preventDefault();
-            handleResultSelect(flatResults[selectedIndex]);
+          if (selectedIndex >= 0) {
+            const selectedResult = flatResults[selectedIndex];
+            if (selectedResult) {
+              e.preventDefault();
+              handleResultSelect(selectedResult);
+            }
           }
           break;
         case 'Tab':
@@ -532,7 +538,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
     };
 
     // Render a single result item with enhanced styling
-    const renderResultItem = (item: SearchResultItem, index: number, isFirstInGroup: boolean = false) => {
+    const renderResultItem = (item: SearchResultItem, index: number, _isFirstInGroup: boolean = false) => {
       const isSelected = selectedIndex === index;
 
       return (
@@ -548,14 +554,14 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
-            padding: '12px 20px',
+            gap: 'var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-5)',
             cursor: 'pointer',
-            backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.03)' : 'transparent',
+            backgroundColor: isSelected ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
             borderLeft: isSelected ? '3px solid var(--ds-color-accent-base-default)' : '3px solid transparent',
             transition: 'all 0.1s ease',
-            marginLeft: '8px',
-            marginRight: '8px',
+            marginLeft: 'var(--ds-spacing-2)',
+            marginRight: 'var(--ds-spacing-2)',
             borderRadius: 'var(--ds-border-radius-md)',
           }}
         >
@@ -567,8 +573,8 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '40px',
-              height: '40px',
+              width: 'var(--ds-spacing-10)',
+              height: 'var(--ds-spacing-10)',
               backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-hover)',
               borderRadius: 'var(--ds-border-radius-md)',
               transition: 'all 0.12s ease',
@@ -582,11 +588,11 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
             <div style={{
               color: isSelected ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-default)',
               fontSize: 'var(--ds-font-size-md)',
-              fontWeight: 600,
+              fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              lineHeight: 'var(--ds-line-height-sm)',
+              lineHeight: 'var(--ds-line-height-snug)',
               transition: 'color 0.12s ease',
             }}>
               {item.label}
@@ -609,11 +615,11 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           {/* Meta badge */}
           {item.meta && (
             <span style={{
-              padding: '4px 10px',
+              padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
               backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-active)',
               borderRadius: 'var(--ds-border-radius-full)',
-              fontSize: '11px',
-              fontWeight: 500,
+              fontSize: 'var(--ds-font-size-xs)',
+              fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
               color: isSelected ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
               flexShrink: 0,
               transition: 'all 0.12s ease',
@@ -625,16 +631,16 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
           {/* Shortcut badge */}
           {item.shortcut && (
             <kbd style={{
-              padding: '4px 8px',
+              padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
               backgroundColor: isSelected ? 'var(--ds-color-accent-surface-hover)' : 'var(--ds-color-neutral-surface-default)',
               borderRadius: 'var(--ds-border-radius-sm)',
-              fontSize: '11px',
-              fontWeight: 500,
+              fontSize: 'var(--ds-font-size-xs)',
+              fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
               color: isSelected ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
               fontFamily: 'inherit',
               flexShrink: 0,
               border: '1px solid var(--ds-color-neutral-border-subtle)',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+              boxShadow: 'var(--ds-shadow-xs)',
               transition: 'all 0.12s ease',
             }}>
               {item.shortcut}
@@ -672,7 +678,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
             <span style={{
               color: 'var(--ds-color-neutral-text-subtle)',
               fontSize: 'var(--ds-font-size-sm)',
-              fontWeight: 500,
+              fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
             }}>
               Søker...
             </span>
@@ -687,17 +693,17 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '48px 32px',
-            gap: '16px',
+            padding: 'var(--ds-spacing-12) var(--ds-spacing-8)',
+            gap: 'var(--ds-spacing-4)',
             color: 'var(--ds-color-neutral-text-subtle)',
           }}>
             <SearchEmptyIcon />
             <div style={{ textAlign: 'center' }}>
               <div style={{
                 fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                 color: 'var(--ds-color-neutral-text-default)',
-                marginBottom: '8px',
+                marginBottom: 'var(--ds-spacing-2)',
               }}>
                 {noResultsText}
               </div>
@@ -715,19 +721,19 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
       if (isGroupedResults(results)) {
         let globalIndex = 0;
         return (
-          <div style={{ padding: '8px 0' }}>
+          <div style={{ padding: 'var(--ds-spacing-2) 0' }}>
             {results.map((group, groupIndex) => (
-              <div key={group.id} style={{ marginTop: groupIndex > 0 ? '16px' : 0 }}>
+              <div key={group.id} style={{ marginTop: groupIndex > 0 ? 'var(--ds-spacing-4)' : 0 }}>
                 {/* Group Header */}
                 <div style={{
-                  padding: '8px 24px 12px 24px',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-6) var(--ds-spacing-3) var(--ds-spacing-6)',
                 }}>
                   <span style={{
                     fontSize: 'var(--ds-font-size-xs)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                     color: 'var(--ds-color-neutral-text-subtle)',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
+                    letterSpacing: 'var(--ds-letter-spacing-wider)',
                   }}>
                     {group.label}
                   </span>
@@ -790,15 +796,15 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: showDropdown ? 'var(--ds-color-neutral-surface-default)' : 'rgba(0, 0, 0, 0.05)',
+              backgroundColor: showDropdown ? 'var(--ds-color-neutral-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
               border: showDropdown ? '1px solid var(--ds-color-neutral-border-default)' : '1px solid transparent',
               borderBottom: showDropdown ? '1px solid var(--ds-color-neutral-border-subtle)' : '1px solid transparent',
               borderRadius: showDropdown ? 'var(--ds-border-radius-lg) var(--ds-border-radius-lg) 0 0' : 'var(--ds-border-radius-lg)',
-              padding: '0 20px',
-              height: '52px',
+              padding: '0 var(--ds-spacing-5)',
+              height: 'var(--ds-spacing-13)',
               transition: 'all 0.2s ease',
               boxShadow: showDropdown
-                ? '0 -4px 16px rgba(0, 0, 0, 0.08)'
+                ? 'var(--ds-shadow-focus-ring)'
                 : isFocused
                   ? '0 0 0 3px var(--ds-color-accent-surface-default), 0 0 0 1px var(--ds-color-accent-base-default)'
                   : 'none',
@@ -811,7 +817,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 color: isFocused || showDropdown ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)',
                 flexShrink: 0,
                 transition: 'color 0.2s ease',
-                marginRight: '16px',
+                marginRight: 'var(--ds-spacing-4)',
               }}
               aria-hidden="true"
             />
@@ -838,9 +844,9 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 background: 'transparent',
                 color: 'var(--ds-color-neutral-text-default)',
                 fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 500,
+                fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
                 padding: '0',
-                paddingRight: '16px',
+                paddingRight: 'var(--ds-spacing-4)',
                 outline: 'none',
                 minWidth: 0,
                 height: '100%',
@@ -857,12 +863,12 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 backgroundColor: 'var(--ds-color-neutral-surface-active)',
                 borderRadius: 'var(--ds-border-radius-sm)',
                 fontSize: 'var(--ds-font-size-xs)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                 color: 'var(--ds-color-neutral-text-subtle)',
                 fontFamily: 'inherit',
                 flexShrink: 0,
                 border: '1px solid var(--ds-color-neutral-border-subtle)',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                boxShadow: 'var(--ds-shadow-xs)',
               }}>
                 <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>⌘</span>
                 <span>K</span>
@@ -879,8 +885,8 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '32px',
-                  height: '32px',
+                  width: 'var(--ds-spacing-8)',
+                  height: 'var(--ds-spacing-8)',
                   border: 'none',
                   borderRadius: 'var(--ds-border-radius-full)',
                   backgroundColor: 'var(--ds-color-neutral-surface-active)',
@@ -889,7 +895,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                   flexShrink: 0,
                   transition: 'all 0.15s ease',
                   padding: 0,
-                  marginLeft: '8px',
+                  marginLeft: 'var(--ds-spacing-2)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
@@ -918,14 +924,14 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
               right: 0,
               backgroundColor: 'var(--ds-color-neutral-surface-default)',
               borderRadius: '0 0 var(--ds-border-radius-lg) var(--ds-border-radius-lg)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)',
+              boxShadow: 'var(--ds-shadow-dropdown)',
               zIndex: 1000,
               border: '1px solid var(--ds-color-neutral-border-default)',
               borderTop: 'none',
               animation: 'search-dropdown-enter 0.2s ease',
               display: 'flex',
               flexDirection: 'column',
-              maxHeight: '480px',
+              maxHeight: 'var(--ds-spacing-120, 480px)',
             }}
           >
             {/* Scrollable results area */}
@@ -948,8 +954,8 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '24px',
-                padding: '14px 24px',
+                gap: 'var(--ds-spacing-6)',
+                padding: 'var(--ds-spacing-4) var(--ds-spacing-6)',
                 borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
                 backgroundColor: 'var(--ds-color-neutral-surface-hover)',
                 flexShrink: 0,
@@ -958,16 +964,16 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 <span style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: 'var(--ds-spacing-2)',
                   fontSize: 'var(--ds-font-size-xs)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                 }}>
                   <kbd style={{
-                    padding: '4px 8px',
+                    padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                     backgroundColor: 'var(--ds-color-neutral-surface-default)',
                     borderRadius: 'var(--ds-border-radius-sm)',
                     fontSize: 'var(--ds-font-size-xs)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                     border: '1px solid var(--ds-color-neutral-border-subtle)',
                   }}>↑↓</kbd>
                   naviger
@@ -975,16 +981,16 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 <span style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: 'var(--ds-spacing-2)',
                   fontSize: 'var(--ds-font-size-xs)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                 }}>
                   <kbd style={{
-                    padding: '4px 8px',
+                    padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                     backgroundColor: 'var(--ds-color-neutral-surface-default)',
                     borderRadius: 'var(--ds-border-radius-sm)',
                     fontSize: 'var(--ds-font-size-xs)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                     border: '1px solid var(--ds-color-neutral-border-subtle)',
                   }}>↵</kbd>
                   velg
@@ -992,16 +998,16 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
                 <span style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: 'var(--ds-spacing-2)',
                   fontSize: 'var(--ds-font-size-xs)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                 }}>
                   <kbd style={{
-                    padding: '4px 8px',
+                    padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                     backgroundColor: 'var(--ds-color-neutral-surface-default)',
                     borderRadius: 'var(--ds-border-radius-sm)',
                     fontSize: 'var(--ds-font-size-xs)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                     border: '1px solid var(--ds-color-neutral-border-subtle)',
                   }}>esc</kbd>
                   lukk
@@ -1049,7 +1055,9 @@ export const HeaderActions = forwardRef<HTMLDivElement, HeaderActionsProps>(
 HeaderActions.displayName = 'HeaderActions';
 
 // Action Button using Digdir Button
-export const HeaderActionButton = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+export const HeaderActionButton: React.ForwardRefExoticComponent<
+  Omit<React.ComponentProps<typeof Button>, 'ref'> & React.RefAttributes<HTMLButtonElement>
+> = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
   ({ children, ...props }, ref) => {
     return (
       <Button
@@ -1118,6 +1126,13 @@ export const HeaderIconButton = forwardRef<HTMLButtonElement, HeaderIconButtonPr
       warning: 'var(--ds-color-warning-base-default)',
     };
 
+    const badgeContrastColors = {
+      danger: 'var(--ds-color-danger-contrast-default)',
+      accent: 'var(--ds-color-accent-contrast-default)',
+      success: 'var(--ds-color-success-contrast-default)',
+      warning: 'var(--ds-color-warning-contrast-default)',
+    };
+
     const currentSize = sizes[size];
     const displayBadge = badge !== undefined && badge > 0;
     const badgeText = badge && badge > maxBadge ? `${maxBadge}+` : badge?.toString();
@@ -1167,20 +1182,20 @@ export const HeaderIconButton = forwardRef<HTMLButtonElement, HeaderIconButtonPr
         {displayBadge && (
           <span style={{
             position: 'absolute',
-            top: '4px',
-            right: '4px',
+            top: 'var(--ds-spacing-1)',
+            right: 'var(--ds-spacing-1)',
             minWidth: currentSize.badge,
             height: currentSize.badge,
-            padding: '0 5px',
+            padding: '0 var(--ds-spacing-1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: badgeColors[badgeColor],
-            color: 'white',
+            color: badgeContrastColors[badgeColor],
             fontSize: currentSize.badgeFont,
-            fontWeight: 700,
+            fontWeight: 'var(--ds-font-weight-bold)' as unknown as number,
             borderRadius: 'var(--ds-border-radius-full)',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            boxShadow: 'var(--ds-shadow-badge)',
             transform: isHovered ? 'scale(1.1)' : 'scale(1)',
             transition: 'transform 0.15s ease',
           }}>
@@ -1233,8 +1248,8 @@ export const HeaderThemeToggle: React.FC<HeaderThemeToggleProps> = ({ onToggle, 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '44px',
-        height: '44px',
+        width: 'var(--ds-spacing-11)',
+        height: 'var(--ds-spacing-11)',
         border: 'none',
         borderRadius: 'var(--ds-border-radius-md)',
         backgroundColor: isPressed
@@ -1287,47 +1302,6 @@ export interface HeaderLanguageSwitchProps {
   languages?: Array<{ code: string; label: string }>;
 }
 
-const LanguageButton: React.FC<{
-  code: string;
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-}> = ({ code, label, isActive, onClick }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      aria-label={code === 'no' ? 'Norsk' : code === 'en' ? 'English' : label}
-      aria-pressed={isActive}
-      style={{
-        padding: '8px 14px',
-        border: 'none',
-        borderRadius: 'var(--ds-border-radius-sm)',
-        backgroundColor: isActive
-          ? 'var(--ds-color-neutral-surface-default)'
-          : isHovered
-            ? 'var(--ds-color-neutral-surface-active)'
-            : 'transparent',
-        color: isActive
-          ? 'var(--ds-color-neutral-text-default)'
-          : 'var(--ds-color-neutral-text-subtle)',
-        fontWeight: 600,
-        fontSize: 'var(--ds-font-size-sm)',
-        cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-        transform: isHovered && !isActive ? 'scale(1.02)' : 'scale(1)',
-      }}
-    >
-      {label}
-    </button>
-  );
-};
-
 export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({
   language = 'no',
   onSwitch,
@@ -1362,19 +1336,19 @@ export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '8px 14px',
+        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
         border: 'none',
         borderRadius: 'var(--ds-border-radius-md)',
         backgroundColor: isHovered
           ? 'var(--ds-color-neutral-surface-hover)'
           : 'var(--ds-color-neutral-surface-default)',
         color: 'var(--ds-color-neutral-text-default)',
-        fontWeight: 600,
+        fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
         fontSize: 'var(--ds-font-size-sm)',
         cursor: 'pointer',
         transition: 'all 0.15s ease',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        minWidth: '48px',
+        boxShadow: 'var(--ds-shadow-sm)',
+        minWidth: 'var(--ds-spacing-12)',
       }}
     >
       {currentLang.label}
@@ -1450,9 +1424,10 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
     return (
       <Button
         variant="primary"
+        type="button"
         {...colorProps}
         onClick={onLogout}
-        aria-label={`Logget inn som ${userName}. Klikk for å logge ut.`}
+        aria-label={`Logget inn som ${userName}. ${logoutText}.`}
       >
         {avatarUrl ? (
           <img
@@ -1478,6 +1453,7 @@ export const HeaderLoginButton: React.FC<HeaderLoginButtonProps> = ({
   return (
     <Button
       variant="primary"
+      type="button"
       {...colorProps}
       onClick={onLogin}
       aria-label={loginText}

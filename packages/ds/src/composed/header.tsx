@@ -89,7 +89,7 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
       zIndex: 100,
       backgroundColor: backgrounds[variant],
       borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-      boxShadow: sticky ? '0 2px 12px -4px rgba(0, 0, 0, 0.1)' : undefined,
+      boxShadow: sticky ? 'var(--ds-shadow-header)' : undefined,
       transition: 'box-shadow 0.2s ease',
       ...style
     };
@@ -105,7 +105,7 @@ export const AppHeader = forwardRef<HTMLElement, AppHeaderProps>(
       textDecoration: 'none',
       borderRadius: 'var(--ds-border-radius-md)',
       fontSize: 'var(--ds-font-size-md)',
-      fontWeight: 600,
+      fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
     };
 
     return (

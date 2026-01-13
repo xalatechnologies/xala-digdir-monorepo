@@ -1,0 +1,166 @@
+{
+  "hardcodedColors": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedSpacing": {
+    "count": 9,
+    "files": {
+      "packages/ds/src/blocks/ListingMap.tsx": [
+        {
+          "line": 231,
+          "content": "border-top: 1px solid var(--ds-color-neutral-border-subtle, rgba(255, 255, 255, 0.1)) !important;",
+          "description": "Pixel spacing"
+        }
+      ],
+      "apps/web/src/App.js": [
+        {
+          "line": 420,
+          "content": "padding-left: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 421,
+          "content": "padding-right: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 426,
+          "content": "padding-left: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 427,
+          "content": "padding-right: 24px !important;",
+          "description": "Pixel spacing"
+        }
+      ],
+      "apps/web/src/App.tsx": [
+        {
+          "line": 467,
+          "content": "padding-left: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 468,
+          "content": "padding-right: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 473,
+          "content": "padding-left: 24px !important;",
+          "description": "Pixel spacing"
+        },
+        {
+          "line": 474,
+          "content": "padding-right: 24px !important;",
+          "description": "Pixel spacing"
+        }
+      ]
+    }
+  },
+  "hardcodedTypography": {
+    "count": 0,
+    "files": {}
+  },
+  "hardcodedBorderRadius": {
+    "count": 0,
+    "files": {}
+  },
+  "rawHtmlLayouts": {
+    "count": 3,
+    "files": {
+      "apps/web/src/App.tsx": [
+        {
+          "line": 552,
+          "content": "<div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>",
+          "description": "Div with inline flex"
+        },
+        {
+          "line": 572,
+          "content": "<div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>",
+          "description": "Div with inline flex"
+        },
+        {
+          "line": 683,
+          "content": "<div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>",
+          "description": "Div with inline flex"
+        }
+      ]
+    }
+  },
+  "hardcodedDimensions": {
+    "count": 8,
+    "files": {
+      "packages/ds/src/composed/header-parts.tsx": [
+        {
+          "line": 60,
+          "content": "@media (max-width: 599px) {",
+          "description": "Dimension in px"
+        }
+      ],
+      "packages/ds/src/composed/header.tsx": [
+        {
+          "line": 129,
+          "content": "@media (max-width: 599px) {",
+          "description": "Dimension in px"
+        },
+        {
+          "line": 159,
+          "content": "maxWidth: '520px',",
+          "description": "Dimension in px"
+        },
+        {
+          "line": 160,
+          "content": "minWidth: '80px'",
+          "description": "Dimension in px"
+        }
+      ],
+      "apps/web/src/App.js": [
+        {
+          "line": 414,
+          "content": "@media (max-width: 599px) {",
+          "description": "Dimension in px"
+        },
+        {
+          "line": 441,
+          "content": "@media (min-width: 600px) {",
+          "description": "Dimension in px"
+        }
+      ],
+      "apps/web/src/App.tsx": [
+        {
+          "line": 461,
+          "content": "@media (max-width: 599px) {",
+          "description": "Dimension in px"
+        },
+        {
+          "line": 488,
+          "content": "@media (min-width: 600px) {",
+          "description": "Dimension in px"
+        }
+      ]
+    }
+  },
+  "hardcodedBreakpoints": {
+    "count": 0,
+    "files": {}
+  },
+  "svgHardcodedColors": {
+    "count": 2,
+    "files": {
+      "packages/ds/src/blocks/ListingListItem.tsx": [
+        {
+          "line": 384,
+          "content": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"var(--ds-color-accent-base-default)\" stroke=\"w",
+          "description": "SVG stroke=\"white\""
+        },
+        {
+          "line": 386,
+          "content": "<circle cx=\"12\" cy=\"10\" r=\"3\" fill=\"white\" stroke=\"var(--ds-color-accent-base-default)\" strokeWidth=",
+          "description": "SVG fill=\"white\""
+        }
+      ]
+    }
+  }
+}

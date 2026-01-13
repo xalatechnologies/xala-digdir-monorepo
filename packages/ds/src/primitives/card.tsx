@@ -19,7 +19,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ variant = 'default', className, style, ...props }, ref) => {
     const getStyles = () => {
       const base = {
-        borderRadius: '8px',
+        borderRadius: 'var(--ds-border-radius-md)',
         transition: 'all 0.2s',
       };
 
@@ -27,20 +27,20 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         case 'outlined':
           return {
             ...base,
-            border: '1px solid var(--ds-colors-border-default)',
-            backgroundColor: 'var(--ds-colors-surface-default)',
+            border: '1px solid var(--ds-color-neutral-border-default)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
           };
         case 'elevated':
           return {
             ...base,
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-            backgroundColor: 'var(--ds-colors-surface-default)',
+            boxShadow: 'var(--ds-shadow-md)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
           };
         default:
           return {
             ...base,
-            border: '1px solid var(--ds-colors-border-subtle)',
-            backgroundColor: 'var(--ds-colors-surface-default)',
+            border: '1px solid var(--ds-color-neutral-border-subtle)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
           };
       }
     };

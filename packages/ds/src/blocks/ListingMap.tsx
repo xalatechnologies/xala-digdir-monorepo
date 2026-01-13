@@ -52,6 +52,11 @@ export interface ListingMapProps {
 
 // Pin marker component - uses accent color for visibility in both light/dark modes
 function MapPin({ size = 36, isSelected = false }: { size?: number; isSelected?: boolean }) {
+  // Use CSS custom properties for theming - these resolve at runtime
+  const selectedColor = 'var(--ds-color-accent-base-default, #0066FF)';
+  const defaultColor = 'var(--ds-color-danger-base-default, #E53935)';
+  const strokeColor = 'var(--ds-color-neutral-background-default, #ffffff)';
+
   return (
     <svg
       width={size}
@@ -61,14 +66,14 @@ function MapPin({ size = 36, isSelected = false }: { size?: number; isSelected?:
         cursor: 'pointer',
         transform: isSelected ? 'scale(1.3)' : 'scale(1)',
         transition: 'transform 0.2s ease',
-        filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.5))',
+        filter: 'var(--ds-shadow-pin, drop-shadow(0 3px 8px rgba(0,0,0,0.5)))',
       }}
     >
       {/* Outer pin shape with stroke for visibility */}
       <path
         d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-        fill={isSelected ? '#0066FF' : '#E53935'}
-        stroke="#ffffff"
+        fill={isSelected ? selectedColor : defaultColor}
+        stroke={strokeColor}
         strokeWidth="1.5"
       />
       {/* Inner circle */}
@@ -76,7 +81,7 @@ function MapPin({ size = 36, isSelected = false }: { size?: number; isSelected?:
         cx="12"
         cy="9"
         r="2.5"
-        fill="#ffffff"
+        fill={strokeColor}
       />
     </svg>
   );
@@ -91,7 +96,7 @@ function Overlay({ onClick }: { onClick: () => void }) {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'var(--ds-color-neutral-background-backdrop, rgba(0,0,0,0.5))',
         zIndex: 9998,
       }}
     />
@@ -213,30 +218,30 @@ export function ListingMap({
       </Marker>
     )), [listings, selectedListing, handleMarkerClick]);
 
-  // CSS for dark mode navigation controls
+  // CSS for dark mode navigation controls - uses token fallbacks
   const darkModeControlStyles = detectedColorScheme === 'dark' ? `
     .mapboxgl-ctrl-group {
-      background: rgba(30, 30, 30, 0.95) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      background: var(--ds-color-neutral-surface-default, rgba(30, 30, 30, 0.95)) !important;
+      border: 1px solid var(--ds-color-neutral-border-subtle, rgba(255, 255, 255, 0.1)) !important;
     }
     .mapboxgl-ctrl-group button {
       background-color: transparent !important;
     }
     .mapboxgl-ctrl-group button + button {
-      border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-top: 1px solid var(--ds-color-neutral-border-subtle, rgba(255, 255, 255, 0.1)) !important;
     }
     .mapboxgl-ctrl-group button:hover {
-      background-color: rgba(255, 255, 255, 0.1) !important;
+      background-color: var(--ds-color-neutral-surface-hover, rgba(255, 255, 255, 0.1)) !important;
     }
     .mapboxgl-ctrl-icon {
       filter: invert(1) !important;
     }
     .mapboxgl-ctrl-attrib {
-      background: rgba(30, 30, 30, 0.8) !important;
-      color: rgba(255, 255, 255, 0.7) !important;
+      background: var(--ds-color-neutral-background-default, rgba(30, 30, 30, 0.8)) !important;
+      color: var(--ds-color-neutral-text-subtle, rgba(255, 255, 255, 0.7)) !important;
     }
     .mapboxgl-ctrl-attrib a {
-      color: rgba(255, 255, 255, 0.7) !important;
+      color: var(--ds-color-neutral-text-subtle, rgba(255, 255, 255, 0.7)) !important;
     }
   ` : '';
 

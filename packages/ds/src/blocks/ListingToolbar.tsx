@@ -68,12 +68,12 @@ export function ListingToolbar({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '24px',
+        marginBottom: 'var(--ds-spacing-6)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
         {onFilterClick && (
-          <Button variant="secondary" onClick={onFilterClick}>
+          <Button variant="secondary" type="button" onClick={onFilterClick}>
             <FilterIcon size={18} aria-hidden />
             Filtre
             {activeFilterCount > 0 && (
@@ -83,8 +83,8 @@ export function ListingToolbar({
         )}
         <span
           style={{
-            fontSize: '1.125rem',
-            fontWeight: 600,
+            fontSize: 'var(--ds-font-size-md)',
+            fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
             color: 'var(--ds-color-neutral-text-default)',
           }}
         >

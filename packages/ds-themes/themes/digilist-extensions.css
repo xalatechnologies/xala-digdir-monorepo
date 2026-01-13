@@ -1,0 +1,330 @@
+/**
+ * Digilist App Extensions
+ *
+ * This file contains ONLY app-specific tokens that extend
+ * the Digdir Designsystemet. The base theme is generated
+ * by the Digdir CLI - do not duplicate base tokens here.
+ *
+ * Generated base: ../generated/digilist.css
+ *
+ * Token namespaces:
+ * - --ds-* tokens: Digdir standard (from CLI-generated base)
+ * - --digilist-* tokens: Custom app-level tokens
+ *
+ * @layer ds.app - Loaded after ds.theme layers
+ */
+
+@layer ds.app {
+
+  /* ==========================================================================
+   * SPACING TOKEN ALIASES
+   *
+   * The Digdir CLI generates --ds-size-* tokens, but many components use
+   * --ds-spacing-* as the semantic name. This section creates aliases.
+   * ========================================================================== */
+
+  :root, [data-size] {
+    /* Spacing aliases: --ds-spacing-N maps to --ds-size-N */
+    --ds-spacing-0: var(--ds-size-0);
+    --ds-spacing-1: var(--ds-size-1);
+    --ds-spacing-2: var(--ds-size-2);
+    --ds-spacing-3: var(--ds-size-3);
+    --ds-spacing-4: var(--ds-size-4);
+    --ds-spacing-5: var(--ds-size-5);
+    --ds-spacing-6: var(--ds-size-6);
+    --ds-spacing-7: var(--ds-size-7);
+    --ds-spacing-8: var(--ds-size-8);
+    --ds-spacing-9: var(--ds-size-9);
+    --ds-spacing-10: var(--ds-size-10);
+    --ds-spacing-11: var(--ds-size-11);
+    --ds-spacing-12: var(--ds-size-12);
+    --ds-spacing-13: var(--ds-size-13);
+    --ds-spacing-14: var(--ds-size-14);
+    --ds-spacing-15: var(--ds-size-15);
+    --ds-spacing-16: var(--ds-size-18);
+    --ds-spacing-18: var(--ds-size-18);
+    --ds-spacing-20: var(--ds-size-22);
+    --ds-spacing-22: var(--ds-size-22);
+    --ds-spacing-24: var(--ds-size-26);
+    --ds-spacing-26: var(--ds-size-26);
+    --ds-spacing-28: var(--ds-size-30);
+    --ds-spacing-30: var(--ds-size-30);
+
+    /* Font size semantic aliases: --ds-font-size-{name} maps to --ds-font-size-{N} */
+    --ds-font-size-xs: var(--ds-font-size-1);   /* 0.75rem base */
+    --ds-font-size-sm: var(--ds-font-size-2);   /* 0.875rem base */
+    --ds-font-size-md: var(--ds-font-size-3);   /* 1rem base */
+    --ds-font-size-lg: var(--ds-font-size-4);   /* 1.125rem base */
+    --ds-font-size-xl: var(--ds-font-size-5);   /* 1.3125rem base */
+    --ds-font-size-2xl: var(--ds-font-size-6);  /* 1.5rem base */
+    --ds-font-size-3xl: var(--ds-font-size-7);  /* 1.875rem base */
+    --ds-font-size-4xl: var(--ds-font-size-8);  /* 2.25rem base */
+    --ds-font-size-5xl: var(--ds-font-size-9);  /* 3rem base */
+    --ds-font-size-6xl: var(--ds-font-size-10); /* 3.75rem base */
+
+    /* Font weight alias */
+    --ds-font-weight-bold: 700;
+
+    /* Font family alias */
+    --ds-font-family: var(--ds-font-family-default, 'Inter', system-ui, sans-serif);
+  }
+
+  /* ==========================================================================
+   * DARK MODE PRIMARY COLOR SWITCH
+   *
+   * Digilist brand requirement: Primary switches from Blue to Aqua in dark mode.
+   * This overrides the CLI-generated accent color for dark mode only.
+   * Light mode: Blue #2F55A4 (from CLI-generated --ds-color-accent-*)
+   * Dark mode: Aqua #9EDBE5 (overridden below)
+   * ========================================================================== */
+
+  [data-color-scheme="dark"] {
+    /* Override accent with Aqua (#9EDBE5) in dark mode */
+    --ds-color-accent-background-default: #0c1a22;
+    --ds-color-accent-background-tinted: #102a35;
+    --ds-color-accent-surface-default: #143a4a;
+    --ds-color-accent-surface-tinted: #184a5d;
+    --ds-color-accent-surface-hover: #1c5a70;
+    --ds-color-accent-surface-active: #216b83;
+    --ds-color-accent-border-subtle: #287c96;
+    --ds-color-accent-border-default: #5eafc4;
+    --ds-color-accent-border-strong: #9EDBE5;
+    --ds-color-accent-text-subtle: #9EDBE5;
+    --ds-color-accent-text-default: #d0f0f5;
+    --ds-color-accent-base-default: #9EDBE5;
+    --ds-color-accent-base-hover: #b5e5ec;
+    --ds-color-accent-base-active: #cceef3;
+    --ds-color-accent-base-contrast-subtle: #0d1e25;
+    --ds-color-accent-base-contrast-default: #1F2F6E;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --ds-color-accent-background-default: #0c1a22;
+      --ds-color-accent-background-tinted: #102a35;
+      --ds-color-accent-surface-default: #143a4a;
+      --ds-color-accent-surface-tinted: #184a5d;
+      --ds-color-accent-surface-hover: #1c5a70;
+      --ds-color-accent-surface-active: #216b83;
+      --ds-color-accent-border-subtle: #287c96;
+      --ds-color-accent-border-default: #5eafc4;
+      --ds-color-accent-border-strong: #9EDBE5;
+      --ds-color-accent-text-subtle: #9EDBE5;
+      --ds-color-accent-text-default: #d0f0f5;
+      --ds-color-accent-base-default: #9EDBE5;
+      --ds-color-accent-base-hover: #b5e5ec;
+      --ds-color-accent-base-active: #cceef3;
+      --ds-color-accent-base-contrast-subtle: #0d1e25;
+      --ds-color-accent-base-contrast-default: #1F2F6E;
+    }
+  }
+
+  /* ==========================================================================
+   * SIDEBAR COMPONENT TOKENS
+   * App-specific sidebar styling
+   * ========================================================================== */
+
+  :root, [data-color-scheme="light"] {
+    --digilist-sidebar-background: oklch(0.99 0 0);
+    --digilist-sidebar-foreground: oklch(0.20 0.02 264);
+    --digilist-sidebar-primary: var(--ds-color-accent-base-default);
+    --digilist-sidebar-primary-foreground: var(--ds-color-accent-base-contrast-default);
+    --digilist-sidebar-accent: oklch(0.96 0 0);
+    --digilist-sidebar-accent-foreground: var(--ds-color-accent-text-default);
+    --digilist-sidebar-border: var(--ds-color-neutral-border-subtle);
+    --digilist-sidebar-ring: var(--ds-color-focus-outer);
+  }
+
+  [data-color-scheme="dark"] {
+    --digilist-sidebar-background: oklch(0.28 0.09 264);
+    --digilist-sidebar-foreground: oklch(0.98 0 0);
+    --digilist-sidebar-primary: #9EDBE5;
+    --digilist-sidebar-primary-foreground: #1F2F6E;
+    --digilist-sidebar-accent: oklch(0.30 0.05 264);
+    --digilist-sidebar-accent-foreground: oklch(0.98 0 0);
+    --digilist-sidebar-border: oklch(0.32 0.02 260);
+    --digilist-sidebar-ring: #9EDBE5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --digilist-sidebar-background: oklch(0.28 0.09 264);
+      --digilist-sidebar-foreground: oklch(0.98 0 0);
+      --digilist-sidebar-primary: #9EDBE5;
+      --digilist-sidebar-primary-foreground: #1F2F6E;
+      --digilist-sidebar-accent: oklch(0.30 0.05 264);
+      --digilist-sidebar-accent-foreground: oklch(0.98 0 0);
+      --digilist-sidebar-border: oklch(0.32 0.02 260);
+      --digilist-sidebar-ring: #9EDBE5;
+    }
+  }
+
+  /* ==========================================================================
+   * DATA VISUALIZATION / CHART COLORS
+   * Uses brand palette for consistent visualization
+   * ========================================================================== */
+
+  :root, [data-color-scheme="light"] {
+    --digilist-chart-1: #2F55A4;  /* Primary Blue */
+    --digilist-chart-2: #8BC34A;  /* Success Green (brand1) */
+    --digilist-chart-3: #9EDBE5;  /* Aqua (brand2) */
+    --digilist-chart-4: #E5AA20;  /* Warning Orange (brand3) */
+    --digilist-chart-5: #1F2F6E;  /* Navy (neutral) */
+  }
+
+  [data-color-scheme="dark"] {
+    --digilist-chart-1: #9EDBE5;  /* Aqua (primary in dark) */
+    --digilist-chart-2: #8BC34A;  /* Success Green */
+    --digilist-chart-3: #2F55A4;  /* Blue */
+    --digilist-chart-4: #E5AA20;  /* Warning Orange */
+    --digilist-chart-5: #B5E5EC;  /* Light Aqua */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --digilist-chart-1: #9EDBE5;
+      --digilist-chart-2: #8BC34A;
+      --digilist-chart-3: #2F55A4;
+      --digilist-chart-4: #E5AA20;
+      --digilist-chart-5: #B5E5EC;
+    }
+  }
+
+  /* ==========================================================================
+   * FORM CONTROL HEIGHTS
+   * Consistent control sizing across custom components
+   * ========================================================================== */
+
+  :root {
+    --digilist-control-height-sm: 2.5rem;    /* 40px */
+    --digilist-control-height-md: 2.875rem;  /* 46px */
+    --digilist-control-height-lg: 3.25rem;   /* 52px */
+  }
+
+  /* ==========================================================================
+   * ANIMATION TIMING TOKENS
+   * Consistent animation timing across components
+   * ========================================================================== */
+
+  :root {
+    --digilist-animation-duration-fast: 150ms;
+    --digilist-animation-duration-normal: 300ms;
+    --digilist-animation-duration-slow: 500ms;
+    --digilist-animation-duration-slower: 700ms;
+
+    --digilist-animation-delay-fast: 100ms;
+    --digilist-animation-delay-normal: 200ms;
+    --digilist-animation-delay-slow: 400ms;
+    --digilist-animation-delay-slower: 600ms;
+    --digilist-animation-delay-slowest: 800ms;
+  }
+
+  /* ==========================================================================
+   * DECORATIVE EFFECT SIZING
+   * For background orbs and blur effects
+   * ========================================================================== */
+
+  :root {
+    --digilist-size-orb-large: 32rem;
+    --digilist-size-orb-medium: 24rem;
+    --digilist-size-orb-small: 16rem;
+    --digilist-size-blur-large: 100px;
+    --digilist-size-blur-medium: 60px;
+    --digilist-size-blur-small: 30px;
+  }
+
+  /* ==========================================================================
+   * EXTENDED SEMANTIC SHADOWS
+   * Component-specific shadows beyond the standard xs-xl scale
+   * ========================================================================== */
+
+  :root, [data-color-scheme="light"] {
+    --ds-shadow-header: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --ds-shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --ds-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+    --ds-shadow-focus-ring: 0 0 0 3px var(--ds-color-focus-outer);
+    --ds-shadow-badge: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  [data-color-scheme="dark"] {
+    --ds-shadow-header: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --ds-shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+    --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --ds-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.25);
+    --ds-shadow-badge: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-color-scheme="auto"] {
+      --ds-shadow-header: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+      --ds-shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+      --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+      --ds-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.25);
+      --ds-shadow-badge: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+}
+
+/* ==========================================================================
+ * RESPONSIVE UTILITIES
+ * Container query support for responsive components
+ * ========================================================================== */
+
+.ds-grid-responsive {
+  --_grid-columns: var(--_grid-sm, 1);
+}
+
+@container ds-container (min-width: 600px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-md, 2);
+  }
+}
+
+@container ds-container (min-width: 900px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-lg, 3);
+  }
+}
+
+/* Media query fallback for browsers without container query support */
+@media (min-width: 640px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-md, 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ds-grid-responsive {
+    --_grid-columns: var(--_grid-lg, 3);
+  }
+}
+
+/* ==========================================================================
+ * MOBILE COMPONENT OVERRIDES
+ * Responsive adjustments for mobile viewports
+ * ========================================================================== */
+
+@media (max-width: 700px) {
+  .listing-list-item {
+    flex-direction: column !important;
+  }
+
+  .listing-list-item > div:first-child {
+    width: 100% !important;
+    min-width: unset !important;
+    max-height: 200px;
+  }
+
+  .listing-list-item > div:last-child:not(:nth-child(2)) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .main-content-layout {
+    padding-left: var(--ds-spacing-4) !important;
+    padding-right: var(--ds-spacing-4) !important;
+  }
+}

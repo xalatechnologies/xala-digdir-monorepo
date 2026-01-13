@@ -1,10 +1,11 @@
 /**
  * React provider for managing Designsystemet theme and styling.
- * 
- * This provider handles runtime theme switching by managing a single <link>
- * element in the document head. It also sets data attributes for color scheme,
+ *
+ * This provider handles runtime theme switching by managing <link>
+ * elements in the document head. It supports themes with multiple CSS
+ * files (base + extensions) and sets data attributes for color scheme,
  * size, and typography preferences.
- * 
+ *
  * @example
  * ```tsx
  * import { DesignsystemetProvider } from '@xala/ds';
@@ -19,7 +20,7 @@
  * ```
  */
 import React from 'react';
-import { DEFAULT_THEME, THEMES, type ThemeId } from '@xala/ds-themes';
+import { DEFAULT_THEME, getThemeUrls, type ThemeId } from '@xala/ds-themes';
 
 /**
  * Available color scheme options for the design system.
@@ -58,39 +59,43 @@ export type DesignsystemetProviderProps = {
   rootAs?: keyof JSX.IntrinsicElements;
 };
 
-const THEME_LINK_ID = 'xala-ds-theme';
+const THEME_LINK_DATA_ATTR = 'data-xala-theme-link';
 
 /**
- * Ensures a theme CSS link element exists in the document head.
- * 
- * This function creates or updates a <link> element with the theme CSS.
- * It reuses the existing link to prevent flickering when switching themes.
- * 
- * @param href - URL of the theme CSS file
+ * Ensures theme CSS link elements exist in the document head.
+ *
+ * This function creates or updates <link> elements for the theme CSS.
+ * It supports multiple CSS files per theme (base + extensions).
+ * Old links are removed when switching themes to prevent conflicts.
+ *
+ * @param hrefs - Array of URLs for theme CSS files
  */
-function ensureThemeLink(href: string): void {
+function ensureThemeLinks(hrefs: string[]): void {
   const head = document.head;
-  let link = document.getElementById(THEME_LINK_ID) as HTMLLinkElement | null;
 
-  if (!link) {
-    link = document.createElement('link');
-    link.id = THEME_LINK_ID;
+  // Remove existing theme links
+  head.querySelectorAll(`link[${THEME_LINK_DATA_ATTR}]`).forEach((el) => {
+    el.remove();
+  });
+
+  // Add new theme links in order (base first, then extensions)
+  hrefs.forEach((href, index) => {
+    const link = document.createElement('link');
     link.rel = 'stylesheet';
-    head.appendChild(link);
-  }
-
-  if (link.href !== href) {
     link.href = href;
-  }
+    link.setAttribute(THEME_LINK_DATA_ATTR, String(index));
+    head.appendChild(link);
+  });
 }
 
 /**
  * React provider component for Designsystemet theming.
- * 
- * Manages theme loading through a dynamic <link> element and applies
+ *
+ * Manages theme loading through dynamic <link> elements and applies
  * data attributes for styling variations. Theme changes are applied
- * instantly without page reload.
- * 
+ * instantly without page reload. Supports themes with multiple CSS
+ * files (e.g., CLI-generated base + app extensions).
+ *
  * @param props - Provider configuration props
  * @returns JSX element with theme context
  */
@@ -98,14 +103,14 @@ export function DesignsystemetProvider({
   children,
   theme = DEFAULT_THEME,
   colorScheme = 'auto',
-  size = 'md',
+  size = 'auto',
   typography = 'primary',
   rootAs: Root = 'div',
 }: DesignsystemetProviderProps) {
   React.useEffect(() => {
-    const href = THEMES[theme];
-    ensureThemeLink(href);
-    
+    const urls = getThemeUrls(theme);
+    ensureThemeLinks(urls);
+
     // Also set attributes on html element for CSS targeting
     document.documentElement.setAttribute('data-color-scheme', colorScheme);
     document.documentElement.setAttribute('data-size', size);

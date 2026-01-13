@@ -28,39 +28,39 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontWeight: 500,
-        borderRadius: '4px',
+        fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
+        borderRadius: 'var(--ds-border-radius-sm)',
         transition: 'all 0.2s',
       };
 
-      // Size mapping
+      // Size mapping using design tokens
       const sizes = {
-        sm: { fontSize: '12px', padding: '2px 8px', height: '20px' },
-        md: { fontSize: '14px', padding: '4px 12px', height: '24px' },
-        lg: { fontSize: '16px', padding: '6px 16px', height: '32px' },
+        sm: { fontSize: 'var(--ds-font-size-xs)', padding: 'var(--ds-spacing-1) var(--ds-spacing-2)', height: 'var(--ds-spacing-5)' },
+        md: { fontSize: 'var(--ds-font-size-sm)', padding: 'var(--ds-spacing-1) var(--ds-spacing-3)', height: 'var(--ds-spacing-6)' },
+        lg: { fontSize: 'var(--ds-font-size-md)', padding: 'var(--ds-spacing-2) var(--ds-spacing-4)', height: 'var(--ds-spacing-8)' },
       };
 
-      // Variant mapping
+      // Variant mapping using correct token names
       const variants = {
         neutral: {
-          backgroundColor: 'var(--ds-colors-surface-subtle)',
-          color: 'var(--ds-colors-text-default)',
+          backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+          color: 'var(--ds-color-neutral-text-default)',
         },
         info: {
-          backgroundColor: 'var(--ds-colors-info-subtle)',
-          color: 'var(--ds-colors-info-default)',
+          backgroundColor: 'var(--ds-color-info-surface-default)',
+          color: 'var(--ds-color-info-text-default)',
         },
         success: {
-          backgroundColor: 'var(--ds-colors-success-subtle)',
-          color: 'var(--ds-colors-success-default)',
+          backgroundColor: 'var(--ds-color-success-surface-default)',
+          color: 'var(--ds-color-success-text-default)',
         },
         warning: {
-          backgroundColor: 'var(--ds-colors-warning-subtle)',
-          color: 'var(--ds-colors-warning-default)',
+          backgroundColor: 'var(--ds-color-warning-surface-default)',
+          color: 'var(--ds-color-warning-text-default)',
         },
         danger: {
-          backgroundColor: 'var(--ds-colors-danger-subtle)',
-          color: 'var(--ds-colors-danger-default)',
+          backgroundColor: 'var(--ds-color-danger-surface-default)',
+          color: 'var(--ds-color-danger-text-default)',
         },
       };
 

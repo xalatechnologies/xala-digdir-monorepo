@@ -22,7 +22,7 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Padding
-   * @default '32px'
+   * @default 'var(--ds-spacing-8)'
    */
   padding?: string | number;
   
@@ -42,7 +42,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     children,
     maxWidth = '1440px',
     fluid = false,
-    padding = '32px',
+    padding = 'var(--ds-spacing-8)',
     px,
     py,
     className,

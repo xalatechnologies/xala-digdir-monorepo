@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom/client';
 // ✅ Single import point for Designsystemet CSS (required).
 import '@xala/ds/styles';
 
-// ✅ DIGILIST brand theme (custom colors)
-import '@xala/ds-themes/themes/digilist.css';
+// Note: Theme CSS is dynamically loaded by DesignsystemetProvider.
+// The provider loads CLI-generated base theme + extensions.
 
 // Minimal global font settings (recommended by Designsystemet).
 import './root.css';

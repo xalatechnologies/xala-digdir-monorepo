@@ -14,107 +14,107 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
 // =============================================================================
 
 /**
- * Enhanced spacing values (use these for padding/margins where Digdir tokens are too small)
- * Digdir tokens should still be used for colors, typography, and border-radius
+ * Enhanced spacing values using design tokens
+ * These map to Digdir spacing scale for consistent sizing
  */
 export const spacing = {
-  xs: '4px',
-  sm: '8px',
-  md: '12px',
-  lg: '16px',
-  xl: '20px',
-  '2xl': '24px',
-  '3xl': '32px',
-  '4xl': '48px',
+  xs: 'var(--ds-spacing-1)',
+  sm: 'var(--ds-spacing-2)',
+  md: 'var(--ds-spacing-3)',
+  lg: 'var(--ds-spacing-4)',
+  xl: 'var(--ds-spacing-5)',
+  '2xl': 'var(--ds-spacing-6)',
+  '3xl': 'var(--ds-spacing-8)',
+  '4xl': 'var(--ds-spacing-12)',
 } as const;
 
 /**
- * Interactive element backgrounds
+ * Interactive element backgrounds using design tokens
  */
 export const interactiveBackgrounds = {
-  hover: 'rgba(0, 0, 0, 0.03)',
-  active: 'rgba(0, 0, 0, 0.06)',
-  selected: 'rgba(0, 0, 0, 0.03)',
-  // For dark mode compatibility
-  hoverDark: 'rgba(255, 255, 255, 0.05)',
-  activeDark: 'rgba(255, 255, 255, 0.1)',
-  selectedDark: 'rgba(255, 255, 255, 0.05)',
+  hover: 'var(--ds-color-neutral-surface-hover)',
+  active: 'var(--ds-color-neutral-surface-active)',
+  selected: 'var(--ds-color-accent-surface-default)',
+  // For dark mode - tokens automatically adapt
+  hoverDark: 'var(--ds-color-neutral-surface-hover)',
+  activeDark: 'var(--ds-color-neutral-surface-active)',
+  selectedDark: 'var(--ds-color-accent-surface-default)',
 } as const;
 
 /**
- * Badge/Tag styling presets
+ * Badge/Tag styling presets using design tokens
  */
 export const badgeStyles = {
   meta: {
-    padding: '4px 10px',
-    fontSize: '11px',
-    fontWeight: 500,
+    padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+    fontSize: 'var(--ds-font-size-xs)',
+    fontWeight: 'var(--ds-font-weight-medium)',
     borderRadius: 'var(--ds-border-radius-full)',
   },
   shortcut: {
-    padding: '4px 8px',
-    fontSize: '11px',
-    fontWeight: 500,
+    padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+    fontSize: 'var(--ds-font-size-xs)',
+    fontWeight: 'var(--ds-font-weight-medium)',
     borderRadius: 'var(--ds-border-radius-sm)',
   },
   notification: {
-    padding: '0 5px',
-    fontSize: '11px',
-    fontWeight: 700,
+    padding: '0 var(--ds-spacing-1)',
+    fontSize: 'var(--ds-font-size-xs)',
+    fontWeight: 'var(--ds-font-weight-bold)',
     borderRadius: 'var(--ds-border-radius-full)',
-    minWidth: '18px',
-    height: '18px',
+    minWidth: 'var(--ds-spacing-5)',
+    height: 'var(--ds-spacing-5)',
   },
 } as const;
 
 /**
- * Dropdown/Menu item styling
+ * Dropdown/Menu item styling using design tokens
  */
 export const menuItemStyles = {
-  padding: '12px 20px',
-  gap: '16px',
-  marginX: '8px',
+  padding: 'var(--ds-spacing-3) var(--ds-spacing-5)',
+  gap: 'var(--ds-spacing-4)',
+  marginX: 'var(--ds-spacing-2)',
   borderRadius: 'var(--ds-border-radius-md)',
   transition: 'all 0.1s ease',
 } as const;
 
 /**
- * Empty state styling
+ * Empty state styling using design tokens
  */
 export const emptyStateStyles = {
-  padding: '48px 32px',
-  gap: '16px',
+  padding: 'var(--ds-spacing-12) var(--ds-spacing-8)',
+  gap: 'var(--ds-spacing-4)',
 } as const;
 
 /**
- * Button text colors (overrides for proper contrast)
+ * Button text colors using design tokens for proper contrast
  */
 export const buttonTextColors = {
-  success: '#ffffff',
+  success: 'var(--ds-color-success-contrast-default)',
   accent: 'var(--ds-color-accent-contrast-default)',
-  danger: '#ffffff',
+  danger: 'var(--ds-color-danger-contrast-default)',
   warning: 'var(--ds-color-warning-contrast-default)',
 } as const;
 
 /**
- * Logo text styling
+ * Logo text styling using design tokens
  */
 export const logoStyles = {
   title: {
-    fontSize: '24px',
-    fontWeight: 700,
-    lineHeight: 1.1,
-    letterSpacing: '0.02em',
+    fontSize: 'var(--ds-font-size-xl)',
+    fontWeight: 'var(--ds-font-weight-bold)',
+    lineHeight: 'var(--ds-line-height-tight, 1.1)',
+    letterSpacing: 'var(--ds-letter-spacing-tight, 0.02em)',
   },
   subtitle: {
-    fontSize: '16px',
-    fontWeight: 500,
-    lineHeight: 1.2,
+    fontSize: 'var(--ds-font-size-md)',
+    fontWeight: 'var(--ds-font-weight-medium)',
+    lineHeight: 'var(--ds-line-height-snug, 1.2)',
     opacity: 0.55,
-    letterSpacing: '0.06em',
+    letterSpacing: 'var(--ds-letter-spacing-wide, 0.06em)',
     textTransform: 'uppercase' as const,
   },
-  gap: '16px',
+  gap: 'var(--ds-spacing-4)',
 } as const;
 
 // =============================================================================

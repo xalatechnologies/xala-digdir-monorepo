@@ -444,7 +444,7 @@ export function App() {
   const activeFilterCount = selectedTypes.includes('all') ? 0 : selectedTypes.length;
 
   return (
-    <DesignsystemetProvider theme={theme} colorScheme={colorScheme}>
+    <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
       <style>{`
         *, *::before, *::after {
           transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;

@@ -32,7 +32,7 @@ export interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Background color
-   * @default 'var(--ds-colors-surface-default)'
+   * @default 'var(--ds-color-neutral-background-default)'
    */
   background?: string;
   
@@ -48,7 +48,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
     children,
     fluid = false,
     maxWidth = '1440px',
-    background = 'var(--ds-colors-surface-default)',
+    background = 'var(--ds-color-neutral-background-default)',
     minHeight = '100vh',
     header,
     footer,

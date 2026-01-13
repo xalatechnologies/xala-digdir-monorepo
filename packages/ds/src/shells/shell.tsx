@@ -33,7 +33,7 @@ export interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
   
   /**
    * Padding for the shell
-   * @default '32px' - More breathing room
+   * @default 'var(--ds-spacing-8)' - Uses design token
    */
   padding?: string;
   
@@ -61,7 +61,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
     subtitle,
     fluid = false,
     maxWidth = '1440px',
-    padding = '32px',
+    padding = 'var(--ds-spacing-8)',
     showBranding = true,
     header,
     footer,
@@ -80,11 +80,11 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
       <div ref={ref} className={className} style={shellStyle} {...props}>
         {/* Header Section */}
         {header || (title || showBranding) ? (
-          <header style={{ marginBottom: 32 }}>
+          <header style={{ marginBottom: 'var(--ds-spacing-8)' }}>
             {header || (
               <>
                 {title && (
-                  <Heading level={1} style={{ marginBottom: subtitle ? 8 : 0 }}>
+                  <Heading level={1} style={{ marginBottom: subtitle ? 'var(--ds-spacing-2)' : 0 }}>
                     {title}
                   </Heading>
                 )}
@@ -101,7 +101,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
 
         {/* Footer Section */}
         {footer && (
-          <footer style={{ marginTop: 64 }}>
+          <footer style={{ marginTop: 'var(--ds-spacing-16)' }}>
             {footer}
           </footer>
         )}

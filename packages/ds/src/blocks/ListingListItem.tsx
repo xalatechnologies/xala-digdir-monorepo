@@ -161,14 +161,14 @@ export function ListingListItem({
         display: 'flex',
         flexWrap: 'wrap',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderRadius: '12px',
-        border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'rgba(0,0,0,0.08)'}`,
+        borderRadius: 'var(--ds-border-radius-lg)',
+        border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'var(--ds-color-neutral-border-subtle)'}`,
         overflow: 'hidden',
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: onClick ? 'pointer' : 'default',
         boxShadow: isHovered
-          ? '0 8px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)'
-          : '0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+          ? 'var(--ds-shadow-md, 0 8px 24px var(--ds-color-neutral-border-default))'
+          : 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))',
       }}
     >
       {/* Image section */}
@@ -190,8 +190,8 @@ export function ListingListItem({
 
         {/* Type badge on image */}
         {showTypeBadge && (
-          <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-            <Tag data-size="sm" data-color={listingTypeColors[listingType || 'OTHER'] || 'neutral'} style={{ paddingInline: '0.75rem' }}>
+          <div style={{ position: 'absolute', top: 'var(--ds-spacing-3)', left: 'var(--ds-spacing-3)' }}>
+            <Tag data-size="sm" data-color={listingTypeColors[listingType || 'OTHER'] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)' }}>
               {type}
             </Tag>
           </div>
@@ -200,22 +200,23 @@ export function ListingListItem({
         {/* Favorite button */}
         {showFavoriteButton && onFavorite && (
           <button
+            type="button"
             style={{
               position: 'absolute',
-              top: '12px',
-              right: '12px',
+              top: 'var(--ds-spacing-3)',
+              right: 'var(--ds-spacing-3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '32px',
-              height: '32px',
+              width: 'var(--ds-spacing-8)',
+              height: 'var(--ds-spacing-8)',
               border: 'none',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255,255,255,0.95)',
+              borderRadius: 'var(--ds-border-radius-full)',
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
               color: isFavorited ? 'var(--ds-color-danger-base-default)' : 'var(--ds-color-neutral-text-subtle)',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
             }}
             onClick={handleFavorite}
             title="Legg til favoritter"
@@ -228,13 +229,13 @@ export function ListingListItem({
       {/* Content section */}
       <div style={{
         flex: 1,
-        padding: '20px 24px',
+        padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0
       }}>
         {/* Header with title and listing type */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
           <h3 style={{
             margin: 0,
             fontSize: 'var(--ds-font-size-md)',
@@ -246,7 +247,7 @@ export function ListingListItem({
             {name}
           </h3>
           {showListingType && listingType && (
-            <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: '0.75rem', flexShrink: 0 }}>
+            <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
               {listingTypeLabels[listingType] || listingType}
             </Tag>
           )}
@@ -255,12 +256,12 @@ export function ListingListItem({
         {/* Location */}
         {showLocation && (
           <p style={{
-            margin: '0 0 10px 0',
+            margin: '0 0 var(--ds-spacing-2) 0',
             fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: 'var(--ds-spacing-1)',
             fontFamily: 'var(--ds-font-family)'
           } as React.CSSProperties}>
             <MapPinIcon />
@@ -271,7 +272,7 @@ export function ListingListItem({
         {/* Description */}
         {showDescription && (
           <p style={{
-            margin: '0 0 14px 0',
+            margin: '0 0 var(--ds-spacing-3) 0',
             fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             lineHeight: 'var(--ds-line-height-md)',
@@ -290,16 +291,16 @@ export function ListingListItem({
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '8px',
-            marginBottom: '14px'
+            gap: 'var(--ds-spacing-2)',
+            marginBottom: 'var(--ds-spacing-3)'
           }}>
             {facilities.slice(0, maxFacilities).map((facility) => (
-              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: '0.75rem' }}>
+              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
                 {facility}
               </Tag>
             ))}
             {moreFacilities > 0 && (
-              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: '0.75rem' }}>
+              <Tag data-size="sm" data-color="neutral" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
                 +{moreFacilities} flere
               </Tag>
             )}
@@ -312,7 +313,7 @@ export function ListingListItem({
             marginTop: 'auto',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: 'var(--ds-spacing-1)',
             fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
             fontFamily: 'var(--ds-font-family)'

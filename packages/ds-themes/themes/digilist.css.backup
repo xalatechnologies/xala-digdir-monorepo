@@ -178,6 +178,49 @@
   --digilist-radius-lg: 8px;
   --digilist-radius-xl: 12px;
   --digilist-radius-full: 9999px;
+
+  /* =========================================================================
+   * Digdir Extension: Shadow Tokens
+   * Semantic shadows derived from design system principles
+   * ========================================================================= */
+  --ds-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ds-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --ds-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --ds-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --ds-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.14);
+  --ds-shadow-header: 0 2px 12px -4px rgba(0, 0, 0, 0.1);
+  --ds-shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  --ds-shadow-focus-ring: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  --ds-shadow-badge: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --ds-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* =========================================================================
+   * Digdir Extension: Font Weight Tokens
+   * Semantic font weights for consistent typography
+   * ========================================================================= */
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+
+  /* =========================================================================
+   * Digdir Extension: Letter Spacing Tokens
+   * Semantic letter spacing for typography hierarchy
+   * ========================================================================= */
+  --ds-letter-spacing-tight: 0.01em;
+  --ds-letter-spacing-normal: 0.02em;
+  --ds-letter-spacing-wide: 0.06em;
+  --ds-letter-spacing-wider: 0.08em;
+
+  /* =========================================================================
+   * Digdir Extension: Line Height Tokens
+   * Semantic line heights for readability
+   * ========================================================================= */
+  --ds-line-height-tight: 1.1;
+  --ds-line-height-snug: 1.2;
+  --ds-line-height-normal: 1.4;
+  --ds-line-height-relaxed: 1.55;
 }
 
 /* =========================================================================
@@ -285,6 +328,22 @@
   --digilist-chart-3: oklch(0.70 0.15 300);  /* Light Purple */
   --digilist-chart-4: oklch(0.80 0.15 80);   /* Bright Orange */
   --digilist-chart-5: oklch(0.45 0.12 262);  /* Blue */
+
+  /* =========================================================================
+   * Digdir Extension: Shadow Tokens (Dark Mode)
+   * Darker shadows with higher opacity for visibility in dark UI
+   * ========================================================================= */
+  --ds-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --ds-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --ds-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --ds-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --ds-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --ds-shadow-header: 0 2px 12px -4px rgba(0, 0, 0, 0.3);
+  --ds-shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --ds-shadow-focus-ring: 0 -4px 16px rgba(0, 0, 0, 0.2);
+  --ds-shadow-badge: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --ds-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* =========================================================================
