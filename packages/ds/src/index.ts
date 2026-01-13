@@ -81,6 +81,7 @@ export {
   DrawerItem,
   DrawerEmptyState
 } from './composed';
+export { mockFilterData } from './composed';
 export type {
   ContentLayoutProps,
   ContentSectionProps,
@@ -98,6 +99,19 @@ export type {
   FilterBarProps,
   SearchResultItem,
   SearchResultGroup,
+  ListingType,
+  VenueType,
+  PriceUnit,
+  AvailabilityStatus,
+  FilterOption,
+  PriceRangeFilter,
+  CapacityRangeFilter,
+  RatingFilter,
+  LocationFilter,
+  FacilitiesFilter,
+  DateTimeFilter,
+  FilterState,
+  FilterConfig,
   DrawerProps,
   DrawerPosition,
   DrawerSize,

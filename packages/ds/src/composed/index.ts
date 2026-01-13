@@ -47,6 +47,24 @@ export type { NavigationProps, NavigationLinkProps } from './navigation';
 export { FilterBar } from './filter-bar';
 export type { FilterBarProps } from './filter-bar';
 
+// Filter Types
+export type {
+  ListingType,
+  VenueType,
+  PriceUnit,
+  AvailabilityStatus,
+  FilterOption,
+  PriceRangeFilter,
+  CapacityRangeFilter,
+  RatingFilter,
+  LocationFilter,
+  FacilitiesFilter,
+  DateTimeFilter,
+  FilterState,
+  FilterConfig
+} from '../types/filters';
+export { mockFilterData } from '../types/filters';
+
 // Drawer / Slide Panel
 export { Drawer, DrawerSection, DrawerItem, DrawerEmptyState } from './Drawer';
 export type {
