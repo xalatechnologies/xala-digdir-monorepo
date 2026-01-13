@@ -8,6 +8,9 @@ import * as React from 'react';
 import { Tag } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 
+/** Card variant for different display contexts */
+export type ListingCardVariant = 'grid' | 'detailed';
+
 export interface ListingCardProps {
   /** Unique identifier */
   id: string;
@@ -47,12 +50,16 @@ export interface ListingCardProps {
   onFavorite?: (id: string) => void;
   /** Click handler for share button */
   onShare?: (id: string) => void;
+  /** Close handler for detailed variant */
+  onClose?: () => void;
   /** Whether this listing is favorited */
   isFavorited?: boolean;
   /** Custom class name */
   className?: string;
   /** Image height in pixels */
   imageHeight?: number;
+  /** Card variant: 'grid' for compact grid view, 'detailed' for popup/modal view */
+  variant?: ListingCardVariant;
   /** Show/hide different elements */
   showRating?: boolean;
   showPrice?: boolean;
@@ -106,6 +113,22 @@ const UserIcon = () => (
   </svg>
 );
 
+const CloseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const PeopleIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ds-color-neutral-text-subtle)" strokeWidth="2">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+
 // Listing type labels in Norwegian
 const listingTypeLabels: Record<string, string> = {
   SPACE: 'Lokale',
@@ -146,9 +169,11 @@ export function ListingCard({
   onClick,
   onFavorite,
   onShare,
+  onClose,
   isFavorited = false,
   className,
   imageHeight = 200,
+  variant = 'grid',
   showRating = false, // Disabled by default, enable when rating system is ready
   showPrice = false,
   showCapacity = true,
@@ -179,6 +204,224 @@ export function ListingCard({
     onShare?.(id);
   };
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose?.();
+  };
+
+  // Detailed variant - larger popup/modal style
+  if (variant === 'detailed') {
+    return (
+      <div
+        className={cn('listing-card listing-card--detailed', className)}
+        style={{
+          position: 'relative',
+          width: '520px',
+          maxWidth: '95vw',
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+          borderRadius: 'var(--ds-border-radius-lg)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Close button - positioned over the image with high contrast */}
+        {onClose && (
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Lukk"
+            style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              zIndex: 10,
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              color: '#ffffff',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.6)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <CloseIcon />
+          </button>
+        )}
+
+        <div
+          style={{ cursor: onClick ? 'pointer' : 'default' }}
+          onClick={handleClick}
+        >
+          {/* Image */}
+          {image && (
+            <img
+              src={image}
+              alt={name}
+              style={{
+                width: '100%',
+                height: '240px',
+                objectFit: 'cover',
+              }}
+            />
+          )}
+
+          <div style={{ padding: '20px' }}>
+            {/* Listing type badge */}
+            {listingType && (
+              <span style={{
+                display: 'inline-block',
+                marginBottom: '12px',
+                padding: '6px 14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                backgroundColor: 'var(--ds-color-accent-surface-default)',
+                color: 'var(--ds-color-accent-text-default)',
+                borderRadius: 'var(--ds-border-radius-sm)',
+              }}>
+                {listingTypeLabels[listingType] || listingType}
+              </span>
+            )}
+
+            {/* Title */}
+            <h3 style={{
+              margin: '0 0 8px 0',
+              fontSize: '1.5rem',
+              fontWeight: 600,
+              color: 'var(--ds-color-neutral-text-default)',
+            }}>
+              {name}
+            </h3>
+
+            {/* Location */}
+            <p style={{
+              margin: '0 0 12px 0',
+              fontSize: '1.125rem',
+              color: 'var(--ds-color-neutral-text-subtle)',
+            }}>
+              {location}
+            </p>
+
+            {/* Description */}
+            {description && (
+              <p style={{
+                margin: '0 0 16px 0',
+                fontSize: '1rem',
+                color: 'var(--ds-color-neutral-text-default)',
+                lineHeight: 1.6,
+              }}>
+                {description}
+              </p>
+            )}
+
+            {/* Capacity */}
+            {capacity && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '16px',
+              }}>
+                <PeopleIcon />
+                <span style={{ fontSize: '1.125rem', color: 'var(--ds-color-neutral-text-default)' }}>
+                  {capacity} personer
+                </span>
+              </div>
+            )}
+
+            {/* Facilities */}
+            {facilities && facilities.length > 0 && (
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                marginBottom: '16px',
+              }}>
+                {facilities.slice(0, 4).map((facility, idx) => (
+                  <span
+                    key={idx}
+                    style={{
+                      padding: '8px 14px',
+                      fontSize: '0.9375rem',
+                      backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+                      color: 'var(--ds-color-neutral-text-default)',
+                      borderRadius: 'var(--ds-border-radius-sm)',
+                    }}
+                  >
+                    {facility}
+                  </span>
+                ))}
+                {facilities.length > 4 && (
+                  <span style={{
+                    padding: '8px 14px',
+                    fontSize: '0.9375rem',
+                    color: 'var(--ds-color-neutral-text-subtle)',
+                  }}>
+                    +{facilities.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Footer with availability & CTA */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: '16px',
+              borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+            }}>
+              {available !== undefined && (
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontSize: '1.125rem',
+                  color: available
+                    ? 'var(--ds-color-success-text-default)'
+                    : 'var(--ds-color-danger-text-default)',
+                  fontWeight: 500,
+                }}>
+                  <span style={{
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    backgroundColor: available
+                      ? 'var(--ds-color-success-base-default)'
+                      : 'var(--ds-color-danger-base-default)',
+                  }} />
+                  {available ? 'Ledig' : 'Opptatt'}
+                </span>
+              )}
+              <span style={{
+                fontSize: '1.125rem',
+                color: 'var(--ds-color-accent-text-default)',
+                fontWeight: 600,
+              }}>
+                Se detaljer →
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Grid variant (default) - compact card style
   return (
     <div
       className={cn('listing-card', className)}

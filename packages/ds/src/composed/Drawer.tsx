@@ -52,17 +52,33 @@ export interface DrawerProps {
   'aria-label'?: string;
   /** Show drag handle (for bottom/top drawers) */
   showHandle?: boolean;
+  /** Position on mobile viewports (under 600px). Defaults to main position */
+  mobilePosition?: DrawerPosition;
+  /** Size on mobile viewports. Defaults to 'full' for bottom/top, 'lg' for left/right */
+  mobileSize?: DrawerSize;
+  /** Breakpoint for mobile behavior in pixels */
+  mobileBreakpoint?: number;
 }
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-const sizeMap: Record<DrawerSize, string> = {
-  sm: '280px',
-  md: '360px',
-  lg: '480px',
-  xl: '640px',
+// Width sizes for left/right drawers (+10% from original)
+const widthSizeMap: Record<DrawerSize, string> = {
+  sm: '352px',
+  md: '440px',
+  lg: '550px',
+  xl: '700px',
+  full: '100%',
+};
+
+// Height sizes for top/bottom drawers (+10% from original)
+const heightSizeMap: Record<DrawerSize, string> = {
+  sm: '45vh',
+  md: '60vh',
+  lg: '77vh',
+  xl: '90vh',
   full: '100%',
 };
 
@@ -216,15 +232,38 @@ export function Drawer({
   zIndex = 1000,
   'aria-label': ariaLabel,
   showHandle = false,
+  mobilePosition,
+  mobileSize,
+  mobileBreakpoint = 600,
 }: DrawerProps): React.ReactElement | null {
   const drawerRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = (): void => {
+      setIsMobile(window.innerWidth < mobileBreakpoint);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [mobileBreakpoint]);
+
+  // Determine effective position and size based on viewport
+  const effectivePosition = isMobile && mobilePosition ? mobilePosition : position;
+  const effectiveSize = isMobile && mobileSize ? mobileSize : size;
+
+  const isVertical = effectivePosition === 'top' || effectivePosition === 'bottom';
+
+  // Use appropriate size map based on drawer orientation
   const computedSize = customSize
     ? typeof customSize === 'number' ? `${customSize}px` : customSize
-    : sizeMap[size];
+    : isVertical ? heightSizeMap[effectiveSize] : widthSizeMap[effectiveSize];
 
-  const isVertical = position === 'top' || position === 'bottom';
+  // Show handle automatically on mobile bottom drawer
+  const effectiveShowHandle = showHandle || (isMobile && effectivePosition === 'bottom');
 
   // Handle escape key
   useEffect(() => {
@@ -332,13 +371,13 @@ export function Drawer({
         aria-label={ariaLabel ?? (typeof title === 'string' ? title : undefined)}
         className={className}
         style={{
-          ...getPositionStyles(position, computedSize, isOpen),
+          ...getPositionStyles(effectivePosition, computedSize, isOpen),
           zIndex,
           visibility: isOpen ? 'visible' : 'hidden',
         }}
       >
         {/* Handle (for vertical drawers) */}
-        {showHandle && isVertical && (
+        {effectiveShowHandle && isVertical && (
           <div style={{
             display: 'flex',
             justifyContent: 'center',

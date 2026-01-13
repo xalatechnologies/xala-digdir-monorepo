@@ -4,16 +4,12 @@ import {
   HeaderLogo,
   HeaderSearch,
   HeaderActions,
-  HeaderIconButton,
   HeaderThemeToggle,
   HeaderLanguageSwitch,
   HeaderLoginButton,
   ContentLayout,
-  Heading,
-  Paragraph,
   Button,
   Checkbox,
-  ShoppingCartIcon,
   CalendarIcon,
   UserIcon,
   SettingsIcon,
@@ -25,7 +21,8 @@ import {
   ListingCard,
   ListingListItem,
   ListingGrid,
-  ListingToolbar
+  ListingToolbar,
+  ListingMap
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
@@ -541,7 +538,7 @@ export function App() {
           }
         />
 
-        {/* Left Filter Drawer */}
+        {/* Left Filter Drawer - switches to bottom on mobile */}
         <Drawer
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}
@@ -549,8 +546,10 @@ export function App() {
           icon={<FilterIcon size={20} />}
           position="left"
           size="sm"
+          mobilePosition="bottom"
+          mobileSize="lg"
           footer={
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
               <div style={{
                 fontSize: 'var(--ds-font-size-sm)',
                 color: 'var(--ds-color-neutral-text-subtle)',
@@ -559,6 +558,7 @@ export function App() {
                 Viser 6 lokaler
               </div>
               <Button
+                type="button"
                 variant="primary"
                 style={{ width: '100%' }}
                 onClick={() => setIsFilterOpen(false)}
@@ -569,7 +569,7 @@ export function App() {
           }
         >
           <DrawerSection title="Type anlegg" collapsible>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
               {venueTypes.map((type) => (
                 <DrawerItem
                   key={type.id}
@@ -580,7 +580,7 @@ export function App() {
                       aria-label={type.label}
                     />
                   }
-                  right={<span style={{ fontSize: '13px' }}>({type.count})</span>}
+                  right={<span style={{ fontSize: 'var(--ds-font-size-sm)' }}>({type.count})</span>}
                   onClick={() => handleTypeToggle(type.id)}
                   selected={selectedTypes.includes(type.id)}
                 >
@@ -597,7 +597,7 @@ export function App() {
 
           <DrawerSection title="Område" collapsible defaultCollapsed>
             <div style={{
-              padding: '8px 0',
+              padding: 'var(--ds-spacing-2) 0',
               fontSize: 'var(--ds-font-size-sm)',
               color: 'var(--ds-color-neutral-text-subtle)'
             }}>
@@ -607,7 +607,7 @@ export function App() {
 
           <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
             <div style={{
-              padding: '8px 0',
+              padding: 'var(--ds-spacing-2) 0',
               fontSize: 'var(--ds-font-size-sm)',
               color: 'var(--ds-color-neutral-text-subtle)'
             }}>
@@ -617,7 +617,7 @@ export function App() {
 
           <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
             <div style={{
-              padding: '8px 0',
+              padding: 'var(--ds-spacing-2) 0',
               fontSize: 'var(--ds-font-size-sm)',
               color: 'var(--ds-color-neutral-text-subtle)'
             }}>
@@ -627,9 +627,9 @@ export function App() {
         </Drawer>
 
         <ContentLayout maxWidth="1440px" className="main-content-layout">
-          <main id="main" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
+          <main id="main" style={{ paddingTop: 'var(--ds-spacing-6)', paddingBottom: 'var(--ds-spacing-6)' }}>
             {/* Mobile search - shown above filter bar on mobile */}
-            <div className="mobile-search-wrapper" style={{ marginBottom: '16px' }}>
+            <div className="mobile-search-wrapper" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               <HeaderSearch
                 placeholder="Søk lokaler..."
                 value={searchQuery}
@@ -680,7 +680,7 @@ export function App() {
                 ))}
               </ListingGrid>
             ) : viewMode === 'list' ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
                 {visibleListings.map((listing) => (
                   <ListingListItem
                     key={listing.id}
@@ -705,26 +705,43 @@ export function App() {
                 ))}
               </div>
             ) : (
-              <div style={{
-                padding: '48px',
-                textAlign: 'center',
-                color: 'var(--ds-color-neutral-text-subtle)'
-              }}>
-                Kartvisning kommer snart...
-              </div>
+              <ListingMap
+                listings={listings
+                  .filter(l => l.latitude && l.longitude)
+                  .map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    location: l.location,
+                    image: l.image,
+                    latitude: l.latitude!,
+                    longitude: l.longitude!,
+                    type: l.type,
+                    listingType: l.listingType,
+                    description: l.description,
+                    capacity: l.capacity,
+                    price: l.price,
+                    priceUnit: l.priceUnit,
+                    facilities: l.facilities,
+                    available: l.available,
+                  }))}
+                mapboxToken={MAPBOX_TOKEN}
+                height="calc(100vh - 250px)"
+                onListingClick={(id) => console.log('Navigate to listing:', id)}
+              />
             )}
 
-            {/* Show more button */}
-            {hasMore && (
+            {/* Show more button - hidden for map view */}
+            {viewMode !== 'map' && hasMore && (
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginTop: '32px'
+                marginTop: 'var(--ds-spacing-8)'
               }}>
                 <Button
+                  type="button"
                   variant="secondary"
                   onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
-                  style={{ paddingInline: '2rem' }}
+                  style={{ paddingInline: 'var(--ds-spacing-8)' }}
                 >
                   Vis flere ({listings.length - visibleCount} igjen)
                 </Button>

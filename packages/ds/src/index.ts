@@ -150,13 +150,17 @@ export {
   ListingCard,
   ListingListItem,
   ListingGrid,
-  ListingToolbar
+  ListingToolbar,
+  ListingMap
 } from './blocks';
 export type {
   ListingCardProps,
+  ListingCardVariant,
   ListingListItemProps,
   ListingGridProps,
   ListingToolbarProps,
+  ListingMapProps,
+  MapListing,
   ViewMode
 } from './blocks';
 

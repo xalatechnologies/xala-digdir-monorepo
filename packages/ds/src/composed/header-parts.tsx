@@ -1337,12 +1337,19 @@ export const HeaderLanguageSwitch: React.FC<HeaderLanguageSwitchProps> = ({
 
   // Simple toggle between first two languages
   const handleToggle = () => {
+    if (languages.length === 0) return;
     const currentIndex = languages.findIndex(l => l.code === language);
     const nextIndex = (currentIndex + 1) % languages.length;
-    onSwitch?.(languages[nextIndex].code);
+    const nextLang = languages[nextIndex];
+    if (nextLang) {
+      onSwitch?.(nextLang.code);
+    }
   };
 
-  const currentLang = languages.find(l => l.code === language) || languages[0];
+  const currentLang = languages.find(l => l.code === language) ?? languages[0];
+
+  // Guard against empty languages array
+  if (!currentLang) return null;
 
   return (
     <button

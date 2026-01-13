@@ -5,7 +5,7 @@
  */
 
 export { ListingCard } from './ListingCard';
-export type { ListingCardProps } from './ListingCard';
+export type { ListingCardProps, ListingCardVariant } from './ListingCard';
 
 export { ListingListItem } from './ListingListItem';
 export type { ListingListItemProps } from './ListingListItem';
@@ -15,3 +15,6 @@ export type { ListingGridProps } from './ListingGrid';
 
 export { ListingToolbar } from './ListingToolbar';
 export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
+
+export { ListingMap } from './ListingMap';
+export type { ListingMapProps, MapListing } from './ListingMap';
