@@ -68,3 +68,45 @@ export type { BookingConfirmationProps } from './BookingConfirmation';
 
 export { BookingSuccess } from './BookingSuccess';
 export type { BookingSuccessProps } from './BookingSuccess';
+
+export { BookingSection } from './BookingSection';
+export type { BookingSectionProps } from './BookingSection';
+
+// Unified Booking Engine - Dynamic booking system for all listing types
+export { UnifiedBookingEngine } from './UnifiedBookingEngine';
+export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
+
+// Key Facts Row - Display key listing information
+export { KeyFactsRow } from './KeyFactsRow';
+export type { KeyFactsRowProps, KeyFact, KeyFactType } from './KeyFactsRow';
+
+// Interactive Action Buttons
+export { FavoriteButton } from './FavoriteButton';
+export type { FavoriteButtonProps } from './FavoriteButton';
+
+export { ShareButton, ShareSheet } from './ShareButton';
+export type { ShareButtonProps, ShareSheetProps, ShareData, SharePlatform } from './ShareButton';
+
+// Tabbed Navigation for Listing Details
+export { ListingTabs, TabContent, TabEmptyState } from './ListingTabs';
+export type { ListingTabsProps, TabConfig, TabContentProps, TabEmptyStateProps } from './ListingTabs';
+
+// Auth Gating Modal
+export { RequireAuthModal } from './RequireAuthModal';
+export type { RequireAuthModalProps } from './RequireAuthModal';
+
+// Login Components
+export { 
+  LoginOption, 
+  FeatureItem, 
+  IntegrationBadge, 
+  LoginFooterLink, 
+  LoginLayout 
+} from './LoginComponents';
+export type { 
+  LoginOptionProps, 
+  FeatureItemProps, 
+  IntegrationBadgeProps, 
+  LoginFooterLinkProps, 
+  LoginLayoutProps 
+} from './LoginComponents';

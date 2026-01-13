@@ -314,3 +314,233 @@ export const ShieldIcon = (props: React.ComponentProps<typeof Icon>) => (
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
   </Icon>
 );
+
+// Shield Check Icon - for security features
+export const ShieldCheckIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+    <path d="m9 12 2 2 4-4" />
+  </Icon>
+);
+
+// Platform/Grid Icon - for platform features
+export const PlatformIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="14" y="14" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+  </Icon>
+);
+
+// Automation/Cog Icon - for automation features
+export const AutomationIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M12 2v4" />
+    <path d="m6.8 15-3.5 2" />
+    <path d="m20.7 17-3.5-2" />
+    <path d="M6.8 9 3.3 7" />
+    <path d="m20.7 7-3.5 2" />
+    <circle cx="12" cy="12" r="4" />
+  </Icon>
+);
+
+// Trend Up Icon - for positive trends
+export const TrendUpIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <polyline points="17 6 23 6 23 12" />
+  </Icon>
+);
+
+// Trend Down Icon - for negative trends
+export const TrendDownIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+    <polyline points="17 18 23 18 23 12" />
+  </Icon>
+);
+
+// Download Icon - for downloads
+export const DownloadIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </Icon>
+);
+
+// More/Dots Icon - for action menus
+export const MoreVerticalIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="19" r="1" />
+  </Icon>
+);
+
+// Home Icon - for dashboard/home navigation
+export const HomeIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <polyline points="9,22 9,12 15,12 15,22" />
+  </Icon>
+);
+
+// Building Icon - for organizations/listings
+export const BuildingIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+    <path d="M9 22v-4h6v4" />
+    <path d="M8 6h.01" />
+    <path d="M16 6h.01" />
+    <path d="M8 10h.01" />
+    <path d="M16 10h.01" />
+    <path d="M8 14h.01" />
+    <path d="M16 14h.01" />
+  </Icon>
+);
+
+// Inbox Icon - for messages/requests
+export const InboxIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+  </Icon>
+);
+
+// Book Icon - for bookings
+export const BookOpenIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </Icon>
+);
+
+// Repeat Icon - for recurring/seasons
+export const RepeatIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <polyline points="17 1 21 5 17 9" />
+    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+    <polyline points="7 23 3 19 7 15" />
+    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+  </Icon>
+);
+
+// Message Icon - for messages/chat
+export const MessageIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </Icon>
+);
+
+// Chart Icon - for reports
+export const ChartIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <line x1="18" y1="20" x2="18" y2="10" />
+    <line x1="12" y1="20" x2="12" y2="4" />
+    <line x1="6" y1="20" x2="6" y2="14" />
+  </Icon>
+);
+
+// Arrow Right Icon - for navigation
+export const ArrowRightIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </Icon>
+);
+
+// X Circle Icon - for error/cancel states
+export const XCircleIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+    <line x1="9" y1="9" x2="15" y2="15" />
+  </Icon>
+);
+
+// =============================================================================
+// Auth Provider Icons (Brand logos)
+// =============================================================================
+
+interface AuthIconProps {
+  size?: number;
+  className?: string;
+}
+
+// ID-porten Icon (Norwegian national identity provider)
+export const IdPortenIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 40 40" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="ID-porten"
+  >
+    <rect width="40" height="40" rx="8" fill="#1E2B3C"/>
+    <path d="M20 8L12 14V26L20 32L28 26V14L20 8Z" stroke="white" strokeWidth="2" fill="none"/>
+    <rect x="18" y="14" width="4" height="8" fill="white"/>
+    <rect x="18" y="24" width="4" height="3" fill="white"/>
+  </svg>
+);
+
+// Microsoft Icon
+export const MicrosoftIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 40 40" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="Microsoft"
+  >
+    <rect width="40" height="40" rx="8" fill="#F3F3F3"/>
+    <rect x="10" y="10" width="9" height="9" fill="#F25022"/>
+    <rect x="21" y="10" width="9" height="9" fill="#7FBA00"/>
+    <rect x="10" y="21" width="9" height="9" fill="#00A4EF"/>
+    <rect x="21" y="21" width="9" height="9" fill="#FFB900"/>
+  </svg>
+);
+
+// Google Icon
+export const GoogleIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 40 40" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="Google"
+  >
+    <rect width="40" height="40" rx="8" fill="#FFFFFF"/>
+    <path d="M29.6 20.227c0-.709-.064-1.39-.182-2.045H20v3.868h5.382a4.6 4.6 0 01-1.996 3.018v2.51h3.232c1.891-1.742 2.982-4.305 2.982-7.35z" fill="#4285F4"/>
+    <path d="M20 30c2.7 0 4.964-.895 6.618-2.423l-3.232-2.509c-.895.6-2.04.955-3.386.955-2.605 0-4.81-1.76-5.595-4.123h-3.341v2.59A10 10 0 0020 30z" fill="#34A853"/>
+    <path d="M14.405 21.9c-.2-.6-.314-1.24-.314-1.9s.114-1.3.314-1.9v-2.59h-3.34A10 10 0 0010 20c0 1.614.386 3.14 1.064 4.49l3.34-2.59z" fill="#FBBC05"/>
+    <path d="M20 13.977c1.468 0 2.786.505 3.823 1.496l2.868-2.868C24.959 10.99 22.695 10 20 10a10 10 0 00-8.936 5.51l3.34 2.59c.787-2.364 2.991-4.123 5.596-4.123z" fill="#EA4335"/>
+  </svg>
+);
+
+// BankID Icon (Norwegian bank identity)
+export const BankIdIcon = ({ size = 40, className }: AuthIconProps): React.ReactElement => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 40 40" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="BankID"
+  >
+    <rect width="40" height="40" rx="8" fill="#002776"/>
+    <path d="M12 14h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4v-8z" fill="white"/>
+    <rect x="12" y="24" width="4" height="4" fill="white"/>
+    <rect x="20" y="14" width="4" height="14" fill="white"/>
+    <path d="M28 14h-4v14h4c2.2 0 4-3.1 4-7s-1.8-7-4-7z" fill="white"/>
+  </svg>
+);
+

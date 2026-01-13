@@ -1,5 +1,5 @@
 /**
- * Login Page - Backoffice App
+ * Login Page - Web App
  *
  * Uses reusable login components from @xala/ds
  */
@@ -65,7 +65,7 @@ export function LoginPage(): React.ReactElement {
       brandTagline="ENKEL BOOKING"
       title="Logg inn"
       subtitle="Velg innloggingsmetode i henhold til kommunens retningslinjer."
-      panelTitle="Backoffice"
+      panelTitle="Booking"
       panelSubtitle="En helhetlig bookingløsning"
       panelDescription="Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering."
       features={features}

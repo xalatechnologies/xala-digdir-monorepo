@@ -169,6 +169,26 @@ export {
   CheckCircleIcon,
   StarIcon,
   ShieldIcon,
+  ShieldCheckIcon,
+  PlatformIcon,
+  AutomationIcon,
+  TrendUpIcon,
+  TrendDownIcon,
+  DownloadIcon,
+  MoreVerticalIcon,
+  HomeIcon,
+  BuildingIcon,
+  InboxIcon,
+  BookOpenIcon,
+  RepeatIcon,
+  MessageIcon,
+  ChartIcon,
+  ArrowRightIcon,
+  XCircleIcon,
+  IdPortenIcon,
+  MicrosoftIcon,
+  GoogleIcon,
+  BankIdIcon,
 } from './primitives';
 export type {
   ContainerProps,
@@ -203,7 +223,23 @@ export {
   PriceSummaryCard,
   BookingFormModal,
   BookingConfirmation,
-  BookingSuccess
+  BookingSuccess,
+  BookingSection,
+  UnifiedBookingEngine,
+  // New listing detail components
+  KeyFactsRow,
+  FavoriteButton,
+  ShareButton,
+  ShareSheet,
+  ListingTabs,
+  TabContent,
+  TabEmptyState,
+  RequireAuthModal,
+  LoginOption,
+  FeatureItem,
+  IntegrationBadge,
+  LoginFooterLink,
+  LoginLayout
 } from './blocks';
 export type {
   ListingCardProps,
@@ -230,7 +266,28 @@ export type {
   PriceLineItem,
   BookingFormModalProps,
   BookingConfirmationProps,
-  BookingSuccessProps
+  BookingSuccessProps,
+  BookingSectionProps,
+  UnifiedBookingEngineProps,
+  // New listing detail types
+  KeyFactsRowProps,
+  KeyFact,
+  KeyFactType,
+  FavoriteButtonProps,
+  ShareButtonProps,
+  ShareSheetProps,
+  ShareData,
+  SharePlatform,
+  ListingTabsProps,
+  TabConfig,
+  TabContentProps,
+  TabEmptyStateProps,
+  RequireAuthModalProps,
+  LoginOptionProps,
+  FeatureItemProps,
+  IntegrationBadgeProps,
+  LoginFooterLinkProps,
+  LoginLayoutProps
 } from './blocks';
 
 // Listing Detail Types
@@ -252,6 +309,31 @@ export type {
   ListingDetail,
   ActivityType
 } from './types/listing-detail';
+
+// Booking Engine Types
+export type {
+  BookingMode,
+  BookingPriceUnit,
+  SlotStatus,
+  AvailabilitySlot,
+  DayAvailability,
+  BookingPricing,
+  BookingRules,
+  DaySchedule,
+  BookingConfig,
+  BookingSelection,
+  BookingFormData,
+  PriceItem,
+  BookingPriceCalculation,
+  BookingStepConfig
+} from './types/booking';
+
+export {
+  getBookingSteps,
+  determineBookingMode,
+  formatPrice,
+  formatPriceUnit
+} from './types/booking';
 
 // =============================================================================
 // Design System Utilities & Tokens
