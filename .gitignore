@@ -9,3 +9,14 @@ build
 coverage
 .vite
 .turbo
+
+# TypeScript compiled output (keep source .ts/.tsx files only)
+*.tsbuildinfo
+apps/**/*.js
+apps/**/*.d.ts
+!apps/**/vite.config.js
+!apps/**/eslint.config.js
+packages/**/*.js
+packages/**/*.d.ts
+!packages/eslint-config/**/*.js
+!packages/ds-registry/examples/**/*.js
