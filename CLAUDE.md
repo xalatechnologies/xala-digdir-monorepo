@@ -150,3 +150,154 @@ import {
   apps               // Full config for apps/
 } from '@xala/eslint-config';
 ```
+
+---
+
+## Token-First Development Workflow
+
+**CRITICAL: Always follow this workflow when creating or modifying components.**
+
+### Step 1: Check Available Tokens First
+
+Before writing any style, check if a token exists:
+
+```bash
+# Search for available tokens in generated theme
+grep -r "ds-color\|ds-spacing\|ds-font\|ds-border" packages/ds-themes/generated/
+
+# Or check the extensions file for custom tokens
+cat packages/ds-themes/themes/digilist-extensions.css
+```
+
+**Available token families:**
+
+| Category | Token Pattern | Example |
+|----------|--------------|---------|
+| Colors | `--ds-color-{semantic}-{variant}` | `--ds-color-neutral-text-default` |
+| Spacing | `--ds-spacing-{0-30}` | `--ds-spacing-4` |
+| Font Size | `--ds-font-size-{xs,sm,md,lg,xl,2xl...}` | `--ds-font-size-md` |
+| Font Weight | `--ds-font-weight-{medium,semibold,bold}` | `--ds-font-weight-bold` |
+| Border Radius | `--ds-border-radius-{sm,md,lg,full}` | `--ds-border-radius-md` |
+| Shadows | `--ds-shadow-{xs,sm,md,lg,xl}` | `--ds-shadow-md` |
+| Line Height | `--ds-line-height-{sm,md,lg}` | `--ds-line-height-md` |
+
+### Step 2: If Token Doesn't Exist, Create Extension
+
+If you need a value not covered by existing tokens:
+
+1. **Add to `packages/ds-themes/themes/digilist-extensions.css`**
+2. **Use proper namespace**: `--ds-*` for Digdir-style tokens, `--digilist-*` for app-specific
+3. **Document the token** with a comment explaining its purpose
+
+```css
+/* In digilist-extensions.css */
+:root {
+  /* Condensed line-height for logo text and tight headings */
+  --ds-line-height-condensed: 1.1;
+
+  /* Micro spacing for optical alignment adjustments */
+  --digilist-spacing-micro: 2px;
+  --digilist-spacing-micro-sm: 1px;
+}
+```
+
+### Step 3: Use Token in Component
+
+```tsx
+// WRONG - hardcoded value
+<span style={{ lineHeight: '1.1', marginTop: '2px' }}>
+
+// CORRECT - tokenized
+<span style={{
+  lineHeight: 'var(--ds-line-height-condensed)',
+  marginTop: 'var(--digilist-spacing-micro)'
+}}>
+```
+
+### Step 4: Run Scanner to Verify
+
+```bash
+pnpm scan:tokens  # Check for any hardcoded values
+```
+
+---
+
+## Token Extension Guidelines
+
+### When to Create New Tokens
+
+| Scenario | Action |
+|----------|--------|
+| Standard color/spacing/size | Use existing `--ds-*` token |
+| Missing standard value | Add to extensions with `--ds-*` prefix |
+| App-specific semantic token | Add with `--digilist-*` prefix |
+| One-off micro-adjustment | Create `--digilist-spacing-micro-*` token |
+| Component-specific token | Create `--digilist-{component}-*` token |
+
+### Token Naming Conventions
+
+```css
+/* Standard Digdir pattern (for missing standard tokens) */
+--ds-line-height-condensed: 1.1;
+--ds-shadow-card-hover: 0 8px 24px rgba(0,0,0,0.12);
+
+/* App-specific semantic tokens */
+--digilist-sidebar-background: oklch(0.99 0 0);
+--digilist-chart-1: #2F55A4;
+
+/* Micro-adjustment tokens */
+--digilist-spacing-micro: 2px;
+--digilist-spacing-micro-sm: 1px;
+
+/* Component-specific tokens */
+--digilist-control-height-md: 2.875rem;
+```
+
+### File Structure for Extensions
+
+```
+packages/ds-themes/
+├── generated/
+│   └── digilist.css       # CLI-generated (DO NOT EDIT)
+└── themes/
+    └── digilist-extensions.css  # Custom tokens (EDIT HERE)
+```
+
+---
+
+## Component Creation Checklist
+
+When creating new components in `@xala/ds`:
+
+- [ ] **Check existing tokens** - Search generated theme first
+- [ ] **No hardcoded values** - All colors, spacing, typography must use tokens
+- [ ] **Create extension tokens** if needed - Add to `digilist-extensions.css`
+- [ ] **Use semantic token names** - `--ds-color-neutral-text-default` not `--ds-color-gray-700`
+- [ ] **Support color schemes** - Test light/dark mode
+- [ ] **Run `pnpm scan:tokens`** - Verify no violations
+- [ ] **Document custom tokens** - Comment explaining purpose
+
+---
+
+## Common Token Mappings
+
+| Need | Token |
+|------|-------|
+| Primary text | `var(--ds-color-neutral-text-default)` |
+| Secondary text | `var(--ds-color-neutral-text-subtle)` |
+| Background | `var(--ds-color-neutral-background-default)` |
+| Card surface | `var(--ds-color-neutral-surface-default)` |
+| Hover surface | `var(--ds-color-neutral-surface-hover)` |
+| Border | `var(--ds-color-neutral-border-default)` |
+| Subtle border | `var(--ds-color-neutral-border-subtle)` |
+| Primary action | `var(--ds-color-accent-base-default)` |
+| Success | `var(--ds-color-success-base-default)` |
+| Warning | `var(--ds-color-warning-base-default)` |
+| Danger | `var(--ds-color-danger-base-default)` |
+| Focus ring | `var(--ds-color-focus-outer)` |
+| Small spacing | `var(--ds-spacing-2)` (8px) |
+| Medium spacing | `var(--ds-spacing-4)` (16px) |
+| Large spacing | `var(--ds-spacing-6)` (24px) |
+| Small radius | `var(--ds-border-radius-sm)` |
+| Medium radius | `var(--ds-border-radius-md)` |
+| Pill/full radius | `var(--ds-border-radius-full)` |
