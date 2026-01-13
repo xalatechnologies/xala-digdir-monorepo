@@ -1,57 +1,16 @@
 import { useMemo } from 'react';
-import { Card, Heading, Paragraph, Button, Badge, Table, Dropdown, Spinner } from '@xala/ds';
-import { useSeasonalLeases, useOrganizations, useListings, type SeasonalLease, type SeasonalLeaseStatus } from '@digilist/client-sdk';
-
-const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-
-const MoreIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="12" cy="5" r="1" />
-    <circle cx="12" cy="19" r="1" />
-  </svg>
-);
-
-// Map weekday numbers to Norwegian abbreviations (0 = Sunday, 1 = Monday, etc.)
-const weekdayNames: Record<number, string> = {
-  0: 'Søn',
-  1: 'Man',
-  2: 'Tir',
-  3: 'Ons',
-  4: 'Tor',
-  5: 'Fre',
-  6: 'Lør',
-};
-
-function formatWeekdays(weekdays: number[]): string[] {
-  return weekdays.map((day) => weekdayNames[day] || '');
-}
-
-function formatPeriod(startDate: string, endDate: string): string {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  return `${start.toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit' })} - ${end.toLocaleDateString('nb-NO', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
-}
-
-function formatTimeSlot(startTime: string, endTime: string): string {
-  return `${startTime}-${endTime}`;
-}
-
-function StatusBadge({ status }: { status: SeasonalLeaseStatus }) {
-  const config: Record<SeasonalLeaseStatus, { color: 'success' | 'info' | 'neutral' | 'warning'; label: string }> = {
-    active: { color: 'success', label: 'Aktiv' },
-    pending: { color: 'warning', label: 'Venter' },
-    expired: { color: 'neutral', label: 'Utløpt' },
-    terminated: { color: 'neutral', label: 'Avsluttet' },
-  };
-  const cfg = config[status] || { color: 'neutral', label: status };
-  return <Badge data-color={cfg.color} data-size="sm">{cfg.label}</Badge>;
-}
+import { Card, Heading, Paragraph, Button, Table, Dropdown, Spinner, SeasonalLeaseStatusBadge, PlusIcon, MoreVerticalIcon } from '@xala/ds';
+import {
+  useSeasonalLeases,
+  useOrganizations,
+  useListings,
+  type SeasonalLease,
+  type SeasonalLeaseStatus,
+  weekdayNames,
+  formatWeekdays,
+  formatPeriod,
+  formatTimeSlot,
+} from '@digilist/client-sdk';
 
 export function SeasonsPage() {
   // Fetch seasonal leases from API

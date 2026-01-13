@@ -4,64 +4,26 @@ import {
   Heading,
   Paragraph,
   Button,
-  Badge,
   Table,
   Dropdown,
   Spinner,
+  RequestStatusBadge,
+  CheckCircleIcon,
+  XCircleIcon,
+  MessageSquareIcon,
+  MoreVerticalIcon,
 } from '@xala/ds';
-import { useBookings, useConfirmBooking, useCancelBooking, type Booking } from '@digilist/client-sdk';
+import {
+  useBookings,
+  useConfirmBooking,
+  useCancelBooking,
+  type Booking,
+  formatTime,
+  formatDate,
+  formatDateTime,
+} from '@digilist/client-sdk';
 
 type RequestStatus = 'pending' | 'needs_info';
-
-const CheckIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-const XIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-const MessageIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-  </svg>
-);
-
-const MoreIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="12" cy="5" r="1" />
-    <circle cx="12" cy="19" r="1" />
-  </svg>
-);
-
-function StatusBadge({ status }: { status: RequestStatus }) {
-  const config: Record<RequestStatus, { color: 'warning' | 'info'; label: string }> = {
-    pending: { color: 'warning', label: 'Venter' },
-    needs_info: { color: 'info', label: 'Trenger info' },
-  };
-  return <Badge data-color={config[status].color} data-size="sm">{config[status].label}</Badge>;
-}
-
-function formatTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
-}
-
-function formatDateTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-}
 
 export function RequestsPage() {
   const [filter, setFilter] = useState<'all' | RequestStatus>('all');

@@ -77,6 +77,8 @@ export {
   ChartIcon,
   ArrowRightIcon,
   XCircleIcon,
+  PlusIcon,
+  MessageSquareIcon,
   IdPortenIcon,
   MicrosoftIcon,
   GoogleIcon,

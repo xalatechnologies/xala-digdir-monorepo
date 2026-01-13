@@ -1,25 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner } from '@xala/ds';
-import { useCalendarEvents, useListings, type CalendarEvent } from '@digilist/client-sdk';
-
-const ChevronLeftIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="15 18 9 12 15 6" />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
+import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
+import { useCalendarEvents, useListings, type CalendarEvent, formatWeekRange } from '@digilist/client-sdk';
 
 type ViewType = 'day' | 'week' | 'month';
 
@@ -43,12 +24,6 @@ function getWeekStart(date: Date): Date {
   const day = d.getDay();
   const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust for Sunday
   return new Date(d.setDate(diff));
-}
-
-function formatWeekRange(weekStart: Date): string {
-  const end = new Date(weekStart);
-  end.setDate(end.getDate() + 6);
-  return `${weekStart.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })} - ${end.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 }
 
 export function CalendarPage() {

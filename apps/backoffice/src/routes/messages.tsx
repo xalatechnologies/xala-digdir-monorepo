@@ -7,17 +7,9 @@ import {
   useMarkMessagesRead,
   type Conversation,
   type Message,
+  formatTime,
+  formatDateTime,
 } from '@digilist/client-sdk';
-
-function formatTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' });
-}
-
-function formatDateTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleString('nb-NO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
 
 const SendIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

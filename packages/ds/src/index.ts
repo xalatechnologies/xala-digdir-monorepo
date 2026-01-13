@@ -185,6 +185,8 @@ export {
   ChartIcon,
   ArrowRightIcon,
   XCircleIcon,
+  PlusIcon,
+  MessageSquareIcon,
   IdPortenIcon,
   MicrosoftIcon,
   GoogleIcon,
@@ -245,7 +247,27 @@ export {
   ActivityFeed,
   QuickActionCard,
   formatTimeAgo,
-  mapBookingStatusToActivity
+  mapBookingStatusToActivity,
+  // Status Badge Components
+  StatusTag,
+  BookingStatusBadge,
+  PaymentStatusBadge,
+  ListingStatusBadge,
+  RequestStatusBadge,
+  SeasonalLeaseStatusBadge,
+  OrganizationStatusBadge,
+  UserStatusBadge,
+  GenericStatusBadge,
+  statusConfigs,
+  // Chart Components
+  BarChart,
+  VerticalBarChart,
+  // Auth UI Components
+  LoadingScreen,
+  AccessDeniedScreen,
+  NotFoundScreen,
+  ErrorScreen,
+  PermissionGate,
 } from './blocks';
 export type {
   ListingCardProps,
@@ -298,7 +320,36 @@ export type {
   ActivityItemProps,
   ActivityStatus,
   ActivityFeedProps,
-  QuickActionProps
+  QuickActionProps,
+  // Status Badge Types
+  StatusTagProps,
+  BadgeColor,
+  StatusBadgeConfig,
+  BookingStatusType,
+  BookingStatusBadgeProps,
+  PaymentStatusType,
+  PaymentStatusBadgeProps,
+  ListingStatusType,
+  ListingStatusBadgeProps,
+  RequestStatusType,
+  RequestStatusBadgeProps,
+  SeasonalLeaseStatusType,
+  SeasonalLeaseStatusBadgeProps,
+  OrganizationStatusType,
+  OrganizationStatusBadgeProps,
+  UserStatusType,
+  UserStatusBadgeProps,
+  GenericStatusBadgeProps,
+  // Chart Types
+  BarChartDataItem,
+  BarChartProps,
+  VerticalBarChartProps,
+  // Auth UI Types
+  LoadingScreenProps,
+  AccessDeniedScreenProps,
+  NotFoundScreenProps,
+  ErrorScreenProps,
+  PermissionGateProps,
 } from './blocks';
 
 // Listing Detail Types
