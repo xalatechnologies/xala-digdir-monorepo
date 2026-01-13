@@ -60,6 +60,12 @@ export type {
   OrganizationStatus,
   UserRole,
   UserStatus,
+  PaymentStatus,
+  ActorType,
+  DiscountType,
+  AuditAction,
+  CancellationPolicy,
+  PaymentProvider,
 
   // Response wrappers
   PaginatedResponse,
@@ -71,7 +77,14 @@ export type {
   Listing,
   ListingMetadata,
   Booking,
+  BookingExtended,
   User,
+
+  // Authentication types
+  AuthSession,
+  AuthUser,
+  LoginCredentials,
+  OAuthProvider,
 
   // Calendar types
   CalendarEvent,
@@ -97,6 +110,32 @@ export type {
 
   // User types
   BackofficeUser,
+
+  // Public API types
+  PublicListingParams,
+  City,
+  Municipality,
+  Category,
+
+  // Discount code types
+  DiscountCode,
+  CreateDiscountCodeDTO,
+  ValidateDiscountResult,
+
+  // Audit types
+  AuditEvent,
+  AuditQueryParams,
+
+  // Settings types
+  TenantSettings,
+  BookingSettings,
+  NotificationSettings,
+  PaymentSettings,
+  IntegrationSettings,
+
+  // GDPR types
+  GdprDataExport,
+  ConsentSettings,
 
   // Query params
   ListingQueryParams,
@@ -205,6 +244,49 @@ export {
   updateUser,
   deactivateUser,
   reactivateUser,
+
+  // Authentication
+  login,
+  logout,
+  getSession,
+  refreshToken,
+  getAuthProviders,
+
+  // Public API (no auth required)
+  getPublicListings,
+  getPublicListing,
+  getPublicAvailability,
+  getPublicCategories,
+  getFeaturedListings,
+  getCities,
+  getMunicipalities,
+
+  // User's Own Data
+  getMyBookings,
+  cancelMyBooking,
+
+  // GDPR
+  exportMyData,
+  deleteMyAccount,
+  getMyConsents,
+  updateMyConsents,
+
+  // Discount Codes
+  getDiscountCodes,
+  createDiscountCode,
+  updateDiscountCode,
+  deleteDiscountCode,
+  validateDiscountCode,
+
+  // Audit
+  getAuditLogs,
+  getAuditEvent,
+
+  // Settings
+  getTenantSettings,
+  updateTenantSettings,
+  getIntegrationSettings,
+  updateIntegrationSettings,
 } from './services/api';
 
 // =============================================================================
@@ -300,3 +382,64 @@ export {
   useDeactivateUser,
   useReactivateUser,
 } from './hooks/useUsers';
+
+export {
+  // Authentication
+  authKeys,
+  useSession,
+  useAuthProviders,
+  useLogin,
+  useLogout,
+  useRefreshToken,
+} from './hooks/useAuth';
+
+export {
+  // Public API (no auth required)
+  publicKeys,
+  usePublicListings,
+  usePublicUiListings,
+  usePublicListing,
+  usePublicUiListing,
+  usePublicAvailability,
+  usePublicCategories,
+  useFeaturedListings,
+  useCities,
+  useMunicipalities,
+} from './hooks/usePublic';
+
+export {
+  // User's Own Data
+  myDataKeys,
+  useMyBookings,
+  useCancelMyBooking,
+  useGdprExport,
+  useDeleteAccount,
+  useMyConsents,
+  useUpdateMyConsents,
+} from './hooks/useMyData';
+
+export {
+  // Discount Codes
+  discountCodeKeys,
+  useDiscountCodes,
+  useCreateDiscountCode,
+  useUpdateDiscountCode,
+  useDeleteDiscountCode,
+  useValidateDiscountCode,
+} from './hooks/useDiscountCodes';
+
+export {
+  // Audit Logs
+  auditKeys,
+  useAuditLogs,
+  useAuditEvent,
+} from './hooks/useAudit';
+
+export {
+  // Settings
+  settingsKeys,
+  useTenantSettings,
+  useUpdateTenantSettings,
+  useIntegrationSettings,
+  useUpdateIntegrationSettings,
+} from './hooks/useSettings';

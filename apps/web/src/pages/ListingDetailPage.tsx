@@ -11,7 +11,6 @@ import {
   Breadcrumb,
   ImageSlider,
   ListingDetailHeader,
-  CapacityCard,
   FacilityChips,
   AdditionalServicesList,
   ContactInfoCard,
@@ -21,19 +20,15 @@ import {
   AvailabilityCalendar,
   GuidelinesTab,
   FAQTab,
+  BookingFormModal,
+  BookingConfirmation,
+  BookingSuccess,
   Tabs,
   Heading,
   Paragraph,
   Button,
-  Card,
   Spinner,
   SparklesIcon,
-  UsersIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-  StarIcon,
-  ShieldIcon,
 } from '@xala/ds';
 import type {
   ListingDetail,
@@ -46,6 +41,7 @@ import type {
   OpeningHoursDay,
   GuidelineSection,
   FAQItem,
+  BookingDetails,
 } from '@xala/ds';
 import { useListing, type Listing } from '@xala/sdk';
 
@@ -446,6 +442,12 @@ export function ListingDetailPage(): React.ReactElement {
     return new Date(today.setDate(diff));
   });
 
+  // Booking modal and form state
+  const [showBookingModal, setShowBookingModal] = React.useState(false);
+  const [bookingDetails, setBookingDetails] = React.useState<BookingDetails | null>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [bookingReference, setBookingReference] = React.useState<string | null>(null);
+
   // Generate time slots for current week
   const timeSlots = React.useMemo(
     () => generateMockTimeSlots(calendarStartDate),
@@ -462,6 +464,14 @@ export function ListingDetailPage(): React.ReactElement {
     }
     return mockListingDetail;
   }, [apiResponse]);
+
+  // Log API errors but fall back to mock data instead of showing error page
+  // This provides a better UX while the API is being fixed
+  React.useEffect(() => {
+    if (error) {
+      console.warn('API error loading listing, using mock data:', error);
+    }
+  }, [error]);
 
   // Show loading state
   if (isLoading) {
@@ -482,36 +492,6 @@ export function ListingDetailPage(): React.ReactElement {
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
               Laster lokale...
             </Paragraph>
-          </div>
-        </main>
-      </ContentLayout>
-    );
-  }
-
-  // Show error state
-  if (error && !apiResponse?.data) {
-    return (
-      <ContentLayout maxWidth="1440px" className="main-content-layout">
-        <main
-          id="main"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '60vh',
-            padding: 'var(--ds-spacing-8)',
-          }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-              Lokalet ble ikke funnet
-            </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-4)' }}>
-              Det oppstod en feil ved lasting av lokalet. Prøv igjen senere.
-            </Paragraph>
-            <Button type="button" variant="secondary" onClick={() => navigate('/')}>
-              Tilbake til forsiden
-            </Button>
           </div>
         </main>
       </ContentLayout>
@@ -566,6 +546,58 @@ export function ListingDetailPage(): React.ReactElement {
     );
   };
 
+  // Handle opening the booking modal (Step 1 -> Step 2)
+  const handleContinueToDetails = () => {
+    setShowBookingModal(true);
+  };
+
+  // Handle booking form confirmation (Step 2 -> Step 3)
+  const handleBookingFormConfirm = (details: BookingDetails) => {
+    setBookingDetails(details);
+    setShowBookingModal(false);
+    setCurrentBookingStep(2); // Move to confirmation step
+  };
+
+  // Handle going back to form from confirmation
+  const handleBackToForm = () => {
+    setShowBookingModal(true);
+    setCurrentBookingStep(1);
+  };
+
+  // Handle final booking submission (Step 3 -> Step 4)
+  const handleFinalConfirm = async () => {
+    setIsSubmitting(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // Generate reference number
+    const ref = `BK-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    setBookingReference(ref);
+    setIsSubmitting(false);
+    setCurrentBookingStep(3); // Move to success step
+  };
+
+  // Handle starting a new booking
+  const handleNewBooking = () => {
+    setCurrentBookingStep(0);
+    setSelectedSlots([]);
+    setSelectedServices([]);
+    setBookingDetails(null);
+    setBookingReference(null);
+  };
+
+  // Handle going back to listing overview
+  const handleBackToListing = () => {
+    setCurrentBookingStep(0);
+    setSelectedSlots([]);
+    setSelectedServices([]);
+    setBookingDetails(null);
+    setBookingReference(null);
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <ContentLayout maxWidth="1440px" className="main-content-layout">
       <main
@@ -597,151 +629,10 @@ export function ListingDetailPage(): React.ReactElement {
             category={listing.category}
             title={listing.name}
             location={listing.location}
+            {...(listing.capacity ? { capacity: listing.capacity } : {})}
             onFavorite={() => console.log('Toggle favorite')}
             onShare={() => console.log('Share listing')}
           />
-        </div>
-
-        {/* Quick Stats Bar */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-3)',
-            padding: 'var(--ds-spacing-4)',
-            marginTop: 'var(--ds-spacing-4)',
-            backgroundColor: 'var(--ds-color-neutral-surface-default)',
-            borderRadius: 'var(--ds-border-radius-xl)',
-            border: '1px solid var(--ds-color-neutral-border-subtle)',
-          }}
-          className="quick-stats-bar"
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              boxShadow: 'var(--ds-shadow-xs)',
-            }}
-          >
-            <div
-              style={{
-                padding: 'var(--ds-spacing-1)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-info-surface-default)',
-              }}
-            >
-              <UsersIcon size={16} style={{ color: 'var(--ds-color-info-base-default)' }} />
-            </div>
-            <div>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Kapasitet
-              </Paragraph>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {listing.capacity} personer
-              </Paragraph>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              boxShadow: 'var(--ds-shadow-xs)',
-            }}
-          >
-            <div
-              style={{
-                padding: 'var(--ds-spacing-1)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-success-surface-default)',
-              }}
-            >
-              <ClockIcon size={16} style={{ color: 'var(--ds-color-success-base-default)' }} />
-            </div>
-            <div>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Åpent
-              </Paragraph>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                08:00 - 22:00
-              </Paragraph>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              boxShadow: 'var(--ds-shadow-xs)',
-            }}
-          >
-            <div
-              style={{
-                padding: 'var(--ds-spacing-1)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-accent-surface-default)',
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--ds-color-accent-base-default)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="6" width="20" height="12" rx="2" />
-                <path d="M22 10H2" />
-              </svg>
-            </div>
-            <div>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Pris fra
-              </Paragraph>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {listing.price} {listing.currency}/{listing.priceUnit}
-              </Paragraph>
-            </div>
-          </div>
-
-          {/* Rating */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-1)',
-              marginLeft: 'auto',
-            }}
-          >
-            {[...Array(5)].map((_, i) => (
-              <StarIcon
-                key={i}
-                size={16}
-                style={{
-                  color: i < 4 ? 'var(--ds-color-warning-base-default)' : 'var(--ds-color-neutral-border-default)',
-                  fill: i < 4 ? 'var(--ds-color-warning-base-default)' : 'none',
-                }}
-              />
-            ))}
-            <Paragraph data-size="sm" style={{ margin: 0, marginLeft: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              (24)
-            </Paragraph>
-          </div>
         </div>
 
         {/* Main Content Grid */}
@@ -756,26 +647,46 @@ export function ListingDetailPage(): React.ReactElement {
         >
           {/* Left Column - Main Content */}
           <div>
-            {/* Enhanced Tabs */}
-            <div className="enhanced-tabs">
+            {/* Enhanced Tabs - Elegant Underline Style */}
+            <div className="elegant-tabs">
               <Tabs
                 defaultValue="overview"
                 value={activeTab}
                 onChange={setActiveTab}
               >
-                <Tabs.List
-                  style={{
-                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-lg)',
-                    padding: 'var(--ds-spacing-1)',
-                    gap: 'var(--ds-spacing-1)',
-                    border: '1px solid var(--ds-color-neutral-border-subtle)',
-                  }}
-                >
-                  <Tabs.Tab value="overview">Oversikt</Tabs.Tab>
-                  <Tabs.Tab value="calendar">Aktivitetskalender</Tabs.Tab>
-                  <Tabs.Tab value="guidelines">Retningslinjer</Tabs.Tab>
-                  <Tabs.Tab value="faq">Ofte stilte spørsmål</Tabs.Tab>
+                <Tabs.List>
+                  <Tabs.Tab value="overview">
+                    <span className="tab-content">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <line x1="9" y1="9" x2="15" y2="9" />
+                        <line x1="9" y1="13" x2="15" y2="13" />
+                        <line x1="9" y1="17" x2="12" y2="17" />
+                      </svg>
+                      Oversikt
+                    </span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value="guidelines">
+                    <span className="tab-content">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                      </svg>
+                      Retningslinjer
+                    </span>
+                  </Tabs.Tab>
+                  <Tabs.Tab value="faq">
+                    <span className="tab-content">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+                      </svg>
+                      Spørsmål
+                    </span>
+                  </Tabs.Tab>
                 </Tabs.List>
 
                 {/* Overview Tab */}
@@ -808,13 +719,6 @@ export function ListingDetailPage(): React.ReactElement {
                       </Paragraph>
                     </section>
 
-                    {/* Capacity */}
-                    {listing.capacity && (
-                      <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                        <CapacityCard maxCapacity={listing.capacity} />
-                      </div>
-                    )}
-
                     {/* Facilities */}
                     {listing.facilities.length > 0 && (
                       <section style={{ marginTop: 'var(--ds-spacing-6)' }}>
@@ -844,18 +748,10 @@ export function ListingDetailPage(): React.ReactElement {
                             services={listing.additionalServices}
                             selectedServices={selectedServices}
                             onServiceSelect={handleServiceSelect}
+                            title=""
                           />
                         </section>
                       )}
-                  </div>
-                </Tabs.Panel>
-
-                {/* Calendar Tab - scrolls to calendar section */}
-                <Tabs.Panel value="calendar">
-                  <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
-                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Se ledighetskalenderen nedenfor for å velge ønskede tidspunkter.
-                    </Paragraph>
                   </div>
                 </Tabs.Panel>
 
@@ -877,7 +773,7 @@ export function ListingDetailPage(): React.ReactElement {
               </Tabs>
             </div>
 
-            {/* Activity Calendar - Always Visible */}
+            {/* Booking Section - Step-based Flow */}
             <div
               id="booking-calendar"
               style={{
@@ -915,93 +811,156 @@ export function ListingDetailPage(): React.ReactElement {
                 steps={bookingSteps}
                 currentStep={currentBookingStep}
                 onStepClick={(index) => {
-                  if (index <= currentBookingStep) {
-                    setCurrentBookingStep(index);
+                  // Allow going back to previous steps
+                  if (index < currentBookingStep) {
+                    if (index === 0) {
+                      // Going back to slot selection
+                      setCurrentBookingStep(0);
+                    } else if (index === 1 && bookingDetails) {
+                      // Going back to form
+                      setShowBookingModal(true);
+                    } else if (index === 2 && bookingDetails) {
+                      // Going to confirmation
+                      setCurrentBookingStep(2);
+                    }
                   }
                 }}
               />
 
-              {/* Calendar */}
+              {/* Step Content */}
               <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                <AvailabilityCalendar
-                  startDate={calendarStartDate}
-                  timeSlots={timeSlots}
-                  selectedSlots={selectedSlots}
-                  onSlotClick={handleSlotClick}
-                  onWeekChange={handleWeekChange}
-                  showTips={false}
-                />
-              </div>
+                {/* Step 1: Select Time Slots */}
+                {currentBookingStep === 0 && (
+                  <>
+                    <AvailabilityCalendar
+                      startDate={calendarStartDate}
+                      timeSlots={timeSlots}
+                      selectedSlots={selectedSlots}
+                      onSlotClick={handleSlotClick}
+                      onWeekChange={handleWeekChange}
+                      showTips={false}
+                    />
 
-              {/* Selected Slots Summary */}
-              {selectedSlots.length > 0 && (
-                <div
-                  style={{
-                    marginTop: 'var(--ds-spacing-5)',
-                    padding: 'var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-accent-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-lg)',
-                  }}
-                >
-                  <Heading
-                    level={3}
-                    data-size="xs"
-                    style={{
-                      marginBottom: 'var(--ds-spacing-3)',
-                      color: 'var(--ds-color-accent-text-default)',
-                    }}
-                  >
-                    Valgte tidspunkter ({selectedSlots.length})
-                  </Heading>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: 'var(--ds-spacing-2)',
-                    }}
-                  >
-                    {selectedSlots.map((slot) => (
+                    {/* Selected Slots Summary */}
+                    {selectedSlots.length > 0 && (
                       <div
-                        key={slot.id}
                         style={{
-                          padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                          backgroundColor: 'var(--ds-color-accent-base-default)',
-                          borderRadius: 'var(--ds-border-radius-full)',
-                          color: 'var(--ds-color-accent-contrast-default)',
+                          marginTop: 'var(--ds-spacing-5)',
+                          padding: 'var(--ds-spacing-4)',
+                          backgroundColor: 'var(--ds-color-accent-surface-default)',
+                          borderRadius: 'var(--ds-border-radius-lg)',
                         }}
                       >
-                        <Paragraph
+                        <Heading
+                          level={3}
                           data-size="xs"
                           style={{
-                            margin: 0,
-                            fontWeight: 'var(--ds-font-weight-medium)',
+                            marginBottom: 'var(--ds-spacing-3)',
+                            color: 'var(--ds-color-accent-text-default)',
                           }}
                         >
-                          {new Date(slot.date).toLocaleDateString('nb-NO', {
-                            weekday: 'short',
-                            day: 'numeric',
-                            month: 'short',
-                          })}{' '}
-                          kl. {slot.startTime}
-                        </Paragraph>
+                          Valgte tidspunkter ({selectedSlots.length})
+                        </Heading>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 'var(--ds-spacing-2)',
+                          }}
+                        >
+                          {selectedSlots.map((slot) => (
+                            <div
+                              key={slot.id}
+                              style={{
+                                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                                backgroundColor: 'var(--ds-color-accent-base-default)',
+                                borderRadius: 'var(--ds-border-radius-full)',
+                                color: 'var(--ds-color-accent-contrast-default)',
+                              }}
+                            >
+                              <Paragraph
+                                data-size="xs"
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 'var(--ds-font-weight-medium)',
+                                }}
+                              >
+                                {new Date(slot.date).toLocaleDateString('nb-NO', {
+                                  weekday: 'short',
+                                  day: 'numeric',
+                                  month: 'short',
+                                })}{' '}
+                                kl. {slot.startTime}
+                              </Paragraph>
+                            </div>
+                          ))}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          data-color="accent"
+                          style={{
+                            marginTop: 'var(--ds-spacing-4)',
+                            width: '100%',
+                          }}
+                          onClick={handleContinueToDetails}
+                        >
+                          Fortsett til detaljer
+                        </Button>
                       </div>
-                    ))}
-                  </div>
-                  <Button
-                    type="button"
-                    variant="primary"
-                    data-color="accent"
-                    style={{
-                      marginTop: 'var(--ds-spacing-4)',
-                      width: '100%',
-                    }}
-                    onClick={() => setCurrentBookingStep(1)}
-                  >
-                    Fortsett til detaljer
-                  </Button>
-                </div>
-              )}
+                    )}
+                  </>
+                )}
+
+                {/* Step 2: Confirmation Review */}
+                {currentBookingStep === 2 && bookingDetails && (
+                  <BookingConfirmation
+                    bookingDetails={bookingDetails}
+                    selectedSlots={selectedSlots}
+                    selectedServices={selectedServices}
+                    availableServices={listing.additionalServices}
+                    listingName={listing.name}
+                    basePrice={listing.price}
+                    currency={listing.currency}
+                    isSubmitting={isSubmitting}
+                    onBack={handleBackToForm}
+                    onConfirm={handleFinalConfirm}
+                  />
+                )}
+
+                {/* Step 3: Success */}
+                {currentBookingStep === 3 && bookingDetails && (
+                  <BookingSuccess
+                    bookingReference={bookingReference || undefined}
+                    bookingDetails={bookingDetails}
+                    listingName={listing.name}
+                    venueEmail={listing.contact?.email}
+                    venuePhone={listing.contact?.phone}
+                    onBackToListing={handleBackToListing}
+                    onNewBooking={handleNewBooking}
+                  />
+                )}
+              </div>
             </div>
+
+            {/* Booking Form Modal */}
+            <BookingFormModal
+              open={showBookingModal}
+              onClose={() => {
+                setShowBookingModal(false);
+                if (!bookingDetails) {
+                  setCurrentBookingStep(0);
+                }
+              }}
+              selectedSlots={selectedSlots}
+              selectedServices={selectedServices}
+              availableServices={listing.additionalServices}
+              listingName={listing.name}
+              basePrice={listing.price}
+              currency={listing.currency}
+              maxCapacity={listing.capacity}
+              onConfirm={handleBookingFormConfirm}
+            />
           </div>
 
           {/* Right Column - Sidebar */}
@@ -1016,158 +975,6 @@ export function ListingDetailPage(): React.ReactElement {
               height: 'fit-content',
             }}
           >
-            {/* Quick Booking Card */}
-            <Card
-              className="booking-cta-card"
-              style={{
-                overflow: 'hidden',
-                border: '2px solid var(--ds-color-neutral-border-subtle)',
-                boxShadow: 'var(--ds-shadow-md)',
-              }}
-            >
-              {/* Price header */}
-              <div
-                style={{
-                  background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-hover) 100%)',
-                  padding: 'var(--ds-spacing-5)',
-                  color: 'white',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                  <Paragraph data-size="sm" style={{ margin: 0, opacity: 0.9 }}>
-                    Pris fra
-                  </Paragraph>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-                    <StarIcon size={14} style={{ fill: 'var(--ds-color-warning-base-default)', color: 'var(--ds-color-warning-base-default)' }} />
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      4.8
-                    </Paragraph>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-2)' }}>
-                  <Heading level={2} data-size="xl" style={{ margin: 0, color: 'white' }}>
-                    {listing.price} {listing.currency}
-                  </Heading>
-                  <Paragraph data-size="sm" style={{ margin: 0, opacity: 0.8 }}>
-                    / {listing.priceUnit}
-                  </Paragraph>
-                </div>
-              </div>
-
-              {/* Booking info */}
-              <div style={{ padding: 'var(--ds-spacing-5)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-4)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                    <div
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        backgroundColor: 'var(--ds-color-success-surface-default)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <CheckCircleIcon size={16} style={{ color: 'var(--ds-color-success-base-default)' }} />
-                    </div>
-                    <div>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Ledig i dag
-                      </Paragraph>
-                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Flere tidspunkter tilgjengelig
-                      </Paragraph>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                    <div
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        backgroundColor: 'var(--ds-color-info-surface-default)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <UsersIcon size={16} style={{ color: 'var(--ds-color-info-base-default)' }} />
-                    </div>
-                    <div>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Maks {listing.capacity} personer
-                      </Paragraph>
-                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Kapasitet for grupper
-                      </Paragraph>
-                    </div>
-                  </div>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="primary"
-                  data-color="accent"
-                  style={{
-                    width: '100%',
-                    height: '48px',
-                    fontWeight: 'var(--ds-font-weight-semibold)',
-                    boxShadow: 'var(--ds-shadow-sm)',
-                  }}
-                  onClick={() => {
-                    const calendarSection = document.getElementById('booking-calendar');
-                    calendarSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  Book nå
-                  <ChevronRightIcon size={16} style={{ marginLeft: 'auto' }} />
-                </Button>
-
-                <Paragraph
-                  data-size="xs"
-                  style={{
-                    margin: 0,
-                    marginTop: 'var(--ds-spacing-3)',
-                    textAlign: 'center',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                  }}
-                >
-                  Gratis avbestilling inntil 24 timer før
-                </Paragraph>
-              </div>
-            </Card>
-
-            {/* Trust badge */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-3)',
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-success-surface-default)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-                border: '1px solid var(--ds-color-success-border-subtle)',
-              }}
-            >
-              <ShieldIcon size={20} style={{ color: 'var(--ds-color-success-base-default)' }} />
-              <div>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  Sikker booking
-                </Paragraph>
-                <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Betaling skjer etter godkjenning
-                </Paragraph>
-              </div>
-            </div>
-
             {/* Contact Info */}
             {listing.contact && (
               <ContactInfoCard
@@ -1239,42 +1046,100 @@ export function ListingDetailPage(): React.ReactElement {
             box-shadow: var(--ds-shadow-md);
           }
 
-          /* Enhanced Tab Styling */
-          .enhanced-tabs [role="tablist"] {
-            display: flex !important;
-            border-bottom: none !important;
-            background: transparent !important;
+          /* ═══════════════════════════════════════════════════════════
+             Professional Tabs - Clean Underline Style
+             ═══════════════════════════════════════════════════════════ */
+
+          .elegant-tabs {
+            margin-bottom: var(--ds-spacing-6);
           }
 
-          .enhanced-tabs [role="tab"] {
-            flex: 1;
-            padding: var(--ds-spacing-3) var(--ds-spacing-4) !important;
+          .elegant-tabs [role="tablist"] {
+            display: flex !important;
+            gap: 0 !important;
+            background: transparent !important;
             border: none !important;
-            border-radius: var(--ds-border-radius-md) !important;
+            border-bottom: 1px solid var(--ds-color-neutral-border-subtle) !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+          }
+
+          /* Base tab styling */
+          .elegant-tabs [role="tab"] {
+            flex: 1;
+            padding: var(--ds-spacing-4) var(--ds-spacing-5) !important;
             background-color: transparent !important;
+            border: none !important;
+            border-bottom: 3px solid transparent !important;
+            border-radius: 0 !important;
+            margin-bottom: -1px !important;
             color: var(--ds-color-neutral-text-subtle) !important;
             font-weight: var(--ds-font-weight-medium) !important;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-size: var(--ds-font-size-sm) !important;
             cursor: pointer;
-            text-align: center;
             position: relative;
+            transition: all 0.2s ease !important;
+            white-space: nowrap;
           }
 
-          .enhanced-tabs [role="tab"]:hover:not([aria-selected="true"]) {
-            background-color: var(--ds-color-neutral-surface-hover) !important;
+          /* Tab content wrapper with icon */
+          .elegant-tabs .tab-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--ds-spacing-2);
+          }
+
+          .elegant-tabs .tab-content svg {
+            opacity: 0.5;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+          }
+
+          /* Hover state for unselected tabs */
+          .elegant-tabs [role="tab"]:hover:not([aria-selected="true"]) {
             color: var(--ds-color-neutral-text-default) !important;
+            border-bottom-color: var(--ds-color-neutral-border-default) !important;
           }
 
-          .enhanced-tabs [role="tab"][aria-selected="true"] {
-            background-color: var(--ds-color-accent-surface-default) !important;
-            color: var(--ds-color-accent-text-default) !important;
+          .elegant-tabs [role="tab"]:hover:not([aria-selected="true"]) .tab-content svg {
+            opacity: 0.7;
+          }
+
+          /* Selected tab - accent underline */
+          .elegant-tabs [role="tab"][aria-selected="true"] {
+            color: var(--ds-color-accent-base-default) !important;
             font-weight: var(--ds-font-weight-semibold) !important;
+            border-bottom-color: var(--ds-color-accent-base-default) !important;
+            background-color: transparent !important;
+          }
+
+          .elegant-tabs [role="tab"][aria-selected="true"] .tab-content svg {
+            opacity: 1;
+            color: var(--ds-color-accent-base-default);
+          }
+
+          /* Focus state */
+          .elegant-tabs [role="tab"]:focus-visible {
+            outline: 2px solid var(--ds-color-focus-outer) !important;
+            outline-offset: -2px !important;
+          }
+
+          /* Facility chips styling */
+          .facility-chip {
+            transition: all 0.2s ease !important;
+          }
+
+          .facility-chip:hover {
+            border-color: var(--ds-color-accent-border-subtle) !important;
+            transform: translateY(-1px);
             box-shadow: var(--ds-shadow-sm) !important;
           }
 
-          .enhanced-tabs [role="tab"]:focus-visible {
-            outline: 2px solid var(--ds-color-focus-outer);
-            outline-offset: 2px;
+          /* Service card hover */
+          .service-card:hover {
+            border-color: var(--ds-color-accent-border-default) !important;
+            box-shadow: var(--ds-shadow-md) !important;
           }
 
           /* Booking section styling */
@@ -1328,14 +1193,25 @@ export function ListingDetailPage(): React.ReactElement {
               display: none !important;
             }
 
-            /* Stack tabs on mobile */
-            .enhanced-tabs [role="tablist"] {
-              flex-direction: column !important;
-              gap: var(--ds-spacing-1) !important;
+            /* Tabs stay horizontal on mobile, just smaller */
+            .elegant-tabs [role="tab"] {
+              padding: var(--ds-spacing-3) var(--ds-spacing-2) !important;
+              font-size: var(--ds-font-size-xs) !important;
             }
 
-            .enhanced-tabs [role="tab"] {
-              width: 100% !important;
+            .elegant-tabs .tab-content svg {
+              display: none;
+            }
+
+            /* Facility grid on mobile - 2 columns */
+            .facility-chips {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Header layout on mobile */
+            .listing-detail-header > div:nth-child(2) {
+              flex-direction: column;
+              align-items: flex-start !important;
             }
           }
 

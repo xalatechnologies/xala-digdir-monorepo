@@ -200,7 +200,10 @@ export {
   AvailabilityCalendar,
   GuidelinesTab,
   FAQTab,
-  PriceSummaryCard
+  PriceSummaryCard,
+  BookingFormModal,
+  BookingConfirmation,
+  BookingSuccess
 } from './blocks';
 export type {
   ListingCardProps,
@@ -224,7 +227,10 @@ export type {
   GuidelinesTabProps,
   FAQTabProps,
   PriceSummaryCardProps,
-  PriceLineItem
+  PriceLineItem,
+  BookingFormModalProps,
+  BookingConfirmationProps,
+  BookingSuccessProps
 } from './blocks';
 
 // Listing Detail Types
@@ -243,7 +249,8 @@ export type {
   BookingState,
   GuidelineSection,
   FAQItem,
-  ListingDetail
+  ListingDetail,
+  ActivityType
 } from './types/listing-detail';
 
 // =============================================================================

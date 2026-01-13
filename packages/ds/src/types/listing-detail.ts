@@ -100,14 +100,43 @@ export interface BookingStep {
 }
 
 /**
+ * Activity type for booking
+ */
+export type ActivityType =
+  | 'meeting'      // Møte
+  | 'training'     // Trening
+  | 'event'        // Arrangement
+  | 'workshop'     // Workshop
+  | 'presentation' // Presentasjon
+  | 'party'        // Fest/Selskap
+  | 'other';       // Annet
+
+/**
  * Booking details form data
  */
 export interface BookingDetails {
+  /** Contact name */
   name: string;
+  /** Contact email */
   email: string;
+  /** Contact phone */
   phone: string;
+  /** Additional notes (short description) */
   notes?: string;
+  /** Whether terms are accepted */
   acceptedTerms: boolean;
+  /** Purpose of booking */
+  purpose?: string;
+  /** Show purpose in calendar */
+  showPurposeInCalendar?: boolean;
+  /** Book multiple days */
+  bookMultipleDays?: boolean;
+  /** Number of attendees */
+  numberOfPeople?: number;
+  /** Type of activity */
+  activityType?: ActivityType;
+  /** Organization name */
+  organization?: string;
 }
 
 /**

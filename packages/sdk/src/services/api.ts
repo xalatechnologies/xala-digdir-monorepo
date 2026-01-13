@@ -516,3 +516,305 @@ export async function reactivateUser(id: string): Promise<SingleResponse<Backoff
   const client = getApiClient();
   return client.put<SingleResponse<BackofficeUser>>(`/api/users/${id}/reactivate`);
 }
+
+// =============================================================================
+// Authentication Services
+// =============================================================================
+
+import type {
+  AuthSession,
+  LoginCredentials,
+  OAuthProvider,
+  PublicListingParams,
+  City,
+  Municipality,
+  Category,
+  DiscountCode,
+  CreateDiscountCodeDTO,
+  ValidateDiscountResult,
+  AuditEvent,
+  AuditQueryParams,
+  TenantSettings,
+  IntegrationSettings,
+  GdprDataExport,
+  ConsentSettings,
+} from '../types/api';
+
+/**
+ * Login with email/password
+ */
+export async function login(credentials: LoginCredentials): Promise<AuthSession> {
+  const client = getApiClient();
+  return client.post<AuthSession>('/api/auth/email', credentials);
+}
+
+/**
+ * Logout
+ */
+export async function logout(): Promise<void> {
+  const client = getApiClient();
+  return client.post<void>('/api/auth/logout');
+}
+
+/**
+ * Get current session
+ */
+export async function getSession(): Promise<AuthSession> {
+  const client = getApiClient();
+  return client.get<AuthSession>('/api/auth/session');
+}
+
+/**
+ * Refresh token
+ */
+export async function refreshToken(): Promise<AuthSession> {
+  const client = getApiClient();
+  return client.post<AuthSession>('/api/auth/refresh');
+}
+
+/**
+ * Get available auth providers
+ */
+export async function getAuthProviders(): Promise<{ data: OAuthProvider[] }> {
+  const client = getApiClient();
+  return client.get<{ data: OAuthProvider[] }>('/api/auth/providers');
+}
+
+// =============================================================================
+// Public API Services (No Auth Required)
+// =============================================================================
+
+/**
+ * Get public listings (no auth required)
+ */
+export async function getPublicListings(params?: PublicListingParams): Promise<PaginatedResponse<Listing>> {
+  const client = getApiClient();
+  return client.request<PaginatedResponse<Listing>>('/api/public/listings', {
+    method: 'GET',
+    params: params as Record<string, string | number | boolean | undefined>,
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get public listing detail (no auth required)
+ */
+export async function getPublicListing(id: string): Promise<SingleResponse<Listing>> {
+  const client = getApiClient();
+  return client.request<SingleResponse<Listing>>(`/api/public/listings/${id}`, {
+    method: 'GET',
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get public listing availability (no auth required)
+ */
+export async function getPublicAvailability(listingId: string, params: AvailabilityQueryParams): Promise<{ data: TimeSlot[] }> {
+  const client = getApiClient();
+  return client.request<{ data: TimeSlot[] }>(`/api/public/listings/${listingId}/availability`, {
+    method: 'GET',
+    params: params as unknown as Record<string, string | number | boolean | undefined>,
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get public categories (no auth required)
+ */
+export async function getPublicCategories(): Promise<{ data: Category[] }> {
+  const client = getApiClient();
+  return client.request<{ data: Category[] }>('/api/public/categories', {
+    method: 'GET',
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get featured listings (no auth required)
+ */
+export async function getFeaturedListings(): Promise<{ data: Listing[] }> {
+  const client = getApiClient();
+  return client.request<{ data: Listing[] }>('/api/public/featured', {
+    method: 'GET',
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get cities with listings (no auth required)
+ */
+export async function getCities(): Promise<{ data: City[] }> {
+  const client = getApiClient();
+  return client.request<{ data: City[] }>('/api/public/cities', {
+    method: 'GET',
+    skipTenantHeader: true,
+  });
+}
+
+/**
+ * Get municipalities with listings (no auth required)
+ */
+export async function getMunicipalities(): Promise<{ data: Municipality[] }> {
+  const client = getApiClient();
+  return client.request<{ data: Municipality[] }>('/api/public/municipalities', {
+    method: 'GET',
+    skipTenantHeader: true,
+  });
+}
+
+// =============================================================================
+// User's Own Data Services
+// =============================================================================
+
+/**
+ * Get current user's bookings
+ */
+export async function getMyBookings(params?: BookingQueryParams): Promise<PaginatedResponse<Booking>> {
+  const client = getApiClient();
+  return client.get<PaginatedResponse<Booking>>('/api/bookings/my', params as Record<string, string | number | boolean | undefined>);
+}
+
+/**
+ * Cancel own booking
+ */
+export async function cancelMyBooking(id: string, reason?: string): Promise<SingleResponse<Booking>> {
+  const client = getApiClient();
+  return client.put<SingleResponse<Booking>>(`/api/bookings/${id}/cancel`, { reason });
+}
+
+// =============================================================================
+// GDPR Services
+// =============================================================================
+
+/**
+ * Export user's personal data (GDPR)
+ */
+export async function exportMyData(): Promise<GdprDataExport> {
+  const client = getApiClient();
+  return client.get<GdprDataExport>('/api/users/me/data');
+}
+
+/**
+ * Delete user's account (GDPR)
+ */
+export async function deleteMyAccount(): Promise<{ success: boolean }> {
+  const client = getApiClient();
+  return client.delete<{ success: boolean }>('/api/users/me');
+}
+
+/**
+ * Get user's consent settings
+ */
+export async function getMyConsents(): Promise<SingleResponse<ConsentSettings>> {
+  const client = getApiClient();
+  return client.get<SingleResponse<ConsentSettings>>('/api/users/me/consents');
+}
+
+/**
+ * Update user's consent settings
+ */
+export async function updateMyConsents(consents: Partial<ConsentSettings>): Promise<SingleResponse<ConsentSettings>> {
+  const client = getApiClient();
+  return client.put<SingleResponse<ConsentSettings>>('/api/users/me/consents', consents);
+}
+
+// =============================================================================
+// Discount Code Services
+// =============================================================================
+
+/**
+ * Get all discount codes
+ */
+export async function getDiscountCodes(): Promise<PaginatedResponse<DiscountCode>> {
+  const client = getApiClient();
+  return client.get<PaginatedResponse<DiscountCode>>('/api/discount-codes');
+}
+
+/**
+ * Create a discount code
+ */
+export async function createDiscountCode(data: CreateDiscountCodeDTO): Promise<SingleResponse<DiscountCode>> {
+  const client = getApiClient();
+  return client.post<SingleResponse<DiscountCode>>('/api/discount-codes', data);
+}
+
+/**
+ * Update a discount code
+ */
+export async function updateDiscountCode(id: string, data: Partial<CreateDiscountCodeDTO>): Promise<SingleResponse<DiscountCode>> {
+  const client = getApiClient();
+  return client.put<SingleResponse<DiscountCode>>(`/api/discount-codes/${id}`, data);
+}
+
+/**
+ * Delete a discount code
+ */
+export async function deleteDiscountCode(id: string): Promise<{ success: boolean }> {
+  const client = getApiClient();
+  return client.delete<{ success: boolean }>(`/api/discount-codes/${id}`);
+}
+
+/**
+ * Validate a discount code
+ */
+export async function validateDiscountCode(code: string, listingId?: string): Promise<ValidateDiscountResult> {
+  const client = getApiClient();
+  return client.post<ValidateDiscountResult>('/api/discount-codes/validate', { code, listingId });
+}
+
+// =============================================================================
+// Audit Services
+// =============================================================================
+
+/**
+ * Get audit logs
+ */
+export async function getAuditLogs(params?: AuditQueryParams): Promise<PaginatedResponse<AuditEvent>> {
+  const client = getApiClient();
+  return client.get<PaginatedResponse<AuditEvent>>('/api/audit', params as Record<string, string | number | boolean | undefined>);
+}
+
+/**
+ * Get a single audit event
+ */
+export async function getAuditEvent(id: string): Promise<SingleResponse<AuditEvent>> {
+  const client = getApiClient();
+  return client.get<SingleResponse<AuditEvent>>(`/api/audit/${id}`);
+}
+
+// =============================================================================
+// Settings Services
+// =============================================================================
+
+/**
+ * Get tenant settings
+ */
+export async function getTenantSettings(): Promise<SingleResponse<TenantSettings>> {
+  const client = getApiClient();
+  return client.get<SingleResponse<TenantSettings>>('/api/settings');
+}
+
+/**
+ * Update tenant settings
+ */
+export async function updateTenantSettings(data: Partial<TenantSettings>): Promise<SingleResponse<TenantSettings>> {
+  const client = getApiClient();
+  return client.put<SingleResponse<TenantSettings>>('/api/settings', data);
+}
+
+/**
+ * Get integration settings
+ */
+export async function getIntegrationSettings(): Promise<SingleResponse<IntegrationSettings>> {
+  const client = getApiClient();
+  return client.get<SingleResponse<IntegrationSettings>>('/api/settings/integrations');
+}
+
+/**
+ * Update integration settings for a provider
+ */
+export async function updateIntegrationSettings(provider: string, data: Record<string, unknown>): Promise<SingleResponse<IntegrationSettings>> {
+  const client = getApiClient();
+  return client.put<SingleResponse<IntegrationSettings>>(`/api/settings/integrations/${provider}`, data);
+}

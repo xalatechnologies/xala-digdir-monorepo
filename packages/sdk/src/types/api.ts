@@ -8,9 +8,15 @@
 // =============================================================================
 
 export type ListingType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
-export type ListingStatus = 'draft' | 'published' | 'archived';
+export type ListingStatus = 'draft' | 'published' | 'archived' | 'maintenance';
 export type PricingUnit = 'hour' | 'day' | 'booking' | 'week' | 'month';
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type PaymentStatus = 'unpaid' | 'paid' | 'partial' | 'refunded';
+export type ActorType = 'private' | 'business' | 'sports_club' | 'youth_organization' | 'school' | 'municipality';
+export type DiscountType = 'percentage' | 'fixed';
+export type AuditAction = 'create' | 'read' | 'update' | 'delete';
+export type CancellationPolicy = 'flexible' | 'moderate' | 'strict';
+export type PaymentProvider = 'vipps' | 'stripe' | 'invoice';
 
 // =============================================================================
 // API Response Types
@@ -745,4 +751,298 @@ function mapPricingUnit(unit: PricingUnit): string {
  */
 export function transformListings(listings: Listing[]): UiListing[] {
   return listings.map(transformListing);
+}
+
+// =============================================================================
+// Authentication Types
+// =============================================================================
+
+/**
+ * Auth session (returned after login)
+ */
+export interface AuthSession {
+  user: AuthUser;
+  token: string;
+  expiresAt: string;
+  permissions: string[];
+}
+
+/**
+ * Authenticated user info
+ */
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  tenantId: string;
+  organizationId?: string;
+}
+
+/**
+ * Login credentials
+ */
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+/**
+ * OAuth provider info
+ */
+export interface OAuthProvider {
+  id: string;
+  name: string;
+  icon: string;
+  loginUrl: string;
+}
+
+// =============================================================================
+// Public API Types
+// =============================================================================
+
+/**
+ * Public listing query params
+ */
+export interface PublicListingParams {
+  type?: ListingType;
+  city?: string;
+  municipality?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  capacity?: number;
+  date?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+/**
+ * City with listing count
+ */
+export interface City {
+  code: string;
+  name: string;
+  listingCount: number;
+}
+
+/**
+ * Municipality with listing count
+ */
+export interface Municipality {
+  code: string;
+  name: string;
+  county: string;
+  listingCount: number;
+}
+
+/**
+ * Category
+ */
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  icon?: string;
+  listingCount: number;
+  parentId?: string;
+  children?: Category[];
+}
+
+// =============================================================================
+// Discount Code Types
+// =============================================================================
+
+/**
+ * Discount code
+ */
+export interface DiscountCode {
+  id: string;
+  code: string;
+  description?: string;
+  type: DiscountType;
+  value: number;
+  minBookingValue?: number;
+  maxUses?: number;
+  usedCount: number;
+  validFrom?: string;
+  validUntil?: string;
+  listingIds?: string[];
+  actorTypes?: ActorType[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Create discount code DTO
+ */
+export interface CreateDiscountCodeDTO {
+  code: string;
+  description?: string;
+  type: DiscountType;
+  value: number;
+  minBookingValue?: number;
+  maxUses?: number;
+  validFrom?: string;
+  validUntil?: string;
+  listingIds?: string[];
+  actorTypes?: ActorType[];
+}
+
+/**
+ * Discount code validation result
+ */
+export interface ValidateDiscountResult {
+  valid: boolean;
+  code?: DiscountCode;
+  discountAmount?: number;
+  reason?: string;
+}
+
+// =============================================================================
+// Audit Types
+// =============================================================================
+
+/**
+ * Audit event
+ */
+export interface AuditEvent {
+  id: string;
+  tenantId: string;
+  userId?: string;
+  userName?: string;
+  resource: string;
+  action: AuditAction;
+  resourceId?: string;
+  changes?: {
+    before?: Record<string, unknown>;
+    after?: Record<string, unknown>;
+  };
+  ipAddress?: string;
+  userAgent?: string;
+  timestamp: string;
+}
+
+/**
+ * Audit query params
+ */
+export interface AuditQueryParams {
+  resource?: string;
+  action?: AuditAction;
+  userId?: string;
+  resourceId?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
+}
+
+// =============================================================================
+// Settings Types
+// =============================================================================
+
+/**
+ * Tenant settings
+ */
+export interface TenantSettings {
+  id: string;
+  tenantId: string;
+  displayName: string;
+  logo?: string;
+  primaryColor?: string;
+  timezone: string;
+  currency: string;
+  language: string;
+  bookingSettings: BookingSettings;
+  notificationSettings: NotificationSettings;
+  paymentSettings: PaymentSettings;
+}
+
+/**
+ * Booking settings
+ */
+export interface BookingSettings {
+  requireApproval: boolean;
+  defaultLeadTimeMinutes: number;
+  maxAdvanceDays: number;
+  cancellationPolicy: CancellationPolicy;
+  cancellationHours: number;
+}
+
+/**
+ * Notification settings
+ */
+export interface NotificationSettings {
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  bookingConfirmation: boolean;
+  bookingReminder: boolean;
+  reminderHoursBefore: number;
+}
+
+/**
+ * Payment settings
+ */
+export interface PaymentSettings {
+  enabled: boolean;
+  provider: PaymentProvider;
+  requirePaymentUpfront: boolean;
+  vatRate: number;
+}
+
+/**
+ * Integration settings
+ */
+export interface IntegrationSettings {
+  bankid: { enabled: boolean; clientId?: string };
+  vipps: { enabled: boolean; merchantId?: string };
+  idporten: { enabled: boolean; clientId?: string };
+  visma: { enabled: boolean; companyId?: string };
+  brreg: { enabled: boolean };
+  rco: { enabled: boolean; apiKey?: string };
+  outlook: { enabled: boolean };
+  googleCalendar: { enabled: boolean };
+}
+
+// =============================================================================
+// GDPR Types
+// =============================================================================
+
+/**
+ * GDPR data export
+ */
+export interface GdprDataExport {
+  user: User;
+  bookings: Booking[];
+  conversations: Conversation[];
+  organizations: Organization[];
+  auditEvents: AuditEvent[];
+  exportedAt: string;
+}
+
+/**
+ * Consent settings
+ */
+export interface ConsentSettings {
+  marketing: boolean;
+  analytics: boolean;
+  thirdPartySharing: boolean;
+  updatedAt: string;
+}
+
+// =============================================================================
+// Extended Booking (with payment status)
+// =============================================================================
+
+/**
+ * Booking with extended fields
+ */
+export interface BookingExtended extends Booking {
+  paymentStatus?: PaymentStatus;
+  listingName?: string;
+  userName?: string;
+  organizationName?: string;
 }

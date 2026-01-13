@@ -58,3 +58,13 @@ export type { ImageSliderProps } from './ImageSlider';
 
 export { PriceSummaryCard } from './PriceSummaryCard';
 export type { PriceSummaryCardProps, PriceLineItem } from './PriceSummaryCard';
+
+// Booking Flow Components
+export { BookingFormModal } from './BookingFormModal';
+export type { BookingFormModalProps } from './BookingFormModal';
+
+export { BookingConfirmation } from './BookingConfirmation';
+export type { BookingConfirmationProps } from './BookingConfirmation';
+
+export { BookingSuccess } from './BookingSuccess';
+export type { BookingSuccessProps } from './BookingSuccess';
