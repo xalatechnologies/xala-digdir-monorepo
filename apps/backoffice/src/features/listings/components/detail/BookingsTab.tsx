@@ -19,6 +19,8 @@ import {
   Stack,
   CheckIcon,
   CloseIcon,
+  HeaderSearch,
+  FilterIcon,
   useDialog,
 } from '@xala/ds';
 
@@ -70,14 +72,29 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Build query params based on active tab and listing ID
+  // Search and filter state
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+
+  // Active filter count (excludes tab selection)
+  const activeFilterCount = [
+    dateFrom,
+    dateTo,
+  ].filter(Boolean).length;
+
+  // Build query params based on active tab, listing ID, and date range
   const bookingParams = useMemo(() => {
-    const params: { listingId: string; status?: BookingStatus } = { listingId };
+    const params: { listingId: string; status?: BookingStatus; from?: string; to?: string } = { listingId };
     if (activeTab !== 'all') {
       params.status = activeTab as BookingStatus;
     }
+    if (dateFrom) params.from = dateFrom;
+    if (dateTo) params.to = dateTo;
     return params;
-  }, [activeTab, listingId]);
+  }, [activeTab, listingId, dateFrom, dateTo]);
 
   // Fetch bookings filtered by listing ID and status
   const { data: bookingsData, isLoading } = useBookings(bookingParams);
@@ -98,9 +115,24 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
     all: allData?.meta?.total ?? allData?.data?.length ?? 0,
   };
 
+  // Filter bookings client-side by search query
   const bookings = useMemo(() => {
-    return bookingsData?.data ?? [];
-  }, [bookingsData]);
+    const data = bookingsData?.data ?? [];
+    if (!searchQuery.trim()) return data;
+
+    const query = searchQuery.toLowerCase();
+    return data.filter((booking: Booking) => {
+      const userName = booking.userName || '';
+      const orgName = booking.organizationName || '';
+      const bookingId = booking.id.toLowerCase();
+
+      return (
+        userName.toLowerCase().includes(query) ||
+        orgName.toLowerCase().includes(query) ||
+        bookingId.includes(query)
+      );
+    });
+  }, [bookingsData, searchQuery]);
 
   const totalCount = bookingsData?.meta?.total || bookings.length;
 
@@ -159,6 +191,20 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
       }
     }
   }, [confirm, cancelBooking]);
+
+  // Search and filter handlers
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchQuery(value || '');
+  }, []);
+
+  const handleClearFilters = useCallback(() => {
+    setDateFrom('');
+    setDateTo('');
+  }, []);
 
   // Loading state
   if (isLoading) {
@@ -250,6 +296,57 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
             </button>
           );
         })}
+      </div>
+
+      {/* Search and Filter Bar */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 'var(--ds-spacing-3)',
+          marginBottom: 'var(--ds-spacing-4)',
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <HeaderSearch
+            value={searchValue}
+            onChange={handleSearchChange}
+            onSearch={handleSearch}
+            placeholder="Søk etter bruker, organisasjon eller booking ID..."
+          />
+        </div>
+        <Button
+          variant="secondary"
+          onClick={() => setIsFilterOpen(true)}
+          style={{
+            position: 'relative',
+            minWidth: '100px',
+          }}
+        >
+          <FilterIcon size={16} />
+          Filter
+          {activeFilterCount > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: '20px',
+                height: '20px',
+                padding: '0 var(--ds-spacing-1)',
+                borderRadius: 'var(--ds-radius-full)',
+                backgroundColor: 'var(--ds-color-primary-surface-default)',
+                color: 'var(--ds-color-primary-text-default)',
+                fontSize: 'var(--ds-font-size-xs)',
+                fontWeight: 600,
+              }}
+            >
+              {activeFilterCount}
+            </span>
+          )}
+        </Button>
       </div>
 
       {/* Empty state */}
@@ -515,6 +612,97 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           )}
         </Drawer>
       )}
+
+      {/* Filter Drawer */}
+      <Drawer
+        open={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        title="Filter bookinger"
+      >
+        <DrawerSection title="Datoperiode">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+            <div>
+              <label
+                htmlFor="date-from"
+                style={{
+                  display: 'block',
+                  marginBottom: 'var(--ds-spacing-1)',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 500,
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              >
+                Fra dato
+              </label>
+              <input
+                id="date-from"
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-radius-md)',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontFamily: 'inherit',
+                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="date-to"
+                style={{
+                  display: 'block',
+                  marginBottom: 'var(--ds-spacing-1)',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 500,
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              >
+                Til dato
+              </label>
+              <input
+                id="date-to"
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-radius-md)',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontFamily: 'inherit',
+                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              />
+            </div>
+          </div>
+        </DrawerSection>
+
+        <DrawerSection>
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+            <Button
+              variant="secondary"
+              onClick={handleClearFilters}
+              style={{ flex: 1 }}
+            >
+              Tilbakestill
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setIsFilterOpen(false)}
+              style={{ flex: 1 }}
+            >
+              Bruk filter
+            </Button>
+          </div>
+        </DrawerSection>
+      </Drawer>
     </div>
   );
 }
