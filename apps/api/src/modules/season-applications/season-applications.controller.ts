@@ -726,4 +726,194 @@ export class SeasonApplicationsController {
       },
     };
   }
+
+  /**
+   * POST /api/season-applications/:id/appeal - Submit appeal for rejected application
+   * KRAV-ADM-06: Klagebehandling for avviste søknader
+   */
+  @Post('/:id/appeal')
+  async submitAppeal(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+    const { appealReason, appealNotes } = request.body as any;
+
+    if (!appealReason) {
+      reply.code(400);
+      return { error: 'appealReason is required' };
+    }
+
+    if (!request.tenantId) {
+      reply.code(401);
+      return { error: 'Tenant ID required' };
+    }
+
+    // Verify application exists and is rejected
+    const application = await db.query.seasonApplications.findFirst({
+      where: and(
+        eq(seasonApplications.id, id),
+        eq(seasonApplications.tenantId, request.tenantId)
+      ),
+    });
+
+    if (!application) {
+      reply.code(404);
+      return { error: 'Application not found' };
+    }
+
+    if (application.status !== 'rejected') {
+      reply.code(400);
+      return { error: 'Only rejected applications can be appealed' };
+    }
+
+    // Check if already appealed
+    if (application.metadata?.appealStatus) {
+      reply.code(400);
+      return { error: 'Application has already been appealed' };
+    }
+
+    // Update application metadata with appeal information
+    const updatedMetadata = {
+      ...(application.metadata || {}),
+      appealStatus: 'pending',
+      appealReason,
+      appealNotes,
+      appealSubmittedAt: new Date().toISOString(),
+    };
+
+    await db
+      .update(seasonApplications)
+      .set({
+        metadata: updatedMetadata,
+        updatedAt: new Date(),
+      })
+      .where(eq(seasonApplications.id, id));
+
+    // Fetch updated application
+    const updated = await db.query.seasonApplications.findFirst({
+      where: eq(seasonApplications.id, id),
+    });
+
+    return {
+      data: updated,
+    };
+  }
+
+  /**
+   * PUT /api/season-applications/:id/appeal/approve - Approve an appeal
+   * Admin endpoint to approve an appeal and change application status
+   */
+  @Put('/:id/appeal/approve')
+  async approveAppeal(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    if (!request.tenantId) {
+      reply.code(401);
+      return { error: 'Tenant ID required' };
+    }
+
+    // Verify application exists and has a pending appeal
+    const application = await db.query.seasonApplications.findFirst({
+      where: and(
+        eq(seasonApplications.id, id),
+        eq(seasonApplications.tenantId, request.tenantId)
+      ),
+    });
+
+    if (!application) {
+      reply.code(404);
+      return { error: 'Application not found' };
+    }
+
+    if (application.metadata?.appealStatus !== 'pending') {
+      reply.code(400);
+      return { error: 'Application does not have a pending appeal' };
+    }
+
+    // Update application metadata with appeal approval
+    const updatedMetadata = {
+      ...(application.metadata || {}),
+      appealStatus: 'approved',
+      appealProcessedAt: new Date().toISOString(),
+    };
+
+    // Update status to approved after successful appeal
+    await db
+      .update(seasonApplications)
+      .set({
+        status: 'approved',
+        metadata: updatedMetadata,
+        rejectionReason: null, // Clear rejection reason
+        updatedAt: new Date(),
+      })
+      .where(eq(seasonApplications.id, id));
+
+    // Fetch updated application
+    const updated = await db.query.seasonApplications.findFirst({
+      where: eq(seasonApplications.id, id),
+    });
+
+    return {
+      data: updated,
+    };
+  }
+
+  /**
+   * PUT /api/season-applications/:id/appeal/reject - Reject an appeal
+   * Admin endpoint to reject an appeal with optional reason
+   */
+  @Put('/:id/appeal/reject')
+  async rejectAppeal(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+    const { appealRejectionReason } = request.body as any;
+
+    if (!request.tenantId) {
+      reply.code(401);
+      return { error: 'Tenant ID required' };
+    }
+
+    // Verify application exists and has a pending appeal
+    const application = await db.query.seasonApplications.findFirst({
+      where: and(
+        eq(seasonApplications.id, id),
+        eq(seasonApplications.tenantId, request.tenantId)
+      ),
+    });
+
+    if (!application) {
+      reply.code(404);
+      return { error: 'Application not found' };
+    }
+
+    if (application.metadata?.appealStatus !== 'pending') {
+      reply.code(400);
+      return { error: 'Application does not have a pending appeal' };
+    }
+
+    // Update application metadata with appeal rejection
+    const updatedMetadata = {
+      ...(application.metadata || {}),
+      appealStatus: 'rejected',
+      appealRejectionReason,
+      appealProcessedAt: new Date().toISOString(),
+    };
+
+    await db
+      .update(seasonApplications)
+      .set({
+        metadata: updatedMetadata,
+        updatedAt: new Date(),
+      })
+      .where(eq(seasonApplications.id, id));
+
+    // Fetch updated application
+    const updated = await db.query.seasonApplications.findFirst({
+      where: eq(seasonApplications.id, id),
+    });
+
+    return {
+      data: updated,
+    };
+  }
 }
