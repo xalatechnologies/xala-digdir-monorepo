@@ -10,9 +10,11 @@ import {
   useExportReport,
   type ReportPeriod,
   type ExportFormat,
+  type ReportTemplate,
   formatCurrency,
   formatPercent,
 } from '@digilist/client-sdk';
+import { ReportTemplateSelector } from '../components/reports/ReportTemplateSelector';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -61,6 +63,9 @@ export function ReportsPage() {
   const [facilityId, setFacilityId] = useState<string>('all');
   const [organizationId, setOrganizationId] = useState<string>('all');
   const [bookingType, setBookingType] = useState<string>('all');
+
+  // Template selection state
+  const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
 
   // Fetch data from API - API returns data directly (no wrapper)
   const { data: kpis, isLoading: isLoadingKPIs } = useDashboardKPIs();
@@ -344,6 +349,20 @@ export function ReportsPage() {
             />
           </div>
         </div>
+      </Card>
+
+      {/* Report Template Selector */}
+      <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+        <ReportTemplateSelector
+          onSelect={(template) => setSelectedTemplate(template)}
+        />
+        {selectedTemplate && (
+          <div style={{ marginTop: 'var(--ds-spacing-4)', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-accent-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+              Valgt mal: {selectedTemplate.name}
+            </Paragraph>
+          </div>
+        )}
       </Card>
 
       {isLoading ? (
