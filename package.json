@@ -23,7 +23,12 @@
     "scan:compliance:strict": "node ./scripts/scan-compliance.mjs --strict",
     "scan:all": "pnpm scan && pnpm scan:compliance",
     "tokens:create": "npx @digdir/designsystemet tokens create --config designsystemet.config.json",
-    "tokens:build": "npx @digdir/designsystemet tokens build --tokens ./packages/ds-themes/generated --out-dir ./packages/ds-themes/generated"
+    "tokens:build": "npx @digdir/designsystemet tokens build --tokens ./packages/ds-themes/generated --out-dir ./packages/ds-themes/generated",
+    "deploy:web": "./scripts/deploy.sh web",
+    "deploy:backoffice": "./scripts/deploy.sh backoffice",
+    "deploy:minside": "./scripts/deploy.sh minside",
+    "deploy:all": "./scripts/deploy.sh all",
+    "deploy:ssl": "./scripts/setup-ssl.sh"
   },
   "devDependencies": {
     "@digdir/designsystemet-css": "1.9.0",
