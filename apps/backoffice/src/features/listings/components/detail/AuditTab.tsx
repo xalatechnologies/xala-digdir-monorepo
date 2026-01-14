@@ -587,116 +587,241 @@ export function AuditTab({ listingId }: AuditTabProps) {
         onClose={handleCloseDrawer}
         title="Hendelsesdetaljer"
         position="right"
+        size="lg"
       >
         {selectedEvent && (
           <>
-            <DrawerSection>
-              <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                Grunnleggende informasjon
-              </Heading>
-              <Stack spacing={3}>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Hendelse-ID
-                  </div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'monospace' }}>
-                    {selectedEvent.id}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Tidspunkt
-                  </div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                    {formatDate(selectedEvent.timestamp, formatLocale)} kl.{' '}
-                    {formatTime(selectedEvent.timestamp, formatLocale)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Aktør
-                  </div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                    {selectedEvent.userId
-                      ? userNameMap.get(selectedEvent.userId) || 'Ukjent bruker'
-                      : 'System'}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <DrawerSection title="Oversikt">
+              <Stack spacing="var(--ds-spacing-3)">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Handling
-                  </div>
-                  <div>
-                    <Badge color={getActionColor(selectedEvent.action)}>
-                      {getActionLabel(selectedEvent.action)}
-                    </Badge>
-                  </div>
+                  </Paragraph>
+                  <Badge data-color={getActionColor(selectedEvent.action)}>
+                    {getActionLabel(selectedEvent.action)}
+                  </Badge>
                 </div>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Alvorlighetsgrad
-                  </div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', textTransform: 'capitalize' }}>
-                    {selectedEvent.severity}
-                  </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Ressurs
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Lokale
+                  </Paragraph>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Ressurs-ID
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    {selectedEvent.resourceId || '-'}
+                  </Paragraph>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Tidspunkt
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    {formatDate(selectedEvent.timestamp, formatLocale)}{' '}
+                    {formatTime(selectedEvent.timestamp, formatLocale)}
+                  </Paragraph>
                 </div>
               </Stack>
             </DrawerSection>
 
-            <DrawerSection>
-              <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                Teknisk informasjon
-              </Heading>
-              <Stack spacing={3}>
-                {selectedEvent.ipAddress && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      IP-adresse
-                    </div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'monospace' }}>
-                      {selectedEvent.ipAddress}
-                    </div>
+            <DrawerSection title="Utført av">
+              <Stack spacing="var(--ds-spacing-2)">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Bruker
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    {selectedEvent.userId
+                      ? userNameMap.get(selectedEvent.userId) || 'Ukjent bruker'
+                      : 'System'}
+                  </Paragraph>
+                </div>
+                {selectedEvent.userId && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Bruker-ID
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                      {selectedEvent.userId.slice(0, 8)}...
+                    </Paragraph>
                   </div>
                 )}
-                {selectedEvent.userAgent && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Brukeragent
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 'var(--ds-font-size-xs)',
-                        fontFamily: 'monospace',
-                        wordBreak: 'break-all',
-                      }}
-                    >
-                      {selectedEvent.userAgent}
-                    </div>
+                {selectedEvent.ipAddress && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      IP-adresse
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                      {selectedEvent.ipAddress}
+                    </Paragraph>
                   </div>
                 )}
               </Stack>
             </DrawerSection>
 
             {selectedEvent.metadata && Object.keys(selectedEvent.metadata).length > 0 && (
-              <DrawerSection>
-                <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                  Metadata
-                </Heading>
-                <pre
-                  style={{
-                    fontSize: 'var(--ds-font-size-xs)',
-                    fontFamily: 'monospace',
-                    backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-                    padding: 'var(--ds-spacing-3)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    overflow: 'auto',
-                    maxHeight: '300px',
-                  }}
-                >
-                  {JSON.stringify(selectedEvent.metadata, null, 2)}
-                </pre>
-              </DrawerSection>
+              <>
+                <DrawerSection title="Endringer">
+                  {selectedEvent.metadata.before && selectedEvent.metadata.after ? (
+                    <div>
+                      <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                        <Paragraph
+                          data-size="sm"
+                          style={{
+                            margin: 0,
+                            marginBottom: 'var(--ds-spacing-2)',
+                            fontWeight: 'var(--ds-font-weight-medium)',
+                          }}
+                        >
+                          Før
+                        </Paragraph>
+                        <div
+                          style={{
+                            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                            borderRadius: 'var(--ds-border-radius-md)',
+                            padding: 'var(--ds-spacing-3)',
+                            overflow: 'auto',
+                            maxHeight: '200px',
+                          }}
+                        >
+                          <pre
+                            style={{
+                              margin: 0,
+                              fontSize: 'var(--ds-font-size-xs)',
+                              fontFamily: 'monospace',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {JSON.stringify(selectedEvent.metadata.before, null, 2)}
+                          </pre>
+                        </div>
+                      </div>
+                      <div>
+                        <Paragraph
+                          data-size="sm"
+                          style={{
+                            margin: 0,
+                            marginBottom: 'var(--ds-spacing-2)',
+                            fontWeight: 'var(--ds-font-weight-medium)',
+                          }}
+                        >
+                          Etter
+                        </Paragraph>
+                        <div
+                          style={{
+                            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                            borderRadius: 'var(--ds-border-radius-md)',
+                            padding: 'var(--ds-spacing-3)',
+                            overflow: 'auto',
+                            maxHeight: '200px',
+                          }}
+                        >
+                          <pre
+                            style={{
+                              margin: 0,
+                              fontSize: 'var(--ds-font-size-xs)',
+                              fontFamily: 'monospace',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {JSON.stringify(selectedEvent.metadata.after, null, 2)}
+                          </pre>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Ingen endringsdata tilgjengelig
+                    </Paragraph>
+                  )}
+                </DrawerSection>
+
+                <DrawerSection title="Full hendelse (JSON)">
+                  <div
+                    style={{
+                      backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      padding: 'var(--ds-spacing-3)',
+                      overflow: 'auto',
+                      maxHeight: '300px',
+                    }}
+                  >
+                    <pre
+                      style={{
+                        margin: 0,
+                        fontSize: 'var(--ds-font-size-xs)',
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {JSON.stringify(selectedEvent.metadata, null, 2)}
+                    </pre>
+                  </div>
+                </DrawerSection>
+              </>
             )}
+
+            <DrawerSection title="System">
+              <Stack spacing="var(--ds-spacing-2)">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Hendelse-ID
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    {selectedEvent.id.slice(0, 8)}...
+                  </Paragraph>
+                </div>
+                {selectedEvent.tenantId && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Tenant-ID
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                      {selectedEvent.tenantId.slice(0, 8)}...
+                    </Paragraph>
+                  </div>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Alvorlighetsgrad
+                  </Paragraph>
+                  <Badge
+                    data-color={
+                      selectedEvent.severity === 'error' || selectedEvent.severity === 'critical'
+                        ? 'danger'
+                        : 'neutral'
+                    }
+                  >
+                    {selectedEvent.severity}
+                  </Badge>
+                </div>
+                {selectedEvent.userAgent && (
+                  <div>
+                    <Paragraph
+                      data-size="sm"
+                      style={{
+                        margin: 0,
+                        marginBottom: 'var(--ds-spacing-1)',
+                        color: 'var(--ds-color-neutral-text-subtle)',
+                      }}
+                    >
+                      User Agent
+                    </Paragraph>
+                    <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                      {selectedEvent.userAgent}
+                    </Paragraph>
+                  </div>
+                )}
+              </Stack>
+            </DrawerSection>
           </>
         )}
       </Drawer>
