@@ -55,16 +55,8 @@ export function useAuth() {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      // Mock auth mode - use localStorage for development
+      // Mock auth mode - in-memory state only
       if (USE_MOCK_AUTH) {
-        const mockUserType = localStorage.getItem('web_user_type');
-        if (mockUserType) {
-          // Map stored user type to predefined typed object (no JSON.parse to prevent prototype pollution)
-          const mockUser = MOCK_USERS[mockUserType];
-          if (mockUser) {
-            setUser(mockUser);
-          }
-        }
         setIsLoading(false);
         return;
       }
@@ -89,11 +81,9 @@ export function useAuth() {
 
   const login = useCallback((provider: 'idporten' | 'microsoft' | 'vipps') => {
     if (USE_MOCK_AUTH) {
-      // Simulate login with mock user
+      // Simulate login with mock user (in-memory only)
       const mockUser = MOCK_USERS[provider];
       if (mockUser) {
-        // Store only user type identifier to avoid JSON.parse prototype pollution
-        localStorage.setItem('web_user_type', provider);
         setUser(mockUser);
         navigate('/');
       }
@@ -107,11 +97,8 @@ export function useAuth() {
   }, [navigate]);
 
   const logout = useCallback(async () => {
-    // Mock auth mode - clear localStorage
-    if (USE_MOCK_AUTH) {
-      localStorage.removeItem('web_user_type');
-    } else {
-      // Real auth mode - call API to clear httpOnly cookie
+    // Real auth mode - call API to clear httpOnly cookie
+    if (!USE_MOCK_AUTH) {
       try {
         await authService.logout();
       } catch (error) {
