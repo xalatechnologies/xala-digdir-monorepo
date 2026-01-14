@@ -308,6 +308,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 <Table.HeaderCell>Prioritet</Table.HeaderCell>
                 <Table.HeaderCell>Betingelser</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
+                {/* Table column width requires specific pixel value for consistent layout */}
                 {canEdit && <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>}
               </Table.Row>
             </Table.Head>
