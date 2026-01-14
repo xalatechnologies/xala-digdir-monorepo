@@ -6,10 +6,15 @@
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+/**
+ * Request body type supporting JSON and multipart/form-data
+ */
+export type RequestBody = unknown | FormData;
+
 export interface RequestOptions {
   params?: Record<string, string | number | boolean | undefined>;
   headers?: Record<string, string>;
-  body?: unknown;
+  body?: RequestBody;
   signal?: AbortSignal;
 }
 
@@ -25,9 +30,9 @@ export interface HttpResponse<T> {
  */
 export interface IHttpClient {
   get<T>(path: string, options?: RequestOptions): Promise<T>;
-  post<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T>;
-  put<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T>;
-  patch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T>;
+  post<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T>;
+  put<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T>;
+  patch<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T>;
   delete<T>(path: string, options?: RequestOptions): Promise<T>;
 }
 

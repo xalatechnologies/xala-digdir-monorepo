@@ -14,6 +14,8 @@ import type {
   PublicListingParams
 } from '../types/listing';
 import { transformListings, transformListing } from '../types/listing';
+import type { UploadOptions } from '../types/upload';
+import { compressImage, isImageFile } from '../utils/image-compression';
 
 // ============================================================================
 // Authenticated Listing Hooks
@@ -310,29 +312,39 @@ export function useFeaturedListings() {
 interface UploadMediaParams {
   id: string;
   files: File[];
+  options?: UploadOptions;
 }
 
 /**
  * Upload media to a listing
- * Converts files to data URLs and calls addMedia API
- * TODO: Implement proper multipart/form-data upload when backend supports it
+ * Uses proper multipart/form-data upload with optional compression and progress tracking
  */
 export function useUploadListingMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, files }: UploadMediaParams) => {
-      // Convert files to data URLs for now
-      // In production, this should be a proper multipart upload
-      const urls = await Promise.all(
-        files.map(file => new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        }))
-      );
-      return listingService.addMedia(id, urls);
+    mutationFn: async ({ id, files, options }: UploadMediaParams) => {
+      // Compress images if enabled (default: true)
+      const shouldCompress = options?.compress !== false;
+      const processedFiles = shouldCompress
+        ? await Promise.all(
+            files.map(async (file) => {
+              // Only compress image files
+              if (isImageFile(file)) {
+                try {
+                  return await compressImage(file, options?.compressionOptions);
+                } catch (error) {
+                  // If compression fails, use original file
+                  return file;
+                }
+              }
+              return file;
+            })
+          )
+        : files;
+
+      // Upload using multipart/form-data
+      return listingService.uploadMedia(id, processedFiles, options);
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });

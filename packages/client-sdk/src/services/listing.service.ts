@@ -19,6 +19,7 @@ import type {
   PublicListingParams
 } from '../types/listing';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+import type { UploadOptions, MediaUploadResponse } from '../types/upload';
 
 export class ListingService extends BaseService {
   constructor() {
@@ -98,10 +99,23 @@ export class ListingService extends BaseService {
   }
 
   /**
-   * Add media to listing
+   * Add media to listing (legacy method - use uploadMedia for new implementations)
+   * @deprecated Use uploadMedia() for new implementations
    */
   async addMedia(id: string, urls: string[]): Promise<SuccessResponse> {
     return this.client.post(this.buildPath(`/${id}/media`), { urls });
+  }
+
+  /**
+   * Upload media files to listing
+   * Uses multipart/form-data for proper file upload with progress tracking
+   * @param id - Listing ID
+   * @param files - Files to upload
+   * @param options - Upload options including progress callback
+   * @returns MediaUploadResponse with uploaded file details
+   */
+  async uploadMedia(id: string, files: File[], options?: UploadOptions): Promise<MediaUploadResponse> {
+    return super.uploadMedia(`/${id}/media`, files, options);
   }
 
   /**

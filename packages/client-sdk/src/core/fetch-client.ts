@@ -4,7 +4,7 @@
  * Open/Closed: Extensible through configuration, closed for modification
  */
 
-import type { IHttpClient, RequestOptions, ApiClientConfig } from './http-client.interface';
+import type { IHttpClient, RequestOptions, ApiClientConfig, RequestBody } from './http-client.interface';
 import { ApiError } from './http-client.interface';
 
 export class FetchHttpClient implements IHttpClient {
@@ -42,11 +42,15 @@ export class FetchHttpClient implements IHttpClient {
     return url.toString();
   }
 
-  private buildHeaders(customHeaders?: Record<string, string>): Record<string, string> {
+  private buildHeaders(customHeaders?: Record<string, string>, isFormData = false): Record<string, string> {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       ...this.config.defaultHeaders,
     };
+
+    // Don't set Content-Type for FormData - browser will set it with boundary
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     if (this.config.tenantId) {
       headers['X-Tenant-Id'] = this.config.tenantId;
@@ -70,10 +74,13 @@ export class FetchHttpClient implements IHttpClient {
   private async request<T>(
     method: string,
     path: string,
-    options?: RequestOptions & { body?: unknown }
+    options?: RequestOptions & { body?: RequestBody }
   ): Promise<T> {
     const url = this.buildUrl(path, options?.params);
-    const headers = this.buildHeaders(options?.headers);
+
+    // Detect if body is FormData to handle Content-Type correctly
+    const isFormData = options?.body instanceof FormData;
+    const headers = this.buildHeaders(options?.headers, isFormData);
 
     const controller = new AbortController();
     const timeoutId = this.config.timeout
@@ -81,10 +88,16 @@ export class FetchHttpClient implements IHttpClient {
       : null;
 
     try {
+      // Prepare request body - FormData passes through, others get JSON.stringify
+      let body: BodyInit | undefined;
+      if (options?.body) {
+        body = isFormData ? (options.body as FormData) : JSON.stringify(options.body);
+      }
+
       const response = await fetch(url, {
         method,
         headers,
-        body: options?.body ? JSON.stringify(options.body) : undefined,
+        body,
         signal: options?.signal ?? controller.signal,
       });
 
@@ -144,15 +157,15 @@ export class FetchHttpClient implements IHttpClient {
     return this.request<T>('GET', path, options);
   }
 
-  async post<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async post<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T> {
     return this.request<T>('POST', path, { ...options, body });
   }
 
-  async put<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async put<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T> {
     return this.request<T>('PUT', path, { ...options, body });
   }
 
-  async patch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  async patch<T>(path: string, body?: RequestBody, options?: RequestOptions): Promise<T> {
     return this.request<T>('PATCH', path, { ...options, body });
   }
 

@@ -14,10 +14,9 @@ import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
-import { SearchPage } from './routes/search';
 import { SeasonsPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
-import { OrganizationsPage } from './routes/organizations';
+import { OrganizationsPage, OrganizationEditPage } from './routes/organizations';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
@@ -70,7 +69,6 @@ function AppWithTheme() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
-              <Route path="search" element={<SearchPage />} />
               <Route path="seasons" element={<SeasonsPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="reports" element={<ReportsPage />} />
@@ -87,6 +85,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <OrganizationsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationEditPage />
                   </ProtectedRoute>
                 }
               />

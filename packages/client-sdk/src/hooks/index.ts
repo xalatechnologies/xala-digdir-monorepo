@@ -73,6 +73,7 @@ export {
   useUpdateOrganization,
   useDeleteOrganization,
   useVerifyOrganization,
+  useUploadOrganizationLogo,
   useUsers,
   useUser,
   useCurrentUser,
@@ -84,7 +85,8 @@ export {
   useExportData,
   useDeleteAccount,
   useConsents,
-  useUpdateConsents
+  useUpdateConsents,
+  useUploadUserAvatar
 } from './use-organizations';
 
 // Integration hooks
@@ -197,16 +199,3 @@ export {
   type UseGeocodeListingsOptions,
   type UseGeocodeListingsResult,
 } from './use-geocode';
-
-// Search hooks
-export {
-  useGlobalSearch,
-  useTypeahead,
-  useSavedFilters,
-  useSavedFilter,
-  useCreateSavedFilter,
-  useUpdateSavedFilter,
-  useDeleteSavedFilter,
-  useRecentSearches,
-  useExportResults
-} from './use-search';

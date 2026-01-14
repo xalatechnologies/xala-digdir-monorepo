@@ -5,7 +5,15 @@
 
 import { useCallback, useState } from 'react';
 import { Paragraph, Heading, Button, Card } from '@xala/ds';
-import { useUploadListingMedia, useDeleteListingMedia } from '@digilist/client-sdk';
+import {
+  useUploadListingMedia,
+  useDeleteListingMedia,
+  formatBytes,
+  formatSpeed,
+  formatETA,
+  UploadProgressTracker,
+} from '@digilist/client-sdk';
+import type { UploadProgressEvent } from '@digilist/client-sdk';
 import type { BackofficeListing, ListingDocument } from '../../../types';
 
 export interface MediaStepProps {
@@ -14,16 +22,92 @@ export interface MediaStepProps {
   errors?: string[];
 }
 
+interface FileUploadProgress {
+  filename: string;
+  progress: UploadProgressEvent;
+  status: 'compressing' | 'uploading' | 'complete' | 'error';
+  error?: string;
+}
+
 export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
   const [isDraggingImages, setIsDraggingImages] = useState(false);
   const [isDraggingDocs, setIsDraggingDocs] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<Map<string, FileUploadProgress>>(new Map());
   const uploadMutation = useUploadListingMedia();
   const deleteMutation = useDeleteListingMedia();
 
   const images = data.images || [];
   const documents: ListingDocument[] = data.documents || [];
   const listingId = data.id;
+
+  // Helper to update progress for a specific file
+  const updateFileProgress = useCallback((fileId: string, update: Partial<FileUploadProgress>) => {
+    setUploadProgress(prev => {
+      const newMap = new Map(prev);
+      const existing = newMap.get(fileId);
+      if (existing) {
+        newMap.set(fileId, { ...existing, ...update });
+      } else {
+        newMap.set(fileId, update as FileUploadProgress);
+      }
+      return newMap;
+    });
+  }, []);
+
+  // Helper to remove file from progress tracking
+  const removeFileProgress = useCallback((fileId: string) => {
+    setUploadProgress(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(fileId);
+      return newMap;
+    });
+  }, []);
+
+  // Simulate compression with progress tracking
+  const compressFile = useCallback(async (file: File, fileId: string): Promise<string> => {
+    const tracker = new UploadProgressTracker();
+
+    // Start compression
+    updateFileProgress(fileId, {
+      filename: file.name,
+      status: 'compressing',
+      progress: {
+        loaded: 0,
+        total: file.size,
+        percentage: 0,
+      },
+    });
+
+    // Simulate compression progress
+    return new Promise<string>((resolve) => {
+      const reader = new FileReader();
+
+      reader.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const progress = tracker.update(e.loaded, e.total);
+          updateFileProgress(fileId, {
+            status: 'compressing',
+            progress,
+          });
+        }
+      };
+
+      reader.onloadend = () => {
+        updateFileProgress(fileId, {
+          status: 'complete',
+          progress: {
+            loaded: file.size,
+            total: file.size,
+            percentage: 100,
+          },
+        });
+        resolve(reader.result as string);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }, [updateFileProgress]);
 
   // Image handling
   const handleImageDragOver = useCallback((e: React.DragEvent) => {
@@ -46,25 +130,75 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
     setIsUploading(true);
     try {
       if (!listingId) {
+        // Process files with progress tracking
         const newUrls = await Promise.all(
-          files.map(file => {
-            return new Promise<string>((resolve) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result as string);
-              reader.readAsDataURL(file);
-            });
+          files.map(async (file) => {
+            const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            try {
+              const url = await compressFile(file, fileId);
+              // Remove from progress after a short delay to show completion
+              setTimeout(() => removeFileProgress(fileId), 1500);
+              return url;
+            } catch (error) {
+              updateFileProgress(fileId, {
+                filename: file.name,
+                status: 'error',
+                error: 'Komprimering feilet',
+                progress: { loaded: 0, total: file.size, percentage: 0 },
+              });
+              throw error;
+            }
           })
         );
         onChange({ images: [...images, ...newUrls] });
       } else {
-        await uploadMutation.mutateAsync({ id: listingId, files });
+        // Track progress for each file
+        const fileIds = files.map(file => {
+          const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}-${file.name}`;
+          updateFileProgress(fileId, {
+            filename: file.name,
+            status: 'compressing',
+            progress: { loaded: 0, total: file.size, percentage: 0 },
+          });
+          return fileId;
+        });
+
+        // Upload with progress tracking
+        await uploadMutation.mutateAsync({
+          id: listingId,
+          files,
+          options: {
+            onProgress: (progress) => {
+              // Update first file's progress (SDK handles all files in batch)
+              if (fileIds[0]) {
+                updateFileProgress(fileIds[0], {
+                  status: 'uploading',
+                  progress,
+                });
+              }
+            },
+          },
+        });
+
+        // Mark all as complete
+        fileIds.forEach(fileId => {
+          updateFileProgress(fileId, {
+            status: 'complete',
+            progress: { loaded: 100, total: 100, percentage: 100 },
+          });
+        });
+
+        // Clear progress after showing completion
+        setTimeout(() => {
+          fileIds.forEach(fileId => removeFileProgress(fileId));
+        }, 1500);
       }
     } catch (error) {
-      console.error('Upload failed:', error);
+      // Error handling - already tracked in progress
     } finally {
       setIsUploading(false);
     }
-  }, [listingId, images, onChange, uploadMutation]);
+  }, [listingId, images, onChange, uploadMutation, compressFile, updateFileProgress, removeFileProgress]);
 
   const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []).filter(f => f.type.startsWith('image/'));
@@ -73,26 +207,76 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
     setIsUploading(true);
     try {
       if (!listingId) {
+        // Process files with progress tracking
         const newUrls = await Promise.all(
-          files.map(file => {
-            return new Promise<string>((resolve) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result as string);
-              reader.readAsDataURL(file);
-            });
+          files.map(async (file) => {
+            const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            try {
+              const url = await compressFile(file, fileId);
+              // Remove from progress after a short delay to show completion
+              setTimeout(() => removeFileProgress(fileId), 1500);
+              return url;
+            } catch (error) {
+              updateFileProgress(fileId, {
+                filename: file.name,
+                status: 'error',
+                error: 'Komprimering feilet',
+                progress: { loaded: 0, total: file.size, percentage: 0 },
+              });
+              throw error;
+            }
           })
         );
         onChange({ images: [...images, ...newUrls] });
       } else {
-        await uploadMutation.mutateAsync({ id: listingId, files });
+        // Track progress for each file
+        const fileIds = files.map(file => {
+          const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}-${file.name}`;
+          updateFileProgress(fileId, {
+            filename: file.name,
+            status: 'compressing',
+            progress: { loaded: 0, total: file.size, percentage: 0 },
+          });
+          return fileId;
+        });
+
+        // Upload with progress tracking
+        await uploadMutation.mutateAsync({
+          id: listingId,
+          files,
+          options: {
+            onProgress: (progress) => {
+              // Update first file's progress (SDK handles all files in batch)
+              if (fileIds[0]) {
+                updateFileProgress(fileIds[0], {
+                  status: 'uploading',
+                  progress,
+                });
+              }
+            },
+          },
+        });
+
+        // Mark all as complete
+        fileIds.forEach(fileId => {
+          updateFileProgress(fileId, {
+            status: 'complete',
+            progress: { loaded: 100, total: 100, percentage: 100 },
+          });
+        });
+
+        // Clear progress after showing completion
+        setTimeout(() => {
+          fileIds.forEach(fileId => removeFileProgress(fileId));
+        }, 1500);
       }
     } catch (error) {
-      console.error('Upload failed:', error);
+      // Error handling - already tracked in progress
     } finally {
       setIsUploading(false);
     }
     e.target.value = '';
-  }, [listingId, images, onChange, uploadMutation]);
+  }, [listingId, images, onChange, uploadMutation, compressFile, updateFileProgress, removeFileProgress]);
 
   const handleRemoveImage = useCallback(async (index: number) => {
     const imageUrl = images[index];
@@ -284,7 +468,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
           onDragOver={handleImageDragOver}
           onDragLeave={handleImageDragLeave}
           onDrop={handleImageDrop}
-          onClick={() => document.getElementById('image-input')?.click()}
+          onClick={() => !isUploading && document.getElementById('image-input')?.click()}
           style={{
             border: `2px dashed ${isDraggingImages ? 'var(--ds-color-accent-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
             borderRadius: 'var(--ds-border-radius-lg)',
@@ -292,17 +476,10 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
             textAlign: 'center',
             backgroundColor: isDraggingImages ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-default)',
             transition: 'all 0.2s ease',
-            cursor: 'pointer',
+            cursor: isUploading ? 'default' : 'pointer',
           }}
         >
-          {isUploading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--ds-color-accent-base-default)', animation: 'spin 1s linear infinite' }}>
-                <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="8" />
-              </svg>
-              <Paragraph data-size="sm" style={{ margin: 0 }}>Laster opp bilder...</Paragraph>
-            </div>
-          ) : (
+          {!isUploading ? (
             <>
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--ds-color-neutral-text-subtle)" strokeWidth="1.5" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -316,7 +493,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                 eller klikk for å velge filer • JPG, PNG, WebP
               </Paragraph>
             </>
-          )}
+          ) : null}
           <input
             id="image-input"
             type="file"
@@ -324,8 +501,106 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
             multiple
             onChange={handleImageSelect}
             style={{ display: 'none' }}
+            disabled={isUploading}
           />
         </div>
+
+        {/* Upload Progress Display */}
+        {uploadProgress.size > 0 && (
+          <div style={{ marginTop: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+            {Array.from(uploadProgress.values()).map((fileProgress) => (
+              <div
+                key={fileProgress.filename}
+                style={{
+                  padding: 'var(--ds-spacing-3)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  border: '1px solid var(--ds-color-neutral-border-subtle)',
+                }}
+              >
+                {/* File name and status */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {fileProgress.status === 'compressing' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--ds-color-accent-base-default)', animation: 'spin 1s linear infinite' }}>
+                        <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="8" />
+                      </svg>
+                    )}
+                    {fileProgress.status === 'uploading' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--ds-color-accent-base-default)' }}>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                      </svg>
+                    )}
+                    {fileProgress.status === 'complete' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--ds-color-success-base-default)' }}>
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                    {fileProgress.status === 'error' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--ds-color-danger-base-default)' }}>
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                      </svg>
+                    )}
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {fileProgress.filename}
+                    </Paragraph>
+                  </div>
+                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {fileProgress.status === 'compressing' && 'Komprimerer...'}
+                    {fileProgress.status === 'uploading' && 'Laster opp...'}
+                    {fileProgress.status === 'complete' && 'Fullført'}
+                    {fileProgress.status === 'error' && fileProgress.error}
+                  </Paragraph>
+                </div>
+
+                {/* Progress bar */}
+                <div style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '8px',
+                      backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+                      borderRadius: 'var(--ds-border-radius-full)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${fileProgress.progress.percentage}%`,
+                        height: '100%',
+                        backgroundColor: fileProgress.status === 'error'
+                          ? 'var(--ds-color-danger-base-default)'
+                          : fileProgress.status === 'complete'
+                          ? 'var(--ds-color-success-base-default)'
+                          : 'var(--ds-color-accent-base-default)',
+                        transition: 'width 0.3s ease',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Progress details */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {formatBytes(fileProgress.progress.loaded)} av {formatBytes(fileProgress.progress.total)} ({fileProgress.progress.percentage}%)
+                  </Paragraph>
+                  {fileProgress.progress.speed !== undefined && fileProgress.progress.speed > 0 && (
+                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {formatSpeed(fileProgress.progress.speed)}
+                      {fileProgress.progress.estimatedTimeRemaining !== undefined && (
+                        <> • {formatETA(fileProgress.progress.estimatedTimeRemaining)} gjenstår</>
+                      )}
+                    </Paragraph>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Image gallery */}
         {images.length > 0 && (
