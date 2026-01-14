@@ -211,8 +211,40 @@ export {
   useBookingStats,
   useRevenueReport,
   useUsageReport,
+  useTimeSlotHeatmap,
+  useSeasonalPatterns,
+  useComparisonData,
   useExportReport,
+  useReportHistory,
+  useGenerateReportAsync,
+  useReportJobStatus,
+  useDownloadReport
 } from './use-reports';
+
+// Report Template hooks
+export {
+  useReportTemplates,
+  useReportTemplate,
+  useSystemReportTemplates,
+  useCreateReportTemplate,
+  useUpdateReportTemplate,
+  useDeleteReportTemplate,
+  useDuplicateReportTemplate
+} from './use-report-templates';
+
+// Scheduled Report hooks
+export {
+  useScheduledReports,
+  useScheduledReport,
+  useActiveScheduledReports,
+  useScheduledReportsByType,
+  useCreateScheduledReport,
+  useUpdateScheduledReport,
+  useDeleteScheduledReport,
+  usePauseScheduledReport,
+  useResumeScheduledReport,
+  useTriggerScheduledReport
+} from './use-scheduled-reports';
 
 // Geocoding hooks
 export {
