@@ -25,6 +25,7 @@ import {
   CloseIcon,
   MoreVerticalIcon,
   FilterIcon,
+  DownloadIcon,
   useDialog,
 } from '@xala/ds';
 
@@ -33,6 +34,7 @@ import {
   useConfirmBooking,
   useCancelBooking,
   useUpdateBooking,
+  useBulkConfirmBookings,
   useListings,
   useUsers,
   type BookingStatus,
@@ -183,6 +185,7 @@ export function BookingsPage() {
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
   const updateBooking = useUpdateBooking();
+  const bulkConfirmBookings = useBulkConfirmBookings();
   const { confirm } = useDialog();
 
   // Tab counts
@@ -287,9 +290,7 @@ export function BookingsPage() {
       variant: 'primary',
     });
     if (confirmed) {
-      for (const id of selectedIds) {
-        await confirmBooking.mutateAsync(id);
-      }
+      await bulkConfirmBookings.mutateAsync(selectedIds);
       setSelectedIds([]);
     }
   };
@@ -1345,7 +1346,7 @@ export function BookingsPage() {
                     variant="tertiary"
                     data-size="sm"
                     onClick={handleBulkConfirm}
-                    disabled={confirmBooking.isPending}
+                    disabled={bulkConfirmBookings.isPending}
                     style={{ color: 'var(--ds-color-success-text-default)' }}
                   >
                     <CheckIcon /> Godkjenn
