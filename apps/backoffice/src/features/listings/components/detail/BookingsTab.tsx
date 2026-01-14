@@ -4,7 +4,7 @@
  * Part of ListingDetailView - shows all bookings for the current listing
  */
 
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Table,
   Paragraph,
@@ -17,6 +17,7 @@ import {
 import {
   useBookings,
   type Booking,
+  type BookingStatus,
   formatDate,
   formatTime,
   formatCurrency,
@@ -25,6 +26,15 @@ import {
 interface BookingsTabProps {
   listingId: string;
 }
+
+// Status tabs for filtering bookings
+const STATUS_TABS = [
+  { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
+  { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
+  { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
+  { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
+  { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
+] as const;
 
 // Helper to calculate duration
 function calculateDuration(startTime: string, endTime: string): string {
@@ -37,8 +47,36 @@ function calculateDuration(startTime: string, endTime: string): string {
 }
 
 export function BookingsTab({ listingId }: BookingsTabProps) {
-  // Fetch bookings filtered by listing ID
-  const { data: bookingsData, isLoading } = useBookings({ listingId });
+  // State for active tab - default to 'all'
+  const [activeTab, setActiveTab] = useState<string>('all');
+
+  // Build query params based on active tab and listing ID
+  const bookingParams = useMemo(() => {
+    const params: { listingId: string; status?: BookingStatus } = { listingId };
+    if (activeTab !== 'all') {
+      params.status = activeTab as BookingStatus;
+    }
+    return params;
+  }, [activeTab, listingId]);
+
+  // Fetch bookings filtered by listing ID and status
+  const { data: bookingsData, isLoading } = useBookings(bookingParams);
+
+  // Fetch counts for all status tabs (filtered by listing ID)
+  const { data: pendingData } = useBookings({ listingId, status: 'pending' });
+  const { data: confirmedData } = useBookings({ listingId, status: 'confirmed' });
+  const { data: completedData } = useBookings({ listingId, status: 'completed' });
+  const { data: cancelledData } = useBookings({ listingId, status: 'cancelled' });
+  const { data: allData } = useBookings({ listingId });
+
+  // Tab counts
+  const tabCounts: Record<string, number> = {
+    pending: pendingData?.meta?.total ?? pendingData?.data?.length ?? 0,
+    confirmed: confirmedData?.meta?.total ?? confirmedData?.data?.length ?? 0,
+    completed: completedData?.meta?.total ?? completedData?.data?.length ?? 0,
+    cancelled: cancelledData?.meta?.total ?? cancelledData?.data?.length ?? 0,
+    all: allData?.meta?.total ?? allData?.data?.length ?? 0,
+  };
 
   const bookings = useMemo(() => {
     return bookingsData?.data ?? [];
@@ -63,52 +101,125 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
     );
   }
 
-  // Empty state
-  if (bookings.length === 0) {
-    return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: 'var(--ds-spacing-10)',
-        }}
-      >
-        <Text
-          data-size="lg"
-          style={{
-            color: 'var(--ds-color-neutral-text-subtle)',
-            marginBottom: 'var(--ds-spacing-2)',
-          }}
-        >
-          Ingen bookinger funnet
-        </Text>
-        <Paragraph
-          data-size="sm"
-          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-        >
-          Det er ingen bookinger for dette utleieobjektet ennå.
-        </Paragraph>
-      </div>
-    );
-  }
-
   return (
     <div>
-      {/* Header with count */}
+      {/* Status Filter Tabs */}
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 'var(--ds-spacing-4)',
+          gap: 'var(--ds-spacing-2)',
+          marginBottom: 'var(--ds-spacing-6)',
+          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+          paddingBottom: 'var(--ds-spacing-1)',
         }}
       >
-        <Paragraph
-          data-size="sm"
-          style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-        >
-          Viser {bookings.length} av {totalCount} bookinger
-        </Paragraph>
+        {STATUS_TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          const count = tabCounts[tab.id] || 0;
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                border: 'none',
+                borderRadius: 'var(--ds-radius-md)',
+                backgroundColor: isActive
+                  ? 'var(--ds-color-neutral-surface-subtle)'
+                  : 'transparent',
+                color: isActive
+                  ? 'var(--ds-color-neutral-text-default)'
+                  : 'var(--ds-color-neutral-text-subtle)',
+                cursor: 'pointer',
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: isActive ? 600 : 500,
+                transition: 'all 0.15s ease',
+                fontFamily: 'inherit',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }
+              }}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: '20px',
+                  height: '20px',
+                  padding: '0 var(--ds-spacing-1)',
+                  borderRadius: 'var(--ds-radius-full)',
+                  backgroundColor: isActive
+                    ? 'var(--ds-color-neutral-surface-default)'
+                    : 'var(--ds-color-neutral-surface-subtle)',
+                  fontSize: 'var(--ds-font-size-xs)',
+                  fontWeight: 600,
+                }}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Empty state */}
+      {bookings.length === 0 ? (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: 'var(--ds-spacing-10)',
+          }}
+        >
+          <Text
+            data-size="lg"
+            style={{
+              color: 'var(--ds-color-neutral-text-subtle)',
+              marginBottom: 'var(--ds-spacing-2)',
+            }}
+          >
+            Ingen bookinger funnet
+          </Text>
+          <Paragraph
+            data-size="sm"
+            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
+          >
+            {activeTab === 'all'
+              ? 'Det er ingen bookinger for dette utleieobjektet ennå.'
+              : `Det er ingen ${STATUS_TABS.find((t) => t.id === activeTab)?.label.toLowerCase()} bookinger for dette utleieobjektet.`}
+          </Paragraph>
+        </div>
+      ) : (
+        <>
+          {/* Header with count */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 'var(--ds-spacing-4)',
+            }}
+          >
+            <Paragraph
+              data-size="sm"
+              style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
+            >
+              Viser {bookings.length} av {totalCount} bookinger
+            </Paragraph>
+          </div>
 
       {/* Bookings Table */}
       <Table size="sm" style={{ width: '100%' }}>
@@ -210,6 +321,8 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           })}
         </Table.Body>
       </Table>
+        </>
+      )}
     </div>
   );
 }
