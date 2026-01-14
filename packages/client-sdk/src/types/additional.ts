@@ -293,6 +293,59 @@ export interface ScheduledReportQueryParams extends BaseQueryParams {
 }
 
 // =============================================================================
+// Report History
+// =============================================================================
+
+export type ReportJobStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+export interface ReportHistoryItem extends TenantEntity {
+  jobId: string;
+  reportType: ReportType;
+  reportTemplateId?: string;
+  reportName?: string;
+  status: ReportJobStatus;
+  exportFormat: ExportFormat;
+  fileUrl?: string;
+  fileSize?: number;
+  generatedBy: string;
+  generatedByName?: string;
+  parameters?: {
+    period?: ReportPeriod;
+    startDate?: string;
+    endDate?: string;
+    listingId?: string;
+    organizationId?: string;
+    filters?: ReportFilter[];
+    metrics?: ReportMetric[];
+  };
+  error?: string;
+  startedAt: string;
+  completedAt?: string;
+}
+
+export interface ReportGenerationResult {
+  jobId: string;
+  status: ReportJobStatus;
+  reportType: ReportType;
+  exportFormat: ExportFormat;
+  fileUrl?: string;
+  fileSize?: number;
+  error?: string;
+  progress?: number;
+  estimatedCompletionTime?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface ReportHistoryQueryParams extends BaseQueryParams {
+  reportType?: ReportType;
+  status?: ReportJobStatus;
+  startDate?: string;
+  endDate?: string;
+  generatedBy?: string;
+}
+
+// =============================================================================
 // Analytics
 // =============================================================================
 
