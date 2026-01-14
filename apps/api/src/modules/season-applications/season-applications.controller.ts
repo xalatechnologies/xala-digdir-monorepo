@@ -6,7 +6,7 @@ import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, sql, count } from 'drizzle-orm';
-import { seasonApplications, seasons, listings, organizations } from '../../database/schema/index';
+import { seasonApplications, seasons, listings, organizations, bookings } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -256,6 +256,128 @@ export class SeasonApplicationsController {
     }
 
     return { data: result[0] };
+  }
+
+  /**
+   * POST /api/season-applications/:id/allocate - Generate recurring bookings from approved application
+   * KRAV-ADM-07: Generere tilbakevendende bookinger fra godkjent søknad
+   */
+  @Post('/:id/allocate')
+  async allocate(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+    const tenantId = request.tenantId || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+    const userId = request.userId || 'f47ac10b-58cc-4372-a567-0e02b2c3d480';
+
+    // Get the application
+    const application = await db
+      .select()
+      .from(seasonApplications)
+      .where(eq(seasonApplications.id, id))
+      .limit(1);
+
+    if (!application.length) {
+      reply.code(404);
+      return { error: 'Season application not found' };
+    }
+
+    const app = application[0];
+
+    // Verify application is approved
+    if (app.status !== 'approved') {
+      reply.code(400);
+      return { error: 'Only approved applications can be allocated' };
+    }
+
+    // Get the season details
+    const season = await db
+      .select()
+      .from(seasons)
+      .where(eq(seasons.id, app.seasonId))
+      .limit(1);
+
+    if (!season.length) {
+      reply.code(404);
+      return { error: 'Season not found' };
+    }
+
+    const seasonData = season[0];
+
+    // Generate recurring booking dates
+    const bookingDates = this.generateRecurringDates(
+      new Date(seasonData.startDate),
+      new Date(seasonData.endDate),
+      app.weekday
+    );
+
+    // Create bookings for each date
+    const createdBookings = [];
+    for (const date of bookingDates) {
+      const [startHour, startMinute] = app.startTime.split(':').map(Number);
+      const [endHour, endMinute] = app.endTime.split(':').map(Number);
+
+      const startTime = new Date(date);
+      startTime.setHours(startHour, startMinute, 0, 0);
+
+      const endTime = new Date(date);
+      endTime.setHours(endHour, endMinute, 0, 0);
+
+      const booking = await db
+        .insert(bookings)
+        .values({
+          tenantId,
+          listingId: app.listingId,
+          userId,
+          status: 'confirmed',
+          startTime,
+          endTime,
+          notes: `Seasonal allocation for ${app.applicantName}`,
+          metadata: {
+            seasonApplicationId: app.id,
+            seasonId: app.seasonId,
+            organizationId: app.organizationId,
+            allocationType: 'seasonal',
+          },
+        })
+        .returning();
+
+      createdBookings.push(booking[0]);
+    }
+
+    return {
+      data: {
+        applicationId: id,
+        seasonId: app.seasonId,
+        listingId: app.listingId,
+        organizationId: app.organizationId,
+        bookingsCreated: createdBookings.length,
+        bookings: createdBookings,
+      },
+    };
+  }
+
+  /**
+   * Helper method to generate recurring dates for a specific weekday
+   * @param startDate - Season start date
+   * @param endDate - Season end date
+   * @param weekday - Day of week (0=Sunday, 1=Monday, etc.)
+   */
+  private generateRecurringDates(startDate: Date, endDate: Date, weekday: number): Date[] {
+    const dates: Date[] = [];
+    const currentDate = new Date(startDate);
+
+    // Move to first occurrence of the weekday
+    while (currentDate.getDay() !== weekday && currentDate <= endDate) {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Collect all occurrences of the weekday
+    while (currentDate <= endDate) {
+      dates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return dates;
   }
 
   /**
