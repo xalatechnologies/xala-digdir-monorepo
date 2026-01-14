@@ -8,6 +8,78 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, sql, count } from 'drizzle-orm';
 import { seasonApplications, seasons, listings, organizations, bookings } from '../../database/schema/index';
 
+/**
+ * Helper to create notification for application status changes
+ * TODO: Replace with real notification service when available
+ */
+function createApplicationNotification(data: {
+  type: 'application_approved' | 'application_rejected' | 'application_allocated';
+  applicationId: string;
+  applicantEmail: string;
+  applicantName: string;
+  seasonName: string;
+  listingName: string;
+  weekday: number;
+  startTime: string;
+  endTime: string;
+  rejectionReason?: string | null;
+  bookingsCreated?: number;
+}) {
+  const weekdays = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+  const weekdayName = weekdays[data.weekday] || 'Ukjent';
+
+  let title = '';
+  let message = '';
+
+  switch (data.type) {
+    case 'application_approved':
+      title = 'Søknad godkjent';
+      message = `Din søknad for ${data.listingName} (${weekdayName} ${data.startTime}-${data.endTime}) i sesong ${data.seasonName} er godkjent.`;
+      break;
+    case 'application_rejected':
+      title = 'Søknad avvist';
+      message = `Din søknad for ${data.listingName} (${weekdayName} ${data.startTime}-${data.endTime}) i sesong ${data.seasonName} er avvist.`;
+      if (data.rejectionReason) {
+        message += ` Årsak: ${data.rejectionReason}`;
+      }
+      break;
+    case 'application_allocated':
+      title = 'Sesongallokering bekreftet';
+      message = `Din godkjente søknad for ${data.listingName} (${weekdayName} ${data.startTime}-${data.endTime}) i sesong ${data.seasonName} er nå allokert.`;
+      if (data.bookingsCreated) {
+        message += ` ${data.bookingsCreated} bookinger er opprettet.`;
+      }
+      break;
+  }
+
+  const notification = {
+    id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    type: data.type,
+    title,
+    message,
+    read: false,
+    createdAt: new Date().toISOString(),
+    data: {
+      applicationId: data.applicationId,
+      applicantEmail: data.applicantEmail,
+      applicantName: data.applicantName,
+      seasonName: data.seasonName,
+      listingName: data.listingName,
+      weekday: data.weekday,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      rejectionReason: data.rejectionReason,
+      bookingsCreated: data.bookingsCreated,
+    },
+  };
+
+  // TODO: Send notification via notification service
+  // For now, log the notification
+  console.log('[NOTIFICATION]', notification.type, '-', notification.title, 'to', data.applicantEmail);
+
+  return notification;
+}
+
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
@@ -214,6 +286,33 @@ export class SeasonApplicationsController {
     const db = container.resolve<any>('Database');
     const { id } = request.params as any;
 
+    // Get application details before updating
+    const applicationData = await db
+      .select({
+        id: seasonApplications.id,
+        seasonId: seasonApplications.seasonId,
+        listingId: seasonApplications.listingId,
+        applicantName: seasonApplications.applicantName,
+        applicantEmail: seasonApplications.applicantEmail,
+        weekday: seasonApplications.weekday,
+        startTime: seasonApplications.startTime,
+        endTime: seasonApplications.endTime,
+        seasonName: seasons.name,
+        listingName: listings.name,
+      })
+      .from(seasonApplications)
+      .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
+      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .where(eq(seasonApplications.id, id))
+      .limit(1);
+
+    if (!applicationData.length) {
+      reply.code(404);
+      return { error: 'Season application not found' };
+    }
+
+    const application = applicationData[0];
+
     const result = await db
       .update(seasonApplications)
       .set({
@@ -228,6 +327,19 @@ export class SeasonApplicationsController {
       return { error: 'Season application not found' };
     }
 
+    // Send notification for approval
+    createApplicationNotification({
+      type: 'application_approved',
+      applicationId: id,
+      applicantEmail: application.applicantEmail,
+      applicantName: application.applicantName,
+      seasonName: application.seasonName || 'Ukjent sesong',
+      listingName: application.listingName || 'Ukjent lokale',
+      weekday: application.weekday,
+      startTime: application.startTime,
+      endTime: application.endTime,
+    });
+
     return { data: result[0] };
   }
 
@@ -239,6 +351,33 @@ export class SeasonApplicationsController {
     const db = container.resolve<any>('Database');
     const { id } = request.params as any;
     const body = (request.body as any) || {};
+
+    // Get application details before updating
+    const applicationData = await db
+      .select({
+        id: seasonApplications.id,
+        seasonId: seasonApplications.seasonId,
+        listingId: seasonApplications.listingId,
+        applicantName: seasonApplications.applicantName,
+        applicantEmail: seasonApplications.applicantEmail,
+        weekday: seasonApplications.weekday,
+        startTime: seasonApplications.startTime,
+        endTime: seasonApplications.endTime,
+        seasonName: seasons.name,
+        listingName: listings.name,
+      })
+      .from(seasonApplications)
+      .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
+      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .where(eq(seasonApplications.id, id))
+      .limit(1);
+
+    if (!applicationData.length) {
+      reply.code(404);
+      return { error: 'Season application not found' };
+    }
+
+    const application = applicationData[0];
 
     const result = await db
       .update(seasonApplications)
@@ -255,6 +394,20 @@ export class SeasonApplicationsController {
       return { error: 'Season application not found' };
     }
 
+    // Send notification for rejection
+    createApplicationNotification({
+      type: 'application_rejected',
+      applicationId: id,
+      applicantEmail: application.applicantEmail,
+      applicantName: application.applicantName,
+      seasonName: application.seasonName || 'Ukjent sesong',
+      listingName: application.listingName || 'Ukjent lokale',
+      weekday: application.weekday,
+      startTime: application.startTime,
+      endTime: application.endTime,
+      rejectionReason: body.rejectionReason || null,
+    });
+
     return { data: result[0] };
   }
 
@@ -269,19 +422,35 @@ export class SeasonApplicationsController {
     const tenantId = request.tenantId || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
     const userId = request.userId || 'f47ac10b-58cc-4372-a567-0e02b2c3d480';
 
-    // Get the application
-    const application = await db
-      .select()
+    // Get the application with related data for notifications
+    const applicationData = await db
+      .select({
+        id: seasonApplications.id,
+        tenantId: seasonApplications.tenantId,
+        seasonId: seasonApplications.seasonId,
+        listingId: seasonApplications.listingId,
+        organizationId: seasonApplications.organizationId,
+        applicantName: seasonApplications.applicantName,
+        applicantEmail: seasonApplications.applicantEmail,
+        weekday: seasonApplications.weekday,
+        startTime: seasonApplications.startTime,
+        endTime: seasonApplications.endTime,
+        status: seasonApplications.status,
+        seasonName: seasons.name,
+        listingName: listings.name,
+      })
       .from(seasonApplications)
+      .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
+      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
       .where(eq(seasonApplications.id, id))
       .limit(1);
 
-    if (!application.length) {
+    if (!applicationData.length) {
       reply.code(404);
       return { error: 'Season application not found' };
     }
 
-    const app = application[0];
+    const app = applicationData[0];
 
     // Verify application is approved
     if (app.status !== 'approved') {
@@ -289,7 +458,7 @@ export class SeasonApplicationsController {
       return { error: 'Only approved applications can be allocated' };
     }
 
-    // Get the season details
+    // Get the season details for date range
     const season = await db
       .select()
       .from(seasons)
@@ -343,6 +512,20 @@ export class SeasonApplicationsController {
 
       createdBookings.push(booking[0]);
     }
+
+    // Send notification for allocation
+    createApplicationNotification({
+      type: 'application_allocated',
+      applicationId: id,
+      applicantEmail: app.applicantEmail,
+      applicantName: app.applicantName,
+      seasonName: app.seasonName || 'Ukjent sesong',
+      listingName: app.listingName || 'Ukjent lokale',
+      weekday: app.weekday,
+      startTime: app.startTime,
+      endTime: app.endTime,
+      bookingsCreated: createdBookings.length,
+    });
 
     return {
       data: {
