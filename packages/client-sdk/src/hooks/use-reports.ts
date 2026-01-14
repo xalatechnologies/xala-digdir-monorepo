@@ -2,10 +2,10 @@
  * Report Hooks
  * React Query hooks for analytics and reporting
  */
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reportsService } from '../services/reports.service';
 import { dashboardService } from '../services/dashboard.service';
-import type { ReportQueryParams, ExportFormat } from '../types';
+import type { ReportQueryParams, ExportFormat, ReportHistoryQueryParams } from '../types';
 
 // Query keys for reports
 export const reportKeys = {
@@ -23,6 +23,8 @@ export const reportKeys = {
   heatmap: (params: ReportQueryParams) => [...reportKeys.all, 'heatmap', params] as const,
   seasonal: (params: ReportQueryParams) => [...reportKeys.all, 'seasonal', params] as const,
   comparison: (params: ReportQueryParams) => [...reportKeys.all, 'comparison', params] as const,
+  history: (params?: ReportHistoryQueryParams) => [...reportKeys.all, 'history', params] as const,
+  jobStatus: (jobId: string) => [...reportKeys.all, 'job', jobId] as const,
 };
 
 /**
@@ -175,5 +177,70 @@ export function useExportReport() {
       params: ReportQueryParams;
       format?: ExportFormat;
     }) => reportsService.export(type, params, format),
+  });
+}
+
+/**
+ * Fetch report generation history
+ */
+export function useReportHistory(params?: ReportHistoryQueryParams) {
+  return useQuery({
+    queryKey: reportKeys.history(params),
+    queryFn: () => reportsService.getHistory(params),
+    staleTime: 60 * 1000, // 1 minute
+  });
+}
+
+/**
+ * Generate report asynchronously (for large reports)
+ * Returns a job ID to track progress
+ */
+export function useGenerateReportAsync() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      reportType,
+      params,
+      format = 'csv',
+    }: {
+      reportType: string;
+      params: ReportQueryParams;
+      format?: ExportFormat;
+    }) => reportsService.generateAsync(reportType, params, format),
+    onSuccess: () => {
+      // Invalidate history when new report is generated
+      queryClient.invalidateQueries({ queryKey: reportKeys.history() });
+    },
+  });
+}
+
+/**
+ * Check status of async report generation job
+ * Use refetchInterval to poll for updates while job is in progress
+ */
+export function useReportJobStatus(jobId: string, options?: { enabled?: boolean; refetchInterval?: number }) {
+  return useQuery({
+    queryKey: reportKeys.jobStatus(jobId),
+    queryFn: () => reportsService.getJobStatus(jobId),
+    enabled: !!jobId && (options?.enabled ?? true),
+    refetchInterval: (query) => {
+      // Poll every 2 seconds while job is pending or processing
+      if (query.state.data && (query.state.data.status === 'pending' || query.state.data.status === 'processing')) {
+        return options?.refetchInterval ?? 2000;
+      }
+      // Stop polling when completed or failed
+      return false;
+    },
+    staleTime: 0, // Always fetch fresh data for job status
+  });
+}
+
+/**
+ * Download completed report from async job
+ */
+export function useDownloadReport() {
+  return useMutation({
+    mutationFn: (jobId: string) => reportsService.downloadReport(jobId),
   });
 }
