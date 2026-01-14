@@ -1,13 +1,12 @@
-import { 
-  Card, 
-  Heading, 
-  Paragraph, 
-  Spinner, 
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Spinner,
   Button,
   StatCard,
   ActivityItem,
   formatTimeAgo,
-  mapBookingStatusToActivity,
   CalendarIcon,
   CheckCircleIcon,
   XCircleIcon,
@@ -15,36 +14,52 @@ import {
   ArrowRightIcon,
   UsersIcon,
   type ActivityItemProps,
+  type ActivityStatus,
 } from '@xala/ds';
-import { useBookings } from '@digilist/client-sdk';
+import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentActivity } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+
+// Map activity type to activity status
+function mapActivityTypeToStatus(type: string): ActivityStatus {
+  switch (type) {
+    case 'booking':
+      return 'pending';
+    case 'payment':
+      return 'approved';
+    case 'message':
+      return 'pending';
+    default:
+      return 'pending';
+  }
+}
 
 export function DashboardPage(): React.ReactElement {
   const { user, isAdmin, isSaksbehandler } = useAuth();
   const navigate = useNavigate();
   const t = useT();
   const { locale } = useLocale();
-  const { data: pendingBookings, isLoading: loadingPending } = useBookings({ status: 'pending' });
-  const { data: confirmedBookings, isLoading: loadingConfirmed } = useBookings({ status: 'confirmed' });
-  const { data: cancelledBookings, isLoading: loadingCancelled } = useBookings({ status: 'cancelled' });
-  // Fetch recent bookings for activity feed (last 10 regardless of status)
-  const { data: recentBookingsData, isLoading: loadingRecent } = useBookings({ limit: 10 });
 
-  const isLoading = loadingPending || loadingConfirmed || loadingCancelled || loadingRecent;
+  // Use dedicated dashboard endpoints
+  const { data: statsData, isLoading: loadingStats } = useDashboardStats();
+  const { data: activityData, isLoading: loadingActivity } = useDashboardActivity(4);
+  const { data: pendingData, isLoading: loadingPending } = usePendingItems();
 
-  const pendingCount = pendingBookings?.meta?.total ?? 0;
-  const confirmedCount = confirmedBookings?.meta?.total ?? 0;
-  const cancelledCount = cancelledBookings?.meta?.total ?? 0;
-  const totalCount = pendingCount + confirmedCount + cancelledCount;
+  const isLoading = loadingStats || loadingActivity || loadingPending;
 
-  // Transform recent bookings to activity items
-  const recentActivity: ActivityItemProps[] = (recentBookingsData?.data ?? []).slice(0, 4).map((booking) => ({
-    title: `Booking #${booking.id.slice(-4)}`,
-    description: `${booking.listingName || booking.listingId} - ${booking.userName || t('booking.unknown')}`,
-    time: formatTimeAgo(booking.createdAt),
-    status: mapBookingStatusToActivity(booking.status),
+  // Extract stats from API response - API returns data directly (no wrapper)
+  const pendingCount = pendingData?.bookings ?? statsData?.byStatus?.pending?.count ?? 0;
+  const confirmedCount = statsData?.byStatus?.confirmed?.count ?? 0;
+  const cancelledCount = statsData?.byStatus?.cancelled?.count ?? 0;
+  const totalCount = statsData?.total ?? 0;
+
+  // Transform activity feed
+  const recentActivity: ActivityItemProps[] = (activityData ?? []).map((activity: RecentActivity) => ({
+    title: activity.action,
+    description: activity.description,
+    time: formatTimeAgo(activity.timestamp),
+    status: mapActivityTypeToStatus(activity.type),
   }));
 
   return (

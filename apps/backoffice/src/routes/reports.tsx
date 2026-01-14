@@ -32,9 +32,8 @@ export function ReportsPage() {
     };
   });
 
-  // Fetch data from API
-  const { data: kpisData, isLoading: isLoadingKPIs } = useDashboardKPIs();
-  const kpis = kpisData?.data;
+  // Fetch data from API - API returns data directly (no wrapper)
+  const { data: kpis, isLoading: isLoadingKPIs } = useDashboardKPIs();
 
   const usageParams = {
     period,
@@ -42,8 +41,7 @@ export function ReportsPage() {
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
   };
   const { data: usageData, isLoading: isLoadingUsage } = useUsageReport(usageParams);
-  const usageReportRaw = usageData?.data;
-  const usageReport = Array.isArray(usageReportRaw) ? usageReportRaw : [];
+  const usageReport = Array.isArray(usageData) ? usageData : [];
 
   const revenueParams = {
     period,
@@ -51,15 +49,13 @@ export function ReportsPage() {
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
   };
   const { data: revenueData, isLoading: isLoadingRevenue } = useRevenueReport(revenueParams);
-  const revenueReportRaw = revenueData?.data;
-  const revenueReport = Array.isArray(revenueReportRaw) ? revenueReportRaw : [];
+  const revenueReport = Array.isArray(revenueData) ? revenueData : [];
 
   const bookingStatsParams = {
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
   };
-  const { data: statsData, isLoading: isLoadingStats } = useBookingStats(bookingStatsParams);
-  const bookingStats = statsData?.data;
+  const { data: bookingStats, isLoading: isLoadingStats } = useBookingStats(bookingStatsParams);
 
   const exportReport = useExportReport();
 

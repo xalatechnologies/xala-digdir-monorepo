@@ -12,6 +12,10 @@ export const reportKeys = {
   all: ['reports'] as const,
   dashboard: () => [...reportKeys.all, 'dashboard'] as const,
   kpis: () => [...reportKeys.all, 'kpis'] as const,
+  activity: (limit?: number) => [...reportKeys.all, 'activity', { limit }] as const,
+  pending: () => [...reportKeys.all, 'pending'] as const,
+  upcoming: (limit?: number) => [...reportKeys.all, 'upcoming', { limit }] as const,
+  quickActions: () => [...reportKeys.all, 'quick-actions'] as const,
   bookings: (params: ReportQueryParams) => [...reportKeys.all, 'bookings', params] as const,
   revenue: (params: ReportQueryParams) => [...reportKeys.all, 'revenue', params] as const,
   usage: (params: ReportQueryParams) => [...reportKeys.all, 'usage', params] as const,
@@ -30,12 +34,56 @@ export function useDashboardKPIs() {
 }
 
 /**
- * Fetch dashboard statistics
+ * Fetch dashboard statistics (bookings, revenue, listings, users)
  */
 export function useDashboardStats() {
   return useQuery({
     queryKey: reportKeys.dashboard(),
-    queryFn: () => reportsService.getDashboardStats(),
+    queryFn: () => dashboardService.getStats(),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
+ * Fetch recent activity feed
+ */
+export function useDashboardActivity(limit = 10) {
+  return useQuery({
+    queryKey: reportKeys.activity(limit),
+    queryFn: () => dashboardService.getRecentActivity(limit),
+    staleTime: 60 * 1000, // 1 minute
+  });
+}
+
+/**
+ * Fetch pending items count (bookings, messages, approvals)
+ */
+export function usePendingItems() {
+  return useQuery({
+    queryKey: reportKeys.pending(),
+    queryFn: () => dashboardService.getPendingItems(),
+    staleTime: 60 * 1000,
+  });
+}
+
+/**
+ * Fetch upcoming bookings for today
+ */
+export function useUpcomingBookings(limit = 5) {
+  return useQuery({
+    queryKey: reportKeys.upcoming(limit),
+    queryFn: () => dashboardService.getUpcomingBookings(limit),
+    staleTime: 60 * 1000,
+  });
+}
+
+/**
+ * Fetch quick actions for current user
+ */
+export function useQuickActions() {
+  return useQuery({
+    queryKey: reportKeys.quickActions(),
+    queryFn: () => dashboardService.getQuickActions(),
     staleTime: 5 * 60 * 1000,
   });
 }

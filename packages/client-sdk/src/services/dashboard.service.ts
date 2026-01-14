@@ -5,27 +5,20 @@
 import { getClient } from '../core/client-factory';
 import type { DashboardKPIs } from '../types';
 
+// Status breakdown from API
+export interface StatusBreakdown {
+  count: number;
+  revenue: number;
+}
+
+// Dashboard stats as returned by the API
 export interface DashboardStats {
-  bookings: {
-    today: number;
-    thisWeek: number;
-    thisMonth: number;
-    pending: number;
-  };
-  revenue: {
-    today: number;
-    thisWeek: number;
-    thisMonth: number;
-    currency: string;
-  };
-  listings: {
-    total: number;
-    published: number;
-    utilizationRate: number;
-  };
-  users: {
-    total: number;
-    activeToday: number;
+  total: number;
+  byStatus: {
+    confirmed: StatusBreakdown;
+    completed: StatusBreakdown;
+    cancelled: StatusBreakdown;
+    pending: StatusBreakdown;
   };
 }
 
@@ -58,49 +51,56 @@ export interface UpcomingBooking {
   status: string;
 }
 
+export interface PendingItems {
+  bookings: number;
+  messages: number;
+  approvals: number;
+}
+
 export class DashboardService {
   private basePath = '/api/dashboard';
 
   /**
    * Get dashboard statistics
+   * API returns data directly (not wrapped in { data: ... })
    */
-  async getStats(): Promise<{ data: DashboardStats }> {
-    return getClient().get<{ data: DashboardStats }>(`${this.basePath}/stats`);
+  async getStats(): Promise<DashboardStats> {
+    return getClient().get<DashboardStats>(`${this.basePath}/stats`);
   }
 
   /**
    * Get KPI summary for reports
    */
-  async getKPIs(): Promise<{ data: DashboardKPIs }> {
-    return getClient().get<{ data: DashboardKPIs }>(`${this.basePath}/kpis`);
+  async getKPIs(): Promise<DashboardKPIs> {
+    return getClient().get<DashboardKPIs>(`${this.basePath}/kpis`);
   }
 
   /**
    * Get recent activity feed
    */
-  async getRecentActivity(limit = 10): Promise<{ data: RecentActivity[] }> {
-    return getClient().get<{ data: RecentActivity[] }>(`${this.basePath}/activity?limit=${limit}`);
+  async getRecentActivity(limit = 10): Promise<RecentActivity[]> {
+    return getClient().get<RecentActivity[]>(`${this.basePath}/activity?limit=${limit}`);
   }
 
   /**
    * Get quick actions for current user
    */
-  async getQuickActions(): Promise<{ data: QuickAction[] }> {
-    return getClient().get<{ data: QuickAction[] }>(`${this.basePath}/quick-actions`);
+  async getQuickActions(): Promise<QuickAction[]> {
+    return getClient().get<QuickAction[]>(`${this.basePath}/quick-actions`);
   }
 
   /**
    * Get today's upcoming bookings
    */
-  async getUpcomingBookings(limit = 5): Promise<{ data: UpcomingBooking[] }> {
-    return getClient().get<{ data: UpcomingBooking[] }>(`${this.basePath}/upcoming?limit=${limit}`);
+  async getUpcomingBookings(limit = 5): Promise<UpcomingBooking[]> {
+    return getClient().get<UpcomingBooking[]>(`${this.basePath}/upcoming?limit=${limit}`);
   }
 
   /**
    * Get pending items requiring attention
    */
-  async getPendingItems(): Promise<{ data: { bookings: number; messages: number; approvals: number } }> {
-    return getClient().get<{ data: { bookings: number; messages: number; approvals: number } }>(`${this.basePath}/pending`);
+  async getPendingItems(): Promise<PendingItems> {
+    return getClient().get<PendingItems>(`${this.basePath}/pending`);
   }
 }
 

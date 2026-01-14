@@ -21,6 +21,7 @@ const MAP_STYLES = {
 export interface MapListing {
   id: string;
   name: string;
+  slug?: string;
   location: string;
   image?: string;
   latitude: number;
@@ -42,7 +43,7 @@ export interface ListingMapProps {
   initialLongitude?: number;
   initialZoom?: number;
   height?: string | number;
-  onListingClick?: (id: string) => void;
+  onListingClick?: (id: string, slug?: string) => void;
   /** Override map style URL. If not provided, uses automatic light/dark switching */
   mapStyle?: string;
   /** Color scheme: 'light', 'dark', or 'auto' (detects from DOM). Defaults to 'auto' */
@@ -177,20 +178,56 @@ export function ListingMap({
   const detectedColorScheme = useColorScheme(colorScheme);
   const effectiveMapStyle = mapStyle || MAP_STYLES[detectedColorScheme];
 
-  // Zoom to first listing location
+  // Calculate bounds to fit all listings
   const initialViewState = useMemo(() => {
-    const firstListing = listings[0];
-    if (!firstListing) {
-      return { latitude: 59.7439, longitude: 10.2045, zoom: initialZoom };
+    if (!listings.length) {
+      // Default to Norway center
+      return { latitude: 62.0, longitude: 10.0, zoom: 5 };
     }
 
-    // Center on first listing
+    if (listings.length === 1) {
+      // Single listing - zoom in
+      const first = listings[0]!;
+      return {
+        latitude: first.latitude,
+        longitude: first.longitude,
+        zoom: 14,
+      };
+    }
+
+    // Calculate bounds for all listings
+    const lats = listings.map(l => l.latitude);
+    const lngs = listings.map(l => l.longitude);
+    const minLat = Math.min(...lats);
+    const maxLat = Math.max(...lats);
+    const minLng = Math.min(...lngs);
+    const maxLng = Math.max(...lngs);
+
+    // Center point
+    const centerLat = (minLat + maxLat) / 2;
+    const centerLng = (minLng + maxLng) / 2;
+
+    // Calculate zoom level based on bounds
+    const latDiff = maxLat - minLat;
+    const lngDiff = maxLng - minLng;
+    const maxDiff = Math.max(latDiff, lngDiff);
+
+    // Approximate zoom level (lower = more zoomed out)
+    let zoom = 10;
+    if (maxDiff > 5) zoom = 5;
+    else if (maxDiff > 2) zoom = 6;
+    else if (maxDiff > 1) zoom = 7;
+    else if (maxDiff > 0.5) zoom = 8;
+    else if (maxDiff > 0.2) zoom = 9;
+    else if (maxDiff > 0.1) zoom = 10;
+    else zoom = 12;
+
     return {
-      latitude: firstListing.latitude,
-      longitude: firstListing.longitude,
-      zoom: 14, // Zoomed in to show the area
+      latitude: centerLat,
+      longitude: centerLng,
+      zoom,
     };
-  }, [listings, initialZoom]);
+  }, [listings]);
 
   const handleMarkerClick = useCallback((listing: MapListing) => {
     setSelectedListing(listing);
@@ -303,7 +340,7 @@ export function ListingMap({
               {...(selectedListing.capacity !== undefined && { capacity: selectedListing.capacity })}
               {...(selectedListing.facilities && { facilities: selectedListing.facilities })}
               {...(selectedListing.available !== undefined && { available: selectedListing.available })}
-              {...(onListingClick && { onClick: onListingClick })}
+              {...(onListingClick && { onClick: () => onListingClick(selectedListing.id, selectedListing.slug) })}
             />
           </div>
         </>

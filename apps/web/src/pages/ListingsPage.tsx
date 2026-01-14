@@ -39,6 +39,38 @@ import { useRealtimeListing } from '../providers';
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
+// Geocode cache to avoid repeat API calls
+const geocodeCache = new Map<string, { lat: number; lng: number } | null>();
+
+// Geocode an address using Mapbox API
+async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
+  if (!MAPBOX_TOKEN || !address) return null;
+
+  // Check cache first
+  if (geocodeCache.has(address)) {
+    return geocodeCache.get(address) || null;
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_TOKEN}&country=NO&limit=1`
+    );
+    const data = await response.json();
+
+    if (data.features?.[0]) {
+      const [lng, lat] = data.features[0].center;
+      const coords = { lat, lng };
+      geocodeCache.set(address, coords);
+      return coords;
+    }
+  } catch (error) {
+    console.warn('[Geocoding] Failed to geocode:', address, error);
+  }
+
+  geocodeCache.set(address, null);
+  return null;
+}
+
 // Listing type options
 const LISTING_TYPE_OPTIONS = [
   { id: 'ALL', label: 'Alle typer' },
@@ -149,6 +181,9 @@ export function ListingsPage(): React.ReactElement {
   }, [queryClient]);
   useRealtimeListing(handleListingEvent);
 
+  // Geocoded coordinates state
+  const [geocodedCoords, setGeocodedCoords] = React.useState<Map<string, { lat: number; lng: number }>>(new Map());
+
   // Transform API listings to UI format using SDK transform
   const listings: ExtendedUiListing[] = React.useMemo(() => {
     if (!listingsResponse?.data) return [];
@@ -156,7 +191,10 @@ export function ListingsPage(): React.ReactElement {
     return listingsResponse.data.map((listing: Listing, index: number) => {
       const transformed = transformListing(listing);
 
-      // Add fallback coordinates if not present (for map view demo)
+      // Check for geocoded coordinates
+      const geocoded = geocodedCoords.get(listing.id);
+
+      // Fallback coordinates if no geocoding available
       const fallbackIndex = index % FALLBACK_COORDINATES.length;
       const fallbackLat = FALLBACK_COORDINATES[fallbackIndex]?.lat ?? 59.9139;
       const fallbackLng = FALLBACK_COORDINATES[fallbackIndex]?.lng ?? 10.7522;
@@ -164,11 +202,87 @@ export function ListingsPage(): React.ReactElement {
       return {
         ...transformed,
         listingType: listing.type,
-        latitude: transformed.latitude ?? fallbackLat,
-        longitude: transformed.longitude ?? fallbackLng,
+        latitude: transformed.latitude ?? geocoded?.lat ?? fallbackLat,
+        longitude: transformed.longitude ?? geocoded?.lng ?? fallbackLng,
       };
     });
-  }, [listingsResponse]);
+  }, [listingsResponse, geocodedCoords]);
+
+  // Track which listings are being geocoded to avoid duplicates
+  const geocodingInProgress = React.useRef<Set<string>>(new Set());
+
+  // Geocode listings that don't have coordinates
+  React.useEffect(() => {
+    if (!listingsResponse?.data || !MAPBOX_TOKEN) return;
+
+    const listingsToGeocode = listingsResponse.data.filter(listing => {
+      const locationMeta = listing.metadata?.location;
+      // Skip if already has coordinates from API
+      if (locationMeta?.lat && locationMeta?.lng) return false;
+      // Skip if already geocoded
+      if (geocodedCoords.has(listing.id)) return false;
+      // Skip if currently being geocoded
+      if (geocodingInProgress.current.has(listing.id)) return false;
+      return true;
+    });
+
+    if (listingsToGeocode.length === 0) return;
+
+    // Geocode all listings in parallel
+    const geocodeAll = async () => {
+      const results = await Promise.all(
+        listingsToGeocode.map(async (listing) => {
+          // Mark as in progress
+          geocodingInProgress.current.add(listing.id);
+
+          // Get the display location from transformed listing
+          const transformed = transformListing(listing);
+          const displayLocation = transformed.location;
+
+          // Try structured address first, fall back to display location
+          const locationMeta = listing.metadata?.location;
+          const structuredAddress = [
+            listing.metadata?.address || locationMeta?.address,
+            listing.metadata?.postalCode || locationMeta?.postalCode,
+            listing.metadata?.city || locationMeta?.city
+          ].filter(Boolean).join(', ');
+
+          // Use structured address if available, otherwise use display location
+          const addressToGeocode = structuredAddress || displayLocation;
+
+          if (!addressToGeocode) {
+            geocodingInProgress.current.delete(listing.id);
+            return null;
+          }
+
+          console.log('[Geocoding] Attempting:', listing.name, addressToGeocode);
+          const coords = await geocodeAddress(addressToGeocode);
+
+          geocodingInProgress.current.delete(listing.id);
+
+          if (coords) {
+            console.log('[Geocoding] Success:', listing.name, coords);
+            return { id: listing.id, coords };
+          } else {
+            console.log('[Geocoding] Failed:', listing.name);
+            return null;
+          }
+        })
+      );
+
+      // Batch update all geocoded coordinates at once
+      const validResults = results.filter((r): r is { id: string; coords: { lat: number; lng: number } } => r !== null);
+      if (validResults.length > 0) {
+        setGeocodedCoords(prev => {
+          const newMap = new Map(prev);
+          validResults.forEach(({ id, coords }) => newMap.set(id, coords));
+          return newMap;
+        });
+      }
+    };
+
+    geocodeAll();
+  }, [listingsResponse, geocodedCoords]);
 
   // Filter state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -542,6 +656,7 @@ export function ListingsPage(): React.ReactElement {
                   listings={filteredListings.map(l => ({
                     id: l.id,
                     name: l.name,
+                    ...(l.slug && { slug: l.slug }),
                     location: l.location,
                     image: l.image,
                     latitude: l.latitude!,

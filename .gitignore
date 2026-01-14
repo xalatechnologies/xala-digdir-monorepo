@@ -20,3 +20,14 @@ packages/**/*.js
 packages/**/*.d.ts
 !packages/eslint-config/**/*.js
 !packages/ds-registry/examples/**/*.js
+
+# Auto Claude data directory
+.auto-claude/
+
+# Auto Claude generated files
+.auto-claude-security.json
+.auto-claude-status
+.claude_settings.json
+.worktrees/
+.security-key
+logs/security/

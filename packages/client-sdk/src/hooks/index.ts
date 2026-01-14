@@ -174,13 +174,26 @@ export {
   useGenerateAllocations,
 } from './use-seasonal-leases';
 
-// Report hooks
+// Report & Dashboard hooks
 export {
   reportKeys,
   useDashboardKPIs,
   useDashboardStats,
+  useDashboardActivity,
+  usePendingItems,
+  useUpcomingBookings,
+  useQuickActions,
   useBookingStats,
   useRevenueReport,
   useUsageReport,
   useExportReport,
 } from './use-reports';
+
+// Geocoding hooks
+export {
+  useGeocode,
+  useGeocodeListings,
+  type GeocodedItem,
+  type UseGeocodeListingsOptions,
+  type UseGeocodeListingsResult,
+} from './use-geocode';

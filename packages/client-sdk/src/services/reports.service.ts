@@ -47,57 +47,58 @@ class ReportsService {
 
   /**
    * Get dashboard statistics
+   * API returns data directly (no wrapper)
    */
-  async getDashboardStats(): Promise<{ data: DashboardStats }> {
-    return getClient().get<{ data: DashboardStats }>(`${this.basePath}/dashboard`);
+  async getDashboardStats(): Promise<DashboardStats> {
+    return getClient().get<DashboardStats>(`${this.basePath}/dashboard`);
   }
 
   /**
    * Get booking report
    */
-  async getBookingReport(params: ReportQueryParams): Promise<{ data: BookingReport }> {
+  async getBookingReport(params: ReportQueryParams): Promise<BookingReport> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
 
-    return getClient().get<{ data: BookingReport }>(`${this.basePath}/bookings?${queryParams.toString()}`);
+    return getClient().get<BookingReport>(`${this.basePath}/bookings?${queryParams.toString()}`);
   }
 
   /**
    * Get revenue report
    */
-  async getRevenueReport(params: ReportQueryParams): Promise<{ data: RevenueReport[] }> {
+  async getRevenueReport(params: ReportQueryParams): Promise<RevenueReport[]> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
 
-    return getClient().get<{ data: RevenueReport[] }>(`${this.basePath}/revenue?${queryParams.toString()}`);
+    return getClient().get<RevenueReport[]>(`${this.basePath}/revenue?${queryParams.toString()}`);
   }
 
   /**
    * Get utilization report
    */
-  async getUtilizationReport(params: ReportQueryParams): Promise<{ data: UsageReport[] }> {
+  async getUtilizationReport(params: ReportQueryParams): Promise<UsageReport[]> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
 
-    return getClient().get<{ data: UsageReport[] }>(`${this.basePath}/utilization?${queryParams.toString()}`);
+    return getClient().get<UsageReport[]>(`${this.basePath}/utilization?${queryParams.toString()}`);
   }
 
   /**
    * Get occupancy report
    */
-  async getOccupancyReport(params: ReportQueryParams): Promise<{ data: { period: string; occupancyRate: number; bookings: number }[] }> {
+  async getOccupancyReport(params: ReportQueryParams): Promise<{ period: string; occupancyRate: number; bookings: number }[]> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
-    
-    return getClient().get<{ data: { period: string; occupancyRate: number; bookings: number }[] }>(`${this.basePath}/occupancy?${queryParams.toString()}`);
+
+    return getClient().get<{ period: string; occupancyRate: number; bookings: number }[]>(`${this.basePath}/occupancy?${queryParams.toString()}`);
   }
 
   /**
