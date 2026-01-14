@@ -216,6 +216,22 @@ export function useBulkCancelBookings() {
   });
 }
 
+/**
+ * Batch reschedule multiple bookings mutation
+ */
+export function useBatchRescheduleBookings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ ids, startTime, endTime }: { ids: string[]; startTime: string; endTime: string }) =>
+      bookingService.batchReschedule(ids, startTime, endTime),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
 // ============================================================================
 // Calendar Hooks
 // ============================================================================
