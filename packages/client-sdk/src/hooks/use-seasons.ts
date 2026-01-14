@@ -9,6 +9,7 @@ import {
   type SeasonQueryParams,
   type CreateSeasonDTO,
   type UpdateSeasonDTO,
+  type SeasonVenue,
 } from '../services/season.service';
 
 // Query keys for seasons
@@ -19,6 +20,7 @@ export const seasonKeys = {
   details: () => [...seasonKeys.all, 'detail'] as const,
   detail: (id: string) => [...seasonKeys.details(), id] as const,
   stats: (id: string) => [...seasonKeys.all, 'stats', id] as const,
+  venues: (id: string) => [...seasonKeys.all, 'venues', id] as const,
 };
 
 /**
@@ -51,6 +53,17 @@ export function useSeasonStats(id: string) {
     queryKey: seasonKeys.stats(id),
     queryFn: () => seasonService.getStats(id),
     enabled: !!id,
+  });
+}
+
+/**
+ * Fetch venues assigned to a season
+ */
+export function useSeasonVenues(seasonId: string) {
+  return useQuery({
+    queryKey: seasonKeys.venues(seasonId),
+    queryFn: () => seasonService.getSeasonVenues(seasonId),
+    enabled: !!seasonId,
   });
 }
 
