@@ -11,10 +11,12 @@ import {
   type ReportPeriod,
   type ExportFormat,
   type ReportTemplate,
+  type CreateReportTemplateDTO,
   formatCurrency,
   formatPercent,
 } from '@digilist/client-sdk';
 import { ReportTemplateSelector } from '../components/reports/ReportTemplateSelector';
+import { CustomReportBuilder } from '../components/reports/CustomReportBuilder';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -226,6 +228,18 @@ export function ReportsPage() {
     });
   };
 
+  const handleGenerateCustomReport = (config: CreateReportTemplateDTO) => {
+    // TODO: Implement custom report generation API call
+    // For now, show success message
+    alert(`Genererer rapport: ${config.name || config.reportType}`);
+  };
+
+  const handleSaveCustomTemplate = (config: CreateReportTemplateDTO) => {
+    // TODO: Implement save template API call
+    // For now, show success message
+    alert(`Lagrer mal: ${config.name}`);
+  };
+
   const isLoading = isLoadingKPIs || isLoadingUsage || isLoadingRevenue || isLoadingStats || isLoadingHeatmap || isLoadingSeasonal;
 
   return (
@@ -364,6 +378,12 @@ export function ReportsPage() {
           </div>
         )}
       </Card>
+
+      {/* Custom Report Builder */}
+      <CustomReportBuilder
+        onGenerate={handleGenerateCustomReport}
+        onSaveTemplate={handleSaveCustomTemplate}
+      />
 
       {isLoading ? (
         <Card style={{ padding: 'var(--ds-spacing-12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
