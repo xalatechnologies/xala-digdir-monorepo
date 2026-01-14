@@ -177,6 +177,15 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Push Notification Keys
+  // =========================================================================
+  pushNotifications: {
+    all: ['pushNotifications'] as const,
+    subscriptions: () => [...queryKeys.pushNotifications.all, 'subscriptions'] as const,
+    preferences: () => [...queryKeys.pushNotifications.all, 'preferences'] as const,
+  },
+
+  // =========================================================================
   // Discount Code Keys
   // =========================================================================
   discountCodes: {

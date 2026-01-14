@@ -134,6 +134,19 @@ export {
   useDeleteNotification
 } from './use-notifications';
 
+// Push Notification hooks
+export {
+  usePushSubscriptions,
+  useNotificationPreferences,
+  usePushPermission,
+  useRegisterPushSubscription,
+  useUnsubscribePush,
+  useDeletePushSubscription,
+  useUpdateNotificationPreferences,
+  useTestPushNotification,
+  usePushSubscriptionFlow
+} from './use-push-notifications';
+
 // Audit hooks
 export {
   useAuditLog,
