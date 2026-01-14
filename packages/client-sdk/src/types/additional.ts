@@ -233,6 +233,66 @@ export interface UpdateReportTemplateDTO {
 }
 
 // =============================================================================
+// Scheduled Reports
+// =============================================================================
+
+export interface EmailRecipient {
+  email: string;
+  name?: string;
+}
+
+export interface ScheduleConfig {
+  frequency: ReportScheduleFrequency;
+  dayOfWeek?: number;
+  dayOfMonth?: number;
+  time?: string;
+  timezone?: string;
+  enabled: boolean;
+  recipients: EmailRecipient[];
+}
+
+export interface ScheduledReport extends TenantEntity {
+  name: string;
+  description?: string;
+  reportType: ReportType;
+  reportTemplateId?: string;
+  metrics?: ReportMetric[];
+  filters?: ReportFilter[];
+  schedule: ScheduleConfig;
+  exportFormat: ExportFormat;
+  nextRunAt?: string;
+  lastRunAt?: string;
+  lastRunStatus?: 'success' | 'failed' | 'skipped';
+  isActive: boolean;
+}
+
+export interface CreateScheduledReportDTO {
+  name: string;
+  description?: string;
+  reportType: ReportType;
+  reportTemplateId?: string;
+  metrics?: ReportMetric[];
+  filters?: ReportFilter[];
+  schedule: Omit<ScheduleConfig, 'recipients'> & { recipients: EmailRecipient[] };
+  exportFormat: ExportFormat;
+}
+
+export interface UpdateScheduledReportDTO {
+  name?: string;
+  description?: string;
+  metrics?: ReportMetric[];
+  filters?: ReportFilter[];
+  schedule?: Partial<ScheduleConfig>;
+  exportFormat?: ExportFormat;
+  isActive?: boolean;
+}
+
+export interface ScheduledReportQueryParams extends BaseQueryParams {
+  reportType?: ReportType;
+  isActive?: boolean;
+}
+
+// =============================================================================
 // Analytics
 // =============================================================================
 
