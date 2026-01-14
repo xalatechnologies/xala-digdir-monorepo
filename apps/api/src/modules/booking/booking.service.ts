@@ -102,61 +102,73 @@ export class BookingService {
   }
 
   /**
-   * Confirm booking
+   * Confirm booking with optimistic locking
    */
-  async confirm(id: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status: 'confirmed' });
-    this.adapters?.log?.info('Booking confirmed', { id });
-    
+  async confirm(id: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status: 'confirmed' })
+      : await this.repository.update(id, { status: 'confirmed' });
+
+    this.adapters?.log?.info('Booking confirmed', { id, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'confirm',
       resource: 'booking',
       resourceId: id,
-      metadata: { previousStatus: 'pending', newStatus: 'confirmed' },
+      metadata: { previousStatus: 'pending', newStatus: 'confirmed', version: booking.version },
     });
-    
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Cancel booking
+   * Cancel booking with optimistic locking
    */
-  async cancel(id: string, data: CancelBookingDTO): Promise<Booking> {
+  async cancel(id: string, data: CancelBookingDTO, version?: number): Promise<Booking> {
     const validated = validate(CancelBookingSchema, data);
-    const booking = await this.repository.update(id, {
-      status: 'cancelled',
+
+    const updateData = {
+      status: 'cancelled' as const,
       notes: validated.reason,
-    });
-    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason });
-    
+    };
+
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, updateData)
+      : await this.repository.update(id, updateData);
+
+    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'cancel',
       resource: 'booking',
       resourceId: id,
       severity: 'warning',
-      metadata: { reason: validated.reason },
+      metadata: { reason: validated.reason, version: booking.version },
     });
-    
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Complete booking
+   * Complete booking with optimistic locking
    */
-  async complete(id: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status: 'completed' });
-    this.adapters?.log?.info('Booking completed', { id });
-    
+  async complete(id: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status: 'completed' })
+      : await this.repository.update(id, { status: 'completed' });
+
+    this.adapters?.log?.info('Booking completed', { id, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'complete',
       resource: 'booking',
       resourceId: id,
-      metadata: { newStatus: 'completed' },
+      metadata: { newStatus: 'completed', version: booking.version },
     });
-    
+
     return booking as unknown as Booking;
   }
 
@@ -176,30 +188,50 @@ export class BookingService {
   }
 
   /**
-   * Update booking
+   * Update booking with optimistic locking
    */
   async update(id: string, data: UpdateBookingDTO): Promise<Booking> {
     const validated = validate(UpdateBookingSchema, data);
-    const booking = await this.repository.update(id, validated);
-    this.adapters?.log?.info('Booking updated', { id });
-    
+
+    // Extract version for optimistic locking
+    const { version, ...updateData } = validated;
+
+    // Use optimistic locking if version is provided
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, updateData)
+      : await this.repository.update(id, updateData);
+
+    this.adapters?.log?.info('Booking updated', { id, version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'update',
       resource: 'booking',
       resourceId: id,
-      metadata: { changes: Object.keys(validated) },
+      metadata: { changes: Object.keys(updateData), version: booking.version },
     });
-    
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Update booking status
+   * Update booking status with optimistic locking
    */
-  async updateStatus(id: string, status: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status });
-    this.adapters?.log?.info('Booking status updated', { id, status });
+  async updateStatus(id: string, status: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status })
+      : await this.repository.update(id, { status });
+
+    this.adapters?.log?.info('Booking status updated', { id, status, version: booking.version });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      action: 'update_status',
+      resource: 'booking',
+      resourceId: id,
+      metadata: { status, version: booking.version },
+    });
+
     return booking as unknown as Booking;
   }
 
