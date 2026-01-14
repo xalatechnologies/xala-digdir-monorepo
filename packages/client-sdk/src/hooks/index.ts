@@ -59,7 +59,6 @@ export {
   useDeleteBooking,
   useCalendarEvents,
   useAvailabilitySlots,
-  useConflictCheck,
   useAllocations,
   useCreateAllocation,
   useDeleteAllocation
@@ -116,14 +115,38 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeCalendar,
   useRealtimeListings,
   useRealtimeMessages,
+  useRealtimeNotifications,
   useRealtimeAudit,
   useRealtimeEvents,
   useNotificationBadge,
   useRealtimeSend
 } from './use-realtime';
+
+// Notification hooks
+export {
+  useNotifications,
+  useMyNotifications,
+  useNotificationUnreadCount,
+  useNotificationTemplates,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  useDeleteNotification
+} from './use-notifications';
+
+// Push Notification hooks
+export {
+  usePushSubscriptions,
+  useNotificationPreferences,
+  usePushPermission,
+  useRegisterPushSubscription,
+  useUnsubscribePush,
+  useDeletePushSubscription,
+  useUpdateNotificationPreferences,
+  useTestPushNotification,
+  usePushSubscriptionFlow
+} from './use-push-notifications';
 
 // Audit hooks
 export {
