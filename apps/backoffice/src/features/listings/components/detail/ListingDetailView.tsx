@@ -17,6 +17,7 @@ import {
 import { useListingBySlug, useListing } from '@digilist/client-sdk';
 import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
+import { AvailabilityTab } from './AvailabilityTab';
 
 interface ListingDetailViewProps {
   slug: string;
@@ -204,14 +205,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
           {activeTab === 'overview' && <OverviewTab listing={listing} />}
           {activeTab === 'bookings' && <BookingsTab listingId={listing.id} />}
           {activeTab === 'availability' && (
-            <div>
-              <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-                Tilgjengelighet
-              </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Kalendervisning med tilgjengelighet og mulighet for å blokkere perioder kommer her.
-              </Paragraph>
-            </div>
+            <AvailabilityTab listingId={listing.id} listingName={listing.name} />
           )}
           {activeTab === 'audit' && (
             <div>
