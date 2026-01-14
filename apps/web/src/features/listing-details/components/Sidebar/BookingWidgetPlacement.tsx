@@ -16,6 +16,7 @@ import { BookingStepperHeader, type BookingStep } from './components/BookingStep
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
 import { BookingPricingStep, type PriceGroup, type AdditionalService } from './components/BookingPricingStep';
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
+import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
 
 // =============================================================================
 // Icons
@@ -259,6 +260,8 @@ export function BookingWidgetPlacement({
   };
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
+  const [conflictDialogOpen, setConflictDialogOpen] = React.useState(false);
+  const [slotAvailabilities, setSlotAvailabilities] = React.useState<SlotAvailability[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
@@ -474,6 +477,74 @@ export function BookingWidgetPlacement({
   };
 
   const visibleRows = isCalendarExpanded ? 24 : 8;
+
+  // Check availability for all selected slots against busy slots
+  const checkAvailability = (): SlotAvailability[] => {
+    return Array.from(selectedSlots).map(slotKey => {
+      const [dayIdxStr, timeStr] = slotKey.split('-');
+      const dayIdx = parseInt(dayIdxStr ?? '0', 10);
+      const details = slotDetails[slotKey] ?? { duration: 60 };
+
+      const slotDate = new Date(weekStart);
+      slotDate.setDate(weekStart.getDate() + dayIdx);
+
+      const [startH, startM] = (timeStr ?? '00:00').split(':').map(Number);
+      const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
+      const endH = Math.floor(endMins / 60);
+      const endM = endMins % 60;
+      const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+
+      const dateStr = slotDate.toISOString().split('T')[0] ?? '';
+
+      // Check if this slot conflicts with any busy slot
+      const isConflicting = busySlots.some(busy => {
+        if (busy.date !== dateStr) return false;
+        const busyStart = busy.startTime;
+        const busyEnd = busy.endTime;
+        // Check for time overlap
+        return (timeStr ?? '') < busyEnd && endTime > busyStart;
+      });
+
+      return {
+        slotKey,
+        date: slotDate,
+        startTime: timeStr ?? '',
+        endTime,
+        isAvailable: !isConflicting,
+        conflictReason: isConflicting ? 'Tidspunktet er opptatt' : undefined,
+      };
+    });
+  };
+
+  const handleCheckAvailabilityAndProceed = (): void => {
+    const availabilities = checkAvailability();
+    const hasConflicts = availabilities.some(a => !a.isAvailable);
+
+    if (hasConflicts && availabilities.length > 1) {
+      // Show conflict dialog for multiple slots with conflicts
+      setSlotAvailabilities(availabilities);
+      setConflictDialogOpen(true);
+    } else if (hasConflicts && availabilities.length === 1) {
+      // Single slot with conflict - show error
+      setBookingError('Det valgte tidspunktet er ikke tilgjengelig. Vennligst velg et annet tidspunkt.');
+    } else {
+      // No conflicts - proceed to next step
+      setCurrentStep(1);
+    }
+  };
+
+  const handleBookAvailableSlots = (availableSlotKeys: string[]): void => {
+    // Update selected slots to only include available ones
+    setSelectedSlots(new Set(availableSlotKeys));
+    setConflictDialogOpen(false);
+    // Proceed to next step
+    setCurrentStep(1);
+  };
+
+  const handleChangeTimeFromConflict = (): void => {
+    setConflictDialogOpen(false);
+    // Stay on calendar step to allow user to change selections
+  };
 
   return (
     <div
@@ -875,6 +946,9 @@ export function BookingWidgetPlacement({
             onClick={() => {
               if (currentStep === 2 && isAuthenticated) {
                 handleSubmitBooking();
+              } else if (currentStep === 0) {
+                // Check availability before proceeding from calendar step
+                handleCheckAvailabilityAndProceed();
               } else if (currentStep < 2) {
                 setCurrentStep(prev => prev + 1);
               }
@@ -935,6 +1009,16 @@ export function BookingWidgetPlacement({
         onConfirm={handleDialogConfirm}
         slot={selectedSlotForDialog}
         busySlots={busySlots}
+      />
+
+      {/* Availability Conflict Dialog */}
+      <BookingAvailabilityConflictDialog
+        isOpen={conflictDialogOpen}
+        onClose={() => setConflictDialogOpen(false)}
+        slots={slotAvailabilities}
+        onChangeTime={handleChangeTimeFromConflict}
+        onBookAvailable={handleBookAvailableSlots}
+        listingTitle={listingTitle}
       />
     </div>
   );

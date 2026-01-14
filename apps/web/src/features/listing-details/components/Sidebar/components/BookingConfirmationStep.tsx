@@ -50,15 +50,15 @@ export interface BookingConfirmationStepProps {
 export function BookingConfirmationStep({
   isAuthenticated,
   isLoggingIn,
-  isSubmitting,
+  isSubmitting: _isSubmitting,
   bookingError,
-  isMobile = false,
+  isMobile: _isMobile = false,
   selectedSlots,
   slotDetails,
   weekStart,
   onLoginWithVipps,
   onLoginAsEmployee,
-  onConfirmBooking,
+  onConfirmBooking: _onConfirmBooking,
   onClearError,
   bookingAccountType,
   selectedOrganizationId,
@@ -89,80 +89,73 @@ export function BookingConfirmationStep({
   if (!isAuthenticated) {
     return (
       <div style={{ padding: 'var(--ds-spacing-6)' }}>
-        {/* Login Prompt */}
+        <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
+          Logg inn for å fullføre
+        </Heading>
+        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          For å sende din bookingforespørsel må du være innlogget. Vi bruker sikker autentisering for å verifisere din identitet.
+        </Paragraph>
+
+        {/* Simple Login Buttons */}
         <div
           style={{
-            padding: 'var(--ds-spacing-6)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--ds-spacing-3)',
+            maxWidth: '400px',
+            margin: '0 auto',
           }}
         >
-            <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
-              Logg inn for å fullføre
-            </Heading>
-            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              For å sende din bookingforespørsel må du være innlogget. Vi bruker sikker autentisering for å verifisere din identitet.
-            </Paragraph>
+          <Button
+            type="button"
+            variant="primary"
+            data-size="lg"
+            data-color="accent"
+            onClick={onLoginWithVipps}
+            disabled={isLoggingIn}
+            style={{
+              width: '100%',
+              backgroundColor: 'var(--ds-color-warning-base-default)',
+              color: 'var(--ds-color-warning-base-contrast-default)',
+            }}
+          >
+            {isLoggingIn ? 'Logger inn...' : 'Logg inn med Vipps'}
+          </Button>
 
-            {/* Simple Login Buttons */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--ds-spacing-3)',
-                maxWidth: '400px',
-                margin: '0 auto',
-              }}
-            >
-              <Button
-                type="button"
-                variant="primary"
-                data-size="lg"
-                data-color="accent"
-                onClick={onLoginWithVipps}
-                disabled={isLoggingIn}
-                style={{
-                  width: '100%',
-                  backgroundColor: 'var(--ds-color-warning-base-default)',
-                  color: 'var(--ds-color-warning-base-contrast-default)',
-                }}
-              >
-                {isLoggingIn ? 'Logger inn...' : 'Logg inn med Vipps'}
-              </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="lg"
+            onClick={onLoginAsEmployee}
+            disabled={isLoggingIn}
+            style={{
+              width: '100%',
+            }}
+          >
+            {isLoggingIn ? 'Logger inn...' : 'Logg inn med Bank ID'}
+          </Button>
+        </div>
 
-              <Button
-                type="button"
-                variant="secondary"
-                data-size="lg"
-                onClick={onLoginAsEmployee}
-                disabled={isLoggingIn}
-                style={{
-                  width: '100%',
-                }}
-              >
-                {isLoggingIn ? 'Logger inn...' : 'Logg inn med Bank ID'}
-              </Button>
-            </div>
-
-            {/* Privacy notice */}
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
-              <div
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  backgroundColor: 'var(--ds-color-success-base-default)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  marginTop: '2px',
-                }}
-              >
-                <CheckCircleIcon size={10} />
-              </div>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Din informasjon behandles sikkert og i henhold til personvernlovgivningen. Ved å logge inn godtar du at vi lagrer nødvendige opplysninger for å behandle din booking.
-              </Paragraph>
-            </div>
+        {/* Privacy notice */}
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
+          <div
+            style={{
+              width: '16px',
+              height: '16px',
+              borderRadius: 'var(--ds-border-radius-full)',
+              backgroundColor: 'var(--ds-color-success-base-default)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginTop: '2px',
+            }}
+          >
+            <CheckCircleIcon size={10} />
+          </div>
+          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            Din informasjon behandles sikkert og i henhold til personvernlovgivningen. Ved å logge inn godtar du at vi lagrer nødvendige opplysninger for å behandle din booking.
+          </Paragraph>
         </div>
       </div>
     );

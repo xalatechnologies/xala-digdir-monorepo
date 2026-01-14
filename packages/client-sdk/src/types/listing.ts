@@ -286,12 +286,23 @@ export function transformListing(listing: Listing): UiListing {
   const amenities = metadata.amenities || [];
   const maxFacilities = 3;
 
-  // Build location string - check both root level and nested location object
-  const address = metadata.address || location.address;
-  const postalCode = metadata.postalCode || location.postalCode;
-  const city = metadata.city || location.city;
-  const locationParts = [address, postalCode, city].filter(Boolean);
-  const locationString = locationParts.length > 0 ? locationParts.join(', ') : '';
+  // Build location string - check multiple possible locations:
+  // 1. Root level (if API returns it, even if not in type)
+  // 2. metadata.address/city/postalCode (flat structure)
+  // 3. metadata.location.address/city/postalCode (nested structure)
+  const address = (listing as unknown as { address?: string }).address 
+    || metadata.address 
+    || location.address;
+  const postalCode = (listing as unknown as { postalCode?: string }).postalCode
+    || metadata.postalCode 
+    || location.postalCode;
+  const city = (listing as unknown as { city?: string }).city
+    || metadata.city 
+    || location.city;
+
+  // Filter out empty strings and build location parts
+  const locationParts = [address, postalCode, city].filter(part => part && typeof part === 'string');
+  const locationString = locationParts.length > 0 ? locationParts.join(', ') : 'Ukjent lokasjon';
 
   // Use listing type label as display type
   const displayType = getListingTypeLabel(listing.type);

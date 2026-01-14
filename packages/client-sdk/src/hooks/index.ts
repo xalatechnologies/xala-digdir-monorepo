@@ -238,3 +238,21 @@ export {
   type UseGeocodeListingsOptions,
   type UseGeocodeListingsResult,
 } from './use-geocode';
+
+// Accessibility Monitoring hooks
+export {
+  useAccessibilityMonitoring,
+  useScreenReaderDetection,
+  useKeyboardNavigationDetection,
+  type UseAccessibilityMonitoringOptions,
+  type AccessibilityMonitoringAPI,
+  type AccessibilityMonitoringConfig,
+  type AccessibilityMetric,
+  type AccessibilityMetricType,
+  type AccessibilityReport,
+  type KeyboardNavigationMetric,
+  type SkipLinkUsageMetric,
+  type ScreenReaderDetectionMetric,
+  type FocusManagementMetric,
+  type AriaAnnouncementMetric,
+} from './use-accessibility-monitoring';

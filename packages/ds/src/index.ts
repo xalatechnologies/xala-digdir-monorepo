@@ -222,6 +222,7 @@ export {
   ListingGrid,
   ListingToolbar,
   ListingMap,
+  ListingTableView,
   ImageGallery,
   ImageSlider,
   ListingDetailHeader,
@@ -280,6 +281,12 @@ export {
   NotFoundScreen,
   ErrorScreen,
   PermissionGate,
+  // Messaging Components
+  NotificationBell,
+  ConversationList,
+  ConversationListItem,
+  MessageBubble,
+  ChatThread,
   // Error Handling Components
   ErrorBoundary,
   withErrorBoundary,
@@ -294,6 +301,7 @@ export type {
   ListingToolbarProps,
   ListingMapProps,
   MapListing,
+  ListingTableViewProps,
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
@@ -367,6 +375,14 @@ export type {
   NotFoundScreenProps,
   ErrorScreenProps,
   PermissionGateProps,
+  // Messaging Types
+  NotificationBellProps,
+  ConversationListProps,
+  ConversationListItemProps,
+  ConversationItem,
+  MessageBubbleProps,
+  MessageItem,
+  ChatThreadProps,
   // Error Handling Types
   ErrorBoundaryProps,
   WithErrorBoundaryOptions,

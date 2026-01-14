@@ -69,8 +69,12 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.bookings.details(), id] as const,
     my: (params?: BookingQueryParams) => [...queryKeys.bookings.all, 'my', params] as const,
     recurring: () => [...queryKeys.bookings.all, 'recurring'] as const,
-    pricing: (listingId: string, start: string, end: string) => 
+    pricing: (listingId: string, start: string, end: string) =>
       [...queryKeys.bookings.all, 'pricing', listingId, start, end] as const,
+    paymentReconciliation: (params?: { startDate?: string; endDate?: string; status?: string; provider?: string }) =>
+      [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
+    paymentHistory: (bookingId: string) =>
+      [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
   },
 
   // =========================================================================
@@ -236,6 +240,8 @@ export const queryKeys = {
     vipps: {
       status: () => [...queryKeys.integrations.all, 'vipps', 'status'] as const,
       payment: (orderId: string) => [...queryKeys.integrations.all, 'vipps', 'payment', orderId] as const,
+      history: (params?: { startDate?: string; endDate?: string; status?: string }) =>
+        [...queryKeys.integrations.all, 'vipps', 'history', params] as const,
     },
     brreg: {
       lookup: (orgNumber: string) => [...queryKeys.integrations.all, 'brreg', orgNumber] as const,

@@ -19,6 +19,9 @@ export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
 export { ListingMap } from './ListingMap';
 export type { ListingMapProps, MapListing } from './ListingMap';
 
+export { ListingTableView } from './ListingTableView';
+export type { ListingTableViewProps } from './ListingTableView';
+
 // Listing Detail Components
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';

@@ -72,14 +72,16 @@ async function geocodeAddress(address: string): Promise<{ lat: number; lng: numb
   return null;
 }
 
-// Listing type options
+// Listing type options (UI filter types)
+// Note: API types SPACE maps to FACILITY, RESOURCE maps to EQUIPMENT
 const LISTING_TYPE_OPTIONS = [
   { id: 'ALL', label: 'Alle typer' },
-  { id: 'FACILITY', label: 'Lokale' },
-  { id: 'EQUIPMENT', label: 'Utstyr' },
+  { id: 'FACILITY', label: 'Lokale' },  // Includes SPACE from API
+  { id: 'EQUIPMENT', label: 'Utstyr' },  // Includes RESOURCE from API
   { id: 'SERVICE', label: 'Tjeneste' },
   { id: 'VEHICLE', label: 'Kjøretøy' },
-  { id: 'SPACE', label: 'Areal' },
+  { id: 'EVENT', label: 'Arrangement' },
+  { id: 'OTHER', label: 'Annet' },
 ];
 
 // Capacity filter options
@@ -130,10 +132,27 @@ interface ExtendedUiListing {
   slug?: string;
 }
 
+// Map API listing types to UI filter types
+const mapApiTypeToFilterType = (apiType: ListingType): string => {
+  const typeMap: Record<ListingType, string> = {
+    SPACE: 'FACILITY',      // SPACE maps to FACILITY (Lokale)
+    RESOURCE: 'EQUIPMENT',  // RESOURCE maps to EQUIPMENT (Utstyr)
+    SERVICE: 'SERVICE',     // SERVICE stays SERVICE (Tjeneste)
+    EVENT: 'EVENT',         // EVENT stays EVENT
+    VEHICLE: 'VEHICLE',     // VEHICLE stays VEHICLE (Kjøretøy)
+    OTHER: 'OTHER',         // OTHER stays OTHER
+  };
+  return typeMap[apiType] || 'OTHER';
+};
+
 // Filter helpers
 const getListingTypeCounts = (listings: ExtendedUiListing[]) => {
   const counts: Record<string, number> = { ALL: listings.length };
   listings.forEach(l => {
+    // Map API type to filter type for counting
+    const filterType = mapApiTypeToFilterType(l.listingType);
+    counts[filterType] = (counts[filterType] || 0) + 1;
+    // Also count by original API type for backwards compatibility
     counts[l.listingType] = (counts[l.listingType] || 0) + 1;
   });
   return counts;
@@ -200,8 +219,14 @@ export function ListingsPage(): React.ReactElement {
       const fallbackLat = FALLBACK_COORDINATES[fallbackIndex]?.lat ?? 59.9139;
       const fallbackLng = FALLBACK_COORDINATES[fallbackIndex]?.lng ?? 10.7522;
 
+      // Defensive: ensure location is always a string (handle if backend sends object)
+      const locationValue = typeof transformed.location === 'string'
+        ? transformed.location
+        : 'Ukjent lokasjon';
+
       return {
         ...transformed,
+        location: locationValue,
         listingType: listing.type,
         latitude: transformed.latitude ?? geocoded?.lat ?? fallbackLat,
         longitude: transformed.longitude ?? geocoded?.lng ?? fallbackLng,
@@ -238,20 +263,46 @@ export function ListingsPage(): React.ReactElement {
 
           // Get the display location from transformed listing
           const transformed = transformListing(listing);
-          const displayLocation = transformed.location;
+          const displayLocation = typeof transformed.location === 'string' ? transformed.location : '';
 
           // Try structured address first, fall back to display location
           const locationMeta = listing.metadata?.location;
-          const structuredAddress = [
-            listing.metadata?.address || locationMeta?.address,
-            listing.metadata?.postalCode || locationMeta?.postalCode,
-            listing.metadata?.city || locationMeta?.city
-          ].filter(Boolean).join(', ');
+          // Check root level fields (if API returns them)
+          const rootAddress = (listing as unknown as { address?: string }).address;
+          const rootPostalCode = (listing as unknown as { postalCode?: string }).postalCode;
+          const rootCity = (listing as unknown as { city?: string }).city;
+          
+          // Build structured address from all possible sources
+          // Ensure all parts are strings, not objects
+          const addressParts: string[] = [];
+          const addPart = (part: unknown) => {
+            if (typeof part === 'string' && part.trim()) {
+              addressParts.push(part.trim());
+            }
+          };
+          
+          addPart(rootAddress);
+          addPart(listing.metadata?.address);
+          addPart(locationMeta?.address);
+          addPart(rootPostalCode);
+          addPart(listing.metadata?.postalCode);
+          addPart(locationMeta?.postalCode);
+          addPart(rootCity);
+          addPart(listing.metadata?.city);
+          addPart(locationMeta?.city);
+          
+          const structuredAddress = addressParts.length > 0 ? addressParts.join(', ') : '';
 
           // Use structured address if available, otherwise use display location
-          const addressToGeocode = structuredAddress || displayLocation;
+          // Ensure we have a string, not an object
+          const addressToGeocode = structuredAddress && structuredAddress.trim() && structuredAddress !== 'Ukjent lokasjon'
+            ? structuredAddress.trim()
+            : (displayLocation && displayLocation.trim() && displayLocation !== 'Ukjent lokasjon' 
+                ? displayLocation.trim() 
+                : '');
 
-          if (!addressToGeocode) {
+          // Skip if no valid address (don't geocode "Ukjent lokasjon")
+          if (!addressToGeocode || addressToGeocode === 'Ukjent lokasjon') {
             geocodingInProgress.current.delete(listing.id);
             return null;
           }
@@ -325,7 +376,11 @@ export function ListingsPage(): React.ReactElement {
   // Filter listings
   const filteredListings = React.useMemo(() => {
     return listings.filter(l => {
-      if (listingType !== 'ALL' && l.listingType !== listingType) return false;
+      // Map API type to filter type for comparison
+      if (listingType !== 'ALL') {
+        const filterType = mapApiTypeToFilterType(l.listingType);
+        if (filterType !== listingType) return false;
+      }
 
       if (selectedArea !== 'all') {
         const locationLower = l.location.toLowerCase();
