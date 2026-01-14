@@ -232,8 +232,27 @@ export const allocations = pgTable('allocations', {
 }));
 
 // ============================================================================
-// Seasonal Leases
+// Seasons & Seasonal Leases
 // ============================================================================
+
+export const seasons = pgTable('seasons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  startDate: timestamp('start_date').notNull(),
+  endDate: timestamp('end_date').notNull(),
+  applicationStartDate: timestamp('application_start_date').notNull(),
+  applicationEndDate: timestamp('application_end_date').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  description: text('description'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('seasons_tenant_idx').on(table.tenantId),
+  statusIdx: index('seasons_status_idx').on(table.status),
+  datesIdx: index('seasons_dates_idx').on(table.startDate, table.endDate),
+}));
 
 export const seasonalLeases = pgTable('seasonal_leases', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -317,6 +336,8 @@ export type Usage = typeof usage.$inferSelect;
 export type NewUsage = typeof usage.$inferInsert;
 export type Allocation = typeof allocations.$inferSelect;
 export type NewAllocation = typeof allocations.$inferInsert;
+export type Season = typeof seasons.$inferSelect;
+export type NewSeason = typeof seasons.$inferInsert;
 export type SeasonalLease = typeof seasonalLeases.$inferSelect;
 export type NewSeasonalLease = typeof seasonalLeases.$inferInsert;
 export type Conversation = typeof conversations.$inferSelect;
