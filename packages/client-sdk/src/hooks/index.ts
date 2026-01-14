@@ -163,6 +163,23 @@ export {
   type AuditStats
 } from './use-audit';
 
+// Monitoring hooks
+export {
+  useHealth,
+  useMetrics,
+  useLogs,
+  useIncidents,
+  useDatabaseStats,
+  useApiUsage,
+  useTriggerHealthCheck,
+  type HealthStatus,
+  type ServiceHealth,
+  type SystemMetrics,
+  type LogEntry,
+  type LogQueryParams,
+  type Incident,
+} from './use-monitoring';
+
 // Conversation hooks
 export {
   conversationKeys,
