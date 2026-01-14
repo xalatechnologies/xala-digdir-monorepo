@@ -85,29 +85,14 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Vendor chunks for core React libraries
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'vendor-react';
+          // Mapbox GL in separate chunk (large, rarely changes)
+          if (id.includes('node_modules/mapbox-gl')) {
+            return 'vendor-mapbox';
           }
 
-          // Vendor chunk for React Router
-          if (id.includes('node_modules/react-router-dom') || id.includes('node_modules/react-router')) {
-            return 'vendor-router';
-          }
-
-          // Vendor chunk for React Query
+          // React Query in separate chunk
           if (id.includes('node_modules/@tanstack/react-query')) {
             return 'vendor-query';
-          }
-
-          // Vendor chunk for i18next
-          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
-            return 'vendor-i18n';
-          }
-
-          // Design system in separate chunk
-          if (id.includes('packages/ds/src')) {
-            return 'vendor-ds';
           }
 
           // Client SDK in separate chunk
@@ -115,15 +100,21 @@ export default defineConfig({
             return 'vendor-sdk';
           }
 
-          // All other node_modules in a generic vendor chunk
+          // Design system in separate chunk
+          if (id.includes('packages/ds/src') || id.includes('@xala/ds')) {
+            return 'vendor-ds';
+          }
+
+          // Everything else from node_modules goes together
+          // This prevents circular dependencies between chunks
           if (id.includes('node_modules')) {
-            return 'vendor-misc';
+            return 'vendor';
           }
         },
       },
     },
-    // Increase chunk size warning limit (default is 500 KiB)
-    chunkSizeWarningLimit: 600,
+    // Increase chunk size warning limit
+    chunkSizeWarningLimit: 800,
   },
   resolve: {
     alias: {

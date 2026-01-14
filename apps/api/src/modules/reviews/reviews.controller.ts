@@ -1,0 +1,281 @@
+/**
+ * Reviews Controller
+ *
+ * API endpoints for listing reviews
+ * - GET /api/reviews - List all reviews
+ * - GET /api/reviews/listing/:listingId - Get reviews for a listing
+ * - GET /api/reviews/:id - Get single review
+ * - POST /api/reviews - Submit a new review
+ * - PATCH /api/reviews/:id - Update review (admin)
+ * - DELETE /api/reviews/:id - Delete review (admin)
+ */
+import { Controller, Get, Post, Patch, Delete } from '../../core/decorators';
+import type { FastifyRequest, FastifyReply } from 'fastify';
+
+interface TenantRequest extends FastifyRequest {
+  tenantId?: string | null;
+  userId?: string | null;
+}
+
+// Mock reviews data
+const mockReviews = [
+  {
+    id: 'review-001',
+    listingId: '10000012-0000-0000-0000-000000000001',
+    userId: 'user-001',
+    userName: 'Erik Hansen',
+    rating: 5,
+    title: 'Flott anlegg!',
+    comment: 'Veldig bra fasiliteter og enkelt å booke. Anbefales!',
+    status: 'approved',
+    createdAt: '2026-01-10T14:30:00Z',
+    updatedAt: '2026-01-10T14:30:00Z',
+  },
+  {
+    id: 'review-002',
+    listingId: '10000012-0000-0000-0000-000000000001',
+    userId: 'user-002',
+    userName: 'Kari Olsen',
+    rating: 4,
+    title: 'God opplevelse',
+    comment: 'Fint lokale, men parkeringen kunne vært bedre.',
+    status: 'approved',
+    createdAt: '2026-01-08T09:00:00Z',
+    updatedAt: '2026-01-08T09:00:00Z',
+  },
+  {
+    id: 'review-003',
+    listingId: '10000012-0000-0000-0000-000000000002',
+    userId: 'user-003',
+    userName: 'Per Nilsen',
+    rating: 5,
+    title: 'Perfekt for fotballtrening',
+    comment: 'Gresset er i topp stand. Bookingprosessen var smidig.',
+    status: 'approved',
+    createdAt: '2026-01-05T16:00:00Z',
+    updatedAt: '2026-01-05T16:00:00Z',
+  },
+  {
+    id: 'review-004',
+    listingId: '10000012-0000-0000-0000-000000000003',
+    userId: 'user-004',
+    userName: 'Lisa Berg',
+    rating: 4,
+    title: 'Bra svømmehall',
+    comment: 'Rent og pent, men litt trangt i garderoben.',
+    status: 'approved',
+    createdAt: '2026-01-03T11:00:00Z',
+    updatedAt: '2026-01-03T11:00:00Z',
+  },
+  {
+    id: 'review-005',
+    listingId: '10000012-0000-0000-0000-000000000005',
+    userId: 'user-005',
+    userName: 'Morten Stein',
+    rating: 5,
+    title: 'Topp fasiliteter',
+    comment: 'Alt fungerte som det skulle. Kommer tilbake!',
+    status: 'approved',
+    createdAt: '2026-01-12T15:00:00Z',
+    updatedAt: '2026-01-12T15:00:00Z',
+  },
+];
+
+@Controller('/api/reviews')
+export class ReviewsController {
+  /**
+   * GET /api/reviews - List all reviews
+   */
+  @Get('/')
+  async listReviews(request: TenantRequest, reply: FastifyReply) {
+    const { status, limit, offset } = request.query as any;
+
+    let reviews = [...mockReviews];
+
+    if (status) {
+      reviews = reviews.filter(r => r.status === status);
+    }
+
+    const total = reviews.length;
+    const start = Number(offset || 0);
+    const end = limit ? start + Number(limit) : reviews.length;
+    reviews = reviews.slice(start, end);
+
+    return {
+      success: true,
+      data: reviews,
+      meta: {
+        total,
+        limit: Number(limit) || total,
+        offset: start,
+      },
+    };
+  }
+
+  /**
+   * GET /api/reviews/listing/:listingId - Get reviews for a specific listing
+   */
+  @Get('/listing/:listingId')
+  async getListingReviews(request: TenantRequest, reply: FastifyReply) {
+    const { listingId } = request.params as any;
+    const { status, limit } = request.query as any;
+
+    let reviews = mockReviews.filter(r => r.listingId === listingId);
+
+    if (status) {
+      reviews = reviews.filter(r => r.status === status);
+    }
+
+    if (limit) {
+      reviews = reviews.slice(0, Number(limit));
+    }
+
+    // Calculate stats
+    const stats = {
+      totalReviews: reviews.length,
+      averageRating: reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0,
+      ratingDistribution: {
+        5: reviews.filter(r => r.rating === 5).length,
+        4: reviews.filter(r => r.rating === 4).length,
+        3: reviews.filter(r => r.rating === 3).length,
+        2: reviews.filter(r => r.rating === 2).length,
+        1: reviews.filter(r => r.rating === 1).length,
+      },
+    };
+
+    return {
+      success: true,
+      data: reviews,
+      meta: {
+        total: reviews.length,
+        stats,
+      },
+    };
+  }
+
+  /**
+   * GET /api/reviews/:id - Get single review
+   */
+  @Get('/:id')
+  async getReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        success: false,
+        error: {
+          code: 'REVIEW_NOT_FOUND',
+          message: 'Review not found',
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: review,
+    };
+  }
+
+  /**
+   * POST /api/reviews - Submit a new review
+   */
+  @Post('/')
+  async createReview(request: TenantRequest, reply: FastifyReply) {
+    const { listingId, rating, title, comment } = request.body as any;
+
+    if (!listingId || !rating || !title) {
+      reply.code(400);
+      return {
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'listingId, rating, and title are required',
+        },
+      };
+    }
+
+    const newReview = {
+      id: `review-${Date.now()}`,
+      listingId,
+      userId: request.userId || 'anonymous',
+      userName: 'Anonym bruker',
+      rating: Number(rating),
+      title,
+      comment: comment || '',
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    return {
+      success: true,
+      data: newReview,
+    };
+  }
+
+  /**
+   * PATCH /api/reviews/:id - Update review (admin moderation)
+   */
+  @Patch('/:id')
+  async updateReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const { status, adminNote } = request.body as any;
+
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        success: false,
+        error: {
+          code: 'REVIEW_NOT_FOUND',
+          message: 'Review not found',
+        },
+      };
+    }
+
+    const updatedReview = {
+      ...review,
+      status: status || review.status,
+      adminNote,
+      updatedAt: new Date().toISOString(),
+    };
+
+    return {
+      success: true,
+      data: updatedReview,
+    };
+  }
+
+  /**
+   * DELETE /api/reviews/:id - Delete review
+   */
+  @Delete('/:id')
+  async deleteReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        success: false,
+        error: {
+          code: 'REVIEW_NOT_FOUND',
+          message: 'Review not found',
+        },
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Review deleted successfully',
+    };
+  }
+}
+
+// Also export the old Elysia controllers for backwards compatibility (unused)
+export { ReviewsController as ListingReviewsController };

@@ -15,18 +15,18 @@
  * ```
  */
 
-// Official Digdir themes from npm package
+// Official Digdir themes - using public folder path
 const OFFICIAL_THEMES = {
-  digdir: '/node_modules/@digdir/designsystemet-theme/brand/digdir.css',
-  altinn: '/node_modules/@digdir/designsystemet-theme/brand/altinn.css',
-  uutilsynet: '/node_modules/@digdir/designsystemet-theme/brand/uutilsynet.css',
-  portal: '/node_modules/@digdir/designsystemet-theme/brand/portal.css',
+  digdir: '/themes/digdir.css',
+  altinn: '/themes/altinn.css',
+  uutilsynet: '/themes/uutilsynet.css',
+  portal: '/themes/portal.css',
 };
 
 // Custom DIGILIST theme: CLI-generated base + app extensions
 const DIGILIST_THEME = [
-  '/node_modules/@xala/ds-themes/generated/digilist.css',      // CLI-generated base
-  '/node_modules/@xala/ds-themes/themes/digilist-extensions.css', // App-specific tokens
+  '/themes/digilist.css',            // CLI-generated base
+  '/themes/digilist-extensions.css', // App-specific tokens
 ];
 
 export type ThemeId = 'digdir' | 'altinn' | 'uutilsynet' | 'portal' | 'digilist';

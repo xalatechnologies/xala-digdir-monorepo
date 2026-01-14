@@ -1,12 +1,14 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
 
 ---
 
 ## System Context
 
-You are operating inside the **Xala / Digilist Platform** - a Norwegian municipal booking and resource management system.
+You are operating inside the **Xala / Digilist Platform** - a Norwegian
+municipal booking and resource management system.
 
 **System Characteristics:**
 
@@ -31,9 +33,11 @@ This is a **Turborepo** using **pnpm workspaces**.
 
 ### Packages (packages/)
 
-- **@digilist/client-sdk** - Enterprise-grade SDK with 24+ services, WebSocket realtime, React Query hooks
+- **@digilist/client-sdk** - Enterprise-grade SDK with 24+ services, WebSocket
+  realtime, React Query hooks
 - **@xala/ds** - UI facade (ONLY allowed import for Designsystemet components)
-- **@xala/ds-themes** - Theme URL registry for runtime switching (digdir, altinn, uutilsynet, portal)
+- **@xala/ds-themes** - Theme URL registry for runtime switching (digdir,
+  altinn, uutilsynet, portal)
 - **@xala/ds-registry** - Documentation and examples
 - **@xala/i18n** - Internationalization utilities
 - **@xala/eslint-config** - Shared ESLint with design system guardrails
@@ -166,10 +170,10 @@ If SDK lacks a method → **report gap, do NOT bypass**.
 
 ```tsx
 // ❌ WRONG
-const response = await fetch('/api/listings');
+const response = await fetch("/api/listings");
 
 // ✅ CORRECT
-import { useListings } from '@digilist/client-sdk/hooks';
+import { useListings } from "@digilist/client-sdk/hooks";
 
 function MyComponent() {
   const { data, isLoading } = useListings();
@@ -228,14 +232,45 @@ interface ProblemDetails {
 
 ```tsx
 // ❌ WRONG
-import { Button } from '@digdir/designsystemet-react';
-import '@digdir/designsystemet-css';
+import { Button } from "@digdir/designsystemet-react";
+import "@digdir/designsystemet-css";
 
 // ✅ CORRECT
-import { Button } from '@xala/ds';
+import { Button } from "@xala/ds";
 ```
 
----
+### 7. ZERO TRANSFORMERS (Contract-First)
+
+```
+❌ FORBIDDEN in apps/:
+- toXxx(), fromXxx(), mapXxx(), adaptXxx() functions
+- *VM, *ViewModel, *UiModel types
+- Reshaping API DTOs before rendering
+- Computing permissions/actions in frontend
+- "select:" in useQuery that transforms data
+
+✅ REQUIRED:
+- Use Projection DTOs directly from SDK
+- Read permissions from dto.permissions
+- Read actions from dto.availableActions
+- Components accept SDK types as props
+```
+
+**Terminology: Use "listing" (never facility)**
+
+**Example:**
+
+```tsx
+// ❌ WRONG - Transformer
+function toCardModel(listing) {
+  return { ...listing, displayName: listing.name };
+}
+
+// ✅ CORRECT - Use Projection DTO directly
+function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
+  return <Card>{listing.title}</Card>;
+}
+```
 
 ## Architecture Layers
 
@@ -301,12 +336,12 @@ Located in `packages/client-sdk/src/hooks/`:
 
 ```tsx
 import {
-  useListings,
-  useBookings,
   useAuth,
+  useBookings,
+  useListings,
   useOrganizations,
   // ... 20+ hooks
-} from '@digilist/client-sdk/hooks';
+} from "@digilist/client-sdk/hooks";
 ```
 
 ### Realtime WebSocket Client
@@ -314,27 +349,27 @@ import {
 Located in `packages/client-sdk/src/realtime/`:
 
 ```tsx
-import { realtimeClient } from '@digilist/client-sdk';
+import { realtimeClient } from "@digilist/client-sdk";
 
 realtimeClient.connect({
-  url: 'wss://api.digilist.no/ws/audit',
-  tenantId: 'your-tenant',
+  url: "wss://api.digilist.no/ws/audit",
+  tenantId: "your-tenant",
   autoReconnect: true,
 });
 
 realtimeClient.onAudit((event) => {
-  console.log('Audit event:', event);
+  console.log("Audit event:", event);
 });
 ```
 
 ### Initialization
 
 ```tsx
-import { initializeClient } from '@digilist/client-sdk';
+import { initializeClient } from "@digilist/client-sdk";
 
 initializeClient({
-  baseUrl: 'https://api.digilist.no',
-  tenantId: 'your-tenant-id',
+  baseUrl: "https://api.digilist.no",
+  tenantId: "your-tenant-id",
 });
 ```
 
@@ -375,7 +410,7 @@ Domain-specific components:
 **Example:**
 
 ```tsx
-import { AppShell, ContentLayout, ContentSection, Grid } from '@xala/ds';
+import { AppShell, ContentLayout, ContentSection, Grid } from "@xala/ds";
 
 function MyApp() {
   return (
@@ -406,7 +441,7 @@ function MyApp() {
 ### Theme Provider
 
 ```tsx
-import { DesignsystemetProvider } from '@xala/ds';
+import { DesignsystemetProvider } from "@xala/ds";
 
 function App() {
   return (
@@ -482,12 +517,12 @@ Custom rules in `packages/eslint-config/rules/`:
 
 ## UI Rules
 
-| Rule       | Correct       | Incorrect           |
-| :--------- | :------------ | :------------------ |
+| Rule       | Correct       | Incorrect             |
+| :--------- | :------------ | :-------------------- |
 | Components | `@xala/ds`    | Raw HTML, `@digdir/*` |
-| Styling    | Design tokens | Inline styles       |
-| Data       | SDK hooks     | `fetch()`, axios    |
-| Constants  | i18n keys     | Magic strings       |
+| Styling    | Design tokens | Inline styles         |
+| Data       | SDK hooks     | `fetch()`, axios      |
+| Constants  | i18n keys     | Magic strings         |
 
 ---
 
@@ -554,7 +589,7 @@ apps/web/src/
 Wrap app in RealtimeProvider for WebSocket events:
 
 ```tsx
-import { RealtimeProvider } from './providers/RealtimeProvider';
+import { RealtimeProvider } from "./providers/RealtimeProvider";
 
 function App() {
   return (
@@ -570,11 +605,11 @@ function App() {
 Use `@xala/i18n` for translations:
 
 ```tsx
-import { useTranslation } from '@xala/i18n';
+import { useTranslation } from "@xala/i18n";
 
 function MyComponent() {
   const { t } = useTranslation();
-  return <Heading>{t('dashboard.title')}</Heading>;
+  return <Heading>{t("dashboard.title")}</Heading>;
 }
 ```
 
@@ -606,7 +641,8 @@ function MyComponent() {
 
 ## Common Pitfalls
 
-1. **Bypassing the SDK** - Always use `@digilist/client-sdk`, never direct fetch()
+1. **Bypassing the SDK** - Always use `@digilist/client-sdk`, never direct
+   fetch()
 2. **Direct Designsystemet imports** - Always use `@xala/ds` facade
 3. **Hardcoded values** - Use design tokens, no magic numbers/colors
 4. **Missing audit logging** - All mutations must be auditable

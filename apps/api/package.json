@@ -1,0 +1,58 @@
+{
+  "name": "@digilist/api",
+  "version": "1.0.0",
+  "description": "Digilist Unified API - Contract-First, type-safe API powering all frontend apps",
+  "type": "module",
+  "main": "./dist/main.js",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsup src/main.ts --format esm --dts",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run tests/unit",
+    "test:watch": "vitest",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:security": "vitest run tests/security",
+    "test:all": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:perf": "k6 run tests/performance/load-test.js",
+    "test:perf:soak": "k6 run tests/performance/soak-test.js",
+    "test:report": "vitest run --reporter=json --outputFile=test-results.json",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:reset": "pnpm db:push && pnpm db:seed",
+    "deploy": "bash scripts/deploy.sh production",
+    "deploy:staging": "bash scripts/deploy.sh staging"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/websocket": "^11.2.0",
+    "drizzle-orm": "^0.33.0",
+    "fastify": "^5.0.0",
+    "graphql": "^16.10.0",
+    "mercurius": "^16.0.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "postgres": "^3.4.0",
+    "reflect-metadata": "^0.2.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "drizzle-kit": "^0.24.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

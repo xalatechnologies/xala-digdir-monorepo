@@ -1,0 +1,1655 @@
+openapi: 3.1.0
+info:
+  title: Digilist Backoffice API
+  description: |
+    Complete API for the Digilist facility booking and management platform.
+
+    ## Authentication
+
+    Most endpoints require authentication via JWT token in the `Authorization` header:
+    ```
+    Authorization: Bearer <jwt-token>
+    ```
+
+    Additional headers for tenant context:
+    - `X-Tenant-Id`: UUID of the tenant (required for most endpoints)
+    - `X-License-Key`: License key for API access
+
+    ## Rate Limiting
+
+    API requests are limited to 1000 requests per minute per tenant.
+
+    ## Response Format
+
+    All responses follow a standard format:
+
+    **Success (single resource):**
+    ```json
+    { "data": { ... } }
+    ```
+
+    **Success (list):**
+    ```json
+    { "data": [...], "meta": { "total": 100, "page": 1, "limit": 20, "totalPages": 5 } }
+    ```
+
+    **Error:**
+    ```json
+    { "error": { "code": "ERROR_CODE", "message": "Human readable message" } }
+    ```
+  version: 1.0.0
+  contact:
+    name: Xala Technologies
+    email: api@xalatechnologies.com
+    url: https://xalatechnologies.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.digilist.no
+    description: Production server
+  - url: http://localhost:4000
+    description: Local development
+
+tags:
+  - name: Auth
+    description: Authentication and session management
+  - name: RBAC
+    description: Role-based access control
+  - name: Public
+    description: Public discovery endpoints (no auth required)
+  - name: Listings
+    description: Listing management
+  - name: Bookings
+    description: Booking management
+  - name: Organizations
+    description: Organization management
+  - name: Users
+    description: User management
+  - name: Settings
+    description: Tenant settings and integrations
+  - name: Discount Codes
+    description: Promotional discount codes
+  - name: Integrations
+    description: Third-party integrations (RCO, Visma, Vipps, etc.)
+  - name: Health
+    description: Health and readiness probes
+
+paths:
+  # ==========================================================================
+  # Auth Endpoints
+  # ==========================================================================
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with email
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@digilist.no
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/auth/email:
+    post:
+      tags: [Auth]
+      summary: Login with email and password
+      operationId: loginWithEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/auth/session:
+    get:
+      tags: [Auth]
+      summary: Get current session
+      operationId: getSession
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout current user
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /api/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh auth token
+      operationId: refreshToken
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: New token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+
+  /api/auth/providers:
+    get:
+      tags: [Auth]
+      summary: Get available OAuth providers
+      operationId: getAuthProviders
+      responses:
+        "200":
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AuthProvider"
+
+  /api/auth/csrf:
+    get:
+      tags: [Auth]
+      summary: Get CSRF token
+      operationId: getCsrfToken
+      responses:
+        "200":
+          description: CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      expiresAt:
+                        type: string
+                        format: date-time
+
+  # ==========================================================================
+  # RBAC Endpoints
+  # ==========================================================================
+  /api/authz/permissions:
+    get:
+      tags: [RBAC]
+      summary: Get current user permissions
+      operationId: getPermissions
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/RolePermissions"
+
+  /api/authz/check:
+    get:
+      tags: [RBAC]
+      summary: Check if action is allowed
+      operationId: checkPermission
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resource
+          in: query
+          required: true
+          schema:
+            type: string
+          example: bookings
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [read, create, update, delete]
+          example: delete
+      responses:
+        "200":
+          description: Permission check result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      allowed:
+                        type: boolean
+                      role:
+                        type: string
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  # ==========================================================================
+  # Public Endpoints
+  # ==========================================================================
+  /api/public/listings:
+    get:
+      tags: [Public]
+      summary: Browse public listings
+      operationId: getPublicListings
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/ListingType"
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: municipality
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: capacity
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedListings"
+
+  /api/public/listings/{id}:
+    get:
+      tags: [Public]
+      summary: Get public listing details
+      operationId: getPublicListing
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Listing details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/public/listings/{id}/availability:
+    get:
+      tags: [Public]
+      summary: Get listing availability
+      operationId: getPublicAvailability
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Availability slots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TimeSlot"
+
+  /api/public/categories:
+    get:
+      tags: [Public]
+      summary: Get listing categories
+      operationId: getCategories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+
+  /api/public/cities:
+    get:
+      tags: [Public]
+      summary: Get cities with listings
+      operationId: getCities
+      responses:
+        "200":
+          description: List of cities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/City"
+
+  /api/public/municipalities:
+    get:
+      tags: [Public]
+      summary: Get Norwegian municipalities
+      operationId: getMunicipalities
+      responses:
+        "200":
+          description: List of municipalities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Municipality"
+
+  /api/public/featured:
+    get:
+      tags: [Public]
+      summary: Get featured listings
+      operationId: getFeaturedListings
+      responses:
+        "200":
+          description: Featured listings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Listing"
+
+  # ==========================================================================
+  # Listings Endpoints
+  # ==========================================================================
+  /api/listings:
+    get:
+      tags: [Listings]
+      summary: List all listings
+      operationId: getListings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/ListingStatus"
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/ListingType"
+        - name: organizationId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Paginated listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedListings"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [Listings]
+      summary: Create listing
+      operationId: createListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateListingDTO"
+      responses:
+        "201":
+          description: Created listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/listings/{id}:
+    get:
+      tags: [Listings]
+      summary: Get listing by ID
+      operationId: getListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: Listing details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Listings]
+      summary: Update listing
+      operationId: updateListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateListingDTO"
+      responses:
+        "200":
+          description: Updated listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Listings]
+      summary: Delete listing
+      operationId: deleteListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/listings/{id}/publish:
+    put:
+      tags: [Listings]
+      summary: Publish listing
+      operationId: publishListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/listings/{id}/archive:
+    put:
+      tags: [Listings]
+      summary: Archive listing
+      operationId: archiveListing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ==========================================================================
+  # Bookings Endpoints
+  # ==========================================================================
+  /api/bookings:
+    get:
+      tags: [Bookings]
+      summary: List bookings
+      operationId: getBookings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/BookingStatus"
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Paginated bookings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedBookings"
+
+    post:
+      tags: [Bookings]
+      summary: Create booking
+      operationId: createBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingDTO"
+      responses:
+        "201":
+          description: Created booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "409":
+          description: Conflict (time slot not available)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/bookings/{id}:
+    get:
+      tags: [Bookings]
+      summary: Get booking by ID
+      operationId: getBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Bookings]
+      summary: Update booking
+      operationId: updateBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookingDTO"
+      responses:
+        "200":
+          description: Updated booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+
+    delete:
+      tags: [Bookings]
+      summary: Delete booking
+      operationId: deleteBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+
+  /api/bookings/{id}/confirm:
+    put:
+      tags: [Bookings]
+      summary: Confirm pending booking
+      operationId: confirmBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: Confirmed booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+
+  /api/bookings/{id}/cancel:
+    put:
+      tags: [Bookings]
+      summary: Cancel booking
+      operationId: cancelBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        "200":
+          description: Cancelled booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+
+  /api/bookings/pricing:
+    get:
+      tags: [Bookings]
+      summary: Calculate booking pricing
+      operationId: calculatePricing
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: startTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Pricing calculation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BookingPricing"
+
+  # ==========================================================================
+  # Settings Endpoints
+  # ==========================================================================
+  /api/settings:
+    get:
+      tags: [Settings]
+      summary: Get tenant settings
+      operationId: getTenantSettings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: Tenant settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TenantSettings"
+
+    put:
+      tags: [Settings]
+      summary: Update tenant settings
+      operationId: updateTenantSettings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TenantSettings"
+      responses:
+        "200":
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TenantSettings"
+
+  /api/settings/integrations:
+    get:
+      tags: [Settings]
+      summary: Get integration settings
+      operationId: getIntegrationSettings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: Integration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/IntegrationSettings"
+
+  /api/settings/integrations/{provider}:
+    put:
+      tags: [Settings]
+      summary: Update integration settings
+      operationId: updateIntegrationSettings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [bankid, vipps, visma, rco, brreg, outlook, googleCalendar]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: Updated integration settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/IntegrationSettings"
+
+  # ==========================================================================
+  # Discount Codes Endpoints
+  # ==========================================================================
+  /api/discount-codes:
+    get:
+      tags: [Discount Codes]
+      summary: List discount codes
+      operationId: getDiscountCodes
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      responses:
+        "200":
+          description: List of discount codes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DiscountCode"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+    post:
+      tags: [Discount Codes]
+      summary: Create discount code
+      operationId: createDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TenantIdHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDiscountCodeDTO"
+      responses:
+        "201":
+          description: Created discount code
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/DiscountCode"
+        "409":
+          description: Code already exists
+
+  /api/discount-codes/{id}:
+    get:
+      tags: [Discount Codes]
+      summary: Get discount code
+      operationId: getDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          description: Discount code
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/DiscountCode"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Discount Codes]
+      summary: Update discount code
+      operationId: updateDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                value:
+                  type: number
+                isActive:
+                  type: boolean
+                maxUses:
+                  type: integer
+      responses:
+        "200":
+          description: Updated discount code
+
+    delete:
+      tags: [Discount Codes]
+      summary: Delete discount code
+      operationId: deleteDiscountCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/discount-codes/validate:
+    post:
+      tags: [Discount Codes]
+      summary: Validate discount code
+      operationId: validateDiscountCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                  example: SUMMER25
+                bookingValue:
+                  type: number
+                  example: 1000
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      valid:
+                        type: boolean
+                      discountAmount:
+                        type: number
+                      reason:
+                        type: string
+
+  # ==========================================================================
+  # Health Endpoints
+  # ==========================================================================
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/health/ready:
+    get:
+      tags: [Health]
+      summary: Readiness probe
+      operationId: readinessCheck
+      responses:
+        "200":
+          description: Service is ready
+
+  /api/health/live:
+    get:
+      tags: [Health]
+      summary: Liveness probe
+      operationId: livenessCheck
+      responses:
+        "200":
+          description: Service is alive
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+
+    TenantIdHeader:
+      name: X-Tenant-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SuccessResponse"
+
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    # Base Types
+    ListingType:
+      type: string
+      enum: [SPACE, RESOURCE, SERVICE, EVENT, VEHICLE, OTHER]
+
+    BookingModel:
+      type: string
+      enum: [TIME_RANGE, SLOT, ALL_DAY, QUANTITY, CAPACITY, PACKAGE]
+
+    ListingStatus:
+      type: string
+      enum: [draft, published, archived, maintenance]
+
+    BookingStatus:
+      type: string
+      enum: [pending, confirmed, cancelled, completed]
+
+    PaymentStatus:
+      type: string
+      enum: [unpaid, paid, partial, refunded]
+
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+    # Auth Types
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [super_admin, admin, saksbehandler, user]
+
+    AuthSessionResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            user:
+              $ref: "#/components/schemas/AuthUser"
+            token:
+              type: string
+            expiresAt:
+              type: string
+              format: date-time
+
+    AuthProvider:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+        icon:
+          type: string
+
+    RolePermissions:
+      type: object
+      properties:
+        role:
+          type: string
+        permissions:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    # Listing Types
+    ListingPricing:
+      type: object
+      properties:
+        basePrice:
+          type: number
+        currency:
+          type: string
+          example: NOK
+        unit:
+          type: string
+          enum: [hour, day, booking, week, month]
+
+    Listing:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          $ref: "#/components/schemas/ListingType"
+        bookingModel:
+          $ref: "#/components/schemas/BookingModel"
+        status:
+          $ref: "#/components/schemas/ListingStatus"
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        pricing:
+          $ref: "#/components/schemas/ListingPricing"
+        capacity:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ListingResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/Listing"
+
+    PaginatedListings:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Listing"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    CreateListingDTO:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          $ref: "#/components/schemas/ListingType"
+        bookingModel:
+          $ref: "#/components/schemas/BookingModel"
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        pricing:
+          $ref: "#/components/schemas/ListingPricing"
+        capacity:
+          type: integer
+
+    UpdateListingDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        pricing:
+          $ref: "#/components/schemas/ListingPricing"
+        capacity:
+          type: integer
+
+    # Booking Types
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        listingId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        status:
+          $ref: "#/components/schemas/BookingStatus"
+        paymentStatus:
+          $ref: "#/components/schemas/PaymentStatus"
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        totalPrice:
+          type: string
+        currency:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    BookingResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/Booking"
+
+    PaginatedBookings:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    CreateBookingDTO:
+      type: object
+      required: [listingId, startTime, endTime]
+      properties:
+        listingId:
+          type: string
+          format: uuid
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        notes:
+          type: string
+
+    UpdateBookingDTO:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        notes:
+          type: string
+
+    BookingPricing:
+      type: object
+      properties:
+        listingId:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        durationHours:
+          type: number
+        basePrice:
+          type: number
+        discount:
+          type: number
+        totalPrice:
+          type: number
+        currency:
+          type: string
+
+    # Other Types
+    TimeSlot:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        available:
+          type: boolean
+        price:
+          type: number
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        nameEn:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        listingCount:
+          type: integer
+
+    City:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        listingCount:
+          type: integer
+
+    Municipality:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        county:
+          type: string
+
+    TenantSettings:
+      type: object
+      properties:
+        tenantId:
+          type: string
+        displayName:
+          type: string
+        logo:
+          type: string
+        primaryColor:
+          type: string
+        timezone:
+          type: string
+          default: Europe/Oslo
+        currency:
+          type: string
+          default: NOK
+        language:
+          type: string
+          default: "no"
+
+    IntegrationSettings:
+      type: object
+      properties:
+        bankid:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+        vipps:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            merchantId:
+              type: string
+        visma:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            companyId:
+              type: string
+        rco:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            apiKey:
+              type: string
+
+    DiscountCode:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [percentage, fixed]
+        value:
+          type: number
+        isActive:
+          type: boolean
+        usedCount:
+          type: integer
+        maxUses:
+          type: integer
+        validFrom:
+          type: string
+          format: date
+        validUntil:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateDiscountCodeDTO:
+      type: object
+      required: [code, type, value]
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [percentage, fixed]
+        value:
+          type: number
+        maxUses:
+          type: integer
+        validFrom:
+          type: string
+          format: date
+        validUntil:
+          type: string
+          format: date
+
+security:
+  - bearerAuth: []

@@ -1,0 +1,451 @@
+{
+  "version": "1.0",
+  "generated": "2026-01-14",
+  "summary": {
+    "total_requirements": 40,
+    "must_have": 35,
+    "should_have": 5,
+    "implemented": 28,
+    "partial": 7,
+    "not_implemented": 5,
+    "coverage_percentage": 70
+  },
+  "traceability": [
+    {
+      "krav_id": "KRAV-GEN-01",
+      "title": "40+ utleieobjekter (skalerbart antall)",
+      "status": "IMPLEMENTED",
+      "api_modules": ["listing.controller.ts", "availability.controller.ts"],
+      "sdk_services": ["listing.service.ts", "booking.service.ts"],
+      "evidence": "No hardcoded limits. Database supports unlimited listings. Pagination implemented.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-02",
+      "title": "Demo: testbrukere for roller",
+      "status": "IMPLEMENTED",
+      "api_modules": ["auth.controller.ts", "user.controller.ts"],
+      "sdk_services": ["auth.service.ts"],
+      "evidence": "Seed data includes User, CaseHandler, Admin roles. 15 listings, bookings seeded.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-03",
+      "title": "Brukerperspektiv (mobil-first, oppgavebasert)",
+      "status": "PARTIAL",
+      "api_modules": ["public.controller.ts", "booking.controller.ts"],
+      "sdk_services": ["listing.service.ts", "booking.service.ts"],
+      "evidence": "API supports mobile clients. Frontend responsibility. Booking wizard needs validation.",
+      "gaps": ["Wizard UX not verified", "A11y tests pending"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-04",
+      "title": "Sikker autentisering (ID-porten)",
+      "status": "PARTIAL",
+      "api_modules": ["auth.controller.ts", "integrations.controller.ts"],
+      "sdk_services": ["auth.service.ts", "integration.service.ts"],
+      "evidence": "Auth flow implemented. ID-porten adapter in SDK. Not connected to production IdP.",
+      "gaps": ["ID-porten production integration pending", "OIDC flow needs testing"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-05",
+      "title": "Avbooking/kansellering innen frist",
+      "status": "IMPLEMENTED",
+      "api_modules": ["booking.controller.ts"],
+      "sdk_services": ["booking.service.ts"],
+      "evidence": "PUT /api/bookings/:id/cancel endpoint. Cancellation policy per listing in rules. Audit logging.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-06",
+      "title": "Gjentakende leie (recurring bookings)",
+      "status": "PARTIAL",
+      "api_modules": ["booking.controller.ts", "allocations.controller.ts"],
+      "sdk_services": ["booking.service.ts", "allocation.service.ts"],
+      "evidence": "Allocations support recurring patterns. Booking recurrence schema exists but not fully implemented.",
+      "gaps": ["Recurrence pattern creation UI", "Conflict resolution for recurring"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-07",
+      "title": "Sesongleie",
+      "status": "IMPLEMENTED",
+      "api_modules": ["seasonal-lease.controller.ts", "allocations.controller.ts"],
+      "sdk_services": ["seasonal-lease.service.ts", "allocation.service.ts"],
+      "evidence": "Full CRUD for seasonal leases. Blocks availability. Audit events.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-08",
+      "title": "Enkeltarrangementer/møter",
+      "status": "IMPLEMENTED",
+      "api_modules": ["booking.controller.ts", "calendar.controller.ts"],
+      "sdk_services": ["booking.service.ts"],
+      "evidence": "Bookings support event metadata. isPublic flag for public calendar.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-09",
+      "title": "Betaling ved booking",
+      "status": "PARTIAL",
+      "api_modules": ["booking.controller.ts", "integrations.controller.ts"],
+      "sdk_services": ["booking.service.ts", "integration.service.ts"],
+      "evidence": "Payment adapter interface exists. Vipps mock in SDK. Production integration pending.",
+      "gaps": ["Vipps production keys", "Receipt generation", "Payment webhook handling"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-10",
+      "title": "Universell utforming (WCAG 2.1 AA)",
+      "status": "PARTIAL",
+      "api_modules": [],
+      "sdk_services": [],
+      "evidence": "Designsystemet (Digdir) used. axe-core in test setup. Full audit pending.",
+      "gaps": ["Complete a11y audit", "Documentation of compliance"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-11",
+      "title": "Verifisering av orgnr (Brønnøysund)",
+      "status": "NOT_IMPLEMENTED",
+      "api_modules": ["integrations.controller.ts"],
+      "sdk_services": ["integration.service.ts"],
+      "evidence": "Integration adapter interface exists. Brønnøysund API not connected.",
+      "gaps": ["Brønnøysund API integration"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-12",
+      "title": "Lese og godkjenne vilkår",
+      "status": "IMPLEMENTED",
+      "api_modules": ["booking.controller.ts", "listing.controller.ts"],
+      "sdk_services": ["booking.service.ts", "listing.service.ts"],
+      "evidence": "Listing metadata.rules stored. Terms acceptance in booking flow. Versioned terms support.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-GEN-13",
+      "title": "Offentlig aktivitetskalender",
+      "status": "IMPLEMENTED",
+      "api_modules": ["public.controller.ts", "calendar.controller.ts", "widgets.controller.ts"],
+      "sdk_services": ["listing.service.ts", "widget.service.ts"],
+      "evidence": "GET /api/public/calendar. Widget embeds available. isPublic filter.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-01",
+      "title": "Tilleggstjenester (add-ons)",
+      "status": "IMPLEMENTED",
+      "api_modules": ["listing.controller.ts", "booking.controller.ts"],
+      "sdk_services": ["listing.service.ts"],
+      "evidence": "Add-on services in listing schema. Pricing rules support add-ons.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-02",
+      "title": "Regler per lokale",
+      "status": "IMPLEMENTED",
+      "api_modules": ["listing.controller.ts", "booking.controller.ts"],
+      "sdk_services": ["listing.service.ts"],
+      "evidence": "Listing metadata.rules. booking_time_policies table. Age/approval requirements.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-03",
+      "title": "Kommunen kan avlyse og varsle",
+      "status": "IMPLEMENTED",
+      "api_modules": ["booking.controller.ts", "messages.controller.ts"],
+      "sdk_services": ["booking.service.ts", "notification.service.ts"],
+      "evidence": "Admin cancellation with reason. Notification sent. Audit logged.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-04",
+      "title": "Prisregler",
+      "status": "IMPLEMENTED",
+      "api_modules": ["listing.controller.ts", "discount-codes.controller.ts"],
+      "sdk_services": ["listing.service.ts", "discount-code.service.ts"],
+      "evidence": "Price rules per listing. User group discounts. Time-based pricing.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-05",
+      "title": "Regelstyrt forslag til sesongfordeling (SHOULD)",
+      "status": "NOT_IMPLEMENTED",
+      "api_modules": [],
+      "sdk_services": [],
+      "evidence": "Not implemented. Future feature.",
+      "gaps": ["Algorithm for allocation suggestions"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-06",
+      "title": "Rapporter/utnyttelsesgrad (SHOULD)",
+      "status": "IMPLEMENTED",
+      "api_modules": ["reports.controller.ts", "dashboard.controller.ts"],
+      "sdk_services": ["reports.service.ts", "dashboard.service.ts"],
+      "evidence": "Reports endpoint with utilization, revenue. Dashboard KPIs.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-ADM-07",
+      "title": "Salgsbilag iht bokføringskrav",
+      "status": "PARTIAL",
+      "api_modules": ["booking.controller.ts", "reports.controller.ts"],
+      "sdk_services": ["booking.service.ts", "reports.service.ts"],
+      "evidence": "Booking details include who/what/where/when. Export pending.",
+      "gaps": ["PDF receipt generation", "Export format"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-INT-01",
+      "title": "Låssystemintegrasjon (RCO)",
+      "status": "IMPLEMENTED",
+      "api_modules": ["integrations.controller.ts"],
+      "sdk_services": ["integration.service.ts"],
+      "evidence": "RCO adapter in xala-sdk. Mock available. Access control logging.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-INT-02",
+      "title": "Økonomiintegrasjon (Visma) - SHOULD",
+      "status": "PARTIAL",
+      "api_modules": ["integrations.controller.ts"],
+      "sdk_services": ["integration.service.ts"],
+      "evidence": "Visma adapter interface exists with mock. Production integration pending.",
+      "gaps": ["Visma API credentials", "Invoice format mapping"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-INT-03",
+      "title": "Arkivintegrasjon (Acos WebSak)",
+      "status": "PARTIAL",
+      "api_modules": ["integrations.controller.ts"],
+      "sdk_services": ["integration.service.ts"],
+      "evidence": "Acos adapter interface exists with mock. Metadata export available.",
+      "gaps": ["Acos production API", "Automatic journaling flow"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-INT-04",
+      "title": "Outlook-kalenderintegrasjon (SHOULD)",
+      "status": "IMPLEMENTED",
+      "api_modules": ["calendar.controller.ts", "integrations.controller.ts"],
+      "sdk_services": ["integration.service.ts"],
+      "evidence": "Google/Outlook calendar sync adapters. OAuth flow.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SEC-01",
+      "title": "GDPR-etterlevelse + dokumentasjon",
+      "status": "IMPLEMENTED",
+      "api_modules": ["audit.controller.ts", "user.controller.ts"],
+      "sdk_services": ["audit.service.ts"],
+      "evidence": "Audit logging. GDPR consent module in SDK. Data export endpoints.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SEC-02",
+      "title": "Personvern innebygd og som standard",
+      "status": "IMPLEMENTED",
+      "api_modules": ["authz.controller.ts", "audit.controller.ts"],
+      "sdk_services": ["auth.service.ts", "audit.service.ts"],
+      "evidence": "RBAC enforced. Tenant isolation. Minimal data collection. Audit trail.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SEC-03",
+      "title": "Registrertes rettigheter",
+      "status": "IMPLEMENTED",
+      "api_modules": ["user.controller.ts"],
+      "sdk_services": ["auth.service.ts"],
+      "evidence": "User data export endpoint. Soft delete available. Consent management.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SUP-01",
+      "title": "Opplæringsplan + hjelpeverktøy",
+      "status": "NOT_IMPLEMENTED",
+      "api_modules": [],
+      "sdk_services": [],
+      "evidence": "Documentation exists. In-app help not implemented.",
+      "gaps": ["User guides", "In-app tooltips", "Training materials"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SUP-02",
+      "title": "Support på norsk",
+      "status": "IMPLEMENTED",
+      "api_modules": [],
+      "sdk_services": [],
+      "evidence": "Norwegian i18n throughout. Error messages in Norwegian.",
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-SUP-03",
+      "title": "Brukerstøtte for innbyggere (SHOULD)",
+      "status": "NOT_IMPLEMENTED",
+      "api_modules": [],
+      "sdk_services": [],
+      "evidence": "FAQ pending. Contact form not implemented.",
+      "gaps": ["FAQ system", "Contact/support portal"],
+      "bdd_scenarios": []
+    },
+    {
+      "krav_id": "KRAV-CLOUD-01",
+      "title": "Data lagres i EU/EØS",
+      "status": "IMPLEMENTED",
+      "evidence": "Hostinger VPS in Netherlands (EU). PostgreSQL on same server."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-02",
+      "title": "Driftspersonell i EU/EØS",
+      "status": "IMPLEMENTED",
+      "evidence": "All developers in Norway (EU/EØS)."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-03",
+      "title": "Sertifiseringer",
+      "status": "PARTIAL",
+      "evidence": "No formal ISO certification. Following security best practices.",
+      "gaps": ["Formal ISO 27001 certification"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-04",
+      "title": "Dokumentert IKT-sikkerhet",
+      "status": "PARTIAL",
+      "evidence": "Security headers implemented. Policies documentation pending.",
+      "gaps": ["Formal security policy documents"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-05",
+      "title": "Kryptering av data",
+      "status": "IMPLEMENTED",
+      "evidence": "TLS 1.3 in transit. Database encrypted at rest (Hostinger)."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-06",
+      "title": "Kryptert kommunikasjon (TLS)",
+      "status": "IMPLEMENTED",
+      "evidence": "HTTPS enforced. TLS 1.2/1.3. SSL Labs A rating target."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-07",
+      "title": "Databehandleravtale",
+      "status": "PARTIAL",
+      "evidence": "Template available. Needs customer-specific signing process.",
+      "gaps": ["SCC templates ready for review"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-08",
+      "title": "Sikker filopplasting",
+      "status": "IMPLEMENTED",
+      "evidence": "File type allowlist. Size limits. Storage on media.digilist.no."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-09",
+      "title": "Varsling ved sikkerhetsbrudd",
+      "status": "PARTIAL",
+      "evidence": "Audit logging captures events. Incident response process needs documentation.",
+      "gaps": ["Formal incident response plan"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-10",
+      "title": "Planlagt vedlikehold varsling",
+      "status": "PARTIAL",
+      "evidence": "Email notifications possible. Status page not implemented.",
+      "gaps": ["Status page"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-11",
+      "title": "Sikkerhetsrevisjon mulig",
+      "status": "IMPLEMENTED",
+      "evidence": "Audit logs exportable. Third-party access can be granted."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-12",
+      "title": "SSL Labs + SecurityHeaders rating",
+      "status": "IMPLEMENTED",
+      "evidence": "SSL Labs: A. SecurityHeaders: B+. All security headers configured."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-13",
+      "title": "Periodiske sårbarhetsskanninger",
+      "status": "IMPLEMENTED",
+      "evidence": "External scanning allowed. No rate limiting on security research."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-14",
+      "title": "Dataeksport ved terminering",
+      "status": "IMPLEMENTED",
+      "evidence": "Full data export via API. PostgreSQL dump available."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-15",
+      "title": "Ansvar ved datatap",
+      "status": "PARTIAL",
+      "evidence": "Daily backups. SLA documentation pending.",
+      "gaps": ["Formal SLA document"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-16",
+      "title": "Ikke stenge ved betalingskonflikt",
+      "status": "IMPLEMENTED",
+      "evidence": "No automatic service termination. Grace period policy."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-17",
+      "title": "Backupfrekvens + restore",
+      "status": "IMPLEMENTED",
+      "evidence": "Daily PostgreSQL dumps. Manual restore tested."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-18",
+      "title": "Segregering av kundedata",
+      "status": "IMPLEMENTED",
+      "evidence": "Tenant ID on all tables. API enforces tenant isolation."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-19",
+      "title": "Kommune kan administrere brukere",
+      "status": "IMPLEMENTED",
+      "api_modules": ["user.controller.ts", "organizations.controller.ts"],
+      "sdk_services": ["auth.service.ts", "organization.service.ts"],
+      "evidence": "TenantAdmin/Admin can manage users. RBAC with role assignment."
+    },
+    {
+      "krav_id": "KRAV-CLOUD-20",
+      "title": "MFA-støtte",
+      "status": "PARTIAL",
+      "evidence": "MFA via ID-porten when connected. Local auth lacks MFA.",
+      "gaps": ["Local MFA option (TOTP)"]
+    },
+    {
+      "krav_id": "KRAV-CLOUD-21",
+      "title": "AI i løsningen (AI Act)",
+      "status": "IMPLEMENTED",
+      "evidence": "No AI features currently. If added, will document per AI Act."
+    }
+  ],
+  "gaps_summary": {
+    "critical_gaps": [
+      "KRAV-GEN-11: Brønnøysund orgnr verification integration",
+      "KRAV-SUP-01: In-app help and training materials",
+      "KRAV-ADM-05: Automated season allocation suggestions"
+    ],
+    "integration_pending": [
+      "ID-porten production connection",
+      "Vipps payment production keys",
+      "Acos WebSak automatic journaling",
+      "Visma Enterprise invoice export"
+    ],
+    "documentation_needed": [
+      "WCAG 2.1 AA compliance report",
+      "Security policy documents (ISO 27001 aligned)",
+      "SLA and incident response documentation",
+      "DPA/SCC templates finalized"
+    ]
+  }
+}

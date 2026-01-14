@@ -1,0 +1,603 @@
+{
+  "version": "1.0",
+  "product": "Digilist",
+  "date": "2026-01-14",
+  "language": "nb-NO",
+  "requirements": [
+    {
+      "id": "KRAV-GEN-01",
+      "category": "Generelle krav",
+      "title": "40+ utleieobjekter (skalerbart antall)",
+      "priority": "MUST",
+      "description": "Systemet skal støtte minimum 40 utleieobjekter og være skalerbart uten endring i kjernearkitektur eller datamodell.",
+      "acceptance_criteria": [
+        "Det kan opprettes > 40 aktive listings innen én tenant",
+        "Søk/filtrering og tilgjengelighet fungerer uten degradering i funksjonalitet",
+        "Ingen hardkodede begrensninger på antall objekter"
+      ],
+      "notes": "Skalerbarhet kan måles gjennom lasttester, men dette kravet handler primært om funksjonell støtte."
+    },
+    {
+      "id": "KRAV-GEN-02",
+      "category": "Generelle krav",
+      "title": "Demo: innbygger, administrator og saksbehandler (pålogging + testbrukere)",
+      "priority": "MUST",
+      "description": "Det skal finnes et demooppsett med testbrukere for rollene Innbygger(User), Saksbehandler og Administrator, inkludert pålogging og demodata.",
+      "acceptance_criteria": [
+        "Testbrukere finnes for hver rolle",
+        "Det finnes seed/demo-data (minst 5 listings, 10 bookinger, 1 sesongleie, 1 samtale)",
+        "Demo kan gjennomføre standard brukerreise per rolle"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-03",
+      "category": "Generelle krav",
+      "title": "Brukerperspektiv",
+      "priority": "MUST",
+      "description": "Løsningen skal utformes med tydelig brukerperspektiv: oppgavebasert, mobil-first, og forståelig for innbyggere og frivillige organisasjoner.",
+      "acceptance_criteria": [
+        "Booking kan fullføres uten forkunnskap (wizard/tydelige steg)",
+        "Tydelige tekster for regler, vilkår, kansellering og betaling",
+        "Kjerneflyter støtter mobil (responsive) og tastatur"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-04",
+      "category": "Generelle krav",
+      "title": "Sikker autentisering (ID-porten)",
+      "priority": "MUST",
+      "description": "Løsningen skal støtte sikker autentisering via ID-porten for innbyggere/brukere.",
+      "acceptance_criteria": [
+        "Bruker kan logge inn via ID-porten",
+        "Session håndteres sikkert (token/cookie policy) og tenant-kontekst opprettholdes",
+        "MFA støttes via IdP (ID-porten) eller tilsvarende mekanisme"
+      ],
+      "notes": "Detaljert teknisk løsningsvalg spesifiseres i ARD (OIDC/OAuth2, tokenhåndtering)."
+    },
+    {
+      "id": "KRAV-GEN-05",
+      "category": "Generelle krav",
+      "title": "Avbooking/kansellering innen frist",
+      "priority": "MUST",
+      "description": "Bruker skal kunne avbooke innen en definert frist (per lokale/regler). Etter frist håndteres via saksbehandler/administrasjon.",
+      "acceptance_criteria": [
+        "Kansellering før frist endrer status og oppdaterer tilgjengelighet",
+        "Kansellering etter frist avvises med RFC7807 (403/409) og forklarende detail",
+        "Kansellering logges i audit og varsler relevante parter"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-06",
+      "category": "Generelle krav",
+      "title": "Gjentakende leie",
+      "priority": "MUST",
+      "description": "Systemet skal støtte gjentakende leie (recurring bookings) med konfliktkontroll og tydelig presentasjon i kalender.",
+      "acceptance_criteria": [
+        "Bruker kan opprette gjentakende mønster (ukentlig/månedlig) innenfor en periode",
+        "Konflikter identifiseres og håndteres deterministisk",
+        "Resultatet kan vises i kalender og i bookingoversikt"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-07",
+      "category": "Generelle krav",
+      "title": "Sesongleie",
+      "priority": "MUST",
+      "description": "Systemet skal støtte sesongleie/kontrakter som reserverer tid og kan overstyre ad-hoc bookinger.",
+      "acceptance_criteria": [
+        "Sesongleie kan opprettes med tidsrom og repetisjon",
+        "Sesongleie blokkerer tilgjengelighet automatisk",
+        "Audit og realtime event produseres ved opprettelse/endring"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-08",
+      "category": "Generelle krav",
+      "title": "Enkeltarrangementer/møter",
+      "priority": "MUST",
+      "description": "Systemet skal støtte enkeltarrangementer/møter som bookinger med relevant metadata og eventuelt publisering til offentlig kalender.",
+      "acceptance_criteria": [
+        "Enkeltbooking kan opprettes med tittel/formål og tidspunkt",
+        "Arrangement kan merkes som offentlig (åpent for publikum)",
+        "Vises korrekt i offentlig aktivitetskalender når markert offentlig"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-09",
+      "category": "Generelle krav",
+      "title": "Betaling ved booking (integrerbare betalingsløsninger)",
+      "priority": "MUST",
+      "description": "Systemet skal støtte betaling i bookingprosessen med integrerbar betalingsløsning (f.eks. Vipps), samt håndtering av kvittering/bilag.",
+      "acceptance_criteria": [
+        "Betaling kan initieres fra bookingflyt",
+        "Betalingsstatus påvirker bookingstatus (f.eks. pending/paid)",
+        "Kvittering/bilag kan hentes frem og spores til booking"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-10",
+      "category": "Generelle krav",
+      "title": "Universell utforming (WCAG 2.1 AA + dokumentasjon)",
+      "priority": "MUST",
+      "description": "Løsningen skal oppfylle WCAG 2.1 AA, og det skal foreligge dokumentasjon og testspor (f.eks. automatiserte a11y-tester).",
+      "acceptance_criteria": [
+        "Kjerneflyter bestås av automatisert a11y-sjekk (axe/lighthouse) uten kritiske feil",
+        "Komponenter støtter tastatur, fokusindikator og ARIA der nødvendig",
+        "Dokumentasjon beskriver etterlevelse og eventuelle kjente avvik"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-11",
+      "category": "Generelle krav",
+      "title": "Verifisering av orgnr mot Brønnøysund (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: Ved registrering/opprettelse av organisasjon skal orgnr kunne verifiseres mot Brønnøysundregistrene.",
+      "acceptance_criteria": [
+        "Systemet kan verifisere orgnr via integrasjon",
+        "Feil orgnr gir tydelig valideringsfeil (RFC7807)",
+        "Verifiseringsresultat logges (audit/ops)"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-12",
+      "category": "Generelle krav",
+      "title": "Lese og godkjenne vilkår (leievilkår/brannrutiner)",
+      "priority": "MUST",
+      "description": "Bruker må lese og akseptere vilkår (versjonert) før booking fullføres.",
+      "acceptance_criteria": [
+        "Vilkår må aksepteres før booking kan bekreftes/innsendes",
+        "Aksept lagres med versjon, timestamp og bruker-id",
+        "Aksept er søkbar/eksporterbar ved behov"
+      ]
+    },
+    {
+      "id": "KRAV-GEN-13",
+      "category": "Generelle krav",
+      "title": "Offentlig aktivitetskalender (arrangementer åpne for publikum)",
+      "priority": "MUST",
+      "description": "Det skal finnes offentlig aktivitetskalender som viser arrangementer markert som åpne for publikum.",
+      "acceptance_criteria": [
+        "Offentlig kalender viser kun offentlige arrangementer",
+        "Filtrering per sted/tidspunkt støttes",
+        "Kalender er tenant-skopet"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-01",
+      "category": "Administrasjon av løsning",
+      "title": "Tilleggstjenester (lydanlegg, matservering m.m.)",
+      "priority": "MUST",
+      "description": "Admin/Saksbehandler skal kunne definere tilleggstjenester som kan velges ved booking, med pris og tilgjengelighetsregler.",
+      "acceptance_criteria": [
+        "Tillegg kan knyttes til listing og/eller bookingtype",
+        "Tillegg vises i bookingflyt og inkluderes i pris",
+        "Valg logges og påvirker bilag/rapport"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-02",
+      "category": "Administrasjon av løsning",
+      "title": "Regler per lokale: godkjenning/fri booking/søknadsfrist/aldersgrense/vilkår",
+      "priority": "MUST",
+      "description": "Systemet skal støtte regelsett per lokale, inkludert krav om godkjenning, søknadsfrist, aldersgrense og lokalevilkår.",
+      "acceptance_criteria": [
+        "Regler kan konfigureres per listing",
+        "Regler håndheves server-side ved booking",
+        "Regler presenteres tydelig i UI før booking"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-03",
+      "category": "Administrasjon av løsning",
+      "title": "Kommunen kan avlyse booking og varsle leietaker",
+      "priority": "MUST",
+      "description": "Saksbehandler/Admin skal kunne avlyse bookinger på vegne av kommunen med automatisk varsling og auditspor.",
+      "acceptance_criteria": [
+        "Avlysning endrer bookingstatus og frigir tid (om relevant)",
+        "Varsel sendes til leietaker og logges",
+        "Årsak kan registreres og spores i audit"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-04",
+      "category": "Administrasjon av løsning",
+      "title": "Prisregler: rom + perioder + brukergrupper (gratis barn/unge, rabatt frivillige)",
+      "priority": "MUST",
+      "description": "Prisregler skal støtte rom, perioder og brukergrupper med rabatter/gratisordninger.",
+      "acceptance_criteria": [
+        "Pris kan beregnes deterministisk ved booking",
+        "Brukergruppe påvirker pris (f.eks. barn/unge gratis)",
+        "Prisgrunnlag kan dokumenteres i bilag/rapport"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-05",
+      "category": "Administrasjon av løsning",
+      "title": "Regelstyrt forslag til sesongfordeling (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: Systemet foreslår sesongfordeling basert på regler (prioritet, historikk, kapasitet).",
+      "acceptance_criteria": [
+        "Systemet kan generere forslag med forklaring",
+        "Saksbehandler kan godkjenne/overstyre",
+        "Forslaget og beslutning logges"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-06",
+      "category": "Administrasjon av løsning",
+      "title": "Rapporter/utnyttelsesgrad (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: Rapporter for utnyttelsesgrad, volum, tidspunkter, brukergrupper.",
+      "acceptance_criteria": [
+        "Rapporter kan genereres for periode/objekt",
+        "Eksport støttes (csv/pdf) der relevant",
+        "Datagrunnlag er tenant-skopet"
+      ]
+    },
+    {
+      "id": "KRAV-ADM-07",
+      "category": "Administrasjon av løsning",
+      "title": "Salgsbilag iht bokføringskrav: hvem/hva/hvor/når (lett tilgjengelig)",
+      "priority": "MUST",
+      "description": "Systemet skal produsere salgsbilag/kvitteringer i tråd med bokføringskrav og gjøre dem lett tilgjengelig.",
+      "acceptance_criteria": [
+        "Bilag viser hvem/hva/hvor/når",
+        "Bilag kan hentes fra bookingdetaljer",
+        "Bilag kan eksporteres ved behov"
+      ]
+    },
+    {
+      "id": "KRAV-INT-01",
+      "category": "Integrasjoner",
+      "title": "Låssystemintegrasjon (RCO mest brukt) + oversikt over støttede låssystemer",
+      "priority": "MUST",
+      "description": "Løsningen skal støtte låssystemintegrasjon (primært RCO) og vise hvilke låssystemer som støttes.",
+      "acceptance_criteria": [
+        "RCO-integrasjon kan aktiveres per tenant",
+        "Handlinger knyttet til adgang logges",
+        "Oversikt over støttede låssystemer er tilgjengelig i admin"
+      ]
+    },
+    {
+      "id": "KRAV-INT-02",
+      "category": "Integrasjoner",
+      "title": "Økonomiintegrasjon (Visma Enterprise) for fakturagrunnlag (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: Integrasjon mot Visma Enterprise for å sende fakturagrunnlag.",
+      "acceptance_criteria": [
+        "Fakturagrunnlag kan eksporteres/overføres",
+        "Feil håndteres med retry og logging",
+        "Tenant-konfigurasjon styrer integrasjon"
+      ]
+    },
+    {
+      "id": "KRAV-INT-03",
+      "category": "Integrasjoner",
+      "title": "Arkivintegrasjon (Acos WebSak) automatisk og løpende (evt eksport/metadata til postjournal)",
+      "priority": "MUST",
+      "description": "Løsningen skal støtte arkivering/journalføring via Acos WebSak automatisk og løpende, eller alternativt eksport av metadata.",
+      "acceptance_criteria": [
+        "Løpende overføring/eksport kan konfigureres",
+        "Metadata til postjournal kan genereres",
+        "Feil håndteres med logging og varsling"
+      ]
+    },
+    {
+      "id": "KRAV-INT-04",
+      "category": "Integrasjoner",
+      "title": "Outlook-kalenderintegrasjon (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: Synkronisering mot Outlook-kalender for relevante brukere/ressurser.",
+      "acceptance_criteria": [
+        "Synk kan aktiveres per tenant/bruker",
+        "Oppdateringer skjer deterministisk og logges",
+        "Konflikter håndteres uten datatap"
+      ]
+    },
+    {
+      "id": "KRAV-SEC-01",
+      "category": "Personvern og informasjonssikkerhet",
+      "title": "GDPR-etterlevelse + dokumentasjon",
+      "priority": "MUST",
+      "description": "Løsningen skal være GDPR-kompatibel med dokumentasjon (policyer, databehandleravtalevedlegg, behandlingsoversikt).",
+      "acceptance_criteria": [
+        "Dokumentasjon tilgjengelig for kommune",
+        "Auditspor støtter etterlevelse",
+        "Prosesser for rettigheter (innsyn/sletting/export) er definert"
+      ]
+    },
+    {
+      "id": "KRAV-SEC-02",
+      "category": "Personvern og informasjonssikkerhet",
+      "title": "Personvern innebygd og som standard",
+      "priority": "MUST",
+      "description": "Privacy by design/default: dataminimering, formålsstyring, tilgangskontroll, beskyttelse mot uautorisert tilgang.",
+      "acceptance_criteria": [
+        "Kun nødvendige data samles inn",
+        "Tilgang kontrolleres via RBAC og tenant-scope",
+        "Sikkerhetslogger/audit fanger relevante hendelser"
+      ]
+    },
+    {
+      "id": "KRAV-SEC-03",
+      "category": "Personvern og informasjonssikkerhet",
+      "title": "Registrertes rettigheter",
+      "priority": "MUST",
+      "description": "Systemet skal støtte innsyn, retting, sletting, trekke samtykke, dataportabilitet.",
+      "acceptance_criteria": [
+        "Innsyn/eksport kan gjennomføres på forespørsel",
+        "Rettigheter håndteres uten å bryte lovpålagt arkiv/audit",
+        "Samtykke kan trekkes tilbake når relevant"
+      ]
+    },
+    {
+      "id": "KRAV-SUP-01",
+      "category": "Opplæring og brukerstøtte",
+      "title": "Opplæringsplan + innebygde hjelpeverktøy",
+      "priority": "MUST",
+      "description": "Det skal leveres opplæringsplan samt innebygde hjelpeverktøy/tekst for brukerflyter.",
+      "acceptance_criteria": [
+        "Opplæringsplan dokumentert",
+        "Hjelpetekster/guider tilgjengelig i UI (minst for booking og admin)",
+        "Supportprosess beskrevet"
+      ]
+    },
+    {
+      "id": "KRAV-SUP-02",
+      "category": "Opplæring og brukerstøtte",
+      "title": "Support på norsk",
+      "priority": "MUST",
+      "description": "Brukerstøtte skal være tilgjengelig på norsk.",
+      "acceptance_criteria": [
+        "Supportkanaler og responstider dokumentert på norsk",
+        "Kontaktinformasjon tilgjengelig i løsningen/dokumentasjon"
+      ]
+    },
+    {
+      "id": "KRAV-SUP-03",
+      "category": "Opplæring og brukerstøtte",
+      "title": "Brukerstøtte for innbyggere (ønsket)",
+      "priority": "SHOULD",
+      "description": "Ønsket: egen støtteflate for innbyggere (FAQ/kontakt).",
+      "acceptance_criteria": [
+        "FAQ eller hjelpesider for innbyggere",
+        "Kontaktmulighet for henvendelser"
+      ]
+    },
+
+    {
+      "id": "KRAV-CLOUD-01",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Data lagres i EU/EØS (primær, backup, replika)",
+      "priority": "MUST",
+      "description": "All datalagring (primær, backup, replika) skal være i EU/EØS.",
+      "acceptance_criteria": [
+        "Dokumentert region for primær/backup/replika",
+        "Kontrakt/DPA reflekterer lagringskravet"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-02",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Driftspersonell i EU/EØS (angi land)",
+      "priority": "MUST",
+      "description": "Driftspersonell med tilgang til produksjon skal befinne seg i EU/EØS, og land skal angis.",
+      "acceptance_criteria": [
+        "Dokumenterte land for driftspersonell",
+        "Tilgangsstyring og logging på driftstilgang"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-03",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Sertifiseringer (ISO 27001/9001/14001 osv.)",
+      "priority": "MUST",
+      "description": "Leverandør skal dokumentere relevante sertifiseringer (der tilgjengelig) eller tilsvarende sikkerhetsstyring.",
+      "acceptance_criteria": [
+        "Dokumentasjon på sertifiseringer eller tilsvarende praksis",
+        "Sikkerhetsstyring kan etterprøves"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-04",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Dokumentert IKT-/infosikkerhet (policyer/revisjon)",
+      "priority": "MUST",
+      "description": "Sikkerhetspolicyer og revisjonsrutiner skal være dokumentert.",
+      "acceptance_criteria": [
+        "Policyer tilgjengelig",
+        "Revisjons-/kontrollrutiner beskrevet"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-05",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Kryptering av data + nøkkelhåndtering",
+      "priority": "MUST",
+      "description": "Sensitive og ikke-sensitive data krypteres der relevant, med dokumentert nøkkelhåndtering.",
+      "acceptance_criteria": [
+        "Kryptering i ro og under transport",
+        "Nøkkelhåndtering dokumentert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-06",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Kryptert kommunikasjon (TLS)",
+      "priority": "MUST",
+      "description": "All kommunikasjon skal benytte TLS.",
+      "acceptance_criteria": [
+        "HTTPS/TLS på alle endepunkter",
+        "Sikre cipher suites iht beste praksis"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-07",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Databehandleravtale (kommunens mal/EU SCC)",
+      "priority": "MUST",
+      "description": "Databehandleravtale skal kunne inngås etter kommunens mal og EU SCC ved behov.",
+      "acceptance_criteria": [
+        "Prosess for DPA etablert",
+        "SCC tilgjengelig ved overføringer der relevant"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-08",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Sikker filopplasting (allowlist, antivirus, størrelsesgrenser)",
+      "priority": "MUST",
+      "description": "Filopplasting skal være sikret med typebegrensning, viruskontroll og størrelsesgrenser.",
+      "acceptance_criteria": [
+        "Allowlist av filtyper",
+        "Viruskontroll i pipeline",
+        "Størrelsesgrenser håndheves"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-09",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Varsling ved sikkerhetsbrudd",
+      "priority": "MUST",
+      "description": "Det skal varsles ved sikkerhetsbrudd, med tydelig prosess og tidslinje.",
+      "acceptance_criteria": [
+        "Incident response prosess dokumentert",
+        "Varslingsrutine definert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-10",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Planlagt vedlikehold/driftsavvik: varsling og informasjon",
+      "priority": "MUST",
+      "description": "Planlagt vedlikehold og driftsavvik skal varsles.",
+      "acceptance_criteria": [
+        "Varslingsmekanisme definert (statusside/e-post)",
+        "Historikk/logg for avvik"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-11",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Sikkerhetsrevisjon mulig (inkl tredjepart)",
+      "priority": "MUST",
+      "description": "Kunden skal kunne gjennomføre sikkerhetsrevisjon, inkl tredjepart, etter avtalte rammer.",
+      "acceptance_criteria": [
+        "Revisjonsprosess definert",
+        "Kontaktpunkt og rammer dokumentert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-12",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "SSL Labs + SecurityHeaders rating (min B, ev. A ved store volumer/sensitivt)",
+      "priority": "MUST",
+      "description": "Tjenesten skal oppnå minst B i SSL Labs og SecurityHeaders (A ved høye krav).",
+      "acceptance_criteria": [
+        "Dokumentert score ved leveranse",
+        "Tiltaksplan ved avvik"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-13",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Periodiske sårbarhetsskanninger tillatt",
+      "priority": "MUST",
+      "description": "Periodiske sårbarhetsskanninger skal være tillatt etter avtale.",
+      "acceptance_criteria": [
+        "Prosess for avtalt scanning dokumentert",
+        "Varslingsrutiner før scanning"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-14",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Dataeksport/migrering ved terminering",
+      "priority": "MUST",
+      "description": "Kunden skal kunne eksportere data og migrere ved terminering.",
+      "acceptance_criteria": [
+        "Eksportformat definert",
+        "Prosess og tidslinje dokumentert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-15",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Ansvar ved datatap",
+      "priority": "MUST",
+      "description": "Ansvar og prosess ved datatap skal være tydelig definert.",
+      "acceptance_criteria": [
+        "SLA/ansvar dokumentert",
+        "Restore-prosedyrer dokumentert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-16",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Ikke stenge tjenesten ved betalingskonflikt i tvist",
+      "priority": "MUST",
+      "description": "Tjenesten skal ikke stenges ved betalingskonflikt som er under tvist (etter avtalevilkår).",
+      "acceptance_criteria": [
+        "Policy dokumentert",
+        "Teknisk støtte for grace/hold modus"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-17",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Backupfrekvens + mulighet for restore (point-in-time)",
+      "priority": "MUST",
+      "description": "Backupfrekvens og restore (inkl point-in-time) skal være definert.",
+      "acceptance_criteria": [
+        "Backupfrekvens dokumentert",
+        "PITR tilgjengelig der relevant",
+        "Restore-test kan gjennomføres"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-18",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Segregering av kundedata (dataadskillelse)",
+      "priority": "MUST",
+      "description": "Det skal være tydelig dataadskillelse mellom tenants/kunder.",
+      "acceptance_criteria": [
+        "Teknisk dokumentasjon på tenant-isolasjon",
+        "Tester/monitoring for kryss-tenant lekkasje"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-19",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "Kommunen kan administrere brukere/tilganger",
+      "priority": "MUST",
+      "description": "Kommunen skal kunne administrere brukere/tilganger innen egen tenant.",
+      "acceptance_criteria": [
+        "Admin/TenantAdmin kan opprette/invitere og tildele roller",
+        "Endringer er audit-logget"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-20",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "MFA-støtte (knyttet til ID-porten eller andre)",
+      "priority": "MUST",
+      "description": "MFA skal støttes via ID-porten eller annen valgt identitetsleverandør.",
+      "acceptance_criteria": [
+        "MFA policy håndheves av IdP",
+        "Session håndteres sikkert"
+      ]
+    },
+    {
+      "id": "KRAV-CLOUD-21",
+      "category": "Skytjenester (Bilag 1b)",
+      "title": "AI i løsningen: må beskrives opp mot AI Act dersom brukt",
+      "priority": "MUST",
+      "description": "Dersom AI brukes i løsningen, skal dette beskrives og vurderes opp mot EU AI Act (formål, risiko, transparens).",
+      "acceptance_criteria": [
+        "AI-bruk dokumentert (hvor/hvordan/hva)",
+        "Risikoklasse vurdert",
+        "Tiltak for transparens og kontroll definert"
+      ]
+    }
+  ]
+}

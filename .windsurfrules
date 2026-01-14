@@ -1,0 +1,90 @@
+# Digilist Platform - Windsurf AI Rules
+# Contract-First Architecture Enforcement
+
+# =============================================================================
+# CRITICAL RULES - NEVER VIOLATE  
+# =============================================================================
+
+## 1. ZERO TRANSFORMERS
+- Never create toXxx(), fromXxx(), mapXxx(), adaptXxx() functions in apps/
+- Never create *VM, *ViewModel, *UiModel types
+- Never reshape API DTOs before rendering
+- Never compute permissions/actions in frontend
+- Always use Projection DTOs directly from SDK
+
+## 2. SDK-FIRST
+- Never use fetch() or axios directly in apps/
+- All network calls via @digilist/client-sdk only
+- If SDK lacks a method, report gap - do NOT bypass
+
+## 3. TERMINOLOGY
+- Always use "listing" (never facility, venue, space)
+
+## 4. DESIGNSYSTEMET
+- Never import @digdir/* directly in apps/
+- Only import from @xala/ds
+
+## 5. RFC7807
+- All errors must be ProblemDetails compliant
+
+# =============================================================================
+# CODE PATTERNS
+# =============================================================================
+
+## Correct Component Pattern
+```tsx
+function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
+  return (
+    <Card>
+      <h2>{listing.title}</h2>
+      {listing.permissions.canBook && <BookButton />}
+    </Card>
+  );
+}
+```
+
+## Correct Hook Pattern  
+```typescript
+export function useListingDetails(id: string) {
+  return useQuery({
+    queryKey: queryKeys.listing.details(id),
+    queryFn: () => sdk.listing.getById(id),
+  });
+}
+```
+
+## Forbidden Patterns
+```typescript
+// ❌ NEVER
+function toCardModel(listing) { return {...} }
+useQuery({ select: (data) => transformData(data) })
+if (user.role === 'admin') { canEdit = true }
+```
+
+# =============================================================================
+# FILE RESTRICTIONS
+# =============================================================================
+
+## Forbidden Directories in apps/
+- transformers/, mappers/, viewmodels/
+
+## Forbidden File Patterns
+- *.transform.ts, *.mapper.ts, *.vm.ts
+
+# =============================================================================
+# ARCHITECTURE LAYERS
+# =============================================================================
+
+Layer 5: UI Components (render only)
+Layer 4: Hooks (TanStack Query)  
+Layer 3: DAL (cache, query keys)
+Layer 2: Client SDK (transport, types)
+Layer 1: API (projections, RBAC, RFC7807)
+
+# =============================================================================
+# COMMANDS
+# =============================================================================
+
+- pnpm dev - Run all apps
+- pnpm test - Run tests (274 passing)
+- pnpm lint:contracts - Check transformer violations

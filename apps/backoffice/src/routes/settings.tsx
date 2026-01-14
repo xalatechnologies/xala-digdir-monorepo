@@ -343,7 +343,6 @@ export function SettingsPage() {
                 <Stack spacing={4}>
                   <FormField label="Fullt navn" required>
                     <Textfield aria-label="Fullt navn"
- aria-label="Field"                      value={profileData.name}
                       onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Ola Nordmann"
                     />
@@ -351,7 +350,6 @@ export function SettingsPage() {
 
                   <FormField label="E-postadresse" required>
                     <Textfield aria-label="Fullt navn"
- aria-label="Field"                      type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                       placeholder="ola.nordmann@example.com"
@@ -360,7 +358,6 @@ export function SettingsPage() {
 
                   <FormField label="Telefonnummer">
                     <Textfield aria-label="E-postadresse"
- aria-label="Field"                      type="tel"
                       value={profileData.phone}
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                       placeholder="+47 123 45 678"
@@ -369,8 +366,8 @@ export function SettingsPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Fødselsdato">
-                      <Textfield aria-label="Field"
- aria-label="Field"                        type="date"
+                      <Textfield aria-label="Fødselsdato"
+                        type="date"
                         value={profileData.dateOfBirth}
                         onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
                       />
@@ -378,7 +375,6 @@ export function SettingsPage() {
 
                     <FormField label="Fødselsnummer">
                       <Textfield aria-label="Fødselsdato"
- aria-label="Field"                        value={profileData.nationalId}
                         onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
                         placeholder="11 siffer"
                         maxLength={11}
@@ -430,7 +426,6 @@ export function SettingsPage() {
                 <Stack spacing={4}>
                   <FormField label="Gateadresse" required>
                     <Textfield aria-label="Gateadresse"
- aria-label="Field"                      value={profileData.residenceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, street: e.target.value }
@@ -442,7 +437,6 @@ export function SettingsPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Poststed" required>
                       <Textfield aria-label="Poststed"
- aria-label="Field"                        value={profileData.residenceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, city: e.target.value }
@@ -452,8 +446,7 @@ export function SettingsPage() {
                     </FormField>
 
                     <FormField label="Postnummer" required>
-                      <Textfield aria-label="Field"
- aria-label="Field"                        value={profileData.residenceAddress.postalCode || ''}
+                      <Textfield aria-label="Postnummer bosted"
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
@@ -507,7 +500,6 @@ export function SettingsPage() {
                 <Stack spacing={4}>
                   <FormField label="Gateadresse" required>
                     <Textfield aria-label="Gateadresse"
- aria-label="Field"                      value={profileData.invoiceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
@@ -519,7 +511,6 @@ export function SettingsPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Poststed" required>
                       <Textfield aria-label="Poststed"
- aria-label="Field"                        value={profileData.invoiceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
@@ -529,8 +520,7 @@ export function SettingsPage() {
                     </FormField>
 
                     <FormField label="Postnummer" required>
-                      <Textfield aria-label="Field"
- aria-label="Field"                        value={profileData.invoiceAddress.postalCode || ''}
+                      <Textfield aria-label="Postnummer faktura"
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
@@ -603,7 +593,6 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
                   <Textfield aria-label="Systemnavn"
- aria-label="Field"                    value={formData.general.name}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, name: e.target.value }
@@ -770,7 +759,6 @@ export function SettingsPage() {
                     description="Antall timer før bookingstart kansellering er tillatt"
                   >
                     <Textfield aria-label="Kanselleringsfrist"
- aria-label="Field"                      type="number"
                       value={formData.booking.cancellationDeadlineHours.toString()}
                       onChange={(e) => setFormData(prev => ({
                         ...prev,
@@ -787,7 +775,6 @@ export function SettingsPage() {
                   description="Hvor langt frem i tid kan man booke?"
                 >
                   <Textfield aria-label="Maksimal forhåndsbooking"
- aria-label="Field"                    type="number"
                     value={formData.booking.maxAdvanceBookingDays.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -803,7 +790,6 @@ export function SettingsPage() {
                   description="Hvor kort tid før kan man booke?"
                 >
                   <Textfield aria-label="Minimum forhåndstid"
- aria-label="Field"                    type="number"
                     value={formData.booking.minAdvanceBookingHours.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -819,7 +805,6 @@ export function SettingsPage() {
                   description="Automatisk pause mellom påfølgende bookinger"
                 >
                   <Textfield aria-label="Buffertid mellom bookinger"
- aria-label="Field"                    type="number"
                     value={formData.booking.bufferTimeMinutes.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -962,7 +947,6 @@ export function SettingsPage() {
                         description="Hvor lenge før booking skal påminnelse sendes?"
                       >
                         <Textfield aria-label="Påminnelsestidspunkt"
- aria-label="Field"                          type="number"
                           value={formData.notifications.reminderHoursBefore.toString()}
                           onChange={(e) => setFormData(prev => ({
                             ...prev,
@@ -1233,7 +1217,6 @@ export function SettingsPage() {
                   description="URL til logo (vil vises i toppen av siden)"
                 >
                   <Textfield aria-label="Logo URL"
- aria-label="Field"                    value={formData.branding.logo || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, logo: e.target.value }
@@ -1247,7 +1230,6 @@ export function SettingsPage() {
                   description="Hovedfarge for knapper og UI-elementer"
                 >
                   <Textfield aria-label="Primærfarge"
- aria-label="Field"                    type="color"
                     value={formData.branding.primaryColor || '#1A56DB'}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -1261,7 +1243,6 @@ export function SettingsPage() {
                   description="Farge for mindre fremtredende elementer"
                 >
                   <Textfield aria-label="Sekundærfarge"
- aria-label="Field"                    type="color"
                     value={formData.branding.secondaryColor || '#6B7280'}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -1275,7 +1256,6 @@ export function SettingsPage() {
                   description="URL til favicon (vises i nettleserens fane)"
                 >
                   <Textfield aria-label="Favicon URL"
- aria-label="Field"                    value={formData.branding.favicon || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, favicon: e.target.value }
