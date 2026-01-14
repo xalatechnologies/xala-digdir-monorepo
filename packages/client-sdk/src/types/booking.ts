@@ -271,3 +271,217 @@ export interface BookingDocument {
   url: string;
   createdAt: string;
 }
+
+// =============================================================================
+// Recurring Booking Types
+// =============================================================================
+
+/**
+ * Recurrence frequency for recurring bookings.
+ */
+export type RecurringFrequency = 'WEEKLY' | 'MONTHLY';
+
+/**
+ * Status of an individual occurrence in a recurring booking preview.
+ * - AVAILABLE: Slot is available for booking
+ * - CONFLICT: Slot overlaps with existing booking
+ * - RESERVED: Slot is temporarily reserved by another user
+ * - BLOCKED: Slot is blocked by admin/maintenance
+ * - BLACKOUT: Slot falls on holiday/blackout period
+ * - CLOSED: Listing is closed during this time
+ */
+export type OccurrenceStatus = 'AVAILABLE' | 'CONFLICT' | 'RESERVED' | 'BLOCKED' | 'BLACKOUT' | 'CLOSED';
+
+/**
+ * End condition type for recurring bookings.
+ * - AFTER_OCCURRENCES: End after N occurrences
+ * - UNTIL_DATE: End on or before a specific date
+ */
+export type RecurringEndConditionType = 'AFTER_OCCURRENCES' | 'UNTIL_DATE';
+
+/**
+ * End condition for recurring bookings.
+ */
+export interface RecurringEndCondition {
+  /** Type of end condition */
+  type: RecurringEndConditionType;
+  /** Number of occurrences (when type is AFTER_OCCURRENCES) */
+  occurrences?: number;
+  /** End date in ISO 8601 format (when type is UNTIL_DATE) */
+  untilDate?: string;
+}
+
+/**
+ * Individual occurrence in a recurring booking preview.
+ * Represents a single booking instance with its availability status.
+ */
+export interface RecurringOccurrenceDTO {
+  /** Unique identifier for this occurrence (0-indexed sequence) */
+  index: number;
+  /** Start time of the occurrence in ISO 8601 format */
+  startTime: string;
+  /** End time of the occurrence in ISO 8601 format */
+  endTime: string;
+  /** Availability status of this occurrence */
+  status: OccurrenceStatus;
+  /** Localization key for conflict/block reason (e.g., "booking.conflict.existingBooking") */
+  reasonKey?: string;
+  /** ID of conflicting booking/allocation if applicable */
+  conflictId?: string;
+  /** Whether this occurrence is selected for creation (used in partial create scenarios) */
+  selected?: boolean;
+}
+
+/**
+ * Unified booking selection model across all booking modes.
+ * Supports SINGLE_SLOT, IN_GAME, and RECURRING booking patterns.
+ */
+export interface BookingSelectionDTO {
+  /** ID of the listing being booked */
+  listingId: string;
+  /** Booking mode for this selection */
+  mode: BookingMode;
+  /** Start time for SINGLE_SLOT/IN_GAME, or pattern start for RECURRING */
+  startTime: string;
+  /** End time for SINGLE_SLOT/IN_GAME, or pattern end time-of-day for RECURRING */
+  endTime: string;
+  /** User ID (optional, defaults to authenticated user) */
+  userId?: string;
+  /** Organization ID (for organizational bookings) */
+  organizationId?: string;
+  /** Notes for the booking */
+  notes?: string;
+  /** Additional booking metadata */
+  metadata?: BookingMetadata;
+
+  // Recurring-specific fields
+  /** Recurrence frequency (WEEKLY or MONTHLY) */
+  frequency?: RecurringFrequency;
+  /** Selected weekdays for recurring (ISO 1-7, where 1=Monday) */
+  weekdays?: number[];
+  /** End condition for recurring bookings */
+  endCondition?: RecurringEndCondition;
+
+  // In-game specific fields
+  /** Duration in minutes for IN_GAME mode */
+  durationMinutes?: number;
+}
+
+/**
+ * Summary statistics for recurring booking preview/result.
+ */
+export interface RecurringSummary {
+  /** Total number of occurrences in the series */
+  totalOccurrences: number;
+  /** Number of occurrences that are available */
+  availableCount: number;
+  /** Number of occurrences with conflicts */
+  conflictCount: number;
+  /** Number of occurrences blocked by admin */
+  blockedCount: number;
+  /** Number of occurrences on blackout dates */
+  blackoutCount: number;
+  /** Total estimated price for all available occurrences */
+  totalPrice: number;
+  /** Currency code */
+  currency: string;
+}
+
+/**
+ * Server-computed recurring booking preview projection.
+ * Contains all occurrences with their status and availability information.
+ */
+export interface RecurringPreviewProjectionDTO {
+  /** ID of the listing */
+  listingId: string;
+  /** Original selection used to generate this preview */
+  selection: BookingSelectionDTO;
+  /** All generated occurrences with status */
+  occurrences: RecurringOccurrenceDTO[];
+  /** Summary statistics */
+  summary: RecurringSummary;
+  /** Proposed selection with only available occurrences (for partial create) */
+  proposedSelection?: BookingSelectionDTO;
+  /** Preview generation timestamp */
+  generatedAt: string;
+  /** Preview validity period (ISO 8601 duration, e.g., "PT5M" for 5 minutes) */
+  validFor?: string;
+  /** Available actions based on preview state */
+  availableActions: Array<'CREATE_ALL' | 'CREATE_AVAILABLE' | 'MODIFY_SELECTION'>;
+  /** Permissions for this preview */
+  permissions: {
+    canCreateAll: boolean;
+    canCreatePartial: boolean;
+    canModify: boolean;
+  };
+}
+
+/**
+ * Create recurring booking request DTO.
+ * Extends BookingSelectionDTO with conflict handling policy.
+ */
+export interface CreateRecurringBookingDTO extends BookingSelectionDTO {
+  /** Conflict handling policy */
+  policy: {
+    /** Stop on first conflict (true) or continue creating available (false) */
+    stopOnConflict: boolean;
+    /** Allow partial creation when some occurrences conflict */
+    allowPartial: boolean;
+  };
+  /** Optional: specific occurrence indices to create (for selective creation) */
+  selectedOccurrences?: number[];
+}
+
+/**
+ * Individual occurrence result after recurring booking creation.
+ */
+export interface RecurringOccurrenceResultDTO {
+  /** Occurrence index in the series */
+  index: number;
+  /** Start time of the occurrence */
+  startTime: string;
+  /** End time of the occurrence */
+  endTime: string;
+  /** Whether this occurrence was successfully created */
+  success: boolean;
+  /** Created booking ID (if successful) */
+  bookingId?: string;
+  /** Failure reason key (if failed) */
+  reasonKey?: string;
+  /** ID of conflicting entity (if applicable) */
+  conflictId?: string;
+}
+
+/**
+ * Result projection for recurring booking creation.
+ * Contains both successfully created and failed occurrences.
+ */
+export interface RecurringBookingResultProjectionDTO {
+  /** ID of the listing */
+  listingId: string;
+  /** Successfully created occurrences */
+  created: RecurringOccurrenceResultDTO[];
+  /** Failed occurrences with reasons */
+  failed: RecurringOccurrenceResultDTO[];
+  /** Summary of creation result */
+  summary: {
+    /** Total occurrences attempted */
+    totalAttempted: number;
+    /** Successfully created count */
+    createdCount: number;
+    /** Failed count */
+    failedCount: number;
+    /** Total price of created bookings */
+    totalPrice: number;
+    /** Currency code */
+    currency: string;
+  };
+  /** Created at timestamp */
+  createdAt: string;
+  /** Permissions for post-creation actions */
+  permissions: {
+    canViewBookings: boolean;
+    canCancelAll: boolean;
+    canModify: boolean;
+  };
+}
