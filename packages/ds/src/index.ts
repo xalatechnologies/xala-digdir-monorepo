@@ -230,6 +230,9 @@ export {
   PlayIcon,
   LockIcon,
   UnlockIcon,
+  UploadIcon,
+  CameraIcon,
+  ImageIcon,
   FormField,
 } from './primitives';
 export type {

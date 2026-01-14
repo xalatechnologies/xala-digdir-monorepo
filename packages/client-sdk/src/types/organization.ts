@@ -66,13 +66,25 @@ export interface OrganizationQueryParams extends BaseQueryParams {
 // User Entity
 // =============================================================================
 
+export interface Address {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
 export interface User extends TenantEntity {
   email: string;
   name: string;
   phone?: string;
+  avatar?: string;
   role: UserRole;
   status: UserStatus;
   lastLoginAt?: string;
+  invoiceAddress?: Address;
+  residenceAddress?: Address;
+  dateOfBirth?: string;
+  nationalId?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -89,8 +101,14 @@ export interface CreateUserDTO {
 
 export interface UpdateUserDTO {
   name?: string;
+  email?: string;
   phone?: string;
   role?: UserRole;
+  avatar?: string;
+  invoiceAddress?: Address;
+  residenceAddress?: Address;
+  dateOfBirth?: string;
+  nationalId?: string;
 }
 
 export interface UserQueryParams extends BaseQueryParams {

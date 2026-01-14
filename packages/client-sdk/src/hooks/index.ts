@@ -200,6 +200,20 @@ export {
   useGenerateAllocations,
 } from './use-seasonal-leases';
 
+// Season Application hooks
+export {
+  seasonApplicationKeys,
+  useSeasonApplications,
+  useSeasonApplication,
+  useCreateSeasonApplication,
+  useUpdateSeasonApplication,
+  useApproveSeasonApplication,
+  useRejectSeasonApplication,
+  useAllocateApplication,
+  useFinalizeSeasonAllocations,
+  useDeleteSeasonApplication,
+} from './use-season-applications';
+
 // Report & Dashboard hooks
 export {
   reportKeys,

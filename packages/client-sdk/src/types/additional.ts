@@ -50,6 +50,60 @@ export interface SeasonalLeaseQueryParams extends BaseQueryParams {
 }
 
 // =============================================================================
+// Season Applications
+// =============================================================================
+
+export interface SeasonApplication extends TenantEntity {
+  seasonId: string;
+  listingId: string;
+  listingName?: string;
+  organizationId: string;
+  organizationName?: string;
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone?: string;
+  weekday: number;
+  startTime: string;
+  endTime: string;
+  status: 'pending' | 'approved' | 'rejected' | 'allocated';
+  priority?: number;
+  notes?: string;
+  rejectionReason?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CreateSeasonApplicationDTO {
+  seasonId: string;
+  listingId: string;
+  organizationId: string;
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone?: string;
+  weekday: number;
+  startTime: string;
+  endTime: string;
+  notes?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface SeasonApplicationQueryParams extends BaseQueryParams {
+  seasonId?: string;
+  listingId?: string;
+  organizationId?: string;
+  status?: string;
+}
+
+export interface AllocateApplicationDTO {
+  applicationId: string;
+  generateRecurring?: boolean;
+}
+
+export interface FinalizeSeasonAllocationsDTO {
+  seasonId: string;
+  sendNotifications?: boolean;
+}
+
+// =============================================================================
 // Conversations & Messages
 // =============================================================================
 
