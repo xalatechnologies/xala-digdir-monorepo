@@ -15,8 +15,14 @@ let clientConfig: ApiClientConfig | null = null;
  * Must be called before using any API methods
  */
 export function initializeClient(config: ApiClientConfig): IHttpClient {
-  clientConfig = config;
-  defaultClient = new FetchHttpClient(config);
+  // Set credentials to 'include' by default to enable cookie-based auth
+  const configWithDefaults: ApiClientConfig = {
+    credentials: 'include',
+    ...config,
+  };
+
+  clientConfig = configWithDefaults;
+  defaultClient = new FetchHttpClient(configWithDefaults);
   return defaultClient;
 }
 
@@ -89,7 +95,13 @@ export function isClientInitialized(): boolean {
  * Useful for testing or multiple API connections
  */
 export function createClient(config: ApiClientConfig): IHttpClient {
-  return new FetchHttpClient(config);
+  // Set credentials to 'include' by default to enable cookie-based auth
+  const configWithDefaults: ApiClientConfig = {
+    credentials: 'include',
+    ...config,
+  };
+
+  return new FetchHttpClient(configWithDefaults);
 }
 
 /**
