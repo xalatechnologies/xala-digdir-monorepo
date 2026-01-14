@@ -9,6 +9,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import {
   realtimeClient,
   createTenantWebSocketUrl,
+  getClientConfig,
   type RealtimeEvent,
   type RealtimeEventHandler,
   type RealtimeEventType,
@@ -82,6 +83,7 @@ export function RealtimeProvider({
       setError(null);
 
       const wsUrl = createTenantWebSocketUrl(baseUrl, tenantId);
+      const token = getClientConfig()?.token;
       console.log('[RealtimeProvider] Connecting to', wsUrl);
 
       realtimeClient.connect({
@@ -90,6 +92,7 @@ export function RealtimeProvider({
         reconnectInterval: 5000,
         maxReconnectAttempts: 10,
         tenantId,
+        token,
       });
     } catch (err) {
       setStatus('error');
