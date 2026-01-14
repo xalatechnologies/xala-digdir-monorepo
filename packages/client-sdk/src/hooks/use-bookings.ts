@@ -11,14 +11,13 @@ import {
   allocationService, 
   availabilityService 
 } from '../services/booking.service';
-import type {
-  BookingQueryParams,
-  CreateBookingDTO,
+import type { 
+  BookingQueryParams, 
+  CreateBookingDTO, 
   UpdateBookingDTO,
   CancelBookingDTO,
   CreateAllocationDTO
 } from '../types/booking';
-import type { ConflictCheckParams } from '../types/additional';
 
 // ============================================================================
 // Booking Hooks
@@ -195,17 +194,6 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
   });
 }
 
-/**
- * Check for conflicts in time range
- */
-export function useConflictCheck(params: ConflictCheckParams, options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: queryKeys.calendar.conflicts(params),
-    queryFn: () => availabilityService.checkConflicts(params),
-    enabled: !!params.listingId && !!params.startTime && !!params.endTime && (options?.enabled ?? true),
-  });
-}
-
 // ============================================================================
 // Allocation Hooks
 // ============================================================================
@@ -240,12 +228,42 @@ export function useCreateAllocation() {
  */
 export function useDeleteAllocation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => allocationService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.allocations.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
+  });
+}
+
+// ============================================================================
+// Payment Hooks
+// ============================================================================
+
+/**
+ * Get payment reconciliation report
+ */
+export function usePaymentReconciliation(params?: {
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  provider?: string;
+}) {
+  return useQuery({
+    queryKey: queryKeys.bookings.paymentReconciliation(params),
+    queryFn: () => bookingService.getPaymentReconciliation(params),
+  });
+}
+
+/**
+ * Get payment history for a booking
+ */
+export function usePaymentHistory(bookingId: string) {
+  return useQuery({
+    queryKey: queryKeys.bookings.paymentHistory(bookingId),
+    queryFn: () => bookingService.getPaymentHistory(bookingId),
+    enabled: !!bookingId,
   });
 }

@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
+import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { ToastProvider } from './providers/ToastProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -13,13 +14,18 @@ import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
-import { SeasonsPage } from './routes/seasons';
+import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
-import { OrganizationsPage } from './routes/organizations';
+import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage } from './routes/organizations';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
+import { ReviewModerationPage } from './routes/reviews';
 import { SettingsPage } from './routes/settings';
+import { initSentry } from './lib/sentry';
+
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 export function App() {
   return (
@@ -68,9 +74,20 @@ function AppWithTheme() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
-              <Route path="seasons" element={<SeasonsPage />} />
+              <Route path="seasons" element={<SeasonsListPage />} />
+              <Route path="seasons/new" element={<SeasonFormPage />} />
+              <Route path="seasons/:id" element={<SeasonDetailPage />} />
+              <Route path="seasons/:id/edit" element={<SeasonFormPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="reports" element={<ReportsPage />} />
+              <Route
+                path="reviews/moderation"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <ReviewModerationPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="audit"
                 element={
@@ -83,7 +100,31 @@ function AppWithTheme() {
                 path="organizations"
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <OrganizationsPage />
+                    <OrganizationsListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/new"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/edit"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationFormPage />
                   </ProtectedRoute>
                 }
               />

@@ -14,7 +14,7 @@ import {
   vippsService,
   calendarSyncService
 } from '../services/integration.service';
-import type { TenantSettings, CreateAccessCodeDTO, CreateInvoiceDTO, InitiatePaymentDTO } from '../types/settings';
+import type { TenantSettings, CreateAccessCodeDTO, CreateInvoiceDTO, InitiatePaymentDTO, CapturePaymentDTO, RefundPaymentDTO } from '../types/settings';
 
 // ============================================================================
 // Settings Hooks
@@ -234,6 +234,46 @@ export function useVippsPayment(orderId: string, options?: { enabled?: boolean }
 export function useInitiatePayment() {
   return useMutation({
     mutationFn: (data: InitiatePaymentDTO) => vippsService.initiatePayment(data),
+  });
+}
+
+/**
+ * Get payment history
+ */
+export function useVippsPaymentHistory() {
+  return useQuery({
+    queryKey: queryKeys.integrations.vipps.history(),
+    queryFn: () => vippsService.getPaymentHistory(),
+  });
+}
+
+/**
+ * Capture payment mutation (finalize authorized payment)
+ */
+export function useCapturePayment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CapturePaymentDTO) => vippsService.capturePayment(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.integrations.vipps.payment(variables.orderId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.integrations.vipps.history() });
+    },
+  });
+}
+
+/**
+ * Refund payment mutation (full or partial)
+ */
+export function useRefundPayment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: RefundPaymentDTO) => vippsService.refundPayment(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.integrations.vipps.payment(variables.orderId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.integrations.vipps.history() });
+    },
   });
 }
 

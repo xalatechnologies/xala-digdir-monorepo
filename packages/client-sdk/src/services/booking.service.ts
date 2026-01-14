@@ -11,12 +11,13 @@ import type {
   UpdateBookingDTO,
   CancelBookingDTO,
   BookingPricing,
+  BookingReceipt,
   CalendarEvent,
   CalendarQueryParams,
   Allocation,
-  CreateAllocationDTO
+  CreateAllocationDTO,
+  PaymentTransaction
 } from '../types/booking';
-import type { ConflictsResponse, ConflictCheckParams } from '../types/additional';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
 export class BookingService extends BaseService {
@@ -120,6 +121,44 @@ export class BookingService extends BaseService {
   }): Promise<SingleResponse<Booking[]>> {
     return this.client.post(this.buildPath('/recurring'), data);
   }
+
+  /**
+   * Get booking receipt/bilag (KRAV-ADM-07)
+   * Returns receipt with hvem/hva/hvor/når for bokføringskrav
+   */
+  async getReceipt(id: string): Promise<SingleResponse<BookingReceipt>> {
+    return this.client.get(this.buildPath(`/${id}/receipt`));
+  }
+
+  /**
+   * Get payment transaction history for a booking
+   */
+  async getPaymentHistory(bookingId: string): Promise<SingleResponse<PaymentTransaction[]>> {
+    return this.client.get(this.buildPath(`/${bookingId}/payments`));
+  }
+
+  /**
+   * Get payment reconciliation report
+   * Returns aggregated payment data for administrative reconciliation
+   */
+  async getPaymentReconciliation(params?: {
+    startDate?: string;
+    endDate?: string;
+    status?: string;
+    provider?: string;
+  }): Promise<PaginatedResponse<{
+    bookingId: string;
+    totalAmount: number;
+    paidAmount: number;
+    refundedAmount: number;
+    currency: string;
+    status: string;
+    transactions: PaymentTransaction[];
+  }>> {
+    return this.client.get(this.buildPath('/reconciliation'), {
+      params: params as Record<string, string | number | boolean>
+    });
+  }
 }
 
 /**
@@ -201,13 +240,6 @@ export class AvailabilityService extends BaseService {
     conflicts?: Array<{ startTime: string; endTime: string }>;
   }>> {
     return this.client.get(this.buildPath('/check'), { params });
-  }
-
-  /**
-   * Check for conflicts in time range
-   */
-  async checkConflicts(params: ConflictCheckParams): Promise<SingleResponse<ConflictsResponse>> {
-    return this.client.get(this.buildPath('/conflicts'), { params: params as any });
   }
 }
 

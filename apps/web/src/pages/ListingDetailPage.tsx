@@ -1,28 +1,8 @@
 /**
  * ListingDetailPage
  *
- * Listing detail page using feature-based architecture with mobile-first responsive design.
+ * Listing detail page using feature-based architecture.
  * Structure: Breadcrumb -> ImageSlider -> ListingDetailsLayout
- *
- * Mobile Enhancements:
- * - Sticky booking CTA button at bottom on mobile
- * - Touch-optimized image gallery with swipe gestures
- * - Responsive layout that adapts to screen size
- * - Optimized booking widget for mobile viewports
- * - Mobile-optimized form inputs with appropriate input types:
- *   - Date inputs use type="date" for native mobile date pickers
- *   - Number inputs use type="number" for numeric keyboards
- *   - Text inputs optimized for touch with proper sizing
- *
- * Performance Optimizations:
- * - Image lazy loading: First image loads eagerly, subsequent images load lazily
- * - Async image decoding for better rendering performance
- * - Responsive image gallery with viewport-appropriate dimensions
- * - Touch-optimized swipe gestures for mobile image navigation
- * - Skeleton screen for initial load to improve perceived performance and prevent layout shift
- *   - Shows on slow 3G connections during data fetch
- *   - Adapts to mobile/desktop viewport
- *   - Prevents cumulative layout shift (CLS) for better Core Web Vitals
  */
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -30,7 +10,10 @@ import {
   ContentLayout,
   Breadcrumb,
   ImageSlider,
+  Spinner,
   Paragraph,
+  Heading,
+  Stack,
 } from '@xala/ds';
 import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
 import { useListing, useListingBySlug, type Listing as ApiListing } from '@digilist/client-sdk';
@@ -50,134 +33,11 @@ import {
   type ListingEvent,
   logAuditEvent,
 } from '../features/listing-details';
+import { ReviewList } from '../features/reviews/components/ReviewList';
+import { ReviewForm } from '../features/reviews/components/ReviewForm';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID || 'default-tenant';
-
-// Skeleton CSS animation
-const skeletonAnimation = `
-  @keyframes skeleton-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-`;
-
-// Skeleton styles
-const skeletonStyles: React.CSSProperties = {
-  backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-  borderRadius: 'var(--ds-border-radius-md)',
-  animation: 'skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-};
-
-// Inject skeleton animation CSS once
-if (typeof document !== 'undefined' && !document.getElementById('skeleton-animation-detail')) {
-  const style = document.createElement('style');
-  style.id = 'skeleton-animation-detail';
-  style.textContent = skeletonAnimation;
-  document.head.appendChild(style);
-}
-
-// Skeleton for Listing Detail Page
-function ListingDetailSkeleton({ isMobile }: { isMobile: boolean }): React.ReactElement {
-  return (
-    <ContentLayout maxWidth="1440px">
-      <main id="main" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
-        {/* Breadcrumb skeleton */}
-        <div style={{ paddingLeft: 'var(--ds-spacing-2)', paddingRight: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <div style={{ ...skeletonStyles, height: '20px', width: '200px' }} />
-        </div>
-
-        {/* Image slider skeleton */}
-        <div
-          style={{
-            marginTop: 'var(--ds-spacing-4)',
-            marginLeft: isMobile ? 'calc(-1 * var(--ds-spacing-4))' : '0',
-            marginRight: isMobile ? 'calc(-1 * var(--ds-spacing-4))' : '0',
-          }}
-        >
-          <div
-            style={{
-              ...skeletonStyles,
-              height: isMobile ? '300px' : '480px',
-              borderRadius: isMobile ? '0' : 'var(--ds-border-radius-lg)',
-            }}
-          />
-        </div>
-
-        {/* Content skeleton */}
-        <div style={{ paddingLeft: 'var(--ds-spacing-1)', paddingRight: 'var(--ds-spacing-1)', marginTop: 'var(--ds-spacing-6)' }}>
-          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 'var(--ds-spacing-6)' }}>
-            {/* Main content */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              {/* Title */}
-              <div style={{ ...skeletonStyles, height: '36px', width: '80%', marginBottom: 'var(--ds-spacing-4)' }} />
-
-              {/* Key facts row */}
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', marginBottom: 'var(--ds-spacing-6)', flexWrap: 'wrap' }}>
-                <div style={{ ...skeletonStyles, height: '24px', width: '120px' }} />
-                <div style={{ ...skeletonStyles, height: '24px', width: '100px' }} />
-                <div style={{ ...skeletonStyles, height: '24px', width: '140px' }} />
-              </div>
-
-              {/* Description */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-6)' }}>
-                <div style={{ ...skeletonStyles, height: '16px', width: '100%' }} />
-                <div style={{ ...skeletonStyles, height: '16px', width: '95%' }} />
-                <div style={{ ...skeletonStyles, height: '16px', width: '90%' }} />
-              </div>
-
-              {/* Tabs skeleton */}
-              <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-                <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-4)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <div style={{ ...skeletonStyles, height: '40px', width: '100px' }} />
-                  <div style={{ ...skeletonStyles, height: '40px', width: '120px' }} />
-                  <div style={{ ...skeletonStyles, height: '40px', width: '90px' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                  <div style={{ ...skeletonStyles, height: '16px', width: '100%' }} />
-                  <div style={{ ...skeletonStyles, height: '16px', width: '95%' }} />
-                  <div style={{ ...skeletonStyles, height: '16px', width: '90%' }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            {!isMobile && (
-              <div style={{ width: '360px', flexShrink: 0 }}>
-                {/* Booking card skeleton */}
-                <div
-                  style={{
-                    ...skeletonStyles,
-                    height: '400px',
-                    borderRadius: 'var(--ds-border-radius-lg)',
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Mobile sticky booking button */}
-        {isMobile && (
-          <div
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: 'var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-              zIndex: 100,
-            }}
-          >
-            <div style={{ ...skeletonStyles, height: '48px', borderRadius: 'var(--ds-border-radius-md)' }} />
-          </div>
-        )}
-      </main>
-    </ContentLayout>
-  );
-}
 
 // Default data for fallback
 const defaultAmenities: Amenity[] = [
@@ -264,20 +124,10 @@ function transformApiToListing(api: ApiListing): Listing {
   };
 
   // Build address - use API data or provide default
-  // Extract location from metadata (SDK structure: metadata.location.lat/lng)
-  const locationData = meta.location as { lat?: number; lng?: number; address?: string; city?: string; postalCode?: string } | undefined;
-
-  const addressString = meta.address || locationData?.address;
-  const postalCodeString = meta.postalCode || locationData?.postalCode;
-  const cityString = meta.city || locationData?.city;
-
-  const hasLocationData = addressString || postalCodeString || cityString;
-  const hasCoordinates = typeof locationData?.lat === 'number' && typeof locationData?.lng === 'number';
-
-  const address = hasLocationData
+  const address = meta.address
     ? {
-        formatted: [addressString, postalCodeString, cityString].filter(Boolean).join(', '),
-        ...(hasCoordinates ? { coordinates: { latitude: locationData!.lat!, longitude: locationData!.lng! } } : {}),
+        formatted: [meta.address, meta.postalCode, meta.city].filter(Boolean).join(', '),
+        ...(typeof meta.latitude === 'number' ? { coordinates: { latitude: meta.latitude as number, longitude: meta.longitude as number } } : {}),
       }
     : {
         formatted: 'Oslo, Norge',
@@ -350,59 +200,20 @@ function buildOpeningHours(meta: Record<string, unknown>): OpeningHours {
 export function ListingDetailPage(): React.ReactElement {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
-
+  
   // Check if the ID looks like a UUID or slug
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.id || '');
-
+  
   // Fetch by ID if UUID, otherwise fetch by slug
-  const { data: apiResponse, isLoading, error } = isUuid
+  const { data: apiResponse, isLoading, error } = isUuid 
     ? useListing(params.id || '')
     : useListingBySlug(params.id || '');
-
+  
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
   const isAuthenticated = false; // Mock auth state
-
-  // Mobile detection and responsive state
-  const [isMobile, setIsMobile] = React.useState(false);
-  const [showMobileBookingCTA, setShowMobileBookingCTA] = React.useState(false);
-
-  // Detect mobile viewport
-  React.useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Show/hide mobile booking CTA based on scroll position
-  React.useEffect(() => {
-    if (!isMobile) {
-      setShowMobileBookingCTA(false);
-      return;
-    }
-
-    const handleScroll = () => {
-      const bookingSection = document.getElementById('booking-section');
-      if (!bookingSection) {
-        setShowMobileBookingCTA(true);
-        return;
-      }
-
-      const bookingSectionTop = bookingSection.getBoundingClientRect().top;
-      const windowHeight = window.innerHeight;
-
-      // Show CTA when booking section is below viewport
-      setShowMobileBookingCTA(bookingSectionTop > windowHeight);
-    };
-
-    handleScroll(); // Initial check
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
+  const [showReviewForm, setShowReviewForm] = React.useState(true); // Mock: show form for eligible users
+  const [hasCompletedBooking, setHasCompletedBooking] = React.useState(true); // Mock: user has completed booking
 
   // Transform API data
   const listing = React.useMemo((): Listing | null => {
@@ -446,17 +257,28 @@ export function ListingDetailPage(): React.ReactElement {
     }
   }, [listing]);
 
-  // Loading state - show skeleton screen for better perceived performance
+  // Loading state
   if (isLoading) {
-    return <ListingDetailSkeleton isMobile={isMobile} />;
+    return (
+      <ContentLayout maxWidth="1440px">
+        <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div role="status" aria-live="polite" aria-busy="true" style={{ textAlign: 'center' }}>
+            <Spinner aria-label="Laster innhold..." />
+            <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+              Laster lokale...
+            </Paragraph>
+          </div>
+        </main>
+      </ContentLayout>
+    );
   }
 
   // Not found state
   if (!listing) {
     return (
       <ContentLayout maxWidth="1440px">
-        <main id="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div role="alert" aria-live="assertive" style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Paragraph data-size="lg" style={{ marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-default)' }}>
               Lokalet ble ikke funnet
             </Paragraph>
@@ -492,29 +314,21 @@ export function ListingDetailPage(): React.ReactElement {
 
   return (
     <ContentLayout maxWidth="1440px">
-      <main id="main" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
+      <main id="main-content" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
         <div style={{ paddingLeft: 'var(--ds-spacing-2)', paddingRight: 'var(--ds-spacing-2)' }}>
           <Breadcrumb items={breadcrumbItems} />
         </div>
 
-        {/* Image Slider - Touch-friendly with responsive height */}
-        <div
-          style={{
-            marginTop: 'var(--ds-spacing-4)',
-            marginLeft: isMobile ? 'calc(-1 * var(--ds-spacing-4))' : '0',
-            marginRight: isMobile ? 'calc(-1 * var(--ds-spacing-4))' : '0',
-          }}
-        >
+        {/* Image Slider with arrows and dots */}
+        <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
           <ImageSlider
             images={galleryImages}
-            height={isMobile ? 300 : 480}
-            showArrows={!isMobile}
+            height={480}
+            showArrows
             showDots
-            showThumbnails={!isMobile}
+            showThumbnails
             showCounter
             enableFullscreen
-            autoplay={false}
-            loop={true}
           />
         </div>
 
@@ -531,80 +345,63 @@ export function ListingDetailPage(): React.ReactElement {
           />
         </div>
 
-        {/* Mobile Sticky Booking CTA */}
-        {showMobileBookingCTA && listing && (
-          <div
-            className="mobile-booking-cta"
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              borderTop: '1px solid var(--ds-color-neutral-border-default)',
-              padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 'var(--ds-spacing-3)',
-              boxShadow: '0 -4px 12px rgba(0, 0, 0, 0.1)',
-              zIndex: 1000,
-              animation: 'slideUp 0.3s ease-out',
-            }}
-          >
-            {/* Price Info */}
-            <div style={{ flex: 1 }}>
-              <Paragraph
-                data-size="sm"
+        {/* Reviews Section */}
+        <div
+          style={{
+            marginTop: 'var(--ds-spacing-8)',
+            paddingLeft: 'var(--ds-spacing-1)',
+            paddingRight: 'var(--ds-spacing-1)',
+          }}
+        >
+          <Stack gap="32px">
+            {/* Reviews Header */}
+            <div>
+              <Heading
+                level={2}
+                size="lg"
                 style={{
-                  margin: 0,
-                  fontWeight: 'var(--ds-font-weight-semibold)',
+                  marginBottom: 'var(--ds-spacing-2)',
                   color: 'var(--ds-color-neutral-text-default)',
                 }}
               >
-                {listing.pricing?.displayPrice || '500 kr/time'}
-              </Paragraph>
+                Anmeldelser
+              </Heading>
               <Paragraph
-                data-size="xs"
+                size="md"
                 style={{
-                  margin: 0,
                   color: 'var(--ds-color-neutral-text-subtle)',
+                  margin: 0,
                 }}
               >
-                per {listing.pricing?.unit || 'time'}
+                Les hva andre brukere sier om dette lokalet
               </Paragraph>
             </div>
 
-            {/* Book Button */}
-            <button
-              type="button"
-              onClick={handleBookingClick}
-              style={{
-                padding: 'var(--ds-spacing-3) var(--ds-spacing-6)',
-                backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'var(--ds-color-accent-contrast-default)',
-                border: 'none',
-                borderRadius: 'var(--ds-border-radius-md)',
-                fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 'var(--ds-font-weight-semibold)',
-                cursor: 'pointer',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                boxShadow: '0 2px 8px rgba(30, 58, 95, 0.15)',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(30, 58, 95, 0.2)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(30, 58, 95, 0.15)';
-              }}
-            >
-              Book nå
-            </button>
-          </div>
-        )}
+            {/* Review Form - Show for authenticated users with completed bookings */}
+            {isAuthenticated && hasCompletedBooking && showReviewForm && (
+              <ReviewForm
+                listingId={listing.id}
+                bookingId="mock-booking-id" // In production, this would come from user's completed bookings
+                onSuccess={() => {
+                  setShowReviewForm(false);
+                  // Optionally show a success message
+                }}
+                onCancel={() => {
+                  setShowReviewForm(false);
+                }}
+              />
+            )}
+
+            {/* Review List */}
+            <ReviewList
+              listingId={listing.id}
+              queryParams={{ status: 'approved' }}
+              showHelpfulCount={true}
+              showStatus={false}
+              variant="default"
+            />
+          </Stack>
+        </div>
 
         {/* Responsive styles */}
         <style>{`
@@ -613,18 +410,6 @@ export function ListingDetailPage(): React.ReactElement {
             from {
               opacity: 0;
               transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          /* Slide up animation for mobile CTA */
-          @keyframes slideUp {
-            from {
-              opacity: 0;
-              transform: translateY(100%);
             }
             to {
               opacity: 1;
@@ -656,19 +441,6 @@ export function ListingDetailPage(): React.ReactElement {
           .booking-widget-placement:hover {
             transform: translateY(-2px);
             box-shadow: var(--ds-shadow-md);
-          }
-
-          /* Touch-friendly targets on mobile */
-          @media (max-width: 768px) {
-            button, a, [role="button"] {
-              min-height: 44px;
-              min-width: 44px;
-            }
-
-            /* Add padding to content to avoid being hidden by sticky CTA */
-            #main {
-              padding-bottom: 80px;
-            }
           }
 
           /* Responsive breakpoints */
@@ -706,11 +478,6 @@ export function ListingDetailPage(): React.ReactElement {
               padding: var(--ds-spacing-3) var(--ds-spacing-2) !important;
               font-size: var(--ds-font-size-xs) !important;
             }
-
-            /* Mobile booking CTA responsive adjustments */
-            .mobile-booking-cta {
-              padding: var(--ds-spacing-2) var(--ds-spacing-3) !important;
-            }
           }
 
           /* Smooth scrolling */
@@ -721,19 +488,6 @@ export function ListingDetailPage(): React.ReactElement {
           /* Button hover enhancements */
           button[type="button"] {
             transition: all 0.2s ease !important;
-          }
-
-          /* Touch action optimization for swipeable elements */
-          .image-slider {
-            touch-action: pan-x pinch-zoom;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          /* Disable selection on interactive elements for better touch UX */
-          button, .image-slider {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            user-select: none;
           }
         `}</style>
       </main>

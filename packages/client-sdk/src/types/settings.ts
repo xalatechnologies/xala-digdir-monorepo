@@ -161,6 +161,14 @@ export interface VippsPayment {
   status: 'initiated' | 'pending' | 'completed' | 'failed' | 'cancelled';
   redirectUrl?: string;
   paidAt?: string;
+  // Refund tracking
+  refundedAmount?: number;
+  refundStatus?: 'none' | 'partial' | 'full';
+  refundedAt?: string;
+  // Deposit handling
+  depositAmount?: number;
+  captureAmount?: number;
+  capturedAt?: string;
 }
 
 export interface InitiatePaymentDTO {
@@ -168,4 +176,15 @@ export interface InitiatePaymentDTO {
   amount: number;
   description?: string;
   returnUrl: string;
+}
+
+export interface CapturePaymentDTO {
+  orderId: string;
+  amount?: number; // Optional for partial capture
+}
+
+export interface RefundPaymentDTO {
+  orderId: string;
+  amount?: number; // Optional for partial refund
+  reason?: string;
 }

@@ -4,7 +4,7 @@
  */
 
 import { BaseService } from './base.service';
-import type { 
+import type {
   TenantSettings,
   IntegrationSettings,
   RcoAccessCode,
@@ -15,7 +15,9 @@ import type {
   BrregOrganization,
   NifSportsClub,
   VippsPayment,
-  InitiatePaymentDTO
+  InitiatePaymentDTO,
+  CapturePaymentDTO,
+  RefundPaymentDTO
 } from '../types/settings';
 import type { SingleResponse, SuccessResponse, PaginatedResponse } from '../types/enums';
 
@@ -196,6 +198,27 @@ export class VippsService extends BaseService {
    */
   async getPaymentStatus(orderId: string): Promise<SingleResponse<VippsPayment>> {
     return this.client.get(this.buildPath(`/payment/${orderId}`));
+  }
+
+  /**
+   * Capture payment (finalize authorized payment)
+   */
+  async capturePayment(data: CapturePaymentDTO): Promise<SingleResponse<VippsPayment>> {
+    return this.client.post(this.buildPath('/capture'), data);
+  }
+
+  /**
+   * Refund payment (full or partial)
+   */
+  async refundPayment(data: RefundPaymentDTO): Promise<SingleResponse<VippsPayment>> {
+    return this.client.post(this.buildPath('/refund'), data);
+  }
+
+  /**
+   * Get payment history
+   */
+  async getPaymentHistory(): Promise<PaginatedResponse<VippsPayment>> {
+    return this.client.get(this.buildPath('/history'));
   }
 }
 

@@ -13,6 +13,7 @@ import {
   SettingsIcon,
   ArrowRightIcon,
   ClockIcon,
+  CheckCircleIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -164,12 +165,6 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Økonomi',
-      items: [
-        { name: 'Økonomi', description: 'Fakturering og økonomi', href: '/economy', icon: <ChartIcon />, adminOnly: true },
-      ],
-    },
-    {
       title: 'Kommunikasjon',
       items: [
         { name: 'Meldinger', description: 'Samtaler med brukere', href: '/messages', icon: <MessageIcon />, badge: 3, badgeColor: 'danger' },
@@ -191,6 +186,7 @@ export function Sidebar() {
     {
       title: 'System',
       items: [
+        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, adminOnly: true },
         { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, adminOnly: true },
         { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, adminOnly: true },
       ],

@@ -3,7 +3,8 @@
  * Single Responsibility: All listing-related type definitions
  */
 
-import type { TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
+import type { BaseEntity, TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
+import type { ReviewStats } from './review';
 
 // =============================================================================
 // Listing Entity
@@ -52,6 +53,9 @@ export interface Listing extends TenantEntity {
   capacity?: number;
   quantity?: number;
   metadata?: ListingMetadata;
+  // Review aggregation (populated by backend)
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 // =============================================================================
@@ -115,6 +119,7 @@ export interface ListingStats {
   averageRating: number;
   utilizationRate: number;
   lastBooking?: string;
+  reviewStats?: ReviewStats;
 }
 
 export interface Category {
@@ -304,8 +309,8 @@ export function transformListing(listing: Listing): UiListing {
     price: listing.pricing?.basePrice || 0,
     priceUnit: mapPricingUnit(listing.pricing?.unit || 'hour'),
     currency: listing.pricing?.currency || 'NOK',
-    rating: 0,
-    reviewCount: 0,
+    rating: listing.averageRating || 0,
+    reviewCount: listing.reviewCount || 0,
     available: listing.status === 'published',
     image: listing.images?.[0] || '/placeholder.jpg',
     images: listing.images || [],

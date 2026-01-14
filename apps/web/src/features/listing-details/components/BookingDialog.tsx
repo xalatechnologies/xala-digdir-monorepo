@@ -17,7 +17,8 @@ import {
   Label,
   Select,
   SelectOption,
-} from '@xala/ds';
+} from '@digdir/designsystemet-react';
+import { PaymentSection } from './PaymentSection';
 
 // =============================================================================
 // Icons
@@ -724,7 +725,7 @@ export function BookingDialog({
                   <div className="booking-recurring-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Til dato</Label>
-                      <Textfield aria-label="Til dato" type="date" value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} style={{ width: '100%' }} />
+                      <Textfield aria-label="Til dato" value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} placeholder="DD.MM.YYYY" style={{ width: '100%' }} />
                     </div>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Gjentagelse</Label>
@@ -793,6 +794,28 @@ export function BookingDialog({
               </Label>
               <Textarea value={formData.description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField('description', e.target.value)} placeholder="Legg til en kort beskrivelse..." rows={2} style={{ width: '100%' }} />
             </div>
+
+            {/* Payment Section */}
+            <div
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
+                transitionDelay: `${baseDelay + 300}ms`,
+              }}
+            >
+              <PaymentSection
+                amount={500}
+                currency="NOK"
+                description={`Booking: ${formData.purpose || 'Tidspunkt'}`}
+                bookingId={undefined}
+                onPaymentInitiated={(paymentUrl, orderId) => {
+                  // Store payment info before redirect
+                  sessionStorage.setItem('pendingPayment', JSON.stringify({ orderId, formData }));
+                }}
+                disabled={!isFormValid}
+              />
+            </div>
           </div>
 
           {/* Footer */}
@@ -804,7 +827,7 @@ export function BookingDialog({
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
               transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
-              transitionDelay: `${baseDelay + 300}ms`,
+              transitionDelay: `${baseDelay + 350}ms`,
             }}
           >
             {/* Validation message */}

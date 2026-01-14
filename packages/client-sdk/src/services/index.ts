@@ -93,17 +93,8 @@ export {
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';
 
-// Seasons
-export { seasonService } from './season.service';
-
-// Season Applications
-export { seasonApplicationService } from './season-application.service';
-
 // Discount Codes
 export { discountCodeService } from './discount-code.service';
-
-// Economy
-export { EconomyService, economyService } from './economy.service';
 
 // Widgets
 export { widgetService } from './widget.service';
@@ -111,62 +102,6 @@ export { widgetService } from './widget.service';
 // Monitoring
 export { monitoringService } from './monitoring.service';
 
-// Accessibility Monitoring
-export {
-  AccessibilityMonitoringService,
-  accessibilityMonitoringService,
-  detectScreenReader,
-  detectKeyboardNavigation,
-  type AccessibilityMetric,
-  type AccessibilityMetricType,
-  type AccessibilityMonitoringConfig,
-  type AccessibilityReport,
-} from './accessibilityMonitoringService';
-
-// Signicat eID Hub Authentication
-export {
-  signicatService,
-  type SignicatConfig,
-  type SignicatUser,
-  type SignicatTokens,
-  type SignicatAuthResult,
-  type SignicatLogoutResult,
-} from './signicat.service';
-
-// Pricing Service (server-side pricing quotes)
-export {
-  PricingService,
-  pricingService,
-  type PricingQuoteRequest,
-  type PricingQuoteResponse,
-  type QuoteLineItem,
-} from './pricing.service';
-
-// User Groups
-export {
-  UserGroupService,
-  BackofficeUserGroupsService,
-  userGroupService,
-  backofficeUserGroupsService,
-  type UserGroup,
-  type UserGroupCode,
-  type CreateUserGroupDTO,
-  type CurrentUserGroup,
-} from './user-group.service';
-
-// Backoffice Price Rules & Listings
-export {
-  BackofficePriceRulesService,
-  BackofficeListingsService,
-  backofficePriceRulesService,
-  backofficeListingsService,
-  type PriceRule,
-  type PriceRuleType,
-  type PriceUnit,
-  type CreatePriceRuleDTO,
-  type ListingRules,
-  type UpsertListingRulesDTO,
-  type ListingCategory,
-  type BackofficeListingParams,
-} from './price-rules.service';
+// Reviews
+export { ReviewService, reviewService } from './review.service';
 

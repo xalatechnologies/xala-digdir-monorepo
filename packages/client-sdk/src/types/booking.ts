@@ -30,6 +30,7 @@ export interface Booking extends TenantEntity {
   currency: string;
   notes?: string;
   metadata?: BookingMetadata;
+  payments?: PaymentTransaction[];
   // Display/denormalized fields (populated by backend)
   listingName?: string;
   userName?: string;
@@ -138,6 +139,25 @@ export interface CreateAllocationDTO {
     endDate: string;
     weekdays?: number[];
   };
+}
+
+// =============================================================================
+// Payment Transaction Types
+// =============================================================================
+
+export interface PaymentTransaction {
+  transactionId: string;
+  bookingId: string;
+  provider: 'vipps' | 'stripe' | 'invoice';
+  transactionType: 'payment' | 'refund' | 'capture' | 'reserve';
+  amount: number;
+  currency: string;
+  status: 'initiated' | 'pending' | 'completed' | 'failed' | 'cancelled';
+  orderId?: string;
+  createdAt: string;
+  completedAt?: string;
+  failureReason?: string;
+  metadata?: Record<string, unknown>;
 }
 
 // =============================================================================

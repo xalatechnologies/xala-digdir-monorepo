@@ -11,8 +11,7 @@ import type {
 } from '../types/listing';
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
-import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
-import type { EconomyQueryParams } from '../types/economy';
+import type { ReviewQueryParams } from '../types/review';
 
 /**
  * Strongly-typed query key factory
@@ -83,8 +82,6 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { listingId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
-    conflicts: (params: { listingId?: string; startTime?: string; endTime?: string }) =>
-      [...queryKeys.calendar.all, 'conflicts', params] as const,
   },
 
   // =========================================================================
@@ -199,6 +196,22 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Review Keys
+  // =========================================================================
+  reviews: {
+    all: ['reviews'] as const,
+    lists: () => [...queryKeys.reviews.all, 'list'] as const,
+    list: (params?: ReviewQueryParams) => [...queryKeys.reviews.lists(), params] as const,
+    details: () => [...queryKeys.reviews.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.reviews.details(), id] as const,
+    byListing: (listingId: string, params?: Omit<ReviewQueryParams, 'listingId'>) =>
+      [...queryKeys.reviews.all, 'byListing', listingId, params] as const,
+    byUser: (userId: string, params?: Omit<ReviewQueryParams, 'userId'>) =>
+      [...queryKeys.reviews.all, 'byUser', userId, params] as const,
+    stats: (listingId: string) => [...queryKeys.reviews.all, 'stats', listingId] as const,
+  },
+
+  // =========================================================================
   // Settings Keys
   // =========================================================================
   settings: {
@@ -233,56 +246,5 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
-  },
-
-  // =========================================================================
-  // Search Keys
-  // =========================================================================
-  search: {
-    all: ['search'] as const,
-    results: (params: SearchParams) =>
-      ['search', 'results', params] as const,
-    typeahead: (params: TypeaheadParams) =>
-      ['search', 'typeahead', params] as const,
-    savedFilters: {
-      all: () => ['search', 'filters'] as const,
-      lists: () => ['search', 'filters', 'list'] as const,
-      list: (params?: SavedFilterQueryParams) =>
-        ['search', 'filters', 'list', params] as const,
-      detail: (id: string) =>
-        ['search', 'filters', 'detail', id] as const,
-    },
-    recent: (params?: RecentSearchQueryParams) => ['search', 'recent', params] as const,
-  },
-
-  // =========================================================================
-  // Economy Keys
-  // =========================================================================
-  economy: {
-    all: ['economy'] as const,
-    invoiceBases: {
-      all: () => [...queryKeys.economy.all, 'invoice-bases'] as const,
-      lists: () => [...queryKeys.economy.invoiceBases.all(), 'list'] as const,
-      list: (params?: EconomyQueryParams) => [...queryKeys.economy.invoiceBases.lists(), params] as const,
-      details: () => [...queryKeys.economy.invoiceBases.all(), 'detail'] as const,
-      detail: (id: string) => [...queryKeys.economy.invoiceBases.details(), id] as const,
-    },
-    salesDocuments: {
-      all: () => [...queryKeys.economy.all, 'sales-documents'] as const,
-      lists: () => [...queryKeys.economy.salesDocuments.all(), 'list'] as const,
-      list: (params?: EconomyQueryParams) => [...queryKeys.economy.salesDocuments.lists(), params] as const,
-      details: () => [...queryKeys.economy.salesDocuments.all(), 'detail'] as const,
-      detail: (id: string) => [...queryKeys.economy.salesDocuments.details(), id] as const,
-      vismaStatus: (id: string) => [...queryKeys.economy.salesDocuments.detail(id), 'visma-status'] as const,
-    },
-    creditNotes: {
-      all: () => [...queryKeys.economy.all, 'credit-notes'] as const,
-      lists: () => [...queryKeys.economy.creditNotes.all(), 'list'] as const,
-      list: (params?: EconomyQueryParams) => [...queryKeys.economy.creditNotes.lists(), params] as const,
-      details: () => [...queryKeys.economy.creditNotes.all(), 'detail'] as const,
-      detail: (id: string) => [...queryKeys.economy.creditNotes.details(), id] as const,
-    },
-    statistics: (params?: { startDate?: string; endDate?: string }) =>
-      [...queryKeys.economy.all, 'statistics', params] as const,
   },
 } as const;
