@@ -4,7 +4,7 @@
  * Admin interface for comprehensive facility management
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -18,6 +18,7 @@ import { useListingBySlug, useListing } from '@digilist/client-sdk';
 import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
 import { AvailabilityTab } from './AvailabilityTab';
+import { EditModal } from './EditModal';
 
 interface ListingDetailViewProps {
   slug: string;
@@ -26,6 +27,7 @@ interface ListingDetailViewProps {
 export function ListingDetailView({ slug }: ListingDetailViewProps) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Check if the param looks like a UUID (ID) or a slug
   const isUuid = slug?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
@@ -43,6 +45,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
   const isLoading = isUuid ? idQuery.isLoading : slugQuery.isLoading;
   const error = isUuid ? idQuery.error : slugQuery.error;
   const listing = data?.data;
+  const refetch = isUuid ? idQuery.refetch : slugQuery.refetch;
 
   // Active tab from URL query params
   const activeTab = searchParams.get('tab') || 'overview';
@@ -52,6 +55,18 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
     params.set('tab', tab);
     setSearchParams(params);
   }, [searchParams, setSearchParams]);
+
+  const handleEditClick = useCallback(() => {
+    setIsEditModalOpen(true);
+  }, []);
+
+  const handleEditModalClose = useCallback(() => {
+    setIsEditModalOpen(false);
+  }, []);
+
+  const handleEditSuccess = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   // Loading state
   if (isLoading) {
@@ -146,7 +161,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-          <Button type="button" variant="secondary">
+          <Button type="button" variant="secondary" onClick={handleEditClick}>
             Rediger
           </Button>
           <Button type="button" variant="tertiary">
@@ -219,6 +234,16 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
           )}
         </Card>
       </div>
+
+      {/* Edit Modal */}
+      {listing && (
+        <EditModal
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          listing={listing}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 }
