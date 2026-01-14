@@ -1432,6 +1432,16 @@ export function BookingsPage() {
                 type="button"
                 variant="tertiary"
                 data-size="sm"
+                onClick={handleBulkCancel}
+                disabled={bulkCancelBookings.isPending}
+                style={{ color: 'var(--ds-color-danger-text-default)' }}
+              >
+                <CloseIcon /> Avbryt bookinger
+              </Button>
+              <Button
+                type="button"
+                variant="tertiary"
+                data-size="sm"
                 onClick={handleBatchReschedule}
                 disabled={batchRescheduleBookings.isPending}
               >
