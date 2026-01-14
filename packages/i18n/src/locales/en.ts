@@ -44,6 +44,8 @@ export const en: Record<string, string> = {
   'common.moreOptions': 'More options',
 
   // Navigation
+  'nav.home': 'Home',
+  'nav.menu': 'Menu',
   'nav.dashboard': 'Dashboard',
   'nav.listings': 'Listings',
   'nav.calendar': 'Calendar',
@@ -55,6 +57,8 @@ export const en: Record<string, string> = {
   'nav.organizations': 'Organizations',
   'nav.users': 'Users',
   'nav.settings': 'Settings',
+  'nav.login': 'Log in',
+  'nav.account': 'Account',
 
   // Auth / Login
   'auth.login': 'Log in',
@@ -327,4 +331,6 @@ export const en: Record<string, string> = {
   'minside.profile': 'My Profile',
   'minside.preferences': 'Preferences',
   'minside.notifications': 'Notifications',
+  'minside.offlineMode': 'Offline Mode',
+  'minside.viewingCachedBookings': 'You are viewing cached bookings. Connect to the internet for updates.',
 };

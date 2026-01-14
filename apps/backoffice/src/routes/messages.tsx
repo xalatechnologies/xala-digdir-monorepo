@@ -6,6 +6,7 @@ import {
   Button,
   Badge,
   Spinner,
+  Select,
   SendIcon,
   SearchIcon,
   MessageSquareIcon,
@@ -14,12 +15,18 @@ import {
   MailIcon,
   PhoneIcon,
   CalendarIcon,
+  PaperclipIcon,
+  XIcon,
 } from '@xala/ds';
 import {
   useConversations,
   useMessages,
   useSendMessage,
   useMarkMessagesRead,
+  useResolveConversation,
+  useReopenConversation,
+  useAssignConversation,
+  useUsers,
   formatTime,
   type Conversation,
   type Message,
@@ -60,8 +67,10 @@ export function MessagesPage() {
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch conversations from API
   const { data: conversationsData, isLoading: isLoadingConversations } = useConversations();
@@ -77,6 +86,13 @@ export function MessagesPage() {
   // Mutations
   const sendMessage = useSendMessage();
   const markAsRead = useMarkMessagesRead();
+  const resolveConversation = useResolveConversation();
+  const reopenConversation = useReopenConversation();
+  const assignConversation = useAssignConversation();
+
+  // Fetch saksbehandlere for assignment
+  const { data: usersData } = useUsers({ role: 'saksbehandler' });
+  const saksbehandlere = usersData?.data ?? [];
 
   // Filter conversations
   const filteredConversations = useMemo(() => {
@@ -170,6 +186,35 @@ export function MessagesPage() {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      setAttachedFiles(Array.from(files));
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleResolveToggle = async () => {
+    if (!selectedConversationId) return;
+
+    if (selectedConversation?.status === 'active') {
+      await resolveConversation.mutateAsync(selectedConversationId);
+    } else {
+      await reopenConversation.mutateAsync(selectedConversationId);
+    }
+  };
+
+  const handleAssign = async (userId: string) => {
+    if (!selectedConversationId) return;
+    await assignConversation.mutateAsync({
+      conversationId: selectedConversationId,
+      userId: userId || undefined,
+    });
   };
 
   return (
@@ -617,8 +662,46 @@ export function MessagesPage() {
                 borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
                 backgroundColor: 'var(--ds-color-neutral-background-default)',
               }}>
-                <div style={{ 
-                  display: 'flex', 
+                {/* Attached Files Display */}
+                {attachedFiles.length > 0 && (
+                  <div style={{ marginBottom: 'var(--ds-spacing-3)', display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
+                    {attachedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--ds-spacing-2)',
+                          padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                          borderRadius: 'var(--ds-border-radius-md)',
+                          border: '1px solid var(--ds-color-neutral-border-default)',
+                        }}
+                      >
+                        <PaperclipIcon style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }} />
+                        <Paragraph data-size="xs" style={{ margin: 0 }}>
+                          {file.name}
+                        </Paragraph>
+                        <button
+                          onClick={() => handleRemoveFile(index)}
+                          style={{
+                            border: 'none',
+                            background: 'none',
+                            cursor: 'pointer',
+                            padding: '2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <XIcon style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div style={{
+                  display: 'flex',
                   gap: 'var(--ds-spacing-3)',
                   alignItems: 'center',
                   backgroundColor: 'var(--ds-color-neutral-background-subtle)',
@@ -626,6 +709,28 @@ export function MessagesPage() {
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                   border: '1px solid var(--ds-color-neutral-border-default)',
                 }}>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer',
+                      padding: 'var(--ds-spacing-1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                    }}
+                    title="Legg til vedlegg"
+                  >
+                    <PaperclipIcon />
+                  </button>
                   <input
                     ref={inputRef}
                     type="text"
@@ -779,12 +884,38 @@ export function MessagesPage() {
                 </div>
               )}
 
+              {/* Assignment */}
+              <div style={{ marginBottom: 'var(--ds-spacing-5)' }}>
+                <Paragraph data-size="xs" style={{
+                  margin: 0,
+                  marginBottom: 'var(--ds-spacing-2)',
+                  fontWeight: 600,
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}>
+                  Tildeling
+                </Paragraph>
+                <Select
+                  value={selectedConversation.assignedTo || ''}
+                  onChange={(e) => handleAssign(e.target.value)}
+                  style={{ width: '100%' }}
+                >
+                  <option value="">Ikke tildelt</option>
+                  {saksbehandlere.map(user => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+
               {/* Quick Actions */}
               <div>
-                <Paragraph data-size="xs" style={{ 
-                  margin: 0, 
-                  marginBottom: 'var(--ds-spacing-2)', 
-                  fontWeight: 600, 
+                <Paragraph data-size="xs" style={{
+                  margin: 0,
+                  marginBottom: 'var(--ds-spacing-2)',
+                  fontWeight: 600,
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
@@ -796,11 +927,13 @@ export function MessagesPage() {
                     <CalendarIcon />
                     Se booking
                   </Button>
-                  <Button 
-                    type="button" 
-                    variant={selectedConversation.status === 'active' ? 'secondary' : 'primary'} 
-                    data-size="sm" 
+                  <Button
+                    type="button"
+                    variant={selectedConversation.status === 'active' ? 'secondary' : 'primary'}
+                    data-size="sm"
                     style={{ width: '100%', justifyContent: 'flex-start' }}
+                    onClick={handleResolveToggle}
+                    disabled={resolveConversation.isPending || reopenConversation.isPending}
                   >
                     <CheckCircleIcon />
                     {selectedConversation.status === 'active' ? 'Marker som løst' : 'Gjenåpne'}

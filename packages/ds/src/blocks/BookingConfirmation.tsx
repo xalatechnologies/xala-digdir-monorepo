@@ -9,7 +9,6 @@ import { Heading, Paragraph, Button, Alert } from '@digdir/designsystemet-react'
 import { cn } from '../utils';
 import {
   CalendarIcon,
-  ClockIcon,
   UsersIcon,
   MailIcon,
   PhoneIcon,

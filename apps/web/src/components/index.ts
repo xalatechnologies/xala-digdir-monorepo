@@ -4,3 +4,4 @@
  */
 
 export { RealtimeToast } from './RealtimeToast';
+export { SkipLinks } from './SkipLinks';

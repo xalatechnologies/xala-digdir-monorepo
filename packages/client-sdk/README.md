@@ -285,6 +285,398 @@ const health = await monitoringService.getHealth();
 
 ---
 
+## 📤 Image & File Upload
+
+The SDK provides proper multipart/form-data upload with automatic image compression, progress tracking, and error handling.
+
+### Upload Hooks
+
+| Hook                         | Purpose                          | Role           |
+| ---------------------------- | -------------------------------- | -------------- |
+| `useUploadListingMedia`      | Upload multiple listing images   | Saksbehandler+ |
+| `useUploadOrganizationLogo`  | Upload organization logo         | Admin          |
+| `useUploadUserAvatar`        | Upload user avatar               | User+          |
+
+### Basic Upload Example
+
+```tsx
+import { useUploadListingMedia } from "@digilist/client-sdk";
+
+function ListingMediaUpload({ listingId }: { listingId: string }) {
+    const uploadMedia = useUploadListingMedia();
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+
+        try {
+            await uploadMedia.mutateAsync({
+                id: listingId,
+                files,
+            });
+            console.log("Upload successful!");
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
+    };
+
+    return (
+        <div>
+            <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                disabled={uploadMedia.isPending}
+            />
+            {uploadMedia.isPending && <p>Uploading...</p>}
+        </div>
+    );
+}
+```
+
+### Upload with Progress Tracking
+
+```tsx
+import {
+    useUploadOrganizationLogo,
+    UploadProgressTracker,
+    type UploadProgressEvent,
+} from "@digilist/client-sdk";
+
+function OrganizationLogoUpload({ orgId }: { orgId: string }) {
+    const [progress, setProgress] = React.useState<UploadProgressEvent | null>(null);
+    const uploadLogo = useUploadOrganizationLogo();
+    const trackerRef = React.useRef(new UploadProgressTracker());
+
+    const handleUpload = async (file: File) => {
+        const tracker = trackerRef.current;
+
+        try {
+            await uploadLogo.mutateAsync({
+                id: orgId,
+                file,
+                options: {
+                    onProgress: (event) => {
+                        // Update tracker with new progress
+                        const enrichedProgress = tracker.update(event);
+                        setProgress(enrichedProgress);
+                    },
+                },
+            });
+
+            // Reset tracker on success
+            tracker.reset();
+            setProgress(null);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
+    };
+
+    return (
+        <div>
+            <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleUpload(file);
+                }}
+            />
+
+            {progress && (
+                <div>
+                    <div>Progress: {progress.percentage.toFixed(0)}%</div>
+                    {progress.speed && <div>Speed: {formatSpeed(progress.speed)}</div>}
+                    {progress.estimatedTimeRemaining && (
+                        <div>ETA: {formatETA(progress.estimatedTimeRemaining)}</div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+```
+
+### Upload with Custom Compression Options
+
+```tsx
+import { useUploadUserAvatar } from "@digilist/client-sdk";
+
+function UserAvatarUpload({ userId }: { userId: string }) {
+    const uploadAvatar = useUploadUserAvatar();
+
+    const handleUpload = async (file: File) => {
+        await uploadAvatar.mutateAsync({
+            id: userId,
+            file,
+            options: {
+                compress: true,
+                compressionOptions: {
+                    maxSizeMB: 0.5,            // Compress to 500KB max
+                    maxWidthOrHeight: 1024,    // Max dimension 1024px
+                    initialQuality: 0.9,       // High quality (0-1)
+                    useWebWorker: true,        // Use web worker
+                },
+                onProgress: (event) => {
+                    console.log(`Upload: ${event.percentage.toFixed(0)}%`);
+                },
+            },
+        });
+    };
+
+    return <input type="file" accept="image/*" onChange={(e) => {
+        const file = e.target.files?.[0];
+        if (file) handleUpload(file);
+    }} />;
+}
+```
+
+### Upload Utilities
+
+```typescript
+import {
+    compressImage,
+    compressImages,
+    formatBytes,
+    formatSpeed,
+    formatETA,
+    isImageFile,
+    needsCompression,
+    validateImageFile,
+    UploadProgressTracker,
+} from "@digilist/client-sdk";
+
+// Compress a single image
+const compressedFile = await compressImage(file, {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+});
+
+// Compress multiple images
+const compressedFiles = await compressImages(files, {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+});
+
+// Check if file is an image
+if (isImageFile(file)) {
+    console.log("It's an image!");
+}
+
+// Check if image needs compression
+if (needsCompression(file, { maxSizeMB: 1 })) {
+    console.log("File is too large, compressing...");
+}
+
+// Validate image file
+const validation = validateImageFile(file, {
+    maxSizeMB: 5,
+    allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+});
+if (!validation.valid) {
+    console.error(validation.error);
+}
+
+// Format utilities (Norwegian locale)
+formatBytes(1024 * 1024);           // "1,0 MB"
+formatSpeed(1024 * 500);            // "500,0 KB/s"
+formatETA(45000);                   // "45 sekunder"
+
+// Progress tracker for smoothed speed calculations
+const tracker = new UploadProgressTracker();
+const enrichedProgress = tracker.update({
+    loaded: 512000,
+    total: 1024000,
+    percentage: 50,
+});
+console.log(enrichedProgress.speed);                 // Smoothed speed in bytes/s
+console.log(enrichedProgress.estimatedTimeRemaining); // ETA in milliseconds
+tracker.reset(); // Reset for next upload
+```
+
+### Upload Options
+
+```typescript
+interface UploadOptions {
+    /** Progress callback function */
+    onProgress?: (progress: UploadProgressEvent) => void;
+
+    /** Whether to compress images before upload (default: true) */
+    compress?: boolean;
+
+    /** Image compression options */
+    compressionOptions?: {
+        maxSizeMB?: number;           // Default: 1
+        maxWidthOrHeight?: number;    // Default: 1920
+        useWebWorker?: boolean;       // Default: true
+        initialQuality?: number;      // Default: 0.8
+        fileType?: string;            // Default: original type
+    };
+
+    /** Additional form fields to include in the upload */
+    fields?: Record<string, string>;
+
+    /** Request timeout in milliseconds */
+    timeout?: number;
+}
+```
+
+### Upload Response
+
+```typescript
+interface MediaUploadResponse {
+    id: string;
+    entityId: string;                          // ID of listing/org/user
+    entityType: 'listing' | 'organization' | 'user';
+    urls: string[];                            // Public URLs
+    files: Array<{
+        originalName: string;
+        filename: string;
+        url: string;
+        size: number;
+        mimeType: string;
+        width?: number;                        // For images
+        height?: number;                       // For images
+    }>;
+    createdAt: string;
+    updatedAt: string;
+}
+```
+
+### Error Handling
+
+```typescript
+import { ApiError } from "@digilist/client-sdk";
+
+try {
+    await uploadMedia.mutateAsync({ id, files });
+} catch (error) {
+    if (error instanceof ApiError) {
+        // Handle specific error types
+        switch (error.code) {
+            case "FILE_TOO_LARGE":
+                console.error("File is too large. Max size: 10MB");
+                break;
+            case "INVALID_FILE_TYPE":
+                console.error("Invalid file type. Only images allowed");
+                break;
+            case "UPLOAD_FAILED":
+                console.error("Upload failed. Please try again");
+                break;
+            default:
+                console.error(error.message);
+        }
+    }
+}
+```
+
+### Complete Upload Component Example
+
+```tsx
+import React, { useState, useRef } from "react";
+import {
+    useUploadListingMedia,
+    UploadProgressTracker,
+    formatBytes,
+    formatSpeed,
+    formatETA,
+    type UploadProgressEvent,
+} from "@digilist/client-sdk";
+
+function ListingImageUploader({ listingId }: { listingId: string }) {
+    const [progress, setProgress] = useState<UploadProgressEvent | null>(null);
+    const [status, setStatus] = useState<"idle" | "compressing" | "uploading" | "complete" | "error">("idle");
+    const [error, setError] = useState<string | null>(null);
+
+    const uploadMedia = useUploadListingMedia();
+    const trackerRef = useRef(new UploadProgressTracker());
+
+    const handleUpload = async (files: File[]) => {
+        const tracker = trackerRef.current;
+        tracker.reset();
+        setError(null);
+        setStatus("compressing");
+
+        try {
+            await uploadMedia.mutateAsync({
+                id: listingId,
+                files,
+                options: {
+                    compress: true,
+                    compressionOptions: {
+                        maxSizeMB: 1,
+                        maxWidthOrHeight: 1920,
+                    },
+                    onProgress: (event) => {
+                        setStatus("uploading");
+                        const enrichedProgress = tracker.update(event);
+                        setProgress(enrichedProgress);
+                    },
+                },
+            });
+
+            setStatus("complete");
+            setProgress(null);
+            setTimeout(() => setStatus("idle"), 2000);
+        } catch (err) {
+            setStatus("error");
+            setError(err instanceof Error ? err.message : "Upload failed");
+        }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length > 0) {
+            handleUpload(files);
+        }
+    };
+
+    return (
+        <div>
+            <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                onChange={handleFileSelect}
+                disabled={status === "compressing" || status === "uploading"}
+            />
+
+            {status === "compressing" && (
+                <div>🔄 Compressing images...</div>
+            )}
+
+            {status === "uploading" && progress && (
+                <div>
+                    <div>
+                        📤 Uploading: {progress.percentage.toFixed(0)}%
+                    </div>
+                    <progress value={progress.percentage} max={100} />
+                    {progress.speed && (
+                        <div>Speed: {formatSpeed(progress.speed)}</div>
+                    )}
+                    {progress.estimatedTimeRemaining && (
+                        <div>ETA: {formatETA(progress.estimatedTimeRemaining)}</div>
+                    )}
+                    <div>
+                        {formatBytes(progress.loaded)} / {formatBytes(progress.total)}
+                    </div>
+                </div>
+            )}
+
+            {status === "complete" && (
+                <div>✅ Upload complete!</div>
+            )}
+
+            {status === "error" && (
+                <div>❌ Error: {error}</div>
+            )}
+        </div>
+    );
+}
+```
+
+---
+
 ## Real-time Events (WebSocket)
 
 ```typescript

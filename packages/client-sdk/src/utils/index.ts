@@ -27,3 +27,30 @@ export {
   getCachedGeocode,
   type GeocodedLocation,
 } from './geocode';
+
+export {
+  // Image compression
+  compressImage,
+  compressImages,
+  isImageFile,
+  needsCompression,
+  formatFileSize,
+  validateImageType,
+  validateImageSize,
+  validateImageFile,
+} from './image-compression';
+
+export {
+  // Upload progress calculation
+  calculatePercentage,
+  calculateSpeed,
+  calculateETA,
+  createProgressEvent,
+  // Upload progress formatting
+  formatBytes,
+  formatSpeed,
+  formatETA,
+  formatProgress,
+  // Upload progress tracking
+  UploadProgressTracker,
+} from './upload-progress';

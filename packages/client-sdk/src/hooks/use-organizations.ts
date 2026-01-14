@@ -6,8 +6,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 import { organizationService, userService } from '../services/organization.service';
-import type { 
-  CreateOrganizationDTO, 
+import type {
+  CreateOrganizationDTO,
   UpdateOrganizationDTO,
   OrganizationQueryParams,
   CreateUserDTO,
@@ -15,6 +15,8 @@ import type {
   UserQueryParams,
   ConsentSettings
 } from '../types/organization';
+import type { UploadOptions } from '../types/upload';
+import { compressImage, isImageFile } from '../utils/image-compression';
 
 // ============================================================================
 // Organization Hooks
@@ -101,11 +103,53 @@ export function useDeleteOrganization() {
  */
 export function useVerifyOrganization() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => organizationService.requestVerification(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(id) });
+    },
+  });
+}
+
+// ============================================================================
+// Organization Media Hooks
+// ============================================================================
+
+interface UploadLogoParams {
+  id: string;
+  file: File;
+  options?: UploadOptions;
+}
+
+/**
+ * Upload logo to an organization
+ * Uses proper multipart/form-data upload with optional compression and progress tracking
+ */
+export function useUploadOrganizationLogo() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, file, options }: UploadLogoParams) => {
+      // Compress image if enabled (default: true)
+      const shouldCompress = options?.compress !== false;
+      let processedFile = file;
+
+      if (shouldCompress && isImageFile(file)) {
+        try {
+          processedFile = await compressImage(file, options?.compressionOptions);
+        } catch (error) {
+          // If compression fails, use original file
+          processedFile = file;
+        }
+      }
+
+      // Upload using multipart/form-data
+      return organizationService.uploadLogo(id, [processedFile], options);
+    },
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.lists() });
     },
   });
 }
@@ -208,11 +252,53 @@ export function useDeactivateUser() {
  */
 export function useReactivateUser() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => userService.reactivate(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
+    },
+  });
+}
+
+// ============================================================================
+// User Media Hooks
+// ============================================================================
+
+interface UploadAvatarParams {
+  id: string;
+  file: File;
+  options?: UploadOptions;
+}
+
+/**
+ * Upload avatar to a user
+ * Uses proper multipart/form-data upload with optional compression and progress tracking
+ */
+export function useUploadUserAvatar() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, file, options }: UploadAvatarParams) => {
+      // Compress image if enabled (default: true)
+      const shouldCompress = options?.compress !== false;
+      let processedFile = file;
+
+      if (shouldCompress && isImageFile(file)) {
+        try {
+          processedFile = await compressImage(file, options?.compressionOptions);
+        } catch (error) {
+          // If compression fails, use original file
+          processedFile = file;
+        }
+      }
+
+      // Upload using multipart/form-data
+      return userService.uploadAvatar(id, [processedFile], options);
+    },
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() });
     },
   });
 }

@@ -10,12 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@xala/i18n": "workspace:*",
+    "@digilist/client-sdk": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "@xala/ds": "workspace:*",
     "@xala/ds-registry": "workspace:*",
     "@xala/ds-themes": "workspace:*",
-    "@digilist/client-sdk": "workspace:*",
+    "@xala/i18n": "workspace:*",
     "mapbox-gl": "^3.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -29,6 +29,7 @@
     "@xala/eslint-config": "workspace:*",
     "eslint": "^9.10.0",
     "typescript": "^5.6.3",
-    "vite": "^5.4.8"
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^1.2.0"
   }
 }

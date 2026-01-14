@@ -11,13 +11,14 @@ import {
   allocationService, 
   availabilityService 
 } from '../services/booking.service';
-import type { 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import type {
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
   CreateAllocationDTO
 } from '../types/booking';
+import type { ConflictCheckParams } from '../types/additional';
 
 // ============================================================================
 // Booking Hooks
@@ -191,6 +192,17 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
     queryKey: queryKeys.calendar.slots(params),
     queryFn: () => availabilityService.getSlots(params),
     enabled: !!params.listingId && !!params.date,
+  });
+}
+
+/**
+ * Check for conflicts in time range
+ */
+export function useConflictCheck(params: ConflictCheckParams, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.calendar.conflicts(params),
+    queryFn: () => availabilityService.checkConflicts(params),
+    enabled: !!params.listingId && !!params.startTime && !!params.endTime && (options?.enabled ?? true),
   });
 }
 

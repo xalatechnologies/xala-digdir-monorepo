@@ -140,6 +140,46 @@ class SeasonalLeaseService {
   async generateAllocations(id: string): Promise<{ data: { allocationsCreated: number } }> {
     return getClient().post<{ data: { allocationsCreated: number } }>(`${this.basePath}/${id}/generate-allocations`);
   }
+
+  /**
+   * Get allocation suggestions (KRAV-ADM-05)
+   * Returns rule-based suggestions for seasonal allocation
+   */
+  async getSuggestions(params?: { listingId?: string; season?: string }): Promise<{ data: AllocationSuggestions }> {
+    const queryParams = new URLSearchParams();
+    if (params?.listingId) queryParams.set('listingId', params.listingId);
+    if (params?.season) queryParams.set('season', params.season);
+    
+    const url = queryParams.toString()
+      ? `${this.basePath}/suggestions?${queryParams.toString()}`
+      : `${this.basePath}/suggestions`;
+      
+    return getClient().get<{ data: AllocationSuggestions }>(url);
+  }
+}
+
+// =============================================================================
+// Allocation Suggestion Types (KRAV-ADM-05)
+// =============================================================================
+
+export interface AllocationSuggestions {
+  season: string;
+  listingId: string;
+  generatedAt: string;
+  algorithm: string;
+  canOverride: boolean;
+  suggestions: AllocationSuggestion[];
+}
+
+export interface AllocationSuggestion {
+  priority: number;
+  organizationId: string | null;
+  organizationName: string;
+  suggestedWeekdays: number[];
+  suggestedTimeSlot: { startTime: string; endTime: string };
+  reasoning: string;
+  historicalUsage: { totalLeases: number; lastSeason: string | null };
 }
 
 export const seasonalLeaseService = new SeasonalLeaseService();
+

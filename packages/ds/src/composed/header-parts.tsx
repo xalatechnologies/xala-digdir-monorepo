@@ -845,6 +845,7 @@ export const HeaderSearch = forwardRef<HTMLDivElement, HeaderSearchProps>(
               aria-activedescendant={selectedIndex >= 0 ? `result-${selectedIndex}` : undefined}
               role="combobox"
               aria-autocomplete="list"
+              autoComplete="off"
               style={{
                 flex: 1,
                 border: 'none',

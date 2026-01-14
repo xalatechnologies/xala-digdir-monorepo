@@ -87,6 +87,10 @@ export {
   useDialog,
   ConfirmDialog,
   AlertDialog,
+  // Mobile Navigation
+  MobileNav,
+  MobileNavToggle,
+  BottomNavigation,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -131,6 +135,13 @@ export type {
   ConfirmDialogProps,
   AlertDialogProps,
   DialogVariant,
+  // Mobile Navigation Types
+  MobileNavProps,
+  MobileNavToggleProps,
+  MobileNavItem,
+  MobileNavSection,
+  BottomNavigationProps,
+  BottomNavigationItem,
 } from './composed';
 
 // Primitives - Low-level building blocks

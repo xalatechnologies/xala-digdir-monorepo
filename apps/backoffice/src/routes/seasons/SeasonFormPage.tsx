@@ -1,0 +1,303 @@
+/**
+ * Season Form Page
+ * Full-page form for creating and editing seasonal lease seasons
+ */
+
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Button,
+  Spinner,
+  ArrowLeftIcon,
+  Stack,
+  FormField,
+  TextField,
+  Alert,
+} from '@xala/ds';
+import {
+  useSeason,
+  useCreateSeason,
+  useUpdateSeason,
+  type CreateSeasonDTO,
+} from '@digilist/client-sdk';
+import { FormSection, FormActions } from '../../components/shared';
+
+export function SeasonFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+  const isEditing = !!id;
+
+  // Queries
+  const { data: seasonData, isLoading } = useSeason(id!, {
+    enabled: isEditing,
+  });
+  const season = seasonData?.data;
+
+  // Mutations
+  const createSeasonMutation = useCreateSeason();
+  const updateSeasonMutation = useUpdateSeason();
+
+  // Form state
+  const [formData, setFormData] = useState<CreateSeasonDTO>({
+    name: '',
+    startDate: '',
+    endDate: '',
+    applicationDeadline: '',
+    description: '',
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Initialize form from season data
+  useEffect(() => {
+    if (season) {
+      setFormData({
+        name: season.name,
+        startDate: season.startDate.split('T')[0],
+        endDate: season.endDate.split('T')[0],
+        applicationDeadline: season.applicationDeadline.split('T')[0],
+        description: season.description || '',
+      });
+    }
+  }, [season]);
+
+  // Validation
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Navn er påkrevd';
+    }
+
+    if (!formData.startDate) {
+      newErrors.startDate = 'Startdato er påkrevd';
+    }
+
+    if (!formData.endDate) {
+      newErrors.endDate = 'Sluttdato er påkrevd';
+    }
+
+    if (formData.startDate && formData.endDate && formData.startDate >= formData.endDate) {
+      newErrors.endDate = 'Sluttdato må være etter startdato';
+    }
+
+    if (!formData.applicationDeadline) {
+      newErrors.applicationDeadline = 'Søknadsfrist er påkrevd';
+    }
+
+    if (formData.applicationDeadline && formData.startDate && formData.applicationDeadline >= formData.startDate) {
+      newErrors.applicationDeadline = 'Søknadsfrist må være før startdato';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handlers
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const cleanData: CreateSeasonDTO = {
+        ...formData,
+        description: formData.description?.trim() || undefined,
+      };
+
+      if (isEditing && id) {
+        await updateSeasonMutation.mutateAsync({ id, data: cleanData });
+        navigate(`/seasons/${id}`);
+      } else {
+        const result = await createSeasonMutation.mutateAsync(cleanData);
+        navigate(`/seasons/${result.data.id}`);
+      }
+    } catch (error) {
+      console.error('Failed to save season:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (isEditing && id) {
+      navigate(`/seasons/${id}`);
+    } else {
+      navigate('/seasons');
+    }
+  };
+
+  const handleChange = (field: keyof CreateSeasonDTO) => (value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  if (isEditing && isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (isEditing && !season) {
+    return (
+      <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <Heading level={3} data-size="sm">Sesong ikke funnet</Heading>
+        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
+          Sesongen eksisterer ikke eller er slettet.
+        </Paragraph>
+        <Link to="/seasons">
+          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+            <ArrowLeftIcon />
+            Tilbake til oversikt
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)', maxWidth: '800px', margin: '0 auto' }}>
+      {/* Header */}
+      <div>
+        <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
+          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+            <ArrowLeftIcon />
+            {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
+          </Button>
+        </Link>
+
+        <Heading level={2} data-size="lg">
+          {isEditing ? 'Rediger sesong' : 'Ny sesong'}
+        </Heading>
+        <Paragraph
+          data-size="sm"
+          style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
+        >
+          {isEditing
+            ? 'Oppdater informasjon om sesongen'
+            : 'Opprett en ny sesong for sesongleie'}
+        </Paragraph>
+      </div>
+
+      {/* Info Alert */}
+      {!isEditing && (
+        <Alert severity="info">
+          Sesongen opprettes som <strong>Utkast</strong>. Du må legge til lokaler før du kan åpne den for søknader.
+        </Alert>
+      )}
+
+      {/* Form */}
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <Stack gap={5}>
+            {/* Basic Information */}
+            <FormSection title="Grunnleggende informasjon">
+              <Stack gap={4}>
+                <FormField
+                  label="Navn"
+                  required
+                  error={errors.name}
+                  description="F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'"
+                >
+                  <TextField
+                    value={formData.name}
+                    onChange={(e) => handleChange('name')(e.target.value)}
+                    placeholder="Vårsesong 2026"
+                    error={!!errors.name}
+                  />
+                </FormField>
+
+                <FormField
+                  label="Beskrivelse"
+                  description="Retningslinjer og informasjon til søkere (valgfritt)"
+                >
+                  <TextField
+                    value={formData.description || ''}
+                    onChange={(e) => handleChange('description')(e.target.value)}
+                    placeholder="Legg til beskrivelse og retningslinjer..."
+                    multiline
+                    rows={4}
+                  />
+                </FormField>
+              </Stack>
+            </FormSection>
+
+            {/* Period */}
+            <FormSection title="Periode og frister">
+              <Stack gap={4}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                  <FormField
+                    label="Startdato"
+                    required
+                    error={errors.startDate}
+                    description="Når sesongen starter"
+                  >
+                    <TextField
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) => handleChange('startDate')(e.target.value)}
+                      error={!!errors.startDate}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Sluttdato"
+                    required
+                    error={errors.endDate}
+                    description="Når sesongen slutter"
+                  >
+                    <TextField
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) => handleChange('endDate')(e.target.value)}
+                      error={!!errors.endDate}
+                      min={formData.startDate}
+                    />
+                  </FormField>
+                </div>
+
+                <FormField
+                  label="Søknadsfrist"
+                  required
+                  error={errors.applicationDeadline}
+                  description="Siste dag for å sende inn søknader"
+                >
+                  <TextField
+                    type="date"
+                    value={formData.applicationDeadline}
+                    onChange={(e) => handleChange('applicationDeadline')(e.target.value)}
+                    error={!!errors.applicationDeadline}
+                    max={formData.startDate}
+                  />
+                </FormField>
+              </Stack>
+            </FormSection>
+
+            {/* Actions */}
+            <FormActions
+              submitText={isEditing ? 'Lagre endringer' : 'Opprett sesong'}
+              onCancel={handleCancel}
+              isSubmitting={isSubmitting}
+            />
+          </Stack>
+        </form>
+      </Card>
+    </div>
+  );
+}

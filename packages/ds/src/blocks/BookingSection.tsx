@@ -5,7 +5,7 @@
  * Combines calendar, stepper, selected slots panel, and CTAs.
  */
 import * as React from 'react';
-import { Heading, Paragraph, Button, Alert } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import {
   CalendarIcon,
@@ -118,7 +118,7 @@ function getDayNames(): string[] {
  * BookingSection component
  */
 export function BookingSection({
-  listingName,
+  listingName: _listingName,
   basePrice,
   currency = 'NOK',
   steps,

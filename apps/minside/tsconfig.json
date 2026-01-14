@@ -20,9 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [
-    { "path": "../../packages/ds" },
-    { "path": "../../packages/client-sdk" }
-  ]
+  "include": ["src"]
 }

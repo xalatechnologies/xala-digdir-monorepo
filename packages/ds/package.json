@@ -12,6 +12,10 @@
       "default": "./src/styles.ts"
     }
   },
+  "scripts": {
+    "build": "echo 'DS package is source-only, consumed directly by bundlers'",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@digdir/designsystemet-css": "^1.0.0",
     "@digdir/designsystemet-react": "^1.9.0",

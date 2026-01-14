@@ -53,7 +53,9 @@
       "optional": true
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "browser-image-compression": "^2.0.2"
+  },
   "devDependencies": {
     "@tanstack/react-query": "^5.62.16",
     "@types/node": "^22.10.7",

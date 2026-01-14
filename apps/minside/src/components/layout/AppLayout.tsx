@@ -1,4 +1,24 @@
+/**
+ * AppLayout Component
+ *
+ * Mobile-first responsive layout for Minside app
+ * - Shows sidebar on desktop (>= 768px)
+ * - Shows bottom navigation on mobile (< 768px)
+ * - Follows DIGILIST design patterns
+ */
+
 import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+  BottomNavigation,
+  type BottomNavigationItem,
+  HomeIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  MessageIcon,
+  SettingsIcon,
+} from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -10,9 +30,64 @@ const pageTitles: Record<string, string> = {
   '/settings': 'Innstillinger',
 };
 
+const MOBILE_BREAKPOINT = 768;
+
 export function AppLayout() {
   const location = useLocation();
+  const t = useT();
   const title = pageTitles[location.pathname] ?? '';
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
+  );
+
+  // Track viewport size for mobile/desktop detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Bottom navigation items for mobile
+  const bottomNavItems: BottomNavigationItem[] = [
+    {
+      id: 'dashboard',
+      label: t('minside.dashboard'),
+      icon: <HomeIcon />,
+      href: '/',
+      active: location.pathname === '/',
+    },
+    {
+      id: 'bookings',
+      label: t('minside.myBookings'),
+      icon: <BookOpenIcon />,
+      href: '/bookings',
+      active: location.pathname.startsWith('/bookings'),
+    },
+    {
+      id: 'calendar',
+      label: t('minside.myCalendar'),
+      icon: <CalendarIcon />,
+      href: '/calendar',
+      active: location.pathname.startsWith('/calendar'),
+    },
+    {
+      id: 'messages',
+      label: t('minside.messages'),
+      icon: <MessageIcon />,
+      href: '/messages',
+      active: location.pathname.startsWith('/messages'),
+    },
+    {
+      id: 'settings',
+      label: t('minside.settings'),
+      icon: <SettingsIcon />,
+      href: '/settings',
+      active: location.pathname.startsWith('/settings'),
+    },
+  ];
 
   return (
     <div
@@ -22,7 +97,8 @@ export function AppLayout() {
         backgroundColor: 'var(--ds-color-neutral-background-default)',
       }}
     >
-      <Sidebar />
+      {/* Sidebar - Desktop only */}
+      {!isMobile && <Sidebar />}
 
       <div
         style={{
@@ -38,7 +114,9 @@ export function AppLayout() {
           style={{
             flex: 1,
             overflow: 'auto',
-            padding: 'var(--ds-spacing-8)',
+            padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-8)',
+            // Add padding at bottom for bottom navigation on mobile
+            paddingBottom: isMobile ? 'calc(64px + var(--ds-spacing-4) + env(safe-area-inset-bottom))' : 'var(--ds-spacing-8)',
           }}
         >
           <div style={{ maxWidth: '1400px' }}>
@@ -46,6 +124,17 @@ export function AppLayout() {
           </div>
         </main>
       </div>
+
+      {/* Bottom Navigation - Mobile only */}
+      {isMobile && (
+        <BottomNavigation
+          items={bottomNavItems}
+          fixed={true}
+          variant="surface"
+          showLabels={true}
+          safeArea={true}
+        />
+      )}
     </div>
   );
 }

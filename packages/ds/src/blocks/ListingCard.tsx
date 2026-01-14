@@ -270,6 +270,8 @@ export function ListingCard({
             <img
               src={image}
               alt={name}
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: 'var(--ds-size-image-detailed, 240px)',
@@ -456,6 +458,8 @@ export function ListingCard({
         <img
           src={image}
           alt={name}
+          loading="lazy"
+          decoding="async"
           style={{
             width: '100%',
             height: '100%',

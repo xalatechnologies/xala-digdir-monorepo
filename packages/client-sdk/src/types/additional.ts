@@ -162,6 +162,52 @@ export interface ReportQueryParams {
 }
 
 // =============================================================================
+// Analytics
+// =============================================================================
+
+export interface TimeSlotHeatmap {
+  dayOfWeek: number;
+  hour: number;
+  bookingCount: number;
+  utilizationRate: number;
+}
+
+export interface SeasonalPattern {
+  period: string;
+  year: number;
+  bookingCount: number;
+  revenue: number;
+  utilizationRate: number;
+}
+
+export interface PeriodComparison {
+  current: {
+    startDate: string;
+    endDate: string;
+    bookingCount: number;
+    revenue: number;
+    utilizationRate: number;
+  };
+  previous: {
+    startDate: string;
+    endDate: string;
+    bookingCount: number;
+    revenue: number;
+    utilizationRate: number;
+  };
+  percentageChange: {
+    bookings: number;
+    revenue: number;
+    utilization: number;
+  };
+}
+
+export interface EnhancedReportFilter extends ReportQueryParams {
+  facilityId?: string;
+  bookingType?: string;
+}
+
+// =============================================================================
 // Audit
 // =============================================================================
 

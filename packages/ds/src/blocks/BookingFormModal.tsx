@@ -13,7 +13,6 @@ import {
   Textarea,
   Checkbox,
   Button,
-  Select,
 } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { CalendarIcon, ClockIcon, CloseIcon } from '../primitives/icons';

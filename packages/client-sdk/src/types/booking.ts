@@ -139,3 +139,37 @@ export interface CreateAllocationDTO {
     weekdays?: number[];
   };
 }
+
+// =============================================================================
+// Receipt Types (KRAV-ADM-07)
+// =============================================================================
+
+export interface BookingReceipt {
+  receiptNumber: string;
+  bookingId: string;
+  generatedAt: string;
+  customer: {
+    userId: string;
+    tenantId: string;
+  };
+  service: {
+    listingId: string;
+    description: string;
+    duration: string;
+  };
+  location: {
+    tenantId: string;
+    listingId: string;
+  };
+  timing: {
+    bookingDate: string;
+    serviceDate: string;
+    receiptDate: string;
+  };
+  payment: {
+    amount: string;
+    currency: string;
+    status: string;
+  };
+}
+

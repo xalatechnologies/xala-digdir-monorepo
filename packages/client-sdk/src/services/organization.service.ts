@@ -18,6 +18,7 @@ import type {
   ConsentSettings
 } from '../types/organization';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+import type { UploadOptions, MediaUploadResponse } from '../types/upload';
 
 export class OrganizationService extends BaseService {
   constructor() {
@@ -92,6 +93,18 @@ export class OrganizationService extends BaseService {
    */
   async removeMember(orgId: string, memberId: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${orgId}/members/${memberId}`));
+  }
+
+  /**
+   * Upload logo to organization
+   * Uses multipart/form-data for proper file upload with progress tracking
+   * @param id - Organization ID
+   * @param files - Files to upload
+   * @param options - Upload options including progress callback
+   * @returns MediaUploadResponse with uploaded file details
+   */
+  async uploadLogo(id: string, files: File[], options?: UploadOptions): Promise<MediaUploadResponse> {
+    return super.uploadMedia(`/${id}/logo`, files, options);
   }
 }
 
@@ -186,6 +199,18 @@ export class UserService extends BaseService {
    */
   async updateConsents(consents: Partial<ConsentSettings>): Promise<SingleResponse<ConsentSettings>> {
     return this.client.put(this.buildPath('/me/consents'), consents);
+  }
+
+  /**
+   * Upload avatar to user
+   * Uses multipart/form-data for proper file upload with progress tracking
+   * @param id - User ID
+   * @param files - Files to upload
+   * @param options - Upload options including progress callback
+   * @returns MediaUploadResponse with uploaded file details
+   */
+  async uploadAvatar(id: string, files: File[], options?: UploadOptions): Promise<MediaUploadResponse> {
+    return super.uploadMedia(`/${id}/avatar`, files, options);
   }
 }
 

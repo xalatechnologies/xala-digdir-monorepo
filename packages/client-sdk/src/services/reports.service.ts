@@ -9,6 +9,9 @@ import type {
   UsageReport,
   RevenueReport,
   ExportFormat,
+  TimeSlotHeatmap,
+  SeasonalPattern,
+  PeriodComparison,
 } from '../types';
 
 export interface DashboardStats {
@@ -99,6 +102,42 @@ class ReportsService {
     });
 
     return getClient().get<{ period: string; occupancyRate: number; bookings: number }[]>(`${this.basePath}/occupancy?${queryParams.toString()}`);
+  }
+
+  /**
+   * Get heatmap data
+   */
+  async getHeatmapData(params: ReportQueryParams): Promise<TimeSlotHeatmap[]> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) queryParams.set(key, String(value));
+    });
+
+    return getClient().get<TimeSlotHeatmap[]>(`${this.basePath}/heatmap?${queryParams.toString()}`);
+  }
+
+  /**
+   * Get seasonal patterns
+   */
+  async getSeasonalPatterns(params: ReportQueryParams): Promise<SeasonalPattern[]> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) queryParams.set(key, String(value));
+    });
+
+    return getClient().get<SeasonalPattern[]>(`${this.basePath}/seasonal?${queryParams.toString()}`);
+  }
+
+  /**
+   * Get period comparison data
+   */
+  async getComparisonData(params: ReportQueryParams): Promise<PeriodComparison> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) queryParams.set(key, String(value));
+    });
+
+    return getClient().get<PeriodComparison>(`${this.basePath}/comparison?${queryParams.toString()}`);
   }
 
   /**

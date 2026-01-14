@@ -6,8 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Paragraph, Button } from '@digdir/designsystemet-react';
-import { CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@xala/ds';
+import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@xala/ds';
 import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus } from '../providers';
 import type { RealtimeEvent } from '@digilist/client-sdk';
 
@@ -162,6 +161,10 @@ export function RealtimeToast(): React.ReactElement {
 
   return (
     <div
+      role="region"
+      aria-label="Varsler"
+      aria-live="polite"
+      aria-atomic="false"
       style={{
         position: 'fixed',
         bottom: 'var(--ds-spacing-6)',
@@ -179,6 +182,8 @@ export function RealtimeToast(): React.ReactElement {
         return (
           <div
             key={toast.id}
+            role={toast.type === 'error' ? 'alert' : 'status'}
+            aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
             style={{
               backgroundColor: colors.bg,
               border: `1px solid ${colors.border}`,
