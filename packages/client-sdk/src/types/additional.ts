@@ -3,7 +3,7 @@
  * Types that don't fit into the main domain categories
  */
 
-import type { TenantEntity, SeasonalLeaseStatus, ConversationStatus, MessageSenderType, ReportPeriod, DiscountType, BaseQueryParams } from './enums';
+import type { TenantEntity, SeasonalLeaseStatus, ConversationStatus, MessageSenderType, ReportPeriod, DiscountType, BaseQueryParams, ExportFormat } from './enums';
 
 // =============================================================================
 // Seasonal Lease
@@ -159,6 +159,77 @@ export interface ReportQueryParams {
   endDate?: string;
   listingId?: string;
   organizationId?: string;
+}
+
+// =============================================================================
+// Report Templates
+// =============================================================================
+
+export type ReportType =
+  | 'usage'
+  | 'revenue'
+  | 'booking'
+  | 'utilization'
+  | 'seasonal_allocation'
+  | 'custom';
+
+export type ReportScheduleFrequency = 'daily' | 'weekly' | 'monthly' | 'quarterly';
+
+export interface ReportMetric {
+  key: string;
+  label: string;
+  aggregation?: 'sum' | 'avg' | 'count' | 'min' | 'max';
+}
+
+export interface ReportFilter {
+  field: string;
+  operator: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'between';
+  value: string | number | string[] | number[];
+}
+
+export interface ReportSchedule {
+  frequency: ReportScheduleFrequency;
+  dayOfWeek?: number;
+  dayOfMonth?: number;
+  time?: string;
+  recipients?: string[];
+  enabled: boolean;
+  nextRunAt?: string;
+  lastRunAt?: string;
+}
+
+export interface ReportTemplate extends TenantEntity {
+  name: string;
+  description?: string;
+  reportType: ReportType;
+  metrics: ReportMetric[];
+  filters?: ReportFilter[];
+  defaultPeriod?: ReportPeriod;
+  exportFormat?: ExportFormat;
+  schedule?: ReportSchedule;
+  isSystem?: boolean;
+  createdBy?: string;
+}
+
+export interface CreateReportTemplateDTO {
+  name: string;
+  description?: string;
+  reportType: ReportType;
+  metrics: ReportMetric[];
+  filters?: ReportFilter[];
+  defaultPeriod?: ReportPeriod;
+  exportFormat?: ExportFormat;
+  schedule?: Omit<ReportSchedule, 'nextRunAt' | 'lastRunAt'>;
+}
+
+export interface UpdateReportTemplateDTO {
+  name?: string;
+  description?: string;
+  metrics?: ReportMetric[];
+  filters?: ReportFilter[];
+  defaultPeriod?: ReportPeriod;
+  exportFormat?: ExportFormat;
+  schedule?: Omit<ReportSchedule, 'nextRunAt' | 'lastRunAt'>;
 }
 
 // =============================================================================
