@@ -186,6 +186,13 @@ class SeasonService {
   async addVenueToSeason(seasonId: string, listingId: string): Promise<{ data: SeasonVenue }> {
     return getClient().post<{ data: SeasonVenue }>(`${this.basePath}/${seasonId}/venues`, { listingId });
   }
+
+  /**
+   * Remove a venue from a season
+   */
+  async removeVenueFromSeason(seasonId: string, listingId: string): Promise<void> {
+    return getClient().delete(`${this.basePath}/${seasonId}/venues/${listingId}`);
+  }
 }
 
 export const seasonService = new SeasonService();
