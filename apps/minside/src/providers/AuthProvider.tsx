@@ -64,14 +64,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         window.history.replaceState({}, document.title, window.location.pathname);
       }
 
-      // Mock auth mode - use localStorage for development
+      // Mock auth mode - in-memory only (no localStorage)
       if (USE_MOCK_AUTH) {
-        const mockUserType = localStorage.getItem('backoffice_mock_user_type');
-        if (mockUserType) {
-          // Map stored user type to predefined typed object (no JSON.parse to prevent prototype pollution)
-          const mockUser = mockUserType === 'admin' ? MOCK_ADMIN_USER : MOCK_USER;
-          setUser(mockUser);
-        }
+        // Mock auth doesn't persist across page refreshes (in-memory only)
+        // User must login again after refresh, which is expected for development
         setIsLoading(false);
         return;
       }
@@ -97,11 +93,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = useCallback((provider: 'idporten' | 'microsoft' | 'vipps' = 'idporten') => {
     if (USE_MOCK_AUTH) {
       // Simulate login - use Ola Hansen (the seeded user)
+      // Mock auth is in-memory only (no localStorage persistence)
       const mockUser = provider === 'microsoft' ? MOCK_ADMIN_USER : MOCK_USER;
-      const mockUserType = provider === 'microsoft' ? 'admin' : 'user';
-      // Store only user type identifier to avoid JSON.parse prototype pollution
-      localStorage.setItem('backoffice_mock_user_type', mockUserType);
-      localStorage.setItem('minside_user_type', mockUserType);
       setUser(mockUser);
       navigate('/');
       return;
@@ -114,11 +107,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
-    // Mock auth mode - clear localStorage
-    if (USE_MOCK_AUTH) {
-      localStorage.removeItem('backoffice_mock_user_type');
-      localStorage.removeItem('minside_user_type');
-    } else {
+    // Mock auth mode - clear in-memory state only
+    if (!USE_MOCK_AUTH) {
       // Real auth mode - call API to clear httpOnly cookie
       try {
         await authService.logout();
