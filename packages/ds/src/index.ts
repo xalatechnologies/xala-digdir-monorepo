@@ -222,6 +222,7 @@ export {
   ListingGrid,
   ListingToolbar,
   ListingMap,
+  ListingTableView,
   ImageGallery,
   ImageSlider,
   ListingDetailHeader,

@@ -14,9 +14,9 @@ import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
-import { SeasonsPage } from './routes/seasons';
+import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
-import { OrganizationsPage, OrganizationEditPage } from './routes/organizations';
+import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage } from './routes/organizations';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
@@ -69,7 +69,10 @@ function AppWithTheme() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
-              <Route path="seasons" element={<SeasonsPage />} />
+              <Route path="seasons" element={<SeasonsListPage />} />
+              <Route path="seasons/new" element={<SeasonFormPage />} />
+              <Route path="seasons/:id" element={<SeasonDetailPage />} />
+              <Route path="seasons/:id/edit" element={<SeasonFormPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route
@@ -84,7 +87,15 @@ function AppWithTheme() {
                 path="organizations"
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <OrganizationsPage />
+                    <OrganizationsListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/new"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationFormPage />
                   </ProtectedRoute>
                 }
               />
@@ -92,7 +103,15 @@ function AppWithTheme() {
                 path="organizations/:id"
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <OrganizationEditPage />
+                    <OrganizationDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/edit"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationFormPage />
                   </ProtectedRoute>
                 }
               />

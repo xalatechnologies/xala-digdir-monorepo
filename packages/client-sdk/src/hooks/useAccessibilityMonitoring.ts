@@ -4,8 +4,7 @@
  * React hook for monitoring accessibility metrics in production
  */
 
-import { useEffect, useRef, useCallback, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { getClient } from '../core/client-factory';
 import {
   AccessibilityMonitoringService,
@@ -46,10 +45,47 @@ export function useAccessibilityMonitoring(
     trackPagePerformance = true,
   } = options;
 
-  const location = useLocation();
+  // Use window.location.pathname instead of react-router's useLocation
+  // This makes the hook work without react-router-dom dependency
+  const [pathname, setPathname] = useState(
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
+
   const serviceRef = useRef<AccessibilityMonitoringService>();
   const pageLoadTimeRef = useRef<number>(Date.now());
   const lastFocusedElementRef = useRef<Element | null>(null);
+
+  // Track pathname changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleLocationChange = () => {
+      setPathname(window.location.pathname);
+    };
+
+    // Listen for navigation events
+    window.addEventListener('popstate', handleLocationChange);
+
+    // For SPAs using pushState/replaceState
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function (...args) {
+      originalPushState.apply(this, args);
+      handleLocationChange();
+    };
+
+    window.history.replaceState = function (...args) {
+      originalReplaceState.apply(this, args);
+      handleLocationChange();
+    };
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, []);
 
   // Get client instance
   const client = useMemo(() => {
@@ -92,11 +128,11 @@ export function useAccessibilityMonitoring(
     if (!enabled || !trackPagePerformance || !serviceRef.current) return;
 
     const loadTime = Date.now() - pageLoadTimeRef.current;
-    serviceRef.current.trackPageLoadTime(location.pathname, loadTime);
+    serviceRef.current.trackPageLoadTime(pathname, loadTime);
 
     // Reset for next page
     pageLoadTimeRef.current = Date.now();
-  }, [location.pathname, enabled, trackPagePerformance]);
+  }, [pathname, enabled, trackPagePerformance]);
 
   // Track keyboard navigation
   useEffect(() => {
@@ -109,12 +145,12 @@ export function useAccessibilityMonitoring(
       if (!action) return;
 
       const element = getElementType(event.target as Element);
-      serviceRef.current.trackKeyboardNavigation(action, element, location.pathname);
+      serviceRef.current.trackKeyboardNavigation(action, element, pathname);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [enabled, trackKeyboardNav, location.pathname]);
+  }, [enabled, trackKeyboardNav, pathname]);
 
   // Track focus management
   useEffect(() => {
@@ -132,7 +168,7 @@ export function useAccessibilityMonitoring(
           serviceRef.current?.trackFocusManagement(
             'focus-lost',
             getElementType(lastFocusedElementRef.current),
-            location.pathname
+            pathname
           );
         }
       }, 0);
@@ -145,7 +181,7 @@ export function useAccessibilityMonitoring(
       window.removeEventListener('focusin', handleFocusIn);
       window.removeEventListener('focusout', handleFocusOut);
     };
-  }, [enabled, trackFocusManagement, location.pathname]);
+  }, [enabled, trackFocusManagement, pathname]);
 
   // Track keyboard traps (user pressing Tab many times without focus moving)
   useEffect(() => {
@@ -171,7 +207,7 @@ export function useAccessibilityMonitoring(
           serviceRef.current?.trackFocusManagement(
             'focus-trapped',
             getElementType(currentFocus),
-            location.pathname
+            pathname
           );
           tabPressCount = 0;
         }
@@ -193,31 +229,31 @@ export function useAccessibilityMonitoring(
       window.removeEventListener('keydown', handleKeyDown);
       clearTimeout(trapTimer);
     };
-  }, [enabled, trackFocusManagement, location.pathname]);
+  }, [enabled, trackFocusManagement, pathname]);
 
   // API methods
   const trackKeyboardNavigationManual = useCallback(
     (action: KeyboardNavigationMetric['action'], element: string) => {
       if (!enabled || !serviceRef.current) return;
-      serviceRef.current.trackKeyboardNavigation(action, element, location.pathname);
+      serviceRef.current.trackKeyboardNavigation(action, element, pathname);
     },
-    [enabled, location.pathname]
+    [enabled, pathname]
   );
 
   const trackSkipLinkUsageManual = useCallback(
     (target: string) => {
       if (!enabled || !trackSkipLinks || !serviceRef.current) return;
-      serviceRef.current.trackSkipLinkUsage(target, location.pathname);
+      serviceRef.current.trackSkipLinkUsage(target, pathname);
     },
-    [enabled, trackSkipLinks, location.pathname]
+    [enabled, trackSkipLinks, pathname]
   );
 
   const trackFocusIssueManual = useCallback(
     (event: FocusManagementMetric['event'], element?: string) => {
       if (!enabled || !trackFocusManagement || !serviceRef.current) return;
-      serviceRef.current.trackFocusManagement(event, element, location.pathname);
+      serviceRef.current.trackFocusManagement(event, element, pathname);
     },
-    [enabled, trackFocusManagement, location.pathname]
+    [enabled, trackFocusManagement, pathname]
   );
 
   return {
