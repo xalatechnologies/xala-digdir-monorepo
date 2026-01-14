@@ -1,0 +1,665 @@
+/**
+ * Audit Tab Component
+ * Displays audit trail for a specific listing with filtering
+ * Shows timestamp, actor, and action for all listing-related events
+ */
+
+import { useState, useMemo, useCallback } from 'react';
+import {
+  Button,
+  Paragraph,
+  Heading,
+  Spinner,
+  Table,
+  Badge,
+  Drawer,
+  DrawerSection,
+  Stack,
+  FilterIcon,
+  CloseIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@xala/ds';
+
+import {
+  useAuditLog,
+  useUsers,
+  type AuditLogEntry,
+  type AuditQueryParams,
+} from '@digilist/client-sdk';
+import { useLocale } from '@xala/i18n';
+
+// Helper to format date
+function formatDate(timestamp: string, locale: string): string {
+  return new Date(timestamp).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+// Helper to format time
+function formatTime(timestamp: string, locale: string): string {
+  return new Date(timestamp).toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+// Action type options
+const ACTION_OPTIONS = [
+  { id: 'all', label: 'Alle handlinger' },
+  { id: 'create', label: 'Opprettet' },
+  { id: 'read', label: 'Lest' },
+  { id: 'update', label: 'Oppdatert' },
+  { id: 'delete', label: 'Slettet' },
+];
+
+// Helper to get action badge color
+function getActionColor(action: string): 'success' | 'info' | 'warning' | 'danger' | 'neutral' {
+  switch (action) {
+    case 'create':
+      return 'success';
+    case 'read':
+      return 'info';
+    case 'update':
+      return 'warning';
+    case 'delete':
+      return 'danger';
+    default:
+      return 'neutral';
+  }
+}
+
+// Helper to get action label
+function getActionLabel(action: string): string {
+  switch (action) {
+    case 'create':
+      return 'Opprettet';
+    case 'read':
+      return 'Lest';
+    case 'update':
+      return 'Oppdatert';
+    case 'delete':
+      return 'Slettet';
+    default:
+      return action;
+  }
+}
+
+interface AuditTabProps {
+  listingId: string;
+}
+
+export function AuditTab({ listingId }: AuditTabProps) {
+  const { locale } = useLocale();
+  const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
+
+  // State
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<AuditLogEntry | null>(null);
+  const [page, setPage] = useState(1);
+
+  // Filter state
+  const [actionFilter, setActionFilter] = useState<string>('all');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
+  // Build query params - filter by this listing's ID
+  const queryParams: AuditQueryParams = useMemo(() => {
+    const params: AuditQueryParams = {
+      resourceId: listingId,
+      resource: 'listing',
+      page,
+      limit: 25,
+    };
+    if (actionFilter !== 'all') params.action = actionFilter;
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+    return params;
+  }, [listingId, page, actionFilter, startDate, endDate]);
+
+  // Data fetching
+  const { data: auditData, isLoading, error } = useAuditLog(queryParams);
+  const { data: usersData } = useUsers({ limit: 100 });
+
+  // Create user lookup map
+  const userNameMap = useMemo(() => {
+    const map = new Map<string, string>();
+    usersData?.data?.forEach((user: { id: string; name?: string; email?: string }) => {
+      map.set(user.id, user.name || user.email || 'Ukjent');
+    });
+    return map;
+  }, [usersData]);
+
+  const events = auditData?.data || [];
+
+  // Pagination
+  const totalPages = auditData?.meta?.totalPages || 1;
+  const totalCount = auditData?.meta?.total || 0;
+
+  // Handlers
+  const handleRowClick = useCallback((event: AuditLogEntry) => {
+    setSelectedEvent(event);
+  }, []);
+
+  const handleCloseDrawer = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
+
+  const handlePreviousPage = useCallback(() => {
+    setPage((p) => Math.max(1, p - 1));
+  }, []);
+
+  const handleNextPage = useCallback(() => {
+    setPage((p) => Math.min(totalPages, p + 1));
+  }, [totalPages]);
+
+  const handleResetFilters = useCallback(() => {
+    setActionFilter('all');
+    setStartDate('');
+    setEndDate('');
+    setPage(1);
+  }, []);
+
+  // Count active filters
+  const activeFilters = useMemo(() => {
+    let count = 0;
+    if (actionFilter !== 'all') count++;
+    if (startDate) count++;
+    if (endDate) count++;
+    return count;
+  }, [actionFilter, startDate, endDate]);
+
+  // Loading state
+  if (isLoading && events.length === 0) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 'var(--ds-spacing-10)',
+          minHeight: '300px',
+        }}
+      >
+        <Spinner aria-label="Laster endringslogg..." />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+          Kunne ikke laste endringslogg
+        </Heading>
+        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+          Det oppstod en feil ved lasting av endringsloggen.
+        </Paragraph>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Header */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 'var(--ds-spacing-6)',
+        }}
+      >
+        <div>
+          <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
+            Endringslogg
+          </Heading>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            {totalCount} {totalCount === 1 ? 'hendelse' : 'hendelser'}
+          </Paragraph>
+        </div>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setIsFilterOpen(true)}
+          style={{ position: 'relative' }}
+        >
+          <FilterIcon size={16} />
+          Filtrer
+          {activeFilters > 0 && (
+            <Badge
+              color="info"
+              style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                minWidth: '20px',
+                height: '20px',
+                padding: '0 6px',
+                fontSize: '12px',
+              }}
+            >
+              {activeFilters}
+            </Badge>
+          )}
+        </Button>
+      </div>
+
+      {/* Empty state */}
+      {events.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-10)' }}>
+          <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+            Ingen hendelser
+          </Heading>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            {activeFilters > 0
+              ? 'Ingen hendelser matcher de valgte filtrene.'
+              : 'Ingen hendelser registrert for dette objektet ennå.'}
+          </Paragraph>
+          {activeFilters > 0 && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleResetFilters}
+              style={{ marginTop: 'var(--ds-spacing-4)' }}
+            >
+              Nullstill filtre
+            </Button>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Table */}
+          <Table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: 'var(--ds-spacing-3)',
+                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    fontWeight: 600,
+                    fontSize: 'var(--ds-font-size-sm)',
+                  }}
+                >
+                  Tidspunkt
+                </th>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: 'var(--ds-spacing-3)',
+                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    fontWeight: 600,
+                    fontSize: 'var(--ds-font-size-sm)',
+                  }}
+                >
+                  Aktør
+                </th>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: 'var(--ds-spacing-3)',
+                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    fontWeight: 600,
+                    fontSize: 'var(--ds-font-size-sm)',
+                  }}
+                >
+                  Handling
+                </th>
+                <th
+                  style={{
+                    textAlign: 'left',
+                    padding: 'var(--ds-spacing-3)',
+                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    fontWeight: 600,
+                    fontSize: 'var(--ds-font-size-sm)',
+                  }}
+                >
+                  Alvorlighetsgrad
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr
+                  key={event.id}
+                  onClick={() => handleRowClick(event)}
+                  style={{
+                    cursor: 'pointer',
+                    transition: 'background-color 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-background-subtle)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <td
+                    style={{
+                      padding: 'var(--ds-spacing-3)',
+                      borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    }}
+                  >
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                      {formatDate(event.timestamp, formatLocale)}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 'var(--ds-font-size-xs)',
+                        color: 'var(--ds-color-neutral-text-subtle)',
+                      }}
+                    >
+                      {formatTime(event.timestamp, formatLocale)}
+                    </div>
+                  </td>
+                  <td
+                    style={{
+                      padding: 'var(--ds-spacing-3)',
+                      borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                      fontSize: 'var(--ds-font-size-sm)',
+                    }}
+                  >
+                    {event.userId ? userNameMap.get(event.userId) || 'Ukjent bruker' : 'System'}
+                  </td>
+                  <td
+                    style={{
+                      padding: 'var(--ds-spacing-3)',
+                      borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                    }}
+                  >
+                    <Badge color={getActionColor(event.action)}>{getActionLabel(event.action)}</Badge>
+                  </td>
+                  <td
+                    style={{
+                      padding: 'var(--ds-spacing-3)',
+                      borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                      fontSize: 'var(--ds-font-size-sm)',
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {event.severity}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--ds-spacing-4)',
+                marginTop: 'var(--ds-spacing-6)',
+              }}
+            >
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handlePreviousPage}
+                disabled={page === 1}
+              >
+                <ChevronLeftIcon size={16} />
+                Forrige
+              </Button>
+              <Paragraph data-size="sm" style={{ margin: 0 }}>
+                Side {page} av {totalPages}
+              </Paragraph>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+              >
+                Neste
+                <ChevronRightIcon size={16} />
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Filter Drawer */}
+      <Drawer
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        title="Filtrer hendelser"
+        position="right"
+      >
+        <DrawerSection>
+          <Stack spacing={4}>
+            {/* Action Filter */}
+            <div>
+              <label
+                htmlFor="action-filter"
+                style={{
+                  display: 'block',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 500,
+                  marginBottom: 'var(--ds-spacing-2)',
+                }}
+              >
+                Handling
+              </label>
+              <select
+                id="action-filter"
+                value={actionFilter}
+                onChange={(e) => setActionFilter(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {ACTION_OPTIONS.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Date Range */}
+            <div>
+              <label
+                htmlFor="start-date"
+                style={{
+                  display: 'block',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 500,
+                  marginBottom: 'var(--ds-spacing-2)',
+                }}
+              >
+                Fra dato
+              </label>
+              <input
+                id="start-date"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="end-date"
+                style={{
+                  display: 'block',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 500,
+                  marginBottom: 'var(--ds-spacing-2)',
+                }}
+              >
+                Til dato
+              </label>
+              <input
+                id="end-date"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            {/* Reset Button */}
+            {activeFilters > 0 && (
+              <Button type="button" variant="secondary" onClick={handleResetFilters}>
+                <CloseIcon size={16} />
+                Nullstill filtre
+              </Button>
+            )}
+          </Stack>
+        </DrawerSection>
+      </Drawer>
+
+      {/* Event Detail Drawer */}
+      <Drawer
+        isOpen={!!selectedEvent}
+        onClose={handleCloseDrawer}
+        title="Hendelsesdetaljer"
+        position="right"
+      >
+        {selectedEvent && (
+          <>
+            <DrawerSection>
+              <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                Grunnleggende informasjon
+              </Heading>
+              <Stack spacing={3}>
+                <div>
+                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Hendelse-ID
+                  </div>
+                  <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'monospace' }}>
+                    {selectedEvent.id}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Tidspunkt
+                  </div>
+                  <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                    {formatDate(selectedEvent.timestamp, formatLocale)} kl.{' '}
+                    {formatTime(selectedEvent.timestamp, formatLocale)}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Aktør
+                  </div>
+                  <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                    {selectedEvent.userId
+                      ? userNameMap.get(selectedEvent.userId) || 'Ukjent bruker'
+                      : 'System'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Handling
+                  </div>
+                  <div>
+                    <Badge color={getActionColor(selectedEvent.action)}>
+                      {getActionLabel(selectedEvent.action)}
+                    </Badge>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Alvorlighetsgrad
+                  </div>
+                  <div style={{ fontSize: 'var(--ds-font-size-sm)', textTransform: 'capitalize' }}>
+                    {selectedEvent.severity}
+                  </div>
+                </div>
+              </Stack>
+            </DrawerSection>
+
+            <DrawerSection>
+              <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                Teknisk informasjon
+              </Heading>
+              <Stack spacing={3}>
+                {selectedEvent.ipAddress && (
+                  <div>
+                    <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      IP-adresse
+                    </div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'monospace' }}>
+                      {selectedEvent.ipAddress}
+                    </div>
+                  </div>
+                )}
+                {selectedEvent.userAgent && (
+                  <div>
+                    <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Brukeragent
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 'var(--ds-font-size-xs)',
+                        fontFamily: 'monospace',
+                        wordBreak: 'break-all',
+                      }}
+                    >
+                      {selectedEvent.userAgent}
+                    </div>
+                  </div>
+                )}
+              </Stack>
+            </DrawerSection>
+
+            {selectedEvent.metadata && Object.keys(selectedEvent.metadata).length > 0 && (
+              <DrawerSection>
+                <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                  Metadata
+                </Heading>
+                <pre
+                  style={{
+                    fontSize: 'var(--ds-font-size-xs)',
+                    fontFamily: 'monospace',
+                    backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+                    padding: 'var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    overflow: 'auto',
+                    maxHeight: '300px',
+                  }}
+                >
+                  {JSON.stringify(selectedEvent.metadata, null, 2)}
+                </pre>
+              </DrawerSection>
+            )}
+          </>
+        )}
+      </Drawer>
+    </div>
+  );
+}

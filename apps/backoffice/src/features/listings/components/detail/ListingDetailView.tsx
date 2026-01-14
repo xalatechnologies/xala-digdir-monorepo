@@ -19,6 +19,7 @@ import { DetailHeader } from './DetailHeader';
 import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
 import { AvailabilityTab } from './AvailabilityTab';
+import { AuditTab } from './AuditTab';
 
 interface ListingDetailViewProps {
   slug: string;
@@ -175,16 +176,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
           {activeTab === 'availability' && (
             <AvailabilityTab listingId={listing.id} listingName={listing.name} />
           )}
-          {activeTab === 'audit' && (
-            <div>
-              <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-                Endringslogg
-              </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Oversikt over alle endringer og hendelser for dette utleieobjektet kommer her.
-              </Paragraph>
-            </div>
-          )}
+          {activeTab === 'audit' && <AuditTab listingId={listing.id} />}
         </Card>
       </div>
     </div>

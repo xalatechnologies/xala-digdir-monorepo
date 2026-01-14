@@ -10,16 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Heading, Paragraph, ChevronLeftIcon } from '@xala/ds';
 import type { Listing } from '@digilist/client-sdk';
 import { EditModal } from './EditModal';
+import { PublishControls } from './PublishControls';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 
 export interface DetailHeaderProps {
   /** The full listing object */
   listing: Listing;
-  /** Callback when more button is clicked */
-  onMore?: () => void;
   /** Back navigation path (defaults to /listings) */
   backPath?: string;
-  /** Callback when edit is successful */
+  /** Callback when edit is successful or any action completes */
   onEditSuccess?: () => void;
 }
 
@@ -30,14 +29,12 @@ export interface DetailHeaderProps {
  * ```tsx
  * <DetailHeader
  *   listing={listing}
- *   onMore={() => handleMore()}
  *   onEditSuccess={() => refetch()}
  * />
  * ```
  */
 export function DetailHeader({
   listing,
-  onMore,
   backPath = '/listings',
   onEditSuccess,
 }: DetailHeaderProps) {
@@ -108,11 +105,12 @@ export function DetailHeader({
           >
             Rediger
           </Button>
-          {onMore && (
-            <Button type="button" variant="tertiary" onClick={onMore}>
-              Mer
-            </Button>
-          )}
+          <PublishControls
+            listingId={listing.id}
+            listingName={listing.name}
+            status={listing.status}
+            onActionComplete={onEditSuccess}
+          />
         </div>
       </div>
 
