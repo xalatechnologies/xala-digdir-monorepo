@@ -4,11 +4,12 @@
  */
 
 import { createContext, useContext, type ReactNode } from 'react';
-import { 
+import {
   useRealtimeConnection,
   useRealtimeBookings,
   useRealtimeListings,
   useRealtimeMessages,
+  getClientConfig,
 } from '@digilist/client-sdk';
 
 interface RealtimeContextValue {
@@ -38,17 +39,21 @@ interface RealtimeProviderProps {
 export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
   // Build full WebSocket URL with tenant ID suffix
   // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
-  const fullWsUrl = wsUrl && tenantId 
-    ? `${wsUrl}/${tenantId}` 
+  const fullWsUrl = wsUrl && tenantId
+    ? `${wsUrl}/${tenantId}`
     : undefined;
-  
-  // Connect to WebSocket
+
+  // Retrieve auth token from client config
+  const token = getClientConfig()?.token;
+
+  // Connect to WebSocket with authentication
   const isConnected = useRealtimeConnection(fullWsUrl ? {
     url: fullWsUrl,
     autoReconnect: true,
     reconnectInterval: 5000,
     maxReconnectAttempts: 3,
-    ...(tenantId ? { tenantId } : {}),
+    tenantId,
+    token,
   } : undefined);
 
   // Subscribe to domain events - auto-invalidates queries
