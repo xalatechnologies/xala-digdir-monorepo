@@ -18,7 +18,8 @@ import type {
   CancelBookingDTO,
   CreateAllocationDTO,
   BookingSelectionDTO,
-  RecurringPreviewProjectionDTO
+  RecurringPreviewProjectionDTO,
+  CreateRecurringBookingDTO
 } from '../types/booking';
 
 // ============================================================================
@@ -143,9 +144,26 @@ export function useRecurringPreview(
  */
 export function useCreateBooking() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: CreateBookingDTO) => bookingService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Create recurring booking mutation with conflict policy support.
+ * Creates a series of recurring bookings with configurable conflict handling.
+ * Supports stopOnConflict (halt on first conflict) and allowPartial (create available only) policies.
+ */
+export function useCreateRecurringBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateRecurringBookingDTO) => bookingService.createRecurringBooking(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
