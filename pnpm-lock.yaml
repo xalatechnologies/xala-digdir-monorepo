@@ -260,6 +260,12 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.16
         version: 5.90.16(react@18.3.1)
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@testing-library/react-hooks':
+        specifier: ^8.0.1
+        version: 8.0.1(@types/react@19.2.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/node':
         specifier: ^22.10.7
         version: 22.19.5
@@ -268,7 +274,10 @@ importers:
         version: 19.2.8
       '@vitest/coverage-v8':
         specifier: ^3.0.4
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17(vitest@4.0.17))(jsdom@27.4.0)(terser@5.44.1))
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17)(jsdom@27.4.0)(terser@5.44.1))
+      jsdom:
+        specifier: ^27.4.0
+        version: 27.4.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -280,7 +289,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.0.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17(vitest@4.0.17))(jsdom@27.4.0)(terser@5.44.1)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17)(jsdom@27.4.0)(terser@5.44.1)
 
   packages/ds:
     dependencies:
@@ -1875,6 +1884,22 @@ packages:
   '@testing-library/jest-dom@6.9.1':
     resolution: {integrity: sha512-zIcONa+hVtVSSep9UT3jZ5rizo2BsxgyDYU7WFD5eICBE7no3881HGeb/QkGfsJs6JTkY1aQhT7rIPC7e+0nnA==}
     engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
+
+  '@testing-library/react-hooks@8.0.1':
+    resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@types/react': ^16.9.0 || ^17.0.0
+      react: ^18.3.1
+      react-dom: ^18.3.1
+      react-test-renderer: ^16.9.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-dom:
+        optional: true
+      react-test-renderer:
+        optional: true
 
   '@testing-library/react@16.3.1':
     resolution: {integrity: sha512-gr4KtAWqIOQoucWYD/f6ki+j5chXfcPc74Col/6poTyqTmn7zRmodWahWRCp8tYd+GMqBonw6hstNzqjbs6gjw==}
@@ -3817,6 +3842,12 @@ packages:
 
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+    peerDependencies:
+      react: ^18.3.1
+
+  react-error-boundary@3.1.4:
+    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
+    engines: {node: '>=10', npm: '>=6'}
     peerDependencies:
       react: ^18.3.1
 
@@ -6410,6 +6441,15 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
+  '@testing-library/react-hooks@8.0.1(@types/react@19.2.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      react: 18.3.1
+      react-error-boundary: 3.1.4(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 19.2.8
+      react-dom: 18.3.1(react@18.3.1)
+
   '@testing-library/react@16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -6672,7 +6712,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17(vitest@4.0.17))(jsdom@27.4.0)(terser@5.44.1))':
+  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17)(jsdom@27.4.0)(terser@5.44.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -6687,7 +6727,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17(vitest@4.0.17))(jsdom@27.4.0)(terser@5.44.1)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17)(jsdom@27.4.0)(terser@5.44.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -8555,6 +8595,11 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
+  react-error-boundary@3.1.4(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.28.6
+      react: 18.3.1
+
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -9411,7 +9456,7 @@ snapshots:
       terser: 5.44.1
       tsx: 4.21.0
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17(vitest@4.0.17))(jsdom@27.4.0)(terser@5.44.1):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.5)(@vitest/ui@4.0.17)(jsdom@27.4.0)(terser@5.44.1):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.4

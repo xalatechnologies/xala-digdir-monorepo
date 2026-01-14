@@ -58,9 +58,12 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.62.16",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@vitest/coverage-v8": "^3.0.4",
+    "jsdom": "^27.4.0",
     "react": "^19.0.0",
     "tsup": "^8.5.1",
     "typescript": "^5.7.3",
