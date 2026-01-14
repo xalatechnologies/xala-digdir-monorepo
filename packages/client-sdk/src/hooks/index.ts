@@ -273,6 +273,8 @@ export {
   useExportResults,
 } from './use-search';
 
+export { useDebounceSearch } from './use-debounce-search';
+
 // Accessibility Monitoring hooks
 export {
   useAccessibilityMonitoring,
