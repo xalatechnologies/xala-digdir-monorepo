@@ -6,13 +6,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 import { listingService, publicListingService } from '../services/listing.service';
-import type { 
-  ListingQueryParams, 
-  CreateListingDTO, 
+import type {
+  ListingQueryParams,
+  CreateListingDTO,
   UpdateListingDTO,
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
+import { transformListings, transformListing } from '../types/listing';
 
 // ============================================================================
 // Authenticated Listing Hooks
@@ -205,12 +206,44 @@ export function usePublicListings(params?: PublicListingParams) {
 }
 
 /**
+ * Get public listings transformed to UI format
+ */
+export function usePublicUiListings(params?: PublicListingParams) {
+  return useQuery({
+    queryKey: [...queryKeys.public.listings(params), 'ui'],
+    queryFn: async () => {
+      const response = await publicListingService.getListings(params);
+      return {
+        ...response,
+        data: transformListings(response.data),
+      };
+    },
+  });
+}
+
+/**
  * Get public listing by ID
  */
 export function usePublicListing(id: string) {
   return useQuery({
     queryKey: queryKeys.public.listing(id),
     queryFn: () => publicListingService.getListing(id),
+    enabled: !!id,
+  });
+}
+
+/**
+ * Get public listing by ID transformed to UI format
+ */
+export function usePublicUiListing(id: string) {
+  return useQuery({
+    queryKey: [...queryKeys.public.listing(id), 'ui'],
+    queryFn: async () => {
+      const response = await publicListingService.getListing(id);
+      return {
+        data: transformListing(response.data),
+      };
+    },
     enabled: !!id,
   });
 }
@@ -267,5 +300,58 @@ export function useFeaturedListings() {
     queryKey: queryKeys.public.featured(),
     queryFn: () => publicListingService.getFeatured(),
     staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+// ============================================================================
+// Media Hooks
+// ============================================================================
+
+interface UploadMediaParams {
+  id: string;
+  files: File[];
+}
+
+/**
+ * Upload media to a listing
+ * Converts files to data URLs and calls addMedia API
+ * TODO: Implement proper multipart/form-data upload when backend supports it
+ */
+export function useUploadListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, files }: UploadMediaParams) => {
+      // Convert files to data URLs for now
+      // In production, this should be a proper multipart upload
+      const urls = await Promise.all(
+        files.map(file => new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        }))
+      );
+      return listingService.addMedia(id, urls);
+    },
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+    },
+  });
+}
+
+/**
+ * Delete media from a listing
+ */
+export function useDeleteListingMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ listingId, mediaId }: { listingId: string; mediaId: string }) => {
+      return listingService.removeMedia(listingId, mediaId);
+    },
+    onSuccess: (_, { listingId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
+    },
   });
 }

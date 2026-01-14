@@ -5,8 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // ✅ Single import point for Designsystemet CSS (required).
 import '@xala/ds/styles';
 
-// Initialize SDK with single-tenant configuration
-import { initializeClient, isUsingMockData } from '@digilist/client-sdk';
+// Initialize SDK with API configuration
+import { initializeClient } from '@digilist/client-sdk';
 
 initializeClient({
   baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
@@ -14,9 +14,7 @@ initializeClient({
   licenseKey: import.meta.env.VITE_LICENSE_KEY || '',
 });
 
-if (isUsingMockData()) {
-  console.info('[SDK] Running in mock data mode. Set VITE_LICENSE_KEY to enable API.');
-}
+console.info('[SDK] Initialized with API:', import.meta.env.VITE_API_URL || 'https://api.digilist.no');
 
 // Note: Theme CSS is dynamically loaded by DesignsystemetProvider.
 // The provider loads CLI-generated base theme + extensions.

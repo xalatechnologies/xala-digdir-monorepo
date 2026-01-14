@@ -61,6 +61,9 @@ export interface Conversation extends TenantEntity {
   unreadCount: number;
   lastMessageAt?: string;
   lastMessagePreview?: string;
+  // Display/denormalized fields (populated by backend)
+  userName?: string;
+  userEmail?: string;
 }
 
 export interface Message {
@@ -218,6 +221,78 @@ export interface ValidateDiscountResult {
   code?: DiscountCode;
   discountAmount?: number;
   reason?: string;
+}
+
+// =============================================================================
+// Calendar Blocks
+// =============================================================================
+
+export type BlockType = 'maintenance' | 'closed' | 'hold' | 'emergency' | 'internal';
+
+export interface Block {
+  id: string;
+  tenantId: string;
+  listingId: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  blockType: BlockType;
+  status: 'active' | 'cancelled';
+  notes?: string;
+  recurrenceRule?: RecurrenceRule;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecurrenceRule {
+  frequency: 'daily' | 'weekly' | 'monthly';
+  interval: number;
+  weekdays?: number[];
+  endDate?: string;
+  exceptions?: string[];
+}
+
+export interface CreateBlockDTO {
+  listingId: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  blockType: BlockType;
+  allDay?: boolean;
+  notes?: string;
+  recurrence?: RecurrenceRule;
+  notifyAffectedUsers?: boolean;
+}
+
+export interface UpdateBlockDTO {
+  title?: string;
+  startTime?: string;
+  endTime?: string;
+  blockType?: BlockType;
+  notes?: string;
+  recurrence?: RecurrenceRule;
+}
+
+export interface Conflict {
+  type: 'booking' | 'block' | 'allocation' | 'seasonal';
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  resolvable: boolean;
+}
+
+export interface ConflictsResponse {
+  hasConflicts: boolean;
+  conflicts: Conflict[];
+}
+
+export interface ConflictCheckParams {
+  listingId: string;
+  startTime: string;
+  endTime: string;
+  excludeBlockId?: string;
 }
 
 // =============================================================================

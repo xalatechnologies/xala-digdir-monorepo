@@ -11,6 +11,7 @@ import {
   UserIcon,
   SettingsIcon,
   MapPinIcon,
+  DialogProvider,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
@@ -19,6 +20,8 @@ import { I18nProvider, useT } from '@xala/i18n';
 import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPageV2 } from './pages/ListingDetailPageV2';
 import { LoginPage } from './pages/login';
+import { RealtimeProvider } from './providers';
+import { RealtimeToast } from './components';
 
 // Layout with header for main pages
 function MainLayout() {
@@ -222,21 +225,26 @@ function AppContent() {
 
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
-      <style>{`
-        *, *::before, *::after {
-          transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
-        }
-      `}</style>
-      <Routes>
-        {/* Login page - no header */}
-        <Route path="/login" element={<LoginPage />} />
+      <DialogProvider>
+        <RealtimeProvider autoConnect={true} enableInDev={true}>
+          <RealtimeToast />
+          <style>{`
+            *, *::before, *::after {
+              transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+            }
+          `}</style>
+          <Routes>
+            {/* Login page - no header */}
+            <Route path="/login" element={<LoginPage />} />
 
-        {/* Main pages with header */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<ListingsPage />} />
-          <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
-        </Route>
-      </Routes>
+            {/* Main pages with header */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<ListingsPage />} />
+              <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
+            </Route>
+          </Routes>
+        </RealtimeProvider>
+      </DialogProvider>
     </DesignsystemetProvider>
   );
 }

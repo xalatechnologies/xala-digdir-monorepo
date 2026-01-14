@@ -136,7 +136,11 @@ export function BookingsPage() {
   const userNameMap = useMemo(() => {
     const map = new Map<string, { name: string; email?: string }>();
     usersData?.data?.forEach((user: { id: string; name?: string; email?: string }) => {
-      map.set(user.id, { name: user.name || 'Ukjent', email: user.email });
+      const entry: { name: string; email?: string } = { name: user.name || 'Ukjent' };
+      if (user.email) {
+        entry.email = user.email;
+      }
+      map.set(user.id, entry);
     });
     return map;
   }, [usersData]);
@@ -209,7 +213,7 @@ export function BookingsPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      await cancelBooking.mutateAsync(id);
+      await cancelBooking.mutateAsync({ id });
     }
   };
 
@@ -430,7 +434,6 @@ export function BookingsPage() {
         title="Bookingdetaljer"
         position="right"
         size="xl"
-        style={{ padding: '0 var(--ds-spacing-6)' }}
         footer={
           selectedBooking && (
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'space-between', width: '100%' }}>

@@ -59,7 +59,7 @@ export function RequestsPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      await cancelBooking.mutateAsync(id);
+      await cancelBooking.mutateAsync({ id });
     }
   };
 

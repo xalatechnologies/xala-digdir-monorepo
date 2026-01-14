@@ -266,6 +266,9 @@ export function BookingWidgetPlacement({
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Error state for booking submission
+  const [bookingError, setBookingError] = React.useState<string | null>(null);
+
   // Terms acceptance state
   const [termsAccepted, setTermsAccepted] = React.useState(false);
 
@@ -570,6 +573,7 @@ export function BookingWidgetPlacement({
     if (!effectivelyAuthenticated) return;
 
     setIsSubmitting(true);
+    setBookingError(null);
 
     try {
       // Prepare booking data for all selected slots
@@ -608,6 +612,9 @@ export function BookingWidgetPlacement({
         console.warn('[BookingWidget] No listingId provided, skipping API call');
       }
 
+      const successfulBookings: typeof bookings = [];
+      let lastError: Error | null = null;
+
       for (const booking of bookings) {
         if (!listingId) continue;
         const attendeesCount = parseInt(booking.attendees, 10);
@@ -622,29 +629,51 @@ export function BookingWidgetPlacement({
         try {
           await bookingService.create(bookingDTO);
           console.log('[BookingWidget] Booking created successfully');
+          successfulBookings.push(booking);
         } catch (apiError) {
-          // If API fails, log and continue (in production, would handle differently)
-          console.warn('[BookingWidget] API call failed, continuing with demo mode:', apiError);
+          console.error('[BookingWidget] API call failed:', apiError);
+          lastError = apiError instanceof Error ? apiError : new Error(String(apiError));
         }
       }
 
-      // Store booked slots locally to mark them as reserved in the calendar
-      const newBusySlots = bookings.map(b => ({
+      // If all bookings failed, show error and don't advance
+      if (successfulBookings.length === 0 && lastError) {
+        const errorMessage = lastError.message.includes('500')
+          ? 'Serverfeil ved booking. Vennligst prøv igjen senere.'
+          : lastError.message.includes('401') || lastError.message.includes('403')
+          ? 'Du må logge inn for å fullføre bookingen.'
+          : lastError.message.includes('400')
+          ? 'Ugyldig bookingdata. Vennligst sjekk valgene dine.'
+          : 'Kunne ikke fullføre bookingen. Vennligst prøv igjen.';
+        setBookingError(errorMessage);
+        return;
+      }
+
+      // Store successful bookings locally to mark them as reserved in the calendar
+      const newBusySlots = successfulBookings.map(b => ({
         date: b.date,
         startTime: b.startTime,
         endTime: b.endTime,
       }));
       setLocalBusySlots(prev => [...prev, ...newBusySlots]);
 
+      // If some bookings failed but some succeeded, show partial success
+      if (successfulBookings.length < bookings.length) {
+        setBookingError(`${successfulBookings.length} av ${bookings.length} bookinger ble fullført.`);
+      }
+
       // Call external handler
       if (onBookClick) {
         onBookClick();
       }
 
-      // Move to success step
-      setCurrentStep(3);
+      // Move to success step (even if partial success)
+      if (successfulBookings.length > 0) {
+        setCurrentStep(3);
+      }
     } catch (error) {
       console.error('[BookingWidget] Booking submission failed:', error);
+      setBookingError('En uventet feil oppstod. Vennligst prøv igjen.');
     } finally {
       setIsSubmitting(false);
     }
@@ -662,6 +691,8 @@ export function BookingWidgetPlacement({
     setTermsAccepted(false);
     // Reset login simulation (if applicable)
     setHasLoggedIn(false);
+    // Clear any booking errors
+    setBookingError(null);
     // Note: localBusySlots is intentionally NOT cleared - these slots remain reserved
   }, []);
 
@@ -2139,6 +2170,62 @@ export function BookingWidgetPlacement({
                 Bekreft booking
               </Heading>
 
+              {/* Error Message Display */}
+              {bookingError && (
+                <div
+                  style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-danger-surface-default)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-danger-border-default)',
+                    marginBottom: 'var(--ds-spacing-4)',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 'var(--ds-spacing-3)',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: 'var(--ds-border-radius-full)',
+                      backgroundColor: 'var(--ds-color-danger-base-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      color: 'var(--ds-color-danger-contrast-default)',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </div>
+                  <div>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-danger-text-default)' }}>
+                      {bookingError}
+                    </Paragraph>
+                    <button
+                      type="button"
+                      onClick={() => setBookingError(null)}
+                      style={{
+                        marginTop: 'var(--ds-spacing-2)',
+                        padding: 0,
+                        border: 'none',
+                        background: 'none',
+                        color: 'var(--ds-color-danger-text-default)',
+                        fontSize: 'var(--ds-font-size-xs)',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Lukk
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div
                 style={{
                   padding: 'var(--ds-spacing-5)',
@@ -2283,7 +2370,10 @@ export function BookingWidgetPlacement({
             type="button"
             variant="secondary"
             data-size="lg"
-            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+            onClick={() => {
+              setCurrentStep(prev => Math.max(0, prev - 1));
+              setBookingError(null); // Clear error when going back
+            }}
             style={{
               padding: 'var(--ds-spacing-4)',
               fontSize: 'var(--ds-font-size-md)',

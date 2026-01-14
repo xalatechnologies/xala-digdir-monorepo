@@ -30,6 +30,12 @@ export interface Booking extends TenantEntity {
   currency: string;
   notes?: string;
   metadata?: BookingMetadata;
+  // Display/denormalized fields (populated by backend)
+  listingName?: string;
+  userName?: string;
+  userEmail?: string;
+  userPhone?: string;
+  organizationName?: string;
 }
 
 // =============================================================================
@@ -88,6 +94,9 @@ export interface CalendarEvent {
   title?: string;
   start: string;
   end: string;
+  // Aliases for start/end (some components use these)
+  startTime?: string;
+  endTime?: string;
   status: string;
   bookingId?: string;
   userName?: string;

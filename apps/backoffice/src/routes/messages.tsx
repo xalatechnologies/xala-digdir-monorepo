@@ -1,16 +1,15 @@
 import { useState, useEffect, useRef, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
-import { 
-  Card, 
-  Heading, 
-  Paragraph, 
-  Button, 
-  Badge, 
-  Spinner, 
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Button,
+  Badge,
+  Spinner,
   SendIcon,
   SearchIcon,
   MessageSquareIcon,
   UserIcon,
-  ClockIcon,
   CheckCircleIcon,
   MailIcon,
   PhoneIcon,
@@ -82,28 +81,28 @@ export function MessagesPage() {
   // Filter conversations
   const filteredConversations = useMemo(() => {
     let result = conversations;
-    
+
     if (searchQuery) {
-      result = result.filter((c: Conversation) =>
+      result = result.filter((c) =>
         (c.userName && c.userName.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (c.subject && c.subject.toLowerCase().includes(searchQuery.toLowerCase()))
       );
     }
-    
+
     if (filter === 'unread') {
-      result = result.filter((c: Conversation) => (c.unreadCount ?? 0) > 0);
+      result = result.filter((c) => (c.unreadCount ?? 0) > 0);
     } else if (filter === 'active') {
-      result = result.filter((c: Conversation) => c.status === 'active');
+      result = result.filter((c) => c.status === 'active');
     } else if (filter === 'resolved') {
-      result = result.filter((c: Conversation) => c.status === 'resolved');
+      result = result.filter((c) => c.status === 'resolved');
     }
-    
+
     return result;
   }, [conversations, searchQuery, filter]);
 
   // Stats
-  const unreadTotal = conversations.reduce((sum: number, c: Conversation) => sum + (c.unreadCount || 0), 0);
-  const activeCount = conversations.filter((c: Conversation) => c.status === 'active').length;
+  const unreadTotal = conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
+  const activeCount = conversations.filter((c) => c.status === 'active').length;
 
   // Auto-select first conversation
   useEffect(() => {

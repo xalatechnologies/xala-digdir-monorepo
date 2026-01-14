@@ -39,6 +39,15 @@ export type {
   DiscountCode,
   CreateDiscountCodeDTO,
   ValidateDiscountResult,
+  // Calendar Blocks
+  BlockType,
+  Block,
+  RecurrenceRule,
+  CreateBlockDTO,
+  UpdateBlockDTO,
+  Conflict,
+  ConflictsResponse,
+  ConflictCheckParams,
   // Share
   ShareLink,
   CreateShareLinkDTO,

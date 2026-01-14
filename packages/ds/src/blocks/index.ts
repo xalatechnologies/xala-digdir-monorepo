@@ -186,3 +186,20 @@ export type {
   PermissionGateProps,
 } from './AuthComponents';
 
+// Messaging Components
+export {
+  NotificationBell,
+  ConversationList,
+  ConversationListItem,
+  MessageBubble,
+  ChatThread,
+} from './messaging';
+export type {
+  NotificationBellProps,
+  ConversationListProps,
+  ConversationListItemProps,
+  ConversationItem,
+  MessageBubbleProps,
+  MessageItem,
+  ChatThreadProps,
+} from './messaging';

@@ -99,3 +99,15 @@ export function resetClient(): void {
   defaultClient = null;
   clientConfig = null;
 }
+
+/**
+ * Check if using mock data (no real API configured)
+ * Returns true if baseUrl is empty, 'mock', or not configured
+ */
+export function isUsingMockData(): boolean {
+  if (!clientConfig || !clientConfig.baseUrl) {
+    return true;
+  }
+  const url = clientConfig.baseUrl.toLowerCase();
+  return url === 'mock' || url === '' || url.includes('localhost:mock');
+}

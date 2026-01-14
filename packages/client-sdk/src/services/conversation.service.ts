@@ -10,11 +10,14 @@ export interface Conversation {
   userId: string;
   userName?: string;
   userEmail?: string;
-  bookingId?: string | null;
-  subject?: string | null;
-  status: 'open' | 'closed' | 'archived';
+  userPhone?: string;
+  bookingId?: string;
+  subject?: string;
+  status: 'active' | 'resolved' | 'archived';
   unreadCount: number;
-  lastMessageAt?: string | null;
+  lastMessageAt?: string;
+  lastMessagePreview?: string;
+  lastMessage?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,9 +26,11 @@ export interface Message {
   id: string;
   conversationId: string;
   senderType: 'user' | 'admin' | 'system';
-  senderId?: string | null;
+  senderId?: string;
+  senderName: string;
+  sender?: string;
   content: string;
-  readAt?: string | null;
+  readAt?: string;
   attachments?: string[];
   createdAt: string;
 }

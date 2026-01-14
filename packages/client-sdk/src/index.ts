@@ -39,6 +39,7 @@ export {
   isClientInitialized,
   createClient,
   resetClient,
+  isUsingMockData,
 } from './core/client-factory';
 
 export type {
@@ -73,4 +74,21 @@ export type {
   RealtimeEventHandler,
   RealtimeClientConfig,
 } from './realtime';
+
+// Utils - Common utility functions
+export {
+  // Date/time formatting
+  formatDate,
+  formatTime,
+  formatWeekRange,
+  formatDateTime,
+  formatRelativeTime,
+  // Number formatting
+  formatCurrency,
+  formatPercent,
+  // Period/seasonal formatting
+  formatWeekdays,
+  formatPeriod,
+  formatTimeSlot,
+} from './utils';
 

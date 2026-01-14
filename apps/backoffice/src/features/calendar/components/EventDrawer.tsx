@@ -79,7 +79,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
   const handleReject = async () => {
     if (!event.bookingId) return;
     if (window.confirm('Er du sikker på at du vil avslå denne forespørselen?')) {
-      await cancelBooking.mutateAsync(event.bookingId);
+      await cancelBooking.mutateAsync({ id: event.bookingId });
       onClose();
     }
   };

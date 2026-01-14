@@ -32,12 +32,16 @@ export {
   useRestoreListing,
   useDuplicateListing,
   usePublicListings,
+  usePublicUiListings,
   usePublicListing,
+  usePublicUiListing,
   usePublicAvailability,
   usePublicCategories,
   usePublicCities,
   usePublicMunicipalities,
-  useFeaturedListings
+  useFeaturedListings,
+  useUploadListingMedia,
+  useDeleteListingMedia
 } from './use-listings';
 
 // Booking hooks
@@ -130,3 +134,28 @@ export {
   type AuditQueryParams,
   type AuditStats
 } from './use-audit';
+
+// Conversation hooks
+export {
+  conversationKeys,
+  useConversations,
+  useConversation,
+  useMessages,
+  useUnreadCount,
+  useCreateConversation,
+  useSendMessage,
+  useMarkMessagesRead,
+  useResolveConversation,
+  useReopenConversation,
+} from './use-conversations';
+
+// Block hooks
+export {
+  blockKeys,
+  useBlocks,
+  useBlock,
+  useCreateBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useCheckConflicts,
+} from './use-blocks';

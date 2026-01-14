@@ -3,7 +3,7 @@
  * Catches JavaScript errors anywhere in the child component tree
  */
 
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from '@xala/ds';
 
 interface ErrorBoundaryProps {
@@ -45,9 +45,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <ErrorScreen
           title="Noe gikk galt"
-          message={this.state.error?.message || 'En uventet feil har oppstått. Vennligst prøv igjen.'}
-          actionLabel="Last siden på nytt"
-          onAction={this.handleRetry}
+          description={this.state.error?.message || 'En uventet feil har oppstått. Vennligst prøv igjen.'}
+          showRetryButton
+          retryButtonText="Last siden på nytt"
+          onRetry={this.handleRetry}
         />
       );
     }

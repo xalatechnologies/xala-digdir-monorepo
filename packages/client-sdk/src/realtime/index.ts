@@ -50,11 +50,23 @@ class RealtimeClient {
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.emit('connected', { type: 'connected', message: 'Connected to realtime server' });
+
+        // Send subscription message to server (required by some WebSocket servers)
+        if (config.tenantId) {
+          this.send({
+            type: 'subscribe',
+            tenantId: config.tenantId,
+            events: ['booking', 'listing', 'message', 'notification', 'audit'],
+          });
+          console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
+        }
       };
 
       this.socket.onmessage = (event) => {
+        console.log('[Realtime] Raw message received:', event.data);
         try {
           const data = JSON.parse(event.data) as RealtimeEvent;
+          console.log('[Realtime] Parsed event:', data.type, data);
           this.emit(data.type, data);
           this.emit('*', data); // Wildcard handler for all events
         } catch (err) {

@@ -101,7 +101,7 @@ export function ListingRowActions({
 
   const handleDuplicate = async () => {
     try {
-      const result = await duplicateMutation.mutateAsync({ id: listingId });
+      const result = await duplicateMutation.mutateAsync(listingId);
       onActionComplete?.();
       toast.success('Duplisert', `"${listingName}" er duplisert!`);
       // Navigate to the new duplicate if we got a response
