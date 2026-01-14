@@ -146,9 +146,6 @@ export const queryKeys = {
     usage: (params: ReportQueryParams) => [...queryKeys.reports.all, 'usage', params] as const,
     revenue: (params: ReportQueryParams) => [...queryKeys.reports.all, 'revenue', params] as const,
     bookings: (params: ReportQueryParams) => [...queryKeys.reports.all, 'bookings', params] as const,
-    heatmap: (params: ReportQueryParams) => [...queryKeys.reports.all, 'heatmap', params] as const,
-    seasonal: (params: ReportQueryParams) => [...queryKeys.reports.all, 'seasonal', params] as const,
-    comparison: (params: ReportQueryParams) => [...queryKeys.reports.all, 'comparison', params] as const,
   },
 
   // =========================================================================
@@ -164,6 +161,28 @@ export const queryKeys = {
       [...queryKeys.audit.all, 'resource', resource, params] as const,
     user: (userId: string, params?: Omit<AuditQueryParams, 'userId'>) =>
       [...queryKeys.audit.all, 'user', userId, params] as const,
+  },
+
+  // =========================================================================
+  // Notification Keys
+  // =========================================================================
+  notifications: {
+    all: ['notifications'] as const,
+    lists: () => [...queryKeys.notifications.all, 'list'] as const,
+    list: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
+      [...queryKeys.notifications.lists(), params] as const,
+    my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
+      [...queryKeys.notifications.all, 'my', params] as const,
+    unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
+  },
+
+  // =========================================================================
+  // Push Notification Keys
+  // =========================================================================
+  pushNotifications: {
+    all: ['pushNotifications'] as const,
+    subscriptions: () => [...queryKeys.pushNotifications.all, 'subscriptions'] as const,
+    preferences: () => [...queryKeys.pushNotifications.all, 'preferences'] as const,
   },
 
   // =========================================================================

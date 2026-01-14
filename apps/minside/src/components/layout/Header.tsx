@@ -6,7 +6,7 @@ import {
   HeaderIconButton,
   HeaderThemeToggle,
   Button,
-  BellIcon,
+  NotificationBell,
   SettingsIcon,
   LogOutIcon,
   SearchIcon,
@@ -14,9 +14,10 @@ import {
   PeopleIcon,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
-import { useUnreadCount } from '@digilist/client-sdk';
+import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
+import { useNotificationCenter } from '../../App';
 
 interface HeaderProps {
   title?: string;
@@ -103,11 +104,12 @@ export function Header({ title: _title }: HeaderProps) {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const { openNotificationCenter } = useNotificationCenter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
-  
+
   // Get real unread notification count
-  const { data: unreadData } = useUnreadCount();
+  const { data: unreadData } = useNotificationUnreadCount();
   const unreadCount = unreadData?.data?.count ?? 0;
 
   const handleSearchChange = (value: string) => {
@@ -170,13 +172,11 @@ export function Header({ title: _title }: HeaderProps) {
               isDark={isDark}
               onToggle={toggleTheme}
             />
-            <HeaderIconButton
-              icon={<BellIcon size={22} />}
-              {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
-              size="md"
+            <NotificationBell
+              count={unreadCount}
+              onClick={openNotificationCenter}
               aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-              title="Varsler"
-              onClick={() => navigate('/messages')}
+              size="md"
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}

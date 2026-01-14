@@ -117,11 +117,36 @@ export {
   useRealtimeBookings,
   useRealtimeListings,
   useRealtimeMessages,
+  useRealtimeNotifications,
   useRealtimeAudit,
   useRealtimeEvents,
   useNotificationBadge,
   useRealtimeSend
 } from './use-realtime';
+
+// Notification hooks
+export {
+  useNotifications,
+  useMyNotifications,
+  useNotificationUnreadCount,
+  useNotificationTemplates,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  useDeleteNotification
+} from './use-notifications';
+
+// Push Notification hooks
+export {
+  usePushSubscriptions,
+  useNotificationPreferences,
+  usePushPermission,
+  useRegisterPushSubscription,
+  useUnsubscribePush,
+  useDeletePushSubscription,
+  useUpdateNotificationPreferences,
+  useTestPushNotification,
+  usePushSubscriptionFlow
+} from './use-push-notifications';
 
 // Audit hooks
 export {
@@ -187,9 +212,6 @@ export {
   useRevenueReport,
   useUsageReport,
   useExportReport,
-  useTimeSlotHeatmap,
-  useSeasonalPatterns,
-  useComparisonData,
 } from './use-reports';
 
 // Geocoding hooks

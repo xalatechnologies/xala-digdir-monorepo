@@ -46,9 +46,6 @@
 // =============================================================================
 export * from '@digdir/designsystemet-react';
 
-// Alias for TextField (Digdir uses Textfield with lowercase 'f')
-export { Textfield as TextField } from '@digdir/designsystemet-react';
-
 // =============================================================================
 // Provider
 // =============================================================================
@@ -145,7 +142,6 @@ export {
   Card,
   Text,
   Badge,
-  FormField,
   SunIcon,
   MoonIcon,
   SearchIcon,
@@ -207,14 +203,6 @@ export {
   VippsIcon,
   SendIcon,
   OrganizationIcon,
-  EditIcon,
-  TrashIcon,
-  RefreshIcon,
-  PaperclipIcon,
-  XIcon,
-  SaveIcon,
-  CopyIcon,
-  EyeIcon,
 } from './primitives';
 export type {
   ContainerProps,
@@ -224,8 +212,7 @@ export type {
   CardProps,
   TextProps,
   BadgeProps,
-  LayoutGridProps,
-  FormFieldProps,
+  LayoutGridProps
 } from './primitives';
 
 // Blocks - Business logic components
@@ -235,7 +222,6 @@ export {
   ListingGrid,
   ListingToolbar,
   ListingMap,
-  ListingTableView,
   ImageGallery,
   ImageSlider,
   ListingDetailHeader,
@@ -294,8 +280,8 @@ export {
   NotFoundScreen,
   ErrorScreen,
   PermissionGate,
-  // Accessibility Monitoring
-  AccessibilityDashboard,
+  // Notification Components
+  NotificationBell,
 } from './blocks';
 export type {
   ListingCardProps,
@@ -305,7 +291,6 @@ export type {
   ListingToolbarProps,
   ListingMapProps,
   MapListing,
-  ListingTableViewProps,
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
@@ -379,8 +364,8 @@ export type {
   NotFoundScreenProps,
   ErrorScreenProps,
   PermissionGateProps,
-  // Accessibility Monitoring Types
-  AccessibilityDashboardProps,
+  // Notification Types
+  NotificationBellProps,
 } from './blocks';
 
 // Listing Detail Types

@@ -4,11 +4,12 @@
  */
 
 import { createContext, useContext, type ReactNode } from 'react';
-import { 
+import {
   useRealtimeConnection,
   useRealtimeBookings,
   useRealtimeListings,
   useRealtimeMessages,
+  useRealtimeNotifications,
 } from '@digilist/client-sdk';
 
 interface RealtimeContextValue {
@@ -55,6 +56,7 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
   useRealtimeBookings();
   useRealtimeListings();
   useRealtimeMessages();
+  useRealtimeNotifications();
 
   return (
     <RealtimeContext.Provider value={{ isConnected }}>

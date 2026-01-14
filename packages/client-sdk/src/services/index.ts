@@ -67,6 +67,9 @@ export { conversationService } from './conversation.service';
 // Notifications
 export { notificationService } from './notification.service';
 
+// Push Notifications
+export { pushNotificationService } from './push-notification.service';
+
 // Settings
 export { settingsService } from './settings.service';
 
@@ -99,13 +102,3 @@ export { widgetService } from './widget.service';
 // Monitoring
 export { monitoringService } from './monitoring.service';
 
-// Help (KRAV-SUP-01, KRAV-SUP-03)
-export { 
-  helpService,
-  type FAQ,
-  type Guide,
-  type TrainingPlan,
-  type TrainingModule,
-  type SupportTicket,
-  type ContactRequest,
-} from './help.service';
