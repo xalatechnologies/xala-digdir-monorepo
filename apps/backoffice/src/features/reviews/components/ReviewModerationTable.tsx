@@ -124,7 +124,7 @@ function StatusTag({ status }: StatusTagProps) {
         padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
         fontSize: 'var(--ds-font-size-xs)',
         fontWeight: 'var(--ds-font-weight-medium)',
-        lineHeight: 1,
+        lineHeight: 'var(--ds-font-line-height-xs)',
         whiteSpace: 'nowrap',
       }}
     >

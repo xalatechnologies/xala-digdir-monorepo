@@ -22,6 +22,17 @@ import { AuditPage } from './routes/audit';
 import { ReviewModerationPage } from './routes/reviews';
 import { SettingsPage } from './routes/settings';
 import { initSentry } from './lib/sentry';
+// New Saksbehandler pages
+import { WorkQueuePage } from './routes/work-queue';
+import { SeasonApplicationsReviewPage } from './routes/season-applications';
+import { AllocationPlannerPage } from './routes/allocation-planner';
+// New Admin pages
+import { ListingWizardPage } from './routes/listing-wizard';
+import { PricingRulesPage } from './routes/pricing-rules';
+import { UsersManagementPage } from './routes/users-management';
+// New TenantAdmin pages
+import { TenantSettingsPage } from './routes/tenant/settings';
+import { TenantBrandingPage } from './routes/tenant/branding';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -140,6 +151,35 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Saksbehandler routes */}
+              <Route path="work-queue" element={<WorkQueuePage />} />
+              <Route path="season-applications" element={<SeasonApplicationsReviewPage />} />
+              <Route path="allocation-planner" element={<AllocationPlannerPage />} />
+              
+              {/* Admin routes */}
+              <Route path="listings/wizard" element={<ListingWizardPage />} />
+              <Route path="listings/wizard/:id" element={<ListingWizardPage />} />
+              <Route path="pricing-rules" element={<PricingRulesPage />} />
+              <Route path="users-management" element={<UsersManagementPage />} />
+              
+              {/* TenantAdmin routes */}
+              <Route
+                path="tenant/settings"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantSettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tenant/branding"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantBrandingPage />
                   </ProtectedRoute>
                 }
               />

@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { Button, Stack, Heading, Paragraph, StarIcon } from '@xala/ds';
-import { useCreateReview } from '@digilist/client-sdk';
+import { useCreateReview, auditService } from '@digilist/client-sdk';
 import type { CreateReviewDTO } from '@digilist/client-sdk/types';
 
 // =============================================================================
@@ -166,7 +166,7 @@ export function ReviewForm({
       onSuccess?.();
     } catch (error) {
       // Error is handled by mutation error state
-      console.error('Failed to submit review:', error);
+      auditService.logError('review_submission_failed', 'review', error instanceof Error ? error : String(error), { listingId, bookingId, rating });
     }
   };
 

@@ -6,6 +6,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from '@xala/ds';
 import * as Sentry from '@sentry/react';
+import { auditService } from '@digilist/client-sdk';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -28,7 +29,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    // Log to audit service for compliance tracking
+    auditService.logError('react_error_boundary', 'application', error, {
+      componentStack: errorInfo.componentStack,
+    });
 
     // Report to Sentry with component stack context
     Sentry.captureException(error, {

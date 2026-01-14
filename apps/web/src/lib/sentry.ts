@@ -18,9 +18,6 @@ export function initSentry(): void {
 
   // Don't initialize Sentry if DSN is not configured
   if (!dsn) {
-    if (import.meta.env.DEV) {
-      console.info('[Sentry] Skipping initialization - no DSN configured');
-    }
     return;
   }
 
@@ -73,23 +70,15 @@ export function initSentry(): void {
     ],
 
     // Filter events before sending
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       // Don't send events in development unless explicitly enabled
       if (import.meta.env.DEV && !import.meta.env.VITE_SENTRY_SEND_IN_DEV) {
-        console.error('[Sentry] Would send error:', event, hint);
         return null;
       }
 
       return event;
     },
   });
-
-  if (import.meta.env.DEV) {
-    console.info('[Sentry] Initialized successfully', {
-      environment,
-      release: release || 'undefined',
-    });
-  }
 }
 
 /**

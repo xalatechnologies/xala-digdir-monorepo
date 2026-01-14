@@ -15,10 +15,8 @@ import {
   Paragraph,
   Button,
   Spinner,
-  Badge,
   Select,
 } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -42,8 +40,6 @@ const mockAllocations: Record<string, Record<string, { org: string; color: strin
 const resources = ['Idrettshall A', 'Idrettshall B', 'Fotballbane 1', 'Fotballbane 2'];
 
 export function AllocationPlannerPage() {
-  const t = useT();
-  const { locale } = useLocale();
   const [selectedResource, setSelectedResource] = useState(resources[0]);
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -185,7 +181,8 @@ export function AllocationPlannerPage() {
                 </div>
                 {DAYS.map((day) => {
                   const key = `${day}-${time}`;
-                  const allocation = mockAllocations[key]?.[selectedResource];
+                  const resourceAllocations = mockAllocations[key];
+                  const allocation = resourceAllocations && selectedResource ? resourceAllocations[selectedResource] : undefined;
                   
                   return (
                     <div

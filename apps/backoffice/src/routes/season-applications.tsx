@@ -20,7 +20,7 @@ import {
   useDialog,
   Drawer,
 } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
+import { useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -83,7 +83,6 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
 }
 
 export function SeasonApplicationsReviewPage() {
-  const t = useT();
   const { locale } = useLocale();
   const { confirm } = useDialog();
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | undefined>(undefined);
@@ -113,7 +112,7 @@ export function SeasonApplicationsReviewPage() {
       description: 'Er du sikker på at du vil godkjenne denne sesongsøknaden?',
       confirmText: 'Godkjenn',
       cancelText: 'Avbryt',
-      variant: 'default',
+      variant: 'success',
     });
     if (confirmed) {
       console.log('Approved:', id);

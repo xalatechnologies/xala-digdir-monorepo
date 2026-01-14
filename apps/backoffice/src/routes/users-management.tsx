@@ -234,7 +234,7 @@ export function UsersManagementPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontWeight: 600,
+                        fontWeight: 'var(--ds-font-weight-semibold)',
                       }}>
                         {user.name.charAt(0)}
                       </div>

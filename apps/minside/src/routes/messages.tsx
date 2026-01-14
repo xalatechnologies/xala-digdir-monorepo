@@ -587,7 +587,7 @@ export function MessagesPage() {
                                 color: isOwnMessage ? 'white' : 'var(--ds-color-neutral-text-default)',
                                 boxShadow: 'var(--ds-shadow-small)',
                               }}>
-                                <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit', lineHeight: 1.5 }}>
+                                <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit', lineHeight: 'var(--ds-font-line-height-base)' }}>
                                   {String(message.content)}
                                 </Paragraph>
                                 <div style={{ 

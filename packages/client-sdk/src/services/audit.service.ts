@@ -1,8 +1,8 @@
 /**
  * Audit Service
- * Provides access to audit logs and real-time audit events
+ * Provides access to audit logs, real-time audit events, and client-side logging
  */
-import { getClient } from '../core/client-factory';
+import { getClient, getClientConfig } from '../core/client-factory';
 
 export interface AuditLogEntry {
   id: string;
@@ -16,6 +16,18 @@ export interface AuditLogEntry {
   ipAddress: string | null;
   userAgent: string | null;
   timestamp: string;
+}
+
+/**
+ * Parameters for creating a new audit log entry
+ */
+export interface CreateAuditLogParams {
+  action: string;
+  resource: string;
+  resourceId?: string;
+  severity?: 'debug' | 'info' | 'warning' | 'error' | 'critical';
+  metadata?: Record<string, unknown>;
+  userId?: string;
 }
 
 export interface AuditQueryParams {
@@ -50,6 +62,100 @@ export interface PaginatedResponse<T> {
 
 class AuditService {
   private basePath = '/api/audit';
+
+  /**
+   * Create a new audit log entry
+   * Use this to log client-side events, errors, warnings, and user actions
+   *
+   * @example
+   * ```typescript
+   * // Log an error
+   * await auditService.create({
+   *   action: 'login_failed',
+   *   resource: 'auth',
+   *   severity: 'error',
+   *   metadata: { error: 'Invalid credentials', email: 'user@example.com' }
+   * });
+   *
+   * // Log a user action
+   * await auditService.create({
+   *   action: 'listing_viewed',
+   *   resource: 'listing',
+   *   resourceId: 'listing-123',
+   *   severity: 'info'
+   * });
+   * ```
+   */
+  async create(params: CreateAuditLogParams): Promise<{ data: AuditLogEntry }> {
+    const config = getClientConfig();
+    const payload = {
+      ...params,
+      tenantId: config.tenantId,
+      severity: params.severity || 'info',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+      timestamp: new Date().toISOString(),
+    };
+    return getClient().post<{ data: AuditLogEntry }>(this.basePath, payload);
+  }
+
+  /**
+   * Log an error event
+   * Convenience method for logging errors with proper severity
+   */
+  async logError(
+    action: string,
+    resource: string,
+    error: Error | string,
+    metadata?: Record<string, unknown>
+  ): Promise<{ data: AuditLogEntry }> {
+    const errorMessage = error instanceof Error ? error.message : error;
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    return this.create({
+      action,
+      resource,
+      severity: 'error',
+      metadata: {
+        ...metadata,
+        error: errorMessage,
+        ...(errorStack && { stack: errorStack }),
+      },
+    });
+  }
+
+  /**
+   * Log a warning event
+   * Convenience method for logging warnings
+   */
+  async logWarning(
+    action: string,
+    resource: string,
+    message: string,
+    metadata?: Record<string, unknown>
+  ): Promise<{ data: AuditLogEntry }> {
+    return this.create({
+      action,
+      resource,
+      severity: 'warning',
+      metadata: { ...metadata, message },
+    });
+  }
+
+  /**
+   * Log an info event
+   * Convenience method for logging informational events
+   */
+  async logInfo(
+    action: string,
+    resource: string,
+    metadata?: Record<string, unknown>
+  ): Promise<{ data: AuditLogEntry }> {
+    return this.create({
+      action,
+      resource,
+      severity: 'info',
+      metadata,
+    });
+  }
 
   /**
    * Get audit logs with optional filtering

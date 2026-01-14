@@ -180,7 +180,7 @@ export function PricingRulesPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <span style={{ 
-                      fontWeight: 600, 
+                      fontWeight: 'var(--ds-font-weight-semibold)', 
                       color: rule.amount < 0 ? 'var(--ds-color-success-text-default)' : undefined 
                     }}>
                       {formatAmount(rule.amount, rule.currency)}

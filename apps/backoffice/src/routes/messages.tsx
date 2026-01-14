@@ -627,7 +627,7 @@ export function MessagesPage() {
                                       {String(message.senderName || 'Bruker')}
                                     </Paragraph>
                                   )}
-                                  <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit', lineHeight: 1.5 }}>
+                                  <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit', lineHeight: 'var(--ds-font-line-height-md)' }}>
                                     {String(message.content)}
                                   </Paragraph>
                                   <div style={{ 

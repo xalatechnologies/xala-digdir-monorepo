@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
-import { bookingService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
+import { bookingService, auditService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { useAuth } from '../../../../hooks/useAuth';
@@ -389,7 +389,7 @@ export function BookingWidgetPlacement({
       authLogin('vipps');
       // Note: Navigation will happen in useAuth hook
     } catch (error) {
-      console.error('Login failed:', error);
+      auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'vipps' });
     } finally {
       setIsLoggingIn(false);
     }
@@ -402,7 +402,7 @@ export function BookingWidgetPlacement({
       authLogin('idporten');
       // Note: Navigation will happen in useAuth hook
     } catch (error) {
-      console.error('Login failed:', error);
+      auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'idporten' });
     } finally {
       setIsLoggingIn(false);
     }

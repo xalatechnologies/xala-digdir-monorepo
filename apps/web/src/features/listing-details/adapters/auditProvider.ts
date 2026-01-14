@@ -3,8 +3,10 @@
  *
  * Interface and implementation for audit logging.
  * All user actions (favorites, share, booking, contact) must be logged.
+ * Uses @digilist/client-sdk auditService for proper API integration.
  */
 
+import { auditService } from '@digilist/client-sdk';
 import type { AuditEvent, AuditEventType } from '../types';
 
 // =============================================================================
@@ -39,23 +41,27 @@ function generateUUID(): string {
 }
 
 /**
- * Console-based audit provider for development
- * Replace with actual API calls in production
+ * SDK-based audit provider
+ * Sends audit events through the @digilist/client-sdk auditService
  */
-class ConsoleAuditProvider implements AuditProvider {
+class SdkAuditProvider implements AuditProvider {
   async log(event: Omit<AuditEvent, 'timestamp' | 'correlationId'>): Promise<void> {
-    const fullEvent: AuditEvent = {
-      ...event,
-      correlationId: this.generateCorrelationId(),
-      timestamp: new Date().toISOString(),
-    };
-
-    // In production, send to audit API
-    // await fetch('/api/audit', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(fullEvent),
-    // });
+    try {
+      await auditService.create({
+        action: event.type,
+        resource: 'listing',
+        resourceId: event.listingId,
+        severity: 'info',
+        userId: event.userId,
+        metadata: {
+          ...event.metadata,
+          correlationId: this.generateCorrelationId(),
+        },
+      });
+    } catch {
+      // Silently fail audit logging to not disrupt user experience
+      // The SDK will handle retries and error reporting internally
+    }
   }
 
   generateCorrelationId(): string {
@@ -71,7 +77,7 @@ let auditProviderInstance: AuditProvider | null = null;
 
 export function getAuditProvider(): AuditProvider {
   if (!auditProviderInstance) {
-    auditProviderInstance = new ConsoleAuditProvider();
+    auditProviderInstance = new SdkAuditProvider();
   }
   return auditProviderInstance;
 }
@@ -104,6 +110,38 @@ export async function logAuditEvent(
     event.metadata = metadata;
   }
   await provider.log(event);
+}
+
+/**
+ * Log an error event through the audit system
+ */
+export async function logError(
+  action: string,
+  resource: string,
+  error: Error | string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  try {
+    await auditService.logError(action, resource, error, metadata);
+  } catch {
+    // Silently fail to not disrupt user experience
+  }
+}
+
+/**
+ * Log a warning event through the audit system
+ */
+export async function logWarning(
+  action: string,
+  resource: string,
+  message: string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  try {
+    await auditService.logWarning(action, resource, message, metadata);
+  } catch {
+    // Silently fail to not disrupt user experience
+  }
 }
 
 export { generateUUID };

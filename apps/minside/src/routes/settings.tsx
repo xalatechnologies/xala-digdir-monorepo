@@ -421,7 +421,7 @@ export function SettingsPage() {
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre profilinnstillinger">
                     <SaveIcon />
                     {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                   </Button>
@@ -584,7 +584,7 @@ export function SettingsPage() {
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre adresseinnstillinger">
                     <SaveIcon />
                     {isSaving ? 'Lagrer endringer' : 'Lagre adresser'}
                   </Button>
@@ -619,7 +619,9 @@ export function SettingsPage() {
                 <Button
                   variant="secondary"
                   onClick={handleExportData}
-                  disabled={isExporting} type="button"
+                  disabled={isExporting}
+                  type="button"
+                  aria-label="Eksporter mine data"
                 >
                   <DownloadIcon />
                   {isExporting ? 'Eksporterer...' : 'Last ned mine data'}

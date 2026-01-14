@@ -184,6 +184,29 @@ export function Sidebar() {
       ],
     },
     {
+      title: 'Saksbehandler',
+      items: [
+        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon /> },
+        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon /> },
+        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon /> },
+      ],
+    },
+    {
+      title: 'Admin',
+      items: [
+        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, adminOnly: true },
+        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, adminOnly: true },
+        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, adminOnly: true },
+      ],
+    },
+    {
+      title: 'Tenant',
+      items: [
+        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, adminOnly: true },
+        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, adminOnly: true },
+      ],
+    },
+    {
       title: 'System',
       items: [
         { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, adminOnly: true },
@@ -237,7 +260,7 @@ export function Sidebar() {
                 fontSize: 'var(--ds-font-size-md)',
                 fontWeight: 'var(--ds-font-weight-bold)',
                 color: 'var(--ds-color-accent-text-default)',
-                lineHeight: 1.2,
+                lineHeight: 'var(--ds-font-line-height-sm)',
                 letterSpacing: 'var(--ds-font-letter-spacing-sm)',
               }}
             >

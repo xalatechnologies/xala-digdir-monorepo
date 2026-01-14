@@ -15,6 +15,7 @@ import {
   Label,
 } from '@digdir/designsystemet-react';
 import { useInitiatePayment } from '@digilist/client-sdk/hooks';
+import { auditService } from '@digilist/client-sdk';
 import type { InitiatePaymentDTO } from '@digilist/client-sdk/types';
 
 // =============================================================================
@@ -99,8 +100,7 @@ export function PaymentSection({
       }
     } catch (error) {
       // Error handling is managed by React Query mutation
-      // eslint-disable-next-line no-console
-      console.error('Payment initiation failed:', error);
+      auditService.logError('payment_initiation_failed', 'payment', error instanceof Error ? error : String(error), { bookingId, amount, currency });
     }
   };
 

@@ -268,8 +268,8 @@ export function TenantBrandingPage() {
           }}>
             <span style={{ fontWeight: 600 }}>{branding.headerText}</span>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: '4px', backgroundColor: 'rgba(255,255,255,0.2)' }} />
-              <div style={{ width: '24px', height: '24px', borderRadius: '4px', backgroundColor: 'rgba(255,255,255,0.2)' }} />
+              <div style={{ width: '24px', height: '24px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'rgba(255,255,255,0.2)' }} />
+              <div style={{ width: '24px', height: '24px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'rgba(255,255,255,0.2)' }} />
             </div>
           </div>
           {/* Mock content */}
