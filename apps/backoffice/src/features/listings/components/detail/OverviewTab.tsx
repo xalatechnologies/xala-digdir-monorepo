@@ -5,9 +5,9 @@
  * First tab in the listing detail view providing administrators with a comprehensive overview.
  */
 import * as React from 'react';
-import { ImageGallery, KeyFactsRow } from '@xala/ds';
+import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard } from '@xala/ds';
 import type { Listing } from '@digilist/client-sdk';
-import type { GalleryImage, KeyFact } from '@xala/ds';
+import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds';
 import { getListingTypeLabel } from '@digilist/client-sdk';
 
 // =============================================================================
@@ -77,6 +77,54 @@ function buildKeyFacts(listing: Listing): KeyFact[] {
   return facts;
 }
 
+/**
+ * Transform SDK facilities/amenities array to Facility format
+ */
+function transformFacilities(facilities: string[] = [], amenities: string[] = []): Facility[] {
+  // Combine facilities and amenities, remove duplicates
+  const allFacilities = [...new Set([...facilities, ...amenities])];
+
+  return allFacilities.map((label, index) => ({
+    id: `facility-${index}`,
+    label,
+  }));
+}
+
+/**
+ * Transform SDK opening hours to OpeningHoursDay format
+ */
+function transformOpeningHours(
+  openingHours?: Record<string, { open: string; close: string }>
+): OpeningHoursDay[] {
+  if (!openingHours) {
+    return [];
+  }
+
+  const daysOrder = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'];
+  const result: OpeningHoursDay[] = [];
+
+  // Convert object to array and sort by day order
+  Object.entries(openingHours).forEach(([day, times]) => {
+    const hours = times.open && times.close ? `${times.open} - ${times.close}` : 'Stengt';
+    const isClosed = !times.open || !times.close;
+
+    result.push({
+      day: day.charAt(0).toUpperCase() + day.slice(1), // Capitalize first letter
+      hours,
+      isClosed,
+    });
+  });
+
+  // Sort by day order
+  result.sort((a, b) => {
+    const aIndex = daysOrder.findIndex(d => a.day.toLowerCase().startsWith(d));
+    const bIndex = daysOrder.findIndex(d => b.day.toLowerCase().startsWith(d));
+    return aIndex - bIndex;
+  });
+
+  return result;
+}
+
 // =============================================================================
 // Component
 // =============================================================================
@@ -92,6 +140,18 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
   const keyFacts = React.useMemo(
     () => buildKeyFacts(listing),
     [listing]
+  );
+
+  // Transform facilities and amenities
+  const facilities = React.useMemo(
+    () => transformFacilities(listing.metadata?.facilities, listing.metadata?.amenities),
+    [listing.metadata?.facilities, listing.metadata?.amenities]
+  );
+
+  // Transform opening hours
+  const openingHours = React.useMemo(
+    () => transformOpeningHours(listing.metadata?.openingHours),
+    [listing.metadata?.openingHours]
   );
 
   return (
@@ -141,6 +201,30 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
           >
             {listing.description}
           </p>
+        </section>
+      )}
+
+      {/* Facilities and Amenities Section */}
+      {facilities.length > 0 && (
+        <section>
+          <h2
+            style={{
+              fontSize: 'var(--ds-font-size-lg)',
+              fontWeight: 'var(--ds-font-weight-semibold)',
+              margin: '0 0 var(--ds-spacing-4) 0',
+              color: 'var(--ds-color-neutral-text-default)',
+            }}
+          >
+            Fasiliteter
+          </h2>
+          <FacilityChips facilities={facilities} />
+        </section>
+      )}
+
+      {/* Opening Hours Section */}
+      {openingHours.length > 0 && (
+        <section>
+          <OpeningHoursCard hours={openingHours} highlightToday />
         </section>
       )}
 
