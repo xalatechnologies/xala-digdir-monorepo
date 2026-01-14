@@ -67,8 +67,8 @@ function MainLayout() {
 
   // Check for logged in user on mount
   React.useEffect(() => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
+    const userType = localStorage.getItem('web_user_type');
+    if (userType) {
       setIsLoggedIn(true);
     }
   }, []);
@@ -146,20 +146,22 @@ function MainLayout() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('web_user');
+    localStorage.removeItem('web_user_type');
     setIsLoggedIn(false);
   };
 
-  // Get logged in user name
+  // Mock users for display (matches useAuth hook)
+  const MOCK_USERS: Record<string, { name: string }> = {
+    vipps: { name: 'Ola Nordmann' },
+    idporten: { name: 'Kari Nordmann' },
+    microsoft: { name: 'Per Hansen' },
+  };
+
+  // Get logged in user name from user type identifier (no JSON.parse to prevent prototype pollution)
   const getUserName = () => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        return user.name;
-      } catch {
-        return undefined;
-      }
+    const userType = localStorage.getItem('web_user_type');
+    if (userType && MOCK_USERS[userType]) {
+      return MOCK_USERS[userType].name;
     }
     return undefined;
   };
