@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole } from '../hooks/useAuth';
-import { getClientConfig, setAuthToken, updateClientConfig } from '@digilist/client-sdk';
+import { getClientConfig, updateClientConfig } from '@digilist/client-sdk';
+import { authService } from '@digilist/client-sdk/services/auth.service';
+import type { AuthUser } from '@digilist/client-sdk/types/auth';
 
 // Users matching seeded database
 const MOCK_ADMIN_USER: BackofficeUser = {
@@ -22,6 +24,18 @@ const MOCK_USER: BackofficeUser = {
 // Set to false to use real OAuth with production API
 const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH !== 'false';
 
+/**
+ * Map SDK AuthUser to minside BackofficeUser
+ */
+function mapAuthUserToBackofficeUser(authUser: AuthUser): BackofficeUser {
+  return {
+    id: authUser.id,
+    name: authUser.name,
+    email: authUser.email,
+    role: authUser.role === 'admin' ? 'admin' : 'saksbehandler',
+  };
+}
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
@@ -40,46 +54,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      // Check URL for OAuth callback with token
+      // Handle OAuth callback with token in URL
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
-      const userId = urlParams.get('userId');
-      const userName = urlParams.get('userName');
-      const userEmail = urlParams.get('userEmail');
-      
+
       if (token) {
-        // OAuth callback - set token and user
-        setAuthToken(token);
-        const userData: BackofficeUser = {
-          id: userId || '',
-          name: userName || 'User',
-          email: userEmail || '',
-          role: 'saksbehandler',
-        };
-        localStorage.setItem('minside_user', JSON.stringify(userData));
-        localStorage.setItem('minside_token', token);
-        setUser(userData);
-        // Clean URL
+        // OAuth callback - token will be set as httpOnly cookie by backend
+        // Clean URL and validate session
         window.history.replaceState({}, document.title, window.location.pathname);
-        setIsLoading(false);
-        return;
       }
 
-      // Check for saved session
-      const savedUser = localStorage.getItem('minside_user');
-      const savedToken = localStorage.getItem('minside_token');
-      
-      if (savedUser && savedToken) {
-        setAuthToken(savedToken);
-        setUser(JSON.parse(savedUser));
-      } else if (USE_MOCK_AUTH) {
-        // Mock auth - check for mock session
+      // Mock auth mode - use localStorage for development
+      if (USE_MOCK_AUTH) {
         const mockUser = localStorage.getItem('backoffice_mock_user');
         if (mockUser) {
           setUser(JSON.parse(mockUser));
         }
+        setIsLoading(false);
+        return;
       }
-      
+
+      // Real auth mode - validate session from httpOnly cookie
+      try {
+        const response = await authService.getSession();
+        if (response.data?.user) {
+          const backofficeUser = mapAuthUserToBackofficeUser(response.data.user);
+          setUser(backofficeUser);
+        }
+      } catch (error) {
+        // No valid session - user stays null
+        setUser(null);
+      }
+
       setIsLoading(false);
     };
 
@@ -104,9 +110,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
-    localStorage.removeItem('backoffice_mock_user');
-    localStorage.removeItem('minside_user');
-    localStorage.removeItem('minside_token');
+    // Mock auth mode - clear localStorage
+    if (USE_MOCK_AUTH) {
+      localStorage.removeItem('backoffice_mock_user');
+      localStorage.removeItem('minside_user');
+    } else {
+      // Real auth mode - call API to clear httpOnly cookie
+      try {
+        await authService.logout();
+      } catch (error) {
+        // Continue logout even if API call fails
+      }
+    }
+
     updateClientConfig({ token: undefined });
     setUser(null);
     navigate('/login');
