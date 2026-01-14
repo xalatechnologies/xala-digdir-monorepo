@@ -102,6 +102,9 @@ export { seasonApplicationService } from './season-application.service';
 // Discount Codes
 export { discountCodeService } from './discount-code.service';
 
+// Economy
+export { EconomyService, economyService } from './economy.service';
+
 // Widgets
 export { widgetService } from './widget.service';
 

@@ -21,6 +21,7 @@ import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
 import { SettingsPage } from './routes/settings';
+import { EconomyPage } from './routes/economy';
 
 export function App() {
   return (
@@ -74,6 +75,14 @@ function AppWithTheme() {
               <Route path="seasons/:id" element={<SeasonDetailPage />} />
               <Route path="seasons/:id/edit" element={<SeasonFormPage />} />
               <Route path="messages" element={<MessagesPage />} />
+              <Route
+                path="economy"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <EconomyPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="reports" element={<ReportsPage />} />
               <Route
                 path="audit"

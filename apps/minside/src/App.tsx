@@ -31,6 +31,9 @@ import { BookingsPage } from './routes/bookings';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 import { NotificationSettingsPage } from './routes/notification-settings';
+import { SeasonsPage } from './routes/seasons';
+import { SeasonDetailPage } from './routes/season-detail';
+import { SeasonApplicationsPage } from './routes/season-applications';
 import { useAuth } from './hooks/useAuth';
 
 // =============================================================================
@@ -102,10 +105,10 @@ function AppWithTheme() {
                 <Route path="messages" element={<MessagesPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="settings/notifications" element={<NotificationSettingsPage />} />
-                {/* Season routes - will be created */}
-                <Route path="seasons" element={<div>Seasons Page (TODO)</div>} />
-                <Route path="seasons/:id" element={<div>Season Detail (TODO)</div>} />
-                <Route path="seasons/applications" element={<div>My Applications (TODO)</div>} />
+                {/* Season routes */}
+                <Route path="seasons" element={<SeasonsPage />} />
+                <Route path="seasons/:id" element={<SeasonDetailPage />} />
+                <Route path="seasons/applications" element={<SeasonApplicationsPage />} />
               </Route>
 
               <Route path="*" element={<Navigate to="/" replace />} />

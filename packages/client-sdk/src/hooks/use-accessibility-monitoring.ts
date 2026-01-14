@@ -3,11 +3,10 @@
  * React hooks for tracking accessibility metrics throughout the application
  */
 
-import { useEffect, useMemo, useCallback, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   accessibilityMonitoringService,
   detectScreenReader,
-  detectKeyboardNavigation,
   type AccessibilityMonitoringConfig,
   type KeyboardNavigationMetric,
   type FocusManagementMetric,
@@ -81,7 +80,7 @@ export function useAccessibilityMonitoring(
   const {
     enabled = true,
     trackKeyboardNav = false,
-    trackSkipLinks = false,
+    // trackSkipLinks = false,
     trackFocusManagement = false,
     trackScreenReader = false,
     trackPagePerformance = false,
@@ -157,7 +156,7 @@ export function useAccessibilityMonitoring(
       lastFocusedElement = event.target as HTMLElement;
     };
 
-    const handleFocusOut = (event: FocusEvent) => {
+    const handleFocusOut = (_event: FocusEvent) => {
       // Check if focus was lost (not moving to another element)
       setTimeout(() => {
         if (document.activeElement === document.body) {

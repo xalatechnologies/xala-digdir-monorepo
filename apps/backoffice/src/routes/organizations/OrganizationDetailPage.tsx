@@ -163,13 +163,13 @@ export function OrganizationDetailPage() {
       {/* Content */}
       <Tabs defaultValue="info">
         <Tabs.List>
-          <Tabs.Trigger value="info">Informasjon</Tabs.Trigger>
-          <Tabs.Trigger value="members">
+          <Tabs.Tab value="info">Informasjon</Tabs.Tab>
+          <Tabs.Tab value="members">
             <UsersIcon />
             Medlemmer ({members.length})
-          </Tabs.Trigger>
-          <Tabs.Trigger value="bookings">Bookinger</Tabs.Trigger>
-          <Tabs.Trigger value="seasons">Sesongleie</Tabs.Trigger>
+          </Tabs.Tab>
+          <Tabs.Tab value="bookings">Bookinger</Tabs.Tab>
+          <Tabs.Tab value="seasons">Sesongleie</Tabs.Tab>
         </Tabs.List>
 
         {/* Information Tab */}

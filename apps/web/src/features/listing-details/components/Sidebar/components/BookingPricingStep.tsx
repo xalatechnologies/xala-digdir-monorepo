@@ -4,7 +4,8 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
+import { InfoIcon } from '@xala/ds';
 
 export interface PriceGroup {
   id: string;
@@ -74,19 +75,20 @@ export function BookingPricingStep({
           ))}
         </select>
         {selectedPriceGroup && (
-          <div
+          <Alert
+            data-color="info"
+            data-size="sm"
             style={{
               marginTop: 'var(--ds-spacing-2)',
-              padding: 'var(--ds-spacing-3)',
-              backgroundColor: 'var(--ds-color-accent-surface-default)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              border: '1px solid var(--ds-color-accent-border-subtle)',
             }}
           >
-            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)' }}>
-              {priceGroups.find(pg => pg.id === selectedPriceGroup)?.description}
-            </Paragraph>
-          </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
+              <InfoIcon size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <Paragraph data-size="sm" style={{ margin: 0 }}>
+                {priceGroups.find(pg => pg.id === selectedPriceGroup)?.description}
+              </Paragraph>
+            </div>
+          </Alert>
         )}
       </div>
 

@@ -284,7 +284,9 @@ export function BookingSelectedSlotsSidebar({
             color: 'var(--ds-color-neutral-text-subtle)',
           }}
         >
-          <CalendarIcon size={32} style={{ marginBottom: 'var(--ds-spacing-2)', opacity: 0.3 }} />
+          <div style={{ marginBottom: 'var(--ds-spacing-2)', opacity: 0.3 }}>
+            <CalendarIcon size={32} />
+          </div>
           <Paragraph data-size="sm" style={{ margin: 0 }}>
             Ingen tidspunkter valgt
           </Paragraph>

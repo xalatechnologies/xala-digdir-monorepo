@@ -5,6 +5,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Paragraph,
@@ -32,7 +33,6 @@ import {
   useBookings,
   useConfirmBooking,
   useCancelBooking,
-  useUpdateBooking,
   useListings,
   useUsers,
   type BookingStatus,
@@ -41,7 +41,6 @@ import {
   formatTime,
 } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
-import { EditBookingForm } from '../components/bookings/EditBookingForm';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
@@ -88,6 +87,7 @@ function calculateDuration(startTime: string, endTime: string): string {
 
 
 export function BookingsPage() {
+  const navigate = useNavigate();
   const t = useT();
   const { locale } = useLocale();
   const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
@@ -97,9 +97,6 @@ export function BookingsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Filter state - default to 'pending' to show actionable items first
@@ -257,24 +254,13 @@ export function BookingsPage() {
     setDateTo('');
   }, []);
 
-  // Edit handlers
+  // Navigation handlers
+  const handleView = (booking: Booking) => {
+    navigate(`/bookings/${booking.id}`);
+  };
+
   const handleEdit = (booking: Booking) => {
-    setEditingBooking(booking);
-    setIsEditDrawerOpen(true);
-    setSelectedBooking(null); // Close detail drawer
-  };
-
-  const handleEditSubmit = async (data: any) => {
-    if (editingBooking) {
-      await updateBooking.mutateAsync({ id: editingBooking.id, data });
-      setIsEditDrawerOpen(false);
-      setEditingBooking(null);
-    }
-  };
-
-  const handleEditCancel = () => {
-    setIsEditDrawerOpen(false);
-    setEditingBooking(null);
+    navigate(`/bookings/${booking.id}/edit`);
   };
 
   // Bulk actions
@@ -508,749 +494,17 @@ export function BookingsPage() {
         </DrawerSection>
       </Drawer>
 
-      {/* Edit Booking Drawer */}
-      {isEditDrawerOpen && editingBooking && (
-        <Drawer
-          isOpen={isEditDrawerOpen}
-          onClose={handleEditCancel}
-          title="Rediger booking"
-          position="right"
-          size="xl"
-        >
-          <EditBookingForm
-            booking={editingBooking}
-            onSubmit={handleEditSubmit}
-            onCancel={handleEditCancel}
-          />
-        </Drawer>
-      )}
-
-      {/* Detail Drawer */}
-      <Drawer
-        isOpen={!!selectedBooking}
-        onClose={() => setSelectedBooking(null)}
-        title="Bookingdetaljer"
-        position="right"
-        size="xl"
-        footer={
-          selectedBooking && (
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'space-between', width: '100%' }}>
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                {selectedBooking.status === 'pending' && (
-                  <>
-                    <Button
-                      type="button"
-                      variant="tertiary"
-                      onClick={() => {
-                        handleConfirm(selectedBooking.id);
-                        setSelectedBooking(null);
-                      }}
-                      disabled={confirmBooking.isPending}
-                      style={{ color: 'var(--ds-color-success-text-default)' }}
-                    >
-                      <CheckIcon /> Godkjenn
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="tertiary"
-                      onClick={() => handleCancel(selectedBooking.id)}
-                      disabled={cancelBooking.isPending}
-                      style={{ color: 'var(--ds-color-danger-text-default)' }}
-                    >
-                      <CloseIcon /> Avvis
-                    </Button>
-                  </>
-                )}
-                {selectedBooking.status !== 'cancelled' && selectedBooking.status !== 'pending' && (
-                  <Button
-                    type="button"
-                    variant="tertiary"
-                    onClick={() => handleCancel(selectedBooking.id)}
-                    disabled={cancelBooking.isPending}
-                    style={{ color: 'var(--ds-color-danger-text-default)' }}
-                  >
-                    Kanseller booking
-                  </Button>
-                )}
-              </div>
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                {selectedBooking.status !== 'cancelled' && selectedBooking.status !== 'completed' && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => handleEdit(selectedBooking)}
-                  >
-                    Rediger
-                  </Button>
-                )}
-                <Button
-                  type="button"
-                  variant="tertiary"
-                  onClick={() => setSelectedBooking(null)}
-                >
-                  Lukk
-                </Button>
-              </div>
-            </div>
-          )
-        }
-      >
-        {selectedBooking && (() => {
-          const { listingName, userName, orgName, duration, bookingRef } = getBookingDisplayValues(selectedBooking);
-          const listing = listingsData?.data?.find(l => l.id === selectedBooking.listingId);
-
-          // Check if user/org values are UUIDs (not resolved names)
-          const isUserUuid = userName && /^[0-9a-f]{8}-[0-9a-f]{4}/i.test(String(userName));
-          const isOrgUuid = orgName && /^[0-9a-f]{8}-[0-9a-f]{4}/i.test(String(orgName));
-
-          // Format date with weekday
-          const startDate = new Date(selectedBooking.startTime);
-          const endDate = new Date(selectedBooking.endTime);
-          const weekdays = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
-          const weekday = weekdays[startDate.getDay()];
-          const formattedDate = startDate.toLocaleDateString(formatLocale, {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          });
-
-          // Calculate time progress for current bookings
-          const now = new Date();
-          const isPast = endDate < now;
-          const isOngoing = startDate <= now && endDate >= now;
-
-          // Time until booking
-          const getTimeUntil = () => {
-            if (isPast) return null;
-            if (isOngoing) return 'Pågår nå';
-            const diffMs = startDate.getTime() - now.getTime();
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            if (diffDays > 0) return `Om ${diffDays} dag${diffDays > 1 ? 'er' : ''}`;
-            if (diffHours > 0) return `Om ${diffHours} time${diffHours > 1 ? 'r' : ''}`;
-            return 'Starter snart';
-          };
-          const timeUntil = getTimeUntil();
-
-          // Status styling
-          const getStatusStyle = () => {
-            switch (selectedBooking.status) {
-              case 'pending':
-                return { bg: 'var(--ds-color-warning-surface-default)', border: 'var(--ds-color-warning-border-default)', icon: '⏳' };
-              case 'confirmed':
-                return { bg: 'var(--ds-color-success-surface-default)', border: 'var(--ds-color-success-border-default)', icon: '✓' };
-              case 'cancelled':
-                return { bg: 'var(--ds-color-danger-surface-default)', border: 'var(--ds-color-danger-border-default)', icon: '✕' };
-              case 'completed':
-                return { bg: 'var(--ds-color-info-surface-default)', border: 'var(--ds-color-info-border-default)', icon: '✓' };
-              default:
-                return { bg: 'var(--ds-color-neutral-surface-default)', border: 'var(--ds-color-neutral-border-default)', icon: '•' };
-            }
-          };
-          const statusStyle = getStatusStyle();
-
-          return (
-            <div style={{ padding: '0 var(--ds-spacing-4)' }}>
-            <Stack spacing="var(--ds-spacing-5)">
-              {/* Hero Section - Visual status banner */}
-              <div style={{
-                position: 'relative',
-                padding: 'var(--ds-spacing-5)',
-                background: `linear-gradient(135deg, ${statusStyle.bg}, var(--ds-color-neutral-surface-default))`,
-                borderRadius: 'var(--ds-border-radius-lg)',
-                border: `1px solid ${statusStyle.border}`,
-                overflow: 'hidden'
-              }}>
-                {/* Background pattern */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '150px',
-                  height: '150px',
-                  background: statusStyle.border,
-                  opacity: 0.05,
-                  borderRadius: '50%',
-                  transform: 'translate(30%, -30%)'
-                }} />
-
-                <div style={{ position: 'relative' }}>
-                  {/* Booking ref and status badges */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-3)' }}>
-                    <span style={{
-                      fontFamily: 'monospace',
-                      fontSize: 'var(--ds-font-size-sm)',
-                      color: 'var(--ds-color-neutral-text-subtle)',
-                      backgroundColor: 'var(--ds-color-neutral-background-default)',
-                      padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                      borderRadius: 'var(--ds-border-radius-sm)'
-                    }}>
-                      #{bookingRef}
-                    </span>
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                      <BookingStatusBadge status={selectedBooking.status} />
-                      <PaymentStatusBadge status={selectedBooking.paymentStatus || 'unpaid'} />
-                    </div>
-                  </div>
-
-                  {/* Main listing name */}
-                  <Heading level={2} data-size="xl" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                    {listingName}
-                  </Heading>
-
-                  {/* Listing metadata tags */}
-                  {listing && (
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-                      {listing.type && (
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 'var(--ds-spacing-1)',
-                          fontSize: 'var(--ds-font-size-sm)',
-                          color: 'var(--ds-color-neutral-text-default)',
-                          backgroundColor: 'var(--ds-color-neutral-background-default)',
-                          padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                          borderRadius: 'var(--ds-border-radius-full)'
-                        }}>
-                          <span>📍</span> {listing.type}
-                        </span>
-                      )}
-                      {listing.capacity && (
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 'var(--ds-spacing-1)',
-                          fontSize: 'var(--ds-font-size-sm)',
-                          color: 'var(--ds-color-neutral-text-default)',
-                          backgroundColor: 'var(--ds-color-neutral-background-default)',
-                          padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                          borderRadius: 'var(--ds-border-radius-full)'
-                        }}>
-                          <span>👥</span> {listing.capacity} personer
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Time indicator banner */}
-              {timeUntil && (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                  backgroundColor: isOngoing
-                    ? 'var(--ds-color-success-surface-default)'
-                    : 'var(--ds-color-info-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  animation: isOngoing ? 'pulse 2s infinite' : 'none'
-                }}>
-                  <span style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: isOngoing
-                      ? 'var(--ds-color-success-base-default)'
-                      : 'var(--ds-color-info-base-default)'
-                  }} />
-                  <Text size="sm" color={isOngoing ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-info-text-default)'} style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                    {timeUntil}
-                  </Text>
-                </div>
-              )}
-
-              {/* When - Time Card */}
-              <div style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-4)' }}>
-                  {/* Calendar icon box */}
-                  <div style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    backgroundColor: 'var(--ds-color-accent-surface-default)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    border: '1px solid var(--ds-color-accent-border-subtle)'
-                  }}>
-                    <span style={{
-                      fontSize: 'var(--ds-font-size-xs)',
-                      color: 'var(--ds-color-accent-text-default)',
-                      textTransform: 'uppercase',
-                      fontWeight: 'var(--ds-font-weight-medium)'
-                    }}>
-                      {startDate.toLocaleDateString(formatLocale, { month: 'short' })}
-                    </span>
-                    <span style={{
-                      fontSize: 'var(--ds-font-size-xl)',
-                      fontWeight: 'var(--ds-font-weight-bold)',
-                      color: 'var(--ds-color-accent-text-default)',
-                      lineHeight: 1
-                    }}>
-                      {startDate.getDate()}
-                    </span>
-                  </div>
-
-                  <div style={{ flex: 1 }}>
-                    <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Når
-                    </Text>
-                    <Heading level={4} data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
-                      {weekday} {formattedDate}
-                    </Heading>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--ds-spacing-2)',
-                      marginTop: 'var(--ds-spacing-2)'
-                    }}>
-                      <span style={{
-                        fontSize: 'var(--ds-font-size-lg)',
-                        fontWeight: 'var(--ds-font-weight-semibold)',
-                        color: 'var(--ds-color-accent-text-default)'
-                      }}>
-                        {formatTime(selectedBooking.startTime)}
-                      </span>
-                      <span style={{
-                        width: '24px',
-                        height: '2px',
-                        backgroundColor: 'var(--ds-color-neutral-border-default)'
-                      }} />
-                      <span style={{
-                        fontSize: 'var(--ds-font-size-lg)',
-                        fontWeight: 'var(--ds-font-weight-semibold)',
-                        color: 'var(--ds-color-accent-text-default)'
-                      }}>
-                        {formatTime(selectedBooking.endTime)}
-                      </span>
-                      <span style={{
-                        padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                        backgroundColor: 'var(--ds-color-info-surface-default)',
-                        borderRadius: 'var(--ds-border-radius-full)',
-                        fontSize: 'var(--ds-font-size-xs)',
-                        color: 'var(--ds-color-info-text-default)',
-                        fontWeight: 'var(--ds-font-weight-medium)'
-                      }}>
-                        {duration}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Who - Booker Card */}
-              <div style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)'
-              }}>
-                <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 'var(--ds-spacing-3)', display: 'block' }}>
-                  Hvem har booket
-                </Text>
-
-                {isUserUuid ? (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ds-spacing-3)',
-                    padding: 'var(--ds-spacing-3)',
-                    backgroundColor: 'var(--ds-color-warning-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    border: '1px dashed var(--ds-color-warning-border-default)'
-                  }}>
-                    <div style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: 'var(--ds-color-warning-surface-hover)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 'var(--ds-font-size-xl)'
-                    }}>
-                      ?
-                    </div>
-                    <div>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', color: 'var(--ds-color-warning-text-default)' }}>
-                        Brukerdata ikke tilgjengelig
-                      </Paragraph>
-                      <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Bruker-ID: {String(userName).slice(0, 8)}...
-                      </Paragraph>
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                    {/* Avatar */}
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      background: 'linear-gradient(135deg, var(--ds-color-accent-base-default), var(--ds-color-accent-base-hover))',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 'var(--ds-font-size-xl)',
-                      fontWeight: 'var(--ds-font-weight-bold)',
-                      color: 'var(--ds-color-accent-contrast-default)',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                    }}>
-                      {String(userName || 'U').charAt(0).toUpperCase()}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                        {userName || 'Ukjent bruker'}
-                      </Paragraph>
-                      {selectedBooking.userEmail && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)', marginTop: 'var(--ds-spacing-1)' }}>
-                          <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>✉️</span>
-                          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                            {selectedBooking.userEmail}
-                          </Paragraph>
-                        </div>
-                      )}
-                      {selectedBooking.userPhone && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)', marginTop: 'var(--ds-spacing-1)' }}>
-                          <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>📱</span>
-                          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                            {selectedBooking.userPhone}
-                          </Paragraph>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Organization */}
-                {orgName && (
-                  <div style={{
-                    marginTop: 'var(--ds-spacing-3)',
-                    paddingTop: 'var(--ds-spacing-3)',
-                    borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ds-spacing-2)'
-                  }}>
-                    <span style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: 'var(--ds-border-radius-sm)',
-                      backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 'var(--ds-font-size-md)'
-                    }}>
-                      🏢
-                    </span>
-                    <div>
-                      <Text size="xs" color="var(--ds-color-neutral-text-subtle)">Organisasjon</Text>
-                      {isOrgUuid ? (
-                        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontStyle: 'italic' }}>
-                          Ikke tilgjengelig
-                        </Paragraph>
-                      ) : (
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {orgName}
-                        </Paragraph>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Price Card */}
-              <div style={{
-                padding: 'var(--ds-spacing-4)',
-                background: 'linear-gradient(135deg, var(--ds-color-success-surface-default), var(--ds-color-success-surface-hover))',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-success-border-subtle)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Total pris
-                    </Text>
-                    <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      inkl. mva
-                    </Paragraph>
-                  </div>
-                  <Heading level={3} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
-                    {(Number(selectedBooking.totalPrice) || 0).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
-                  </Heading>
-                </div>
-              </div>
-
-              {/* Payment & Invoice Details */}
-              <div style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)'
-              }}>
-                <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 'var(--ds-spacing-3)', display: 'block' }}>
-                  💳 Betaling & Faktura
-                </Text>
-
-                <Stack spacing="var(--ds-spacing-3)">
-                  {/* Payment Status */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Status</Text>
-                    <PaymentStatusBadge status={selectedBooking.paymentStatus || 'unpaid'} />
-                  </div>
-
-                  {/* Payment Method */}
-                  {selectedBooking.paymentMethod && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalingsmetode</Text>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        {selectedBooking.paymentMethod === 'vipps' ? 'Vipps' :
-                         selectedBooking.paymentMethod === 'card' ? 'Kort' :
-                         selectedBooking.paymentMethod === 'invoice' ? 'Faktura' :
-                         selectedBooking.paymentMethod}
-                      </Paragraph>
-                    </div>
-                  )}
-
-                  {/* Transaction ID */}
-                  {selectedBooking.transactionId && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Transaksjon-ID</Text>
-                      <code style={{
-                        fontFamily: 'monospace',
-                        fontSize: 'var(--ds-font-size-xs)',
-                        padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                        backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        borderRadius: 'var(--ds-border-radius-sm)'
-                      }}>
-                        {selectedBooking.transactionId}
-                      </code>
-                    </div>
-                  )}
-
-                  {/* Payment Date */}
-                  {selectedBooking.paidAt && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalt</Text>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        {new Date(selectedBooking.paidAt).toLocaleDateString(formatLocale, {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </Paragraph>
-                    </div>
-                  )}
-
-                  {/* Invoice Number */}
-                  {selectedBooking.invoiceNumber && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Fakturanummer</Text>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        #{selectedBooking.invoiceNumber}
-                      </Paragraph>
-                    </div>
-                  )}
-
-                  {/* Price Breakdown */}
-                  <div style={{
-                    marginTop: 'var(--ds-spacing-2)',
-                    paddingTop: 'var(--ds-spacing-3)',
-                    borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Grunnpris</Text>
-                      <Text size="sm">
-                        {(Number(selectedBooking.totalPrice) * 0.8).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
-                      </Text>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">MVA (25%)</Text>
-                      <Text size="sm">
-                        {(Number(selectedBooking.totalPrice) * 0.2).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
-                      </Text>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 'var(--ds-spacing-2)', borderTop: '1px solid var(--ds-color-neutral-border-default)' }}>
-                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Totalt</Text>
-                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                        {(Number(selectedBooking.totalPrice) || 0).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
-                      </Text>
-                    </div>
-                  </div>
-                </Stack>
-              </div>
-
-              {/* Notes/Purpose */}
-              {selectedBooking.notes && (
-                <div style={{
-                  padding: 'var(--ds-spacing-4)',
-                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-md)',
-                  border: '1px solid var(--ds-color-neutral-border-subtle)'
-                }}>
-                  <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    📝 Formål / Notater
-                  </Text>
-                  <div style={{
-                    padding: 'var(--ds-spacing-3)',
-                    backgroundColor: 'var(--ds-color-neutral-background-default)',
-                    borderRadius: 'var(--ds-border-radius-sm)',
-                    marginTop: 'var(--ds-spacing-2)',
-                    borderLeft: '3px solid var(--ds-color-accent-border-default)'
-                  }}>
-                    <Paragraph data-size="sm" style={{ margin: 0, lineHeight: 1.6 }}>
-                      {selectedBooking.notes}
-                    </Paragraph>
-                  </div>
-                </div>
-              )}
-
-              {/* Listing Description */}
-              {listing?.description && (
-                <div style={{
-                  padding: 'var(--ds-spacing-4)',
-                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-md)',
-                  border: '1px solid var(--ds-color-neutral-border-subtle)'
-                }}>
-                  <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    ℹ️ Om lokalet
-                  </Text>
-                  <Paragraph data-size="sm" style={{
-                    margin: 0,
-                    marginTop: 'var(--ds-spacing-2)',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                    lineHeight: 1.6
-                  }}>
-                    {listing.description}
-                  </Paragraph>
-                </div>
-              )}
-
-              {/* Metadata Footer */}
-              <div style={{
-                padding: 'var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 'var(--ds-spacing-3)'
-              }}>
-                <div>
-                  <Text size="xs" color="var(--ds-color-neutral-text-subtle)">Opprettet</Text>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                    {selectedBooking.createdAt
-                      ? new Date(selectedBooking.createdAt).toLocaleDateString(formatLocale, {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
-                      : '–'}
-                  </Paragraph>
-                </div>
-                {selectedBooking.updatedAt && selectedBooking.updatedAt !== selectedBooking.createdAt && (
-                  <div>
-                    <Text size="xs" color="var(--ds-color-neutral-text-subtle)">Sist oppdatert</Text>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {new Date(selectedBooking.updatedAt).toLocaleDateString(formatLocale, {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </Paragraph>
-                  </div>
-                )}
-              </div>
-
-              {/* Full ID (collapsible) */}
-              <details style={{
-                padding: 'var(--ds-spacing-2)',
-                borderRadius: 'var(--ds-border-radius-sm)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)'
-              }}>
-                <summary style={{
-                  cursor: 'pointer',
-                  fontSize: 'var(--ds-font-size-xs)',
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  userSelect: 'none',
-                  padding: 'var(--ds-spacing-1)'
-                }}>
-                  🔗 Vis full booking-ID
-                </summary>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  marginTop: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-2)',
-                  backgroundColor: 'var(--ds-color-neutral-background-default)',
-                  borderRadius: 'var(--ds-border-radius-sm)'
-                }}>
-                  <code style={{
-                    flex: 1,
-                    fontFamily: 'monospace',
-                    fontSize: 'var(--ds-font-size-xs)',
-                    wordBreak: 'break-all',
-                    color: 'var(--ds-color-neutral-text-subtle)'
-                  }}>
-                    {selectedBooking.id}
-                  </code>
-                  <Button
-                    type="button"
-                    variant="tertiary"
-                    data-size="sm"
-                    onClick={() => handleCopyId(selectedBooking.id)}
-                    aria-label="Kopier ID"
-                    style={{ flexShrink: 0 }}
-                  >
-                    <CopyIcon style={{ width: '14px', height: '14px' }} />
-                  </Button>
-                </div>
-              </details>
-            </Stack>
-            </div>
-          );
-        })()}
-      </Drawer>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', height: '100%' }}>
-        {/* Header */}
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Bookinger
-          </Heading>
-          <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Administrer alle bookinger og forespørsler
-          </Paragraph>
-        </div>
-
+      {/* Main Content Area */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', flex: 1, overflow: 'hidden' }}>
         {/* Status Tabs */}
         <div style={{
           display: 'flex',
-          gap: 'var(--ds-spacing-2)',
+          gap: 'var(--ds-spacing-1)',
           borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
           paddingBottom: 'var(--ds-spacing-1)',
           overflowX: 'auto'
         }}>
-          {STATUS_TABS.map((tab) => {
+        {STATUS_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             const count = tabCounts[tab.id] || 0;
             const colorMap: Record<string, string> = {
@@ -1501,7 +755,7 @@ export function BookingsPage() {
                       <Table.Row
                         key={booking.id}
                         style={{ cursor: 'pointer' }}
-                        onClick={() => setSelectedBooking(booking)}
+                        onClick={() => handleView(booking)}
                       >
                         <Table.Cell onClick={(e) => e.stopPropagation()}>
                           <Checkbox
@@ -1625,7 +879,7 @@ export function BookingsPage() {
                             <Dropdown id={`dropdown-${booking.id}`} placement="bottom-end">
                               <Dropdown.List>
                                 <Dropdown.Item>
-                                  <Dropdown.Button onClick={() => setSelectedBooking(booking)}>
+                                  <Dropdown.Button onClick={() => handleView(booking)}>
                                     Se detaljer
                                   </Dropdown.Button>
                                 </Dropdown.Item>
@@ -1648,7 +902,7 @@ export function BookingsPage() {
             </div>
           )}
         </div>
-      </div>
+      </div> {/* End Main Content Area */}
     </>
   );
 }

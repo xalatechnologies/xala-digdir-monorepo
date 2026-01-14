@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -13,9 +14,6 @@ import {
   Table,
   Dropdown,
   Spinner,
-  Drawer,
-  DrawerSection,
-  Stack,
   PlusIcon,
   MoreVerticalIcon,
   FilterIcon,
@@ -28,18 +26,12 @@ import {
 } from '@xala/ds';
 import {
   useUsers,
-  useUser,
-  useCreateUser,
-  useUpdateUser,
   useDeactivateUser,
   useReactivateUser,
   type User,
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
-import { UserForm } from '../components/users/UserForm';
-
-type ViewMode = 'list' | 'detail';
 
 const roleLabels: Record<UserRole, string> = {
   super_admin: 'Superadmin',
@@ -62,11 +54,9 @@ const statusColors: Record<UserStatus, 'success' | 'warning' | 'danger'> = {
 };
 
 export function UsersPage() {
+  const navigate = useNavigate();
+
   // State
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all');
@@ -79,26 +69,17 @@ export function UsersPage() {
   });
   const users = usersData?.data ?? [];
 
-  const { data: selectedUserData } = useUser(selectedUserId ?? '', {
-    enabled: !!selectedUserId,
-  });
-  const selectedUser = selectedUserData?.data;
-
   // Mutations
-  const createUserMutation = useCreateUser();
-  const updateUserMutation = useUpdateUser();
   const deactivateUserMutation = useDeactivateUser();
   const reactivateUserMutation = useReactivateUser();
 
   // Handlers
   const handleCreate = () => {
-    setEditingUser(null);
-    setIsFormOpen(true);
+    navigate('/users/new');
   };
 
   const handleEdit = (user: User) => {
-    setEditingUser(user);
-    setIsFormOpen(true);
+    navigate(`/users/${user.id}/edit`);
   };
 
   const handleDeactivate = async (id: string) => {
@@ -112,18 +93,7 @@ export function UsersPage() {
   };
 
   const handleViewDetail = (user: User) => {
-    setSelectedUserId(user.id);
-    setViewMode('detail');
-  };
-
-  const handleFormSubmit = async (data: any) => {
-    if (editingUser) {
-      await updateUserMutation.mutateAsync({ id: editingUser.id, data });
-    } else {
-      await createUserMutation.mutateAsync(data);
-    }
-    setIsFormOpen(false);
-    setEditingUser(null);
+    navigate(`/users/${user.id}`);
   };
 
   return (
@@ -154,39 +124,52 @@ export function UsersPage() {
             <HeaderSearch
               placeholder="Søk etter bruker..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
+              onSearchChange={(value) => setSearchQuery(value)}
             />
           </div>
 
-          <Dropdown>
-            <Dropdown.Trigger asChild>
-              <Button variant="secondary" data-size="sm">
-                <FilterIcon />
-                Rolle: {roleFilter === 'all' ? 'Alle' : roleLabels[roleFilter]}
-              </Button>
+          <Dropdown.TriggerContext>
+            <Dropdown.Trigger variant="secondary" data-size="sm">
+              <FilterIcon />
+              Rolle: {roleFilter === 'all' ? 'Alle' : roleLabels[roleFilter]}
             </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item onClick={() => setRoleFilter('all')}>Alle</Dropdown.Item>
-              <Dropdown.Item onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Item>
-              <Dropdown.Item onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown>
+            <Dropdown>
+              <Dropdown.List>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setRoleFilter('all')}>Alle</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Button>
+                </Dropdown.Item>
+              </Dropdown.List>
+            </Dropdown>
+          </Dropdown.TriggerContext>
 
-          <Dropdown>
-            <Dropdown.Trigger asChild>
-              <Button variant="secondary" data-size="sm">
-                <FilterIcon />
-                Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
-              </Button>
+          <Dropdown.TriggerContext>
+            <Dropdown.Trigger variant="secondary" data-size="sm">
+              <FilterIcon />
+              Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
             </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown>
+            <Dropdown>
+              <Dropdown.List>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+                </Dropdown.Item>
+              </Dropdown.List>
+            </Dropdown>
+          </Dropdown.TriggerContext>
         </div>
       </Card>
 
@@ -260,34 +243,42 @@ export function UsersPage() {
                     )}
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
-                    <Dropdown>
-                      <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" data-size="sm" aria-label="Handlinger">
-                          <MoreVerticalIcon />
-                        </Button>
+                    <Dropdown.TriggerContext>
+                      <Dropdown.Trigger variant="tertiary" data-size="sm" aria-label="Handlinger">
+                        <MoreVerticalIcon />
                       </Dropdown.Trigger>
-                      <Dropdown.Content>
-                        <Dropdown.Item onClick={() => handleViewDetail(user)}>
-                          <UserIcon />
-                          Se detaljer
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleEdit(user)}>
-                          <EditIcon />
-                          Rediger
-                        </Dropdown.Item>
-                        {user.status === 'active' ? (
-                          <Dropdown.Item onClick={() => handleDeactivate(user.id)} color="danger">
-                            <XCircleIcon />
-                            Deaktiver
+                      <Dropdown>
+                        <Dropdown.List>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => handleViewDetail(user)}>
+                              <UserIcon />
+                              Se detaljer
+                            </Dropdown.Button>
                           </Dropdown.Item>
-                        ) : (
-                          <Dropdown.Item onClick={() => handleReactivate(user.id)}>
-                            <CheckCircleIcon />
-                            Reaktiver
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => handleEdit(user)}>
+                              <EditIcon />
+                              Rediger
+                            </Dropdown.Button>
                           </Dropdown.Item>
-                        )}
-                      </Dropdown.Content>
-                    </Dropdown>
+                          {user.status === 'active' ? (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={() => handleDeactivate(user.id)} data-color="danger">
+                                <XCircleIcon />
+                                Deaktiver
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          ) : (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={() => handleReactivate(user.id)}>
+                                <CheckCircleIcon />
+                                Reaktiver
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          )}
+                        </Dropdown.List>
+                      </Dropdown>
+                    </Dropdown.TriggerContext>
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -295,126 +286,6 @@ export function UsersPage() {
           </Table>
         )}
       </Card>
-
-      {/* Create/Edit Form Drawer */}
-      {isFormOpen && (
-        <Drawer
-          isOpen={isFormOpen}
-          onClose={() => {
-            setIsFormOpen(false);
-            setEditingUser(null);
-          }}
-          title={editingUser ? 'Rediger bruker' : 'Inviter bruker'}
-        >
-          <UserForm
-            user={editingUser}
-            onSubmit={handleFormSubmit}
-            onCancel={() => {
-              setIsFormOpen(false);
-              setEditingUser(null);
-            }}
-          />
-        </Drawer>
-      )}
-
-      {/* Detail Drawer */}
-      {viewMode === 'detail' && selectedUser && (
-        <Drawer
-          isOpen={viewMode === 'detail'}
-          onClose={() => {
-            setViewMode('list');
-            setSelectedUserId(null);
-          }}
-          title={selectedUser.name}
-        >
-          <Stack spacing={4}>
-            {/* Quick Actions */}
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-              <Button variant="secondary" data-size="sm" onClick={() => handleEdit(selectedUser)}>
-                <EditIcon />
-                Rediger
-              </Button>
-              {selectedUser.status === 'active' ? (
-                <Button variant="secondary" data-size="sm" onClick={() => handleDeactivate(selectedUser.id)}>
-                  <XCircleIcon />
-                  Deaktiver
-                </Button>
-              ) : (
-                <Button variant="secondary" data-size="sm" onClick={() => handleReactivate(selectedUser.id)}>
-                  <CheckCircleIcon />
-                  Reaktiver
-                </Button>
-              )}
-            </div>
-
-            {/* User Information */}
-            <DrawerSection title="Brukerinformasjon">
-              <Stack spacing={3}>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    E-post
-                  </div>
-                  <a href={`mailto:${selectedUser.email}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
-                    {selectedUser.email}
-                  </a>
-                </div>
-
-                {selectedUser.phone && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Telefon
-                    </div>
-                    <a href={`tel:${selectedUser.phone}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
-                      {selectedUser.phone}
-                    </a>
-                  </div>
-                )}
-
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Rolle
-                  </div>
-                  <Badge color={roleColors[selectedUser.role]}>
-                    {roleLabels[selectedUser.role]}
-                  </Badge>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Status
-                  </div>
-                  <Badge color={statusColors[selectedUser.status]}>
-                    {selectedUser.status === 'active' ? 'Aktiv' : selectedUser.status === 'inactive' ? 'Inaktiv' : 'Suspendert'}
-                  </Badge>
-                </div>
-
-                {selectedUser.lastLoginAt && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Sist innlogget
-                    </div>
-                    <div>{new Date(selectedUser.lastLoginAt).toLocaleString('nb-NO')}</div>
-                  </div>
-                )}
-
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Opprettet
-                  </div>
-                  <div>{new Date(selectedUser.createdAt).toLocaleDateString('nb-NO')}</div>
-                </div>
-              </Stack>
-            </DrawerSection>
-
-            {/* Activity Section (placeholder) */}
-            <DrawerSection title="Aktivitet">
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Brukerens aktivitetslogg vil vises her.
-              </Paragraph>
-            </DrawerSection>
-          </Stack>
-        </Drawer>
-      )}
     </div>
   );
 }

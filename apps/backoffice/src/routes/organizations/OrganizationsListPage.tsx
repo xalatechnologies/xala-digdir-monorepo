@@ -97,6 +97,10 @@ export function OrganizationsListPage() {
     await verifyOrgMutation.mutateAsync(id);
   };
 
+  const handleViewDetail = (org: Organization) => {
+    navigate(`/organizations/${org.id}`);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       {/* Header */}
@@ -127,43 +131,64 @@ export function OrganizationsListPage() {
             <HeaderSearch
               placeholder="Søk etter organisasjon..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
+              onSearchChange={(value) => setSearchQuery(value)}
             />
           </div>
 
-          <Dropdown>
-            <Dropdown.Trigger asChild>
-              <Button variant="secondary" data-size="sm">
-                <FilterIcon />
-                Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
-              </Button>
+          <Dropdown.TriggerContext>
+            <Dropdown.Trigger variant="secondary" data-size="sm">
+              <FilterIcon />
+              Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
             </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown>
+            <Dropdown>
+              <Dropdown.List>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+                </Dropdown.Item>
+              </Dropdown.List>
+            </Dropdown>
+          </Dropdown.TriggerContext>
 
-          <Dropdown>
-            <Dropdown.Trigger asChild>
-              <Button variant="secondary" data-size="sm">
-                <FilterIcon />
-                Type: {actorTypeFilter === 'all' ? 'Alle' : actorTypeLabels[actorTypeFilter]}
-              </Button>
+          <Dropdown.TriggerContext>
+            <Dropdown.Trigger variant="secondary" data-size="sm">
+              <FilterIcon />
+              Type: {actorTypeFilter === 'all' ? 'Alle' : actorTypeLabels[actorTypeFilter]}
             </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item onClick={() => setActorTypeFilter('all')}>Alle</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('private')}>Privatperson</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('business')}>Bedrift</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('sports_club')}>Idrettslag</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('youth_organization')}>Ungdomsorganisasjon</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('school')}>Skole</Dropdown.Item>
-              <Dropdown.Item onClick={() => setActorTypeFilter('municipality')}>Kommune</Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown>
+            <Dropdown>
+              <Dropdown.List>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('all')}>Alle</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('private')}>Privatperson</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('business')}>Bedrift</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('sports_club')}>Idrettslag</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('youth_organization')}>Ungdomsorganisasjon</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('school')}>Skole</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('municipality')}>Kommune</Dropdown.Button>
+                </Dropdown.Item>
+              </Dropdown.List>
+            </Dropdown>
+          </Dropdown.TriggerContext>
         </div>
       </Card>
 
@@ -208,7 +233,7 @@ export function OrganizationsListPage() {
             </Table.Head>
             <Table.Body>
               {filteredOrgs.map(org => (
-                <Table.Row key={org.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/organizations/${org.id}`)}>
+                <Table.Row key={org.id} style={{ cursor: 'pointer' }} onClick={() => handleViewDetail(org)}>
                   <Table.Cell>
                     <div style={{ fontWeight: 500 }}>{org.name}</div>
                   </Table.Cell>
@@ -245,33 +270,41 @@ export function OrganizationsListPage() {
                     )}
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
-                    <Dropdown>
-                      <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" data-size="sm">
-                          <MoreVerticalIcon />
-                        </Button>
+                    <Dropdown.TriggerContext>
+                      <Dropdown.Trigger variant="tertiary" data-size="sm">
+                        <MoreVerticalIcon />
                       </Dropdown.Trigger>
-                      <Dropdown.Content>
-                        <Dropdown.Item onClick={() => navigate(`/organizations/${org.id}`)}>
-                          <EyeIcon />
-                          Vis detaljer
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => navigate(`/organizations/${org.id}/edit`)}>
-                          <EditIcon />
-                          Rediger
-                        </Dropdown.Item>
-                        {!org.verified && (
-                          <Dropdown.Item onClick={() => handleVerify(org.id)}>
-                            <ShieldCheckIcon />
-                            Verifiser
+                      <Dropdown>
+                        <Dropdown.List>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => handleViewDetail(org)}>
+                              <EyeIcon />
+                              Vis detaljer
+                            </Dropdown.Button>
                           </Dropdown.Item>
-                        )}
-                        <Dropdown.Item onClick={() => handleDelete(org.id)} color="danger">
-                          <TrashIcon />
-                          Slett
-                        </Dropdown.Item>
-                      </Dropdown.Content>
-                    </Dropdown>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => navigate(`/organizations/${org.id}/edit`)}>
+                              <EditIcon />
+                              Rediger
+                            </Dropdown.Button>
+                          </Dropdown.Item>
+                          {!org.verified && (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={() => handleVerify(org.id)}>
+                                <ShieldCheckIcon />
+                                Verifiser
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          )}
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => handleDelete(org.id)} data-color="danger">
+                              <TrashIcon />
+                              Slett
+                            </Dropdown.Button>
+                          </Dropdown.Item>
+                        </Dropdown.List>
+                      </Dropdown>
+                    </Dropdown.TriggerContext>
                   </Table.Cell>
                 </Table.Row>
               ))}

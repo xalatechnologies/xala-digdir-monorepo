@@ -4,6 +4,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -13,12 +14,7 @@ import {
   Dropdown,
   Spinner,
   Badge,
-  Drawer,
-  DrawerSection,
   Stack,
-  FormField,
-  Textfield,
-  Select,
   Alert,
   CheckCircleIcon,
   XCircleIcon,
@@ -33,12 +29,8 @@ import {
 } from '@xala/ds';
 import {
   useBookings,
-  useBooking,
   useConfirmBooking,
   useCancelBooking,
-  useRequestMoreInfo,
-  useAssignBooking,
-  useUsers,
   formatTime,
   formatDate,
   formatDateTime,
@@ -92,34 +84,21 @@ function formatTimeAgo(date: string): string {
 }
 
 export function RequestsPage() {
+  const navigate = useNavigate();
+
   // State
   const [filter, setFilter] = useState<RequestFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
-  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
-  const [isRequestInfoDrawerOpen, setIsRequestInfoDrawerOpen] = useState(false);
-  const [moreInfoMessage, setMoreInfoMessage] = useState('');
-  const [assigneeUserId, setAssigneeUserId] = useState('');
 
   // Queries
-  const { data: pendingData, isLoading } = useBookings({
+  const { data: pendingData, isLoading} = useBookings({
     status: 'pending',
   });
   const pendingBookings = pendingData?.data ?? [];
 
-  const { data: selectedBookingData } = useBooking(selectedRequestId ?? '', {
-    enabled: !!selectedRequestId,
-  });
-  const selectedBooking = selectedBookingData?.data;
-
-  const { data: usersData } = useUsers({ role: 'saksbehandler' });
-  const saksbehandlere = usersData?.data ?? [];
-
   // Mutations
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
-  const requestMoreInfo = useRequestMoreInfo();
-  const assignBooking = useAssignBooking();
   const { confirm } = useDialog();
 
   // Calculate stats and priorities
@@ -172,8 +151,7 @@ export function RequestsPage() {
 
   // Handlers
   const handleViewDetail = (booking: Booking) => {
-    setSelectedRequestId(booking.id);
-    setIsDetailDrawerOpen(true);
+    navigate(`/bookings/${booking.id}`);
   };
 
   const handleApprove = async (id: string) => {
@@ -186,7 +164,6 @@ export function RequestsPage() {
     });
     if (confirmed) {
       await confirmBooking.mutateAsync(id);
-      setIsDetailDrawerOpen(false);
     }
   };
 
@@ -200,34 +177,6 @@ export function RequestsPage() {
     });
     if (confirmed) {
       await cancelBooking.mutateAsync({ id });
-      setIsDetailDrawerOpen(false);
-    }
-  };
-
-  const handleRequestMoreInfo = () => {
-    if (selectedRequestId) {
-      setIsRequestInfoDrawerOpen(true);
-    }
-  };
-
-  const handleSendInfoRequest = async () => {
-    if (selectedRequestId && moreInfoMessage.trim()) {
-      await requestMoreInfo.mutateAsync({
-        bookingId: selectedRequestId,
-        message: moreInfoMessage,
-      });
-      setMoreInfoMessage('');
-      setIsRequestInfoDrawerOpen(false);
-      setIsDetailDrawerOpen(false);
-    }
-  };
-
-  const handleAssign = async (userId: string) => {
-    if (selectedRequestId) {
-      await assignBooking.mutateAsync({
-        bookingId: selectedRequestId,
-        userId,
-      });
     }
   };
 
@@ -509,224 +458,6 @@ export function RequestsPage() {
           </Table>
         )}
       </Card>
-
-      {/* Detail Drawer */}
-      {isDetailDrawerOpen && selectedBooking && (
-        <Drawer
-          open={isDetailDrawerOpen}
-          onClose={() => {
-            setIsDetailDrawerOpen(false);
-            setSelectedRequestId(null);
-          }}
-          title="Forespørseldetaljer"
-          size="md"
-        >
-          <Stack spacing={4}>
-            {/* Priority Alert */}
-            {(selectedBooking.priority === 'urgent' || selectedBooking.priority === 'high') && (
-              <Alert severity="warning">
-                <Paragraph data-size="sm">
-                  <AlertTriangleIcon /> Dette er en {priorityLabels[selectedBooking.priority].toLowerCase()} prioritetsforespørsel.
-                  Bookingen starter {formatDateTime(selectedBooking.startTime)}.
-                </Paragraph>
-              </Alert>
-            )}
-
-            {/* Quick Actions */}
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-              <Button variant="primary" onClick={() => handleApprove(selectedBooking.id)}>
-                <CheckCircleIcon />
-                Godkjenn
-              </Button>
-              <Button variant="secondary" onClick={() => handleReject(selectedBooking.id)}>
-                <XCircleIcon />
-                Avslå
-              </Button>
-              <Button variant="secondary" onClick={handleRequestMoreInfo}>
-                <MessageSquareIcon />
-                Be om mer info
-              </Button>
-            </div>
-
-            {/* Booking Information */}
-            <DrawerSection title="Bookinginformasjon">
-              <Stack spacing={3}>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Lokale
-                  </div>
-                  <div style={{ fontWeight: 500 }}>{selectedBooking.listingName || selectedBooking.listingId}</div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Tidsrom
-                  </div>
-                  <div>{formatDate(selectedBooking.startTime)}</div>
-                  <div style={{ fontFamily: 'monospace', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {formatTime(selectedBooking.startTime)} - {formatTime(selectedBooking.endTime)}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Prioritet
-                  </div>
-                  <Badge color={priorityColors[selectedBooking.priority]}>
-                    {priorityLabels[selectedBooking.priority]}
-                  </Badge>
-                </div>
-
-                {selectedBooking.notes && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Melding fra søker
-                    </div>
-                    <div style={{
-                      padding: 'var(--ds-spacing-3)',
-                      backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
-                      borderRadius: 'var(--ds-border-radius-md)',
-                    }}>
-                      {selectedBooking.notes}
-                    </div>
-                  </div>
-                )}
-              </Stack>
-            </DrawerSection>
-
-            {/* Requester Information */}
-            <DrawerSection title="Søkerinformasjon">
-              <Stack spacing={3}>
-                <div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    Navn
-                  </div>
-                  <div>{selectedBooking.userName || 'Ukjent'}</div>
-                </div>
-
-                {selectedBooking.userEmail && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      E-post
-                    </div>
-                    <a href={`mailto:${selectedBooking.userEmail}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
-                      {selectedBooking.userEmail}
-                    </a>
-                  </div>
-                )}
-
-                {selectedBooking.userPhone && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Telefon
-                    </div>
-                    <a href={`tel:${selectedBooking.userPhone}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
-                      {selectedBooking.userPhone}
-                    </a>
-                  </div>
-                )}
-
-                {selectedBooking.organizationName && (
-                  <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Organisasjon
-                    </div>
-                    <div>{selectedBooking.organizationName}</div>
-                  </div>
-                )}
-              </Stack>
-            </DrawerSection>
-
-            {/* Assignment */}
-            <DrawerSection title="Tildeling">
-              <FormField
-                label="Tildel saksbehandler"
-                description="Tildel denne forespørselen til en spesifikk saksbehandler"
-              >
-                <Select
-                  value={selectedBooking.assignedTo || ''}
-                  onChange={(e) => handleAssign(e.target.value)}
-                >
-                  <option value="">Ikke tildelt</option>
-                  {saksbehandlere.map(user => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
-            </DrawerSection>
-
-            {/* Metadata */}
-            <DrawerSection title="Metadata">
-              <Stack spacing={2}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--ds-font-size-sm)' }}>
-                  <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Forespørsel-ID</span>
-                  <span style={{ fontFamily: 'monospace' }}>{selectedBooking.id.slice(-8)}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--ds-font-size-sm)' }}>
-                  <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Opprettet</span>
-                  <span>{formatDateTime(selectedBooking.createdAt)}</span>
-                </div>
-              </Stack>
-            </DrawerSection>
-          </Stack>
-        </Drawer>
-      )}
-
-      {/* Request More Info Drawer */}
-      {isRequestInfoDrawerOpen && (
-        <Drawer
-          open={isRequestInfoDrawerOpen}
-          onClose={() => {
-            setIsRequestInfoDrawerOpen(false);
-            setMoreInfoMessage('');
-          }}
-          title="Be om mer informasjon"
-          size="sm"
-        >
-          <Stack spacing={4}>
-            <Alert severity="info">
-              <Paragraph data-size="sm">
-                Søker vil motta en e-post med din forespørsel om tilleggsinformasjon.
-                Bookingforespørselen merkes som "Trenger info" til svar mottas.
-              </Paragraph>
-            </Alert>
-
-            <FormField
-              label="Melding til søker"
-              required
-              description="Beskriv hvilken informasjon du trenger"
-            >
-              <Textfield
-                value={moreInfoMessage}
-                onChange={(e) => setMoreInfoMessage(e.target.value)}
-                placeholder="F.eks. Vi trenger mer detaljer om formålet med bookingen..."
-                multiline
-                rows={6}
-              />
-            </FormField>
-
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-              <Button
-                onClick={handleSendInfoRequest}
-                disabled={!moreInfoMessage.trim() || requestMoreInfo.isPending}
-              >
-                Send forespørsel
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setIsRequestInfoDrawerOpen(false);
-                  setMoreInfoMessage('');
-                }}
-              >
-                Avbryt
-              </Button>
-            </div>
-          </Stack>
-        </Drawer>
-      )}
     </div>
   );
 }

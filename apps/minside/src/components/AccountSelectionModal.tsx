@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button, Heading, Paragraph, Card, Spinner } from '@xala/ds';
-import { useAccountContext } from '../hooks/useAccountContext';
+import { useAccountContext } from '../providers/AccountContextProvider';
 import type { Organization } from '@digilist/client-sdk/types';
 
 /**
@@ -169,34 +169,39 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
             }}
           >
             {/* Personal Account Option */}
-            <Card
-              asChild
+            <button
+              type="button"
+              onClick={handlePersonalSelect}
               style={{
+                all: 'unset',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                border: '2px solid var(--ds-color-neutral-border-default)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                const card = e.currentTarget.firstChild as HTMLElement;
+                if (card) {
+                  card.style.borderColor = 'var(--ds-color-accent-border-default)';
+                  card.style.transform = 'translateY(-2px)';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                const card = e.currentTarget.firstChild as HTMLElement;
+                if (card) {
+                  card.style.borderColor = 'var(--ds-color-neutral-border-default)';
+                  card.style.transform = 'translateY(0)';
+                }
               }}
             >
-              <button
-                type="button"
-                onClick={handlePersonalSelect}
+              <Card
                 style={{
-                  all: 'unset',
-                  width: '100%',
                   padding: 'var(--ds-spacing-5)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-3)',
                   textAlign: 'center',
+                  border: '2px solid var(--ds-color-neutral-border-default)',
+                  transition: 'all 0.2s',
                 }}
               >
                 <div
@@ -219,40 +224,49 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Book og administrer egne aktiviteter
                 </Paragraph>
-              </button>
-            </Card>
+              </Card>
+            </button>
 
             {/* Organization Account Option */}
-            <Card
-              asChild
+            <button
+              type="button"
+              onClick={handleOrganizationSelect}
+              disabled={isLoadingOrganizations}
               style={{
+                all: 'unset',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                border: '2px solid var(--ds-color-neutral-border-default)',
+                opacity: isLoadingOrganizations ? 0.6 : 1,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                if (!isLoadingOrganizations) {
+                  const card = e.currentTarget.firstChild as HTMLElement;
+                  if (card) {
+                    card.style.borderColor = 'var(--ds-color-accent-border-default)';
+                    card.style.transform = 'translateY(-2px)';
+                  }
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                if (!isLoadingOrganizations) {
+                  const card = e.currentTarget.firstChild as HTMLElement;
+                  if (card) {
+                    card.style.borderColor = 'var(--ds-color-neutral-border-default)';
+                    card.style.transform = 'translateY(0)';
+                  }
+                }
               }}
             >
-              <button
-                type="button"
-                onClick={handleOrganizationSelect}
-                disabled={isLoadingOrganizations}
+              <Card
                 style={{
-                  all: 'unset',
-                  width: '100%',
                   padding: 'var(--ds-spacing-5)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-3)',
                   textAlign: 'center',
-                  opacity: isLoadingOrganizations ? 0.6 : 1,
+                  border: '2px solid var(--ds-color-neutral-border-default)',
+                  transition: 'all 0.2s',
                 }}
               >
                 <div
@@ -275,8 +289,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Representér en organisasjon du er tilknyttet
                 </Paragraph>
-              </button>
-            </Card>
+              </Card>
+            </button>
           </div>
         )}
 
@@ -290,30 +304,29 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
               </Card>
             ) : (
               organizations.map((org: Organization) => (
-                <Card
+                <button
                   key={org.id}
-                  asChild
+                  type="button"
+                  onClick={() => setSelectedOrgId(org.id)}
                   style={{
+                    all: 'unset',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    border: selectedOrgId === org.id
-                      ? '2px solid var(--ds-color-accent-border-default)'
-                      : '2px solid var(--ds-color-neutral-border-default)',
-                    backgroundColor: selectedOrgId === org.id
-                      ? 'var(--ds-color-accent-surface-default)'
-                      : undefined,
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setSelectedOrgId(org.id)}
+                  <Card
                     style={{
-                      all: 'unset',
-                      width: '100%',
                       padding: 'var(--ds-spacing-4)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 'var(--ds-spacing-3)',
+                      border: selectedOrgId === org.id
+                        ? '2px solid var(--ds-color-accent-border-default)'
+                        : '2px solid var(--ds-color-neutral-border-default)',
+                      backgroundColor: selectedOrgId === org.id
+                        ? 'var(--ds-color-accent-surface-default)'
+                        : undefined,
+                      transition: 'all 0.2s',
                     }}
                   >
                     <div
@@ -358,8 +371,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                         <CheckIcon />
                       </div>
                     )}
-                  </button>
-                </Card>
+                  </Card>
+                </button>
               ))
             )}
           </div>

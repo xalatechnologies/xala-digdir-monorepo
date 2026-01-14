@@ -13,6 +13,7 @@ import {
   SettingsIcon,
   ArrowRightIcon,
   ClockIcon,
+  MoneyIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -161,6 +162,12 @@ export function Sidebar() {
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
+      ],
+    },
+    {
+      title: 'Økonomi',
+      items: [
+        { name: 'Økonomi', description: 'Fakturering og økonomi', href: '/economy', icon: <MoneyIcon />, adminOnly: true },
       ],
     },
     {

@@ -11,20 +11,14 @@ import { bookingService, type CreateBookingDTO } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 
+import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
+import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
+import { BookingPricingStep, type PriceGroup, type AdditionalService } from './components/BookingPricingStep';
+import { BookingConfirmationStep } from './components/BookingConfirmationStep';
+
 // =============================================================================
 // Icons
 // =============================================================================
-
-function CalendarIcon({ size = 20 }: { size?: number }): React.ReactElement {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
 
 function ChevronLeftIcon({ size = 20 }: { size?: number }): React.ReactElement {
   return (
@@ -51,17 +45,6 @@ function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   );
 }
 
-function DetailsIcon({ size = 20 }: { size?: number }): React.ReactElement {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-    </svg>
-  );
-}
-
 // =============================================================================
 // Types
 // =============================================================================
@@ -81,13 +64,9 @@ interface DayColumn {
   slots: TimeSlot[];
 }
 
-// =============================================================================
-// Types for Opening Hours
-// =============================================================================
-
 export interface OpeningHours {
-  open: string; // "10:00"
-  close: string; // "21:00"
+  open: string;
+  close: string;
 }
 
 // =============================================================================
@@ -101,145 +80,115 @@ export interface BookingWidgetPlacementProps {
     basePrice?: number;
     currency?: string;
     unit?: string;
-    displayPrice?: string;
   };
-  openingHours?: OpeningHours;
-  busySlots?: Array<{ date: string; startTime: string; endTime: string }>;
-  isAuthenticated?: boolean;
-  onBookClick?: () => void;
-  onLoginWithVipps?: () => void;
-  onLoginAsEmployee?: () => void;
   className?: string;
+  listingTitle?: string;
+  openingHours?: Record<number, OpeningHours>;
+  busySlots?: Array<{ date: string; startTime: string; endTime: string }>;
 }
 
 // =============================================================================
-// Booking Steps Configuration
+// Constants
 // =============================================================================
 
-const bookingSteps = [
-  { id: 'select', label: 'Velg tidspunkter' },
-  { id: 'details', label: 'Fyll ut bookingdetaljer' },
-  { id: 'confirm', label: 'Bekreft' },
-  { id: 'done', label: 'Sendt' },
+const BOOKING_STEPS: BookingStep[] = [
+  { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
+  { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
+  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
+  { id: 'done', label: 'Sendt', icon: 'success' },
 ];
+
+const DEFAULT_PRICE_GROUPS: PriceGroup[] = [
+  { id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle.' },
+  { id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer.' },
+  { id: 'youth', label: 'Ungdom (under 26)', pricePerHour: 250, description: 'Redusert pris for unge.' },
+];
+
+const DEFAULT_ADDITIONAL_SERVICES: AdditionalService[] = [
+  { id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500 },
+  { id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price: 300 },
+];
+
+const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
+  0: { open: '10:00', close: '18:00' },
+  1: { open: '08:00', close: '21:00' },
+  2: { open: '08:00', close: '21:00' },
+  3: { open: '08:00', close: '21:00' },
+  4: { open: '08:00', close: '21:00' },
+  5: { open: '08:00', close: '21:00' },
+  6: { open: '10:00', close: '18:00' },
+};
 
 // =============================================================================
 // Helper Functions
 // =============================================================================
 
-function isTimeInPast(date: Date, time: string): boolean {
-  const now = new Date();
-  const [hours, minutes] = time.split(':').map(Number);
-  const slotTime = new Date(date);
-  slotTime.setHours(hours ?? 0, minutes ?? 0, 0, 0);
-  return slotTime <= now;
+function getStartOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
 }
 
-function isDateInPast(date: Date): boolean {
+function generateTimeSlots(
+  openingHours: Record<number, OpeningHours>,
+  busySlots: Array<{ date: string; startTime: string; endTime: string }>,
+  weekStart: Date,
+  selectedSlots: Set<string>
+): DayColumn[] {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const checkDate = new Date(date);
-  checkDate.setHours(0, 0, 0, 0);
-  return checkDate < today;
-}
+  const now = new Date();
+  const dayNames = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
 
-function generateMockWeekData(
-  startDate: Date,
-  openingHours: OpeningHours = { open: '08:00', close: '21:00' },
-  busySlots: Array<{ date: string; startTime: string; endTime: string }> = []
-): DayColumn[] {
-  const days: string[] = ['SØN', 'MAN', 'TIR', 'ONS', 'TOR', 'FRE', 'LØR'];
+  return Array.from({ length: 7 }, (_, dayIndex) => {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + dayIndex);
+    const dayOfWeek = date.getDay();
+    const hours = openingHours[dayOfWeek] || { open: '08:00', close: '18:00' };
 
-  // Parse opening hours
-  const openHour = parseInt(openingHours.open.split(':')[0] ?? '8', 10);
-  const closeHour = parseInt(openingHours.close.split(':')[0] ?? '21', 10);
+    const [openH, openM] = hours.open.split(':').map(Number);
+    const [closeH, closeM] = hours.close.split(':').map(Number);
+    const startMins = (openH ?? 8) * 60 + (openM ?? 0);
+    const endMins = (closeH ?? 18) * 60 + (closeM ?? 0);
 
-  // Generate 30-minute slots based on opening hours
-  const timeSlots: string[] = [];
-  for (let hour = openHour; hour < closeHour; hour++) {
-    timeSlots.push(`${hour.toString().padStart(2, '0')}:00`);
-    timeSlots.push(`${hour.toString().padStart(2, '0')}:30`);
-  }
+    const dateStr = date.toISOString().split('T')[0];
+    const dayBusySlots = busySlots.filter(s => s.date === dateStr);
 
-  const today = new Date();
+    const slots: TimeSlot[] = [];
+    for (let mins = startMins; mins < endMins; mins += 30) {
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+      const slotKey = `${dayIndex}-${timeStr}`;
 
-  return Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(startDate);
-    date.setDate(startDate.getDate() + i);
-    const dayIndex = date.getDay();
-    const isToday = date.toDateString() === today.toDateString();
-    const dateKey = date.toISOString().split('T')[0] ?? '';
-    const isPastDay = isDateInPast(date);
+      const isPast = date < today || (date.toDateString() === now.toDateString() && mins <= now.getHours() * 60 + now.getMinutes());
+      const isOccupied = dayBusySlots.some(busy => {
+        const [bsH, bsM] = busy.startTime.split(':').map(Number);
+        const [beH, beM] = busy.endTime.split(':').map(Number);
+        const busyStart = (bsH ?? 0) * 60 + (bsM ?? 0);
+        const busyEnd = (beH ?? 0) * 60 + (beM ?? 0);
+        return mins >= busyStart && mins < busyEnd;
+      });
+
+      let status: SlotStatus = 'available';
+      if (isPast) status = 'unavailable';
+      else if (isOccupied) status = 'occupied';
+      else if (selectedSlots.has(slotKey)) status = 'selected';
+
+      slots.push({ time: timeStr, status, isPast });
+    }
 
     return {
-      dayName: days[dayIndex] ?? 'UKE',
+      dayName: dayNames[dayOfWeek] ?? '',
       dayNumber: date.getDate(),
-      isToday,
-      slots: timeSlots.map((time) => {
-        // Check if slot is in the past
-        const isPastTime = isToday && isTimeInPast(date, time);
-
-        // Check if slot is busy
-        const isBusy = busySlots.some(slot => {
-          if (slot.date !== dateKey) return false;
-          return time >= slot.startTime && time < slot.endTime;
-        });
-
-        // Determine status
-        let status: SlotStatus;
-        if (isPastDay || isPastTime) {
-          status = 'unavailable';
-        } else if (isBusy) {
-          status = 'occupied';
-        } else {
-          // Generate random status for demo (in real app, this comes from API)
-          const rand = Math.random();
-          if (rand < 0.6) status = 'available';
-          else if (rand < 0.85) status = 'occupied';
-          else status = 'unavailable';
-        }
-
-        return { time, status, isPast: isPastDay || isPastTime };
-      }),
+      isToday: date.toDateString() === today.toDateString(),
+      slots,
     };
   });
 }
-
-function formatDateRange(startDate: Date): string {
-  const endDate = new Date(startDate);
-  endDate.setDate(startDate.getDate() + 6);
-
-  const months = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'];
-
-  return `${startDate.getDate()}. - ${endDate.getDate()}. ${months[endDate.getMonth()]} ${endDate.getFullYear()}`;
-}
-
-// =============================================================================
-// Slot Status Colors
-// =============================================================================
-
-const slotColors: Record<SlotStatus, { bg: string; text: string; border: string }> = {
-  available: {
-    bg: 'var(--ds-color-neutral-background-default)',
-    text: 'var(--ds-color-neutral-text-default)',
-    border: 'var(--ds-color-neutral-border-default)',
-  },
-  occupied: {
-    bg: 'var(--ds-color-danger-surface-default)',
-    text: 'var(--ds-color-danger-text-default)',
-    border: 'var(--ds-color-danger-border-subtle)',
-  },
-  selected: {
-    bg: 'var(--ds-color-accent-base-default)',
-    text: 'var(--ds-color-accent-contrast-default)',
-    border: 'var(--ds-color-accent-base-default)',
-  },
-  unavailable: {
-    bg: 'var(--ds-color-neutral-surface-default)',
-    text: 'var(--ds-color-neutral-text-subtle)',
-    border: 'var(--ds-color-neutral-border-subtle)',
-  },
-};
 
 // =============================================================================
 // Component
@@ -248,515 +197,227 @@ const slotColors: Record<SlotStatus, { bg: string; text: string; border: string 
 export function BookingWidgetPlacement({
   listingId,
   bookingConfig,
-  openingHours = { open: '08:00', close: '21:00' },
-  busySlots = [],
-  isAuthenticated = false,
-  onBookClick,
-  onLoginWithVipps,
-  onLoginAsEmployee,
+  pricing: _pricing,
   className,
+  listingTitle,
+  openingHours = DEFAULT_OPENING_HOURS,
+  busySlots = [],
 }: BookingWidgetPlacementProps): React.ReactElement {
-  const isBookable = bookingConfig?.enabled !== false && bookingConfig?.mode !== 'NONE';
-
-  // Current booking step (0 = select, 1 = details, 2 = confirm, 3 = done)
+  const [isMobile, setIsMobile] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
-
-  // Login simulation state (internal - overrides isAuthenticated prop when user logs in)
-  const [hasLoggedIn, setHasLoggedIn] = React.useState(false);
+  const [weekStart, setWeekStart] = React.useState(() => getStartOfWeek(new Date()));
+  const [selectedSlots, setSelectedSlots] = React.useState<Set<string>>(new Set());
+  const [slotDetails, setSlotDetails] = React.useState<Record<string, SlotDetail>>({});
+  const [selectedPriceGroup, setSelectedPriceGroup] = React.useState('');
+  const [selectedServices, setSelectedServices] = React.useState<Set<string>>(new Set());
+  const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  // Error state for booking submission
   const [bookingError, setBookingError] = React.useState<string | null>(null);
-
-  // Terms acceptance state
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
-
-  // Local busy slots state - holds booked slots to display as reserved after submission
-  const [localBusySlots, setLocalBusySlots] = React.useState<Array<{ date: string; startTime: string; endTime: string }>>([]);
-
-  // Effective authentication state (prop or simulated)
-  const effectivelyAuthenticated = isAuthenticated || hasLoggedIn;
-
-  // Mobile detection state
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  // Current day index for mobile day view (0-6 for Mon-Sun)
-  const [mobileDayIndex, setMobileDayIndex] = React.useState(0);
-
-  // Ref for scroll container
-  const timeGridRef = React.useRef<HTMLDivElement>(null);
-  const mobileTimeGridRef = React.useRef<HTMLDivElement>(null);
-
-  // Week navigation state
-  const [weekStart, setWeekStart] = React.useState(() => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - dayOfWeek + 1);
-    return monday;
-  });
-
-  // Selected slots state
-  const [selectedSlots, setSelectedSlots] = React.useState<Set<string>>(new Set());
-
-  // Booking details per slot (duration, purpose, etc)
-  interface SlotBookingDetails {
-    duration: number; // minutes
-    purpose: string;
-    showPurpose: boolean;
-    attendees: string;
-    activityType: string;
-  }
-  const [slotDetails, setSlotDetails] = React.useState<Record<string, SlotBookingDetails>>({});
-
-  // Update slot details helper
-  const updateSlotDetail = (slotKey: string, field: keyof SlotBookingDetails, value: string | number | boolean) => {
-    setSlotDetails(prev => {
-      const existing = prev[slotKey] ?? { duration: 60, purpose: '', showPurpose: false, attendees: '', activityType: '' };
-      return {
-        ...prev,
-        [slotKey]: {
-          ...existing,
-          [field]: value,
-        },
-      };
-    });
-  };
-
-  // Adjust slot time by minutes
-  const adjustSlotTime = (slotKey: string, minutesDelta: number) => {
-    const parts = slotKey.split('-');
-    const dayIdx = parseInt(parts[0] ?? '0', 10);
-    const timeStr = parts[1] ?? '08:00';
-    const [h, m] = timeStr.split(':').map(Number);
-    let totalMins = (h ?? 8) * 60 + (m ?? 0) + minutesDelta;
-
-    // Clamp to opening hours
-    const openMins = parseInt(openingHours.open.split(':')[0] ?? '8', 10) * 60;
-    const closeMins = (parseInt(openingHours.close.split(':')[0] ?? '21', 10) - 1) * 60 + 30;
-    totalMins = Math.max(openMins, Math.min(closeMins, totalMins));
-
-    const newH = Math.floor(totalMins / 60);
-    const newM = totalMins % 60;
-    const newTime = `${newH.toString().padStart(2, '0')}:${newM.toString().padStart(2, '0')}`;
-    const newSlotKey = `${dayIdx}-${newTime}`;
-
-    // Update the slots
-    setSelectedSlots(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(slotKey);
-      newSet.add(newSlotKey);
-      return newSet;
-    });
-
-    // Transfer details to new key
-    setSlotDetails(prev => {
-      const details = prev[slotKey];
-      const newDetails = { ...prev };
-      delete newDetails[slotKey];
-      if (details) {
-        newDetails[newSlotKey] = details;
-      }
-      return newDetails;
-    });
-  };
-
-  // Pricing state
-  const [selectedPriceGroup, setSelectedPriceGroup] = React.useState<string>('');
-  const [selectedServices, setSelectedServices] = React.useState<Set<string>>(new Set());
-
-  // Price group options
-  const priceGroups = [
-    { id: 'standard', label: 'Standard', pricePerHour: 200, description: 'Grunnpris for alle brukere' },
-    { id: 'member', label: 'Medlem', pricePerHour: 150, description: 'Redusert pris for medlemmer' },
-    { id: 'youth', label: 'Ungdom', pricePerHour: 100, description: 'Spesialpris for ungdomslag' },
-    { id: 'nonprofit', label: 'Ideell organisasjon', pricePerHour: 120, description: 'Pris for ideelle organisasjoner' },
-  ];
-
-  // Additional services
-  const additionalServices = [
-    { id: 'extra-time', label: 'Ekstra tid', description: 'Forleng bookingen med 30 minutter', price: 200 },
-    { id: 'equipment', label: 'Utstyr', description: 'Inkluderer ballnett, musikanlegg og annet utstyr', price: 150 },
-    { id: 'janitor', label: 'Vaktmesterhjelp', description: 'Hjelp med oppsett og nedrigging av utstyr', price: 300 },
-    { id: 'security', label: 'Sikkerhet', description: 'Vaktmester til stede under hele arrangementet', price: 500 },
-  ];
-
-  // Calculate total price
-  const calculateTotalPrice = React.useCallback(() => {
-    if (!selectedPriceGroup) return 0;
-
-    const priceGroup = priceGroups.find(pg => pg.id === selectedPriceGroup);
-    if (!priceGroup) return 0;
-
-    // Calculate base price from selected slots
-    let totalMinutes = 0;
-    selectedSlots.forEach(slotKey => {
-      const details = slotDetails[slotKey] ?? { duration: 60 };
-      totalMinutes += details.duration;
-    });
-    const totalHours = totalMinutes / 60;
-    const basePrice = priceGroup.pricePerHour * totalHours;
-
-    // Add additional services
-    let servicesPrice = 0;
-    selectedServices.forEach(serviceId => {
-      const service = additionalServices.find(s => s.id === serviceId);
-      if (service) {
-        servicesPrice += service.price;
-      }
-    });
-
-    return Math.round(basePrice + servicesPrice);
-  }, [selectedPriceGroup, selectedSlots, slotDetails, selectedServices]);
-
-  const totalPrice = calculateTotalPrice();
-
-  // Booking dialog state
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
-
-  // Calendar expanded state
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
 
-  // Selected duration for simplified mobile view
-  const [selectedDuration, setSelectedDuration] = React.useState<number>(60); // minutes
-
-  // Check for mobile on mount and resize
   React.useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Combine prop busy slots with locally reserved slots
-  const allBusySlots = React.useMemo(() => [...busySlots, ...localBusySlots], [busySlots, localBusySlots]);
+  const isBookable = bookingConfig?.enabled !== false;
+  const priceGroups = DEFAULT_PRICE_GROUPS;
+  const additionalServices = DEFAULT_ADDITIONAL_SERVICES;
 
-  // Generate week data with opening hours support
-  const weekData = React.useMemo(() => generateMockWeekData(weekStart, openingHours, allBusySlots), [weekStart, openingHours, allBusySlots]);
+  const calendarData = React.useMemo(
+    () => generateTimeSlots(openingHours, busySlots, weekStart, selectedSlots),
+    [openingHours, busySlots, weekStart, selectedSlots]
+  );
 
-  // Calculate all slots that should be highlighted based on selected bookings and their durations
-  const highlightedSlots = React.useMemo(() => {
-    const highlighted = new Set<string>();
+  const handleSlotClick = (dayIndex: number, time: string): void => {
+    const slot = calendarData[dayIndex]?.slots.find(s => s.time === time);
+    if (!slot || slot.status === 'unavailable' || slot.status === 'occupied') return;
 
-    selectedSlots.forEach(slotKey => {
-      const parts = slotKey.split('-');
-      const dayIdx = parseInt(parts[0] ?? '0', 10);
-      const timeStr = parts[1] ?? '08:00';
-      const details = slotDetails[slotKey] ?? { duration: 60 };
-      const duration = details.duration;
-
-      // Parse start time
-      const [startH, startM] = timeStr.split(':').map(Number);
-      const startMins = (startH ?? 0) * 60 + (startM ?? 0);
-
-      // Calculate how many 30-minute slots this booking covers
-      const slotsCount = Math.ceil(duration / 30);
-
-      // Add all slots in the range to highlighted set
-      for (let i = 0; i < slotsCount; i++) {
-        const slotMins = startMins + (i * 30);
-        const slotH = Math.floor(slotMins / 60);
-        const slotM = slotMins % 60;
-        const slotTime = `${slotH.toString().padStart(2, '0')}:${slotM.toString().padStart(2, '0')}`;
-        highlighted.add(`${dayIdx}-${slotTime}`);
-      }
-    });
-
-    return highlighted;
-  }, [selectedSlots, slotDetails]);
-
-  // Auto-scroll to first available time slot
-  React.useEffect(() => {
-    const scrollToFirstAvailable = () => {
-      // Find the first available slot across all days
-      let firstAvailableIndex = -1;
-      for (const day of weekData) {
-        const idx = day.slots.findIndex(slot => slot.status === 'available');
-        if (idx !== -1 && (firstAvailableIndex === -1 || idx < firstAvailableIndex)) {
-          firstAvailableIndex = idx;
-        }
-      }
-
-      if (firstAvailableIndex > 0 && timeGridRef.current) {
-        // Each row is approximately 42px (padding + button)
-        const rowHeight = 42;
-        const scrollPosition = Math.max(0, (firstAvailableIndex - 1) * rowHeight);
-        timeGridRef.current.scrollTop = scrollPosition;
-      }
-
-      if (firstAvailableIndex > 0 && mobileTimeGridRef.current) {
-        // For mobile, scroll to show the first available slot
-        const rowHeight = 48;
-        const scrollPosition = Math.max(0, Math.floor(firstAvailableIndex / 4) * rowHeight);
-        mobileTimeGridRef.current.scrollTop = scrollPosition;
-      }
-    };
-
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(scrollToFirstAvailable, 100);
-    return () => clearTimeout(timer);
-  }, [weekData, isMobile]);
-
-  // Navigate weeks
-  const goToPrevWeek = () => {
-    setWeekStart((prev) => {
-      const newDate = new Date(prev);
-      newDate.setDate(prev.getDate() - 7);
-      return newDate;
-    });
-  };
-
-  const goToNextWeek = () => {
-    setWeekStart((prev) => {
-      const newDate = new Date(prev);
-      newDate.setDate(prev.getDate() + 7);
-      return newDate;
-    });
-  };
-
-  // Navigate days (mobile only)
-  const goToPrevDay = () => {
-    if (mobileDayIndex > 0) {
-      setMobileDayIndex(mobileDayIndex - 1);
-    } else {
-      // Go to previous week, last day
-      goToPrevWeek();
-      setMobileDayIndex(6);
-    }
-  };
-
-  const goToNextDay = () => {
-    if (mobileDayIndex < 6) {
-      setMobileDayIndex(mobileDayIndex + 1);
-    } else {
-      // Go to next week, first day
-      goToNextWeek();
-      setMobileDayIndex(0);
-    }
-  };
-
-  // Handle slot click
-  const handleSlotClick = (dayIndex: number, time: string, status: SlotStatus) => {
-    if (status !== 'available') return;
-
-    const slotKey = `${dayIndex}-${time}`;
-
-    // Check if slot is already selected - if so, deselect it
-    if (selectedSlots.has(slotKey)) {
-      setSelectedSlots((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(slotKey);
-        return newSet;
-      });
-      return;
-    }
-
-    // Open the booking dialog for new slot selection
     const slotDate = new Date(weekStart);
     slotDate.setDate(weekStart.getDate() + dayIndex);
 
     setSelectedSlotForDialog({
       date: slotDate,
       startTime: time,
+      endTime: '',
     });
     setDialogOpen(true);
   };
 
-  // Handle dialog confirm
-  const handleDialogConfirm = (data: BookingFormData) => {
-    if (selectedSlotForDialog) {
-      // Find the day index from the date
-      const dayDiff = Math.floor((selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24));
-      const slotKey = `${dayDiff}-${selectedSlotForDialog.startTime}`;
+  const handleDialogConfirm = (data: BookingFormData): void => {
+    if (!selectedSlotForDialog) return;
 
-      setSelectedSlots((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(slotKey);
-        return newSet;
-      });
+    const dayIndex = Math.floor(
+      (selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const slotKey = `${dayIndex}-${selectedSlotForDialog.startTime}`;
 
-      // Calculate duration from start/end times
-      const [startH, startM] = data.startTime.split(':').map(Number);
-      const [endH, endM] = data.endTime.split(':').map(Number);
-      const durationMins = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
+    // Calculate duration from startTime and endTime
+    const [startH, startM] = data.startTime.split(':').map(Number);
+    const [endH, endM] = data.endTime.split(':').map(Number);
+    const duration = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
 
-      // Save booking details for this slot
-      setSlotDetails(prev => ({
-        ...prev,
-        [slotKey]: {
-          duration: durationMins > 0 ? durationMins : 60,
-          purpose: data.purpose,
-          showPurpose: data.showPurposeInCalendar,
-          attendees: data.attendees,
-          activityType: data.activityType,
-        },
-      }));
-    }
+    setSelectedSlots(prev => new Set(prev).add(slotKey));
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: {
+        duration: duration > 0 ? duration : 60,
+        purpose: data.purpose,
+        attendees: data.attendees,
+        activityType: data.activityType,
+      },
+    }));
     setDialogOpen(false);
-    console.log('Booking data:', data);
+    setSelectedSlotForDialog(undefined);
   };
 
-  // Handle login simulation
-  const handleLoginSimulation = React.useCallback(async (method: 'vipps' | 'employee') => {
+  const handleRemoveSlot = (slotKey: string): void => {
+    setSelectedSlots(prev => {
+      const next = new Set(prev);
+      next.delete(slotKey);
+      return next;
+    });
+    setSlotDetails(prev => {
+      const next = { ...prev };
+      delete next[slotKey];
+      return next;
+    });
+  };
+
+  const handleAdjustTime = (slotKey: string, minutesDelta: number): void => {
+    const [dayIdxStr, timeStr] = slotKey.split('-');
+    const dayIdx = parseInt(dayIdxStr ?? '0', 10);
+    const [h, m] = (timeStr ?? '00:00').split(':').map(Number);
+    const newMins = (h ?? 0) * 60 + (m ?? 0) + minutesDelta;
+    if (newMins < 0 || newMins >= 24 * 60) return;
+
+    const newH = Math.floor(newMins / 60);
+    const newM = newMins % 60;
+    const newTime = `${newH.toString().padStart(2, '0')}:${newM.toString().padStart(2, '0')}`;
+    const newKey = `${dayIdx}-${newTime}`;
+
+    if (selectedSlots.has(newKey)) return;
+
+    setSelectedSlots(prev => {
+      const next = new Set(prev);
+      next.delete(slotKey);
+      next.add(newKey);
+      return next;
+    });
+    setSlotDetails(prev => {
+      const details = prev[slotKey];
+      const next = { ...prev };
+      delete next[slotKey];
+      if (details) next[newKey] = details;
+      return next;
+    });
+  };
+
+  const handleChangeDuration = (slotKey: string, duration: number): void => {
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: { ...prev[slotKey], duration } as SlotDetail,
+    }));
+  };
+
+  const handleServiceToggle = (serviceId: string, checked: boolean): void => {
+    setSelectedServices(prev => {
+      const next = new Set(prev);
+      if (checked) next.add(serviceId);
+      else next.delete(serviceId);
+      return next;
+    });
+  };
+
+  const handleLoginVipps = async (): Promise<void> => {
     setIsLoggingIn(true);
-
-    // Call the external handler if provided
-    if (method === 'vipps' && onLoginWithVipps) {
-      onLoginWithVipps();
-    } else if (method === 'employee' && onLoginAsEmployee) {
-      onLoginAsEmployee();
-    }
-
-    // Simulate login delay
     await new Promise(resolve => setTimeout(resolve, 1500));
-
+    setIsAuthenticated(true);
     setIsLoggingIn(false);
-    setHasLoggedIn(true);
-  }, [onLoginWithVipps, onLoginAsEmployee]);
+  };
 
-  // Handle booking submission
-  const handleSubmitBooking = React.useCallback(async () => {
-    if (!effectivelyAuthenticated) return;
+  const handleLoginEmployee = async (): Promise<void> => {
+    setIsLoggingIn(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsAuthenticated(true);
+    setIsLoggingIn(false);
+  };
+
+  const handleSubmitBooking = async (): Promise<void> => {
+    if (!listingId) {
+      setBookingError('Mangler listing ID');
+      return;
+    }
 
     setIsSubmitting(true);
     setBookingError(null);
 
     try {
-      // Prepare booking data for all selected slots
-      const bookings = Array.from(selectedSlots).map(slotKey => {
-        const parts = slotKey.split('-');
-        const dayIdx = parseInt(parts[0] ?? '0', 10);
-        const timeStr = parts[1] ?? '';
-        const details = slotDetails[slotKey] ?? { duration: 60, purpose: '', showPurpose: false, attendees: '', activityType: '' };
+      const bookings: CreateBookingDTO[] = Array.from(selectedSlots).map(slotKey => {
+        const [dayIdxStr, timeStr] = slotKey.split('-');
+        const dayIdx = parseInt(dayIdxStr ?? '0', 10);
+        const details = slotDetails[slotKey] ?? { duration: 60 };
 
         const slotDate = new Date(weekStart);
         slotDate.setDate(weekStart.getDate() + dayIdx);
 
-        // Calculate end time
-        const [startH, startM] = timeStr.split(':').map(Number);
+        const [startH, startM] = (timeStr ?? '00:00').split(':').map(Number);
         const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
         const endH = Math.floor(endMins / 60);
         const endM = endMins % 60;
         const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
 
         return {
+          listingId,
           date: slotDate.toISOString().split('T')[0] ?? '',
-          startTime: timeStr,
+          startTime: timeStr ?? '',
           endTime,
-          duration: details.duration,
           purpose: details.purpose,
-          showPurpose: details.showPurpose,
-          attendees: details.attendees,
+          attendees: details.attendees ? parseInt(details.attendees, 10) : undefined,
           activityType: details.activityType,
+          priceGroupId: selectedPriceGroup || undefined,
+          additionalServices: Array.from(selectedServices),
         };
       });
 
-      console.log('[BookingWidget] Submitting bookings:', bookings);
-
-      // Send each booking to the backend via client SDK
-      if (!listingId) {
-        console.warn('[BookingWidget] No listingId provided, skipping API call');
-      }
-
-      const successfulBookings: typeof bookings = [];
-      let lastError: Error | null = null;
-
       for (const booking of bookings) {
-        if (!listingId) continue;
-        const attendeesCount = parseInt(booking.attendees, 10);
-        const bookingDTO: CreateBookingDTO = {
-          listingId,
-          startTime: `${booking.date}T${booking.startTime}:00`,
-          endTime: `${booking.date}T${booking.endTime}:00`,
-          notes: booking.purpose,
-          ...(attendeesCount > 0 ? { metadata: { attendees: attendeesCount } } : {}),
-        };
-
-        try {
-          await bookingService.create(bookingDTO);
-          console.log('[BookingWidget] Booking created successfully');
-          successfulBookings.push(booking);
-        } catch (apiError) {
-          console.error('[BookingWidget] API call failed:', apiError);
-          lastError = apiError instanceof Error ? apiError : new Error(String(apiError));
-        }
+        await bookingService.create(booking);
       }
 
-      // If all bookings failed, show error and don't advance
-      if (successfulBookings.length === 0 && lastError) {
-        const errorMessage = lastError.message.includes('500')
-          ? 'Serverfeil ved booking. Vennligst prøv igjen senere.'
-          : lastError.message.includes('401') || lastError.message.includes('403')
-          ? 'Du må logge inn for å fullføre bookingen.'
-          : lastError.message.includes('400')
-          ? 'Ugyldig bookingdata. Vennligst sjekk valgene dine.'
-          : 'Kunne ikke fullføre bookingen. Vennligst prøv igjen.';
-        setBookingError(errorMessage);
-        return;
-      }
-
-      // Store successful bookings locally to mark them as reserved in the calendar
-      const newBusySlots = successfulBookings.map(b => ({
-        date: b.date,
-        startTime: b.startTime,
-        endTime: b.endTime,
-      }));
-      setLocalBusySlots(prev => [...prev, ...newBusySlots]);
-
-      // If some bookings failed but some succeeded, show partial success
-      if (successfulBookings.length < bookings.length) {
-        setBookingError(`${successfulBookings.length} av ${bookings.length} bookinger ble fullført.`);
-      }
-
-      // Call external handler
-      if (onBookClick) {
-        onBookClick();
-      }
-
-      // Move to success step (even if partial success)
-      if (successfulBookings.length > 0) {
-        setCurrentStep(3);
-      }
+      setCurrentStep(3);
     } catch (error) {
-      console.error('[BookingWidget] Booking submission failed:', error);
-      setBookingError('En uventet feil oppstod. Vennligst prøv igjen.');
+      setBookingError(error instanceof Error ? error.message : 'En feil oppstod ved booking');
     } finally {
       setIsSubmitting(false);
     }
-  }, [effectivelyAuthenticated, selectedSlots, slotDetails, weekStart, onBookClick, listingId]);
-
-  // Handle "Ferdig" button - reset to initial state
-  const handleFinish = React.useCallback(() => {
-    // Reset to step 0
-    setCurrentStep(0);
-    // Clear selected slots
-    setSelectedSlots(new Set());
-    // Clear slot details
-    setSlotDetails({});
-    // Reset terms acceptance
-    setTermsAccepted(false);
-    // Reset login simulation (if applicable)
-    setHasLoggedIn(false);
-    // Clear any booking errors
-    setBookingError(null);
-    // Note: localBusySlots is intentionally NOT cleared - these slots remain reserved
-  }, []);
-
-  // Get current day data for mobile view
-  const currentDayData = weekData[mobileDayIndex];
-
-  // Format single day date for mobile
-  const formatSingleDate = (dayIndex: number): string => {
-    const date = new Date(weekStart);
-    date.setDate(weekStart.getDate() + dayIndex);
-    const months = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'];
-    const days = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
-    return `${days[date.getDay()]}, ${date.getDate()}. ${months[date.getMonth()]}`;
   };
+
+  const navigateWeek = (direction: 'prev' | 'next'): void => {
+    setWeekStart(prev => {
+      const newDate = new Date(prev);
+      newDate.setDate(prev.getDate() + (direction === 'next' ? 7 : -7));
+      return newDate;
+    });
+  };
+
+  const goToToday = (): void => {
+    setWeekStart(getStartOfWeek(new Date()));
+  };
+
+  const getDateRangeString = (): string => {
+    const endDate = new Date(weekStart);
+    endDate.setDate(weekStart.getDate() + 6);
+    const months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
+    return `${weekStart.getDate()}. ${months[weekStart.getMonth()]} – ${endDate.getDate()}. ${months[endDate.getMonth()]} ${endDate.getFullYear()}`;
+  };
+
+  const visibleRows = isCalendarExpanded ? 24 : 8;
 
   return (
     <div
@@ -768,139 +429,15 @@ export function BookingWidgetPlacement({
         overflow: 'hidden',
       }}
     >
-      {/* Header Section */}
-      <div
-        className="booking-header-mobile"
-        style={{
-          backgroundColor: 'var(--ds-color-accent-base-default)',
-          padding: 'var(--ds-spacing-5)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Heading level={2} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)' }}>
-          Book dette lokalet
-        </Heading>
-        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.9 }}>
-          Steg {currentStep + 1} av 4
-        </Paragraph>
-      </div>
+      {/* Header */}
+      <BookingStepperHeader
+        steps={BOOKING_STEPS}
+        currentStep={currentStep}
+        listingTitle={listingTitle}
+        isMobile={isMobile}
+      />
 
-      {/* Stepper Section */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-5)',
-          backgroundColor: 'var(--ds-color-neutral-surface-default)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'var(--ds-color-neutral-background-default)',
-            borderRadius: 'var(--ds-border-radius-lg)',
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-4)',
-            border: '1px solid var(--ds-color-neutral-border-subtle)',
-          }}
-        >
-          <div
-            className="booking-stepper-mobile"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-            }}
-          >
-          {bookingSteps.map((step, index) => {
-            const isActive = index === currentStep;
-            const isCompleted = index < currentStep;
-            const isFirst = index === 0;
-
-            return (
-              <div
-                key={step.id}
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  position: 'relative',
-                }}
-              >
-                {/* Connecting line */}
-                {!isFirst && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 'var(--ds-spacing-5)',
-                      right: '50%',
-                      width: '100%',
-                      height: '2px',
-                      backgroundColor: isCompleted ? 'var(--ds-color-success-base-default)' : 'var(--ds-color-neutral-border-subtle)',
-                      zIndex: 0,
-                    }}
-                  />
-                )}
-
-                {/* Circle with icon */}
-                <div
-                  className="booking-step-circle"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: isCompleted
-                      ? 'var(--ds-color-success-base-default)'
-                      : isActive
-                        ? 'var(--ds-color-accent-base-default)'
-                        : 'var(--ds-color-neutral-surface-default)',
-                    color: isCompleted || isActive
-                      ? 'var(--ds-color-accent-contrast-default)'
-                      : 'var(--ds-color-neutral-text-subtle)',
-                    border: isCompleted || isActive ? 'none' : '2px solid var(--ds-color-neutral-border-subtle)',
-                    position: 'relative',
-                    zIndex: 1,
-                  }}
-                >
-                  {isCompleted ? (
-                    <CheckCircleIcon size={18} />
-                  ) : (
-                    <>
-                      {step.id === 'select' && <CalendarIcon size={18} />}
-                      {step.id === 'details' && <DetailsIcon size={18} />}
-                      {step.id === 'confirm' && <CheckCircleIcon size={18} />}
-                      {step.id === 'done' && <CheckCircleIcon size={18} />}
-                    </>
-                  )}
-                </div>
-
-                {/* Label */}
-                <Paragraph
-                  className="booking-step-label"
-                  data-size="sm"
-                  style={{
-                    margin: 0,
-                    marginTop: 'var(--ds-spacing-2)',
-                    color: isActive || isCompleted ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-                    fontWeight: isActive ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)',
-                    textAlign: 'center',
-                    maxWidth: '90px',
-                    lineHeight: 'var(--ds-line-height-condensed)',
-                  }}
-                >
-                  {step.label}
-                </Paragraph>
-              </div>
-            );
-          })}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area - Two Column Layout */}
+      {/* Main Content */}
       <div
         style={{
           display: 'flex',
@@ -909,1210 +446,343 @@ export function BookingWidgetPlacement({
           overflow: 'hidden',
         }}
       >
-        {/* LEFT COLUMN: Step Content (changes based on currentStep) */}
+        {/* LEFT COLUMN: Step Content */}
         <div
           style={{
-            flex: isMobile ? 1 : '0 0 65%',
+            flex: isMobile ? 1 : '0 0 55%',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
           }}
         >
-      {/* Step 0: Calendar Selection */}
-      {currentStep === 0 && (
-        <>
-      {/* Calendar Header - Today (left) + Date Nav (center) + Legend (right) */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          gap: 'var(--ds-spacing-3)',
-        }}
-      >
-        {/* Today button - Left */}
-        <button
-          type="button"
-          onClick={() => {
-            const today = new Date();
-            const dayOfWeek = today.getDay();
-            const monday = new Date(today);
-            monday.setDate(today.getDate() - dayOfWeek + 1);
-            setWeekStart(monday);
-            setMobileDayIndex(dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-          }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-1)',
-            padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-            border: '1px solid var(--ds-color-neutral-border-default)',
-            borderRadius: 'var(--ds-border-radius-md)',
-            backgroundColor: 'var(--ds-color-neutral-background-default)',
-            cursor: 'pointer',
-            color: 'var(--ds-color-neutral-text-default)',
-            fontSize: 'var(--ds-font-size-sm)',
-            fontWeight: 'var(--ds-font-weight-medium)',
-          }}
-        >
-          I dag
-        </button>
-
-        {/* Date Navigation - Center */}
-        <div
-          className="booking-date-nav"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-2)',
-          }}
-        >
-          <button
-            type="button"
-            onClick={isMobile ? goToPrevDay : goToPrevWeek}
-            aria-label={isMobile ? 'Forrige dag' : 'Forrige uke'}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '32px',
-              height: '32px',
-              border: '1px solid var(--ds-color-neutral-border-default)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              cursor: 'pointer',
-              color: 'var(--ds-color-neutral-text-default)',
-            }}
-          >
-            <ChevronLeftIcon size={16} />
-          </button>
-          <Paragraph
-            data-size="sm"
-            style={{
-              margin: 0,
-              fontWeight: 'var(--ds-font-weight-semibold)',
-              minWidth: '160px',
-              textAlign: 'center',
-            }}
-          >
-            {isMobile ? formatSingleDate(mobileDayIndex) : formatDateRange(weekStart)}
-          </Paragraph>
-          <button
-            type="button"
-            onClick={isMobile ? goToNextDay : goToNextWeek}
-            aria-label={isMobile ? 'Neste dag' : 'Neste uke'}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '32px',
-              height: '32px',
-              border: '1px solid var(--ds-color-neutral-border-default)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              cursor: 'pointer',
-              color: 'var(--ds-color-neutral-text-default)',
-            }}
-          >
-            <ChevronRightIcon size={16} />
-          </button>
-        </div>
-
-        {/* Legend - Right on desktop, centered on mobile */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 'var(--ds-spacing-3)',
-            justifyContent: isMobile ? 'center' : 'flex-end',
-            width: isMobile ? '100%' : 'auto',
-          }}
-        >
-          <Paragraph data-size="xs" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-            Forklaring
-          </Paragraph>
-          {[
-            { status: 'available' as const, label: 'Ledig' },
-            { status: 'occupied' as const, label: 'Opptatt' },
-            { status: 'selected' as const, label: 'Valgt' },
-            { status: 'unavailable' as const, label: 'Ikke tilgjengelig' },
-          ].map(({ status, label }) => (
-            <div key={status} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-              <div
-                style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  backgroundColor: slotColors[status].bg,
-                  border: `1px solid ${slotColors[status].border}`,
-                }}
-              />
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {label}
-              </Paragraph>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content Area - Split Layout on Desktop */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 420px',
-          gap: 'var(--ds-spacing-4)',
-        }}
-      >
-        {/* Left Side - Calendar */}
-        <div>
-          {/* Time Slot Grid */}
-          <div style={{ padding: 'var(--ds-spacing-4)', overflowX: isMobile ? 'visible' : 'auto', WebkitOverflowScrolling: 'touch' }}>
-            {/* Mobile Single Day View - Simplified Design */}
-            {isMobile && currentDayData ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            {/* Horizontal Day Selector */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(7, 1fr)',
-                gap: 'var(--ds-spacing-1)',
-                padding: 'var(--ds-spacing-2)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)',
-              }}
-            >
-              {weekData.map((day, idx) => {
-                const isSelectedDay = idx === mobileDayIndex;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setMobileDayIndex(idx)}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: 'var(--ds-spacing-1)',
-                      padding: 'var(--ds-spacing-2)',
-                      borderRadius: 'var(--ds-border-radius-md)',
-                      border: isSelectedDay ? '2px solid var(--ds-color-accent-base-default)' : '2px solid transparent',
-                      backgroundColor: isSelectedDay
-                        ? 'var(--ds-color-accent-surface-default)'
-                        : day.isToday
-                          ? 'var(--ds-color-neutral-surface-hover)'
-                          : 'transparent',
-                      cursor: 'pointer',
-                      transition: 'all 150ms ease',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 'var(--ds-font-size-xs)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        color: isSelectedDay ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-                      }}
-                    >
-                      {day.dayName}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 'var(--ds-font-size-md)',
-                        fontWeight: 'var(--ds-font-weight-bold)',
-                        color: isSelectedDay ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-default)',
-                      }}
-                    >
-                      {day.dayNumber}
-                    </span>
-                    {day.isToday && (
-                      <span
-                        style={{
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: 'var(--ds-border-radius-full)',
-                          backgroundColor: 'var(--ds-color-accent-base-default)',
-                        }}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Time Slots - Simplified Grid */}
-            <div
-              ref={mobileTimeGridRef}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 'var(--ds-spacing-2)',
-              }}
-            >
-              {currentDayData.slots
-                .filter(slot => slot.status === 'available' || slot.status === 'occupied')
-                .slice(0, isCalendarExpanded ? undefined : 12)
-                .map((slot, slotIndex) => {
-                  const slotKey = `${mobileDayIndex}-${slot.time}`;
-                  const isHighlighted = highlightedSlots.has(slotKey);
-                  const isAvailable = slot.status === 'available';
-
-                  return (
-                    <button
-                      key={slotIndex}
-                      type="button"
-                      onClick={() => {
-                        if (isAvailable) {
-                          handleSlotClick(mobileDayIndex, slot.time, slot.status);
-                        }
-                      }}
-                      disabled={!isAvailable}
-                      style={{
-                        padding: 'var(--ds-spacing-3)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        border: isHighlighted
-                          ? '2px solid var(--ds-color-accent-base-default)'
-                          : '1px solid var(--ds-color-neutral-border-subtle)',
-                        backgroundColor: isHighlighted
-                          ? 'var(--ds-color-accent-base-default)'
-                          : isAvailable
-                            ? 'var(--ds-color-neutral-background-default)'
-                            : 'var(--ds-color-danger-surface-default)',
-                        color: isHighlighted
-                          ? 'var(--ds-color-accent-contrast-default)'
-                          : isAvailable
-                            ? 'var(--ds-color-neutral-text-default)'
-                            : 'var(--ds-color-danger-text-default)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        cursor: isAvailable ? 'pointer' : 'not-allowed',
-                        opacity: isAvailable ? 1 : 0.6,
-                        transition: 'all 150ms ease',
-                      }}
-                    >
-                      {slot.time}
-                    </button>
-                  );
-                })}
-            </div>
-
-            {/* Show more/less button */}
-            {currentDayData.slots.filter(s => s.status === 'available' || s.status === 'occupied').length > 12 && (
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button
-                  type="button"
-                  onClick={() => setIsCalendarExpanded(!isCalendarExpanded)}
-                  aria-label={isCalendarExpanded ? 'Vis færre tidspunkter' : 'Vis flere tidspunkter'}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ds-spacing-2)',
-                    padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    color: 'var(--ds-color-neutral-text-default)',
-                    fontSize: 'var(--ds-font-size-sm)',
-                    fontWeight: 'var(--ds-font-weight-medium)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points={isCalendarExpanded ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
-                  </svg>
-                  {isCalendarExpanded ? 'Vis færre' : 'Vis flere'}
-                </button>
-              </div>
-            )}
-
-            {/* Duration Selector */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-3)',
-                padding: 'var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)',
-              }}
-            >
-              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', whiteSpace: 'nowrap' }}>
-                Varighet:
-              </Paragraph>
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-                {[
-                  { label: '30 min', value: 30 },
-                  { label: '1 time', value: 60 },
-                  { label: '2 timer', value: 120 },
-                  { label: '3 timer', value: 180 },
-                ].map(({ label, value }) => {
-                  const isSelectedDur = selectedDuration === value;
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setSelectedDuration(value)}
-                      style={{
-                        padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        border: isSelectedDur
-                          ? '2px solid var(--ds-color-accent-base-default)'
-                          : '1px solid var(--ds-color-neutral-border-subtle)',
-                        backgroundColor: isSelectedDur
-                          ? 'var(--ds-color-accent-surface-default)'
-                          : 'var(--ds-color-neutral-background-default)',
-                        color: isSelectedDur
-                          ? 'var(--ds-color-accent-base-default)'
-                          : 'var(--ds-color-neutral-text-default)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: isSelectedDur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
-                        cursor: 'pointer',
-                        transition: 'all 150ms ease',
-                      }}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Desktop Week View */
-          <div style={{ display: 'flex', flexDirection: 'column', minWidth: '700px' }}>
-            {/* Combined grid for header and time slots with column borders */}
-            <div
-              className="booking-calendar-wrapper"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '80px repeat(7, 1fr)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                overflow: 'hidden',
-              }}
-            >
-              {/* Header row - empty cell for time column */}
-              <div
-                style={{
-                  borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
-                  borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                }}
-              />
-
-              {/* Day headers - compact style with column borders */}
-              {weekData.map((day, dayIndex) => (
-                <div
-                  key={dayIndex}
-                  style={{
-                    textAlign: 'center',
-                    padding: 'var(--ds-spacing-2)',
-                    backgroundColor: day.isToday ? 'var(--ds-color-neutral-surface-hover)' : 'var(--ds-color-neutral-surface-default)',
-                    borderRight: dayIndex < 6 ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
-                    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                  }}
-                >
-                  <Paragraph
-                    data-size="xs"
-                    style={{
-                      margin: 0,
-                      color: 'var(--ds-color-neutral-text-subtle)',
-                      fontWeight: 'var(--ds-font-weight-medium)',
-                    }}
-                  >
-                    {day.dayName}
-                  </Paragraph>
-                  <Paragraph
-                    data-size="md"
-                    style={{
-                      margin: 0,
-                      fontWeight: 'var(--ds-font-weight-bold)',
-                      color: 'var(--ds-color-neutral-text-default)',
-                    }}
-                  >
-                    {day.dayNumber}
-                  </Paragraph>
-                </div>
-              ))}
-
-              {/* Time grid rows */}
-              {(weekData[0]?.slots ?? []).slice(0, isCalendarExpanded ? undefined : 16).map((firstDaySlot, slotIndex) => (
-                <React.Fragment key={slotIndex}>
-                  {/* Time label */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
-                      padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                      borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
-                    }}
-                  >
-                    <Paragraph
-                      data-size="sm"
-                      style={{
-                        margin: 0,
-                        color: 'var(--ds-color-neutral-text-default)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
-                      {firstDaySlot.time}
-                    </Paragraph>
-                  </div>
-
-                  {/* Slots for each day - colored blocks without text */}
-                  {weekData.map((day, dayIndex) => {
-                    const slot = day.slots[slotIndex];
-                    if (!slot) return null;
-
-                    const slotKey = `${dayIndex}-${slot.time}`;
-                    const isHighlighted = highlightedSlots.has(slotKey);
-                    const effectiveStatus: SlotStatus = isHighlighted ? 'selected' : slot.status;
-                    const colors = slotColors[effectiveStatus];
-                    const isClickable = slot.status === 'available';
-
-                    return (
-                      <div
-                        key={dayIndex}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: 'var(--ds-spacing-1)',
-                          backgroundColor: day.isToday ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
-                          borderRight: dayIndex < 6 ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
-                        }}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleSlotClick(dayIndex, slot.time, slot.status)}
-                          disabled={!isClickable}
-                          aria-label={`${slot.time} - ${effectiveStatus}`}
-                          style={{
-                            width: '100%',
-                            height: '32px',
-                            borderRadius: 'var(--ds-border-radius-sm)',
-                            border: `1px solid ${colors.border}`,
-                            backgroundColor: colors.bg,
-                            color: colors.text,
-                            cursor: isClickable ? 'pointer' : 'default',
-                            opacity: effectiveStatus === 'unavailable' ? 0.5 : 1,
-                            transition: 'all 0.15s ease',
-                            fontSize: 'var(--ds-font-size-xs)',
-                            fontWeight: 'var(--ds-font-weight-medium)',
-                            fontVariantNumeric: 'tabular-nums',
-                          }}
-                        >
-                          {slot.time}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </React.Fragment>
-              ))}
-            </div>
-
-            {/* Show more button */}
-            {!isCalendarExpanded && (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  paddingTop: 'var(--ds-spacing-3)',
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setIsCalendarExpanded(true)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ds-spacing-2)',
-                    padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    color: 'var(--ds-color-neutral-text-default)',
-                    fontSize: 'var(--ds-font-size-sm)',
-                    fontWeight: 'var(--ds-font-weight-medium)',
-                    cursor: 'pointer',
-                    transition: 'all 150ms ease',
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                  Vis flere
-                </button>
-              </div>
-            )}
-
-            {/* Show less button when expanded */}
-            {isCalendarExpanded && (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  paddingTop: 'var(--ds-spacing-3)',
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setIsCalendarExpanded(false)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--ds-spacing-2)',
-                    padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                    border: '1px solid var(--ds-color-neutral-border-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    color: 'var(--ds-color-neutral-text-default)',
-                    fontSize: 'var(--ds-font-size-sm)',
-                    fontWeight: 'var(--ds-font-weight-medium)',
-                    cursor: 'pointer',
-                    transition: 'all 150ms ease',
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="18 15 12 9 6 15" />
-                  </svg>
-                  Vis færre
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-          </div>
-        </div>
-        </>
-      )}
-
-      {/* Step 1: Pricing, Services and Terms */}
-
-      {/* Step 1: Pricing, Services and Terms */}
-      {currentStep === 1 && (
-        <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-          {/* Price Group Selection */}
-          <div>
-            <Heading level={4} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-              Prisgruppe
-            </Heading>
-            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Utleier tilbyr egne priser til enkelte kundegrupper. Valg av prisgruppe medfører en godkjenningsprosess.
-            </Paragraph>
-            <select
-              value={selectedPriceGroup}
-              onChange={(e) => setSelectedPriceGroup(e.target.value)}
-              style={{
-                width: '100%',
-                padding: 'var(--ds-spacing-3)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-default)',
-                backgroundColor: 'var(--ds-color-neutral-background-default)',
-                fontSize: 'var(--ds-font-size-md)',
-                color: 'var(--ds-color-neutral-text-default)',
-                outline: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              <option value="">Velg prisgruppe</option>
-              {priceGroups.map(group => (
-                <option key={group.id} value={group.id}>
-                  {group.label} - {group.pricePerHour} kr/time
-                </option>
-              ))}
-            </select>
-            {selectedPriceGroup && (
-              <div
-                style={{
-                  marginTop: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-3)',
-                  backgroundColor: 'var(--ds-color-accent-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-md)',
-                  border: '1px solid var(--ds-color-accent-border-subtle)',
-                }}
-              >
-                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)' }}>
-                  {priceGroups.find(pg => pg.id === selectedPriceGroup)?.description}
-                </Paragraph>
-              </div>
-            )}
-          </div>
-
-          {/* Additional Services */}
-          <div>
-            <Heading level={4} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-              ANBEFALTE TILLEGG
-            </Heading>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-              {additionalServices.map(service => (
-                <label
-                  key={service.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 'var(--ds-spacing-3)',
-                    padding: 'var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-neutral-background-default)',
-                    borderRadius: 'var(--ds-border-radius-lg)',
-                    border: selectedServices.has(service.id)
-                      ? '2px solid var(--ds-color-accent-base-default)'
-                      : '1px solid var(--ds-color-neutral-border-subtle)',
-                    cursor: 'pointer',
-                    transition: 'all 150ms ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!selectedServices.has(service.id)) {
-                      e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)';
-                      e.currentTarget.style.boxShadow = 'var(--ds-shadow-sm)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!selectedServices.has(service.id)) {
-                      e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-subtle)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedServices.has(service.id)}
-                    onChange={(e) => {
-                      const newServices = new Set(selectedServices);
-                      if (e.target.checked) {
-                        newServices.add(service.id);
-                      } else {
-                        newServices.delete(service.id);
-                      }
-                      setSelectedServices(newServices);
-                    }}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      marginTop: '2px',
-                      accentColor: 'var(--ds-color-accent-base-default)',
-                      cursor: 'pointer',
-                    }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
-                      <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                        {service.label}
-                      </Paragraph>
-                      <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-accent-text-default)' }}>
-                        +{service.price} kr
-                      </Paragraph>
-                    </div>
-                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {service.description}
-                    </Paragraph>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Terms and Conditions */}
-          <div>
-            <div
-              style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-warning-surface-default)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-warning-border-subtle)',
-                marginBottom: 'var(--ds-spacing-3)',
-              }}
-            >
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', color: 'var(--ds-color-warning-text-default)' }}>
-                Utleier krever at du har lest og godkjent betingelsene før forespørsel kan sendes.
-              </Paragraph>
-            </div>
-
-            {/* Document links */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-2)',
-                  color: 'var(--ds-color-accent-text-default)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--ds-font-size-sm)',
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Last ned Brannvernvideo
-              </a>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-2)',
-                  color: 'var(--ds-color-accent-text-default)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--ds-font-size-sm)',
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Last ned Ditt ansvar
-              </a>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-2)',
-                  color: 'var(--ds-color-accent-text-default)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--ds-font-size-sm)',
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Last ned Overordnede retningslinjer for lån og leie av lokaler
-              </a>
-            </div>
-
-            {/* Accept checkbox */}
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 'var(--ds-spacing-3)',
-                cursor: 'pointer',
-                padding: 'var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-neutral-background-default)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-default)',
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  marginTop: '2px',
-                  accentColor: 'var(--ds-color-accent-base-default)',
-                  cursor: 'pointer',
-                }}
-              />
-              <Paragraph data-size="sm" style={{ margin: 0 }}>
-                Jeg har lest og godkjenner betingelsene
-              </Paragraph>
-            </label>
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Confirmation / Login */}
-      {currentStep === 2 && (
-        <div style={{ padding: 'var(--ds-spacing-6)' }}>
-          {/* Show login card if not authenticated */}
-          {!effectivelyAuthenticated ? (
+          {/* Step 0: Calendar Selection */}
+          {currentStep === 0 && (
             <>
-              {/* Login Card */}
+              {/* Calendar Header */}
               <div
                 style={{
-                  backgroundColor: 'var(--ds-color-accent-base-default)',
-                  borderRadius: 'var(--ds-border-radius-xl)',
-                  padding: 'var(--ds-spacing-6)',
-                  color: 'var(--ds-color-accent-contrast-default)',
+                  padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                  gap: 'var(--ds-spacing-3)',
+                  minHeight: '48px',
+                  boxSizing: 'border-box',
                 }}
               >
-                <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-accent-contrast-default)' }}>
-                  Logg inn for å fullføre
-                </Heading>
-                <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', opacity: 0.8 }}>
-                  For å sende din bookingforespørsel må du være innlogget. Vi bruker sikker autentisering for å verifisere din identitet.
-                </Paragraph>
+                <Button type="button" variant="tertiary" data-size="sm" onClick={goToToday}>
+                  I dag
+                </Button>
 
-                {/* Login Options Grid */}
+                <div
+                  className="booking-date-nav"
+                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => navigateWeek('prev')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '32px',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      backgroundColor: 'var(--ds-color-neutral-background-default)',
+                      cursor: 'pointer',
+                    }}
+                    aria-label="Forrige uke"
+                  >
+                    <ChevronLeftIcon size={16} />
+                  </button>
+                  <Paragraph
+                    data-size="sm"
+                    style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', minWidth: '180px', textAlign: 'center' }}
+                  >
+                    {getDateRangeString()}
+                  </Paragraph>
+                  <button
+                    type="button"
+                    onClick={() => navigateWeek('next')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '32px',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      backgroundColor: 'var(--ds-color-neutral-background-default)',
+                      cursor: 'pointer',
+                    }}
+                    aria-label="Neste uke"
+                  >
+                    <ChevronRightIcon size={16} />
+                  </button>
+                </div>
+
+                {/* Legend */}
+                <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', fontSize: 'var(--ds-font-size-xs)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-success-surface-default)', border: '1px solid var(--ds-color-success-border-default)' }} />
+                    <span>Ledig</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-danger-surface-default)', border: '1px solid var(--ds-color-danger-border-default)' }} />
+                    <span>Opptatt</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-accent-base-default)' }} />
+                    <span>Valgt</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                    gap: 'var(--ds-spacing-4)',
+                    gridTemplateColumns: `60px repeat(7, 1fr)`,
+                    gap: '1px',
+                    backgroundColor: 'var(--ds-color-neutral-border-subtle)',
+                    border: '1px solid var(--ds-color-neutral-border-subtle)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    overflow: 'hidden',
                   }}
                 >
-                  {/* Vipps Option - Private Person */}
-                  <div
-                    style={{
-                      backgroundColor: 'var(--ds-color-neutral-background-default)',
-                      borderRadius: 'var(--ds-border-radius-lg)',
-                      padding: 'var(--ds-spacing-4)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 'var(--ds-spacing-3)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                      {/* Vipps Logo */}
-                      <div
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: 'var(--ds-border-radius-md)',
-                          backgroundColor: 'var(--ds-color-warning-base-default)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'var(--ds-color-warning-contrast-default)',
-                          fontWeight: 'bold',
-                          fontSize: 'var(--ds-font-size-sm)',
-                        }}
-                      >
-                        V
-                      </div>
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                          Privatperson
-                        </Paragraph>
-                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
-                          Anbefalt
-                        </Paragraph>
-                      </div>
-                    </div>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Rask og enkel innlogging med Vipps. Ingen passord nødvendig.
-                    </Paragraph>
-                    <button
-                      type="button"
-                      onClick={() => handleLoginSimulation('vipps')}
-                      disabled={isLoggingIn}
+                  {/* Header Row */}
+                  <div style={{ backgroundColor: 'var(--ds-color-neutral-surface-default)', padding: 'var(--ds-spacing-2)' }} />
+                  {calendarData.map((day, idx) => (
+                    <div
+                      key={idx}
                       style={{
-                        width: '100%',
-                        padding: 'var(--ds-spacing-3)',
-                        backgroundColor: 'var(--ds-color-warning-base-default)',
-                        color: 'var(--ds-color-warning-contrast-default)',
-                        border: 'none',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-semibold)',
-                        cursor: isLoggingIn ? 'wait' : 'pointer',
-                        transition: 'all 150ms ease',
-                        opacity: isLoggingIn ? 0.7 : 1,
+                        backgroundColor: day.isToday ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-default)',
+                        padding: 'var(--ds-spacing-2)',
+                        textAlign: 'center',
                       }}
                     >
-                      {isLoggingIn ? 'Logger inn...' : 'Logg inn med Vipps'}
-                    </button>
-                  </div>
-
-                  {/* Organization Option */}
-                  <div
-                    style={{
-                      backgroundColor: 'var(--ds-color-neutral-background-default)',
-                      borderRadius: 'var(--ds-border-radius-lg)',
-                      padding: 'var(--ds-spacing-4)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 'var(--ds-spacing-3)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                      {/* ID Icon */}
-                      <div
+                      <Paragraph data-size="xs" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {day.dayName}
+                      </Paragraph>
+                      <Paragraph
+                        data-size="md"
                         style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: 'var(--ds-border-radius-md)',
-                          backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                          border: '1px solid var(--ds-color-neutral-border-default)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'var(--ds-color-neutral-text-default)',
-                          fontWeight: 'bold',
-                          fontSize: 'var(--ds-font-size-xs)',
+                          margin: 0,
+                          fontWeight: day.isToday ? 'var(--ds-font-weight-bold)' : 'var(--ds-font-weight-regular)',
+                          color: day.isToday ? 'var(--ds-color-accent-text-default)' : 'inherit',
                         }}
                       >
-                        ID
-                      </div>
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                          Organisasjon
-                        </Paragraph>
-                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          For ansatte
-                        </Paragraph>
-                      </div>
+                        {day.dayNumber}
+                      </Paragraph>
                     </div>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      For kommunalt ansatte og bedrifter med organisasjonskonto.
-                    </Paragraph>
+                  ))}
+
+                  {/* Time Rows */}
+                  {Array.from({ length: visibleRows }, (_, rowIdx) => {
+                    const firstDaySlots = calendarData[0]?.slots ?? [];
+                    const slot = firstDaySlots[rowIdx];
+                    if (!slot) return null;
+
+                    return (
+                      <React.Fragment key={rowIdx}>
+                        <div
+                          style={{
+                            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                            padding: 'var(--ds-spacing-2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Paragraph data-size="xs" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                            {slot.time}
+                          </Paragraph>
+                        </div>
+                        {calendarData.map((day, dayIdx) => {
+                          const daySlot = day.slots[rowIdx];
+                          if (!daySlot) return <div key={dayIdx} style={{ backgroundColor: 'var(--ds-color-neutral-background-default)' }} />;
+
+                          const bgColor =
+                            daySlot.status === 'selected'
+                              ? 'var(--ds-color-accent-base-default)'
+                              : daySlot.status === 'occupied'
+                                ? 'var(--ds-color-danger-surface-default)'
+                                : daySlot.status === 'unavailable'
+                                  ? 'var(--ds-color-neutral-surface-default)'
+                                  : 'var(--ds-color-success-surface-default)';
+
+                          const isClickable = daySlot.status === 'available' || daySlot.status === 'selected';
+
+                          return (
+                            <button
+                              key={dayIdx}
+                              type="button"
+                              onClick={() => isClickable && handleSlotClick(dayIdx, daySlot.time)}
+                              disabled={!isClickable}
+                              style={{
+                                backgroundColor: bgColor,
+                                border: 'none',
+                                cursor: isClickable ? 'pointer' : 'default',
+                                padding: 'var(--ds-spacing-1)',
+                                minHeight: '32px',
+                                transition: 'all 150ms ease',
+                                opacity: daySlot.status === 'unavailable' ? 0.5 : 1,
+                              }}
+                              aria-label={`${day.dayName} ${day.dayNumber}, ${daySlot.time}`}
+                            />
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+
+                {/* Expand/Collapse */}
+                {!isCalendarExpanded && (calendarData[0]?.slots.length ?? 0) > visibleRows && (
+                  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 'var(--ds-spacing-3)' }}>
                     <button
                       type="button"
-                      onClick={() => handleLoginSimulation('employee')}
-                      disabled={isLoggingIn}
+                      onClick={() => setIsCalendarExpanded(true)}
                       style={{
-                        width: '100%',
-                        padding: 'var(--ds-spacing-3)',
-                        backgroundColor: 'transparent',
-                        color: 'var(--ds-color-neutral-text-default)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--ds-spacing-2)',
+                        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
+                        backgroundColor: 'var(--ds-color-neutral-surface-default)',
                         border: '1px solid var(--ds-color-neutral-border-default)',
                         borderRadius: 'var(--ds-border-radius-md)',
+                        cursor: 'pointer',
                         fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        cursor: isLoggingIn ? 'wait' : 'pointer',
-                        transition: 'all 150ms ease',
-                        opacity: isLoggingIn ? 0.7 : 1,
                       }}
                     >
-                      {isLoggingIn ? 'Logger inn...' : 'Logg inn som ansatt'}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                      Vis flere
                     </button>
                   </div>
-                </div>
-
-                {/* Privacy Notice */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 'var(--ds-spacing-2)',
-                    marginTop: 'var(--ds-spacing-4)',
-                    padding: 'var(--ds-spacing-3)',
-                    backgroundColor: 'var(--ds-color-accent-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: 'var(--ds-color-success-base-default)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      marginTop: '2px',
-                    }}
-                  >
-                    <CheckCircleIcon size={10} />
-                  </div>
-                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.9 }}>
-                    Din informasjon behandles sikkert og i henhold til personvernlovgivningen. Ved å logge inn godtar du at vi lagrer nødvendige opplysninger for å behandle din booking.
-                  </Paragraph>
-                </div>
-              </div>
-            </>
-          ) : (
-            /* Show confirmation if authenticated */
-            <>
-              <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-                Bekreft booking
-              </Heading>
-
-              {/* Error Message Display */}
-              {bookingError && (
-                <div
-                  style={{
-                    padding: 'var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-danger-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    border: '1px solid var(--ds-color-danger-border-default)',
-                    marginBottom: 'var(--ds-spacing-4)',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 'var(--ds-spacing-3)',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: 'var(--ds-color-danger-base-default)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      color: 'var(--ds-color-danger-contrast-default)',
-                    }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </div>
-                  <div>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-danger-text-default)' }}>
-                      {bookingError}
-                    </Paragraph>
+                )}
+                {isCalendarExpanded && (
+                  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 'var(--ds-spacing-3)' }}>
                     <button
                       type="button"
-                      onClick={() => setBookingError(null)}
+                      onClick={() => setIsCalendarExpanded(false)}
                       style={{
-                        marginTop: 'var(--ds-spacing-2)',
-                        padding: 0,
-                        border: 'none',
-                        background: 'none',
-                        color: 'var(--ds-color-danger-text-default)',
-                        fontSize: 'var(--ds-font-size-xs)',
-                        textDecoration: 'underline',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--ds-spacing-2)',
+                        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
+                        backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                        border: '1px solid var(--ds-color-neutral-border-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
                         cursor: 'pointer',
+                        fontSize: 'var(--ds-font-size-sm)',
                       }}
                     >
-                      Lukk
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="18 15 12 9 6 15" />
+                      </svg>
+                      Vis færre
                     </button>
                   </div>
-                </div>
-              )}
-
-              <div
-                style={{
-                  padding: 'var(--ds-spacing-5)',
-                  backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-lg)',
-                  border: '1px solid var(--ds-color-neutral-border-subtle)',
-                }}
-              >
-                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
-                  Vennligst bekreft at følgende informasjon er korrekt:
-                </Paragraph>
-
-                {Array.from(selectedSlots).map((slotKey, index) => {
-                  const parts = slotKey.split('-');
-                  const dayIdx = parseInt(parts[0] ?? '0', 10);
-                  const timeStr = parts[1] ?? '';
-                  const details = slotDetails[slotKey] ?? { duration: 60, purpose: '', showPurpose: false, attendees: '', activityType: '' };
-
-                  const slotDate = new Date(weekStart);
-                  slotDate.setDate(weekStart.getDate() + dayIdx);
-                  const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
-                  const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
-
-                  // Calculate end time
-                  const [startH, startM] = timeStr.split(':').map(Number);
-                  const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
-                  const endH = Math.floor(endMins / 60);
-                  const endM = endMins % 60;
-                  const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
-
-                  return (
-                    <div
-                      key={slotKey}
-                      style={{
-                        padding: 'var(--ds-spacing-4)',
-                        backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        marginTop: index > 0 ? 'var(--ds-spacing-3)' : 0,
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
-                        <CalendarIcon size={18} />
-                        <Heading level={4} data-size="xs" style={{ margin: 0 }}>
-                          Booking #{index + 1}
-                        </Heading>
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
-                        <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Dato:</span>
-                        <span>{dayNames[slotDate.getDay()]} {slotDate.getDate()}. {monthNames[slotDate.getMonth()]} {slotDate.getFullYear()}</span>
-                        <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Tid:</span>
-                        <span>{timeStr} – {endTime}</span>
-                        <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Varighet:</span>
-                        <span>{details.duration} minutter</span>
-                        {details.purpose && (
-                          <>
-                            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Formål:</span>
-                            <span>{details.purpose}</span>
-                          </>
-                        )}
-                        {details.activityType && (
-                          <>
-                            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Aktivitet:</span>
-                            <span>{details.activityType}</span>
-                          </>
-                        )}
-                        {details.attendees && (
-                          <>
-                            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Deltakere:</span>
-                            <span>{details.attendees} personer</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+                )}
               </div>
             </>
           )}
+
+          {/* Step 1: Pricing */}
+          {currentStep === 1 && (
+            <BookingPricingStep
+              priceGroups={priceGroups}
+              additionalServices={additionalServices}
+              selectedPriceGroup={selectedPriceGroup}
+              selectedServices={selectedServices}
+              termsAccepted={termsAccepted}
+              onPriceGroupChange={setSelectedPriceGroup}
+              onServiceToggle={handleServiceToggle}
+              onTermsChange={setTermsAccepted}
+            />
+          )}
+
+          {/* Step 2: Confirmation */}
+          {currentStep === 2 && (
+            <BookingConfirmationStep
+              isAuthenticated={isAuthenticated}
+              isLoggingIn={isLoggingIn}
+              isSubmitting={isSubmitting}
+              bookingError={bookingError}
+              isMobile={isMobile}
+              selectedSlots={selectedSlots}
+              slotDetails={slotDetails}
+              weekStart={weekStart}
+              onLoginWithVipps={handleLoginVipps}
+              onLoginAsEmployee={handleLoginEmployee}
+              onConfirmBooking={handleSubmitBooking}
+              onClearError={() => setBookingError(null)}
+            />
+          )}
+
+          {/* Step 3: Success */}
+          {currentStep === 3 && (
+            <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+              <div
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: 'var(--ds-color-success-surface-default)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto var(--ds-spacing-4)',
+                }}
+              >
+                <CheckCircleIcon size={40} />
+              </div>
+              <Heading level={2} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                Booking sendt!
+              </Heading>
+              <Paragraph data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                Din bookingforespørsel er sendt til utleier for godkjenning.
+              </Paragraph>
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Step 3: Success */}
-      {currentStep === 3 && (
-        <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+        {/* RIGHT COLUMN: Fixed Sidebar */}
+        {!isMobile && currentStep < 3 && (
           <div
             style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-success-surface-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto var(--ds-spacing-4)',
-              color: 'var(--ds-color-success-base-default)',
-            }}
-          >
-            <CheckCircleIcon size={40} />
-          </div>
-          <Heading level={3} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-success-text-default)' }}>
-            Booking sendt!
-          </Heading>
-          <Paragraph data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Din bookingforespørsel er sendt. Du vil motta en bekreftelse på e-post når bookingen er godkjent.
-          </Paragraph>
-
-          <div
-            style={{
+              flex: '0 0 45%',
+              minWidth: 0,
+              maxWidth: '45%',
+              borderLeft: '1px solid var(--ds-color-neutral-border-subtle)',
               padding: 'var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-neutral-surface-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              border: '1px solid var(--ds-color-neutral-border-subtle)',
-              textAlign: 'left',
-              maxWidth: '400px',
-              margin: '0 auto',
+              backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
-              Hva skjer nå?
-            </Paragraph>
-            <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              <li>Bookingen behandles innen 24 timer</li>
-              <li>Du mottar bekreftelse på e-post</li>
-              <li>Bookingen vises i din profil</li>
-            </ul>
+            <BookingCartSidebar
+              selectedSlots={selectedSlots}
+              slotDetails={slotDetails}
+              weekStart={weekStart}
+              priceGroups={priceGroups}
+              additionalServices={additionalServices}
+              selectedPriceGroup={selectedPriceGroup}
+              selectedServices={selectedServices}
+              onRemoveSlot={handleRemoveSlot}
+              onAdjustTime={handleAdjustTime}
+              onChangeDuration={handleChangeDuration}
+            />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Action Section */}
       <div
@@ -2123,80 +793,71 @@ export function BookingWidgetPlacement({
           gap: 'var(--ds-spacing-3)',
         }}
       >
-        {/* Back button (only show on steps > 0) */}
-        {currentStep > 0 && (
+        {currentStep > 0 && currentStep < 3 && (
           <Button
             type="button"
             variant="secondary"
             data-size="lg"
-            onClick={() => {
-              setCurrentStep(prev => Math.max(0, prev - 1));
-              setBookingError(null); // Clear error when going back
-            }}
-            style={{
-              padding: 'var(--ds-spacing-4)',
-              fontSize: 'var(--ds-font-size-md)',
-              fontWeight: 'var(--ds-font-weight-medium)',
-            }}
+            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
           >
             Tilbake
           </Button>
         )}
-        <Button
-          type="button"
-          variant="primary"
-          data-size="lg"
-          data-color="accent"
-          onClick={() => {
-            if (currentStep === 3) {
-              // "Ferdig" button - reset to initial state with booked slots marked as reserved
-              handleFinish();
-            } else if (currentStep === 2 && effectivelyAuthenticated) {
-              // Submit booking on step 2 when authenticated
-              handleSubmitBooking();
-            } else if (currentStep < 3 && currentStep !== 2) {
-              // Advance step for other steps (except step 2 which requires auth)
-              setCurrentStep(prev => prev + 1);
-            } else if (currentStep === 2 && !effectivelyAuthenticated) {
-              // Do nothing - user needs to login first
-              return;
+        {currentStep < 3 && (
+          <Button
+            type="button"
+            variant="primary"
+            data-size="lg"
+            data-color="accent"
+            onClick={() => {
+              if (currentStep === 2 && isAuthenticated) {
+                handleSubmitBooking();
+              } else if (currentStep < 2) {
+                setCurrentStep(prev => prev + 1);
+              }
+            }}
+            disabled={
+              !isBookable ||
+              (currentStep === 0 && selectedSlots.size === 0) ||
+              (currentStep === 1 && (!selectedPriceGroup || !termsAccepted)) ||
+              (currentStep === 2 && !isAuthenticated) ||
+              isSubmitting
             }
-          }}
-          disabled={
-            !isBookable ||
-            (currentStep === 0 && selectedSlots.size === 0) ||
-            (currentStep === 1 && (!selectedPriceGroup || !termsAccepted)) ||
-            (currentStep === 2 && !effectivelyAuthenticated) ||
-            isSubmitting
-          }
-          aria-label={isBookable ? 'Fortsett til neste steg' : 'Lokalet er ikke tilgjengelig for booking'}
-          style={{
-            flex: 1,
-            padding: 'var(--ds-spacing-4)',
-            fontSize: 'var(--ds-font-size-md)',
-            fontWeight: 'var(--ds-font-weight-semibold)',
-          }}
-        >
-          {isSubmitting
-            ? 'Sender booking...'
-            : currentStep === 0 && selectedSlots.size > 0
-              ? `Fortsett med ${selectedSlots.size} valgte tidspunkt${selectedSlots.size > 1 ? 'er' : ''}`
+            style={{ flex: 1 }}
+          >
+            {isSubmitting
+              ? 'Sender booking...'
               : currentStep === 0
-                ? 'Velg tidspunkt for å fortsette'
+                ? selectedSlots.size > 0
+                  ? `Fortsett med ${selectedSlots.size} tidspunkt${selectedSlots.size > 1 ? 'er' : ''}`
+                  : 'Velg tidspunkt for å fortsette'
                 : currentStep === 1
-                  ? !selectedPriceGroup
-                    ? 'Velg prisgruppe for å fortsette'
-                    : !termsAccepted
-                      ? 'Godta vilkårene for å fortsette'
-                      : 'Fortsett til innlogging'
+                  ? 'Fortsett til bekreftelse'
                   : currentStep === 2
-                    ? effectivelyAuthenticated
-                      ? 'Bekreft booking'
-                      : 'Logg inn for å bekrefte'
-                    : currentStep === 3
-                      ? 'Ferdig'
-                      : 'Fortsett'}
-        </Button>
+                    ? isAuthenticated
+                      ? 'Send bookingforespørsel'
+                      : 'Logg inn for å fortsette'
+                    : 'Ferdig'}
+          </Button>
+        )}
+        {currentStep === 3 && (
+          <Button
+            type="button"
+            variant="primary"
+            data-size="lg"
+            onClick={() => {
+              setCurrentStep(0);
+              setSelectedSlots(new Set());
+              setSlotDetails({});
+              setSelectedPriceGroup('');
+              setSelectedServices(new Set());
+              setTermsAccepted(false);
+            }}
+            style={{ flex: 1 }}
+          >
+            Book flere tidspunkter
+          </Button>
+        )}
       </div>
 
       {/* Booking Dialog */}
@@ -2206,106 +867,8 @@ export function BookingWidgetPlacement({
         onClose={() => setDialogOpen(false)}
         onConfirm={handleDialogConfirm}
         slot={selectedSlotForDialog}
-        openingHours={openingHours}
         busySlots={busySlots}
       />
-
-      {/* Mobile responsive styles */}
-      <style>{`
-        /* Smooth accordion animations */
-        details {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        details summary {
-          position: relative;
-          transition: all 0.2s ease;
-        }
-
-        details summary::after {
-          content: '▼';
-          position: absolute;
-          right: 48px;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          opacity: 0.6;
-          font-size: 12px;
-        }
-
-        details[open] summary::after {
-          transform: rotate(-180deg);
-        }
-
-        details summary::-webkit-details-marker {
-          display: none;
-        }
-
-        details > div {
-          animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          transform-origin: top;
-        }
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        /* Smooth hover transitions for buttons */
-        details summary button:hover {
-          transform: scale(1.1);
-          background-color: var(--ds-color-danger-surface-default) !important;
-          border-color: var(--ds-color-danger-border-default) !important;
-          color: var(--ds-color-danger-text-default) !important;
-        }
-
-        @media (max-width: 768px) {
-          .booking-calendar-grid {
-            min-width: 100% !important;
-          }
-          .booking-calendar-grid > div {
-            font-size: var(--ds-font-size-xs) !important;
-          }
-          .booking-calendar-grid button {
-            padding: var(--ds-spacing-1) !important;
-            font-size: 10px !important;
-          }
-        }
-
-        @media (max-width: 599px) {
-          .booking-stepper-mobile {
-            gap: var(--ds-spacing-1) !important;
-          }
-          .booking-stepper-mobile > div {
-            min-width: 0 !important;
-          }
-          .booking-step-circle {
-            width: 32px !important;
-            height: 32px !important;
-          }
-          .booking-step-label {
-            font-size: 10px !important;
-            max-width: 60px !important;
-          }
-          .booking-header-mobile {
-            flex-direction: column !important;
-            gap: var(--ds-spacing-2) !important;
-            align-items: flex-start !important;
-          }
-          .booking-date-nav {
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-          }
-          .booking-date-nav > p {
-            min-width: auto !important;
-            font-size: var(--ds-font-size-xs) !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

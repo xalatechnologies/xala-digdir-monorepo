@@ -333,7 +333,7 @@ export function useUploadListingMedia() {
               if (isImageFile(file)) {
                 try {
                   return await compressImage(file, options?.compressionOptions);
-                } catch (error) {
+                } catch (_error) {
                   // If compression fails, use original file
                   return file;
                 }

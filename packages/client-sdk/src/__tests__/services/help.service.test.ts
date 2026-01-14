@@ -18,7 +18,7 @@ vi.mock('../../core/client-factory', () => ({
 import { getClient } from '../../core/client-factory';
 import { helpService } from '../../services/help.service';
 import { seasonalLeaseService } from '../../services/seasonal-lease.service';
-import { bookingService } from '../../services/booking.service';
+// import { bookingService } from '../../services/booking.service';
 
 describe('HelpService', () => {
   const mockClient = {
