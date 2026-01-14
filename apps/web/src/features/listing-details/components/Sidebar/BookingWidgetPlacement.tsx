@@ -1031,6 +1031,7 @@ export function BookingWidgetPlacement({
         onChangeTime={handleChangeTimeFromConflict}
         onBookAvailable={handleBookAvailableSlots}
         listingTitle={listingTitle}
+        listingId={listingId ?? ''}
       />
     </div>
   );
