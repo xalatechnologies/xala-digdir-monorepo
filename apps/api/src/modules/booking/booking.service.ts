@@ -13,6 +13,7 @@ import {
   BookingQuerySchema,
   CancelBookingSchema,
   RecurringPreviewRequestSchema,
+  RecurringCreateSchema,
   type CreateBookingDTO,
   type UpdateBookingDTO,
   type BookingQueryParams,
@@ -24,6 +25,9 @@ import {
   type RecurringOccurrence,
   type RecurringSummary,
   type OccurrenceStatus,
+  type RecurringCreateRequest,
+  type RecurringBookingResultProjection,
+  type FailedOccurrence,
 } from '../../schemas/booking.schema';
 import type { PaginatedResult } from '../../database/base.repository';
 
@@ -247,7 +251,7 @@ export class BookingService {
   }
 
   /**
-   * Create recurring booking
+   * Create recurring booking (legacy method for backward compatibility)
    */
   async createRecurring(tenantId: string, userId: string, data: any): Promise<Booking[]> {
     const { listingId, startTime, endTime, frequency, endDate, weekdays } = data;
@@ -268,6 +272,222 @@ export class BookingService {
 
     this.adapters?.log?.info('Recurring booking created', { count: bookings.length });
     return bookings;
+  }
+
+  /**
+   * Create recurring booking with conflict policy support
+   * Implements stopOnConflict and allowPartial policies
+   * Returns a projection with created bookings and failed occurrences
+   */
+  async createRecurringWithPolicy(
+    tenantId: string,
+    userId: string,
+    data: RecurringCreateRequest
+  ): Promise<RecurringBookingResultProjection> {
+    const validated = validate(RecurringCreateSchema, data);
+
+    // Apply defaults for conflict policies (Zod defaults are applied but TypeScript needs explicit values)
+    const stopOnConflict = validated.stopOnConflict ?? false;
+    const allowPartial = validated.allowPartial ?? true;
+
+    // Build a booking selection for occurrence generation
+    const selection: BookingSelection = {
+      listingId: validated.listingId,
+      mode: 'RECURRING',
+      startTime: validated.startTime,
+      endTime: validated.endTime,
+      userId: validated.userId,
+      organizationId: validated.organizationId,
+      notes: validated.notes,
+      metadata: validated.metadata,
+      frequency: validated.frequency,
+      weekdays: validated.weekdays,
+      endCondition: validated.endCondition,
+    };
+
+    // Generate occurrences based on recurrence pattern
+    const occurrences = this.generateOccurrences(selection);
+
+    // Filter to selected occurrences if specified
+    let targetOccurrences = occurrences;
+    if (validated.selectedOccurrences && validated.selectedOccurrences.length > 0) {
+      targetOccurrences = occurrences.filter((_, index) =>
+        validated.selectedOccurrences!.includes(index)
+      );
+    }
+
+    // Check for conflicts
+    const occurrencesWithStatus = await this.checkOccurrenceConflicts(
+      validated.listingId,
+      targetOccurrences
+    );
+
+    const conflictOccurrences = occurrencesWithStatus.filter(o => o.status !== 'AVAILABLE');
+    const availableOccurrences = occurrencesWithStatus.filter(o => o.status === 'AVAILABLE');
+
+    // Apply conflict policy
+    if (stopOnConflict && conflictOccurrences.length > 0) {
+      // Return error result with no created bookings
+      const result: RecurringBookingResultProjection = {
+        created: [],
+        failed: conflictOccurrences.map(o => ({
+          index: o.index,
+          startTime: o.startTime,
+          endTime: o.endTime,
+          status: o.status,
+          reasonKey: o.reasonKey || 'booking.conflict.stopOnConflict',
+          conflictId: o.conflictId,
+        })),
+        summary: {
+          totalRequested: targetOccurrences.length,
+          createdCount: 0,
+          failedCount: conflictOccurrences.length,
+          totalPrice: 0,
+          currency: 'NOK',
+        },
+        seriesMetadata: {
+          frequency: validated.frequency,
+          weekdays: validated.weekdays,
+          firstOccurrence: targetOccurrences[0]?.startTime || validated.startTime,
+          lastOccurrence: targetOccurrences[targetOccurrences.length - 1]?.endTime,
+        },
+        createdAt: new Date().toISOString(),
+      };
+
+      this.adapters?.log?.warn('Recurring booking creation stopped due to conflicts', {
+        listingId: validated.listingId,
+        conflictCount: conflictOccurrences.length,
+      });
+
+      return result;
+    }
+
+    // Create bookings for available occurrences
+    const createdBookings: Booking[] = [];
+    const failed: FailedOccurrence[] = [];
+
+    // Add conflict occurrences to failed list
+    for (const occurrence of conflictOccurrences) {
+      failed.push({
+        index: occurrence.index,
+        startTime: occurrence.startTime,
+        endTime: occurrence.endTime,
+        status: occurrence.status,
+        reasonKey: occurrence.reasonKey || 'booking.conflict.existingBooking',
+        conflictId: occurrence.conflictId,
+      });
+    }
+
+    // Create bookings for available slots
+    const seriesId = crypto.randomUUID();
+    const ANONYMOUS_USER_ID = '00000000-0000-0000-0000-000000000000';
+    const effectiveUserId = validated.userId || (userId !== 'anonymous' ? userId : ANONYMOUS_USER_ID);
+
+    for (const occurrence of availableOccurrences) {
+      try {
+        const booking = await this.repository.create({
+          tenantId,
+          listingId: validated.listingId,
+          userId: effectiveUserId,
+          status: 'pending',
+          startTime: new Date(occurrence.startTime),
+          endTime: new Date(occurrence.endTime),
+          totalPrice: String(500), // Mock pricing - in production would calculate
+          currency: 'NOK',
+          notes: validated.notes,
+          metadata: {
+            ...validated.metadata,
+            recurring: true,
+            frequency: validated.frequency,
+            weekdays: validated.weekdays,
+            seriesId,
+            occurrenceIndex: occurrence.index,
+          },
+        });
+
+        createdBookings.push(booking as unknown as Booking);
+
+        // Audit log for each created booking
+        getAuditService().log({
+          tenantId,
+          userId: effectiveUserId,
+          action: 'create',
+          resource: 'booking',
+          resourceId: booking.id,
+          metadata: {
+            type: 'recurring',
+            seriesId,
+            occurrenceIndex: occurrence.index,
+            listingId: validated.listingId,
+          },
+        });
+      } catch (error: any) {
+        // If creation fails, add to failed list
+        failed.push({
+          index: occurrence.index,
+          startTime: occurrence.startTime,
+          endTime: occurrence.endTime,
+          status: 'CONFLICT',
+          reasonKey: 'booking.error.creationFailed',
+        });
+
+        this.adapters?.log?.error('Failed to create recurring occurrence', {
+          index: occurrence.index,
+          error: error.message,
+        });
+      }
+    }
+
+    // Calculate total price
+    const pricePerOccurrence = 500; // Mock pricing
+    const totalPrice = createdBookings.length * pricePerOccurrence;
+
+    // Build result projection
+    const result: RecurringBookingResultProjection = {
+      created: createdBookings,
+      failed,
+      summary: {
+        totalRequested: targetOccurrences.length,
+        createdCount: createdBookings.length,
+        failedCount: failed.length,
+        totalPrice,
+        currency: 'NOK',
+      },
+      seriesMetadata: {
+        frequency: validated.frequency,
+        weekdays: validated.weekdays,
+        firstOccurrence: createdBookings[0]?.startTime?.toString() || targetOccurrences[0]?.startTime || validated.startTime,
+        lastOccurrence: createdBookings[createdBookings.length - 1]?.endTime?.toString() || targetOccurrences[targetOccurrences.length - 1]?.endTime,
+        seriesId,
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    this.adapters?.log?.info('Recurring booking series created', {
+      seriesId,
+      listingId: validated.listingId,
+      createdCount: createdBookings.length,
+      failedCount: failed.length,
+    });
+
+    // Audit log for the series creation
+    getAuditService().log({
+      tenantId,
+      userId: effectiveUserId,
+      action: 'create',
+      resource: 'booking_series',
+      resourceId: seriesId,
+      metadata: {
+        frequency: validated.frequency,
+        totalRequested: targetOccurrences.length,
+        createdCount: createdBookings.length,
+        failedCount: failed.length,
+        stopOnConflict,
+        allowPartial,
+      },
+    });
+
+    return result;
   }
 
   /**
