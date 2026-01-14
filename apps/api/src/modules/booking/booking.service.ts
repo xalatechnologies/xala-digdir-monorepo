@@ -12,12 +12,18 @@ import {
   UpdateBookingSchema,
   BookingQuerySchema,
   CancelBookingSchema,
+  RecurringPreviewRequestSchema,
   type CreateBookingDTO,
   type UpdateBookingDTO,
   type BookingQueryParams,
   type CancelBookingDTO,
   type Booking,
   type CalendarEvent,
+  type BookingSelection,
+  type RecurringPreviewProjection,
+  type RecurringOccurrence,
+  type RecurringSummary,
+  type OccurrenceStatus,
 } from '../../schemas/booking.schema';
 import type { PaginatedResult } from '../../database/base.repository';
 
@@ -245,12 +251,12 @@ export class BookingService {
    */
   async createRecurring(tenantId: string, userId: string, data: any): Promise<Booking[]> {
     const { listingId, startTime, endTime, frequency, endDate, weekdays } = data;
-    
+
     // Generate recurring dates
     const bookings: Booking[] = [];
     const start = new Date(startTime);
     const end = new Date(endDate);
-    
+
     // Create first booking
     const firstBooking = await this.create(tenantId, userId, {
       listingId,
@@ -259,9 +265,208 @@ export class BookingService {
       metadata: { recurring: true, frequency, weekdays },
     });
     bookings.push(firstBooking);
-    
+
     this.adapters?.log?.info('Recurring booking created', { count: bookings.length });
     return bookings;
+  }
+
+  /**
+   * Preview recurring booking with conflict detection
+   * Generates all occurrences based on recurrence pattern and checks availability
+   */
+  async previewRecurring(tenantId: string, selection: BookingSelection): Promise<RecurringPreviewProjection> {
+    const validated = validate(RecurringPreviewRequestSchema, selection);
+
+    // Generate occurrences based on frequency and end condition
+    const occurrences = this.generateOccurrences(validated);
+
+    // Check for conflicts with existing bookings
+    const occurrencesWithStatus = await this.checkOccurrenceConflicts(validated.listingId, occurrences);
+
+    // Calculate summary statistics
+    const summary = this.calculateRecurringSummary(occurrencesWithStatus);
+
+    // Determine available actions based on conflicts
+    const availableActions = this.determineAvailableActions(summary);
+
+    // Build proposed selection for partial creation if there are conflicts
+    const proposedSelection = summary.conflictCount > 0 && summary.availableCount > 0
+      ? { ...validated }
+      : undefined;
+
+    const preview: RecurringPreviewProjection = {
+      listingId: validated.listingId,
+      selection: validated,
+      occurrences: occurrencesWithStatus,
+      summary,
+      proposedSelection,
+      generatedAt: new Date().toISOString(),
+      validFor: 'PT5M', // 5 minutes validity
+      availableActions,
+      permissions: {
+        canCreateAll: summary.conflictCount === 0,
+        canCreatePartial: summary.availableCount > 0,
+        canModify: true,
+      },
+    };
+
+    this.adapters?.log?.info('Recurring preview generated', {
+      listingId: validated.listingId,
+      totalOccurrences: summary.totalOccurrences,
+      availableCount: summary.availableCount,
+      conflictCount: summary.conflictCount,
+    });
+
+    return preview;
+  }
+
+  /**
+   * Generate occurrences based on recurrence pattern
+   */
+  private generateOccurrences(selection: BookingSelection): RecurringOccurrence[] {
+    const occurrences: RecurringOccurrence[] = [];
+    const startDate = new Date(selection.startTime);
+    const endDate = new Date(selection.endTime);
+    const duration = endDate.getTime() - startDate.getTime();
+
+    const endCondition = selection.endCondition!;
+    const frequency = selection.frequency!;
+    const weekdays = selection.weekdays || [startDate.getDay() === 0 ? 7 : startDate.getDay()]; // ISO weekday
+
+    let currentDate = new Date(startDate);
+    let index = 0;
+    const maxOccurrences = endCondition.type === 'AFTER_OCCURRENCES'
+      ? endCondition.occurrences!
+      : 52; // Safety limit
+    const untilDate = endCondition.type === 'UNTIL_DATE'
+      ? new Date(endCondition.untilDate!)
+      : null;
+
+    while (index < maxOccurrences) {
+      // Check if we've passed the until date
+      if (untilDate && currentDate > untilDate) {
+        break;
+      }
+
+      // Check if current day matches selected weekdays (for weekly frequency)
+      const currentWeekday = currentDate.getDay() === 0 ? 7 : currentDate.getDay(); // Convert to ISO weekday
+      const matchesWeekday = frequency === 'WEEKLY'
+        ? weekdays.includes(currentWeekday)
+        : true;
+
+      if (matchesWeekday) {
+        const occurrenceStart = new Date(currentDate);
+        const occurrenceEnd = new Date(currentDate.getTime() + duration);
+
+        occurrences.push({
+          index,
+          startTime: occurrenceStart.toISOString(),
+          endTime: occurrenceEnd.toISOString(),
+          status: 'AVAILABLE', // Will be updated by conflict check
+          selected: true,
+        });
+
+        index++;
+      }
+
+      // Advance to next occurrence
+      if (frequency === 'WEEKLY') {
+        currentDate.setDate(currentDate.getDate() + 1);
+        // If we've gone through all weekdays, jump to next week's first selected weekday
+        if (currentDate.getDay() === 0 ? 7 : currentDate.getDay() > Math.max(...weekdays)) {
+          const daysUntilNextWeek = 7 - (currentDate.getDay() === 0 ? 7 : currentDate.getDay()) + Math.min(...weekdays);
+          currentDate.setDate(currentDate.getDate() + daysUntilNextWeek);
+        }
+      } else if (frequency === 'MONTHLY') {
+        // Monthly: same day of month
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
+    }
+
+    return occurrences;
+  }
+
+  /**
+   * Check occurrences for conflicts with existing bookings
+   */
+  private async checkOccurrenceConflicts(
+    listingId: string,
+    occurrences: RecurringOccurrence[]
+  ): Promise<RecurringOccurrence[]> {
+    const checkedOccurrences: RecurringOccurrence[] = [];
+
+    for (const occurrence of occurrences) {
+      const startTime = new Date(occurrence.startTime);
+      const endTime = new Date(occurrence.endTime);
+
+      // Check for existing bookings in this time slot
+      const conflicts = await this.repository.findByListingAndDateRange(
+        listingId,
+        startTime,
+        endTime
+      );
+
+      if (conflicts.length > 0) {
+        checkedOccurrences.push({
+          ...occurrence,
+          status: 'CONFLICT' as OccurrenceStatus,
+          reasonKey: 'booking.conflict.existingBooking',
+          conflictId: conflicts[0].id,
+          selected: false,
+        });
+      } else {
+        checkedOccurrences.push({
+          ...occurrence,
+          status: 'AVAILABLE' as OccurrenceStatus,
+          selected: true,
+        });
+      }
+    }
+
+    return checkedOccurrences;
+  }
+
+  /**
+   * Calculate summary statistics for recurring preview
+   */
+  private calculateRecurringSummary(occurrences: RecurringOccurrence[]): RecurringSummary {
+    const availableCount = occurrences.filter(o => o.status === 'AVAILABLE').length;
+    const conflictCount = occurrences.filter(o => o.status === 'CONFLICT').length;
+    const blockedCount = occurrences.filter(o => o.status === 'BLOCKED').length;
+    const blackoutCount = occurrences.filter(o => o.status === 'BLACKOUT').length;
+
+    // Mock pricing - in production would calculate based on listing rates
+    const pricePerOccurrence = 500; // NOK
+    const totalPrice = availableCount * pricePerOccurrence;
+
+    return {
+      totalOccurrences: occurrences.length,
+      availableCount,
+      conflictCount,
+      blockedCount,
+      blackoutCount,
+      totalPrice,
+      currency: 'NOK',
+    };
+  }
+
+  /**
+   * Determine available actions based on conflict summary
+   */
+  private determineAvailableActions(summary: RecurringSummary): Array<'CREATE_ALL' | 'CREATE_AVAILABLE' | 'MODIFY_SELECTION'> {
+    const actions: Array<'CREATE_ALL' | 'CREATE_AVAILABLE' | 'MODIFY_SELECTION'> = [];
+
+    if (summary.conflictCount === 0 && summary.availableCount > 0) {
+      actions.push('CREATE_ALL');
+    }
+
+    if (summary.availableCount > 0) {
+      actions.push('CREATE_AVAILABLE');
+    }
+
+    actions.push('MODIFY_SELECTION');
+
+    return actions;
   }
 }
 

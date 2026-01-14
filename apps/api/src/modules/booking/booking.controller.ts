@@ -11,6 +11,7 @@ import {
   CreateBookingSchema,
   BookingQuerySchema,
   CancelBookingSchema,
+  RecurringPreviewRequestSchema,
 } from '../../schemas/booking.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -164,6 +165,18 @@ export class BookingController {
     const bookings = await this.service.createRecurring(tenantId, userId, body);
     reply.code(201);
     return { data: bookings };
+  }
+
+  /**
+   * POST /api/bookings/recurring/preview - Preview recurring booking with conflict detection
+   * Returns computed occurrences with availability status for each date
+   */
+  @Post('/recurring/preview')
+  async previewRecurring(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const data = validate(RecurringPreviewRequestSchema, request.body);
+    const preview = await this.service.previewRecurring(tenantId, data);
+    return { data: preview };
   }
 
   /**
