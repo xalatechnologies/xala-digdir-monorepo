@@ -20,7 +20,8 @@ export const seasonKeys = {
   details: () => [...seasonKeys.all, 'detail'] as const,
   detail: (id: string) => [...seasonKeys.details(), id] as const,
   stats: (id: string) => [...seasonKeys.all, 'stats', id] as const,
-  venues: (id: string) => [...seasonKeys.all, 'venues', id] as const,
+  venues: () => [...seasonKeys.all, 'venues'] as const,
+  venueList: (id: string) => [...seasonKeys.venues(), id] as const,
 };
 
 /**
@@ -61,7 +62,7 @@ export function useSeasonStats(id: string) {
  */
 export function useSeasonVenues(seasonId: string) {
   return useQuery({
-    queryKey: seasonKeys.venues(seasonId),
+    queryKey: seasonKeys.venueList(seasonId),
     queryFn: () => seasonService.getSeasonVenues(seasonId),
     enabled: !!seasonId,
   });
@@ -197,7 +198,7 @@ export function useAddVenueToSeason() {
     mutationFn: ({ seasonId, listingId }: { seasonId: string; listingId: string }) =>
       seasonService.addVenueToSeason(seasonId, listingId),
     onSuccess: (_, { seasonId }) => {
-      queryClient.invalidateQueries({ queryKey: seasonKeys.venues(seasonId) });
+      queryClient.invalidateQueries({ queryKey: seasonKeys.venueList(seasonId) });
       queryClient.invalidateQueries({ queryKey: seasonKeys.detail(seasonId) });
       queryClient.invalidateQueries({ queryKey: seasonKeys.lists() });
     },
@@ -214,7 +215,7 @@ export function useRemoveVenueFromSeason() {
     mutationFn: ({ seasonId, listingId }: { seasonId: string; listingId: string }) =>
       seasonService.removeVenueFromSeason(seasonId, listingId),
     onSuccess: (_, { seasonId }) => {
-      queryClient.invalidateQueries({ queryKey: seasonKeys.venues(seasonId) });
+      queryClient.invalidateQueries({ queryKey: seasonKeys.venueList(seasonId) });
       queryClient.invalidateQueries({ queryKey: seasonKeys.detail(seasonId) });
       queryClient.invalidateQueries({ queryKey: seasonKeys.lists() });
     },
