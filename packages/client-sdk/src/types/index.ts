@@ -6,6 +6,12 @@
 // Core types
 export * from './enums';
 
+// Authorization types (ActionCode enums + helpers)
+export * from './actions';
+
+// Projection Registry (cost classification + metadata)
+export * from './projection-registry';
+
 // Domain types
 export * from './listing';
 export * from './booking';
