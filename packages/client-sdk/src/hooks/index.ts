@@ -175,6 +175,7 @@ export {
   useMarkMessagesRead,
   useResolveConversation,
   useReopenConversation,
+  useAssignConversation,
 } from './use-conversations';
 
 // Block hooks
