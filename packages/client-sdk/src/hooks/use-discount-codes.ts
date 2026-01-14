@@ -21,10 +21,7 @@ export type { DiscountCode, DiscountCodeQueryParams, CreateDiscountCodeDTO, Vali
 export function useDiscountCodes(params?: DiscountCodeQueryParams) {
   return useQuery({
     queryKey: [...queryKeys.discountCodes.list(), params] as const,
-    queryFn: async () => {
-      const result = await discountCodeService.getAll(params);
-      return result.data;
-    },
+    queryFn: () => discountCodeService.getAll(params),
   });
 }
 
@@ -34,10 +31,7 @@ export function useDiscountCodes(params?: DiscountCodeQueryParams) {
 export function useDiscountCode(id: string) {
   return useQuery({
     queryKey: queryKeys.discountCodes.detail(id),
-    queryFn: async () => {
-      const result = await discountCodeService.getById(id);
-      return result.data;
-    },
+    queryFn: () => discountCodeService.getById(id),
     enabled: !!id,
   });
 }
@@ -49,10 +43,7 @@ export function useCreateDiscountCode() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CreateDiscountCodeDTO) => {
-      const result = await discountCodeService.create(data);
-      return result.data;
-    },
+    mutationFn: (data: CreateDiscountCodeDTO) => discountCodeService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.all });
     },
@@ -66,10 +57,8 @@ export function useUpdateDiscountCode() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateDiscountCodeDTO> }) => {
-      const result = await discountCodeService.update(id, data);
-      return result.data;
-    },
+    mutationFn: ({ id, data }: { id: string; data: Partial<CreateDiscountCodeDTO> }) =>
+      discountCodeService.update(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.list() });
@@ -109,10 +98,7 @@ export function useToggleDiscountCode() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      const result = await discountCodeService.toggleActive(id);
-      return result.data;
-    },
+    mutationFn: (id: string) => discountCodeService.toggleActive(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.list() });
