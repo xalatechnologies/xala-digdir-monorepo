@@ -4,6 +4,7 @@
  */
 import { Injectable, Inject } from '../../core/decorators';
 import { BookingRepository } from './booking.repository';
+import { ListingRepository } from '../listing/listing.repository';
 import { validate } from '../../core/validation/zod-pipe';
 import { ForbiddenError } from '../../core/errors/problem-details';
 import { getAuditService } from '../../core/audit/audit.service';
@@ -25,6 +26,7 @@ import type { PaginatedResult } from '../../database/base.repository';
 export class BookingService {
   constructor(
     @Inject('BookingRepository') private readonly repository: BookingRepository,
+    @Inject('ListingRepository') private readonly listingRepository: ListingRepository,
     @Inject('Adapters') private readonly adapters: any
   ) {}
 
@@ -34,15 +36,41 @@ export class BookingService {
   async create(tenantId: string, userId: string, data: CreateBookingDTO): Promise<Booking> {
     const validated = validate(CreateBookingSchema, data);
 
-    // Check availability (simplified - should check against existing bookings)
+    // Fetch listing to get buffer time configuration
+    const listing = await this.listingRepository.findById(validated.listingId);
+    if (!listing) {
+      throw new ForbiddenError('Listing not found');
+    }
+
+    // Extract buffer time from listing metadata (default to 0 if not set)
+    const bufferTimeMinutes = (listing.metadata as any)?.bufferTimeMinutes || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
+
+    // Check availability with buffer time
     const conflicts = await this.repository.findByListingAndDateRange(
       validated.listingId,
       validated.startTime,
       validated.endTime
     );
 
-    if (conflicts.length > 0) {
-      throw new ForbiddenError('The requested time slot is not available');
+    // Check if any existing booking conflicts with the requested time slot (including buffer time)
+    const requestedStart = new Date(validated.startTime).getTime();
+    const requestedEnd = new Date(validated.endTime).getTime();
+
+    const hasConflict = conflicts.some((existingBooking) => {
+      // Apply buffer time before and after existing bookings
+      const existingStart = new Date(existingBooking.startTime).getTime() - bufferTimeMs;
+      const existingEnd = new Date(existingBooking.endTime).getTime() + bufferTimeMs;
+
+      // Check for overlap
+      return requestedStart < existingEnd && requestedEnd > existingStart;
+    });
+
+    if (hasConflict) {
+      const bufferMsg = bufferTimeMinutes > 0
+        ? ` (including ${bufferTimeMinutes} minute buffer time)`
+        : '';
+      throw new ForbiddenError(`The requested time slot is not available${bufferMsg}`);
     }
 
     // Anonymous user placeholder UUID (database requires userId)

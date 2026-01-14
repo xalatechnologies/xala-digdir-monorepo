@@ -167,8 +167,8 @@ async function bootstrap() {
   container.registerFactory('ListingService', () => 
     new ListingService(container.resolve('ListingRepository'), adapters)
   );
-  container.registerFactory('BookingService', () => 
-    new BookingService(container.resolve('BookingRepository'), adapters)
+  container.registerFactory('BookingService', () =>
+    new BookingService(container.resolve('BookingRepository'), container.resolve('ListingRepository'), adapters)
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
