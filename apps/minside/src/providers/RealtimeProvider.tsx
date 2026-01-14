@@ -10,6 +10,7 @@ import {
   useRealtimeListings,
   useRealtimeMessages,
   useRealtimeNotifications,
+  getClientConfig,
 } from '@digilist/client-sdk';
 
 interface RealtimeContextValue {
@@ -39,10 +40,13 @@ interface RealtimeProviderProps {
 export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
   // Build full WebSocket URL with tenant ID suffix
   // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
-  const fullWsUrl = wsUrl && tenantId 
-    ? `${wsUrl}/${tenantId}` 
+  const fullWsUrl = wsUrl && tenantId
+    ? `${wsUrl}/${tenantId}`
     : undefined;
-  
+
+  // Retrieve auth token from SDK client config
+  const token = getClientConfig()?.token;
+
   // Connect to WebSocket
   const isConnected = useRealtimeConnection(fullWsUrl ? {
     url: fullWsUrl,
@@ -50,6 +54,7 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
     reconnectInterval: 5000,
     maxReconnectAttempts: 3,
     ...(tenantId ? { tenantId } : {}),
+    ...(token ? { token } : {}),
   } : undefined);
 
   // Subscribe to domain events - auto-invalidates queries
