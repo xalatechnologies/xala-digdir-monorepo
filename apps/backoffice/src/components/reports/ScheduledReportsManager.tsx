@@ -21,7 +21,6 @@ import {
   FormField,
   Textfield,
   Select,
-  Text,
 } from '@xala/ds';
 import {
   useScheduledReports,
@@ -130,16 +129,19 @@ export function ScheduledReportsManager() {
   }, []);
 
   const handleEdit = useCallback((schedule: ScheduledReport) => {
-    setFormData({
+    const formData: Partial<CreateScheduledReportDTO> = {
       name: schedule.name,
-      description: schedule.description,
       reportType: schedule.reportType,
       exportFormat: schedule.exportFormat,
       schedule: schedule.schedule,
-      metrics: schedule.metrics,
-      filters: schedule.filters,
-      reportTemplateId: schedule.reportTemplateId,
-    });
+    };
+
+    if (schedule.description) formData.description = schedule.description;
+    if (schedule.metrics) formData.metrics = schedule.metrics;
+    if (schedule.filters) formData.filters = schedule.filters;
+    if (schedule.reportTemplateId) formData.reportTemplateId = schedule.reportTemplateId;
+
+    setFormData(formData);
     setEditingSchedule(schedule);
     setIsCreateDrawerOpen(true);
   }, []);
@@ -479,6 +481,7 @@ export function ScheduledReportsManager() {
                     setFormData({ ...formData, name: e.target.value })
                   }
                   placeholder="Månedlig bruksrapport"
+                  aria-label="Navn"
                 />
               </FormField>
 
@@ -489,6 +492,7 @@ export function ScheduledReportsManager() {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   placeholder="Månedlig oversikt over ressursbruk"
+                  aria-label="Beskrivelse"
                 />
               </FormField>
 

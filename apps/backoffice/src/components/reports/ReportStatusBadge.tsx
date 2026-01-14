@@ -36,7 +36,7 @@ export interface ReportStatusBadgeProps {
  * <ReportStatusBadge status="failed" />
  * ```
  */
-export function ReportStatusBadge({ status, size = 'sm' }: ReportStatusBadgeProps): React.ReactElement {
+export function ReportStatusBadge({ status }: ReportStatusBadgeProps): React.ReactElement {
   const config = reportStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
   return <StatusTag color={config.color}>{config.label}</StatusTag>;
 }

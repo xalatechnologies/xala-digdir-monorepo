@@ -36,7 +36,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
   if (isLoading) {
     return (
       <Stack direction="horizontal" spacing={12} style={{ justifyContent: 'center', padding: '3rem' }}>
-        <Spinner />
+        <Spinner aria-label="Laster maler" />
         <Paragraph>Laster maler...</Paragraph>
       </Stack>
     );
@@ -71,7 +71,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
       <Heading level={2} style={{ marginBottom: '1.5rem' }}>
         Velg rapportmal
       </Heading>
-      <Grid columns="repeat(auto-fill, minmax(300px, 1fr))" spacing={16}>
+      <Grid style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
         {templateList.map((template) => {
           const isSelected = selectedId === template.id;
           return (

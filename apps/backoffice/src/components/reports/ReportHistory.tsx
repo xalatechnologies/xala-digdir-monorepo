@@ -176,11 +176,6 @@ export function ReportHistory() {
     setPage(1);
   }, [searchValue]);
 
-  const handleClearSearch = useCallback(() => {
-    setSearchValue('');
-    setSearchQuery('');
-    setPage(1);
-  }, []);
 
   const handleStatusTabChange = useCallback((tabId: string) => {
     setStatusFilter(tabId);
