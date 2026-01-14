@@ -72,6 +72,15 @@ export class AuthService extends BaseService {
   async initiateOAuth(provider: string, callbackUrl?: string): Promise<SingleResponse<{ redirectUrl: string }>> {
     return this.client.post(this.buildPath('/oauth/initiate'), { provider, callbackUrl });
   }
+
+  /**
+   * Handle OAuth callback and exchange authorization code for session
+   * @param code - OAuth authorization code from callback URL
+   * @returns Auth session with HTTP-only cookie set by backend
+   */
+  async handleOAuthCallback(code: string): Promise<SingleResponse<AuthSession>> {
+    return this.client.post(this.buildPath('/callback'), { code });
+  }
 }
 
 // Singleton instance
