@@ -12,6 +12,7 @@ export * from './booking';
 export * from './organization';
 export * from './auth';
 export * from './settings';
+export * from './search';
 
 // Additional types that don't fit a single domain
 export type {
@@ -32,11 +33,6 @@ export type {
   RevenueReport,
   BookingReport,
   ReportQueryParams,
-  // Analytics
-  TimeSlotHeatmap,
-  SeasonalPattern,
-  PeriodComparison,
-  EnhancedReportFilter,
   // Audit
   AuditEvent,
   AuditQueryParams,

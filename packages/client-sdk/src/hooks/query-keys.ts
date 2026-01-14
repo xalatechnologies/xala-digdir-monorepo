@@ -4,13 +4,20 @@
  * Enables proper cache invalidation and prefetching
  */
 
-import type { 
-  ListingQueryParams, 
+import type {
+  ListingQueryParams,
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
+import type {
+  SearchParams,
+  TypeaheadParams,
+  SavedFilterQueryParams,
+  RecentSearchQueryParams,
+  ExportSearchParams
+} from '../types/search';
 
 /**
  * Strongly-typed query key factory
@@ -164,28 +171,6 @@ export const queryKeys = {
   },
 
   // =========================================================================
-  // Notification Keys
-  // =========================================================================
-  notifications: {
-    all: ['notifications'] as const,
-    lists: () => [...queryKeys.notifications.all, 'list'] as const,
-    list: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
-      [...queryKeys.notifications.lists(), params] as const,
-    my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
-      [...queryKeys.notifications.all, 'my', params] as const,
-    unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
-  },
-
-  // =========================================================================
-  // Push Notification Keys
-  // =========================================================================
-  pushNotifications: {
-    all: ['pushNotifications'] as const,
-    subscriptions: () => [...queryKeys.pushNotifications.all, 'subscriptions'] as const,
-    preferences: () => [...queryKeys.pushNotifications.all, 'preferences'] as const,
-  },
-
-  // =========================================================================
   // Discount Code Keys
   // =========================================================================
   discountCodes: {
@@ -229,5 +214,23 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
+  },
+
+  // =========================================================================
+  // Search Keys
+  // =========================================================================
+  search: {
+    all: ['search'] as const,
+    results: (params: SearchParams) => [...queryKeys.search.all, 'results', params] as const,
+    typeahead: (params: TypeaheadParams) => [...queryKeys.search.all, 'typeahead', params] as const,
+    savedFilters: {
+      all: () => [...queryKeys.search.all, 'savedFilters'] as const,
+      lists: () => [...queryKeys.search.savedFilters.all(), 'list'] as const,
+      list: (params?: SavedFilterQueryParams) => [...queryKeys.search.savedFilters.lists(), params] as const,
+      details: () => [...queryKeys.search.savedFilters.all(), 'detail'] as const,
+      detail: (id: string) => [...queryKeys.search.savedFilters.details(), id] as const,
+    },
+    recent: (params?: RecentSearchQueryParams) => [...queryKeys.search.all, 'recent', params] as const,
+    export: (params: ExportSearchParams) => [...queryKeys.search.all, 'export', params] as const,
   },
 } as const;

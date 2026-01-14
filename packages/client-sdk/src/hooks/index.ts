@@ -117,36 +117,11 @@ export {
   useRealtimeBookings,
   useRealtimeListings,
   useRealtimeMessages,
-  useRealtimeNotifications,
   useRealtimeAudit,
   useRealtimeEvents,
   useNotificationBadge,
   useRealtimeSend
 } from './use-realtime';
-
-// Notification hooks
-export {
-  useNotifications,
-  useMyNotifications,
-  useNotificationUnreadCount,
-  useNotificationTemplates,
-  useMarkNotificationRead,
-  useMarkAllNotificationsRead,
-  useDeleteNotification
-} from './use-notifications';
-
-// Push Notification hooks
-export {
-  usePushSubscriptions,
-  useNotificationPreferences,
-  usePushPermission,
-  useRegisterPushSubscription,
-  useUnsubscribePush,
-  useDeletePushSubscription,
-  useUpdateNotificationPreferences,
-  useTestPushNotification,
-  usePushSubscriptionFlow
-} from './use-push-notifications';
 
 // Audit hooks
 export {
@@ -222,3 +197,16 @@ export {
   type UseGeocodeListingsOptions,
   type UseGeocodeListingsResult,
 } from './use-geocode';
+
+// Search hooks
+export {
+  useGlobalSearch,
+  useTypeahead,
+  useSavedFilters,
+  useSavedFilter,
+  useCreateSavedFilter,
+  useUpdateSavedFilter,
+  useDeleteSavedFilter,
+  useRecentSearches,
+  useExportResults
+} from './use-search';

@@ -67,9 +67,6 @@ export { conversationService } from './conversation.service';
 // Notifications
 export { notificationService } from './notification.service';
 
-// Push Notifications
-export { pushNotificationService } from './push-notification.service';
-
 // Settings
 export { settingsService } from './settings.service';
 
@@ -101,4 +98,7 @@ export { widgetService } from './widget.service';
 
 // Monitoring
 export { monitoringService } from './monitoring.service';
+
+// Search
+export { SearchService, searchService } from './search.service';
 
