@@ -26,13 +26,17 @@ import { initSentry } from './lib/sentry';
 import { WorkQueuePage } from './routes/work-queue';
 import { SeasonApplicationsReviewPage } from './routes/season-applications';
 import { AllocationPlannerPage } from './routes/allocation-planner';
+import { DecisionFormsPage } from './routes/decision-forms';
+import { AuditTimelinePage } from './routes/audit-timeline';
 // New Admin pages
 import { ListingWizardPage } from './routes/listing-wizard';
 import { PricingRulesPage } from './routes/pricing-rules';
 import { UsersManagementPage } from './routes/users-management';
+import { AdminReportsPage } from './routes/admin-reports';
 // New TenantAdmin pages
 import { TenantSettingsPage } from './routes/tenant/settings';
 import { TenantBrandingPage } from './routes/tenant/branding';
+import { TenantAuditLogPage } from './routes/tenant/audit-log';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -159,12 +163,15 @@ function AppWithTheme() {
               <Route path="work-queue" element={<WorkQueuePage />} />
               <Route path="season-applications" element={<SeasonApplicationsReviewPage />} />
               <Route path="allocation-planner" element={<AllocationPlannerPage />} />
+              <Route path="decision-forms" element={<DecisionFormsPage />} />
+              <Route path="audit-timeline" element={<AuditTimelinePage />} />
               
               {/* Admin routes */}
               <Route path="listings/wizard" element={<ListingWizardPage />} />
               <Route path="listings/wizard/:id" element={<ListingWizardPage />} />
               <Route path="pricing-rules" element={<PricingRulesPage />} />
               <Route path="users-management" element={<UsersManagementPage />} />
+              <Route path="reports" element={<AdminReportsPage />} />
               
               {/* TenantAdmin routes */}
               <Route
@@ -180,6 +187,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <TenantBrandingPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tenant/audit-log"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantAuditLogPage />
                   </ProtectedRoute>
                 }
               />

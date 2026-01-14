@@ -17,13 +17,12 @@ import {
   Input,
   Switch,
 } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
 export function OrganizationSettingsPage() {
   const t = useT();
-  const { locale } = useLocale();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -193,8 +192,9 @@ export function OrganizationSettingsPage() {
                 </Paragraph>
               </div>
               <Switch
+                aria-label={item.label}
                 checked={settings[item.key as keyof typeof settings] as boolean}
-                onChange={(checked: boolean) => updateSetting(item.key, checked)}
+                onChange={(e) => updateSetting(item.key, e.target.checked)}
               />
             </div>
           ))}

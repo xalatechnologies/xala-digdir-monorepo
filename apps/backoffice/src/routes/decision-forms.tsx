@@ -22,7 +22,6 @@ import {
   useDialog,
 } from '@xala/ds';
 import { useLocale } from '@xala/i18n';
-import { useNavigate } from 'react-router-dom';
 
 const MOBILE_BREAKPOINT = 768;
 

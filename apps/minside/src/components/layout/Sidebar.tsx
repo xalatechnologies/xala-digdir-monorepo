@@ -168,7 +168,7 @@ function SidebarNavItem({ item, onClick }: { item: NavItem; onClick?: () => void
 }
 
 // Shared sidebar content component
-function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: unknown; onItemClick?: () => void }) {
+function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: { name: string; email: string } | null; onItemClick?: () => void }) {
   return (
     <>
       {/* Logo Section */}
@@ -369,6 +369,7 @@ export function Sidebar() {
       {/* Mobile hamburger button */}
       {isMobile && (
         <Button
+          type="button"
           onClick={() => setIsMobileMenuOpen(true)}
           aria-label="Open menu"
           style={{

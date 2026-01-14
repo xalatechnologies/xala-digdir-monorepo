@@ -19,8 +19,11 @@ export interface ListingPricing {
 }
 
 export interface ListingLocation {
+  // Support both lat/lng and latitude/longitude for compatibility
   lat?: number;
   lng?: number;
+  latitude?: number;
+  longitude?: number;
   address?: string;
   postalCode?: string;
   city?: string;
@@ -38,6 +41,11 @@ export interface ListingMetadata {
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];
   faq?: Array<{ question: string; answer: string }>;
+  // Contact information
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactWebsite?: string;
 }
 
 export interface Listing extends TenantEntity {
@@ -52,6 +60,9 @@ export interface Listing extends TenantEntity {
   pricing: ListingPricing;
   capacity?: number;
   quantity?: number;
+  // Location fields (root level)
+  address?: string;
+  location?: ListingLocation;
   metadata?: ListingMetadata;
   // Review aggregation (populated by backend)
   averageRating?: number;

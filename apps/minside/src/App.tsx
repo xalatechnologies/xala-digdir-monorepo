@@ -17,7 +17,10 @@ import { BillingPage } from './routes/billing';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 // Organization pages
-import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage } from './routes/org';
+import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage } from './routes/org';
+import { UserPreferencesPage } from './routes/preferences';
+import { NotificationsPage } from './routes/notifications';
+import { HelpPage } from './routes/help';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -100,6 +103,9 @@ function AppWithTheme() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="preferences" element={<UserPreferencesPage />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="help" element={<HelpPage />} />
               
               {/* Organization portal routes */}
               <Route path="org" element={<OrganizationDashboardPage />} />
@@ -107,6 +113,8 @@ function AppWithTheme() {
               <Route path="org/invoices" element={<OrganizationInvoicesPage />} />
               <Route path="org/members" element={<OrganizationMembersPage />} />
               <Route path="org/season-rental" element={<SeasonRentalPage />} />
+              <Route path="org/settings" element={<OrganizationSettingsPage />} />
+              <Route path="org/activity" element={<OrganizationActivityPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

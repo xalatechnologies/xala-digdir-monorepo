@@ -41,15 +41,21 @@ const TENANT_ID = import.meta.env.VITE_TENANT_ID;
 
 // Transform API listing to feature Listing type
 function transformApiToListing(api: ApiListing): Listing {
-  const meta = (api.metadata || {}) as Record<string, unknown>;
+  const meta = api.metadata || {};
+  // Access location from root level (SDK type now includes this)
+  const apiLocation = api.location;
+  const metaLocation = meta.location;
+
   const typeMap: Record<string, ListingType> = { EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', SPACE: 'FACILITY' };
   const listingType: ListingType = typeMap[api.type] || 'OTHER';
 
-  // Amenities from API
-  const apiAmenities = (meta.facilities as string[]) || [];
+  // Amenities from API - check both facilities and amenities
+  const apiAmenities = meta.amenities || meta.facilities || [];
   const amenities: Amenity[] = apiAmenities.map((f, i) => ({ id: `a-${i}`, name: f, description: f, category: 'general' }));
 
-  const includedFacilities: IncludedFacility[] = ((meta.includedEquipment as Array<{ name: string; quantity?: number; description?: string }>) || []).map((e, i) => {
+  // Included facilities/equipment
+  const includedEquipment = (meta as Record<string, unknown>).includedEquipment as Array<{ name: string; quantity?: number; description?: string }> | undefined;
+  const includedFacilities: IncludedFacility[] = (includedEquipment || []).map((e, i) => {
     const facility: IncludedFacility = {
       id: `inc-${i}`,
       name: e.name,
@@ -66,38 +72,57 @@ function transformApiToListing(api: ApiListing): Listing {
     return facility;
   });
 
-  // Rules from API
-  const apiRules = (meta.guidelines as Array<{ id: string; title: string; content: string }>) || [];
-  const rules: Rule[] = apiRules.map((g, i) => ({ id: g.id || `rule-${i}`, title: g.title, content: g.content, category: 'general' as const }));
+  // Rules from API - check both guidelines and rules, handle string arrays too
+  const metaAny = meta as Record<string, unknown>;
+  const apiRulesRaw = (metaAny.guidelines || metaAny.rules || []) as Array<{ id?: string; title?: string; content?: string } | string>;
+  const rules: Rule[] = apiRulesRaw.map((g, i) => {
+    if (typeof g === 'string') {
+      return { id: `rule-${i}`, title: g, content: g, category: 'general' as const };
+    }
+    return { id: g.id || `rule-${i}`, title: g.title || '', content: g.content || '', category: 'general' as const };
+  });
 
   // FAQ from API
-  const apiFaq = (meta.faq as Array<{ id: string; question: string; answer: string }>) || [];
+  const apiFaq = meta.faq || [];
   const faq: FAQItem[] = apiFaq.map((f, i) => ({ id: f.id || `faq-${i}`, question: f.question, answer: f.answer }));
 
   const keyFacts: KeyFacts = { ...(api.capacity ? { capacity: api.capacity } : {}), bookingMode: 'SLOTS' as BookingMode };
+
+  // Highlights from metadata
+  const highlights = (metaAny.highlights as string[]) || [];
+
   const metadata: ListingMetadata = {
     description: api.description || '',
     amenities,
     includedFacilities,
     rules,
     faq,
-    highlights: (meta.highlights as string[]) || []
+    highlights,
   };
 
-  // Build address from API data only
-  const address = meta.address
-    ? {
-        formatted: [meta.address, meta.postalCode, meta.city].filter(Boolean).join(', '),
-        ...(typeof meta.latitude === 'number' ? { coordinates: { latitude: meta.latitude as number, longitude: meta.longitude as number } } : {}),
-      }
-    : { formatted: '' };
+  // Build address from API - check root level first, then metadata
+  // Priority: api.address > api.location.address > meta.address > meta.location.address
+  const addressString = api.address || apiLocation?.address || meta.address || metaLocation?.address || '';
+  const postalCode = apiLocation?.postalCode || meta.postalCode || metaLocation?.postalCode || '';
+  const city = apiLocation?.city || meta.city || metaLocation?.city || '';
 
-  // Build contact from API data only
-  const contact = meta.contactEmail
+  // Get coordinates from api.location or meta.location (support both lat/lng and latitude/longitude)
+  const lat = apiLocation?.lat ?? apiLocation?.latitude ?? metaLocation?.lat ?? metaLocation?.latitude;
+  const lng = apiLocation?.lng ?? apiLocation?.longitude ?? metaLocation?.lng ?? metaLocation?.longitude;
+
+  const addressParts = [addressString, postalCode, city].filter(Boolean);
+  const address = {
+    formatted: addressParts.length > 0 ? addressParts.join(', ') : '',
+    ...(typeof lat === 'number' && typeof lng === 'number' ? { coordinates: { latitude: lat, longitude: lng } } : {}),
+  };
+
+  // Build contact from metadata
+  const hasContact = meta.contactEmail || meta.contactPhone || meta.contactName;
+  const contact = hasContact
     ? {
-        email: meta.contactEmail as string,
-        ...(meta.contactPhone ? { phone: meta.contactPhone as string } : {}),
-        ...(meta.contactName ? { name: meta.contactName as string } : {}),
+        ...(meta.contactEmail ? { email: meta.contactEmail } : {}),
+        ...(meta.contactPhone ? { phone: meta.contactPhone } : {}),
+        ...(meta.contactName ? { name: meta.contactName } : {}),
       }
     : {};
 
@@ -111,7 +136,7 @@ function transformApiToListing(api: ApiListing): Listing {
     images: (api.images || []).map((src: string, i: number) => ({ id: `${i}`, url: src, alt: `${api.name} - ${i + 1}`, isPrimary: i === 0, order: i })),
     address,
     ...(Object.keys(contact).length > 0 && { contact }),
-    openingHours: buildOpeningHours(meta),
+    openingHours: buildOpeningHours(meta.openingHours),
     keyFacts,
     metadata,
     // Activity data from API (if available)
@@ -129,14 +154,13 @@ function transformApiToListing(api: ApiListing): Listing {
   };
 }
 
-function buildOpeningHours(meta: Record<string, unknown>): OpeningHours {
-  const data = meta.openingHours as Record<string, { open: string; close: string }> | undefined;
+function buildOpeningHours(openingHours?: Record<string, { open: string; close: string }>): OpeningHours {
   const dayMap: Record<string, [string, number]> = {
     monday: ['Mandag', 1], tuesday: ['Tirsdag', 2], wednesday: ['Onsdag', 3],
     thursday: ['Torsdag', 4], friday: ['Fredag', 5], saturday: ['Lørdag', 6], sunday: ['Søndag', 0],
   };
-  if (data) {
-    const regular: DayHours[] = Object.entries(data).map(([d, h]) => ({
+  if (openingHours) {
+    const regular: DayHours[] = Object.entries(openingHours).map(([d, h]) => ({
       day: dayMap[d]?.[0] || d, dayIndex: dayMap[d]?.[1] || 0, open: h.open, close: h.close, isClosed: !h.open,
     }));
     return { regular };

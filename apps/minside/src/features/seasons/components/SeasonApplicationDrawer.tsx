@@ -180,6 +180,7 @@ export function SeasonApplicationDrawer({
             </Paragraph>
           </div>
           <Button
+            type="button"
             onClick={onClose}
             disabled={isSubmitting}
             aria-label="Lukk søknadsskjema"

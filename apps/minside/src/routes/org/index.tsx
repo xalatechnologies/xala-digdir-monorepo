@@ -9,3 +9,4 @@ export { OrganizationInvoicesPage } from './invoices';
 export { OrganizationMembersPage } from './members';
 export { SeasonRentalPage } from './season-rental';
 export { OrganizationSettingsPage } from './settings';
+export { OrganizationActivityPage } from './activity';

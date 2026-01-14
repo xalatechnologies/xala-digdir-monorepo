@@ -45,11 +45,20 @@ export interface ContactWidgetProps {
 // Component
 // =============================================================================
 
+function UserIcon({ size = 18 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
 export function ContactWidget({
   contact,
   className,
 }: ContactWidgetProps): React.ReactElement {
-  const hasAnyContact = contact.email || contact.phone;
+  const hasAnyContact = contact.email || contact.phone || contact.name;
 
   if (!hasAnyContact) {
     return <></>;
@@ -80,6 +89,23 @@ export function ContactWidget({
       </Paragraph>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+        {/* Contact Name */}
+        {contact.name && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+            <div style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              <UserIcon />
+            </div>
+            <div>
+              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                Kontaktperson
+              </Paragraph>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                {contact.name}
+              </Paragraph>
+            </div>
+          </div>
+        )}
+
         {/* Email */}
         {contact.email && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>

@@ -173,7 +173,7 @@ export function SeasonRentalPage() {
                 width: '24px',
                 height: '24px',
                 borderRadius: 'var(--ds-border-radius-full)',
-                backgroundColor: 'rgba(255,255,255,0.3)',
+                backgroundColor: 'var(--ds-color-neutral-surface-hover)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

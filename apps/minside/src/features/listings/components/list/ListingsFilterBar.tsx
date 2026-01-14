@@ -322,6 +322,7 @@ export function ListingsFilterBar({
           />
           {searchValue && (
             <Button
+              type="button"
               onClick={handleClearSearch}
               aria-label="Tøm søk"
               style={{
@@ -486,6 +487,7 @@ export function ListingsFilterBar({
             </button>
           ))}
           <Button
+            type="button"
             onClick={onResetFilters}
             style={{
               padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
@@ -511,6 +513,7 @@ export function ListingsFilterBar({
               Flere filter
             </Heading>
             <Button
+              type="button"
               onClick={() => setFilterModalOpen(false)}
               aria-label="Lukk"
               style={{
