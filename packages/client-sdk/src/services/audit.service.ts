@@ -90,7 +90,7 @@ class AuditService {
     const config = getClientConfig();
     const payload = {
       ...params,
-      tenantId: config.tenantId,
+      tenantId: config?.tenantId || '',
       severity: params.severity || 'info',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
       timestamp: new Date().toISOString(),

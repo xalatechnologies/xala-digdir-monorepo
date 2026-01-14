@@ -121,56 +121,50 @@ export interface TransformedUser {
 // =============================================================================
 
 const ACTOR_TYPE_LABELS: Record<ActorType, string> = {
-  KOMMUNE: 'Kommune',
-  ORGANIZATION: 'Organisasjon',
-  COMPANY: 'Bedrift',
-  PRIVATE: 'Privatperson',
-  NONPROFIT: 'Veldedig organisasjon',
-  SPORTS_CLUB: 'Idrettslag',
-  SCHOOL: 'Skole',
-  OTHER: 'Annet',
+  private: 'Privatperson',
+  business: 'Bedrift',
+  sports_club: 'Idrettslag',
+  youth_organization: 'Ungdomsorganisasjon',
+  school: 'Skole',
+  municipality: 'Kommune',
 };
 
 const ORGANIZATION_STATUS_LABELS: Record<OrganizationStatus, string> = {
   active: 'Aktiv',
   inactive: 'Inaktiv',
-  pending: 'Venter',
   suspended: 'Suspendert',
 };
 
 const ORGANIZATION_STATUS_COLORS: Record<OrganizationStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   active: 'success',
   inactive: 'neutral',
-  pending: 'warning',
   suspended: 'danger',
 };
 
 const USER_ROLE_LABELS: Record<UserRole, string> = {
+  super_admin: 'Superadministrator',
   admin: 'Administrator',
-  backoffice: 'Backoffice',
+  saksbehandler: 'Saksbehandler',
   user: 'Bruker',
-  readonly: 'Kun lesing',
 };
 
 const USER_ROLE_COLORS: Record<UserRole, 'success' | 'warning' | 'danger' | 'neutral'> = {
-  admin: 'danger',
-  backoffice: 'warning',
+  super_admin: 'danger',
+  admin: 'warning',
+  saksbehandler: 'neutral',
   user: 'success',
-  readonly: 'neutral',
 };
 
 const USER_STATUS_LABELS: Record<UserStatus, string> = {
   active: 'Aktiv',
   inactive: 'Inaktiv',
   suspended: 'Suspendert',
-  pending: 'Venter',
 };
 
 const USER_STATUS_COLORS: Record<UserStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   active: 'success',
   inactive: 'neutral',
   suspended: 'danger',
-  pending: 'warning',
 };
 
 const MEMBER_ROLE_LABELS: Record<'admin' | 'member', string> = {

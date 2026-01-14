@@ -5,7 +5,7 @@
  * Used by web, backoffice, and minside apps.
  */
 
-import type { Listing, ListingMetadata, ListingLocation, ListingType } from '../types/listing';
+import type { Listing, ListingMetadata, ListingLocation, ListingType } from '../types';
 
 // =============================================================================
 // UI Types for Transformed Listings
@@ -355,7 +355,7 @@ export function transformFAQ(metadata?: ListingMetadata): TransformedFAQ[] {
   if (!metadata?.faq) return [];
 
   return metadata.faq.map((item, index) => ({
-    id: item.id || `faq-${index}`,
+    id: `faq-${index}`,
     question: item.question,
     answer: item.answer,
   }));

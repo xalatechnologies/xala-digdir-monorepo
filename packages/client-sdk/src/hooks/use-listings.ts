@@ -217,7 +217,7 @@ export function usePublicUiListings(params?: PublicListingParams) {
       const response = await publicListingService.getListings(params);
       return {
         ...response,
-        data: transformListings(response.data),
+        data: toUiListings(response.data),
       };
     },
   });
@@ -243,7 +243,7 @@ export function usePublicUiListing(id: string) {
     queryFn: async () => {
       const response = await publicListingService.getListing(id);
       return {
-        data: transformListing(response.data),
+        data: toUiListing(response.data),
       };
     },
     enabled: !!id,

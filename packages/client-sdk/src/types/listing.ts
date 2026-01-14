@@ -40,7 +40,7 @@ export interface ListingMetadata {
   amenities?: string[];
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];
-  faq?: Array<{ question: string; answer: string }>;
+  faq?: Array<{ id?: string; question: string; answer: string }>;
   // Contact information
   contactName?: string;
   contactEmail?: string;
@@ -257,7 +257,7 @@ export interface UiListing {
   slug?: string;
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];
-  faq?: Array<{ question: string; answer: string }>;
+  faq?: Array<{ id?: string; question: string; answer: string }>;
   additionalServices?: Array<{ name: string; price: number }>;
 }
 
