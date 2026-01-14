@@ -198,6 +198,20 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Monitoring Keys
+  // =========================================================================
+  monitoring: {
+    all: ['monitoring'] as const,
+    health: () => [...queryKeys.monitoring.all, 'health'] as const,
+    metrics: () => [...queryKeys.monitoring.all, 'metrics'] as const,
+    logs: (params?: { level?: string; startDate?: string; endDate?: string; search?: string; page?: number; limit?: number }) =>
+      [...queryKeys.monitoring.all, 'logs', params] as const,
+    incidents: () => [...queryKeys.monitoring.all, 'incidents'] as const,
+    databaseStats: () => [...queryKeys.monitoring.all, 'databaseStats'] as const,
+    apiUsage: (period: 'day' | 'week' | 'month') => [...queryKeys.monitoring.all, 'apiUsage', period] as const,
+  },
+
+  // =========================================================================
   // Settings Keys
   // =========================================================================
   settings: {
