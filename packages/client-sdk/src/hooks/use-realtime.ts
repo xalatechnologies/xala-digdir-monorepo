@@ -101,7 +101,7 @@ export function useRealtimeMessages(handler?: RealtimeEventHandler) {
       // Invalidate conversation queries
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
-
+      
       // Call custom handler if provided
       handlerRef.current?.(event);
     });
@@ -111,18 +111,20 @@ export function useRealtimeMessages(handler?: RealtimeEventHandler) {
 }
 
 /**
- * Hook to subscribe to notification events
- * Auto-invalidates notification queries when events arrive
+ * Hook to subscribe to calendar events
+ * Auto-invalidates calendar and booking queries when events arrive
  */
-export function useRealtimeNotifications(handler?: RealtimeEventHandler) {
+export function useRealtimeCalendar(handler?: RealtimeEventHandler) {
   const queryClient = useQueryClient();
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
 
   useEffect(() => {
-    const unsubscribe = realtimeClient.on('notification', (event) => {
-      // Invalidate notification queries to refetch latest data
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    const unsubscribe = realtimeClient.onBooking((event) => {
+      // Invalidate calendar-related queries
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['availability-slots'] });
 
       // Call custom handler if provided
       handlerRef.current?.(event);

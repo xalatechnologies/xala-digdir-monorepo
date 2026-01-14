@@ -5,7 +5,7 @@
 
 import type { CalendarEvent, Block, BlockType, Conflict } from '@digilist/client-sdk';
 
-export type CalendarViewType = 'day' | 'week' | 'month';
+export type CalendarViewType = 'day' | 'week' | 'month' | 'timeline';
 
 export interface CalendarState {
   view: CalendarViewType;

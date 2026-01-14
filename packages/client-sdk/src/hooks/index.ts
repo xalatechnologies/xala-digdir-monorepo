@@ -59,6 +59,7 @@ export {
   useDeleteBooking,
   useCalendarEvents,
   useAvailabilitySlots,
+  useConflictCheck,
   useAllocations,
   useCreateAllocation,
   useDeleteAllocation
@@ -73,7 +74,6 @@ export {
   useUpdateOrganization,
   useDeleteOrganization,
   useVerifyOrganization,
-  useUploadOrganizationLogo,
   useUsers,
   useUser,
   useCurrentUser,
@@ -85,8 +85,7 @@ export {
   useExportData,
   useDeleteAccount,
   useConsents,
-  useUpdateConsents,
-  useUploadUserAvatar
+  useUpdateConsents
 } from './use-organizations';
 
 // Integration hooks
@@ -117,6 +116,7 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
+  useRealtimeCalendar,
   useRealtimeListings,
   useRealtimeMessages,
   useRealtimeAudit,

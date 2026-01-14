@@ -1,9 +1,20 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
 import { useCalendarEvents, useListings, type CalendarEvent, type Listing, formatWeekRange } from '@digilist/client-sdk';
-import { CreateBlockModal, EventDrawer, useCalendarPermissions } from '../features/calendar';
+import {
+  CreateBlockModal,
+  EventDrawer,
+  TimelineView,
+  ConflictIndicator,
+  getConflictColors,
+  useCalendarPermissions,
+  useDragAndDrop,
+  useConflictDetection,
+  useRealtimeCalendar
+} from '../features/calendar';
+import { useToast } from '../providers/ToastProvider';
 
-type ViewType = 'day' | 'week' | 'month';
+type ViewType = 'day' | 'week' | 'month' | 'timeline';
 
 const hours = Array.from({ length: 14 }, (_, i) => i + 7); // 07:00 - 20:00
 const days = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
@@ -51,9 +62,35 @@ export function CalendarPage() {
 
   // Block modal state
   const [isCreateBlockOpen, setIsCreateBlockOpen] = useState(false);
+  const [draggedTimeRange, setDraggedTimeRange] = useState<{
+    startTime: Date;
+    endTime: Date;
+    listingId?: string;
+  } | null>(null);
 
   // Permissions
   const permissions = useCalendarPermissions();
+
+  // Drag and drop for week view
+  const { isDragging: isWeekDragging, dragPreview: weekDragPreview, handlers: weekDragHandlers } = useDragAndDrop({
+    onDragComplete: (params) => {
+      setDraggedTimeRange(params);
+      setIsCreateBlockOpen(true);
+    },
+  });
+
+  // Toast notifications
+  const toast = useToast();
+
+  // Real-time calendar sync
+  const { lastUpdate, hasUpdates } = useRealtimeCalendar({
+    enabled: true,
+    onBookingEvent: () => {
+      // Show subtle notification when calendar updates
+      toast.info('Kalender oppdatert', 'Nye bookinger eller endringer er synkronisert');
+    },
+    trackUpdates: true,
+  });
 
   // Update current time every minute
   useEffect(() => {
@@ -104,6 +141,12 @@ export function CalendarPage() {
   // Fetch calendar events
   const { data: eventsData, isLoading } = useCalendarEvents(calendarParams);
   const events = eventsData?.data ?? [];
+
+  // Conflict detection
+  const { hasConflict, getConflicts } = useConflictDetection({
+    events,
+    enabled: true,
+  });
 
   // Transform events to day index for week view
   const eventsByDay = useMemo(() => {
@@ -184,7 +227,16 @@ export function CalendarPage() {
     const eventEnd = new Date(endStr);
     const startHour = eventStart.getHours() + eventStart.getMinutes() / 60;
     const endHour = eventEnd.getHours() + eventEnd.getMinutes() / 60;
-    const colors = getEventColor(event.status);
+
+    // Check for conflicts
+    const eventHasConflict = hasConflict(event.id);
+    const conflictInfo = getConflicts(event.id);
+
+    // Get colors - use conflict colors if there's a conflict, otherwise use status colors
+    const conflictColors = getConflictColors(eventHasConflict);
+    const statusColors = getEventColor(event.status);
+    const colors = conflictColors || statusColors;
+
     const top = 48 + (startHour - 7) * 60;
     const height = Math.max((endHour - startHour) * 60 - 4, 20);
 
@@ -199,23 +251,39 @@ export function CalendarPage() {
           right: compact ? undefined : '2px',
           height: compact ? 'auto' : `${height}px`,
           backgroundColor: colors.bg,
-          border: `1px solid ${colors.border}`,
+          border: eventHasConflict
+            ? `2px solid ${colors.border}`
+            : `1px solid ${colors.border}`,
           borderRadius: 'var(--ds-border-radius-sm)',
           padding: compact ? 'var(--ds-spacing-1)' : 'var(--ds-spacing-1) var(--ds-spacing-2)',
           overflow: 'hidden',
           cursor: 'pointer',
           marginBottom: compact ? 'var(--ds-spacing-1)' : undefined,
           transition: 'transform 0.1s ease, box-shadow 0.1s ease',
+          boxShadow: eventHasConflict ? '0 0 0 1px var(--ds-color-danger-border-default)' : undefined,
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'scale(1.02)';
-          e.currentTarget.style.boxShadow = 'var(--ds-shadow-sm)';
+          e.currentTarget.style.boxShadow = eventHasConflict
+            ? '0 0 8px var(--ds-color-danger-border-default)'
+            : 'var(--ds-shadow-sm)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = 'none';
+          e.currentTarget.style.boxShadow = eventHasConflict
+            ? '0 0 0 1px var(--ds-color-danger-border-default)'
+            : 'none';
         }}
       >
+        {/* Conflict indicator */}
+        {eventHasConflict && conflictInfo && !compact && (
+          <ConflictIndicator
+            conflicts={conflictInfo.conflictingEvents}
+            variant="icon"
+            position="top-right"
+          />
+        )}
+
         <div
           style={{
             fontSize: compact ? '10px' : 'var(--ds-font-size-xs)',
@@ -269,7 +337,12 @@ export function CalendarPage() {
           const dayEvents = eventsByDay[dayIndex] ?? [];
 
           return (
-            <div key={day} style={{ borderRight: dayIndex < 6 ? '1px solid var(--ds-color-neutral-border-subtle)' : undefined, position: 'relative' }}>
+            <div
+              key={day}
+              style={{ borderRight: dayIndex < 6 ? '1px solid var(--ds-color-neutral-border-subtle)' : undefined, position: 'relative' }}
+              data-date={dayDate.toISOString().split('T')[0]}
+              {...weekDragHandlers}
+            >
               {/* Day header */}
               <div
                 style={{
@@ -313,6 +386,40 @@ export function CalendarPage() {
                   }}
                 />
               ))}
+
+              {/* Drag preview */}
+              {isWeekDragging && weekDragPreview.visible && !weekDragPreview.listingId && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${weekDragPreview.top}px`,
+                    left: '4px',
+                    right: '4px',
+                    height: `${weekDragPreview.height}px`,
+                    backgroundColor: 'var(--ds-color-accent-surface-default)',
+                    border: '2px dashed var(--ds-color-accent-border-default)',
+                    borderRadius: 'var(--ds-border-radius-sm)',
+                    opacity: 0.7,
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 'var(--ds-font-size-xs)',
+                      color: 'var(--ds-color-accent-text-default)',
+                      fontWeight: 'var(--ds-font-weight-medium)',
+                    }}
+                  >
+                    {weekDragPreview.startTime?.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}
+                    {' - '}
+                    {weekDragPreview.endTime?.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              )}
 
               {/* Current time indicator */}
               {isCurrentDayInView(dayIndex) && currentTimePosition && (
@@ -577,6 +684,34 @@ export function CalendarPage() {
             <Button type="button" variant="secondary" data-size="sm" onClick={goToToday}>
               I dag
             </Button>
+            {/* Real-time sync indicator */}
+            {hasUpdates && lastUpdate && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--ds-spacing-1)',
+                  fontSize: 'var(--ds-font-size-xs)',
+                  color: 'var(--ds-color-success-text-default)',
+                  padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                  backgroundColor: 'var(--ds-color-success-surface-default)',
+                  borderRadius: 'var(--ds-border-radius-sm)',
+                  border: '1px solid var(--ds-color-success-border-default)',
+                }}
+                title={`Sist oppdatert: ${lastUpdate.toLocaleTimeString('nb-NO')}`}
+              >
+                <div
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: 'var(--ds-border-radius-full)',
+                    backgroundColor: 'var(--ds-color-success-base-default)',
+                    animation: 'pulse 2s ease-in-out infinite',
+                  }}
+                />
+                <span>Live</span>
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
@@ -602,7 +737,7 @@ export function CalendarPage() {
 
             {/* View toggle */}
             <div style={{ display: 'flex', gap: '2px', backgroundColor: 'var(--ds-color-neutral-surface-default)', padding: '2px', borderRadius: 'var(--ds-border-radius-md)' }}>
-              {(['day', 'week', 'month'] as ViewType[]).map((v) => (
+              {(['day', 'week', 'month', 'timeline'] as ViewType[]).map((v) => (
                 <Button
                   key={v}
                   type="button"
@@ -611,7 +746,7 @@ export function CalendarPage() {
                   onClick={() => setView(v)}
                   style={{ borderRadius: 'var(--ds-border-radius-sm)' }}
                 >
-                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : 'Måned'}
+                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : v === 'month' ? 'Måned' : 'Tidslinje'}
                 </Button>
               ))}
             </div>
@@ -646,6 +781,20 @@ export function CalendarPage() {
             {view === 'week' && renderWeekView()}
             {view === 'day' && renderDayView()}
             {view === 'month' && renderMonthView()}
+            {view === 'timeline' && (
+              <TimelineView
+                events={events}
+                listings={listings}
+                dateRange={{ start: weekStart, end: weekEnd }}
+                currentTime={currentTime}
+                isLoading={isLoading}
+                onEventClick={setSelectedEvent}
+                onDragComplete={(params) => {
+                  setDraggedTimeRange(params);
+                  setIsCreateBlockOpen(true);
+                }}
+              />
+            )}
           </>
         )}
       </Card>
@@ -669,10 +818,29 @@ export function CalendarPage() {
       {/* Create Block Modal */}
       <CreateBlockModal
         isOpen={isCreateBlockOpen}
-        onClose={() => setIsCreateBlockOpen(false)}
-        initialListingId={selectedListing}
-        initialDate={currentDate}
+        onClose={() => {
+          setIsCreateBlockOpen(false);
+          setDraggedTimeRange(null);
+        }}
+        initialListingId={selectedListing || draggedTimeRange?.listingId}
+        initialDate={draggedTimeRange?.startTime || currentDate}
+        initialStartTime={draggedTimeRange?.startTime}
+        initialEndTime={draggedTimeRange?.endTime}
       />
+
+      {/* Animation keyframes */}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(0.8);
+          }
+        }
+      `}</style>
     </div>
   );
 }

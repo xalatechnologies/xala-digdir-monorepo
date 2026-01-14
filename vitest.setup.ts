@@ -1,10 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi, expect } from 'vitest';
-import { toHaveNoViolations } from 'jest-axe';
-
-// Extend Vitest matchers with jest-axe
-expect.extend(toHaveNoViolations);
+import { afterEach, vi } from 'vitest';
 
 // Cleanup after each test
 afterEach(() => {
@@ -35,9 +31,12 @@ mockIntersectionObserver.mockReturnValue({
 });
 window.IntersectionObserver = mockIntersectionObserver;
 
-// Mock ResizeObserver
-window.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+// Mock ResizeObserver as a class
+global.ResizeObserver = class ResizeObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+};
+
+// Mock document.getAnimations (needed for design system animations)
+Document.prototype.getAnimations = vi.fn(() => []);

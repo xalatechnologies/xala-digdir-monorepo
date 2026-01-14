@@ -36,6 +36,8 @@ interface CreateBlockModalProps {
   onClose: () => void;
   initialListingId?: string | undefined;
   initialDate?: Date | undefined;
+  initialStartTime?: Date | undefined;
+  initialEndTime?: Date | undefined;
   onSuccess?: () => void;
 }
 
@@ -44,6 +46,8 @@ export function CreateBlockModal({
   onClose,
   initialListingId,
   initialDate,
+  initialStartTime,
+  initialEndTime,
   onSuccess,
 }: CreateBlockModalProps) {
   const permissions = useCalendarPermissions();
@@ -55,6 +59,9 @@ export function CreateBlockModal({
     listingId: initialListingId ?? '',
     startDate: initialDate ? initialDate.toISOString().split('T')[0] ?? '' : '',
     endDate: initialDate ? initialDate.toISOString().split('T')[0] ?? '' : '',
+    startTime: initialStartTime ? initialStartTime.toTimeString().slice(0, 5) : '',
+    endTime: initialEndTime ? initialEndTime.toTimeString().slice(0, 5) : '',
+    allDay: !initialStartTime && !initialEndTime,
   }));
 
   const [showRecurrence, setShowRecurrence] = useState(false);
@@ -91,11 +98,14 @@ export function CreateBlockModal({
         listingId: initialListingId ?? '',
         startDate: initialDate ? initialDate.toISOString().split('T')[0] ?? '' : new Date().toISOString().split('T')[0] ?? '',
         endDate: initialDate ? initialDate.toISOString().split('T')[0] ?? '' : new Date().toISOString().split('T')[0] ?? '',
+        startTime: initialStartTime ? initialStartTime.toTimeString().slice(0, 5) : '',
+        endTime: initialEndTime ? initialEndTime.toTimeString().slice(0, 5) : '',
+        allDay: !initialStartTime && !initialEndTime,
       });
       setShowRecurrence(false);
       setRecurrence(DEFAULT_RECURRENCE_FORM);
     }
-  }, [isOpen, initialListingId, initialDate]);
+  }, [isOpen, initialListingId, initialDate, initialStartTime, initialEndTime]);
 
   // Form handlers
   const updateField = <K extends keyof BlockFormData>(field: K, value: BlockFormData[K]) => {

@@ -4,19 +4,19 @@
  */
 
 import { BaseService } from './base.service';
-import type { 
-  Booking, 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import type {
+  Booking,
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
   BookingPricing,
-  BookingReceipt,
   CalendarEvent,
   CalendarQueryParams,
   Allocation,
   CreateAllocationDTO
 } from '../types/booking';
+import type { ConflictsResponse, ConflictCheckParams } from '../types/additional';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
 export class BookingService extends BaseService {
@@ -120,14 +120,6 @@ export class BookingService extends BaseService {
   }): Promise<SingleResponse<Booking[]>> {
     return this.client.post(this.buildPath('/recurring'), data);
   }
-
-  /**
-   * Get booking receipt/bilag (KRAV-ADM-07)
-   * Returns receipt with hvem/hva/hvor/når for bokføringskrav
-   */
-  async getReceipt(id: string): Promise<SingleResponse<BookingReceipt>> {
-    return this.client.get(this.buildPath(`/${id}/receipt`));
-  }
 }
 
 /**
@@ -209,6 +201,13 @@ export class AvailabilityService extends BaseService {
     conflicts?: Array<{ startTime: string; endTime: string }>;
   }>> {
     return this.client.get(this.buildPath('/check'), { params });
+  }
+
+  /**
+   * Check for conflicts in time range
+   */
+  async checkConflicts(params: ConflictCheckParams): Promise<SingleResponse<ConflictsResponse>> {
+    return this.client.get(this.buildPath('/conflicts'), { params: params as any });
   }
 }
 
