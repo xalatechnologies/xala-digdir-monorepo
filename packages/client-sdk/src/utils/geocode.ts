@@ -131,6 +131,47 @@ export function getCachedGeocode(address: ListingAddress): GeocodeResult | null 
   return getCached(key);
 }
 
+/**
+ * Get a cached geocode result from a string address without making an API call
+ *
+ * This adapter function allows looking up cached results using a plain string address
+ * instead of a structured ListingAddress object. Useful for hooks that work with
+ * string addresses.
+ *
+ * @param addressString - The address string (e.g., "Storgata 1, 0155 Oslo")
+ * @param country - Optional country name (defaults to "Norway")
+ * @returns Cached GeocodeResult if found, null if not in cache or cache expired
+ *
+ * @example
+ * ```typescript
+ * const cached = getCachedGeocodeFromString("Storgata 1, 0155 Oslo", "Norway");
+ * if (cached) {
+ *   console.log("Using cached coordinates:", cached.latitude, cached.longitude);
+ * }
+ * ```
+ */
+export function getCachedGeocodeFromString(
+  addressString: string,
+  country?: string
+): GeocodeResult | null {
+  if (!addressString?.trim()) return null;
+
+  // Normalize the address string
+  const normalizedAddress = addressString.trim();
+
+  // Add country if not already present in the address string
+  const countryName = country || 'Norway';
+  const addressWithCountry = normalizedAddress.toLowerCase().includes(countryName.toLowerCase())
+    ? normalizedAddress
+    : `${normalizedAddress}, ${countryName}`;
+
+  // Convert to lowercase to match buildCacheKey behavior
+  const cacheKey = addressWithCountry.toLowerCase();
+
+  // Look up in cache using the existing getCached function
+  return getCached(cacheKey);
+}
+
 // =============================================================================
 // Address Normalization
 // =============================================================================
