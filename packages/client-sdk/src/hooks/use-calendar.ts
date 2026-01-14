@@ -3,8 +3,13 @@
  * Single Responsibility: React Query hooks for calendar configuration and availability
  */
 
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
+import {
+  realtimeClient,
+  type RealtimeEventHandler,
+} from '../realtime';
 import {
   listingCalendarService,
   availabilityMatrixService,
@@ -82,4 +87,96 @@ export function useAvailabilityMatrix(
     queryFn: () => availabilityMatrixService.getAvailabilityMatrix(listingId, params),
     enabled: !!listingId && !!params.from && !!params.to && (options?.enabled ?? true),
   });
+}
+
+// ============================================================================
+// Realtime Hooks
+// ============================================================================
+
+/**
+ * Hook to subscribe to calendar availability events
+ * Auto-invalidates calendar-related queries when availability changes
+ *
+ * Subscribes to:
+ * - availability.updated - Direct availability changes
+ * - booking.created/updated/cancelled - Bookings affect availability
+ * - block.created/updated/deleted - Blocks affect availability
+ *
+ * @param handler - Optional custom event handler
+ *
+ * @example
+ * ```tsx
+ * function CalendarView() {
+ *   // Auto-invalidates availability queries on realtime events
+ *   useCalendarRealtime((event) => {
+ *     console.log('Calendar event:', event.type);
+ *   });
+ *
+ *   const { data } = useAvailabilityMatrix('listing-123', { from: '2025-01-15', to: '2025-01-21' });
+ *   // ...
+ * }
+ * ```
+ */
+export function useCalendarRealtime(handler?: RealtimeEventHandler) {
+  const queryClient = useQueryClient();
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    const invalidateCalendarQueries = () => {
+      // Invalidate all calendar-related queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['blocks'] });
+      queryClient.invalidateQueries({ queryKey: ['allocations'] });
+    };
+
+    // Subscribe to availability update events
+    const unsubAvailability = realtimeClient.onAvailability((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    // Subscribe to booking events (affect availability)
+    const unsubBookingCreated = realtimeClient.onBookingCreated((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    const unsubBookingUpdated = realtimeClient.onBookingUpdated((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    const unsubBookingCancelled = realtimeClient.onBookingCancelled((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    // Subscribe to block events (affect availability)
+    const unsubBlockCreated = realtimeClient.onBlockCreated((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    const unsubBlockUpdated = realtimeClient.onBlockUpdated((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    const unsubBlockDeleted = realtimeClient.onBlockDeleted((event) => {
+      invalidateCalendarQueries();
+      handlerRef.current?.(event);
+    });
+
+    return () => {
+      unsubAvailability();
+      unsubBookingCreated();
+      unsubBookingUpdated();
+      unsubBookingCancelled();
+      unsubBlockCreated();
+      unsubBlockUpdated();
+      unsubBlockDeleted();
+    };
+  }, [queryClient]);
 }
