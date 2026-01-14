@@ -328,12 +328,15 @@ export function Sidebar() {
         { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon /> },
         { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon /> },
         { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon /> },
+        { name: 'Varsler', description: 'Se alle varsler og påminnelser', href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger' },
       ],
     },
     {
       title: t('minside.account'),
       items: [
         { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon /> },
+        { name: 'Preferanser', description: 'Varsler, personvern og visning', href: '/preferences', icon: <SettingsIcon /> },
+        { name: 'Hjelp', description: 'Spørsmål og svar, kontakt oss', href: '/help', icon: <BookOpenIcon /> },
       ],
     },
     {
@@ -344,6 +347,8 @@ export function Sidebar() {
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon /> },
         { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon /> },
         { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon /> },
+        { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon /> },
+        { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon /> },
       ],
     },
   ];

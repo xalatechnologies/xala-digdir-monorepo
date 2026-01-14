@@ -16,7 +16,13 @@ import {
   Stack,
 } from '@xala/ds';
 import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
-import { useListing, useListingBySlug, type Listing as ApiListing } from '@digilist/client-sdk';
+import {
+  useListing,
+  useListingBySlug,
+  transformListing as sdkTransformListing,
+  type Listing as ApiListing,
+  type TransformedListing,
+} from '@digilist/client-sdk';
 import {
   ListingDetailsLayout,
   type Listing,
