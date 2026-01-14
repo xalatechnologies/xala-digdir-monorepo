@@ -56,4 +56,25 @@ export type {
   // Share
   ShareLink,
   CreateShareLinkDTO,
+  // Report Templates
+  ReportTemplate,
+  CreateReportTemplateDTO,
+  UpdateReportTemplateDTO,
+  ReportType,
+  ReportMetric,
+  ReportFilter,
+  ReportSchedule,
+  ReportScheduleFrequency,
+  // Scheduled Reports
+  ScheduledReport,
+  ScheduleConfig,
+  EmailRecipient,
+  CreateScheduledReportDTO,
+  UpdateScheduledReportDTO,
+  ScheduledReportQueryParams,
+  // Report History
+  ReportJobStatus,
+  ReportHistoryItem,
+  ReportGenerationResult,
+  ReportHistoryQueryParams,
 } from './additional';
