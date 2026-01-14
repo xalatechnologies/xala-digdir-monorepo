@@ -10,10 +10,15 @@ import {
   Heading,
   Paragraph,
   ListingStatusBadge,
+  Dropdown,
+  MoreVerticalIcon,
 } from '@xala/ds';
+import { useNavigate } from 'react-router-dom';
 import {
   usePublishListing,
   useArchiveListing,
+  useDuplicateListing,
+  useDeleteListing,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
@@ -32,12 +37,16 @@ export function PublishControls({
   status,
   onActionComplete,
 }: PublishControlsProps) {
+  const navigate = useNavigate();
   const toast = useToast();
-  const { canPublishListing, canArchiveListing } = useListingPermissions();
+  const { canPublishListing, canArchiveListing, canDeleteListing, permissions } = useListingPermissions();
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const publishMutation = usePublishListing();
   const archiveMutation = useArchiveListing();
+  const duplicateMutation = useDuplicateListing();
+  const deleteMutation = useDeleteListing();
 
   const handlePublish = async () => {
     try {
@@ -63,7 +72,41 @@ export function PublishControls({
     }
   };
 
-  const isLoading = publishMutation.isPending || archiveMutation.isPending;
+  const handleDuplicate = async () => {
+    try {
+      const result = await duplicateMutation.mutateAsync(listingId);
+      onActionComplete?.();
+      toast.success('Duplisert', `"${listingName}" er duplisert!`);
+      // Navigate to the new duplicate if we got a response
+      if (result?.data?.slug) {
+        navigate(`/listings/${result.data.slug}`);
+      }
+    } catch (error) {
+      console.error('Failed to duplicate listing:', error);
+      toast.error('Kunne ikke duplisere', error instanceof Error ? error.message : 'En uventet feil oppstod');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(listingId);
+      setDeleteDialogOpen(false);
+      onActionComplete?.();
+      toast.success('Slettet', `"${listingName}" er slettet`);
+      // Navigate back to listings after delete
+      navigate('/listings');
+    } catch (error) {
+      console.error('Failed to delete listing:', error);
+      setDeleteDialogOpen(false);
+      toast.error('Kunne ikke slette', error instanceof Error ? error.message : 'En uventet feil oppstod');
+    }
+  };
+
+  const isLoading =
+    publishMutation.isPending ||
+    archiveMutation.isPending ||
+    duplicateMutation.isPending ||
+    deleteMutation.isPending;
 
   return (
     <>
@@ -100,6 +143,40 @@ export function PublishControls({
             Arkiver
           </Button>
         )}
+
+        {/* More Actions Dropdown */}
+        <Dropdown.TriggerContext>
+          <Dropdown.Trigger
+            aria-label="Flere handlinger"
+            disabled={isLoading}
+          >
+            <MoreVerticalIcon />
+          </Dropdown.Trigger>
+          <Dropdown placement="bottom-end">
+            <Dropdown.List>
+              {/* Duplicate - Always available */}
+              {permissions.canDuplicate && (
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={handleDuplicate}>
+                    Dupliser
+                  </Dropdown.Button>
+                </Dropdown.Item>
+              )}
+
+              {/* Delete - Admin only */}
+              {canDeleteListing(status) && (
+                <Dropdown.Item>
+                  <Dropdown.Button
+                    onClick={() => setDeleteDialogOpen(true)}
+                    style={{ color: 'var(--ds-color-danger-text-default)' }}
+                  >
+                    Slett
+                  </Dropdown.Button>
+                </Dropdown.Item>
+              )}
+            </Dropdown.List>
+          </Dropdown>
+        </Dropdown.TriggerContext>
       </div>
 
       {/* Archive Confirmation Dialog */}
@@ -125,6 +202,33 @@ export function PublishControls({
             disabled={isLoading}
           >
             Arkiver
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <Dialog.Block>
+          <Heading level={2} data-size="sm">Slett objekt</Heading>
+          <Paragraph>
+            Er du sikker på at du vil slette &quot;{listingName}&quot;?
+            Denne handlingen kan ikke angres.
+          </Paragraph>
+        </Dialog.Block>
+        <Dialog.Actions>
+          <Button
+            variant="secondary"
+            onClick={() => setDeleteDialogOpen(false)}
+            disabled={isLoading}
+          >
+            Avbryt
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            disabled={isLoading}
+          >
+            Slett
           </Button>
         </Dialog.Actions>
       </Dialog>
