@@ -28,6 +28,7 @@ export interface Booking extends TenantEntity {
   quantity?: number;
   totalPrice: string;
   currency: string;
+  version: number;
   notes?: string;
   metadata?: BookingMetadata;
   payments?: PaymentTransaction[];
