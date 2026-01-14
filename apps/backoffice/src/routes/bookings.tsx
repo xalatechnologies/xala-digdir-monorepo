@@ -332,30 +332,16 @@ export function BookingsPage() {
     setIsBatchRescheduleDialogOpen(true);
   };
 
-  const handleBatchRescheduleConfirm = async (offsets: { offsetDays: number; offsetHours: number; offsetMinutes: number }) => {
-    // Get the selected bookings to calculate new times
-    const selectedBookings = bookings.filter(b => selectedIds.includes(b.id));
-
-    if (selectedBookings.length === 0) return;
-
-    // Calculate the total offset in milliseconds
-    const offsetMs = (
-      offsets.offsetDays * 24 * 60 * 60 * 1000 +
-      offsets.offsetHours * 60 * 60 * 1000 +
-      offsets.offsetMinutes * 60 * 1000
-    );
-
-    // For batch reschedule, we apply the same offset to all bookings
-    // The API expects startTime and endTime, so we'll use the first booking as reference
-    // and add the offset to it
-    const firstBooking = selectedBookings[0];
-    const newStartTime = new Date(new Date(firstBooking.startTime).getTime() + offsetMs).toISOString();
-    const newEndTime = new Date(new Date(firstBooking.endTime).getTime() + offsetMs).toISOString();
-
+  const handleBatchRescheduleConfirm = async (offsets: {
+    offsetDays: number;
+    offsetHours: number;
+    offsetMinutes: number
+  }) => {
     await batchRescheduleBookings.mutateAsync({
       ids: selectedIds,
-      startTime: newStartTime,
-      endTime: newEndTime,
+      offsetDays: offsets.offsetDays,
+      offsetHours: offsets.offsetHours,
+      offsetMinutes: offsets.offsetMinutes,
     });
     setSelectedIds([]);
   };

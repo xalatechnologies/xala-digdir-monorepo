@@ -223,8 +223,12 @@ export function useBatchRescheduleBookings() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ ids, startTime, endTime }: { ids: string[]; startTime: string; endTime: string }) =>
-      bookingService.batchReschedule(ids, startTime, endTime),
+    mutationFn: ({ ids, offsetDays, offsetHours, offsetMinutes }: {
+      ids: string[];
+      offsetDays: number;
+      offsetHours: number;
+      offsetMinutes: number;
+    }) => bookingService.batchReschedule(ids, offsetDays, offsetHours, offsetMinutes),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });

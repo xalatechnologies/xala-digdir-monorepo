@@ -167,40 +167,42 @@ describe('BookingService - Bulk Operations', () => {
   describe('batchReschedule', () => {
     it('should call PUT /api/bookings/bulk/reschedule with ids, startTime, and endTime', async () => {
       const testIds = ['booking-1', 'booking-2'];
-      const testStartTime = '2026-01-20T10:00:00Z';
-      const testEndTime = '2026-01-20T12:00:00Z';
+      const offsetDays = 1;
+      const offsetHours = 2;
+      const offsetMinutes = 30;
       const mockResponse = {
         data: [
-          { id: 'booking-1', startTime: testStartTime, endTime: testEndTime },
-          { id: 'booking-2', startTime: testStartTime, endTime: testEndTime },
+          { id: 'booking-1' },
+          { id: 'booking-2' },
         ]
       };
 
       mockClient.put.mockResolvedValueOnce(mockResponse);
 
-      const result = await bookingService.batchReschedule(testIds, testStartTime, testEndTime);
+      const result = await bookingService.batchReschedule(testIds, offsetDays, offsetHours, offsetMinutes);
 
       expect(mockClient.put).toHaveBeenCalledTimes(1);
       expect(mockClient.put).toHaveBeenCalledWith(
         '/api/bookings/bulk/reschedule',
-        { ids: testIds, startTime: testStartTime, endTime: testEndTime }
+        { ids: testIds, offsetDays: 1, offsetHours: 2, offsetMinutes: 30 }
       );
       expect(result).toEqual(mockResponse);
     });
 
-    it('should handle ISO 8601 datetime strings', async () => {
+    it('should handle positive and negative offsets', async () => {
       const testIds = ['booking-1'];
-      const testStartTime = '2026-02-15T14:30:00.000Z';
-      const testEndTime = '2026-02-15T16:30:00.000Z';
+      const offsetDays = 2;
+      const offsetHours = 0;
+      const offsetMinutes = 0;
       const mockResponse = { data: [{ id: 'booking-1' }] };
 
       mockClient.put.mockResolvedValueOnce(mockResponse);
 
-      await bookingService.batchReschedule(testIds, testStartTime, testEndTime);
+      await bookingService.batchReschedule(testIds, offsetDays, offsetHours, offsetMinutes);
 
       expect(mockClient.put).toHaveBeenCalledWith(
         '/api/bookings/bulk/reschedule',
-        { ids: testIds, startTime: testStartTime, endTime: testEndTime }
+        { ids: testIds, offsetDays: 2, offsetHours: 0, offsetMinutes: 0 }
       );
     });
 
@@ -210,8 +212,9 @@ describe('BookingService - Bulk Operations', () => {
 
       const result = await bookingService.batchReschedule(
         ['booking-1'],
-        '2026-01-20T10:00:00Z',
-        '2026-01-20T12:00:00Z'
+        1, // offsetDays
+        0, // offsetHours
+        0  // offsetMinutes
       );
 
       expect(result).toHaveProperty('data');
