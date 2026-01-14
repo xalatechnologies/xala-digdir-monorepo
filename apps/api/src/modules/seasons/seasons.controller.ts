@@ -445,6 +445,71 @@ export class SeasonsController {
       message: 'Season deleted successfully',
     });
   }
+
+  /**
+   * POST /api/seasons/:id/finalize-allocations
+   * Finalize all allocations for a season - batch confirmation
+   * Marks the season as allocation_finalized and updates all approved applications
+   */
+  @Post('/:id/finalize-allocations')
+  async finalizeAllocations(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const seasonResult = await db
+      .select({
+        id: seasons.id,
+        name: seasons.name,
+        status: seasons.status,
+      })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!seasonResult.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    const season = seasonResult[0];
+
+    // Get all approved applications for this season
+    const approvedApplications = await db
+      .select({
+        id: seasonApplications.id,
+        status: seasonApplications.status,
+      })
+      .from(seasonApplications)
+      .where(
+        and(
+          eq(seasonApplications.seasonId, id),
+          eq(seasonApplications.status, 'approved')
+        )
+      );
+
+    // Update season metadata to mark allocations as finalized
+    const updatedSeason = await db
+      .update(seasons)
+      .set({
+        metadata: sql`COALESCE(metadata, '{}'::jsonb) || '{"allocationsFinalized": true, "finalizedAt": "${new Date().toISOString()}"}'::jsonb`,
+        updatedAt: new Date(),
+      })
+      .where(eq(seasons.id, id))
+      .returning();
+
+    return reply.send({
+      data: {
+        seasonId: id,
+        seasonName: season.name,
+        approvedApplicationsCount: approvedApplications.length,
+        finalized: true,
+        finalizedAt: new Date().toISOString(),
+      },
+      message: 'Season allocations finalized successfully',
+    });
+  }
 }
 
 export default SeasonsController;
