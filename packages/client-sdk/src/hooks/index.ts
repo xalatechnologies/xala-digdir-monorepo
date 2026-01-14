@@ -123,6 +123,17 @@ export {
   useRealtimeSend
 } from './use-realtime';
 
+// Notification hooks
+export {
+  useNotifications,
+  useMyNotifications,
+  useNotificationUnreadCount,
+  useNotificationTemplates,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  useDeleteNotification
+} from './use-notifications';
+
 // Audit hooks
 export {
   useAuditLog,

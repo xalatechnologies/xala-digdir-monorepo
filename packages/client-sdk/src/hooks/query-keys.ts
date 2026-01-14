@@ -164,6 +164,19 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Notification Keys
+  // =========================================================================
+  notifications: {
+    all: ['notifications'] as const,
+    lists: () => [...queryKeys.notifications.all, 'list'] as const,
+    list: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
+      [...queryKeys.notifications.lists(), params] as const,
+    my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
+      [...queryKeys.notifications.all, 'my', params] as const,
+    unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
+  },
+
+  // =========================================================================
   // Discount Code Keys
   // =========================================================================
   discountCodes: {
