@@ -4,7 +4,7 @@
 
 export { ListingDetailView } from './ListingDetailView';
 export { DetailHeader } from './DetailHeader';
-export { DetailTabs } from './DetailTabs';
+export { DetailTabs, TabContent, TabEmptyState } from './DetailTabs';
 export { OverviewTab } from './OverviewTab';
 export { BookingsTab } from './BookingsTab';
 export { AvailabilityTab } from './AvailabilityTab';
