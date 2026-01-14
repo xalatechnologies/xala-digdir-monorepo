@@ -4,7 +4,7 @@
  * Admin interface for comprehensive facility management
  */
 
-import { useCallback } from 'react';
+import { Component, useCallback, type ReactNode } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   Paragraph,
   Skeleton,
   ChevronLeftIcon,
+  AlertTriangleIcon,
 } from '@xala/ds';
 import { useListingBySlug, useListing } from '@digilist/client-sdk';
 import { DetailHeader } from './DetailHeader';
@@ -20,6 +21,46 @@ import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
 import { AvailabilityTab } from './AvailabilityTab';
 import { AuditTab } from './AuditTab';
+
+/**
+ * Error Boundary to catch JavaScript runtime errors
+ * Prevents entire page crash when component rendering fails
+ */
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: unknown) {
+    // Log error to console for debugging (in development)
+    if (import.meta.env.DEV) {
+      console.error('ErrorBoundary caught error:', error, errorInfo);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
 
 interface ListingDetailViewProps {
   slug: string;
@@ -176,65 +217,96 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header Section - Integrated with EditModal and RBAC */}
-      <DetailHeader listing={listing} onEditSuccess={handleEditSuccess} />
-
-      {/* Tabs Section */}
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            gap: 'var(--ds-spacing-2)',
-            borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-            marginBottom: 'var(--ds-spacing-6)',
-          }}
-        >
-          {[
-            { id: 'overview', label: 'Oversikt' },
-            { id: 'bookings', label: 'Bookinger' },
-            { id: 'availability', label: 'Tilgjengelighet' },
-            { id: 'audit', label: 'Endringslogg' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => handleTabChange(tab.id)}
-              style={{
-                padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                background: 'none',
-                border: 'none',
-                borderBottom:
-                  activeTab === tab.id
-                    ? '2px solid var(--ds-color-accent-border-default)'
-                    : '2px solid transparent',
-                color:
-                  activeTab === tab.id
-                    ? 'var(--ds-color-accent-text-default)'
-                    : 'var(--ds-color-neutral-text-subtle)',
-                fontWeight: activeTab === tab.id ? 600 : 400,
-                cursor: 'pointer',
-                fontSize: 'var(--ds-font-size-md)',
-                fontFamily: 'inherit',
-                transition: 'all 0.2s ease',
-              }}
-              aria-current={activeTab === tab.id ? 'page' : undefined}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          {activeTab === 'overview' && <OverviewTab listing={listing} />}
-          {activeTab === 'bookings' && <BookingsTab listingId={listing.id} />}
-          {activeTab === 'availability' && (
-            <AvailabilityTab listingId={listing.id} listingName={listing.name} />
-          )}
-          {activeTab === 'audit' && <AuditTab listingId={listing.id} />}
+    <ErrorBoundary
+      fallback={
+        <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+            <AlertTriangleIcon
+              size={48}
+              style={{ color: 'var(--ds-color-danger-border-default)' }}
+            />
+          </div>
+          <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+            Noe gikk galt
+          </Heading>
+          <Paragraph
+            data-size="sm"
+            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0, marginBottom: 'var(--ds-spacing-4)' }}
+          >
+            Det oppstod en uventet feil ved visning av objektet. Vennligst prøv igjen.
+          </Paragraph>
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'center' }}>
+            <Button type="button" variant="secondary" onClick={() => window.location.reload()}>
+              Last inn på nytt
+            </Button>
+            <Button type="button" variant="primary" onClick={() => navigate('/listings')}>
+              <ChevronLeftIcon size={16} />
+              Tilbake til liste
+            </Button>
+          </div>
         </Card>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Header Section - Integrated with EditModal and RBAC */}
+        <DetailHeader listing={listing} onEditSuccess={handleEditSuccess} />
+
+        {/* Tabs Section */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--ds-spacing-2)',
+              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+              marginBottom: 'var(--ds-spacing-6)',
+            }}
+          >
+            {[
+              { id: 'overview', label: 'Oversikt' },
+              { id: 'bookings', label: 'Bookinger' },
+              { id: 'availability', label: 'Tilgjengelighet' },
+              { id: 'audit', label: 'Endringslogg' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleTabChange(tab.id)}
+                style={{
+                  padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom:
+                    activeTab === tab.id
+                      ? '2px solid var(--ds-color-accent-border-default)'
+                      : '2px solid transparent',
+                  color:
+                    activeTab === tab.id
+                      ? 'var(--ds-color-accent-text-default)'
+                      : 'var(--ds-color-neutral-text-subtle)',
+                  fontWeight: activeTab === tab.id ? 600 : 400,
+                  cursor: 'pointer',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s ease',
+                }}
+                aria-current={activeTab === tab.id ? 'page' : undefined}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+            {activeTab === 'overview' && <OverviewTab listing={listing} />}
+            {activeTab === 'bookings' && <BookingsTab listingId={listing.id} />}
+            {activeTab === 'availability' && (
+              <AvailabilityTab listingId={listing.id} listingName={listing.name} />
+            )}
+            {activeTab === 'audit' && <AuditTab listingId={listing.id} />}
+          </Card>
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
