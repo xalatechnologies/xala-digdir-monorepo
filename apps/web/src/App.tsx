@@ -13,6 +13,7 @@ import {
   SettingsIcon,
   MapPinIcon,
   DialogProvider,
+  ErrorBoundary,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
@@ -25,6 +26,10 @@ import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast } from './components';
+import { initSentry } from './lib/sentry';
+
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -287,27 +292,29 @@ function AppContent() {
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
       <DialogProvider>
-        <RealtimeProvider autoConnect={true} enableInDev={true}>
-          <RealtimeToast />
-          <style>{`
-            *, *::before, *::after {
-              transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
-            }
-          `}</style>
-          <Routes>
-            {/* Login page - no header */}
-            <Route path="/login" element={<LoginPage />} />
+        <ErrorBoundary>
+          <RealtimeProvider autoConnect={true} enableInDev={true}>
+            <RealtimeToast />
+            <style>{`
+              *, *::before, *::after {
+                transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+              }
+            `}</style>
+            <Routes>
+              {/* Login page - no header */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Main pages with header - wrapped to provide theme context */}
-            <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<ListingsPage />} />
-                <Route path="/listing/:id" element={<ListingDetailPage />} />
-                <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+              {/* Main pages with header - wrapped to provide theme context */}
+              <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
+                <Route element={<MainLayout />}>
+                  <Route path="/" element={<ListingsPage />} />
+                  <Route path="/listing/:id" element={<ListingDetailPage />} />
+                  <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </RealtimeProvider>
+            </Routes>
+          </RealtimeProvider>
+        </ErrorBoundary>
       </DialogProvider>
     </DesignsystemetProvider>
   );
