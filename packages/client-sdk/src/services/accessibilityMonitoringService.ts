@@ -123,13 +123,13 @@ export interface AccessibilityReport {
 // ============================================================================
 
 export class AccessibilityMonitoringService {
-  private client: BaseClient;
+  private client: IHttpClient;
   private config: AccessibilityMonitoringConfig;
   private metricsBuffer: AccessibilityMetric[] = [];
   private sessionId: string;
   private flushTimer?: NodeJS.Timeout;
 
-  constructor(client: BaseClient, config?: Partial<AccessibilityMonitoringConfig>) {
+  constructor(client: IHttpClient, config?: Partial<AccessibilityMonitoringConfig>) {
     this.client = client;
     this.config = {
       enabled: true,
