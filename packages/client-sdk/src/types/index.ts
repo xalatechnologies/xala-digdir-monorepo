@@ -12,6 +12,9 @@ export * from './actions';
 // Projection Registry (cost classification + metadata)
 export * from './projection-registry';
 
+// Projection DTOs (screen-ready, flat data structures)
+export * from './projection-dtos';
+
 // Domain types
 export * from './listing';
 export * from './booking';
