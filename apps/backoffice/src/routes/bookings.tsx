@@ -36,6 +36,7 @@ import {
   useUpdateBooking,
   useBulkConfirmBookings,
   useBulkCancelBookings,
+  useBatchRescheduleBookings,
   useListings,
   useUsers,
   type BookingStatus,
@@ -46,6 +47,7 @@ import {
 import { useT, useLocale } from '@xala/i18n';
 import { EditBookingForm } from '../components/bookings/EditBookingForm';
 import { BulkCancelDialog } from '../components/bookings/BulkCancelDialog';
+import { BatchRescheduleDialog } from '../components/bookings/BatchRescheduleDialog';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
@@ -106,6 +108,7 @@ export function BookingsPage() {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isBulkCancelDialogOpen, setIsBulkCancelDialogOpen] = useState(false);
+  const [isBatchRescheduleDialogOpen, setIsBatchRescheduleDialogOpen] = useState(false);
 
   // Filter state - default to 'pending' to show actionable items first
   const [activeTab, setActiveTab] = useState<string>('pending');
@@ -190,6 +193,7 @@ export function BookingsPage() {
   const updateBooking = useUpdateBooking();
   const bulkConfirmBookings = useBulkConfirmBookings();
   const bulkCancelBookings = useBulkCancelBookings();
+  const batchRescheduleBookings = useBatchRescheduleBookings();
   const { confirm } = useDialog();
 
   // Tab counts
@@ -305,6 +309,38 @@ export function BookingsPage() {
 
   const handleBulkCancelConfirm = async (reason: string) => {
     await bulkCancelBookings.mutateAsync({ ids: selectedIds, reason });
+    setSelectedIds([]);
+  };
+
+  const handleBatchReschedule = () => {
+    setIsBatchRescheduleDialogOpen(true);
+  };
+
+  const handleBatchRescheduleConfirm = async (offsets: { offsetDays: number; offsetHours: number; offsetMinutes: number }) => {
+    // Get the selected bookings to calculate new times
+    const selectedBookings = bookings.filter(b => selectedIds.includes(b.id));
+
+    if (selectedBookings.length === 0) return;
+
+    // Calculate the total offset in milliseconds
+    const offsetMs = (
+      offsets.offsetDays * 24 * 60 * 60 * 1000 +
+      offsets.offsetHours * 60 * 60 * 1000 +
+      offsets.offsetMinutes * 60 * 1000
+    );
+
+    // For batch reschedule, we apply the same offset to all bookings
+    // The API expects startTime and endTime, so we'll use the first booking as reference
+    // and add the offset to it
+    const firstBooking = selectedBookings[0];
+    const newStartTime = new Date(new Date(firstBooking.startTime).getTime() + offsetMs).toISOString();
+    const newEndTime = new Date(new Date(firstBooking.endTime).getTime() + offsetMs).toISOString();
+
+    await batchRescheduleBookings.mutateAsync({
+      ids: selectedIds,
+      startTime: newStartTime,
+      endTime: newEndTime,
+    });
     setSelectedIds([]);
   };
 
@@ -528,6 +564,14 @@ export function BookingsPage() {
         isOpen={isBulkCancelDialogOpen}
         onClose={() => setIsBulkCancelDialogOpen(false)}
         onConfirm={handleBulkCancelConfirm}
+        selectedCount={selectedIds.length}
+      />
+
+      {/* Batch Reschedule Dialog */}
+      <BatchRescheduleDialog
+        isOpen={isBatchRescheduleDialogOpen}
+        onClose={() => setIsBatchRescheduleDialogOpen(false)}
+        onConfirm={handleBatchRescheduleConfirm}
         selectedCount={selectedIds.length}
       />
 
@@ -1368,6 +1412,15 @@ export function BookingsPage() {
                   </Button>
                 </>
               )}
+              <Button
+                type="button"
+                variant="tertiary"
+                data-size="sm"
+                onClick={handleBatchReschedule}
+                disabled={batchRescheduleBookings.isPending}
+              >
+                📅 Flytt
+              </Button>
               <Button
                 type="button"
                 variant="tertiary"
