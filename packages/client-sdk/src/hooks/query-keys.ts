@@ -239,18 +239,18 @@ export const queryKeys = {
   // =========================================================================
   search: {
     all: ['search'] as const,
-    results: (params: Record<string, unknown>) =>
+    results: (params: SearchParams) =>
       ['search', 'results', params] as const,
-    typeahead: (params: Record<string, unknown>) =>
+    typeahead: (params: TypeaheadParams) =>
       ['search', 'typeahead', params] as const,
     savedFilters: {
-      all: ['search', 'filters'] as const,
+      all: () => ['search', 'filters'] as const,
       lists: () => ['search', 'filters', 'list'] as const,
-      list: (params?: Record<string, unknown>) =>
+      list: (params?: SavedFilterQueryParams) =>
         ['search', 'filters', 'list', params] as const,
       detail: (id: string) =>
         ['search', 'filters', 'detail', id] as const,
     },
-    recent: () => ['search', 'recent'] as const,
+    recent: (params?: RecentSearchQueryParams) => ['search', 'recent', params] as const,
   },
 } as const;

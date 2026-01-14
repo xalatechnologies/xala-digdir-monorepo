@@ -114,3 +114,12 @@ export {
   type AccessibilityReport,
 } from './accessibilityMonitoringService';
 
+// Signicat eID Hub Authentication
+export {
+  signicatService,
+  type SignicatConfig,
+  type SignicatUser,
+  type SignicatTokens,
+  type SignicatAuthResult,
+  type SignicatLogoutResult,
+} from './signicat.service';
