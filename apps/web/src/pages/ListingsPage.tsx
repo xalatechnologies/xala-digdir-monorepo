@@ -493,13 +493,23 @@ export function ListingsPage(): React.ReactElement {
                       facilities={listing.amenities}
                       moreFacilities={listing.moreAmenitiesCount}
                       capacity={listing.capacity}
+                      price={listing.priceAmount}
+                      priceUnit={listing.priceUnit}
+                      currency={listing.priceCurrency}
                       {...(listing.latitude != null && { latitude: listing.latitude })}
                       {...(listing.longitude != null && { longitude: listing.longitude })}
                       mapboxToken={MAPBOX_TOKEN || ''}
                       showListingType={true}
                       showMap={true}
+                      showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                      onShare={(_id) => { 
+                        navigator.share?.({ 
+                          title: listing.name, 
+                          url: `${window.location.origin}/listings/${listing.slug}` 
+                        }).catch(() => {});
+                      }}
                     />
                   ))}
                 </Stack>
@@ -517,7 +527,7 @@ export function ListingsPage(): React.ReactElement {
                       longitude: l.longitude!,
                       type: l.type,
                       listingType: l.type,
-                      description: '',
+                      description: l.descriptionExcerpt || '',
                       capacity: l.capacity,
                       price: l.priceAmount,
                       priceUnit: l.priceUnit,
@@ -527,6 +537,14 @@ export function ListingsPage(): React.ReactElement {
                   mapboxToken={MAPBOX_TOKEN || ''}
                   height="calc(100vh - 250px)"
                   onListingClick={handleListingClick}
+                  onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                  onShare={(id, slug) => {
+                    const listing = filteredListings.find(l => l.id === id);
+                    navigator.share?.({
+                      title: listing?.name || 'Digilist',
+                      url: `${window.location.origin}/listings/${slug || id}`
+                    }).catch(() => {});
+                  }}
                 />
               ) : (
                 <ListingTableView
@@ -535,6 +553,8 @@ export function ListingsPage(): React.ReactElement {
                     name: l.name,
                     ...(l.slug && { slug: l.slug }),
                     location: l.locationFormatted,
+                    latitude: l.latitude ?? 0,
+                    longitude: l.longitude ?? 0,
                     type: l.type,
                     capacity: l.capacity,
                     price: l.priceAmount,
