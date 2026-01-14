@@ -41,6 +41,7 @@ import {
 } from '../features/listing-details';
 import { ReviewList } from '../features/reviews/components/ReviewList';
 import { ReviewForm } from '../features/reviews/components/ReviewForm';
+import { useAuth } from '../hooks/useAuth';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;
@@ -189,8 +190,7 @@ export function ListingDetailPage(): React.ReactElement {
   
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
-  // TODO: Replace with real auth state from SDK/provider
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuth();
   const [showReviewForm, setShowReviewForm] = React.useState(false);
   const hasCompletedBooking = false;
 
