@@ -41,6 +41,10 @@ export class AvailabilityController {
       return { error: 'Listing not found' };
     }
 
+    // Extract buffer time from listing metadata (default to 0 if not set)
+    const bufferTimeMinutes = listing[0].metadata?.bufferTimeMinutes || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
+
     // Get all blocked times for this date
     const blocked = await db
       .select({
@@ -86,14 +90,25 @@ export class AvailabilityController {
 
       if (slotEnd.getHours() > operatingEnd) continue;
 
-      // Check if slot overlaps with any blocked or booked time
-      const isBlocked = [...blocked, ...bookedSlots].some((b: any) => {
+      // Check if slot overlaps with any blocked time (allocations - no buffer)
+      const isBlockedByAllocation = blocked.some((b: any) => {
         const bStart = new Date(b.startTime).getTime();
         const bEnd = new Date(b.endTime).getTime();
         const sStart = slotStart.getTime();
         const sEnd = slotEnd.getTime();
         return sStart < bEnd && sEnd > bStart;
       });
+
+      // Check if slot overlaps with any booked time (including buffer time)
+      const isBlockedByBooking = bookedSlots.some((b: any) => {
+        const bStart = new Date(b.startTime).getTime() - bufferTimeMs; // Add buffer before
+        const bEnd = new Date(b.endTime).getTime() + bufferTimeMs; // Add buffer after
+        const sStart = slotStart.getTime();
+        const sEnd = slotEnd.getTime();
+        return sStart < bEnd && sEnd > bStart;
+      });
+
+      const isBlocked = isBlockedByAllocation || isBlockedByBooking;
 
       slots.push({
         startTime: slotStart.toISOString(),
