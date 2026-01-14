@@ -104,7 +104,7 @@ export const listings = pgTable('listings', {
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
   capacity: integer('capacity'),
-  metadata: jsonb('metadata').default({}),
+  metadata: jsonb('metadata').default({}), // Stores flexible config including bufferTimeMinutes
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
