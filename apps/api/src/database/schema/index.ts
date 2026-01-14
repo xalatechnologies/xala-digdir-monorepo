@@ -79,6 +79,38 @@ export const tenantIntegrations = pgTable('tenant_integrations', {
 }));
 
 // ============================================================================
+// License Plans & Entitlements
+// ============================================================================
+
+export const licensePlans = pgTable('license_plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  isActive: boolean('is_active').notNull().default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: index('license_plans_code_idx').on(table.code),
+  isActiveIdx: index('license_plans_is_active_idx').on(table.isActive),
+}));
+
+export const licenseEntitlements = pgTable('license_entitlements', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  planId: uuid('plan_id').notNull().references(() => licensePlans.id, { onDelete: 'cascade' }),
+  entitlementKey: varchar('entitlement_key', { length: 100 }).notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  quotaLimit: integer('quota_limit'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  planIdx: index('license_entitlements_plan_idx').on(table.planId),
+  planEntitlementIdx: index('license_entitlements_plan_entitlement_idx').on(table.planId, table.entitlementKey),
+}));
+
+// ============================================================================
 // Users & RBAC
 // ============================================================================
 
@@ -357,4 +389,8 @@ export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
 export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
 export type TenantIntegration = typeof tenantIntegrations.$inferSelect;
 export type NewTenantIntegration = typeof tenantIntegrations.$inferInsert;
+export type LicensePlan = typeof licensePlans.$inferSelect;
+export type NewLicensePlan = typeof licensePlans.$inferInsert;
+export type LicenseEntitlement = typeof licenseEntitlements.$inferSelect;
+export type NewLicenseEntitlement = typeof licenseEntitlements.$inferInsert;
 
