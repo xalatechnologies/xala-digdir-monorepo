@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, Outlet, useOutletContext } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet, useOutletContext } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -22,17 +21,12 @@ import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast, SkipLinks } from './components';
+import { RealtimeToast } from './components';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { initSentry } from './lib/sentry';
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -169,7 +163,6 @@ function MainLayout() {
       margin: 0,
       padding: 0
     }}>
-      <SkipLinks />
       {/* CSS for mobile-specific styles */}
       <style>{`
         @media (max-width: 599px) {
@@ -205,10 +198,7 @@ function MainLayout() {
       `}</style>
 
       <AppHeader
-        id="main-navigation"
-        aria-label="Hoved navigasjon"
         sticky={true}
-        showSkipLink={false}
         logo={
           <HeaderLogo
             src="/logo.svg"
@@ -286,6 +276,7 @@ function AppContent() {
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
       <DialogProvider>
+      <ErrorBoundary>
         <RealtimeProvider autoConnect={true} enableInDev={true}>
           <RealtimeToast />
           <style>{`
@@ -306,6 +297,7 @@ function AppContent() {
             </Route>
           </Routes>
         </RealtimeProvider>
+      </ErrorBoundary>
       </DialogProvider>
     </DesignsystemetProvider>
   );
@@ -313,18 +305,16 @@ function AppContent() {
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <AppContent />
-        </BrowserRouter>
-      </I18nProvider>
-    </QueryClientProvider>
+    <I18nProvider>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <AppContent />
+      </BrowserRouter>
+    </I18nProvider>
   );
 }
 

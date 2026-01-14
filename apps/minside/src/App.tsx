@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -14,24 +14,16 @@ import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
+import { initSentry } from './lib/sentry';
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AppWithTheme />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <AppWithTheme />
+    </ThemeProvider>
   );
 }
 
@@ -42,6 +34,7 @@ function AppWithTheme() {
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
+      <ErrorBoundary>
       <BrowserRouter
         future={{
           v7_startTransition: true,
@@ -49,8 +42,8 @@ function AppWithTheme() {
         }}
       >
         <AuthProvider>
-          <RealtimeProvider 
-            wsUrl={import.meta.env.VITE_WS_URL} 
+          <RealtimeProvider
+            wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
           >
           <Routes>
@@ -76,6 +69,7 @@ function AppWithTheme() {
           </RealtimeProvider>
         </AuthProvider>
       </BrowserRouter>
+      </ErrorBoundary>
       </DialogProvider>
       </DesignsystemetProvider>
     </I18nProvider>
