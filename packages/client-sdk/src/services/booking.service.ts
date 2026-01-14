@@ -95,6 +95,13 @@ export class BookingService extends BaseService {
   }
 
   /**
+   * Bulk cancel multiple bookings
+   */
+  async bulkCancel(ids: string[], reason: string): Promise<SingleResponse<Booking[]>> {
+    return this.client.put(this.buildPath('/bulk/cancel'), { ids, reason });
+  }
+
+  /**
    * Delete booking
    */
   async delete(id: string): Promise<SuccessResponse> {
