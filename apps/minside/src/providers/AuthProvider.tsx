@@ -145,7 +145,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Handle logout error - still clear local state
     }
 
-    // Clear local storage (but not tokens - managed by HTTP-only cookie)
+    // Clear user data from local storage
+    // Note: Authentication tokens are managed by HTTP-only cookies and cleared by backend
     localStorage.removeItem('backoffice_mock_user');
     localStorage.removeItem('minside_user');
     setUser(null);
