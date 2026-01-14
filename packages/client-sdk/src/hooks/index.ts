@@ -116,6 +116,7 @@ export {
   useRealtimeConnection,
   useRealtimeBookings,
   useRealtimeListings,
+  useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
   useRealtimeAudit,
@@ -222,3 +223,34 @@ export {
   type UseGeocodeListingsOptions,
   type UseGeocodeListingsResult,
 } from './use-geocode';
+
+// Search hooks
+export {
+  useGlobalSearch,
+  useTypeahead,
+  useSavedFilters,
+  useSavedFilter,
+  useCreateSavedFilter,
+  useUpdateSavedFilter,
+  useDeleteSavedFilter,
+  useRecentSearches,
+  useExportResults,
+} from './use-search';
+
+// Accessibility Monitoring hooks
+export {
+  useAccessibilityMonitoring,
+  useScreenReaderDetection,
+  useKeyboardNavigationDetection,
+  type UseAccessibilityMonitoringOptions,
+  type AccessibilityMonitoringAPI,
+  type AccessibilityMonitoringConfig,
+  type AccessibilityMetric,
+  type AccessibilityMetricType,
+  type AccessibilityReport,
+  type KeyboardNavigationMetric,
+  type SkipLinkUsageMetric,
+  type ScreenReaderDetectionMetric,
+  type FocusManagementMetric,
+  type AriaAnnouncementMetric,
+} from './use-accessibility-monitoring';

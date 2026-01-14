@@ -12,7 +12,7 @@
  */
 
 import type { IHttpClient } from '../core/http-client.interface';
-import { getClientConfig } from '../core/client-factory';
+import { getClient, getClientConfig } from '../core/client-factory';
 
 // ============================================================================
 // Types
@@ -123,14 +123,12 @@ export interface AccessibilityReport {
 // ============================================================================
 
 export class AccessibilityMonitoringService {
-  private client: IHttpClient;
   private config: AccessibilityMonitoringConfig;
   private metricsBuffer: AccessibilityMetric[] = [];
   private sessionId: string;
   private flushTimer?: NodeJS.Timeout;
 
-  constructor(client: IHttpClient, config?: Partial<AccessibilityMonitoringConfig>) {
-    this.client = client;
+  constructor(config?: Partial<AccessibilityMonitoringConfig>) {
     this.config = {
       enabled: true,
       sampleRate: 1.0, // Track 100% by default (can be reduced in production)
@@ -145,6 +143,10 @@ export class AccessibilityMonitoringService {
     if (this.config.enabled) {
       this.startFlushTimer();
     }
+  }
+
+  private get client(): IHttpClient {
+    return getClient();
   }
 
   /**
@@ -381,3 +383,12 @@ export function detectKeyboardNavigation(): boolean {
   // Check if focus came from keyboard (not mouse)
   return focusedElement.matches(':focus-visible');
 }
+
+// ============================================================================
+// Service Instance
+// ============================================================================
+
+/**
+ * Singleton instance of the accessibility monitoring service
+ */
+export const accessibilityMonitoringService = new AccessibilityMonitoringService();

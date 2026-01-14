@@ -78,7 +78,32 @@ export function useRealtimeListings(handler?: RealtimeEventHandler) {
     const unsubscribe = realtimeClient.onListing((event) => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ['listings'] });
-      
+
+      // Call custom handler if provided
+      handlerRef.current?.(event);
+    });
+
+    return unsubscribe;
+  }, [queryClient]);
+}
+
+/**
+ * Hook to subscribe to calendar events (bookings, blocks, allocations)
+ * Auto-invalidates calendar-related queries when events arrive
+ */
+export function useRealtimeCalendar(handler?: RealtimeEventHandler) {
+  const queryClient = useQueryClient();
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    const unsubscribe = realtimeClient.onBooking((event) => {
+      // Invalidate calendar-related queries
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['blocks'] });
+      queryClient.invalidateQueries({ queryKey: ['allocations'] });
+
       // Call custom handler if provided
       handlerRef.current?.(event);
     });

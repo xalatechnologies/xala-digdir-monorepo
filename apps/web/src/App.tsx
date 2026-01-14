@@ -46,7 +46,7 @@ function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
   const location = useLocation();
-  const { colorScheme, setColorScheme, effectiveScheme } = useThemeContext();
+  const { colorScheme: _colorScheme, setColorScheme, effectiveScheme } = useThemeContext();
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);

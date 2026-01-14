@@ -214,6 +214,7 @@ export {
   VippsIcon,
   SendIcon,
   OrganizationIcon,
+  AlertTriangleIcon,
 } from './primitives';
 export type {
   ContainerProps,
@@ -291,6 +292,11 @@ export {
   NotFoundScreen,
   ErrorScreen,
   PermissionGate,
+  // Notification Components
+  NotificationBell,
+  NotificationItem,
+  NotificationCenter,
+  PushNotificationPrompt,
 } from './blocks';
 export type {
   ListingCardProps,
@@ -373,6 +379,15 @@ export type {
   NotFoundScreenProps,
   ErrorScreenProps,
   PermissionGateProps,
+  // Notification Types
+  NotificationBellProps,
+  NotificationItemProps,
+  NotificationItemData,
+  NotificationType,
+  NotificationPriority,
+  NotificationCenterProps,
+  NotificationFilter,
+  PushNotificationPromptProps,
 } from './blocks';
 
 // Listing Detail Types

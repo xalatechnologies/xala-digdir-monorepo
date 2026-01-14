@@ -94,6 +94,7 @@ export {
   SaveIcon,
   CopyIcon,
   EyeIcon,
+  AlertTriangleIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility

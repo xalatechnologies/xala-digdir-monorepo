@@ -102,3 +102,15 @@ export { widgetService } from './widget.service';
 // Monitoring
 export { monitoringService } from './monitoring.service';
 
+// Accessibility Monitoring
+export {
+  AccessibilityMonitoringService,
+  accessibilityMonitoringService,
+  detectScreenReader,
+  detectKeyboardNavigation,
+  type AccessibilityMetric,
+  type AccessibilityMetricType,
+  type AccessibilityMonitoringConfig,
+  type AccessibilityReport,
+} from './accessibilityMonitoringService';
+

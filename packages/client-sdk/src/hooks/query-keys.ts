@@ -81,6 +81,8 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { listingId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
+    conflicts: (params: { listingId?: string; startTime?: string; endTime?: string }) =>
+      [...queryKeys.calendar.all, 'conflicts', params] as const,
   },
 
   // =========================================================================

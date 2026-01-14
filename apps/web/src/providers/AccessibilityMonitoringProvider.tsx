@@ -8,9 +8,7 @@
 import React, { createContext, useContext } from 'react';
 import { useAccessibilityMonitoring, type AccessibilityMonitoringAPI } from '@digilist/client-sdk/hooks';
 
-interface AccessibilityMonitoringContextValue extends AccessibilityMonitoringAPI {}
-
-const AccessibilityMonitoringContext = createContext<AccessibilityMonitoringContextValue | null>(null);
+const AccessibilityMonitoringContext = createContext<AccessibilityMonitoringAPI | null>(null);
 
 export interface AccessibilityMonitoringProviderProps {
   children: React.ReactNode;
@@ -56,7 +54,7 @@ export function AccessibilityMonitoringProvider({
  * }
  * ```
  */
-export function useAccessibilityMonitoringContext(): AccessibilityMonitoringContextValue {
+export function useAccessibilityMonitoringContext(): AccessibilityMonitoringAPI {
   const context = useContext(AccessibilityMonitoringContext);
 
   if (!context) {

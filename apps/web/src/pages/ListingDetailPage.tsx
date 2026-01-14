@@ -30,7 +30,6 @@ import {
   ContentLayout,
   Breadcrumb,
   ImageSlider,
-  Spinner,
   Paragraph,
 } from '@xala/ds';
 import type { BreadcrumbItem, GalleryImage } from '@xala/ds';

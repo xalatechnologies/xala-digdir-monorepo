@@ -89,13 +89,13 @@ export function SentryTestComponent() {
         <div>
           <h3 style={{ marginBottom: '0.5rem' }}>Context Setup</h3>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Button onClick={handleSetTenantContext} variant="secondary">
+            <Button onClick={handleSetTenantContext} variant="secondary" type="button">
               Set Tenant Context
             </Button>
-            <Button onClick={handleSetUserContext} variant="secondary">
+            <Button onClick={handleSetUserContext} variant="secondary" type="button">
               Set User Context
             </Button>
-            <Button onClick={handleAddBreadcrumbs} variant="secondary">
+            <Button onClick={handleAddBreadcrumbs} variant="secondary" type="button">
               Add Breadcrumbs ({counter})
             </Button>
           </div>
@@ -104,16 +104,16 @@ export function SentryTestComponent() {
         <div>
           <h3 style={{ marginBottom: '0.5rem' }}>Error Tests</h3>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Button onClick={handleSyncError} variant="danger">
+            <Button onClick={handleSyncError} variant="danger" type="button">
               Throw Sync Error
             </Button>
-            <Button onClick={handleAsyncError} variant="danger">
+            <Button onClick={handleAsyncError} variant="danger" type="button">
               Throw Async Error
             </Button>
-            <Button onClick={handlePromiseRejection} variant="danger">
+            <Button onClick={handlePromiseRejection} variant="danger" type="button">
               Promise Rejection
             </Button>
-            <Button onClick={handleTypeError} variant="danger">
+            <Button onClick={handleTypeError} variant="danger" type="button">
               Throw TypeError
             </Button>
           </div>
