@@ -7,6 +7,10 @@
  * - GET /api/seasons/:id - Get season by ID
  * - POST /api/seasons - Create a new season
  * - PUT /api/seasons/:id - Update season
+ * - PUT /api/seasons/:id/open - Open season for applications
+ * - PUT /api/seasons/:id/close - Close season for applications
+ * - PUT /api/seasons/:id/activate - Activate season
+ * - PUT /api/seasons/:id/complete - Complete season
  * - DELETE /api/seasons/:id - Delete season
  */
 
@@ -193,6 +197,158 @@ export class SeasonsController {
     return reply.send({
       data: result[0],
       message: 'Season updated successfully',
+    });
+  }
+
+  /**
+   * PUT /api/seasons/:id/open
+   * Open season for applications
+   */
+  @Put('/:id/open')
+  async open(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const existing = await db
+      .select({ id: seasons.id })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!existing.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    // Update status to open
+    const result = await db
+      .update(seasons)
+      .set({
+        status: 'open',
+        updatedAt: new Date(),
+      })
+      .where(eq(seasons.id, id))
+      .returning();
+
+    return reply.send({
+      data: result[0],
+      message: 'Season opened successfully',
+    });
+  }
+
+  /**
+   * PUT /api/seasons/:id/close
+   * Close season for applications
+   */
+  @Put('/:id/close')
+  async close(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const existing = await db
+      .select({ id: seasons.id })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!existing.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    // Update status to closed
+    const result = await db
+      .update(seasons)
+      .set({
+        status: 'closed',
+        updatedAt: new Date(),
+      })
+      .where(eq(seasons.id, id))
+      .returning();
+
+    return reply.send({
+      data: result[0],
+      message: 'Season closed successfully',
+    });
+  }
+
+  /**
+   * PUT /api/seasons/:id/activate
+   * Activate season
+   */
+  @Put('/:id/activate')
+  async activate(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const existing = await db
+      .select({ id: seasons.id })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!existing.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    // Update status to active
+    const result = await db
+      .update(seasons)
+      .set({
+        status: 'active',
+        updatedAt: new Date(),
+      })
+      .where(eq(seasons.id, id))
+      .returning();
+
+    return reply.send({
+      data: result[0],
+      message: 'Season activated successfully',
+    });
+  }
+
+  /**
+   * PUT /api/seasons/:id/complete
+   * Complete season
+   */
+  @Put('/:id/complete')
+  async complete(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const existing = await db
+      .select({ id: seasons.id })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!existing.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    // Update status to completed
+    const result = await db
+      .update(seasons)
+      .set({
+        status: 'completed',
+        updatedAt: new Date(),
+      })
+      .where(eq(seasons.id, id))
+      .returning();
+
+    return reply.send({
+      data: result[0],
+      message: 'Season completed successfully',
     });
   }
 
