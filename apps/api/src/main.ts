@@ -50,7 +50,7 @@ import { UserGroupController } from './modules/user-groups/user-group.controller
 import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
-import { SeasonsController } from './modules/seasons/seasons.controller';
+import { SeasonsController, PriorityRulesController } from './modules/seasons/seasons.controller';
 import { BlocksController } from './modules/blocks/blocks.controller';
 import { SeasonApplicationsController } from './modules/season-applications/season-applications.controller';
 // Phase 6: Profile
@@ -263,6 +263,7 @@ async function bootstrap() {
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,
+    PriorityRulesController,
     BlocksController,
     SeasonApplicationsController,
     // Phase 6: Profile

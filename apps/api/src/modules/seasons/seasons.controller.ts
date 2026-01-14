@@ -539,7 +539,7 @@ export class SeasonsController {
  * Priority Rules Controller
  * Manages priority rules for season applications
  */
-@Controller('/priority-rules')
+@Controller('/api/priority-rules')
 class PriorityRulesController {
   /**
    * GET /api/priority-rules - List all priority rules

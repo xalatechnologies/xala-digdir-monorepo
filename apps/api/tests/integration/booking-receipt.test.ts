@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
 const headers = {
