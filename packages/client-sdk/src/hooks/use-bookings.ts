@@ -5,12 +5,13 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { 
-  bookingService, 
-  calendarService, 
-  allocationService, 
-  availabilityService 
+import {
+  bookingService,
+  calendarService,
+  allocationService,
+  availabilityService
 } from '../services/booking.service';
+import { listingService } from '../services/listing.service';
 import type {
   BookingQueryParams,
   CreateBookingDTO,
@@ -272,6 +273,33 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
     queryKey: queryKeys.calendar.slots(params),
     queryFn: () => availabilityService.getSlots(params),
     enabled: !!params.listingId && !!params.date,
+  });
+}
+
+/**
+ * Get listing calendar configuration including booking modes.
+ * Returns the ListingCalendarConfigProjectionDTO which contains:
+ * - Available booking modes (SINGLE_SLOT, IN_GAME, RECURRING) with constraints
+ * - Default mode and calendar granularity
+ * - Operating hours and timezone
+ * - Slot duration and selection limits
+ * - User permissions and available actions
+ *
+ * This is a screen-ready projection - UI should use values directly without transformation.
+ *
+ * @param listingId - ID of the listing to get calendar config for
+ * @param options - Query options including enabled flag
+ * @returns Query result with ListingCalendarConfigProjectionDTO
+ */
+export function useBookingModeConfig(
+  listingId: string,
+  options?: { enabled?: boolean }
+) {
+  return useQuery({
+    queryKey: queryKeys.listings.calendarConfig(listingId),
+    queryFn: () => listingService.getCalendarConfig(listingId),
+    enabled: !!listingId && (options?.enabled ?? true),
+    staleTime: 60_000, // 60s - config changes infrequently
   });
 }
 

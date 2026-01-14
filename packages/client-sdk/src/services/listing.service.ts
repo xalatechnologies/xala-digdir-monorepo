@@ -4,10 +4,10 @@
  */
 
 import { BaseService } from './base.service';
-import type { 
-  Listing, 
-  ListingQueryParams, 
-  CreateListingDTO, 
+import type {
+  Listing,
+  ListingQueryParams,
+  CreateListingDTO,
   UpdateListingDTO,
   ListingAvailability,
   ListingStats,
@@ -16,7 +16,8 @@ import type {
   Municipality,
   TimeSlot,
   AvailabilityQueryParams,
-  PublicListingParams
+  PublicListingParams,
+  ListingCalendarConfigProjectionDTO
 } from '../types/listing';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
@@ -96,6 +97,18 @@ export class ListingService extends BaseService {
    */
   async getStats(id: string): Promise<SingleResponse<ListingStats>> {
     return this.client.get(this.buildPath(`/${id}/stats`));
+  }
+
+  /**
+   * Get listing calendar configuration.
+   * Returns booking modes, constraints, and calendar display settings.
+   * This is a screen-ready projection containing all configuration needed to render the booking calendar UI.
+   *
+   * @param id - Listing ID
+   * @returns ListingCalendarConfigProjectionDTO with booking modes and constraints
+   */
+  async getCalendarConfig(id: string): Promise<SingleResponse<ListingCalendarConfigProjectionDTO>> {
+    return this.client.get(this.buildPath(`/${id}/calendar-config`));
   }
 
   /**
