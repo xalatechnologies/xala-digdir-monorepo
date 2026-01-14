@@ -149,6 +149,19 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Report Templates Keys
+  // =========================================================================
+  reportTemplates: {
+    all: ['reportTemplates'] as const,
+    lists: () => [...queryKeys.reportTemplates.all, 'list'] as const,
+    list: (params?: { reportType?: string; isSystem?: boolean; createdBy?: string }) =>
+      [...queryKeys.reportTemplates.lists(), params] as const,
+    details: () => [...queryKeys.reportTemplates.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.reportTemplates.details(), id] as const,
+    system: () => [...queryKeys.reportTemplates.all, 'system'] as const,
+  },
+
+  // =========================================================================
   // Audit Keys
   // =========================================================================
   audit: {
