@@ -188,14 +188,12 @@ export type {
 
 // Messaging Components
 export {
-  NotificationBell,
   ConversationList,
   ConversationListItem,
   MessageBubble,
   ChatThread,
 } from './messaging';
 export type {
-  NotificationBellProps,
   ConversationListProps,
   ConversationListItemProps,
   ConversationItem,
@@ -203,3 +201,24 @@ export type {
   MessageItem,
   ChatThreadProps,
 } from './messaging';
+
+// Notification Components
+export { NotificationBell } from './NotificationBell';
+export type { NotificationBellProps } from './NotificationBell';
+
+export { NotificationItem } from './NotificationItem';
+export type {
+  NotificationItemProps,
+  NotificationItemData,
+  NotificationType,
+  NotificationPriority,
+} from './NotificationItem';
+
+export { NotificationCenter } from './NotificationCenter';
+export type {
+  NotificationCenterProps,
+  NotificationFilter,
+} from './NotificationCenter';
+
+export { PushNotificationPrompt } from './PushNotificationPrompt';
+export type { PushNotificationPromptProps } from './PushNotificationPrompt';
