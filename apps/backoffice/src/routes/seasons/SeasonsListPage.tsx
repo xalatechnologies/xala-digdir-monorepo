@@ -25,10 +25,10 @@ import {
 import {
   useSeasonalLeases,
   useDeleteSeasonalLease,
-  type SeasonalLease,
+  // type SeasonalLease,
   type SeasonalLeaseStatus,
 } from '@digilist/client-sdk';
-import { StatusBadge } from '../../components/shared';
+// import { StatusBadge } from '../../components/shared';
 
 const statusLabels: Record<SeasonalLeaseStatus, string> = {
   draft: 'Utkast',
@@ -97,7 +97,7 @@ export function SeasonsListPage() {
           </Paragraph>
         </div>
         <Link to="/seasons/new">
-          <Button size="md">
+          <Button type="button">
             <PlusIcon />
             Ny sesong
           </Button>
@@ -161,7 +161,7 @@ export function SeasonsListPage() {
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && (
               <Link to="/seasons/new">
-                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
                   <PlusIcon />
                   Ny sesong
                 </Button>

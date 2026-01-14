@@ -241,7 +241,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
         data: { openingHours: localOpeningHours },
       });
       setIsDirty(false);
-    } catch (error) {
+    } catch {
       // Error handling will be shown by the mutation
     }
   };

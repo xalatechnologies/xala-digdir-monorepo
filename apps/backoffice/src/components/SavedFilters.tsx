@@ -235,7 +235,7 @@ export function SavedFilters({
                 {filter.name}
               </Text>
               {filter.isDefault && (
-                <Badge variant="info" size="sm">
+                <Badge variant="info" >
                   <StarIcon size={12} style={{ marginRight: 'var(--ds-spacing-1)' }} />
                   Standard
                 </Badge>
@@ -278,7 +278,7 @@ export function SavedFilters({
 
           <Button
             variant="tertiary"
-            size="sm"
+            
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteFilter(filter);
@@ -287,7 +287,7 @@ export function SavedFilters({
             style={{
               flexShrink: 0,
               color: 'var(--ds-color-danger-500)',
-            }}
+            }} type="button"
           >
             <CloseIcon size={16} />
           </Button>
@@ -371,12 +371,12 @@ export function SavedFilters({
         variant="secondary"
         onClick={handleOpenDrawer}
         className={className}
-        style={style}
+        style={style} type="button"
       >
         <HeartIcon size={16} />
         {triggerText}
         {savedFilters.length > 0 && (
-          <Badge variant="neutral" size="sm" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
+          <Badge variant="neutral"  style={{ marginLeft: 'var(--ds-spacing-2)' }}>
             {savedFilters.length}
           </Badge>
         )}
@@ -393,11 +393,11 @@ export function SavedFilters({
               borderBottom: '1px solid var(--ds-color-neutral-200)',
             }}
           >
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>
+            <Heading level={2} data- style={{ margin: 0 }}>
               Lagrede filtre
             </Heading>
             {hasActiveFilters && !isCreating && (
-              <Button variant="primary" data-size="sm" onClick={handleStartCreate}>
+              <Button variant="primary" data- onClick={handleStartCreate} type="button">
                 <PlusIcon size={16} />
                 Lagre filter
               </Button>
@@ -440,19 +440,19 @@ export function SavedFilters({
                 <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                   <Button
                     variant="primary"
-                    size="sm"
+                    
                     onClick={handleCreateFilter}
                     disabled={!newFilterName.trim() || createSavedFilter.isPending}
-                    style={{ flex: 1 }}
+                    style={{ flex: 1 }} type="button"
                   >
                     {createSavedFilter.isPending ? 'Lagrer...' : 'Lagre'}
                   </Button>
                   <Button
                     variant="secondary"
-                    size="sm"
+                    
                     onClick={handleCancelCreate}
                     disabled={createSavedFilter.isPending}
-                    style={{ flex: 1 }}
+                    style={{ flex: 1 }} type="button"
                   >
                     Avbryt
                   </Button>

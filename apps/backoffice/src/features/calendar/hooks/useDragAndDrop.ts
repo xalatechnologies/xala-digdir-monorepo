@@ -198,7 +198,7 @@ export function useDragAndDrop(options: DragAndDropOptions = {}) {
    * Handle mouse up - complete dragging
    */
   const onMouseUp = useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
+    (_event: React.MouseEvent<HTMLElement>) => {
       if (!dragState.isDragging || !dragState.startPosition || !dragState.currentPosition) {
         setDragState({
           isDragging: false,
@@ -283,12 +283,12 @@ export function useDragAndDrop(options: DragAndDropOptions = {}) {
 
     const { startPosition, currentPosition } = dragState;
 
-    // Calculate Y positions
-    const startY = Math.min(startPosition.y, currentPosition.y);
-    const endY = Math.max(startPosition.y, currentPosition.y);
+    // Calculate Y positions (currently unused but kept for future enhancements)
+    // const startY = Math.min(startPosition.y, currentPosition.y);
+    // const endY = Math.max(startPosition.y, currentPosition.y);
 
     // Calculate time range
-    let startTime = new Date(Math.min(startPosition.time.getTime(), currentPosition.time.getTime()));
+    const startTime = new Date(Math.min(startPosition.time.getTime(), currentPosition.time.getTime()));
     let endTime = new Date(Math.max(startPosition.time.getTime(), currentPosition.time.getTime()));
 
     // Ensure minimum duration

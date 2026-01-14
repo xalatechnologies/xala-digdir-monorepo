@@ -136,7 +136,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         padding: 0,
         maxWidth: '560px',
         width: '90vw',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+        boxShadow: 'var(--ds-shadow-xlarge)',
         backgroundColor: 'var(--ds-color-neutral-background-default)',
       }}
     >
@@ -169,8 +169,9 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
             }}
           >
             {/* Personal Account Option */}
-            <button
+            <Button
               type="button"
+              variant="tertiary"
               onClick={handlePersonalSelect}
               style={{
                 all: 'unset',
@@ -225,11 +226,12 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                   Book og administrer egne aktiviteter
                 </Paragraph>
               </Card>
-            </button>
+            </Button>
 
             {/* Organization Account Option */}
-            <button
+            <Button
               type="button"
+              variant="tertiary"
               onClick={handleOrganizationSelect}
               disabled={isLoadingOrganizations}
               style={{
@@ -281,7 +283,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                     justifyContent: 'center',
                   }}
                 >
-                  {isLoadingOrganizations ? <Spinner /> : <BuildingIcon />}
+                  {isLoadingOrganizations ? <Spinner aria-hidden="true" /> : <BuildingIcon />}
                 </div>
                 <Heading level={3} data-size="sm" style={{ margin: 0 }}>
                   På vegne av organisasjon
@@ -290,7 +292,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                   Representér en organisasjon du er tilknyttet
                 </Paragraph>
               </Card>
-            </button>
+            </Button>
           </div>
         )}
 
@@ -304,9 +306,10 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
               </Card>
             ) : (
               organizations.map((org: Organization) => (
-                <button
+                <Button
                   key={org.id}
                   type="button"
+                  variant="tertiary"
                   onClick={() => setSelectedOrgId(org.id)}
                   style={{
                     all: 'unset',
@@ -361,7 +364,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                           height: '24px',
                           borderRadius: 'var(--ds-border-radius-full)',
                           backgroundColor: 'var(--ds-color-accent-base-default)',
-                          color: 'white',
+                          color: 'var(--ds-color-neutral-contrast-default)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -372,7 +375,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                       </div>
                     )}
                   </Card>
-                </button>
+                </Button>
               ))
             )}
           </div>

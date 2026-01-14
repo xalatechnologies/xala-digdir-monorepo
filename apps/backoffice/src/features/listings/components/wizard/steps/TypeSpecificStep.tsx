@@ -3,7 +3,6 @@
  * Dynamic form fields based on listing type (SPACE, RESOURCE, SERVICE, EVENT, VEHICLE, OTHER)
  */
 
-import { useState } from 'react';
 import {
   FormField,
   Textfield,
@@ -13,7 +12,7 @@ import {
   Paragraph,
   Alert,
 } from '@xala/ds';
-import type { BackofficeListing, BackofficeListingType } from '../../../types';
+import type { BackofficeListing } from '../../../types';
 
 export interface TypeSpecificStepProps {
   data: Partial<BackofficeListing>;
@@ -21,7 +20,7 @@ export interface TypeSpecificStepProps {
   errors?: string[];
 }
 
-export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificStepProps) {
+export function TypeSpecificStep({ data, onChange, errors: _errors = [] }: TypeSpecificStepProps) {
   const listingType = data.type;
 
   const handleFieldChange = (field: string, value: any) => {

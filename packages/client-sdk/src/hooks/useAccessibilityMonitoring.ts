@@ -50,7 +50,7 @@ export function useAccessibilityMonitoring(
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
 
-  const serviceRef = useRef<AccessibilityMonitoringService>();
+  const serviceRef = useRef<AccessibilityMonitoringService | null>(null);
   const pageLoadTimeRef = useRef<number>(Date.now());
   const lastFocusedElementRef = useRef<Element | null>(null);
 
@@ -97,9 +97,9 @@ export function useAccessibilityMonitoring(
 
   // Initialize service
   useEffect(() => {
-    if (!enabled || !client) return;
+    if (!enabled) return;
 
-    serviceRef.current = new AccessibilityMonitoringService(client, {
+    serviceRef.current = new AccessibilityMonitoringService({
       enabled: true,
       sampleRate: 1.0,
     });
@@ -108,7 +108,7 @@ export function useAccessibilityMonitoring(
       // Flush metrics on unmount
       void serviceRef.current?.flush();
     };
-  }, [client, enabled]);
+  }, [enabled]);
 
   // Track screen reader detection on mount
   useEffect(() => {

@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Container, Heading, Paragraph, Card, Button, Spinner, Grid, Badge } from '@xala/ds';
+import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { SeasonStatusBadge } from '../features/seasons/components/SeasonStatusBadge';
 import { SeasonApplicationDrawer, type SeasonApplicationFormData } from '../features/seasons/components/SeasonApplicationDrawer';
-import { VenueCard } from '../features/seasons/components/VenueCard';
-import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
 
 /**
  * Season Detail Page
@@ -152,7 +150,7 @@ export function SeasonDetailPage() {
     return (
       <Container style={{ padding: 'var(--ds-spacing-8)' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner />
+          <Spinner aria-label="Laster..." />
         </div>
       </Container>
     );
@@ -230,7 +228,7 @@ export function SeasonDetailPage() {
                 height: '40px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -576,7 +574,7 @@ export function SeasonDetailPage() {
             style={{
               borderRadius: 'var(--ds-border-radius-full)',
               padding: 'var(--ds-spacing-4) var(--ds-spacing-6)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              boxShadow: 'var(--ds-shadow-large)',
             }}
           >
             Søk nå

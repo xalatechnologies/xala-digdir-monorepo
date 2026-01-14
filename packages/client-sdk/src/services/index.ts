@@ -105,3 +105,16 @@ export { monitoringService } from './monitoring.service';
 // Reviews
 export { ReviewService, reviewService } from './review.service';
 
+// Billing (User + Org)
+export { 
+  billingService, 
+  orgBillingService
+} from './billing.service';
+
+// Re-export billing types for convenience
+export type { 
+  BillingSummary, 
+  Invoice,
+  InvoiceQueryParams 
+} from './billing.service';
+

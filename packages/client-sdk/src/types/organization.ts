@@ -136,3 +136,29 @@ export interface ConsentSettings {
   thirdPartySharing: boolean;
   updatedAt: string;
 }
+
+// =============================================================================
+// Notification Preferences
+// =============================================================================
+
+export interface NotificationPreferences {
+  email: {
+    bookingConfirmation: boolean;
+    bookingReminder: boolean;
+    bookingCancellation: boolean;
+    invoiceReady: boolean;
+    newMessage: boolean;
+    seasonalAlerts: boolean;
+    marketing: boolean;
+  };
+  push: {
+    bookingReminder: boolean;
+    newMessage: boolean;
+    urgentAlerts: boolean;
+  };
+  sms: {
+    bookingReminder: boolean;
+    urgentAlerts: boolean;
+  };
+  updatedAt: string;
+}

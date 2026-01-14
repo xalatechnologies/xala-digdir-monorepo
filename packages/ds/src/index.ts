@@ -82,6 +82,7 @@ export {
   DrawerEmptyState,
   Breadcrumb,
   BookingStepper,
+  BottomNavigation,
   // Dialogs
   DialogProvider,
   useDialog,
@@ -127,6 +128,8 @@ export type {
   DrawerEmptyStateProps,
   BreadcrumbProps,
   BookingStepperProps,
+  BottomNavigationProps,
+  BottomNavigationItem,
   // Dialog Types
   ConfirmDialogProps,
   AlertDialogProps,
@@ -203,6 +206,26 @@ export {
   VippsIcon,
   SendIcon,
   OrganizationIcon,
+  EditIcon,
+  TrashIcon,
+  RefreshIcon,
+  PaperclipIcon,
+  XIcon,
+  SaveIcon,
+  CopyIcon,
+  EyeIcon,
+  AlertTriangleIcon,
+  ExternalLinkIcon,
+  ArrowLeftIcon,
+  FileTextIcon,
+  ClipboardListIcon,
+  PlayIcon,
+  LockIcon,
+  UnlockIcon,
+  UploadIcon,
+  CameraIcon,
+  ImageIcon,
+  FormField,
 } from './primitives';
 export type {
   ContainerProps,
@@ -212,7 +235,8 @@ export type {
   CardProps,
   TextProps,
   BadgeProps,
-  LayoutGridProps
+  LayoutGridProps,
+  FormFieldProps,
 } from './primitives';
 
 // Blocks - Business logic components

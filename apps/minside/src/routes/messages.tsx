@@ -243,7 +243,7 @@ export function MessagesPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 'var(--ds-spacing-1)',
-                }}
+                }} type="button"
               >
                 {tab.label}
                 <span style={{
@@ -337,7 +337,7 @@ export function MessagesPage() {
                         height: '12px',
                         borderRadius: 'var(--ds-border-radius-full)',
                         backgroundColor: index % 2 === 0 ? 'var(--ds-color-success-base-default)' : 'var(--ds-color-neutral-border-default)',
-                        border: '2px solid white',
+                        border: '2px solid var(--ds-color-neutral-contrast-default)',
                       }} />
                     </div>
                     
@@ -389,7 +389,7 @@ export function MessagesPage() {
                             height: '20px',
                             borderRadius: 'var(--ds-border-radius-full)',
                             backgroundColor: 'var(--ds-color-danger-base-default)',
-                            color: 'white',
+                            color: 'var(--ds-color-neutral-contrast-default)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -450,7 +450,7 @@ export function MessagesPage() {
                     height: '10px',
                     borderRadius: 'var(--ds-border-radius-full)',
                     backgroundColor: 'var(--ds-color-success-base-default)',
-                    border: '2px solid white',
+                    border: '2px solid var(--ds-color-neutral-contrast-default)',
                   }} />
                 </div>
                 
@@ -585,7 +585,7 @@ export function MessagesPage() {
                                   ? 'var(--ds-color-brand-1-base-default)'
                                   : 'var(--ds-color-neutral-background-default)',
                                 color: isOwnMessage ? 'white' : 'var(--ds-color-neutral-text-default)',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
+                                boxShadow: 'var(--ds-shadow-small)',
                               }}>
                                 <Paragraph data-size="sm" style={{ margin: 0, color: 'inherit', lineHeight: 1.5 }}>
                                   {String(message.content)}
@@ -631,7 +631,7 @@ export function MessagesPage() {
                         padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
                         borderRadius: 'var(--ds-border-radius-lg)',
                         backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
+                        boxShadow: 'var(--ds-shadow-small)',
                       }}>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           {[0, 1, 2].map((i) => (

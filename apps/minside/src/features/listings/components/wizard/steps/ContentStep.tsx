@@ -192,7 +192,6 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
           <div style={{ flex: 1 }}>
             <Textfield
-              label=""
               aria-label="Ny fasilitet"
               value={newAmenity}
               onChange={(e) => setNewAmenity(e.target.value)}

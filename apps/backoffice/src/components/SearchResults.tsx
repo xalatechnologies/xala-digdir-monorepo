@@ -189,7 +189,7 @@ export function SearchResults({
       </Stack>
 
       {/* Entity type tabs */}
-      <Stack direction="row" spacing="sm">
+      <Stack direction="horizontal" spacing="sm">
         {ENTITY_TYPE_TABS.map((tab) => {
           const count =
             tab.id === 'all'
@@ -203,9 +203,8 @@ export function SearchResults({
           return (
             <Button
               key={tab.id}
-              variant={activeTab === tab.id ? 'primary' : 'outline'}
-              size="sm"
-              onClick={() => handleTabChange(tab.id)}
+              variant={activeTab === tab.id ? 'primary' : 'secondary'}
+              onClick={() => handleTabChange(tab.id)} type="button"
             >
               {tab.icon} {tab.label} ({count})
             </Button>
@@ -244,7 +243,7 @@ export function SearchResults({
                   return (
                     <tr key={booking.id}>
                       <td>
-                        <Text size="sm" family="mono">
+                        <Text size="sm">
                           {booking.id.slice(0, 8)}
                         </Text>
                       </td>
@@ -278,10 +277,10 @@ export function SearchResults({
                       </td>
                       <td>
                         <Button
-                          variant="ghost"
+                          variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne booking"
+                          aria-label="Åpne booking" type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>
@@ -323,7 +322,7 @@ export function SearchResults({
                   return (
                     <tr key={listing.id}>
                       <td>
-                        <Text size="sm" family="mono">
+                        <Text size="sm">
                           {listing.id.slice(0, 8)}
                         </Text>
                       </td>
@@ -353,10 +352,10 @@ export function SearchResults({
                       </td>
                       <td>
                         <Button
-                          variant="ghost"
+                          variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne lokale"
+                          aria-label="Åpne lokale" type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>
@@ -398,7 +397,7 @@ export function SearchResults({
                   return (
                     <tr key={org.id}>
                       <td>
-                        <Text size="sm" family="mono">
+                        <Text size="sm">
                           {org.id.slice(0, 8)}
                         </Text>
                       </td>
@@ -411,7 +410,7 @@ export function SearchResults({
                         )}
                       </td>
                       <td>
-                        <Text size="sm" family="mono">
+                        <Text size="sm">
                           {org.organizationNumber || '-'}
                         </Text>
                       </td>
@@ -426,10 +425,10 @@ export function SearchResults({
                       </td>
                       <td>
                         <Button
-                          variant="ghost"
+                          variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne organisasjon"
+                          aria-label="Åpne organisasjon" type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>
@@ -445,7 +444,7 @@ export function SearchResults({
 
       {/* Execution time footer (if available) */}
       {searchData?.meta?.executionTime && (
-        <Text size="sm" color="secondary" align="right">
+        <Text size="sm" style={{ textAlign: 'right' }}>
           Søk utført på {searchData.meta.executionTime}ms
         </Text>
       )}

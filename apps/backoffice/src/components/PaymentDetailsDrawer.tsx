@@ -162,29 +162,37 @@ export function PaymentDetailsDrawer({
       {!isLoading && !error && historyData?.data && (
         <>
           <DrawerSection title={t('payments.details.summary', 'Sammendrag')}>
-            <Stack direction="column" gap="var(--ds-spacing-4)">
-              <DrawerItem
-                label={t('payments.details.bookingId', 'Booking ID')}
-                value={bookingId || ''}
-              />
-              <DrawerItem
-                label={t('payments.details.totalPaid', 'Totalt betalt')}
-                value={formatCurrency(summary.totalPaid, summary.currency)}
-              />
-              <DrawerItem
-                label={t('payments.details.totalRefunded', 'Totalt refundert')}
-                value={formatCurrency(summary.totalRefunded, summary.currency)}
-              />
-              <DrawerItem
-                label={t('payments.details.netAmount', 'Netto beløp')}
-                value={formatCurrency(summary.totalPaid - summary.totalRefunded, summary.currency)}
-              />
+            <Stack direction="vertical" gap="var(--ds-spacing-4)">
+              <DrawerItem>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span>{t('payments.details.bookingId', 'Booking ID')}</span>
+                  <strong>{bookingId || ''}</strong>
+                </div>
+              </DrawerItem>
+              <DrawerItem>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span>{t('payments.details.totalPaid', 'Totalt betalt')}</span>
+                  <strong>{formatCurrency(summary.totalPaid, summary.currency)}</strong>
+                </div>
+              </DrawerItem>
+              <DrawerItem>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span>{t('payments.details.totalRefunded', 'Totalt refundert')}</span>
+                  <strong>{formatCurrency(summary.totalRefunded, summary.currency)}</strong>
+                </div>
+              </DrawerItem>
+              <DrawerItem>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span>{t('payments.details.netAmount', 'Netto beløp')}</span>
+                  <strong>{formatCurrency(summary.totalPaid - summary.totalRefunded, summary.currency)}</strong>
+                </div>
+              </DrawerItem>
             </Stack>
           </DrawerSection>
 
           {/* Transaction History */}
           <DrawerSection title={t('payments.details.transactionHistory', 'Transaksjonshistorikk')}>
-            <Stack direction="column" gap="var(--ds-spacing-3)">
+            <Stack direction="vertical" gap="var(--ds-spacing-3)">
               {historyData.data.length === 0 ? (
                 <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t('payments.details.noTransactions', 'Ingen transaksjoner funnet')}
@@ -205,7 +213,7 @@ export function PaymentDetailsDrawer({
                       }`,
                     }}
                   >
-                    <Stack direction="column" gap="var(--ds-spacing-3)">
+                    <Stack direction="vertical" gap="var(--ds-spacing-3)">
                       {/* Transaction Type and Amount */}
                       <div
                         style={{

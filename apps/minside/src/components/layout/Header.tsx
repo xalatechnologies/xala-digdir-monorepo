@@ -173,7 +173,6 @@ export function Header({ title: _title }: HeaderProps) {
               count={unreadCount}
               onClick={openNotificationCenter}
               aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-              size="md"
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}

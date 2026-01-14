@@ -33,7 +33,6 @@ import {
 import {
   useCurrentUser,
   useUpdateCurrentUser,
-  useUploadUserAvatar,
   useExportData,
   useDeleteAccount,
   useConsents,
@@ -238,7 +237,7 @@ export function SettingsPage() {
           </Paragraph>
         </div>
         {saveSuccess && (
-          <Alert severity="success" style={{ maxWidth: '400px' }}>
+          <Alert style={{ maxWidth: '400px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CheckCircleIcon />
               Endringene ble lagret
@@ -252,7 +251,7 @@ export function SettingsPage() {
         backgroundColor: 'var(--ds-color-neutral-background-default)',
         borderRadius: 'var(--ds-border-radius-lg)',
         padding: 'var(--ds-spacing-6)',
-        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        boxShadow: 'var(--ds-shadow-xsmall)',
       }}>
         <Tabs value={activeTab} onChange={setActiveTab}>
           <Tabs.List style={{ marginBottom: 'var(--ds-spacing-6)' }}>
@@ -342,7 +341,7 @@ export function SettingsPage() {
                       variant="secondary"
                       data-size="sm"
                       onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploadingAvatar}
+                      disabled={isUploadingAvatar} type="button"
                     >
                       <CameraIcon />
                       {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
@@ -373,6 +372,7 @@ export function SettingsPage() {
                       value={profileData.name}
                       onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Ola Nordmann"
+                      aria-label="Fullt navn"
                     />
                   </FormField>
 
@@ -382,6 +382,7 @@ export function SettingsPage() {
                       value={profileData.email}
                       onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                       placeholder="ola.nordmann@example.com"
+                      aria-label="E-postadresse"
                     />
                   </FormField>
 
@@ -391,6 +392,7 @@ export function SettingsPage() {
                       value={profileData.phone}
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                       placeholder="+47 123 45 678"
+                      aria-label="Telefonnummer"
                     />
                   </FormField>
 
@@ -400,6 +402,7 @@ export function SettingsPage() {
                         type="date"
                         value={profileData.dateOfBirth}
                         onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                        aria-label="Fødselsdato"
                       />
                     </FormField>
 
@@ -409,13 +412,14 @@ export function SettingsPage() {
                         onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
                         placeholder="11 siffer"
                         maxLength={11}
+                        aria-label="Fødselsnummer"
                       />
                     </FormField>
                   </div>
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                     <SaveIcon />
                     {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                   </Button>
@@ -450,6 +454,7 @@ export function SettingsPage() {
                         residenceAddress: { ...prev.residenceAddress, street: e.target.value }
                       }))}
                       placeholder="Storgata 1"
+                      aria-label="Gateadresse"
                     />
                   </FormField>
 
@@ -462,6 +467,7 @@ export function SettingsPage() {
                           residenceAddress: { ...prev.residenceAddress, city: e.target.value }
                         }))}
                         placeholder="Oslo"
+                        aria-label="Poststed"
                       />
                     </FormField>
 
@@ -474,6 +480,7 @@ export function SettingsPage() {
                         }))}
                         placeholder="0010"
                         maxLength={4}
+                        aria-label="Postnummer"
                       />
                     </FormField>
                   </div>
@@ -512,7 +519,7 @@ export function SettingsPage() {
                   <Button
                     variant="tertiary"
                     data-size="sm"
-                    onClick={handleCopyResidenceToInvoice}
+                    onClick={handleCopyResidenceToInvoice} type="button"
                   >
                     Kopier fra bostedsadresse
                   </Button>
@@ -527,6 +534,7 @@ export function SettingsPage() {
                         invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
                       }))}
                       placeholder="Storgata 1"
+                      aria-label="Gateadresse"
                     />
                   </FormField>
 
@@ -539,6 +547,7 @@ export function SettingsPage() {
                           invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
                         }))}
                         placeholder="Oslo"
+                        aria-label="Poststed"
                       />
                     </FormField>
 
@@ -551,6 +560,7 @@ export function SettingsPage() {
                         }))}
                         placeholder="0010"
                         maxLength={4}
+                        aria-label="Postnummer"
                       />
                     </FormField>
                   </div>
@@ -572,7 +582,7 @@ export function SettingsPage() {
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                     <SaveIcon />
                     {isSaving ? 'Lagrer endringer' : 'Lagre adresser'}
                   </Button>
@@ -598,7 +608,7 @@ export function SettingsPage() {
                   </Paragraph>
                 </div>
 
-                <Alert severity="info">
+                <Alert>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
                     I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
                   </Paragraph>
@@ -607,7 +617,7 @@ export function SettingsPage() {
                 <Button
                   variant="secondary"
                   onClick={handleExportData}
-                  disabled={isExporting}
+                  disabled={isExporting} type="button"
                 >
                   <DownloadIcon />
                   {isExporting ? 'Eksporterer...' : 'Last ned mine data'}
@@ -712,7 +722,7 @@ export function SettingsPage() {
                   </Paragraph>
                 </div>
 
-                <Alert severity="danger">
+                <Alert>
                   <Stack spacing={2}>
                     <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                       Dette kan ikke angres
@@ -730,7 +740,7 @@ export function SettingsPage() {
                     backgroundColor: 'var(--ds-color-danger-surface-default)',
                     color: 'var(--ds-color-danger-text-default)',
                     borderColor: 'var(--ds-color-danger-border-default)'
-                  }}
+                  }} type="button"
                 >
                   <TrashIcon />
                   Slett min konto
@@ -754,14 +764,14 @@ export function SettingsPage() {
                   </Paragraph>
                 </div>
 
-                <Alert severity="info">
+                <Alert>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
                     Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.
                   </Paragraph>
                 </Alert>
 
                 <Link to="/settings/notifications">
-                  <Button variant="secondary">
+                  <Button variant="secondary" type="button">
                     Åpne varslingsinnstillinger
                   </Button>
                 </Link>
@@ -847,7 +857,7 @@ export function SettingsPage() {
                       Logg ut av din konto på denne enheten
                     </Paragraph>
                   </div>
-                  <Button variant="secondary" data-size="sm" onClick={logout}>
+                  <Button variant="secondary" data-size="sm" onClick={logout} type="button">
                     Logg ut
                   </Button>
                 </div>

@@ -126,7 +126,7 @@ export function PublishControls({
             onClick={handlePublish}
             disabled={isLoading}
             size="sm"
-            variant="primary"
+            variant="primary" type="button"
           >
             Publiser
           </Button>
@@ -138,7 +138,7 @@ export function PublishControls({
             onClick={() => setArchiveDialogOpen(true)}
             disabled={isLoading}
             size="sm"
-            variant="secondary"
+            variant="secondary" type="button"
           >
             Arkiver
           </Button>
@@ -192,14 +192,14 @@ export function PublishControls({
           <Button
             variant="secondary"
             onClick={() => setArchiveDialogOpen(false)}
-            disabled={isLoading}
+            disabled={isLoading} type="button"
           >
             Avbryt
           </Button>
           <Button
             variant="primary"
             onClick={handleArchive}
-            disabled={isLoading}
+            disabled={isLoading} type="button"
           >
             Arkiver
           </Button>
@@ -219,14 +219,14 @@ export function PublishControls({
           <Button
             variant="secondary"
             onClick={() => setDeleteDialogOpen(false)}
-            disabled={isLoading}
+            disabled={isLoading} type="button"
           >
             Avbryt
           </Button>
           <Button
             variant="danger"
             onClick={handleDelete}
-            disabled={isLoading}
+            disabled={isLoading} type="button"
           >
             Slett
           </Button>

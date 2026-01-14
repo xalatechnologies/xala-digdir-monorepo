@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Button, Heading, Paragraph } from '@xala/ds';
+import { Button, Paragraph } from '@xala/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 
 /**
@@ -166,7 +166,7 @@ export function AccountSwitcher() {
             backgroundColor: 'var(--ds-color-neutral-background-default)',
             border: '1px solid var(--ds-color-neutral-border-default)',
             borderRadius: 'var(--ds-border-radius-md)',
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+            boxShadow: 'var(--ds-shadow-large)',
             zIndex: 1000,
             maxHeight: '400px',
             overflowY: 'auto',
@@ -174,8 +174,9 @@ export function AccountSwitcher() {
         >
           {/* Personal Option */}
           <div style={{ padding: 'var(--ds-spacing-2) 0' }}>
-            <button
+            <Button
               type="button"
+              variant="tertiary"
               onClick={handlePersonalClick}
               style={{
                 all: 'unset',
@@ -218,7 +219,7 @@ export function AccountSwitcher() {
                 <UserIcon />
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                   Som privatperson
                 </Paragraph>
               </div>
@@ -255,8 +256,8 @@ export function AccountSwitcher() {
                     margin: 0,
                     color: 'var(--ds-color-neutral-text-subtle)',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    fontWeight: 600,
+                    letterSpacing: 'var(--ds-font-letter-spacing-wide)',
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                   }}
                 >
                   Organisasjoner
@@ -312,7 +313,7 @@ export function AccountSwitcher() {
                       data-size="sm"
                       style={{
                         margin: 0,
-                        fontWeight: 500,
+                        fontWeight: 'var(--ds-font-weight-medium)',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',

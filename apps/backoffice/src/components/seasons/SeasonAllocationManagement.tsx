@@ -115,7 +115,7 @@ export function SeasonAllocationManagement({
     return time.substring(0, 5); // HH:MM
   };
 
-  const calculateBookingCount = (application: SeasonApplication) => {
+  const calculateBookingCount = (_application: SeasonApplication) => {
     const start = new Date(seasonStartDate);
     const end = new Date(seasonEndDate);
     const weeks = Math.floor((end.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000));
@@ -175,13 +175,13 @@ export function SeasonAllocationManagement({
       {approvedApplications.length > 0 && (
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end' }}>
           {!allAllocated && (
-            <Button onClick={handleAllocateAll} disabled={allocateMutation.isPending}>
+            <Button onClick={handleAllocateAll} disabled={allocateMutation.isPending} type="button">
               <PlayIcon />
               Tildel alle ({approvedApplications.length})
             </Button>
           )}
           {allAllocated && (
-            <Button variant="primary" onClick={handleFinalize} disabled={finalizeMutation.isPending}>
+            <Button variant="primary" onClick={handleFinalize} disabled={finalizeMutation.isPending} type="button">
               <CheckCircleIcon />
               Fullfør tildeling
             </Button>
@@ -266,7 +266,7 @@ export function SeasonAllocationManagement({
                             <Button
                               size="sm"
                               onClick={() => handleAllocate(application.id)}
-                              disabled={allocating[application.id] || allocateMutation.isPending}
+                              disabled={allocating[application.id] || allocateMutation.isPending} type="button"
                             >
                               {allocating[application.id] ? (
                                 <>

@@ -1,4 +1,4 @@
-import { Card, Heading, Paragraph, Button, Switch, Spinner } from '@xala/ds';
+import { Card, Heading, Paragraph, Switch, Spinner } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
   useNotificationPreferences,
@@ -424,7 +424,7 @@ export function NotificationSettingsPage() {
           alignItems: 'center',
           gap: 'var(--ds-spacing-3)',
         }}>
-          <Spinner data-size="sm" />
+          <Spinner data-size="sm" aria-hidden="true" />
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-brand-1-text-default)' }}>
             Lagrer innstillinger...
           </Paragraph>

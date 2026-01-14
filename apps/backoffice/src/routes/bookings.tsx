@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Paragraph,
-  Heading,
   Spinner,
   Table,
   Checkbox,
@@ -259,6 +258,7 @@ export function BookingsPage() {
     navigate(`/bookings/${booking.id}`);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleEdit = (booking: Booking) => {
     navigate(`/bookings/${booking.id}/edit`);
   };
@@ -359,11 +359,11 @@ export function BookingsPage() {
         title="Filter og sortering"
         icon={<FilterIcon size={20} />}
         position="right"
-        size="sm"
+       
         footer={
           <Stack spacing="var(--ds-spacing-3)">
             <Text
-              size="sm"
+             
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
@@ -415,7 +415,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedPayment(payment.id)}
                 selected={selectedPayment === payment.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {payment.label}
                 </Text>
               </DrawerItem>
@@ -427,7 +427,7 @@ export function BookingsPage() {
         <DrawerSection title="Datoperiode" collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-3)">
             <div>
-              <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Text color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Fra dato
               </Text>
               <input
@@ -444,7 +444,7 @@ export function BookingsPage() {
               />
             </div>
             <div>
-              <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Text color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Til dato
               </Text>
               <input
@@ -485,7 +485,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedSort(sort.id)}
                 selected={selectedSort === sort.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {sort.label}
                 </Text>
               </DrawerItem>

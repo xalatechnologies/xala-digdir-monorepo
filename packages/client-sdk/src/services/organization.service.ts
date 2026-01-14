@@ -15,7 +15,8 @@ import type {
   UpdateUserDTO,
   UserQueryParams,
   GdprDataExport,
-  ConsentSettings
+  ConsentSettings,
+  NotificationPreferences
 } from '../types/organization';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
@@ -199,6 +200,20 @@ export class UserService extends BaseService {
    */
   async updateConsents(consents: Partial<ConsentSettings>): Promise<SingleResponse<ConsentSettings>> {
     return this.client.put(this.buildPath('/me/consents'), consents);
+  }
+
+  /**
+   * Get notification preferences
+   */
+  async getNotificationPrefs(): Promise<SingleResponse<NotificationPreferences>> {
+    return this.client.get(this.buildPath('/me/notification-preferences'));
+  }
+
+  /**
+   * Update notification preferences
+   */
+  async updateNotificationPrefs(prefs: Partial<NotificationPreferences>): Promise<SingleResponse<NotificationPreferences>> {
+    return this.client.patch(this.buildPath('/me/notification-preferences'), prefs);
   }
 
   /**

@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Paragraph, Heading, Button, Spinner } from '@xala/ds';
+import { Paragraph, Heading, Spinner } from '@xala/ds';
 import { useUploadListingMedia, useDeleteListingMedia } from '@digilist/client-sdk';
 import type { BackofficeListing } from '../../../types';
 
@@ -238,7 +238,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       fontSize: 'var(--ds-font-size-xs)',
                       fontWeight: 'var(--ds-font-weight-semibold)',
                       backgroundColor: 'var(--ds-color-accent-base-default)',
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-contrast-default)',
                       borderRadius: 'var(--ds-border-radius-sm)',
                     }}
                   >
@@ -252,6 +252,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                     left: 0,
                     right: 0,
                     padding: 'var(--ds-spacing-2)',
+                    // eslint-disable-next-line digdir/no-hardcoded-colors
                     background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
                     display: 'flex',
                     gap: 'var(--ds-spacing-1)',
@@ -265,7 +266,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       style={{
                         padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                         fontSize: 'var(--ds-font-size-xs)',
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
                         border: 'none',
                         borderRadius: 'var(--ds-border-radius-sm)',
                         cursor: 'pointer',
@@ -282,7 +283,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                       fontSize: 'var(--ds-font-size-xs)',
                       backgroundColor: 'var(--ds-color-danger-base-default)',
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-contrast-default)',
                       border: 'none',
                       borderRadius: 'var(--ds-border-radius-sm)',
                       cursor: isDeleting ? 'not-allowed' : 'pointer',

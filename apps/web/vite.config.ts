@@ -136,6 +136,7 @@ export default defineConfig({
     exclude: ['@digilist/client-sdk'],
     include: [
       'mapbox-gl',
+      'react-map-gl',
       'react-map-gl/mapbox',
     ],
     esbuildOptions: {

@@ -162,7 +162,7 @@ export function SeasonFormPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -176,7 +176,7 @@ export function SeasonFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
           </Button>
@@ -197,7 +197,7 @@ export function SeasonFormPage() {
 
       {/* Info Alert */}
       {!isEditing && (
-        <Alert severity="info">
+        <Alert>
           Sesongen opprettes som <strong>Utkast</strong>. Du må legge til lokaler før du kan åpne den for søknader.
         </Alert>
       )}
@@ -215,7 +215,7 @@ export function SeasonFormPage() {
                   error={errors.name || undefined}
                   description="F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'"
                 >
-                  <Textfield
+                  <Textfield aria-label="Navn"
                     value={formData.name}
                     onChange={(e) => handleChange('name')(e.target.value)}
                     placeholder="Vårsesong 2026"
@@ -227,7 +227,7 @@ export function SeasonFormPage() {
                   label="Beskrivelse"
                   description="Retningslinjer og informasjon til søkere (valgfritt)"
                 >
-                  <Textfield
+                  <Textfield aria-label="Beskrivelse"
                     value={formData.description || ''}
                     onChange={(e) => handleChange('description')(e.target.value)}
                     placeholder="Legg til beskrivelse og retningslinjer..."
@@ -248,7 +248,7 @@ export function SeasonFormPage() {
                     error={errors.startDate || undefined}
                     description="Når sesongen starter"
                   >
-                    <Textfield
+                    <Textfield aria-label="Startdato"
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => handleChange('startDate')(e.target.value)}
@@ -262,7 +262,7 @@ export function SeasonFormPage() {
                     error={errors.endDate || undefined}
                     description="Når sesongen slutter"
                   >
-                    <Textfield
+                    <Textfield aria-label="Sluttdato"
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => handleChange('endDate')(e.target.value)}
@@ -278,7 +278,7 @@ export function SeasonFormPage() {
                   error={errors.applicationDeadline || undefined}
                   description="Siste dag for å sende inn søknader"
                 >
-                  <Textfield
+                  <Textfield aria-label="Søknadsfrist"
                     type="date"
                     value={formData.applicationDeadline}
                     onChange={(e) => handleChange('applicationDeadline')(e.target.value)}

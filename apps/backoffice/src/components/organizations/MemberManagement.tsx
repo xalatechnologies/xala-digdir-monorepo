@@ -94,7 +94,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
       {/* Add Member Section */}
       <div>
         {!isAdding ? (
-          <Button variant="secondary" data-size="sm" onClick={() => setIsAdding(true)}>
+          <Button variant="secondary" data-size="sm" onClick={() => setIsAdding(true)} type="button">
             <PlusIcon />
             Legg til medlem
           </Button>
@@ -140,21 +140,19 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
 
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                 <Button
-                  size="sm"
                   onClick={handleAddMember}
-                  disabled={!selectedUserId || isSubmitting}
+                  disabled={!selectedUserId || isSubmitting} type="button"
                 >
                   {isSubmitting ? 'Legger til...' : 'Legg til'}
                 </Button>
                 <Button
                   variant="secondary"
-                  size="sm"
                   onClick={() => {
                     setIsAdding(false);
                     setSelectedUserId('');
                     setSelectedRole('member');
                   }}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting} type="button"
                 >
                   Avbryt
                 </Button>
@@ -223,7 +221,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 <Table.Cell>
                   <Dropdown.TriggerContext>
                     <Dropdown.Trigger asChild>
-                      <Button variant="tertiary" data-size="sm" aria-label="Handlinger">
+                      <Button variant="tertiary" data-size="sm" aria-label="Handlinger" type="button">
                         <MoreVerticalIcon />
                       </Button>
                     </Dropdown.Trigger>

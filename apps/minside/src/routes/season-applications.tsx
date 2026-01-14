@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
-import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
+
+// Local type for season application status
+type SeasonApplicationStatus = 'pending' | 'approved' | 'rejected';
 
 /**
  * Season Applications Page
@@ -120,7 +122,7 @@ export function SeasonApplicationsPage() {
                 height: '40px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -316,7 +318,7 @@ export function SeasonApplicationsPage() {
       {/* Applications List */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner />
+          <Spinner aria-label="Laster søknader..." />
         </div>
       ) : error ? (
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>

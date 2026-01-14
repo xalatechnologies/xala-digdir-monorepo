@@ -33,44 +33,24 @@ import {
   type ListingType,
   type PublicListingParams,
   transformListing,
+  geocodeAddress,
+  buildAddressString,
+  type GeocodeConfig,
 } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeListing } from '../providers';
 
-// Mapbox token from environment
+// API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+const GOOGLE_API_KEY = import.meta.env.VITE_GEOCODING_API_KEY;
 
-// Geocode cache to avoid repeat API calls
-const geocodeCache = new Map<string, { lat: number; lng: number } | null>();
-
-// Geocode an address using Mapbox API
-async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
-  if (!MAPBOX_TOKEN || !address) return null;
-
-  // Check cache first
-  if (geocodeCache.has(address)) {
-    return geocodeCache.get(address) || null;
-  }
-
-  try {
-    const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_TOKEN}&country=NO&limit=1`
-    );
-    const data = await response.json();
-
-    if (data.features?.[0]) {
-      const [lng, lat] = data.features[0].center;
-      const coords = { lat, lng };
-      geocodeCache.set(address, coords);
-      return coords;
-    }
-  } catch (error) {
-    console.warn('[Geocoding] Failed to geocode:', address, error);
-  }
-
-  geocodeCache.set(address, null);
-  return null;
-}
+// Geocoding configuration - Mapbox for accurate Norwegian address geocoding
+const GEOCODE_CONFIG: GeocodeConfig = {
+  googleApiKey: GOOGLE_API_KEY,
+  mapboxToken: MAPBOX_TOKEN,
+  country: 'NO',
+  language: 'no',
+};
 
 // Listing type options (UI filter types)
 // Note: API types SPACE maps to FACILITY, RESOURCE maps to EQUIPMENT
@@ -92,20 +72,6 @@ const CAPACITY_OPTIONS = [
   { id: '11-20', label: '11-20 personer', min: 11, max: 20 },
   { id: '21-50', label: '21-50 personer', min: 21, max: 50 },
   { id: '50+', label: '50+ personer', min: 50, max: Infinity },
-];
-
-// Fallback coordinates for listings without location data (Norwegian cities for demo)
-const FALLBACK_COORDINATES: Array<{ lat: number; lng: number }> = [
-  { lat: 59.9139, lng: 10.7522 },  // Oslo
-  { lat: 59.2086, lng: 9.6089 },   // Skien
-  { lat: 59.2623, lng: 10.4085 },  // Tønsberg
-  { lat: 59.7439, lng: 10.2045 },  // Drammen
-  { lat: 59.0489, lng: 9.6942 },   // Porsgrunn
-  { lat: 59.4225, lng: 10.4393 },  // Sandefjord
-  { lat: 58.9700, lng: 5.7331 },   // Stavanger
-  { lat: 60.3913, lng: 5.3221 },   // Bergen
-  { lat: 63.4305, lng: 10.3951 },  // Trondheim
-  { lat: 69.6496, lng: 18.9560 },  // Tromsø
 ];
 
 // UI listing type for local use (matches SDK's UiListing)
@@ -208,144 +174,150 @@ export function ListingsPage(): React.ReactElement {
   const listings: ExtendedUiListing[] = React.useMemo(() => {
     if (!listingsResponse?.data) return [];
 
-    return listingsResponse.data.map((listing: Listing, index: number) => {
+    return listingsResponse.data.map((listing: Listing) => {
       const transformed = transformListing(listing);
 
       // Check for geocoded coordinates
       const geocoded = geocodedCoords.get(listing.id);
-
-      // Fallback coordinates if no geocoding available
-      const fallbackIndex = index % FALLBACK_COORDINATES.length;
-      const fallbackLat = FALLBACK_COORDINATES[fallbackIndex]?.lat ?? 59.9139;
-      const fallbackLng = FALLBACK_COORDINATES[fallbackIndex]?.lng ?? 10.7522;
 
       // Defensive: ensure location is always a string (handle if backend sends object)
       const locationValue = typeof transformed.location === 'string'
         ? transformed.location
         : 'Ukjent lokasjon';
 
+      // IMPORTANT: Destructure to EXCLUDE API coordinates (they are often incorrect)
+      // Only use freshly geocoded coordinates from addresses
+      const { latitude: _apiLat, longitude: _apiLng, ...transformedWithoutCoords } = transformed;
+
       return {
-        ...transformed,
+        ...transformedWithoutCoords,
         location: locationValue,
         listingType: listing.type,
-        latitude: transformed.latitude ?? geocoded?.lat ?? fallbackLat,
-        longitude: transformed.longitude ?? geocoded?.lng ?? fallbackLng,
+        // Only include coordinates from geocoding (NOT from API)
+        ...(geocoded && { latitude: geocoded.lat, longitude: geocoded.lng }),
       };
     });
   }, [listingsResponse, geocodedCoords]);
 
-  // Track which listings are being geocoded to avoid duplicates
-  const geocodingInProgress = React.useRef<Set<string>>(new Set());
+  // Track which listings have been geocoded (ref to avoid re-renders)
+  const geocodedIds = React.useRef<Set<string>>(new Set());
+  const geocodingInProgress = React.useRef<boolean>(false);
 
-  // Geocode listings that don't have coordinates
+  // Check if we have any geocoding API keys configured
+  const hasGeocodingKeys = Boolean(GOOGLE_API_KEY || MAPBOX_TOKEN);
+
+  // Geocode ALL listings based on their addresses
+  // ALWAYS geocode from address - do NOT rely on API coordinates (they are often incorrect)
+  // Uses Mapbox for accurate Norwegian address geocoding
   React.useEffect(() => {
-    if (!listingsResponse?.data || !MAPBOX_TOKEN) return;
+    if (!listingsResponse?.data || !hasGeocodingKeys || geocodingInProgress.current) return;
 
     const listingsToGeocode = listingsResponse.data.filter(listing => {
-      const locationMeta = listing.metadata?.location;
-      // Skip if already has coordinates from API
-      if (locationMeta?.lat && locationMeta?.lng) return false;
-      // Skip if already geocoded
-      if (geocodedCoords.has(listing.id)) return false;
-      // Skip if currently being geocoded
-      if (geocodingInProgress.current.has(listing.id)) return false;
+      // Skip if already geocoded in this session
+      if (geocodedIds.current.has(listing.id)) return false;
+      // Geocode ALL listings regardless of whether API has coordinates
       return true;
     });
 
     if (listingsToGeocode.length === 0) return;
 
-    // Geocode all listings in parallel
+    // Mark geocoding as in progress to prevent duplicate runs
+    geocodingInProgress.current = true;
+
+    // Geocode all listings in batches
     const geocodeAll = async () => {
-      const results = await Promise.all(
-        listingsToGeocode.map(async (listing) => {
-          // Mark as in progress
-          geocodingInProgress.current.add(listing.id);
+      const batchSize = GOOGLE_API_KEY ? 5 : 3; // Google allows higher rate limits
+      const allResults: Array<{ id: string; coords: { lat: number; lng: number } }> = [];
 
-          // Get the display location from transformed listing (already handles all structures)
-          const transformed = transformListing(listing);
-          const displayLocation = typeof transformed.location === 'string' ? transformed.location : '';
+      for (let i = 0; i < listingsToGeocode.length; i += batchSize) {
+        const batch = listingsToGeocode.slice(i, i + batchSize);
 
-          // Build structured address for geocoding - handle metadata.address as object
-          const metadata = listing.metadata || {};
-          const locationMeta = metadata.location || {};
-          const addressObj = metadata.address;
-          const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
-          const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
-          
-          // Extract address components - prioritize object structure (API format)
-          const addressParts: string[] = [];
-          const addPart = (part: unknown) => {
-            if (typeof part === 'string' && part.trim()) {
-              addressParts.push(part.trim());
+        const batchResults = await Promise.all(
+          batch.map(async (listing) => {
+            // Mark as geocoded immediately to prevent duplicates
+            geocodedIds.current.add(listing.id);
+
+            // Build structured address using SDK helper
+            const metadata = listing.metadata || {};
+            const locationMeta = metadata.location || {};
+            const addressObj = metadata.address;
+            const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
+            const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
+
+            // Debug: log the raw metadata to understand structure
+            console.log('[Geocoding] Raw metadata for', listing.name, ':', JSON.stringify(metadata, null, 2));
+
+            // Extract address components with explicit logging
+            const street = (addressObjTyped?.street as string) || (locationMeta.address as string) || '';
+            const postalCode = (addressObjTyped?.postalCode as string) || (locationMeta.postalCode as string) || (metadata.postalCode as string) || '';
+            const city = (addressObjTyped?.city as string) || (locationMeta.city as string) || (metadata.city as string) || '';
+
+            console.log('[Geocoding] Extracted components:', { street, postalCode, city });
+
+            // Build address string from components
+            const addressString = buildAddressString({
+              street,
+              postalCode,
+              city,
+            });
+
+            // Fallback to display location if no structured address
+            const transformed = transformListing(listing);
+            const displayLocation = typeof transformed.location === 'string' ? transformed.location : '';
+
+            const addressToGeocode = addressString && addressString !== 'Norway' && addressString.trim() !== ''
+              ? addressString
+              : (displayLocation && displayLocation !== 'Ukjent lokasjon' ? displayLocation : '');
+
+            // Skip if no valid address
+            if (!addressToGeocode || addressToGeocode === 'Ukjent lokasjon' || addressToGeocode === 'Norway') {
+              console.log('[Geocoding] Skipped (no valid address):', listing.name);
+              return null;
             }
-          };
-          
-          // Handle metadata.address as object with {street, city, postalCode}
-          if (addressObjTyped) {
-            addPart(addressObjTyped.street);
-            addPart(addressObjTyped.address); // fallback if street doesn't exist
-            addPart(addressObjTyped.postalCode);
-            addPart(addressObjTyped.city);
-          }
-          
-          // Fallback to other structures
-          addPart(locationMeta.address);
-          addPart(metadata.address as string); // if it's a string, not object
-          addPart(locationMeta.postalCode);
-          addPart(metadata.postalCode);
-          addPart(locationMeta.city);
-          addPart(metadata.city);
-          
-          const structuredAddress = addressParts.length > 0 ? addressParts.join(', ') : '';
 
-          // Use structured address if available, otherwise use display location
-          // Ensure we have a string, not an object
-          const addressToGeocode = structuredAddress && structuredAddress.trim() && structuredAddress !== 'Ukjent lokasjon'
-            ? structuredAddress.trim()
-            : (displayLocation && displayLocation.trim() && displayLocation !== 'Ukjent lokasjon' 
-                ? displayLocation.trim() 
-                : '');
+            console.log('[Geocoding] Final address to geocode:', listing.name, '->', addressToGeocode);
+            const result = await geocodeAddress(addressToGeocode, GEOCODE_CONFIG);
 
-          // Skip if no valid address (don't geocode "Ukjent lokasjon")
-          if (!addressToGeocode || addressToGeocode === 'Ukjent lokasjon') {
-            geocodingInProgress.current.delete(listing.id);
-            return null;
-          }
+            if (result) {
+              console.log(`[Geocoding] Success (${result.provider}):`, listing.name, result.latitude, result.longitude);
+              return { id: listing.id, coords: { lat: result.latitude, lng: result.longitude } };
+            } else {
+              console.log('[Geocoding] Failed:', listing.name);
+              return null;
+            }
+          })
+        );
 
-          console.log('[Geocoding] Attempting:', listing.name, addressToGeocode);
-          const coords = await geocodeAddress(addressToGeocode);
+        // Collect valid results
+        batchResults.forEach(r => {
+          if (r) allResults.push(r);
+        });
 
-          geocodingInProgress.current.delete(listing.id);
+        // Small delay between batches to respect rate limits
+        if (i + batchSize < listingsToGeocode.length) {
+          await new Promise(resolve => setTimeout(resolve, GOOGLE_API_KEY ? 100 : 150));
+        }
+      }
 
-          if (coords) {
-            console.log('[Geocoding] Success:', listing.name, coords.lat, coords.lng);
-            return { id: listing.id, coords };
-          } else {
-            console.log('[Geocoding] Failed:', listing.name);
-            return null;
-          }
-        })
-      );
-
-      // Batch update all geocoded coordinates at once
-      const validResults = results.filter((r): r is { id: string; coords: { lat: number; lng: number } } => r !== null);
-      if (validResults.length > 0) {
+      // Update state once with all results
+      if (allResults.length > 0) {
         setGeocodedCoords(prev => {
           const newMap = new Map(prev);
-          validResults.forEach(({ id, coords }) => newMap.set(id, coords));
+          allResults.forEach(({ id, coords }) => newMap.set(id, coords));
           return newMap;
         });
       }
+
+      geocodingInProgress.current = false;
     };
 
     geocodeAll();
-  }, [listingsResponse, geocodedCoords]);
+  }, [listingsResponse, hasGeocodingKeys]);
 
   // Filter state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [listingType, setListingType] = React.useState<string>('ALL');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
-  const [showMapView, setShowMapView] = React.useState<boolean>(true); // Toggle between map and accessible table
   const [selectedArea, setSelectedArea] = React.useState<string>('all');
   const [selectedCapacity, setSelectedCapacity] = React.useState<string>('all');
   const [selectedFacilities, setSelectedFacilities] = React.useState<string[]>([]);
@@ -683,6 +655,9 @@ export function ListingsPage(): React.ReactElement {
                       facilities={listing.facilities}
                       moreFacilities={listing.moreFacilities}
                       capacity={listing.capacity}
+                      price={listing.price}
+                      priceUnit={listing.priceUnit}
+                      currency={listing.currency}
                       rating={listing.rating}
                       reviewCount={listing.reviewCount}
                       imageHeight={260}
@@ -690,9 +665,9 @@ export function ListingsPage(): React.ReactElement {
                       showDescription={true}
                       showFacilities={true}
                       showCapacity={true}
-                      showListingType={true}
+                      showListingType={false}
                       showRating={true}
-                      showPrice={false}
+                      showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(id) => console.log('Toggle favorite:', id)}
                       onShare={(id) => console.log('Share listing:', id)}
@@ -724,82 +699,50 @@ export function ListingsPage(): React.ReactElement {
                     />
                   ))}
                 </Stack>
+              ) : viewMode === 'map' ? (
+                <ListingMap
+                  listings={filteredListings
+                    .filter(l => l.latitude !== undefined && l.longitude !== undefined)
+                    .map(l => ({
+                      id: l.id,
+                      name: l.name,
+                      ...(l.slug && { slug: l.slug }),
+                      location: l.location,
+                      image: l.image,
+                      latitude: l.latitude!,
+                      longitude: l.longitude!,
+                      type: l.type,
+                      listingType: l.listingType,
+                      description: l.description,
+                      capacity: l.capacity,
+                      price: l.price,
+                      priceUnit: l.priceUnit,
+                      facilities: l.facilities,
+                      available: l.available,
+                    }))}
+                  mapboxToken={MAPBOX_TOKEN || ''}
+                  height="calc(100vh - 250px)"
+                  onListingClick={handleListingClick}
+                />
               ) : (
-                <>
-                  {/* Map/Table View Toggle for Accessibility */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      marginBottom: 'var(--ds-spacing-4)',
-                      gap: 'var(--ds-spacing-3)',
-                    }}
-                  >
-                    <Button
-                      type="button"
-                      variant={showMapView ? 'primary' : 'secondary'}
-                      onClick={() => setShowMapView(true)}
-                      aria-pressed={showMapView}
-                    >
-                      Kartvisning
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={!showMapView ? 'primary' : 'secondary'}
-                      onClick={() => setShowMapView(false)}
-                      aria-pressed={!showMapView}
-                      aria-label="Vis tabellvisning (tilgjengelig for skjermlesere og tastaturnavigering)"
-                    >
-                      Tabellvisning
-                    </Button>
-                  </div>
-
-                  {showMapView ? (
-                    <ListingMap
-                      listings={filteredListings
-                        .filter(l => l.latitude !== undefined && l.longitude !== undefined)
-                        .map(l => ({
-                          id: l.id,
-                          name: l.name,
-                          ...(l.slug && { slug: l.slug }),
-                          location: l.location,
-                          image: l.image,
-                          latitude: l.latitude!,
-                          longitude: l.longitude!,
-                          type: l.type,
-                          listingType: l.listingType,
-                          description: l.description,
-                          capacity: l.capacity,
-                          price: l.price,
-                          priceUnit: l.priceUnit,
-                          facilities: l.facilities,
-                          available: l.available,
-                        }))}
-                      mapboxToken={MAPBOX_TOKEN || ''}
-                      height="calc(100vh - 250px)"
-                      onListingClick={handleListingClick}
-                    />
-                  ) : (
-                    <ListingTableView
-                      listings={filteredListings.map(l => ({
-                        id: l.id,
-                        name: l.name,
-                        ...(l.slug && { slug: l.slug }),
-                        location: l.location,
-                        type: l.type,
-                        capacity: l.capacity,
-                        price: l.price,
-                        priceUnit: l.priceUnit,
-                      }))}
-                      height="calc(100vh - 250px)"
-                      onListingClick={handleListingClick}
-                    />
-                  )}
-                </>
+                <ListingTableView
+                  listings={filteredListings.map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    ...(l.slug && { slug: l.slug }),
+                    location: l.location,
+                    type: l.type,
+                    capacity: l.capacity,
+                    price: l.price,
+                    priceUnit: l.priceUnit,
+                  }))}
+                  height="calc(100vh - 250px)"
+                  onListingClick={handleListingClick}
+                />
               )}
 
-              {/* Show more */}
-              {viewMode !== 'map' && hasMore && (
+              {/* Show more - only for grid/list views */}
+              {(viewMode === 'grid' || viewMode === 'list') && hasMore && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--ds-spacing-8)' }}>
                   <Button
                     type="button"

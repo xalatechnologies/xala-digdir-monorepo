@@ -105,6 +105,7 @@ export {
   UploadIcon,
   CameraIcon,
   ImageIcon,
+  TableIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility

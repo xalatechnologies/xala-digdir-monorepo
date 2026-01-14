@@ -550,7 +550,7 @@ export function ReportsPage() {
                               justifyContent: 'center',
                               fontSize: 'var(--ds-font-size-xs)',
                               fontWeight: 'var(--ds-font-weight-medium)',
-                              color: intensity > 0.5 ? 'white' : 'var(--ds-color-neutral-text-default)',
+                              color: intensity > 0.5 ? 'var(--ds-color-neutral-contrast-default)' : 'var(--ds-color-neutral-text-default)',
                               cursor: 'pointer',
                               transition: 'transform 0.1s',
                             }}

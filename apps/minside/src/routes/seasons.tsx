@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Container, Heading, Paragraph, Card, Button, Spinner, Grid } from '@xala/ds';
+import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
@@ -13,7 +13,7 @@ import { SEASON_FILTER_OPTIONS } from '../features/seasons/constants';
  */
 
 // Icons
-function UserIcon() {
+function CalendarIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="8" r="4" />
@@ -49,19 +49,8 @@ function ClockIcon() {
   );
 }
 
-function CalendarIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
-
 export function SeasonsPage() {
-  const { accountType, selectedOrganization, getActiveAccount } = useAccountContext();
+  const { accountType, selectedOrganization } = useAccountContext();
   const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
 
   // Fetch seasons from SDK
@@ -70,7 +59,6 @@ export function SeasonsPage() {
   );
 
   const seasons = seasonsResponse?.data ?? [];
-  const activeAccount = getActiveAccount();
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -104,7 +92,7 @@ export function SeasonsPage() {
                 height: '40px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -160,7 +148,7 @@ export function SeasonsPage() {
                 height: '56px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -198,7 +186,7 @@ export function SeasonsPage() {
                 height: '56px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -236,7 +224,7 @@ export function SeasonsPage() {
                 height: '56px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-warning-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -287,7 +275,7 @@ export function SeasonsPage() {
       {/* Season List */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner />
+          <Spinner aria-label="Laster sesonger..." />
         </div>
       ) : error ? (
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>

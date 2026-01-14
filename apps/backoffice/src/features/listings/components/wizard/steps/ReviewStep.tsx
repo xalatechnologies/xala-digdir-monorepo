@@ -296,11 +296,11 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                   gap: 'var(--ds-spacing-1)',
                 }}
               >
-                <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
+                <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
                   <ImageIcon size={14} /> {images.length} bilder
                 </Tag>
                 {documents.length > 0 && (
-                  <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
+                  <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
                     {documents.length} dokumenter
                   </Tag>
                 )}
@@ -493,7 +493,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 flexShrink: 0,
               }}
             >

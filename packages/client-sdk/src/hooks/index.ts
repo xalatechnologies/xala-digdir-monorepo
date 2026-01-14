@@ -61,7 +61,8 @@ export {
   useAvailabilitySlots,
   useAllocations,
   useCreateAllocation,
-  useDeleteAllocation
+  useDeleteAllocation,
+  usePaymentHistory
 } from './use-bookings';
 
 // Organization & User hooks
@@ -107,6 +108,7 @@ export {
   useVippsStatus,
   useVippsPayment,
   useInitiatePayment,
+  useRefundPayment,
   useCalendarSyncStatus,
   useSyncCalendar
 } from './use-integrations';
@@ -116,6 +118,7 @@ export {
   useRealtimeConnection,
   useRealtimeBookings,
   useRealtimeListings,
+  useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
   useRealtimeAudit,
@@ -256,3 +259,88 @@ export {
   type FocusManagementMetric,
   type AriaAnnouncementMetric,
 } from './use-accessibility-monitoring';
+
+// Search hooks
+export {
+  useGlobalSearch,
+  useTypeahead,
+  useSavedFilters,
+  useSavedFilter,
+  useCreateSavedFilter,
+  useUpdateSavedFilter,
+  useDeleteSavedFilter,
+  useRecentSearches,
+  useExportResults,
+} from './use-search';
+
+// Economy hooks (invoicing, billing, credit notes)
+export {
+  useInvoiceBases,
+  useInvoiceBasis,
+  useCreateInvoiceBasis,
+  useGenerateFromBookings,
+  useUpdateInvoiceBasis,
+  useApproveInvoiceBasis,
+  useFinalizeInvoiceBasis,
+  useDeleteInvoiceBasis,
+  useSalesDocuments,
+  useSalesDocument,
+  useSendSalesDocument,
+  useMarkAsPaid,
+  useDownloadInvoicePdf,
+  useCancelSalesDocument,
+  useCreditNotes,
+  useCreditNote,
+  useCreateCreditNote,
+  useApproveCreditNote,
+  useProcessCreditNote,
+  useDownloadCreditNotePdf,
+  useSyncToVisma,
+  useVismaInvoiceStatus,
+  useExportEconomy,
+  useEconomyStatistics,
+} from './use-economy';
+
+// Billing hooks (user + org billing for Minside)
+export {
+  billingKeys,
+  useBillingSummary,
+  useInvoices,
+  useInvoice,
+  useDownloadInvoice,
+  useInvoiceDownloadUrl,
+  useOrgBillingSummary,
+  useOrgInvoices,
+  useOrgInvoice,
+  useDownloadOrgInvoice,
+} from './use-billing';
+
+// Season Applications hooks
+export {
+  seasonApplicationKeys,
+  useSeasonApplications,
+  useSeasonApplication,
+  useCreateSeasonApplication,
+  useUpdateSeasonApplication,
+  useApproveSeasonApplication,
+  useRejectSeasonApplication,
+  useAllocateApplication,
+  useFinalizeSeasonAllocations,
+  useDeleteSeasonApplication,
+} from './use-season-applications';
+
+// Seasons hooks
+export {
+  seasonKeys,
+  useSeasons,
+  useSeason,
+  useSeasonStats,
+  useCreateSeason,
+  useUpdateSeason,
+  useOpenSeason,
+  useCloseSeason,
+  useActivateSeason,
+  useCompleteSeason,
+  useCancelSeason,
+  useDeleteSeason,
+} from './use-seasons';

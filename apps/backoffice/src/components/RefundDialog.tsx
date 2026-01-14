@@ -384,6 +384,7 @@ export function RefundDialog({
             min="0"
             max={maxAmount}
             error={!!error}
+            aria-label={t('refund.amountLabel', 'Beløp å refundere')}
             style={{ width: '100%' }}
           />
           {error && (

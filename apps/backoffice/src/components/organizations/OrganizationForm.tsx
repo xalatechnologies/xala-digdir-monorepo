@@ -142,7 +142,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder="F.eks. Oslo Idrettslag"
-                
+                aria-label="Navn"
               />
             </FormField>
 
@@ -172,7 +172,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.organizationNumber || ''}
                 onChange={(e) => handleChange('organizationNumber')(e.target.value)}
                 placeholder="123456789"
-                
+                aria-label="Organisasjonsnummer"
                 maxLength={9}
               />
             </FormField>
@@ -192,7 +192,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="kontakt@organisasjon.no"
-                
+                aria-label="E-post"
               />
             </FormField>
 
@@ -205,6 +205,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
                 placeholder="+47 12 34 56 78"
+                aria-label="Telefon"
               />
             </FormField>
           </Stack>
@@ -221,6 +222,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.address || ''}
                 onChange={(e) => handleChange('address')(e.target.value)}
                 placeholder="Gateadresse"
+                aria-label="Gateadresse"
               />
             </FormField>
 
@@ -233,7 +235,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                   value={formData.postalCode || ''}
                   onChange={(e) => handleChange('postalCode')(e.target.value)}
                   placeholder="0001"
-                  
+                  aria-label="Postnummer"
                   maxLength={4}
                 />
               </FormField>
@@ -243,6 +245,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                   value={formData.city || ''}
                   onChange={(e) => handleChange('city')(e.target.value)}
                   placeholder="Oslo"
+                  aria-label="Poststed"
                 />
               </FormField>
             </div>

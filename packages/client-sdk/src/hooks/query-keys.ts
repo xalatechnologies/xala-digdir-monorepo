@@ -12,6 +12,8 @@ import type {
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
+import type { EconomyQueryParams } from '../types/economy';
+import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
 
 /**
  * Strongly-typed query key factory
@@ -27,6 +29,50 @@ export const queryKeys = {
     providers: () => [...queryKeys.auth.all, 'providers'] as const,
     permissions: () => [...queryKeys.auth.all, 'permissions'] as const,
   },
+
+  // =========================================================================
+  // Economy Keys
+  // =========================================================================
+  economy: {
+    all: ['economy'] as const,
+    invoiceBases: {
+      all: () => [...queryKeys.economy.all, 'invoiceBases'] as const,
+      lists: () => [...queryKeys.economy.invoiceBases.all(), 'list'] as const,
+      list: (params?: EconomyQueryParams) => [...queryKeys.economy.invoiceBases.lists(), params] as const,
+      detail: (id: string) => [...queryKeys.economy.invoiceBases.all(), 'detail', id] as const,
+    },
+    salesDocuments: {
+      all: () => [...queryKeys.economy.all, 'salesDocuments'] as const,
+      lists: () => [...queryKeys.economy.salesDocuments.all(), 'list'] as const,
+      list: (params?: EconomyQueryParams) => [...queryKeys.economy.salesDocuments.lists(), params] as const,
+      detail: (id: string) => [...queryKeys.economy.salesDocuments.all(), 'detail', id] as const,
+      vismaStatus: (salesDocumentId: string) => [...queryKeys.economy.salesDocuments.all(), 'vismaStatus', salesDocumentId] as const,
+    },
+    creditNotes: {
+      all: () => [...queryKeys.economy.all, 'creditNotes'] as const,
+      lists: () => [...queryKeys.economy.creditNotes.all(), 'list'] as const,
+      list: (params?: EconomyQueryParams) => [...queryKeys.economy.creditNotes.lists(), params] as const,
+      detail: (id: string) => [...queryKeys.economy.creditNotes.all(), 'detail', id] as const,
+    },
+    statistics: (params?: { startDate?: string; endDate?: string }) => [...queryKeys.economy.all, 'statistics', params] as const,
+  },
+
+  // =========================================================================
+  // Search Keys
+  // =========================================================================
+  search: {
+    all: ['search'] as const,
+    results: (params: SearchParams) => [...queryKeys.search.all, 'results', params] as const,
+    typeahead: (params: TypeaheadParams) => [...queryKeys.search.all, 'typeahead', params] as const,
+    recent: (params?: RecentSearchQueryParams) => [...queryKeys.search.all, 'recent', params] as const,
+    savedFilters: {
+      all: () => [...queryKeys.search.all, 'savedFilters'] as const,
+      lists: () => [...queryKeys.search.savedFilters.all(), 'list'] as const,
+      list: (params?: SavedFilterQueryParams) => [...queryKeys.search.savedFilters.lists(), params] as const,
+      detail: (id: string) => [...queryKeys.search.savedFilters.all(), 'detail', id] as const,
+    },
+  },
+
 
   // =========================================================================
   // Listing Keys

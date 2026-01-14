@@ -12,6 +12,7 @@ import type {
   CancelBookingDTO,
   BookingPricing,
   BookingReceipt,
+  BookingDocument,
   CalendarEvent,
   CalendarQueryParams,
   Allocation,
@@ -158,6 +159,34 @@ export class BookingService extends BaseService {
     return this.client.get(this.buildPath('/reconciliation'), {
       params: params as Record<string, string | number | boolean>
     });
+  }
+
+  /**
+   * Change booking time (user-initiated reschedule)
+   * Server enforces cancellation deadlines and availability
+   */
+  async changeTime(id: string, newTimeRange: { startTime: string; endTime: string }): Promise<SingleResponse<Booking>> {
+    return this.client.patch(this.buildPath(`/${id}/time`), newTimeRange);
+  }
+
+  /**
+   * Request a change to a booking (when direct changes are locked)
+   * Used for bookings that require approval for modifications
+   */
+  async requestChange(id: string, data: { 
+    requestedStartTime?: string; 
+    requestedEndTime?: string; 
+    reason?: string;
+    notes?: string;
+  }): Promise<SingleResponse<{ requestId: string; status: string }>> {
+    return this.client.post(this.buildPath(`/${id}/change-request`), data);
+  }
+
+  /**
+   * Get booking documents (confirmations, receipts, decisions, terms)
+   */
+  async getDocuments(id: string): Promise<SingleResponse<BookingDocument[]>> {
+    return this.client.get(this.buildPath(`/${id}/documents`));
   }
 }
 

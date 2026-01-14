@@ -37,40 +37,7 @@ import { ReviewList } from '../features/reviews/components/ReviewList';
 import { ReviewForm } from '../features/reviews/components/ReviewForm';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const TENANT_ID = import.meta.env.VITE_TENANT_ID || 'default-tenant';
-
-// Default data for fallback
-const defaultAmenities: Amenity[] = [
-  { id: 'wifi', name: 'WiFi', category: 'connectivity' },
-  { id: 'projector', name: 'Projektor', category: 'av' },
-  { id: 'whiteboard', name: 'Whiteboard', category: 'av' },
-  { id: 'parking', name: 'Parkering', category: 'facilities' },
-  { id: 'coffee', name: 'Kaffe/Te', category: 'amenities' },
-  { id: 'ac', name: 'Klimaanlegg', category: 'comfort' },
-];
-
-const defaultRules: Rule[] = [
-  { id: 'cancel', title: 'Avbestilling', content: 'Avbestilling må skje senest 24 timer før booket tid. Ved senere avbestilling belastes fullt beløp.', category: 'cancellation' },
-  { id: 'cleaning', title: 'Renhold', content: 'Lokalet skal forlates i samme stand som ved ankomst. Alt søppel skal kastes i anviste beholdere. Ved behov for ekstra renhold kan gebyr påløpe.', category: 'cleaning' },
-  { id: 'noise', title: 'Støy og ro', content: 'Vis hensyn til naboer og andre brukere. Høy musikk og støyende aktiviteter er kun tillatt i angitte tidsrom.', category: 'noise' },
-  { id: 'safety', title: 'Sikkerhet', content: 'Nødutganger skal holdes frie til enhver tid. Røyking er ikke tillatt innendørs. Brannslukningsutstyr skal ikke flyttes eller blokkeres.', category: 'safety' },
-  { id: 'equipment', title: 'Utstyr', content: 'Alt utstyr skal behandles forsiktig og returneres til opprinnelig plassering. Skader må meldes umiddelbart.', category: 'general' },
-];
-
-const defaultFaq: FAQItem[] = [
-  { id: 'faq1', question: 'Hvordan booker jeg lokalet?', answer: 'Velg ønsket dato og tidspunkt i kalenderen, og følg instruksjonene for å fullføre bookingen. Du vil motta en bekreftelse på e-post.' },
-  { id: 'faq2', question: 'Kan jeg avbestille bookingen?', answer: 'Ja, du kan avbestille inntil 24 timer før booket tid uten kostnad. Ved senere avbestilling gjelder våre avbestillingsregler.' },
-  { id: 'faq3', question: 'Hva er inkludert i prisen?', answer: 'Prisen inkluderer tilgang til lokalet og standard fasiliteter som WiFi, projektor og whiteboard. Ekstra tjenester kan bestilles separat.' },
-  { id: 'faq4', question: 'Er det parkering tilgjengelig?', answer: 'Ja, det er gratis parkering for gjester. Parkeringsplasser er tilgjengelige etter først-til-mølla-prinsippet.' },
-  { id: 'faq5', question: 'Kan jeg forlenge bookingen?', answer: 'Ja, du kan forlenge bookingen hvis lokalet er ledig. Kontakt oss eller sjekk tilgjengelighet i kalenderen.' },
-];
-
-const defaultEvents: ListingEvent[] = [
-  { id: 'evt1', title: 'Yoga i parken', description: 'Ukentlig yoga-økt for alle nivåer', startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), startTime: '10:00', endTime: '11:30', status: 'upcoming', organizer: 'Helsestudio AS' },
-  { id: 'evt2', title: 'Fotballtrening', description: 'Trening for juniorlaget', startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), startTime: '17:00', endTime: '19:00', status: 'upcoming', organizer: 'Lokalt idrettslag' },
-  { id: 'evt3', title: 'Bedriftsmøte', description: 'Kvartalsvis samling', startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), startTime: '09:00', endTime: '16:00', status: 'upcoming', organizer: 'Tech Solutions' },
-  { id: 'evt4', title: 'Workshop: Kreativ skriving', description: 'Lær grunnleggende teknikker', startDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), startTime: '18:00', endTime: '20:00', status: 'past', organizer: 'Kulturhuset' },
-];
+const TENANT_ID = import.meta.env.VITE_TENANT_ID;
 
 // Transform API listing to feature Listing type
 function transformApiToListing(api: ApiListing): Listing {
@@ -78,11 +45,9 @@ function transformApiToListing(api: ApiListing): Listing {
   const typeMap: Record<string, ListingType> = { EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', SPACE: 'FACILITY' };
   const listingType: ListingType = typeMap[api.type] || 'OTHER';
 
-  // Amenities - use API data or defaults
+  // Amenities from API
   const apiAmenities = (meta.facilities as string[]) || [];
-  const amenities: Amenity[] = apiAmenities.length > 0
-    ? apiAmenities.map((f, i) => ({ id: `a-${i}`, name: f, description: f, category: 'general' }))
-    : defaultAmenities;
+  const amenities: Amenity[] = apiAmenities.map((f, i) => ({ id: `a-${i}`, name: f, description: f, category: 'general' }));
 
   const includedFacilities: IncludedFacility[] = ((meta.includedEquipment as Array<{ name: string; quantity?: number; description?: string }>) || []).map((e, i) => {
     const facility: IncludedFacility = {
@@ -101,50 +66,40 @@ function transformApiToListing(api: ApiListing): Listing {
     return facility;
   });
 
-  // Rules - use API data or defaults
+  // Rules from API
   const apiRules = (meta.guidelines as Array<{ id: string; title: string; content: string }>) || [];
-  const rules: Rule[] = apiRules.length > 0
-    ? apiRules.map((g, i) => ({ id: g.id || `rule-${i}`, title: g.title, content: g.content, category: 'general' as const }))
-    : defaultRules;
+  const rules: Rule[] = apiRules.map((g, i) => ({ id: g.id || `rule-${i}`, title: g.title, content: g.content, category: 'general' as const }));
 
-  // FAQ - use API data or defaults
+  // FAQ from API
   const apiFaq = (meta.faq as Array<{ id: string; question: string; answer: string }>) || [];
-  const faq: FAQItem[] = apiFaq.length > 0
-    ? apiFaq.map((f, i) => ({ id: f.id || `faq-${i}`, question: f.question, answer: f.answer }))
-    : defaultFaq;
+  const faq: FAQItem[] = apiFaq.map((f, i) => ({ id: f.id || `faq-${i}`, question: f.question, answer: f.answer }));
 
-  const keyFacts: KeyFacts = { ...(api.capacity ? { capacity: api.capacity } : { capacity: 50 }), bookingMode: 'SLOTS' as BookingMode };
+  const keyFacts: KeyFacts = { ...(api.capacity ? { capacity: api.capacity } : {}), bookingMode: 'SLOTS' as BookingMode };
   const metadata: ListingMetadata = {
-    description: api.description || 'Moderne og fleksibelt lokale perfekt for møter, workshops og arrangementer. Sentralt beliggende med god tilgang til offentlig transport.',
+    description: api.description || '',
     amenities,
     includedFacilities,
     rules,
     faq,
-    highlights: ((meta.highlights as string[]) || ['Sentralt beliggende', 'Moderne fasiliteter', 'Fleksible løsninger'])
+    highlights: (meta.highlights as string[]) || []
   };
 
-  // Build address - use API data or provide default
+  // Build address from API data only
   const address = meta.address
     ? {
         formatted: [meta.address, meta.postalCode, meta.city].filter(Boolean).join(', '),
         ...(typeof meta.latitude === 'number' ? { coordinates: { latitude: meta.latitude as number, longitude: meta.longitude as number } } : {}),
       }
-    : {
-        formatted: 'Oslo, Norge',
-        coordinates: { latitude: 59.9139, longitude: 10.7522 },
-      };
+    : { formatted: '' };
 
-  // Build contact - use API data or provide default
+  // Build contact from API data only
   const contact = meta.contactEmail
     ? {
         email: meta.contactEmail as string,
         ...(meta.contactPhone ? { phone: meta.contactPhone as string } : {}),
         ...(meta.contactName ? { name: meta.contactName as string } : {}),
       }
-    : {
-        email: 'kontakt@digilist.no',
-        phone: '+47 123 45 678',
-      };
+    : {};
 
   return {
     id: api.id,
@@ -155,19 +110,22 @@ function transformApiToListing(api: ApiListing): Listing {
     status: 'published',
     images: (api.images || []).map((src: string, i: number) => ({ id: `${i}`, url: src, alt: `${api.name} - ${i + 1}`, isPrimary: i === 0, order: i })),
     address,
-    contact,
+    ...(Object.keys(contact).length > 0 && { contact }),
     openingHours: buildOpeningHours(meta),
     keyFacts,
     metadata,
-    activityData: {
-      type: 'events',
-      events: defaultEvents,
-      totalCount: defaultEvents.length,
-    },
+    // Activity data from API (if available)
+    ...((meta.events as ListingEvent[])?.length && {
+      activityData: {
+        type: 'events' as const,
+        events: meta.events as ListingEvent[],
+        totalCount: (meta.events as ListingEvent[]).length,
+      },
+    }),
     bookingConfig: { enabled: true, mode: 'SLOTS', approval: 'NONE', paymentRequired: false },
-    ...(api.pricing?.basePrice ? { pricing: { basePrice: api.pricing.basePrice, currency: 'NOK', unit: 'time', displayPrice: `${api.pricing.basePrice} kr/time` } } : { pricing: { basePrice: 500, currency: 'NOK', unit: 'time', displayPrice: '500 kr/time' } }),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    ...(api.pricing?.basePrice && { pricing: { basePrice: api.pricing.basePrice, currency: 'NOK', unit: 'time', displayPrice: `${api.pricing.basePrice} kr/time` } }),
+    createdAt: api.createdAt || new Date().toISOString(),
+    updatedAt: api.updatedAt || new Date().toISOString(),
   };
 }
 
@@ -183,17 +141,8 @@ function buildOpeningHours(meta: Record<string, unknown>): OpeningHours {
     }));
     return { regular };
   }
-  return {
-    regular: [
-      { day: 'Mandag', dayIndex: 1, open: '08:00', close: '22:00', isClosed: false },
-      { day: 'Tirsdag', dayIndex: 2, open: '08:00', close: '22:00', isClosed: false },
-      { day: 'Onsdag', dayIndex: 3, open: '08:00', close: '22:00', isClosed: false },
-      { day: 'Torsdag', dayIndex: 4, open: '08:00', close: '22:00', isClosed: false },
-      { day: 'Fredag', dayIndex: 5, open: '08:00', close: '22:00', isClosed: false },
-      { day: 'Lørdag', dayIndex: 6, open: '09:00', close: '18:00', isClosed: false },
-      { day: 'Søndag', dayIndex: 0, isClosed: true },
-    ],
-  };
+  // Return empty opening hours if not provided by API
+  return { regular: [] };
 }
 
 
@@ -211,9 +160,10 @@ export function ListingDetailPage(): React.ReactElement {
   
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
-  const isAuthenticated = false; // Mock auth state
-  const [showReviewForm, setShowReviewForm] = React.useState(true); // Mock: show form for eligible users
-  const [hasCompletedBooking, setHasCompletedBooking] = React.useState(true); // Mock: user has completed booking
+  // TODO: Replace with real auth state from SDK/provider
+  const isAuthenticated = false;
+  const [showReviewForm, setShowReviewForm] = React.useState(false);
+  const hasCompletedBooking = false;
 
   // Transform API data
   const listing = React.useMemo((): Listing | null => {
@@ -381,7 +331,7 @@ export function ListingDetailPage(): React.ReactElement {
             {isAuthenticated && hasCompletedBooking && showReviewForm && (
               <ReviewForm
                 listingId={listing.id}
-                bookingId="mock-booking-id" // In production, this would come from user's completed bookings
+                bookingId="" // TODO: Get from user's completed bookings via SDK
                 onSuccess={() => {
                   setShowReviewForm(false);
                   // Optionally show a success message

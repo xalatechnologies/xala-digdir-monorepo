@@ -149,7 +149,7 @@ export function OrganizationDetailPage() {
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/organizations">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -163,7 +163,7 @@ export function OrganizationDetailPage() {
       {/* Header */}
       <div>
         <Link to="/organizations">
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -235,18 +235,18 @@ export function OrganizationDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
-              <Button variant="secondary" data-size="sm">
+              <Button variant="secondary" data-size="sm" type="button">
                 <EditIcon />
                 Rediger
               </Button>
             </Link>
             {!organization.verified && (
-              <Button variant="secondary" data-size="sm" onClick={handleVerify}>
+              <Button variant="secondary" data-size="sm" onClick={handleVerify} type="button">
                 <ShieldCheckIcon />
                 Verifiser
               </Button>
             )}
-            <Button variant="danger" data-size="sm" onClick={handleDelete}>
+            <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
               <TrashIcon />
               Slett
             </Button>

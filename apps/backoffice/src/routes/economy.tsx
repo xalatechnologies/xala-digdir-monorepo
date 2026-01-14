@@ -41,7 +41,7 @@ export function EconomyPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Paragraph>Generer og administrer fakturagrunnlag fra godkjente bookinger</Paragraph>
-              <Button variant="primary">
+              <Button variant="primary" type="button">
                 <PlusIcon />
                 Generer fra bookinger
               </Button>
@@ -93,7 +93,7 @@ export function EconomyPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Paragraph>Opprett og administrer kreditnotar</Paragraph>
-              <Button variant="primary">
+              <Button variant="primary" type="button">
                 <PlusIcon />
                 Opprett kreditnota
               </Button>

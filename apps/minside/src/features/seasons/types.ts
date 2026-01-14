@@ -7,7 +7,6 @@
 import type {
   Season,
   SeasonStatus,
-  SeasonApplication,
 } from '@digilist/client-sdk/types';
 
 // =============================================================================

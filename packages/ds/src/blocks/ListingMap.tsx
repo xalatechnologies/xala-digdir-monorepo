@@ -173,12 +173,28 @@ export function ListingMap({
 }: ListingMapProps): React.ReactElement {
   const mapRef = useRef<MapRef>(null);
   const [selectedListing, setSelectedListing] = useState<MapListing | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   // Detect color scheme for map style
   const detectedColorScheme = useColorScheme(colorScheme);
   const effectiveMapStyle = mapStyle || MAP_STYLES[detectedColorScheme];
 
-  // Calculate bounds to fit all listings
+  // Calculate bounds for all listings
+  const bounds = useMemo(() => {
+    if (!listings.length) return null;
+
+    const lats = listings.map(l => l.latitude);
+    const lngs = listings.map(l => l.longitude);
+
+    return {
+      minLat: Math.min(...lats),
+      maxLat: Math.max(...lats),
+      minLng: Math.min(...lngs),
+      maxLng: Math.max(...lngs),
+    };
+  }, [listings]);
+
+  // Initial view state (fallback before fitBounds)
   const initialViewState = useMemo(() => {
     if (!listings.length) {
       // Default to Norway center
@@ -186,7 +202,6 @@ export function ListingMap({
     }
 
     if (listings.length === 1) {
-      // Single listing - zoom in
       const first = listings[0]!;
       return {
         latitude: first.latitude,
@@ -195,39 +210,38 @@ export function ListingMap({
       };
     }
 
-    // Calculate bounds for all listings
-    const lats = listings.map(l => l.latitude);
-    const lngs = listings.map(l => l.longitude);
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLng = Math.min(...lngs);
-    const maxLng = Math.max(...lngs);
-
-    // Center point
-    const centerLat = (minLat + maxLat) / 2;
-    const centerLng = (minLng + maxLng) / 2;
-
-    // Calculate zoom level based on bounds
-    const latDiff = maxLat - minLat;
-    const lngDiff = maxLng - minLng;
-    const maxDiff = Math.max(latDiff, lngDiff);
-
-    // Approximate zoom level (lower = more zoomed out)
-    let zoom = 10;
-    if (maxDiff > 5) zoom = 5;
-    else if (maxDiff > 2) zoom = 6;
-    else if (maxDiff > 1) zoom = 7;
-    else if (maxDiff > 0.5) zoom = 8;
-    else if (maxDiff > 0.2) zoom = 9;
-    else if (maxDiff > 0.1) zoom = 10;
-    else zoom = 12;
+    // Center point for initial load
+    const centerLat = bounds ? (bounds.minLat + bounds.maxLat) / 2 : 62.0;
+    const centerLng = bounds ? (bounds.minLng + bounds.maxLng) / 2 : 10.0;
 
     return {
       latitude: centerLat,
       longitude: centerLng,
-      zoom,
+      zoom: 6, // Start zoomed out, fitBounds will adjust
     };
-  }, [listings]);
+  }, [listings, bounds]);
+
+  // Fit bounds when map loads or listings change
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current || !bounds || listings.length <= 1) return;
+
+    // Use fitBounds for accurate zoom to show all markers
+    mapRef.current.fitBounds(
+      [
+        [bounds.minLng, bounds.minLat], // Southwest
+        [bounds.maxLng, bounds.maxLat], // Northeast
+      ],
+      {
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+        maxZoom: 14,
+        duration: 1000,
+      }
+    );
+  }, [mapLoaded, bounds, listings.length]);
+
+  const handleMapLoad = useCallback(() => {
+    setMapLoaded(true);
+  }, []);
 
   const handleMarkerClick = useCallback((listing: MapListing) => {
     setSelectedListing(listing);
@@ -300,6 +314,7 @@ export function ListingMap({
         initialViewState={initialViewState}
         mapStyle={effectiveMapStyle}
         mapboxAccessToken={mapboxToken}
+        onLoad={handleMapLoad}
         style={{
           width: '100%',
           height: '100%',
@@ -311,6 +326,7 @@ export function ListingMap({
         <NavigationControl position="top-right" />
         {markers}
       </Map>
+
 
       {/* Custom popup rendered outside map container */}
       {selectedListing && (

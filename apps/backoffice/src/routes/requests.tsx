@@ -14,8 +14,8 @@ import {
   Dropdown,
   Spinner,
   Badge,
-  Stack,
-  Alert,
+  // Stack,
+  // Alert,
   CheckCircleIcon,
   XCircleIcon,
   MessageSquareIcon,
@@ -33,9 +33,9 @@ import {
   useCancelBooking,
   formatTime,
   formatDate,
-  formatDateTime,
+  // formatDateTime,
   type Booking,
-  type BookingStatus,
+  // type BookingStatus,
 } from '@digilist/client-sdk';
 
 type RequestFilter = 'all' | 'pending' | 'needs_info' | 'urgent';
@@ -319,7 +319,7 @@ export function RequestsPage() {
               onClear={() => setSearchQuery('')}
             />
           </div>
-          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')}>
+          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')} type="button">
             <FilterIcon />
             {filter === 'all' ? 'Alle' : filter === 'needs_info' ? 'Trenger info' : filter === 'urgent' ? 'Haster' : 'Ventende'}
           </Button>
@@ -417,23 +417,23 @@ export function RequestsPage() {
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                       <Button
                         variant="primary"
-                        size="sm"
+                       
                         onClick={() => handleApprove(request.id)}
-                        title="Godkjenn"
+                        title="Godkjenn" type="button"
                       >
                         <CheckCircleIcon />
                       </Button>
                       <Button
                         variant="secondary"
-                        size="sm"
+                       
                         onClick={() => handleReject(request.id)}
-                        title="Avslå"
+                        title="Avslå" type="button"
                       >
                         <XCircleIcon />
                       </Button>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" data-size="sm" aria-label="Flere valg">
+                          <Button variant="tertiary" data-size="sm" aria-label="Flere valg" type="button">
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>

@@ -13,6 +13,16 @@ import {
 import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
 
+// Icon for Billing/Credit Card
+function CreditCardIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+      <line x1="1" y1="10" x2="23" y2="10" />
+    </svg>
+  );
+}
+
 // Icon for Seasons/Recurring events
 function RepeatIcon() {
   return (
@@ -167,7 +177,7 @@ function SidebarNavItem({ item, onClick }: { item: NavItem; onClick?: () => void
 }
 
 // Shared sidebar content component
-function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: any; onItemClick?: () => void }) {
+function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: unknown; onItemClick?: () => void }) {
   return (
     <>
       {/* Logo Section */}
@@ -195,8 +205,8 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 fontSize: 'var(--ds-font-size-md)',
                 fontWeight: 'var(--ds-font-weight-bold)',
                 color: 'var(--ds-color-accent-text-default)',
-                lineHeight: 1.2,
-                letterSpacing: '0.02em',
+                lineHeight: 'var(--ds-font-line-height-heading)',
+                letterSpacing: 'var(--ds-font-letter-spacing-wide)',
               }}
             >
               DIGILIST
@@ -205,7 +215,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
               style={{
                 fontSize: 'var(--ds-font-size-2xs)',
                 color: 'var(--ds-color-neutral-text-subtle)',
-                letterSpacing: '0.08em',
+                letterSpacing: 'var(--ds-font-letter-spacing-wide)',
                 marginTop: '2px',
                 textTransform: 'uppercase',
               }}
@@ -228,7 +238,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                   fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  letterSpacing: 'var(--ds-font-letter-spacing-wide)',
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-5)',
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
@@ -325,12 +335,21 @@ export function Sidebar() {
         { name: t('minside.myCalendar'), description: t('minside.myCalendarDesc'), href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon /> },
         { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon /> },
+        { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon /> },
       ],
     },
     {
       title: t('minside.account'),
       items: [
         { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon /> },
+      ],
+    },
+    {
+      title: t('org.organization'),
+      items: [
+        { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon /> },
+        { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon /> },
+        { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon /> },
       ],
     },
   ];

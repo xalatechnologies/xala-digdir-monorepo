@@ -135,7 +135,7 @@ export function SeasonApplicationDrawer({
         style={{
           position: 'fixed',
           inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'var(--ds-color-neutral-background-overlay)',
           zIndex: 1000,
           animation: 'fadeIn 0.2s ease-in-out',
         }}
@@ -151,7 +151,7 @@ export function SeasonApplicationDrawer({
           width: '100%',
           maxWidth: '600px',
           backgroundColor: 'var(--ds-color-neutral-background-default)',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
+          boxShadow: 'var(--ds-shadow-large)',
           zIndex: 1001,
           display: 'flex',
           flexDirection: 'column',
@@ -223,7 +223,7 @@ export function SeasonApplicationDrawer({
                 height: '40px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-contrast-default)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -472,7 +472,7 @@ export function SeasonApplicationDrawer({
             >
               {isSubmitting ? (
                 <>
-                  <Spinner />
+                  <Spinner aria-hidden="true" />
                   <span style={{ marginLeft: 'var(--ds-spacing-2)' }}>Sender...</span>
                 </>
               ) : (

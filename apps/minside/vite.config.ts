@@ -104,6 +104,7 @@ export default defineConfig({
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
+      '@digilist/client-sdk/realtime': path.resolve(__dirname, '../../packages/client-sdk/src/realtime'),
     },
   },
   optimizeDeps: {

@@ -30,6 +30,7 @@ import { SavedFilters } from '../components/SavedFilters';
 
 export function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
 
   // State
@@ -138,7 +139,7 @@ export function SearchPage() {
       <Stack spacing="lg" style={{ padding: 'var(--ds-spacing-6)' }}>
         <Heading level={1}>Søk</Heading>
         <Stack spacing="md" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-          <Text size="lg" weight="medium">
+          <Text weight="medium">
             Ingen søk utført
           </Text>
           <Text color="secondary">
@@ -152,10 +153,10 @@ export function SearchPage() {
   return (
     <Stack spacing="lg" style={{ padding: 'var(--ds-spacing-6)' }}>
       {/* Page header with filters and actions */}
-      <Stack direction="row" justify="space-between" align="center">
+      <Stack direction="horizontal" justify="space-between" align="center">
         <Heading level={1}>Søkeresultater</Heading>
 
-        <Stack direction="row" spacing="sm">
+        <Stack direction="horizontal" spacing="sm">
           {/* Saved Filters */}
           <SavedFilters
             currentFilters={searchFilters}
@@ -165,11 +166,11 @@ export function SearchPage() {
           />
 
           {/* Filter Toggle Button */}
-          <Button variant="secondary" onClick={handleToggleFilters}>
+          <Button variant="secondary" onClick={handleToggleFilters} type="button">
             <FilterIcon size={16} />
             Filtre
             {activeFilterCount > 0 && (
-              <Badge variant="primary" size="sm" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
+              <Badge variant="primary" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
                 {activeFilterCount}
               </Badge>
             )}
@@ -179,7 +180,7 @@ export function SearchPage() {
           <Button
             variant="secondary"
             onClick={handleExport}
-            disabled={exportResults.isPending || !query}
+            disabled={exportResults.isPending || !query} type="button"
           >
             <DownloadIcon size={16} />
             {exportResults.isPending ? 'Eksporterer...' : 'Eksporter'}
@@ -210,7 +211,7 @@ export function SearchPage() {
               Filtre
             </Heading>
             {activeFilterCount > 0 && (
-              <Button variant="tertiary" data-size="sm" onClick={handleClearFilters}>
+              <Button variant="tertiary" data-size="sm" onClick={handleClearFilters} type="button">
                 Nullstill alle
               </Button>
             )}
@@ -222,7 +223,7 @@ export function SearchPage() {
               <Text weight="medium" style={{ fontSize: 'var(--ds-font-size-sm)' }}>
                 Datoperiode
               </Text>
-              <Stack direction="row" spacing="sm" align="center">
+              <Stack direction="horizontal" spacing="sm" align="center">
                 <input
                   type="date"
                   value={dateFrom}
@@ -235,7 +236,7 @@ export function SearchPage() {
                     borderRadius: 'var(--ds-radius-md)',
                   }}
                 />
-                <Text size="sm" color="secondary">
+                <Text color="secondary">
                   til
                 </Text>
                 <input
@@ -287,7 +288,7 @@ export function SearchPage() {
             <Button
               variant="primary"
               onClick={handleCloseFilters}
-              style={{ width: '100%' }}
+              style={{ width: '100%' }} type="button"
             >
               Bruk filtre
             </Button>

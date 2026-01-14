@@ -139,7 +139,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
               // Remove from progress after a short delay to show completion
               setTimeout(() => removeFileProgress(fileId), 1500);
               return url;
-            } catch (error) {
+            } catch {
               updateFileProgress(fileId, {
                 filename: file.name,
                 status: 'error',
@@ -193,7 +193,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
           fileIds.forEach(fileId => removeFileProgress(fileId));
         }, 1500);
       }
-    } catch (error) {
+    } catch {
       // Error handling - already tracked in progress
     } finally {
       setIsUploading(false);
@@ -216,7 +216,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
               // Remove from progress after a short delay to show completion
               setTimeout(() => removeFileProgress(fileId), 1500);
               return url;
-            } catch (error) {
+            } catch {
               updateFileProgress(fileId, {
                 filename: file.name,
                 status: 'error',
@@ -270,7 +270,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
           fileIds.forEach(fileId => removeFileProgress(fileId));
         }, 1500);
       }
-    } catch (error) {
+    } catch {
       // Error handling - already tracked in progress
     } finally {
       setIsUploading(false);
@@ -291,7 +291,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
         const parts = imageUrl.split('/');
         const mediaId = parts[parts.length - 1] || index.toString();
         await deleteMutation.mutateAsync({ listingId, mediaId });
-      } catch (error) {
+      } catch {
         console.error('Delete failed:', error);
       }
     }
@@ -638,7 +638,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       fontSize: 'var(--ds-font-size-xs)',
                       fontWeight: 'var(--ds-font-weight-semibold)',
                       backgroundColor: 'var(--ds-color-accent-base-default)',
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-contrast-default)',
                       borderRadius: 'var(--ds-border-radius-sm)',
                     }}
                   >
@@ -652,7 +652,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                     left: 0,
                     right: 0,
                     padding: 'var(--ds-spacing-2)',
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                    background: 'linear-gradient(transparent, var(--ds-color-neutral-background-default))',
                     display: 'flex',
                     gap: 'var(--ds-spacing-1)',
                     justifyContent: 'flex-end',
@@ -665,7 +665,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       style={{
                         padding: '2px var(--ds-spacing-2)',
                         fontSize: '10px',
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
                         border: 'none',
                         borderRadius: 'var(--ds-border-radius-sm)',
                         cursor: 'pointer',
@@ -681,7 +681,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       padding: '2px var(--ds-spacing-2)',
                       fontSize: '10px',
                       backgroundColor: 'var(--ds-color-danger-base-default)',
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-contrast-default)',
                       border: 'none',
                       borderRadius: 'var(--ds-border-radius-sm)',
                       cursor: 'pointer',

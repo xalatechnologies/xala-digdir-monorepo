@@ -94,7 +94,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
       }
     }
 
-    if (formData.totalPrice < 0) {
+    if (Number(formData.totalPrice) < 0) {
       newErrors.totalPrice = 'Pris kan ikke være negativ';
     }
 
@@ -112,7 +112,6 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
     setIsSubmitting(true);
     try {
       const updateData: UpdateBookingDTO = {
-        listingId: formData.listingId,
         startTime: new Date(formData.startTime).toISOString(),
         endTime: new Date(formData.endTime).toISOString(),
         notes: formData.notes?.trim() || undefined,
@@ -156,7 +155,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
     <form onSubmit={handleSubmit}>
       <Stack spacing={5}>
         {/* Warning Alert */}
-        <Alert severity="warning">
+        <Alert>
           Endringer i booking vil påvirke brukerens reservasjon. Sørg for at brukeren er informert om endringene.
         </Alert>
 
@@ -233,7 +232,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
               value={formData.totalPrice.toString()}
               onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
               placeholder="0"
-              
+              aria-label="Total pris"
               min="0"
               step="0.01"
             />
@@ -250,6 +249,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
               value={formData.notes}
               onChange={(e) => handleChange('notes')(e.target.value)}
               placeholder="Legg til eventuelle notater..."
+              aria-label="Interne notater"
               multiline
               rows={4}
             />

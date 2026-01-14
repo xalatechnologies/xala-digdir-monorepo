@@ -61,7 +61,6 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
   };
 
   const isOpen = season.status === 'open';
-  const isActive = season.status === 'active';
 
   return (
     <Card

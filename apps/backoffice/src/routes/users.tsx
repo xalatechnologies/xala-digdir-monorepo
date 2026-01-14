@@ -111,7 +111,7 @@ export function UsersPage() {
             Administrer backoffice-brukere og tilgangsroller
           </Paragraph>
         </div>
-        <Button onClick={handleCreate} data-size="md">
+        <Button onClick={handleCreate} data-size="md" type="button">
           <PlusIcon />
           Inviter bruker
         </Button>

@@ -70,7 +70,7 @@ export function OrganizationFormPage() {
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/organizations">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -84,7 +84,7 @@ export function OrganizationFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/organizations/${id}` : '/organizations'}>
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til organisasjon' : 'Tilbake til oversikt'}
           </Button>

@@ -238,7 +238,7 @@ export function SettingsPage() {
           </Paragraph>
         </div>
         {saveSuccess && (
-          <Alert severity="success" style={{ maxWidth: '400px' }}>
+          <Alert style={{ maxWidth: '400px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CheckCircleIcon />
               Innstillingene ble lagret
@@ -297,7 +297,7 @@ export function SettingsPage() {
                         }}
                       />
                     ) : (
-                      <UserIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                      <UserIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                     )}
                   </div>
 
@@ -313,7 +313,7 @@ export function SettingsPage() {
                       variant="secondary"
                       data-size="sm"
                       onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploadingAvatar}
+                      disabled={isUploadingAvatar} type="button"
                     >
                       <CameraIcon />
                       {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
@@ -340,16 +340,16 @@ export function SettingsPage() {
 
                 <Stack spacing={4}>
                   <FormField label="Fullt navn" required>
-                    <Textfield
-                      value={profileData.name}
+                    <Textfield aria-label="Fullt navn"
+ aria-label="Field"                      value={profileData.name}
                       onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Ola Nordmann"
                     />
                   </FormField>
 
                   <FormField label="E-postadresse" required>
-                    <Textfield
-                      type="email"
+                    <Textfield aria-label="Fullt navn"
+ aria-label="Field"                      type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                       placeholder="ola.nordmann@example.com"
@@ -357,8 +357,8 @@ export function SettingsPage() {
                   </FormField>
 
                   <FormField label="Telefonnummer">
-                    <Textfield
-                      type="tel"
+                    <Textfield aria-label="E-postadresse"
+ aria-label="Field"                      type="tel"
                       value={profileData.phone}
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                       placeholder="+47 123 45 678"
@@ -367,16 +367,16 @@ export function SettingsPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Fødselsdato">
-                      <Textfield
-                        type="date"
+                      <Textfield aria-label="Field"
+ aria-label="Field"                        type="date"
                         value={profileData.dateOfBirth}
                         onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
                       />
                     </FormField>
 
                     <FormField label="Fødselsnummer">
-                      <Textfield
-                        value={profileData.nationalId}
+                      <Textfield aria-label="Fødselsdato"
+ aria-label="Field"                        value={profileData.nationalId}
                         onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
                         placeholder="11 siffer"
                         maxLength={11}
@@ -386,7 +386,7 @@ export function SettingsPage() {
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                     <SaveIcon />
                     {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                   </Button>
@@ -427,8 +427,8 @@ export function SettingsPage() {
 
                 <Stack spacing={4}>
                   <FormField label="Gateadresse" required>
-                    <Textfield
-                      value={profileData.residenceAddress.street || ''}
+                    <Textfield aria-label="Gateadresse"
+ aria-label="Field"                      value={profileData.residenceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, street: e.target.value }
@@ -439,8 +439,8 @@ export function SettingsPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Poststed" required>
-                      <Textfield
-                        value={profileData.residenceAddress.city || ''}
+                      <Textfield aria-label="Poststed"
+ aria-label="Field"                        value={profileData.residenceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, city: e.target.value }
@@ -450,8 +450,8 @@ export function SettingsPage() {
                     </FormField>
 
                     <FormField label="Postnummer" required>
-                      <Textfield
-                        value={profileData.residenceAddress.postalCode || ''}
+                      <Textfield aria-label="Field"
+ aria-label="Field"                        value={profileData.residenceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
@@ -495,7 +495,7 @@ export function SettingsPage() {
                   <Button
                     variant="tertiary"
                     data-size="sm"
-                    onClick={handleCopyResidenceToInvoice}
+                    onClick={handleCopyResidenceToInvoice} type="button"
                   >
                     <CopyIcon />
                     Kopier fra bostedsadresse
@@ -504,8 +504,8 @@ export function SettingsPage() {
 
                 <Stack spacing={4}>
                   <FormField label="Gateadresse" required>
-                    <Textfield
-                      value={profileData.invoiceAddress.street || ''}
+                    <Textfield aria-label="Gateadresse"
+ aria-label="Field"                      value={profileData.invoiceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
@@ -516,8 +516,8 @@ export function SettingsPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <FormField label="Poststed" required>
-                      <Textfield
-                        value={profileData.invoiceAddress.city || ''}
+                      <Textfield aria-label="Poststed"
+ aria-label="Field"                        value={profileData.invoiceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
@@ -527,8 +527,8 @@ export function SettingsPage() {
                     </FormField>
 
                     <FormField label="Postnummer" required>
-                      <Textfield
-                        value={profileData.invoiceAddress.postalCode || ''}
+                      <Textfield aria-label="Field"
+ aria-label="Field"                        value={profileData.invoiceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
@@ -563,7 +563,7 @@ export function SettingsPage() {
                 <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'flex-start' }}>
                   <InfoIcon style={{ color: 'var(--ds-color-info-text-default)', marginTop: '2px', flexShrink: 0 }} />
                   <div>
-                    <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
+                    <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Adresseverifikasjon
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -577,7 +577,7 @@ export function SettingsPage() {
 
             {/* Save Button */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button onClick={handleSaveProfile} disabled={isSaving}>
+              <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                 <SaveIcon />
                 {isSaving ? 'Lagrer...' : 'Lagre adresser'}
               </Button>
@@ -600,8 +600,8 @@ export function SettingsPage() {
 
               <Stack spacing={4}>
                 <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
-                  <Textfield
-                    value={formData.general.name}
+                  <Textfield aria-label="Systemnavn"
+ aria-label="Field"                    value={formData.general.name}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, name: e.target.value }
@@ -683,7 +683,7 @@ export function SettingsPage() {
               </Stack>
 
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
                   {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                 </Button>
@@ -709,6 +709,12 @@ export function SettingsPage() {
                 <FormField label="Automatisk bekreftelse">
                   <Switch
                     checked={formData.booking.autoConfirm}
+                    aria-label="setFormData(prev => ({
+                      ...prev,
+                      booking: { ...prev.booking, autoConfirm: checked }
+                    }))}
+                  >
+                    Bekreft bookinger automatisk uten godkjenning"
                     onChange={(checked) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, autoConfirm: checked }
@@ -722,6 +728,12 @@ export function SettingsPage() {
                   <FormField label="Krev godkjenning">
                     <Switch
                       checked={formData.booking.requireApproval}
+                    aria-label="setFormData(prev => ({
+                        ...prev,
+                        booking: { ...prev.booking, requireApproval: checked }
+                      }))}
+                    >
+                      Alle bookinger må godkjennes av saksbehandler"
                       onChange={(checked) => setFormData(prev => ({
                         ...prev,
                         booking: { ...prev.booking, requireApproval: checked }
@@ -735,6 +747,12 @@ export function SettingsPage() {
                 <FormField label="Tillat kansellering">
                   <Switch
                     checked={formData.booking.allowCancellation}
+                    aria-label="setFormData(prev => ({
+                      ...prev,
+                      booking: { ...prev.booking, allowCancellation: checked }
+                    }))}
+                  >
+                    Brukere kan kansellere egne bookinger"
                     onChange={(checked) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, allowCancellation: checked }
@@ -749,8 +767,8 @@ export function SettingsPage() {
                     label="Kanselleringsfrist"
                     description="Antall timer før bookingstart kansellering er tillatt"
                   >
-                    <Textfield
-                      type="number"
+                    <Textfield aria-label="Kanselleringsfrist"
+ aria-label="Field"                      type="number"
                       value={formData.booking.cancellationDeadlineHours.toString()}
                       onChange={(e) => setFormData(prev => ({
                         ...prev,
@@ -766,8 +784,8 @@ export function SettingsPage() {
                   label="Maksimal forhåndsbooking"
                   description="Hvor langt frem i tid kan man booke?"
                 >
-                  <Textfield
-                    type="number"
+                  <Textfield aria-label="Maksimal forhåndsbooking"
+ aria-label="Field"                    type="number"
                     value={formData.booking.maxAdvanceBookingDays.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -782,8 +800,8 @@ export function SettingsPage() {
                   label="Minimum forhåndstid"
                   description="Hvor kort tid før kan man booke?"
                 >
-                  <Textfield
-                    type="number"
+                  <Textfield aria-label="Minimum forhåndstid"
+ aria-label="Field"                    type="number"
                     value={formData.booking.minAdvanceBookingHours.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -798,8 +816,8 @@ export function SettingsPage() {
                   label="Buffertid mellom bookinger"
                   description="Automatisk pause mellom påfølgende bookinger"
                 >
-                  <Textfield
-                    type="number"
+                  <Textfield aria-label="Buffertid mellom bookinger"
+ aria-label="Field"                    type="number"
                     value={formData.booking.bufferTimeMinutes.toString()}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -812,7 +830,7 @@ export function SettingsPage() {
               </Stack>
 
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
                   {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                 </Button>
@@ -838,6 +856,12 @@ export function SettingsPage() {
                 <FormField label="E-postvarsler">
                   <Switch
                     checked={formData.notifications.emailEnabled}
+                    aria-label="setFormData(prev => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, emailEnabled: checked }
+                    }))}
+                  >
+                    Send varsler på e-post"
                     onChange={(checked) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, emailEnabled: checked }
@@ -850,6 +874,12 @@ export function SettingsPage() {
                 <FormField label="SMS-varsler">
                   <Switch
                     checked={formData.notifications.smsEnabled}
+                    aria-label="setFormData(prev => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, smsEnabled: checked }
+                    }))}
+                  >
+                    Send varsler på SMS"
                     onChange={(checked) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, smsEnabled: checked }
@@ -862,6 +892,12 @@ export function SettingsPage() {
                 <FormField label="Push-varsler">
                   <Switch
                     checked={formData.notifications.pushEnabled}
+                    aria-label="setFormData(prev => ({
+                      ...prev,
+                      notifications: { ...prev.notifications, pushEnabled: checked }
+                    }))}
+                  >
+                    Send push-varsler til mobilapp"
                     onChange={(checked) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, pushEnabled: checked }
@@ -877,7 +913,7 @@ export function SettingsPage() {
                   borderRadius: 'var(--ds-border-radius-md)',
                   marginTop: 'var(--ds-spacing-2)',
                 }}>
-                  <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
+                  <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
                     Automatiske varsler
                   </Paragraph>
 
@@ -885,6 +921,12 @@ export function SettingsPage() {
                     <FormField label="Bookingbekreftelse">
                       <Switch
                         checked={formData.notifications.bookingConfirmation}
+                    aria-label="setFormData(prev => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, bookingConfirmation: checked }
+                        }))}
+                      >
+                        Send bekreftelse når booking er godkjent"
                         onChange={(checked) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingConfirmation: checked }
@@ -897,6 +939,12 @@ export function SettingsPage() {
                     <FormField label="Booking-påminnelse">
                       <Switch
                         checked={formData.notifications.bookingReminder}
+                    aria-label="setFormData(prev => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, bookingReminder: checked }
+                        }))}
+                      >
+                        Send påminnelse før booking starter"
                         onChange={(checked) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingReminder: checked }
@@ -911,8 +959,8 @@ export function SettingsPage() {
                         label="Påminnelsestidspunkt"
                         description="Hvor lenge før booking skal påminnelse sendes?"
                       >
-                        <Textfield
-                          type="number"
+                        <Textfield aria-label="Påminnelsestidspunkt"
+ aria-label="Field"                          type="number"
                           value={formData.notifications.reminderHoursBefore.toString()}
                           onChange={(e) => setFormData(prev => ({
                             ...prev,
@@ -928,7 +976,7 @@ export function SettingsPage() {
               </Stack>
 
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
                   {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                 </Button>
@@ -953,7 +1001,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>BankID</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>BankID</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Norsk e-ID for sikker pålogging</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -971,7 +1019,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>ID-porten</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>ID-porten</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Offentlig påloggingsløsning</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1002,7 +1050,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>Vipps</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Vipps</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Mobilbetaling med Vipps</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1033,7 +1081,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>RCO</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>RCO</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Digital låssystem</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1064,7 +1112,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>Google Calendar</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Google Calendar</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Synkroniser med Google Calendar</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1082,7 +1130,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>Outlook</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Outlook</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Synkroniser med Outlook/Exchange</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1113,7 +1161,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>Visma</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Visma</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Fakturering via Visma</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1144,7 +1192,7 @@ export function SettingsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <div style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>Brønnøysundregistrene</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Brønnøysundregistrene</div>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Verifiser organisasjoner</Paragraph>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
@@ -1182,8 +1230,8 @@ export function SettingsPage() {
                   label="Logo URL"
                   description="URL til logo (vil vises i toppen av siden)"
                 >
-                  <Textfield
-                    value={formData.branding.logo || ''}
+                  <Textfield aria-label="Logo URL"
+ aria-label="Field"                    value={formData.branding.logo || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, logo: e.target.value }
@@ -1196,8 +1244,8 @@ export function SettingsPage() {
                   label="Primærfarge"
                   description="Hovedfarge for knapper og UI-elementer"
                 >
-                  <Textfield
-                    type="color"
+                  <Textfield aria-label="Primærfarge"
+ aria-label="Field"                    type="color"
                     value={formData.branding.primaryColor || '#1A56DB'}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -1210,8 +1258,8 @@ export function SettingsPage() {
                   label="Sekundærfarge"
                   description="Farge for mindre fremtredende elementer"
                 >
-                  <Textfield
-                    type="color"
+                  <Textfield aria-label="Sekundærfarge"
+ aria-label="Field"                    type="color"
                     value={formData.branding.secondaryColor || '#6B7280'}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -1224,8 +1272,8 @@ export function SettingsPage() {
                   label="Favicon URL"
                   description="URL til favicon (vises i nettleserens fane)"
                 >
-                  <Textfield
-                    value={formData.branding.favicon || ''}
+                  <Textfield aria-label="Favicon URL"
+ aria-label="Field"                    value={formData.branding.favicon || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, favicon: e.target.value }
@@ -1236,7 +1284,7 @@ export function SettingsPage() {
               </Stack>
 
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
                   {isSaving ? 'Lagrer...' : 'Lagre endringer'}
                 </Button>

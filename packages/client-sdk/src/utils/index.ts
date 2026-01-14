@@ -20,12 +20,24 @@ export {
 } from './date-utils';
 
 export {
-  // Geocoding
-  geocodeAddress,
+  // Geocoding (Mapbox Forward Geocoding)
+  geocodeListingAddress,
   geocodeAddresses,
   clearGeocodeCache,
   getCachedGeocode,
-  type GeocodedLocation,
+  buildAddressString,
+  isGeocodeSuccess,
+  isGeocodeError,
+  // Legacy (deprecated)
+  geocodeAddress,
+  // Types
+  type ListingAddress,
+  type GeocodeResult,
+  type GeocodeError,
+  type GeocodeErrorCode,
+  type GeocodeConfig,
+  type BatchGeocodeResult,
+  type GeocodedLocation, // deprecated alias
 } from './geocode';
 
 export {

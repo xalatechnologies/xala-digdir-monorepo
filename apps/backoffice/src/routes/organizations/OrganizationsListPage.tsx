@@ -61,6 +61,7 @@ const statusColors: Record<OrganizationStatus, 'success' | 'warning' | 'danger'>
 };
 
 export function OrganizationsListPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const t = useT();
   const navigate = useNavigate();
 
@@ -117,7 +118,7 @@ export function OrganizationsListPage() {
           </Paragraph>
         </div>
         <Link to="/organizations/new">
-          <Button size="md">
+          <Button type="button">
             <PlusIcon />
             Ny organisasjon
           </Button>
@@ -211,7 +212,7 @@ export function OrganizationsListPage() {
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && actorTypeFilter === 'all' && (
               <Link to="/organizations/new">
-                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
                   <PlusIcon />
                   Ny organisasjon
                 </Button>

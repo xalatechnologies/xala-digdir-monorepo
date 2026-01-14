@@ -194,7 +194,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
     <form onSubmit={handleSubmit}>
       <Stack spacing={5}>
         {/* Info Alert */}
-        <Alert severity="info">
+        <Alert>
           Sesongleie låser lokalet for den valgte perioden. Kalenderblokker kan genereres automatisk etter godkjenning.
         </Alert>
 
@@ -257,7 +257,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="date"
                   value={formData.startDate}
                   onChange={(e) => handleChange('startDate')(e.target.value)}
-                  
+                  aria-label="Startdato"
                 />
               </FormField>
 
@@ -270,7 +270,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="date"
                   value={formData.endDate}
                   onChange={(e) => handleChange('endDate')(e.target.value)}
-                  
+                  aria-label="Sluttdato"
                 />
               </FormField>
             </div>
@@ -322,7 +322,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleChange('startTime')(e.target.value)}
-                  
+                  aria-label="Starttid"
                 />
               </FormField>
 
@@ -335,7 +335,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleChange('endTime')(e.target.value)}
-                  
+                  aria-label="Sluttid"
                 />
               </FormField>
             </div>
@@ -356,7 +356,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                 value={formData.totalPrice?.toString() || '0'}
                 onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                
+                aria-label="Total pris"
                 min="0"
                 step="0.01"
               />
@@ -370,6 +370,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                 value={formData.notes || ''}
                 onChange={(e) => handleChange('notes')(e.target.value)}
                 placeholder="F.eks. spesielle avtaler eller betingelser"
+                aria-label="Notater"
                 multiline
                 rows={3}
               />

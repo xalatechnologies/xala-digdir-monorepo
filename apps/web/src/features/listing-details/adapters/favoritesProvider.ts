@@ -39,7 +39,8 @@ export interface FavoritesProvider {
 }
 
 // =============================================================================
-// Local Storage Implementation (for demo/development)
+// Local Storage Implementation
+// Favorites are stored locally for unauthenticated users
 // =============================================================================
 
 const FAVORITES_STORAGE_KEY = 'digilist_favorites';
@@ -62,8 +63,8 @@ function saveFavoritesToStorage(favorites: Record<string, boolean>): void {
 }
 
 /**
- * Local storage-based favorites provider for development
- * Replace with actual API calls in production
+ * Local storage-based favorites provider
+ * Persists favorites locally for quick access
  */
 class LocalStorageFavoritesProvider implements FavoritesProvider {
   private userId: string | null = null;

@@ -5,12 +5,13 @@
 
 // Service Worker version - increment to force update
 const SW_VERSION = '1.0.0';
+console.log('Service Worker version:', SW_VERSION);
 
 // =============================================================================
 // Installation & Activation
 // =============================================================================
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
   // Skip waiting to activate immediately
   self.skipWaiting();
 });
@@ -70,6 +71,7 @@ self.addEventListener('push', (event) => {
       self.registration.showNotification(title || 'Xala', notificationOptions)
     );
   } catch (error) {
+    console.error('Error parsing push notification:', error);
     // Fallback notification on parse error
     event.waitUntil(
       self.registration.showNotification('Xala', {
@@ -214,7 +216,8 @@ function getTargetUrl(data, action) {
       if (url.origin === new URL(self.registration.scope).origin) {
         return url.href;
       }
-    } catch (e) {
+    } catch (error) {
+      console.error('Invalid notification URL:', error);
       // Invalid URL, fall through to default routing
     }
   }

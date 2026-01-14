@@ -151,7 +151,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
       await navigator.clipboard.writeText(id);
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
+    } catch {
       // Silently fail - clipboard may not be available
     }
   }, []);
@@ -168,7 +168,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
       try {
         await confirmBooking.mutateAsync(booking.id);
         setSelectedBooking(null);
-      } catch (error) {
+      } catch {
         // Error handling is done by the SDK
       }
     }
@@ -186,7 +186,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
       try {
         await cancelBooking.mutateAsync(booking.id);
         setSelectedBooking(null);
-      } catch (error) {
+      } catch {
         // Error handling is done by the SDK
       }
     }
@@ -328,7 +328,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                 if (!isActive) {
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }
-              }}
+              }} type="button"
             >
               <span>{tab.icon}</span>
               <span>{tab.label}</span>
@@ -377,7 +377,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           style={{
             position: 'relative',
             minWidth: '100px',
-          }}
+          }} type="button"
         >
           <FilterIcon size={16} />
           Filter
@@ -579,7 +579,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => handleCopyId(selectedBooking.id)}
-                style={{ minWidth: 'auto', padding: 'var(--ds-spacing-2)' }}
+                style={{ minWidth: 'auto', padding: 'var(--ds-spacing-2)' }} type="button"
               >
                 {copiedId === selectedBooking.id ? (
                   <CheckIcon size={14} style={{ color: 'var(--ds-color-success-text-default)' }} />
@@ -647,7 +647,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                     variant="primary"
                     onClick={() => handleConfirm(selectedBooking)}
                     disabled={confirmBooking.isPending}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%' }} type="button"
                   >
                     <CheckIcon size={16} />
                     {confirmBooking.isPending ? 'Bekrefter...' : 'Bekreft booking'}
@@ -658,7 +658,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                     variant="danger"
                     onClick={() => handleCancel(selectedBooking)}
                     disabled={cancelBooking.isPending}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%' }} type="button"
                   >
                     <CloseIcon size={16} />
                     {cancelBooking.isPending ? 'Kansellerer...' : 'Kanseller booking'}
@@ -746,14 +746,14 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
             <Button
               variant="secondary"
               onClick={handleClearFilters}
-              style={{ flex: 1 }}
+              style={{ flex: 1 }} type="button"
             >
               Tilbakestill
             </Button>
             <Button
               variant="primary"
               onClick={() => setIsFilterOpen(false)}
-              style={{ flex: 1 }}
+              style={{ flex: 1 }} type="button"
             >
               Bruk filter
             </Button>

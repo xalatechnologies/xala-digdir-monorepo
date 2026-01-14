@@ -37,8 +37,8 @@ import { SeasonApplicationManagement } from '../../components/seasons/SeasonAppl
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
 
 // Temporary placeholder hooks until implemented in SDK
-const useSeasonVenues = (seasonId: string) => ({ data: { data: [] }, isLoading: false });
-const useSeasonApplications = (seasonId: string) => ({ data: { data: [] }, isLoading: false });
+const useSeasonVenues = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
+const useSeasonApplications = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
 const useUpdateSeasonalLeaseStatus = () => ({ mutateAsync: async () => {}, isLoading: false });
 
 const statusLabels: Record<SeasonalLeaseStatus, string> = {
@@ -127,7 +127,7 @@ export function SeasonDetailPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -141,7 +141,7 @@ export function SeasonDetailPage() {
       {/* Header */}
       <div>
         <Link to="/seasons">
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -167,16 +167,16 @@ export function SeasonDetailPage() {
             {season.status === 'draft' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm">
+                  <Button variant="secondary" data-size="sm" type="button">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="primary" data-size="sm" onClick={handleOpenSeason}>
+                <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
-                <Button variant="danger" data-size="sm" onClick={handleDelete}>
+                <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
                   <TrashIcon />
                   Slett
                 </Button>
@@ -186,12 +186,12 @@ export function SeasonDetailPage() {
             {season.status === 'open' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm">
+                  <Button variant="secondary" data-size="sm" type="button">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="warning" data-size="sm" onClick={handleCloseSeason}>
+                <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">
                   <LockIcon />
                   Lukk sesong
                 </Button>
@@ -199,7 +199,7 @@ export function SeasonDetailPage() {
             )}
 
             {season.status === 'closed' && (
-              <Button variant="primary" data-size="sm" onClick={handleStartAllocation}>
+              <Button variant="primary" data-size="sm" onClick={handleStartAllocation} type="button">
                 <PlayIcon />
                 Start tildeling
               </Button>
@@ -207,7 +207,7 @@ export function SeasonDetailPage() {
 
             {season.status === 'assigned' && (
               <Link to={`/seasons/${id}/edit`}>
-                <Button variant="secondary" data-size="sm">
+                <Button variant="secondary" data-size="sm" type="button">
                   <EditIcon />
                   Se detaljer
                 </Button>

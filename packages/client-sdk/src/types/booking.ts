@@ -193,3 +193,18 @@ export interface BookingReceipt {
   };
 }
 
+// =============================================================================
+// Booking Document Types (for getDocuments endpoint)
+// =============================================================================
+
+export interface BookingDocument {
+  id: string;
+  bookingId: string;
+  type: 'confirmation' | 'receipt' | 'decision' | 'terms' | 'contract' | 'cancellation';
+  name: string;
+  description?: string;
+  mimeType: string;
+  size: number;
+  url: string;
+  createdAt: string;
+}

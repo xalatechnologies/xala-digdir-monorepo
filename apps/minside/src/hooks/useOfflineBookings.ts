@@ -139,7 +139,7 @@ export function useOfflineBookings(params?: BookingQueryParams) {
 
   // Use SDK hook for online fetching
   const queryResult = useMyBookings(params);
-  const { data, isLoading, error } = queryResult;
+  const { data, isLoading } = queryResult;
 
   // Monitor online/offline status
   useEffect(() => {
@@ -164,7 +164,7 @@ export function useOfflineBookings(params?: BookingQueryParams) {
         if (cached) {
           setCachedData(cached as typeof cachedData);
         }
-      } catch (err) {
+      } catch {
         // Silently fail - IndexedDB might not be available
       }
     };
@@ -183,7 +183,7 @@ export function useOfflineBookings(params?: BookingQueryParams) {
         const cacheKey = getCacheKey(params);
         await cache.set(cacheKey, data);
         setCachedData(data);
-      } catch (err) {
+      } catch {
         // Silently fail - caching is not critical
       }
     };
@@ -210,7 +210,7 @@ export function useOfflineBookings(params?: BookingQueryParams) {
 export async function clearOfflineBookingsCache(): Promise<void> {
   try {
     await cache.clear();
-  } catch (err) {
+  } catch {
     // Silently fail
   }
 }

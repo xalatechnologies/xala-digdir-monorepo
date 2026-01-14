@@ -79,11 +79,16 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
 
       {/* Type selection */}
       <div>
+        <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+          Type utleieobjekt
+        </Heading>
+        <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          Velg hvilken type objekt dette er
+        </Paragraph>
         <Select
-          label="Type utleieobjekt"
-          description="Velg hvilken type objekt dette er"
           value={data.type || 'SPACE'}
           onChange={handleTypeChange}
+          aria-label="Type utleieobjekt"
         >
           {LISTING_TYPE_OPTIONS.filter(opt => opt.id !== 'ALL').map((option) => (
             <option key={option.id} value={option.id}>
@@ -123,11 +128,16 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
 
       {/* Visibility */}
       <div>
+        <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+          Synlighet
+        </Heading>
+        <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          Hvem kan se dette utleieobjektet
+        </Paragraph>
         <Select
-          label="Synlighet"
-          description="Hvem kan se dette utleieobjektet"
           value={data.visibility || 'public'}
           onChange={handleVisibilityChange}
+          aria-label="Synlighet"
         >
           {VISIBILITY_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>

@@ -81,7 +81,7 @@ export function ConflictIndicator({
             height: '20px',
             borderRadius: 'var(--ds-border-radius-full)',
             backgroundColor: 'var(--ds-color-danger-base-default)',
-            color: 'white',
+            color: 'var(--ds-color-neutral-contrast-default)',
             cursor: 'help',
           }}
           aria-label="Konflikt"

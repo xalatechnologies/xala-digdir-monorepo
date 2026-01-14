@@ -90,6 +90,12 @@ export {
   formatWeekdays,
   formatPeriod,
   formatTimeSlot,
+  // Geocoding (Google Places API primary, Mapbox fallback)
+  geocodeAddress,
+  geocodeAddresses,
+  clearGeocodeCache,
+  getCachedGeocode,
+  buildAddressString,
   // Upload progress calculation
   calculatePercentage,
   calculateSpeed,
@@ -102,5 +108,10 @@ export {
   formatProgress,
   // Upload progress tracking
   UploadProgressTracker,
+} from './utils';
+
+export type {
+  GeocodedLocation,
+  GeocodeConfig,
 } from './utils';
 

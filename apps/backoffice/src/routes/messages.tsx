@@ -316,7 +316,7 @@ export function MessagesPage() {
                     fontSize: 'var(--ds-font-size-xs)',
                     fontWeight: filter === tab.key ? 600 : 400,
                     cursor: 'pointer',
-                  }}
+                  }} type="button"
                 >
                   {tab.label}
                 </button>
@@ -395,10 +395,10 @@ export function MessagesPage() {
                           width: '10px',
                           height: '10px',
                           borderRadius: 'var(--ds-border-radius-full)',
-                          backgroundColor: conversation.status === 'active' 
-                            ? 'var(--ds-color-success-base-default)' 
+                          backgroundColor: conversation.status === 'active'
+                            ? 'var(--ds-color-success-base-default)'
                             : 'var(--ds-color-neutral-border-default)',
-                          border: '2px solid white',
+                          border: '2px solid var(--ds-color-neutral-background-default)',
                         }} />
                       </div>
                       
@@ -490,10 +490,10 @@ export function MessagesPage() {
                       width: '10px',
                       height: '10px',
                       borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: selectedConversation.status === 'active' 
-                        ? 'var(--ds-color-success-base-default)' 
+                      backgroundColor: selectedConversation.status === 'active'
+                        ? 'var(--ds-color-success-base-default)'
                         : 'var(--ds-color-neutral-border-default)',
-                      border: '2px solid white',
+                      border: '2px solid var(--ds-color-neutral-background-default)',
                     }} />
                   </div>
                   <div>
@@ -619,8 +619,8 @@ export function MessagesPage() {
                                   backgroundColor: isAdmin
                                     ? 'var(--ds-color-brand-1-base-default)'
                                     : 'var(--ds-color-neutral-background-default)',
-                                  color: isAdmin ? 'white' : 'var(--ds-color-neutral-text-default)',
-                                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
+                                  color: isAdmin ? 'var(--ds-color-neutral-contrast-default)' : 'var(--ds-color-neutral-text-default)',
+                                  boxShadow: 'var(--ds-shadow-xs)',
                                 }}>
                                   {!isAdmin && (
                                     <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 600, color: 'inherit', opacity: 0.8 }}>
@@ -691,7 +691,7 @@ export function MessagesPage() {
                             padding: '2px',
                             display: 'flex',
                             alignItems: 'center',
-                          }}
+                          }} type="button"
                         >
                           <XIcon style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                         </button>
@@ -727,7 +727,7 @@ export function MessagesPage() {
                       alignItems: 'center',
                       color: 'var(--ds-color-neutral-text-subtle)',
                     }}
-                    title="Legg til vedlegg"
+                    title="Legg til vedlegg" type="button"
                   >
                     <PaperclipIcon />
                   </button>

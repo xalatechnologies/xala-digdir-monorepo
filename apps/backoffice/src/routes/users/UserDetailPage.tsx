@@ -109,7 +109,7 @@ export function UserDetailPage() {
           Brukeren eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/users">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -123,7 +123,7 @@ export function UserDetailPage() {
       {/* Breadcrumb */}
       <div>
         <Link to="/users">
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til brukere
           </Button>
@@ -146,17 +146,17 @@ export function UserDetailPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <Button variant="secondary" data-size="sm" onClick={handleEdit}>
+            <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button">
               <EditIcon />
               Rediger
             </Button>
             {user.status === 'active' ? (
-              <Button variant="secondary" data-size="sm" onClick={handleDeactivate}>
+              <Button variant="secondary" data-size="sm" onClick={handleDeactivate} type="button">
                 <XCircleIcon />
                 Deaktiver
               </Button>
             ) : (
-              <Button variant="secondary" data-size="sm" onClick={handleReactivate}>
+              <Button variant="secondary" data-size="sm" onClick={handleReactivate} type="button">
                 <CheckCircleIcon />
                 Reaktiver
               </Button>
@@ -205,7 +205,7 @@ export function UserDetailPage() {
                       variant="tertiary"
                       data-size="sm"
                       onClick={() => handleCopyToClipboard(user.email, 'email')}
-                      aria-label="Kopier e-post"
+                      aria-label="Kopier e-post" type="button"
                     >
                       {copiedField === 'email' ? <CheckCircleIcon /> : <CopyIcon />}
                     </Button>
@@ -228,7 +228,7 @@ export function UserDetailPage() {
                         variant="tertiary"
                         data-size="sm"
                         onClick={() => handleCopyToClipboard(user.phone!, 'phone')}
-                        aria-label="Kopier telefon"
+                        aria-label="Kopier telefon" type="button"
                       >
                         {copiedField === 'phone' ? <CheckCircleIcon /> : <CopyIcon />}
                       </Button>

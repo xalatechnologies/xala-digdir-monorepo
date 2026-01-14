@@ -7,9 +7,9 @@
 import * as React from 'react';
 import { cn } from '../utils';
 import { Button, ToggleGroup, Tooltip, Badge } from '@digdir/designsystemet-react';
-import { FilterIcon, GridIcon, ListIcon, MapIcon } from '../primitives';
+import { FilterIcon, GridIcon, ListIcon, MapIcon, TableIcon } from '../primitives';
 
-export type ViewMode = 'grid' | 'list' | 'map';
+export type ViewMode = 'grid' | 'list' | 'map' | 'table';
 
 export interface ListingToolbarProps {
   /** Total count of listings */
@@ -40,19 +40,21 @@ export function ListingToolbar({
   viewMode = 'grid',
   onViewModeChange,
   showViewToggle = true,
-  availableViews = ['grid', 'list', 'map'],
+  availableViews = ['grid', 'list', 'map', 'table'],
   className,
 }: ListingToolbarProps): React.ReactElement {
   const viewIcons: Record<ViewMode, React.ReactNode> = {
     grid: <GridIcon size={20} aria-hidden />,
     list: <ListIcon size={20} aria-hidden />,
     map: <MapIcon size={20} aria-hidden />,
+    table: <TableIcon size={20} aria-hidden />,
   };
 
   const viewTitles: Record<ViewMode, string> = {
     grid: 'Rutenett',
     list: 'Liste',
     map: 'Kart',
+    table: 'Tabell',
   };
 
   const handleViewChange = (value: string) => {

@@ -1,119 +1,99 @@
 /**
  * Real-time Client Adapter
  *
- * Interface for WebSocket-based real-time updates.
- * Vendor-agnostic - can be implemented with any WebSocket provider.
+ * Uses SDK's WebSocket realtime client for live updates.
+ * Re-exports SDK types for local use.
  */
 
-import type { RealtimeEvent, RealtimeEventType } from '../types';
+import { useEffect, useCallback, useState } from 'react';
+import {
+  realtimeClient as sdkRealtimeClient,
+  createTenantWebSocketUrl,
+  type RealtimeEvent,
+  type RealtimeEventHandler,
+} from '@digilist/client-sdk';
+import type { RealtimeEventType } from '../types';
 
 // =============================================================================
-// Adapter Interface
+// Re-export SDK types
 // =============================================================================
 
-export type RealtimeEventHandler = (event: RealtimeEvent) => void;
+export type { RealtimeEventHandler, RealtimeEvent };
+
+// =============================================================================
+// Client Interface
+// =============================================================================
 
 export interface RealtimeClient {
-  /**
-   * Connect to the real-time service
-   */
   connect(): Promise<void>;
-
-  /**
-   * Disconnect from the real-time service
-   */
   disconnect(): void;
-
-  /**
-   * Subscribe to a listing's updates
-   */
   subscribe(listingId: string, handler: RealtimeEventHandler): () => void;
-
-  /**
-   * Check connection status
-   */
   isConnected(): boolean;
 }
 
 // =============================================================================
-// Mock Implementation (for development)
+// SDK-based Implementation
 // =============================================================================
 
-/**
- * Mock real-time client that simulates WebSocket behavior
- * Replace with actual WebSocket implementation in production
- */
-class MockRealtimeClient implements RealtimeClient {
-  private connected = false;
-  private subscriptions = new Map<string, Set<RealtimeEventHandler>>();
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.digilist.no';
+const TENANT_ID = import.meta.env.VITE_TENANT_ID;
+
+class SdkRealtimeClient implements RealtimeClient {
+  private listingHandlers = new Map<string, Set<RealtimeEventHandler>>();
+  private unsubscribeAll: (() => void) | null = null;
 
   async connect(): Promise<void> {
-    // Simulate connection delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    this.connected = true;
-    
-    if (import.meta.env.DEV) {
-      console.log('[REALTIME] Connected (mock)');
+    if (sdkRealtimeClient.isConnected) {
+      return;
     }
+
+    const wsUrl = createTenantWebSocketUrl(API_URL, TENANT_ID || '');
+
+    sdkRealtimeClient.connect({
+      url: wsUrl,
+      autoReconnect: true,
+      maxReconnectAttempts: 5,
+      tenantId: TENANT_ID,
+      debug: import.meta.env.DEV,
+    });
+
+    // Subscribe to listing events and route to appropriate handlers
+    this.unsubscribeAll = sdkRealtimeClient.onListing((event: RealtimeEvent) => {
+      const listingId = (event.data as { listingId?: string })?.listingId;
+      if (listingId) {
+        const handlers = this.listingHandlers.get(listingId);
+        handlers?.forEach(handler => handler(event));
+      }
+    });
   }
 
   disconnect(): void {
-    this.connected = false;
-    this.subscriptions.clear();
-    
-    if (import.meta.env.DEV) {
-      console.log('[REALTIME] Disconnected (mock)');
-    }
+    this.unsubscribeAll?.();
+    this.unsubscribeAll = null;
+    this.listingHandlers.clear();
+    sdkRealtimeClient.disconnect();
   }
 
   subscribe(listingId: string, handler: RealtimeEventHandler): () => void {
-    const topic = `listing:${listingId}`;
-    
-    if (!this.subscriptions.has(topic)) {
-      this.subscriptions.set(topic, new Set());
-    }
-    
-    this.subscriptions.get(topic)!.add(handler);
-    
-    if (import.meta.env.DEV) {
-      console.log('[REALTIME] Subscribed to', topic);
+    if (!this.listingHandlers.has(listingId)) {
+      this.listingHandlers.set(listingId, new Set());
     }
 
-    // Return unsubscribe function
+    this.listingHandlers.get(listingId)!.add(handler);
+
     return () => {
-      const handlers = this.subscriptions.get(topic);
+      const handlers = this.listingHandlers.get(listingId);
       if (handlers) {
         handlers.delete(handler);
         if (handlers.size === 0) {
-          this.subscriptions.delete(topic);
+          this.listingHandlers.delete(listingId);
         }
-      }
-      
-      if (import.meta.env.DEV) {
-        console.log('[REALTIME] Unsubscribed from', topic);
       }
     };
   }
 
   isConnected(): boolean {
-    return this.connected;
-  }
-
-  // For testing: simulate receiving an event
-  simulateEvent(listingId: string, type: RealtimeEventType, payload: unknown): void {
-    const topic = `listing:${listingId}`;
-    const handlers = this.subscriptions.get(topic);
-    
-    if (handlers) {
-      const event: RealtimeEvent = {
-        type,
-        listingId,
-        payload,
-        timestamp: new Date().toISOString(),
-      };
-      
-      handlers.forEach((handler) => handler(event));
-    }
+    return sdkRealtimeClient.isConnected;
   }
 }
 
@@ -125,7 +105,7 @@ let realtimeClientInstance: RealtimeClient | null = null;
 
 export function getRealtimeClient(): RealtimeClient {
   if (!realtimeClientInstance) {
-    realtimeClientInstance = new MockRealtimeClient();
+    realtimeClientInstance = new SdkRealtimeClient();
   }
   return realtimeClientInstance;
 }
@@ -137,8 +117,6 @@ export function setRealtimeClient(client: RealtimeClient): void {
 // =============================================================================
 // React Hook for Real-time Updates
 // =============================================================================
-
-import { useEffect, useCallback, useState } from 'react';
 
 export interface UseRealtimeResult {
   isConnected: boolean;

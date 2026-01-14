@@ -45,7 +45,7 @@ type SeasonApplication = {
   processedBy?: string;
 };
 
-const useSeasonApplications = (seasonId: string) => ({ data: { data: [] as SeasonApplication[] }, isLoading: false });
+const useSeasonApplications = (_seasonId: string) => ({ data: { data: [] as SeasonApplication[] }, isLoading: false });
 const useApproveApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
 const useRejectApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
 
@@ -71,6 +71,7 @@ const statusVariants: Record<ApplicationStatus, 'warning' | 'success' | 'danger'
 export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonApplicationManagementProps) {
   const [filterStatus, setFilterStatus] = useState<ApplicationStatus | 'all'>('all');
   const [filterVenue, setFilterVenue] = useState<string | 'all'>('all');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedApplication, setSelectedApplication] = useState<SeasonApplication | null>(null);
 
   // Queries
@@ -184,7 +185,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
         <Dropdown>
           <Dropdown.Trigger asChild>
-            <Button variant="secondary" data-size="sm">
+            <Button variant="secondary" data-size="sm" type="button">
               <FilterIcon />
               Status: {filterStatus === 'all' ? 'Alle' : statusLabels[filterStatus]}
             </Button>
@@ -199,7 +200,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
 
         <Dropdown>
           <Dropdown.Trigger asChild>
-            <Button variant="secondary" data-size="sm">
+            <Button variant="secondary" data-size="sm" type="button">
               <FilterIcon />
               Lokale: {filterVenue === 'all' ? 'Alle' : venues.find(v => v[0] === filterVenue)?.[1] || 'Alle'}
             </Button>
@@ -296,7 +297,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
                     <Table.Cell>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" data-size="sm">
+                          <Button variant="tertiary" data-size="sm" type="button">
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
