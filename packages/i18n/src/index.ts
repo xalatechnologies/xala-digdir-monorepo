@@ -3,7 +3,7 @@ export { I18nProvider, I18nContext } from './context';
 export type { I18nProviderProps } from './context';
 
 // Hooks
-export { useI18n, useT, useLocale } from './hooks';
+export { useI18n, useT, useLocale, supportedLocales } from './hooks';
 
 // Types
 export type {
