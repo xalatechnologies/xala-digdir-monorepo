@@ -24,6 +24,7 @@ import { I18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast } from './components';
+import { useAuth } from './hooks/useAuth';
 
 // Lazy load route components for better performance
 const ListingsPage = React.lazy(() => import('./pages/ListingsPage').then(m => ({ default: m.ListingsPage })));
@@ -53,8 +54,10 @@ function MainLayout() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
+
+  // Auth state from useAuth hook (httpOnly cookie-based in real mode, in-memory in mock mode)
+  const { isAuthenticated, user, login, logout: authLogout } = useAuth();
 
   // Get real unread notification count (only for logged in users)
   const { data: unreadData } = useNotificationUnreadCount();
@@ -64,14 +67,6 @@ function MainLayout() {
   const handleThemeToggle = () => {
     setColorScheme(effectiveScheme === 'dark' ? 'light' : 'dark');
   };
-
-  // Check for logged in user on mount
-  React.useEffect(() => {
-    const userType = localStorage.getItem('web_user_type');
-    if (userType) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   // Demo search data with translations
   const demoSearchResults: SearchResultGroup[] = [
@@ -145,25 +140,8 @@ function MainLayout() {
     navigate('/login');
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('web_user_type');
-    setIsLoggedIn(false);
-  };
-
-  // Mock users for display (matches useAuth hook)
-  const MOCK_USERS: Record<string, { name: string }> = {
-    vipps: { name: 'Ola Nordmann' },
-    idporten: { name: 'Kari Nordmann' },
-    microsoft: { name: 'Per Hansen' },
-  };
-
-  // Get logged in user name from user type identifier (no JSON.parse to prevent prototype pollution)
-  const getUserName = () => {
-    const userType = localStorage.getItem('web_user_type');
-    if (userType && MOCK_USERS[userType]) {
-      return MOCK_USERS[userType].name;
-    }
-    return undefined;
+  const handleLogout = async () => {
+    await authLogout();
   };
 
   // Mobile navigation items
@@ -176,11 +154,11 @@ function MainLayout() {
       active: location.pathname === '/',
       onClick: () => navigate('/'),
     },
-    ...(isLoggedIn
+    ...(isAuthenticated
       ? [
           {
             id: 'account',
-            label: getUserName() || t('nav.account'),
+            label: user?.name || t('nav.account'),
             icon: <UserIcon size={24} />,
             onClick: handleLogout,
           },
@@ -282,7 +260,7 @@ function MainLayout() {
               isDark={effectiveScheme === 'dark'}
               onToggle={handleThemeToggle}
             />
-            {isLoggedIn && (
+            {isAuthenticated && (
               <NotificationBell
                 count={unreadCount}
                 onClick={() => {
@@ -293,8 +271,8 @@ function MainLayout() {
               />
             )}
             <HeaderLoginButton
-              isLoggedIn={isLoggedIn}
-              userName={getUserName()}
+              isLoggedIn={isAuthenticated}
+              userName={user?.name}
               onLogin={handleLogin}
               onLogout={handleLogout}
               color="accent"
