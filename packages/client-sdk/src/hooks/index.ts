@@ -245,6 +245,9 @@ export {
   useBookingStats,
   useRevenueReport,
   useUsageReport,
+  useTimeSlotHeatmap,
+  useSeasonalPatterns,
+  useComparisonData,
   useExportReport,
 } from './use-reports';
 
@@ -287,3 +290,13 @@ export {
   type FocusManagementMetric,
   type AriaAnnouncementMetric,
 } from './use-accessibility-monitoring';
+
+// Help & Support hooks
+export {
+  helpKeys,
+  useFaq,
+  useGuides,
+  useTraining,
+  useTooltips,
+  useSubmitContact,
+} from './useHelp';
