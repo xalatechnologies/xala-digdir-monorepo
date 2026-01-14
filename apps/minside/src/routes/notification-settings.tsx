@@ -48,7 +48,7 @@ export function NotificationSettingsPage() {
   });
 
   // Track if subscription exists
-  const hasActiveSubscription = (subscriptionsData?.data ?? []).some((sub: any) => sub.isActive);
+  const hasActiveSubscription = (subscriptionsData?.data ?? []).some((sub: { isActive?: boolean }) => sub.isActive);
 
   // Update local state when preferences load
   useEffect(() => {

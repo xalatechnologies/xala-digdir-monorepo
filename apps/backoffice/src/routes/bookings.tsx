@@ -589,7 +589,7 @@ export function BookingsPage() {
               borderRadius: 'var(--ds-border-radius-md)',
               border: '1px solid var(--ds-color-accent-border-default)',
             }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 {selectedIds.length} valgt
               </Paragraph>
               {activeTab === 'pending' && (
@@ -767,7 +767,7 @@ export function BookingsPage() {
                         <Table.Cell>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                             <span style={{
-                              fontFamily: 'monospace',
+                              fontFamily: 'var(--ds-font-family-monospace)',
                               fontSize: 'var(--ds-font-size-sm)',
                               color: 'var(--ds-color-accent-text-default)'
                             }}>

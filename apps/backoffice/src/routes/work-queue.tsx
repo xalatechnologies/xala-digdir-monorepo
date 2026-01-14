@@ -241,7 +241,7 @@ export function WorkQueuePage() {
                     <TypeBadge type={item.type as RequestType} />
                   </Table.Cell>
                   <Table.Cell>
-                    <span style={{ fontWeight: 500 }}>{item.title}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{item.title}</span>
                   </Table.Cell>
                   <Table.Cell>
                     <div>

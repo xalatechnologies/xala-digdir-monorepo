@@ -569,7 +569,7 @@ export function MessagesPage() {
                           <span style={{
                             color: 'var(--ds-color-neutral-text-subtle)',
                             fontSize: 'var(--ds-font-size-xs)',
-                            fontWeight: 500,
+                            fontWeight: 'var(--ds-font-weight-medium)',
                             textTransform: 'capitalize',
                           }}>
                             {date}
@@ -623,7 +623,7 @@ export function MessagesPage() {
                                   boxShadow: 'var(--ds-shadow-xs)',
                                 }}>
                                   {!isAdmin && (
-                                    <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 600, color: 'inherit', opacity: 0.8 }}>
+                                    <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'inherit', opacity: 0.8 }}>
                                       {String(message.senderName || 'Bruker')}
                                     </Paragraph>
                                   )}
@@ -826,7 +826,7 @@ export function MessagesPage() {
                 <Paragraph data-size="xs" style={{ 
                   margin: 0, 
                   marginBottom: 'var(--ds-spacing-2)', 
-                  fontWeight: 600, 
+                  fontWeight: 'var(--ds-font-weight-semibold)', 
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
@@ -862,7 +862,7 @@ export function MessagesPage() {
                   <Paragraph data-size="xs" style={{ 
                     margin: 0, 
                     marginBottom: 'var(--ds-spacing-2)', 
-                    fontWeight: 600, 
+                    fontWeight: 'var(--ds-font-weight-semibold)', 
                     color: 'var(--ds-color-neutral-text-subtle)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px',
@@ -889,7 +889,7 @@ export function MessagesPage() {
                 <Paragraph data-size="xs" style={{
                   margin: 0,
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 600,
+                  fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
@@ -915,7 +915,7 @@ export function MessagesPage() {
                 <Paragraph data-size="xs" style={{
                   margin: 0,
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 600,
+                  fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',

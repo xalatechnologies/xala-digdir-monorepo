@@ -236,7 +236,7 @@ export function OrganizationsListPage() {
               {filteredOrgs.map(org => (
                 <Table.Row key={org.id} style={{ cursor: 'pointer' }} onClick={() => handleViewDetail(org)}>
                   <Table.Cell>
-                    <div style={{ fontWeight: 500 }}>{org.name}</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{org.name}</div>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={actorTypeColors[org.actorType]}>
@@ -244,7 +244,7 @@ export function OrganizationsListPage() {
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)' }}>
+                    <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-sm)' }}>
                       {org.organizationNumber || '—'}
                     </div>
                   </Table.Cell>

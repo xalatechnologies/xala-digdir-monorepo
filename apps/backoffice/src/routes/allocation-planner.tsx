@@ -119,7 +119,7 @@ export function AllocationPlannerPage() {
 
       {/* Legend */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
+        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
           Organisasjoner
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
@@ -148,13 +148,13 @@ export function AllocationPlannerPage() {
               gridTemplateColumns: '80px repeat(7, 1fr)',
               borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
             }}>
-              <div style={{ padding: 'var(--ds-spacing-3)', fontWeight: 600, fontSize: 'var(--ds-font-size-sm)' }} />
+              <div style={{ padding: 'var(--ds-spacing-3)', fontWeight: 'var(--ds-font-weight-semibold)', fontSize: 'var(--ds-font-size-sm)' }} />
               {DAYS.map((day) => (
                 <div
                   key={day}
                   style={{
                     padding: 'var(--ds-spacing-3)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     fontSize: 'var(--ds-font-size-sm)',
                     textAlign: 'center',
                     borderLeft: '1px solid var(--ds-color-neutral-border-subtle)',
@@ -179,7 +179,7 @@ export function AllocationPlannerPage() {
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                   fontSize: 'var(--ds-font-size-sm)',
                   color: 'var(--ds-color-neutral-text-subtle)',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-monospace)',
                 }}>
                   {time}
                 </div>
@@ -205,7 +205,7 @@ export function AllocationPlannerPage() {
                           backgroundColor: allocation.color,
                           color: 'white',
                           fontSize: 'var(--ds-font-size-xs)',
-                          fontWeight: 500,
+                          fontWeight: 'var(--ds-font-weight-medium)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',

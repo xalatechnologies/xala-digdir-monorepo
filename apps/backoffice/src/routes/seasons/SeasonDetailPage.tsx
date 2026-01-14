@@ -223,7 +223,7 @@ export function SeasonDetailPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <UnlockIcon style={{ fontSize: '24px', color: 'var(--ds-color-info-text-default)' }} />
             <div>
-              <Paragraph style={{ fontWeight: 600, margin: 0 }}>
+              <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er åpen for søknader
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
@@ -239,7 +239,7 @@ export function SeasonDetailPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <LockIcon style={{ fontSize: '24px', color: 'var(--ds-color-warning-text-default)' }} />
             <div>
-              <Paragraph style={{ fontWeight: 600, margin: 0 }}>
+              <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er lukket for søknader
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
@@ -255,7 +255,7 @@ export function SeasonDetailPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <CheckCircleIcon style={{ fontSize: '24px', color: 'var(--ds-color-success-text-default)' }} />
             <div>
-              <Paragraph style={{ fontWeight: 600, margin: 0 }}>
+              <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er tildelt
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
@@ -299,7 +299,7 @@ export function SeasonDetailPage() {
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Navn
                     </div>
-                    <div style={{ fontWeight: 500 }}>{season.name}</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{season.name}</div>
                   </div>
 
                   <div>

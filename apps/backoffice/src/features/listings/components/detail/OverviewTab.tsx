@@ -376,7 +376,7 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
             <code
               style={{
                 fontSize: 'var(--ds-font-size-sm)',
-                fontFamily: 'monospace',
+                fontFamily: 'var(--ds-font-family-monospace)',
                 color: 'var(--ds-color-neutral-text-default)',
                 backgroundColor: 'var(--ds-color-neutral-surface-default)',
                 padding: '2px 6px',
@@ -466,7 +466,7 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
                         {lease.organizationName || lease.organizationId}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                        ID: <code style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-xs)' }}>{lease.id.slice(0, 8)}</code>
+                        ID: <code style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-xs)' }}>{lease.id.slice(0, 8)}</code>
                       </Paragraph>
                     </div>
                     <SeasonalLeaseStatusBadge status={lease.status} />

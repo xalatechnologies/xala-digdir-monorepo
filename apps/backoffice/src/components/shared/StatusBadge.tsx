@@ -76,7 +76,7 @@ export function StatusBadge({ variant, label, size = 'sm' }: StatusBadgeProps) {
         color: styles.color,
         border: styles.border ? `1px solid ${styles.border}` : 'none',
         borderRadius: 'var(--ds-border-radius-full)',
-        fontWeight: 500,
+        fontWeight: 'var(--ds-font-weight-medium)',
         fontSize: sizing.fontSize,
         padding: sizing.padding,
         whiteSpace: 'nowrap',

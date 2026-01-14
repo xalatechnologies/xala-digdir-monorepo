@@ -126,7 +126,7 @@ export function simulateBookingModification() {
 
 // Expose to window for browser console testing
 if (typeof window !== 'undefined') {
-  (window as any).notificationTest = {
+  (window as Record<string, unknown>).notificationTest = {
     simulate: simulateNotificationEvent,
     bookingConfirmation: simulateBookingConfirmation,
     bookingReminder24h: simulateBookingReminder24h,

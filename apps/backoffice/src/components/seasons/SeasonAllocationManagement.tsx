@@ -149,7 +149,7 @@ export function SeasonAllocationManagement({
           <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             Godkjente søknader
           </div>
-          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 600 }}>
+          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
             {approvedApplications.length}
           </div>
         </Card>
@@ -157,7 +157,7 @@ export function SeasonAllocationManagement({
           <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             Tildelt
           </div>
-          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 600, color: 'var(--ds-color-success-text-default)' }}>
+          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-success-text-default)' }}>
             {allocatedApplications.length}
           </div>
         </Card>
@@ -165,7 +165,7 @@ export function SeasonAllocationManagement({
           <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             Gjenstår
           </div>
-          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 600, color: 'var(--ds-color-warning-text-default)' }}>
+          <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-warning-text-default)' }}>
             {approvedApplications.length - allocatedApplications.length}
           </div>
         </Card>
@@ -235,7 +235,7 @@ export function SeasonAllocationManagement({
                     return (
                       <Table.Row key={application.id}>
                         <Table.Cell>
-                          <div style={{ fontWeight: 500 }}>{application.organizationName}</div>
+                          <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{application.organizationName}</div>
                         </Table.Cell>
                         <Table.Cell>
                           <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
@@ -243,7 +243,7 @@ export function SeasonAllocationManagement({
                           </div>
                         </Table.Cell>
                         <Table.Cell>
-                          <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'monospace' }}>
+                          <div style={{ fontSize: 'var(--ds-font-size-sm)', fontFamily: 'var(--ds-font-family-monospace)' }}>
                             {formatTime(application.startTime)} – {formatTime(application.endTime)}
                           </div>
                         </Table.Cell>

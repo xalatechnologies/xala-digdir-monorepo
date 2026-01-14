@@ -210,7 +210,7 @@ export function UsersPage() {
                   <Table.Cell>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                       <UserIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                      <span style={{ fontWeight: 500 }}>{user.name}</span>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{user.name}</span>
                     </div>
                   </Table.Cell>
                   <Table.Cell>

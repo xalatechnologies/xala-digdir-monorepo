@@ -108,7 +108,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
             }}
           >
             <Stack spacing={3}>
-              <Paragraph data-size="sm" style={{ fontWeight: 600 }}>
+              <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 Legg til nytt medlem
               </Paragraph>
 
@@ -200,7 +200,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 <Table.Cell>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     <UserIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                    <span style={{ fontWeight: 500 }}>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {member.user?.name || 'Ukjent bruker'}
                     </span>
                   </div>

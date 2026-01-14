@@ -94,10 +94,10 @@ export function CalendarPage() {
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigateWeek('prev')}>
+            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigateWeek('prev')} aria-label={t('calendar.previous_week') || 'Previous week'}>
               <ChevronLeftIcon />
             </Button>
-            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigateWeek('next')}>
+            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigateWeek('next')} aria-label={t('calendar.next_week') || 'Next week'}>
               <ChevronRightIcon />
             </Button>
             <Heading level={2} data-size="sm" style={{ margin: 0 }}>

@@ -59,7 +59,7 @@ export function InfoBox({ variant = 'info', children, title }: InfoBoxProps) {
         <Paragraph
           data-size="sm"
           style={{
-            fontWeight: 600,
+            fontWeight: 'var(--ds-font-weight-semibold)',
             color: styles.text,
             margin: 0,
             marginBottom: 'var(--ds-spacing-1)',

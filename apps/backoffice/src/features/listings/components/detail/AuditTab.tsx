@@ -326,7 +326,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     textAlign: 'left',
                     padding: 'var(--ds-spacing-3)',
                     borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
@@ -337,7 +337,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     textAlign: 'left',
                     padding: 'var(--ds-spacing-3)',
                     borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
@@ -348,7 +348,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     textAlign: 'left',
                     padding: 'var(--ds-spacing-3)',
                     borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
@@ -359,7 +359,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     textAlign: 'left',
                     padding: 'var(--ds-spacing-3)',
                     borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
@@ -486,7 +486,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                 style={{
                   display: 'block',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)',
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
@@ -520,7 +520,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                 style={{
                   display: 'block',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)',
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
@@ -548,7 +548,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                 style={{
                   display: 'block',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)',
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
@@ -613,7 +613,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Ressurs-ID
                   </Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.resourceId || '-'}
                   </Paragraph>
                 </div>
@@ -646,7 +646,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       Bruker-ID
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.userId.slice(0, 8)}...
                     </Paragraph>
                   </div>
@@ -656,7 +656,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       IP-adresse
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.ipAddress}
                     </Paragraph>
                   </div>
@@ -693,7 +693,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                             style={{
                               margin: 0,
                               fontSize: 'var(--ds-font-size-xs)',
-                              fontFamily: 'monospace',
+                              fontFamily: 'var(--ds-font-family-monospace)',
                               whiteSpace: 'pre-wrap',
                               wordBreak: 'break-word',
                             }}
@@ -726,7 +726,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                             style={{
                               margin: 0,
                               fontSize: 'var(--ds-font-size-xs)',
-                              fontFamily: 'monospace',
+                              fontFamily: 'var(--ds-font-family-monospace)',
                               whiteSpace: 'pre-wrap',
                               wordBreak: 'break-word',
                             }}
@@ -757,7 +757,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                       style={{
                         margin: 0,
                         fontSize: 'var(--ds-font-size-xs)',
-                        fontFamily: 'monospace',
+                        fontFamily: 'var(--ds-font-family-monospace)',
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
                       }}
@@ -775,7 +775,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Hendelse-ID
                   </Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.id.slice(0, 8)}...
                   </Paragraph>
                 </div>
@@ -784,7 +784,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       Tenant-ID
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.tenantId.slice(0, 8)}...
                     </Paragraph>
                   </div>
@@ -815,7 +815,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                     >
                       User Agent
                     </Paragraph>
-                    <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                    <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)', wordBreak: 'break-all' }}>
                       {selectedEvent.userAgent}
                     </Paragraph>
                   </div>

@@ -225,7 +225,7 @@ export function SavedFilters({
             >
               <Text
                 style={{
-                  fontWeight: 600,
+                  fontWeight: 'var(--ds-font-weight-semibold)',
                   fontSize: 'var(--ds-font-size-md)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -413,7 +413,7 @@ export function SavedFilters({
               }}
             >
               <Stack direction="vertical" spacing={3}>
-                <Text style={{ fontWeight: 600, fontSize: 'var(--ds-font-size-sm)' }}>
+                <Text style={{ fontWeight: 'var(--ds-font-weight-semibold)', fontSize: 'var(--ds-font-size-sm)' }}>
                   Nytt lagret filter
                 </Text>
                 <input

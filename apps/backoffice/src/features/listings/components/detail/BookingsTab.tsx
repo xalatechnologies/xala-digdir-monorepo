@@ -345,7 +345,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                     ? 'var(--ds-color-neutral-surface-default)'
                     : 'var(--ds-color-neutral-surface-subtle)',
                   fontSize: 'var(--ds-font-size-xs)',
-                  fontWeight: 600,
+                  fontWeight: 'var(--ds-font-weight-semibold)',
                 }}
               >
                 {count}
@@ -397,7 +397,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                 backgroundColor: 'var(--ds-color-primary-surface-default)',
                 color: 'var(--ds-color-primary-text-default)',
                 fontSize: 'var(--ds-font-size-xs)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
               }}
             >
               {activeFilterCount}
@@ -490,7 +490,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                   <Text
                     data-size="sm"
                     style={{
-                      fontFamily: 'monospace',
+                      fontFamily: 'var(--ds-font-family-monospace)',
                       color: 'var(--ds-color-neutral-text-subtle)',
                     }}
                   >
@@ -499,7 +499,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                 </Table.Cell>
                 <Table.Cell>
                   <div>
-                    <Text data-size="sm" style={{ fontWeight: 500 }}>
+                    <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {booking.userName || 'Ukjent bruker'}
                     </Text>
                     {booking.organizationName && (
@@ -517,7 +517,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                 </Table.Cell>
                 <Table.Cell>
                   <div>
-                    <Text data-size="sm" style={{ fontWeight: 500 }}>
+                    <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {startDate}
                     </Text>
                     <Text
@@ -543,7 +543,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                   )}
                 </Table.Cell>
                 <Table.Cell style={{ textAlign: 'right' }}>
-                  <Text data-size="sm" style={{ fontWeight: 500 }}>
+                  <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                     {formatCurrency(parseFloat(booking.totalPrice), booking.currency)}
                   </Text>
                 </Table.Cell>
@@ -568,7 +568,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
               <Text
                 data-size="sm"
                 style={{
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-monospace)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   flex: 1,
                 }}
@@ -632,7 +632,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           {/* Payment Information */}
           <DrawerSection title="Betaling">
             <DrawerItem label="Totalpris">
-              <Text data-size="sm" style={{ fontWeight: 600 }}>
+              <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 {formatCurrency(parseFloat(selectedBooking.totalPrice), selectedBooking.currency)}
               </Text>
             </DrawerItem>
@@ -685,7 +685,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-1)',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)',
                   color: 'var(--ds-color-neutral-text-default)',
                 }}
               >
@@ -715,7 +715,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-1)',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: 500,
+                  fontWeight: 'var(--ds-font-weight-medium)',
                   color: 'var(--ds-color-neutral-text-default)',
                 }}
               >

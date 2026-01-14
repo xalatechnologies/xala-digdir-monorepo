@@ -185,7 +185,7 @@ export function SeasonsListPage() {
               {filteredSeasons.map(season => (
                 <Table.Row key={season.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/seasons/${season.id}`)}>
                   <Table.Cell>
-                    <div style={{ fontWeight: 500 }}>{season.name}</div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{season.name}</div>
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>

@@ -342,7 +342,7 @@ export function OrganizationDetailPage() {
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                         Organisasjonsnummer
                       </div>
-                      <div style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-md)' }}>
+                      <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-md)' }}>
                         {organization.organizationNumber}
                       </div>
                     </div>
@@ -504,7 +504,7 @@ export function OrganizationDetailPage() {
                           onClick={() => navigate(`/bookings/${booking.id}`)}
                         >
                           <Table.Cell>
-                            <span style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-accent-text-default)' }}>
+                            <span style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-accent-text-default)' }}>
                               #{booking.id.split('-')[0]?.toUpperCase()}
                             </span>
                           </Table.Cell>

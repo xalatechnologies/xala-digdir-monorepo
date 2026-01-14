@@ -196,7 +196,7 @@ const styles = {
         : state === 'completed'
         ? '0 2px 6px var(--ds-color-success-surface-default)'
         : 'none',
-    fontWeight: 600,
+    fontWeight: 'var(--ds-font-weight-semibold)',
     fontSize: 'var(--ds-font-size-sm)',
   }),
   label: (state: 'completed' | 'active' | 'future' | 'error') => ({

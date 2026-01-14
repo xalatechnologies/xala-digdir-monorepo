@@ -228,7 +228,7 @@ export function AccountSwitcher() {
                   <CheckIcon />
                 </div>
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Divider */}
@@ -264,9 +264,10 @@ export function AccountSwitcher() {
                 </Paragraph>
               </div>
               {organizations.map((org) => (
-                <button
+                <Button
                   key={org.id}
                   type="button"
+                  variant="tertiary"
                   onClick={() => handleOrganizationClick(org.id)}
                   style={{
                     all: 'unset',
@@ -335,7 +336,7 @@ export function AccountSwitcher() {
                       <CheckIcon />
                     </div>
                   )}
-                </button>
+                </Button>
               ))}
             </div>
           )}
@@ -351,8 +352,9 @@ export function AccountSwitcher() {
 
           {/* Manage Organizations Link */}
           <div style={{ padding: 'var(--ds-spacing-2)' }}>
-            <button
+            <Button
               type="button"
+              variant="tertiary"
               onClick={() => {
                 setIsOpen(false);
                 // Navigate to settings - will be implemented when integrating
@@ -393,7 +395,7 @@ export function AccountSwitcher() {
               >
                 Administrer organisasjoner
               </Paragraph>
-            </button>
+            </Button>
           </div>
         </div>
       )}

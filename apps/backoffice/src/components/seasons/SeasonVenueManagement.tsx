@@ -128,7 +128,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
                 }}
               >
                 <div>
-                  <div style={{ fontWeight: 500 }}>{venue.name}</div>
+                  <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{venue.name}</div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {venue.type}
                   </div>
@@ -189,7 +189,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
             {seasonVenues.map(venue => (
               <Table.Row key={venue.id}>
                 <Table.Cell>
-                  <div style={{ fontWeight: 500 }}>{venue.name}</div>
+                  <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{venue.name}</div>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge color="info">{venue.type}</Badge>

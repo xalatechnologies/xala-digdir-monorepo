@@ -108,7 +108,7 @@ export function TypeSpecificStep({ data, onChange, errors: _errors = [] }: TypeS
             </FormField>
 
             <div>
-              <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-2)' }}>
+              <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
                 Fasiliteter
               </Paragraph>
               <Stack spacing={2}>

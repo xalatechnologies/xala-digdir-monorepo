@@ -295,7 +295,7 @@ export function UserDetailPage() {
                         Sist innlogget
                       </span>
                     </div>
-                    <div style={{ fontWeight: 500 }}>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {new Date(user.lastLoginAt).toLocaleString('nb-NO', {
                         day: '2-digit',
                         month: 'short',
@@ -311,7 +311,7 @@ export function UserDetailPage() {
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     Opprettet
                   </div>
-                  <div style={{ fontWeight: 500 }}>
+                  <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                     {new Date(user.createdAt).toLocaleDateString('nb-NO', {
                       day: '2-digit',
                       month: 'long',
@@ -324,7 +324,7 @@ export function UserDetailPage() {
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     Bruker-ID
                   </div>
-                  <div style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {user.id}
                   </div>
                 </div>

@@ -386,7 +386,7 @@ export function AuditPage() {
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Ressurs-ID
                   </Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.resourceId || '-'}
                   </Paragraph>
                 </div>
@@ -416,7 +416,7 @@ export function AuditPage() {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       Bruker-ID
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.userId.slice(0, 8)}...
                     </Paragraph>
                   </div>
@@ -426,7 +426,7 @@ export function AuditPage() {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       IP-adresse
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.ipAddress}
                     </Paragraph>
                   </div>
@@ -449,7 +449,7 @@ export function AuditPage() {
                     style={{
                       margin: 0,
                       fontSize: 'var(--ds-font-size-xs)',
-                      fontFamily: 'monospace',
+                      fontFamily: 'var(--ds-font-family-monospace)',
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-word',
                     }}
@@ -466,7 +466,7 @@ export function AuditPage() {
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Hendelse-ID
                   </Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.id.slice(0, 8)}...
                   </Paragraph>
                 </div>
@@ -475,7 +475,7 @@ export function AuditPage() {
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       Tenant-ID
                     </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.tenantId.slice(0, 8)}...
                     </Paragraph>
                   </div>
@@ -493,7 +493,7 @@ export function AuditPage() {
                     <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                       User Agent
                     </Paragraph>
-                    <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                    <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)', wordBreak: 'break-all' }}>
                       {selectedEvent.userAgent}
                     </Paragraph>
                   </div>
@@ -735,7 +735,7 @@ export function AuditPage() {
                           </Paragraph>
                         </Table.Cell>
                         <Table.Cell>
-                          <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'monospace' }}>
+                          <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                             {getResourceDisplay(event)}
                           </Paragraph>
                         </Table.Cell>

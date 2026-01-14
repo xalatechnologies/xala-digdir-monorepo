@@ -213,7 +213,7 @@ export function PaymentReconciliationPage() {
           <Stack direction="column" gap="var(--ds-spacing-4)">
             {/* Payment Status Filter */}
             <div>
-              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('payments.reconciliation.paymentStatus', 'Betalingsstatus')}
               </Text>
               <Select
@@ -230,7 +230,7 @@ export function PaymentReconciliationPage() {
 
             {/* Provider Filter */}
             <div>
-              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('payments.reconciliation.provider', 'Betalingsleverandør')}
               </Text>
               <Select
@@ -247,7 +247,7 @@ export function PaymentReconciliationPage() {
 
             {/* Date Range */}
             <div>
-              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('payments.reconciliation.dateFrom', 'Fra dato')}
               </Text>
               <Textfield
@@ -257,7 +257,7 @@ export function PaymentReconciliationPage() {
               />
             </div>
             <div>
-              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+              <Text as="label" style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('payments.reconciliation.dateTo', 'Til dato')}
               </Text>
               <Textfield
@@ -306,12 +306,12 @@ export function PaymentReconciliationPage() {
               {reconciliationData.data.map((payment) => (
                 <Table.Row key={payment.bookingId}>
                   <Table.Cell>
-                    <Text style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                    <Text style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: '0.875rem' }}>
                       {payment.bookingId.slice(0, 8)}
                     </Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text style={{ fontWeight: 500 }}>
+                    <Text style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {formatCurrency(payment.totalAmount, payment.currency, formatLocale)}
                     </Text>
                   </Table.Cell>
@@ -391,10 +391,10 @@ export function PaymentReconciliationPage() {
                   <Card key={transaction.transactionId} style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }}>
                     <Stack direction="column" gap="var(--ds-spacing-2)">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 500 }}>
+                        <Text style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                           {transaction.transactionType === 'payment' ? 'Betaling' : transaction.transactionType === 'refund' ? 'Refundering' : transaction.transactionType === 'capture' ? 'Trekking' : 'Annet'}
                         </Text>
-                        <Text style={{ fontWeight: 500 }}>
+                        <Text style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                           {formatCurrency(transaction.amount, transaction.currency, formatLocale)}
                         </Text>
                       </div>

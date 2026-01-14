@@ -19,7 +19,7 @@ export function FormSection({ title, children, description }: FormSectionProps) 
       <Paragraph
         data-size="sm"
         style={{
-          fontWeight: 600,
+          fontWeight: 'var(--ds-font-weight-semibold)',
           color: 'var(--ds-color-neutral-text-default)',
           marginBottom: 'var(--ds-spacing-3)',
         }}

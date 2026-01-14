@@ -226,7 +226,7 @@ export function SeasonApplicationsReviewPage() {
               {applications.map((app) => (
                 <Table.Row key={app.id} style={{ cursor: 'pointer' }} onClick={() => setSelectedApp(app)}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 500 }}>{app.organization}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{app.organization}</span>
                   </Table.Cell>
                   <Table.Cell>{app.seasonName}</Table.Cell>
                   <Table.Cell>{app.totalHours} t</Table.Cell>
@@ -244,7 +244,7 @@ export function SeasonApplicationsReviewPage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontWeight: 600,
+                      fontWeight: 'var(--ds-font-weight-semibold)',
                       fontSize: 'var(--ds-font-size-sm)',
                     }}>
                       {app.priorityScore}
@@ -291,7 +291,7 @@ export function SeasonApplicationsReviewPage() {
             </div>
 
             <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
                 Ønskede tider
               </Paragraph>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
@@ -301,7 +301,7 @@ export function SeasonApplicationsReviewPage() {
                     borderRadius: 'var(--ds-border-radius-md)',
                     backgroundColor: 'var(--ds-color-neutral-surface-hover)',
                   }}>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {slot.day} {slot.time}
                     </Paragraph>
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -314,7 +314,7 @@ export function SeasonApplicationsReviewPage() {
 
             {selectedApp.notes && (
               <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-2)' }}>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
                   Merknad fra søker
                 </Paragraph>
                 <Paragraph data-size="sm" style={{ margin: 0 }}>

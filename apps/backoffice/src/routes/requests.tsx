@@ -219,13 +219,13 @@ export function RequestsPage() {
                 justifyContent: 'center',
                 color: 'var(--ds-color-warning-text-default)',
                 fontSize: 'var(--ds-font-size-xl)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
               }}
             >
               {stats.pending}
             </div>
             <div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 Ventende
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -255,13 +255,13 @@ export function RequestsPage() {
                 justifyContent: 'center',
                 color: 'var(--ds-color-info-text-default)',
                 fontSize: 'var(--ds-font-size-xl)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
               }}
             >
               {stats.needsInfo}
             </div>
             <div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 Trenger info
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -291,13 +291,13 @@ export function RequestsPage() {
                 justifyContent: 'center',
                 color: 'var(--ds-color-danger-text-default)',
                 fontSize: 'var(--ds-font-size-xl)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
               }}
             >
               {stats.urgent}
             </div>
             <div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 Haster
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -373,7 +373,7 @@ export function RequestsPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <div>
-                      <div style={{ fontWeight: 500 }}>
+                      <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {request.userName || 'Ukjent'}
                       </div>
                       {request.organizationName && (
@@ -391,7 +391,7 @@ export function RequestsPage() {
                       <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
                         {formatDate(request.startTime)}
                       </div>
-                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontFamily: 'monospace' }}>
+                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontFamily: 'var(--ds-font-family-monospace)' }}>
                         {formatTime(request.startTime)} - {formatTime(request.endTime)}
                       </Paragraph>
                     </div>
