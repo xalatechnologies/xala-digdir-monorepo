@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, Heading, Paragraph, Button, Badge, Spinner, BarChart, DownloadIcon, CalendarIcon, Dropdown, FilterIcon } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Badge, Spinner, BarChart, DownloadIcon, CalendarIcon, Dropdown, FilterIcon, Tabs } from '@xala/ds';
 import {
   useDashboardKPIs,
   useUsageReport,
@@ -17,6 +17,7 @@ import {
 } from '@digilist/client-sdk';
 import { ReportTemplateSelector } from '../components/reports/ReportTemplateSelector';
 import { CustomReportBuilder } from '../components/reports/CustomReportBuilder';
+import { ScheduledReportsManager } from '../components/reports/ScheduledReportsManager';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -50,6 +51,9 @@ const BOOKING_TYPE_OPTIONS = [
 ];
 
 export function ReportsPage() {
+  // Tab state
+  const [activeTab, setActiveTab] = useState<string>('overview');
+
   const [period, setPeriod] = useState<ReportPeriod>('month');
   const [dateRange, setDateRange] = useState(() => {
     const end = new Date();
@@ -254,29 +258,42 @@ export function ReportsPage() {
             Oversikt og statistikk over bookinger og bruk.
           </Paragraph>
         </div>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-          <Button
-            type="button"
-            variant="secondary"
-            data-size="md"
-            onClick={() => handleExport('xlsx', 'usage')}
-            disabled={exportReport.isPending}
-          >
-            <DownloadIcon />
-            Eksporter Excel
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            data-size="md"
-            onClick={() => handleExport('pdf', 'usage')}
-            disabled={exportReport.isPending}
-          >
-            <DownloadIcon />
-            Eksporter PDF
-          </Button>
-        </div>
+        {activeTab === 'overview' && (
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="md"
+              onClick={() => handleExport('xlsx', 'usage')}
+              disabled={exportReport.isPending}
+            >
+              <DownloadIcon />
+              Eksporter Excel
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="md"
+              onClick={() => handleExport('pdf', 'usage')}
+              disabled={exportReport.isPending}
+            >
+              <DownloadIcon />
+              Eksporter PDF
+            </Button>
+          </div>
+        )}
       </div>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          <Tabs.Tab value="overview">Oversikt</Tabs.Tab>
+          <Tabs.Tab value="scheduled">Planlagte rapporter</Tabs.Tab>
+          <Tabs.Tab value="templates">Rapportmaler</Tabs.Tab>
+        </Tabs.List>
+
+        {/* Overview Tab */}
+        <Tabs.Panel value="overview">
 
       {/* Period Controls */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -952,6 +969,39 @@ export function ReportsPage() {
           )}
         </>
       )}
+        </Tabs.Panel>
+
+        {/* Scheduled Reports Tab */}
+        <Tabs.Panel value="scheduled">
+          <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
+            <ScheduledReportsManager />
+          </div>
+        </Tabs.Panel>
+
+        {/* Templates Tab */}
+        <Tabs.Panel value="templates">
+          <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                Rapportmaler
+              </Heading>
+              <ReportTemplateSelector
+                onSelect={setSelectedTemplate}
+                onCustomize={() => {}}
+              />
+              {selectedTemplate && (
+                <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
+                  <CustomReportBuilder
+                    template={selectedTemplate}
+                    onGenerate={handleGenerateCustomReport}
+                    onSaveTemplate={handleSaveCustomTemplate}
+                  />
+                </div>
+              )}
+            </Card>
+          </div>
+        </Tabs.Panel>
+      </Tabs>
     </div>
   );
 }
