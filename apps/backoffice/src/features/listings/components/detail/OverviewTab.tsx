@@ -8,7 +8,7 @@ import * as React from 'react';
 import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard, LocationCard, ContactInfoCard } from '@xala/ds';
 import type { Listing } from '@digilist/client-sdk';
 import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds';
-import { getListingTypeLabel } from '@digilist/client-sdk';
+import { getListingTypeLabel, formatDateTime } from '@digilist/client-sdk';
 
 // =============================================================================
 // Types
@@ -18,6 +18,30 @@ export interface OverviewTabProps {
   /** Listing data from SDK */
   listing: Listing;
 }
+
+// =============================================================================
+// Inline Components
+// =============================================================================
+
+/**
+ * Copy icon SVG component
+ */
+const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={style}
+  >
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
 
 // =============================================================================
 // Helper Functions
@@ -130,6 +154,9 @@ function transformOpeningHours(
 // =============================================================================
 
 export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
+  // State for copy feedback
+  const [copiedId, setCopiedId] = React.useState<string | null>(null);
+
   // Transform images to gallery format
   const galleryImages = React.useMemo(
     () => transformImagesToGallery(listing.images || [], listing.name),
@@ -153,6 +180,14 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
     () => transformOpeningHours(listing.metadata?.openingHours),
     [listing.metadata?.openingHours]
   );
+
+  // Copy ID handler with feedback
+  const handleCopyId = React.useCallback((id: string) => {
+    navigator.clipboard.writeText(id).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  }, []);
 
   return (
     <div
@@ -258,6 +293,128 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
           title="Kontaktinformasjon"
         />
       </div>
+
+      {/* Metadata Section */}
+      <section
+        style={{
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+          borderRadius: 'var(--ds-radius-md)',
+          border: '1px solid var(--ds-color-neutral-border-subtle)',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: 'var(--ds-font-size-lg)',
+            fontWeight: 'var(--ds-font-weight-semibold)',
+            margin: '0 0 var(--ds-spacing-4) 0',
+            color: 'var(--ds-color-neutral-text-default)',
+          }}
+        >
+          Metadata
+        </h2>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            gap: 'var(--ds-spacing-2) var(--ds-spacing-4)',
+            fontSize: 'var(--ds-font-size-sm)',
+          }}
+        >
+          {/* Created */}
+          <div
+            style={{
+              fontWeight: 'var(--ds-font-weight-medium)',
+              color: 'var(--ds-color-neutral-text-subtle)',
+            }}
+          >
+            Opprettet:
+          </div>
+          <div style={{ color: 'var(--ds-color-neutral-text-default)' }}>
+            {listing.createdAt ? formatDateTime(listing.createdAt) : 'Ikke tilgjengelig'}
+          </div>
+
+          {/* Updated */}
+          <div
+            style={{
+              fontWeight: 'var(--ds-font-weight-medium)',
+              color: 'var(--ds-color-neutral-text-subtle)',
+            }}
+          >
+            Oppdatert:
+          </div>
+          <div style={{ color: 'var(--ds-color-neutral-text-default)' }}>
+            {listing.updatedAt ? formatDateTime(listing.updatedAt) : 'Ikke tilgjengelig'}
+          </div>
+
+          {/* Listing ID */}
+          <div
+            style={{
+              fontWeight: 'var(--ds-font-weight-medium)',
+              color: 'var(--ds-color-neutral-text-subtle)',
+            }}
+          >
+            ID:
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-2)',
+            }}
+          >
+            <code
+              style={{
+                fontSize: 'var(--ds-font-size-sm)',
+                fontFamily: 'monospace',
+                color: 'var(--ds-color-neutral-text-default)',
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                padding: '2px 6px',
+                borderRadius: 'var(--ds-radius-sm)',
+              }}
+            >
+              {listing.id}
+            </code>
+            <button
+              type="button"
+              onClick={() => handleCopyId(listing.id)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 8px',
+                fontSize: 'var(--ds-font-size-xs)',
+                backgroundColor: copiedId === listing.id
+                  ? 'var(--ds-color-success-surface-subtle)'
+                  : 'var(--ds-color-neutral-surface-default)',
+                color: copiedId === listing.id
+                  ? 'var(--ds-color-success-text-default)'
+                  : 'var(--ds-color-neutral-text-default)',
+                border: '1px solid',
+                borderColor: copiedId === listing.id
+                  ? 'var(--ds-color-success-border-subtle)'
+                  : 'var(--ds-color-neutral-border-default)',
+                borderRadius: 'var(--ds-radius-sm)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (copiedId !== listing.id) {
+                  e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (copiedId !== listing.id) {
+                  e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-default)';
+                }
+              }}
+            >
+              <CopyIcon size={12} />
+              <span>{copiedId === listing.id ? 'Kopiert!' : 'Kopier'}</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Additional sections will be added in subsequent subtasks */}
     </div>
