@@ -36,6 +36,7 @@ import {
   useUpdateBooking,
   useBulkConfirmBookings,
   useBulkCancelBookings,
+  useBulkRejectBookings,
   useBatchRescheduleBookings,
   useListings,
   useUsers,
@@ -193,6 +194,7 @@ export function BookingsPage() {
   const updateBooking = useUpdateBooking();
   const bulkConfirmBookings = useBulkConfirmBookings();
   const bulkCancelBookings = useBulkCancelBookings();
+  const bulkRejectBookings = useBulkRejectBookings();
   const batchRescheduleBookings = useBatchRescheduleBookings();
   const { confirm } = useDialog();
 
@@ -299,6 +301,20 @@ export function BookingsPage() {
     });
     if (confirmed) {
       await bulkConfirmBookings.mutateAsync(selectedIds);
+      setSelectedIds([]);
+    }
+  };
+
+  const handleBulkReject = async () => {
+    const confirmed = await confirm({
+      title: 'Avvis bookinger',
+      description: `Avvis ${selectedIds.length} bookinger? Dette vil sende en avvisningsmelding til brukerne.`,
+      confirmText: 'Avvis alle',
+      cancelText: t('common.abort'),
+      variant: 'danger',
+    });
+    if (confirmed) {
+      await bulkRejectBookings.mutateAsync(selectedIds);
       setSelectedIds([]);
     }
   };
@@ -1404,8 +1420,8 @@ export function BookingsPage() {
                     type="button"
                     variant="tertiary"
                     data-size="sm"
-                    onClick={handleBulkCancel}
-                    disabled={cancelBooking.isPending}
+                    onClick={handleBulkReject}
+                    disabled={bulkRejectBookings.isPending}
                     style={{ color: 'var(--ds-color-danger-text-default)' }}
                   >
                     <CloseIcon /> Avslå
