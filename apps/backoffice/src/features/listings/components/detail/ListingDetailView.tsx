@@ -16,6 +16,7 @@ import {
 } from '@xala/ds';
 import { useListingBySlug, useListing } from '@digilist/client-sdk';
 import { OverviewTab } from './OverviewTab';
+import { BookingsTab } from './BookingsTab';
 
 interface ListingDetailViewProps {
   slug: string;
@@ -201,16 +202,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
         {/* Tab Content */}
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
           {activeTab === 'overview' && <OverviewTab listing={listing} />}
-          {activeTab === 'bookings' && (
-            <div>
-              <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-                Bookinger
-              </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Liste over alle bookinger for dette utleieobjektet kommer her.
-              </Paragraph>
-            </div>
-          )}
+          {activeTab === 'bookings' && <BookingsTab listingId={listing.id} />}
           {activeTab === 'availability' && (
             <div>
               <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
