@@ -5,10 +5,11 @@
  * First tab in the listing detail view providing administrators with a comprehensive overview.
  */
 import * as React from 'react';
-import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard, LocationCard, ContactInfoCard } from '@xala/ds';
-import type { Listing } from '@digilist/client-sdk';
+import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard, LocationCard, ContactInfoCard, Card, Heading, Paragraph, Badge, SeasonalLeaseStatusBadge, Button } from '@xala/ds';
+import type { Listing, SeasonalLease } from '@digilist/client-sdk';
 import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds';
-import { getListingTypeLabel, formatDateTime } from '@digilist/client-sdk';
+import { getListingTypeLabel, formatDateTime, useSeasonalLeases, formatWeekdays, formatPeriod, formatTimeSlot } from '@digilist/client-sdk';
+import { useNavigate } from 'react-router-dom';
 
 // =============================================================================
 // Types
@@ -156,6 +157,15 @@ function transformOpeningHours(
 export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
   // State for copy feedback
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
+
+  // Navigation
+  const navigate = useNavigate();
+
+  // Fetch seasonal leases for this listing
+  const { data: seasonalLeasesData } = useSeasonalLeases({
+    listingId: listing.id,
+  });
+  const seasonalLeases = seasonalLeasesData?.data ?? [];
 
   // Transform images to gallery format
   const galleryImages = React.useMemo(
@@ -416,7 +426,98 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
         </div>
       </section>
 
-      {/* Additional sections will be added in subsequent subtasks */}
+      {/* Seasonal Lease Section */}
+      {seasonalLeases.length > 0 && (
+        <section>
+          <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-4)' }}>
+              <div>
+                <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                  Sesongleie
+                </Heading>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  Dette lokalet har {seasonalLeases.length} aktiv{seasonalLeases.length > 1 ? 'e' : ''} sesongleieavtale{seasonalLeases.length > 1 ? 'r' : ''}.
+                </Paragraph>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                data-size="sm"
+                onClick={() => navigate('/seasons')}
+              >
+                Administrer sesongleie
+              </Button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+              {seasonalLeases.map((lease: SeasonalLease) => (
+                <div
+                  key={lease.id}
+                  style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    borderRadius: 'var(--ds-radius-md)',
+                    border: '1px solid var(--ds-color-neutral-border-subtle)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-3)' }}>
+                    <div>
+                      <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)', margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
+                        {lease.organizationName || lease.organizationId}
+                      </Paragraph>
+                      <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                        ID: <code style={{ fontFamily: 'monospace', fontSize: 'var(--ds-font-size-xs)' }}>{lease.id.slice(0, 8)}</code>
+                      </Paragraph>
+                    </div>
+                    <SeasonalLeaseStatusBadge status={lease.status} />
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gap: 'var(--ds-spacing-2)',
+                      fontSize: 'var(--ds-font-size-sm)',
+                    }}
+                  >
+                    <div>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Periode: </span>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {formatPeriod(lease.startDate, lease.endDate)}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Ukedager: </span>
+                      {formatWeekdays(lease.weekdays).map((day: string, idx: number) => (
+                        <Badge key={idx} data-color="neutral" data-size="sm" style={{ marginLeft: 'var(--ds-spacing-1)' }}>
+                          {day}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Tidspunkt: </span>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {formatTimeSlot(lease.startTime, lease.endTime)}
+                      </span>
+                    </div>
+
+                    {lease.totalPrice && (
+                      <div>
+                        <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Totalpris: </span>
+                        <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {lease.totalPrice.toLocaleString('nb-NO')} kr
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </section>
+      )}
     </div>
   );
 }
