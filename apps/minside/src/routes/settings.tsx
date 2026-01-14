@@ -330,6 +330,7 @@ export function SettingsPage() {
                   </div>
 
                   <Stack spacing={2}>
+                    {/* eslint-disable-next-line digdir/prefer-ds-components -- Hidden file input for avatar upload */}
                     <input
                       ref={fileInputRef}
                       type="file"

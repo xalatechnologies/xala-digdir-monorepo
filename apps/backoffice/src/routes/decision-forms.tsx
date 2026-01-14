@@ -52,7 +52,6 @@ const mockDecisions = [
 
 export function DecisionFormsPage() {
   const { locale } = useLocale();
-  const navigate = useNavigate();
   const { confirm } = useDialog();
   const [selectedDecision, setSelectedDecision] = useState<typeof mockDecisions[0] | null>(null);
   const [outcome, setOutcome] = useState<DecisionType>('approved');
@@ -95,6 +94,8 @@ export function DecisionFormsPage() {
     }
   };
 
+  // Helper functions for decision status display
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getOutcomeLabel = (status: DecisionType) => {
     switch (status) {
       case 'approved': return 'Godkjent';
@@ -104,6 +105,7 @@ export function DecisionFormsPage() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getOutcomeColor = (status: DecisionType) => {
     switch (status) {
       case 'approved': return { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' };
