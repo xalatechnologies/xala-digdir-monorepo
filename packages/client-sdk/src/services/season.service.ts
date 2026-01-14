@@ -179,6 +179,13 @@ class SeasonService {
   async getSeasonVenues(seasonId: string): Promise<{ data: SeasonVenue[] }> {
     return getClient().get<{ data: SeasonVenue[] }>(`${this.basePath}/${seasonId}/venues`);
   }
+
+  /**
+   * Add a venue to a season
+   */
+  async addVenueToSeason(seasonId: string, listingId: string): Promise<{ data: SeasonVenue }> {
+    return getClient().post<{ data: SeasonVenue }>(`${this.basePath}/${seasonId}/venues`, { listingId });
+  }
 }
 
 export const seasonService = new SeasonService();
