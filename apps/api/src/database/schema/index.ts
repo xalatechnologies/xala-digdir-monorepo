@@ -110,6 +110,55 @@ export const licenseEntitlements = pgTable('license_entitlements', {
   planEntitlementIdx: index('license_entitlements_plan_entitlement_idx').on(table.planId, table.entitlementKey),
 }));
 
+export const tenantLicenses = pgTable('tenant_licenses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  planId: uuid('plan_id').notNull().references(() => licensePlans.id, { onDelete: 'cascade' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  validFrom: timestamp('valid_from').notNull().defaultNow(),
+  validUntil: timestamp('valid_until'),
+  trialEndsAt: timestamp('trial_ends_at'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('tenant_licenses_tenant_idx').on(table.tenantId),
+  planIdx: index('tenant_licenses_plan_idx').on(table.planId),
+  statusIdx: index('tenant_licenses_status_idx').on(table.status),
+}));
+
+export const licenseCodes = pgTable('license_codes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 100 }).notNull().unique(),
+  token: text('token'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  issuedAt: timestamp('issued_at').notNull().defaultNow(),
+  expiresAt: timestamp('expires_at'),
+  revokedAt: timestamp('revoked_at'),
+  metadata: jsonb('metadata').default({}),
+}, (table) => ({
+  tenantIdx: index('license_codes_tenant_idx').on(table.tenantId),
+  codeIdx: index('license_codes_code_idx').on(table.code),
+  statusIdx: index('license_codes_status_idx').on(table.status),
+}));
+
+export const activations = pgTable('activations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  licenseCodeId: uuid('license_code_id').notNull().references(() => licenseCodes.id, { onDelete: 'cascade' }),
+  environment: varchar('environment', { length: 50 }).notNull(),
+  appId: varchar('app_id', { length: 100 }).notNull(),
+  moduleId: varchar('module_id', { length: 100 }),
+  activatedAt: timestamp('activated_at').notNull().defaultNow(),
+  lastVerifiedAt: timestamp('last_verified_at'),
+  metadata: jsonb('metadata').default({}),
+}, (table) => ({
+  tenantIdx: index('activations_tenant_idx').on(table.tenantId),
+  licenseCodeIdx: index('activations_license_code_idx').on(table.licenseCodeId),
+  envAppIdx: index('activations_env_app_idx').on(table.environment, table.appId),
+}));
+
 // ============================================================================
 // Users & RBAC
 // ============================================================================
@@ -393,4 +442,10 @@ export type LicensePlan = typeof licensePlans.$inferSelect;
 export type NewLicensePlan = typeof licensePlans.$inferInsert;
 export type LicenseEntitlement = typeof licenseEntitlements.$inferSelect;
 export type NewLicenseEntitlement = typeof licenseEntitlements.$inferInsert;
+export type TenantLicense = typeof tenantLicenses.$inferSelect;
+export type NewTenantLicense = typeof tenantLicenses.$inferInsert;
+export type LicenseCode = typeof licenseCodes.$inferSelect;
+export type NewLicenseCode = typeof licenseCodes.$inferInsert;
+export type Activation = typeof activations.$inferSelect;
+export type NewActivation = typeof activations.$inferInsert;
 
