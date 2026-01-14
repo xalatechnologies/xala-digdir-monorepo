@@ -93,6 +93,9 @@ export {
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';
 
+// Seasons
+export { seasonService } from './season.service';
+
 // Season Applications
 export { seasonApplicationService } from './season-application.service';
 

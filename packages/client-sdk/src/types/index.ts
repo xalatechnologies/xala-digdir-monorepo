@@ -22,6 +22,12 @@ export type {
   CreateSeasonalLeaseDTO,
   UpdateSeasonalLeaseDTO,
   SeasonalLeaseQueryParams,
+  // Season types
+  Season,
+  SeasonStatus,
+  CreateSeasonDTO,
+  UpdateSeasonDTO,
+  SeasonQueryParams,
   // Season Application types
   SeasonApplication,
   CreateSeasonApplicationDTO,

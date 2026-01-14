@@ -50,6 +50,48 @@ export interface SeasonalLeaseQueryParams extends BaseQueryParams {
 }
 
 // =============================================================================
+// Seasons
+// =============================================================================
+
+export type SeasonStatus = 'draft' | 'open' | 'closed' | 'active' | 'completed' | 'cancelled';
+
+export interface Season extends TenantEntity {
+  name: string;
+  startDate: string;
+  endDate: string;
+  applicationDeadline: string;
+  description?: string;
+  status: SeasonStatus;
+  totalApplications?: number;
+  approvedApplications?: number;
+  allocatedApplications?: number;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CreateSeasonDTO {
+  name: string;
+  startDate: string;
+  endDate: string;
+  applicationDeadline: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface UpdateSeasonDTO {
+  name?: string;
+  startDate?: string;
+  endDate?: string;
+  applicationDeadline?: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface SeasonQueryParams extends BaseQueryParams {
+  status?: SeasonStatus;
+  year?: number;
+}
+
+// =============================================================================
 // Season Applications
 // =============================================================================
 
