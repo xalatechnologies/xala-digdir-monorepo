@@ -6,7 +6,7 @@ import {
   HeaderIconButton,
   HeaderThemeToggle,
   Button,
-  BellIcon,
+  NotificationBell,
   SettingsIcon,
   LogOutIcon,
   SearchIcon,
@@ -170,13 +170,11 @@ export function Header({ title: _title }: HeaderProps) {
               isDark={isDark}
               onToggle={toggleTheme}
             />
-            <HeaderIconButton
-              icon={<BellIcon size={22} />}
-              {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
-              size="md"
-              aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-              title="Varsler"
+            <NotificationBell
+              count={unreadCount}
               onClick={() => navigate('/messages')}
+              aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
+              size="md"
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
