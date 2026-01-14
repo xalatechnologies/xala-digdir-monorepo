@@ -20,7 +20,10 @@ export interface ListingPricing {
 export interface ListingLocation {
   lat?: number;
   lng?: number;
+  address?: string;
+  postalCode?: string;
   city?: string;
+  country?: string;
   municipality?: string;
 }
 
@@ -278,8 +281,11 @@ export function transformListing(listing: Listing): UiListing {
   const amenities = metadata.amenities || [];
   const maxFacilities = 3;
 
-  // Build location string from location object
-  const locationParts = [metadata.address, metadata.postalCode, metadata.city].filter(Boolean);
+  // Build location string - check both root level and nested location object
+  const address = metadata.address || location.address;
+  const postalCode = metadata.postalCode || location.postalCode;
+  const city = metadata.city || location.city;
+  const locationParts = [address, postalCode, city].filter(Boolean);
   const locationString = locationParts.length > 0 ? locationParts.join(', ') : '';
 
   // Use listing type label as display type

@@ -18,3 +18,12 @@ export {
   formatPeriod,
   formatTimeSlot,
 } from './date-utils';
+
+export {
+  // Geocoding
+  geocodeAddress,
+  geocodeAddresses,
+  clearGeocodeCache,
+  getCachedGeocode,
+  type GeocodedLocation,
+} from './geocode';

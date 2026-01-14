@@ -597,9 +597,8 @@ export function ListingCard({
             data-size="sm"
             variant="short"
             style={{
-              marginBottom: 'var(--ds-spacing-5)',
+              marginBottom: 'var(--ds-spacing-4)',
               color: 'var(--ds-color-neutral-text-subtle)',
-              minHeight: '4.5em',
               display: '-webkit-box',
               WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',

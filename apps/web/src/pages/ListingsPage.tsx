@@ -31,7 +31,10 @@ import {
   type Listing,
   type ListingType,
   type PublicListingParams,
+  transformListing,
 } from '@digilist/client-sdk';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRealtimeListing } from '../providers';
 
 // Mapbox token from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -56,57 +59,46 @@ const CAPACITY_OPTIONS = [
   { id: '50+', label: '50+ personer', min: 50, max: Infinity },
 ];
 
-// Transform API listing to UI format
-interface UiListing {
+// Fallback coordinates for listings without location data (Norwegian cities for demo)
+const FALLBACK_COORDINATES: Array<{ lat: number; lng: number }> = [
+  { lat: 59.9139, lng: 10.7522 },  // Oslo
+  { lat: 59.2086, lng: 9.6089 },   // Skien
+  { lat: 59.2623, lng: 10.4085 },  // Tønsberg
+  { lat: 59.7439, lng: 10.2045 },  // Drammen
+  { lat: 59.0489, lng: 9.6942 },   // Porsgrunn
+  { lat: 59.4225, lng: 10.4393 },  // Sandefjord
+  { lat: 58.9700, lng: 5.7331 },   // Stavanger
+  { lat: 60.3913, lng: 5.3221 },   // Bergen
+  { lat: 63.4305, lng: 10.3951 },  // Trondheim
+  { lat: 69.6496, lng: 18.9560 },  // Tromsø
+];
+
+// UI listing type for local use (matches SDK's UiListing)
+interface ExtendedUiListing {
   id: string;
   name: string;
-  slug?: string;
-  type: ListingType;
+  type: string;
   listingType: ListingType;
   location: string;
   description: string;
-  image: string;
   facilities: string[];
   moreFacilities: number;
   capacity: number;
   price: number;
   priceUnit: string;
+  currency: string;
+  rating: number;
+  reviewCount: number;
   available: boolean;
+  image: string;
+  images: string[];
   latitude?: number;
   longitude?: number;
-}
-
-function transformToUiListing(listing: Listing): UiListing {
-  const facilities = listing.metadata?.facilities || listing.metadata?.amenities || [];
-  const facilityNames = facilities.slice(0, 3);
-  const lat = listing.metadata?.location?.lat;
-  const lng = listing.metadata?.location?.lng;
-
-  const result: UiListing = {
-    id: listing.id,
-    name: listing.name,
-    slug: listing.slug,
-    type: listing.type,
-    listingType: listing.type,
-    location: listing.metadata?.address || listing.metadata?.city || '',
-    description: listing.description || '',
-    image: listing.images?.[0] || '',
-    facilities: facilityNames,
-    moreFacilities: Math.max(0, facilities.length - 3),
-    capacity: listing.capacity || 0,
-    price: listing.pricing?.basePrice || 0,
-    priceUnit: listing.pricing?.unit || 'time',
-    available: listing.status === 'published',
-  };
-
-  if (lat !== undefined) result.latitude = lat;
-  if (lng !== undefined) result.longitude = lng;
-
-  return result;
+  slug?: string;
 }
 
 // Filter helpers
-const getListingTypeCounts = (listings: UiListing[]) => {
+const getListingTypeCounts = (listings: ExtendedUiListing[]) => {
   const counts: Record<string, number> = { ALL: listings.length };
   listings.forEach(l => {
     counts[l.listingType] = (counts[l.listingType] || 0) + 1;
@@ -114,13 +106,13 @@ const getListingTypeCounts = (listings: UiListing[]) => {
   return counts;
 };
 
-const getAllFacilities = (listings: UiListing[]) => {
+const getAllFacilities = (listings: ExtendedUiListing[]) => {
   const facilitySet = new Set<string>();
   listings.forEach(l => l.facilities?.forEach(f => facilitySet.add(f)));
   return Array.from(facilitySet).sort();
 };
 
-const getUniqueCities = (listings: UiListing[]) => {
+const getUniqueCities = (listings: ExtendedUiListing[]) => {
   const citySet = new Set<string>();
   listings.forEach(l => {
     if (l.location) {
@@ -148,10 +140,34 @@ export function ListingsPage(): React.ReactElement {
   // Fetch cities for location filter
   const { data: citiesResponse } = usePublicCities();
 
-  // Transform API listings to UI format
-  const listings: UiListing[] = React.useMemo(() => {
+  // Realtime updates - refetch when listings are created/updated/published
+  const queryClient = useQueryClient();
+  const handleListingEvent = React.useCallback((event: { type: string; data?: unknown }) => {
+    console.log('[ListingsPage] Realtime listing event received:', event);
+    // Invalidate all public listings queries to refetch
+    queryClient.invalidateQueries({ queryKey: ['public'] });
+  }, [queryClient]);
+  useRealtimeListing(handleListingEvent);
+
+  // Transform API listings to UI format using SDK transform
+  const listings: ExtendedUiListing[] = React.useMemo(() => {
     if (!listingsResponse?.data) return [];
-    return listingsResponse.data.map(transformToUiListing);
+
+    return listingsResponse.data.map((listing: Listing, index: number) => {
+      const transformed = transformListing(listing);
+
+      // Add fallback coordinates if not present (for map view demo)
+      const fallbackIndex = index % FALLBACK_COORDINATES.length;
+      const fallbackLat = FALLBACK_COORDINATES[fallbackIndex]?.lat ?? 59.9139;
+      const fallbackLng = FALLBACK_COORDINATES[fallbackIndex]?.lng ?? 10.7522;
+
+      return {
+        ...transformed,
+        listingType: listing.type,
+        latitude: transformed.latitude ?? fallbackLat,
+        longitude: transformed.longitude ?? fallbackLng,
+      };
+    });
   }, [listingsResponse]);
 
   // Filter state
@@ -169,7 +185,7 @@ export function ListingsPage(): React.ReactElement {
   const [showMoreFacilities, setShowMoreFacilities] = React.useState(false);
   const MAX_VISIBLE_ITEMS = 4;
 
-  // Derived filter options
+  // Derived filter options (cast needed for filter helpers)
   const typeCounts = React.useMemo(() => getListingTypeCounts(listings), [listings]);
   const allFacilities = React.useMemo(() => getAllFacilities(listings), [listings]);
 
@@ -482,12 +498,14 @@ export function ListingsPage(): React.ReactElement {
                       facilities={listing.facilities}
                       moreFacilities={listing.moreFacilities}
                       capacity={listing.capacity}
-                      price={listing.price}
-                      priceUnit={listing.priceUnit}
-                      available={listing.available}
+                      imageHeight={260}
+                      showLocation={true}
+                      showDescription={true}
+                      showFacilities={true}
+                      showCapacity={true}
+                      showListingType={true}
                       showRating={false}
                       showPrice={false}
-                      showListingType={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(id) => console.log('Toggle favorite:', id)}
                       onShare={(id) => console.log('Share listing:', id)}
@@ -513,7 +531,7 @@ export function ListingsPage(): React.ReactElement {
                       {...(listing.longitude !== undefined && { longitude: listing.longitude })}
                       mapboxToken={MAPBOX_TOKEN || ''}
                       showListingType={true}
-                      showMap={Boolean(listing.latitude && listing.longitude)}
+                      showMap={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(id) => console.log('Toggle favorite:', id)}
                     />
@@ -521,24 +539,22 @@ export function ListingsPage(): React.ReactElement {
                 </Stack>
               ) : (
                 <ListingMap
-                  listings={listings
-                    .filter(l => l.latitude && l.longitude)
-                    .map(l => ({
-                      id: l.id,
-                      name: l.name,
-                      location: l.location,
-                      image: l.image,
-                      latitude: l.latitude!,
-                      longitude: l.longitude!,
-                      type: l.type,
-                      listingType: l.listingType,
-                      description: l.description,
-                      capacity: l.capacity,
-                      price: l.price,
-                      priceUnit: l.priceUnit,
-                      facilities: l.facilities,
-                      available: l.available,
-                    }))}
+                  listings={filteredListings.map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    location: l.location,
+                    image: l.image,
+                    latitude: l.latitude!,
+                    longitude: l.longitude!,
+                    type: l.type,
+                    listingType: l.listingType,
+                    description: l.description,
+                    capacity: l.capacity,
+                    price: l.price,
+                    priceUnit: l.priceUnit,
+                    facilities: l.facilities,
+                    available: l.available,
+                  }))}
                   mapboxToken={MAPBOX_TOKEN || ''}
                   height="calc(100vh - 250px)"
                   onListingClick={handleListingClick}
