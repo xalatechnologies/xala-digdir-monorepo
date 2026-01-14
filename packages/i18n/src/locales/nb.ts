@@ -350,7 +350,7 @@ export const nb: Record<string, string> = {
   'org.seasonRental': 'Sesongleie',
   'org.seasonRentalDesc': 'Faste leieperioder',
 
-  // Errors
+  // Errors (generic)
   'errors.generic': 'Noe gikk galt. Vennligst prøv igjen.',
   'errors.network': 'Nettverksfeil. Sjekk tilkoblingen din.',
   'errors.notFound': 'Ressursen ble ikke funnet.',
@@ -360,7 +360,24 @@ export const nb: Record<string, string> = {
   'errors.timeout': 'Forespørselen tok for lang tid. Prøv igjen.',
   'errors.serverError': 'Serverfeil. Kontakt support hvis problemet vedvarer.',
 
-  // Policy
+  // Errors (RFC 7807 ProblemDetails)
+  'errors.VALIDATION_ERROR.title': 'Valideringsfeil',
+  'errors.VALIDATION_ERROR.description':
+    'Forespørselen inneholder ugyldige data. Vennligst sjekk feltene og prøv igjen.',
+  'errors.NOT_FOUND.title': 'Ikke funnet',
+  'errors.NOT_FOUND.description':
+    'Den forespurte ressursen ble ikke funnet.',
+  'errors.UNAUTHORIZED.title': 'Ikke autentisert',
+  'errors.UNAUTHORIZED.description':
+    'Du må logge inn for å utføre denne handlingen.',
+  'errors.FORBIDDEN.title': 'Tilgang nektet',
+  'errors.FORBIDDEN.description':
+    'Du har ikke tilgang til å utføre denne handlingen.',
+  'errors.INTERNAL_ERROR.title': 'Serverfeil',
+  'errors.INTERNAL_ERROR.description':
+    'En uventet feil oppstod. Vennligst prøv igjen senere.',
+
+  // Policy (pages)
   'policy.terms': 'Bruksvilkår',
   'policy.privacy': 'Personvernerklæring',
   'policy.cookies': 'Informasjonskapsler',
@@ -370,7 +387,19 @@ export const nb: Record<string, string> = {
   'policy.gdpr': 'GDPR og personvern',
   'policy.dataRetention': 'Databehandling',
 
-  // Actions
+  // Policy (API reason keys)
+  'policy.role.insufficient_permissions':
+    'Du har ikke tilstrekkelige rettigheter til å utføre denne handlingen.',
+  'policy.slot.already_booked': 'Dette tidspunktet er allerede booket.',
+  'policy.booking.cancelled': 'Denne bookingen er kansellert.',
+  'policy.booking.past': 'Denne bookingen har allerede funnet sted.',
+  'policy.listing.inactive': 'Dette lokalet er ikke lenger aktivt.',
+  'policy.user.not_verified':
+    'Brukerkontoen din er ikke verifisert. Vennligst verifiser kontoen først.',
+  'policy.organization.suspended':
+    'Denne organisasjonen er midlertidig suspendert.',
+
+  // Actions (buttons)
   'actions.approve': 'Godkjenn',
   'actions.reject': 'Avslå',
   'actions.submit': 'Send inn',
@@ -379,6 +408,16 @@ export const nb: Record<string, string> = {
   'actions.import': 'Importer',
   'actions.duplicate': 'Dupliser',
   'actions.download': 'Last ned',
+
+  // Actions (API reason keys - disabled states)
+  'actions.book.disabled.slot_unavailable':
+    'Dette tidspunktet er ikke lenger tilgjengelig.',
+  'actions.book.disabled.not_authenticated':
+    'Du må logge inn for å kunne booke.',
+  'actions.cancel.disabled.too_late':
+    'Bookingen kan ikke kanselleres innen {{hours}} timer før start.',
+  'actions.edit.disabled.not_owner':
+    'Du kan ikke redigere denne bookingen fordi du ikke er eieren.',
 };
 
 
