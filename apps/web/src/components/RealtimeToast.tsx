@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@xala/ds';
-import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus } from '../providers';
+import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon, AlertTriangleIcon } from '@xala/ds';
+import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus, useRealtimeSlotAvailability } from '../providers';
 import type { RealtimeEvent } from '@digilist/client-sdk';
 
 interface Toast {
@@ -102,9 +102,69 @@ export function RealtimeToast(): React.ReactElement {
     });
   }, [addToast]);
 
+  // Handle slot unavailability events
+  const handleSlotUnavailable = useCallback((event: RealtimeEvent) => {
+    const data = event.data as {
+      action?: string;
+      listingName?: string;
+      startTime?: string;
+      endTime?: string;
+      date?: string;
+    } | undefined;
+
+    // Format time and date for better user experience
+    const formatTime = (time?: string) => {
+      if (!time) return '';
+      return time.substring(0, 5); // HH:MM format
+    };
+
+    const formatDate = (dateStr?: string) => {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const targetDate = new Date(date);
+      targetDate.setHours(0, 0, 0, 0);
+
+      if (targetDate.getTime() === today.getTime()) {
+        return 'i dag';
+      }
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      if (targetDate.getTime() === tomorrow.getTime()) {
+        return 'i morgen';
+      }
+
+      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+      return date.toLocaleDateString('nb-NO', options);
+    };
+
+    const timeSlot =
+      data?.startTime && data?.endTime
+        ? `${formatTime(data.startTime)}-${formatTime(data.endTime)}`
+        : '';
+    const dateInfo = formatDate(data?.date);
+    const listingName = data?.listingName || 'et lokale';
+
+    let message = `${listingName}`;
+    if (dateInfo && timeSlot) {
+      message += ` (${dateInfo}, ${timeSlot})`;
+    } else if (timeSlot) {
+      message += ` (${timeSlot})`;
+    }
+
+    addToast({
+      type: 'warning',
+      title: 'Tidspunkt ikke lenger tilgjengelig',
+      message: message,
+    });
+  }, [addToast]);
+
   // Subscribe to realtime events
   useRealtimeBooking(handleBookingEvent);
   useRealtimeNotification(handleNotificationEvent);
+  useRealtimeSlotAvailability(undefined, handleSlotUnavailable);
 
   // Show connection status toast on disconnect
   useEffect(() => {
@@ -123,6 +183,8 @@ export function RealtimeToast(): React.ReactElement {
         return <CheckCircleIcon size={20} />;
       case 'error':
         return <XCircleIcon size={20} />;
+      case 'warning':
+        return <AlertTriangleIcon size={20} />;
       default:
         return <InfoIcon size={20} />;
     }

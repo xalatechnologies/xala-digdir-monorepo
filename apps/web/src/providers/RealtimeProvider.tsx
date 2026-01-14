@@ -276,4 +276,44 @@ export function useRealtimeStatus(): {
   return { isConnected, status, error };
 }
 
+/**
+ * Subscribe to slot availability changes
+ * Useful for showing visual feedback when slots become unavailable
+ *
+ * @param listingId - Optional listing ID to filter events
+ * @param onSlotUnavailable - Callback when a slot becomes unavailable
+ */
+export function useRealtimeSlotAvailability(
+  listingId?: string,
+  onSlotUnavailable?: (event: RealtimeEvent) => void
+): void {
+  const { subscribe } = useRealtimeContext();
+
+  useEffect(() => {
+    const handler = (event: RealtimeEvent) => {
+      const data = event.data as {
+        action?: string;
+        listingId?: string;
+        listingName?: string;
+        startTime?: string;
+        endTime?: string;
+        date?: string;
+      } | undefined;
+
+      // Filter by listing ID if provided
+      if (listingId && data?.listingId !== listingId) {
+        return;
+      }
+
+      // Detect slot unavailability events (created or confirmed bookings)
+      if (data?.action === 'created' || data?.action === 'confirmed') {
+        onSlotUnavailable?.(event);
+      }
+    };
+
+    const unsubscribe = subscribe('booking', handler);
+    return unsubscribe;
+  }, [subscribe, listingId, onSlotUnavailable]);
+}
+
 export default RealtimeProvider;
