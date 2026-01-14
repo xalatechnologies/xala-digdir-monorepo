@@ -49,6 +49,36 @@ export const organizations = pgTable('organizations', {
 }));
 
 // ============================================================================
+// Feature Flags & Integrations
+// ============================================================================
+
+export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  featureKey: varchar('feature_key', { length: 100 }).notNull(),
+  enabled: boolean('enabled').notNull().default(false),
+  config: jsonb('config').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantFeatureIdx: index('tenant_feature_flags_tenant_feature_idx').on(table.tenantId, table.featureKey),
+}));
+
+export const tenantIntegrations = pgTable('tenant_integrations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  providerType: varchar('provider_type', { length: 50 }).notNull(),
+  providerName: varchar('provider_name', { length: 100 }).notNull(),
+  credentialRef: varchar('credential_ref', { length: 255 }),
+  config: jsonb('config').default({}),
+  enabled: boolean('enabled').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantProviderIdx: index('tenant_integrations_tenant_provider_idx').on(table.tenantId, table.providerType),
+}));
+
+// ============================================================================
 // Users & RBAC
 // ============================================================================
 
@@ -323,4 +353,8 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
+export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
+export type TenantIntegration = typeof tenantIntegrations.$inferSelect;
+export type NewTenantIntegration = typeof tenantIntegrations.$inferInsert;
 
