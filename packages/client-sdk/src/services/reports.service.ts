@@ -12,6 +12,9 @@ import type {
   TimeSlotHeatmap,
   SeasonalPattern,
   PeriodComparison,
+  ReportGenerationResult,
+  ReportHistoryItem,
+  ReportHistoryQueryParams,
 } from '../types';
 
 export interface DashboardStats {
@@ -149,11 +152,61 @@ class ReportsService {
       if (value !== undefined) queryParams.set(key, String(value));
     });
     queryParams.set('format', format);
-    
+
     const response = await fetch(`${this.basePath}/export/${reportType}?${queryParams.toString()}`, {
       method: 'GET',
     });
     return response.blob();
+  }
+
+  /**
+   * Generate report asynchronously (for large reports)
+   * Returns a job ID to track progress
+   */
+  async generateAsync(
+    reportType: string,
+    params: ReportQueryParams,
+    format: ExportFormat = 'csv'
+  ): Promise<ReportGenerationResult> {
+    return getClient().post<ReportGenerationResult>(`${this.basePath}/generate`, {
+      reportType,
+      exportFormat: format,
+      parameters: params,
+    });
+  }
+
+  /**
+   * Get status of async report generation job
+   */
+  async getJobStatus(jobId: string): Promise<ReportGenerationResult> {
+    return getClient().get<ReportGenerationResult>(`${this.basePath}/jobs/${jobId}`);
+  }
+
+  /**
+   * Download completed report from async job
+   */
+  async downloadReport(jobId: string): Promise<Blob> {
+    const response = await fetch(`${this.basePath}/jobs/${jobId}/download`, {
+      method: 'GET',
+    });
+    return response.blob();
+  }
+
+  /**
+   * Get report generation history
+   */
+  async getHistory(params?: ReportHistoryQueryParams): Promise<ReportHistoryItem[]> {
+    const queryParams = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) queryParams.set(key, String(value));
+      });
+    }
+
+    const queryString = queryParams.toString();
+    return getClient().get<ReportHistoryItem[]>(
+      queryString ? `${this.basePath}/history?${queryString}` : `${this.basePath}/history`
+    );
   }
 }
 
