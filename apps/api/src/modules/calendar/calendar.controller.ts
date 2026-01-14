@@ -1,9 +1,15 @@
 /**
- * Calendar/Allocations Controller
- * Manages calendar events, time blocking, and availability
+ * Calendar Controllers
+ * REST API endpoints for calendar configuration, availability, events, and allocations
  */
-import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
+import { Controller, Get, Post, Put, Delete, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
+import { validate } from '../../core/validation/zod-pipe';
+import {
+  CalendarConfigQuerySchema,
+  AvailabilityMatrixQuerySchema,
+} from '../../schemas/calendar.schema';
+import { CalendarService } from './calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, sql } from 'drizzle-orm';
 import { allocations, listings, users, bookings } from '../../database/schema/index';
@@ -12,6 +18,77 @@ interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
 }
+
+// =============================================================================
+// Listing Calendar Config Controller
+// =============================================================================
+
+/**
+ * Listing Calendar Config Controller
+ * Handles GET /api/listings/:id/calendar-config endpoint
+ */
+@Controller('/api/listings')
+export class ListingCalendarConfigController {
+  constructor(
+    @Inject('CalendarService') private readonly calendarService: CalendarService
+  ) {}
+
+  /**
+   * GET /api/listings/:id/calendar-config - Get calendar configuration
+   * Returns complete calendar behavior configuration for a listing
+   * including granularity, slot rules, permissions, and UI hints
+   */
+  @Get('/:id/calendar-config')
+  async getCalendarConfig(
+    request: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply
+  ) {
+    const params = validate(CalendarConfigQuerySchema, request.query);
+    const config = await this.calendarService.getCalendarConfig(
+      request.params.id,
+      params
+    );
+    return { data: config };
+  }
+}
+
+// =============================================================================
+// Availability Matrix Controller
+// =============================================================================
+
+/**
+ * Availability Matrix Controller
+ * Handles GET /api/availability/:listingId endpoint
+ */
+@Controller('/api/availability')
+export class AvailabilityMatrixController {
+  constructor(
+    @Inject('CalendarService') private readonly calendarService: CalendarService
+  ) {}
+
+  /**
+   * GET /api/availability/:listingId - Get availability matrix
+   * Returns cell-by-cell availability state for a date range
+   * Each cell contains status (AVAILABLE, RESERVED, BOOKED, BLOCKED, BLACKOUT, CLOSED)
+   * and optional reason key for localized tooltips
+   */
+  @Get('/:listingId')
+  async getAvailabilityMatrix(
+    request: FastifyRequest<{ Params: { listingId: string } }>,
+    reply: FastifyReply
+  ) {
+    const params = validate(AvailabilityMatrixQuerySchema, request.query);
+    const matrix = await this.calendarService.getAvailabilityMatrix(
+      request.params.listingId,
+      params
+    );
+    return { data: matrix };
+  }
+}
+
+// =============================================================================
+// Legacy Calendar Controller (existing functionality)
+// =============================================================================
 
 @Controller('/api/calendar')
 export class CalendarController {
