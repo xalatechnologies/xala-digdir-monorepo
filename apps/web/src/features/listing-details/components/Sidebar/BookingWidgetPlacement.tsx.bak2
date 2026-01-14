@@ -11,6 +11,12 @@ import { bookingService, type CreateBookingDTO } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 
+// Refactored components
+import { BookingStepperHeader } from './components/BookingStepperHeader';
+import { BookingSelectedSlotsSidebar } from './components/BookingSelectedSlotsSidebar';
+import { BookingPricingStep } from './components/BookingPricingStep';
+import { BookingConfirmationStep } from './components/BookingConfirmationStep';
+
 // =============================================================================
 // Icons
 // =============================================================================
@@ -768,137 +774,13 @@ export function BookingWidgetPlacement({
         overflow: 'hidden',
       }}
     >
-      {/* Header Section */}
-      <div
-        className="booking-header-mobile"
-        style={{
-          backgroundColor: 'var(--ds-color-accent-base-default)',
-          padding: 'var(--ds-spacing-5)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Heading level={2} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)' }}>
-          Book dette lokalet
-        </Heading>
-        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.9 }}>
-          Steg {currentStep + 1} av 4
-        </Paragraph>
-      </div>
-
-      {/* Stepper Section */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-5)',
-          backgroundColor: 'var(--ds-color-neutral-surface-default)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'var(--ds-color-neutral-background-default)',
-            borderRadius: 'var(--ds-border-radius-lg)',
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-4)',
-            border: '1px solid var(--ds-color-neutral-border-subtle)',
-          }}
-        >
-          <div
-            className="booking-stepper-mobile"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-            }}
-          >
-          {bookingSteps.map((step, index) => {
-            const isActive = index === currentStep;
-            const isCompleted = index < currentStep;
-            const isFirst = index === 0;
-
-            return (
-              <div
-                key={step.id}
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  position: 'relative',
-                }}
-              >
-                {/* Connecting line */}
-                {!isFirst && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 'var(--ds-spacing-5)',
-                      right: '50%',
-                      width: '100%',
-                      height: '2px',
-                      backgroundColor: isCompleted ? 'var(--ds-color-success-base-default)' : 'var(--ds-color-neutral-border-subtle)',
-                      zIndex: 0,
-                    }}
-                  />
-                )}
-
-                {/* Circle with icon */}
-                <div
-                  className="booking-step-circle"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: isCompleted
-                      ? 'var(--ds-color-success-base-default)'
-                      : isActive
-                        ? 'var(--ds-color-accent-base-default)'
-                        : 'var(--ds-color-neutral-surface-default)',
-                    color: isCompleted || isActive
-                      ? 'var(--ds-color-accent-contrast-default)'
-                      : 'var(--ds-color-neutral-text-subtle)',
-                    border: isCompleted || isActive ? 'none' : '2px solid var(--ds-color-neutral-border-subtle)',
-                    position: 'relative',
-                    zIndex: 1,
-                  }}
-                >
-                  {isCompleted ? (
-                    <CheckCircleIcon size={18} />
-                  ) : (
-                    <>
-                      {step.id === 'select' && <CalendarIcon size={18} />}
-                      {step.id === 'details' && <DetailsIcon size={18} />}
-                      {step.id === 'confirm' && <CheckCircleIcon size={18} />}
-                      {step.id === 'done' && <CheckCircleIcon size={18} />}
-                    </>
-                  )}
-                </div>
-
-                {/* Label */}
-                <Paragraph
-                  className="booking-step-label"
-                  data-size="sm"
-                  style={{
-                    margin: 0,
-                    marginTop: 'var(--ds-spacing-2)',
-                    color: isActive || isCompleted ? 'var(--ds-color-neutral-text-default)' : 'var(--ds-color-neutral-text-subtle)',
-                    fontWeight: isActive ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)',
-                    textAlign: 'center',
-                    maxWidth: '90px',
-                    lineHeight: 'var(--ds-line-height-condensed)',
-                  }}
-                >
-                  {step.label}
-                </Paragraph>
-              </div>
-            );
-          })}
-          </div>
-        </div>
-      </div>
+      {/* Header with Step Indicator */}
+      <BookingStepperHeader
+        steps={bookingSteps}
+        currentStep={currentStep}
+        listingTitle="Book dette lokalet"
+        isMobile={isMobile}
+      />
 
       {/* Main Content Area - Two Column Layout */}
       <div
@@ -2657,6 +2539,50 @@ export function BookingWidgetPlacement({
           </div>
         </div>
       )}
+        </div>
+        {/* END LEFT COLUMN */}
+
+        {/* RIGHT COLUMN: Fixed Sidebar - Persists across all steps */}
+        {!isMobile && (
+          <div
+            style={{
+              flex: '0 0 35%',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: 'var(--ds-spacing-4)',
+              borderLeft: '1px solid var(--ds-color-neutral-border-subtle)',
+              overflow: 'auto',
+              backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+            }}
+          >
+            <BookingSelectedSlotsSidebar
+              selectedSlots={selectedSlots}
+              slotDetails={slotDetails}
+              weekStart={weekStart}
+              selectedPriceGroup={selectedPriceGroup}
+              totalPrice={totalPrice}
+              onRemoveSlot={(slotKey) => {
+                setSelectedSlots(prev => {
+                  const newSet = new Set(prev);
+                  newSet.delete(slotKey);
+                  return newSet;
+                });
+                setSlotDetails(prev => {
+                  const newDetails = { ...prev };
+                  delete newDetails[slotKey];
+                  return newDetails;
+                });
+              }}
+              onAdjustTime={adjustSlotTime}
+              onChangeDuration={(slotKey, duration) => {
+                updateSlotDetail(slotKey, 'duration', duration);
+              }}
+            />
+          </div>
+        )}
+        {/* END RIGHT COLUMN */}
+      </div>
+      {/* END TWO-COLUMN LAYOUT */}
 
       {/* Action Section */}
       <div

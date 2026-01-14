@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Tag } from '@digdir/designsystemet-react';
+import { Tag } from '@xala/ds';
 import {
   UsersIcon,
   CalendarIcon,

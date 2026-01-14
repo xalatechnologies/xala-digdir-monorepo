@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Button } from '@digdir/designsystemet-react';
+import { Paragraph, Button } from '@xala/ds';
 import type { Address } from '../../types';
 
 // =============================================================================

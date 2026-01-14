@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { Heading, Paragraph } from '@xala/ds';
 import type { Rule, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
 

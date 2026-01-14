@@ -3,7 +3,7 @@
  * Manage tenant settings, integrations, and system configuration
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Card,
   Heading,
@@ -20,19 +20,26 @@ import {
   Alert,
   SaveIcon,
   CheckCircleIcon,
-  XCircleIcon,
+  UserIcon,
+  CameraIcon,
+  CopyIcon,
+  InfoIcon,
 } from '@xala/ds';
 import {
   useTenantSettings,
   useUpdateTenantSettings,
   useIntegrationSettings,
   useUpdateIntegration,
+  useCurrentUser,
+  useUpdateCurrentUser,
+  useUploadUserAvatar,
+  type Address,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 
 export function SettingsPage() {
-  const t = useT();
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState('profile');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   // Queries
   const { data: settingsData, isLoading } = useTenantSettings();
@@ -41,9 +48,14 @@ export function SettingsPage() {
   const { data: integrationsData } = useIntegrationSettings();
   const integrations = integrationsData?.data;
 
+  const { data: currentUserData, isLoading: isLoadingUser } = useCurrentUser();
+  const currentUser = currentUserData?.data;
+
   // Mutations
   const updateSettingsMutation = useUpdateTenantSettings();
   const updateIntegrationMutation = useUpdateIntegration();
+  const updateProfileMutation = useUpdateCurrentUser();
+  const uploadAvatarMutation = useUploadUserAvatar();
 
   const [formData, setFormData] = useState({
     general: {
@@ -79,8 +91,29 @@ export function SettingsPage() {
     },
   });
 
+  const [profileData, setProfileData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    nationalId: '',
+    invoiceAddress: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: 'Norge',
+    } as Address,
+    residenceAddress: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: 'Norge',
+    } as Address,
+  });
+
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   // Load settings into form
   useState(() => {
@@ -91,6 +124,24 @@ export function SettingsPage() {
         notifications: settings.notifications || formData.notifications,
         branding: settings.branding || formData.branding,
       });
+    }
+  });
+
+  // Load current user into profile form
+  useState(() => {
+    if (currentUser) {
+      setProfileData({
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        dateOfBirth: currentUser.dateOfBirth || '',
+        nationalId: currentUser.nationalId || '',
+        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
+        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
+      });
+      if (currentUser.avatar) {
+        setAvatarPreview(currentUser.avatar);
+      }
     }
   });
 
@@ -116,7 +167,54 @@ export function SettingsPage() {
     }
   };
 
-  if (isLoading) {
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    setSaveSuccess(false);
+    try {
+      await updateProfileMutation.mutateAsync(profileData);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUser) return;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload avatar
+    setIsUploadingAvatar(true);
+    try {
+      await uploadAvatarMutation.mutateAsync({
+        id: currentUser.id,
+        file,
+        options: { compress: true },
+      });
+    } catch (error) {
+      console.error('Failed to upload avatar:', error);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleCopyResidenceToInvoice = () => {
+    setProfileData(prev => ({
+      ...prev,
+      invoiceAddress: { ...prev.residenceAddress },
+    }));
+  };
+
+  if (isLoading || isLoadingUser) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
         <Spinner data-size="lg" aria-label="Laster..." />
@@ -150,14 +248,342 @@ export function SettingsPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
-          <Tabs.Trigger value="general">Generelt</Tabs.Trigger>
-          <Tabs.Trigger value="booking">Booking</Tabs.Trigger>
-          <Tabs.Trigger value="notifications">Varsler</Tabs.Trigger>
-          <Tabs.Trigger value="integrations">Integrasjoner</Tabs.Trigger>
-          <Tabs.Trigger value="branding">Visuelle profil</Tabs.Trigger>
+          <Tabs.Tab value="profile">Min profil</Tabs.Tab>
+          <Tabs.Tab value="addresses">Adresser</Tabs.Tab>
+          <Tabs.Tab value="general">Generelt</Tabs.Tab>
+          <Tabs.Tab value="booking">Booking</Tabs.Tab>
+          <Tabs.Tab value="notifications">Varsler</Tabs.Tab>
+          <Tabs.Tab value="integrations">Integrasjoner</Tabs.Tab>
+          <Tabs.Tab value="branding">Visuelle profil</Tabs.Tab>
         </Tabs.List>
+
+        {/* Profile Settings */}
+        <Tabs.Panel value="profile">
+          <Stack spacing={4}>
+            {/* Avatar Section */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    Profilbilde
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Last opp et profilbilde som vises i systemet
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                  <div style={{
+                    position: 'relative',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: 'var(--ds-border-radius-full)',
+                    overflow: 'hidden',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {avatarPreview ? (
+                      <img
+                        src={avatarPreview}
+                        alt="Avatar"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : (
+                      <UserIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                    )}
+                  </div>
+
+                  <Stack spacing={2}>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      style={{ display: 'none' }}
+                    />
+                    <Button
+                      variant="secondary"
+                      data-size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingAvatar}
+                    >
+                      <CameraIcon />
+                      {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
+                    </Button>
+                    <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      JPG, PNG eller GIF (maks 5MB)
+                    </Paragraph>
+                  </Stack>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Personal Information */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    Personlig informasjon
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Din grunnleggende kontaktinformasjon
+                  </Paragraph>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label="Fullt navn" required>
+                    <Textfield
+                      value={profileData.name}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Ola Nordmann"
+                    />
+                  </FormField>
+
+                  <FormField label="E-postadresse" required>
+                    <Textfield
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="ola.nordmann@example.com"
+                    />
+                  </FormField>
+
+                  <FormField label="Telefonnummer">
+                    <Textfield
+                      type="tel"
+                      value={profileData.phone}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="+47 123 45 678"
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label="Fødselsdato">
+                      <Textfield
+                        type="date"
+                        value={profileData.dateOfBirth}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                      />
+                    </FormField>
+
+                    <FormField label="Fødselsnummer">
+                      <Textfield
+                        value={profileData.nationalId}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
+                        placeholder="11 siffer"
+                        maxLength={11}
+                      />
+                    </FormField>
+                  </div>
+                </Stack>
+
+                <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving}>
+                    <SaveIcon />
+                    {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+                  </Button>
+                </div>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+
+        {/* Addresses Tab */}
+        <Tabs.Panel value="addresses">
+          <Stack spacing={5}>
+            {/* Intro */}
+            <Card>
+              <Stack spacing={3}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Adresseinformasjon
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Administrer din bostedsadresse og fakturaadresse. Disse brukes for kommunikasjon og fakturering.
+                  </Paragraph>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Residence Address */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Bostedsadresse
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Din registrerte bostedsadresse
+                  </Paragraph>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label="Gateadresse" required>
+                    <Textfield
+                      value={profileData.residenceAddress.street || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, street: e.target.value }
+                      }))}
+                      placeholder="Storgata 1"
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label="Poststed" required>
+                      <Textfield
+                        value={profileData.residenceAddress.city || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, city: e.target.value }
+                        }))}
+                        placeholder="Oslo"
+                      />
+                    </FormField>
+
+                    <FormField label="Postnummer" required>
+                      <Textfield
+                        value={profileData.residenceAddress.postalCode || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
+                        }))}
+                        placeholder="0010"
+                        maxLength={4}
+                      />
+                    </FormField>
+                  </div>
+
+                  <FormField label="Land" required>
+                    <Select
+                      value={profileData.residenceAddress.country || 'Norge'}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, country: e.target.value }
+                      }))}
+                    >
+                      <option value="Norge">Norge</option>
+                      <option value="Sverige">Sverige</option>
+                      <option value="Danmark">Danmark</option>
+                      <option value="Finland">Finland</option>
+                    </Select>
+                  </FormField>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Invoice Address */}
+            <Card>
+              <Stack spacing={5}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                      Fakturaadresse
+                    </Heading>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Adresse for fakturering og betalingsinformasjon
+                    </Paragraph>
+                  </div>
+                  <Button
+                    variant="tertiary"
+                    data-size="sm"
+                    onClick={handleCopyResidenceToInvoice}
+                  >
+                    <CopyIcon />
+                    Kopier fra bostedsadresse
+                  </Button>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label="Gateadresse" required>
+                    <Textfield
+                      value={profileData.invoiceAddress.street || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
+                      }))}
+                      placeholder="Storgata 1"
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label="Poststed" required>
+                      <Textfield
+                        value={profileData.invoiceAddress.city || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
+                        }))}
+                        placeholder="Oslo"
+                      />
+                    </FormField>
+
+                    <FormField label="Postnummer" required>
+                      <Textfield
+                        value={profileData.invoiceAddress.postalCode || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
+                        }))}
+                        placeholder="0010"
+                        maxLength={4}
+                      />
+                    </FormField>
+                  </div>
+
+                  <FormField label="Land" required>
+                    <Select
+                      value={profileData.invoiceAddress.country || 'Norge'}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
+                      }))}
+                    >
+                      <option value="Norge">Norge</option>
+                      <option value="Sverige">Sverige</option>
+                      <option value="Danmark">Danmark</option>
+                      <option value="Finland">Finland</option>
+                    </Select>
+                  </FormField>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Address Verification Info */}
+            <Card style={{ backgroundColor: 'var(--ds-color-info-surface-default)', border: '1px solid var(--ds-color-info-border-subtle)' }}>
+              <Stack spacing={3}>
+                <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'flex-start' }}>
+                  <InfoIcon style={{ color: 'var(--ds-color-info-text-default)', marginTop: '2px', flexShrink: 0 }} />
+                  <div>
+                    <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
+                      Adresseverifikasjon
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon.
+                      Endringer i adresse kan ta opptil 24 timer å tre i kraft.
+                    </Paragraph>
+                  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Save Button */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={handleSaveProfile} disabled={isSaving}>
+                <SaveIcon />
+                {isSaving ? 'Lagrer...' : 'Lagre adresser'}
+              </Button>
+            </div>
+          </Stack>
+        </Tabs.Panel>
 
         {/* General Settings */}
         <Tabs.Panel value="general">

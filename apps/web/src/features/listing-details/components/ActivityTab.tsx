@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Card, Tag } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Card, Tag } from '@xala/ds';
 import type { ActivityData, ListingEvent, RentalHistoryItem, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
 

@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Tag } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Tag } from '@xala/ds';
 import type { Listing } from '../types';
 import { FavoriteButton } from './FavoriteButton';
 import { ShareButton } from './ShareButton';

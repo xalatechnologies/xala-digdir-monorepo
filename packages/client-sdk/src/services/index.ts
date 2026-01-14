@@ -129,3 +129,41 @@ export {
   type SignicatAuthResult,
   type SignicatLogoutResult,
 } from './signicat.service';
+
+// Pricing Service (server-side pricing quotes)
+export {
+  PricingService,
+  pricingService,
+  type PricingQuoteRequest,
+  type PricingQuoteResponse,
+  type QuoteLineItem,
+} from './pricing.service';
+
+// User Groups
+export {
+  UserGroupService,
+  BackofficeUserGroupsService,
+  userGroupService,
+  backofficeUserGroupsService,
+  type UserGroup,
+  type UserGroupCode,
+  type CreateUserGroupDTO,
+  type CurrentUserGroup,
+} from './user-group.service';
+
+// Backoffice Price Rules & Listings
+export {
+  BackofficePriceRulesService,
+  BackofficeListingsService,
+  backofficePriceRulesService,
+  backofficeListingsService,
+  type PriceRule,
+  type PriceRuleType,
+  type PriceUnit,
+  type CreatePriceRuleDTO,
+  type ListingRules,
+  type UpsertListingRulesDTO,
+  type ListingCategory,
+  type BackofficeListingParams,
+} from './price-rules.service';
+

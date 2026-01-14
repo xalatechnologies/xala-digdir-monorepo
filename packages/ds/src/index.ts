@@ -235,6 +235,19 @@ export {
   ImageIcon,
   FormField,
 } from './primitives';
+
+// Common Designsystemet components - Explicitly re-export for better tree-shaking
+export {
+  Tabs,
+  Heading,
+  Paragraph,
+  Button,
+  Spinner,
+  Textfield,
+  Select,
+  Switch,
+  Alert,
+} from '@digdir/designsystemet-react';
 export type {
   ContainerProps,
   GridProps,

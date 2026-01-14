@@ -18,10 +18,12 @@ if (import.meta.env.DEV) {
 }
 
 import { AuthProvider } from './providers/AuthProvider';
+import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
+import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
 import { CalendarPage } from './routes/calendar';
@@ -29,6 +31,7 @@ import { BookingsPage } from './routes/bookings';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 import { NotificationSettingsPage } from './routes/notification-settings';
+import { useAuth } from './hooks/useAuth';
 
 // =============================================================================
 // Notification Context
@@ -74,34 +77,42 @@ function AppWithTheme() {
         }}
       >
         <AuthProvider>
-          <RealtimeProvider
-            wsUrl={import.meta.env.VITE_WS_URL}
-            tenantId={import.meta.env.VITE_TENANT_ID}
-          >
-          <NotificationProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
+          <AccountContextProviderWrapper>
+            <RealtimeProvider
+              wsUrl={import.meta.env.VITE_WS_URL}
+              tenantId={import.meta.env.VITE_TENANT_ID}
             >
-              <Route index element={<DashboardPage />} />
-              <Route path="bookings" element={<BookingsPage />} />
-              <Route path="calendar" element={<CalendarPage />} />
-              <Route path="messages" element={<MessagesPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="settings/notifications" element={<NotificationSettingsPage />} />
-            </Route>
+            <NotificationProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          </NotificationProvider>
-          </RealtimeProvider>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <AccountSelectionWrapper>
+                      <AppLayout />
+                    </AccountSelectionWrapper>
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<DashboardPage />} />
+                <Route path="bookings" element={<BookingsPage />} />
+                <Route path="calendar" element={<CalendarPage />} />
+                <Route path="messages" element={<MessagesPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="settings/notifications" element={<NotificationSettingsPage />} />
+                {/* Season routes - will be created */}
+                <Route path="seasons" element={<div>Seasons Page (TODO)</div>} />
+                <Route path="seasons/:id" element={<div>Season Detail (TODO)</div>} />
+                <Route path="seasons/applications" element={<div>My Applications (TODO)</div>} />
+              </Route>
+
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            </NotificationProvider>
+            </RealtimeProvider>
+          </AccountContextProviderWrapper>
         </AuthProvider>
       </BrowserRouter>
       </DialogProvider>
@@ -233,5 +244,34 @@ function NotificationProvider({ children }: { children: React.ReactNode }) {
         context="booking"
       />
     </NotificationContext.Provider>
+  );
+}
+
+// =============================================================================
+// Account Context Provider Wrapper
+// =============================================================================
+
+function AccountContextProviderWrapper({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+
+  return (
+    <AccountContextProvider userId={user?.id} userName={user?.name}>
+      {children}
+    </AccountContextProvider>
+  );
+}
+
+// =============================================================================
+// Account Selection Wrapper
+// =============================================================================
+
+function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
+  const { hasSelectedAccount } = useAccountContext();
+
+  return (
+    <>
+      <AccountSelectionModal open={!hasSelectedAccount} />
+      {children}
+    </>
   );
 }

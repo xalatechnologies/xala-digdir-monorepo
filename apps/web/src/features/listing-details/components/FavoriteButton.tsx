@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Button, Spinner } from '@digdir/designsystemet-react';
+import { Button, Spinner } from '@xala/ds';
 
 // =============================================================================
 // Icons

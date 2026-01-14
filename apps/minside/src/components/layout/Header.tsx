@@ -18,6 +18,7 @@ import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { useNotificationCenter } from '../../App';
+import { AccountSwitcher } from '../AccountSwitcher';
 
 interface HeaderProps {
   title?: string;
@@ -140,15 +141,18 @@ export function Header({ title: _title }: HeaderProps) {
           alignItems: 'center',
           height: '72px',
           padding: '0 var(--ds-spacing-6)',
+          gap: 'var(--ds-spacing-4)',
         }}
       >
-        {/* Left spacer for balance */}
-        <div style={{ flex: '1 1 0', minWidth: 0 }} />
+        {/* Left side - Account Switcher */}
+        <div style={{ flex: '0 0 auto' }}>
+          <AccountSwitcher />
+        </div>
 
         {/* Search - centered */}
         <div
           style={{
-            flex: '0 1 600px',
+            flex: '1 1 600px',
             maxWidth: '600px',
             width: '100%',
           }}
@@ -166,7 +170,7 @@ export function Header({ title: _title }: HeaderProps) {
         </div>
 
         {/* Right side - Actions */}
-        <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ flex: '0 0 auto', display: 'flex', justifyContent: 'flex-end' }}>
           <HeaderActions spacing="var(--ds-spacing-3)">
             <HeaderThemeToggle
               isDark={isDark}

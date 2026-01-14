@@ -111,25 +111,34 @@ export function SeasonsListPage() {
             <HeaderSearch
               placeholder="Søk etter sesong..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
+              onSearchChange={(value) => setSearchQuery(value)}
             />
           </div>
 
-          <Dropdown>
-            <Dropdown.Trigger asChild>
-              <Button variant="secondary" data-size="sm">
-                Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
-              </Button>
+          <Dropdown.TriggerContext>
+            <Dropdown.Trigger variant="secondary" data-size="sm">
+              Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
             </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown>
+            <Dropdown>
+              <Dropdown.List>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Button>
+                </Dropdown.Item>
+              </Dropdown.List>
+            </Dropdown>
+          </Dropdown.TriggerContext>
         </div>
       </Card>
 
@@ -204,29 +213,35 @@ export function SeasonsListPage() {
                     </div>
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
-                    <Dropdown>
-                      <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" data-size="sm">
-                          <MoreVerticalIcon />
-                        </Button>
+                    <Dropdown.TriggerContext>
+                      <Dropdown.Trigger variant="tertiary" data-size="sm">
+                        <MoreVerticalIcon />
                       </Dropdown.Trigger>
-                      <Dropdown.Content>
-                        <Dropdown.Item onClick={() => navigate(`/seasons/${season.id}`)}>
-                          <EyeIcon />
-                          Vis detaljer
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => navigate(`/seasons/${season.id}/edit`)}>
-                          <EditIcon />
-                          Rediger
-                        </Dropdown.Item>
-                        {season.status === 'draft' && (
-                          <Dropdown.Item onClick={() => handleDelete(season.id)} color="danger">
-                            <TrashIcon />
-                            Slett
+                      <Dropdown>
+                        <Dropdown.List>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}`)}>
+                              <EyeIcon />
+                              Vis detaljer
+                            </Dropdown.Button>
                           </Dropdown.Item>
-                        )}
-                      </Dropdown.Content>
-                    </Dropdown>
+                          <Dropdown.Item>
+                            <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}/edit`)}>
+                              <EditIcon />
+                              Rediger
+                            </Dropdown.Button>
+                          </Dropdown.Item>
+                          {season.status === 'draft' && (
+                            <Dropdown.Item>
+                              <Dropdown.Button onClick={() => handleDelete(season.id)} data-color="danger">
+                                <TrashIcon />
+                                Slett
+                              </Dropdown.Button>
+                            </Dropdown.Item>
+                          )}
+                        </Dropdown.List>
+                      </Dropdown>
+                    </Dropdown.TriggerContext>
                   </Table.Cell>
                 </Table.Row>
               ))}

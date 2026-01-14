@@ -17,7 +17,7 @@ import {
   Label,
   Select,
   SelectOption,
-} from '@digdir/designsystemet-react';
+} from '@xala/ds';
 
 // =============================================================================
 // Icons

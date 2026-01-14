@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Details } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Details } from '@xala/ds';
 import type { FAQItem, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
 
