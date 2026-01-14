@@ -112,7 +112,7 @@ export function SeasonDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner />
       </div>
     );
   }
@@ -125,7 +125,7 @@ export function SeasonDetailPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -139,7 +139,7 @@ export function SeasonDetailPage() {
       {/* Header */}
       <div>
         <Link to="/seasons">
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -165,16 +165,16 @@ export function SeasonDetailPage() {
             {season.status === 'draft' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="primary" size="sm" onClick={handleOpenSeason}>
+                <Button variant="primary" onClick={handleOpenSeason}>
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
-                <Button variant="danger" size="sm" onClick={handleDelete}>
+                <Button variant="danger" onClick={handleDelete}>
                   <TrashIcon />
                   Slett
                 </Button>
@@ -184,12 +184,12 @@ export function SeasonDetailPage() {
             {season.status === 'open' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="warning" size="sm" onClick={handleCloseSeason}>
+                <Button variant="warning" onClick={handleCloseSeason}>
                   <LockIcon />
                   Lukk sesong
                 </Button>
@@ -197,7 +197,7 @@ export function SeasonDetailPage() {
             )}
 
             {season.status === 'closed' && (
-              <Button variant="primary" size="sm" onClick={handleStartAllocation}>
+              <Button variant="primary" onClick={handleStartAllocation}>
                 <PlayIcon />
                 Start tildeling
               </Button>
@@ -205,7 +205,7 @@ export function SeasonDetailPage() {
 
             {season.status === 'assigned' && (
               <Link to={`/seasons/${id}/edit`}>
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary">
                   <EditIcon />
                   Se detaljer
                 </Button>
@@ -292,7 +292,7 @@ export function SeasonDetailPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
               <FormSection title="Sesongdetaljer">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Navn

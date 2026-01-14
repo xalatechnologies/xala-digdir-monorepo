@@ -108,17 +108,17 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Info Alert */}
         {!user && (
-          <Alert severity="info">
+          <Alert data-color="info">
             Brukeren vil motta en e-postinvitasjon til den angitte e-postadressen for å opprette passord og få tilgang til backoffice.
           </Alert>
         )}
 
         {/* Basic Information */}
         <FormSection title="Brukerinformasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Fullt navn"
               required
@@ -165,7 +165,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
         {/* Role Assignment */}
         <FormSection title="Tilgangsnivå">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Rolle"
               required

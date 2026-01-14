@@ -237,7 +237,7 @@ export function BookingConfigStep({ data, onChange, errors = [] }: BookingConfig
                     color: isSelected ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  <IconComponent size={32} />
+                  <IconComponent />
                 </div>
                 <Paragraph
                   data-size="sm"
@@ -390,7 +390,7 @@ export function BookingConfigStep({ data, onChange, errors = [] }: BookingConfig
                       : 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  <IconComponent size={32} />
+                  <IconComponent />
                 </div>
                 <Paragraph
                   data-size="sm"

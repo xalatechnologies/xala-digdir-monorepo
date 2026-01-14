@@ -37,17 +37,17 @@ export function LoginPage(): React.ReactElement {
 
   const features = [
     {
-      icon: <PlatformIcon size={20} />,
+      icon: <PlatformIcon />,
       title: t('auth.completePlatform'),
       description: t('auth.completePlatformDesc'),
     },
     {
-      icon: <AutomationIcon size={20} />,
+      icon: <AutomationIcon />,
       title: t('auth.automation'),
       description: t('auth.automationDesc'),
     },
     {
-      icon: <ShieldCheckIcon size={20} />,
+      icon: <ShieldCheckIcon />,
       title: t('auth.gdprSecure'),
       description: t('auth.gdprSecureDesc'),
     },

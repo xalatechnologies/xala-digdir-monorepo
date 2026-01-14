@@ -204,6 +204,14 @@ export {
   VippsIcon,
   SendIcon,
   OrganizationIcon,
+  EditIcon,
+  TrashIcon,
+  RefreshIcon,
+  PaperclipIcon,
+  XIcon,
+  SaveIcon,
+  CopyIcon,
+  EyeIcon,
 } from './primitives';
 export type {
   ContainerProps,

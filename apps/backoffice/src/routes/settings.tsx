@@ -3,7 +3,7 @@
  * Manage tenant settings, integrations, and system configuration
  */
 
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import {
   Card,
   Heading,
@@ -13,14 +13,13 @@ import {
   Tabs,
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Switch,
   Badge,
   Alert,
   SaveIcon,
   CheckCircleIcon,
-  XCircleIcon,
 } from '@xala/ds';
 import {
   useTenantSettings,
@@ -28,10 +27,8 @@ import {
   useIntegrationSettings,
   useUpdateIntegration,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 
 export function SettingsPage() {
-  const t = useT();
   const [activeTab, setActiveTab] = useState('general');
 
   // Queries
@@ -86,10 +83,37 @@ export function SettingsPage() {
   useState(() => {
     if (settings) {
       setFormData({
-        general: settings.general || formData.general,
-        booking: settings.booking || formData.booking,
-        notifications: settings.notifications || formData.notifications,
-        branding: settings.branding || formData.branding,
+        general: {
+          name: settings.displayName || formData.general.name,
+          locale: settings.language || formData.general.locale,
+          timezone: settings.timezone || formData.general.timezone,
+          currency: settings.currency || formData.general.currency,
+          dateFormat: formData.general.dateFormat,
+          timeFormat: formData.general.timeFormat,
+        },
+        booking: {
+          autoConfirm: !settings.bookingSettings?.requireApproval || formData.booking.autoConfirm,
+          requireApproval: settings.bookingSettings?.requireApproval || formData.booking.requireApproval,
+          allowCancellation: formData.booking.allowCancellation,
+          cancellationDeadlineHours: settings.bookingSettings?.cancellationHours || formData.booking.cancellationDeadlineHours,
+          maxAdvanceBookingDays: settings.bookingSettings?.maxAdvanceDays || formData.booking.maxAdvanceBookingDays,
+          minAdvanceBookingHours: Math.floor((settings.bookingSettings?.defaultLeadTimeMinutes || 0) / 60) || formData.booking.minAdvanceBookingHours,
+          bufferTimeMinutes: formData.booking.bufferTimeMinutes,
+        },
+        notifications: {
+          emailEnabled: settings.notificationSettings?.emailNotifications || formData.notifications.emailEnabled,
+          smsEnabled: settings.notificationSettings?.smsNotifications || formData.notifications.smsEnabled,
+          pushEnabled: formData.notifications.pushEnabled,
+          bookingConfirmation: settings.notificationSettings?.bookingConfirmation || formData.notifications.bookingConfirmation,
+          bookingReminder: settings.notificationSettings?.bookingReminder || formData.notifications.bookingReminder,
+          reminderHoursBefore: settings.notificationSettings?.reminderHoursBefore || formData.notifications.reminderHoursBefore,
+        },
+        branding: {
+          logo: settings.logo || formData.branding.logo,
+          primaryColor: settings.primaryColor || formData.branding.primaryColor,
+          secondaryColor: formData.branding.secondaryColor,
+          favicon: formData.branding.favicon,
+        },
       });
     }
   });
@@ -98,7 +122,30 @@ export function SettingsPage() {
     setIsSaving(true);
     setSaveSuccess(false);
     try {
-      await updateSettingsMutation.mutateAsync(formData);
+      // Map formData to TenantSettings structure
+      const settingsUpdate = {
+        displayName: formData.general.name,
+        language: formData.general.locale,
+        timezone: formData.general.timezone,
+        currency: formData.general.currency,
+        logo: formData.branding.logo,
+        primaryColor: formData.branding.primaryColor,
+        bookingSettings: {
+          requireApproval: formData.booking.requireApproval,
+          defaultLeadTimeMinutes: formData.booking.minAdvanceBookingHours * 60,
+          maxAdvanceDays: formData.booking.maxAdvanceBookingDays,
+          cancellationPolicy: 'flexible' as const,
+          cancellationHours: formData.booking.cancellationDeadlineHours,
+        },
+        notificationSettings: {
+          emailNotifications: formData.notifications.emailEnabled,
+          smsNotifications: formData.notifications.smsEnabled,
+          bookingConfirmation: formData.notifications.bookingConfirmation,
+          bookingReminder: formData.notifications.bookingReminder,
+          reminderHoursBefore: formData.notifications.reminderHoursBefore,
+        },
+      };
+      await updateSettingsMutation.mutateAsync(settingsUpdate);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
@@ -119,7 +166,7 @@ export function SettingsPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner aria-hidden="true" />
       </div>
     );
   }
@@ -140,7 +187,7 @@ export function SettingsPage() {
           </Paragraph>
         </div>
         {saveSuccess && (
-          <Alert severity="success" style={{ maxWidth: '400px' }}>
+          <Alert data-color="success" style={{ maxWidth: '400px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CheckCircleIcon />
               Innstillingene ble lagret
@@ -150,19 +197,19 @@ export function SettingsPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
-          <Tabs.Trigger value="general">Generelt</Tabs.Trigger>
-          <Tabs.Trigger value="booking">Booking</Tabs.Trigger>
-          <Tabs.Trigger value="notifications">Varsler</Tabs.Trigger>
-          <Tabs.Trigger value="integrations">Integrasjoner</Tabs.Trigger>
-          <Tabs.Trigger value="branding">Visuelle profil</Tabs.Trigger>
+          <Tabs.Tab value="general">Generelt</Tabs.Tab>
+          <Tabs.Tab value="booking">Booking</Tabs.Tab>
+          <Tabs.Tab value="notifications">Varsler</Tabs.Tab>
+          <Tabs.Tab value="integrations">Integrasjoner</Tabs.Tab>
+          <Tabs.Tab value="branding">Visuelle profil</Tabs.Tab>
         </Tabs.List>
 
         {/* General Settings */}
-        <Tabs.Content value="general">
+        <Tabs.Panel value="general">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Generelle innstillinger
@@ -172,11 +219,11 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
-                  <TextField
+                  <Textfield
                     value={formData.general.name}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, name: e.target.value }
                     }))}
@@ -187,7 +234,7 @@ export function SettingsPage() {
                 <FormField label="Språk">
                   <Select
                     value={formData.general.locale}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, locale: e.target.value }
                     }))}
@@ -201,7 +248,7 @@ export function SettingsPage() {
                 <FormField label="Tidssone">
                   <Select
                     value={formData.general.timezone}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, timezone: e.target.value }
                     }))}
@@ -215,7 +262,7 @@ export function SettingsPage() {
                 <FormField label="Valuta">
                   <Select
                     value={formData.general.currency}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       general: { ...prev.general, currency: e.target.value }
                     }))}
@@ -230,7 +277,7 @@ export function SettingsPage() {
                   <FormField label="Datoformat">
                     <Select
                       value={formData.general.dateFormat}
-                      onChange={(e) => setFormData(prev => ({
+                      onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                         ...prev,
                         general: { ...prev.general, dateFormat: e.target.value }
                       }))}
@@ -244,7 +291,7 @@ export function SettingsPage() {
                   <FormField label="Tidsformat">
                     <Select
                       value={formData.general.timeFormat}
-                      onChange={(e) => setFormData(prev => ({
+                      onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                         ...prev,
                         general: { ...prev.general, timeFormat: e.target.value }
                       }))}
@@ -264,12 +311,12 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Booking Settings */}
-        <Tabs.Content value="booking">
+        <Tabs.Panel value="booking">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Bookinginnstillinger
@@ -279,43 +326,37 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
-                <FormField label="Automatisk bekreftelse">
+              <Stack spacing={4}>
+                <FormField label="Automatisk bekreftelse" description="Bekreft bookinger automatisk uten godkjenning">
                   <Switch
                     checked={formData.booking.autoConfirm}
-                    onChange={(checked) => setFormData(prev => ({
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, autoConfirm: checked }
                     }))}
-                  >
-                    Bekreft bookinger automatisk uten godkjenning
-                  </Switch>
+                  />
                 </FormField>
 
                 {!formData.booking.autoConfirm && (
-                  <FormField label="Krev godkjenning">
+                  <FormField label="Krev godkjenning" description="Alle bookinger må godkjennes av saksbehandler">
                     <Switch
                       checked={formData.booking.requireApproval}
-                      onChange={(checked) => setFormData(prev => ({
+                      onCheckedChange={(checked: boolean) => setFormData(prev => ({
                         ...prev,
                         booking: { ...prev.booking, requireApproval: checked }
                       }))}
-                    >
-                      Alle bookinger må godkjennes av saksbehandler
-                    </Switch>
+                    />
                   </FormField>
                 )}
 
-                <FormField label="Tillat kansellering">
+                <FormField label="Tillat kansellering" description="Brukere kan kansellere egne bookinger">
                   <Switch
                     checked={formData.booking.allowCancellation}
-                    onChange={(checked) => setFormData(prev => ({
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, allowCancellation: checked }
                     }))}
-                  >
-                    Brukere kan kansellere egne bookinger
-                  </Switch>
+                  />
                 </FormField>
 
                 {formData.booking.allowCancellation && (
@@ -323,10 +364,10 @@ export function SettingsPage() {
                     label="Kanselleringsfrist"
                     description="Antall timer før bookingstart kansellering er tillatt"
                   >
-                    <TextField
+                    <Textfield
                       type="number"
                       value={formData.booking.cancellationDeadlineHours.toString()}
-                      onChange={(e) => setFormData(prev => ({
+                      onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                         ...prev,
                         booking: { ...prev.booking, cancellationDeadlineHours: parseInt(e.target.value) || 0 }
                       }))}
@@ -340,10 +381,10 @@ export function SettingsPage() {
                   label="Maksimal forhåndsbooking"
                   description="Hvor langt frem i tid kan man booke?"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.maxAdvanceBookingDays.toString()}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, maxAdvanceBookingDays: parseInt(e.target.value) || 0 }
                     }))}
@@ -356,10 +397,10 @@ export function SettingsPage() {
                   label="Minimum forhåndstid"
                   description="Hvor kort tid før kan man booke?"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.minAdvanceBookingHours.toString()}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, minAdvanceBookingHours: parseInt(e.target.value) || 0 }
                     }))}
@@ -372,10 +413,10 @@ export function SettingsPage() {
                   label="Buffertid mellom bookinger"
                   description="Automatisk pause mellom påfølgende bookinger"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.bufferTimeMinutes.toString()}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, bufferTimeMinutes: parseInt(e.target.value) || 0 }
                     }))}
@@ -393,12 +434,12 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Notification Settings */}
-        <Tabs.Content value="notifications">
+        <Tabs.Panel value="notifications">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Varslingsinnstillinger
@@ -408,41 +449,35 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
-                <FormField label="E-postvarsler">
+              <Stack spacing={4}>
+                <FormField label="E-postvarsler" description="Send varsler på e-post">
                   <Switch
                     checked={formData.notifications.emailEnabled}
-                    onChange={(checked) => setFormData(prev => ({
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, emailEnabled: checked }
                     }))}
-                  >
-                    Send varsler på e-post
-                  </Switch>
+                  />
                 </FormField>
 
-                <FormField label="SMS-varsler">
+                <FormField label="SMS-varsler" description="Send varsler på SMS">
                   <Switch
                     checked={formData.notifications.smsEnabled}
-                    onChange={(checked) => setFormData(prev => ({
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, smsEnabled: checked }
                     }))}
-                  >
-                    Send varsler på SMS
-                  </Switch>
+                  />
                 </FormField>
 
-                <FormField label="Push-varsler">
+                <FormField label="Push-varsler" description="Send push-varsler til mobilapp">
                   <Switch
                     checked={formData.notifications.pushEnabled}
-                    onChange={(checked) => setFormData(prev => ({
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, pushEnabled: checked }
                     }))}
-                  >
-                    Send push-varsler til mobilapp
-                  </Switch>
+                  />
                 </FormField>
 
                 <div style={{
@@ -455,29 +490,25 @@ export function SettingsPage() {
                     Automatiske varsler
                   </Paragraph>
 
-                  <Stack gap={3}>
-                    <FormField label="Bookingbekreftelse">
+                  <Stack spacing={3}>
+                    <FormField label="Bookingbekreftelse" description="Send bekreftelse når booking er godkjent">
                       <Switch
                         checked={formData.notifications.bookingConfirmation}
-                        onChange={(checked) => setFormData(prev => ({
+                        onCheckedChange={(checked: boolean) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingConfirmation: checked }
                         }))}
-                      >
-                        Send bekreftelse når booking er godkjent
-                      </Switch>
+                      />
                     </FormField>
 
-                    <FormField label="Booking-påminnelse">
+                    <FormField label="Booking-påminnelse" description="Send påminnelse før booking starter">
                       <Switch
                         checked={formData.notifications.bookingReminder}
-                        onChange={(checked) => setFormData(prev => ({
+                        onCheckedChange={(checked: boolean) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingReminder: checked }
                         }))}
-                      >
-                        Send påminnelse før booking starter
-                      </Switch>
+                      />
                     </FormField>
 
                     {formData.notifications.bookingReminder && (
@@ -485,10 +516,10 @@ export function SettingsPage() {
                         label="Påminnelsestidspunkt"
                         description="Hvor lenge før booking skal påminnelse sendes?"
                       >
-                        <TextField
+                        <Textfield
                           type="number"
                           value={formData.notifications.reminderHoursBefore.toString()}
-                          onChange={(e) => setFormData(prev => ({
+                          onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                             ...prev,
                             notifications: { ...prev.notifications, reminderHoursBefore: parseInt(e.target.value) || 24 }
                           }))}
@@ -509,13 +540,13 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Integrations */}
-        <Tabs.Content value="integrations">
-          <Stack gap={4}>
+        <Tabs.Panel value="integrations">
+          <Stack spacing={4}>
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Autentisering
@@ -538,7 +569,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.bankid?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('bankid', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('bankid', checked)}
                     />
                   </div>
                 </div>
@@ -556,7 +587,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.idporten?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('idporten', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('idporten', checked)}
                     />
                   </div>
                 </div>
@@ -564,7 +595,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Betaling
@@ -587,7 +618,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.vipps?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('vipps', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('vipps', checked)}
                     />
                   </div>
                 </div>
@@ -595,7 +626,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Tilgangskontroll
@@ -618,7 +649,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.rco?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('rco', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('rco', checked)}
                     />
                   </div>
                 </div>
@@ -626,7 +657,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Kalender
@@ -649,7 +680,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.googleCalendar?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('googleCalendar', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('googleCalendar', checked)}
                     />
                   </div>
                 </div>
@@ -667,7 +698,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.outlook?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('outlook', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('outlook', checked)}
                     />
                   </div>
                 </div>
@@ -675,7 +706,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Økonomi & ERP
@@ -698,7 +729,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.visma?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('visma', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('visma', checked)}
                     />
                   </div>
                 </div>
@@ -706,7 +737,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Offentlige registre
@@ -729,19 +760,19 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.brreg?.enabled || false}
-                      onChange={(checked) => handleIntegrationToggle('brreg', checked)}
+                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('brreg', checked)}
                     />
                   </div>
                 </div>
               </Stack>
             </Card>
           </Stack>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Branding */}
-        <Tabs.Content value="branding">
+        <Tabs.Panel value="branding">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Visuell profil
@@ -751,14 +782,14 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField
                   label="Logo URL"
                   description="URL til logo (vil vises i toppen av siden)"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.branding.logo || ''}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, logo: e.target.value }
                     }))}
@@ -770,10 +801,10 @@ export function SettingsPage() {
                   label="Primærfarge"
                   description="Hovedfarge for knapper og UI-elementer"
                 >
-                  <TextField
+                  <Textfield
                     type="color"
                     value={formData.branding.primaryColor || '#1A56DB'}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, primaryColor: e.target.value }
                     }))}
@@ -784,10 +815,10 @@ export function SettingsPage() {
                   label="Sekundærfarge"
                   description="Farge for mindre fremtredende elementer"
                 >
-                  <TextField
+                  <Textfield
                     type="color"
                     value={formData.branding.secondaryColor || '#6B7280'}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, secondaryColor: e.target.value }
                     }))}
@@ -798,9 +829,9 @@ export function SettingsPage() {
                   label="Favicon URL"
                   description="URL til favicon (vises i nettleserens fane)"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.branding.favicon || ''}
-                    onChange={(e) => setFormData(prev => ({
+                    onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({
                       ...prev,
                       branding: { ...prev.branding, favicon: e.target.value }
                     }))}
@@ -817,7 +848,7 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
       </Tabs>
     </div>
   );

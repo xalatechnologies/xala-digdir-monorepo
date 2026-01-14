@@ -3,14 +3,13 @@
  * Allow modification of booking details for confirmed and pending bookings
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Alert,
-  Paragraph,
 } from '@xala/ds';
 import {
   useListings,
@@ -31,7 +30,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
     startTime: '',
     endTime: '',
     notes: booking.notes || '',
-    totalPrice: booking.totalPrice || 0,
+    totalPrice: Number(booking.totalPrice || 0),
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -61,7 +60,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
       startTime: formatForInput(start),
       endTime: formatForInput(end),
       notes: booking.notes || '',
-      totalPrice: booking.totalPrice || 0,
+      totalPrice: Number(booking.totalPrice) || 0,
     });
   }, [booking]);
 
@@ -113,12 +112,14 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
     setIsSubmitting(true);
     try {
       const updateData: UpdateBookingDTO = {
-        listingId: formData.listingId,
         startTime: new Date(formData.startTime).toISOString(),
         endTime: new Date(formData.endTime).toISOString(),
-        notes: formData.notes?.trim() || undefined,
-        totalPrice: formData.totalPrice,
       };
+
+      // Add optional fields only if they have values
+      if (formData.notes?.trim()) {
+        updateData.notes = formData.notes.trim();
+      }
 
       await onSubmit(updateData);
     } catch (error) {
@@ -155,25 +156,24 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Warning Alert */}
-        <Alert severity="warning">
+        <Alert data-color="warning">
           Endringer i booking vil påvirke brukerens reservasjon. Sørg for at brukeren er informert om endringene.
         </Alert>
 
         {/* Booking Details */}
         <FormSection title="Bookingdetaljer">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Lokale"
               required
-              error={errors.listingId}
+              {...(errors.listingId && { error: errors.listingId })}
               description="Hvilket lokale skal bookes?"
             >
               <Select
                 value={formData.listingId}
-                onChange={(e) => handleChange('listingId')(e.target.value)}
-                error={!!errors.listingId}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => handleChange('listingId')(e.target.value)}
               >
                 <option value="">Velg lokale...</option>
                 {listings.map(listing => (
@@ -188,26 +188,26 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
               <FormField
                 label="Starttid"
                 required
-                error={errors.startTime}
+                {...(errors.startTime && { error: errors.startTime })}
               >
-                <TextField
+                <Textfield
                   type="datetime-local"
                   value={formData.startTime}
-                  onChange={(e) => handleChange('startTime')(e.target.value)}
-                  error={!!errors.startTime}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('startTime')(e.target.value)}
+                  aria-label="Starttid"
                 />
               </FormField>
 
               <FormField
                 label="Sluttid"
                 required
-                error={errors.endTime}
+                {...(errors.endTime && { error: errors.endTime })}
               >
-                <TextField
+                <Textfield
                   type="datetime-local"
                   value={formData.endTime}
-                  onChange={(e) => handleChange('endTime')(e.target.value)}
-                  error={!!errors.endTime}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('endTime')(e.target.value)}
+                  aria-label="Sluttid"
                 />
               </FormField>
             </div>
@@ -226,17 +226,17 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
           <FormField
             label="Total pris"
             required
-            error={errors.totalPrice}
+            {...(errors.totalPrice && { error: errors.totalPrice })}
             description="Pris i NOK (inkl. mva)"
           >
-            <TextField
+            <Textfield
               type="number"
               value={formData.totalPrice.toString()}
-              onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
               placeholder="0"
-              error={!!errors.totalPrice}
               min="0"
               step="0.01"
+              aria-label="Total pris"
             />
           </FormField>
         </FormSection>
@@ -247,12 +247,13 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
             label="Interne notater"
             description="Notater synlige for saksbehandler"
           >
-            <TextField
+            <Textfield
               value={formData.notes}
-              onChange={(e) => handleChange('notes')(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange('notes')(e.target.value)}
               placeholder="Legg til eventuelle notater..."
               multiline
               rows={4}
+              aria-label="Interne notater"
             />
           </FormField>
         </FormSection>

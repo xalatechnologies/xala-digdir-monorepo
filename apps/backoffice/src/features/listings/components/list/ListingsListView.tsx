@@ -179,13 +179,13 @@ export function ListingsListView() {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         title="Filter og sortering"
-        icon={<FilterIcon size={20} />}
+        icon={<FilterIcon />}
         position="right"
-        size="sm"
+       
         footer={
           <Stack spacing="var(--ds-spacing-3)">
             <Text
-              size="sm"
+             
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
@@ -235,11 +235,11 @@ export function ListingsListView() {
                     }}
                   />
                 }
-                right={<Text size="sm">({typeCounts[type.id] || 0})</Text>}
+                right={<Text>({typeCounts[type.id] || 0})</Text>}
                 onClick={() => setSelectedType(type.id as ListingType | 'ALL')}
                 selected={selectedType === type.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {type.label}
                 </Text>
               </DrawerItem>
@@ -269,7 +269,7 @@ export function ListingsListView() {
                 onClick={() => setSelectedStatus(status.id)}
                 selected={selectedStatus === status.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {status.label}
                 </Text>
               </DrawerItem>
@@ -299,7 +299,7 @@ export function ListingsListView() {
                 onClick={() => setSelectedCapacity(cap.id)}
                 selected={selectedCapacity === cap.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {cap.label}
                 </Text>
               </DrawerItem>
@@ -329,7 +329,7 @@ export function ListingsListView() {
                 onClick={() => setSelectedSort(sort.id)}
                 selected={selectedSort === sort.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {sort.label}
                 </Text>
               </DrawerItem>

@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
 } from '@xala/ds';
 import type {
@@ -97,14 +97,28 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
     try {
       // Clean up empty strings
       const cleanData: CreateOrganizationDTO = {
-        ...formData,
-        organizationNumber: formData.organizationNumber?.trim() || undefined,
-        email: formData.email?.trim() || undefined,
-        phone: formData.phone?.trim() || undefined,
-        address: formData.address?.trim() || undefined,
-        city: formData.city?.trim() || undefined,
-        postalCode: formData.postalCode?.trim() || undefined,
+        name: formData.name,
+        actorType: formData.actorType,
       };
+
+      // Add optional fields only if they have values
+      const orgNum = formData.organizationNumber?.trim();
+      if (orgNum) cleanData.organizationNumber = orgNum;
+
+      const email = formData.email?.trim();
+      if (email) cleanData.email = email;
+
+      const phone = formData.phone?.trim();
+      if (phone) cleanData.phone = phone;
+
+      const address = formData.address?.trim();
+      if (address) cleanData.address = address;
+
+      const city = formData.city?.trim();
+      if (city) cleanData.city = city;
+
+      const postalCode = formData.postalCode?.trim();
+      if (postalCode) cleanData.postalCode = postalCode;
 
       await onSubmit(cleanData);
     } catch (error) {
@@ -128,21 +142,21 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Basic Information */}
         <FormSection title="Grunnleggende informasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Navn"
               required
-              error={errors.name}
+              {...(errors.name && { error: errors.name })}
               description="Organisasjonens fulle navn"
             >
-              <TextField
+              <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder="F.eks. Oslo Idrettslag"
-                error={!!errors.name}
+                aria-label="Navn"
               />
             </FormField>
 
@@ -165,15 +179,15 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
             <FormField
               label="Organisasjonsnummer"
-              error={errors.organizationNumber}
+              {...(errors.organizationNumber && { error: errors.organizationNumber })}
               description="9 siffer (valgfritt)"
             >
-              <TextField
+              <Textfield
                 value={formData.organizationNumber || ''}
                 onChange={(e) => handleChange('organizationNumber')(e.target.value)}
                 placeholder="123456789"
-                error={!!errors.organizationNumber}
                 maxLength={9}
+                aria-label="Organisasjonsnummer"
               />
             </FormField>
           </Stack>
@@ -181,18 +195,18 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Contact Information */}
         <FormSection title="Kontaktinformasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="E-post"
-              error={errors.email}
+              {...(errors.email && { error: errors.email })}
               description="Primær e-postadresse"
             >
-              <TextField
+              <Textfield
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="kontakt@organisasjon.no"
-                error={!!errors.email}
+                aria-label="E-post"
               />
             </FormField>
 
@@ -200,11 +214,12 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
               label="Telefon"
               description="Kontakttelefon"
             >
-              <TextField
+              <Textfield
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
                 placeholder="+47 12 34 56 78"
+                aria-label="Telefon"
               />
             </FormField>
           </Stack>
@@ -212,37 +227,39 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Address */}
         <FormSection title="Adresse">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Gateadresse"
               description="F.eks. Storgata 1"
             >
-              <TextField
+              <Textfield
                 value={formData.address || ''}
                 onChange={(e) => handleChange('address')(e.target.value)}
                 placeholder="Gateadresse"
+                aria-label="Gateadresse"
               />
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Postnummer"
-                error={errors.postalCode}
+                {...(errors.postalCode && { error: errors.postalCode })}
               >
-                <TextField
+                <Textfield
                   value={formData.postalCode || ''}
                   onChange={(e) => handleChange('postalCode')(e.target.value)}
                   placeholder="0001"
-                  error={!!errors.postalCode}
                   maxLength={4}
+                  aria-label="Postnummer"
                 />
               </FormField>
 
               <FormField label="Poststed">
-                <TextField
+                <Textfield
                   value={formData.city || ''}
                   onChange={(e) => handleChange('city')(e.target.value)}
                   placeholder="Oslo"
+                  aria-label="Poststed"
                 />
               </FormField>
             </div>

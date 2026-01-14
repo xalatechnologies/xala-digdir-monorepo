@@ -309,7 +309,7 @@ export function ListingsFilterBar({
             }}
           />
           <SearchIcon
-            size={18}
+           
             style={{
               position: 'absolute',
               left: 'var(--ds-spacing-3)',
@@ -341,7 +341,7 @@ export function ListingsFilterBar({
                 cursor: 'pointer',
               }}
             >
-              <CloseIcon size={16} />
+              <CloseIcon />
             </button>
           )}
         </div>
@@ -350,7 +350,7 @@ export function ListingsFilterBar({
         <Dropdown.TriggerContext>
           <Dropdown.Trigger>
             {STATUS_OPTIONS.find((opt) => opt.id === (filters.status || 'all'))?.label || 'Status'}
-            <ChevronRightIcon size={16} style={{ transform: 'rotate(90deg)', marginLeft: 'var(--ds-spacing-1)' }} />
+            <ChevronRightIcon style={{ transform: 'rotate(90deg)', marginLeft: 'var(--ds-spacing-1)' }} />
           </Dropdown.Trigger>
           <Dropdown placement="bottom-start">
             <Dropdown.List>
@@ -368,7 +368,7 @@ export function ListingsFilterBar({
                   >
                     {option.label}
                     {(filters.status || 'all') === option.id && (
-                      <CheckIcon size={16} style={{ color: 'var(--ds-color-accent-base-default)' }} />
+                      <CheckIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
                     )}
                   </Dropdown.Button>
                 </Dropdown.Item>
@@ -381,7 +381,7 @@ export function ListingsFilterBar({
         <Dropdown.TriggerContext>
           <Dropdown.Trigger>
             {currentSort?.label || 'Sorter'}
-            <ChevronRightIcon size={16} style={{ transform: 'rotate(90deg)', marginLeft: 'var(--ds-spacing-1)' }} />
+            <ChevronRightIcon style={{ transform: 'rotate(90deg)', marginLeft: 'var(--ds-spacing-1)' }} />
           </Dropdown.Trigger>
           <Dropdown placement="bottom-start">
             <Dropdown.List>
@@ -399,7 +399,7 @@ export function ListingsFilterBar({
                   >
                     {option.label}
                     {currentSort?.id === option.id && (
-                      <CheckIcon size={16} style={{ color: 'var(--ds-color-accent-base-default)' }} />
+                      <CheckIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
                     )}
                   </Dropdown.Button>
                 </Dropdown.Item>
@@ -480,7 +480,7 @@ export function ListingsFilterBar({
               }}
             >
               {chip.label}
-              <CloseIcon size={14} />
+              <CloseIcon />
             </button>
           ))}
           <button
@@ -526,7 +526,7 @@ export function ListingsFilterBar({
                 cursor: 'pointer',
               }}
             >
-              <CloseIcon size={20} />
+              <CloseIcon />
             </button>
           </div>
         </Dialog.Block>

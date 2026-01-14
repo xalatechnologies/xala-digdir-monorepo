@@ -448,7 +448,7 @@ export function ScheduledReportsManager() {
         onClose={handleCancel}
         title={editingSchedule ? 'Rediger planlagt rapport' : 'Ny planlagt rapport'}
         position="right"
-        size="lg"
+       
         footer={
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
             <Button onClick={handleCancel} variant="secondary">

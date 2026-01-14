@@ -71,7 +71,7 @@ export function ExportFormatSelector({
 }: ExportFormatSelectorProps): React.ReactElement {
   return (
     <Card>
-      <Stack gap={16}>
+      <Stack spacing={16}>
         <div>
           <Heading level={3} data-size="sm">
             {label}
@@ -81,7 +81,7 @@ export function ExportFormatSelector({
           </Paragraph>
         </div>
 
-        <Stack gap={12}>
+        <Stack spacing={12}>
           {EXPORT_FORMATS.map((formatOption) => {
             const isSelected = selectedFormat === formatOption.format;
 
@@ -110,7 +110,7 @@ export function ExportFormatSelector({
                 aria-pressed={isSelected}
                 aria-label={`Velg ${formatOption.label} format`}
               >
-                <Stack direction="horizontal" gap={12} style={{ alignItems: 'center' }}>
+                <Stack direction="horizontal" spacing={12} style={{ alignItems: 'center' }}>
                   {formatOption.icon && (
                     <div
                       style={{
@@ -123,12 +123,12 @@ export function ExportFormatSelector({
                     </div>
                   )}
                   <div style={{ flex: 1 }}>
-                    <Stack direction="horizontal" gap={8} style={{ alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
+                    <Stack direction="horizontal" spacing={8} style={{ alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
                       <Paragraph data-size="md" style={{ fontWeight: 600, margin: 0 }}>
                         {formatOption.label}
                       </Paragraph>
                       {isSelected && (
-                        <Badge size="sm" color="success">
+                        <Badge color="success">
                           Valgt
                         </Badge>
                       )}

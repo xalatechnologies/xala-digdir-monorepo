@@ -371,13 +371,13 @@ export function BookingsPage() {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         title="Filter og sortering"
-        icon={<FilterIcon size={20} />}
+        icon={<FilterIcon />}
         position="right"
-        size="sm"
+       
         footer={
           <Stack spacing="var(--ds-spacing-3)">
             <Text
-              size="sm"
+             
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
@@ -429,7 +429,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedPayment(payment.id)}
                 selected={selectedPayment === payment.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {payment.label}
                 </Text>
               </DrawerItem>
@@ -499,7 +499,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedSort(sort.id)}
                 selected={selectedSort === sort.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
+                <Text color="var(--ds-color-neutral-text-default)">
                   {sort.label}
                 </Text>
               </DrawerItem>
@@ -756,7 +756,7 @@ export function BookingsPage() {
                       ? 'var(--ds-color-success-base-default)'
                       : 'var(--ds-color-info-base-default)'
                   }} />
-                  <Text size="sm" color={isOngoing ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-info-text-default)'} style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                  <Text color={isOngoing ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-info-text-default)'} style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                     {timeUntil}
                   </Text>
                 </div>
@@ -1007,14 +1007,14 @@ export function BookingsPage() {
                 <Stack spacing="var(--ds-spacing-3)">
                   {/* Payment Status */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Status</Text>
+                    <Text color="var(--ds-color-neutral-text-subtle)">Status</Text>
                     <PaymentStatusBadge status={selectedBooking.paymentStatus || 'unpaid'} />
                   </div>
 
                   {/* Payment Method */}
                   {selectedBooking.paymentMethod && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalingsmetode</Text>
+                      <Text color="var(--ds-color-neutral-text-subtle)">Betalingsmetode</Text>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {selectedBooking.paymentMethod === 'vipps' ? 'Vipps' :
                          selectedBooking.paymentMethod === 'card' ? 'Kort' :
@@ -1027,7 +1027,7 @@ export function BookingsPage() {
                   {/* Transaction ID */}
                   {selectedBooking.transactionId && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Transaksjon-ID</Text>
+                      <Text color="var(--ds-color-neutral-text-subtle)">Transaksjon-ID</Text>
                       <code style={{
                         fontFamily: 'monospace',
                         fontSize: 'var(--ds-font-size-xs)',
@@ -1043,7 +1043,7 @@ export function BookingsPage() {
                   {/* Payment Date */}
                   {selectedBooking.paidAt && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalt</Text>
+                      <Text color="var(--ds-color-neutral-text-subtle)">Betalt</Text>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {new Date(selectedBooking.paidAt).toLocaleDateString(formatLocale, {
                           day: 'numeric',
@@ -1059,7 +1059,7 @@ export function BookingsPage() {
                   {/* Invoice Number */}
                   {selectedBooking.invoiceNumber && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Fakturanummer</Text>
+                      <Text color="var(--ds-color-neutral-text-subtle)">Fakturanummer</Text>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         #{selectedBooking.invoiceNumber}
                       </Paragraph>
@@ -1073,20 +1073,20 @@ export function BookingsPage() {
                     borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Grunnpris</Text>
-                      <Text size="sm">
+                      <Text color="var(--ds-color-neutral-text-subtle)">Grunnpris</Text>
+                      <Text>
                         {(Number(selectedBooking.totalPrice) * 0.8).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
                       </Text>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">MVA (25%)</Text>
-                      <Text size="sm">
+                      <Text color="var(--ds-color-neutral-text-subtle)">MVA (25%)</Text>
+                      <Text>
                         {(Number(selectedBooking.totalPrice) * 0.2).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
                       </Text>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 'var(--ds-spacing-2)', borderTop: '1px solid var(--ds-color-neutral-border-default)' }}>
-                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Totalt</Text>
-                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                      <Text style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Totalt</Text>
+                      <Text style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
                         {(Number(selectedBooking.totalPrice) || 0).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
                       </Text>
                     </div>

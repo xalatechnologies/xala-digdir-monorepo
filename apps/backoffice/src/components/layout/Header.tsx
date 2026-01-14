@@ -37,7 +37,7 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
       id: 'booking-pending',
       label: 'Ventende bookinger',
       description: 'Se alle bookinger som venter på godkjenning',
-      icon: <CalendarIcon size={18} />,
+      icon: <CalendarIcon />,
       href: '/bookings?status=pending',
       meta: '12',
     });
@@ -47,7 +47,7 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
       id: 'booking-confirmed',
       label: 'Bekreftede bookinger',
       description: 'Se alle godkjente bookinger',
-      icon: <CalendarIcon size={18} />,
+      icon: <CalendarIcon />,
       href: '/bookings?status=confirmed',
     });
   }
@@ -62,7 +62,7 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
       id: 'users-all',
       label: 'Alle brukere',
       description: 'Administrer brukere og tilganger',
-      icon: <PeopleIcon size={18} />,
+      icon: <PeopleIcon />,
       href: '/users',
     });
   }
@@ -77,7 +77,7 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
       id: 'nav-dashboard',
       label: 'Dashboard',
       description: 'Gå til oversikt',
-      icon: <SearchIcon size={18} />,
+      icon: <SearchIcon />,
       href: '/',
       shortcut: '⌘D',
     });
@@ -87,7 +87,7 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
       id: 'nav-settings',
       label: 'Innstillinger',
       description: 'Systemkonfigurasjon',
-      icon: <SettingsIcon size={18} />,
+      icon: <SettingsIcon />,
       href: '/settings',
       shortcut: '⌘,',
     });
@@ -171,16 +171,16 @@ export function Header({ title: _title }: HeaderProps) {
               onToggle={toggleTheme}
             />
             <HeaderIconButton
-              icon={<BellIcon size={22} />}
+              icon={<BellIcon />}
               {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
-              size="md"
+             
               aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
               title="Varsler"
               onClick={() => navigate('/messages')}
             />
             <HeaderIconButton
-              icon={<SettingsIcon size={22} />}
-              size="md"
+              icon={<SettingsIcon />}
+             
               aria-label="Innstillinger"
               title="Innstillinger"
               onClick={() => navigate('/settings')}
@@ -202,7 +202,7 @@ export function Header({ title: _title }: HeaderProps) {
                 aria-label="Logg ut"
                 style={{ whiteSpace: 'nowrap' }}
               >
-                <LogOutIcon size={20} />
+                <LogOutIcon />
                 Logg ut
               </Button>
             )}

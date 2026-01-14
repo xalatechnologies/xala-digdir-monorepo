@@ -119,7 +119,7 @@ export function CapacityStep({ data, onChange, errors = [] }: CapacityStepProps)
         <div style={{ padding: 'var(--ds-spacing-5)' }}>
           <div style={metricCardStyle}>
             <div style={iconContainerStyle}>
-              <PeopleIcon size={28} />
+              <PeopleIcon />
             </div>
             <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-6)', flexWrap: 'wrap' }}>
               {/* Left side - Input */}
@@ -216,7 +216,7 @@ export function CapacityStep({ data, onChange, errors = [] }: CapacityStepProps)
           <div style={{ padding: 'var(--ds-spacing-5)' }}>
             <div style={metricCardStyle}>
               <div style={iconContainerStyle}>
-                <QuantityIcon size={28} />
+                <QuantityIcon />
               </div>
               <div style={{ flex: 1 }}>
                 <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
@@ -258,7 +258,7 @@ export function CapacityStep({ data, onChange, errors = [] }: CapacityStepProps)
               {/* Area */}
               <div style={metricCardStyle}>
                 <div style={{ ...iconContainerStyle, width: '48px', height: '48px' }}>
-                  <AreaIcon size={24} />
+                  <AreaIcon />
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
@@ -287,7 +287,7 @@ export function CapacityStep({ data, onChange, errors = [] }: CapacityStepProps)
               {/* Floor */}
               <div style={metricCardStyle}>
                 <div style={{ ...iconContainerStyle, width: '48px', height: '48px' }}>
-                  <FloorIcon size={24} />
+                  <FloorIcon />
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>

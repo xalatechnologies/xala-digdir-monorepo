@@ -149,7 +149,7 @@ export function SeasonFormPage() {
   if (isEditing && isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner />
       </div>
     );
   }
@@ -162,7 +162,7 @@ export function SeasonFormPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -176,7 +176,7 @@ export function SeasonFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
           </Button>
@@ -197,7 +197,7 @@ export function SeasonFormPage() {
 
       {/* Info Alert */}
       {!isEditing && (
-        <Alert severity="info">
+        <Alert data-color="info">
           Sesongen opprettes som <strong>Utkast</strong>. Du må legge til lokaler før du kan åpne den for søknader.
         </Alert>
       )}
@@ -205,10 +205,10 @@ export function SeasonFormPage() {
       {/* Form */}
       <Card>
         <form onSubmit={handleSubmit}>
-          <Stack gap={5}>
+          <Stack spacing={5}>
             {/* Basic Information */}
             <FormSection title="Grunnleggende informasjon">
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField
                   label="Navn"
                   required
@@ -240,7 +240,7 @@ export function SeasonFormPage() {
 
             {/* Period */}
             <FormSection title="Periode og frister">
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                   <FormField
                     label="Startdato"

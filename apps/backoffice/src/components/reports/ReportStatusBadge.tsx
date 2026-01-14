@@ -31,12 +31,12 @@ export interface ReportStatusBadgeProps {
  *
  * @example
  * ```tsx
- * <ReportStatusBadge status="completed" size="sm" />
+ * <ReportStatusBadge status="completed" />
  * <ReportStatusBadge status="processing" />
- * <ReportStatusBadge status="failed" size="md" />
+ * <ReportStatusBadge status="failed" />
  * ```
  */
 export function ReportStatusBadge({ status, size = 'sm' }: ReportStatusBadgeProps): React.ReactElement {
   const config = reportStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
-  return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
+  return <StatusTag color={config.color}>{config.label}</StatusTag>;
 }

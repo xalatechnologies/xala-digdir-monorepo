@@ -41,7 +41,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
       description: reportDescription,
       reportType,
       metrics: selectedMetrics,
-      filters: filters.length > 0 ? filters : undefined,
+      ...(filters.length > 0 && { filters }),
     };
 
     if (onGenerate) {
@@ -60,7 +60,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
       description: reportDescription,
       reportType,
       metrics: selectedMetrics,
-      filters: filters.length > 0 ? filters : undefined,
+      ...(filters.length > 0 && { filters }),
     };
 
     if (onSaveTemplate) {
@@ -71,10 +71,10 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
   const isConfigValid = selectedMetrics.length > 0;
 
   return (
-    <Stack gap={24}>
+    <Stack spacing="var(--ds-spacing-3)">
       {/* Header */}
       <Card>
-        <Stack gap={16}>
+        <Stack spacing="var(--ds-spacing-2)">
           <div>
             <Heading level={2} data-size="md">
               Tilpasset rapportbygger
@@ -178,7 +178,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
       {/* Configuration Preview */}
       {isConfigValid && (
         <Card style={{ backgroundColor: 'var(--ds-color-success-surface-subtle)', border: '1px solid var(--ds-color-success-border-subtle)' }}>
-          <Stack gap={12}>
+          <Stack spacing="var(--ds-spacing-2)">
             <Heading level={3} data-size="sm">
               Rapportkonfigurasjon
             </Heading>
@@ -194,7 +194,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
               <Paragraph data-size="sm" style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>
                 Måleparametere ({selectedMetrics.length})
               </Paragraph>
-              <Stack direction="row" gap={8} style={{ flexWrap: 'wrap' }}>
+              <Stack direction="horizontal" spacing="var(--ds-spacing-1)" style={{ flexWrap: 'wrap' }}>
                 {selectedMetrics.map((metric) => (
                   <Badge key={metric.key} color="success">
                     {metric.label}
@@ -208,7 +208,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
                 <Paragraph data-size="sm" style={{ fontWeight: 500, marginBottom: 'var(--ds-spacing-1)' }}>
                   Filtre ({filters.length})
                 </Paragraph>
-                <Stack direction="row" gap={8} style={{ flexWrap: 'wrap' }}>
+                <Stack direction="horizontal" spacing="var(--ds-spacing-1)" style={{ flexWrap: 'wrap' }}>
                   {filters.map((filter, index) => (
                     <Badge key={index} color="neutral">
                       {filter.field}
@@ -223,7 +223,7 @@ export function CustomReportBuilder({ onGenerate, onSaveTemplate }: CustomReport
 
       {/* Action Buttons */}
       <Card>
-        <Stack direction="row" gap={12} style={{ justifyContent: 'flex-end' }}>
+        <Stack direction="horizontal" spacing="var(--ds-spacing-2)" style={{ justifyContent: 'flex-end' }}>
           <Button variant="secondary" onClick={handleSaveAsTemplate} disabled={!isConfigValid || !reportName.trim()}>
             Lagre som mal
           </Button>

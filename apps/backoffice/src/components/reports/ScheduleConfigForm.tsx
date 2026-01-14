@@ -96,7 +96,7 @@ export function ScheduleConfigForm({ value, onChange }: ScheduleConfigFormProps)
 
   return (
     <Card>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         <div>
           <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             Planleggingsinnstillinger
@@ -106,7 +106,7 @@ export function ScheduleConfigForm({ value, onChange }: ScheduleConfigFormProps)
           </Paragraph>
         </div>
 
-        <Stack gap={4}>
+        <Stack spacing={4}>
           {/* Frequency */}
           <FormField
             label="Frekvens"
@@ -154,6 +154,7 @@ export function ScheduleConfigForm({ value, onChange }: ScheduleConfigFormProps)
                 max={31}
                 value={String(config.dayOfMonth ?? 1)}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDayOfMonthChange(Number(e.target.value))}
+                aria-label="Dag i måneden"
               />
             </FormField>
           )}
@@ -167,6 +168,7 @@ export function ScheduleConfigForm({ value, onChange }: ScheduleConfigFormProps)
               type="time"
               value={config.time || '09:00'}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTimeChange(e.target.value)}
+              aria-label="Tidspunkt"
             />
           </FormField>
 

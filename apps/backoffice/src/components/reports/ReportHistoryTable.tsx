@@ -247,7 +247,7 @@ export function ReportHistoryTable() {
   return (
     <div style={{ width: '100%' }}>
       {/* Header with Search and Filters */}
-      <Stack direction="vertical" gap={16} style={{ marginBottom: 24 }}>
+      <Stack direction="vertical" spacing={16} style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Heading data-size="md">Rapporthistorikk</Heading>
           <Button
@@ -458,7 +458,7 @@ export function ReportHistoryTable() {
         }
       >
         <DrawerSection>
-          <Stack direction="vertical" gap={16}>
+          <Stack direction="vertical" spacing={16}>
             {/* Report Type Filter */}
             <div>
               <Heading data-size="xs" style={{ marginBottom: 8 }}>Rapporttype</Heading>
@@ -526,7 +526,7 @@ export function ReportHistoryTable() {
         {selectedReport && (
           <>
             <DrawerSection>
-              <Stack direction="vertical" gap={16}>
+              <Stack direction="vertical" spacing={16}>
                 <div>
                   <Heading data-size="xs" style={{ marginBottom: 4 }}>Rapportnavn</Heading>
                   <Paragraph>{selectedReport.reportName || 'Uten navn'}</Paragraph>

@@ -234,7 +234,7 @@ export function AuditPage() {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         position="right"
-        size="sm"
+       
         title="Filtrer hendelser"
       >
         <DrawerSection title="Ressurstype">
@@ -359,7 +359,7 @@ export function AuditPage() {
         isOpen={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
         position="right"
-        size="lg"
+       
         title="Hendelsesdetaljer"
       >
         {selectedEvent && (

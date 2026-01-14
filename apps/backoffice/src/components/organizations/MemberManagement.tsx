@@ -11,7 +11,6 @@ import {
   Dropdown,
   Stack,
   Paragraph,
-  TextField,
   Select,
   FormField,
   PlusIcon,
@@ -92,11 +91,11 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
   };
 
   return (
-    <Stack gap={4}>
+    <Stack spacing={4}>
       {/* Add Member Section */}
       <div>
         {!isAdding ? (
-          <Button variant="secondary" size="sm" onClick={() => setIsAdding(true)}>
+          <Button variant="secondary" onClick={() => setIsAdding(true)}>
             <PlusIcon />
             Legg til medlem
           </Button>
@@ -109,7 +108,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
               border: '1px solid var(--ds-color-neutral-border-default)',
             }}
           >
-            <Stack gap={3}>
+            <Stack spacing={3}>
               <Paragraph data-size="sm" style={{ fontWeight: 600 }}>
                 Legg til nytt medlem
               </Paragraph>
@@ -142,7 +141,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
 
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                 <Button
-                  size="sm"
+                 
                   onClick={handleAddMember}
                   disabled={!selectedUserId || isSubmitting}
                 >
@@ -150,7 +149,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 </Button>
                 <Button
                   variant="secondary"
-                  size="sm"
+                 
                   onClick={() => {
                     setIsAdding(false);
                     setSelectedUserId('');
@@ -225,11 +224,11 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 <Table.Cell>
                   <Dropdown>
                     <Dropdown.Trigger asChild>
-                      <Button variant="tertiary" size="sm" aria-label="Handlinger">
+                      <Button variant="tertiary" aria-label="Handlinger">
                         <MoreVerticalIcon />
                       </Button>
                     </Dropdown.Trigger>
-                    <Dropdown.Menu>
+                    <Dropdown.List>
                       <Dropdown.Item
                         onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}
                       >
@@ -240,7 +239,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                         <TrashIcon />
                         Fjern medlem
                       </Dropdown.Item>
-                    </Dropdown.Menu>
+                    </Dropdown.List>
                   </Dropdown>
                 </Table.Cell>
               </Table.Row>

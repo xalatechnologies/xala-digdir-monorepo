@@ -178,7 +178,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                 flexShrink: 0,
               }}
             >
-              {allValid ? <CheckCircleIcon size={24} /> : <AlertCircleIcon size={24} />}
+              {allValid ? <CheckCircleIcon /> : <AlertCircleIcon />}
             </div>
             <div style={{ flex: 1 }}>
               <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
@@ -297,7 +297,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                 }}
               >
                 <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
-                  <ImageIcon size={14} /> {images.length} bilder
+                  <ImageIcon /> {images.length} bilder
                 </Tag>
                 {documents.length > 0 && (
                   <Tag data-size="sm" data-color="neutral" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
@@ -318,7 +318,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                 gap: 'var(--ds-spacing-2)',
               }}
             >
-              <ImageIcon size={32} />
+              <ImageIcon />
               <Paragraph data-size="sm" style={{ margin: 0 }}>Ingen bilder lagt til</Paragraph>
             </div>
           )}
@@ -329,7 +329,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
                   <Tag data-size="sm" data-color="accent">
-                    <TagIcon size={12} /> {LISTING_TYPE_LABELS[listingType]}
+                    <TagIcon /> {LISTING_TYPE_LABELS[listingType]}
                   </Tag>
                   <ListingStatusBadge status={data.status || 'draft'} />
                 </div>
@@ -350,7 +350,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                   color: 'var(--ds-color-neutral-text-subtle)',
                 }}
               >
-                <MapPinIcon size={16} />
+                <MapPinIcon />
                 <Paragraph data-size="sm" style={{ margin: 0 }}>
                   {[data.location.address, data.location.postalCode, data.location.city].filter(Boolean).join(', ')}
                 </Paragraph>
@@ -386,7 +386,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                   }}
                 >
                   <div style={{ color: 'var(--ds-color-accent-base-default)' }}>
-                    <UsersIcon size={20} />
+                    <UsersIcon />
                   </div>
                   <div>
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -410,7 +410,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                   }}
                 >
                   <div style={{ color: 'var(--ds-color-accent-base-default)' }}>
-                    <SquareIcon size={20} />
+                    <SquareIcon />
                   </div>
                   <div>
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>

@@ -230,7 +230,7 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
                       color: isSelected ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)',
                     }}
                   >
-                    <IconComponent size={32} />
+                    <IconComponent />
                   </div>
                   <Paragraph
                     data-size="sm"
@@ -324,7 +324,7 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
                       color: isSelected ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)',
                     }}
                   >
-                    <IconComponent size={28} />
+                    <IconComponent />
                   </div>
                   <Paragraph
                     data-size="sm"

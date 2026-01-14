@@ -125,7 +125,7 @@ export function SeasonAllocationManagement({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner />
       </div>
     );
   }
@@ -133,7 +133,7 @@ export function SeasonAllocationManagement({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
       {/* Header with instructions */}
-      <Alert severity="info">
+      <Alert data-color="info">
         <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
           Manuell tildeling
         </Heading>
@@ -201,7 +201,7 @@ export function SeasonAllocationManagement({
           </Paragraph>
         </div>
       ) : (
-        <Stack gap={4}>
+        <Stack spacing={4}>
           {Object.entries(applicationsByVenue).map(([venueId, apps]) => (
             <Card key={venueId}>
               <div style={{ marginBottom: 'var(--ds-spacing-3)' }}>
@@ -264,13 +264,13 @@ export function SeasonAllocationManagement({
                         <Table.Cell>
                           {!isAllocated && (
                             <Button
-                              size="sm"
+                             
                               onClick={() => handleAllocate(application.id)}
                               disabled={allocating[application.id] || allocateMutation.isPending}
                             >
                               {allocating[application.id] ? (
                                 <>
-                                  <Spinner size="sm" /> Tildeler...
+                                  <Spinner /> Tildeler...
                                 </>
                               ) : (
                                 <>
@@ -292,7 +292,7 @@ export function SeasonAllocationManagement({
 
       {/* Success message */}
       {allAllocated && (
-        <Alert severity="success">
+        <Alert data-color="success">
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Alle søknader er tildelt!
           </Heading>

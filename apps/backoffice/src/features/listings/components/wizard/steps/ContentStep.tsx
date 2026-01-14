@@ -347,7 +347,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
                 flexShrink: 0,
               }}
             >
-              <CheckIcon size={20} />
+              <CheckIcon />
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -391,7 +391,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
                     gap: 'var(--ds-spacing-1)',
                   }}
                 >
-                  <CheckIcon size={14} />
+                  <CheckIcon />
                   {amenity}
                   <Button
                     type="button"
@@ -458,7 +458,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
                     }}
                   >
                     {IconComponent ? (
-                      <IconComponent size={18} />
+                      <IconComponent />
                     ) : (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="12" y1="5" x2="12" y2="19" />

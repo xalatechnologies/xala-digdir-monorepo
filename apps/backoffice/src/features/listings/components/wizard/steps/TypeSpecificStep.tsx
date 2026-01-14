@@ -42,8 +42,8 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
     switch (listingType) {
       case 'SPACE':
         return (
-          <Stack gap={4}>
-            <Alert severity="info">
+          <Stack spacing={4}>
+            <Alert data-color="info">
               <Paragraph data-size="sm">
                 Legg til detaljer om lokalet som hjelper brukere å forstå rommet bedre.
               </Paragraph>
@@ -112,7 +112,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-2)' }}>
                 Fasiliteter
               </Paragraph>
-              <Stack gap={2}>
+              <Stack spacing={2}>
                 <Checkbox
                   checked={typeData.hasKitchen || false}
                   onChange={(e) => handleFieldChange('hasKitchen', e.target.checked)}
@@ -150,8 +150,8 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'RESOURCE':
         return (
-          <Stack gap={4}>
-            <Alert severity="info">
+          <Stack spacing={4}>
+            <Alert data-color="info">
               <Paragraph data-size="sm">
                 Beskriv ressursen i detalj slik at brukere forstår hva som tilbys.
               </Paragraph>
@@ -222,8 +222,8 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'SERVICE':
         return (
-          <Stack gap={4}>
-            <Alert severity="info">
+          <Stack spacing={4}>
+            <Alert data-color="info">
               <Paragraph data-size="sm">
                 Gi detaljer om tjenesten og leveringsbetingelser.
               </Paragraph>
@@ -281,8 +281,8 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'EVENT':
         return (
-          <Stack gap={4}>
-            <Alert severity="info">
+          <Stack spacing={4}>
+            <Alert data-color="info">
               <Paragraph data-size="sm">
                 Legg til informasjon om arrangementet.
               </Paragraph>
@@ -357,8 +357,8 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'VEHICLE':
         return (
-          <Stack gap={4}>
-            <Alert severity="info">
+          <Stack spacing={4}>
+            <Alert data-color="info">
               <Paragraph data-size="sm">
                 Gi tekniske detaljer om kjøretøyet.
               </Paragraph>
@@ -465,7 +465,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
       case 'OTHER':
       default:
         return (
-          <Alert severity="info">
+          <Alert data-color="info">
             <Paragraph data-size="sm">
               For denne typen listing, legg til all nødvendig informasjon i beskrivelsen og notater.
               Bruk de generelle feltene i de andre trinnene.
@@ -477,7 +477,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
   if (!listingType) {
     return (
-      <Alert severity="warning">
+      <Alert data-color="warning">
         <Paragraph data-size="sm">
           Vennligst velg en listingtype først i "Grunnleggende informasjon"-steget.
         </Paragraph>

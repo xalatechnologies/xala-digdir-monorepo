@@ -217,7 +217,7 @@ export function ReportHistory() {
   return (
     <div style={{ width: '100%' }}>
       {/* Header with Search and Filters */}
-      <Stack direction="vertical" gap={16} style={{ marginBottom: 24 }}>
+      <Stack direction="vertical" spacing={16} style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <Heading data-size="md">Rapporthistorikk</Heading>
@@ -335,7 +335,7 @@ export function ReportHistory() {
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <ReportStatusBadge status={report.status} size="sm" />
+                    <ReportStatusBadge status={report.status} />
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color="neutral" data-size="sm">
@@ -431,7 +431,7 @@ export function ReportHistory() {
         }
       >
         <DrawerSection>
-          <Stack direction="vertical" gap={16}>
+          <Stack direction="vertical" spacing={16}>
             {/* Report Type Filter */}
             <div>
               <Heading data-size="xs" style={{ marginBottom: 8 }}>Rapporttype</Heading>
@@ -499,7 +499,7 @@ export function ReportHistory() {
         {selectedReport && (
           <>
             <DrawerSection>
-              <Stack direction="vertical" gap={16}>
+              <Stack direction="vertical" spacing={16}>
                 <div>
                   <Heading data-size="xs" style={{ marginBottom: 4 }}>Rapportnavn</Heading>
                   <Paragraph>{selectedReport.reportName || 'Uten navn'}</Paragraph>

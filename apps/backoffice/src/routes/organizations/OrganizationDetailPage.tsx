@@ -86,7 +86,7 @@ export function OrganizationDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner />
       </div>
     );
   }
@@ -99,7 +99,7 @@ export function OrganizationDetailPage() {
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/organizations">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -113,7 +113,7 @@ export function OrganizationDetailPage() {
       {/* Header */}
       <div>
         <Link to="/organizations">
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -141,18 +141,18 @@ export function OrganizationDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary">
                 <EditIcon />
                 Rediger
               </Button>
             </Link>
             {!organization.verified && (
-              <Button variant="secondary" size="sm" onClick={handleVerify}>
+              <Button variant="secondary" onClick={handleVerify}>
                 <ShieldCheckIcon />
                 Verifiser
               </Button>
             )}
-            <Button variant="danger" size="sm" onClick={handleDelete}>
+            <Button variant="danger" onClick={handleDelete}>
               <TrashIcon />
               Slett
             </Button>
@@ -177,7 +177,7 @@ export function OrganizationDetailPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
               <FormSection title="Grunnleggende informasjon">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Type organisasjon
@@ -231,7 +231,7 @@ export function OrganizationDetailPage() {
 
             <Card>
               <FormSection title="Kontaktinformasjon">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   {organization.email ? (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>

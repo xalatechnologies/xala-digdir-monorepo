@@ -277,7 +277,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
 
   return (
     <Card>
-      <Stack gap={16}>
+      <Stack spacing={16}>
         <div>
           <Heading level={3} data-size="sm">
             Konfigurer filtre
@@ -293,7 +293,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
             <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
               Aktive filtre ({filters.length})
             </Paragraph>
-            <Stack gap={8}>
+            <Stack spacing={8}>
               {filters.map((filter, index) => (
                 <div
                   key={index}
@@ -307,7 +307,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
                     border: '1px solid var(--ds-color-info-border-subtle)',
                   }}
                 >
-                  <Badge color="info" size="sm">
+                  <Badge color="info">
                     {getFieldLabel(filter.field)}
                   </Badge>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -318,7 +318,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
                   </Paragraph>
                   <Button
                     variant="tertiary"
-                    size="sm"
+                   
                     onClick={() => handleRemoveFilter(index)}
                     aria-label={`Fjern filter: ${getFieldLabel(filter.field)}`}
                   >
@@ -343,7 +343,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
             Legg til nytt filter
           </Heading>
 
-          <Stack gap={12}>
+          <Stack spacing={12}>
             {/* Field selector */}
             <div>
               <label
@@ -449,7 +449,7 @@ export function FilterBuilder({ filters, onFiltersChange, reportType = 'custom' 
             {/* Add button */}
             <Button
               variant="secondary"
-              size="sm"
+             
               onClick={handleAddFilter}
               disabled={!selectedField || !filterValue}
               style={{ alignSelf: 'flex-start' }}

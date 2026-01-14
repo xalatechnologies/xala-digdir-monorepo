@@ -86,7 +86,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
 
   return (
     <Card>
-      <Stack gap={5}>
+      <Stack spacing="var(--ds-spacing-1)">
         <div>
           <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             E-postmottakere
@@ -96,7 +96,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
           </Paragraph>
         </div>
 
-        <Stack gap={4}>
+        <Stack spacing="var(--ds-spacing-1)">
           {/* Add New Recipient Form */}
           <div
             style={{
@@ -108,8 +108,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
           >
             <FormField
               label="E-postadresse"
-              description={emailError || undefined}
-              error={!!emailError}
+              {...(emailError && { description: emailError })}
             >
               <Textfield
                 type="email"
@@ -117,7 +116,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleEmailChange(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="eksempel@kommune.no"
-                error={!!emailError}
+                aria-label="E-postadresse"
               />
             </FormField>
 
@@ -128,6 +127,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNameChange(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ole Nordmann"
+                aria-label="Navn"
               />
             </FormField>
 
@@ -200,7 +200,7 @@ export function EmailRecipientsInput({ value, onChange }: EmailRecipientsInputPr
                     </div>
                     <Button
                       variant="tertiary"
-                      size="sm"
+                      data-size="sm"
                       onClick={() => handleRemoveRecipient(recipient.email)}
                       aria-label={`Fjern ${recipient.email}`}
                     >

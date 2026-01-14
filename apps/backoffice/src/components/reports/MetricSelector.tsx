@@ -81,7 +81,7 @@ export function MetricSelector({ selectedMetrics, onMetricsChange, reportType = 
 
   return (
     <Card>
-      <Stack gap={16}>
+      <Stack spacing={16}>
         <div>
           <Heading level={3} data-size="sm">
             Velg måleparametere
@@ -96,7 +96,7 @@ export function MetricSelector({ selectedMetrics, onMetricsChange, reportType = 
             <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
               Valgte måleparametere ({selectedMetrics.length})
             </Paragraph>
-            <Stack direction="row" gap={8} style={{ flexWrap: 'wrap' }}>
+            <Stack direction="horizontal" spacing={8} style={{ flexWrap: 'wrap' }}>
               {selectedMetrics.map((metric) => (
                 <Badge key={metric.key} color="info">
                   {metric.label}
@@ -107,7 +107,7 @@ export function MetricSelector({ selectedMetrics, onMetricsChange, reportType = 
           </div>
         )}
 
-        <Stack gap={12}>
+        <Stack spacing={12}>
           {availableMetrics.map((metric) => (
             <div
               key={metric.key}
@@ -121,19 +121,19 @@ export function MetricSelector({ selectedMetrics, onMetricsChange, reportType = 
               }}
               onClick={() => handleMetricToggle(metric)}
             >
-              <Stack direction="row" gap={12} style={{ alignItems: 'flex-start' }}>
+              <Stack direction="horizontal" spacing={12} style={{ alignItems: 'flex-start' }}>
                 <Checkbox
                   checked={isMetricSelected(metric.key)}
                   onChange={() => handleMetricToggle(metric)}
                   aria-label={metric.label}
                 />
                 <div style={{ flex: 1 }}>
-                  <Stack direction="row" gap={8} style={{ alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
+                  <Stack direction="horizontal" spacing={8} style={{ alignItems: 'center', marginBottom: 'var(--ds-spacing-1)' }}>
                     <Paragraph data-size="sm" style={{ fontWeight: 500, margin: 0 }}>
                       {metric.label}
                     </Paragraph>
                     {metric.aggregation && (
-                      <Badge size="sm" color="neutral">
+                      <Badge color="neutral">
                         {aggregationLabels[metric.aggregation]}
                       </Badge>
                     )}

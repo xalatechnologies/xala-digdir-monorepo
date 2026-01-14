@@ -192,15 +192,15 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Info Alert */}
-        <Alert severity="info">
+        <Alert data-color="info">
           Sesongleie låser lokalet for den valgte perioden. Kalenderblokker kan genereres automatisk etter godkjenning.
         </Alert>
 
         {/* Basic Information */}
         <FormSection title="Grunnleggende informasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Organisasjon"
               required
@@ -246,7 +246,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Period */}
         <FormSection title="Leieperiode">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Startdato"
@@ -280,13 +280,13 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         {/* Weekdays */}
         <FormSection title="Ukedager">
           <div style={{ marginBottom: 'var(--ds-spacing-3)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectAllWeekdays}>
+            <Button type="button" variant="secondary" onClick={handleSelectAllWeekdays}>
               Hverdager
             </Button>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectWeekend}>
+            <Button type="button" variant="secondary" onClick={handleSelectWeekend}>
               Helg
             </Button>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectAllDays}>
+            <Button type="button" variant="secondary" onClick={handleSelectAllDays}>
               Alle dager
             </Button>
           </div>
@@ -311,7 +311,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Time */}
         <FormSection title="Tidspunkt">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Starttid"
@@ -344,7 +344,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Pricing */}
         <FormSection title="Prissetting">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Total pris"
               required

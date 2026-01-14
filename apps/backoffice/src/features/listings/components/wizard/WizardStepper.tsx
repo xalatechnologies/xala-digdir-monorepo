@@ -101,21 +101,21 @@ function ReviewIcon({ size = 20 }: { size?: number }) {
 function getStepIcon(stepId: string, size: number = 20) {
   switch (stepId) {
     case 'basics':
-      return <BasicsIcon size={size} />;
+      return <BasicsIcon />;
     case 'location':
-      return <LocationIcon size={size} />;
+      return <LocationIcon />;
     case 'capacity':
-      return <CapacityIcon size={size} />;
+      return <CapacityIcon />;
     case 'content':
-      return <ContentIcon size={size} />;
+      return <ContentIcon />;
     case 'openingHours':
-      return <ClockIcon size={size} />;
+      return <ClockIcon />;
     case 'bookingConfig':
-      return <BookingIcon size={size} />;
+      return <BookingIcon />;
     case 'media':
-      return <MediaIcon size={size} />;
+      return <MediaIcon />;
     case 'review':
-      return <ReviewIcon size={size} />;
+      return <ReviewIcon />;
     default:
       return null;
   }
@@ -304,7 +304,7 @@ export function WizardStepper({
                 {/* Circle with icon or number */}
                 <div style={styles.circle(state === 'error' ? 'error' : state)}>
                   {state === 'completed' ? (
-                    <CheckIcon size={22} />
+                    <CheckIcon />
                   ) : icon ? (
                     icon
                   ) : (

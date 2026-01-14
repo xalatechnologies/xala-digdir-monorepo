@@ -39,7 +39,7 @@ function AppWithTheme() {
   
   return (
     <I18nProvider>
-      <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
+      <DesignsystemetProvider theme="digilist" colorScheme={colorScheme}>
       <DialogProvider>
       <ErrorBoundary>
       <ToastProvider>

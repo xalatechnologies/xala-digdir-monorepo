@@ -194,7 +194,7 @@ export function DashboardPage(): React.ReactElement {
                   style={{ justifyContent: 'flex-start' }}
                   onClick={() => navigate('/users')}
                 >
-                  <UsersIcon size={20} />
+                  <UsersIcon />
                   {t('dashboard.manageUsers')}
                 </Button>
               )}

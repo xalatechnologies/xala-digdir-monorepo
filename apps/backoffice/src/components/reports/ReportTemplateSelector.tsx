@@ -35,7 +35,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
 
   if (isLoading) {
     return (
-      <Stack direction="row" gap={12} style={{ justifyContent: 'center', padding: '3rem' }}>
+      <Stack direction="horizontal" spacing={12} style={{ justifyContent: 'center', padding: '3rem' }}>
         <Spinner />
         <Paragraph>Laster maler...</Paragraph>
       </Stack>
@@ -45,7 +45,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
   if (isError) {
     return (
       <Card>
-        <Heading level={3} size="sm">
+        <Heading level={3}>
           Kunne ikke laste maler
         </Heading>
         <Paragraph>{error instanceof Error ? error.message : 'En ukjent feil oppstod'}</Paragraph>
@@ -58,7 +58,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
   if (templateList.length === 0) {
     return (
       <Card>
-        <Heading level={3} size="sm">
+        <Heading level={3}>
           Ingen maler tilgjengelig
         </Heading>
         <Paragraph>Det finnes ingen forhåndsdefinerte rapportmaler.</Paragraph>
@@ -68,10 +68,10 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
 
   return (
     <div>
-      <Heading level={2} size="md" style={{ marginBottom: '1.5rem' }}>
+      <Heading level={2} style={{ marginBottom: '1.5rem' }}>
         Velg rapportmal
       </Heading>
-      <Grid columns="repeat(auto-fill, minmax(300px, 1fr))" gap={16}>
+      <Grid columns="repeat(auto-fill, minmax(300px, 1fr))" spacing={16}>
         {templateList.map((template) => {
           const isSelected = selectedId === template.id;
           return (
@@ -86,9 +86,9 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
               }}
               onClick={() => handleSelectTemplate(template)}
             >
-              <Stack gap={12}>
-                <Stack direction="row" gap={8} style={{ alignItems: 'center' }}>
-                  <Heading level={3} size="sm">
+              <Stack spacing={12}>
+                <Stack direction="horizontal" spacing={8} style={{ alignItems: 'center' }}>
+                  <Heading level={3}>
                     {template.name}
                   </Heading>
                   <Badge color={REPORT_TYPE_COLORS[template.reportType] || 'info'}>
@@ -96,20 +96,20 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
                   </Badge>
                 </Stack>
 
-                {template.description && <Paragraph size="sm">{template.description}</Paragraph>}
+                {template.description && <Paragraph>{template.description}</Paragraph>}
 
-                <Stack gap={8}>
-                  <Paragraph size="sm" style={{ fontWeight: 500 }}>
+                <Stack spacing={8}>
+                  <Paragraph style={{ fontWeight: 500 }}>
                     Beregninger:
                   </Paragraph>
-                  <Stack gap={4}>
+                  <Stack spacing={4}>
                     {template.metrics.slice(0, 3).map((metric, index) => (
-                      <Paragraph key={index} size="sm" style={{ color: 'var(--ds-color-text-subtle)' }}>
+                      <Paragraph key={index} style={{ color: 'var(--ds-color-text-subtle)' }}>
                         • {metric.label}
                       </Paragraph>
                     ))}
                     {template.metrics.length > 3 && (
-                      <Paragraph size="sm" style={{ color: 'var(--ds-color-text-subtle)' }}>
+                      <Paragraph style={{ color: 'var(--ds-color-text-subtle)' }}>
                         + {template.metrics.length - 3} mer
                       </Paragraph>
                     )}
@@ -117,14 +117,14 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
                 </Stack>
 
                 {template.filters && template.filters.length > 0 && (
-                  <Paragraph size="sm" style={{ color: 'var(--ds-color-text-subtle)' }}>
+                  <Paragraph style={{ color: 'var(--ds-color-text-subtle)' }}>
                     {template.filters.length} filter(e) aktive
                   </Paragraph>
                 )}
 
                 <Button
                   variant={isSelected ? 'primary' : 'secondary'}
-                  size="sm"
+                 
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectTemplate(template);

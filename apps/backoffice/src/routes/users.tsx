@@ -146,7 +146,7 @@ export function UsersPage() {
             Administrer backoffice-brukere og tilgangsroller
           </Paragraph>
         </div>
-        <Button onClick={handleCreate} size="md">
+        <Button onClick={handleCreate}>
           <PlusIcon />
           Inviter bruker
         </Button>
@@ -166,31 +166,31 @@ export function UsersPage() {
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary">
                 <FilterIcon />
                 Rolle: {roleFilter === 'all' ? 'Alle' : roleLabels[roleFilter]}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.List>
               <Dropdown.Item onClick={() => setRoleFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Item>
               <Dropdown.Item onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.List>
           </Dropdown>
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary">
                 <FilterIcon />
                 Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.List>
               <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.List>
           </Dropdown>
         </div>
       </Card>
@@ -199,7 +199,7 @@ export function UsersPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" />
+            <Spinner />
           </div>
         ) : users.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -267,11 +267,11 @@ export function UsersPage() {
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" size="sm" aria-label="Handlinger">
+                        <Button variant="tertiary" aria-label="Handlinger">
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
-                      <Dropdown.Menu>
+                      <Dropdown.List>
                         <Dropdown.Item onClick={() => handleViewDetail(user)}>
                           <UserIcon />
                           Se detaljer
@@ -291,7 +291,7 @@ export function UsersPage() {
                             Reaktiver
                           </Dropdown.Item>
                         )}
-                      </Dropdown.Menu>
+                      </Dropdown.List>
                     </Dropdown>
                   </Table.Cell>
                 </Table.Row>
@@ -310,7 +310,7 @@ export function UsersPage() {
             setEditingUser(null);
           }}
           title={editingUser ? 'Rediger bruker' : 'Inviter bruker'}
-          size="md"
+         
         >
           <UserForm
             user={editingUser}
@@ -332,22 +332,22 @@ export function UsersPage() {
             setSelectedUserId(null);
           }}
           title={selectedUser.name}
-          size="md"
+         
         >
-          <Stack gap={4}>
+          <Stack spacing={4}>
             {/* Quick Actions */}
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-              <Button variant="secondary" size="sm" onClick={() => handleEdit(selectedUser)}>
+              <Button variant="secondary" onClick={() => handleEdit(selectedUser)}>
                 <EditIcon />
                 Rediger
               </Button>
               {selectedUser.status === 'active' ? (
-                <Button variant="secondary" size="sm" onClick={() => handleDeactivate(selectedUser.id)}>
+                <Button variant="secondary" onClick={() => handleDeactivate(selectedUser.id)}>
                   <XCircleIcon />
                   Deaktiver
                 </Button>
               ) : (
-                <Button variant="secondary" size="sm" onClick={() => handleReactivate(selectedUser.id)}>
+                <Button variant="secondary" onClick={() => handleReactivate(selectedUser.id)}>
                   <CheckCircleIcon />
                   Reaktiver
                 </Button>
@@ -356,7 +356,7 @@ export function UsersPage() {
 
             {/* User Information */}
             <DrawerSection title="Brukerinformasjon">
-              <Stack gap={3}>
+              <Stack spacing={3}>
                 <div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     E-post
