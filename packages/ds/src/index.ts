@@ -280,6 +280,8 @@ export {
   NotFoundScreen,
   ErrorScreen,
   PermissionGate,
+  // Notification Components
+  NotificationBell,
 } from './blocks';
 export type {
   ListingCardProps,
@@ -362,6 +364,8 @@ export type {
   NotFoundScreenProps,
   ErrorScreenProps,
   PermissionGateProps,
+  // Notification Types
+  NotificationBellProps,
 } from './blocks';
 
 // Listing Detail Types

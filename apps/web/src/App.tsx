@@ -7,6 +7,7 @@ import {
   HeaderActions,
   HeaderThemeToggle,
   HeaderLoginButton,
+  NotificationBell,
   CalendarIcon,
   UserIcon,
   SettingsIcon,
@@ -17,6 +18,7 @@ import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
+import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { LoginPage } from './pages/login';
@@ -46,6 +48,10 @@ function MainLayout() {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  // Get real unread notification count (only for logged in users)
+  const { data: unreadData } = useNotificationUnreadCount();
+  const unreadCount = unreadData?.data?.count ?? 0;
 
   // Toggle between light and dark (skip auto for manual toggle)
   const handleThemeToggle = () => {
@@ -225,6 +231,16 @@ function MainLayout() {
               isDark={effectiveScheme === 'dark'}
               onToggle={handleThemeToggle}
             />
+            {isLoggedIn && (
+              <NotificationBell
+                count={unreadCount}
+                onClick={() => {
+                  // TODO: Open notification center modal
+                }}
+                aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
+                size="md"
+              />
+            )}
             <HeaderLoginButton
               isLoggedIn={isLoggedIn}
               userName={getUserName()}
