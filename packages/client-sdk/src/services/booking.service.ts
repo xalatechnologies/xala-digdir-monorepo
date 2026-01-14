@@ -81,6 +81,20 @@ export class BookingService extends BaseService {
   }
 
   /**
+   * Bulk confirm multiple bookings
+   */
+  async bulkConfirm(ids: string[]): Promise<SingleResponse<Booking[]>> {
+    return this.client.put(this.buildPath('/bulk/confirm'), { ids });
+  }
+
+  /**
+   * Bulk reject multiple bookings
+   */
+  async bulkReject(ids: string[], reason?: string): Promise<SingleResponse<Booking[]>> {
+    return this.client.put(this.buildPath('/bulk/reject'), { ids, reason });
+  }
+
+  /**
    * Delete booking
    */
   async delete(id: string): Promise<SuccessResponse> {
