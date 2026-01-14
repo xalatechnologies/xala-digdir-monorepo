@@ -1,9 +1,17 @@
 /**
  * Availability Controller
  * Time slot availability at /api/availability
+ * Includes matrix projection endpoint for calendar integration
  */
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
+import { validate } from '../../core/validation/zod-pipe';
+import { BadRequestError } from '../../core/errors/problem-details';
+import {
+  AvailabilityMatrixQuerySchema,
+  type ListingAvailabilityMatrixProjection,
+} from '../../schemas/calendar.schema';
+import { CalendarService } from '../calendar/calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
 import { allocations, bookings, listings } from '../../database/schema/index';
@@ -15,6 +23,38 @@ interface TenantRequest extends FastifyRequest {
 
 @Controller('/api/availability')
 export class AvailabilityController {
+  constructor(
+    @Inject('CalendarService') private readonly calendarService: CalendarService
+  ) {}
+
+  /**
+   * GET /api/availability/:listingId - Get availability matrix
+   * Returns ListingAvailabilityMatrixProjectionDTO with cell-by-cell availability
+   *
+   * Query params:
+   * - from: string (YYYY-MM-DD format, required) - Start date for availability range
+   * - to: string (YYYY-MM-DD format, required) - End date for availability range
+   * - bookingType: string (optional) - Filter by booking type
+   *
+   * Response: { data: ListingAvailabilityMatrixProjection }
+   */
+  @Get('/:listingId')
+  async getAvailabilityMatrix(
+    request: FastifyRequest<{ Params: { listingId: string } }>,
+    reply: FastifyReply
+  ): Promise<{ data: ListingAvailabilityMatrixProjection }> {
+    const params = validate(AvailabilityMatrixQuerySchema, request.query);
+    const matrix = await this.calendarService.getAvailabilityMatrix(
+      request.params.listingId,
+      params
+    );
+    return { data: matrix };
+  }
+
+  /**
+   * GET /api/availability/slots - Get available time slots (legacy endpoint)
+   * Returns simple slot availability for a single date
+   */
   @Get('/slots')
   async getSlots(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
