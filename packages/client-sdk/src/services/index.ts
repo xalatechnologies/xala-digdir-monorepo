@@ -102,3 +102,6 @@ export { widgetService } from './widget.service';
 // Monitoring
 export { monitoringService } from './monitoring.service';
 
+// Report Templates
+export { ReportTemplatesService, reportTemplatesService } from './report-templates.service';
+
