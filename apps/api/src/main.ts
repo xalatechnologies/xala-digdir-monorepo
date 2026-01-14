@@ -19,7 +19,7 @@ import { BookingModule, BookingController, BookingService, BookingRepository } f
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
-import { CalendarController } from './modules/calendar/calendar.controller';
+import { CalendarModule, CalendarController, ListingCalendarConfigController, AvailabilityMatrixController, CalendarService } from './modules/calendar';
 import { SeasonalLeaseController } from './modules/seasonal-lease/seasonal-lease.controller';
 import { MessagesController } from './modules/messages/messages.controller';
 import { ReportsController } from './modules/reports/reports.controller';
@@ -173,13 +173,16 @@ async function bootstrap() {
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () => 
+  container.registerFactory('MonitoringService', () =>
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
       container.resolve('IncidentRepository'),
       adapters
     )
+  );
+  container.registerFactory('CalendarService', () =>
+    new CalendarService(adapters)
   );
 
   console.log('✓ Services registered');
@@ -216,6 +219,7 @@ async function bootstrap() {
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
+  await moduleLoader.load(CalendarModule);
   console.log('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
@@ -228,6 +232,8 @@ async function bootstrap() {
     // Backoffice modules
     DashboardController,
     CalendarController,
+    ListingCalendarConfigController,
+    AvailabilityMatrixController,
     SeasonalLeaseController,
     MessagesController,
     ReportsController,
