@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Card, Heading, Paragraph, Button } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
@@ -97,12 +98,14 @@ export function SettingsPage() {
               {t('minside.notifications')}
             </Paragraph>
             <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              E-postvarsler for bookinger
+              Push-varsler, e-post og påminnelser
             </Paragraph>
           </div>
-          <Button type="button" variant="secondary" data-size="sm">
-            {t('common.edit')}
-          </Button>
+          <Link to="/settings/notifications">
+            <Button type="button" variant="secondary" data-size="sm">
+              {t('common.edit')}
+            </Button>
+          </Link>
         </div>
       </Card>
 

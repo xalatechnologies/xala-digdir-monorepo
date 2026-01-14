@@ -21,6 +21,7 @@ import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
+import { NotificationSettingsPage } from './routes/notification-settings';
 
 // =============================================================================
 // Notification Context
@@ -87,6 +88,7 @@ function AppWithTheme() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="settings/notifications" element={<NotificationSettingsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
