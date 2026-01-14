@@ -11,13 +11,51 @@ import {
   allocationService, 
   availabilityService 
 } from '../services/booking.service';
-import type { 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import type {
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
-  CreateAllocationDTO
+  CreateAllocationDTO,
+  BookingSelectionDTO,
+  RecurringPreviewProjectionDTO
 } from '../types/booking';
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Generate a stable hash from a booking selection for cache key stability.
+ * Prevents unnecessary refetches when selection object reference changes but content is same.
+ */
+function hashSelection(selection: BookingSelectionDTO): string {
+  // Create a deterministic string from the selection properties
+  const parts = [
+    selection.listingId,
+    selection.mode,
+    selection.startTime,
+    selection.endTime,
+    selection.frequency ?? '',
+    selection.weekdays?.sort().join(',') ?? '',
+    selection.endCondition?.type ?? '',
+    selection.endCondition?.occurrences?.toString() ?? '',
+    selection.endCondition?.untilDate ?? '',
+    selection.durationMinutes?.toString() ?? '',
+    selection.userId ?? '',
+    selection.organizationId ?? '',
+  ];
+
+  // Simple string hash for cache key differentiation
+  const str = parts.join('|');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
 
 // ============================================================================
 // Booking Hooks
@@ -72,6 +110,31 @@ export function useBookingPricing(listingId: string, startTime: string, endTime:
     queryKey: queryKeys.bookings.pricing(listingId, startTime, endTime),
     queryFn: () => bookingService.calculatePricing(listingId, startTime, endTime),
     enabled: !!listingId && !!startTime && !!endTime,
+  });
+}
+
+/**
+ * Get recurring booking preview with conflict detection.
+ * Uses selection hash for cache key stability to prevent unnecessary refetches
+ * when selection object reference changes but content remains the same.
+ *
+ * @param listingId - ID of the listing for the recurring booking
+ * @param selection - Booking selection with recurring pattern configuration
+ * @param options - Query options including enabled flag
+ * @returns Query result with RecurringPreviewProjectionDTO containing occurrences and availability
+ */
+export function useRecurringPreview(
+  listingId: string,
+  selection: BookingSelectionDTO | null,
+  options?: { enabled?: boolean }
+) {
+  const selectionHash = selection ? hashSelection(selection) : '';
+
+  return useQuery({
+    queryKey: queryKeys.bookings.recurringPreview(listingId, selectionHash),
+    queryFn: () => bookingService.getRecurringPreview(selection!),
+    enabled: !!listingId && !!selection && (options?.enabled ?? true),
+    staleTime: 10_000, // 10s for real-time accuracy
   });
 }
 
