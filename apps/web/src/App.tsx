@@ -7,23 +7,26 @@ import {
   HeaderActions,
   HeaderThemeToggle,
   HeaderLoginButton,
-  NotificationBell,
+  MobileNav,
+  MobileNavToggle,
   CalendarIcon,
   UserIcon,
   SettingsIcon,
   MapPinIcon,
   DialogProvider,
+  HomeIcon,
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+import type { SearchResultItem, SearchResultGroup, MobileNavItem } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
-import { useNotificationUnreadCount } from '@digilist/client-sdk';
-import { ListingsPage } from './pages/ListingsPage';
-import { ListingDetailPage } from './pages/ListingDetailPage';
-import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast } from './components';
+
+// Lazy load route components for better performance
+const ListingsPage = React.lazy(() => import('./pages/ListingsPage').then(m => ({ default: m.ListingsPage })));
+const ListingDetailPage = React.lazy(() => import('./pages/ListingDetailPage').then(m => ({ default: m.ListingDetailPage })));
+const LoginPage = React.lazy(() => import('./pages/login').then(m => ({ default: m.LoginPage })));
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -42,16 +45,14 @@ function useThemeContext() {
 function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
+  const location = useLocation();
   const { colorScheme, setColorScheme, effectiveScheme } = useThemeContext();
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
-  // Get real unread notification count (only for logged in users)
-  const { data: unreadData } = useNotificationUnreadCount();
-  const unreadCount = unreadData?.data?.count ?? 0;
+  const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
 
   // Toggle between light and dark (skip auto for manual toggle)
   const handleThemeToggle = () => {
@@ -157,6 +158,35 @@ function MainLayout() {
     return undefined;
   };
 
+  // Mobile navigation items
+  const mobileNavItems: MobileNavItem[] = [
+    {
+      id: 'home',
+      label: t('nav.home'),
+      href: '/',
+      icon: <HomeIcon size={24} />,
+      active: location.pathname === '/',
+      onClick: () => navigate('/'),
+    },
+    ...(isLoggedIn
+      ? [
+          {
+            id: 'account',
+            label: getUserName() || t('nav.account'),
+            icon: <UserIcon size={24} />,
+            onClick: handleLogout,
+          },
+        ]
+      : [
+          {
+            id: 'login',
+            label: t('nav.login'),
+            icon: <UserIcon size={24} />,
+            onClick: handleLogin,
+          },
+        ]),
+  ];
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -167,6 +197,11 @@ function MainLayout() {
       {/* CSS for mobile-specific styles */}
       <style>{`
         @media (max-width: 599px) {
+          /* Show mobile menu toggle on mobile */
+          .mobile-menu-toggle {
+            display: flex !important;
+          }
+
           .header-search-desktop { display: none !important; }
           .mobile-search-wrapper { display: block !important; }
 
@@ -227,20 +262,18 @@ function MainLayout() {
         }
         actions={
           <HeaderActions spacing="12px">
+            {/* Mobile menu toggle - only visible on mobile */}
+            <div className="mobile-menu-toggle" style={{ display: 'none' }}>
+              <MobileNavToggle
+                isOpen={isMobileNavOpen}
+                onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+                aria-label={t('nav.menu')}
+              />
+            </div>
             <HeaderThemeToggle
               isDark={effectiveScheme === 'dark'}
               onToggle={handleThemeToggle}
             />
-            {isLoggedIn && (
-              <NotificationBell
-                count={unreadCount}
-                onClick={() => {
-                  // TODO: Open notification center modal
-                }}
-                aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-                size="md"
-              />
-            )}
             <HeaderLoginButton
               isLoggedIn={isLoggedIn}
               userName={getUserName()}
@@ -250,6 +283,15 @@ function MainLayout() {
             />
           </HeaderActions>
         }
+      />
+
+      {/* Mobile navigation drawer */}
+      <MobileNav
+        isOpen={isMobileNavOpen}
+        onClose={() => setIsMobileNavOpen(false)}
+        title={t('nav.menu')}
+        items={mobileNavItems}
+        closeOnItemClick={true}
       />
 
       <Outlet />
@@ -294,18 +336,30 @@ function AppContent() {
               transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
             }
           `}</style>
-          <Routes>
-            {/* Login page - no header */}
-            <Route path="/login" element={<LoginPage />} />
+          <React.Suspense fallback={
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '100vh',
+              backgroundColor: 'var(--ds-color-neutral-background-default)'
+            }}>
+              <div>Loading...</div>
+            </div>
+          }>
+            <Routes>
+              {/* Login page - no header */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Main pages with header - wrapped to provide theme context */}
-            <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<ListingsPage />} />
-                <Route path="/listing/:id" element={<ListingDetailPage />} />
+              {/* Main pages with header - wrapped to provide theme context */}
+              <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
+                <Route element={<MainLayout />}>
+                  <Route path="/" element={<ListingsPage />} />
+                  <Route path="/listing/:id" element={<ListingDetailPage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </React.Suspense>
         </RealtimeProvider>
       </DialogProvider>
     </DesignsystemetProvider>

@@ -142,7 +142,7 @@ export function ListingListItem({
   };
 
   // Generate static map URL (using OpenStreetMap placeholder for demo)
-  const _getMapUrl = () => {
+  const getMapUrl = () => {
     if (latitude && longitude) {
       // Using a static map tile service
       return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=${mapWidth}x160&markers=${latitude},${longitude},red`;
@@ -181,6 +181,8 @@ export function ListingListItem({
         <img
           src={image}
           alt={name}
+          loading="lazy"
+          decoding="async"
           style={{
             width: '100%',
             height: '100%',
@@ -338,6 +340,8 @@ export function ListingListItem({
             <img
               src={`https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+2F55A4(${longitude},${latitude})/${longitude},${latitude},14,0/${mapWidth}x200@2x?access_token=${mapboxToken}`}
               alt={`Kart over ${location}`}
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',

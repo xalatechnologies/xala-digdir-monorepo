@@ -724,7 +724,7 @@ export function BookingDialog({
                   <div className="booking-recurring-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Til dato</Label>
-                      <Textfield aria-label="Til dato" value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} placeholder="DD.MM.YYYY" style={{ width: '100%' }} />
+                      <Textfield aria-label="Til dato" type="date" value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} style={{ width: '100%' }} />
                     </div>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Gjentagelse</Label>

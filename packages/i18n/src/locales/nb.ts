@@ -45,6 +45,8 @@ export const nb: Record<string, string> = {
   'common.moreOptions': 'Flere valg',
 
   // Navigation
+  'nav.home': 'Hjem',
+  'nav.menu': 'Meny',
   'nav.dashboard': 'Dashboard',
   'nav.listings': 'Lokaler',
   'nav.calendar': 'Kalender',
@@ -56,6 +58,8 @@ export const nb: Record<string, string> = {
   'nav.organizations': 'Organisasjoner',
   'nav.users': 'Brukere',
   'nav.settings': 'Innstillinger',
+  'nav.login': 'Logg inn',
+  'nav.account': 'Konto',
 
   // Auth / Login
   'auth.login': 'Logg inn',
@@ -328,6 +332,8 @@ export const nb: Record<string, string> = {
   'minside.profile': 'Min profil',
   'minside.preferences': 'Preferanser',
   'minside.notifications': 'Varsler',
+  'minside.offlineMode': 'Frakoblet modus',
+  'minside.viewingCachedBookings': 'Du ser bufrede bookinger. Koble til nettet for oppdateringer.',
 };
 
 

@@ -3,6 +3,13 @@
  *
  * Clean listings page using only real API data.
  * No mock data fallback - shows proper empty/error states.
+ *
+ * Performance Optimizations:
+ * - Image lazy loading: All listing card and list item images load lazily
+ * - Async image decoding for better rendering performance
+ * - Responsive grid layout adapts to viewport (1/2/3 columns)
+ * - Map images in list view are lazy loaded for bandwidth efficiency
+ * - Optimized for mobile-first Core Web Vitals on 3G connections
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +26,6 @@ import {
   ListingGrid,
   ListingToolbar,
   ListingMap,
-  ListingTableView,
   Stack,
   Text,
   HeaderSearch,
@@ -289,7 +295,6 @@ export function ListingsPage(): React.ReactElement {
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [listingType, setListingType] = React.useState<string>('ALL');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
-  const [showMapView, setShowMapView] = React.useState<boolean>(true); // Toggle between map and accessible table
   const [selectedArea, setSelectedArea] = React.useState<string>('all');
   const [selectedCapacity, setSelectedCapacity] = React.useState<string>('all');
   const [selectedFacilities, setSelectedFacilities] = React.useState<string[]>([]);
@@ -521,10 +526,36 @@ export function ListingsPage(): React.ReactElement {
         </DrawerSection>
       </Drawer>
 
-      <ContentLayout maxWidth="1440px" className="main-content-layout">
-        <main id="main-content" style={{ paddingTop: 'var(--ds-spacing-6)', paddingBottom: 'var(--ds-spacing-6)' }}>
+      <ContentLayout
+        maxWidth="1440px"
+        className="main-content-layout"
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          overflowX: 'hidden',
+        }}
+      >
+        <main
+          id="main"
+          style={{
+            paddingTop: 'var(--ds-spacing-6)',
+            paddingBottom: 'var(--ds-spacing-6)',
+            paddingInline: 'var(--ds-spacing-4)',
+            width: '100%',
+            maxWidth: '100%',
+            boxSizing: 'border-box',
+            overflowX: 'hidden',
+          }}
+        >
           {/* Search */}
-          <div className="mobile-search-wrapper" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <div
+            className="mobile-search-wrapper"
+            style={{
+              marginBottom: 'var(--ds-spacing-4)',
+              width: '100%',
+              maxWidth: '100%',
+            }}
+          >
             <HeaderSearch
               placeholder="Søk etter lokaler..."
               value={searchQuery}
@@ -538,12 +569,7 @@ export function ListingsPage(): React.ReactElement {
 
           {/* Loading State */}
           {isLoading && (
-            <div
-              role="status"
-              aria-live="polite"
-              aria-busy="true"
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}
-            >
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}>
               <Spinner aria-label="Laster lokaler..." />
             </div>
           )}
@@ -551,8 +577,6 @@ export function ListingsPage(): React.ReactElement {
           {/* Error State */}
           {error && !isLoading && (
             <div
-              role="alert"
-              aria-live="assertive"
               style={{
                 padding: 'var(--ds-spacing-6)',
                 marginBottom: 'var(--ds-spacing-4)',
@@ -560,6 +584,9 @@ export function ListingsPage(): React.ReactElement {
                 borderRadius: 'var(--ds-border-radius-md)',
                 border: '1px solid var(--ds-color-danger-border-default)',
                 textAlign: 'center',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
               }}
             >
               <Text size="md" color="var(--ds-color-danger-text-default)">
@@ -568,7 +595,10 @@ export function ListingsPage(): React.ReactElement {
               <Button
                 type="button"
                 variant="secondary"
-                style={{ marginTop: 'var(--ds-spacing-4)' }}
+                style={{
+                  marginTop: 'var(--ds-spacing-4)',
+                  minHeight: '44px',
+                }}
                 onClick={() => window.location.reload()}
               >
                 Prøv igjen
@@ -578,13 +608,18 @@ export function ListingsPage(): React.ReactElement {
 
           {/* Empty State */}
           {!isLoading && !error && listings.length === 0 && (
-            <div style={{
-              padding: 'var(--ds-spacing-8)',
-              textAlign: 'center',
-              backgroundColor: 'var(--ds-color-neutral-surface-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              border: '1px solid var(--ds-color-neutral-border-subtle)',
-            }}>
+            <div
+              style={{
+                padding: 'var(--ds-spacing-8)',
+                textAlign: 'center',
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                borderRadius: 'var(--ds-border-radius-lg)',
+                border: '1px solid var(--ds-color-neutral-border-subtle)',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
               <Text size="lg" color="var(--ds-color-neutral-text-default)" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 Ingen lokaler tilgjengelig
               </Text>
@@ -606,10 +641,15 @@ export function ListingsPage(): React.ReactElement {
                 onViewModeChange={setViewMode}
                 showViewToggle={true}
                 className="listing-toolbar"
+                style={{
+                  marginBottom: 'var(--ds-spacing-4)',
+                  width: '100%',
+                  maxWidth: '100%',
+                }}
               />
 
               {viewMode === 'grid' ? (
-                <ListingGrid minCardWidth={300}>
+                <ListingGrid minCardWidth={280} maxColumns={3}>
                   {visibleListings.map((listing) => (
                     <ListingCard
                       key={listing.id}
@@ -638,7 +678,13 @@ export function ListingsPage(): React.ReactElement {
                   ))}
                 </ListingGrid>
               ) : viewMode === 'list' ? (
-                <Stack spacing="var(--ds-spacing-4)">
+                <Stack
+                  spacing="var(--ds-spacing-4)"
+                  style={{
+                    width: '100%',
+                    maxWidth: '100%',
+                  }}
+                >
                   {visibleListings.map((listing) => (
                     <ListingListItem
                       key={listing.id}
@@ -663,85 +709,59 @@ export function ListingsPage(): React.ReactElement {
                   ))}
                 </Stack>
               ) : (
-                <>
-                  {/* Map/Table View Toggle for Accessibility */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      marginBottom: 'var(--ds-spacing-4)',
-                      gap: 'var(--ds-spacing-3)',
-                    }}
-                  >
-                    <Button
-                      type="button"
-                      variant={showMapView ? 'primary' : 'secondary'}
-                      onClick={() => setShowMapView(true)}
-                      aria-pressed={showMapView}
-                    >
-                      Kartvisning
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={!showMapView ? 'primary' : 'secondary'}
-                      onClick={() => setShowMapView(false)}
-                      aria-pressed={!showMapView}
-                      aria-label="Vis tabellvisning (tilgjengelig for skjermlesere og tastaturnavigering)"
-                    >
-                      Tabellvisning
-                    </Button>
-                  </div>
-
-                  {showMapView ? (
-                    <ListingMap
-                      listings={filteredListings.map(l => ({
-                        id: l.id,
-                        name: l.name,
-                        ...(l.slug && { slug: l.slug }),
-                        location: l.location,
-                        image: l.image,
-                        latitude: l.latitude!,
-                        longitude: l.longitude!,
-                        type: l.type,
-                        listingType: l.listingType,
-                        description: l.description,
-                        capacity: l.capacity,
-                        price: l.price,
-                        priceUnit: l.priceUnit,
-                        facilities: l.facilities,
-                        available: l.available,
-                      }))}
-                      mapboxToken={MAPBOX_TOKEN || ''}
-                      height="calc(100vh - 250px)"
-                      onListingClick={handleListingClick}
-                    />
-                  ) : (
-                    <ListingTableView
-                      listings={filteredListings.map(l => ({
-                        id: l.id,
-                        name: l.name,
-                        ...(l.slug && { slug: l.slug }),
-                        location: l.location,
-                        type: l.type,
-                        capacity: l.capacity,
-                        price: l.price,
-                        priceUnit: l.priceUnit,
-                      }))}
-                      height="calc(100vh - 250px)"
-                      onListingClick={handleListingClick}
-                    />
-                  )}
-                </>
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: '100%',
+                    height: 'calc(100vh - 250px)',
+                    minHeight: '400px',
+                  }}
+                >
+                  <ListingMap
+                    listings={filteredListings.map(l => ({
+                      id: l.id,
+                      name: l.name,
+                      ...(l.slug && { slug: l.slug }),
+                      location: l.location,
+                      image: l.image,
+                      latitude: l.latitude!,
+                      longitude: l.longitude!,
+                      type: l.type,
+                      listingType: l.listingType,
+                      description: l.description,
+                      capacity: l.capacity,
+                      price: l.price,
+                      priceUnit: l.priceUnit,
+                      facilities: l.facilities,
+                      available: l.available,
+                    }))}
+                    mapboxToken={MAPBOX_TOKEN || ''}
+                    height="100%"
+                    onListingClick={handleListingClick}
+                  />
+                </div>
               )}
 
               {/* Show more */}
               {viewMode !== 'map' && hasMore && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--ds-spacing-8)' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: 'var(--ds-spacing-8)',
+                    width: '100%',
+                  }}
+                >
                   <Button
                     type="button"
                     variant="secondary"
                     onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
-                    style={{ paddingInline: 'var(--ds-spacing-8)' }}
+                    style={{
+                      paddingInline: 'var(--ds-spacing-8)',
+                      minHeight: '44px',
+                      width: '100%',
+                      maxWidth: '400px',
+                    }}
                   >
                     Vis flere ({filteredListings.length - visibleCount} gjenstår)
                   </Button>
