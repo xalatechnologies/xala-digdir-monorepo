@@ -130,9 +130,13 @@ export default defineConfig({
       'react-map-gl',
       'react-map-gl/mapbox',
     ],
+    force: true,
     esbuildOptions: {
       // Mapbox GL requires these Node.js polyfills
       target: 'esnext',
+      define: {
+        global: 'globalThis',
+      },
     },
   },
 });

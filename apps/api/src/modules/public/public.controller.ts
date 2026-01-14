@@ -69,7 +69,8 @@ export class PublicController {
       return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
     }
 
-    return { data: result[0] };
+    // Transform to screen-ready projection DTO
+    return { data: toDetailsProjection(result[0]) };
   }
 
   /**

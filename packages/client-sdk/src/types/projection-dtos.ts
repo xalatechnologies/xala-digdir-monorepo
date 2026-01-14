@@ -34,171 +34,52 @@
  */
 export interface ListingCardProjectionDTO {
   // === IDENTITY ===
-  /** Unique listing ID */
   id: string;
-  /** URL-safe slug for routing */
   slug: string;
-  /** Human-readable listing name */
   name: string;
+  tenantId: string;
 
   // === TYPE (Display-Ready) ===
-  /** Raw type code (SPACE, RESOURCE, etc.) */
   type: string;
-  /** Norwegian display label (Lokale, Utstyr, etc.) */
   typeLabel: string;
 
   // === LOCATION (Display-Ready) ===
-  /** Formatted location string (e.g., "Storgata 1, 3010 Drammen") */
   locationFormatted: string;
-  /** City name for filtering */
   city: string;
-  /** Coordinates for map display (null if not available) */
   latitude: number | null;
   longitude: number | null;
 
   // === MEDIA (Display-Ready URLs) ===
-  /** Primary image URL (full resolution) */
   primaryImageUrl: string;
-  /** Primary image thumbnail URL (for cards) */
   primaryImageThumbnail: string;
-  /** Alt text for accessibility */
   primaryImageAlt: string;
-  /** Total number of images */
   imageCount: number;
 
   // === PRICING (Display-Ready) ===
-  /** Base price amount (number for calculations) */
   priceAmount: number;
-  /** Currency code (NOK, EUR, etc.) */
   priceCurrency: string;
-  /** Pricing unit code (hour, day, etc.) */
   priceUnit: string;
-  /** Full display string (e.g., "250 NOK/time") */
   priceDisplay: string;
 
   // === CAPACITY (Display-Ready) ===
-  /** Maximum capacity number */
   capacity: number;
-  /** Display label (e.g., "20 personer") */
   capacityLabel: string;
 
   // === FEATURES (Display-Ready Lists) ===
-  /** Top 3 amenities for card display */
   amenities: string[];
-  /** Count of additional amenities not shown */
   moreAmenitiesCount: number;
 
   // === RATING (Display-Ready) ===
-  /** Average rating (0-5 scale) */
   averageRating: number;
-  /** Total review count */
   reviewCount: number;
-  /** Display string (e.g., "4.5 (23 anmeldelser)") */
   ratingDisplay: string;
 
-  // === STATUS ===
-  /** Whether currently available for booking */
-  isAvailable: boolean;
-  /** Whether this is a featured listing */
-  isFeatured: boolean;
-}
-
-// =============================================================================
-// LISTING DETAILS PROJECTION - For detail pages
-// =============================================================================
-
-/**
- * ListingDetailsProjectionDTO
- *
- * Complete listing data for detail pages.
- * All nested data is flattened or pre-formatted.
- */
-export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
-  // === DESCRIPTION ===
-  /** Full description text */
-  description: string;
-  /** Short excerpt for meta tags (max 160 chars) */
+  // === DESCRIPTION (excerpt for cards) ===
   descriptionExcerpt: string;
 
-  // === ALL IMAGES (Display-Ready) ===
-  /** All images with full metadata */
-  images: ListingImageDTO[];
-
-  // === FULL LOCATION ===
-  /** Street address */
-  addressStreet: string;
-  /** Postal code */
-  addressPostalCode: string;
-  /** City */
-  addressCity: string;
-  /** Municipality */
-  addressMunicipality: string;
-  /** Country */
-  addressCountry: string;
-
-  // === CONTACT (Display-Ready) ===
-  /** Contact person name */
-  contactName: string;
-  /** Contact email */
-  contactEmail: string;
-  /** Contact phone (formatted) */
-  contactPhone: string;
-  /** Contact website URL */
-  contactWebsite: string;
-
-  // === ALL AMENITIES ===
-  /** Complete list of amenities */
-  allAmenities: ListingAmenityDTO[];
-
-  // === FACILITIES/EQUIPMENT ===
-  /** Included equipment or facilities */
-  includedEquipment: ListingEquipmentDTO[];
-
-  // === OPENING HOURS (Display-Ready) ===
-  /** Weekly schedule in display-ready format */
-  openingHours: ListingOpeningHoursDTO[];
-  /** Whether open now */
-  isOpenNow: boolean;
-  /** Today's hours display (e.g., "08:00 - 20:00" or "Stengt") */
-  todayHoursDisplay: string;
-
-  // === RULES & GUIDELINES ===
-  /** House rules / usage guidelines */
-  rules: ListingRuleDTO[];
-
-  // === FAQ ===
-  /** Frequently asked questions */
-  faq: ListingFaqDTO[];
-
-  // === HIGHLIGHTS ===
-  /** Marketing highlights/features */
-  highlights: string[];
-
-  // === BOOKING CONFIG (Display-Ready) ===
-  /** Minimum booking duration display */
-  minBookingDurationDisplay: string;
-  /** Maximum booking duration display */
-  maxBookingDurationDisplay: string;
-  /** Advance booking required display */
-  advanceBookingDisplay: string;
-  /** Cancellation policy display */
-  cancellationPolicyDisplay: string;
-
-  // === PERMISSIONS (API-Computed) ===
-  /** Whether current user can book */
-  canBook: boolean;
-  /** Whether current user can edit */
-  canEdit: boolean;
-  /** Whether current user can view pricing details */
-  canViewPricing: boolean;
-  /** Available actions for current user */
-  availableActions: string[];
-
-  // === TIMESTAMPS ===
-  /** Created date (ISO string) */
-  createdAt: string;
-  /** Last updated date (ISO string) */
-  updatedAt: string;
+  // === STATUS ===
+  isAvailable: boolean;
+  isFeatured: boolean;
 }
 
 // =============================================================================
@@ -247,6 +128,105 @@ export interface ListingFaqDTO {
   id: string;
   question: string;
   answer: string;
+}
+
+export interface ListingAdditionalServiceDTO {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  currency: string;
+  priceDisplay: string;
+  isOptional: boolean;
+}
+
+export interface ListingEventDTO {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+}
+
+// =============================================================================
+// LISTING DETAILS PROJECTION - For detail pages with all tabs
+// =============================================================================
+
+/**
+ * ListingDetailsProjectionDTO
+ *
+ * Complete listing data for detail pages.
+ * Covers all tabs: Overview, Rules, FAQ, Events, Booking.
+ */
+export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
+  // === DESCRIPTION ===
+  description: string;
+  descriptionExcerpt: string;
+
+  // === ALL IMAGES (for gallery) ===
+  images: ListingImageDTO[];
+
+  // === FULL LOCATION (for map tab) ===
+  addressStreet: string;
+  addressPostalCode: string;
+  addressCity: string;
+  addressMunicipality: string;
+  addressCountry: string;
+
+  // === CONTACT (Display-Ready) ===
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactWebsite: string;
+
+  // === ALL AMENITIES ===
+  allAmenities: ListingAmenityDTO[];
+
+  // === FACILITIES/EQUIPMENT ===
+  includedEquipment: ListingEquipmentDTO[];
+
+  // === ADDITIONAL SERVICES (purchasable add-ons) ===
+  additionalServices: ListingAdditionalServiceDTO[];
+
+  // === OPENING HOURS (Display-Ready) ===
+  openingHours: ListingOpeningHoursDTO[];
+  isOpenNow: boolean;
+  todayHoursDisplay: string;
+
+  // === RULES & GUIDELINES (for Rules tab) ===
+  rules: ListingRuleDTO[];
+
+  // === FAQ (for FAQ tab) ===
+  faq: ListingFaqDTO[];
+
+  // === HIGHLIGHTS ===
+  highlights: string[];
+
+  // === EVENTS (for Events/Calendar tab) ===
+  upcomingEvents: ListingEventDTO[];
+
+  // === BOOKING CONFIG (for booking widget) ===
+  /** Calendar type: time_slots, day_booking, season_allocation, request_only */
+  bookingCalendarType: 'time_slots' | 'day_booking' | 'season_allocation' | 'request_only';
+  minBookingDuration: number;
+  minBookingDurationDisplay: string;
+  maxBookingDuration: number;
+  maxBookingDurationDisplay: string;
+  advanceBookingDays: number;
+  advanceBookingDisplay: string;
+  cancellationPolicyDisplay: string;
+  requiresApproval: boolean;
+  instantBookingEnabled: boolean;
+
+  // === PERMISSIONS (API-Computed) ===
+  canBook: boolean;
+  canEdit: boolean;
+  canViewPricing: boolean;
+  availableActions: string[];
+
+  // === TIMESTAMPS ===
+  createdAt: string;
+  updatedAt: string;
 }
 
 // =============================================================================
@@ -333,4 +313,47 @@ export interface PriceBreakdownItemDTO {
   label: string;
   amount: number;
   type: 'base' | 'addon' | 'discount' | 'tax' | 'total';
+}
+
+// =============================================================================
+// ORGANIZATION PROJECTIONS
+// =============================================================================
+
+export interface OrganizationCardProjectionDTO {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string;
+  memberCount: number;
+  role: string;
+  roleLabel: string;
+}
+
+export interface OrganizationDetailsProjectionDTO extends OrganizationCardProjectionDTO {
+  description: string;
+  contactEmail: string;
+  contactPhone: string;
+  addressFormatted: string;
+  createdAt: string;
+  canEdit: boolean;
+  canManageMembers: boolean;
+  canViewBookings: boolean;
+}
+
+// =============================================================================
+// USER PROJECTIONS
+// =============================================================================
+
+export interface UserProfileProjectionDTO {
+  id: string;
+  email: string;
+  displayName: string;
+  avatarUrl: string;
+  phone: string;
+  preferredLanguage: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  createdAt: string;
+  lastLoginAt: string;
+  organizations: OrganizationCardProjectionDTO[];
 }

@@ -57,6 +57,9 @@ export interface ListingCardProjectionDTO {
   reviewCount: number;
   ratingDisplay: string;
 
+  // Description (short excerpt for cards)
+  descriptionExcerpt: string;
+
   // Status
   isAvailable: boolean;
   isFeatured: boolean;
@@ -415,6 +418,11 @@ export function toCardProjection(listing: DbListing): ListingCardProjectionDTO {
     averageRating: avgRating,
     reviewCount: revCount,
     ratingDisplay: formatRating(avgRating, revCount),
+
+    // Description
+    descriptionExcerpt: listing.description 
+      ? (listing.description.length > 120 ? listing.description.slice(0, 117) + '...' : listing.description)
+      : '',
 
     // Status
     isAvailable: listing.status === 'published',

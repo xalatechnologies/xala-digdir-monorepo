@@ -1,8 +1,8 @@
 /**
  * ListingsPage
  *
- * Clean listings page using only real API data.
- * No mock data fallback - shows proper empty/error states.
+ * Clean listings page using projection DTOs from API.
+ * No client-side transformation - uses screen-ready data directly.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -29,35 +29,20 @@ import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import {
   usePublicListings,
   usePublicCities,
-  type Listing,
-  type ListingType,
+  type ListingCardProjectionDTO,
   type PublicListingParams,
-  transformListing,
-  geocodeAddress,
-  buildAddressString,
-  type GeocodeConfig,
 } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeListing } from '../providers';
 
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const GOOGLE_API_KEY = import.meta.env.VITE_GEOCODING_API_KEY;
-
-// Geocoding configuration - Mapbox for accurate Norwegian address geocoding
-const GEOCODE_CONFIG: GeocodeConfig = {
-  googleApiKey: GOOGLE_API_KEY,
-  mapboxToken: MAPBOX_TOKEN,
-  country: 'NO',
-  language: 'no',
-};
 
 // Listing type options (UI filter types)
-// Note: API types SPACE maps to FACILITY, RESOURCE maps to EQUIPMENT
 const LISTING_TYPE_OPTIONS = [
   { id: 'ALL', label: 'Alle typer' },
-  { id: 'FACILITY', label: 'Lokale' },  // Includes SPACE from API
-  { id: 'EQUIPMENT', label: 'Utstyr' },  // Includes RESOURCE from API
+  { id: 'SPACE', label: 'Lokale' },
+  { id: 'RESOURCE', label: 'Utstyr' },
   { id: 'SERVICE', label: 'Tjeneste' },
   { id: 'VEHICLE', label: 'Kjøretøy' },
   { id: 'EVENT', label: 'Arrangement' },
@@ -74,69 +59,29 @@ const CAPACITY_OPTIONS = [
   { id: '50+', label: '50+ personer', min: 50, max: Infinity },
 ];
 
-// UI listing type for local use (matches SDK's UiListing)
-interface ExtendedUiListing {
-  id: string;
-  name: string;
-  type: string;
-  listingType: ListingType;
-  location: string;
-  description: string;
-  facilities: string[];
-  moreFacilities: number;
-  capacity: number;
-  price: number;
-  priceUnit: string;
-  currency: string;
-  rating: number;
-  reviewCount: number;
-  available: boolean;
-  image: string;
-  images: string[];
-  latitude?: number;
-  longitude?: number;
-  slug?: string;
-}
+// Filter helpers using projection DTO directly (no transformation needed)
 
-// Map API listing types to UI filter types
-const mapApiTypeToFilterType = (apiType: ListingType): string => {
-  const typeMap: Record<ListingType, string> = {
-    SPACE: 'FACILITY',      // SPACE maps to FACILITY (Lokale)
-    RESOURCE: 'EQUIPMENT',  // RESOURCE maps to EQUIPMENT (Utstyr)
-    SERVICE: 'SERVICE',     // SERVICE stays SERVICE (Tjeneste)
-    EVENT: 'EVENT',         // EVENT stays EVENT
-    VEHICLE: 'VEHICLE',     // VEHICLE stays VEHICLE (Kjøretøy)
-    OTHER: 'OTHER',         // OTHER stays OTHER
-  };
-  return typeMap[apiType] || 'OTHER';
-};
-
-// Filter helpers
-const getListingTypeCounts = (listings: ExtendedUiListing[]) => {
+// Get listing type counts for filter badges
+const getListingTypeCounts = (listings: ListingCardProjectionDTO[]) => {
   const counts: Record<string, number> = { ALL: listings.length };
   listings.forEach(l => {
-    // Map API type to filter type for counting
-    const filterType = mapApiTypeToFilterType(l.listingType);
-    counts[filterType] = (counts[filterType] || 0) + 1;
-    // Also count by original API type for backwards compatibility
-    counts[l.listingType] = (counts[l.listingType] || 0) + 1;
+    counts[l.type] = (counts[l.type] || 0) + 1;
   });
   return counts;
 };
 
-const getAllFacilities = (listings: ExtendedUiListing[]) => {
-  const facilitySet = new Set<string>();
-  listings.forEach(l => l.facilities?.forEach(f => facilitySet.add(f)));
-  return Array.from(facilitySet).sort();
+// Get all unique amenities for filter options
+const getAllAmenities = (listings: ListingCardProjectionDTO[]) => {
+  const amenitySet = new Set<string>();
+  listings.forEach(l => l.amenities?.forEach((a: string) => amenitySet.add(a)));
+  return Array.from(amenitySet).sort();
 };
 
-const getUniqueCities = (listings: ExtendedUiListing[]) => {
+// Get unique cities for location filter
+const getUniqueCities = (listings: ListingCardProjectionDTO[]) => {
   const citySet = new Set<string>();
   listings.forEach(l => {
-    if (l.location) {
-      const city = l.location.split(',').pop()?.trim() || l.location;
-      if (city) citySet.add(city);
-    }
+    if (l.city && l.city !== 'Ukjent') citySet.add(l.city);
   });
   return Array.from(citySet).sort();
 };
@@ -149,10 +94,10 @@ export function ListingsPage(): React.ReactElement {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // API query params
-  const [queryParams] = React.useState<PublicListingParams>({});
+  // API query params - load all listings at once for client-side filtering
+  const [queryParams] = React.useState<PublicListingParams>({ limit: 100 });
 
-  // Fetch listings from real API
+  // Fetch listings from real API - returns ListingCardProjectionDTO[] directly
   const { data: listingsResponse, isLoading, error } = usePublicListings(queryParams);
 
   // Fetch cities for location filter
@@ -166,143 +111,12 @@ export function ListingsPage(): React.ReactElement {
   }, [queryClient]);
   useRealtimeListing(handleListingEvent);
 
-  // Geocoded coordinates state
-  const [geocodedCoords, setGeocodedCoords] = React.useState<Map<string, { lat: number; lng: number }>>(new Map());
+  // Listings from API - already in screen-ready projection DTO format
+  const listings = React.useMemo(() => {
+    if (!listingsResponse?.data) return [] as ListingCardProjectionDTO[];
+    return listingsResponse.data;
+  }, [listingsResponse]);
 
-  // Transform API listings to UI format using SDK transform
-  const listings: ExtendedUiListing[] = React.useMemo(() => {
-    if (!listingsResponse?.data) return [];
-
-    return listingsResponse.data.map((listing: Listing) => {
-      const transformed = transformListing(listing);
-
-      // Check for geocoded coordinates
-      const geocoded = geocodedCoords.get(listing.id);
-
-      // Defensive: ensure location is always a string (handle if backend sends object)
-      const locationValue = typeof transformed.location === 'string'
-        ? transformed.location
-        : 'Ukjent lokasjon';
-
-      // IMPORTANT: Destructure to EXCLUDE API coordinates (they are often incorrect)
-      // Only use freshly geocoded coordinates from addresses
-      const { latitude: _apiLat, longitude: _apiLng, ...transformedWithoutCoords } = transformed;
-
-      return {
-        ...transformedWithoutCoords,
-        location: locationValue,
-        listingType: listing.type,
-        // Only include coordinates from geocoding (NOT from API)
-        ...(geocoded && { latitude: geocoded.lat, longitude: geocoded.lng }),
-      };
-    });
-  }, [listingsResponse, geocodedCoords]);
-
-  // Track which listings have been geocoded (ref to avoid re-renders)
-  const geocodedIds = React.useRef<Set<string>>(new Set());
-  const geocodingInProgress = React.useRef<boolean>(false);
-
-  // Check if we have any geocoding API keys configured
-  const hasGeocodingKeys = Boolean(GOOGLE_API_KEY || MAPBOX_TOKEN);
-
-  // Geocode ALL listings based on their addresses
-  // ALWAYS geocode from address - do NOT rely on API coordinates (they are often incorrect)
-  // Uses Mapbox for accurate Norwegian address geocoding
-  React.useEffect(() => {
-    if (!listingsResponse?.data || !hasGeocodingKeys || geocodingInProgress.current) return;
-
-    const listingsToGeocode = listingsResponse.data.filter(listing => {
-      // Skip if already geocoded in this session
-      if (geocodedIds.current.has(listing.id)) return false;
-      // Geocode ALL listings regardless of whether API has coordinates
-      return true;
-    });
-
-    if (listingsToGeocode.length === 0) return;
-
-    // Mark geocoding as in progress to prevent duplicate runs
-    geocodingInProgress.current = true;
-
-    // Geocode all listings in batches
-    const geocodeAll = async () => {
-      const batchSize = GOOGLE_API_KEY ? 5 : 3; // Google allows higher rate limits
-      const allResults: Array<{ id: string; coords: { lat: number; lng: number } }> = [];
-
-      for (let i = 0; i < listingsToGeocode.length; i += batchSize) {
-        const batch = listingsToGeocode.slice(i, i + batchSize);
-
-        const batchResults = await Promise.all(
-          batch.map(async (listing) => {
-            // Mark as geocoded immediately to prevent duplicates
-            geocodedIds.current.add(listing.id);
-
-            // Build structured address using SDK helper
-            const metadata = listing.metadata || {};
-            const locationMeta = metadata.location || {};
-            const addressObj = metadata.address;
-            const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
-            const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
-
-            // Extract address components
-            const street = (addressObjTyped?.street as string) || (locationMeta.address as string) || '';
-            const postalCode = (addressObjTyped?.postalCode as string) || (locationMeta.postalCode as string) || (metadata.postalCode as string) || '';
-            const city = (addressObjTyped?.city as string) || (locationMeta.city as string) || (metadata.city as string) || '';
-
-            // Build address string from components
-            const addressString = buildAddressString({
-              street,
-              postalCode,
-              city,
-            });
-
-            // Fallback to display location if no structured address
-            const transformed = transformListing(listing);
-            const displayLocation = typeof transformed.location === 'string' ? transformed.location : '';
-
-            const addressToGeocode = addressString && addressString !== 'Norway' && addressString.trim() !== ''
-              ? addressString
-              : (displayLocation && displayLocation !== 'Ukjent lokasjon' ? displayLocation : '');
-
-            // Skip if no valid address
-            if (!addressToGeocode || addressToGeocode === 'Ukjent lokasjon' || addressToGeocode === 'Norway') {
-              return null;
-            }
-
-            const result = await geocodeAddress(addressToGeocode, GEOCODE_CONFIG);
-
-            if (result) {
-              return { id: listing.id, coords: { lat: result.latitude, lng: result.longitude } };
-            } else {
-              return null;
-            }
-          })
-        );
-
-        // Collect valid results
-        batchResults.forEach(r => {
-          if (r) allResults.push(r);
-        });
-
-        // Small delay between batches to respect rate limits
-        if (i + batchSize < listingsToGeocode.length) {
-          await new Promise(resolve => setTimeout(resolve, GOOGLE_API_KEY ? 100 : 150));
-        }
-      }
-
-      // Update state once with all results
-      if (allResults.length > 0) {
-        setGeocodedCoords(prev => {
-          const newMap = new Map(prev);
-          allResults.forEach(({ id, coords }) => newMap.set(id, coords));
-          return newMap;
-        });
-      }
-
-      geocodingInProgress.current = false;
-    };
-
-    geocodeAll();
-  }, [listingsResponse, hasGeocodingKeys]);
 
   // Filter state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -319,9 +133,9 @@ export function ListingsPage(): React.ReactElement {
   const [showMoreFacilities, setShowMoreFacilities] = React.useState(false);
   const MAX_VISIBLE_ITEMS = 4;
 
-  // Derived filter options (cast needed for filter helpers)
+  // Derived filter options (using projection DTO fields)
   const typeCounts = React.useMemo(() => getListingTypeCounts(listings), [listings]);
-  const allFacilities = React.useMemo(() => getAllFacilities(listings), [listings]);
+  const allFacilities = React.useMemo(() => getAllAmenities(listings), [listings]);
 
   const locationAreas = React.useMemo(() => {
     const areas: { id: string; label: string }[] = [{ id: 'all', label: 'Alle områder' }];
@@ -340,29 +154,28 @@ export function ListingsPage(): React.ReactElement {
     return areas;
   }, [citiesResponse, listings]);
 
-  // Filter listings
+  // Filter listings using projection DTO fields
   const filteredListings = React.useMemo(() => {
     return listings.filter(l => {
-      // Map API type to filter type for comparison
-      if (listingType !== 'ALL') {
-        const filterType = mapApiTypeToFilterType(l.listingType);
-        if (filterType !== listingType) return false;
-      }
+      // Filter by type using DTO's type field directly
+      if (listingType !== 'ALL' && l.type !== listingType) return false;
 
+      // Filter by area using DTO's city field
       if (selectedArea !== 'all') {
-        const locationLower = l.location.toLowerCase();
-        const areaLower = selectedArea.replace(/-/g, ' ');
-        if (!locationLower.includes(areaLower)) return false;
+        const cityLower = l.city.toLowerCase().replace(/\s+/g, '-');
+        if (cityLower !== selectedArea) return false;
       }
 
+      // Filter by capacity
       if (selectedCapacity !== 'all') {
         const capacityOption = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);
         if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
       }
 
+      // Filter by amenities (renamed from facilities)
       if (selectedFacilities.length > 0) {
-        const listingFacilities = l.facilities || [];
-        if (!selectedFacilities.every(f => listingFacilities.includes(f))) return false;
+        const listingAmenities = l.amenities || [];
+        if (!selectedFacilities.every(f => listingAmenities.includes(f))) return false;
       }
 
       return true;
@@ -392,8 +205,8 @@ export function ListingsPage(): React.ReactElement {
     const query = value.toLowerCase();
     const matchingListings = listings.filter(listing =>
       listing.name.toLowerCase().includes(query) ||
-      listing.location.toLowerCase().includes(query) ||
-      listing.description.toLowerCase().includes(query)
+      listing.locationFormatted.toLowerCase().includes(query) ||
+      listing.city.toLowerCase().includes(query)
     );
 
     const results: SearchResultGroup[] = matchingListings.length > 0
@@ -403,8 +216,8 @@ export function ListingsPage(): React.ReactElement {
           items: matchingListings.slice(0, 5).map(listing => ({
             id: listing.id,
             label: listing.name,
-            description: listing.location,
-            meta: listing.type,
+            description: listing.locationFormatted,
+            meta: listing.typeLabel,
           })),
         }]
       : [];
@@ -630,6 +443,7 @@ export function ListingsPage(): React.ReactElement {
                 className="listing-toolbar"
               />
 
+
               {viewMode === 'grid' ? (
                 <ListingGrid minCardWidth={300}>
                   {visibleListings.map((listing) => (
@@ -637,18 +451,18 @@ export function ListingsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={listing.type}
-                      listingType={listing.listingType}
-                      location={listing.location}
-                      description={listing.description}
-                      image={listing.image}
-                      facilities={listing.facilities}
-                      moreFacilities={listing.moreFacilities}
+                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      location={listing.locationFormatted}
+                      description={listing.descriptionExcerpt || ''}
+                      image={listing.primaryImageUrl}
+                      facilities={listing.amenities}
+                      moreFacilities={listing.moreAmenitiesCount}
                       capacity={listing.capacity}
-                      price={listing.price}
+                      price={listing.priceAmount}
                       priceUnit={listing.priceUnit}
-                      currency={listing.currency}
-                      rating={listing.rating}
+                      currency={listing.priceCurrency}
+                      rating={listing.averageRating}
                       reviewCount={listing.reviewCount}
                       imageHeight={260}
                       showLocation={true}
@@ -671,16 +485,16 @@ export function ListingsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={listing.type}
-                      listingType={listing.listingType}
-                      location={listing.location}
-                      description={listing.description}
-                      image={listing.image}
-                      facilities={listing.facilities}
-                      moreFacilities={listing.moreFacilities}
+                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      location={listing.locationFormatted}
+                      description={listing.descriptionExcerpt || ''}
+                      image={listing.primaryImageUrl}
+                      facilities={listing.amenities}
+                      moreFacilities={listing.moreAmenitiesCount}
                       capacity={listing.capacity}
-                      {...(listing.latitude !== undefined && { latitude: listing.latitude })}
-                      {...(listing.longitude !== undefined && { longitude: listing.longitude })}
+                      {...(listing.latitude != null && { latitude: listing.latitude })}
+                      {...(listing.longitude != null && { longitude: listing.longitude })}
                       mapboxToken={MAPBOX_TOKEN || ''}
                       showListingType={true}
                       showMap={true}
@@ -692,23 +506,23 @@ export function ListingsPage(): React.ReactElement {
               ) : viewMode === 'map' ? (
                 <ListingMap
                   listings={filteredListings
-                    .filter(l => l.latitude !== undefined && l.longitude !== undefined)
+                    .filter(l => l.latitude != null && l.longitude != null)
                     .map(l => ({
                       id: l.id,
                       name: l.name,
                       ...(l.slug && { slug: l.slug }),
-                      location: l.location,
-                      image: l.image,
+                      location: l.locationFormatted,
+                      image: l.primaryImageUrl,
                       latitude: l.latitude!,
                       longitude: l.longitude!,
                       type: l.type,
-                      listingType: l.listingType,
-                      description: l.description,
+                      listingType: l.type,
+                      description: '',
                       capacity: l.capacity,
-                      price: l.price,
+                      price: l.priceAmount,
                       priceUnit: l.priceUnit,
-                      facilities: l.facilities,
-                      available: l.available,
+                      facilities: l.amenities,
+                      available: l.isAvailable,
                     }))}
                   mapboxToken={MAPBOX_TOKEN || ''}
                   height="calc(100vh - 250px)"
@@ -720,10 +534,10 @@ export function ListingsPage(): React.ReactElement {
                     id: l.id,
                     name: l.name,
                     ...(l.slug && { slug: l.slug }),
-                    location: l.location,
+                    location: l.locationFormatted,
                     type: l.type,
                     capacity: l.capacity,
-                    price: l.price,
+                    price: l.priceAmount,
                     priceUnit: l.priceUnit,
                   }))}
                   height="calc(100vh - 250px)"
