@@ -17,6 +17,7 @@ import {
   Select,
 } from '@xala/ds';
 import { useUpdateListing, type Listing } from '@digilist/client-sdk';
+import { useToast } from '../../../../providers/ToastProvider';
 
 export interface EditModalProps {
   /** Whether the modal is open */
@@ -61,6 +62,7 @@ const VISIBILITY_LABELS: Record<string, string> = {
  */
 export function EditModal({ isOpen, onClose, listing, onSuccess }: EditModalProps) {
   const updateMutation = useUpdateListing();
+  const toast = useToast();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -162,18 +164,24 @@ export function EditModal({ isOpen, onClose, listing, onSuccess }: EditModalProp
         },
       };
 
+      // Perform the update with optimistic UI
       await updateMutation.mutateAsync({
         id: listing.id,
         data: updatePayload,
       });
 
-      // Success - call callback and close
+      // Show success toast
+      toast.success('Endringer lagret', `Endringene i "${formData.name}" er lagret`);
+
+      // Trigger callback to refetch/update parent view (optimistic update)
       onSuccess?.();
+
+      // Close modal
       onClose();
     } catch (error) {
-      // Error is handled by SDK/react-query
-      // RFC 7807 compliant error will be shown by the mutation
-      console.error('Failed to update listing:', error);
+      // Show error toast with RFC 7807 compliant error message
+      const errorMessage = error instanceof Error ? error.message : 'En uventet feil oppstod';
+      toast.error('Kunne ikke lagre endringer', errorMessage);
     }
   };
 
