@@ -4,13 +4,14 @@
  * Enables proper cache invalidation and prefetching
  */
 
-import type { 
-  ListingQueryParams, 
+import type {
+  ListingQueryParams,
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
+import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
 
 /**
  * Strongly-typed query key factory
@@ -239,17 +240,17 @@ export const queryKeys = {
   search: {
     all: ['search'] as const,
     results: (params: Record<string, unknown>) =>
-      [...queryKeys.search.all, 'results', params] as const,
+      ['search', 'results', params] as const,
     typeahead: (params: Record<string, unknown>) =>
-      [...queryKeys.search.all, 'typeahead', params] as const,
+      ['search', 'typeahead', params] as const,
     savedFilters: {
-      all: [...queryKeys.search.all, 'filters'] as const,
-      lists: () => [...queryKeys.search.all, 'filters', 'list'] as const,
+      all: ['search', 'filters'] as const,
+      lists: () => ['search', 'filters', 'list'] as const,
       list: (params?: Record<string, unknown>) =>
-        [...queryKeys.search.all, 'filters', 'list', params] as const,
+        ['search', 'filters', 'list', params] as const,
       detail: (id: string) =>
-        [...queryKeys.search.all, 'filters', 'detail', id] as const,
+        ['search', 'filters', 'detail', id] as const,
     },
-    recent: () => [...queryKeys.search.all, 'recent'] as const,
+    recent: () => ['search', 'recent'] as const,
   },
 } as const;
