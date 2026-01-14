@@ -142,6 +142,7 @@ export {
   Card,
   Text,
   Badge,
+  FormField,
   SunIcon,
   MoonIcon,
   SearchIcon,
@@ -212,6 +213,7 @@ export type {
   CardProps,
   TextProps,
   BadgeProps,
+  FormFieldProps,
   LayoutGridProps
 } from './primitives';
 
