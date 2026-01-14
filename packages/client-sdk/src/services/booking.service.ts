@@ -102,6 +102,13 @@ export class BookingService extends BaseService {
   }
 
   /**
+   * Batch reschedule multiple bookings
+   */
+  async batchReschedule(ids: string[], startTime: string, endTime: string): Promise<SingleResponse<Booking[]>> {
+    return this.client.put(this.buildPath('/bulk/reschedule'), { ids, startTime, endTime });
+  }
+
+  /**
    * Delete booking
    */
   async delete(id: string): Promise<SuccessResponse> {
