@@ -69,7 +69,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   if (isLoadingAll || isLoadingSeasonVenues) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner />
+        <Spinner aria-label="Laster" />
       </div>
     );
   }

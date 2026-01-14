@@ -125,7 +125,7 @@ export function SeasonAllocationManagement({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner />
+        <Spinner aria-label="Laster" />
       </div>
     );
   }
@@ -270,7 +270,7 @@ export function SeasonAllocationManagement({
                             >
                               {allocating[application.id] ? (
                                 <>
-                                  <Spinner /> Tildeler...
+                                  <Spinner aria-label="Laster" /> Tildeler...
                                 </>
                               ) : (
                                 <>

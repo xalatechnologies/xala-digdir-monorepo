@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Alert,
 } from '@xala/ds';
@@ -125,7 +125,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
               error={errors.name}
               description="Brukerens fulle navn"
             >
-              <TextField
+              <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder="F.eks. Ola Nordmann"
@@ -139,7 +139,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
               error={errors.email}
               description={user ? 'Brukerens e-postadresse' : 'Invitasjonen sendes til denne adressen'}
             >
-              <TextField
+              <Textfield
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email')(e.target.value)}
@@ -153,7 +153,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
               label="Telefon"
               description="Valgfri kontaktinformasjon"
             >
-              <TextField
+              <Textfield
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}

@@ -197,7 +197,8 @@ export function ScheduleConfigForm({ value, onChange }: ScheduleConfigFormProps)
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
               <Switch
                 checked={config.enabled ?? true}
-                onCheckedChange={(checked: boolean) => handleEnabledChange(checked)}
+                onChange={(e) => handleEnabledChange(e.target.checked)}
+                aria-label="Aktivert"
               />
               <Badge
                 color={config.enabled ? 'success' : 'neutral'}

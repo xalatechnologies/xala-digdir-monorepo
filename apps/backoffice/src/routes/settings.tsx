@@ -330,7 +330,7 @@ export function SettingsPage() {
                 <FormField label="Automatisk bekreftelse" description="Bekreft bookinger automatisk uten godkjenning">
                   <Switch
                     checked={formData.booking.autoConfirm}
-                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                    onChange={(e) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, autoConfirm: checked }
                     }))}
@@ -341,7 +341,7 @@ export function SettingsPage() {
                   <FormField label="Krev godkjenning" description="Alle bookinger må godkjennes av saksbehandler">
                     <Switch
                       checked={formData.booking.requireApproval}
-                      onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                      onChange={(e) => setFormData(prev => ({
                         ...prev,
                         booking: { ...prev.booking, requireApproval: checked }
                       }))}
@@ -352,7 +352,7 @@ export function SettingsPage() {
                 <FormField label="Tillat kansellering" description="Brukere kan kansellere egne bookinger">
                   <Switch
                     checked={formData.booking.allowCancellation}
-                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                    onChange={(e) => setFormData(prev => ({
                       ...prev,
                       booking: { ...prev.booking, allowCancellation: checked }
                     }))}
@@ -453,7 +453,7 @@ export function SettingsPage() {
                 <FormField label="E-postvarsler" description="Send varsler på e-post">
                   <Switch
                     checked={formData.notifications.emailEnabled}
-                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                    onChange={(e) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, emailEnabled: checked }
                     }))}
@@ -463,7 +463,7 @@ export function SettingsPage() {
                 <FormField label="SMS-varsler" description="Send varsler på SMS">
                   <Switch
                     checked={formData.notifications.smsEnabled}
-                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                    onChange={(e) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, smsEnabled: checked }
                     }))}
@@ -473,7 +473,7 @@ export function SettingsPage() {
                 <FormField label="Push-varsler" description="Send push-varsler til mobilapp">
                   <Switch
                     checked={formData.notifications.pushEnabled}
-                    onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                    onChange={(e) => setFormData(prev => ({
                       ...prev,
                       notifications: { ...prev.notifications, pushEnabled: checked }
                     }))}
@@ -494,7 +494,7 @@ export function SettingsPage() {
                     <FormField label="Bookingbekreftelse" description="Send bekreftelse når booking er godkjent">
                       <Switch
                         checked={formData.notifications.bookingConfirmation}
-                        onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                        onChange={(e) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingConfirmation: checked }
                         }))}
@@ -504,7 +504,7 @@ export function SettingsPage() {
                     <FormField label="Booking-påminnelse" description="Send påminnelse før booking starter">
                       <Switch
                         checked={formData.notifications.bookingReminder}
-                        onCheckedChange={(checked: boolean) => setFormData(prev => ({
+                        onChange={(e) => setFormData(prev => ({
                           ...prev,
                           notifications: { ...prev.notifications, bookingReminder: checked }
                         }))}
@@ -569,7 +569,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.bankid?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('bankid', checked)}
+                      onChange={(e) => handleIntegrationToggle('bankid', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -587,7 +587,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.idporten?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('idporten', checked)}
+                      onChange={(e) => handleIntegrationToggle('idporten', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -618,7 +618,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.vipps?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('vipps', checked)}
+                      onChange={(e) => handleIntegrationToggle('vipps', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -649,7 +649,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.rco?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('rco', checked)}
+                      onChange={(e) => handleIntegrationToggle('rco', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -680,7 +680,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.googleCalendar?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('googleCalendar', checked)}
+                      onChange={(e) => handleIntegrationToggle('googleCalendar', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -698,7 +698,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.outlook?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('outlook', checked)}
+                      onChange={(e) => handleIntegrationToggle('outlook', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -729,7 +729,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.visma?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('visma', checked)}
+                      onChange={(e) => handleIntegrationToggle('visma', e.target.checked)}
                     />
                   </div>
                 </div>
@@ -760,7 +760,7 @@ export function SettingsPage() {
                     )}
                     <Switch
                       checked={integrations?.brreg?.enabled || false}
-                      onCheckedChange={(checked: boolean) => handleIntegrationToggle('brreg', checked)}
+                      onChange={(e) => handleIntegrationToggle('brreg', e.target.checked)}
                     />
                   </div>
                 </div>

@@ -86,7 +86,7 @@ export function OrganizationDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner />
+        <Spinner aria-label="Laster" />
       </div>
     );
   }
