@@ -5,7 +5,7 @@
  * First tab in the listing detail view providing administrators with a comprehensive overview.
  */
 import * as React from 'react';
-import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard } from '@xala/ds';
+import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard, LocationCard, ContactInfoCard } from '@xala/ds';
 import type { Listing } from '@digilist/client-sdk';
 import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds';
 import { getListingTypeLabel } from '@digilist/client-sdk';
@@ -227,6 +227,37 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
           <OpeningHoursCard hours={openingHours} highlightToday />
         </section>
       )}
+
+      {/* Location and Contact Information Grid */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 'var(--ds-spacing-4)',
+        }}
+      >
+        {/* Location Section */}
+        {listing.address && (
+          <LocationCard
+            address={listing.address}
+            latitude={listing.location?.latitude}
+            longitude={listing.location?.longitude}
+            mapboxToken={import.meta.env.VITE_MAPBOX_TOKEN}
+            height={250}
+            title="Lokasjon"
+            showExpandLink
+          />
+        )}
+
+        {/* Contact Information Section */}
+        <ContactInfoCard
+          email={listing.metadata?.contactEmail}
+          phone={listing.metadata?.contactPhone}
+          website={listing.metadata?.contactWebsite}
+          contactName={listing.metadata?.contactName}
+          title="Kontaktinformasjon"
+        />
+      </div>
 
       {/* Additional sections will be added in subsequent subtasks */}
     </div>
