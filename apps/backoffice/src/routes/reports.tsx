@@ -18,6 +18,7 @@ import {
 import { ReportTemplateSelector } from '../components/reports/ReportTemplateSelector';
 import { CustomReportBuilder } from '../components/reports/CustomReportBuilder';
 import { ScheduledReportsManager } from '../components/reports/ScheduledReportsManager';
+import { ReportHistory } from '../components/reports/ReportHistory';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -290,6 +291,7 @@ export function ReportsPage() {
           <Tabs.Tab value="overview">Oversikt</Tabs.Tab>
           <Tabs.Tab value="scheduled">Planlagte rapporter</Tabs.Tab>
           <Tabs.Tab value="templates">Rapportmaler</Tabs.Tab>
+          <Tabs.Tab value="history">Historikk</Tabs.Tab>
         </Tabs.List>
 
         {/* Overview Tab */}
@@ -999,6 +1001,13 @@ export function ReportsPage() {
                 </div>
               )}
             </Card>
+          </div>
+        </Tabs.Panel>
+
+        {/* History Tab */}
+        <Tabs.Panel value="history">
+          <div style={{ marginTop: 'var(--ds-spacing-5)' }}>
+            <ReportHistory />
           </div>
         </Tabs.Panel>
       </Tabs>
