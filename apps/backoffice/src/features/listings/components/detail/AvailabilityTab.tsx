@@ -108,7 +108,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
   }, [listingId, weekStart, weekEnd]);
 
   // Fetch calendar events
-  const { data: eventsData, isLoading } = useCalendarEvents(calendarParams);
+  const { data: eventsData, isLoading, refetch } = useCalendarEvents(calendarParams);
   const events = eventsData?.data ?? [];
 
   // Transform events to day index for week view
@@ -441,6 +441,9 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
         isOpen={isCreateBlockOpen}
         onClose={() => setIsCreateBlockOpen(false)}
         initialListingId={listingId}
+        onSuccess={() => {
+          refetch();
+        }}
       />
 
       <EventDrawer
