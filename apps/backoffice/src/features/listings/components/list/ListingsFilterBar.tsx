@@ -21,6 +21,7 @@ import {
   SearchIcon,
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
+import { useDebounceSearch } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { TYPE_TABS, STATUS_OPTIONS, SORT_OPTIONS } from '../../hooks/useListingFilters';
 import type { ListingQueryFilters, ViewMode } from '../../types';
@@ -57,19 +58,16 @@ export function ListingsFilterBar({
 }: ListingsFilterBarProps) {
   const navigate = useNavigate();
   const { permissions } = useListingPermissions();
-  const [searchValue, setSearchValue] = useState(filters.search || '');
+  const { value: searchValue, debouncedValue: debouncedSearch, setValue: setSearchValue } = useDebounceSearch(filters.search || '', 400);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [tempFilters, setTempFilters] = useState<Partial<ListingQueryFilters>>({});
 
-  // Debounced search
+  // Trigger filter change when debounced search value changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchValue !== (filters.search || '')) {
-        onFilterChange('search', searchValue || undefined);
-      }
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchValue, filters.search, onFilterChange]);
+    if (debouncedSearch !== (filters.search || '')) {
+      onFilterChange('search', debouncedSearch || undefined);
+    }
+  }, [debouncedSearch, filters.search, onFilterChange]);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
