@@ -13,7 +13,7 @@ import type {
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
-import { transformListings, transformListing } from '../types/listing';
+import { toUiListings, toUiListing } from '../types/listing';
 import type { UploadOptions } from '../types/upload';
 import { compressImage, isImageFile } from '../utils/image-compression';
 

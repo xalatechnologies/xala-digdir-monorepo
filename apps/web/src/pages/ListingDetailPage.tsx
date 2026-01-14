@@ -45,134 +45,133 @@ import { ReviewForm } from '../features/reviews/components/ReviewForm';
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;
 
-// Transform API listing to feature Listing type
+/**
+ * Adapt SDK TransformedListing to feature Listing type
+ * Uses the SDK's transformListing as base and maps to feature-specific types
+ */
 function transformApiToListing(api: ApiListing): Listing {
+  // Use SDK transformer as base
+  const transformed = sdkTransformListing(api);
   const meta = api.metadata || {};
-  // Access location from root level (SDK type now includes this)
-  const apiLocation = api.location;
-  const metaLocation = meta.location;
+  const metaAny = meta as Record<string, unknown>;
 
-  const typeMap: Record<string, ListingType> = { EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', SPACE: 'FACILITY' };
+  // Map listing type
+  const typeMap: Record<string, ListingType> = {
+    EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', SPACE: 'FACILITY',
+  };
   const listingType: ListingType = typeMap[api.type] || 'OTHER';
 
-  // Amenities from API - check both facilities and amenities
-  const apiAmenities = meta.amenities || meta.facilities || [];
-  const amenities: Amenity[] = apiAmenities.map((f, i) => ({ id: `a-${i}`, name: f, description: f, category: 'general' }));
+  // Map amenities to feature type
+  const amenities: Amenity[] = transformed.amenities.map((a) => ({
+    id: a.id,
+    name: a.name,
+    icon: a.icon,
+    category: a.category,
+    description: a.name,
+  }));
 
-  // Included facilities/equipment
-  const includedEquipment = (meta as Record<string, unknown>).includedEquipment as Array<{ name: string; quantity?: number; description?: string }> | undefined;
-  const includedFacilities: IncludedFacility[] = (includedEquipment || []).map((e, i) => {
-    const facility: IncludedFacility = {
-      id: `inc-${i}`,
-      name: e.name,
-    };
+  // Map facilities to feature type
+  const includedFacilities: IncludedFacility[] = transformed.facilities.map((f) => ({
+    id: f.id,
+    name: f.name,
+    quantity: f.quantity,
+    description: f.description,
+  }));
 
-    if (e.quantity !== undefined) {
-      facility.quantity = e.quantity;
-    }
+  // Map rules to feature type
+  const rules: Rule[] = transformed.rules.map((r) => ({
+    id: r.id,
+    title: r.title,
+    content: r.content,
+    category: 'general' as const,
+  }));
 
-    if (e.description !== undefined) {
-      facility.description = e.description;
-    }
+  // Map FAQ to feature type
+  const faq: FAQItem[] = transformed.faq.map((f) => ({
+    id: f.id,
+    question: f.question,
+    answer: f.answer,
+  }));
 
-    return facility;
-  });
+  // Map opening hours to feature type
+  const openingHours: OpeningHours = {
+    regular: transformed.openingHours.regular.map((day) => ({
+      day: day.day,
+      dayIndex: day.dayIndex,
+      open: day.open,
+      close: day.close,
+      isClosed: day.isClosed,
+    })),
+  };
 
-  // Rules from API - check both guidelines and rules, handle string arrays too
-  const metaAny = meta as Record<string, unknown>;
-  const apiRulesRaw = (metaAny.guidelines || metaAny.rules || []) as Array<{ id?: string; title?: string; content?: string } | string>;
-  const rules: Rule[] = apiRulesRaw.map((g, i) => {
-    if (typeof g === 'string') {
-      return { id: `rule-${i}`, title: g, content: g, category: 'general' as const };
-    }
-    return { id: g.id || `rule-${i}`, title: g.title || '', content: g.content || '', category: 'general' as const };
-  });
-
-  // FAQ from API
-  const apiFaq = meta.faq || [];
-  const faq: FAQItem[] = apiFaq.map((f, i) => ({ id: f.id || `faq-${i}`, question: f.question, answer: f.answer }));
-
-  const keyFacts: KeyFacts = { ...(api.capacity ? { capacity: api.capacity } : {}), bookingMode: 'SLOTS' as BookingMode };
-
-  // Highlights from metadata
-  const highlights = (metaAny.highlights as string[]) || [];
-
+  // Build feature metadata
   const metadata: ListingMetadata = {
-    description: api.description || '',
+    description: transformed.description || '',
     amenities,
     includedFacilities,
     rules,
     faq,
-    highlights,
+    highlights: transformed.highlights,
   };
 
-  // Build address from API - check root level first, then metadata
-  // Priority: api.address > api.location.address > meta.address > meta.location.address
-  const addressString = api.address || apiLocation?.address || meta.address || metaLocation?.address || '';
-  const postalCode = apiLocation?.postalCode || meta.postalCode || metaLocation?.postalCode || '';
-  const city = apiLocation?.city || meta.city || metaLocation?.city || '';
-
-  // Get coordinates from api.location or meta.location (support both lat/lng and latitude/longitude)
-  const lat = apiLocation?.lat ?? apiLocation?.latitude ?? metaLocation?.lat ?? metaLocation?.latitude;
-  const lng = apiLocation?.lng ?? apiLocation?.longitude ?? metaLocation?.lng ?? metaLocation?.longitude;
-
-  const addressParts = [addressString, postalCode, city].filter(Boolean);
-  const address = {
-    formatted: addressParts.length > 0 ? addressParts.join(', ') : '',
-    ...(typeof lat === 'number' && typeof lng === 'number' ? { coordinates: { latitude: lat, longitude: lng } } : {}),
+  // Build feature key facts
+  const keyFacts: KeyFacts = {
+    ...(transformed.keyFacts.capacity ? { capacity: transformed.keyFacts.capacity } : {}),
+    bookingMode: 'SLOTS' as BookingMode,
   };
 
-  // Build contact from metadata
-  const hasContact = meta.contactEmail || meta.contactPhone || meta.contactName;
-  const contact = hasContact
-    ? {
-        ...(meta.contactEmail ? { email: meta.contactEmail } : {}),
-        ...(meta.contactPhone ? { phone: meta.contactPhone } : {}),
-        ...(meta.contactName ? { name: meta.contactName } : {}),
-      }
-    : {};
+  // Build contact if exists
+  const contact = transformed.contact ? {
+    ...(transformed.contact.name ? { name: transformed.contact.name } : {}),
+    ...(transformed.contact.email ? { email: transformed.contact.email } : {}),
+    ...(transformed.contact.phone ? { phone: transformed.contact.phone } : {}),
+  } : undefined;
 
   return {
-    id: api.id,
+    id: transformed.id,
     tenantId: TENANT_ID,
     type: listingType,
-    name: api.name,
-    category: (meta.category as string) || api.type,
+    name: transformed.name,
+    category: (metaAny.category as string) || api.type,
     status: 'published',
-    images: (api.images || []).map((src: string, i: number) => ({ id: `${i}`, url: src, alt: `${api.name} - ${i + 1}`, isPrimary: i === 0, order: i })),
-    address,
-    ...(Object.keys(contact).length > 0 && { contact }),
-    openingHours: buildOpeningHours(meta.openingHours),
+    images: transformed.images.map((img) => ({
+      id: img.id,
+      url: img.url,
+      alt: img.alt,
+      isPrimary: img.isPrimary,
+      order: img.order,
+    })),
+    address: {
+      formatted: transformed.address.formatted,
+      street: transformed.address.street,
+      postalCode: transformed.address.postalCode,
+      city: transformed.address.city,
+      ...(transformed.address.coordinates ? { coordinates: transformed.address.coordinates } : {}),
+    },
+    ...(contact && Object.keys(contact).length > 0 ? { contact } : {}),
+    openingHours,
     keyFacts,
     metadata,
     // Activity data from API (if available)
-    ...((meta.events as ListingEvent[])?.length && {
+    ...((metaAny.events as ListingEvent[])?.length && {
       activityData: {
         type: 'events' as const,
-        events: meta.events as ListingEvent[],
-        totalCount: (meta.events as ListingEvent[]).length,
+        events: metaAny.events as ListingEvent[],
+        totalCount: (metaAny.events as ListingEvent[]).length,
       },
     }),
     bookingConfig: { enabled: true, mode: 'SLOTS', approval: 'NONE', paymentRequired: false },
-    ...(api.pricing?.basePrice && { pricing: { basePrice: api.pricing.basePrice, currency: 'NOK', unit: 'time', displayPrice: `${api.pricing.basePrice} kr/time` } }),
-    createdAt: api.createdAt || new Date().toISOString(),
-    updatedAt: api.updatedAt || new Date().toISOString(),
+    ...(transformed.pricing ? {
+      pricing: {
+        basePrice: transformed.pricing.basePrice,
+        currency: transformed.pricing.currency,
+        unit: transformed.pricing.unit,
+        displayPrice: transformed.pricing.displayPrice,
+      },
+    } : {}),
+    createdAt: transformed.createdAt,
+    updatedAt: transformed.updatedAt,
   };
-}
-
-function buildOpeningHours(openingHours?: Record<string, { open: string; close: string }>): OpeningHours {
-  const dayMap: Record<string, [string, number]> = {
-    monday: ['Mandag', 1], tuesday: ['Tirsdag', 2], wednesday: ['Onsdag', 3],
-    thursday: ['Torsdag', 4], friday: ['Fredag', 5], saturday: ['Lørdag', 6], sunday: ['Søndag', 0],
-  };
-  if (openingHours) {
-    const regular: DayHours[] = Object.entries(openingHours).map(([d, h]) => ({
-      day: dayMap[d]?.[0] || d, dayIndex: dayMap[d]?.[1] || 0, open: h.open, close: h.close, isClosed: !h.open,
-    }));
-    return { regular };
-  }
-  // Return empty opening hours if not provided by API
-  return { regular: [] };
 }
 
 

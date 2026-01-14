@@ -122,7 +122,6 @@ const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   confirmed: 'Bekreftet',
   cancelled: 'Kansellert',
   completed: 'Fullført',
-  rejected: 'Avvist',
 };
 
 const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
@@ -130,14 +129,13 @@ const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
   confirmed: '#10B981', // green
   cancelled: '#EF4444', // red
   completed: '#6B7280', // gray
-  rejected: '#EF4444', // red
 };
 
 const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-  pending: 'Venter',
+  unpaid: 'Ubetalt',
   paid: 'Betalt',
+  partial: 'Delvis betalt',
   refunded: 'Refundert',
-  failed: 'Feilet',
 };
 
 const ALLOCATION_TYPE_LABELS: Record<string, string> = {

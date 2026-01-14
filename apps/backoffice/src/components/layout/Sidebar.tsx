@@ -189,6 +189,8 @@ export function Sidebar() {
         { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon /> },
         { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon /> },
         { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon /> },
+        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon /> },
+        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon /> },
       ],
     },
     {
@@ -197,6 +199,7 @@ export function Sidebar() {
         { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, adminOnly: true },
         { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, adminOnly: true },
         { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, adminOnly: true },
+        { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, adminOnly: true },
       ],
     },
     {
@@ -204,6 +207,7 @@ export function Sidebar() {
       items: [
         { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, adminOnly: true },
         { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, adminOnly: true },
+        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, adminOnly: true },
       ],
     },
     {

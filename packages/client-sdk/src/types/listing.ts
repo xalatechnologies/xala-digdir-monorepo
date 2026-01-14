@@ -280,16 +280,18 @@ export function mapPricingUnit(unit: PricingUnit): string {
 }
 
 /**
- * Get display label for listing type
+ * Get display label for listing type (for UiListing cards)
+ * @deprecated Use getListingTypeLabel from transforms/listing.transform.ts for comprehensive transforms
  */
-export function getListingTypeLabel(type: ListingType): string {
+export function getListingTypeLabelForCard(type: ListingType): string {
   return LISTING_TYPE_LABELS[type] || type;
 }
 
 /**
- * Transform API Listing to UI Listing
+ * Transform API Listing to UiListing (card format)
+ * @deprecated Use transformListing from transforms/listing.transform.ts for comprehensive transforms
  */
-export function transformListing(listing: Listing): UiListing {
+export function toUiListing(listing: Listing): UiListing {
   const metadata = listing.metadata || {};
   const location = metadata.location || {};
 
@@ -350,7 +352,7 @@ export function transformListing(listing: Listing): UiListing {
   const locationString = locationParts.length > 0 ? locationParts.join(', ') : 'Ukjent lokasjon';
 
   // Use listing type label as display type
-  const displayType = getListingTypeLabel(listing.type);
+  const displayType = getListingTypeLabelForCard(listing.type);
 
   const result: UiListing = {
     id: listing.id,
@@ -388,8 +390,9 @@ export function transformListing(listing: Listing): UiListing {
 }
 
 /**
- * Transform multiple listings
+ * Transform multiple listings to UiListing (card format)
+ * @deprecated Use transformListings from transforms/listing.transform.ts for comprehensive transforms
  */
-export function transformListings(listings: Listing[]): UiListing[] {
-  return listings.map(transformListing);
+export function toUiListings(listings: Listing[]): UiListing[] {
+  return listings.map(toUiListing);
 }
