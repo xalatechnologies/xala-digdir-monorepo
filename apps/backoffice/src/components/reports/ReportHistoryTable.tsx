@@ -263,9 +263,9 @@ export function ReportHistoryTable() {
         {/* Search Bar */}
         <HeaderSearch
           value={searchValue}
-          onChange={handleSearchChange}
+          onSearchChange={handleSearchChange}
           onSearch={handleSearch}
-          onClear={handleClearSearch}
+          
           placeholder="Søk etter rapportnavn, jobb-ID eller bruker..."
         />
 

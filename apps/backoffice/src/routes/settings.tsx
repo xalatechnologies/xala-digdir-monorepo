@@ -808,6 +808,7 @@ export function SettingsPage() {
                       ...prev,
                       branding: { ...prev.branding, primaryColor: e.target.value }
                     }))}
+                    aria-label="Primærfarge"
                   />
                 </FormField>
 
@@ -822,6 +823,7 @@ export function SettingsPage() {
                       ...prev,
                       branding: { ...prev.branding, secondaryColor: e.target.value }
                     }))}
+                    aria-label="Sekundærfarge"
                   />
                 </FormField>
 
@@ -836,6 +838,7 @@ export function SettingsPage() {
                       branding: { ...prev.branding, favicon: e.target.value }
                     }))}
                     placeholder="https://example.com/favicon.ico"
+                    aria-label="Favicon URL"
                   />
                 </FormField>
               </Stack>

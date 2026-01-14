@@ -142,14 +142,15 @@ export function ListingListItem({
   };
 
   // Generate static map URL (using OpenStreetMap placeholder for demo)
-  const _getMapUrl = () => {
-    if (latitude && longitude) {
-      // Using a static map tile service
-      return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=${mapWidth}x160&markers=${latitude},${longitude},red`;
-    }
-    // Fallback placeholder map image
-    return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${10.2039 + Math.random() * 0.1},${59.7439 + Math.random() * 0.05},14,0/${mapWidth}x160?access_token=placeholder`;
-  };
+  // Commented out for now - intended for future use
+  // const _getMapUrl = () => {
+  //   if (latitude && longitude) {
+  //     // Using a static map tile service
+  //     return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=${mapWidth}x160&markers=${latitude},${longitude},red`;
+  //   }
+  //   // Fallback placeholder map image
+  //   return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${10.2039 + Math.random() * 0.1},${59.7439 + Math.random() * 0.05},14,0/${mapWidth}x160?access_token=placeholder`;
+  // };
 
   return (
     <div

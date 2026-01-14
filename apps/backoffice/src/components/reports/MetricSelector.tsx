@@ -61,7 +61,7 @@ const aggregationLabels: Record<string, string> = {
 };
 
 export function MetricSelector({ selectedMetrics, onMetricsChange, reportType = 'custom' }: MetricSelectorProps) {
-  const availableMetrics = AVAILABLE_METRICS[reportType] || AVAILABLE_METRICS.custom;
+  const availableMetrics = AVAILABLE_METRICS[reportType] || AVAILABLE_METRICS.custom || [];
 
   const handleMetricToggle = (metric: ReportMetric) => {
     const isSelected = selectedMetrics.some((m) => m.key === metric.key);

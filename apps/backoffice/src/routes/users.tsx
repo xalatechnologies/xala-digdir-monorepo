@@ -3,7 +3,7 @@
  * Create, invite, and manage backoffice users with roles
  */
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   Card,
   Heading,
@@ -22,10 +22,8 @@ import {
   UserIcon,
   UsersIcon,
   EditIcon,
-  TrashIcon,
   CheckCircleIcon,
   XCircleIcon,
-  MailIcon,
   HeaderSearch,
 } from '@xala/ds';
 import {
@@ -39,7 +37,6 @@ import {
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 import { UserForm } from '../components/users/UserForm';
 
 type ViewMode = 'list' | 'detail';
@@ -65,8 +62,6 @@ const statusColors: Record<UserStatus, 'success' | 'warning' | 'danger'> = {
 };
 
 export function UsersPage() {
-  const t = useT();
-
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -78,9 +73,9 @@ export function UsersPage() {
 
   // Queries
   const { data: usersData, isLoading } = useUsers({
-    role: roleFilter === 'all' ? undefined : roleFilter,
-    status: statusFilter === 'all' ? undefined : statusFilter,
-    search: searchQuery || undefined,
+    ...(roleFilter !== 'all' && { role: roleFilter }),
+    ...(statusFilter !== 'all' && { status: statusFilter }),
+    ...(searchQuery && { search: searchQuery }),
   });
   const users = usersData?.data ?? [];
 
@@ -159,8 +154,8 @@ export function UsersPage() {
             <HeaderSearch
               placeholder="Søk etter bruker..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClear={() => setSearchQuery('')}
+              onSearchChange={(value) => setSearchQuery(value)}
+              
             />
           </div>
 
@@ -304,13 +299,13 @@ export function UsersPage() {
       {/* Create/Edit Form Drawer */}
       {isFormOpen && (
         <Drawer
-          open={isFormOpen}
+          isOpen={isFormOpen}
           onClose={() => {
             setIsFormOpen(false);
             setEditingUser(null);
           }}
           title={editingUser ? 'Rediger bruker' : 'Inviter bruker'}
-         
+
         >
           <UserForm
             user={editingUser}
@@ -326,7 +321,7 @@ export function UsersPage() {
       {/* Detail Drawer */}
       {viewMode === 'detail' && selectedUser && (
         <Drawer
-          open={viewMode === 'detail'}
+          isOpen={viewMode === 'detail'}
           onClose={() => {
             setViewMode('list');
             setSelectedUserId(null);

@@ -15,6 +15,7 @@ import type {
   ReportGenerationResult,
   ReportHistoryItem,
   ReportHistoryQueryParams,
+  PaginatedResponse,
 } from '../types';
 
 export interface DashboardStats {
@@ -195,7 +196,7 @@ class ReportsService {
   /**
    * Get report generation history
    */
-  async getHistory(params?: ReportHistoryQueryParams): Promise<ReportHistoryItem[]> {
+  async getHistory(params?: ReportHistoryQueryParams): Promise<PaginatedResponse<ReportHistoryItem>> {
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -204,7 +205,7 @@ class ReportsService {
     }
 
     const queryString = queryParams.toString();
-    return getClient().get<ReportHistoryItem[]>(
+    return getClient().get<PaginatedResponse<ReportHistoryItem>>(
       queryString ? `${this.basePath}/history?${queryString}` : `${this.basePath}/history`
     );
   }

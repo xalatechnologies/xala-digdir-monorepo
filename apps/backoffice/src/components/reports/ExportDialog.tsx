@@ -12,7 +12,7 @@ import {
   Stack,
   Radio,
   Label,
-  Dropdown,
+  Select,
   Alert,
 } from '@xala/ds';
 import {
@@ -223,6 +223,7 @@ export function ExportDialog({
                     value={format.value}
                     checked={selectedFormat === format.value}
                     onChange={() => setSelectedFormat(format.value)}
+                    aria-label={format.label}
                   />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>
@@ -287,15 +288,18 @@ export function ExportDialog({
             <Label style={{ marginBottom: 'var(--ds-spacing-3)', display: 'block' }}>
               Grupperingsperiode
             </Label>
-            <Dropdown
-              items={PERIOD_OPTIONS.map((opt) => ({
-                id: opt.id,
-                label: opt.label,
-                onSelect: () => setPeriod(opt.id as ReportPeriod),
-              }))}
-              label={PERIOD_OPTIONS.find((opt) => opt.id === period)?.label || 'Velg periode'}
+            <Select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value as ReportPeriod)}
               data-size="md"
-            />
+              aria-label="Grupperingsperiode"
+            >
+              {PERIOD_OPTIONS.map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </Select>
           </div>
 
           {/* Filters */}
@@ -308,45 +312,57 @@ export function ExportDialog({
                 <Label htmlFor="facility-filter" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)', display: 'block' }}>
                   Lokale
                 </Label>
-                <Dropdown
-                  items={FACILITY_OPTIONS.map((opt) => ({
-                    id: opt.id,
-                    label: opt.label,
-                    onSelect: () => setFacilityId(opt.id),
-                  }))}
-                  label={FACILITY_OPTIONS.find((opt) => opt.id === facilityId)?.label || 'Velg lokale'}
+                <Select
+                  id="facility-filter"
+                  value={facilityId}
+                  onChange={(e) => setFacilityId(e.target.value)}
                   data-size="md"
-                />
+                  aria-label="Velg lokale"
+                >
+                  {FACILITY_OPTIONS.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </Select>
               </div>
 
               <div>
                 <Label htmlFor="organization-filter" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)', display: 'block' }}>
                   Organisasjon
                 </Label>
-                <Dropdown
-                  items={ORGANIZATION_OPTIONS.map((opt) => ({
-                    id: opt.id,
-                    label: opt.label,
-                    onSelect: () => setOrganizationId(opt.id),
-                  }))}
-                  label={ORGANIZATION_OPTIONS.find((opt) => opt.id === organizationId)?.label || 'Velg organisasjon'}
+                <Select
+                  id="organization-filter"
+                  value={organizationId}
+                  onChange={(e) => setOrganizationId(e.target.value)}
                   data-size="md"
-                />
+                  aria-label="Velg organisasjon"
+                >
+                  {ORGANIZATION_OPTIONS.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </Select>
               </div>
 
               <div>
                 <Label htmlFor="booking-type-filter" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)', display: 'block' }}>
                   Bookingtype
                 </Label>
-                <Dropdown
-                  items={BOOKING_TYPE_OPTIONS.map((opt) => ({
-                    id: opt.id,
-                    label: opt.label,
-                    onSelect: () => setBookingType(opt.id),
-                  }))}
-                  label={BOOKING_TYPE_OPTIONS.find((opt) => opt.id === bookingType)?.label || 'Velg type'}
+                <Select
+                  id="booking-type-filter"
+                  value={bookingType}
+                  onChange={(e) => setBookingType(e.target.value)}
                   data-size="md"
-                />
+                  aria-label="Velg type"
+                >
+                  {BOOKING_TYPE_OPTIONS.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </Select>
               </div>
             </Stack>
           </div>

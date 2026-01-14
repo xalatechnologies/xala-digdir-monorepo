@@ -98,10 +98,13 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
       // Clean up empty strings
       const cleanData: CreateOrganizationDTO = {
         name: formData.name,
-        actorType: formData.actorType,
       };
 
       // Add optional fields only if they have values
+      if (formData.actorType) {
+        cleanData.actorType = formData.actorType;
+      }
+
       const orgNum = formData.organizationNumber?.trim();
       if (orgNum) cleanData.organizationNumber = orgNum;
 

@@ -5,7 +5,7 @@
  * Wraps HeaderIconButton with a bell icon to indicate notification count.
  */
 
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { HeaderIconButton } from '../composed/header-parts';
 import type { HeaderIconButtonProps } from '../composed/header-parts';
 import { BellIcon } from '../primitives';

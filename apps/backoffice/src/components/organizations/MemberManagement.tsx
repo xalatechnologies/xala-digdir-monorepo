@@ -20,7 +20,7 @@ import {
   MoreVerticalIcon,
 } from '@xala/ds';
 import { useUsers, type OrganizationMember } from '@digilist/client-sdk';
-import { organizationService } from '@digilist/client-sdk/services/organization.service';
+import { organizationService } from '@digilist/client-sdk/services';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface MemberManagementProps {
