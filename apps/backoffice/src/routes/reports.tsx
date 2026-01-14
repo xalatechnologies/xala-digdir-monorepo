@@ -19,6 +19,8 @@ import { ReportTemplateSelector } from '../components/reports/ReportTemplateSele
 import { CustomReportBuilder } from '../components/reports/CustomReportBuilder';
 import { ScheduledReportsManager } from '../components/reports/ScheduledReportsManager';
 import { ReportHistory } from '../components/reports/ReportHistory';
+import { ExportDialog } from '../components/reports/ExportDialog';
+import { ExportProgressDialog } from '../components/reports/ExportProgressDialog';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -73,6 +75,12 @@ export function ReportsPage() {
 
   // Template selection state
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
+
+  // Export dialog state
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [isProgressDialogOpen, setIsProgressDialogOpen] = useState(false);
+  const [exportReportType, setExportReportType] = useState<'usage' | 'revenue' | 'bookings' | 'heatmap' | 'seasonal'>('usage');
+  const [exportJobId, setExportJobId] = useState<string | null>(null);
 
   // Fetch data from API - API returns data directly (no wrapper)
   const { data: kpis, isLoading: isLoadingKPIs } = useDashboardKPIs();
@@ -222,15 +230,23 @@ export function ReportsPage() {
     };
   }, [seasonalPatterns]);
 
-  const handleExport = (format: ExportFormat, type: 'usage' | 'revenue' | 'bookings') => {
-    exportReport.mutate({
-      type,
-      format,
-      params: {
-        ...(dateRange.startDate && { startDate: dateRange.startDate }),
-        ...(dateRange.endDate && { endDate: dateRange.endDate }),
-      },
-    });
+  // Open export dialog with report type
+  const handleOpenExportDialog = (type: 'usage' | 'revenue' | 'bookings' | 'heatmap' | 'seasonal') => {
+    setExportReportType(type);
+    setIsExportDialogOpen(true);
+  };
+
+  // Handle export completion from dialog - shows progress dialog
+  const handleExportComplete = (jobId: string) => {
+    setExportJobId(jobId);
+    setIsExportDialogOpen(false);
+    setIsProgressDialogOpen(true);
+  };
+
+  // Handle download completion
+  const handleDownloadComplete = () => {
+    setIsProgressDialogOpen(false);
+    setExportJobId(null);
   };
 
   const handleGenerateCustomReport = (config: CreateReportTemplateDTO) => {
@@ -263,23 +279,12 @@ export function ReportsPage() {
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
             <Button
               type="button"
-              variant="secondary"
+              variant="primary"
               data-size="md"
-              onClick={() => handleExport('xlsx', 'usage')}
-              disabled={exportReport.isPending}
+              onClick={() => handleOpenExportDialog('usage')}
             >
               <DownloadIcon />
-              Eksporter Excel
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              data-size="md"
-              onClick={() => handleExport('pdf', 'usage')}
-              disabled={exportReport.isPending}
-            >
-              <DownloadIcon />
-              Eksporter PDF
+              Eksporter rapport
             </Button>
           </div>
         )}
@@ -477,11 +482,10 @@ export function ReportsPage() {
                   type="button"
                   variant="tertiary"
                   data-size="sm"
-                  onClick={() => handleExport('csv', 'usage')}
-                  disabled={exportReport.isPending}
+                  onClick={() => handleOpenExportDialog('usage')}
                 >
                   <DownloadIcon />
-                  CSV
+                  Eksporter
                 </Button>
               </div>
               {usageChartData.length > 0 ? (
@@ -503,11 +507,10 @@ export function ReportsPage() {
                   type="button"
                   variant="tertiary"
                   data-size="sm"
-                  onClick={() => handleExport('csv', 'revenue')}
-                  disabled={exportReport.isPending}
+                  onClick={() => handleOpenExportDialog('revenue')}
                 >
                   <DownloadIcon />
-                  CSV
+                  Eksporter
                 </Button>
               </div>
               {revenueChartData.length > 0 ? (
@@ -673,11 +676,10 @@ export function ReportsPage() {
                 type="button"
                 variant="tertiary"
                 data-size="sm"
-                onClick={() => handleExport('csv', 'usage')}
-                disabled={exportReport.isPending}
+                onClick={() => handleOpenExportDialog('seasonal')}
               >
                 <DownloadIcon />
-                CSV
+                Eksporter
               </Button>
             </div>
 
@@ -1011,6 +1013,21 @@ export function ReportsPage() {
           </div>
         </Tabs.Panel>
       </Tabs>
+
+      {/* Export Dialogs */}
+      <ExportDialog
+        isOpen={isExportDialogOpen}
+        onClose={() => setIsExportDialogOpen(false)}
+        reportType={exportReportType}
+        onExportStart={handleExportComplete}
+      />
+
+      <ExportProgressDialog
+        isOpen={isProgressDialogOpen}
+        onClose={() => setIsProgressDialogOpen(false)}
+        jobId={exportJobId}
+        onComplete={handleDownloadComplete}
+      />
     </div>
   );
 }

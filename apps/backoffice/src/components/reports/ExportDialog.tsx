@@ -25,6 +25,7 @@ interface ExportDialogProps {
   isOpen: boolean;
   onClose: () => void;
   reportType: 'usage' | 'revenue' | 'bookings' | 'heatmap' | 'seasonal';
+  onExportStart?: (jobId: string) => void;
 }
 
 // Export format options
@@ -105,6 +106,7 @@ export function ExportDialog({
   isOpen,
   onClose,
   reportType,
+  onExportStart,
 }: ExportDialogProps) {
   // Export format state
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('pdf');
@@ -133,21 +135,32 @@ export function ExportDialog({
 
   // Handle export
   const handleExport = () => {
-    exportReport.mutate({
-      type: reportType,
-      format: selectedFormat,
-      params: {
-        period,
-        ...(dateRange.startDate && { startDate: dateRange.startDate }),
-        ...(dateRange.endDate && { endDate: dateRange.endDate }),
-        ...(facilityId !== 'all' && { facilityId }),
-        ...(organizationId !== 'all' && { organizationId }),
-        ...(bookingType !== 'all' && { bookingType }),
+    exportReport.mutate(
+      {
+        type: reportType,
+        format: selectedFormat,
+        params: {
+          period,
+          ...(dateRange.startDate && { startDate: dateRange.startDate }),
+          ...(dateRange.endDate && { endDate: dateRange.endDate }),
+          ...(facilityId !== 'all' && { facilityId }),
+          ...(organizationId !== 'all' && { organizationId }),
+          ...(bookingType !== 'all' && { bookingType }),
+        },
       },
-    });
-
-    // Close dialog after initiating export
-    onClose();
+      {
+        onSuccess: (data: any) => {
+          // Call onExportStart with jobId if provided
+          // Note: Current SDK returns Blob directly for sync exports
+          // TODO: Update when SDK supports async exports with job IDs
+          if (onExportStart && data?.jobId) {
+            onExportStart(data.jobId);
+          }
+          // Close dialog after export initiated
+          onClose();
+        },
+      }
+    );
   };
 
   // Reset state when dialog closes
