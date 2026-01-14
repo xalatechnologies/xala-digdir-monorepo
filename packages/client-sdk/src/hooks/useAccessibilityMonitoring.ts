@@ -51,7 +51,7 @@ export function useAccessibilityMonitoring(
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
 
-  const serviceRef = useRef<AccessibilityMonitoringService>();
+  const serviceRef = useRef<AccessibilityMonitoringService | undefined>(undefined);
   const pageLoadTimeRef = useRef<number>(Date.now());
   const lastFocusedElementRef = useRef<Element | null>(null);
 
@@ -100,7 +100,7 @@ export function useAccessibilityMonitoring(
   useEffect(() => {
     if (!enabled || !client) return;
 
-    serviceRef.current = new AccessibilityMonitoringService(client, {
+    serviceRef.current = new AccessibilityMonitoringService({
       enabled: true,
       sampleRate: 1.0,
     });
