@@ -200,6 +200,22 @@ export function useBulkRejectBookings() {
   });
 }
 
+/**
+ * Bulk cancel multiple bookings mutation
+ */
+export function useBulkCancelBookings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ ids, reason }: { ids: string[]; reason: string }) =>
+      bookingService.bulkCancel(ids, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
 // ============================================================================
 // Calendar Hooks
 // ============================================================================
