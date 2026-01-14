@@ -19,9 +19,6 @@ export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
 export { ListingMap } from './ListingMap';
 export type { ListingMapProps, MapListing } from './ListingMap';
 
-export { ListingTableView } from './ListingTableView';
-export type { ListingTableViewProps } from './ListingTableView';
-
 // Listing Detail Components
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';
@@ -173,6 +170,13 @@ export type {
   VerticalBarChartProps,
 } from './BarChart';
 
+export { HeatmapChart, CompactHeatmap } from './HeatmapChart';
+export type {
+  HeatmapCell,
+  HeatmapChartProps,
+  CompactHeatmapProps,
+} from './HeatmapChart';
+
 // Auth UI Components
 export {
   LoadingScreen,
@@ -206,7 +210,3 @@ export type {
   MessageItem,
   ChatThreadProps,
 } from './messaging';
-
-// Accessibility Monitoring Components
-export { AccessibilityDashboard } from './AccessibilityDashboard';
-export type { AccessibilityDashboardProps } from './AccessibilityDashboard';

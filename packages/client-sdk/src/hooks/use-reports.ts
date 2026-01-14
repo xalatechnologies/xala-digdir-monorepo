@@ -20,6 +20,9 @@ export const reportKeys = {
   revenue: (params: ReportQueryParams) => [...reportKeys.all, 'revenue', params] as const,
   usage: (params: ReportQueryParams) => [...reportKeys.all, 'usage', params] as const,
   utilization: (params: ReportQueryParams) => [...reportKeys.all, 'utilization', params] as const,
+  heatmap: (params: ReportQueryParams) => [...reportKeys.all, 'heatmap', params] as const,
+  seasonal: (params: ReportQueryParams) => [...reportKeys.all, 'seasonal', params] as const,
+  comparison: (params: ReportQueryParams) => [...reportKeys.all, 'comparison', params] as const,
 };
 
 /**
@@ -119,6 +122,42 @@ export function useUsageReport(params: ReportQueryParams) {
     queryKey: reportKeys.usage(params),
     queryFn: () => reportsService.getUtilizationReport(params),
     enabled: (!!params.startDate && !!params.endDate) || !!params.period,
+  });
+}
+
+/**
+ * Fetch time slot heatmap data
+ */
+export function useTimeSlotHeatmap(params: ReportQueryParams) {
+  return useQuery({
+    queryKey: reportKeys.heatmap(params),
+    queryFn: () => reportsService.getHeatmapData(params),
+    enabled: (!!params.startDate && !!params.endDate) || !!params.period,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+/**
+ * Fetch seasonal patterns report
+ */
+export function useSeasonalPatterns(params: ReportQueryParams) {
+  return useQuery({
+    queryKey: reportKeys.seasonal(params),
+    queryFn: () => reportsService.getSeasonalPatterns(params),
+    enabled: (!!params.startDate && !!params.endDate) || !!params.period,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+/**
+ * Fetch period comparison data
+ */
+export function useComparisonData(params: ReportQueryParams) {
+  return useQuery({
+    queryKey: reportKeys.comparison(params),
+    queryFn: () => reportsService.getComparisonData(params),
+    enabled: (!!params.startDate && !!params.endDate) || !!params.period,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

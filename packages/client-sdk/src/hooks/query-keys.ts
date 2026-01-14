@@ -146,6 +146,9 @@ export const queryKeys = {
     usage: (params: ReportQueryParams) => [...queryKeys.reports.all, 'usage', params] as const,
     revenue: (params: ReportQueryParams) => [...queryKeys.reports.all, 'revenue', params] as const,
     bookings: (params: ReportQueryParams) => [...queryKeys.reports.all, 'bookings', params] as const,
+    heatmap: (params: ReportQueryParams) => [...queryKeys.reports.all, 'heatmap', params] as const,
+    seasonal: (params: ReportQueryParams) => [...queryKeys.reports.all, 'seasonal', params] as const,
+    comparison: (params: ReportQueryParams) => [...queryKeys.reports.all, 'comparison', params] as const,
   },
 
   // =========================================================================
