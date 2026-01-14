@@ -304,6 +304,25 @@ export const seasonalLeases = pgTable('seasonal_leases', {
   orgIdx: index('seasonal_leases_org_idx').on(table.organizationId),
 }));
 
+export const priorityRules = pgTable('priority_rules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  seasonId: uuid('season_id').references(() => seasons.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  ruleType: varchar('rule_type', { length: 50 }).notNull().default('custom'),
+  priority: integer('priority').notNull().default(0),
+  conditions: jsonb('conditions').notNull(),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('priority_rules_tenant_idx').on(table.tenantId),
+  seasonIdx: index('priority_rules_season_idx').on(table.seasonId),
+  typeIdx: index('priority_rules_type_idx').on(table.ruleType),
+  enabledIdx: index('priority_rules_enabled_idx').on(table.enabled),
+}));
+
 // ============================================================================
 // Conversations & Messages
 // ============================================================================
@@ -369,6 +388,8 @@ export type SeasonApplication = typeof seasonApplications.$inferSelect;
 export type NewSeasonApplication = typeof seasonApplications.$inferInsert;
 export type SeasonalLease = typeof seasonalLeases.$inferSelect;
 export type NewSeasonalLease = typeof seasonalLeases.$inferInsert;
+export type PriorityRule = typeof priorityRules.$inferSelect;
+export type NewPriorityRule = typeof priorityRules.$inferInsert;
 export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;

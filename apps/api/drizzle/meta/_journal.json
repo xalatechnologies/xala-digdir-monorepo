@@ -15,6 +15,13 @@
       "when": 1768417335292,
       "tag": "0001_sparkling_microchip",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768417430028,
+      "tag": "0002_fancy_jack_power",
+      "breakpoints": true
     }
   ]
 }
