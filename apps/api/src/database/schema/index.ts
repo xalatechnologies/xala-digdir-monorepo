@@ -254,6 +254,33 @@ export const seasons = pgTable('seasons', {
   datesIdx: index('seasons_dates_idx').on(table.startDate, table.endDate),
 }));
 
+export const seasonApplications = pgTable('season_applications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
+  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  applicantName: varchar('applicant_name', { length: 255 }).notNull(),
+  applicantEmail: varchar('applicant_email', { length: 255 }).notNull(),
+  applicantPhone: varchar('applicant_phone', { length: 50 }),
+  weekday: integer('weekday').notNull(),
+  startTime: varchar('start_time', { length: 10 }).notNull(),
+  endTime: varchar('end_time', { length: 10 }).notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  priority: integer('priority'),
+  notes: text('notes'),
+  rejectionReason: text('rejection_reason'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('season_applications_tenant_idx').on(table.tenantId),
+  seasonIdx: index('season_applications_season_idx').on(table.seasonId),
+  listingIdx: index('season_applications_listing_idx').on(table.listingId),
+  orgIdx: index('season_applications_org_idx').on(table.organizationId),
+  statusIdx: index('season_applications_status_idx').on(table.status),
+}));
+
 export const seasonalLeases = pgTable('seasonal_leases', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
@@ -338,6 +365,8 @@ export type Allocation = typeof allocations.$inferSelect;
 export type NewAllocation = typeof allocations.$inferInsert;
 export type Season = typeof seasons.$inferSelect;
 export type NewSeason = typeof seasons.$inferInsert;
+export type SeasonApplication = typeof seasonApplications.$inferSelect;
+export type NewSeasonApplication = typeof seasonApplications.$inferInsert;
 export type SeasonalLease = typeof seasonalLeases.$inferSelect;
 export type NewSeasonalLease = typeof seasonalLeases.$inferInsert;
 export type Conversation = typeof conversations.$inferSelect;
