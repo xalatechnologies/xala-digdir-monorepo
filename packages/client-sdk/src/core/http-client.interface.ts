@@ -56,6 +56,8 @@ export interface ApiClientConfig {
   onError?: (error: Error) => void;
   /** Custom headers to include in all requests */
   defaultHeaders?: Record<string, string>;
+  /** Credentials mode for requests (omit, same-origin, include) - enables cookie-based auth */
+  credentials?: RequestCredentials;
 }
 
 /**
