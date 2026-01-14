@@ -4,7 +4,7 @@
  * Admin interface for comprehensive facility management
  */
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   ChevronLeftIcon,
 } from '@xala/ds';
 import { useListingBySlug, useListing } from '@digilist/client-sdk';
+import { OverviewTab } from './OverviewTab';
 
 interface ListingDetailViewProps {
   slug: string;
@@ -199,16 +200,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
 
         {/* Tab Content */}
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          {activeTab === 'overview' && (
-            <div>
-              <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-                Oversikt
-              </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Innhold for oversikt kommer her. Dette vil inneholde bilder, beskrivelse, fasiliteter, åpningstider og kontaktinformasjon.
-              </Paragraph>
-            </div>
-          )}
+          {activeTab === 'overview' && <OverviewTab listing={listing} />}
           {activeTab === 'bookings' && (
             <div>
               <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
