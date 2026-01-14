@@ -14,9 +14,10 @@ import {
   PeopleIcon,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
-import { useUnreadCount } from '@digilist/client-sdk';
+import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
+import { useNotificationCenter } from '../../App';
 
 interface HeaderProps {
   title?: string;
@@ -103,11 +104,12 @@ export function Header({ title: _title }: HeaderProps) {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const { openNotificationCenter } = useNotificationCenter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
-  
+
   // Get real unread notification count
-  const { data: unreadData } = useUnreadCount();
+  const { data: unreadData } = useNotificationUnreadCount();
   const unreadCount = unreadData?.data?.count ?? 0;
 
   const handleSearchChange = (value: string) => {
@@ -172,7 +174,7 @@ export function Header({ title: _title }: HeaderProps) {
             />
             <NotificationBell
               count={unreadCount}
-              onClick={() => navigate('/messages')}
+              onClick={openNotificationCenter}
               aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
               size="md"
             />
