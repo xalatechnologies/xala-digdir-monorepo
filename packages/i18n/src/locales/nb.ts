@@ -349,6 +349,36 @@ export const nb: Record<string, string> = {
   'org.membersDesc': 'Administrer medlemmer',
   'org.seasonRental': 'Sesongleie',
   'org.seasonRentalDesc': 'Faste leieperioder',
+
+  // Errors
+  'errors.generic': 'Noe gikk galt. Vennligst prøv igjen.',
+  'errors.network': 'Nettverksfeil. Sjekk tilkoblingen din.',
+  'errors.notFound': 'Ressursen ble ikke funnet.',
+  'errors.unauthorized': 'Du har ikke tilgang til denne ressursen.',
+  'errors.forbidden': 'Handlingen er ikke tillatt.',
+  'errors.validation': 'Vennligst sjekk at alle felt er fylt ut korrekt.',
+  'errors.timeout': 'Forespørselen tok for lang tid. Prøv igjen.',
+  'errors.serverError': 'Serverfeil. Kontakt support hvis problemet vedvarer.',
+
+  // Policy
+  'policy.terms': 'Bruksvilkår',
+  'policy.privacy': 'Personvernerklæring',
+  'policy.cookies': 'Informasjonskapsler',
+  'policy.cancellation': 'Avbestillingsregler',
+  'policy.rental': 'Utleievilkår',
+  'policy.accessibility': 'Tilgjengelighet',
+  'policy.gdpr': 'GDPR og personvern',
+  'policy.dataRetention': 'Databehandling',
+
+  // Actions
+  'actions.approve': 'Godkjenn',
+  'actions.reject': 'Avslå',
+  'actions.submit': 'Send inn',
+  'actions.reset': 'Tilbakestill',
+  'actions.export': 'Eksporter',
+  'actions.import': 'Importer',
+  'actions.duplicate': 'Dupliser',
+  'actions.download': 'Last ned',
 };
 
 
