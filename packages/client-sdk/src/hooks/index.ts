@@ -61,7 +61,11 @@ export {
   useAvailabilitySlots,
   useAllocations,
   useCreateAllocation,
-  useDeleteAllocation
+  useDeleteAllocation,
+  useBulkConfirmBookings,
+  useBulkRejectBookings,
+  useBulkCancelBookings,
+  useBatchRescheduleBookings
 } from './use-bookings';
 
 // Organization & User hooks
