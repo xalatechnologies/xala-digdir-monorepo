@@ -17,10 +17,14 @@
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
+  },
   "peerDependencies": {
     "react": "^18.0.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.18",
     "typescript": "~5.6.0"
   }
