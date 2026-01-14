@@ -12,6 +12,11 @@ import {
   usePushSubscriptionFlow
 } from '@digilist/client-sdk';
 
+// Import notification test utilities in development mode
+if (import.meta.env.DEV) {
+  import('./utils/notification-test');
+}
+
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';

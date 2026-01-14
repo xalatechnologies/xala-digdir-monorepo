@@ -101,7 +101,29 @@ export function useRealtimeMessages(handler?: RealtimeEventHandler) {
       // Invalidate conversation queries
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
-      
+
+      // Call custom handler if provided
+      handlerRef.current?.(event);
+    });
+
+    return unsubscribe;
+  }, [queryClient]);
+}
+
+/**
+ * Hook to subscribe to notification events
+ * Auto-invalidates notification queries when events arrive
+ */
+export function useRealtimeNotifications(handler?: RealtimeEventHandler) {
+  const queryClient = useQueryClient();
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    const unsubscribe = realtimeClient.on('notification', (event) => {
+      // Invalidate notification queries to refetch latest data
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+
       // Call custom handler if provided
       handlerRef.current?.(event);
     });

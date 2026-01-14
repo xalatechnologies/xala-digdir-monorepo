@@ -117,6 +117,7 @@ export {
   useRealtimeBookings,
   useRealtimeListings,
   useRealtimeMessages,
+  useRealtimeNotifications,
   useRealtimeAudit,
   useRealtimeEvents,
   useNotificationBadge,
