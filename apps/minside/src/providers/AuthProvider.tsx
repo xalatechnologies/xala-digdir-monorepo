@@ -42,7 +42,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (code) {
         try {
           // OAuth callback - exchange authorization code for session
-          // The backend will set HTTP-only cookie automatically
+          // Security: Using Authorization Code Flow (OAuth 2.0 BCP compliant)
+          // The backend validates the code and sets an HTTP-only session cookie
+          // No tokens are passed in the URL or stored in localStorage
           const response = await authService.handleOAuthCallback(code);
           const session: AuthSession = response.data;
 
@@ -53,16 +55,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
             role: session.user.role as BackofficeRole,
           };
 
-          // Store user data (but NOT token - managed by HTTP-only cookie)
+          // Store user data in localStorage for quick access (NOT for authentication)
+          // Authentication is handled by the HTTP-only session cookie set by backend
           localStorage.setItem('minside_user', JSON.stringify(userData));
           setUser(userData);
 
-          // Clean URL to remove authorization code
+          // Clean URL to remove authorization code (prevent replay attacks)
           window.history.replaceState({}, document.title, window.location.pathname);
           setIsLoading(false);
           return;
         } catch (error) {
-          // Handle OAuth callback error
+          // OAuth callback failed - clear URL and show login page
+          // Common causes: invalid/expired code, network error, backend unavailable
           window.history.replaceState({}, document.title, window.location.pathname);
           setIsLoading(false);
           return;
@@ -70,6 +74,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       // Check for existing session via HTTP-only cookie
+      // Note: authService.getSession() automatically sends the session cookie
+      // with the request. The backend validates the cookie and returns the session.
+      // No manual token handling is required - authentication is cookie-based.
       try {
         const response = await authService.getSession();
         const session: AuthSession = response.data;
@@ -81,17 +88,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
           role: session.user.role as BackofficeRole,
         };
 
+        // Store user data in localStorage for quick access (not for authentication)
+        // Authentication is handled by the HTTP-only session cookie
         localStorage.setItem('minside_user', JSON.stringify(userData));
         setUser(userData);
       } catch (error) {
-        // No valid session - check for saved user data or mock auth
+        // No valid session cookie - either expired, invalid, or user not logged in
+        // Clear any stale user data from localStorage
         const savedUser = localStorage.getItem('minside_user');
 
         if (savedUser) {
-          // User data exists but session expired - clear it
+          // User data exists but session cookie expired/invalid - clear stale data
           localStorage.removeItem('minside_user');
         } else if (USE_MOCK_AUTH) {
-          // Mock auth - check for mock session
+          // Mock auth mode - check for mock session in localStorage
           const mockUser = localStorage.getItem('backoffice_mock_user');
           if (mockUser) {
             setUser(JSON.parse(mockUser));
