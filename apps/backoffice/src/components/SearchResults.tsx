@@ -130,7 +130,7 @@ export function SearchResults({
   // Render loading state
   if (isLoading) {
     return (
-      <Stack spacing="lg" align="center" style={{ padding: '3rem', ...style }} className={className}>
+      <Stack spacing="lg" align="center" style={{ padding: 'var(--ds-spacing-12)', ...style }} className={className}>
         <Spinner data-size="lg" aria-label="Laster..." />
         <Text color="secondary">Søker...</Text>
       </Stack>
@@ -140,7 +140,7 @@ export function SearchResults({
   // Render error state
   if (error) {
     return (
-      <Stack spacing="md" style={{ padding: '2rem', ...style }} className={className}>
+      <Stack spacing="md" style={{ padding: 'var(--ds-spacing-8)', ...style }} className={className}>
         <Heading level={3}>Søket feilet</Heading>
         <Paragraph color="danger">
           {error instanceof Error ? error.message : 'En ukjent feil oppstod'}
@@ -155,7 +155,7 @@ export function SearchResults({
   // Render empty state
   if (totalResults === 0) {
     return (
-      <Stack spacing="md" align="center" style={{ padding: '3rem', ...style }} className={className}>
+      <Stack spacing="md" align="center" style={{ padding: 'var(--ds-spacing-12)', ...style }} className={className}>
         <Text size="lg" weight="medium">
           Ingen resultater funnet
         </Text>
@@ -219,7 +219,7 @@ export function SearchResults({
           <Stack spacing="md">
             {activeTab === 'all' && (
               <Heading level={3}>
-                <CalendarIcon size={20} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                <CalendarIcon size={20} style={{ marginRight: 'var(--ds-spacing-2)', verticalAlign: 'middle' }} />
                 Bookinger ({groupedResults.bookings.length})
               </Heading>
             )}
@@ -298,7 +298,7 @@ export function SearchResults({
           <Stack spacing="md">
             {activeTab === 'all' && (
               <Heading level={3}>
-                <BuildingIcon size={20} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                <BuildingIcon size={20} style={{ marginRight: 'var(--ds-spacing-2)', verticalAlign: 'middle' }} />
                 Lokaler ({groupedResults.listings.length})
               </Heading>
             )}
@@ -373,7 +373,7 @@ export function SearchResults({
           <Stack spacing="md">
             {activeTab === 'all' && (
               <Heading level={3}>
-                <PeopleIcon size={20} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+                <PeopleIcon size={20} style={{ marginRight: 'var(--ds-spacing-2)', verticalAlign: 'middle' }} />
                 Organisasjoner ({groupedResults.organizations.length})
               </Heading>
             )}

@@ -177,7 +177,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
                     borderRadius: 'var(--ds-border-radius-full)',
                     backgroundColor: 'transparent',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: 'var(--ds-font-size-sm)',
                   }}
                   aria-label={`Fjern ${amenity}`}
                 >

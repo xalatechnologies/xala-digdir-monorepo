@@ -73,7 +73,6 @@ export function RealtimeProvider({
   // Connect to realtime server
   const connect = useCallback(() => {
     if (!enableInDev && import.meta.env.DEV) {
-      console.log('[RealtimeProvider] Disabled in development mode');
       return;
     }
 
@@ -82,7 +81,6 @@ export function RealtimeProvider({
       setError(null);
 
       const wsUrl = createTenantWebSocketUrl(baseUrl, tenantId);
-      console.log('[RealtimeProvider] Connecting to', wsUrl);
 
       realtimeClient.connect({
         url: wsUrl,
@@ -118,7 +116,6 @@ export function RealtimeProvider({
       setIsConnected(true);
       setStatus('connected');
       setError(null);
-      console.log('[RealtimeProvider] Connected');
     });
 
     // Track all events for debugging/display

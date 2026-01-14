@@ -238,7 +238,7 @@ export function Sidebar() {
                 fontWeight: 'var(--ds-font-weight-bold)',
                 color: 'var(--ds-color-accent-text-default)',
                 lineHeight: 1.2,
-                letterSpacing: '0.02em',
+                letterSpacing: 'var(--ds-font-letter-spacing-sm)',
               }}
             >
               DIGILIST
@@ -247,7 +247,7 @@ export function Sidebar() {
               style={{
                 fontSize: 'var(--ds-font-size-2xs)',
                 color: 'var(--ds-color-neutral-text-subtle)',
-                letterSpacing: '0.08em',
+                letterSpacing: 'var(--ds-font-letter-spacing-md)',
                 marginTop: '2px',
                 textTransform: 'uppercase',
               }}
@@ -270,7 +270,7 @@ export function Sidebar() {
                   fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  letterSpacing: 'var(--ds-font-letter-spacing-md)',
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-5)',
                   marginBottom: 'var(--ds-spacing-2)',
                 }}

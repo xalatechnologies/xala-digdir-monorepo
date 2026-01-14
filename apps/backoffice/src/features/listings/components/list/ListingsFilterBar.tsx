@@ -422,7 +422,7 @@ export function ListingsFilterBar({
                 backgroundColor: 'var(--ds-color-accent-base-default)',
                 color: 'var(--ds-color-accent-contrast-default)',
                 borderRadius: 'var(--ds-border-radius-full)',
-                padding: '2px 8px',
+                padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                 fontSize: 'var(--ds-font-size-xs)',
                 marginLeft: 'var(--ds-spacing-1)',
               }}

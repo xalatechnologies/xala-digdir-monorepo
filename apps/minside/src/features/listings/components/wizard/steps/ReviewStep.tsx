@@ -125,7 +125,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
                   justifyContent: 'center',
                   backgroundColor: item.isValid ? 'var(--ds-color-success-base-default)' : 'var(--ds-color-neutral-surface-default)',
                   color: item.isValid ? 'white' : 'var(--ds-color-neutral-text-subtle)',
-                  fontSize: '12px',
+                  fontSize: 'var(--ds-font-size-xs)',
                   border: item.isValid ? 'none' : '1px solid var(--ds-color-neutral-border-default)',
                 }}
               >

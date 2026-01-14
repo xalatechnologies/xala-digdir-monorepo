@@ -385,8 +385,8 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
             <span
               style={{
                 position: 'absolute',
-                top: '-6px',
-                right: '-6px',
+                top: 'calc(-1 * var(--ds-spacing-2))',
+                right: 'calc(-1 * var(--ds-spacing-2))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

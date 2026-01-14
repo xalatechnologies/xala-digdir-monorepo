@@ -791,8 +791,8 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
                         <div
                           style={{
                             position: 'absolute',
-                            left: '-4px',
-                            top: '-4px',
+                            left: 'calc(-1 * var(--ds-spacing-1))',
+                            top: 'calc(-1 * var(--ds-spacing-1))',
                             width: '8px',
                             height: '8px',
                             borderRadius: '50%',

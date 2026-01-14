@@ -96,7 +96,7 @@ export function DashboardPage() {
               }}>
                 <CalendarIcon />
               </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('minside.upcomingBookings')}
               </Paragraph>
             </div>
@@ -130,7 +130,7 @@ export function DashboardPage() {
               }}>
                 <ClockIcon />
               </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('requests.pending')}
               </Paragraph>
             </div>
@@ -164,7 +164,7 @@ export function DashboardPage() {
               }}>
                 <CheckCircleIcon />
               </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('bookings.totalBookings')}
               </Paragraph>
             </div>
@@ -207,7 +207,7 @@ export function DashboardPage() {
               }}>
                 <HomeIcon />
               </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500, textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
                 {t('minside.bookNow')}
               </Paragraph>
             </Card>
@@ -234,7 +234,7 @@ export function DashboardPage() {
               }}>
                 <CalendarIcon />
               </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500, textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
                 {t('minside.myBookings')}
               </Paragraph>
             </Card>
@@ -261,7 +261,7 @@ export function DashboardPage() {
               }}>
                 <MessageSquareIcon />
               </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500, textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
                 {t('minside.messages')}
               </Paragraph>
             </Card>
@@ -288,7 +288,7 @@ export function DashboardPage() {
               }}>
                 <SettingsIcon />
               </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500, textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
                 {t('minside.settings')}
               </Paragraph>
             </Card>
@@ -310,7 +310,7 @@ export function DashboardPage() {
             {t('minside.upcomingBookings')}
           </Heading>
           <Link to="/bookings">
-            <Button type="button" variant="tertiary" data-size="sm">
+            <Button type="button" variant="tertiary" data-size="sm" aria-label={t('minside.viewAll') || 'View all'}>
               {t('minside.viewAll')}
               <ChevronRightIcon />
             </Button>
@@ -384,7 +384,7 @@ export function DashboardPage() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <Paragraph data-size={isMobile ? 'sm' : 'md'} style={{
                         margin: 0,
-                        fontWeight: 600,
+                        fontWeight: 'var(--ds-font-weight-semibold)',
                         color: 'var(--ds-color-neutral-text-default)',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -418,7 +418,7 @@ export function DashboardPage() {
                     marginLeft: isMobile ? 'calc(40px + var(--ds-spacing-3))' : '0'
                   }}>
                     {booking.totalPrice && (
-                      <Paragraph data-size={isMobile ? 'sm' : 'md'} style={{ margin: 0, fontWeight: 600 }}>
+                      <Paragraph data-size={isMobile ? 'sm' : 'md'} style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                         {booking.totalPrice.toLocaleString('nb-NO')} kr
                       </Paragraph>
                     )}

@@ -275,7 +275,7 @@ export function OrganizationDashboardPage() {
             </Paragraph>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-              {members.slice(0, 5).map((member: any) => (
+              {members.slice(0, 5).map((member: { id: string; name: string; role: string; email?: string }) => (
                 <div
                   key={member.id}
                   style={{
@@ -297,12 +297,12 @@ export function OrganizationDashboardPage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontWeight: 600,
+                      fontWeight: 'var(--ds-font-weight-semibold)',
                     }}>
                       {member.name?.charAt(0) || '?'}
                     </div>
                     <div>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {member.name || member.email}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>

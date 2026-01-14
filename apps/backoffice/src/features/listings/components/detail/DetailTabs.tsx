@@ -182,7 +182,7 @@ export function TabEmptyState({
         <div
           style={{
             marginBottom: 'var(--ds-spacing-3)',
-            fontSize: '3rem',
+            fontSize: 'var(--ds-font-size-heading-xl)',
             opacity: 0.5,
           }}
         >

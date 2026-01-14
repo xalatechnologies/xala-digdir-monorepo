@@ -130,10 +130,10 @@ export function OrganizationBookingsPage() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                     {booking.listingName}
                   </Paragraph>
-                  <BookingStatusBadge status={booking.status as any} />
+                  <BookingStatusBadge status={booking.status as string} />
                 </div>
                 <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {formatDate(booking.startTime)} • {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
@@ -141,7 +141,7 @@ export function OrganizationBookingsPage() {
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t('org.bookedBy')}: {booking.bookedBy}
                 </Paragraph>
-                <Paragraph data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', fontWeight: 600 }}>
+                <Paragraph data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
                   {formatCurrency(booking.totalPrice)}
                 </Paragraph>
               </div>
@@ -162,7 +162,7 @@ export function OrganizationBookingsPage() {
               {bookings.map((booking) => (
                 <Table.Row key={booking.id}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 500 }}>{booking.listingName}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{booking.listingName}</span>
                   </Table.Cell>
                   <Table.Cell>
                     <div>
@@ -174,7 +174,7 @@ export function OrganizationBookingsPage() {
                   </Table.Cell>
                   <Table.Cell>{booking.bookedBy}</Table.Cell>
                   <Table.Cell>
-                    <BookingStatusBadge status={booking.status as any} />
+                    <BookingStatusBadge status={booking.status as string} />
                   </Table.Cell>
                   <Table.Cell>{formatCurrency(booking.totalPrice)}</Table.Cell>
                 </Table.Row>

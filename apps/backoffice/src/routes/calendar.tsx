@@ -297,7 +297,7 @@ export function CalendarPage() {
           {event.title || event.userName || 'Booking'}
         </div>
         {!compact && height > 40 && (
-          <div style={{ fontSize: '10px', color: colors.text, opacity: 0.8 }}>
+          <div style={{ fontSize: 'var(--ds-font-size-body-xs)', color: colors.text, opacity: 0.8 }}>
             {event.listingName}
           </div>
         )}
@@ -393,8 +393,8 @@ export function CalendarPage() {
                   style={{
                     position: 'absolute',
                     top: `${weekDragPreview.top}px`,
-                    left: '4px',
-                    right: '4px',
+                    left: 'var(--ds-spacing-1)',
+                    right: 'var(--ds-spacing-1)',
                     height: `${weekDragPreview.height}px`,
                     backgroundColor: 'var(--ds-color-accent-surface-default)',
                     border: '2px dashed var(--ds-color-accent-border-default)',
@@ -437,8 +437,8 @@ export function CalendarPage() {
                   <div
                     style={{
                       position: 'absolute',
-                      left: '-5px',
-                      top: '-4px',
+                      left: 'calc(-1 * var(--ds-spacing-1))',
+                      top: 'calc(-1 * var(--ds-spacing-1))',
                       width: '10px',
                       height: '10px',
                       borderRadius: 'var(--ds-border-radius-full)',
@@ -537,8 +537,8 @@ export function CalendarPage() {
               <div
                 style={{
                   position: 'absolute',
-                  left: '-5px',
-                  top: '-4px',
+                  left: 'calc(-1 * var(--ds-spacing-1))',
+                  top: 'calc(-1 * var(--ds-spacing-1))',
                   width: '10px',
                   height: '10px',
                   borderRadius: 'var(--ds-border-radius-full)',
@@ -626,7 +626,7 @@ export function CalendarPage() {
                     <div style={{ overflow: 'hidden' }}>
                       {dayEvents.slice(0, 3).map((event: CalendarEvent) => renderEventCard(event, true))}
                       {dayEvents.length > 3 && (
-                        <div style={{ fontSize: '10px', color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}>
+                        <div style={{ fontSize: 'var(--ds-font-size-body-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}>
                           +{dayEvents.length - 3} flere
                         </div>
                       )}

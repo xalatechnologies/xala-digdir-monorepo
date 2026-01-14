@@ -114,10 +114,8 @@ export function ListingDetailsLayout({
   const presenter = React.useMemo(() => createPresenter(listing.type), [listing.type]);
 
   // Subscribe to real-time updates
-  useRealtimeUpdates(listing.id, (event) => {
-    if (event.type === 'LISTING_UPDATED') {
-      console.log('[REALTIME] Listing updated:', event);
-    }
+  useRealtimeUpdates(listing.id, (_event) => {
+    // Real-time listing updates handled by React Query invalidation
   });
 
   // Share data

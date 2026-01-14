@@ -17,6 +17,7 @@ import {
   Spinner,
   Input,
   Select,
+  Label,
   useDialog,
 } from '@xala/ds';
 import {
@@ -137,9 +138,9 @@ export function OrganizationMembersPage() {
             alignItems: 'end',
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>
+              <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('common.email')}
-              </label>
+              </Label>
               <Input
                 type="email"
                 value={inviteEmail}
@@ -149,9 +150,9 @@ export function OrganizationMembersPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>
+              <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('common.role')}
-              </label>
+              </Label>
               <Select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value as Role)}
@@ -194,7 +195,7 @@ export function OrganizationMembersPage() {
             {t('org.admins')}
           </Paragraph>
           <Heading level={2} data-size="lg" style={{ margin: 0 }}>
-            {members.filter((m: any) => m.role === 'admin').length}
+            {members.filter((m: { id: string; name: string; email: string; role: string; joinedAt?: string }) => m.role === 'admin').length}
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -202,7 +203,7 @@ export function OrganizationMembersPage() {
             {t('org.regularMembers')}
           </Paragraph>
           <Heading level={2} data-size="lg" style={{ margin: 0 }}>
-            {members.filter((m: any) => m.role !== 'admin').length}
+            {members.filter((m: { id: string; name: string; email: string; role: string; joinedAt?: string }) => m.role !== 'admin').length}
           </Heading>
         </Card>
       </div>
@@ -230,7 +231,7 @@ export function OrganizationMembersPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {members.map((member: any) => (
+            {members.map((member: { id: string; name: string; email: string; role: string; joinedAt?: string }) => (
               <div
                 key={member.id}
                 style={{
@@ -253,12 +254,12 @@ export function OrganizationMembersPage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                   }}>
                     {member.name?.charAt(0) || member.email?.charAt(0) || '?'}
                   </div>
                   <div>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {member.name || member.email}
                     </Paragraph>
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>

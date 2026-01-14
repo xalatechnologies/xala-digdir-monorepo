@@ -50,11 +50,6 @@ class ConsoleAuditProvider implements AuditProvider {
       timestamp: new Date().toISOString(),
     };
 
-    // In development, log to console
-    if (import.meta.env.DEV) {
-      console.log('[AUDIT]', fullEvent.type, fullEvent);
-    }
-
     // In production, send to audit API
     // await fetch('/api/audit', {
     //   method: 'POST',

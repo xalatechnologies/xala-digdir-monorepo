@@ -379,7 +379,7 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
                 fontFamily: 'var(--ds-font-family-monospace)',
                 color: 'var(--ds-color-neutral-text-default)',
                 backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                padding: '2px 6px',
+                padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                 borderRadius: 'var(--ds-radius-sm)',
               }}
             >
@@ -391,8 +391,8 @@ export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
-                padding: '4px 8px',
+                gap: 'var(--ds-spacing-1)',
+                padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                 fontSize: 'var(--ds-font-size-xs)',
                 backgroundColor: copiedId === listing.id
                   ? 'var(--ds-color-success-surface-subtle)'

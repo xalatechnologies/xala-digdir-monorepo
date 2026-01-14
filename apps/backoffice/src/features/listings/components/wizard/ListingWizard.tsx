@@ -171,7 +171,7 @@ export function ListingWizard({ slug, initialType }: ListingWizardProps) {
             gap: 'var(--ds-spacing-2)',
           }}
         >
-          <span style={{ fontSize: '18px' }}>{saveStatus === 'success' ? '✓' : '✕'}</span>
+          <span style={{ fontSize: 'var(--ds-font-size-heading-sm)' }}>{saveStatus === 'success' ? '✓' : '✕'}</span>
           <Paragraph
             data-size="sm"
             style={{

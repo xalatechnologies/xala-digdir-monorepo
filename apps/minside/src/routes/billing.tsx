@@ -219,7 +219,7 @@ export function BillingPage() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-2)' }}>
                   <div>
-                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                       {invoice.invoiceNumber}
                     </Paragraph>
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -229,7 +229,7 @@ export function BillingPage() {
                   <InvoiceStatusBadge status={invoice.status} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--ds-spacing-3)' }}>
-                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 600 }}>
+                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                     {formatCurrency(invoice.amount)}
                   </Paragraph>
                   <Button
@@ -259,7 +259,7 @@ export function BillingPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {invoices.map((invoice: any) => (
+              {invoices.map((invoice: { id: string; invoiceNumber: string; dueDate: string; status: string; amount: number }) => (
                 <Table.Row key={invoice.id}>
                   <Table.Cell>
                     <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>

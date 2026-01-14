@@ -176,10 +176,6 @@ export function ListingDetailPage(): React.ReactElement {
     listing?.images.map(img => ({ id: img.id, src: img.url, alt: img.alt || listing.name, thumbnail: img.url })) || [],
   [listing]);
 
-  // Log errors
-  React.useEffect(() => {
-    if (error) console.error('API error loading listing:', error);
-  }, [error]);
 
   // Handle favorite toggle
   const handleFavoriteToggle = React.useCallback(async () => {

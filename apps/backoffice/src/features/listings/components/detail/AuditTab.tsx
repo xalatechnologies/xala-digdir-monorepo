@@ -264,12 +264,12 @@ export function AuditTab({ listingId }: AuditTabProps) {
               color="info"
               style={{
                 position: 'absolute',
-                top: '-8px',
-                right: '-8px',
+                top: 'calc(-1 * var(--ds-spacing-2))',
+                right: 'calc(-1 * var(--ds-spacing-2))',
                 minWidth: '20px',
                 height: '20px',
-                padding: '0 6px',
-                fontSize: '12px',
+                padding: '0 var(--ds-spacing-2)',
+                fontSize: 'var(--ds-font-size-body-xs)',
               }}
             >
               {activeFilters}

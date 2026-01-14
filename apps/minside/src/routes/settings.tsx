@@ -257,31 +257,31 @@ export function SettingsPage() {
           <Tabs.List style={{ marginBottom: 'var(--ds-spacing-6)' }}>
             <Tabs.Tab value="profile">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <UserIcon style={{ fontSize: '18px' }} />
+                <UserIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
                 Min profil
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="addresses">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <HomeIcon style={{ fontSize: '18px' }} />
+                <HomeIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
                 Adresser
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="privacy">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <ShieldIcon style={{ fontSize: '18px' }} />
+                <ShieldIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
                 Personvern
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="notifications">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <BellIcon style={{ fontSize: '18px' }} />
+                <BellIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
                 Varsler
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="preferences">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <SettingsIcon style={{ fontSize: '18px' }} />
+                <SettingsIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
                 Preferanser
               </div>
             </Tabs.Tab>
@@ -325,7 +325,7 @@ export function SettingsPage() {
                         }}
                       />
                     ) : (
-                      <UserIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                      <UserIcon style={{ fontSize: 'var(--ds-font-size-2xl)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                     )}
                   </div>
 
@@ -341,7 +341,9 @@ export function SettingsPage() {
                       variant="secondary"
                       data-size="sm"
                       onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploadingAvatar} type="button"
+                      disabled={isUploadingAvatar}
+                      type="button"
+                      aria-label="Endre profilbilde"
                     >
                       <CameraIcon />
                       {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}

@@ -14,8 +14,6 @@ initializeClient({
   licenseKey: import.meta.env.VITE_LICENSE_KEY || '',
 });
 
-console.info('[SDK] Initialized with API:', import.meta.env.VITE_API_URL || 'https://api.digilist.no');
-
 // Note: Theme CSS is dynamically loaded by DesignsystemetProvider.
 // The provider loads CLI-generated base theme + extensions.
 

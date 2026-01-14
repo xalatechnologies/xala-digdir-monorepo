@@ -124,11 +124,11 @@ export function AllocationPlannerPage() {
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#2563eb' }} />
+            <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#2563eb' }} />
             <Paragraph data-size="sm" style={{ margin: 0 }}>Skien IL</Paragraph>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#16a34a' }} />
+            <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#16a34a' }} />
             <Paragraph data-size="sm" style={{ margin: 0 }}>Telemark FK</Paragraph>
           </div>
         </div>

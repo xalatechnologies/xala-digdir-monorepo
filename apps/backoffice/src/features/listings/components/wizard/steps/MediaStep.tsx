@@ -664,7 +664,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       onClick={(e) => { e.stopPropagation(); handleSetCover(index); }}
                       style={{
                         padding: '2px var(--ds-spacing-2)',
-                        fontSize: '10px',
+                        fontSize: 'var(--ds-font-size-body-xs)',
                         backgroundColor: 'var(--ds-color-neutral-background-default)',
                         border: 'none',
                         borderRadius: 'var(--ds-border-radius-sm)',
@@ -679,7 +679,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                     onClick={(e) => { e.stopPropagation(); handleRemoveImage(index); }}
                     style={{
                       padding: '2px var(--ds-spacing-2)',
-                      fontSize: '10px',
+                      fontSize: 'var(--ds-font-size-body-xs)',
                       backgroundColor: 'var(--ds-color-danger-base-default)',
                       color: 'var(--ds-color-neutral-contrast-default)',
                       border: 'none',

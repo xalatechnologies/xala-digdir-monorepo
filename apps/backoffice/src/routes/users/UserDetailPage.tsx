@@ -192,7 +192,7 @@ export function UserDetailPage() {
 
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    <MailIcon style={{ fontSize: '16px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                    <MailIcon style={{ fontSize: 'var(--ds-font-size-body-md)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                     <span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                       E-post
                     </span>
@@ -215,7 +215,7 @@ export function UserDetailPage() {
                 {user.phone && (
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      <PhoneIcon style={{ fontSize: '16px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                      <PhoneIcon style={{ fontSize: 'var(--ds-font-size-body-md)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                       <span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                         Telefon
                       </span>
@@ -290,7 +290,7 @@ export function UserDetailPage() {
                 {user.lastLoginAt && (
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      <ClockIcon style={{ fontSize: '16px', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                      <ClockIcon style={{ fontSize: 'var(--ds-font-size-body-md)', color: 'var(--ds-color-neutral-text-subtle)' }} />
                       <span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                         Sist innlogget
                       </span>

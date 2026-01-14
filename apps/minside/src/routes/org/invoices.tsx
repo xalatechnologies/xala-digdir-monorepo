@@ -125,7 +125,7 @@ export function OrganizationInvoicesPage() {
           </div>
         ) : isMobile ? (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {invoices.map((invoice: any) => (
+            {invoices.map((invoice: { id: string; invoiceNumber: string; dueDate: string; amount: number; status: string }) => (
               <div
                 key={invoice.id}
                 style={{
@@ -134,7 +134,7 @@ export function OrganizationInvoicesPage() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                     {invoice.invoiceNumber}
                   </Paragraph>
                   <InvoiceStatusBadge status={invoice.status} />
@@ -143,7 +143,7 @@ export function OrganizationInvoicesPage() {
                   {t('billing.dueDate')}: {invoice.dueDate}
                 </Paragraph>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--ds-spacing-3)' }}>
-                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 600 }}>
+                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                     {formatCurrency(invoice.amount)}
                   </Paragraph>
                   <Button
@@ -171,10 +171,10 @@ export function OrganizationInvoicesPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {invoices.map((invoice: any) => (
+              {invoices.map((invoice: { id: string; invoiceNumber: string; dueDate: string; amount: number; status: string }) => (
                 <Table.Row key={invoice.id}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 500 }}>{invoice.invoiceNumber}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{invoice.invoiceNumber}</span>
                   </Table.Cell>
                   <Table.Cell>{invoice.dueDate}</Table.Cell>
                   <Table.Cell>{formatCurrency(invoice.amount)}</Table.Cell>

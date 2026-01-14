@@ -647,14 +647,14 @@ export function BookingsPage() {
             {activeFilterCount > 0 && (
               <span style={{
                 position: 'absolute',
-                top: '-4px',
-                right: '-4px',
+                top: 'calc(-1 * var(--ds-spacing-1))',
+                right: 'calc(-1 * var(--ds-spacing-1))',
                 minWidth: '16px',
                 height: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '10px',
+                fontSize: 'var(--ds-font-size-body-xs)',
                 fontWeight: 'var(--ds-font-weight-semibold)',
                 backgroundColor: 'var(--ds-color-accent-base-default)',
                 color: 'var(--ds-color-accent-contrast-default)',

@@ -478,7 +478,7 @@ export function ReportsPage() {
               <div style={{ overflowX: 'auto' }}>
                 <div style={{ display: 'inline-flex', flexDirection: 'column', gap: '2px', minWidth: 'min-content' }}>
                   {/* Day labels */}
-                  <div style={{ display: 'flex', gap: '2px', paddingLeft: '50px' }}>
+                  <div style={{ display: 'flex', gap: '2px', paddingLeft: 'var(--ds-spacing-12)' }}>
                     {['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].map((day, idx) => (
                       <div
                         key={idx}
@@ -501,7 +501,7 @@ export function ReportsPage() {
                       {/* Hour label */}
                       <div
                         style={{
-                          width: '50px',
+                          width: 'var(--ds-spacing-12)',
                           fontSize: 'var(--ds-font-size-xs)',
                           fontWeight: 'var(--ds-font-weight-medium)',
                           textAlign: 'right',
@@ -570,11 +570,11 @@ export function ReportsPage() {
                   ))}
                 </div>
                 {/* Legend */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)', paddingLeft: '50px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)', paddingLeft: 'var(--ds-spacing-12)' }}>
                   <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
                     Færre bookinger
                   </Paragraph>
-                  <div style={{ display: 'flex', gap: '4px' }}>
+                  <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
                     {[0.1, 0.3, 0.5, 0.7, 1.0].map((intensity, idx) => (
                       <div
                         key={idx}

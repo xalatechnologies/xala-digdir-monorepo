@@ -125,12 +125,11 @@ function MainLayout() {
     }, 200);
   };
 
-  const handleSearch = (value: string) => {
-    console.log('Searching for:', value);
+  const handleSearch = (_value: string) => {
+    // Search action handled
   };
 
-  const handleResultSelect = (result: SearchResultItem) => {
-    console.log('Selected result:', result);
+  const handleResultSelect = (_result: SearchResultItem) => {
     setSearchQuery('');
     setSearchResults([]);
   };

@@ -181,7 +181,7 @@ export function MessagesPage() {
                 backgroundColor: 'var(--ds-color-danger-surface-default)',
                 color: 'var(--ds-color-danger-text-default)',
                 fontSize: 'var(--ds-font-size-xs)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
               }}>
                 {totalUnread} uleste
               </div>
@@ -355,7 +355,7 @@ export function MessagesPage() {
                           {String(conversation.subject || 'Ukjent avsender')}
                         </Paragraph>
                         <span style={{
-                          fontSize: '11px',
+                          fontSize: 'var(--ds-font-size-xs)',
                           color: 'var(--ds-color-neutral-text-subtle)',
                           whiteSpace: 'nowrap',
                         }}>
@@ -364,7 +364,7 @@ export function MessagesPage() {
                       </div>
                       
                       {/* Preview with unread badge */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-1)' }}>
                         <Paragraph
                           data-size="xs"
                           style={{
@@ -393,8 +393,8 @@ export function MessagesPage() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '11px',
-                            fontWeight: 700,
+                            fontSize: 'var(--ds-font-size-xs)',
+                            fontWeight: 'var(--ds-font-weight-bold)',
                           }}>
                             {conversation.unreadCount}
                           </div>
@@ -466,10 +466,10 @@ export function MessagesPage() {
 
               {/* Header Actions */}
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                <Button type="button" variant="tertiary" data-size="sm">
+                <Button type="button" variant="tertiary" data-size="sm" aria-label={t('messages.call') || 'Call'}>
                   <PhoneIcon />
                 </Button>
-                <Button type="button" variant="tertiary" data-size="sm">
+                <Button type="button" variant="tertiary" data-size="sm" aria-label={t('messages.schedule') || 'Schedule'}>
                   <CalendarIcon />
                 </Button>
               </div>
@@ -529,7 +529,7 @@ export function MessagesPage() {
                         <span style={{
                           color: 'var(--ds-color-neutral-text-subtle)',
                           fontSize: 'var(--ds-font-size-xs)',
-                          fontWeight: 500,
+                          fontWeight: 'var(--ds-font-weight-medium)',
                           textTransform: 'capitalize',
                         }}>
                           {date}
@@ -597,7 +597,7 @@ export function MessagesPage() {
                                   gap: 'var(--ds-spacing-1)',
                                   marginTop: 'var(--ds-spacing-1)',
                                 }}>
-                                  <span style={{ fontSize: '11px', opacity: 0.7 }}>
+                                  <span style={{ fontSize: 'var(--ds-font-size-xs)', opacity: 0.7 }}>
                                     {formatTime(message.createdAt)}
                                   </span>
                                   {isOwnMessage && (
@@ -633,7 +633,7 @@ export function MessagesPage() {
                         backgroundColor: 'var(--ds-color-neutral-background-default)',
                         boxShadow: 'var(--ds-shadow-small)',
                       }}>
-                        <div style={{ display: 'flex', gap: '4px' }}>
+                        <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
                           {[0, 1, 2].map((i) => (
                             <div
                               key={i}
@@ -805,10 +805,10 @@ export function MessagesPage() {
               <Paragraph data-size="xs" style={{ 
                 margin: 0, 
                 marginBottom: 'var(--ds-spacing-2)', 
-                fontWeight: 600, 
+                fontWeight: 'var(--ds-font-weight-semibold)', 
                 color: 'var(--ds-color-neutral-text-subtle)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.5px',
+                letterSpacing: 'var(--ds-font-letter-spacing-normal)',
               }}>
                 Kontakt
               </Paragraph>
@@ -840,10 +840,10 @@ export function MessagesPage() {
               <Paragraph data-size="xs" style={{ 
                 margin: 0, 
                 marginBottom: 'var(--ds-spacing-2)', 
-                fontWeight: 600, 
+                fontWeight: 'var(--ds-font-weight-semibold)', 
                 color: 'var(--ds-color-neutral-text-subtle)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.5px',
+                letterSpacing: 'var(--ds-font-letter-spacing-normal)',
               }}>
                 Hurtigvalg
               </Paragraph>

@@ -109,9 +109,9 @@ export function BookingsPage() {
           borderLeft: '4px solid var(--ds-color-warning-border-default)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-            <span style={{ fontSize: '20px' }}>📡</span>
+            <span style={{ fontSize: 'var(--ds-font-size-lg)' }}>📡</span>
             <div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, color: 'var(--ds-color-warning-text-default)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-warning-text-default)' }}>
                 {t('minside.offlineMode')}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -160,7 +160,7 @@ export function BookingsPage() {
         gap: 'var(--ds-spacing-4)'
       }}>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
             {t('booking.confirmed')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-success-text-default)' }}>
@@ -168,7 +168,7 @@ export function BookingsPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
             {t('requests.pending')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-warning-text-default)' }}>
@@ -176,7 +176,7 @@ export function BookingsPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
             {t('booking.cancelled')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
@@ -277,7 +277,7 @@ export function BookingsPage() {
                 alignItems: 'flex-start',
                 marginBottom: 'var(--ds-spacing-3)',
               }}>
-                <Heading level={3} data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+                <Heading level={3} data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                   {booking.listingName || booking.listingId}
                 </Heading>
                 <BookingStatusBadge status={booking.status} />
@@ -312,7 +312,7 @@ export function BookingsPage() {
               <Paragraph data-size="md" style={{
                 margin: 0,
                 marginBottom: 'var(--ds-spacing-4)',
-                fontWeight: 600,
+                fontWeight: 'var(--ds-font-weight-semibold)',
                 color: 'var(--ds-color-neutral-text-default)',
               }}>
                 {(booking.totalPrice ?? 0).toLocaleString(locale === 'en' ? 'en-US' : 'nb-NO')} kr
@@ -373,7 +373,7 @@ export function BookingsPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <div>
-                      <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>
+                      <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {formatDate(booking.startTime)}
                       </span>
                       <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-default)' }}>

@@ -556,8 +556,8 @@ export function AuditPage() {
               <span
                 style={{
                   position: 'absolute',
-                  top: '-4px',
-                  right: '-4px',
+                  top: 'calc(-1 * var(--ds-spacing-1))',
+                  right: 'calc(-1 * var(--ds-spacing-1))',
                   width: '8px',
                   height: '8px',
                   borderRadius: 'var(--ds-border-radius-full)',
@@ -702,7 +702,7 @@ export function AuditPage() {
                     <Table.HeaderCell>Ressurs</Table.HeaderCell>
                     <Table.HeaderCell>Ressurs-ID</Table.HeaderCell>
                     <Table.HeaderCell>Bruker</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '50px' }}></Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: 'var(--ds-spacing-12)' }}></Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>
                 <Table.Body>

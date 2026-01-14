@@ -449,8 +449,8 @@ export function ListingsListView() {
                 <span
                   style={{
                     position: 'absolute',
-                    top: '-6px',
-                    right: '-6px',
+                    top: 'calc(-1 * var(--ds-spacing-2))',
+                    right: 'calc(-1 * var(--ds-spacing-2))',
                     minWidth: '18px',
                     height: '18px',
                     display: 'flex',

@@ -160,8 +160,7 @@ export function ListingsPage(): React.ReactElement {
 
   // Realtime updates - refetch when listings are created/updated/published
   const queryClient = useQueryClient();
-  const handleListingEvent = React.useCallback((event: { type: string; data?: unknown }) => {
-    console.log('[ListingsPage] Realtime listing event received:', event);
+  const handleListingEvent = React.useCallback((_event: { type: string; data?: unknown }) => {
     // Invalidate all public listings queries to refetch
     queryClient.invalidateQueries({ queryKey: ['public'] });
   }, [queryClient]);
@@ -244,15 +243,10 @@ export function ListingsPage(): React.ReactElement {
             const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
             const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
 
-            // Debug: log the raw metadata to understand structure
-            console.log('[Geocoding] Raw metadata for', listing.name, ':', JSON.stringify(metadata, null, 2));
-
-            // Extract address components with explicit logging
+            // Extract address components
             const street = (addressObjTyped?.street as string) || (locationMeta.address as string) || '';
             const postalCode = (addressObjTyped?.postalCode as string) || (locationMeta.postalCode as string) || (metadata.postalCode as string) || '';
             const city = (addressObjTyped?.city as string) || (locationMeta.city as string) || (metadata.city as string) || '';
-
-            console.log('[Geocoding] Extracted components:', { street, postalCode, city });
 
             // Build address string from components
             const addressString = buildAddressString({
@@ -271,18 +265,14 @@ export function ListingsPage(): React.ReactElement {
 
             // Skip if no valid address
             if (!addressToGeocode || addressToGeocode === 'Ukjent lokasjon' || addressToGeocode === 'Norway') {
-              console.log('[Geocoding] Skipped (no valid address):', listing.name);
               return null;
             }
 
-            console.log('[Geocoding] Final address to geocode:', listing.name, '->', addressToGeocode);
             const result = await geocodeAddress(addressToGeocode, GEOCODE_CONFIG);
 
             if (result) {
-              console.log(`[Geocoding] Success (${result.provider}):`, listing.name, result.latitude, result.longitude);
               return { id: listing.id, coords: { lat: result.latitude, lng: result.longitude } };
             } else {
-              console.log('[Geocoding] Failed:', listing.name);
               return null;
             }
           })
@@ -669,8 +659,8 @@ export function ListingsPage(): React.ReactElement {
                       showRating={true}
                       showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
-                      onFavorite={(id) => console.log('Toggle favorite:', id)}
-                      onShare={(id) => console.log('Share listing:', id)}
+                      onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                      onShare={(_id) => { /* TODO: Implement share */ }}
                     />
                   ))}
                 </ListingGrid>
@@ -695,7 +685,7 @@ export function ListingsPage(): React.ReactElement {
                       showListingType={true}
                       showMap={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
-                      onFavorite={(id) => console.log('Toggle favorite:', id)}
+                      onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
                     />
                   ))}
                 </Stack>

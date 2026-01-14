@@ -415,7 +415,7 @@ export function MessagesPage() {
                           }}>
                             {String(conversation.userName || conversation.subject || 'Ukjent bruker')}
                           </Paragraph>
-                          <span style={{ fontSize: '11px', color: 'var(--ds-color-neutral-text-subtle)', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 'var(--ds-font-size-body-xs)', color: 'var(--ds-color-neutral-text-subtle)', whiteSpace: 'nowrap' }}>
                             {lastMessageTime ? formatTimeAgo(lastMessageTime) : ''}
                           </span>
                         </div>
@@ -426,7 +426,7 @@ export function MessagesPage() {
                           </Paragraph>
                         )}
                         
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-1)' }}>
                           <Paragraph
                             data-size="xs"
                             style={{
@@ -637,7 +637,7 @@ export function MessagesPage() {
                                     gap: 'var(--ds-spacing-1)',
                                     marginTop: 'var(--ds-spacing-1)',
                                   }}>
-                                    <span style={{ fontSize: '11px', opacity: 0.7 }}>
+                                    <span style={{ fontSize: 'var(--ds-font-size-body-xs)', opacity: 0.7 }}>
                                       {formatTime(message.createdAt)}
                                     </span>
                                     {isAdmin && (
@@ -829,7 +829,7 @@ export function MessagesPage() {
                   fontWeight: 'var(--ds-font-weight-semibold)', 
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
+                  letterSpacing: 'var(--ds-font-letter-spacing-sm)',
                 }}>
                   Brukerinformasjon
                 </Paragraph>
@@ -865,7 +865,7 @@ export function MessagesPage() {
                     fontWeight: 'var(--ds-font-weight-semibold)', 
                     color: 'var(--ds-color-neutral-text-subtle)',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
+                    letterSpacing: 'var(--ds-font-letter-spacing-sm)',
                   }}>
                     Tilknyttet booking
                   </Paragraph>
@@ -892,7 +892,7 @@ export function MessagesPage() {
                   fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
+                  letterSpacing: 'var(--ds-font-letter-spacing-sm)',
                 }}>
                   Tildeling
                 </Paragraph>
@@ -918,7 +918,7 @@ export function MessagesPage() {
                   fontWeight: 'var(--ds-font-weight-semibold)',
                   color: 'var(--ds-color-neutral-text-subtle)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
+                  letterSpacing: 'var(--ds-font-letter-spacing-sm)',
                 }}>
                   Handlinger
                 </Paragraph>

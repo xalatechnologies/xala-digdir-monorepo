@@ -143,8 +143,8 @@ export function TimelineView({
         style={{
           position: 'absolute',
           left: `${left}px`,
-          top: '4px',
-          bottom: '4px',
+          top: 'var(--ds-spacing-1)',
+          bottom: 'var(--ds-spacing-1)',
           width: `${width}px`,
           backgroundColor: colors.bg,
           border: eventHasConflict
@@ -197,7 +197,7 @@ export function TimelineView({
         {width > 100 && (
           <div
             style={{
-              fontSize: '10px',
+              fontSize: 'var(--ds-font-size-body-xs)',
               color: colors.text,
               opacity: 0.8,
               marginTop: 'var(--ds-spacing-1)',
@@ -356,8 +356,8 @@ export function TimelineView({
                   <div
                     style={{
                       position: 'absolute',
-                      top: '4px',
-                      bottom: '4px',
+                      top: 'var(--ds-spacing-1)',
+                      bottom: 'var(--ds-spacing-1)',
                       left: `${dragPreview.top}px`,
                       width: `${dragPreview.height}px`,
                       backgroundColor: 'var(--ds-color-accent-surface-default)',
@@ -403,7 +403,7 @@ export function TimelineView({
                     <div
                       style={{
                         position: 'absolute',
-                        left: '-4px',
+                        left: 'calc(-1 * var(--ds-spacing-1))',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         width: '10px',

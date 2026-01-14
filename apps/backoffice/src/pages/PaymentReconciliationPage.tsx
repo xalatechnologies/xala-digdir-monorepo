@@ -150,7 +150,7 @@ export function PaymentReconciliationPage() {
         }}
       >
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Text style={{ fontSize: '0.875rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Text style={{ fontSize: 'var(--ds-font-size-body-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('payments.reconciliation.totalAmount', 'Totalt beløp')}
           </Text>
           <Heading level={2} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
@@ -158,7 +158,7 @@ export function PaymentReconciliationPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Text style={{ fontSize: '0.875rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Text style={{ fontSize: 'var(--ds-font-size-body-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('payments.reconciliation.paidAmount', 'Betalt')}
           </Text>
           <Heading
@@ -174,7 +174,7 @@ export function PaymentReconciliationPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Text style={{ fontSize: '0.875rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Text style={{ fontSize: 'var(--ds-font-size-body-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('payments.reconciliation.refundedAmount', 'Refundert')}
           </Text>
           <Heading
@@ -190,7 +190,7 @@ export function PaymentReconciliationPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-          <Text style={{ fontSize: '0.875rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Text style={{ fontSize: 'var(--ds-font-size-body-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('payments.reconciliation.outstandingAmount', 'Utestående')}
           </Text>
           <Heading
@@ -306,7 +306,7 @@ export function PaymentReconciliationPage() {
               {reconciliationData.data.map((payment) => (
                 <Table.Row key={payment.bookingId}>
                   <Table.Cell>
-                    <Text style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: '0.875rem' }}>
+                    <Text style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-body-sm)' }}>
                       {payment.bookingId.slice(0, 8)}
                     </Text>
                   </Table.Cell>
@@ -372,7 +372,7 @@ export function PaymentReconciliationPage() {
                 value={formatCurrency(selectedPayment.refundedAmount, selectedPayment.currency, formatLocale)}
               />
               <div>
-                <Text style={{ fontSize: '0.875rem', color: 'var(--ds-color-neutral-text-subtle)', display: 'block', marginBottom: 'var(--ds-spacing-2)' }}>
+                <Text style={{ fontSize: 'var(--ds-font-size-body-sm)', color: 'var(--ds-color-neutral-text-subtle)', display: 'block', marginBottom: 'var(--ds-spacing-2)' }}>
                   {t('payments.reconciliation.status', 'Status')}
                 </Text>
                 <PaymentStatusBadge status={selectedPayment.status as 'paid' | 'unpaid' | 'partial' | 'refunded'} />
@@ -398,7 +398,7 @@ export function PaymentReconciliationPage() {
                           {formatCurrency(transaction.amount, transaction.currency, formatLocale)}
                         </Text>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--ds-font-size-body-sm)' }}>
                         <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                           {transaction.provider}
                         </Text>
@@ -406,7 +406,7 @@ export function PaymentReconciliationPage() {
                           {formatDate(transaction.createdAt, formatLocale)}
                         </Text>
                       </div>
-                      <div style={{ fontSize: '0.875rem' }}>
+                      <div style={{ fontSize: 'var(--ds-font-size-body-sm)' }}>
                         <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                           {transaction.status}
                         </Text>
