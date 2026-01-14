@@ -8,7 +8,7 @@ import { useState, useMemo, useCallback } from 'react';
 import {
   Table,
   Paragraph,
-  Spinner,
+  Skeleton,
   BookingStatusBadge,
   PaymentStatusBadge,
   Text,
@@ -206,19 +206,76 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
     setDateTo('');
   }, []);
 
-  // Loading state
+  // Loading state - Skeleton screen
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 'var(--ds-spacing-10)',
-          minHeight: '300px',
-        }}
-      >
-        <Spinner aria-label="Laster bookinger..." />
+      <div>
+        {/* Status Tabs Skeleton */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--ds-spacing-2)',
+            marginBottom: 'var(--ds-spacing-6)',
+            borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+            paddingBottom: 'var(--ds-spacing-1)',
+          }}
+        >
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} width={100} height={32} />
+          ))}
+        </div>
+
+        {/* Search Bar Skeleton */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--ds-spacing-3)',
+            marginBottom: 'var(--ds-spacing-4)',
+          }}
+        >
+          <Skeleton width="100%" height={40} />
+          <Skeleton width={100} height={40} />
+        </div>
+
+        {/* Count Skeleton */}
+        <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Skeleton width={200} height={20} />
+        </div>
+
+        {/* Table Skeleton */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+          {/* Table Header */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '100px 200px 150px 100px 120px 120px 100px',
+              gap: 'var(--ds-spacing-3)',
+              padding: 'var(--ds-spacing-2) 0',
+              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+            }}
+          >
+            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <Skeleton key={i} height={16} />
+            ))}
+          </div>
+          {/* Table Rows */}
+          {[1, 2, 3, 4, 5].map((row) => (
+            <div
+              key={row}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '100px 200px 150px 100px 120px 120px 100px',
+                gap: 'var(--ds-spacing-3)',
+                padding: 'var(--ds-spacing-3) 0',
+                borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7].map((col) => (
+                <Skeleton key={col} height={20} />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

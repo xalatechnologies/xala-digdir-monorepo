@@ -11,7 +11,7 @@ import {
   Card,
   Heading,
   Paragraph,
-  Spinner,
+  Skeleton,
   ChevronLeftIcon,
 } from '@xala/ds';
 import { useListingBySlug, useListing } from '@digilist/client-sdk';
@@ -60,19 +60,75 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
     refetch();
   }, [refetch]);
 
-  // Loading state
+  // Loading state - Skeleton screen
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 'var(--ds-spacing-10)',
-          minHeight: '400px',
-        }}
-      >
-        <Spinner aria-label="Laster utleieobjekt..." />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Header Skeleton */}
+        <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+            {/* Title and status */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div style={{ flex: 1 }}>
+                <Skeleton width="60%" height={32} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                <Skeleton width="40%" height={20} />
+              </div>
+              <Skeleton width={100} height={40} />
+            </div>
+            {/* Action buttons */}
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+              <Skeleton width={120} height={40} />
+              <Skeleton width={120} height={40} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Tabs Skeleton */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--ds-spacing-2)',
+              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+              marginBottom: 'var(--ds-spacing-6)',
+            }}
+          >
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} width={100} height={40} style={{ marginBottom: '-1px' }} />
+            ))}
+          </div>
+
+          {/* Tab Content Skeleton */}
+          <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+              {/* Image gallery skeleton */}
+              <Skeleton width="100%" height={400} />
+
+              {/* Key facts skeleton */}
+              <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)' }}>
+                <Skeleton width="30%" height={80} />
+                <Skeleton width="30%" height={80} />
+                <Skeleton width="30%" height={80} />
+              </div>
+
+              {/* Description skeleton */}
+              <div>
+                <Skeleton width="30%" height={24} style={{ marginBottom: 'var(--ds-spacing-3)' }} />
+                <Skeleton count={3} />
+              </div>
+
+              {/* Facilities skeleton */}
+              <div>
+                <Skeleton width="25%" height={24} style={{ marginBottom: 'var(--ds-spacing-3)' }} />
+                <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Skeleton key={i} width={100} height={32} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     );
   }
