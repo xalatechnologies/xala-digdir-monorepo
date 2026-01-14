@@ -13,7 +13,7 @@ export type ListingStatus = 'draft' | 'published' | 'archived' | 'maintenance';
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 export type PaymentStatus = 'unpaid' | 'paid' | 'partial' | 'refunded';
 export type AllocationStatus = 'confirmed' | 'pending' | 'blocked' | 'maintenance';
-export type SeasonalLeaseStatus = 'active' | 'upcoming' | 'expired' | 'cancelled';
+export type SeasonalLeaseStatus = 'draft' | 'pending' | 'approved' | 'active' | 'expired' | 'cancelled';
 export type ConversationStatus = 'active' | 'resolved' | 'archived';
 export type OrganizationStatus = 'active' | 'inactive' | 'suspended';
 export type UserStatus = 'active' | 'inactive' | 'suspended';
@@ -21,7 +21,7 @@ export type UserRole = 'super_admin' | 'admin' | 'saksbehandler' | 'user';
 export type ActorType = 'private' | 'business' | 'sports_club' | 'youth_organization' | 'school' | 'municipality';
 export type MessageSenderType = 'user' | 'admin' | 'system';
 export type ReportPeriod = 'day' | 'week' | 'month' | 'quarter' | 'year';
-export type ExportFormat = 'pdf' | 'excel' | 'csv';
+export type ExportFormat = 'csv' | 'xlsx' | 'pdf' | 'json';
 export type DiscountType = 'percentage' | 'fixed';
 export type PricingUnit = 'hour' | 'day' | 'booking' | 'week' | 'month';
 

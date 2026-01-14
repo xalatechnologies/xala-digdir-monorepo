@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
     'hooks/index': 'src/hooks/index.ts',
     'types/index': 'src/types/index.ts',
+    'services/index': 'src/services/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
@@ -15,7 +16,7 @@ export default defineConfig({
   external: ['react', '@tanstack/react-query'],
   esbuildOptions(options) {
     options.banner = {
-      js: '/* @digilist/client-sdk v1.0.0 - Xala Technologies */',
+      js: '/* @digilist/client-sdk v1.1.0 - Xala Technologies */',
     };
   },
 });

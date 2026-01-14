@@ -156,11 +156,11 @@ export function formatPercent(
 /**
  * Format weekday numbers to Norwegian names
  * @param weekdays - Array of weekday numbers (0=Sunday, 1=Monday, etc.)
- * @returns Formatted string (e.g., "man, ons, fre")
+ * @returns Array of formatted day names (e.g., ["man", "ons", "fre"])
  */
-export function formatWeekdays(weekdays: number[]): string {
+export function formatWeekdays(weekdays: number[]): string[] {
   const dayNames = ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'];
-  return weekdays.map(d => dayNames[d] ?? '').filter(Boolean).join(', ');
+  return weekdays.map(d => dayNames[d] ?? '').filter(Boolean);
 }
 
 /**

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet, useOutletContext } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -18,20 +18,39 @@ import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
 import { ListingsPage } from './pages/ListingsPage';
-import { ListingDetailPageV2 } from './pages/ListingDetailPageV2';
+import { ListingDetailPage } from './pages/ListingDetailPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast } from './components';
+
+// Theme context type
+type ColorScheme = 'auto' | 'light' | 'dark';
+interface ThemeContextType {
+  colorScheme: ColorScheme;
+  setColorScheme: (scheme: ColorScheme) => void;
+  effectiveScheme: 'light' | 'dark';
+}
+
+// Hook to use theme context from outlet
+function useThemeContext() {
+  return useOutletContext<ThemeContextType>();
+}
 
 // Layout with header for main pages
 function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
+  const { colorScheme, setColorScheme, effectiveScheme } = useThemeContext();
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  // Toggle between light and dark (skip auto for manual toggle)
+  const handleThemeToggle = () => {
+    setColorScheme(effectiveScheme === 'dark' ? 'light' : 'dark');
+  };
 
   // Check for logged in user on mount
   React.useEffect(() => {
@@ -202,6 +221,10 @@ function MainLayout() {
         }
         actions={
           <HeaderActions spacing="12px">
+            <HeaderThemeToggle
+              isDark={effectiveScheme === 'dark'}
+              onToggle={handleThemeToggle}
+            />
             <HeaderLoginButton
               isLoggedIn={isLoggedIn}
               userName={getUserName()}
@@ -218,10 +241,32 @@ function MainLayout() {
   );
 }
 
+// Wrapper to provide theme context to MainLayout
+function MainLayoutWithContext({ colorScheme, setColorScheme, effectiveScheme }: ThemeContextType) {
+  return <Outlet context={{ colorScheme, setColorScheme, effectiveScheme }} />;
+}
+
 // App content with theme provider
 function AppContent() {
   const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
-  const [colorScheme] = React.useState<'light' | 'dark'>('light');
+  const [colorScheme, setColorScheme] = React.useState<ColorScheme>('auto');
+  const [systemScheme, setSystemScheme] = React.useState<'light' | 'dark'>('light');
+
+  // Detect system color scheme
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setSystemScheme(mediaQuery.matches ? 'dark' : 'light');
+
+    const handler = (e: MediaQueryListEvent) => {
+      setSystemScheme(e.matches ? 'dark' : 'light');
+    };
+
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  // Compute effective scheme
+  const effectiveScheme = colorScheme === 'auto' ? systemScheme : colorScheme;
 
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
@@ -237,10 +282,12 @@ function AppContent() {
             {/* Login page - no header */}
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Main pages with header */}
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<ListingsPage />} />
-              <Route path="/listing/:id" element={<ListingDetailPageV2 />} />
+            {/* Main pages with header - wrapped to provide theme context */}
+            <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<ListingsPage />} />
+                <Route path="/listing/:id" element={<ListingDetailPage />} />
+              </Route>
             </Route>
           </Routes>
         </RealtimeProvider>

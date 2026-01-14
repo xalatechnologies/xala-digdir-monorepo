@@ -3,14 +3,13 @@
  * Analytics, reports, and data export
  */
 import { getClient } from '../core/client-factory';
-
-export interface ReportQueryParams {
-  startDate: string;
-  endDate: string;
-  listingId?: string;
-  organizationId?: string;
-  groupBy?: 'day' | 'week' | 'month';
-}
+import type {
+  ReportQueryParams,
+  BookingReport,
+  UsageReport,
+  RevenueReport,
+  ExportFormat,
+} from '../types';
 
 export interface DashboardStats {
   bookings: {
@@ -43,32 +42,6 @@ export interface DashboardStats {
   };
 }
 
-export interface BookingReport {
-  period: string;
-  bookingsCount: number;
-  revenue: number;
-  avgBookingValue: number;
-  cancelRate: number;
-  topListings: Array<{
-    listingId: string;
-    listingName: string;
-    bookings: number;
-    revenue: number;
-  }>;
-}
-
-export interface UtilizationReport {
-  listingId: string;
-  listingName: string;
-  totalSlots: number;
-  bookedSlots: number;
-  utilizationRate: number;
-  peakHours: string[];
-  revenue: number;
-}
-
-export type ExportFormat = 'csv' | 'xlsx' | 'pdf' | 'json';
-
 class ReportsService {
   private basePath = '/api/reports';
 
@@ -82,37 +55,37 @@ class ReportsService {
   /**
    * Get booking report
    */
-  async getBookingReport(params: ReportQueryParams): Promise<{ data: BookingReport[] }> {
+  async getBookingReport(params: ReportQueryParams): Promise<{ data: BookingReport }> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
-    
-    return getClient().get<{ data: BookingReport[] }>(`${this.basePath}/bookings?${queryParams.toString()}`);
+
+    return getClient().get<{ data: BookingReport }>(`${this.basePath}/bookings?${queryParams.toString()}`);
   }
 
   /**
    * Get revenue report
    */
-  async getRevenueReport(params: ReportQueryParams): Promise<{ data: { period: string; revenue: number; transactions: number }[] }> {
+  async getRevenueReport(params: ReportQueryParams): Promise<{ data: RevenueReport[] }> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
-    
-    return getClient().get<{ data: { period: string; revenue: number; transactions: number }[] }>(`${this.basePath}/revenue?${queryParams.toString()}`);
+
+    return getClient().get<{ data: RevenueReport[] }>(`${this.basePath}/revenue?${queryParams.toString()}`);
   }
 
   /**
    * Get utilization report
    */
-  async getUtilizationReport(params: ReportQueryParams): Promise<{ data: UtilizationReport[] }> {
+  async getUtilizationReport(params: ReportQueryParams): Promise<{ data: UsageReport[] }> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
-    
-    return getClient().get<{ data: UtilizationReport[] }>(`${this.basePath}/utilization?${queryParams.toString()}`);
+
+    return getClient().get<{ data: UsageReport[] }>(`${this.basePath}/utilization?${queryParams.toString()}`);
   }
 
   /**

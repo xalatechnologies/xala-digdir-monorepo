@@ -14,7 +14,12 @@ export interface SeasonalLease {
   season: string;
   startDate: string;
   endDate: string;
+  // Weekly slots array for complex schedules
   weeklySlots: WeeklySlot[];
+  // Flat fields for simple display (derived from weeklySlots)
+  weekdays: number[];
+  startTime: string;
+  endTime: string;
   status: 'draft' | 'pending' | 'approved' | 'active' | 'expired' | 'cancelled';
   totalPrice?: number;
   currency?: string;

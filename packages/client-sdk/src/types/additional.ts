@@ -61,9 +61,11 @@ export interface Conversation extends TenantEntity {
   unreadCount: number;
   lastMessageAt?: string;
   lastMessagePreview?: string;
+  lastMessage?: string;
   // Display/denormalized fields (populated by backend)
   userName?: string;
   userEmail?: string;
+  userPhone?: string;
 }
 
 export interface Message {
@@ -72,6 +74,7 @@ export interface Message {
   senderType: MessageSenderType;
   senderId?: string;
   senderName: string;
+  sender?: string;
   content: string;
   attachments?: string[];
   readAt?: string;
@@ -107,6 +110,8 @@ export interface DashboardKPIs {
   monthRevenue: number;
   previousMonthRevenue: number;
   revenueGrowth: number;
+  periodRevenue: number;
+  revenueChange?: number;
   topListings: Array<{
     id: string;
     name: string;
@@ -120,20 +125,25 @@ export interface UsageReport {
   listingId: string;
   listingName: string;
   totalBookings: number;
+  bookingCount: number;
   totalHours: number;
   utilizationRate: number;
   revenue: number;
 }
 
 export interface RevenueReport {
-  totalCents: number;
-  data: Array<{
-    period: string;
-    amountCents: number;
-  }>;
+  period: string;
+  revenue: number;
+  totalRevenue: number;
+  transactions: number;
 }
 
 export interface BookingReport {
+  totalBookings: number;
+  confirmedBookings: number;
+  pendingBookings: number;
+  cancelledBookings: number;
+  averageDuration: number;
   data: Array<{
     date: string;
     confirmed: number;
@@ -145,8 +155,8 @@ export interface BookingReport {
 
 export interface ReportQueryParams {
   period?: ReportPeriod;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   listingId?: string;
   organizationId?: string;
 }

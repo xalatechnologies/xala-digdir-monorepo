@@ -602,7 +602,7 @@ export function ChatThread({
                 <MessageBubble
                   key={message.id}
                   message={message}
-                  isFromCurrentUser={currentUserId ? message.senderId === currentUserId : undefined}
+                  {...(currentUserId && { isFromCurrentUser: message.senderId === currentUserId })}
                   showReadReceipt={showReadReceipts}
                 />
               ))}
@@ -714,7 +714,7 @@ function groupMessagesByDate(messages: MessageItem[]): Record<string, MessageIte
     }
 
     if (!groups[key]) groups[key] = [];
-    groups[key].push(message);
+    groups[key]!.push(message);
   });
 
   return groups;

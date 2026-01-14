@@ -602,6 +602,7 @@ export function BookingDialog({
                 <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>Påkrevd</span>
               </Label>
               <Textfield
+                aria-label="Formål med bookingen"
                 value={formData.purpose}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('purpose', e.target.value)}
                 placeholder="f.eks. Trening, Styremøte, Kurs..."
@@ -723,7 +724,7 @@ export function BookingDialog({
                   <div className="booking-recurring-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Til dato</Label>
-                      <Textfield value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} placeholder="DD.MM.YYYY" style={{ width: '100%' }} />
+                      <Textfield aria-label="Til dato" value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} placeholder="DD.MM.YYYY" style={{ width: '100%' }} />
                     </div>
                     <div>
                       <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Gjentagelse</Label>
@@ -757,7 +758,7 @@ export function BookingDialog({
                   <span>Antall</span>
                   <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>Påkrevd</span>
                 </Label>
-                <Textfield type="number" value={formData.attendees} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('attendees', e.target.value)} placeholder="0" min="1" style={{ width: '100%' }} />
+                <Textfield aria-label="Antall deltakere" type="number" value={formData.attendees} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('attendees', e.target.value)} placeholder="0" min="1" style={{ width: '100%' }} />
               </div>
               <div>
                 <Label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)', whiteSpace: 'nowrap' }}>

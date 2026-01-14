@@ -77,7 +77,7 @@ export { reportsService } from './reports.service';
 export { tenantService } from './tenant.service';
 
 // Dashboard
-export { dashboardService } from './dashboard.service';
+export { DashboardService, dashboardService } from './dashboard.service';
 
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';

@@ -159,3 +159,28 @@ export {
   useDeleteBlock,
   useCheckConflicts,
 } from './use-blocks';
+
+// Seasonal Lease hooks
+export {
+  seasonalLeaseKeys,
+  useSeasonalLeases,
+  useSeasonalLease,
+  useCreateSeasonalLease,
+  useUpdateSeasonalLease,
+  useApproveSeasonalLease,
+  useRejectSeasonalLease,
+  useCancelSeasonalLease,
+  useDeleteSeasonalLease,
+  useGenerateAllocations,
+} from './use-seasonal-leases';
+
+// Report hooks
+export {
+  reportKeys,
+  useDashboardKPIs,
+  useDashboardStats,
+  useBookingStats,
+  useRevenueReport,
+  useUsageReport,
+  useExportReport,
+} from './use-reports';

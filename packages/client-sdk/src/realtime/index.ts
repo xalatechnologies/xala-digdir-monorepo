@@ -21,6 +21,8 @@ export interface RealtimeClientConfig {
   reconnectInterval?: number;
   maxReconnectAttempts?: number;
   tenantId?: string;
+  /** Enable debug logging (default: false) */
+  debug?: boolean;
 }
 
 class RealtimeClient {
@@ -29,65 +31,71 @@ class RealtimeClient {
   private handlers: Map<string, Set<RealtimeEventHandler>> = new Map();
   private reconnectAttempts = 0;
   private isConnecting = false;
+  private debug = false;
 
   /**
    * Connect to WebSocket endpoint
    */
   connect(config: RealtimeClientConfig): void {
     if (this.socket?.readyState === WebSocket.OPEN) {
-      console.warn('[Realtime] Already connected');
-      return;
+      return; // Already connected
     }
 
     this.config = config;
     this.isConnecting = true;
+    this.debug = config.debug ?? false;
 
     try {
       this.socket = new WebSocket(config.url);
       
       this.socket.onopen = () => {
-        console.log('[Realtime] Connected to', config.url);
+        if (this.debug) console.log('[Realtime] Connected to', config.url);
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.emit('connected', { type: 'connected', message: 'Connected to realtime server' });
 
         // Send subscription message to server (required by some WebSocket servers)
-        if (config.tenantId) {
-          this.send({
-            type: 'subscribe',
-            tenantId: config.tenantId,
-            events: ['booking', 'listing', 'message', 'notification', 'audit'],
-          });
-          console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
+        // Use direct socket.send since we're inside onopen and socket is guaranteed open
+        if (config.tenantId && this.socket) {
+          try {
+            this.socket.send(JSON.stringify({
+              type: 'subscribe',
+              tenantId: config.tenantId,
+              events: ['booking', 'listing', 'message', 'notification', 'audit'],
+            }));
+            if (this.debug) console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
+          } catch {
+            // Silent error - some servers don't need subscription
+          }
         }
       };
 
       this.socket.onmessage = (event) => {
-        console.log('[Realtime] Raw message received:', event.data);
+        if (this.debug) console.log('[Realtime] Raw message received:', event.data);
         try {
           const data = JSON.parse(event.data) as RealtimeEvent;
-          console.log('[Realtime] Parsed event:', data.type, data);
+          if (this.debug) console.log('[Realtime] Parsed event:', data.type, data);
           this.emit(data.type, data);
           this.emit('*', data); // Wildcard handler for all events
-        } catch (err) {
-          console.error('[Realtime] Failed to parse message:', err);
+        } catch {
+          // Silent parse error
         }
       };
 
       this.socket.onclose = () => {
-        console.log('[Realtime] Disconnected');
+        if (this.debug) console.log('[Realtime] Disconnected');
         this.isConnecting = false;
         
-        if (config.autoReconnect !== false) {
+        if (config.autoReconnect !== false && this.reconnectAttempts < (config.maxReconnectAttempts ?? 5)) {
           this.attemptReconnect();
         }
       };
 
-      this.socket.onerror = (error) => {
-        console.error('[Realtime] Error:', error);
+      this.socket.onerror = () => {
+        // Silent error - WebSocket errors are expected when server is unavailable
+        this.isConnecting = false;
       };
-    } catch (err) {
-      console.error('[Realtime] Failed to connect:', err);
+    } catch {
       this.isConnecting = false;
     }
   }
@@ -196,12 +204,12 @@ class RealtimeClient {
     const interval = this.config?.reconnectInterval ?? 3000;
 
     if (this.reconnectAttempts >= maxAttempts) {
-      console.log('[Realtime] Max reconnect attempts reached');
+      if (this.debug) console.log('[Realtime] Max reconnect attempts reached');
       return;
     }
 
     this.reconnectAttempts++;
-    console.log(`[Realtime] Reconnecting in ${interval}ms (attempt ${this.reconnectAttempts}/${maxAttempts})`);
+    if (this.debug) console.log(`[Realtime] Reconnecting in ${interval}ms (attempt ${this.reconnectAttempts}/${maxAttempts})`);
 
     setTimeout(() => {
       if (this.config && !this.isConnecting) {

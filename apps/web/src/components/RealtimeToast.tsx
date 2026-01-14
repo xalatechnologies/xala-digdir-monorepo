@@ -94,11 +94,12 @@ export function RealtimeToast(): React.ReactElement {
   // Handle notification events
   const handleNotificationEvent = useCallback((event: RealtimeEvent) => {
     const data = event.data as { title?: string; body?: string; type?: string } | undefined;
+    const message = data?.body ?? event.message;
 
     addToast({
       type: (data?.type as Toast['type']) || 'info',
       title: data?.title || 'Varsel',
-      message: data?.body || event.message,
+      ...(message && { message }),
     });
   }, [addToast]);
 

@@ -3,6 +3,7 @@
  * Quick stats, recent activity, and dashboard widgets
  */
 import { getClient } from '../core/client-factory';
+import type { DashboardKPIs } from '../types';
 
 export interface DashboardStats {
   bookings: {
@@ -57,7 +58,7 @@ export interface UpcomingBooking {
   status: string;
 }
 
-class DashboardService {
+export class DashboardService {
   private basePath = '/api/dashboard';
 
   /**
@@ -65,6 +66,13 @@ class DashboardService {
    */
   async getStats(): Promise<{ data: DashboardStats }> {
     return getClient().get<{ data: DashboardStats }>(`${this.basePath}/stats`);
+  }
+
+  /**
+   * Get KPI summary for reports
+   */
+  async getKPIs(): Promise<{ data: DashboardKPIs }> {
+    return getClient().get<{ data: DashboardKPIs }>(`${this.basePath}/kpis`);
   }
 
   /**

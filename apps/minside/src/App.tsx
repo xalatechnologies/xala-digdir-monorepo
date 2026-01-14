@@ -4,6 +4,7 @@ import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
+import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -15,8 +16,18 @@ import { SettingsPage } from './routes/settings';
 
 export function App() {
   return (
+    <ThemeProvider>
+      <AppWithTheme />
+    </ThemeProvider>
+  );
+}
+
+function AppWithTheme() {
+  const { colorScheme } = useTheme();
+  
+  return (
     <I18nProvider>
-      <DesignsystemetProvider theme="digilist" colorScheme="light" size="md">
+      <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
       <BrowserRouter
         future={{
@@ -25,7 +36,10 @@ export function App() {
         }}
       >
         <AuthProvider>
-          <RealtimeProvider wsUrl={import.meta.env.VITE_WS_URL}>
+          <RealtimeProvider 
+            wsUrl={import.meta.env.VITE_WS_URL} 
+            tenantId={import.meta.env.VITE_TENANT_ID}
+          >
           <Routes>
             <Route path="/login" element={<LoginPage />} />
 

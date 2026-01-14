@@ -19,9 +19,8 @@
     { "path": "./packages/ds" },
     { "path": "./packages/ds-themes" },
     { "path": "./packages/ds-registry" },
-    { "path": "./packages/eslint-config" },
-    { "path": "./packages/client-sdk" },
-    { "path": "./apps/web" },
-    { "path": "./apps/backoffice" }
-  ]
+    { "path": "./packages/eslint-config" }
+  ],
+  "include": [],
+  "exclude": ["node_modules", "**/node_modules", "**/dist"]
 }

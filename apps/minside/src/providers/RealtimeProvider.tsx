@@ -30,18 +30,24 @@ interface RealtimeProviderProps {
  * 
  * @example
  * ```tsx
- * <RealtimeProvider wsUrl="wss://api.digilist.no/ws/events">
+ * <RealtimeProvider wsUrl="wss://api.digilist.no" tenantId="f47ac10b...">
  *   <App />
  * </RealtimeProvider>
  * ```
  */
 export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
+  // Build full WebSocket URL with tenant ID suffix
+  // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
+  const fullWsUrl = wsUrl && tenantId 
+    ? `${wsUrl}/${tenantId}` 
+    : undefined;
+  
   // Connect to WebSocket
-  const isConnected = useRealtimeConnection(wsUrl ? {
-    url: wsUrl,
+  const isConnected = useRealtimeConnection(fullWsUrl ? {
+    url: fullWsUrl,
     autoReconnect: true,
-    reconnectInterval: 3000,
-    maxReconnectAttempts: 5,
+    reconnectInterval: 5000,
+    maxReconnectAttempts: 3,
     ...(tenantId ? { tenantId } : {}),
   } : undefined);
 

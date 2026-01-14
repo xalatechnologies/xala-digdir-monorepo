@@ -203,11 +203,13 @@ export function RequestStatusBadge({ status, size = 'sm' }: RequestStatusBadgePr
 // Seasonal Lease Status Badge
 // =============================================================================
 
-export type SeasonalLeaseStatusType = 'active' | 'pending' | 'upcoming' | 'expired' | 'cancelled' | 'terminated';
+export type SeasonalLeaseStatusType = 'draft' | 'pending' | 'approved' | 'active' | 'upcoming' | 'expired' | 'cancelled' | 'terminated';
 
 const seasonalLeaseStatusConfig: Record<SeasonalLeaseStatusType, StatusBadgeConfig> = {
-  active: { color: 'success', label: 'Aktiv' },
+  draft: { color: 'neutral', label: 'Utkast' },
   pending: { color: 'warning', label: 'Venter' },
+  approved: { color: 'info', label: 'Godkjent' },
+  active: { color: 'success', label: 'Aktiv' },
   upcoming: { color: 'info', label: 'Kommende' },
   expired: { color: 'neutral', label: 'Utløpt' },
   cancelled: { color: 'neutral', label: 'Kansellert' },

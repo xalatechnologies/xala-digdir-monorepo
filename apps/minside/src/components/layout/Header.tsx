@@ -4,6 +4,7 @@ import {
   HeaderSearch,
   HeaderActions,
   HeaderIconButton,
+  HeaderThemeToggle,
   Button,
   BellIcon,
   SettingsIcon,
@@ -13,7 +14,9 @@ import {
   PeopleIcon,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../providers/ThemeProvider';
 
 interface HeaderProps {
   title?: string;
@@ -98,9 +101,14 @@ const getMockSearchResults = (query: string): SearchResultGroup[] => {
 
 export function Header({ title: _title }: HeaderProps) {
   const { user, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
+  
+  // Get real unread notification count
+  const { data: unreadData } = useUnreadCount();
+  const unreadCount = unreadData?.data?.count ?? 0;
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -158,13 +166,17 @@ export function Header({ title: _title }: HeaderProps) {
         {/* Right side - Actions */}
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
           <HeaderActions spacing="var(--ds-spacing-3)">
+            <HeaderThemeToggle
+              isDark={isDark}
+              onToggle={toggleTheme}
+            />
             <HeaderIconButton
               icon={<BellIcon size={22} />}
-              badge={3}
-              badgeColor="danger"
+              {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
               size="md"
-              aria-label="Varsler"
+              aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
               title="Varsler"
+              onClick={() => navigate('/messages')}
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
