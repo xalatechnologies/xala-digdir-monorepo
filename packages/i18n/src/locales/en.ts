@@ -348,4 +348,34 @@ export const en: Record<string, string> = {
   'org.membersDesc': 'Manage members',
   'org.seasonRental': 'Season rental',
   'org.seasonRentalDesc': 'Fixed rental periods',
+
+  // Errors
+  'errors.generic': 'Something went wrong. Please try again.',
+  'errors.network': 'Network error. Check your connection.',
+  'errors.notFound': 'Resource not found.',
+  'errors.unauthorized': 'You do not have access to this resource.',
+  'errors.forbidden': 'This action is not allowed.',
+  'errors.validation': 'Please check that all fields are filled in correctly.',
+  'errors.timeout': 'Request timed out. Please try again.',
+  'errors.serverError': 'Server error. Contact support if the problem persists.',
+
+  // Policy
+  'policy.terms': 'Terms of use',
+  'policy.privacy': 'Privacy policy',
+  'policy.cookies': 'Cookies',
+  'policy.cancellation': 'Cancellation policy',
+  'policy.rental': 'Rental terms',
+  'policy.accessibility': 'Accessibility',
+  'policy.gdpr': 'GDPR and privacy',
+  'policy.dataRetention': 'Data processing',
+
+  // Actions
+  'actions.approve': 'Approve',
+  'actions.reject': 'Reject',
+  'actions.submit': 'Submit',
+  'actions.reset': 'Reset',
+  'actions.export': 'Export',
+  'actions.import': 'Import',
+  'actions.duplicate': 'Duplicate',
+  'actions.download': 'Download',
 };
