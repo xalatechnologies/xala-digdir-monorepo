@@ -162,6 +162,20 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Scheduled Reports Keys
+  // =========================================================================
+  scheduledReports: {
+    all: ['scheduledReports'] as const,
+    lists: () => [...queryKeys.scheduledReports.all, 'list'] as const,
+    list: (params?: { reportType?: string; isActive?: boolean }) =>
+      [...queryKeys.scheduledReports.lists(), params] as const,
+    details: () => [...queryKeys.scheduledReports.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.scheduledReports.details(), id] as const,
+    active: () => [...queryKeys.scheduledReports.all, 'active'] as const,
+    byType: (reportType: string) => [...queryKeys.scheduledReports.all, 'type', reportType] as const,
+  },
+
+  // =========================================================================
   // Audit Keys
   // =========================================================================
   audit: {
