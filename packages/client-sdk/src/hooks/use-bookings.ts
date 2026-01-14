@@ -159,11 +159,42 @@ export function useCompleteBooking() {
  */
 export function useDeleteBooking() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => bookingService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Bulk confirm multiple bookings mutation
+ */
+export function useBulkConfirmBookings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (ids: string[]) => bookingService.bulkConfirm(ids),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Bulk reject multiple bookings mutation
+ */
+export function useBulkRejectBookings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ ids, reason }: { ids: string[]; reason?: string }) =>
+      bookingService.bulkReject(ids, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
   });
