@@ -186,3 +186,20 @@ export function useDeleteSeason() {
     },
   });
 }
+
+/**
+ * Add a venue to a season
+ */
+export function useAddVenueToSeason() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ seasonId, listingId }: { seasonId: string; listingId: string }) =>
+      seasonService.addVenueToSeason(seasonId, listingId),
+    onSuccess: (_, { seasonId }) => {
+      queryClient.invalidateQueries({ queryKey: seasonKeys.venues(seasonId) });
+      queryClient.invalidateQueries({ queryKey: seasonKeys.detail(seasonId) });
+      queryClient.invalidateQueries({ queryKey: seasonKeys.lists() });
+    },
+  });
+}
