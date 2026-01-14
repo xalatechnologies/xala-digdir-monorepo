@@ -207,6 +207,58 @@ export class SeasonApplicationsController {
   }
 
   /**
+   * PUT /api/season-applications/:id/approve - Approve application
+   */
+  @Put('/:id/approve')
+  async approve(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    const result = await db
+      .update(seasonApplications)
+      .set({
+        status: 'approved',
+        updatedAt: new Date(),
+      })
+      .where(eq(seasonApplications.id, id))
+      .returning();
+
+    if (!result.length) {
+      reply.code(404);
+      return { error: 'Season application not found' };
+    }
+
+    return { data: result[0] };
+  }
+
+  /**
+   * PUT /api/season-applications/:id/reject - Reject application
+   */
+  @Put('/:id/reject')
+  async reject(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+    const body = (request.body as any) || {};
+
+    const result = await db
+      .update(seasonApplications)
+      .set({
+        status: 'rejected',
+        rejectionReason: body.rejectionReason || null,
+        updatedAt: new Date(),
+      })
+      .where(eq(seasonApplications.id, id))
+      .returning();
+
+    if (!result.length) {
+      reply.code(404);
+      return { error: 'Season application not found' };
+    }
+
+    return { data: result[0] };
+  }
+
+  /**
    * GET /api/season-applications/conflicts - Detect conflicts between applications
    * KRAV-ADM-04: Konfliktdeteksjon mellom søknader
    */
