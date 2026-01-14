@@ -102,6 +102,9 @@ export {
   PlayIcon,
   LockIcon,
   UnlockIcon,
+  UploadIcon,
+  CameraIcon,
+  ImageIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility
