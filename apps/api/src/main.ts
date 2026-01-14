@@ -52,6 +52,7 @@ import { BackofficeUserGroupsController, BackofficePriceRulesController, Backoff
 import { SearchController } from './modules/search/search.controller';
 import { SeasonsController } from './modules/seasons/seasons.controller';
 import { BlocksController } from './modules/blocks/blocks.controller';
+import { SeasonApplicationsController } from './modules/season-applications/season-applications.controller';
 // Phase 6: Profile
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
@@ -263,6 +264,7 @@ async function bootstrap() {
     SearchController,
     SeasonsController,
     BlocksController,
+    SeasonApplicationsController,
     // Phase 6: Profile
     ProfileController,
     // Phase 7: Reviews
