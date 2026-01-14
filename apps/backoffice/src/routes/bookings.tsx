@@ -35,6 +35,7 @@ import {
   useCancelBooking,
   useUpdateBooking,
   useBulkConfirmBookings,
+  useBulkCancelBookings,
   useListings,
   useUsers,
   type BookingStatus,
@@ -44,6 +45,7 @@ import {
 } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 import { EditBookingForm } from '../components/bookings/EditBookingForm';
+import { BulkCancelDialog } from '../components/bookings/BulkCancelDialog';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
@@ -103,6 +105,7 @@ export function BookingsPage() {
   const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isBulkCancelDialogOpen, setIsBulkCancelDialogOpen] = useState(false);
 
   // Filter state - default to 'pending' to show actionable items first
   const [activeTab, setActiveTab] = useState<string>('pending');
@@ -186,6 +189,7 @@ export function BookingsPage() {
   const cancelBooking = useCancelBooking();
   const updateBooking = useUpdateBooking();
   const bulkConfirmBookings = useBulkConfirmBookings();
+  const bulkCancelBookings = useBulkCancelBookings();
   const { confirm } = useDialog();
 
   // Tab counts
@@ -295,20 +299,13 @@ export function BookingsPage() {
     }
   };
 
-  const handleBulkCancel = async () => {
-    const confirmed = await confirm({
-      title: t('bookings.bulkCancel'),
-      description: `Avslå ${selectedIds.length} bookinger?`,
-      confirmText: 'Avslå alle',
-      cancelText: t('common.abort'),
-      variant: 'danger',
-    });
-    if (confirmed) {
-      for (const id of selectedIds) {
-        await cancelBooking.mutateAsync({ id });
-      }
-      setSelectedIds([]);
-    }
+  const handleBulkCancel = () => {
+    setIsBulkCancelDialogOpen(true);
+  };
+
+  const handleBulkCancelConfirm = async (reason: string) => {
+    await bulkCancelBookings.mutateAsync({ ids: selectedIds, reason });
+    setSelectedIds([]);
   };
 
   const handleBulkExport = () => {
@@ -525,6 +522,14 @@ export function BookingsPage() {
           />
         </Drawer>
       )}
+
+      {/* Bulk Cancel Dialog */}
+      <BulkCancelDialog
+        isOpen={isBulkCancelDialogOpen}
+        onClose={() => setIsBulkCancelDialogOpen(false)}
+        onConfirm={handleBulkCancelConfirm}
+        selectedCount={selectedIds.length}
+      />
 
       {/* Detail Drawer */}
       <Drawer
