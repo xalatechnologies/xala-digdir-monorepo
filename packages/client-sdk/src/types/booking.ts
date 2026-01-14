@@ -55,6 +55,7 @@ export interface CreateBookingDTO {
 }
 
 export interface UpdateBookingDTO {
+  version?: number;
   startTime?: string | Date;
   endTime?: string | Date;
   notes?: string;
