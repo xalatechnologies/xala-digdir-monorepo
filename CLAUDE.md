@@ -1,454 +1,164 @@
-# CLAUDE.md
+# CLAUDE.md - Xala AI Governance System
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## System Context
 
-## Build Commands
+You are operating inside the **Xala / Digilist Platform** - a Norwegian
+municipal booking and resource management system.
 
-```bash
-pnpm install          # Install dependencies
-pnpm dev              # Run all apps in parallel (web: 5173, api: 3002)
-pnpm build            # Build all packages
-pnpm lint             # Check ESLint guardrails
-pnpm format           # Format with Prettier
-pnpm tokens:create    # Generate themes via Designsystemet CLI
-pnpm tokens:build     # Build theme tokens
-```
+**System Characteristics:**
 
-**Scanner commands:**
-```bash
-pnpm scan             # Full Digdir standards scan
-pnpm scan:strict      # All rules as errors
-pnpm scan:tokens      # Design token violations only
-pnpm scan:components  # Component pattern issues only
-pnpm scan:a11y        # Accessibility rules only
-pnpm scan:fix         # Auto-fix where possible
-```
-
-Individual app commands:
-```bash
-pnpm --filter @xala/web dev      # Web only
-pnpm --filter @xala/api dev      # API only
-pnpm --filter @xala/web lint     # Lint web app
-```
-
-## Architecture
-
-**Monorepo stack:** pnpm workspaces + Turborepo
-
-```
-apps/
-  web/          # Vite + React + TypeScript (port 5173)
-  api/          # Fastify server (port 3002)
-packages/
-  ds/           # UI facade - the ONLY UI import allowed in apps
-  ds-themes/    # Theme URL registry for runtime switching
-  ds-registry/  # Documentation and examples
-  eslint-config/# Guardrail enforcement + Digdir scanner
-```
-
-**Component hierarchy in @xala/ds:**
-- **Shells** (AppShell) - Application-level layout
-- **Composed** (ContentLayout, PageHeader, Navigation, FilterBar) - Mid-level components
-- **Primitives** (Container, Grid, Stack, Icon, Card) - Low-level building blocks
-- All Digdir components re-exported via `@digdir/designsystemet-react`
-
-## Critical Rules (Enforced by ESLint Scanner)
-
-### Import Rules
-1. **Apps must NOT import @digdir/* packages directly** - Use only `@xala/ds`
-2. **Import `@xala/ds/styles` exactly once** - Only in `main.tsx`
-3. **No custom UI components in apps** - Use DS components from `@xala/ds`
-4. **Use DesignsystemetProvider for theme switching** - Never import theme CSS directly
-
-### Design Token Rules
-5. **No hardcoded colors** - Use `var(--ds-color-*)` tokens
-6. **No hardcoded spacing** - Use `var(--ds-spacing-*)` tokens
-7. **No hardcoded typography** - Use `var(--ds-font-*)` tokens
-8. **No hardcoded border-radius** - Use `var(--ds-border-radius-*)` tokens
-
-### Component Pattern Rules
-9. **Follow asChild pattern** - Only ONE child allowed under `asChild`
-10. **Require button type** - Always specify `type="button|submit|reset"`
-11. **Require accessible labels** - Icon-only buttons need `aria-label`
-12. **Prefer DS components** - Use `<Button>` not `<button>`, etc.
-13. **Require provider** - Entry files must import `DesignsystemetProvider`
-
-## Digdir Design Tokens
-
-**Always use CSS variables instead of hardcoded values:**
-
-```tsx
-// WRONG - hardcoded values
-<div style={{ color: '#333', padding: '16px', borderRadius: '4px' }}>
-
-// CORRECT - design tokens
-<div style={{
-  color: 'var(--ds-color-neutral-text-default)',
-  padding: 'var(--ds-spacing-4)',
-  borderRadius: 'var(--ds-border-radius-md)'
-}}>
-```
-
-**Available token families:**
-- `--ds-color-neutral-*` - Neutral colors (text, backgrounds, borders)
-- `--ds-color-accent-*` - Accent/brand colors
-- `--ds-color-brand1-*` through `--ds-color-brand3-*` - Brand palette
-- `--ds-color-success-*`, `--ds-color-danger-*`, `--ds-color-warning-*`, `--ds-color-info-*`
-- `--ds-spacing-0` through `--ds-spacing-30` - Spacing scale
-- `--ds-font-size-*`, `--ds-font-weight-*`, `--ds-font-line-height-*`
-- `--ds-border-radius-sm`, `--ds-border-radius-md`, `--ds-border-radius-lg`, `--ds-border-radius-full`
-
-## Theme System
-
-Available themes: `digdir`, `altinn`, `uutilsynet`, `portal`
-
-```tsx
-import { DesignsystemetProvider } from '@xala/ds';
-
-<DesignsystemetProvider theme="digdir" colorScheme="auto" size="md">
-  {/* App */}
-</DesignsystemetProvider>
-```
-
-Data attributes for styling:
-- `data-color-scheme`: `"auto" | "light" | "dark"`
-- `data-size`: `"sm" | "md" | "lg"`
-- `data-typography`: `"primary" | "secondary"`
-
-## Entry Point Pattern
-
-```tsx
-// main.tsx - correct pattern
-import '@xala/ds/styles';  // CSS import (exactly once)
-import { DesignsystemetProvider, Button } from '@xala/ds';  // Components
-```
-
-## ESLint Scanner Rules
-
-Located in `packages/eslint-config/`:
-
-**Design Token Rules:**
-- `digdir/no-hardcoded-colors` - Blocks hex, rgb(), hsl(), named colors
-- `digdir/no-hardcoded-spacing` - Blocks px/rem/em in padding/margin/gap
-- `digdir/no-hardcoded-typography` - Blocks hardcoded font sizes/weights
-- `digdir/no-hardcoded-border-radius` - Blocks hardcoded border-radius values
-
-**Component Pattern Rules:**
-- `digdir/as-child-single-child` - Validates asChild has exactly one child
-- `digdir/require-button-type` - Requires explicit button type attribute
-- `digdir/require-interactive-labels` - Ensures icon buttons have aria-label
-- `digdir/prefer-ds-components` - Suggests DS components over native HTML
-- `digdir/require-provider` - Warns if DesignsystemetProvider not imported
-
-**Configuration presets:**
-```js
-import {
-  designTokens,      // Token rules only
-  componentPatterns, // Pattern rules only
-  digdirScanner,     // All rules (default)
-  strict,            // All rules as errors
-  apps               // Full config for apps/
-} from '@xala/eslint-config';
-```
+- Multi-tenant (kommune-level isolation)
+- Audit-first (all mutations logged for compliance)
+- SDK-driven (@digilist/client-sdk is THE integration layer)
+- RFC 7807 compliant (Problem Details for errors)
+- RBAC enforced (role-based access control)
+- Production live
 
 ---
 
-## Token-First Development Workflow
+## Non-Negotiable Rules
 
-**CRITICAL: Always follow this workflow when creating or modifying components.**
+### 1. SDK-FIRST RULE
 
-### Step 1: Check Available Tokens First
-
-Before writing any style, check if a token exists:
-
-```bash
-# Search for available tokens in generated theme
-grep -r "ds-color\|ds-spacing\|ds-font\|ds-border" packages/ds-themes/generated/
-
-# Or check the extensions file for custom tokens
-cat packages/ds-themes/themes/digilist-extensions.css
+```
+❌ NEVER generate direct API calls (fetch, axios, graphql)
+✅ ONLY use @digilist/client-sdk
 ```
 
-**Available token families:**
+If SDK lacks a method → **report gap, do NOT bypass**.
 
-| Category | Token Pattern | Example |
-|----------|--------------|---------|
-| Colors | `--ds-color-{semantic}-{variant}` | `--ds-color-neutral-text-default` |
-| Spacing | `--ds-spacing-{0-30}` | `--ds-spacing-4` |
-| Font Size | `--ds-font-size-{xs,sm,md,lg,xl,2xl...}` | `--ds-font-size-md` |
-| Font Weight | `--ds-font-weight-{medium,semibold,bold}` | `--ds-font-weight-bold` |
-| Border Radius | `--ds-border-radius-{sm,md,lg,full}` | `--ds-border-radius-md` |
-| Shadows | `--ds-shadow-{xs,sm,md,lg,xl}` | `--ds-shadow-md` |
-| Line Height | `--ds-line-height-{sm,md,lg}` | `--ds-line-height-md` |
+### 2. NO BUSINESS LOGIC IN UI
 
-### Step 2: If Token Doesn't Exist, Create Extension
+- React components = orchestration + rendering only
+- All logic lives in: API, SDK services, typed hooks
 
-If you need a value not covered by existing tokens:
+### 3. RFC 7807 COMPLIANCE
 
-1. **Add to `packages/ds-themes/themes/digilist-extensions.css`**
-2. **Use proper namespace**: `--ds-*` for Digdir-style tokens, `--digilist-*` for app-specific
-3. **Document the token** with a comment explaining its purpose
+All errors MUST conform to Problem Details:
 
-```css
-/* In digilist-extensions.css */
-:root {
-  /* Condensed line-height for logo text and tight headings */
-  --ds-line-height-condensed: 1.1;
-
-  /* Micro spacing for optical alignment adjustments */
-  --digilist-spacing-micro: 2px;
-  --digilist-spacing-micro-sm: 1px;
+```typescript
+interface ProblemDetails {
+  type: string; // URI identifying error type
+  title: string; // Human-readable summary
+  status: number; // HTTP status code
+  detail?: string; // Human-readable explanation
 }
 ```
 
-### Step 3: Use Token in Component
+### 4. AUDIT-FIRST PRINCIPLE
 
-```tsx
-// WRONG - hardcoded value
-<span style={{ lineHeight: '1.1', marginTop: '2px' }}>
+- Any state mutation MUST be auditable
+- If action is not logged → **block implementation**
+- Required audit fields: `who`, `what`, `when`, `tenantId`, `ip/ua`
 
-// CORRECT - tokenized
-<span style={{
-  lineHeight: 'var(--ds-line-height-condensed)',
-  marginTop: 'var(--digilist-spacing-micro)'
-}}>
-```
+### 5. RBAC IS SOURCE OF TRUTH
 
-### Step 4: Run Scanner to Verify
-
-```bash
-pnpm scan:tokens  # Check for any hardcoded values
-```
+- Feature access derives from role matrix
+- No role checks hardcoded in UI
+- Use capability-based guards
 
 ---
 
-## Token Extension Guidelines
-
-### When to Create New Tokens
-
-| Scenario | Action |
-|----------|--------|
-| Standard color/spacing/size | Use existing `--ds-*` token |
-| Missing standard value | Add to extensions with `--ds-*` prefix |
-| App-specific semantic token | Add with `--digilist-*` prefix |
-| One-off micro-adjustment | Create `--digilist-spacing-micro-*` token |
-| Component-specific token | Create `--digilist-{component}-*` token |
-
-### Token Naming Conventions
-
-```css
-/* Standard Digdir pattern (for missing standard tokens) */
---ds-line-height-condensed: 1.1;
---ds-shadow-card-hover: 0 8px 24px rgba(0,0,0,0.12);
-
-/* App-specific semantic tokens */
---digilist-sidebar-background: oklch(0.99 0 0);
---digilist-chart-1: #2F55A4;
-
-/* Micro-adjustment tokens */
---digilist-spacing-micro: 2px;
---digilist-spacing-micro-sm: 1px;
-
-/* Component-specific tokens */
---digilist-control-height-md: 2.875rem;
-```
-
-### File Structure for Extensions
+## Architecture Layers
 
 ```
-packages/ds-themes/
-├── generated/
-│   └── digilist.css       # CLI-generated (DO NOT EDIT)
-└── themes/
-    └── digilist-extensions.css  # Custom tokens (EDIT HERE)
+┌─────────────────────────────────────────────┐
+│  FRONTEND (React)                           │
+│  - Orchestration only                       │
+│  - Uses SDK hooks                           │
+│  - No API calls, no business logic          │
+├─────────────────────────────────────────────┤
+│  SDK (@digilist/client-sdk)                 │
+│  - Typed services                           │
+│  - React Query hooks                        │
+│  - Realtime WebSocket client                │
+├─────────────────────────────────────────────┤
+│  API (Fastify)                              │
+│  - Business logic                           │
+│  - Persistence (Drizzle/Postgres)           │
+│  - Audit logging                            │
+└─────────────────────────────────────────────┘
 ```
+
+**Cross-layer imports are FORBIDDEN.**
 
 ---
 
-## Component Creation Checklist
+## UI Rules
 
-When creating new components in `@xala/ds`:
-
-- [ ] **Check existing tokens** - Search generated theme first
-- [ ] **No hardcoded values** - All colors, spacing, typography must use tokens
-- [ ] **Create extension tokens** if needed - Add to `digilist-extensions.css`
-- [ ] **Use semantic token names** - `--ds-color-neutral-text-default` not `--ds-color-gray-700`
-- [ ] **Support color schemes** - Test light/dark mode
-- [ ] **Run `pnpm scan:tokens`** - Verify no violations
-- [ ] **Document custom tokens** - Comment explaining purpose
+| Rule       | Correct       | Incorrect     |
+| :--------- | :------------ | :------------ |
+| Components | `@xala/ds`    | Raw HTML      |
+| Styling    | Design tokens | Inline styles |
+| Data       | SDK hooks     | `fetch()`     |
+| Constants  | i18n keys     | Magic strings |
 
 ---
 
-## Common Token Mappings
+## Failure Modes
 
-| Need | Token |
-|------|-------|
-| Primary text | `var(--ds-color-neutral-text-default)` |
-| Secondary text | `var(--ds-color-neutral-text-subtle)` |
-| Background | `var(--ds-color-neutral-background-default)` |
-| Card surface | `var(--ds-color-neutral-surface-default)` |
-| Hover surface | `var(--ds-color-neutral-surface-hover)` |
-| Border | `var(--ds-color-neutral-border-default)` |
-| Subtle border | `var(--ds-color-neutral-border-subtle)` |
-| Primary action | `var(--ds-color-accent-base-default)` |
-| Success | `var(--ds-color-success-base-default)` |
-| Warning | `var(--ds-color-warning-base-default)` |
-| Danger | `var(--ds-color-danger-base-default)` |
-| Focus ring | `var(--ds-color-focus-outer)` |
-| Small spacing | `var(--ds-spacing-2)` (8px) |
-| Medium spacing | `var(--ds-spacing-4)` (16px) |
-| Large spacing | `var(--ds-spacing-6)` (24px) |
-| Small radius | `var(--ds-border-radius-sm)` |
-| Medium radius | `var(--ds-border-radius-md)` |
-| Pill/full radius | `var(--ds-border-radius-full)` |
+**STOP and ask for clarification if:**
+
+- SDK method does not exist
+- Role matrix is ambiguous
+- Audit event type is undefined
+- Tenant context is missing
+- Error contract is unclear
 
 ---
 
-## Digdir Typography Components
+## Custom Skills
 
-**CRITICAL: Use Digdir's `<Heading>` and `<Paragraph>` components instead of styled HTML elements.**
+### `sdk_only_execution`
 
-### Why Use Typography Components?
+Refuse to generate code that bypasses the SDK.
 
-1. **Automatic responsive scaling** - Respects app's `data-size` mode (sm/md/lg)
-2. **Built-in styles** - Font size, weight, line-height handled automatically
-3. **Semantic markup** - Proper heading hierarchy for accessibility
-4. **Consistency** - Matches Digdir ecosystem patterns
-5. **Less code** - No inline style objects needed
+Trigger Phrases: "just fetch", "quick axios", "temporary call"
 
-### Heading Component
+Response: `❌ Direct API calls are not allowed. Use @digilist/client-sdk.`
 
-```tsx
-import { Heading } from '@digdir/designsystemet-react';
+### `audit_enforcement`
 
-// Basic usage
-<Heading level={1}>Page Title</Heading>
-<Heading level={2}>Section Title</Heading>
-<Heading level={3}>Card Title</Heading>
+Verify audit logging for every state mutation. If missing: stop, explain,
+propose audit-safe alternative.
 
-// With size override (visual size independent of semantic level)
-<Heading level={3} data-size="xs">Small Card Title</Heading>
-<Heading level={2} data-size="lg">Large Section Title</Heading>
+### `rbac_reasoning`
+
+Reason in terms of roles and capabilities, not UI permissions. Output: Role →
+Capability → Feature mapping.
+
+### `production_realism`
+
+Assume system is live, multi-tenant, and regulated.
+
+**Forbidden phrases:**
+
+- "In a real system you would…"
+- "For simplicity…"
+
+---
+
+## Canonical Prompt Header
+
+Use this at the start of complex tasks:
+
 ```
+You are operating inside the Xala / Digilist Platform.
 
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `level` | `1-6` | `2` | Semantic heading level (h1-h6) |
-| `data-size` | `'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'md'` | Visual size |
+System is:
+- Multi-tenant
+- Audit-first
+- SDK-driven
+- RFC 7807 compliant
+- RBAC enforced
+- Production live
 
-### Paragraph Component
+Rules:
+- No direct API calls
+- No business logic in UI
+- All mutations must be audited
+- Realtime events must be considered
+- SDK is the only integration layer
 
-```tsx
-import { Paragraph } from '@digdir/designsystemet-react';
-
-// Basic usage
-<Paragraph>Body text content</Paragraph>
-
-// With size
-<Paragraph data-size="sm">Small text</Paragraph>
-<Paragraph data-size="lg">Large text</Paragraph>
-
-// With variant for different line-heights
-<Paragraph variant="short">Short paragraph</Paragraph>
-<Paragraph variant="long">Long paragraph with more line-height</Paragraph>
+If any rule cannot be satisfied, STOP and report.
 ```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `data-size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | - | Text size |
-| `variant` | `'short' \| 'default' \| 'long'` | `'default'` | Line-height variant |
-
-### Migration: Inline Styles → Components
-
-```tsx
-// ❌ WRONG - Inline styles (even with tokens)
-<h3 style={{
-  fontSize: 'var(--ds-font-size-md)',
-  fontWeight: 'var(--ds-font-weight-semibold)',
-  lineHeight: 'var(--ds-line-height-sm)',
-  color: 'var(--ds-color-neutral-text-default)',
-}}>
-  Card Title
-</h3>
-
-<p style={{
-  fontSize: 'var(--ds-font-size-sm)',
-  color: 'var(--ds-color-neutral-text-subtle)',
-}}>
-  Description text
-</p>
-
-// ✅ CORRECT - Digdir components
-<Heading level={3} data-size="sm">
-  Card Title
-</Heading>
-
-<Paragraph
-  data-size="sm"
-  style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
->
-  Description text
-</Paragraph>
-```
-
-### When to Use Each
-
-| Content Type | Component | Example |
-|-------------|-----------|---------|
-| Page title | `<Heading level={1}>` | Main page heading |
-| Section title | `<Heading level={2}>` | Content sections |
-| Card/item title | `<Heading level={3}>` | ListingCard name |
-| Subsection | `<Heading level={4-6}>` | Nested content |
-| Body text | `<Paragraph>` | Descriptions, content |
-| Small text | `<Paragraph data-size="sm">` | Metadata, captions |
-| Long content | `<Paragraph variant="long">` | Articles, descriptions |
-
-### Customizing Typography Components
-
-Override specific styles while keeping component benefits:
-
-```tsx
-// Custom color
-<Paragraph
-  data-size="sm"
-  style={{ color: 'var(--ds-color-neutral-text-subtle)' }}
->
-  Muted text
-</Paragraph>
-
-// Custom margin
-<Heading
-  level={3}
-  data-size="xs"
-  style={{ marginBottom: 'var(--ds-spacing-2)' }}
->
-  Title with spacing
-</Heading>
-
-// Flex container integration
-<Paragraph
-  data-size="sm"
-  style={{
-    margin: 0,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 'var(--ds-spacing-1)',
-  }}
->
-  <Icon /> Text with icon
-</Paragraph>
-```
-
-### Size Mapping Reference
-
-| data-size | Approximate px | Use Case |
-|-----------|---------------|----------|
-| `2xs` | ~12px | Fine print, badges |
-| `xs` | ~14px | Compact UI, metadata |
-| `sm` | ~16px | Secondary text, descriptions |
-| `md` | ~18px | Body text (default) |
-| `lg` | ~21px | Emphasized text |
-| `xl` | ~24px | Subheadings |
-| `2xl` | ~30px | Page titles |

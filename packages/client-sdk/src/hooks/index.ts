@@ -106,3 +106,27 @@ export {
   useCalendarSyncStatus,
   useSyncCalendar
 } from './use-integrations';
+
+// Realtime hooks (WebSocket)
+export {
+  useRealtimeConnection,
+  useRealtimeBookings,
+  useRealtimeListings,
+  useRealtimeMessages,
+  useRealtimeAudit,
+  useRealtimeEvents,
+  useNotificationBadge,
+  useRealtimeSend
+} from './use-realtime';
+
+// Audit hooks
+export {
+  useAuditLog,
+  useAuditEvent,
+  useAuditStats,
+  useResourceAudit,
+  useUserAudit,
+  type AuditLogEntry,
+  type AuditQueryParams,
+  type AuditStats
+} from './use-audit';

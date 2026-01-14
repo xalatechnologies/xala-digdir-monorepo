@@ -156,6 +156,11 @@ export const queryKeys = {
     lists: () => [...queryKeys.audit.all, 'list'] as const,
     list: (params?: AuditQueryParams) => [...queryKeys.audit.lists(), params] as const,
     detail: (id: string) => [...queryKeys.audit.all, 'detail', id] as const,
+    stats: () => [...queryKeys.audit.all, 'stats'] as const,
+    resource: (resource: string, params?: Omit<AuditQueryParams, 'resource'>) =>
+      [...queryKeys.audit.all, 'resource', resource, params] as const,
+    user: (userId: string, params?: Omit<AuditQueryParams, 'userId'>) =>
+      [...queryKeys.audit.all, 'user', userId, params] as const,
   },
 
   // =========================================================================

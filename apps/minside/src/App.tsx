@@ -3,6 +3,7 @@ import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
+import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -24,6 +25,7 @@ export function App() {
         }}
       >
         <AuthProvider>
+          <RealtimeProvider wsUrl={import.meta.env.VITE_WS_URL}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
 
@@ -44,6 +46,7 @@ export function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </RealtimeProvider>
         </AuthProvider>
       </BrowserRouter>
       </DialogProvider>

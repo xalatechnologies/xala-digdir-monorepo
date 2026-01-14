@@ -4,6 +4,7 @@ import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { ToastProvider } from './providers/ToastProvider';
+import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
@@ -17,6 +18,7 @@ import { MessagesPage } from './routes/messages';
 import { OrganizationsPage } from './routes/organizations';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
+import { AuditPage } from './routes/audit';
 import { SettingsPage } from './routes/settings';
 
 export function App() {
@@ -33,6 +35,7 @@ export function App() {
         }}
       >
         <AuthProvider>
+          <RealtimeProvider wsUrl={import.meta.env.VITE_WS_URL}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
 
@@ -55,6 +58,14 @@ export function App() {
               <Route path="seasons" element={<SeasonsPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="reports" element={<ReportsPage />} />
+              <Route
+                path="audit"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AuditPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="organizations"
                 element={
@@ -83,6 +94,7 @@ export function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </RealtimeProvider>
         </AuthProvider>
       </BrowserRouter>
       </ToastProvider>

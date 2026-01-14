@@ -12,6 +12,7 @@ import {
   ChartIcon,
   SettingsIcon,
   ArrowRightIcon,
+  ClockIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -184,6 +185,7 @@ export function Sidebar() {
     {
       title: 'System',
       items: [
+        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, adminOnly: true },
         { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, adminOnly: true },
       ],
     },

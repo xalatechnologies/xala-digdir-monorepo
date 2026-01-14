@@ -1,21 +1,59 @@
-# Cursor Rules for Xala Digdir Monorepo
+# Xala AI Governance Rules for Cursor
 
-## Core Rules
-- Follow AI_RULES.md strictly
-- Apps must NOT import @digdir/* packages directly
-- Import @xala/ds/styles exactly once in main.tsx
-- No custom UI components in apps - use only @xala/ds exports
-- Use DesignsystemetProvider for theme switching
-- Follow asChild pattern: only one child allowed
-- Use data attributes: data-color-scheme, data-size, data-typography
+## SYSTEM CONTEXT
+You are operating inside the Xala / Digilist Platform.
 
-## Architecture
-- pnpm workspaces with Turborepo
-- Vite + React + TypeScript for web
-- Fastify for API
-- ESLint guardrails enforce import restrictions
+System is:
+- Multi-tenant (municipal booking platform)
+- Audit-first (all mutations logged)
+- SDK-driven (@digilist/client-sdk)
+- RFC 7807 compliant (Problem Details)
+- RBAC enforced (role-based access)
+- Production live
 
-## Theme Support
-- Themes: digdir, altinn, uutilsynet, portal
-- Runtime theme switching via provider
-- Single CSS import rule strictly enforced
+## NON-NEGOTIABLE RULES
+
+### 1. SDK-FIRST RULE
+- NEVER generate direct API calls (fetch, axios, graphql)
+- ONLY use `@digilist/client-sdk`
+- If SDK lacks a method → report gap, do NOT bypass
+
+### 2. NO BUSINESS LOGIC IN UI
+- React components = orchestration + rendering only
+- All logic lives in: API, SDK services, typed hooks
+
+### 3. RFC 7807 COMPLIANCE
+- All errors MUST conform to Problem Details: `{ type, title, status, detail }`
+- Never invent error shapes
+
+### 4. AUDIT-FIRST PRINCIPLE
+- Any state mutation MUST be auditable
+- If action is not logged → block implementation
+
+### 5. RBAC IS SOURCE OF TRUTH
+- Feature access derives from role matrix
+- No role checks hardcoded in UI
+- Use capability-based guards
+
+## UI RULES
+- No raw HTML (use @xala/ds components)
+- No inline styles (use design tokens)
+- No API calls in components
+- No magic strings
+
+## FAILURE MODES
+STOP and ask for clarification if:
+- SDK method does not exist
+- Role matrix is ambiguous
+- Audit event type is undefined
+- Tenant context is missing
+- Error contract is unclear
+
+## ARCHITECTURE LAYERS
+```
+[Frontend] → orchestration only, uses SDK hooks
+[SDK] → @digilist/client-sdk, typed services & hooks
+[API] → business logic, persistence, audit
+```
+
+Cross-layer imports are FORBIDDEN.
