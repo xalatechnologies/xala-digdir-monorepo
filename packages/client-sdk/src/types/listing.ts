@@ -5,6 +5,7 @@
 
 import type { BaseEntity, TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
 import type { ReviewStats } from './review';
+import type { BookingMode, RecurringConstraintsDTO, InGameConstraintsDTO } from './booking';
 
 // =============================================================================
 // Listing Entity
@@ -181,6 +182,93 @@ export interface PublicListingParams extends BaseQueryParams {
   capacity?: number;
   date?: string;
   search?: string;
+}
+
+// =============================================================================
+// Listing Calendar Config Types
+// =============================================================================
+
+/**
+ * Constraints for single slot booking mode.
+ * Defines rules for standard one-time booking selection.
+ */
+export interface SingleSlotConstraintsDTO {
+  /** Whether single slot mode is enabled for this listing */
+  enabled: boolean;
+  /** Minimum booking duration in minutes */
+  minDurationMinutes?: number;
+  /** Maximum booking duration in minutes */
+  maxDurationMinutes?: number;
+  /** Minimum advance notice in minutes */
+  minNoticeMinutes?: number;
+  /** Maximum advance booking window in days */
+  maxAdvanceDays?: number;
+}
+
+/**
+ * Configuration for a single booking mode.
+ * Contains mode type, enabled status, label key, and mode-specific constraints.
+ */
+export interface BookingModeConfig {
+  /** The booking mode type */
+  mode: BookingMode;
+  /** Whether this mode is enabled for the listing */
+  enabled: boolean;
+  /** Localization key for display label (e.g., "booking.mode.single", "booking.mode.recurring") */
+  labelKey: string;
+  /** Optional description key for mode explanation */
+  descriptionKey?: string;
+  /** Mode-specific constraints */
+  constraints: SingleSlotConstraintsDTO | InGameConstraintsDTO | RecurringConstraintsDTO;
+}
+
+/**
+ * Calendar granularity for display purposes.
+ * - HOUR: Display time slots by hour
+ * - DAY: Display full-day slots
+ * - WEEK: Display weekly view
+ */
+export type CalendarGranularity = 'HOUR' | 'DAY' | 'WEEK';
+
+/**
+ * Listing calendar configuration projection DTO.
+ * Contains all configuration needed to render the booking calendar UI.
+ * This is a screen-ready projection - UI should use values directly without transformation.
+ */
+export interface ListingCalendarConfigProjectionDTO {
+  /** ID of the listing */
+  listingId: string;
+  /** Name of the listing */
+  listingName: string;
+  /** Calendar display granularity */
+  granularity: CalendarGranularity;
+  /** Available booking modes with their configurations */
+  bookingModes: BookingModeConfig[];
+  /** Default booking mode (first enabled mode) */
+  defaultMode: BookingMode;
+  /** Operating hours for the listing (ISO weekday 1-7 to open/close times) */
+  operatingHours?: Record<string, { open: string; close: string }>;
+  /** Time zone for the listing (IANA format, e.g., "Europe/Oslo") */
+  timezone: string;
+  /** Slot duration in minutes for calendar grid */
+  slotDurationMinutes: number;
+  /** Minimum selectable slots (for MIN_SLOT_COUNT validation) */
+  minSlots?: number;
+  /** Maximum selectable slots (for MAX_SLOT_COUNT validation) */
+  maxSlots?: number;
+  /** Whether the listing allows same-day booking */
+  allowSameDayBooking: boolean;
+  /** Lead time in minutes required before booking start */
+  leadTimeMinutes?: number;
+  /** Available actions based on user permissions */
+  availableActions: Array<'VIEW' | 'BOOK' | 'RESERVE' | 'MANAGE'>;
+  /** User permissions for this listing */
+  permissions: {
+    canBook: boolean;
+    canReserve: boolean;
+    canViewPricing: boolean;
+    canManageAvailability: boolean;
+  };
 }
 
 // =============================================================================
