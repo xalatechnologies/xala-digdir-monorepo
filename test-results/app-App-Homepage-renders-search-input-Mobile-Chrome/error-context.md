@@ -1,0 +1,197 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - link "Hopp til hovedinnhold" [ref=e5] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e6]:
+    - generic [ref=e8]:
+      - link [ref=e10] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e13]:
+        - button "Bytt til mørkt tema" [ref=e14] [cursor=pointer]:
+          - img [ref=e16]
+        - button "Logg inn" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - text: Logg inn
+  - main [ref=e23]:
+    - generic [ref=e27]:
+      - img [ref=e28]
+      - combobox "Søk etter lokaler..." [ref=e31]
+    - generic [ref=e33]:
+      - button "Filtre" [ref=e34] [cursor=pointer]:
+        - img [ref=e35]
+        - text: Filtre
+      - generic [ref=e37]: 20 resultater
+    - generic [ref=e38]:
+      - generic [ref=e39] [cursor=pointer]:
+        - generic [ref=e40]:
+          - img "Slottsparken Paviljong" [ref=e41]
+          - generic [ref=e44]: Lokale
+          - generic [ref=e45]:
+            - button "Legg til favoritter" [ref=e46]:
+              - img [ref=e47]
+            - button "Del" [ref=e49]:
+              - img [ref=e50]
+          - generic [ref=e56]:
+            - img [ref=e57]
+            - text: "0"
+            - generic [ref=e59]: (0)
+        - generic [ref=e60]:
+          - heading "Slottsparken Paviljong" [level=3] [ref=e61]
+          - paragraph [ref=e62]:
+            - img [ref=e63]
+            - text: Slottsplassen 1, 0010, Oslo
+          - paragraph [ref=e66]: Vakker paviljong i Slottsparken. Perfekt for utendørsarrangementer.
+          - generic [ref=e67]:
+            - generic [ref=e68]: Uteplass
+            - generic [ref=e69]: Strøm
+            - generic [ref=e70]: Toaletter
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - text: 100 personer
+            - generic [ref=e76]: fra 0 NOK/time
+      - generic [ref=e77] [cursor=pointer]:
+        - generic [ref=e78]:
+          - img "Frognerparken Scene" [ref=e79]
+          - generic [ref=e82]: Lokale
+          - generic [ref=e83]:
+            - button "Legg til favoritter" [ref=e84]:
+              - img [ref=e85]
+            - button "Del" [ref=e87]:
+              - img [ref=e88]
+          - generic [ref=e94]:
+            - img [ref=e95]
+            - text: "0"
+            - generic [ref=e97]: (0)
+        - generic [ref=e98]:
+          - heading "Frognerparken Scene" [level=3] [ref=e99]
+          - paragraph [ref=e100]:
+            - img [ref=e101]
+            - text: Kirkeveien 20, 0268, Oslo
+          - paragraph [ref=e104]: Stor utendørsscene i Frognerparken.
+          - generic [ref=e105]:
+            - generic [ref=e106]: Scene
+            - generic [ref=e107]: Strøm
+            - generic [ref=e108]: Lydtekniker
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - img [ref=e111]
+              - text: 500 personer
+            - generic [ref=e114]: fra 3000 NOK/dag
+      - generic [ref=e115] [cursor=pointer]:
+        - generic [ref=e116]:
+          - img "Tennisbane Frogner" [ref=e117]
+          - generic [ref=e120]: Lokale
+          - generic [ref=e121]:
+            - button "Legg til favoritter" [ref=e122]:
+              - img [ref=e123]
+            - button "Del" [ref=e125]:
+              - img [ref=e126]
+          - generic [ref=e132]:
+            - img [ref=e133]
+            - text: "0"
+            - generic [ref=e135]: (0)
+        - generic [ref=e136]:
+          - heading "Tennisbane Frogner" [level=3] [ref=e137]
+          - paragraph [ref=e138]:
+            - img [ref=e139]
+            - text: Frognerveien 45, 0263, Oslo
+          - paragraph [ref=e142]: Profesjonell tennisbane med flomlys.
+          - generic [ref=e143]:
+            - generic [ref=e144]: Flomlys
+            - generic [ref=e145]: Garderobe
+            - generic [ref=e146]: Racketleie
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - img [ref=e149]
+              - text: 4 personer
+            - generic [ref=e152]: fra 300 NOK/time
+      - generic [ref=e153] [cursor=pointer]:
+        - generic [ref=e154]:
+          - img "Havnepir 7" [ref=e155]
+          - generic [ref=e158]: Lokale
+          - generic [ref=e159]:
+            - button "Legg til favoritter" [ref=e160]:
+              - img [ref=e161]
+            - button "Del" [ref=e163]:
+              - img [ref=e164]
+          - generic [ref=e170]:
+            - img [ref=e171]
+            - text: "0"
+            - generic [ref=e173]: (0)
+        - generic [ref=e174]:
+          - heading "Havnepir 7" [level=3] [ref=e175]
+          - paragraph [ref=e176]:
+            - img [ref=e177]
+            - text: Langkaia 7, 0150, Oslo
+          - paragraph [ref=e180]: Unik lokasjon på havna. For festivaler og utendørsarrangementer.
+          - generic [ref=e181]:
+            - generic [ref=e182]: Utsikt
+            - generic [ref=e183]: Strøm
+            - generic [ref=e184]: Vannpost
+          - generic [ref=e185]:
+            - generic [ref=e186]:
+              - img [ref=e187]
+              - text: 200 personer
+            - generic [ref=e190]: fra 5000 NOK/dag
+      - generic [ref=e191] [cursor=pointer]:
+        - generic [ref=e192]:
+          - img "Skøytebane Jordal" [ref=e193]
+          - generic [ref=e196]: Lokale
+          - generic [ref=e197]:
+            - button "Legg til favoritter" [ref=e198]:
+              - img [ref=e199]
+            - button "Del" [ref=e201]:
+              - img [ref=e202]
+          - generic [ref=e208]:
+            - img [ref=e209]
+            - text: "0"
+            - generic [ref=e211]: (0)
+        - generic [ref=e212]:
+          - heading "Skøytebane Jordal" [level=3] [ref=e213]
+          - paragraph [ref=e214]:
+            - img [ref=e215]
+            - text: Jordal Amfi, 0659, Oslo
+          - paragraph [ref=e218]: Kunstisbane for skøyteløp og hockey.
+          - generic [ref=e219]:
+            - generic [ref=e220]: Kunstis
+            - generic [ref=e221]: Garderobe
+            - generic [ref=e222]: Skøyteleie
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - img [ref=e225]
+              - text: 50 personer
+            - generic [ref=e228]: fra 1200 NOK/time
+      - generic [ref=e229] [cursor=pointer]:
+        - generic [ref=e230]:
+          - img "Ungdomshuset Sentrum" [ref=e231]
+          - generic [ref=e234]: Lokale
+          - generic [ref=e235]:
+            - button "Legg til favoritter" [ref=e236]:
+              - img [ref=e237]
+            - button "Del" [ref=e239]:
+              - img [ref=e240]
+          - generic [ref=e246]:
+            - img [ref=e247]
+            - text: "0"
+            - generic [ref=e249]: (0)
+        - generic [ref=e250]:
+          - heading "Ungdomshuset Sentrum" [level=3] [ref=e251]
+          - paragraph [ref=e252]:
+            - img [ref=e253]
+            - text: Kommunegata 1, 3700, Skien
+          - paragraph [ref=e256]: Moderne ungdomshus med spillrom, scene og kafé.
+          - generic [ref=e257]:
+            - generic [ref=e258]: Spillrom
+            - generic [ref=e259]: Scene
+            - generic [ref=e260]: Kafé
+            - generic [ref=e261]: +2 mer
+          - generic [ref=e262]:
+            - generic [ref=e263]:
+              - img [ref=e264]
+              - text: 100 personer
+            - generic [ref=e267]: fra 0 NOK/time
+    - button "Vis flere (14 gjenstår)" [ref=e269] [cursor=pointer]
+```
