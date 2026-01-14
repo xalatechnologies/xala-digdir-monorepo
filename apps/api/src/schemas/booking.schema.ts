@@ -288,3 +288,116 @@ export const RecurringPreviewProjectionSchema = z.object({
   }),
 });
 export type RecurringPreviewProjection = z.infer<typeof RecurringPreviewProjectionSchema>;
+
+/**
+ * Conflict Policy Enum
+ * Defines how the API handles conflicts when creating recurring bookings
+ */
+export const ConflictPolicySchema = z.enum(['STOP_ON_CONFLICT', 'ALLOW_PARTIAL']);
+export type ConflictPolicy = z.infer<typeof ConflictPolicySchema>;
+
+/**
+ * Recurring Create Request Schema
+ * Request body for POST /api/bookings/recurring
+ * Includes the booking selection and conflict handling policy
+ */
+export const RecurringCreateSchema = z.object({
+  // Selection data (extends BookingSelectionSchema fields)
+  listingId: z.string().uuid(),
+  startTime: z.string().datetime(),
+  endTime: z.string().datetime(),
+  userId: z.string().uuid().optional(),
+  organizationId: z.string().uuid().optional(),
+  notes: z.string().max(1000).optional(),
+  metadata: BookingMetadataSchema.optional(),
+
+  // Recurring-specific fields (required for recurring creation)
+  frequency: RecurringFrequencySchema,
+  weekdays: z.array(z.number().int().min(1).max(7)).optional(),
+  endCondition: RecurringEndConditionSchema,
+
+  // Conflict policy options
+  /**
+   * When true, stops the entire operation if any conflict is detected.
+   * No bookings will be created if there are any conflicts.
+   * Default: false
+   */
+  stopOnConflict: z.boolean().default(false),
+
+  /**
+   * When true, creates only the available occurrences and skips conflicts.
+   * Returns a list of created bookings and failed occurrences.
+   * Default: true
+   */
+  allowPartial: z.boolean().default(true),
+
+  // Optional: selected occurrence indices (for user-curated creation)
+  selectedOccurrences: z.array(z.number().int().nonnegative()).optional(),
+}).refine(
+  (data) => {
+    // stopOnConflict and allowPartial are mutually exclusive behaviors
+    // If stopOnConflict is true, allowPartial behavior is overridden
+    // This is a valid configuration - just informational
+    return true;
+  },
+  {
+    message: 'When stopOnConflict is true, the operation will fail on any conflict regardless of allowPartial',
+    path: ['stopOnConflict'],
+  }
+).refine(
+  (data) => data.endTime > data.startTime,
+  {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  }
+);
+
+export type RecurringCreateRequest = z.infer<typeof RecurringCreateSchema>;
+
+/**
+ * Failed Occurrence Schema
+ * Describes an occurrence that could not be created
+ */
+export const FailedOccurrenceSchema = z.object({
+  index: z.number().int().nonnegative(),
+  startTime: z.string().datetime(),
+  endTime: z.string().datetime(),
+  status: OccurrenceStatusSchema,
+  reasonKey: z.string(),
+  conflictId: z.string().uuid().optional(),
+});
+export type FailedOccurrence = z.infer<typeof FailedOccurrenceSchema>;
+
+/**
+ * Recurring Booking Result Projection Schema
+ * Response for POST /api/bookings/recurring
+ */
+export const RecurringBookingResultProjectionSchema = z.object({
+  /** Successfully created bookings */
+  created: z.array(BookingSchema),
+
+  /** Occurrences that failed to be created */
+  failed: z.array(FailedOccurrenceSchema),
+
+  /** Summary of the operation */
+  summary: z.object({
+    totalRequested: z.number().int().nonnegative(),
+    createdCount: z.number().int().nonnegative(),
+    failedCount: z.number().int().nonnegative(),
+    totalPrice: z.number().nonnegative(),
+    currency: z.string().length(3).default('NOK'),
+  }),
+
+  /** Metadata about the recurring series */
+  seriesMetadata: z.object({
+    frequency: RecurringFrequencySchema,
+    weekdays: z.array(z.number().int().min(1).max(7)).optional(),
+    firstOccurrence: z.string().datetime(),
+    lastOccurrence: z.string().datetime().optional(),
+    seriesId: z.string().uuid().optional(),
+  }),
+
+  /** Timestamp when the result was generated */
+  createdAt: z.string().datetime(),
+});
+export type RecurringBookingResultProjection = z.infer<typeof RecurringBookingResultProjectionSchema>;
