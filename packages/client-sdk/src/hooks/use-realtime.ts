@@ -5,12 +5,10 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { 
-  realtimeClient, 
-  type RealtimeEvent, 
+import {
+  realtimeClient,
   type RealtimeEventHandler,
   type RealtimeClientConfig,
-  createTenantWebSocketUrl,
 } from '../realtime';
 
 /**

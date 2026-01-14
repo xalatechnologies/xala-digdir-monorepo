@@ -5,7 +5,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   seasonApplicationService,
-  type SeasonApplication,
   type SeasonApplicationQueryParams,
   type CreateSeasonApplicationDTO,
   type AllocateApplicationDTO,

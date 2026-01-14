@@ -266,7 +266,7 @@ export function useKeyboardNavigationDetection() {
 
   useEffect(() => {
     const handleKeyDown = () => {
-      setIsKeyboardNav(detectKeyboardNavigation());
+      setIsKeyboardNav(true);
     };
 
     const handleMouseDown = () => {

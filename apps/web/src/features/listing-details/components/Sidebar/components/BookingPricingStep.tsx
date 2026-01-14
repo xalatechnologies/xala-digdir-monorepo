@@ -30,6 +30,12 @@ export interface BookingPricingStepProps {
   onPriceGroupChange: (groupId: string) => void;
   onServiceToggle: (serviceId: string, checked: boolean) => void;
   onTermsChange: (accepted: boolean) => void;
+  /** Enable multi-select for price groups (default: false) */
+  allowMultiplePriceGroups?: boolean;
+  /** Selected price groups (for multi-select mode) */
+  selectedPriceGroups?: Set<string>;
+  /** Handler for multi-select price groups */
+  onPriceGroupsChange?: (groupIds: Set<string>) => void;
 }
 
 export function BookingPricingStep({
@@ -41,7 +47,52 @@ export function BookingPricingStep({
   onPriceGroupChange,
   onServiceToggle,
   onTermsChange,
+  allowMultiplePriceGroups = false,
+  selectedPriceGroups,
+  onPriceGroupsChange,
 }: BookingPricingStepProps): React.ReactElement {
+  const [internalSelectedGroups, setInternalSelectedGroups] = React.useState<Set<string>>(
+    selectedPriceGroups ?? new Set(selectedPriceGroup ? [selectedPriceGroup] : [])
+  );
+
+  React.useEffect(() => {
+    if (selectedPriceGroups) {
+      setInternalSelectedGroups(selectedPriceGroups);
+    } else if (selectedPriceGroup) {
+      setInternalSelectedGroups(new Set([selectedPriceGroup]));
+    } else {
+      setInternalSelectedGroups(new Set());
+    }
+  }, [selectedPriceGroup, selectedPriceGroups]);
+
+  const handlePriceGroupClick = (groupId: string): void => {
+    if (allowMultiplePriceGroups) {
+      const newSelection = new Set(internalSelectedGroups);
+      if (newSelection.has(groupId)) {
+        newSelection.delete(groupId);
+      } else {
+        newSelection.add(groupId);
+      }
+      setInternalSelectedGroups(newSelection);
+      onPriceGroupsChange?.(newSelection);
+      // Also call single-select handler for backward compatibility
+      if (newSelection.size === 1) {
+        onPriceGroupChange(Array.from(newSelection)[0] ?? '');
+      } else if (newSelection.size === 0) {
+        onPriceGroupChange('');
+      }
+    } else {
+      const newValue = selectedPriceGroup === groupId ? '' : groupId;
+      onPriceGroupChange(newValue);
+    }
+  };
+
+  const isSelected = (groupId: string): boolean => {
+    if (allowMultiplePriceGroups) {
+      return internalSelectedGroups.has(groupId);
+    }
+    return selectedPriceGroup === groupId;
+  };
   return (
     <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Price Group Selection */}
@@ -51,30 +102,124 @@ export function BookingPricingStep({
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
           Utleier tilbyr egne priser til enkelte kundegrupper. Valg av prisgruppe medfører en godkjenningsprosess.
+          {allowMultiplePriceGroups && ' Du kan velge flere prisgrupper.'}
         </Paragraph>
-        <select
-          value={selectedPriceGroup}
-          onChange={(e) => onPriceGroupChange(e.target.value)}
+        
+        {/* Button-based Price Group Selection */}
+        <div
           style={{
-            width: '100%',
-            padding: 'var(--ds-spacing-3)',
-            borderRadius: 'var(--ds-border-radius-md)',
-            border: '1px solid var(--ds-color-neutral-border-default)',
-            backgroundColor: 'var(--ds-color-neutral-background-default)',
-            fontSize: 'var(--ds-font-size-md)',
-            color: 'var(--ds-color-neutral-text-default)',
-            outline: 'none',
-            cursor: 'pointer',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 'var(--ds-spacing-2)',
+            marginBottom: 'var(--ds-spacing-2)',
           }}
         >
-          <option value="">Velg prisgruppe</option>
-          {priceGroups.map(group => (
-            <option key={group.id} value={group.id}>
-              {group.label} - {group.pricePerHour} kr/time
-            </option>
-          ))}
-        </select>
-        {selectedPriceGroup && (
+          {priceGroups.map(group => {
+            const selected = isSelected(group.id);
+            return (
+              <button
+                key={group.id}
+                type="button"
+                onClick={() => handlePriceGroupClick(group.id)}
+                aria-pressed={selected}
+                aria-label={`${group.label} - ${group.pricePerHour} kr/time`}
+                style={{
+                  minWidth: '140px',
+                  flex: '1 1 auto',
+                  position: 'relative',
+                  padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  border: selected
+                    ? '2px solid var(--ds-color-accent-base-default)'
+                    : '1px solid var(--ds-color-neutral-border-default)',
+                  backgroundColor: selected
+                    ? 'var(--ds-color-accent-base-default)'
+                    : 'var(--ds-color-neutral-background-default)',
+                  color: selected
+                    ? 'var(--ds-color-accent-base-contrast-default)'
+                    : 'var(--ds-color-neutral-text-default)',
+                  fontWeight: selected ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
+                  boxShadow: selected ? 'var(--ds-shadow-sm)' : 'none',
+                  transition: 'all 150ms ease',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  fontFamily: 'inherit',
+                  fontSize: 'var(--ds-font-size-sm)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!selected) {
+                    e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)';
+                    e.currentTarget.style.backgroundColor = 'var(--ds-color-accent-surface-tinted)';
+                  } else {
+                    e.currentTarget.style.boxShadow = 'var(--ds-shadow-md)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!selected) {
+                    e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)';
+                    e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-background-default)';
+                  } else {
+                    e.currentTarget.style.boxShadow = 'var(--ds-shadow-sm)';
+                  }
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.outline = '2px solid var(--ds-color-focus-outer)';
+                  e.currentTarget.style.outlineOffset = '2px';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.outline = 'none';
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 'var(--ds-spacing-1)',
+                    width: '100%',
+                  }}
+                >
+                  <span style={{ fontSize: 'var(--ds-font-size-sm)', lineHeight: 1.2 }}>
+                    {group.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 'var(--ds-font-size-xs)',
+                      opacity: 0.9,
+                      fontWeight: 'var(--ds-font-weight-medium)',
+                    }}
+                  >
+                    {group.pricePerHour} kr/time
+                  </span>
+                  {allowMultiplePriceGroups && selected && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '4px',
+                        right: '4px',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: 'var(--ds-border-radius-full)',
+                        backgroundColor: 'var(--ds-color-accent-base-contrast-default)',
+                        color: 'var(--ds-color-accent-base-default)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 'var(--ds-font-size-xs)',
+                        fontWeight: 'var(--ds-font-weight-bold)',
+                      }}
+                    >
+                      ✓
+                    </div>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Show info alert for selected price groups */}
+        {(allowMultiplePriceGroups ? internalSelectedGroups.size > 0 : selectedPriceGroup) && (
           <Alert
             data-color="info"
             data-size="sm"
@@ -84,9 +229,24 @@ export function BookingPricingStep({
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
               <InfoIcon size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <Paragraph data-size="sm" style={{ margin: 0 }}>
-                {priceGroups.find(pg => pg.id === selectedPriceGroup)?.description}
-              </Paragraph>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
+                {allowMultiplePriceGroups ? (
+                  <>
+                    {Array.from(internalSelectedGroups).map(groupId => {
+                      const group = priceGroups.find(pg => pg.id === groupId);
+                      return group ? (
+                        <Paragraph key={groupId} data-size="sm" style={{ margin: 0 }}>
+                          <strong>{group.label}:</strong> {group.description}
+                        </Paragraph>
+                      ) : null;
+                    })}
+                  </>
+                ) : (
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    {priceGroups.find(pg => pg.id === selectedPriceGroup)?.description}
+                  </Paragraph>
+                )}
+              </div>
             </div>
           </Alert>
         )}

@@ -87,10 +87,6 @@ export {
   useDialog,
   ConfirmDialog,
   AlertDialog,
-  // Mobile Navigation
-  MobileNav,
-  MobileNavToggle,
-  BottomNavigation,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -135,13 +131,6 @@ export type {
   ConfirmDialogProps,
   AlertDialogProps,
   DialogVariant,
-  // Mobile Navigation Types
-  MobileNavProps,
-  MobileNavToggleProps,
-  MobileNavItem,
-  MobileNavSection,
-  BottomNavigationProps,
-  BottomNavigationItem,
 } from './composed';
 
 // Primitives - Low-level building blocks
@@ -214,40 +203,7 @@ export {
   VippsIcon,
   SendIcon,
   OrganizationIcon,
-  AlertTriangleIcon,
-  EditIcon,
-  TrashIcon,
-  RefreshIcon,
-  PaperclipIcon,
-  XIcon,
-  SaveIcon,
-  CopyIcon,
-  EyeIcon,
-  ExternalLinkIcon,
-  ArrowLeftIcon,
-  FileTextIcon,
-  ClipboardListIcon,
-  PlayIcon,
-  LockIcon,
-  UnlockIcon,
-  UploadIcon,
-  CameraIcon,
-  ImageIcon,
-  FormField,
 } from './primitives';
-
-// Common Designsystemet components - Explicitly re-export for better tree-shaking
-export {
-  Tabs,
-  Heading,
-  Paragraph,
-  Button,
-  Spinner,
-  Textfield,
-  Select,
-  Switch,
-  Alert,
-} from '@digdir/designsystemet-react';
 export type {
   ContainerProps,
   GridProps,
@@ -256,8 +212,7 @@ export type {
   CardProps,
   TextProps,
   BadgeProps,
-  LayoutGridProps,
-  FormFieldProps,
+  LayoutGridProps
 } from './primitives';
 
 // Blocks - Business logic components
@@ -325,11 +280,11 @@ export {
   NotFoundScreen,
   ErrorScreen,
   PermissionGate,
-  // Notification Components
-  NotificationBell,
-  NotificationItem,
-  NotificationCenter,
-  PushNotificationPrompt,
+  // Error Handling Components
+  ErrorBoundary,
+  withErrorBoundary,
+  GlobalErrorHandler,
+  useGlobalError,
 } from './blocks';
 export type {
   ListingCardProps,
@@ -412,15 +367,12 @@ export type {
   NotFoundScreenProps,
   ErrorScreenProps,
   PermissionGateProps,
-  // Notification Types
-  NotificationBellProps,
-  NotificationItemProps,
-  NotificationItemData,
-  NotificationType,
-  NotificationPriority,
-  NotificationCenterProps,
-  NotificationFilter,
-  PushNotificationPromptProps,
+  // Error Handling Types
+  ErrorBoundaryProps,
+  WithErrorBoundaryOptions,
+  GlobalErrorHandlerProps,
+  GlobalError,
+  UseGlobalErrorOptions,
 } from './blocks';
 
 // Listing Detail Types
@@ -483,6 +435,23 @@ export {
   brandColors,
   brandColorsCss,
 } from './utils';
+
+// =============================================================================
+// API Error Utilities (RFC 7807 Problem Details)
+// =============================================================================
+export {
+  parseApiError,
+  parseErrorObject,
+  getStatusMessage,
+  formatFieldErrors,
+  shouldOfferRetry,
+  createProblemDetails,
+} from './utils/api-error';
+export type {
+  ProblemDetails,
+  ParsedApiError,
+  ApiErrorCategory,
+} from './utils/api-error';
 
 // =============================================================================
 // CSS Import Policy

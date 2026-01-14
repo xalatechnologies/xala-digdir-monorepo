@@ -264,10 +264,20 @@ function transformApiToListing(api: ApiListing): Listing {
   };
 
   // Build address - use API data or provide default
-  const address = meta.address
+  // Extract location from metadata (SDK structure: metadata.location.lat/lng)
+  const locationData = meta.location as { lat?: number; lng?: number; address?: string; city?: string; postalCode?: string } | undefined;
+
+  const addressString = meta.address || locationData?.address;
+  const postalCodeString = meta.postalCode || locationData?.postalCode;
+  const cityString = meta.city || locationData?.city;
+
+  const hasLocationData = addressString || postalCodeString || cityString;
+  const hasCoordinates = typeof locationData?.lat === 'number' && typeof locationData?.lng === 'number';
+
+  const address = hasLocationData
     ? {
-        formatted: [meta.address, meta.postalCode, meta.city].filter(Boolean).join(', '),
-        ...(typeof meta.latitude === 'number' ? { coordinates: { latitude: meta.latitude as number, longitude: meta.longitude as number } } : {}),
+        formatted: [addressString, postalCodeString, cityString].filter(Boolean).join(', '),
+        ...(hasCoordinates ? { coordinates: { latitude: locationData!.lat!, longitude: locationData!.lng! } } : {}),
       }
     : {
         formatted: 'Oslo, Norge',

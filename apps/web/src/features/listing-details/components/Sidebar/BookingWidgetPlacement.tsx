@@ -7,9 +7,10 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
-import { bookingService, type CreateBookingDTO } from '@digilist/client-sdk';
+import { bookingService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
+import { useAuth } from '../../../../hooks/useAuth';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
@@ -211,8 +212,51 @@ export function BookingWidgetPlacement({
   const [selectedPriceGroup, setSelectedPriceGroup] = React.useState('');
   const [selectedServices, setSelectedServices] = React.useState<Set<string>>(new Set());
   const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
+  const [bookingAccountType, setBookingAccountType] = React.useState<'private' | 'organization' | undefined>(undefined);
+  const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
+  const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
+  
+  // Use real authentication state
+  const { isAuthenticated: authIsAuthenticated, user, login: authLogin } = useAuth();
+  const isAuthenticated = authIsAuthenticated;
+  
+  // Fetch user's organizations when authenticated
+  // The API should return only organizations the user is a member of
+  const { data: organizationsData } = useOrganizations(
+    isAuthenticated ? {} : undefined
+  );
+  
+  const organizations = React.useMemo(() => {
+    if (!organizationsData?.data) return [];
+    return organizationsData.data.map(org => ({ id: org.id, name: org.name }));
+  }, [organizationsData]);
+  
+  // Reset account selection when authentication changes
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      setBookingAccountType(undefined);
+      setSelectedOrganizationId(undefined);
+      setIsAccountTypeConfirmed(false);
+    }
+  }, [isAuthenticated]);
+  
+  const handleAccountTypeSelect = (type: 'private' | 'organization' | undefined, organizationId?: string): void => {
+    if (type === undefined) {
+      // Reset selection
+      setBookingAccountType(undefined);
+      setSelectedOrganizationId(undefined);
+      setIsAccountTypeConfirmed(false);
+    } else {
+      setBookingAccountType(type);
+      setSelectedOrganizationId(organizationId);
+      setIsAccountTypeConfirmed(false); // Reset confirmation when selection changes
+    }
+  };
+
+  const handleConfirmAccountType = (): void => {
+    setIsAccountTypeConfirmed(true);
+  };
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [bookingError, setBookingError] = React.useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -337,16 +381,28 @@ export function BookingWidgetPlacement({
 
   const handleLoginVipps = async (): Promise<void> => {
     setIsLoggingIn(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsAuthenticated(true);
-    setIsLoggingIn(false);
+    try {
+      // Use real auth login
+      authLogin('vipps');
+      // Note: Navigation will happen in useAuth hook
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   const handleLoginEmployee = async (): Promise<void> => {
     setIsLoggingIn(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsAuthenticated(true);
-    setIsLoggingIn(false);
+    try {
+      // Use real auth login for organization (ID-porten)
+      authLogin('idporten');
+      // Note: Navigation will happen in useAuth hook
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   const handleSubmitBooking = async (): Promise<void> => {
@@ -449,7 +505,7 @@ export function BookingWidgetPlacement({
         {/* LEFT COLUMN: Step Content */}
         <div
           style={{
-            flex: isMobile ? 1 : '0 0 55%',
+            flex: isMobile || currentStep === 2 ? 1 : '0 0 55%',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
@@ -711,6 +767,7 @@ export function BookingWidgetPlacement({
           {/* Step 2: Confirmation */}
           {currentStep === 2 && (
             <BookingConfirmationStep
+              key={`confirmation-${isAuthenticated}-${bookingAccountType}-${selectedOrganizationId}`}
               isAuthenticated={isAuthenticated}
               isLoggingIn={isLoggingIn}
               isSubmitting={isSubmitting}
@@ -723,6 +780,12 @@ export function BookingWidgetPlacement({
               onLoginAsEmployee={handleLoginEmployee}
               onConfirmBooking={handleSubmitBooking}
               onClearError={() => setBookingError(null)}
+              bookingAccountType={bookingAccountType}
+              selectedOrganizationId={selectedOrganizationId}
+              onAccountTypeSelect={handleAccountTypeSelect}
+              onConfirmAccountType={handleConfirmAccountType}
+              organizations={organizations}
+              isAccountTypeConfirmed={isAccountTypeConfirmed}
             />
           )}
 
@@ -753,8 +816,8 @@ export function BookingWidgetPlacement({
           )}
         </div>
 
-        {/* RIGHT COLUMN: Fixed Sidebar */}
-        {!isMobile && currentStep < 3 && (
+        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step */}
+        {!isMobile && currentStep < 3 && currentStep !== 2 && (
           <div
             style={{
               flex: '0 0 45%',
@@ -820,7 +883,7 @@ export function BookingWidgetPlacement({
               !isBookable ||
               (currentStep === 0 && selectedSlots.size === 0) ||
               (currentStep === 1 && (!selectedPriceGroup || !termsAccepted)) ||
-              (currentStep === 2 && !isAuthenticated) ||
+              (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
               isSubmitting
             }
             style={{ flex: 1 }}
@@ -834,9 +897,13 @@ export function BookingWidgetPlacement({
                 : currentStep === 1
                   ? 'Fortsett til bekreftelse'
                   : currentStep === 2
-                    ? isAuthenticated
+                    ? isAuthenticated && isAccountTypeConfirmed
                       ? 'Send bookingforespørsel'
-                      : 'Logg inn for å fortsette'
+                      : isAuthenticated && bookingAccountType
+                        ? 'Bekreft bookingtype'
+                        : isAuthenticated
+                          ? 'Velg bookingtype'
+                          : 'Logg inn for å fortsette'
                     : 'Ferdig'}
           </Button>
         )}

@@ -16,6 +16,7 @@ export interface RequestOptions {
   headers?: Record<string, string>;
   body?: RequestBody;
   signal?: AbortSignal;
+  responseType?: 'json' | 'blob' | 'text';
 }
 
 export interface HttpResponse<T> {

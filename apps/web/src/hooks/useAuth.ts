@@ -48,21 +48,28 @@ export function useAuth() {
     setIsLoading(false);
   }, []);
 
-  const login = useCallback((provider: 'idporten' | 'microsoft' | 'vipps') => {
+  const login = useCallback((provider: 'idporten' | 'microsoft' | 'vipps', returnTo?: string) => {
     if (USE_MOCK_AUTH) {
       // Simulate login with mock user
       const mockUser = MOCK_USERS[provider];
       if (mockUser) {
         localStorage.setItem('web_user', JSON.stringify(mockUser));
         setUser(mockUser);
-        navigate('/');
+        // Only navigate if returnTo is explicitly provided, otherwise stay on current page
+        // This allows the booking widget to keep the user on the same page after login
+        if (returnTo) {
+          navigate(returnTo);
+        }
+        // No navigation by default - stay on current page
       }
       return;
     }
 
     // Real OAuth flow - redirect to API
     const baseUrl = import.meta.env.VITE_API_URL || 'https://api.digilist.no';
-    const returnUrl = encodeURIComponent(window.location.origin + '/auth/callback');
+    // Use current path as return URL so user comes back to the same page
+    const currentPath = returnTo || window.location.pathname + window.location.search;
+    const returnUrl = encodeURIComponent(window.location.origin + currentPath);
     window.location.href = `${baseUrl}/auth/${provider}?returnUrl=${returnUrl}`;
   }, [navigate]);
 

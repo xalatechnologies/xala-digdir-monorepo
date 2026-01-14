@@ -95,8 +95,15 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
   });
 
   // State: Has user made initial account selection
+  // Auto-mark as selected to skip the modal - users can switch via the dropdown
   const [hasSelectedAccount, setHasSelectedAccount] = useState<boolean>(() => {
-    return localStorage.getItem(STORAGE_KEYS.HAS_SELECTED) === 'true';
+    const stored = localStorage.getItem(STORAGE_KEYS.HAS_SELECTED);
+    if (stored === null) {
+      // First time - auto-mark as selected
+      localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
+      return true;
+    }
+    return stored === 'true';
   });
 
   // Effect: Restore selected organization from localStorage once organizations are loaded

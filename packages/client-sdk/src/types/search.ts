@@ -6,7 +6,6 @@
 import type {
   TenantEntity,
   BaseQueryParams,
-  PaginatedResponse,
   BookingStatus,
   ListingType,
   ListingStatus,

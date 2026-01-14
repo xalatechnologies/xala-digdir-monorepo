@@ -3,7 +3,7 @@
  * Single Responsibility: All listing-related type definitions
  */
 
-import type { BaseEntity, TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
+import type { TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
 
 // =============================================================================
 // Listing Entity

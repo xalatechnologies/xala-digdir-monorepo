@@ -131,6 +131,15 @@ export class FetchHttpClient implements IHttpClient {
         return {} as T;
       }
 
+      // Handle different response types
+      const responseType = options?.responseType || 'json';
+
+      if (responseType === 'blob') {
+        return response.blob() as Promise<T>;
+      } else if (responseType === 'text') {
+        return response.text() as Promise<T>;
+      }
+
       return response.json();
     } catch (error) {
       if (timeoutId) clearTimeout(timeoutId);

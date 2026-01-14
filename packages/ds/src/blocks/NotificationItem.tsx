@@ -179,6 +179,16 @@ const notificationTypeConfig: Record<NotificationType, NotificationTypeConfig> =
   },
 };
 
+/**
+ * Default configuration for unknown notification types
+ */
+const defaultNotificationConfig: NotificationTypeConfig = {
+  icon: <BellIcon />,
+  color: 'var(--ds-color-neutral-text-default)',
+  backgroundColor: 'var(--ds-color-neutral-surface-default)',
+  label: 'Varsel',
+};
+
 // =============================================================================
 // Helper Functions
 // =============================================================================
@@ -220,7 +230,7 @@ export function NotificationItem({
   className = '',
 }: NotificationItemProps): React.ReactElement {
   const isUnread = !notification.readAt;
-  const config = notificationTypeConfig[notification.type];
+  const config = notificationTypeConfig[notification.type] || defaultNotificationConfig;
 
   const handleClick = () => {
     onClick?.(notification.id);

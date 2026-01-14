@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole } from '../hooks/useAuth';
 import { getClientConfig, setAuthToken, updateClientConfig } from '@digilist/client-sdk';
 
-// Users matching seeded database
+/**
+ * Mock Authentication Users
+ *
+ * These users are ONLY used when VITE_USE_MOCK_AUTH is enabled for local development.
+ * In production, set VITE_USE_MOCK_AUTH=false to use real OAuth authentication.
+ *
+ * Mock users match the seeded database for consistent testing.
+ */
 const MOCK_ADMIN_USER: BackofficeUser = {
   id: 'kari-nordmann-001',
   name: 'Kari Nordmann',
@@ -18,8 +25,20 @@ const MOCK_USER: BackofficeUser = {
   role: 'saksbehandler',
 };
 
-// Toggle between mock and real auth
-// Set to false to use real OAuth with production API
+/**
+ * Authentication Mode Toggle
+ *
+ * Controls whether to use mock authentication or real OAuth flow.
+ *
+ * - Development (default): USE_MOCK_AUTH = true
+ *   - Uses mock users above for quick local testing
+ *   - No API calls for authentication
+ *
+ * - Production: Set VITE_USE_MOCK_AUTH=false in .env
+ *   - Uses real OAuth providers (ID-porten, Microsoft, Vipps)
+ *   - Redirects to API for authentication
+ *   - Receives token via OAuth callback
+ */
 const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH !== 'false';
 
 interface AuthProviderProps {

@@ -19,9 +19,6 @@ export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
 export { ListingMap } from './ListingMap';
 export type { ListingMapProps, MapListing } from './ListingMap';
 
-export { ListingTableView } from './ListingTableView';
-export type { ListingTableViewProps } from './ListingTableView';
-
 // Listing Detail Components
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';
@@ -191,12 +188,14 @@ export type {
 
 // Messaging Components
 export {
+  NotificationBell,
   ConversationList,
   ConversationListItem,
   MessageBubble,
   ChatThread,
 } from './messaging';
 export type {
+  NotificationBellProps,
   ConversationListProps,
   ConversationListItemProps,
   ConversationItem,
@@ -205,23 +204,13 @@ export type {
   ChatThreadProps,
 } from './messaging';
 
-// Notification Components
-export { NotificationBell } from './NotificationBell';
-export type { NotificationBellProps } from './NotificationBell';
+// Error Handling Components
+export { ErrorBoundary, withErrorBoundary } from './ErrorBoundary';
+export type { ErrorBoundaryProps, WithErrorBoundaryOptions } from './ErrorBoundary';
 
-export { NotificationItem } from './NotificationItem';
+export { GlobalErrorHandler, useGlobalError } from './GlobalErrorHandler';
 export type {
-  NotificationItemProps,
-  NotificationItemData,
-  NotificationType,
-  NotificationPriority,
-} from './NotificationItem';
-
-export { NotificationCenter } from './NotificationCenter';
-export type {
-  NotificationCenterProps,
-  NotificationFilter,
-} from './NotificationCenter';
-
-export { PushNotificationPrompt } from './PushNotificationPrompt';
-export type { PushNotificationPromptProps } from './PushNotificationPrompt';
+  GlobalErrorHandlerProps,
+  GlobalError,
+  UseGlobalErrorOptions,
+} from './GlobalErrorHandler';

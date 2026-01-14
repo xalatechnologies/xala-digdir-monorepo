@@ -138,7 +138,7 @@ export function useUploadOrganizationLogo() {
       if (shouldCompress && isImageFile(file)) {
         try {
           processedFile = await compressImage(file, options?.compressionOptions);
-        } catch (_error) {
+        } catch {
           // If compression fails, use original file
           processedFile = file;
         }
@@ -287,7 +287,7 @@ export function useUploadUserAvatar() {
       if (shouldCompress && isImageFile(file)) {
         try {
           processedFile = await compressImage(file, options?.compressionOptions);
-        } catch (_error) {
+        } catch {
           // If compression fails, use original file
           processedFile = file;
         }

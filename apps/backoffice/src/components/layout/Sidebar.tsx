@@ -13,7 +13,6 @@ import {
   SettingsIcon,
   ArrowRightIcon,
   ClockIcon,
-  MoneyIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -167,7 +166,7 @@ export function Sidebar() {
     {
       title: 'Økonomi',
       items: [
-        { name: 'Økonomi', description: 'Fakturering og økonomi', href: '/economy', icon: <MoneyIcon />, adminOnly: true },
+        { name: 'Økonomi', description: 'Fakturering og økonomi', href: '/economy', icon: <ChartIcon />, adminOnly: true },
       ],
     },
     {

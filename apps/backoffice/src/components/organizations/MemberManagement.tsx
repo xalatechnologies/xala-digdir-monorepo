@@ -221,25 +221,29 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                   </span>
                 </Table.Cell>
                 <Table.Cell>
-                  <Dropdown>
+                  <Dropdown.TriggerContext>
                     <Dropdown.Trigger asChild>
                       <Button variant="tertiary" data-size="sm" aria-label="Handlinger">
                         <MoreVerticalIcon />
                       </Button>
                     </Dropdown.Trigger>
-                    <Dropdown.Content>
-                      <Dropdown.Item
-                        onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}
-                      >
-                        <EditIcon />
-                        {member.role === 'admin' ? 'Gjør til medlem' : 'Gjør til admin'}
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleRemoveMember(member.id)} color="danger">
-                        <TrashIcon />
-                        Fjern medlem
-                      </Dropdown.Item>
-                    </Dropdown.Content>
-                  </Dropdown>
+                    <Dropdown placement="bottom-end">
+                      <Dropdown.List>
+                        <Dropdown.Item>
+                          <Dropdown.Button onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}>
+                            <EditIcon />
+                            {member.role === 'admin' ? 'Gjør til medlem' : 'Gjør til admin'}
+                          </Dropdown.Button>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Dropdown.Button onClick={() => handleRemoveMember(member.id)}>
+                            <TrashIcon />
+                            Fjern medlem
+                          </Dropdown.Button>
+                        </Dropdown.Item>
+                      </Dropdown.List>
+                    </Dropdown>
+                  </Dropdown.TriggerContext>
                 </Table.Cell>
               </Table.Row>
             ))}

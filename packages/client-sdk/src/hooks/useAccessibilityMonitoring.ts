@@ -9,7 +9,6 @@ import { getClient } from '../core/client-factory';
 import {
   AccessibilityMonitoringService,
   detectScreenReader,
-  detectKeyboardNavigation,
   type KeyboardNavigationMetric,
   type FocusManagementMetric,
 } from '../services/accessibilityMonitoringService';
@@ -160,7 +159,7 @@ export function useAccessibilityMonitoring(
       lastFocusedElementRef.current = event.target as Element;
     };
 
-    const handleFocusOut = (event: FocusEvent) => {
+    const handleFocusOut = (_event: FocusEvent) => {
       // Check if focus was lost to body or null (focus loss)
       setTimeout(() => {
         const newFocus = document.activeElement;

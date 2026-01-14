@@ -5,7 +5,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   seasonalLeaseService,
-  type SeasonalLease,
   type SeasonalLeaseQueryParams,
   type CreateSeasonalLeaseDTO,
 } from '../services/seasonal-lease.service';

@@ -66,6 +66,8 @@ export function usePendingItems() {
     queryKey: reportKeys.pending(),
     queryFn: () => dashboardService.getPendingItems(),
     staleTime: 60 * 1000,
+    retry: false, // Don't retry on 404 if endpoint doesn't exist
+    throwOnError: false, // Don't throw error - allow graceful fallback
   });
 }
 

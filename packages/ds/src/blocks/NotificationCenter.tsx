@@ -397,7 +397,6 @@ export function NotificationCenter({
             {filteredNotifications.map((notification) => {
               // Build props object to avoid exactOptionalPropertyTypes issues
               const itemProps: {
-                key: string;
                 notification: NotificationItemData;
                 showActions: boolean;
                 onClick?: (id: string) => void;
@@ -405,7 +404,6 @@ export function NotificationCenter({
                 onDelete?: (id: string) => void;
                 formatTimeAgo?: (date: string) => string;
               } = {
-                key: notification.id,
                 notification,
                 showActions: true,
               };
@@ -415,7 +413,7 @@ export function NotificationCenter({
               if (onDelete) itemProps.onDelete = onDelete;
               if (formatTimeAgo) itemProps.formatTimeAgo = formatTimeAgo;
 
-              return <NotificationItem {...itemProps} />;
+              return <NotificationItem key={notification.id} {...itemProps} />;
             })}
           </div>
         )}

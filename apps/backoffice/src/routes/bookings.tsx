@@ -26,6 +26,7 @@ import {
   CloseIcon,
   MoreVerticalIcon,
   FilterIcon,
+  DownloadIcon,
   useDialog,
 } from '@xala/ds';
 
@@ -179,7 +180,6 @@ export function BookingsPage() {
 
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
-  const updateBooking = useUpdateBooking();
   const { confirm } = useDialog();
 
   // Tab counts
