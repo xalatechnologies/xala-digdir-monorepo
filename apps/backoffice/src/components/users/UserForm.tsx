@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Alert,
 } from '@xala/ds';
@@ -108,7 +108,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Info Alert */}
         {!user && (
           <Alert severity="info">
@@ -118,33 +118,33 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
         {/* Basic Information */}
         <FormSection title="Brukerinformasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Fullt navn"
               required
-              error={errors.name}
+              
               description="Brukerens fulle navn"
             >
-              <TextField
+              <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder="F.eks. Ola Nordmann"
-                error={!!errors.name}
+                
               />
             </FormField>
 
             <FormField
               label="E-post"
               required
-              error={errors.email}
+              error={errors.email || undefined}
               description={user ? 'Brukerens e-postadresse' : 'Invitasjonen sendes til denne adressen'}
             >
-              <TextField
+              <Textfield
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="ola.nordmann@kommune.no"
-                error={!!errors.email}
+                
                 disabled={!!user} // Can't change email when editing
               />
             </FormField>
@@ -153,7 +153,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
               label="Telefon"
               description="Valgfri kontaktinformasjon"
             >
-              <TextField
+              <Textfield
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
@@ -165,11 +165,11 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
         {/* Role Assignment */}
         <FormSection title="Tilgangsnivå">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Rolle"
               required
-              error={errors.role}
+              error={errors.role || undefined}
               description="Velg brukerens rolle og tilgangsnivå"
             >
               <Select

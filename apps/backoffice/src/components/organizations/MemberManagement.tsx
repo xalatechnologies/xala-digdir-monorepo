@@ -11,7 +11,6 @@ import {
   Dropdown,
   Stack,
   Paragraph,
-  TextField,
   Select,
   FormField,
   PlusIcon,
@@ -20,8 +19,7 @@ import {
   UserIcon,
   MoreVerticalIcon,
 } from '@xala/ds';
-import { useUsers, type OrganizationMember } from '@digilist/client-sdk';
-import { organizationService } from '@digilist/client-sdk/services/organization.service';
+import { useUsers, type OrganizationMember, organizationService } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface MemberManagementProps {
@@ -92,11 +90,11 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
   };
 
   return (
-    <Stack gap={4}>
+    <Stack spacing={4}>
       {/* Add Member Section */}
       <div>
         {!isAdding ? (
-          <Button variant="secondary" size="sm" onClick={() => setIsAdding(true)}>
+          <Button variant="secondary" data-size="sm" onClick={() => setIsAdding(true)}>
             <PlusIcon />
             Legg til medlem
           </Button>
@@ -109,7 +107,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
               border: '1px solid var(--ds-color-neutral-border-default)',
             }}
           >
-            <Stack gap={3}>
+            <Stack spacing={3}>
               <Paragraph data-size="sm" style={{ fontWeight: 600 }}>
                 Legg til nytt medlem
               </Paragraph>
@@ -225,11 +223,11 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 <Table.Cell>
                   <Dropdown>
                     <Dropdown.Trigger asChild>
-                      <Button variant="tertiary" size="sm" aria-label="Handlinger">
+                      <Button variant="tertiary" data-size="sm" aria-label="Handlinger">
                         <MoreVerticalIcon />
                       </Button>
                     </Dropdown.Trigger>
-                    <Dropdown.Menu>
+                    <Dropdown.Content>
                       <Dropdown.Item
                         onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}
                       >
@@ -240,7 +238,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                         <TrashIcon />
                         Fjern medlem
                       </Dropdown.Item>
-                    </Dropdown.Menu>
+                    </Dropdown.Content>
                   </Dropdown>
                 </Table.Cell>
               </Table.Row>

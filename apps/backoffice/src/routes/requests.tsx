@@ -17,7 +17,7 @@ import {
   DrawerSection,
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Alert,
   CheckCircleIcon,
@@ -370,7 +370,7 @@ export function RequestsPage() {
               onClear={() => setSearchQuery('')}
             />
           </div>
-          <Button variant="secondary" size="sm" onClick={() => setFilter('all')}>
+          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')}>
             <FilterIcon />
             {filter === 'all' ? 'Alle' : filter === 'needs_info' ? 'Trenger info' : filter === 'urgent' ? 'Haster' : 'Ventende'}
           </Button>
@@ -381,7 +381,7 @@ export function RequestsPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" />
+            <Spinner data-size="lg" aria-label="Laster..." />
           </div>
         ) : filteredRequests.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -484,11 +484,11 @@ export function RequestsPage() {
                       </Button>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" size="sm" aria-label="Flere valg">
+                          <Button variant="tertiary" data-size="sm" aria-label="Flere valg">
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
-                        <Dropdown.Menu>
+                        <Dropdown.Content>
                           <Dropdown.Item onClick={() => handleViewDetail(request)}>
                             Se detaljer
                           </Dropdown.Item>
@@ -499,7 +499,7 @@ export function RequestsPage() {
                             <MessageSquareIcon />
                             Be om mer info
                           </Dropdown.Item>
-                        </Dropdown.Menu>
+                        </Dropdown.Content>
                       </Dropdown>
                     </div>
                   </Table.Cell>
@@ -521,7 +521,7 @@ export function RequestsPage() {
           title="Forespørseldetaljer"
           size="md"
         >
-          <Stack gap={4}>
+          <Stack spacing={4}>
             {/* Priority Alert */}
             {(selectedBooking.priority === 'urgent' || selectedBooking.priority === 'high') && (
               <Alert severity="warning">
@@ -550,7 +550,7 @@ export function RequestsPage() {
 
             {/* Booking Information */}
             <DrawerSection title="Bookinginformasjon">
-              <Stack gap={3}>
+              <Stack spacing={3}>
                 <div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     Lokale
@@ -596,7 +596,7 @@ export function RequestsPage() {
 
             {/* Requester Information */}
             <DrawerSection title="Søkerinformasjon">
-              <Stack gap={3}>
+              <Stack spacing={3}>
                 <div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     Navn
@@ -659,7 +659,7 @@ export function RequestsPage() {
 
             {/* Metadata */}
             <DrawerSection title="Metadata">
-              <Stack gap={2}>
+              <Stack spacing={2}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--ds-font-size-sm)' }}>
                   <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Forespørsel-ID</span>
                   <span style={{ fontFamily: 'monospace' }}>{selectedBooking.id.slice(-8)}</span>
@@ -685,7 +685,7 @@ export function RequestsPage() {
           title="Be om mer informasjon"
           size="sm"
         >
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Søker vil motta en e-post med din forespørsel om tilleggsinformasjon.
@@ -698,7 +698,7 @@ export function RequestsPage() {
               required
               description="Beskriv hvilken informasjon du trenger"
             >
-              <TextField
+              <Textfield
                 value={moreInfoMessage}
                 onChange={(e) => setMoreInfoMessage(e.target.value)}
                 placeholder="F.eks. Vi trenger mer detaljer om formålet med bookingen..."

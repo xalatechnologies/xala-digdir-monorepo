@@ -142,7 +142,7 @@ export function ListingListItem({
   };
 
   // Generate static map URL (using OpenStreetMap placeholder for demo)
-  const getMapUrl = () => {
+  const _getMapUrl = () => {
     if (latitude && longitude) {
       // Using a static map tile service
       return `https://staticmap.openstreetmap.de/staticmap.php?center=${latitude},${longitude}&zoom=15&size=${mapWidth}x160&markers=${latitude},${longitude},red`;

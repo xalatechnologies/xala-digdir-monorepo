@@ -94,7 +94,7 @@ export function DashboardPage(): React.ReactElement {
       {/* Stats grid */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('dashboard.loadingStats')} data-size="lg" />
+          <Spinner aria-label={t('dashboard.loadingStats')} data-data-size="lg" />
         </div>
       ) : (
         <div
@@ -151,7 +151,7 @@ export function DashboardPage(): React.ReactElement {
             <Heading level={2} data-size="sm" style={{ margin: 0 }}>
               {t('dashboard.recentActivity')}
             </Heading>
-            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigate('/bookings')}>
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('/bookings')}>
               {t('common.seeAll')}
             </Button>
           </div>

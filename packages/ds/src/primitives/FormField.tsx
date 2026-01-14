@@ -11,9 +11,9 @@ export interface FormFieldProps {
   /** Whether the field is required */
   required?: boolean;
   /** Error message */
-  error?: string;
+  error?: string | undefined;
   /** Help text / description */
-  description?: string;
+  description?: string | undefined;
   /** Children (the form control) */
   children: React.ReactNode;
   /** Custom className */

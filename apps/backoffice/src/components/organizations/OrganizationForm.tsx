@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
 } from '@xala/ds';
 import type {
@@ -128,21 +128,21 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Basic Information */}
         <FormSection title="Grunnleggende informasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Navn"
               required
-              error={errors.name}
+              
               description="Organisasjonens fulle navn"
             >
-              <TextField
+              <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder="F.eks. Oslo Idrettslag"
-                error={!!errors.name}
+                
               />
             </FormField>
 
@@ -165,14 +165,14 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
             <FormField
               label="Organisasjonsnummer"
-              error={errors.organizationNumber}
+              error={errors.organizationNumber || undefined}
               description="9 siffer (valgfritt)"
             >
-              <TextField
+              <Textfield
                 value={formData.organizationNumber || ''}
                 onChange={(e) => handleChange('organizationNumber')(e.target.value)}
                 placeholder="123456789"
-                error={!!errors.organizationNumber}
+                
                 maxLength={9}
               />
             </FormField>
@@ -181,18 +181,18 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Contact Information */}
         <FormSection title="Kontaktinformasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="E-post"
-              error={errors.email}
+              error={errors.email || undefined}
               description="Primær e-postadresse"
             >
-              <TextField
+              <Textfield
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="kontakt@organisasjon.no"
-                error={!!errors.email}
+                
               />
             </FormField>
 
@@ -200,7 +200,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
               label="Telefon"
               description="Kontakttelefon"
             >
-              <TextField
+              <Textfield
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
@@ -212,12 +212,12 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Address */}
         <FormSection title="Adresse">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Gateadresse"
               description="F.eks. Storgata 1"
             >
-              <TextField
+              <Textfield
                 value={formData.address || ''}
                 onChange={(e) => handleChange('address')(e.target.value)}
                 placeholder="Gateadresse"
@@ -227,19 +227,19 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Postnummer"
-                error={errors.postalCode}
+                error={errors.postalCode || undefined}
               >
-                <TextField
+                <Textfield
                   value={formData.postalCode || ''}
                   onChange={(e) => handleChange('postalCode')(e.target.value)}
                   placeholder="0001"
-                  error={!!errors.postalCode}
+                  
                   maxLength={4}
                 />
               </FormField>
 
               <FormField label="Poststed">
-                <TextField
+                <Textfield
                   value={formData.city || ''}
                   onChange={(e) => handleChange('city')(e.target.value)}
                   placeholder="Oslo"

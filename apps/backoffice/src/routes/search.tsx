@@ -210,7 +210,7 @@ export function SearchPage() {
               Filtre
             </Heading>
             {activeFilterCount > 0 && (
-              <Button variant="tertiary" size="sm" onClick={handleClearFilters}>
+              <Button variant="tertiary" data-size="sm" onClick={handleClearFilters}>
                 Nullstill alle
               </Button>
             )}

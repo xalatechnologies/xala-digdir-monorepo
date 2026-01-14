@@ -2113,25 +2113,6 @@ export function BookingWidgetPlacement({
           </div>
         </div>
       )}
-        </div>
-        {/* END LEFT COLUMN */}
-
-        {/* RIGHT COLUMN: Fixed Sidebar */}
-        {!isMobile && selectedSlots.size > 0 && (
-          <div style={{ flex: '0 0 35%', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', padding: 'var(--ds-spacing-4)', borderLeft: '1px solid var(--ds-color-neutral-border-subtle)', overflow: 'auto', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', paddingBottom: 'var(--ds-spacing-3)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-              <CalendarIcon size={20} />
-              <Heading level={4} data-size="xs" style={{ margin: 0 }}>Valgte tidspunkter</Heading>
-            </div>
-            {selectedPriceGroup && <div style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-accent-surface-default)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-accent-border-subtle)', marginTop: 'auto' }}>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>Totalpris</Paragraph>
-              <Heading level={3} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)' }}>{calculateTotalPrice()} kr</Heading>
-            </div>}
-          </div>
-        )}
-      </div>
-      {/* END TWO-COLUMN LAYOUT */}
-
 
       {/* Action Section */}
       <div

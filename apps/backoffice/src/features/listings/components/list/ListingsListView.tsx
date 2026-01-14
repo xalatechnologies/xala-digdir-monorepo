@@ -486,7 +486,7 @@ export function ListingsListView() {
             <Paragraph data-size="sm" style={{ margin: 0 }}>
               {selectedIds.length} valgt
             </Paragraph>
-            <Button type="button" variant="secondary" data-size="sm" onClick={() => setSelectedIds([])}>
+            <Button type="button" variant="secondary" data-data-size="sm" onClick={() => setSelectedIds([])}>
               Fjern valg
             </Button>
           </div>

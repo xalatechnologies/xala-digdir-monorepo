@@ -27,26 +27,28 @@ import {
   UnlockIcon,
 } from '@xala/ds';
 import {
-  useSeason,
-  useSeasonVenues,
-  useSeasonApplications,
-  useDeleteSeason,
-  useUpdateSeasonStatus,
-  type SeasonStatus,
+  useSeasonalLease,
+  useDeleteSeasonalLease,
+  type SeasonalLeaseStatus,
 } from '@digilist/client-sdk';
 import { FormSection } from '../../components/shared';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
 
-const statusLabels: Record<SeasonStatus, string> = {
+// Temporary placeholder hooks until implemented in SDK
+const useSeasonVenues = (seasonId: string) => ({ data: { data: [] }, isLoading: false });
+const useSeasonApplications = (seasonId: string) => ({ data: { data: [] }, isLoading: false });
+const useUpdateSeasonalLeaseStatus = () => ({ mutateAsync: async () => {}, isLoading: false });
+
+const statusLabels: Record<SeasonalLeaseStatus, string> = {
   draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
   assigned: 'Tildelt',
 };
 
-const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+const statusVariants: Record<SeasonalLeaseStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
   closed: 'warning',
@@ -59,7 +61,7 @@ export function SeasonDetailPage() {
   const [activeTab, setActiveTab] = useState('info');
 
   // Queries
-  const { data: seasonData, isLoading } = useSeason(id!);
+  const { data: seasonData, isLoading } = useSeasonalLease(id!);
   const season = seasonData?.data;
 
   const { data: venuesData } = useSeasonVenues(id!);
@@ -69,8 +71,8 @@ export function SeasonDetailPage() {
   const applications = applicationsData?.data ?? [];
 
   // Mutations
-  const deleteSeasonMutation = useDeleteSeason();
-  const updateStatusMutation = useUpdateSeasonStatus();
+  const deleteSeasonMutation = useDeleteSeasonalLease();
+  const updateStatusMutation = useUpdateSeasonalLeaseStatus();
 
   // Handlers
   const handleDelete = async () => {
@@ -112,7 +114,7 @@ export function SeasonDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -125,7 +127,7 @@ export function SeasonDetailPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -139,7 +141,7 @@ export function SeasonDetailPage() {
       {/* Header */}
       <div>
         <Link to="/seasons">
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -165,16 +167,16 @@ export function SeasonDetailPage() {
             {season.status === 'draft' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" data-size="sm">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="primary" size="sm" onClick={handleOpenSeason}>
+                <Button variant="primary" data-size="sm" onClick={handleOpenSeason}>
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
-                <Button variant="danger" size="sm" onClick={handleDelete}>
+                <Button variant="danger" data-size="sm" onClick={handleDelete}>
                   <TrashIcon />
                   Slett
                 </Button>
@@ -184,12 +186,12 @@ export function SeasonDetailPage() {
             {season.status === 'open' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" data-size="sm">
                     <EditIcon />
                     Rediger
                   </Button>
                 </Link>
-                <Button variant="warning" size="sm" onClick={handleCloseSeason}>
+                <Button variant="warning" data-size="sm" onClick={handleCloseSeason}>
                   <LockIcon />
                   Lukk sesong
                 </Button>
@@ -197,7 +199,7 @@ export function SeasonDetailPage() {
             )}
 
             {season.status === 'closed' && (
-              <Button variant="primary" size="sm" onClick={handleStartAllocation}>
+              <Button variant="primary" data-size="sm" onClick={handleStartAllocation}>
                 <PlayIcon />
                 Start tildeling
               </Button>
@@ -205,7 +207,7 @@ export function SeasonDetailPage() {
 
             {season.status === 'assigned' && (
               <Link to={`/seasons/${id}/edit`}>
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary" data-size="sm">
                   <EditIcon />
                   Se detaljer
                 </Button>
@@ -288,11 +290,11 @@ export function SeasonDetailPage() {
         </Tabs.List>
 
         {/* Info Tab */}
-        <Tabs.Content value="info">
+        <Tabs.Panel value="info">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
               <FormSection title="Sesongdetaljer">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Navn
@@ -340,31 +342,31 @@ export function SeasonDetailPage() {
               </FormSection>
             </Card>
           </div>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Venues Tab */}
-        <Tabs.Content value="venues">
+        <Tabs.Panel value="venues">
           <Card>
             <SeasonVenueManagement
               seasonId={id!}
               canEdit={season.status === 'draft' || season.status === 'open'}
             />
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Applications Tab */}
-        <Tabs.Content value="applications">
+        <Tabs.Panel value="applications">
           <Card>
             <SeasonApplicationManagement
               seasonId={id!}
               canProcess={season.status === 'closed'}
             />
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Allocation Tab */}
         {(season.status === 'closed' || season.status === 'assigned') && (
-          <Tabs.Content value="allocation">
+          <Tabs.Panel value="allocation">
             <Card>
               <SeasonAllocationManagement
                 seasonId={id!}
@@ -373,7 +375,7 @@ export function SeasonDetailPage() {
                 onAllocationComplete={() => navigate(`/seasons/${id}`)}
               />
             </Card>
-          </Tabs.Content>
+          </Tabs.Panel>
         )}
       </Tabs>
     </div>

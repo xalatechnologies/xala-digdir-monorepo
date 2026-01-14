@@ -3,7 +3,7 @@
  * Create, invite, and manage backoffice users with roles
  */
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   Card,
   Heading,
@@ -22,10 +22,8 @@ import {
   UserIcon,
   UsersIcon,
   EditIcon,
-  TrashIcon,
   CheckCircleIcon,
   XCircleIcon,
-  MailIcon,
   HeaderSearch,
 } from '@xala/ds';
 import {
@@ -39,7 +37,6 @@ import {
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 import { UserForm } from '../components/users/UserForm';
 
 type ViewMode = 'list' | 'detail';
@@ -65,8 +62,6 @@ const statusColors: Record<UserStatus, 'success' | 'warning' | 'danger'> = {
 };
 
 export function UsersPage() {
-  const t = useT();
-
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -146,7 +141,7 @@ export function UsersPage() {
             Administrer backoffice-brukere og tilgangsroller
           </Paragraph>
         </div>
-        <Button onClick={handleCreate} size="md">
+        <Button onClick={handleCreate} data-size="md">
           <PlusIcon />
           Inviter bruker
         </Button>
@@ -166,31 +161,31 @@ export function UsersPage() {
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 <FilterIcon />
                 Rolle: {roleFilter === 'all' ? 'Alle' : roleLabels[roleFilter]}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.Content>
               <Dropdown.Item onClick={() => setRoleFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Item>
               <Dropdown.Item onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Content>
           </Dropdown>
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 <FilterIcon />
                 Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.Content>
               <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Content>
           </Dropdown>
         </div>
       </Card>
@@ -199,7 +194,7 @@ export function UsersPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" />
+            <Spinner data-size="lg" aria-label="Laster..." />
           </div>
         ) : users.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -267,11 +262,11 @@ export function UsersPage() {
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" size="sm" aria-label="Handlinger">
+                        <Button variant="tertiary" data-size="sm" aria-label="Handlinger">
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
-                      <Dropdown.Menu>
+                      <Dropdown.Content>
                         <Dropdown.Item onClick={() => handleViewDetail(user)}>
                           <UserIcon />
                           Se detaljer
@@ -291,7 +286,7 @@ export function UsersPage() {
                             Reaktiver
                           </Dropdown.Item>
                         )}
-                      </Dropdown.Menu>
+                      </Dropdown.Content>
                     </Dropdown>
                   </Table.Cell>
                 </Table.Row>
@@ -304,13 +299,12 @@ export function UsersPage() {
       {/* Create/Edit Form Drawer */}
       {isFormOpen && (
         <Drawer
-          open={isFormOpen}
+          isOpen={isFormOpen}
           onClose={() => {
             setIsFormOpen(false);
             setEditingUser(null);
           }}
           title={editingUser ? 'Rediger bruker' : 'Inviter bruker'}
-          size="md"
         >
           <UserForm
             user={editingUser}
@@ -326,28 +320,27 @@ export function UsersPage() {
       {/* Detail Drawer */}
       {viewMode === 'detail' && selectedUser && (
         <Drawer
-          open={viewMode === 'detail'}
+          isOpen={viewMode === 'detail'}
           onClose={() => {
             setViewMode('list');
             setSelectedUserId(null);
           }}
           title={selectedUser.name}
-          size="md"
         >
-          <Stack gap={4}>
+          <Stack spacing={4}>
             {/* Quick Actions */}
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-              <Button variant="secondary" size="sm" onClick={() => handleEdit(selectedUser)}>
+              <Button variant="secondary" data-size="sm" onClick={() => handleEdit(selectedUser)}>
                 <EditIcon />
                 Rediger
               </Button>
               {selectedUser.status === 'active' ? (
-                <Button variant="secondary" size="sm" onClick={() => handleDeactivate(selectedUser.id)}>
+                <Button variant="secondary" data-size="sm" onClick={() => handleDeactivate(selectedUser.id)}>
                   <XCircleIcon />
                   Deaktiver
                 </Button>
               ) : (
-                <Button variant="secondary" size="sm" onClick={() => handleReactivate(selectedUser.id)}>
+                <Button variant="secondary" data-size="sm" onClick={() => handleReactivate(selectedUser.id)}>
                   <CheckCircleIcon />
                   Reaktiver
                 </Button>
@@ -356,7 +349,7 @@ export function UsersPage() {
 
             {/* User Information */}
             <DrawerSection title="Brukerinformasjon">
-              <Stack gap={3}>
+              <Stack spacing={3}>
                 <div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                     E-post

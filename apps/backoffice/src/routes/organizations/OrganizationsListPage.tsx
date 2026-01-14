@@ -134,27 +134,27 @@ export function OrganizationsListPage() {
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 <FilterIcon />
                 Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.Content>
               <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Content>
           </Dropdown>
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 <FilterIcon />
                 Type: {actorTypeFilter === 'all' ? 'Alle' : actorTypeLabels[actorTypeFilter]}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.Content>
               <Dropdown.Item onClick={() => setActorTypeFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setActorTypeFilter('private')}>Privatperson</Dropdown.Item>
               <Dropdown.Item onClick={() => setActorTypeFilter('business')}>Bedrift</Dropdown.Item>
@@ -162,7 +162,7 @@ export function OrganizationsListPage() {
               <Dropdown.Item onClick={() => setActorTypeFilter('youth_organization')}>Ungdomsorganisasjon</Dropdown.Item>
               <Dropdown.Item onClick={() => setActorTypeFilter('school')}>Skole</Dropdown.Item>
               <Dropdown.Item onClick={() => setActorTypeFilter('municipality')}>Kommune</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Content>
           </Dropdown>
         </div>
       </Card>
@@ -171,7 +171,7 @@ export function OrganizationsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" />
+            <Spinner data-size="lg" aria-label="Laster..." />
           </div>
         ) : filteredOrgs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -186,7 +186,7 @@ export function OrganizationsListPage() {
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && actorTypeFilter === 'all' && (
               <Link to="/organizations/new">
-                <Button size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
                   <PlusIcon />
                   Ny organisasjon
                 </Button>
@@ -247,11 +247,11 @@ export function OrganizationsListPage() {
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" size="sm">
+                        <Button variant="tertiary" data-size="sm">
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
-                      <Dropdown.Menu>
+                      <Dropdown.Content>
                         <Dropdown.Item onClick={() => navigate(`/organizations/${org.id}`)}>
                           <EyeIcon />
                           Vis detaljer
@@ -270,7 +270,7 @@ export function OrganizationsListPage() {
                           <TrashIcon />
                           Slett
                         </Dropdown.Item>
-                      </Dropdown.Menu>
+                      </Dropdown.Content>
                     </Dropdown>
                   </Table.Cell>
                 </Table.Row>

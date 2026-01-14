@@ -125,7 +125,7 @@ export function SeasonAllocationManagement({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -201,7 +201,7 @@ export function SeasonAllocationManagement({
           </Paragraph>
         </div>
       ) : (
-        <Stack gap={4}>
+        <Stack spacing={4}>
           {Object.entries(applicationsByVenue).map(([venueId, apps]) => (
             <Card key={venueId}>
               <div style={{ marginBottom: 'var(--ds-spacing-3)' }}>
@@ -270,7 +270,7 @@ export function SeasonAllocationManagement({
                             >
                               {allocating[application.id] ? (
                                 <>
-                                  <Spinner size="sm" /> Tildeler...
+                                  <Spinner data-size="sm" aria-label="Laster..." /> Tildeler...
                                 </>
                               ) : (
                                 <>

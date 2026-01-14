@@ -1494,6 +1494,550 @@ export function BookingWidgetPlacement({
       )}
 
       {/* Step 1: Pricing, Services and Terms */}
+      {currentStep === 1 && (
+        <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--ds-spacing-4)',
+              padding: 'var(--ds-spacing-4)',
+              borderLeft: '1px solid var(--ds-color-neutral-border-subtle)',
+            }}
+          >
+            {/* Selected Slots Header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+                paddingBottom: 'var(--ds-spacing-3)',
+                borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+              }}
+            >
+              <CalendarIcon size={20} />
+              <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+                Valgte tidspunkter
+              </Heading>
+            </div>
+
+            {/* Selected Slots List or Empty State */}
+            {selectedSlots.size > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', flex: 1, overflow: 'auto' }}>
+                {Array.from(selectedSlots).map((slotKey) => {
+                  const parts = slotKey.split('-');
+                  const dayIdxStr = parts[0] ?? '0';
+                  const timeStr = parts[1] ?? '';
+                  const dayIdx = parseInt(dayIdxStr, 10);
+                  const details = slotDetails[slotKey] ?? { duration: 60, purpose: '', showPurpose: false, attendees: '', activityType: '' };
+
+                  // Calculate end time based on duration
+                  const [startH, startM] = timeStr.split(':').map(Number);
+                  const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
+                  const endH = Math.floor(endMins / 60);
+                  const endM = endMins % 60;
+                  const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+
+                  // Get full date for display
+                  const slotDate = new Date(weekStart);
+                  slotDate.setDate(weekStart.getDate() + dayIdx);
+                  const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+                  const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+
+                  return (
+                    <details
+                      key={slotKey}
+                      style={{
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        borderRadius: 'var(--ds-border-radius-lg)',
+                        border: '1px solid var(--ds-color-neutral-border-subtle)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <summary
+                        style={{
+                          padding: 'var(--ds-spacing-3)',
+                          cursor: 'pointer',
+                          listStyle: 'none',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          backgroundColor: 'var(--ds-color-accent-surface-default)',
+                          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                          transition: 'background-color 150ms ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--ds-color-accent-surface-hover)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--ds-color-accent-surface-default)';
+                        }}
+                      >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)', flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-accent-text-default)' }}>
+                              {dayNames[slotDate.getDay()]} {slotDate.getDate()}. {monthNames[slotDate.getMonth()]}
+                            </Paragraph>
+                            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>•</span>
+                            <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-text-default)' }}>
+                              {timeStr} – {endTime}
+                            </Paragraph>
+                          </div>
+                          {details.purpose && (
+                            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                              {details.purpose}
+                            </Paragraph>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSelectedSlots(prev => {
+                              const newSet = new Set(prev);
+                              newSet.delete(slotKey);
+                              return newSet;
+                            });
+                            setSlotDetails(prev => {
+                              const newDetails = { ...prev };
+                              delete newDetails[slotKey];
+                              return newDetails;
+                            });
+                          }}
+                          aria-label="Fjern booking"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '28px',
+                            height: '28px',
+                            border: '1px solid var(--ds-color-neutral-border-default)',
+                            backgroundColor: 'var(--ds-color-neutral-background-default)',
+                            cursor: 'pointer',
+                            color: 'var(--ds-color-neutral-text-subtle)',
+                            borderRadius: 'var(--ds-border-radius-full)',
+                            transition: 'all 150ms ease',
+                            marginLeft: 'var(--ds-spacing-2)',
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </summary>
+
+                      {/* Accordion Content */}
+                      <div style={{ padding: 'var(--ds-spacing-4)' }}>
+                        {/* Time Adjustment Controls */}
+                        <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                            Tidspunkt
+                          </Paragraph>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              padding: 'var(--ds-spacing-3)',
+                              backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                              borderRadius: 'var(--ds-border-radius-md)',
+                              gap: 'var(--ds-spacing-3)',
+                            }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => adjustSlotTime(slotKey, -30)}
+                              aria-label="30 minutter tidligere"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: 'var(--ds-border-radius-full)',
+                                border: '1px solid var(--ds-color-neutral-border-default)',
+                                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                cursor: 'pointer',
+                                fontSize: 'var(--ds-font-size-md)',
+                                fontWeight: 'var(--ds-font-weight-bold)',
+                                color: 'var(--ds-color-neutral-text-default)',
+                                transition: 'all 150ms ease',
+                              }}
+                            >
+                              −
+                            </button>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                              <Paragraph data-size="md" style={{ margin: 0, fontVariantNumeric: 'tabular-nums', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-accent-text-default)' }}>
+                                {timeStr} – {endTime}
+                              </Paragraph>
+                              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                                {details.duration} minutter
+                              </Paragraph>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => adjustSlotTime(slotKey, 30)}
+                              aria-label="30 minutter senere"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: 'var(--ds-border-radius-full)',
+                                border: '1px solid var(--ds-color-neutral-border-default)',
+                                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                cursor: 'pointer',
+                                fontSize: 'var(--ds-font-size-md)',
+                                fontWeight: 'var(--ds-font-weight-bold)',
+                                color: 'var(--ds-color-neutral-text-default)',
+                                transition: 'all 150ms ease',
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Duration Selector */}
+                        <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                            Varighet
+                          </Paragraph>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-2)' }}>
+                            {[
+                              { label: '30 min', value: 30 },
+                              { label: '1 time', value: 60 },
+                              { label: '2 timer', value: 120 },
+                              { label: '3 timer', value: 180 },
+                            ].map(({ label, value }) => (
+                              <button
+                                key={value}
+                                type="button"
+                                onClick={() => updateSlotDetail(slotKey, 'duration', value)}
+                                style={{
+                                  padding: 'var(--ds-spacing-2) var(--ds-spacing-1)',
+                                  borderRadius: 'var(--ds-border-radius-md)',
+                                  border: details.duration === value
+                                    ? '2px solid var(--ds-color-accent-base-default)'
+                                    : '1px solid var(--ds-color-neutral-border-subtle)',
+                                  backgroundColor: details.duration === value
+                                    ? 'var(--ds-color-accent-surface-default)'
+                                    : 'var(--ds-color-neutral-background-default)',
+                                  color: details.duration === value
+                                    ? 'var(--ds-color-accent-base-default)'
+                                    : 'var(--ds-color-neutral-text-default)',
+                                  fontSize: 'var(--ds-font-size-sm)',
+                                  fontWeight: details.duration === value ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+                                  cursor: 'pointer',
+                                  transition: 'all 150ms ease',
+                                }}
+                              >
+                                {label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Form Fields */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                          {/* Purpose Field */}
+                          <div>
+                            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                              Formål
+                            </Paragraph>
+                            <input
+                              type="text"
+                              value={details.purpose}
+                              onChange={(e) => updateSlotDetail(slotKey, 'purpose', e.target.value)}
+                              placeholder="f.eks. Trening, Møte, Kurs..."
+                              style={{
+                                width: '100%',
+                                padding: 'var(--ds-spacing-3)',
+                                borderRadius: 'var(--ds-border-radius-md)',
+                                border: '1px solid var(--ds-color-neutral-border-default)',
+                                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                fontSize: 'var(--ds-font-size-sm)',
+                                color: 'var(--ds-color-neutral-text-default)',
+                                outline: 'none',
+                                transition: 'border-color 150ms ease',
+                              }}
+                            />
+                            {/* Show in calendar toggle */}
+                            <label
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--ds-spacing-2)',
+                                marginTop: 'var(--ds-spacing-2)',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              <div
+                                onClick={() => updateSlotDetail(slotKey, 'showPurpose', !details.showPurpose)}
+                                style={{
+                                  width: '20px',
+                                  height: '20px',
+                                  borderRadius: 'var(--ds-border-radius-sm)',
+                                  border: `2px solid ${details.showPurpose ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                                  backgroundColor: details.showPurpose ? 'var(--ds-color-accent-base-default)' : 'transparent',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  cursor: 'pointer',
+                                  transition: 'all 150ms ease',
+                                  color: 'var(--ds-color-accent-contrast-default)',
+                                }}
+                              >
+                                {details.showPurpose && (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                )}
+                              </div>
+                              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                                Vis formål i kalender
+                              </Paragraph>
+                            </label>
+                          </div>
+
+                          {/* Activity Type & Attendees Row */}
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                            <div>
+                              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                                Aktivitet
+                              </Paragraph>
+                              <select
+                                value={details.activityType}
+                                onChange={(e) => updateSlotDetail(slotKey, 'activityType', e.target.value)}
+                                style={{
+                                  width: '100%',
+                                  padding: 'var(--ds-spacing-3)',
+                                  borderRadius: 'var(--ds-border-radius-md)',
+                                  border: '1px solid var(--ds-color-neutral-border-default)',
+                                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                  fontSize: 'var(--ds-font-size-sm)',
+                                  color: 'var(--ds-color-neutral-text-default)',
+                                  outline: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <option value="">Velg type...</option>
+                                <option value="Trening">Trening</option>
+                                <option value="Møte">Møte</option>
+                                <option value="Kurs">Kurs</option>
+                                <option value="Arrangement">Arrangement</option>
+                                <option value="Annet">Annet</option>
+                              </select>
+                            </div>
+                            <div>
+                              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                                Antall personer
+                              </Paragraph>
+                              <input
+                                type="number"
+                                value={details.attendees}
+                                onChange={(e) => updateSlotDetail(slotKey, 'attendees', e.target.value)}
+                                placeholder="0"
+                                min="1"
+                                style={{
+                                  width: '100%',
+                                  padding: 'var(--ds-spacing-3)',
+                                  borderRadius: 'var(--ds-border-radius-md)',
+                                  border: '1px solid var(--ds-color-neutral-border-default)',
+                                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                                  fontSize: 'var(--ds-font-size-sm)',
+                                  color: 'var(--ds-color-neutral-text-default)',
+                                  outline: 'none',
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: 'var(--ds-border-radius-full)',
+                    backgroundColor: 'var(--ds-color-accent-surface-default)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto var(--ds-spacing-4)',
+                  }}
+                >
+                  <CalendarIcon size={36} />
+                </div>
+                <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                  Ingen bookinger ennå
+                </Heading>
+                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '280px', marginLeft: 'auto', marginRight: 'auto' }}>
+                  Velg et ledig tidspunkt i kalenderen til venstre for å starte bookingen.
+                </Paragraph>
+              </div>
+            )}
+
+            {/* Price Summary - only show on step 1 when price group is selected */}
+            {currentStep === 1 && selectedPriceGroup && selectedSlots.size > 0 && (
+              <div
+                style={{
+                  padding: 'var(--ds-spacing-4)',
+                  borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+                  marginTop: 'auto',
+                }}
+              >
+                <Heading level={4} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                  Prissammendrag
+                </Heading>
+
+                {/* Breakdown */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+                  {/* Base price */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {priceGroups.find(pg => pg.id === selectedPriceGroup)?.label}
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                      {(() => {
+                        const priceGroup = priceGroups.find(pg => pg.id === selectedPriceGroup);
+                        if (!priceGroup) return '0 kr';
+                        let totalMinutes = 0;
+                        selectedSlots.forEach(slotKey => {
+                          const details = slotDetails[slotKey] ?? { duration: 60 };
+                          totalMinutes += details.duration;
+                        });
+                        const totalHours = totalMinutes / 60;
+                        const basePrice = priceGroup.pricePerHour * totalHours;
+                        return `${Math.round(basePrice)} kr`;
+                      })()}
+                    </Paragraph>
+                  </div>
+
+                  {/* Additional services */}
+                  {Array.from(selectedServices).map(serviceId => {
+                    const service = additionalServices.find(s => s.id === serviceId);
+                    if (!service) return null;
+                    return (
+                      <div key={serviceId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                          {service.label}
+                        </Paragraph>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                          {service.price} kr
+                        </Paragraph>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Total */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingTop: 'var(--ds-spacing-3)',
+                    borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+                  }}
+                >
+                  <Heading level={4} data-size="sm" style={{ margin: 0 }}>
+                    Totalt
+                  </Heading>
+                  <Heading level={4} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)', fontVariantNumeric: 'tabular-nums' }}>
+                    {totalPrice} kr
+                  </Heading>
+                </div>
+
+                {/* Note about time */}
+                <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)', textAlign: 'center' }}>
+                  {(() => {
+                    let totalMinutes = 0;
+                    selectedSlots.forEach(slotKey => {
+                      const details = slotDetails[slotKey] ?? { duration: 60 };
+                      totalMinutes += details.duration;
+                    });
+                    const hours = Math.floor(totalMinutes / 60);
+                    const minutes = totalMinutes % 60;
+                    return `${selectedSlots.size} ${selectedSlots.size === 1 ? 'time' : 'timer'}${minutes > 0 ? ` (${hours}t ${minutes}min)` : ''}`;
+                  })()}
+                </Paragraph>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Selected Slots Drawer */}
+      {isMobile && selectedSlots.size > 0 && (
+        <div
+          style={{
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-accent-surface-default)',
+            borderTop: '1px solid var(--ds-color-accent-border-subtle)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+            <CalendarIcon size={18} />
+            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
+              Valgte tidspunkter ({selectedSlots.size})
+            </Paragraph>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
+            {Array.from(selectedSlots).map((slotKey) => {
+              const parts = slotKey.split('-');
+              const dayIdxStr = parts[0] ?? '0';
+              const timeStr = parts[1] ?? '';
+              const dayIdx = parseInt(dayIdxStr, 10);
+              const day = weekData[dayIdx];
+              return (
+                <div
+                  key={slotKey}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--ds-spacing-1)',
+                    padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                    backgroundColor: 'var(--ds-color-neutral-background-default)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-neutral-border-default)',
+                  }}
+                >
+                  <Paragraph data-size="xs" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    {day?.dayName} {timeStr}
+                  </Paragraph>
+                  <button
+                    type="button"
+                    onClick={() => handleSlotClick(dayIdx, timeStr, 'available')}
+                    aria-label="Fjern"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '16px',
+                      height: '16px',
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      cursor: 'pointer',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                      fontSize: 'var(--ds-font-size-xs)',
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+        </>
+      )}
 
       {/* Step 1: Pricing, Services and Terms */}
       {currentStep === 1 && (
@@ -2113,25 +2657,6 @@ export function BookingWidgetPlacement({
           </div>
         </div>
       )}
-        </div>
-        {/* END LEFT COLUMN */}
-
-        {/* RIGHT COLUMN: Fixed Sidebar */}
-        {!isMobile && selectedSlots.size > 0 && (
-          <div style={{ flex: '0 0 35%', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', padding: 'var(--ds-spacing-4)', borderLeft: '1px solid var(--ds-color-neutral-border-subtle)', overflow: 'auto', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', paddingBottom: 'var(--ds-spacing-3)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-              <CalendarIcon size={20} />
-              <Heading level={4} data-size="xs" style={{ margin: 0 }}>Valgte tidspunkter</Heading>
-            </div>
-            {selectedPriceGroup && <div style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-accent-surface-default)', borderRadius: 'var(--ds-border-radius-lg)', border: '1px solid var(--ds-color-accent-border-subtle)', marginTop: 'auto' }}>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>Totalpris</Paragraph>
-              <Heading level={3} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)' }}>{calculateTotalPrice()} kr</Heading>
-            </div>}
-          </div>
-        )}
-      </div>
-      {/* END TWO-COLUMN LAYOUT */}
-
 
       {/* Action Section */}
       <div

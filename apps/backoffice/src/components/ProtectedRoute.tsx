@@ -22,7 +22,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label="Laster..." data-data-size="lg" />
       </div>
     );
   }

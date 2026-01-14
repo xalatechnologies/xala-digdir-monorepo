@@ -23,21 +23,21 @@ import {
   HeaderSearch,
 } from '@xala/ds';
 import {
-  useSeasons,
-  useDeleteSeason,
-  type Season,
-  type SeasonStatus,
+  useSeasonalLeases,
+  useDeleteSeasonalLease,
+  type SeasonalLease,
+  type SeasonalLeaseStatus,
 } from '@digilist/client-sdk';
 import { StatusBadge } from '../../components/shared';
 
-const statusLabels: Record<SeasonStatus, string> = {
+const statusLabels: Record<SeasonalLeaseStatus, string> = {
   draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
   assigned: 'Tildelt',
 };
 
-const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+const statusVariants: Record<SeasonalLeaseStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
   closed: 'warning',
@@ -49,16 +49,16 @@ export function SeasonsListPage() {
 
   // State
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<SeasonalLeaseStatus | 'all'>('all');
 
   // Queries
-  const { data: seasonsData, isLoading } = useSeasons({
+  const { data: seasonsData, isLoading } = useSeasonalLeases({
     status: statusFilter === 'all' ? undefined : statusFilter,
   });
   const seasons = seasonsData?.data ?? [];
 
   // Mutations
-  const deleteSeasonMutation = useDeleteSeason();
+  const deleteSeasonMutation = useDeleteSeasonalLease();
 
   // Filtered seasons
   const filteredSeasons = seasons.filter(season => {
@@ -118,17 +118,17 @@ export function SeasonsListPage() {
 
           <Dropdown>
             <Dropdown.Trigger asChild>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
               </Button>
             </Dropdown.Trigger>
-            <Dropdown.Menu>
+            <Dropdown.Content>
               <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Item>
               <Dropdown.Item onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Item>
-            </Dropdown.Menu>
+            </Dropdown.Content>
           </Dropdown>
         </div>
       </Card>
@@ -137,7 +137,7 @@ export function SeasonsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" />
+            <Spinner data-size="lg" aria-label="Laster..." />
           </div>
         ) : filteredSeasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -152,7 +152,7 @@ export function SeasonsListPage() {
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && (
               <Link to="/seasons/new">
-                <Button size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
                   <PlusIcon />
                   Ny sesong
                 </Button>
@@ -206,11 +206,11 @@ export function SeasonsListPage() {
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" size="sm">
+                        <Button variant="tertiary" data-size="sm">
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
-                      <Dropdown.Menu>
+                      <Dropdown.Content>
                         <Dropdown.Item onClick={() => navigate(`/seasons/${season.id}`)}>
                           <EyeIcon />
                           Vis detaljer
@@ -225,7 +225,7 @@ export function SeasonsListPage() {
                             Slett
                           </Dropdown.Item>
                         )}
-                      </Dropdown.Menu>
+                      </Dropdown.Content>
                     </Dropdown>
                   </Table.Cell>
                 </Table.Row>

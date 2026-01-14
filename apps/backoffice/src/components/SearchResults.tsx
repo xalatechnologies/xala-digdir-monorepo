@@ -131,7 +131,7 @@ export function SearchResults({
   if (isLoading) {
     return (
       <Stack spacing="lg" align="center" style={{ padding: '3rem', ...style }} className={className}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
         <Text color="secondary">Søker...</Text>
       </Stack>
     );

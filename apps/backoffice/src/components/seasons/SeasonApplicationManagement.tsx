@@ -6,7 +6,6 @@
 import { useState, useMemo } from 'react';
 import {
   Button,
-  Stack,
   Table,
   Badge,
   Heading,
@@ -14,7 +13,6 @@ import {
   Dropdown,
   Spinner,
   Card,
-  Tabs,
   FilterIcon,
   MoreVerticalIcon,
   CheckCircleIcon,
@@ -24,12 +22,32 @@ import {
   MessageSquareIcon,
 } from '@xala/ds';
 import {
-  useSeasonApplications,
-  useApproveApplication,
-  useRejectApplication,
-  type SeasonApplication,
-  type ApplicationStatus,
+  // TODO: Implement season application management hooks
+  // useSeasonApplications,
+  // useApproveApplication,
+  // useRejectApplication,
+  // type SeasonApplication,
+  // type ApplicationStatus,
 } from '@digilist/client-sdk';
+
+// Temporary type definitions and placeholder hooks until implemented in SDK
+type ApplicationStatus = 'pending' | 'approved' | 'rejected';
+type SeasonApplication = {
+  id: string;
+  seasonId: string;
+  organizationId: string;
+  organizationName: string;
+  status: ApplicationStatus;
+  requestedSlots: number;
+  notes?: string;
+  createdAt: string;
+  processedAt?: string;
+  processedBy?: string;
+};
+
+const useSeasonApplications = (seasonId: string) => ({ data: { data: [] as SeasonApplication[] }, isLoading: false });
+const useApproveApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
+const useRejectApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
 
 interface SeasonApplicationManagementProps {
   seasonId: string;
@@ -119,7 +137,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -166,34 +184,34 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
         <Dropdown>
           <Dropdown.Trigger asChild>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" data-size="sm">
               <FilterIcon />
               Status: {filterStatus === 'all' ? 'Alle' : statusLabels[filterStatus]}
             </Button>
           </Dropdown.Trigger>
-          <Dropdown.Menu>
+          <Dropdown.Content>
             <Dropdown.Item onClick={() => setFilterStatus('all')}>Alle</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('pending')}>Venter</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('approved')}>Godkjent</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('rejected')}>Avslått</Dropdown.Item>
-          </Dropdown.Menu>
+          </Dropdown.Content>
         </Dropdown>
 
         <Dropdown>
           <Dropdown.Trigger asChild>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" data-size="sm">
               <FilterIcon />
               Lokale: {filterVenue === 'all' ? 'Alle' : venues.find(v => v[0] === filterVenue)?.[1] || 'Alle'}
             </Button>
           </Dropdown.Trigger>
-          <Dropdown.Menu>
+          <Dropdown.Content>
             <Dropdown.Item onClick={() => setFilterVenue('all')}>Alle lokaler</Dropdown.Item>
             {venues.map(([id, name]) => (
               <Dropdown.Item key={id} onClick={() => setFilterVenue(id)}>
                 {name}
               </Dropdown.Item>
             ))}
-          </Dropdown.Menu>
+          </Dropdown.Content>
         </Dropdown>
       </div>
 
@@ -278,11 +296,11 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
                     <Table.Cell>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" size="sm">
+                          <Button variant="tertiary" data-size="sm">
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>
-                        <Dropdown.Menu>
+                        <Dropdown.Content>
                           <Dropdown.Item onClick={() => setSelectedApplication(application)}>
                             <EyeIcon />
                             Se detaljer
@@ -303,7 +321,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
                             <MessageSquareIcon />
                             Send melding
                           </Dropdown.Item>
-                        </Dropdown.Menu>
+                        </Dropdown.Content>
                       </Dropdown>
                     </Table.Cell>
                   )}

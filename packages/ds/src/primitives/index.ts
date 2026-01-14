@@ -95,6 +95,13 @@ export {
   CopyIcon,
   EyeIcon,
   AlertTriangleIcon,
+  ExternalLinkIcon,
+  ArrowLeftIcon,
+  FileTextIcon,
+  ClipboardListIcon,
+  PlayIcon,
+  LockIcon,
+  UnlockIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility

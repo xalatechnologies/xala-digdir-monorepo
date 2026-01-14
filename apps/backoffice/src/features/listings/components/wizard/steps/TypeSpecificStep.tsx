@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import {
   FormField,
-  TextField,
+  Textfield,
   Select,
   Checkbox,
   Stack,
@@ -42,7 +42,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
     switch (listingType) {
       case 'SPACE':
         return (
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Legg til detaljer om lokalet som hjelper brukere å forstå rommet bedre.
@@ -73,7 +73,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Maksimal takhøyde (meter)"
               description="Takhøyde i meter"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.ceilingHeight || ''}
                 onChange={(e) => handleFieldChange('ceilingHeight', parseFloat(e.target.value))}
@@ -87,7 +87,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Areal (m²)"
               description="Lokalets areal i kvadratmeter"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.area || ''}
                 onChange={(e) => handleFieldChange('area', parseFloat(e.target.value))}
@@ -101,7 +101,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Scenestørrelse"
               description="Kun relevant for scener eller rom med scene"
             >
-              <TextField
+              <Textfield
                 value={typeData.stageSize || ''}
                 onChange={(e) => handleFieldChange('stageSize', e.target.value)}
                 placeholder="F.eks. 6m x 4m"
@@ -112,7 +112,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               <Paragraph data-size="sm" style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-2)' }}>
                 Fasiliteter
               </Paragraph>
-              <Stack gap={2}>
+              <Stack spacing={2}>
                 <Checkbox
                   checked={typeData.hasKitchen || false}
                   onChange={(e) => handleFieldChange('hasKitchen', e.target.checked)}
@@ -150,7 +150,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'RESOURCE':
         return (
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Beskriv ressursen i detalj slik at brukere forstår hva som tilbys.
@@ -161,7 +161,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Merke/Produsent"
               description="Hvem har laget utstyret?"
             >
-              <TextField
+              <Textfield
                 value={typeData.brand || ''}
                 onChange={(e) => handleFieldChange('brand', e.target.value)}
                 placeholder="F.eks. Yamaha, Bose"
@@ -172,7 +172,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Modell"
               description="Modellnavn eller nummer"
             >
-              <TextField
+              <Textfield
                 value={typeData.model || ''}
                 onChange={(e) => handleFieldChange('model', e.target.value)}
                 placeholder="F.eks. Speaker X2000"
@@ -200,7 +200,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Antall tilgjengelige"
               description="Hvor mange enheter er tilgjengelige?"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.quantity || ''}
                 onChange={(e) => handleFieldChange('quantity', parseInt(e.target.value))}
@@ -222,7 +222,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'SERVICE':
         return (
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Gi detaljer om tjenesten og leveringsbetingelser.
@@ -233,7 +233,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Tjenestevarighet"
               description="Estimert varighet per økt"
             >
-              <TextField
+              <Textfield
                 value={typeData.serviceDuration || ''}
                 onChange={(e) => handleFieldChange('serviceDuration', e.target.value)}
                 placeholder="F.eks. 60 minutter, 2 timer"
@@ -259,7 +259,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Maksimalt antall deltakere"
               description="Hvor mange kan delta samtidig?"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.maxParticipants || ''}
                 onChange={(e) => handleFieldChange('maxParticipants', parseInt(e.target.value))}
@@ -281,7 +281,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'EVENT':
         return (
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Legg til informasjon om arrangementet.
@@ -311,7 +311,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Arrangør"
               description="Hvem arrangerer eventet?"
             >
-              <TextField
+              <Textfield
                 value={typeData.organizer || ''}
                 onChange={(e) => handleFieldChange('organizer', e.target.value)}
                 placeholder="F.eks. Kultur Norge"
@@ -322,7 +322,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Minimumsdeltakere"
               description="Minste antall påmeldte for gjennomføring"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.minAttendees || ''}
                 onChange={(e) => handleFieldChange('minAttendees', parseInt(e.target.value))}
@@ -335,7 +335,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Maksimumsdeltakere"
               description="Maks antall påmeldte"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.maxAttendees || ''}
                 onChange={(e) => handleFieldChange('maxAttendees', parseInt(e.target.value))}
@@ -357,7 +357,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
 
       case 'VEHICLE':
         return (
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <Alert severity="info">
               <Paragraph data-size="sm">
                 Gi tekniske detaljer om kjøretøyet.
@@ -388,7 +388,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Merke"
               description="Kjøretøymerke"
             >
-              <TextField
+              <Textfield
                 value={typeData.vehicleBrand || ''}
                 onChange={(e) => handleFieldChange('vehicleBrand', e.target.value)}
                 placeholder="F.eks. Toyota, Tesla"
@@ -399,7 +399,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Modell"
               description="Modellnavn"
             >
-              <TextField
+              <Textfield
                 value={typeData.vehicleModel || ''}
                 onChange={(e) => handleFieldChange('vehicleModel', e.target.value)}
                 placeholder="F.eks. Corolla, Model 3"
@@ -410,7 +410,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Årsmodell"
               description="Hvilket år ble kjøretøyet produsert?"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.yearModel || ''}
                 onChange={(e) => handleFieldChange('yearModel', parseInt(e.target.value))}
@@ -442,7 +442,7 @@ export function TypeSpecificStep({ data, onChange, errors = [] }: TypeSpecificSt
               label="Passasjerkapasitet"
               description="Antall sitteplasser"
             >
-              <TextField
+              <Textfield
                 type="number"
                 value={typeData.passengerCapacity || ''}
                 onChange={(e) => handleFieldChange('passengerCapacity', parseInt(e.target.value))}

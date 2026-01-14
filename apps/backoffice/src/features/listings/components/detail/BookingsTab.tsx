@@ -592,7 +592,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
 
           {/* Status Section */}
           <DrawerSection title="Status">
-            <Stack direction="horizontal" gap={2}>
+            <Stack direction="horizontal" spacing={2}>
               <BookingStatusBadge status={selectedBooking.status} />
               {selectedBooking.paymentStatus && (
                 <PaymentStatusBadge status={selectedBooking.paymentStatus} />
@@ -641,7 +641,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           {/* Action Buttons */}
           {(selectedBooking.status === 'pending' || selectedBooking.status === 'confirmed') && (
             <DrawerSection>
-              <Stack direction="vertical" gap={2}>
+              <Stack direction="vertical" spacing={2}>
                 {selectedBooking.status === 'pending' && (
                   <Button
                     variant="primary"

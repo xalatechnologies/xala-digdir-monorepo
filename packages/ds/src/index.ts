@@ -215,6 +215,22 @@ export {
   SendIcon,
   OrganizationIcon,
   AlertTriangleIcon,
+  EditIcon,
+  TrashIcon,
+  RefreshIcon,
+  PaperclipIcon,
+  XIcon,
+  SaveIcon,
+  CopyIcon,
+  EyeIcon,
+  ExternalLinkIcon,
+  ArrowLeftIcon,
+  FileTextIcon,
+  ClipboardListIcon,
+  PlayIcon,
+  LockIcon,
+  UnlockIcon,
+  FormField,
 } from './primitives';
 export type {
   ContainerProps,
@@ -224,7 +240,8 @@ export type {
   CardProps,
   TextProps,
   BadgeProps,
-  LayoutGridProps
+  LayoutGridProps,
+  FormFieldProps,
 } from './primitives';
 
 // Blocks - Business logic components

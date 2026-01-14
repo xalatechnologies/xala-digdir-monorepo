@@ -14,7 +14,7 @@ import {
   ArrowLeftIcon,
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Alert,
 } from '@xala/ds';
 import {
@@ -149,7 +149,7 @@ export function SeasonFormPage() {
   if (isEditing && isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -162,7 +162,7 @@ export function SeasonFormPage() {
           Sesongen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/seasons">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -176,7 +176,7 @@ export function SeasonFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
           </Button>
@@ -205,21 +205,21 @@ export function SeasonFormPage() {
       {/* Form */}
       <Card>
         <form onSubmit={handleSubmit}>
-          <Stack gap={5}>
+          <Stack spacing={5}>
             {/* Basic Information */}
             <FormSection title="Grunnleggende informasjon">
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField
                   label="Navn"
                   required
-                  error={errors.name}
+                  error={errors.name || undefined}
                   description="F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.name}
                     onChange={(e) => handleChange('name')(e.target.value)}
                     placeholder="Vårsesong 2026"
-                    error={!!errors.name}
+                    
                   />
                 </FormField>
 
@@ -227,7 +227,7 @@ export function SeasonFormPage() {
                   label="Beskrivelse"
                   description="Retningslinjer og informasjon til søkere (valgfritt)"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.description || ''}
                     onChange={(e) => handleChange('description')(e.target.value)}
                     placeholder="Legg til beskrivelse og retningslinjer..."
@@ -240,33 +240,33 @@ export function SeasonFormPage() {
 
             {/* Period */}
             <FormSection title="Periode og frister">
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                   <FormField
                     label="Startdato"
                     required
-                    error={errors.startDate}
+                    error={errors.startDate || undefined}
                     description="Når sesongen starter"
                   >
-                    <TextField
+                    <Textfield
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => handleChange('startDate')(e.target.value)}
-                      error={!!errors.startDate}
+                      
                     />
                   </FormField>
 
                   <FormField
                     label="Sluttdato"
                     required
-                    error={errors.endDate}
+                    error={errors.endDate || undefined}
                     description="Når sesongen slutter"
                   >
-                    <TextField
+                    <Textfield
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => handleChange('endDate')(e.target.value)}
-                      error={!!errors.endDate}
+                      
                       min={formData.startDate}
                     />
                   </FormField>
@@ -275,14 +275,14 @@ export function SeasonFormPage() {
                 <FormField
                   label="Søknadsfrist"
                   required
-                  error={errors.applicationDeadline}
+                  error={errors.applicationDeadline || undefined}
                   description="Siste dag for å sende inn søknader"
                 >
-                  <TextField
+                  <Textfield
                     type="date"
                     value={formData.applicationDeadline}
                     onChange={(e) => handleChange('applicationDeadline')(e.target.value)}
-                    error={!!errors.applicationDeadline}
+                    
                     max={formData.startDate}
                   />
                 </FormField>

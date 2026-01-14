@@ -309,7 +309,7 @@ export function SavedFilters({
             padding: 'var(--ds-spacing-8)',
           }}
         >
-          <Spinner />
+          <Spinner aria-label="Laster..." />
         </div>
       );
     }
@@ -397,7 +397,7 @@ export function SavedFilters({
               Lagrede filtre
             </Heading>
             {hasActiveFilters && !isCreating && (
-              <Button variant="primary" size="sm" onClick={handleStartCreate}>
+              <Button variant="primary" data-size="sm" onClick={handleStartCreate}>
                 <PlusIcon size={16} />
                 Lagre filter
               </Button>

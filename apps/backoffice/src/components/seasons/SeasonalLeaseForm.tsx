@@ -192,7 +192,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Info Alert */}
         <Alert severity="info">
           Sesongleie låser lokalet for den valgte perioden. Kalenderblokker kan genereres automatisk etter godkjenning.
@@ -200,17 +200,17 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Basic Information */}
         <FormSection title="Grunnleggende informasjon">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Organisasjon"
               required
-              error={errors.organizationId}
+              
               description="Hvem leier lokalet?"
             >
               <Select
                 value={formData.organizationId}
                 onChange={(e) => handleChange('organizationId')(e.target.value)}
-                error={!!errors.organizationId}
+                
                 disabled={!!lease} // Can't change org when editing
               >
                 <option value="">Velg organisasjon...</option>
@@ -225,13 +225,13 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
             <FormField
               label="Lokale"
               required
-              error={errors.listingId}
+              
               description="Hvilket lokale skal leies?"
             >
               <Select
                 value={formData.listingId}
                 onChange={(e) => handleChange('listingId')(e.target.value)}
-                error={!!errors.listingId}
+                
               >
                 <option value="">Velg lokale...</option>
                 {listings.map(listing => (
@@ -246,31 +246,31 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Period */}
         <FormSection title="Leieperiode">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Startdato"
                 required
-                error={errors.startDate}
+                
               >
                 <Textfield
                   type="date"
                   value={formData.startDate}
                   onChange={(e) => handleChange('startDate')(e.target.value)}
-                  error={!!errors.startDate}
+                  
                 />
               </FormField>
 
               <FormField
                 label="Sluttdato"
                 required
-                error={errors.endDate}
+                error={errors.endDate || undefined}
               >
                 <Textfield
                   type="date"
                   value={formData.endDate}
                   onChange={(e) => handleChange('endDate')(e.target.value)}
-                  error={!!errors.endDate}
+                  
                 />
               </FormField>
             </div>
@@ -280,13 +280,13 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         {/* Weekdays */}
         <FormSection title="Ukedager">
           <div style={{ marginBottom: 'var(--ds-spacing-3)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectAllWeekdays}>
+            <Button type="button" variant="secondary" data-size="sm" onClick={handleSelectAllWeekdays}>
               Hverdager
             </Button>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectWeekend}>
+            <Button type="button" variant="secondary" data-size="sm" onClick={handleSelectWeekend}>
               Helg
             </Button>
-            <Button type="button" variant="secondary" size="sm" onClick={handleSelectAllDays}>
+            <Button type="button" variant="secondary" data-size="sm" onClick={handleSelectAllDays}>
               Alle dager
             </Button>
           </div>
@@ -311,31 +311,31 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Time */}
         <FormSection title="Tidspunkt">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
                 label="Starttid"
                 required
-                error={errors.startTime}
+                error={errors.startTime || undefined}
               >
                 <Textfield
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleChange('startTime')(e.target.value)}
-                  error={!!errors.startTime}
+                  
                 />
               </FormField>
 
               <FormField
                 label="Sluttid"
                 required
-                error={errors.endTime}
+                error={errors.endTime || undefined}
               >
                 <Textfield
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleChange('endTime')(e.target.value)}
-                  error={!!errors.endTime}
+                  
                 />
               </FormField>
             </div>
@@ -344,11 +344,11 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Pricing */}
         <FormSection title="Prissetting">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Total pris"
               required
-              error={errors.totalPrice}
+              error={errors.totalPrice || undefined}
               description="Totalpris for hele leieperioden (NOK)"
             >
               <Textfield
@@ -356,7 +356,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                 value={formData.totalPrice?.toString() || '0'}
                 onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                error={!!errors.totalPrice}
+                
                 min="0"
                 step="0.01"
               />

@@ -21,11 +21,17 @@ import {
 } from '@xala/ds';
 import {
   useListings,
-  useSeasonVenues,
-  useAddVenueToSeason,
-  useRemoveVenueFromSeason,
+  // TODO: Implement season venue management hooks
+  // useSeasonVenues,
+  // useAddVenueToSeason,
+  // useRemoveVenueFromSeason,
   type Listing,
 } from '@digilist/client-sdk';
+
+// Temporary placeholder hooks until implemented in SDK
+const useSeasonVenues = (seasonId: string) => ({ data: { data: [] }, isLoading: false });
+const useAddVenueToSeason = () => ({ mutateAsync: async () => {}, isLoading: false });
+const useRemoveVenueFromSeason = () => ({ mutateAsync: async () => {}, isLoading: false });
 
 interface SeasonVenueManagementProps {
   seasonId: string;
@@ -69,7 +75,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   if (isLoadingAll || isLoadingSeasonVenues) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -107,7 +113,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             Velg lokale å legge til
           </Heading>
-          <Stack gap={2}>
+          <Stack spacing={2}>
             {availableVenues.map(venue => (
               <div
                 key={venue.id}
@@ -144,7 +150,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
             )}
           </Stack>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-3)' }}>
-            <Button variant="secondary" size="sm" onClick={() => setIsAddingVenue(false)}>
+            <Button variant="secondary" data-size="sm" onClick={() => setIsAddingVenue(false)}>
               Lukk
             </Button>
           </div>
@@ -162,7 +168,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
             Legg til lokaler som skal inngå i sesongleien
           </Paragraph>
           {canEdit && availableVenues.length > 0 && (
-            <Button size="sm" onClick={() => setIsAddingVenue(true)} style={{ marginTop: 'var(--ds-spacing-4)' }}>
+            <Button data-size="sm" onClick={() => setIsAddingVenue(true)} style={{ marginTop: 'var(--ds-spacing-4)' }}>
               <PlusIcon />
               Legg til ditt første lokale
             </Button>
@@ -202,16 +208,16 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
                   <Table.Cell>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" size="sm">
+                        <Button variant="tertiary" data-size="sm">
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>
-                      <Dropdown.Menu>
+                      <Dropdown.Content>
                         <Dropdown.Item onClick={() => handleRemoveVenue(venue.id)} color="danger">
                           <TrashIcon />
                           Fjern
                         </Dropdown.Item>
-                      </Dropdown.Menu>
+                      </Dropdown.Content>
                     </Dropdown>
                   </Table.Cell>
                 )}

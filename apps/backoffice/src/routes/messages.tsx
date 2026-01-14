@@ -328,7 +328,7 @@ export function MessagesPage() {
           <div style={{ flex: 1, overflow: 'auto' }}>
             {isLoadingConversations ? (
               <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-                <Spinner aria-label="Laster samtaler..." data-size="md" />
+                <Spinner aria-label="Laster samtaler..." data-data-size="md" />
               </div>
             ) : filteredConversations.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -524,7 +524,7 @@ export function MessagesPage() {
               }}>
                 {isLoadingMessages ? (
                   <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                    <Spinner aria-label="Laster meldinger..." data-size="md" />
+                    <Spinner aria-label="Laster meldinger..." data-data-size="md" />
                   </div>
                 ) : messages.length === 0 ? (
                   <div style={{ 
@@ -923,7 +923,7 @@ export function MessagesPage() {
                   Handlinger
                 </Paragraph>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                  <Button type="button" variant="secondary" data-size="sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                  <Button type="button" variant="secondary" data-data-size="sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
                     <CalendarIcon />
                     Se booking
                   </Button>

@@ -197,7 +197,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 disabled={cancelBooking.isPending}
                 data-color="danger"
               >
-                {cancelBooking.isPending ? <Spinner data-size="sm" aria-label="Avslår..." /> : 'Avslå'}
+                {cancelBooking.isPending ? <Spinner data-data-size="sm" aria-label="Avslår..." /> : 'Avslå'}
               </Button>
               <Button
                 type="button"
@@ -205,7 +205,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 onClick={handleApprove}
                 disabled={confirmBooking.isPending}
               >
-                {confirmBooking.isPending ? <Spinner data-size="sm" aria-label="Godkjenner..." /> : 'Godkjenn'}
+                {confirmBooking.isPending ? <Spinner data-data-size="sm" aria-label="Godkjenner..." /> : 'Godkjenn'}
               </Button>
             </>
           )}
@@ -229,7 +229,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 disabled={deleteBlock.isPending}
                 data-color="danger"
               >
-                {deleteBlock.isPending ? <Spinner data-size="sm" aria-label="Sletter..." /> : 'Slett'}
+                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : 'Slett'}
               </Button>
             </>
           )}

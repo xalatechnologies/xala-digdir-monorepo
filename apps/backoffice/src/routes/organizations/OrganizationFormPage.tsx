@@ -57,7 +57,7 @@ export function OrganizationFormPage() {
   if (isEditing && isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export function OrganizationFormPage() {
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/organizations">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -84,7 +84,7 @@ export function OrganizationFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/organizations/${id}` : '/organizations'}>
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til organisasjon' : 'Tilbake til oversikt'}
           </Button>

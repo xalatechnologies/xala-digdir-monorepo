@@ -13,7 +13,7 @@ import {
   Tabs,
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Switch,
   Badge,
@@ -119,7 +119,7 @@ export function SettingsPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -160,9 +160,9 @@ export function SettingsPage() {
         </Tabs.List>
 
         {/* General Settings */}
-        <Tabs.Content value="general">
+        <Tabs.Panel value="general">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Generelle innstillinger
@@ -172,9 +172,9 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
-                  <TextField
+                  <Textfield
                     value={formData.general.name}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -264,12 +264,12 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Booking Settings */}
-        <Tabs.Content value="booking">
+        <Tabs.Panel value="booking">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Bookinginnstillinger
@@ -279,7 +279,7 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField label="Automatisk bekreftelse">
                   <Switch
                     checked={formData.booking.autoConfirm}
@@ -323,7 +323,7 @@ export function SettingsPage() {
                     label="Kanselleringsfrist"
                     description="Antall timer før bookingstart kansellering er tillatt"
                   >
-                    <TextField
+                    <Textfield
                       type="number"
                       value={formData.booking.cancellationDeadlineHours.toString()}
                       onChange={(e) => setFormData(prev => ({
@@ -340,7 +340,7 @@ export function SettingsPage() {
                   label="Maksimal forhåndsbooking"
                   description="Hvor langt frem i tid kan man booke?"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.maxAdvanceBookingDays.toString()}
                     onChange={(e) => setFormData(prev => ({
@@ -356,7 +356,7 @@ export function SettingsPage() {
                   label="Minimum forhåndstid"
                   description="Hvor kort tid før kan man booke?"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.minAdvanceBookingHours.toString()}
                     onChange={(e) => setFormData(prev => ({
@@ -372,7 +372,7 @@ export function SettingsPage() {
                   label="Buffertid mellom bookinger"
                   description="Automatisk pause mellom påfølgende bookinger"
                 >
-                  <TextField
+                  <Textfield
                     type="number"
                     value={formData.booking.bufferTimeMinutes.toString()}
                     onChange={(e) => setFormData(prev => ({
@@ -393,12 +393,12 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Notification Settings */}
-        <Tabs.Content value="notifications">
+        <Tabs.Panel value="notifications">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Varslingsinnstillinger
@@ -408,7 +408,7 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField label="E-postvarsler">
                   <Switch
                     checked={formData.notifications.emailEnabled}
@@ -455,7 +455,7 @@ export function SettingsPage() {
                     Automatiske varsler
                   </Paragraph>
 
-                  <Stack gap={3}>
+                  <Stack spacing={3}>
                     <FormField label="Bookingbekreftelse">
                       <Switch
                         checked={formData.notifications.bookingConfirmation}
@@ -485,7 +485,7 @@ export function SettingsPage() {
                         label="Påminnelsestidspunkt"
                         description="Hvor lenge før booking skal påminnelse sendes?"
                       >
-                        <TextField
+                        <Textfield
                           type="number"
                           value={formData.notifications.reminderHoursBefore.toString()}
                           onChange={(e) => setFormData(prev => ({
@@ -509,13 +509,13 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Integrations */}
-        <Tabs.Content value="integrations">
-          <Stack gap={4}>
+        <Tabs.Panel value="integrations">
+          <Stack spacing={4}>
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Autentisering
@@ -564,7 +564,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Betaling
@@ -595,7 +595,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Tilgangskontroll
@@ -626,7 +626,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Kalender
@@ -675,7 +675,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Økonomi & ERP
@@ -706,7 +706,7 @@ export function SettingsPage() {
             </Card>
 
             <Card>
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     Offentlige registre
@@ -736,12 +736,12 @@ export function SettingsPage() {
               </Stack>
             </Card>
           </Stack>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Branding */}
-        <Tabs.Content value="branding">
+        <Tabs.Panel value="branding">
           <Card>
-            <Stack gap={5}>
+            <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                   Visuell profil
@@ -751,12 +751,12 @@ export function SettingsPage() {
                 </Paragraph>
               </div>
 
-              <Stack gap={4}>
+              <Stack spacing={4}>
                 <FormField
                   label="Logo URL"
                   description="URL til logo (vil vises i toppen av siden)"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.branding.logo || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -770,7 +770,7 @@ export function SettingsPage() {
                   label="Primærfarge"
                   description="Hovedfarge for knapper og UI-elementer"
                 >
-                  <TextField
+                  <Textfield
                     type="color"
                     value={formData.branding.primaryColor || '#1A56DB'}
                     onChange={(e) => setFormData(prev => ({
@@ -784,7 +784,7 @@ export function SettingsPage() {
                   label="Sekundærfarge"
                   description="Farge for mindre fremtredende elementer"
                 >
-                  <TextField
+                  <Textfield
                     type="color"
                     value={formData.branding.secondaryColor || '#6B7280'}
                     onChange={(e) => setFormData(prev => ({
@@ -798,7 +798,7 @@ export function SettingsPage() {
                   label="Favicon URL"
                   description="URL til favicon (vises i nettleserens fane)"
                 >
-                  <TextField
+                  <Textfield
                     value={formData.branding.favicon || ''}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -817,7 +817,7 @@ export function SettingsPage() {
               </div>
             </Stack>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
       </Tabs>
     </div>
   );

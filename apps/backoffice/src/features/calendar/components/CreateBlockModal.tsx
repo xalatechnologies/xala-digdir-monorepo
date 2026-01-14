@@ -604,7 +604,7 @@ export function CreateBlockModal({
           {/* Conflict warning */}
           {isCheckingConflicts && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <Spinner data-size="sm" aria-label="Sjekker konflikter..." />
+              <Spinner data-data-size="sm" aria-label="Sjekker konflikter..." />
               <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Sjekker for konflikter...
               </Paragraph>

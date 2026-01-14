@@ -672,16 +672,16 @@ export function CalendarPage() {
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--ds-spacing-3)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigate('prev')} aria-label="Forrige">
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('prev')} aria-label="Forrige">
               <ChevronLeftIcon />
             </Button>
-            <Button type="button" variant="tertiary" data-size="sm" onClick={() => navigate('next')} aria-label="Neste">
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('next')} aria-label="Neste">
               <ChevronRightIcon />
             </Button>
             <Heading level={2} data-size="sm" style={{ margin: 0, minWidth: '200px' }}>
               {getDateTitle()}
             </Heading>
-            <Button type="button" variant="secondary" data-size="sm" onClick={goToToday}>
+            <Button type="button" variant="secondary" data-data-size="sm" onClick={goToToday}>
               I dag
             </Button>
             {/* Real-time sync indicator */}

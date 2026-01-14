@@ -7,10 +7,9 @@ import { useState, useEffect } from 'react';
 import {
   Stack,
   FormField,
-  TextField,
+  Textfield,
   Select,
   Alert,
-  Paragraph,
 } from '@xala/ds';
 import {
   useListings,
@@ -155,7 +154,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={5}>
+      <Stack spacing={5}>
         {/* Warning Alert */}
         <Alert severity="warning">
           Endringer i booking vil påvirke brukerens reservasjon. Sørg for at brukeren er informert om endringene.
@@ -163,17 +162,17 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
 
         {/* Booking Details */}
         <FormSection title="Bookingdetaljer">
-          <Stack gap={4}>
+          <Stack spacing={4}>
             <FormField
               label="Lokale"
               required
-              error={errors.listingId}
+              
               description="Hvilket lokale skal bookes?"
             >
               <Select
                 value={formData.listingId}
                 onChange={(e) => handleChange('listingId')(e.target.value)}
-                error={!!errors.listingId}
+                
               >
                 <option value="">Velg lokale...</option>
                 {listings.map(listing => (
@@ -188,26 +187,26 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
               <FormField
                 label="Starttid"
                 required
-                error={errors.startTime}
+                
               >
-                <TextField
+                <Textfield
                   type="datetime-local"
                   value={formData.startTime}
                   onChange={(e) => handleChange('startTime')(e.target.value)}
-                  error={!!errors.startTime}
+                  aria-label="Starttid"
                 />
               </FormField>
 
               <FormField
                 label="Sluttid"
                 required
-                error={errors.endTime}
+                error={errors.endTime || undefined}
               >
-                <TextField
+                <Textfield
                   type="datetime-local"
                   value={formData.endTime}
                   onChange={(e) => handleChange('endTime')(e.target.value)}
-                  error={!!errors.endTime}
+                  aria-label="Sluttid"
                 />
               </FormField>
             </div>
@@ -226,15 +225,15 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
           <FormField
             label="Total pris"
             required
-            error={errors.totalPrice}
+            error={errors.totalPrice || undefined}
             description="Pris i NOK (inkl. mva)"
           >
-            <TextField
+            <Textfield
               type="number"
               value={formData.totalPrice.toString()}
               onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
               placeholder="0"
-              error={!!errors.totalPrice}
+              
               min="0"
               step="0.01"
             />
@@ -247,7 +246,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
             label="Interne notater"
             description="Notater synlige for saksbehandler"
           >
-            <TextField
+            <Textfield
               value={formData.notes}
               onChange={(e) => handleChange('notes')(e.target.value)}
               placeholder="Legg til eventuelle notater..."

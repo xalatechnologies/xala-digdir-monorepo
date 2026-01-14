@@ -86,7 +86,7 @@ export function OrganizationDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" />
+        <Spinner data-size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -99,7 +99,7 @@ export function OrganizationDetailPage() {
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/organizations">
-          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -113,7 +113,7 @@ export function OrganizationDetailPage() {
       {/* Header */}
       <div>
         <Link to="/organizations">
-          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -141,18 +141,18 @@ export function OrganizationDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" data-size="sm">
                 <EditIcon />
                 Rediger
               </Button>
             </Link>
             {!organization.verified && (
-              <Button variant="secondary" size="sm" onClick={handleVerify}>
+              <Button variant="secondary" data-size="sm" onClick={handleVerify}>
                 <ShieldCheckIcon />
                 Verifiser
               </Button>
             )}
-            <Button variant="danger" size="sm" onClick={handleDelete}>
+            <Button variant="danger" data-size="sm" onClick={handleDelete}>
               <TrashIcon />
               Slett
             </Button>
@@ -173,11 +173,11 @@ export function OrganizationDetailPage() {
         </Tabs.List>
 
         {/* Information Tab */}
-        <Tabs.Content value="info">
+        <Tabs.Panel value="info">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
               <FormSection title="Grunnleggende informasjon">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
                       Type organisasjon
@@ -231,7 +231,7 @@ export function OrganizationDetailPage() {
 
             <Card>
               <FormSection title="Kontaktinformasjon">
-                <Stack gap={3}>
+                <Stack spacing={3}>
                   {organization.email ? (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
@@ -281,32 +281,32 @@ export function OrganizationDetailPage() {
               </FormSection>
             </Card>
           </div>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Members Tab */}
-        <Tabs.Content value="members">
+        <Tabs.Panel value="members">
           <Card>
             <MemberManagement organizationId={organization.id} members={members} />
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Bookings Tab */}
-        <Tabs.Content value="bookings">
+        <Tabs.Panel value="bookings">
           <Card>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Bookinger fra denne organisasjonen vil vises her.
             </Paragraph>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
 
         {/* Seasons Tab */}
-        <Tabs.Content value="seasons">
+        <Tabs.Panel value="seasons">
           <Card>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Sesongleie-avtaler for denne organisasjonen vil vises her.
             </Paragraph>
           </Card>
-        </Tabs.Content>
+        </Tabs.Panel>
       </Tabs>
     </div>
   );

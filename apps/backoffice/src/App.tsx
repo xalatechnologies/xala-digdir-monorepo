@@ -16,7 +16,7 @@ import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
-import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage } from './routes/organizations';
+import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage } from './routes/organizations/index';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
