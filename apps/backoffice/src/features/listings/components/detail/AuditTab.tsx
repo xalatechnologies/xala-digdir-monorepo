@@ -11,6 +11,7 @@ import {
   Heading,
   Spinner,
   Table,
+  HeaderSearch,
   Badge,
   Drawer,
   DrawerSection,
@@ -97,6 +98,8 @@ export function AuditTab({ listingId }: AuditTabProps) {
 
   // State
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<AuditLogEntry | null>(null);
   const [page, setPage] = useState(1);
 
@@ -132,13 +135,37 @@ export function AuditTab({ listingId }: AuditTabProps) {
     return map;
   }, [usersData]);
 
-  const events = auditData?.data || [];
+  // Filter events by search
+  const events = useMemo(() => {
+    if (!auditData?.data) return [];
+    if (!searchQuery) return auditData.data;
+
+    const query = searchQuery.toLowerCase();
+    return auditData.data.filter((event: AuditLogEntry) => {
+      const userName = userNameMap.get(event.userId || '') || '';
+      const action = getActionLabel(event.action).toLowerCase();
+      return (
+        userName.toLowerCase().includes(query) ||
+        action.includes(query) ||
+        event.action.toLowerCase().includes(query)
+      );
+    });
+  }, [auditData, searchQuery, userNameMap]);
 
   // Pagination
   const totalPages = auditData?.meta?.totalPages || 1;
   const totalCount = auditData?.meta?.total || 0;
 
   // Handlers
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchQuery(value || '');
+    setPage(1); // Reset to first page on search
+  }, []);
+
   const handleRowClick = useCallback((event: AuditLogEntry) => {
     setSelectedEvent(event);
   }, []);
@@ -159,6 +186,8 @@ export function AuditTab({ listingId }: AuditTabProps) {
     setActionFilter('all');
     setStartDate('');
     setEndDate('');
+    setSearchValue('');
+    setSearchQuery('');
     setPage(1);
   }, []);
 
@@ -168,8 +197,9 @@ export function AuditTab({ listingId }: AuditTabProps) {
     if (actionFilter !== 'all') count++;
     if (startDate) count++;
     if (endDate) count++;
+    if (searchQuery) count++;
     return count;
-  }, [actionFilter, startDate, endDate]);
+  }, [actionFilter, startDate, endDate, searchQuery]);
 
   // Loading state
   if (isLoading && events.length === 0) {
@@ -246,6 +276,16 @@ export function AuditTab({ listingId }: AuditTabProps) {
             </Badge>
           )}
         </Button>
+      </div>
+
+      {/* Search */}
+      <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
+        <HeaderSearch
+          value={searchValue}
+          onChange={handleSearchChange}
+          onSearch={handleSearch}
+          placeholder="Søk etter aktør eller handling..."
+        />
       </div>
 
       {/* Empty state */}
