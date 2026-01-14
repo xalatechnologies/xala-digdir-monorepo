@@ -173,3 +173,37 @@ export interface BookingReceipt {
   };
 }
 
+// =============================================================================
+// Bulk Operations
+// =============================================================================
+
+export interface BulkConfirmBookingsDTO {
+  bookingIds: string[];
+}
+
+export interface BulkRejectBookingsDTO {
+  bookingIds: string[];
+}
+
+export interface BulkCancelBookingsDTO {
+  bookingIds: string[];
+  reason: string;
+}
+
+export interface BatchRescheduleBookingsDTO {
+  bookingIds: string[];
+  offsetDays?: number;
+  offsetHours?: number;
+  offsetMinutes?: number;
+}
+
+export interface BulkOperationResult {
+  success: boolean;
+  processedCount: number;
+  failedCount: number;
+  errors?: Array<{
+    bookingId: string;
+    error: string;
+  }>;
+}
+
