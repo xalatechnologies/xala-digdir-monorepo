@@ -1,7 +1,8 @@
 import { createContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { SupportedLocale, TranslationParams, I18nContextValue, TranslationsRegistry } from './types';
 import { translations as defaultTranslations } from './locales';
-import { interpolate, getStoredLocale, setStoredLocale } from './utils';
+import { interpolate } from './utils';
+import { getCookieLocale, getPersistedLocale, persistLocale } from './storage';
 
 const DEFAULT_LOCALE: SupportedLocale = 'nb';
 
@@ -14,7 +15,7 @@ export interface I18nProviderProps {
    */
   translations?: TranslationsRegistry;
   /**
-   * Initial locale (overrides localStorage)
+   * Initial locale (overrides cookie/localStorage for SSR)
    */
   initialLocale?: SupportedLocale;
 }
@@ -27,18 +28,18 @@ export function I18nProvider({
   translations = defaultTranslations,
   initialLocale,
 }: I18nProviderProps) {
-  // Initialize locale from: prop > localStorage > default
+  // Initialize locale from: prop > cookie > localStorage > default
   const [locale, setLocaleState] = useState<SupportedLocale>(() => {
     if (initialLocale) return initialLocale;
-    const stored = getStoredLocale();
+    const stored = getPersistedLocale();
     if (stored === 'en' || stored === 'nb') return stored;
     return DEFAULT_LOCALE;
   });
 
-  // Persist locale changes to localStorage
+  // Persist locale changes to cookie + localStorage (dual-write)
   const setLocale = useCallback((newLocale: SupportedLocale) => {
     setLocaleState(newLocale);
-    setStoredLocale(newLocale);
+    persistLocale(newLocale);
   }, []);
 
   // Sync initialLocale prop changes
