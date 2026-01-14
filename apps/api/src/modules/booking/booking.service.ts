@@ -7,7 +7,7 @@ import { BookingRepository } from './booking.repository';
 import { ListingRepository } from '../listing/listing.repository';
 import { validate } from '../../core/validation/zod-pipe';
 import { ForbiddenError } from '../../core/errors/problem-details';
-import { getAuditService } from '../../core/audit/audit.service';
+import { getAuditService, broadcastBookingEvent } from '../../core/audit/audit.service';
 import {
   CreateBookingSchema,
   UpdateBookingSchema,
@@ -104,6 +104,18 @@ export class BookingService {
       metadata: { listingId: booking.listingId, startTime: booking.startTime, endTime: booking.endTime },
     });
 
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'created',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -147,6 +159,18 @@ export class BookingService {
       metadata: { previousStatus: 'pending', newStatus: 'confirmed', version: booking.version },
     });
 
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'confirmed',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -176,6 +200,19 @@ export class BookingService {
       metadata: { reason: validated.reason, version: booking.version },
     });
 
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'cancelled',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { reason: validated.reason },
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -195,6 +232,18 @@ export class BookingService {
       resource: 'booking',
       resourceId: id,
       metadata: { newStatus: 'completed', version: booking.version },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'completed',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
     });
 
     return booking as unknown as Booking;
@@ -239,6 +288,19 @@ export class BookingService {
       metadata: { changes: Object.keys(updateData), version: booking.version },
     });
 
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'updated',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { changes: Object.keys(updateData) },
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -258,6 +320,19 @@ export class BookingService {
       resource: 'booking',
       resourceId: id,
       metadata: { status, version: booking.version },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'updated',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { status },
     });
 
     return booking as unknown as Booking;
