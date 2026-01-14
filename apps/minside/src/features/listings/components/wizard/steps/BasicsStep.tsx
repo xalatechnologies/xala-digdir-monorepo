@@ -3,7 +3,7 @@
  * Type selection, name, slug, and visibility settings
  */
 
-import { Textfield, Select, Paragraph, Heading } from '@xala/ds';
+import { Textfield, Select, Paragraph, Heading, Label, Textarea } from '@xala/ds';
 import { LISTING_TYPE_OPTIONS } from '@digilist/client-sdk';
 import type { BackofficeListing, BackofficeListingType } from '../../../types';
 
@@ -149,24 +149,22 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
 
       {/* Short description */}
       <div>
-        <label
+        <Label
           htmlFor="description"
           style={{
             display: 'block',
             marginBottom: 'var(--ds-spacing-2)',
-            fontSize: 'var(--ds-font-size-sm)',
-            fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
           Kort beskrivelse
-        </label>
+        </Label>
         <Paragraph
           data-size="xs"
           style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}
         >
           En kort introduksjon som vises i søkeresultater og kort-visning
         </Paragraph>
-        <textarea
+        <Textarea
           id="description"
           value={data.description || ''}
           onChange={handleDescriptionChange}

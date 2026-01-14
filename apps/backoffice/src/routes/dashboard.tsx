@@ -79,6 +79,7 @@ export function DashboardPage(): React.ReactElement {
           </Paragraph>
         </div>
         {pendingCount > 0 && (
+          // eslint-disable-next-line digdir/require-interactive-labels -- Button has text content
           <Button
             type="button"
             variant="primary"
@@ -169,6 +170,7 @@ export function DashboardPage(): React.ReactElement {
               {t('dashboard.quickActions')}
             </Heading>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+              {/* eslint-disable-next-line digdir/require-interactive-labels -- Button has text content */}
               <Button
                 type="button"
                 variant="secondary"
@@ -178,6 +180,7 @@ export function DashboardPage(): React.ReactElement {
                 <ClockIcon />
                 {t('dashboard.processPendingBtn')}
               </Button>
+              {/* eslint-disable-next-line digdir/require-interactive-labels -- Button has text content */}
               <Button
                 type="button"
                 variant="secondary"
@@ -187,6 +190,7 @@ export function DashboardPage(): React.ReactElement {
                 <CalendarIcon />
                 {t('dashboard.viewAllBookings')}
               </Button>
+              {/* eslint-disable-next-line digdir/require-interactive-labels -- Button has text content */}
               {isAdmin && (
                 <Button
                   type="button"

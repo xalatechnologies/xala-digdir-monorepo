@@ -185,6 +185,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
             </Paragraph>
           </>
         )}
+        {/* eslint-disable-next-line digdir/prefer-ds-components -- Hidden file input for drag-drop upload */}
         <input
           id="file-input"
           type="file"
@@ -260,6 +261,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                   }}
                 >
                   {index !== 0 && (
+                    // eslint-disable-next-line digdir/prefer-ds-components -- Small overlay button with custom styling
                     <button
                       type="button"
                       onClick={() => handleSetCover(index)}
@@ -275,6 +277,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                       Sett som hovedbilde
                     </button>
                   )}
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Small overlay button with custom styling */}
                   <button
                     type="button"
                     onClick={() => handleRemoveImage(index)}
@@ -311,6 +314,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
         <Heading level={4} data-size="2xs" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-info-text-default)' }}>
           Tips for gode bilder
         </Heading>
+        {/* eslint-disable-next-line digdir/prefer-ds-components -- Simple tips list */}
         <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-color-info-text-default)' }}>
           <li><Paragraph data-size="sm" style={{ margin: 0 }}>Bruk god belysning og vis rommet fra flere vinkler</Paragraph></li>
           <li><Paragraph data-size="sm" style={{ margin: 0 }}>Inkluder bilder av fasiliteter og utstyr</Paragraph></li>

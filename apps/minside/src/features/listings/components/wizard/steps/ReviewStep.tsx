@@ -271,6 +271,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
         <Heading level={4} data-size="2xs" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-info-text-default)' }}>
           Hva skjer videre?
         </Heading>
+        {/* eslint-disable-next-line digdir/prefer-ds-components -- Simple information list */}
         <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-color-info-text-default)' }}>
           <li>
             <Paragraph data-size="sm" style={{ margin: 0 }}>

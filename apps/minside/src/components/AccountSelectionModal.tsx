@@ -128,6 +128,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
   }, [open]);
 
   return (
+    // eslint-disable-next-line digdir/prefer-ds-components -- Native dialog required for ref-based imperative API
     <dialog
       ref={dialogRef}
       style={{

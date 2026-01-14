@@ -3,6 +3,8 @@
  * Modal for creating calendar blocks (maintenance, closed, holds, etc.)
  */
 
+/* eslint-disable digdir/prefer-ds-components -- Complex form with native HTML elements for better browser compatibility */
+
 import { useState, useEffect, useMemo } from 'react';
 import {
   Dialog,

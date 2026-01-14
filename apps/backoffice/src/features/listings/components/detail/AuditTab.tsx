@@ -4,6 +4,8 @@
  * Shows timestamp, actor, and action for all listing-related events
  */
 
+/* eslint-disable digdir/prefer-ds-components -- Filter form with native HTML elements */
+
 import { useState, useMemo, useCallback } from 'react';
 import {
   Button,

@@ -383,6 +383,7 @@ export function SeasonDetailPage() {
         }}
       >
         {tabs.map((tab) => (
+          // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled tab button
           <button
             key={tab.id}
             type="button"
@@ -524,6 +525,7 @@ export function SeasonDetailPage() {
             <Paragraph style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
               Ved å søke om sesongbooking aksepterer du følgende vilkår:
             </Paragraph>
+            {/* eslint-disable-next-line digdir/prefer-ds-components -- Simple list of terms and conditions */}
             <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-6)', display: 'grid', gap: 'var(--ds-spacing-2)' }}>
               <li>
                 <Paragraph data-size="sm" style={{ margin: 0 }}>

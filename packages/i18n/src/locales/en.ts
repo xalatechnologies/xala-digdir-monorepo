@@ -333,4 +333,19 @@ export const en: Record<string, string> = {
   'minside.notifications': 'Notifications',
   'minside.offlineMode': 'Offline Mode',
   'minside.viewingCachedBookings': 'You are viewing cached bookings. Connect to the internet for updates.',
+  'minside.billing': 'Billing',
+  'minside.billingDesc': 'View your invoices and payments',
+
+  // Organization Portal (Minside)
+  'org.organization': 'Organization',
+  'org.dashboard': 'Dashboard',
+  'org.dashboardDesc': 'Organization overview',
+  'org.bookings': 'Bookings',
+  'org.bookingsDesc': 'Organization bookings',
+  'org.invoices': 'Invoices',
+  'org.invoicesDesc': 'Organization invoices',
+  'org.members': 'Members',
+  'org.membersDesc': 'Manage members',
+  'org.seasonRental': 'Season rental',
+  'org.seasonRentalDesc': 'Fixed rental periods',
 };

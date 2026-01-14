@@ -8,6 +8,8 @@
  * - Email templates
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex branding form with custom styling */
+
 import { useState, useEffect } from 'react';
 import {
   Card,
@@ -16,7 +18,6 @@ import {
   Button,
   Input,
 } from '@xala/ds';
-import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -28,7 +29,6 @@ const COLOR_PRESETS = [
 ];
 
 export function TenantBrandingPage() {
-  const t = useT();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -258,36 +258,47 @@ export function TenantBrandingPage() {
           overflow: 'hidden',
         }}>
           {/* Mock header */}
-          <div style={{
-            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-            backgroundColor: branding.primaryColor,
-            color: 'white',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+          {/* eslint-disable digdir/no-hardcoded-colors -- Branding preview with custom colors */}
+          <div
+            style={{
+              padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+              backgroundColor: branding.primaryColor,
+              color: 'white',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            {/* eslint-disable-next-line digdir/no-hardcoded-typography */}
             <span style={{ fontWeight: 600 }}>{branding.headerText}</span>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+              {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
               <div style={{ width: '24px', height: '24px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'rgba(255,255,255,0.2)' }} />
+              {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
               <div style={{ width: '24px', height: '24px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'rgba(255,255,255,0.2)' }} />
             </div>
           </div>
+          {/* eslint-enable digdir/no-hardcoded-colors */}
           {/* Mock content */}
           <div style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-surface-default)' }}>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
               <div style={{ flex: 1, height: '60px', borderRadius: 'var(--ds-border-radius-md)', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }} />
               <div style={{ flex: 1, height: '60px', borderRadius: 'var(--ds-border-radius-md)', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }} />
             </div>
-            <div style={{
-              marginTop: 'var(--ds-spacing-3)',
-              padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-              backgroundColor: branding.accentColor,
-              color: 'white',
-              borderRadius: 'var(--ds-border-radius-md)',
-              display: 'inline-block',
-            }}>
+            {/* eslint-disable digdir/no-hardcoded-colors -- Branding preview button */}
+            <div
+              style={{
+                marginTop: 'var(--ds-spacing-3)',
+                padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
+                backgroundColor: branding.accentColor,
+                color: 'white',
+                borderRadius: 'var(--ds-border-radius-md)',
+                display: 'inline-block',
+              }}
+            >
               Eksempel-knapp
             </div>
+            {/* eslint-enable digdir/no-hardcoded-colors */}
           </div>
           {/* Mock footer */}
           <div style={{

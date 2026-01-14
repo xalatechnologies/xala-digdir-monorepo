@@ -19,7 +19,6 @@ import {
   Spinner,
   useDialog,
 } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -64,8 +63,6 @@ const mockRules = [
 ];
 
 export function PricingRulesPage() {
-  const t = useT();
-  const { locale } = useLocale();
   const { confirm } = useDialog();
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -173,7 +170,7 @@ export function PricingRulesPage() {
               {mockRules.map((rule) => (
                 <Table.Row key={rule.id}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 500 }}>{rule.name}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{rule.name}</span>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge>{rule.type === 'hourly' ? 'Timepris' : rule.type === 'discount' ? 'Rabatt' : rule.type}</Badge>

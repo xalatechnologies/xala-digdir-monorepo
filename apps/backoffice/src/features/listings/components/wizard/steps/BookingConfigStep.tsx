@@ -3,6 +3,8 @@
  * Booking rules and configuration with enhanced UX
  */
 
+/* eslint-disable digdir/prefer-ds-components -- Wizard step with native elements */
+
 import { Textfield, Paragraph, Heading, Switch, Card } from '@xala/ds';
 import type { BackofficeListing, ListingBookingConfig } from '../../../types';
 

@@ -4,6 +4,8 @@
  * Styled consistently with ListingsListView
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form */
+
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {

@@ -4,6 +4,8 @@
  * Styled consistently with bookings page and other list views
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex search form */
+
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {

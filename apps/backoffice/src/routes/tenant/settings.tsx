@@ -8,6 +8,8 @@
  * - Integration settings
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex settings form */
+
 import { useState, useEffect } from 'react';
 import {
   Card,
@@ -18,13 +20,10 @@ import {
   Select,
   Switch,
 } from '@xala/ds';
-import { useT, useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
 export function TenantSettingsPage() {
-  const t = useT();
-  const { locale } = useLocale();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false

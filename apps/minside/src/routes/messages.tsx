@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Card, 
-  Heading, 
-  Paragraph, 
-  Button, 
-  Spinner, 
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Button,
+  Spinner,
   SearchIcon,
   SendIcon,
   MessageSquareIcon,
@@ -16,6 +16,7 @@ import {
   CalendarIcon,
   CheckCircleIcon,
   HomeIcon,
+  Textfield,
 } from '@xala/ds';
 import { useConversations, useMessages, useSendMessage, type Conversation, type Message, formatTime } from '@digilist/client-sdk';
 import { useAuth } from '../hooks/useAuth';
@@ -190,6 +191,7 @@ export function MessagesPage() {
           
           {/* Search */}
           <div style={{ position: 'relative', marginBottom: 'var(--ds-spacing-3)' }}>
+            {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom search input with icon positioning */}
             <input
               type="text"
               placeholder="Søk etter samtaler..."
@@ -222,6 +224,7 @@ export function MessagesPage() {
               { key: 'all' as FilterType, label: 'Alle', count: conversations.length },
               { key: 'unread' as FilterType, label: 'Uleste', count: totalUnread },
             ].map((tab) => (
+              // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled tab button
               <button
                 key={tab.key}
                 onClick={() => setFilter(tab.key)}
@@ -671,6 +674,7 @@ export function MessagesPage() {
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                 border: '1px solid var(--ds-color-neutral-border-default)',
               }}>
+                {/* eslint-disable-next-line digdir/prefer-ds-components -- Message input with ref and custom behavior */}
                 <input
                   ref={inputRef}
                   type="text"

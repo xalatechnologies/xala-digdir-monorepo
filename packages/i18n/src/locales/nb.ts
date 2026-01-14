@@ -334,6 +334,21 @@ export const nb: Record<string, string> = {
   'minside.notifications': 'Varsler',
   'minside.offlineMode': 'Frakoblet modus',
   'minside.viewingCachedBookings': 'Du ser bufrede bookinger. Koble til nettet for oppdateringer.',
+  'minside.billing': 'Faktura',
+  'minside.billingDesc': 'Se dine fakturaer og betalinger',
+
+  // Organization Portal (Minside)
+  'org.organization': 'Organisasjon',
+  'org.dashboard': 'Dashboard',
+  'org.dashboardDesc': 'Organisasjonsoversikt',
+  'org.bookings': 'Bookinger',
+  'org.bookingsDesc': 'Organisasjonens bookinger',
+  'org.invoices': 'Fakturaer',
+  'org.invoicesDesc': 'Organisasjonens fakturaer',
+  'org.members': 'Medlemmer',
+  'org.membersDesc': 'Administrer medlemmer',
+  'org.seasonRental': 'Sesongleie',
+  'org.seasonRentalDesc': 'Faste leieperioder',
 };
 
 

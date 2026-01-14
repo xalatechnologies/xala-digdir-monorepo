@@ -8,6 +8,8 @@
  * - Invite users
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Form with native HTML elements */
+
 import { useState, useEffect } from 'react';
 import {
   Card,
@@ -21,7 +23,6 @@ import {
   useDialog,
   Input,
 } from '@xala/ds';
-import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -60,7 +61,6 @@ const mockUsers = [
 ];
 
 export function UsersManagementPage() {
-  const t = useT();
   const { confirm } = useDialog();
   const [isLoading] = useState(false);
   const [showInvite, setShowInvite] = useState(false);

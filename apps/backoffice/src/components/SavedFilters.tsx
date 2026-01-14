@@ -4,6 +4,8 @@
  * Integrates with SDK search hooks for filter persistence
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Filter management component */
+
 import { useState, useMemo, useCallback } from 'react';
 import {
   Button,

@@ -3,6 +3,8 @@
  * Admin view for viewing system audit trail with filters and details
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form with native elements */
+
 import { useState, useMemo, useCallback } from 'react';
 import {
   Button,

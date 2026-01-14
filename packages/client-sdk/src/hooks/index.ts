@@ -62,7 +62,8 @@ export {
   useAllocations,
   useCreateAllocation,
   useDeleteAllocation,
-  usePaymentHistory
+  usePaymentHistory,
+  usePaymentReconciliation,
 } from './use-bookings';
 
 // Organization & User hooks
@@ -74,6 +75,7 @@ export {
   useUpdateOrganization,
   useDeleteOrganization,
   useVerifyOrganization,
+  useUploadOrganizationLogo,
   useUsers,
   useUser,
   useCurrentUser,
@@ -82,10 +84,11 @@ export {
   useUpdateCurrentUser,
   useDeactivateUser,
   useReactivateUser,
+  useUploadUserAvatar,
   useExportData,
   useDeleteAccount,
   useConsents,
-  useUpdateConsents
+  useUpdateConsents,
 } from './use-organizations';
 
 // Integration hooks
@@ -107,10 +110,12 @@ export {
   useNifLookup,
   useVippsStatus,
   useVippsPayment,
+  useVippsPaymentHistory,
   useInitiatePayment,
+  useCapturePayment,
   useRefundPayment,
   useCalendarSyncStatus,
-  useSyncCalendar
+  useSyncCalendar,
 } from './use-integrations';
 
 // Realtime hooks (WebSocket)
@@ -175,6 +180,7 @@ export {
   useMarkMessagesRead,
   useResolveConversation,
   useReopenConversation,
+  useAssignConversation,
 } from './use-conversations';
 
 // Block hooks
@@ -230,6 +236,9 @@ export {
   useBookingStats,
   useRevenueReport,
   useUsageReport,
+  useTimeSlotHeatmap,
+  useSeasonalPatterns,
+  useComparisonData,
   useExportReport,
 } from './use-reports';
 
@@ -344,3 +353,12 @@ export {
   useCancelSeason,
   useDeleteSeason,
 } from './use-seasons';
+
+// Help & Support hooks
+export {
+  useFaq,
+  useGuides,
+  useTraining,
+  useTooltips,
+  useSubmitContact,
+} from './useHelp';

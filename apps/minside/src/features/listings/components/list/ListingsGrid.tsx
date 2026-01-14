@@ -90,6 +90,7 @@ export function ListingsGrid({
               }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* eslint-disable-next-line digdir/prefer-ds-components -- Checkbox with custom styling and positioning */}
               <input
                 type="checkbox"
                 aria-label={`Velg ${listing.name}`}

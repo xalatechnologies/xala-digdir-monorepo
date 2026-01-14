@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { Textfield, Paragraph, Heading, Button, Tag } from '@xala/ds';
+import { Textfield, Paragraph, Heading, Button, Tag, Label, Textarea } from '@xala/ds';
 import type { BackofficeListing } from '../../../types';
 
 export interface ContentStepProps {
@@ -104,24 +104,22 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
 
       {/* Full description */}
       <div>
-        <label
+        <Label
           htmlFor="fullDescription"
           style={{
             display: 'block',
             marginBottom: 'var(--ds-spacing-2)',
-            fontSize: 'var(--ds-font-size-sm)',
-            fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
           Fullstendig beskrivelse
-        </label>
+        </Label>
         <Paragraph
           data-size="xs"
           style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}
         >
           En detaljert beskrivelse som vises på objektets detaljside
         </Paragraph>
-        <textarea
+        <Textarea
           id="fullDescription"
           value={content.fullDescription || ''}
           onChange={handleFullDescriptionChange}
@@ -164,6 +162,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
                 }}
               >
                 {amenity}
+                {/* eslint-disable-next-line digdir/prefer-ds-components -- Small icon button within Tag component */}
                 <button
                   type="button"
                   onClick={() => removeAmenity(amenity)}
@@ -211,6 +210,7 @@ export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
           </Paragraph>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-1)' }}>
             {COMMON_AMENITIES.filter((a) => !amenities.includes(a)).map((amenity) => (
+              // eslint-disable-next-line digdir/prefer-ds-components -- Small quick-add button with custom styling
               <button
                 key={amenity}
                 type="button"

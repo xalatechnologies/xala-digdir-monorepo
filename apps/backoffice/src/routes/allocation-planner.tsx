@@ -120,10 +120,12 @@ export function AllocationPlannerPage() {
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+            {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
             <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#2563eb' }} />
             <Paragraph data-size="sm" style={{ margin: 0 }}>Skien IL</Paragraph>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+            {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
             <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#16a34a' }} />
             <Paragraph data-size="sm" style={{ margin: 0 }}>Telemark FK</Paragraph>
           </div>
@@ -195,21 +197,25 @@ export function AllocationPlannerPage() {
                         backgroundColor: allocation ? allocation.color + '20' : undefined,
                       }}
                     >
+                      {/* eslint-disable digdir/no-hardcoded-colors -- Mock data with dynamic colors */}
                       {allocation && (
-                        <div style={{
-                          padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                          borderRadius: 'var(--ds-border-radius-sm)',
-                          backgroundColor: allocation.color,
-                          color: 'white',
-                          fontSize: 'var(--ds-font-size-xs)',
-                          fontWeight: 'var(--ds-font-weight-medium)',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>
+                        <div
+                          style={{
+                            padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                            borderRadius: 'var(--ds-border-radius-sm)',
+                            backgroundColor: allocation.color,
+                            color: 'white',
+                            fontSize: 'var(--ds-font-size-xs)',
+                            fontWeight: 'var(--ds-font-weight-medium)',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           {allocation.org}
                         </div>
                       )}
+                      {/* eslint-enable digdir/no-hardcoded-colors */}
                     </div>
                   );
                 })}

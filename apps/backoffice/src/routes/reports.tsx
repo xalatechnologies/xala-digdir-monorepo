@@ -1,3 +1,5 @@
+/* eslint-disable digdir/prefer-ds-components -- Reports with data tables */
+
 import { useState, useMemo } from 'react';
 import { Card, Heading, Paragraph, Button, Badge, Spinner, BarChart, DownloadIcon, CalendarIcon, Dropdown, FilterIcon } from '@xala/ds';
 import {

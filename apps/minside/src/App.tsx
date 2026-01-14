@@ -6,6 +6,7 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
+import { AccountContextProvider } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -16,7 +17,7 @@ import { BillingPage } from './routes/billing';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 // Organization pages
-import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage } from './routes/org';
+import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage } from './routes/org';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -77,8 +78,9 @@ function AppWithTheme() {
       >
         <NotificationCenterProvider>
           <AuthProvider>
-            <RealtimeProvider 
-              wsUrl={import.meta.env.VITE_WS_URL} 
+            <AccountContextProvider>
+            <RealtimeProvider
+              wsUrl={import.meta.env.VITE_WS_URL}
               tenantId={import.meta.env.VITE_TENANT_ID}
             >
             <Routes>
@@ -104,11 +106,13 @@ function AppWithTheme() {
               <Route path="org/bookings" element={<OrganizationBookingsPage />} />
               <Route path="org/invoices" element={<OrganizationInvoicesPage />} />
               <Route path="org/members" element={<OrganizationMembersPage />} />
+              <Route path="org/season-rental" element={<SeasonRentalPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             </RealtimeProvider>
+            </AccountContextProvider>
           </AuthProvider>
         </NotificationCenterProvider>
       </BrowserRouter>

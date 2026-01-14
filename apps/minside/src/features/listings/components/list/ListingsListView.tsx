@@ -223,6 +223,7 @@ export function ListingsListView() {
               <DrawerItem
                 key={type.id}
                 left={
+                  // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio input in DrawerItem
                   <input
                     type="radio"
                     name="type"
@@ -254,6 +255,7 @@ export function ListingsListView() {
               <DrawerItem
                 key={status.id}
                 left={
+                  // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio input in DrawerItem
                   <input
                     type="radio"
                     name="status"
@@ -284,6 +286,7 @@ export function ListingsListView() {
               <DrawerItem
                 key={cap.id}
                 left={
+                  // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio input in DrawerItem
                   <input
                     type="radio"
                     name="capacity"
@@ -314,6 +317,7 @@ export function ListingsListView() {
               <DrawerItem
                 key={sort.id}
                 left={
+                  // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio input in DrawerItem
                   <input
                     type="radio"
                     name="sort"
@@ -449,8 +453,8 @@ export function ListingsListView() {
                 <span
                   style={{
                     position: 'absolute',
-                    top: '-6px',
-                    right: '-6px',
+                    top: 'calc(-1 * var(--ds-spacing-15))',
+                    right: 'calc(-1 * var(--ds-spacing-15))',
                     minWidth: '18px',
                     height: '18px',
                     display: 'flex',

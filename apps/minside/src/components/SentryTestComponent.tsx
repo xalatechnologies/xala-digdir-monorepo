@@ -126,6 +126,7 @@ export function SentryTestComponent() {
           fontSize: 'var(--ds-font-size-sm)'
         }}>
           <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Testing Instructions:</h4>
+          {/* eslint-disable-next-line digdir/prefer-ds-components -- Simple ordered list for testing instructions */}
           <ol style={{ marginLeft: 'var(--ds-spacing-6)', lineHeight: 'var(--ds-font-line-height-body)' }}>
             <li>First, set tenant and user context (optional but recommended)</li>
             <li>Add some breadcrumbs to test breadcrumb tracking</li>

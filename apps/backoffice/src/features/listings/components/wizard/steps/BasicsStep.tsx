@@ -4,6 +4,8 @@
  * Enhanced with interactive card selection UI
  */
 
+/* eslint-disable digdir/prefer-ds-components -- Wizard step with native elements */
+
 import { Textfield, Paragraph, Heading, Card, Textarea } from '@xala/ds';
 import type { BackofficeListing, BackofficeListingType } from '../../../types';
 

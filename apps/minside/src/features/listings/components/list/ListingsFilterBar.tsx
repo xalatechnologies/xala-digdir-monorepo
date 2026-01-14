@@ -289,6 +289,7 @@ export function ListingsFilterBar({
       >
         {/* Search */}
         <div style={{ position: 'relative', width: '280px' }}>
+          {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom search input with icon positioning */}
           <input
             type="text"
             aria-label="Søk etter objekter"
@@ -320,8 +321,7 @@ export function ListingsFilterBar({
             }}
           />
           {searchValue && (
-            <button
-              type="button"
+            <Button
               onClick={handleClearSearch}
               aria-label="Tøm søk"
               style={{
@@ -342,7 +342,7 @@ export function ListingsFilterBar({
               }}
             >
               <CloseIcon size={16} />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -422,7 +422,7 @@ export function ListingsFilterBar({
                 backgroundColor: 'var(--ds-color-accent-base-default)',
                 color: 'var(--ds-color-accent-contrast-default)',
                 borderRadius: 'var(--ds-border-radius-full)',
-                padding: '2px 8px',
+                padding: 'var(--ds-spacing-05) var(--ds-spacing-2)',
                 fontSize: 'var(--ds-font-size-xs)',
                 marginLeft: 'var(--ds-spacing-1)',
               }}
@@ -461,10 +461,12 @@ export function ListingsFilterBar({
             Aktive filter:
           </Paragraph>
           {activeChips.map((chip) => (
+            // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled chip button with specific appearance
             <button
               key={chip.key}
               type="button"
               onClick={chip.onRemove}
+              aria-label={`Fjern filter: ${chip.label}`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -483,8 +485,7 @@ export function ListingsFilterBar({
               <CloseIcon size={14} />
             </button>
           ))}
-          <button
-            type="button"
+          <Button
             onClick={onResetFilters}
             style={{
               padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
@@ -498,7 +499,7 @@ export function ListingsFilterBar({
             }}
           >
             Nullstill alle
-          </button>
+          </Button>
         </div>
       )}
 
@@ -509,8 +510,7 @@ export function ListingsFilterBar({
             <Heading level={2} data-size="sm" style={{ margin: 0 }}>
               Flere filter
             </Heading>
-            <button
-              type="button"
+            <Button
               onClick={() => setFilterModalOpen(false)}
               aria-label="Lukk"
               style={{
@@ -527,7 +527,7 @@ export function ListingsFilterBar({
               }}
             >
               <CloseIcon size={20} />
-            </button>
+            </Button>
           </div>
         </Dialog.Block>
 
@@ -552,6 +552,7 @@ export function ListingsFilterBar({
               }}
             >
               {CAPACITY_OPTIONS.map((option) => (
+                // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio group with complex styling
                 <label
                   key={option.id}
                   style={{
@@ -567,6 +568,7 @@ export function ListingsFilterBar({
                     transition: 'background-color 0.15s ease',
                   }}
                 >
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom styled radio input */}
                   <input
                     type="radio"
                     name="capacity"
@@ -618,6 +620,7 @@ export function ListingsFilterBar({
               Booking
             </Paragraph>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+              {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom styled checkbox with complex behavior */}
               <label
                 style={{
                   display: 'flex',
@@ -626,6 +629,7 @@ export function ListingsFilterBar({
                   cursor: 'pointer',
                 }}
               >
+                {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom styled checkbox */}
                 <input
                   type="checkbox"
                   checked={tempFilters.hasBookingConfig === true}

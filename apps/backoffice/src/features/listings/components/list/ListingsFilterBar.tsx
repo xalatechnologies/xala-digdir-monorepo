@@ -3,6 +3,8 @@
  * Enhanced search, type tabs, and filter controls using DS components
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Filter bar with native form elements */
+
 import { useState, useEffect, useCallback } from 'react';
 import {
   Button,

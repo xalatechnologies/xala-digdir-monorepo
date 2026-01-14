@@ -1,3 +1,5 @@
+/* eslint-disable digdir/prefer-ds-components -- Calendar view with custom elements */
+
 import { useState, useMemo, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
 import { useCalendarEvents, useListings, type CalendarEvent, type Listing, formatWeekRange } from '@digilist/client-sdk';

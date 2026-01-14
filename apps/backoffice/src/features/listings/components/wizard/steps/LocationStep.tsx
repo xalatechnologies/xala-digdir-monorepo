@@ -3,6 +3,8 @@
  * Address input with Google Places autocomplete and coordinates
  */
 
+/* eslint-disable digdir/prefer-ds-components -- Location form with Google Places */
+
 import { useRef, useEffect, useState } from 'react';
 import { Textfield, Paragraph, Heading } from '@xala/ds';
 import { useGooglePlaces, type PlaceResult } from '../../../../../hooks/useGooglePlaces';

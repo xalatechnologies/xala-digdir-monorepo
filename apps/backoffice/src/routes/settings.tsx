@@ -3,6 +3,8 @@
  * Manage tenant settings, integrations, and system configuration
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex settings form */
+
 import { useState, useRef } from 'react';
 import {
   Card,

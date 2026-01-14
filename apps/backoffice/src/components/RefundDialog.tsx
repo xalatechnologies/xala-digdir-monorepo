@@ -100,6 +100,7 @@ function DialogBase({ open, onClose, children }: DialogBaseProps) {
   }, [onClose]);
 
   return (
+    // eslint-disable-next-line digdir/prefer-ds-components -- Using native dialog with imperative API (showModal/close)
     <dialog
       ref={dialogRef}
       onClose={onClose}

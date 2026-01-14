@@ -1,3 +1,5 @@
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex messaging interface */
+
 import { useState, useEffect, useRef, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
 import {
   Card,

@@ -23,6 +23,7 @@ import {
   useDialog,
   CalendarIcon,
   ClockIcon,
+  Link,
 } from '@xala/ds';
 import {
   useCancelBooking,
@@ -138,7 +139,7 @@ export function BookingsPage() {
             {t('minside.myBookingsDesc')}
           </Paragraph>
         </div>
-        <a href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ width: isMobile ? '100%' : 'auto' }}>
+        <Link href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ width: isMobile ? '100%' : 'auto' }}>
           <Button
             type="button"
             variant="primary"
@@ -150,7 +151,7 @@ export function BookingsPage() {
           >
             {t('minside.bookNow')} ↗
           </Button>
-        </a>
+        </Link>
       </div>
 
       {/* Stats Cards - Responsive: 1 column on mobile, 3 columns on desktop */}
@@ -259,11 +260,11 @@ export function BookingsPage() {
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
             {t('minside.noUpcomingBookings')}
           </Paragraph>
-          <a href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ marginTop: 'var(--ds-spacing-4)', display: 'inline-block' }}>
+          <Link href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ marginTop: 'var(--ds-spacing-4)', display: 'inline-block' }}>
             <Button type="button" variant="primary" data-size="md">
               {t('minside.bookNow')} ↗
             </Button>
-          </a>
+          </Link>
         </Card>
       ) : isMobile ? (
         // Mobile: Card-based layout

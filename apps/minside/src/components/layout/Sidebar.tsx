@@ -8,7 +8,10 @@ import {
   MessageIcon,
   SettingsIcon,
   ArrowRightIcon,
+  RepeatIcon,
+  UsersIcon,
   Drawer,
+  Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
@@ -19,18 +22,6 @@ function CreditCardIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
       <line x1="1" y1="10" x2="23" y2="10" />
-    </svg>
-  );
-}
-
-// Icon for Seasons/Recurring events
-function RepeatIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polyline points="17 1 21 5 17 9" />
-      <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-      <polyline points="7 23 3 19 7 15" />
-      <path d="M21 13v2a4 4 0 0 1-4 4H3" />
     </svg>
   );
 }
@@ -246,6 +237,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 {section.title}
               </Paragraph>
             )}
+            {/* eslint-disable-next-line digdir/prefer-ds-components -- Navigation list requires specific styling and structure */}
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
               {section.items.map((item) => (
                 <li key={item.href}>
@@ -350,6 +342,8 @@ export function Sidebar() {
         { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon /> },
         { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon /> },
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon /> },
+        { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon /> },
+        { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon /> },
       ],
     },
   ];
@@ -374,8 +368,7 @@ export function Sidebar() {
     <>
       {/* Mobile hamburger button */}
       {isMobile && (
-        <button
-          type="button"
+        <Button
           onClick={() => setIsMobileMenuOpen(true)}
           aria-label="Open menu"
           style={{
@@ -404,7 +397,7 @@ export function Sidebar() {
           }}
         >
           <MenuIcon />
-        </button>
+        </Button>
       )}
 
       {/* Desktop sidebar */}

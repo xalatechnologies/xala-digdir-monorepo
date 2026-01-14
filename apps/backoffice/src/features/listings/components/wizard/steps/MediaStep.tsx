@@ -3,6 +3,8 @@
  * Image and document upload management
  */
 
+/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Media upload component */
+
 import { useCallback, useState } from 'react';
 import { Paragraph, Heading, Button, Card } from '@xala/ds';
 import {

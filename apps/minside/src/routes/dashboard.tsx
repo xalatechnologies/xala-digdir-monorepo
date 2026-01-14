@@ -14,6 +14,7 @@ import {
   ChevronRightIcon,
   CheckCircleIcon,
   BookingStatusBadge,
+  Link as DSLink,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
@@ -185,7 +186,7 @@ export function DashboardPage() {
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
           gap: 'var(--ds-spacing-3)'
         }}>
-          <a href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+          <DSLink href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
             <Card style={{ 
               padding: 'var(--ds-spacing-4)', 
               display: 'flex', 
@@ -211,7 +212,7 @@ export function DashboardPage() {
                 {t('minside.bookNow')}
               </Paragraph>
             </Card>
-          </a>
+          </DSLink>
           <Link to="/bookings" style={{ textDecoration: 'none' }}>
             <Card style={{ 
               padding: 'var(--ds-spacing-4)', 
@@ -344,11 +345,11 @@ export function DashboardPage() {
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, marginBottom: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
               {t('minside.noUpcomingBookings')}
             </Paragraph>
-            <a href={WEB_APP_URL} target="_blank" rel="noopener noreferrer">
+            <DSLink href={WEB_APP_URL} target="_blank" rel="noopener noreferrer">
               <Button type="button" variant="primary" data-size={isMobile ? 'sm' : 'md'}>
                 {t('minside.bookNow')}
               </Button>
-            </a>
+            </DSLink>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>

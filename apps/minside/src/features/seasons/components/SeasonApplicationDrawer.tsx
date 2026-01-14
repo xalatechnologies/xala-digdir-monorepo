@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Spinner, Label, Select, Textfield, Textarea } from '@xala/ds';
 import type { Season } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../../../providers/AccountContextProvider';
 import { WEEKDAY_LABELS } from '../constants';
@@ -179,10 +179,10 @@ export function SeasonApplicationDrawer({
               {season.name}
             </Paragraph>
           </div>
-          <button
-            type="button"
+          <Button
             onClick={onClose}
             disabled={isSubmitting}
+            aria-label="Lukk søknadsskjema"
             style={{
               all: 'unset',
               cursor: 'pointer',
@@ -202,7 +202,7 @@ export function SeasonApplicationDrawer({
             }}
           >
             <XIcon />
-          </button>
+          </Button>
         </div>
 
         {/* Account Context Banner */}
@@ -263,18 +263,16 @@ export function SeasonApplicationDrawer({
 
             {/* Venue Selection */}
             <div>
-              <label
+              <Label
                 htmlFor="listing"
                 style={{
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
                 Velg lokale *
-              </label>
-              <select
+              </Label>
+              <Select
                 id="listing"
                 value={listingId}
                 onChange={(e) => setListingId(e.target.value)}
@@ -295,7 +293,7 @@ export function SeasonApplicationDrawer({
                 <option value="listing-2">Idrettshall 2</option>
                 <option value="listing-3">Møterom A</option>
                 <option value="listing-4">Kinosalen</option>
-              </select>
+              </Select>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Velg hvilket lokale du ønsker å booke
               </Paragraph>
@@ -303,18 +301,16 @@ export function SeasonApplicationDrawer({
 
             {/* Weekday Selection */}
             <div>
-              <label
+              <Label
                 htmlFor="weekday"
                 style={{
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
                 Ukedag *
-              </label>
-              <select
+              </Label>
+              <Select
                 id="weekday"
                 value={weekday}
                 onChange={(e) => setWeekday(Number(e.target.value))}
@@ -334,7 +330,7 @@ export function SeasonApplicationDrawer({
                     {label}
                   </option>
                 ))}
-              </select>
+              </Select>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Hvilken ukedag ønsker du faste tider?
               </Paragraph>
@@ -349,18 +345,16 @@ export function SeasonApplicationDrawer({
               }}
             >
               <div>
-                <label
+                <Label
                   htmlFor="startTime"
                   style={{
                     display: 'block',
                     marginBottom: 'var(--ds-spacing-2)',
-                    fontWeight: 'var(--ds-font-weight-semibold)',
-                    fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
                   Fra kl. *
-                </label>
-                <input
+                </Label>
+                <Textfield
                   type="time"
                   id="startTime"
                   value={startTime}
@@ -379,18 +373,16 @@ export function SeasonApplicationDrawer({
               </div>
 
               <div>
-                <label
+                <Label
                   htmlFor="endTime"
                   style={{
                     display: 'block',
                     marginBottom: 'var(--ds-spacing-2)',
-                    fontWeight: 'var(--ds-font-weight-semibold)',
-                    fontSize: 'var(--ds-font-size-sm)',
                   }}
                 >
                   Til kl. *
-                </label>
-                <input
+                </Label>
+                <Textfield
                   type="time"
                   id="endTime"
                   value={endTime}
@@ -411,18 +403,16 @@ export function SeasonApplicationDrawer({
 
             {/* Notes */}
             <div>
-              <label
+              <Label
                 htmlFor="notes"
                 style={{
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
                 Merknad (valgfritt)
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
