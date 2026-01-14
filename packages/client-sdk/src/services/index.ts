@@ -105,3 +105,6 @@ export { monitoringService } from './monitoring.service';
 // Report Templates
 export { ReportTemplatesService, reportTemplatesService } from './report-templates.service';
 
+// Scheduled Reports
+export { ScheduledReportsService, scheduledReportsService } from './scheduled-reports.service';
+
