@@ -21,6 +21,8 @@ export interface RealtimeClientConfig {
   reconnectInterval?: number;
   maxReconnectAttempts?: number;
   tenantId?: string;
+  /** JWT token for authentication */
+  token?: string;
   /** Enable debug logging (default: false) */
   debug?: boolean;
 }
@@ -61,6 +63,7 @@ class RealtimeClient {
             this.socket.send(JSON.stringify({
               type: 'subscribe',
               tenantId: config.tenantId,
+              token: config.token,
               events: ['booking', 'listing', 'message', 'notification', 'audit'],
             }));
             if (this.debug) console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
