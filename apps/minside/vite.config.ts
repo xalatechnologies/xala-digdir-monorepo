@@ -13,6 +13,8 @@ export default defineConfig({
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
     },
+    // Ensure single instance of React and React Query across all modules
+    dedupe: ['react', 'react-dom', '@tanstack/react-query'],
   },
   optimizeDeps: {
     exclude: ['@digilist/client-sdk'],

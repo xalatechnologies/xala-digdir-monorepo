@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
@@ -14,11 +15,23 @@ import { BookingsPage } from './routes/bookings';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
+
 export function App() {
   return (
-    <ThemeProvider>
-      <AppWithTheme />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AppWithTheme />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

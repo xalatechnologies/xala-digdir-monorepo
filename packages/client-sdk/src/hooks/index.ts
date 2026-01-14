@@ -147,6 +147,7 @@ export {
   useMarkMessagesRead,
   useResolveConversation,
   useReopenConversation,
+  useAssignConversation,
 } from './use-conversations';
 
 // Block hooks
@@ -197,3 +198,20 @@ export {
   type UseGeocodeListingsOptions,
   type UseGeocodeListingsResult,
 } from './use-geocode';
+
+// Accessibility Monitoring hooks
+export {
+  useAccessibilityMonitoring,
+  type UseAccessibilityMonitoringOptions,
+  type AccessibilityMonitoringAPI,
+} from './useAccessibilityMonitoring';
+
+// Help hooks (KRAV-SUP-01, KRAV-SUP-03)
+export {
+  helpKeys,
+  useFaq,
+  useGuides,
+  useTraining,
+  useTooltips,
+  useSubmitContact,
+} from './useHelp';

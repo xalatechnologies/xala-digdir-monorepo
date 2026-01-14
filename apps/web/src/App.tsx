@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet, useOutletContext } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Outlet, useOutletContext } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   AppHeader,
   HeaderLogo,
@@ -21,7 +22,17 @@ import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast } from './components';
+import { RealtimeToast, SkipLinks } from './components';
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -158,6 +169,7 @@ function MainLayout() {
       margin: 0,
       padding: 0
     }}>
+      <SkipLinks />
       {/* CSS for mobile-specific styles */}
       <style>{`
         @media (max-width: 599px) {
@@ -193,7 +205,10 @@ function MainLayout() {
       `}</style>
 
       <AppHeader
+        id="main-navigation"
+        aria-label="Hoved navigasjon"
         sticky={true}
+        showSkipLink={false}
         logo={
           <HeaderLogo
             src="/logo.svg"
@@ -298,16 +313,18 @@ function AppContent() {
 
 export function App() {
   return (
-    <I18nProvider>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <AppContent />
-      </BrowserRouter>
-    </I18nProvider>
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
+          <AppContent />
+        </BrowserRouter>
+      </I18nProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect, type ReactNode, type KeyboardEvent } from 'react';
-import { Button, Heading, Paragraph, Spinner } from '@digdir/designsystemet-react';
+import { Button, Paragraph, Spinner } from '@digdir/designsystemet-react';
 
 // =============================================================================
 // Types

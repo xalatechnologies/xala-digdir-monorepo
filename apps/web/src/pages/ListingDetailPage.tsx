@@ -255,8 +255,8 @@ export function ListingDetailPage(): React.ReactElement {
   if (isLoading) {
     return (
       <ContentLayout maxWidth="1440px">
-        <main id="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <div style={{ textAlign: 'center' }}>
+        <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div role="status" aria-live="polite" aria-busy="true" style={{ textAlign: 'center' }}>
             <Spinner aria-label="Laster innhold..." />
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
               Laster lokale...
@@ -271,8 +271,8 @@ export function ListingDetailPage(): React.ReactElement {
   if (!listing) {
     return (
       <ContentLayout maxWidth="1440px">
-        <main id="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div role="alert" aria-live="assertive" style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Paragraph data-size="lg" style={{ marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-default)' }}>
               Lokalet ble ikke funnet
             </Paragraph>
@@ -308,7 +308,7 @@ export function ListingDetailPage(): React.ReactElement {
 
   return (
     <ContentLayout maxWidth="1440px">
-      <main id="main" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
+      <main id="main-content" style={{ paddingTop: 'var(--ds-spacing-4)', paddingBottom: 'var(--ds-spacing-8)' }}>
         <div style={{ paddingLeft: 'var(--ds-spacing-2)', paddingRight: 'var(--ds-spacing-2)' }}>
           <Breadcrumb items={breadcrumbItems} />
         </div>

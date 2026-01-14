@@ -11,6 +11,7 @@ import type {
   UpdateBookingDTO,
   CancelBookingDTO,
   BookingPricing,
+  BookingReceipt,
   CalendarEvent,
   CalendarQueryParams,
   Allocation,
@@ -118,6 +119,14 @@ export class BookingService extends BaseService {
     weekdays?: number[];
   }): Promise<SingleResponse<Booking[]>> {
     return this.client.post(this.buildPath('/recurring'), data);
+  }
+
+  /**
+   * Get booking receipt/bilag (KRAV-ADM-07)
+   * Returns receipt with hvem/hva/hvor/når for bokføringskrav
+   */
+  async getReceipt(id: string): Promise<SingleResponse<BookingReceipt>> {
+    return this.client.get(this.buildPath(`/${id}/receipt`));
   }
 }
 

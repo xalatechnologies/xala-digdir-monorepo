@@ -8,7 +8,7 @@
 import React, { forwardRef } from 'react';
 import { Select, Button } from '@digdir/designsystemet-react';
 import { Grid, Stack } from '../primitives';
-import { FilterIcon, GridIcon, ListIcon, MapIcon } from '../primitives/icons';
+import { GridIcon, ListIcon, MapIcon } from '../primitives/icons';
 import type { FilterConfig, ListingType } from '../types/filters';
 
 export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {

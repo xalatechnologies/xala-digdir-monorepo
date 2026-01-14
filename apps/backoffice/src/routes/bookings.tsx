@@ -32,6 +32,7 @@ import {
   useBookings,
   useConfirmBooking,
   useCancelBooking,
+  useUpdateBooking,
   useListings,
   useUsers,
   type BookingStatus,
@@ -40,6 +41,7 @@ import {
   formatTime,
 } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
+import { EditBookingForm } from '../components/bookings/EditBookingForm';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
@@ -96,6 +98,8 @@ export function BookingsPage() {
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Filter state - default to 'pending' to show actionable items first
@@ -178,6 +182,7 @@ export function BookingsPage() {
 
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
+  const updateBooking = useUpdateBooking();
   const { confirm } = useDialog();
 
   // Tab counts
@@ -251,6 +256,82 @@ export function BookingsPage() {
     setDateFrom('');
     setDateTo('');
   }, []);
+
+  // Edit handlers
+  const handleEdit = (booking: Booking) => {
+    setEditingBooking(booking);
+    setIsEditDrawerOpen(true);
+    setSelectedBooking(null); // Close detail drawer
+  };
+
+  const handleEditSubmit = async (data: any) => {
+    if (editingBooking) {
+      await updateBooking.mutateAsync({ id: editingBooking.id, data });
+      setIsEditDrawerOpen(false);
+      setEditingBooking(null);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setIsEditDrawerOpen(false);
+    setEditingBooking(null);
+  };
+
+  // Bulk actions
+  const handleBulkConfirm = async () => {
+    const confirmed = await confirm({
+      title: t('bookings.bulkConfirm'),
+      description: `Godkjenn ${selectedIds.length} bookinger?`,
+      confirmText: 'Godkjenn alle',
+      cancelText: t('common.abort'),
+      variant: 'primary',
+    });
+    if (confirmed) {
+      for (const id of selectedIds) {
+        await confirmBooking.mutateAsync(id);
+      }
+      setSelectedIds([]);
+    }
+  };
+
+  const handleBulkCancel = async () => {
+    const confirmed = await confirm({
+      title: t('bookings.bulkCancel'),
+      description: `Avslå ${selectedIds.length} bookinger?`,
+      confirmText: 'Avslå alle',
+      cancelText: t('common.abort'),
+      variant: 'danger',
+    });
+    if (confirmed) {
+      for (const id of selectedIds) {
+        await cancelBooking.mutateAsync({ id });
+      }
+      setSelectedIds([]);
+    }
+  };
+
+  const handleBulkExport = () => {
+    // Export selected bookings to CSV
+    const selectedBookings = bookings.filter(b => selectedIds.includes(b.id));
+    const csvContent = [
+      ['ID', 'Lokale', 'Bruker', 'Starttid', 'Sluttid', 'Status', 'Pris'].join(','),
+      ...selectedBookings.map(b => [
+        b.id,
+        b.listingName || b.listingId,
+        b.userName || b.userId,
+        b.startTime,
+        b.endTime,
+        b.status,
+        b.totalPrice || 0,
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `bookinger-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
 
   // Get display values for a booking (with user/listing name resolution)
   const getBookingDisplayValues = (booking: Booking) => {
@@ -427,6 +508,23 @@ export function BookingsPage() {
         </DrawerSection>
       </Drawer>
 
+      {/* Edit Booking Drawer */}
+      {isEditDrawerOpen && editingBooking && (
+        <Drawer
+          isOpen={isEditDrawerOpen}
+          onClose={handleEditCancel}
+          title="Rediger booking"
+          position="right"
+          size="xl"
+        >
+          <EditBookingForm
+            booking={editingBooking}
+            onSubmit={handleEditSubmit}
+            onCancel={handleEditCancel}
+          />
+        </Drawer>
+      )}
+
       {/* Detail Drawer */}
       <Drawer
         isOpen={!!selectedBooking}
@@ -475,13 +573,24 @@ export function BookingsPage() {
                   </Button>
                 )}
               </div>
-              <Button
-                type="button"
-                variant="tertiary"
-                onClick={() => setSelectedBooking(null)}
-              >
-                Lukk
-              </Button>
+              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+                {selectedBooking.status !== 'cancelled' && selectedBooking.status !== 'completed' && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => handleEdit(selectedBooking)}
+                  >
+                    Rediger
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  onClick={() => setSelectedBooking(null)}
+                >
+                  Lukk
+                </Button>
+              </div>
             </div>
           )
         }
@@ -884,6 +993,107 @@ export function BookingsPage() {
                 </div>
               </div>
 
+              {/* Payment & Invoice Details */}
+              <div style={{
+                padding: 'var(--ds-spacing-4)',
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                border: '1px solid var(--ds-color-neutral-border-subtle)'
+              }}>
+                <Text size="xs" color="var(--ds-color-neutral-text-subtle)" style={{ textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 'var(--ds-spacing-3)', display: 'block' }}>
+                  💳 Betaling & Faktura
+                </Text>
+
+                <Stack spacing="var(--ds-spacing-3)">
+                  {/* Payment Status */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Status</Text>
+                    <PaymentStatusBadge status={selectedBooking.paymentStatus || 'unpaid'} />
+                  </div>
+
+                  {/* Payment Method */}
+                  {selectedBooking.paymentMethod && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalingsmetode</Text>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {selectedBooking.paymentMethod === 'vipps' ? 'Vipps' :
+                         selectedBooking.paymentMethod === 'card' ? 'Kort' :
+                         selectedBooking.paymentMethod === 'invoice' ? 'Faktura' :
+                         selectedBooking.paymentMethod}
+                      </Paragraph>
+                    </div>
+                  )}
+
+                  {/* Transaction ID */}
+                  {selectedBooking.transactionId && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Transaksjon-ID</Text>
+                      <code style={{
+                        fontFamily: 'monospace',
+                        fontSize: 'var(--ds-font-size-xs)',
+                        padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        borderRadius: 'var(--ds-border-radius-sm)'
+                      }}>
+                        {selectedBooking.transactionId}
+                      </code>
+                    </div>
+                  )}
+
+                  {/* Payment Date */}
+                  {selectedBooking.paidAt && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Betalt</Text>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {new Date(selectedBooking.paidAt).toLocaleDateString(formatLocale, {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </Paragraph>
+                    </div>
+                  )}
+
+                  {/* Invoice Number */}
+                  {selectedBooking.invoiceNumber && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Fakturanummer</Text>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        #{selectedBooking.invoiceNumber}
+                      </Paragraph>
+                    </div>
+                  )}
+
+                  {/* Price Breakdown */}
+                  <div style={{
+                    marginTop: 'var(--ds-spacing-2)',
+                    paddingTop: 'var(--ds-spacing-3)',
+                    borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">Grunnpris</Text>
+                      <Text size="sm">
+                        {(Number(selectedBooking.totalPrice) * 0.8).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
+                      </Text>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">MVA (25%)</Text>
+                      <Text size="sm">
+                        {(Number(selectedBooking.totalPrice) * 0.2).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
+                      </Text>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 'var(--ds-spacing-2)', borderTop: '1px solid var(--ds-color-neutral-border-default)' }}>
+                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Totalt</Text>
+                      <Text size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                        {(Number(selectedBooking.totalPrice) || 0).toLocaleString(formatLocale)} {selectedBooking.currency || 'NOK'}
+                      </Text>
+                    </div>
+                  </div>
+                </Stack>
+              </div>
+
               {/* Notes/Purpose */}
               {selectedBooking.notes && (
                 <div style={{
@@ -1114,23 +1324,60 @@ export function BookingsPage() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Batch actions for pending tab */}
-          {activeTab === 'pending' && selectedIds.length > 0 && (
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+          {/* Bulk actions */}
+          {selectedIds.length > 0 && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-2)',
+              padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+              backgroundColor: 'var(--ds-color-accent-surface-default)',
+              borderRadius: 'var(--ds-border-radius-md)',
+              border: '1px solid var(--ds-color-accent-border-default)',
+            }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
+                {selectedIds.length} valgt
+              </Paragraph>
+              {activeTab === 'pending' && (
+                <>
+                  <Button
+                    type="button"
+                    variant="tertiary"
+                    data-size="sm"
+                    onClick={handleBulkConfirm}
+                    disabled={confirmBooking.isPending}
+                    style={{ color: 'var(--ds-color-success-text-default)' }}
+                  >
+                    <CheckIcon /> Godkjenn
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="tertiary"
+                    data-size="sm"
+                    onClick={handleBulkCancel}
+                    disabled={cancelBooking.isPending}
+                    style={{ color: 'var(--ds-color-danger-text-default)' }}
+                  >
+                    <CloseIcon /> Avslå
+                  </Button>
+                </>
+              )}
               <Button
                 type="button"
                 variant="tertiary"
                 data-size="sm"
-                onClick={async () => {
-                  for (const id of selectedIds) {
-                    await confirmBooking.mutateAsync(id);
-                  }
-                  setSelectedIds([]);
-                }}
-                disabled={confirmBooking.isPending}
-                style={{ color: 'var(--ds-color-success-text-default)' }}
+                onClick={handleBulkExport}
               >
-                <CheckIcon /> Godkjenn alle ({selectedIds.length})
+                <DownloadIcon /> Eksporter
+              </Button>
+              <Button
+                type="button"
+                variant="tertiary"
+                data-size="sm"
+                onClick={() => setSelectedIds([])}
+                style={{ marginLeft: 'auto' }}
+              >
+                <CloseIcon /> Avbryt
               </Button>
             </div>
           )}

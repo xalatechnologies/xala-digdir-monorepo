@@ -5,7 +5,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Container, Grid, Stack } from '../primitives';
+import { Container, Grid } from '../primitives';
 
 export interface ContentLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

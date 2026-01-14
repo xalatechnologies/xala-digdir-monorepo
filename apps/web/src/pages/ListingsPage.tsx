@@ -19,6 +19,7 @@ import {
   ListingGrid,
   ListingToolbar,
   ListingMap,
+  ListingTableView,
   Stack,
   Text,
   HeaderSearch,
@@ -288,6 +289,7 @@ export function ListingsPage(): React.ReactElement {
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [listingType, setListingType] = React.useState<string>('ALL');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
+  const [showMapView, setShowMapView] = React.useState<boolean>(true); // Toggle between map and accessible table
   const [selectedArea, setSelectedArea] = React.useState<string>('all');
   const [selectedCapacity, setSelectedCapacity] = React.useState<string>('all');
   const [selectedFacilities, setSelectedFacilities] = React.useState<string[]>([]);
@@ -520,7 +522,7 @@ export function ListingsPage(): React.ReactElement {
       </Drawer>
 
       <ContentLayout maxWidth="1440px" className="main-content-layout">
-        <main id="main" style={{ paddingTop: 'var(--ds-spacing-6)', paddingBottom: 'var(--ds-spacing-6)' }}>
+        <main id="main-content" style={{ paddingTop: 'var(--ds-spacing-6)', paddingBottom: 'var(--ds-spacing-6)' }}>
           {/* Search */}
           <div className="mobile-search-wrapper" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             <HeaderSearch
@@ -536,21 +538,30 @@ export function ListingsPage(): React.ReactElement {
 
           {/* Loading State */}
           {isLoading && (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}>
+            <div
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}
+            >
               <Spinner aria-label="Laster lokaler..." />
             </div>
           )}
 
           {/* Error State */}
           {error && !isLoading && (
-            <div style={{
-              padding: 'var(--ds-spacing-6)',
-              marginBottom: 'var(--ds-spacing-4)',
-              backgroundColor: 'var(--ds-color-danger-surface-default)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              border: '1px solid var(--ds-color-danger-border-default)',
-              textAlign: 'center',
-            }}>
+            <div
+              role="alert"
+              aria-live="assertive"
+              style={{
+                padding: 'var(--ds-spacing-6)',
+                marginBottom: 'var(--ds-spacing-4)',
+                backgroundColor: 'var(--ds-color-danger-surface-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                border: '1px solid var(--ds-color-danger-border-default)',
+                textAlign: 'center',
+              }}
+            >
               <Text size="md" color="var(--ds-color-danger-text-default)">
                 Kunne ikke laste lokaler. Prøv igjen senere.
               </Text>
@@ -652,28 +663,75 @@ export function ListingsPage(): React.ReactElement {
                   ))}
                 </Stack>
               ) : (
-                <ListingMap
-                  listings={filteredListings.map(l => ({
-                    id: l.id,
-                    name: l.name,
-                    ...(l.slug && { slug: l.slug }),
-                    location: l.location,
-                    image: l.image,
-                    latitude: l.latitude!,
-                    longitude: l.longitude!,
-                    type: l.type,
-                    listingType: l.listingType,
-                    description: l.description,
-                    capacity: l.capacity,
-                    price: l.price,
-                    priceUnit: l.priceUnit,
-                    facilities: l.facilities,
-                    available: l.available,
-                  }))}
-                  mapboxToken={MAPBOX_TOKEN || ''}
-                  height="calc(100vh - 250px)"
-                  onListingClick={handleListingClick}
-                />
+                <>
+                  {/* Map/Table View Toggle for Accessibility */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      marginBottom: 'var(--ds-spacing-4)',
+                      gap: 'var(--ds-spacing-3)',
+                    }}
+                  >
+                    <Button
+                      type="button"
+                      variant={showMapView ? 'primary' : 'secondary'}
+                      onClick={() => setShowMapView(true)}
+                      aria-pressed={showMapView}
+                    >
+                      Kartvisning
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={!showMapView ? 'primary' : 'secondary'}
+                      onClick={() => setShowMapView(false)}
+                      aria-pressed={!showMapView}
+                      aria-label="Vis tabellvisning (tilgjengelig for skjermlesere og tastaturnavigering)"
+                    >
+                      Tabellvisning
+                    </Button>
+                  </div>
+
+                  {showMapView ? (
+                    <ListingMap
+                      listings={filteredListings.map(l => ({
+                        id: l.id,
+                        name: l.name,
+                        ...(l.slug && { slug: l.slug }),
+                        location: l.location,
+                        image: l.image,
+                        latitude: l.latitude!,
+                        longitude: l.longitude!,
+                        type: l.type,
+                        listingType: l.listingType,
+                        description: l.description,
+                        capacity: l.capacity,
+                        price: l.price,
+                        priceUnit: l.priceUnit,
+                        facilities: l.facilities,
+                        available: l.available,
+                      }))}
+                      mapboxToken={MAPBOX_TOKEN || ''}
+                      height="calc(100vh - 250px)"
+                      onListingClick={handleListingClick}
+                    />
+                  ) : (
+                    <ListingTableView
+                      listings={filteredListings.map(l => ({
+                        id: l.id,
+                        name: l.name,
+                        ...(l.slug && { slug: l.slug }),
+                        location: l.location,
+                        type: l.type,
+                        capacity: l.capacity,
+                        price: l.price,
+                        priceUnit: l.priceUnit,
+                      }))}
+                      height="calc(100vh - 250px)"
+                      onListingClick={handleListingClick}
+                    />
+                  )}
+                </>
               )}
 
               {/* Show more */}

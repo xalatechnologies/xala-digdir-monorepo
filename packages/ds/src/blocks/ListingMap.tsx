@@ -164,7 +164,7 @@ function useColorScheme(colorScheme: 'light' | 'dark' | 'auto'): 'light' | 'dark
 export function ListingMap({
   listings,
   mapboxToken,
-  initialZoom = 12,
+  initialZoom: _initialZoom = 12,
   height = '600px',
   onListingClick,
   mapStyle,

@@ -8,7 +8,6 @@ import * as React from 'react';
 import { cn } from '../utils';
 import {
   UsersIcon,
-  MapPinIcon,
   CalendarIcon,
   ClockIcon,
   CheckCircleIcon,

@@ -181,7 +181,7 @@ export function ListingCard({
   showDescription = true,
   showLocation = true,
   showTypeBadge = true,
-  showAvailabilityBadge = true,
+  showAvailabilityBadge: _showAvailabilityBadge = true,
   showGradientOverlay = true,
   showFavoriteButton = true,
   showShareButton = true,

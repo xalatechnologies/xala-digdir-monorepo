@@ -141,6 +141,13 @@ class ConversationService {
   }
 
   /**
+   * Assign a conversation to a user/admin
+   */
+  async assign(conversationId: string, assigneeId: string): Promise<{ data: Conversation }> {
+    return getClient().put<{ data: Conversation }>(`${this.basePath}/${conversationId}/assign`, { assigneeId });
+  }
+
+  /**
    * Get unread conversation count
    */
   async getUnreadCount(): Promise<{ data: { count: number } }> {

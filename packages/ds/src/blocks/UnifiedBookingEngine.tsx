@@ -26,7 +26,6 @@ import type {
   BookingPriceCalculation,
   AvailabilitySlot,
   DayAvailability,
-  BookingStepConfig,
   PriceItem,
   BookingPricing,
 } from '../types/booking';
@@ -319,7 +318,7 @@ function DailyModeView({
  */
 function DateRangeModeView({
   calendarDate,
-  dayAvailability,
+  dayAvailability: _dayAvailability,
   selection,
   onRangeSelect,
   onMonthChange,
@@ -671,10 +670,10 @@ function EventModeView({
  * Recurring Mode View - Set up weekly recurring booking
  */
 function RecurringModeView({
-  config,
+  config: _config,
   selection,
   onRecurringChange,
-  formatPrice,
+  formatPrice: _formatPrice,
   priceCalculation,
   onContinue,
   canContinue,
@@ -858,8 +857,8 @@ function RecurringModeView({
  */
 function InstantModeView({
   config,
-  formatPrice,
-  priceCalculation,
+  formatPrice: _formatPrice,
+  priceCalculation: _priceCalculation,
   onContinue,
 }: {
   config: BookingConfig;

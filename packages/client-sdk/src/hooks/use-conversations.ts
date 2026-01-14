@@ -158,5 +158,21 @@ export function useReopenConversation() {
   });
 }
 
+/**
+ * Assign a conversation to a user/admin
+ */
+export function useAssignConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ conversationId, assigneeId }: { conversationId: string; assigneeId: string }) => 
+      conversationService.assign(conversationId, assigneeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: conversationKeys.all });
+    },
+  });
+}
+
 // Re-export types for convenience
 export type { Conversation, Message, CreateConversationDTO, SendMessageDTO };
+

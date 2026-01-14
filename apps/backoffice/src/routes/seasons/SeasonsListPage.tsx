@@ -1,0 +1,239 @@
+/**
+ * Seasons List Page
+ * Admin view for managing seasonal lease seasons
+ */
+
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Button,
+  Badge,
+  Table,
+  Dropdown,
+  Spinner,
+  PlusIcon,
+  MoreVerticalIcon,
+  CalendarIcon,
+  EditIcon,
+  TrashIcon,
+  EyeIcon,
+  HeaderSearch,
+} from '@xala/ds';
+import {
+  useSeasons,
+  useDeleteSeason,
+  type Season,
+  type SeasonStatus,
+} from '@digilist/client-sdk';
+import { StatusBadge } from '../../components/shared';
+
+const statusLabels: Record<SeasonStatus, string> = {
+  draft: 'Utkast',
+  open: 'Åpen',
+  closed: 'Lukket',
+  assigned: 'Tildelt',
+};
+
+const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+  draft: 'neutral',
+  open: 'info',
+  closed: 'warning',
+  assigned: 'success',
+};
+
+export function SeasonsListPage() {
+  const navigate = useNavigate();
+
+  // State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
+
+  // Queries
+  const { data: seasonsData, isLoading } = useSeasons({
+    status: statusFilter === 'all' ? undefined : statusFilter,
+  });
+  const seasons = seasonsData?.data ?? [];
+
+  // Mutations
+  const deleteSeasonMutation = useDeleteSeason();
+
+  // Filtered seasons
+  const filteredSeasons = seasons.filter(season => {
+    if (!searchQuery) return true;
+    return season.name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+  // Handlers
+  const handleDelete = async (id: string) => {
+    if (confirm('Er du sikker på at du vil slette denne sesongen?')) {
+      await deleteSeasonMutation.mutateAsync(id);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('nb-NO', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <Heading level={2} data-size="md">
+            Sesongleie
+          </Heading>
+          <Paragraph
+            data-size="sm"
+            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
+          >
+            Administrer sesonger, søknader og tildelinger
+          </Paragraph>
+        </div>
+        <Link to="/seasons/new">
+          <Button size="md">
+            <PlusIcon />
+            Ny sesong
+          </Button>
+        </Link>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
+            <HeaderSearch
+              placeholder="Søk etter sesong..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClear={() => setSearchQuery('')}
+            />
+          </div>
+
+          <Dropdown>
+            <Dropdown.Trigger asChild>
+              <Button variant="secondary" size="sm">
+                Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setStatusFilter('all')}>Alle</Dropdown.Item>
+              <Dropdown.Item onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Item>
+              <Dropdown.Item onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Item>
+              <Dropdown.Item onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Item>
+              <Dropdown.Item onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      </Card>
+
+      {/* Results */}
+      <Card>
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
+            <Spinner size="lg" />
+          </div>
+        ) : filteredSeasons.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
+            <CalendarIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
+            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+              Ingen sesonger funnet
+            </Heading>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {searchQuery || statusFilter !== 'all'
+                ? 'Prøv å endre søkekriteriene'
+                : 'Opprett din første sesong for å komme i gang'}
+            </Paragraph>
+            {!searchQuery && statusFilter === 'all' && (
+              <Link to="/seasons/new">
+                <Button size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }}>
+                  <PlusIcon />
+                  Ny sesong
+                </Button>
+              </Link>
+            )}
+          </div>
+        ) : (
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>Periode</Table.HeaderCell>
+                <Table.HeaderCell>Søknadsfrist</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>Lokaler</Table.HeaderCell>
+                <Table.HeaderCell>Søknader</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {filteredSeasons.map(season => (
+                <Table.Row key={season.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/seasons/${season.id}`)}>
+                  <Table.Cell>
+                    <div style={{ fontWeight: 500 }}>{season.name}</div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                      {formatDate(season.startDate)} – {formatDate(season.endDate)}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                      {formatDate(season.applicationDeadline)}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Badge color={statusVariants[season.status]}>
+                      {statusLabels[season.status]}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                      {season.venueCount || 0} lokaler
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
+                      {season.applicationCount || 0} søknader
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell onClick={(e) => e.stopPropagation()}>
+                    <Dropdown>
+                      <Dropdown.Trigger asChild>
+                        <Button variant="tertiary" size="sm">
+                          <MoreVerticalIcon />
+                        </Button>
+                      </Dropdown.Trigger>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => navigate(`/seasons/${season.id}`)}>
+                          <EyeIcon />
+                          Vis detaljer
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => navigate(`/seasons/${season.id}/edit`)}>
+                          <EditIcon />
+                          Rediger
+                        </Dropdown.Item>
+                        {season.status === 'draft' && (
+                          <Dropdown.Item onClick={() => handleDelete(season.id)} color="danger">
+                            <TrashIcon />
+                            Slett
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        )}
+      </Card>
+    </div>
+  );
+}

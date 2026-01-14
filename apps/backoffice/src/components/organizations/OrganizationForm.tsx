@@ -1,0 +1,261 @@
+/**
+ * Organization Form Component
+ * Create and edit organization with validation
+ */
+
+import { useState, useEffect } from 'react';
+import {
+  Stack,
+  FormField,
+  TextField,
+  Select,
+} from '@xala/ds';
+import type {
+  Organization,
+  CreateOrganizationDTO,
+  ActorType,
+} from '@digilist/client-sdk';
+import { FormSection, FormActions } from '../shared';
+
+interface OrganizationFormProps {
+  organization?: Organization | null;
+  onSubmit: (data: CreateOrganizationDTO) => Promise<void>;
+  onCancel: () => void;
+}
+
+const actorTypeOptions = [
+  { value: 'private', label: 'Privatperson' },
+  { value: 'business', label: 'Bedrift' },
+  { value: 'sports_club', label: 'Idrettslag' },
+  { value: 'youth_organization', label: 'Ungdomsorganisasjon' },
+  { value: 'school', label: 'Skole' },
+  { value: 'municipality', label: 'Kommune' },
+];
+
+export function OrganizationForm({ organization, onSubmit, onCancel }: OrganizationFormProps) {
+  const [formData, setFormData] = useState<CreateOrganizationDTO>({
+    name: '',
+    actorType: 'business',
+    organizationNumber: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    postalCode: '',
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Pre-fill form if editing
+  useEffect(() => {
+    if (organization) {
+      setFormData({
+        name: organization.name,
+        actorType: organization.actorType,
+        organizationNumber: organization.organizationNumber || '',
+        email: organization.email || '',
+        phone: organization.phone || '',
+        address: organization.address || '',
+        city: organization.city || '',
+        postalCode: organization.postalCode || '',
+      });
+    }
+  }, [organization]);
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Navn er påkrevd';
+    }
+
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Ugyldig e-postadresse';
+    }
+
+    if (formData.organizationNumber && !/^\d{9}$/.test(formData.organizationNumber.replace(/\s/g, ''))) {
+      newErrors.organizationNumber = 'Organisasjonsnummer må være 9 siffer';
+    }
+
+    if (formData.postalCode && !/^\d{4}$/.test(formData.postalCode)) {
+      newErrors.postalCode = 'Postnummer må være 4 siffer';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Clean up empty strings
+      const cleanData: CreateOrganizationDTO = {
+        ...formData,
+        organizationNumber: formData.organizationNumber?.trim() || undefined,
+        email: formData.email?.trim() || undefined,
+        phone: formData.phone?.trim() || undefined,
+        address: formData.address?.trim() || undefined,
+        city: formData.city?.trim() || undefined,
+        postalCode: formData.postalCode?.trim() || undefined,
+      };
+
+      await onSubmit(cleanData);
+    } catch (error) {
+      console.error('Failed to save organization:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (field: keyof CreateOrganizationDTO) => (value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Stack gap={5}>
+        {/* Basic Information */}
+        <FormSection title="Grunnleggende informasjon">
+          <Stack gap={4}>
+            <FormField
+              label="Navn"
+              required
+              error={errors.name}
+              description="Organisasjonens fulle navn"
+            >
+              <TextField
+                value={formData.name}
+                onChange={(e) => handleChange('name')(e.target.value)}
+                placeholder="F.eks. Oslo Idrettslag"
+                error={!!errors.name}
+              />
+            </FormField>
+
+            <FormField
+              label="Type organisasjon"
+              required
+              description="Organisasjonstype påvirker prisregler og rabatter"
+            >
+              <Select
+                value={formData.actorType}
+                onChange={(e) => handleChange('actorType')(e.target.value as ActorType)}
+              >
+                {actorTypeOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </FormField>
+
+            <FormField
+              label="Organisasjonsnummer"
+              error={errors.organizationNumber}
+              description="9 siffer (valgfritt)"
+            >
+              <TextField
+                value={formData.organizationNumber || ''}
+                onChange={(e) => handleChange('organizationNumber')(e.target.value)}
+                placeholder="123456789"
+                error={!!errors.organizationNumber}
+                maxLength={9}
+              />
+            </FormField>
+          </Stack>
+        </FormSection>
+
+        {/* Contact Information */}
+        <FormSection title="Kontaktinformasjon">
+          <Stack gap={4}>
+            <FormField
+              label="E-post"
+              error={errors.email}
+              description="Primær e-postadresse"
+            >
+              <TextField
+                type="email"
+                value={formData.email || ''}
+                onChange={(e) => handleChange('email')(e.target.value)}
+                placeholder="kontakt@organisasjon.no"
+                error={!!errors.email}
+              />
+            </FormField>
+
+            <FormField
+              label="Telefon"
+              description="Kontakttelefon"
+            >
+              <TextField
+                type="tel"
+                value={formData.phone || ''}
+                onChange={(e) => handleChange('phone')(e.target.value)}
+                placeholder="+47 12 34 56 78"
+              />
+            </FormField>
+          </Stack>
+        </FormSection>
+
+        {/* Address */}
+        <FormSection title="Adresse">
+          <Stack gap={4}>
+            <FormField
+              label="Gateadresse"
+              description="F.eks. Storgata 1"
+            >
+              <TextField
+                value={formData.address || ''}
+                onChange={(e) => handleChange('address')(e.target.value)}
+                placeholder="Gateadresse"
+              />
+            </FormField>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--ds-spacing-3)' }}>
+              <FormField
+                label="Postnummer"
+                error={errors.postalCode}
+              >
+                <TextField
+                  value={formData.postalCode || ''}
+                  onChange={(e) => handleChange('postalCode')(e.target.value)}
+                  placeholder="0001"
+                  error={!!errors.postalCode}
+                  maxLength={4}
+                />
+              </FormField>
+
+              <FormField label="Poststed">
+                <TextField
+                  value={formData.city || ''}
+                  onChange={(e) => handleChange('city')(e.target.value)}
+                  placeholder="Oslo"
+                />
+              </FormField>
+            </div>
+          </Stack>
+        </FormSection>
+
+        {/* Actions */}
+        <FormActions
+          submitText={organization ? 'Lagre endringer' : 'Opprett organisasjon'}
+          onCancel={onCancel}
+          isSubmitting={isSubmitting}
+        />
+      </Stack>
+    </form>
+  );
+}

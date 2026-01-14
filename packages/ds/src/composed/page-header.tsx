@@ -5,7 +5,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Heading, Button } from '@digdir/designsystemet-react';
+import { Heading } from '@digdir/designsystemet-react';
 
 export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

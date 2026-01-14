@@ -143,7 +143,7 @@ export function AvailabilityCalendar({
   };
 
   // Determine slot status including selection
-  const getSlotStatus = (slot: TimeSlot | undefined, date: Date, hour: number): TimeSlotStatus => {
+  const getSlotStatus = (slot: TimeSlot | undefined, _date: Date, _hour: number): TimeSlotStatus => {
     if (!slot) return 'unavailable';
     if (isSlotSelected(slot)) return 'selected';
     return slot.status;
