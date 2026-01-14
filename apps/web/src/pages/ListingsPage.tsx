@@ -261,19 +261,18 @@ export function ListingsPage(): React.ReactElement {
           // Mark as in progress
           geocodingInProgress.current.add(listing.id);
 
-          // Get the display location from transformed listing
+          // Get the display location from transformed listing (already handles all structures)
           const transformed = transformListing(listing);
           const displayLocation = typeof transformed.location === 'string' ? transformed.location : '';
 
-          // Try structured address first, fall back to display location
-          const locationMeta = listing.metadata?.location;
-          // Check root level fields (if API returns them)
-          const rootAddress = (listing as unknown as { address?: string }).address;
-          const rootPostalCode = (listing as unknown as { postalCode?: string }).postalCode;
-          const rootCity = (listing as unknown as { city?: string }).city;
+          // Build structured address for geocoding - handle metadata.address as object
+          const metadata = listing.metadata || {};
+          const locationMeta = metadata.location || {};
+          const addressObj = metadata.address;
+          const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
+          const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
           
-          // Build structured address from all possible sources
-          // Ensure all parts are strings, not objects
+          // Extract address components - prioritize object structure (API format)
           const addressParts: string[] = [];
           const addPart = (part: unknown) => {
             if (typeof part === 'string' && part.trim()) {
@@ -281,15 +280,21 @@ export function ListingsPage(): React.ReactElement {
             }
           };
           
-          addPart(rootAddress);
-          addPart(listing.metadata?.address);
-          addPart(locationMeta?.address);
-          addPart(rootPostalCode);
-          addPart(listing.metadata?.postalCode);
-          addPart(locationMeta?.postalCode);
-          addPart(rootCity);
-          addPart(listing.metadata?.city);
-          addPart(locationMeta?.city);
+          // Handle metadata.address as object with {street, city, postalCode}
+          if (addressObjTyped) {
+            addPart(addressObjTyped.street);
+            addPart(addressObjTyped.address); // fallback if street doesn't exist
+            addPart(addressObjTyped.postalCode);
+            addPart(addressObjTyped.city);
+          }
+          
+          // Fallback to other structures
+          addPart(locationMeta.address);
+          addPart(metadata.address as string); // if it's a string, not object
+          addPart(locationMeta.postalCode);
+          addPart(metadata.postalCode);
+          addPart(locationMeta.city);
+          addPart(metadata.city);
           
           const structuredAddress = addressParts.length > 0 ? addressParts.join(', ') : '';
 
@@ -313,7 +318,7 @@ export function ListingsPage(): React.ReactElement {
           geocodingInProgress.current.delete(listing.id);
 
           if (coords) {
-            console.log('[Geocoding] Success:', listing.name, coords);
+            console.log('[Geocoding] Success:', listing.name, coords.lat, coords.lng);
             return { id: listing.id, coords };
           } else {
             console.log('[Geocoding] Failed:', listing.name);
@@ -751,23 +756,25 @@ export function ListingsPage(): React.ReactElement {
 
                   {showMapView ? (
                     <ListingMap
-                      listings={filteredListings.map(l => ({
-                        id: l.id,
-                        name: l.name,
-                        ...(l.slug && { slug: l.slug }),
-                        location: l.location,
-                        image: l.image,
-                        latitude: l.latitude!,
-                        longitude: l.longitude!,
-                        type: l.type,
-                        listingType: l.listingType,
-                        description: l.description,
-                        capacity: l.capacity,
-                        price: l.price,
-                        priceUnit: l.priceUnit,
-                        facilities: l.facilities,
-                        available: l.available,
-                      }))}
+                      listings={filteredListings
+                        .filter(l => l.latitude !== undefined && l.longitude !== undefined)
+                        .map(l => ({
+                          id: l.id,
+                          name: l.name,
+                          ...(l.slug && { slug: l.slug }),
+                          location: l.location,
+                          image: l.image,
+                          latitude: l.latitude!,
+                          longitude: l.longitude!,
+                          type: l.type,
+                          listingType: l.listingType,
+                          description: l.description,
+                          capacity: l.capacity,
+                          price: l.price,
+                          priceUnit: l.priceUnit,
+                          facilities: l.facilities,
+                          available: l.available,
+                        }))}
                       mapboxToken={MAPBOX_TOKEN || ''}
                       height="calc(100vh - 250px)"
                       onListingClick={handleListingClick}

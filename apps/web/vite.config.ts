@@ -134,5 +134,13 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@digilist/client-sdk'],
+    include: [
+      'mapbox-gl',
+      'react-map-gl/mapbox',
+    ],
+    esbuildOptions: {
+      // Mapbox GL requires these Node.js polyfills
+      target: 'esnext',
+    },
   },
 });

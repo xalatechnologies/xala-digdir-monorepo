@@ -286,22 +286,56 @@ export function transformListing(listing: Listing): UiListing {
   const amenities = metadata.amenities || [];
   const maxFacilities = 3;
 
-  // Build location string - check multiple possible locations:
-  // 1. Root level (if API returns it, even if not in type)
-  // 2. metadata.address/city/postalCode (flat structure)
-  // 3. metadata.location.address/city/postalCode (nested structure)
-  const address = (listing as unknown as { address?: string }).address 
-    || metadata.address 
-    || location.address;
-  const postalCode = (listing as unknown as { postalCode?: string }).postalCode
-    || metadata.postalCode 
-    || location.postalCode;
-  const city = (listing as unknown as { city?: string }).city
-    || metadata.city 
-    || location.city;
+  // Build location string - check ALL possible locations in order of preference:
+  // API returns metadata.address as an OBJECT with {city, street, postalCode}
+  // 1. metadata.address.* (object structure: {city, street, postalCode})
+  // 2. metadata.location.* (nested location object)
+  // 3. metadata.* (flat metadata structure - strings)
+  // 4. Root level fields (if API returns them directly on listing)
+  
+  const listingAny = listing as unknown as Record<string, unknown>;
+  
+  // Handle metadata.address as object (API structure)
+  const addressObj = metadata.address;
+  const isAddressObject = addressObj && typeof addressObj === 'object' && !Array.isArray(addressObj);
+  const addressObjTyped = isAddressObject ? addressObj as Record<string, unknown> : null;
+  
+  // Extract address components - prioritize object structure
+  const street = 
+    (addressObjTyped && typeof addressObjTyped.street === 'string' ? addressObjTyped.street : null) ||
+    (addressObjTyped && typeof addressObjTyped.address === 'string' ? addressObjTyped.address : null) ||
+    (typeof location.address === 'string' ? location.address : null) ||
+    (typeof metadata.address === 'string' ? metadata.address : null) ||
+    (typeof listingAny.address === 'string' ? listingAny.address : null) ||
+    null;
+    
+  const postalCode = 
+    (addressObjTyped && typeof addressObjTyped.postalCode === 'string' ? addressObjTyped.postalCode : null) ||
+    (typeof location.postalCode === 'string' ? location.postalCode : null) ||
+    (typeof metadata.postalCode === 'string' ? metadata.postalCode : null) ||
+    (typeof listingAny.postalCode === 'string' ? listingAny.postalCode : null) ||
+    null;
+    
+  const city = 
+    (addressObjTyped && typeof addressObjTyped.city === 'string' ? addressObjTyped.city : null) ||
+    (typeof location.city === 'string' ? location.city : null) ||
+    (typeof metadata.city === 'string' ? metadata.city : null) ||
+    (typeof listingAny.city === 'string' ? listingAny.city : null) ||
+    null;
 
   // Filter out empty strings and build location parts
-  const locationParts = [address, postalCode, city].filter(part => part && typeof part === 'string');
+  // Prefer: street, postalCode, city (if street exists) OR city, postalCode (if no street)
+  const locationParts: string[] = [];
+  if (street) {
+    locationParts.push(street);
+    if (postalCode) locationParts.push(postalCode);
+    if (city) locationParts.push(city);
+  } else {
+    // No street, use city and postalCode
+    if (city) locationParts.push(city);
+    if (postalCode) locationParts.push(postalCode);
+  }
+  
   const locationString = locationParts.length > 0 ? locationParts.join(', ') : 'Ukjent lokasjon';
 
   // Use listing type label as display type
