@@ -192,7 +192,7 @@ export function SeasonAllocationManagement({
       {/* Applications by venue */}
       {Object.keys(applicationsByVenue).length === 0 ? (
         <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <CalendarIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
+          <CalendarIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Ingen godkjente søknader
           </Heading>

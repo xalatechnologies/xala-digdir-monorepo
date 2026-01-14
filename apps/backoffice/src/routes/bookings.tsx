@@ -691,7 +691,7 @@ export function BookingsPage() {
             }}>
               {activeTab === 'pending' ? (
                 <>
-                  <div style={{ fontSize: '48px', marginBottom: 'var(--ds-spacing-3)' }}>✓</div>
+                  <div style={{ fontSize: 'var(--ds-font-size-heading-lg)', marginBottom: 'var(--ds-spacing-3)' }}>✓</div>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-success-text-default)' }}>
                     Ingen ventende forespørsler
                   </Paragraph>

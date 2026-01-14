@@ -160,7 +160,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
       {/* Venues list */}
       {seasonVenues.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <BuildingIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
+          <BuildingIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Ingen lokaler lagt til
           </Heading>

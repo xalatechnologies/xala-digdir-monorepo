@@ -174,7 +174,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
         >
           <UserIcon
             style={{
-              fontSize: '48px',
+              fontSize: 'var(--ds-font-size-heading-lg)',
               color: 'var(--ds-color-neutral-text-subtle)',
               marginBottom: 'var(--ds-spacing-2)',
             }}

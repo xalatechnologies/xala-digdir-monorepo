@@ -219,7 +219,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
       {/* Applications list */}
       {filteredApplications.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <ClockIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
+          <ClockIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Ingen søknader funnet
           </Heading>

@@ -85,14 +85,14 @@ export function SeasonApplicationsPage() {
   // Mock data for now
   const isLoading = false;
   const error = null;
-  const applications: any[] = []; // Empty for now
+  const applications: Array<{ status: string; [key: string]: unknown }> = []; // Empty for now
 
   // Calculate stats
   const stats = useMemo(() => {
     const total = applications.length;
-    const pending = applications.filter((a: any) => a.status === 'pending').length;
-    const approved = applications.filter((a: any) => a.status === 'approved').length;
-    const rejected = applications.filter((a: any) => a.status === 'rejected').length;
+    const pending = applications.filter((a) => a.status === 'pending').length;
+    const approved = applications.filter((a) => a.status === 'approved').length;
+    const rejected = applications.filter((a) => a.status === 'rejected').length;
 
     return { total, pending, approved, rejected };
   }, [applications]);
@@ -100,7 +100,7 @@ export function SeasonApplicationsPage() {
   // Filtered applications
   const filteredApplications = useMemo(() => {
     if (statusFilter === 'all') return applications;
-    return applications.filter((a: any) => a.status === statusFilter);
+    return applications.filter((a) => a.status === statusFilter);
   }, [applications, statusFilter]);
 
   return (
@@ -355,8 +355,8 @@ export function SeasonApplicationsPage() {
             gap: 'var(--ds-spacing-6)',
           }}
         >
-          {filteredApplications.map((application: any) => (
-            <ApplicationCard key={application.id} application={application} />
+          {filteredApplications.map((application) => (
+            <ApplicationCard key={application.id as string} application={application} />
           ))}
         </div>
       )}

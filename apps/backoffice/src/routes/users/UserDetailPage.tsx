@@ -337,7 +337,7 @@ export function UserDetailPage() {
         <Tabs.Panel value="activity">
           <Card>
             <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
-              <ClockIcon style={{ fontSize: '48px', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
+              <ClockIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
               <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 Ingen aktivitet ennå
               </Heading>
@@ -353,7 +353,7 @@ export function UserDetailPage() {
           <Card>
             <Stack spacing={4}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)', padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-success-background-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-                <ShieldCheckIcon style={{ fontSize: '24px', color: 'var(--ds-color-success-text-default)' }} />
+                <ShieldCheckIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-success-text-default)' }} />
                 <div>
                   <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                     Tilgangsnivå: {roleLabels[user.role]}

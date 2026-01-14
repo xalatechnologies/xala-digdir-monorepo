@@ -134,7 +134,7 @@ export function BillingPage() {
           gap: 'var(--ds-spacing-4)'
         }}>
           <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
               {t('billing.totalPaid')}
             </Paragraph>
             <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-success-text-default)' }}>
@@ -145,7 +145,7 @@ export function BillingPage() {
             </Paragraph>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-5)' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 500 }}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
               {t('billing.outstanding')}
             </Paragraph>
             <Heading level={2} data-size="xl" style={{ 
@@ -209,7 +209,7 @@ export function BillingPage() {
         ) : isMobile ? (
           // Mobile: Card layout
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {invoices.map((invoice: any) => (
+            {invoices.map((invoice: { id: string; invoiceNumber: string; dueDate: string; status: string; amount: number }) => (
               <div
                 key={invoice.id}
                 style={{

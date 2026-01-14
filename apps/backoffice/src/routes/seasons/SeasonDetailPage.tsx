@@ -221,7 +221,7 @@ export function SeasonDetailPage() {
       {season.status === 'open' && (
         <Card style={{ backgroundColor: 'var(--ds-color-info-surface-subtle)', border: '1px solid var(--ds-color-info-border-default)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <UnlockIcon style={{ fontSize: '24px', color: 'var(--ds-color-info-text-default)' }} />
+            <UnlockIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-info-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er åpen for søknader
@@ -237,7 +237,7 @@ export function SeasonDetailPage() {
       {season.status === 'closed' && (
         <Card style={{ backgroundColor: 'var(--ds-color-warning-surface-subtle)', border: '1px solid var(--ds-color-warning-border-default)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <LockIcon style={{ fontSize: '24px', color: 'var(--ds-color-warning-text-default)' }} />
+            <LockIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-warning-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er lukket for søknader
@@ -253,7 +253,7 @@ export function SeasonDetailPage() {
       {season.status === 'assigned' && (
         <Card style={{ backgroundColor: 'var(--ds-color-success-surface-subtle)', border: '1px solid var(--ds-color-success-border-default)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <CheckCircleIcon style={{ fontSize: '24px', color: 'var(--ds-color-success-text-default)' }} />
+            <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-success-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
                 Sesongen er tildelt
