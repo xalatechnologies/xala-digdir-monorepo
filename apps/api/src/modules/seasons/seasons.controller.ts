@@ -5,6 +5,7 @@
  * Endpoints:
  * - GET /api/seasons - List all seasons
  * - GET /api/seasons/:id - Get season by ID
+ * - GET /api/seasons/:id/stats - Get season statistics with application counts
  * - POST /api/seasons - Create a new season
  * - PUT /api/seasons/:id - Update season
  * - PUT /api/seasons/:id/open - Open season for applications
@@ -17,8 +18,8 @@
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { eq, and, desc, count } from 'drizzle-orm';
-import { seasons } from '../../database/schema/index';
+import { eq, and, desc, count, sql } from 'drizzle-orm';
+import { seasons, seasonApplications } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -349,6 +350,68 @@ export class SeasonsController {
     return reply.send({
       data: result[0],
       message: 'Season completed successfully',
+    });
+  }
+
+  /**
+   * GET /api/seasons/:id/stats
+   * Get season statistics with application counts
+   */
+  @Get('/:id/stats')
+  async getStats(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    // Check if season exists
+    const seasonResult = await db
+      .select({
+        id: seasons.id,
+        name: seasons.name,
+        status: seasons.status,
+      })
+      .from(seasons)
+      .where(eq(seasons.id, id));
+
+    if (!seasonResult.length) {
+      return reply.status(404).send({
+        error: 'not_found',
+        message: `Season ${id} not found`,
+      });
+    }
+
+    // Get total application count
+    const totalCountResult = await db
+      .select({ count: count() })
+      .from(seasonApplications)
+      .where(eq(seasonApplications.seasonId, id));
+
+    const totalApplications = Number(totalCountResult[0]?.count || 0);
+
+    // Get application counts by status
+    const statusCountsResult = await db
+      .select({
+        status: seasonApplications.status,
+        count: count(),
+      })
+      .from(seasonApplications)
+      .where(eq(seasonApplications.seasonId, id))
+      .groupBy(seasonApplications.status);
+
+    // Build status counts object
+    const applicationsByStatus: Record<string, number> = {};
+    statusCountsResult.forEach((row: any) => {
+      applicationsByStatus[row.status] = Number(row.count);
+    });
+
+    return reply.send({
+      data: {
+        seasonId: id,
+        seasonName: seasonResult[0].name,
+        seasonStatus: seasonResult[0].status,
+        totalApplications,
+        applicationsByStatus,
+        generatedAt: new Date().toISOString(),
+      },
     });
   }
 
