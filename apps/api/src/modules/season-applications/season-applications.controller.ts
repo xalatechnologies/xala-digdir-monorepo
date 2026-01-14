@@ -11,8 +11,10 @@ import { seasonApplications, seasons, listings, organizations, bookings } from '
 /**
  * Helper to create notification for application status changes
  * TODO: Replace with real notification service when available
+ *
+ * Exported for use in batch operations (e.g., season finalization)
  */
-function createApplicationNotification(data: {
+export function createApplicationNotification(data: {
   type: 'application_approved' | 'application_rejected' | 'application_allocated';
   applicationId: string;
   applicantEmail: string;
@@ -78,6 +80,49 @@ function createApplicationNotification(data: {
   console.log('[NOTIFICATION]', notification.type, '-', notification.title, 'to', data.applicantEmail);
 
   return notification;
+}
+
+/**
+ * Helper to send batch notifications for season finalization
+ * Sends allocation notifications to all approved applicants
+ *
+ * @param applications - Array of applications with required notification data
+ * @returns Array of created notifications
+ */
+export function sendBatchAllocationNotifications(applications: Array<{
+  id: string;
+  applicantEmail: string;
+  applicantName: string;
+  seasonName: string;
+  listingName: string;
+  weekday: number;
+  startTime: string;
+  endTime: string;
+  bookingsCreated?: number;
+}>): Array<any> {
+  const notifications = [];
+
+  for (const app of applications) {
+    const notification = createApplicationNotification({
+      type: 'application_allocated',
+      applicationId: app.id,
+      applicantEmail: app.applicantEmail,
+      applicantName: app.applicantName,
+      seasonName: app.seasonName,
+      listingName: app.listingName,
+      weekday: app.weekday,
+      startTime: app.startTime,
+      endTime: app.endTime,
+      bookingsCreated: app.bookingsCreated,
+    });
+
+    notifications.push(notification);
+  }
+
+  // Log batch summary
+  console.log(`[BATCH NOTIFICATION] Sent ${notifications.length} allocation notifications`);
+
+  return notifications;
 }
 
 interface TenantRequest extends FastifyRequest {

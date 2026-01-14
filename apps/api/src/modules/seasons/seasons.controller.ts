@@ -19,7 +19,8 @@ import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, desc, count, sql } from 'drizzle-orm';
-import { seasons, seasonApplications } from '../../database/schema/index';
+import { seasons, seasonApplications, listings } from '../../database/schema/index';
+import { sendBatchAllocationNotifications } from '../season-applications/season-applications.controller';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -475,13 +476,20 @@ export class SeasonsController {
 
     const season = seasonResult[0];
 
-    // Get all approved applications for this season
+    // Get all approved applications for this season with full details for notifications
     const approvedApplications = await db
       .select({
         id: seasonApplications.id,
         status: seasonApplications.status,
+        applicantEmail: seasonApplications.applicantEmail,
+        applicantName: seasonApplications.applicantName,
+        weekday: seasonApplications.weekday,
+        startTime: seasonApplications.startTime,
+        endTime: seasonApplications.endTime,
+        listingName: listings.name,
       })
       .from(seasonApplications)
+      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
       .where(
         and(
           eq(seasonApplications.seasonId, id),
@@ -499,11 +507,26 @@ export class SeasonsController {
       .where(eq(seasons.id, id))
       .returning();
 
+    // Send batch notifications to all approved applicants
+    const notifications = sendBatchAllocationNotifications(
+      approvedApplications.map((app) => ({
+        id: app.id,
+        applicantEmail: app.applicantEmail,
+        applicantName: app.applicantName,
+        seasonName: season.name,
+        listingName: app.listingName || 'Ukjent lokale',
+        weekday: app.weekday,
+        startTime: app.startTime,
+        endTime: app.endTime,
+      }))
+    );
+
     return reply.send({
       data: {
         seasonId: id,
         seasonName: season.name,
         approvedApplicationsCount: approvedApplications.length,
+        notificationsSent: notifications.length,
         finalized: true,
         finalizedAt: new Date().toISOString(),
       },
