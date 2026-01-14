@@ -67,6 +67,9 @@ export { conversationService } from './conversation.service';
 // Notifications
 export { notificationService } from './notification.service';
 
+// Push Notifications
+export { pushNotificationService } from './push-notification.service';
+
 // Settings
 export { settingsService } from './settings.service';
 
