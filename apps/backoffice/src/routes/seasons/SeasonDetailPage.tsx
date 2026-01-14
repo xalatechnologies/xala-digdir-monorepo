@@ -35,6 +35,9 @@ import {
   type SeasonStatus,
 } from '@digilist/client-sdk';
 import { FormSection } from '../../components/shared';
+import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
+import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
+import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
 
 const statusLabels: Record<SeasonStatus, string> = {
   draft: 'Utkast',
@@ -342,18 +345,20 @@ export function SeasonDetailPage() {
         {/* Venues Tab */}
         <Tabs.Content value="venues">
           <Card>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Lokaladministrasjon kommer her. Saksbehandler kan legge til/fjerne lokaler som skal inngå i sesongleien.
-            </Paragraph>
+            <SeasonVenueManagement
+              seasonId={id!}
+              canEdit={season.status === 'draft' || season.status === 'open'}
+            />
           </Card>
         </Tabs.Content>
 
         {/* Applications Tab */}
         <Tabs.Content value="applications">
           <Card>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Søknadsadministrasjon kommer her. Saksbehandler kan se alle søknader, sammenligne overlappende ønsker, og prioritere.
-            </Paragraph>
+            <SeasonApplicationManagement
+              seasonId={id!}
+              canProcess={season.status === 'closed'}
+            />
           </Card>
         </Tabs.Content>
 
@@ -361,9 +366,12 @@ export function SeasonDetailPage() {
         {(season.status === 'closed' || season.status === 'assigned') && (
           <Tabs.Content value="allocation">
             <Card>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Tildelingsgrensesnitt kommer her. Saksbehandler kan manuelt tildele tider og generere repeterende bookinger.
-              </Paragraph>
+              <SeasonAllocationManagement
+                seasonId={id!}
+                seasonStartDate={season.startDate}
+                seasonEndDate={season.endDate}
+                onAllocationComplete={() => navigate(`/seasons/${id}`)}
+              />
             </Card>
           </Tabs.Content>
         )}

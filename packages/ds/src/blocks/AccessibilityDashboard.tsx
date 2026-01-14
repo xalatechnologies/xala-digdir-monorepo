@@ -6,8 +6,41 @@
  */
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import type { AccessibilityReport } from '@digilist/client-sdk';
+
+// Accessibility Report type (from SDK)
+export interface AccessibilityReport {
+  period: {
+    start: Date;
+    end: Date;
+  };
+  tenantId: string;
+  metrics: {
+    keyboardNavigation: {
+      total: number;
+      byAction: Record<string, number>;
+      byPage: Record<string, number>;
+    };
+    skipLinkUsage: {
+      total: number;
+      byTarget: Record<string, number>;
+    };
+    screenReaderUsers: {
+      total: number;
+      percentage: number;
+      byType: Record<string, number>;
+    };
+    focusIssues: {
+      total: number;
+      byType: Record<string, number>;
+    };
+    ariaAnnouncements: {
+      total: number;
+      successRate: number;
+    };
+  };
+  complianceScore: number; // 0-100
+  recommendations: string[];
+}
 
 export interface AccessibilityDashboardProps {
   report: AccessibilityReport;
@@ -22,8 +55,6 @@ export function AccessibilityDashboard({
   onRefresh,
   className,
 }: AccessibilityDashboardProps): React.ReactElement {
-  const [selectedPeriod, setSelectedPeriod] = useState<'day' | 'week' | 'month'>('day');
-
   // Calculate compliance badge color
   const getComplianceColor = (score: number): string => {
     if (score >= 90) return 'var(--ds-color-success-border-default)';
@@ -229,7 +260,7 @@ export function AccessibilityDashboard({
           icon="🔊"
           details={Object.entries(report.metrics.screenReaderUsers.byType).map(([type, count]) => ({
             label: type,
-            value: count,
+            value: count as number,
           }))}
         />
 
@@ -241,7 +272,7 @@ export function AccessibilityDashboard({
           icon="⏩"
           details={Object.entries(report.metrics.skipLinkUsage.byTarget).map(([target, count]) => ({
             label: target,
-            value: count,
+            value: count as number,
           }))}
         />
 
@@ -254,7 +285,7 @@ export function AccessibilityDashboard({
           status={report.metrics.focusIssues.total > 10 ? 'warning' : 'success'}
           details={Object.entries(report.metrics.focusIssues.byType).map(([type, count]) => ({
             label: type,
-            value: count,
+            value: count as number,
           }))}
         />
 
@@ -303,7 +334,7 @@ export function AccessibilityDashboard({
               listStyle: 'disc',
             }}
           >
-            {report.recommendations.map((recommendation, index) => (
+            {report.recommendations.map((recommendation: string, index: number) => (
               <li
                 key={index}
                 style={{

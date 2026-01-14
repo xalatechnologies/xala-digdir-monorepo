@@ -223,14 +223,12 @@ export class AccessibilityMonitoringService {
    * Get accessibility report for a time period
    */
   async getReport(startDate: Date, endDate: Date): Promise<AccessibilityReport> {
-    const response = await this.client.get<AccessibilityReport>('/api/accessibility/report', {
+    return await this.client.get<AccessibilityReport>('/api/accessibility/report', {
       params: {
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
       },
     });
-
-    return response.data;
   }
 
   /**
@@ -243,7 +241,7 @@ export class AccessibilityMonitoringService {
     this.metricsBuffer = [];
 
     try {
-      await this.client.post('/api/accessibility/metrics', {
+      await this.client.post<void>('/api/accessibility/metrics', {
         metrics: metricsToSend,
       });
     } catch (error) {
@@ -281,9 +279,10 @@ export class AccessibilityMonitoringService {
   // ============================================================================
 
   private addMetric(partial: Omit<AccessibilityMetric, 'timestamp' | 'tenantId' | 'sessionId'>): void {
+    const config = getClientConfig();
     const metric: AccessibilityMetric = {
       timestamp: Date.now(),
-      tenantId: this.client.getTenantId(),
+      tenantId: config?.tenantId || 'unknown',
       sessionId: this.sessionId,
       ...partial,
     };
