@@ -66,6 +66,12 @@ export {
   usePaymentReconciliation,
 } from './use-bookings';
 
+// Calendar hooks (config and availability matrix)
+export {
+  useListingCalendarConfig,
+  useAvailabilityMatrix,
+} from './use-calendar';
+
 // Organization & User hooks
 export {
   useOrganizations,
