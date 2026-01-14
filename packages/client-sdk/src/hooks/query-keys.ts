@@ -232,4 +232,24 @@ export const queryKeys = {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
   },
+
+  // =========================================================================
+  // Search Keys
+  // =========================================================================
+  search: {
+    all: ['search'] as const,
+    results: (params: Record<string, unknown>) =>
+      [...queryKeys.search.all, 'results', params] as const,
+    typeahead: (params: Record<string, unknown>) =>
+      [...queryKeys.search.all, 'typeahead', params] as const,
+    savedFilters: {
+      all: [...queryKeys.search.all, 'filters'] as const,
+      lists: () => [...queryKeys.search.all, 'filters', 'list'] as const,
+      list: (params?: Record<string, unknown>) =>
+        [...queryKeys.search.all, 'filters', 'list', params] as const,
+      detail: (id: string) =>
+        [...queryKeys.search.all, 'filters', 'detail', id] as const,
+    },
+    recent: () => [...queryKeys.search.all, 'recent'] as const,
+  },
 } as const;

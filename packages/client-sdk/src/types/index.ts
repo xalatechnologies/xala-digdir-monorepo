@@ -33,6 +33,9 @@ export type {
   RevenueReport,
   BookingReport,
   ReportQueryParams,
+  TimeSlotHeatmap,
+  SeasonalPattern,
+  PeriodComparison,
   // Audit
   AuditEvent,
   AuditQueryParams,
