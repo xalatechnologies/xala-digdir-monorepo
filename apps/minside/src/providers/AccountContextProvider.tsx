@@ -114,23 +114,85 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     return stored === 'true';
   });
 
-  // Effect: Restore selected organization from localStorage once organizations are loaded
+  // =============================================================================
+  // Context Validation
+  // =============================================================================
+
+  /**
+   * Validates the stored context and returns the validated state.
+   * - Checks if remembered orgId still exists in user's organizations
+   * - Forces personal mode if no organizations available
+   * - Forces personal mode if remembered org is no longer accessible
+   */
+  const validateContext = (
+    storedAccountType: AccountType,
+    storedOrgId: string | null,
+    availableOrgs: Organization[]
+  ): { accountType: AccountType; organization: Organization | null; forcePersonal: boolean } => {
+    // Force personal if user has no organizations
+    if (availableOrgs.length === 0) {
+      return {
+        accountType: 'personal',
+        organization: null,
+        forcePersonal: storedAccountType === 'organization',
+      };
+    }
+
+    // If account type is personal, no org validation needed
+    if (storedAccountType === 'personal') {
+      return {
+        accountType: 'personal',
+        organization: null,
+        forcePersonal: false,
+      };
+    }
+
+    // Validate organization mode - check if remembered org still exists
+    if (storedOrgId) {
+      const org = availableOrgs.find(o => o.id === storedOrgId);
+      if (org) {
+        // Remembered org exists - valid
+        return {
+          accountType: 'organization',
+          organization: org,
+          forcePersonal: false,
+        };
+      }
+    }
+
+    // Organization mode selected but org not found - force personal
+    return {
+      accountType: 'personal',
+      organization: null,
+      forcePersonal: true,
+    };
+  };
+
+  // Effect: Validate and restore context once organizations are loaded
   useEffect(() => {
-    if (isLoadingOrganizations || organizations.length === 0) return;
+    // Wait for organizations to finish loading
+    if (isLoadingOrganizations) return;
 
+    const storedAccountType = localStorage.getItem(STORAGE_KEYS.ACCOUNT_TYPE) as AccountType | null;
     const storedOrgId = localStorage.getItem(STORAGE_KEYS.SELECTED_ORG_ID);
-    if (!storedOrgId) return;
+    const currentAccountType = storedAccountType === 'organization' ? 'organization' : 'personal';
 
-    // Find the organization in loaded organizations
-    const org = organizations.find(o => o.id === storedOrgId);
+    // Validate the stored context
+    const validated = validateContext(currentAccountType, storedOrgId, organizations);
 
-    if (org) {
-      setSelectedOrganization(org);
-    } else {
-      // Organization not found (user no longer has access)
-      // Reset to personal mode
-      console.warn(`Organization ${storedOrgId} not found. Resetting to personal mode.`);
+    // Apply validated state
+    if (validated.forcePersonal) {
+      // Force personal mode - stored org no longer valid or no orgs available
       localStorage.removeItem(STORAGE_KEYS.SELECTED_ORG_ID);
+      localStorage.setItem(STORAGE_KEYS.ACCOUNT_TYPE, 'personal');
+      setAccountType('personal');
+      setSelectedOrganization(null);
+    } else if (validated.accountType === 'organization' && validated.organization) {
+      // Valid organization context
+      setAccountType('organization');
+      setSelectedOrganization(validated.organization);
+    } else {
+      // Personal mode (no changes needed if already personal)
       setAccountType('personal');
       setSelectedOrganization(null);
     }
