@@ -2,19 +2,61 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole } from '../hooks/useAuth';
 
-// Mock users for development
+// =============================================================================
+// Local Storage Keys
+// =============================================================================
+
+/**
+ * Storage keys for role persistence.
+ * Must match the keys in BackofficeRoleProvider to clear on logout.
+ */
+const ROLE_STORAGE_KEYS = {
+  EFFECTIVE_ROLE: 'backoffice_effective_role',
+  REMEMBER_CHOICE: 'backoffice_remember_role_choice',
+} as const;
+
+// =============================================================================
+// Mock Users for Development
+// =============================================================================
+
+/**
+ * Admin-only user for testing admin-specific flows.
+ * Can access all admin features, skips role selection.
+ *
+ * To use: swap MOCK_DUAL_ROLE_USER with MOCK_ADMIN_USER in login()
+ * @see login function below
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MOCK_ADMIN_USER: BackofficeUser = {
   id: 'mock-admin-001',
   name: 'Kari Nordmann',
   email: 'kari.nordmann@kommune.no',
   role: 'admin',
+  grantedRoles: ['admin'],
 };
 
+/**
+ * Case handler-only user for testing saksbehandler-specific flows.
+ * Limited access to booking/approval workflows, skips role selection.
+ */
 const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
   id: 'mock-saksbehandler-001',
   name: 'Ola Hansen',
   email: 'ola.hansen@kommune.no',
   role: 'saksbehandler',
+  grantedRoles: ['case_handler'],
+};
+
+/**
+ * Dual-role user for testing role selection flow.
+ * Has both admin and case_handler roles, will be prompted to select.
+ */
+const MOCK_DUAL_ROLE_USER: BackofficeUser = {
+  id: 'mock-dual-001',
+  name: 'Per Eriksen',
+  email: 'per.eriksen@kommune.no',
+  role: 'admin', // Legacy field - kept for backward compatibility
+  grantedRoles: ['admin', 'case_handler'],
 };
 
 // Simulated login - will be replaced with real OAuth when API is ready
@@ -59,11 +101,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = useCallback((provider: 'idporten' | 'microsoft' = 'idporten') => {
     if (USE_MOCK_AUTH) {
-      // Simulate login with a mock user based on provider
-      // ID-porten gives admin, Microsoft gives saksbehandler (for demo purposes)
-      const mockUser = provider === 'idporten' ? MOCK_ADMIN_USER : MOCK_SAKSBEHANDLER_USER;
+      // Simulate login with a mock user based on provider:
+      // - ID-porten: Dual-role user (tests role selection flow)
+      // - Microsoft: Case handler only (tests single-role auto-assignment)
+      //
+      // To test admin-only flow, modify MOCK_DUAL_ROLE_USER.grantedRoles to ['admin']
+      const mockUser = provider === 'idporten' ? MOCK_DUAL_ROLE_USER : MOCK_SAKSBEHANDLER_USER;
       localStorage.setItem('backoffice_mock_user', JSON.stringify(mockUser));
       setUser(mockUser);
+
+      // Don't navigate directly - let ProtectedRoute handle the redirect
+      // based on whether role selection is needed
+      // For single-role users: auto-redirects to appropriate home
+      // For dual-role users: redirects to /role-selection
       navigate('/');
       return;
     }
@@ -75,7 +125,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(async () => {
     if (USE_MOCK_AUTH) {
+      // Clear user session
       localStorage.removeItem('backoffice_mock_user');
+
+      // Clear role selection state to ensure fresh role selection on next login
+      // This prevents stale role data from persisting across different user logins
+      localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
+      localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
+
       setUser(null);
       navigate('/login');
       return;
@@ -84,6 +141,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Real logout - uncomment when API is ready
     // try {
     //   await apiLogout();
+    //   // Also clear role storage on real logout
+    //   localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
+    //   localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
     // } finally {
     //   setUser(null);
     //   navigate('/login');
