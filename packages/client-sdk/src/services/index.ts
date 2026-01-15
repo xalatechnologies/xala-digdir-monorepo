@@ -108,6 +108,9 @@ export { ReviewService, reviewService } from './review.service';
 // Likes (Favorites)
 export { LikeService, likeService, type IsLikedResponse } from './like.service';
 
+// Shares
+export { ShareService, shareService, type ShareQueryParams, type ShareLinkResponse } from './share.service';
+
 // Billing (User + Org)
 export { 
   billingService, 
