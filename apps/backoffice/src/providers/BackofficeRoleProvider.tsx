@@ -93,12 +93,6 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
   const grantedRoles = useMemo<EffectiveBackofficeRole[]>(() => {
     if (!user || !isAuthenticated) return [];
 
-    // DEV MODE: In development, give all backoffice users all roles for testing
-    // Remove this block when backend properly assigns grantedRoles
-    if (import.meta.env.DEV) {
-      return ['super_admin', 'admin', 'case_handler'];
-    }
-
     // Use grantedRoles if available, otherwise derive from legacy role
     if (user.grantedRoles && user.grantedRoles.length > 0) {
       return user.grantedRoles;
@@ -146,6 +140,9 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
       setEffectiveRoleState(autoRole);
       setHasSelectedRole(true);
       localStorage.setItem(STORAGE_KEYS.EFFECTIVE_ROLE, autoRole);
+      // Clear any stale "remember choice" flag for single-role users
+      // (they don't need to remember, it's auto-assigned)
+      localStorage.removeItem(STORAGE_KEYS.REMEMBER_CHOICE);
       setIsInitializing(false);
       return;
     }

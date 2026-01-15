@@ -18,6 +18,8 @@ export const TenantSettingsSchema = z.object({
     rbac: z.boolean().default(true),
     invitations: z.boolean().default(true),
     auditLogs: z.boolean().default(true),
+    ratings: z.boolean().default(false),
+    reviews: z.boolean().default(false),
   }).optional(),
   branding: z.object({
     primaryColor: z.string().optional(),

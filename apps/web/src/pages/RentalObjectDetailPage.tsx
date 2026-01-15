@@ -13,8 +13,6 @@ import {
   ImageSlider,
   Spinner,
   Paragraph,
-  Heading,
-  Stack,
 } from '@xala/ds';
 import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
 import {
@@ -27,19 +25,14 @@ import {
   type Listing,
   type ListingType,
   type BookingMode,
-  type DayHours,
   type OpeningHours,
   type KeyFacts,
   type ListingMetadata,
   type Rule,
   type FAQItem,
   type Amenity,
-  type IncludedFacility,
-  type ListingEvent,
   logAuditEvent,
 } from '../features/listing-details';
-import { ReviewList } from '../features/reviews/components/ReviewList';
-import { ReviewForm } from '../features/reviews/components/ReviewForm';
 import { useAuth } from '../hooks/useAuth';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -207,8 +200,7 @@ export function RentalObjectDetailPage(): React.ReactElement {
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
   const { isAuthenticated } = useAuth();
-  const [showReviewForm, setShowReviewForm] = React.useState(false);
-  const hasCompletedBooking = false;
+  // Reviews disabled via feature flag - see tenant settings
 
   // Check for flow context restoration from login
   const locationState = location.state as FlowContextNavigationState | FlowContextExpiredState | null;
@@ -369,63 +361,7 @@ export function RentalObjectDetailPage(): React.ReactElement {
           />
         </div>
 
-        {/* Reviews Section */}
-        <div
-          style={{
-            marginTop: 'var(--ds-spacing-8)',
-            paddingLeft: 'var(--ds-spacing-1)',
-            paddingRight: 'var(--ds-spacing-1)',
-          }}
-        >
-          <Stack gap="32px">
-            {/* Reviews Header */}
-            <div>
-              <Heading
-                level={2}
-                data-size="lg"
-                style={{
-                  marginBottom: 'var(--ds-spacing-2)',
-                  color: 'var(--ds-color-neutral-text-default)',
-                }}
-              >
-                Anmeldelser
-              </Heading>
-              <Paragraph
-                data-size="md"
-                style={{
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  margin: 0,
-                }}
-              >
-                Les hva andre brukere sier om dette lokalet
-              </Paragraph>
-            </div>
-
-            {/* Review Form - Show for authenticated users with completed bookings */}
-            {isAuthenticated && hasCompletedBooking && showReviewForm && (
-              <ReviewForm
-                listingId={listing.id}
-                bookingId="" // TODO: Get from user's completed bookings via SDK
-                onSuccess={() => {
-                  setShowReviewForm(false);
-                  // Optionally show a success message
-                }}
-                onCancel={() => {
-                  setShowReviewForm(false);
-                }}
-              />
-            )}
-
-            {/* Review List */}
-            <ReviewList
-              listingId={listing.id}
-              queryParams={{ status: 'approved' }}
-              showHelpfulCount={true}
-              showStatus={false}
-              variant="default"
-            />
-          </Stack>
-        </div>
+        {/* Reviews Section - Hidden for now */}
 
         {/* Responsive styles */}
         <style>{`

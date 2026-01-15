@@ -237,16 +237,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return;
     }
 
-    // Real logout - uncomment when API is ready
-    // try {
-    //   await apiLogout();
-    //   // Also clear role storage on real logout
-    //   localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
-    //   localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
-    // } finally {
-    //   setUser(null);
-    //   navigate('/login');
-    // }
+    // Real logout - call API to clear session cookie
+    try {
+      await authService.logout();
+      // Clear role storage on logout
+      localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
+      localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Continue with logout even if API call fails
+    } finally {
+      setUser(null);
+      navigate('/login');
+    }
   }, [navigate]);
 
   const checkRole = useCallback(
