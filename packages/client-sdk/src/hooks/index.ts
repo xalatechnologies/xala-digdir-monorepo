@@ -122,6 +122,7 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
+  useRealtimeBookingConflicts,
   useRealtimeListings,
   useRealtimeCalendar,
   useRealtimeMessages,

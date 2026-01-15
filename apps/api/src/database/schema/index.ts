@@ -104,7 +104,7 @@ export const listings = pgTable('listings', {
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
   capacity: integer('capacity'),
-  metadata: jsonb('metadata').default({}),
+  metadata: jsonb('metadata').default({}), // Stores flexible config including bufferTimeMinutes
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
@@ -130,6 +130,7 @@ export const bookings = pgTable('bookings', {
   currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
   notes: text('notes'),
   metadata: jsonb('metadata').default({}),
+  version: integer('version').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
