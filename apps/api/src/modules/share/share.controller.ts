@@ -1,67 +1,121 @@
 /**
  * Share Controller
- * Shareable links for bookings and listings
+ * REST API endpoints for shareable links management
  */
-import { Controller, Get, Post } from '../../core/decorators';
+import { Controller, Get, Post, Delete } from '../../core/decorators';
+import { Inject } from '../../core/decorators';
+import { ShareService } from './share.service';
+import { getTenantId, getOptionalUserId, TenantRequest } from '../../core/validation/tenant';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-
-// In-memory share tokens (use database in production)
-const shareTokens: Map<string, any> = new Map();
 
 @Controller('/api/share')
 export class ShareController {
+  constructor(
+    @Inject('ShareService') private readonly service: ShareService
+  ) {}
+
   /**
-   * GET /api/share/:token - Get shareable link data
+   * GET /api/share - List all share links
+   */
+  @Get()
+  async findAll(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const params = request.query as any;
+    const result = await this.service.findAll(tenantId, {
+      ...params,
+      page: params.page ?? 1,
+      limit: params.limit ?? 20,
+    });
+    return { data: result.data, meta: result.pagination };
+  }
+
+  /**
+   * GET /api/share/:token - Get shareable link data and track view
    */
   @Get('/:token')
   async getShareData(request: FastifyRequest<{ Params: { token: string } }>, reply: FastifyReply) {
     const { token } = request.params;
+    const shareLink = await this.service.trackView(token);
+    return { data: shareLink };
+  }
 
-    const shareData = shareTokens.get(token);
-
-    if (!shareData) {
-      reply.code(404);
-      return { error: { code: 'NOT_FOUND', message: 'Share link not found or expired' } };
-    }
-
-    if (shareData.expiresAt && new Date(shareData.expiresAt) < new Date()) {
-      shareTokens.delete(token);
-      reply.code(410);
-      return { error: { code: 'EXPIRED', message: 'Share link has expired' } };
-    }
-
-    return { data: shareData };
+  /**
+   * GET /api/share/:token/validate - Validate share link without tracking view
+   */
+  @Get('/:token/validate')
+  async validateShare(request: FastifyRequest<{ Params: { token: string } }>, reply: FastifyReply) {
+    const { token } = request.params;
+    const shareLink = await this.service.validate(token);
+    return { data: shareLink };
   }
 
   /**
    * POST /api/share - Create shareable link
    */
   @Post()
-  async createShareLink(request: FastifyRequest, reply: FastifyReply) {
-    const { type, resourceId, expiresIn } = request.body as any;
+  async createShareLink(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getOptionalUserId(request);
+    const data = request.body as any;
+    const shareLink = await this.service.create(tenantId, userId, data);
+    reply.code(201);
+    return { data: shareLink };
+  }
 
-    if (!type || !resourceId) {
-      reply.code(400);
-      return { error: { code: 'VALIDATION_ERROR', message: 'type and resourceId are required' } };
+  /**
+   * DELETE /api/share/:token - Revoke share link
+   */
+  @Delete('/:token')
+  async revokeShare(request: TenantRequest & { params: { token: string } }, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getOptionalUserId(request);
+
+    if (!userId) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'User authentication required to revoke share links' } };
     }
 
-    const token = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
-    const expiresAt = expiresIn
-      ? new Date(Date.now() + expiresIn * 1000).toISOString()
-      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days default
+    const { token } = request.params;
+    const data = request.body as any;
 
-    const shareData = {
-      token,
-      type,
-      resourceId,
-      expiresAt,
-      createdAt: new Date().toISOString(),
-      url: `https://digilist.no/share/${token}`,
-    };
+    await this.service.revoke(tenantId, userId, token, data);
 
-    shareTokens.set(token, shareData);
+    reply.code(204);
+    return;
+  }
 
-    reply.code(201);
-    return { data: shareData };
+  /**
+   * GET /api/share/resource/:type/:resourceId - Get share links for a resource
+   */
+  @Get('/resource/:type/:resourceId')
+  async getResourceShares(
+    request: TenantRequest & { params: { type: string; resourceId: string } },
+    reply: FastifyReply
+  ) {
+    const tenantId = getTenantId(request);
+    const { type, resourceId } = request.params;
+    const shares = await this.service.findActiveByResource(tenantId, type, resourceId);
+    return { data: shares };
+  }
+
+  /**
+   * GET /api/share/my - Get share links created by current user
+   */
+  @Get('/my')
+  async getMyShares(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getOptionalUserId(request);
+
+    if (!userId) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'User authentication required' } };
+    }
+
+    const params = request.query as { page?: string; limit?: string };
+    const result = await this.service.findByCreator(tenantId, userId, {
+      page: params.page ? parseInt(params.page) : 1,
+      limit: params.limit ? parseInt(params.limit) : 20,
+    });
+    return { data: result.data, meta: result.pagination };
   }
 }
