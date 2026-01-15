@@ -100,8 +100,9 @@ export {
 } from './use-bookings';
 
 // Calendar hooks (config and availability matrix)
+// Note: useRentalObjectCalendarConfig is exported from use-rental-objects
 export {
-  useListingCalendarConfig,
+  useListingCalendarConfig, // @deprecated - use useRentalObjectCalendarConfig from use-rental-objects
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from './use-calendar';
@@ -507,3 +508,22 @@ export {
   useRentalObjectCalendar,
   useCalendarRealtime as useRentalObjectCalendarRealtime,
 } from './use-rental-object-calendar';
+
+// Authorization (RBAC) hooks
+export {
+  authzKeys,
+  usePermissions,
+  useCheckPermission,
+  useCan,
+  useRole,
+  useHasAnyPermission,
+  useHasAllPermissions,
+  useInvalidatePermissions,
+} from './use-authz';
+
+// Profile hooks
+export {
+  profileKeys,
+  useProfile,
+  useUpdateProfile,
+} from './use-profile';

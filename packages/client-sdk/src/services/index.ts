@@ -165,6 +165,18 @@ export type {
 // Profile & Preferences
 export { ProfileService, profileService } from './profile.service';
 
+// Authorization (RBAC)
+export {
+  AuthzService,
+  authzService,
+  type AuthzUserRole,
+  type AuthzResource,
+  type AuthzAction,
+  type UserPermissionsDTO,
+  type PermissionCheckResultDTO,
+  type PermissionCheckParams,
+} from './authz.service';
+
 // GDPR Consent
 export { GdprService, gdprService } from './gdpr.service';
 

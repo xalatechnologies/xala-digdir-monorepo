@@ -10,7 +10,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests/journeys',
-  testMatch: ['auth-rbac.spec.ts'],
+  testMatch: ['*.spec.ts'],
 
   /* Run tests in files in parallel */
   fullyParallel: false, // Run serially for auth tests to avoid conflicts

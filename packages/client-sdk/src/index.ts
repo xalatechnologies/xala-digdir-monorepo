@@ -48,6 +48,7 @@ export type {
   RequestOptions,
   HttpResponse,
   HttpMethod,
+  ProblemDetails,
 } from './core/http-client.interface';
 
 export { ApiError } from './core/http-client.interface';

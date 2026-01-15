@@ -257,9 +257,9 @@ This document tracks the progress of renaming "listing" → "rental object" acro
 2. **Backward Compatibility**: Some deprecated types are kept in `types/index.ts` for backward compatibility. These should be marked as deprecated and removed in a future version.
 
 3. **Migration Strategy**: The refactoring is done incrementally:
-   - API layer first (complete)
-   - SDK layer second (in progress)
-   - Frontend layer last (pending)
+   - API layer first (✅ complete)
+   - SDK layer second (✅ ~90% complete)
+   - Frontend layer last (✅ ~92% complete - main components done, optional cleanup remaining)
 
 4. **Testing**: After completion, run:
    - `pnpm lint` - Check for lint errors
