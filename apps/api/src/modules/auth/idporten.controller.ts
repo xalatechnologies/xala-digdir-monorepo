@@ -84,7 +84,7 @@ async function getAccessToken(): Promise<string> {
     },
     body: new URLSearchParams({
       grant_type: 'client_credentials',
-      scope: 'idporten-api',
+      scope: 'signicat-api',
     }),
   });
   
@@ -134,7 +134,7 @@ export class IdPortenAuthController {
       } else {
         // Log invalid returnTo attempt for security monitoring
         getAuditService().log({
-          tenantId: tenantId || 'unknown',
+          tenantId: tenantId || null,
           userId: 'anonymous',
           action: 'auth_returnto_validation_failed',
           resource: 'idporten',
@@ -185,7 +185,7 @@ export class IdPortenAuthController {
         const error = await response.text();
         // Log session creation failure
         getAuditService().log({
-          tenantId: tenantId || 'unknown',
+          tenantId: tenantId || null,
           userId: 'anonymous',
           action: 'auth_session_creation_failed',
           resource: 'idporten',
@@ -215,7 +215,7 @@ export class IdPortenAuthController {
 
       // Audit log auth initiation
       getAuditService().log({
-        tenantId: tenantId || 'unknown',
+        tenantId: tenantId || null,
         userId: 'anonymous',
         action: 'auth_initiated',
         resource: 'idporten',
@@ -234,7 +234,7 @@ export class IdPortenAuthController {
     } catch (error) {
       // Log authorization error
       getAuditService().log({
-        tenantId: tenantId || 'unknown',
+        tenantId: tenantId || null,
         userId: 'anonymous',
         action: 'auth_initiation_error',
         resource: 'idporten',
@@ -286,11 +286,11 @@ export class IdPortenAuthController {
     if (!state) {
       // Audit log missing state
       getAuditService().log({
-        tenantId: 'unknown',
+        tenantId: null,
         userId: 'anonymous',
         action: 'auth_callback_missing_state',
         resource: 'idporten',
-        resourceId: 'unknown',
+        resourceId: null,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
         metadata: { status },
@@ -308,7 +308,7 @@ export class IdPortenAuthController {
     if (!session) {
       // Audit log invalid state
       getAuditService().log({
-        tenantId: 'unknown',
+        tenantId: null,
         userId: 'anonymous',
         action: 'auth_callback_invalid_state',
         resource: 'idporten',
@@ -327,7 +327,7 @@ export class IdPortenAuthController {
     }
 
     const returnTo = session.returnTo || DEFAULT_REDIRECT_URL;
-    const tenantId = session.tenantId || 'unknown';
+    const tenantId = session.tenantId || null;
 
     if (status === 'abort') {
       await sessionStore.delete(state);
@@ -427,7 +427,7 @@ export class IdPortenAuthController {
       const userId =
         sessionData.identity?.subject ||
         sessionData.identity?.nin ||
-        'unknown';
+        'anonymous';
 
       // Clean up session
       await sessionStore.delete(state);

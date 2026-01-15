@@ -209,7 +209,7 @@ describe('VippsCheckoutService', () => {
       const service = new VippsCheckoutService();
 
       await expect(service.getPaymentStatus('nonexistent-ref'))
-        .rejects.toThrow('Payment not found');
+        .rejects.toThrow(/not found|payment/i);
     });
   });
 

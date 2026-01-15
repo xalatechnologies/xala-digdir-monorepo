@@ -13,7 +13,169 @@ import {
   integer,
   decimal,
   index,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
+
+// ============================================================================
+// System Configuration Tables (Schema-Driven)
+// All enums, categories, and configurable options are stored here
+// ============================================================================
+
+/**
+ * Rental Object Categories
+ * Main category types for rental objects (e.g., LOKALER_OG_BANER, UTSTYR_OG_INVENTAR)
+ */
+export const rentalObjectCategories = pgTable('rental_object_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 100 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  descriptionEn: text('description_en'),
+  icon: varchar('icon', { length: 100 }),
+  examples: jsonb('examples').default([]),
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: uniqueIndex('rental_object_categories_code_idx').on(table.code),
+  enabledIdx: index('rental_object_categories_enabled_idx').on(table.enabled),
+  sortOrderIdx: index('rental_object_categories_sort_idx').on(table.sortOrder),
+}));
+
+/**
+ * Rental Object Subcategories
+ * Subcategories linked to main categories
+ */
+export const rentalObjectSubcategories = pgTable('rental_object_subcategories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  categoryId: uuid('category_id').notNull().references(() => rentalObjectCategories.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 100 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  icon: varchar('icon', { length: 100 }),
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  categoryIdx: index('rental_object_subcategories_category_idx').on(table.categoryId),
+  codeIdx: uniqueIndex('rental_object_subcategories_code_idx').on(table.categoryId, table.code),
+  enabledIdx: index('rental_object_subcategories_enabled_idx').on(table.enabled),
+}));
+
+/**
+ * Booking Time Modes
+ * How bookings are made (PERIOD, SLOT, ALL_DAY)
+ */
+export const bookingTimeModes = pgTable('booking_time_modes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  descriptionEn: text('description_en'),
+  calendarBehavior: varchar('calendar_behavior', { length: 100 }),
+  icon: varchar('icon', { length: 100 }),
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: uniqueIndex('booking_time_modes_code_idx').on(table.code),
+  enabledIdx: index('booking_time_modes_enabled_idx').on(table.enabled),
+}));
+
+/**
+ * Pricing Units
+ * Units for pricing (hour, day, booking, week, month)
+ */
+export const pricingUnits = pgTable('pricing_units', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  durationMinutes: integer('duration_minutes'), // null for 'booking' type
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: uniqueIndex('pricing_units_code_idx').on(table.code),
+  enabledIdx: index('pricing_units_enabled_idx').on(table.enabled),
+}));
+
+/**
+ * Rental Object Statuses
+ * Status values (draft, published, archived, etc.)
+ */
+export const rentalObjectStatuses = pgTable('rental_object_statuses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  color: varchar('color', { length: 50 }), // For UI display
+  allowedTransitions: jsonb('allowed_transitions').default([]), // Which statuses can transition to this
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: uniqueIndex('rental_object_statuses_code_idx').on(table.code),
+  enabledIdx: index('rental_object_statuses_enabled_idx').on(table.enabled),
+}));
+
+/**
+ * Booking Statuses
+ * Status values for bookings (pending, confirmed, cancelled, etc.)
+ */
+export const bookingStatuses = pgTable('booking_statuses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nameEn: varchar('name_en', { length: 255 }),
+  description: text('description'),
+  color: varchar('color', { length: 50 }),
+  allowedTransitions: jsonb('allowed_transitions').default([]),
+  isFinal: boolean('is_final').default(false), // No further transitions allowed
+  sortOrder: integer('sort_order').notNull().default(0),
+  enabled: boolean('enabled').default(true),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  codeIdx: uniqueIndex('booking_statuses_code_idx').on(table.code),
+  enabledIdx: index('booking_statuses_enabled_idx').on(table.enabled),
+}));
+
+/**
+ * System Configurations
+ * Generic key-value configuration store for tenant-specific and global settings
+ */
+export const systemConfigurations = pgTable('system_configurations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }), // null = global
+  key: varchar('key', { length: 255 }).notNull(),
+  value: jsonb('value').notNull(),
+  valueType: varchar('value_type', { length: 50 }).notNull().default('string'), // string, number, boolean, json
+  description: text('description'),
+  isPublic: boolean('is_public').default(false), // Can be exposed to frontend
+  isEditable: boolean('is_editable').default(true), // Can be modified via API
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantKeyIdx: uniqueIndex('system_configurations_tenant_key_idx').on(table.tenantId, table.key),
+  publicIdx: index('system_configurations_public_idx').on(table.isPublic),
+}));
 
 // ============================================================================
 // Tenants & Organizations
@@ -378,6 +540,23 @@ export const messages = pgTable('messages', {
 // Type Exports
 // ============================================================================
 
+// Configuration Types
+export type RentalObjectCategory = typeof rentalObjectCategories.$inferSelect;
+export type NewRentalObjectCategory = typeof rentalObjectCategories.$inferInsert;
+export type RentalObjectSubcategory = typeof rentalObjectSubcategories.$inferSelect;
+export type NewRentalObjectSubcategory = typeof rentalObjectSubcategories.$inferInsert;
+export type BookingTimeMode = typeof bookingTimeModes.$inferSelect;
+export type NewBookingTimeMode = typeof bookingTimeModes.$inferInsert;
+export type PricingUnit = typeof pricingUnits.$inferSelect;
+export type NewPricingUnit = typeof pricingUnits.$inferInsert;
+export type RentalObjectStatus = typeof rentalObjectStatuses.$inferSelect;
+export type NewRentalObjectStatus = typeof rentalObjectStatuses.$inferInsert;
+export type BookingStatus = typeof bookingStatuses.$inferSelect;
+export type NewBookingStatus = typeof bookingStatuses.$inferInsert;
+export type SystemConfiguration = typeof systemConfigurations.$inferSelect;
+export type NewSystemConfiguration = typeof systemConfigurations.$inferInsert;
+
+// Entity Types
 export type Tenant = typeof tenants.$inferSelect;
 export type NewTenant = typeof tenants.$inferInsert;
 export type Organization = typeof organizations.$inferSelect;

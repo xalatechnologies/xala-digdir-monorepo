@@ -35,7 +35,6 @@ import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
-import { CategoriesController } from './modules/listing/listing.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
