@@ -261,11 +261,35 @@ function MainLayoutWithContext({ colorScheme, setColorScheme, effectiveScheme }:
   return <Outlet context={{ colorScheme, setColorScheme, effectiveScheme }} />;
 }
 
+const THEME_STORAGE_KEY = 'theme-preference';
+
 // App content with theme provider
 function AppContent() {
   const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
-  const [colorScheme, setColorScheme] = React.useState<ColorScheme>('auto');
-  const [systemScheme, setSystemScheme] = React.useState<'light' | 'dark'>('light');
+  const [colorScheme, setColorSchemeState] = React.useState<ColorScheme>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark') {
+        return stored;
+      }
+    }
+    return 'auto';
+  });
+  const [systemScheme, setSystemScheme] = React.useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'light';
+  });
+
+  const setColorScheme = React.useCallback((scheme: ColorScheme) => {
+    setColorSchemeState(scheme);
+    if (scheme === 'auto') {
+      localStorage.removeItem(THEME_STORAGE_KEY);
+    } else {
+      localStorage.setItem(THEME_STORAGE_KEY, scheme);
+    }
+  }, []);
 
   // Detect system color scheme
   React.useEffect(() => {

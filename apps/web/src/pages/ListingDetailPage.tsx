@@ -52,10 +52,10 @@ function transformApiToListing(api: ApiListing): Listing {
   // API DTO is already well-structured, just map to feature types
   const dto = api as any; // API returns flat DTO with all fields
 
-  // Map listing type
+  // Map listing type - RESOURCE and SPACE are venues so map to FACILITY
   const typeMap: Record<string, ListingType> = {
     EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', 
-    SPACE: 'FACILITY', RESOURCE: 'EQUIPMENT',
+    SPACE: 'FACILITY', RESOURCE: 'FACILITY',
   };
   const listingType: ListingType = typeMap[dto.type] || 'OTHER';
 

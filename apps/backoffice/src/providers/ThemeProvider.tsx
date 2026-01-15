@@ -5,20 +5,23 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
-type ColorScheme = 'light' | 'dark';
+type ColorScheme = 'light' | 'dark' | 'auto';
 
 interface ThemeContextValue {
   colorScheme: ColorScheme;
   toggleTheme: () => void;
   setColorScheme: (scheme: ColorScheme) => void;
   isDark: boolean;
+  /** Resets to auto mode (follows system preference) */
+  resetToAuto: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  colorScheme: 'light',
+  colorScheme: 'auto',
   toggleTheme: () => {},
   setColorScheme: () => {},
   isDark: false,
+  resetToAuto: () => {},
 });
 
 interface ThemeProviderProps {
@@ -41,43 +44,58 @@ interface ThemeProviderProps {
  */
 export function ThemeProvider({ children, storageKey = 'theme-preference' }: ThemeProviderProps) {
   const [colorScheme, setColorSchemeState] = useState<ColorScheme>(() => {
-    // Check localStorage first
+    // Check localStorage first - only use stored if explicitly set
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey);
       if (stored === 'light' || stored === 'dark') {
         return stored;
       }
-      // Fall back to system preference
-      if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
     }
-    return 'light';
+    // Default to auto (follows system preference via CSS)
+    return 'auto';
   });
 
-  // Listen for system preference changes
+  // Compute isDark for UI toggle state
+  const [systemPrefersDark, setSystemPrefersDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    }
+    return false;
+  });
+
+  // Listen for system preference changes (for isDark computation when in auto mode)
   useEffect(() => {
     const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
     if (!mediaQuery) return;
 
     const handleChange = (e: MediaQueryListEvent) => {
-      // Only update if no stored preference
-      if (!localStorage.getItem(storageKey)) {
-        setColorSchemeState(e.matches ? 'dark' : 'light');
-      }
+      setSystemPrefersDark(e.matches);
     };
 
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [storageKey]);
+  }, []);
 
   const setColorScheme = (scheme: ColorScheme) => {
     setColorSchemeState(scheme);
-    localStorage.setItem(storageKey, scheme);
+    if (scheme === 'auto') {
+      localStorage.removeItem(storageKey);
+    } else {
+      localStorage.setItem(storageKey, scheme);
+    }
   };
 
+  const resetToAuto = () => {
+    setColorSchemeState('auto');
+    localStorage.removeItem(storageKey);
+  };
+
+  // Compute effective dark state for UI
+  const isDark = colorScheme === 'auto' ? systemPrefersDark : colorScheme === 'dark';
+
   const toggleTheme = () => {
-    setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
+    // Toggle based on current effective state
+    setColorScheme(isDark ? 'light' : 'dark');
   };
 
   return (
@@ -85,7 +103,8 @@ export function ThemeProvider({ children, storageKey = 'theme-preference' }: The
       colorScheme, 
       toggleTheme, 
       setColorScheme,
-      isDark: colorScheme === 'dark' 
+      isDark,
+      resetToAuto,
     }}>
       {children}
     </ThemeContext.Provider>
