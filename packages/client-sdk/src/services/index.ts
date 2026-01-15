@@ -105,6 +105,9 @@ export { monitoringService } from './monitoring.service';
 // Reviews
 export { ReviewService, reviewService } from './review.service';
 
+// Likes (Favorites)
+export { LikeService, likeService, type IsLikedResponse } from './like.service';
+
 // Billing (User + Org)
 export { 
   billingService, 
