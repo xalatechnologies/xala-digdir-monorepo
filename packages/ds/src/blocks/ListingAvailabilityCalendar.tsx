@@ -7,7 +7,7 @@
  *
  * This component implements:
  * - TIME_SLOTS mode: Week/day timeline view with hourly slots
- * - ALL_DAY mode: Month view with day selection (future subtask)
+ * - ALL_DAY mode: Month view with day selection
  * - MULTI_DAY mode: Date range picker (future subtask)
  */
 import * as React from 'react';
@@ -129,6 +129,67 @@ function getWeekStart(date: Date): Date {
   d.setDate(diff);
   d.setHours(0, 0, 0, 0);
   return d;
+}
+
+/**
+ * Get first day of month
+ */
+function getMonthStart(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
+}
+
+/**
+ * Format month and year for header (Norwegian)
+ */
+function formatMonthYear(date: Date): string {
+  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+/**
+ * Get all days in a month grid (includes padding days from prev/next months)
+ * Returns 6 weeks (42 days) to ensure consistent grid size
+ */
+function getMonthGridDays(date: Date): Date[] {
+  const monthStart = getMonthStart(date);
+  const days: Date[] = [];
+
+  // Get the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
+  let startDayOfWeek = monthStart.getDay();
+  // Adjust for Monday start (Monday = 0, Sunday = 6)
+  startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
+
+  // Add padding days from previous month
+  for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const d = new Date(monthStart);
+    d.setDate(d.getDate() - i - 1);
+    days.push(d);
+  }
+
+  // Add all days of current month
+  const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  for (let i = 1; i <= daysInMonth; i++) {
+    days.push(new Date(date.getFullYear(), date.getMonth(), i, 0, 0, 0, 0));
+  }
+
+  // Add padding days from next month to complete 6 weeks (42 days)
+  const remainingDays = 42 - days.length;
+  if (remainingDays > 0 && days.length > 0) {
+    const lastDay = days[days.length - 1]!;
+    for (let i = 1; i <= remainingDays; i++) {
+      const d = new Date(lastDay);
+      d.setDate(d.getDate() + i);
+      days.push(d);
+    }
+  }
+
+  return days;
+}
+
+/**
+ * Check if a date is in a given month
+ */
+function isInMonth(date: Date, monthDate: Date): boolean {
+  return date.getMonth() === monthDate.getMonth() && date.getFullYear() === monthDate.getFullYear();
 }
 
 /**
@@ -290,6 +351,125 @@ function TimeSlotsCell({
   );
 }
 
+interface AllDayCellProps {
+  date: Date;
+  cell: CalendarCell | undefined;
+  isSelected: boolean;
+  isClickable: boolean;
+  isCurrentMonth: boolean;
+  readOnly: boolean;
+  onCellClick?: (cell: CalendarCell) => void;
+}
+
+function AllDayCell({
+  date,
+  cell,
+  isSelected,
+  isClickable,
+  isCurrentMonth,
+  readOnly,
+  onCellClick,
+}: AllDayCellProps): React.ReactElement {
+  const status = cell?.status ?? 'CLOSED';
+  const canClick = isClickable && !readOnly && cell;
+  const today = isToday(date);
+
+  const handleClick = () => {
+    if (canClick && onCellClick && cell) {
+      onCellClick(cell);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Enter' || e.key === ' ') && canClick && onCellClick && cell) {
+      e.preventDefault();
+      onCellClick(cell);
+    }
+  };
+
+  // Determine background color
+  const getBackgroundColor = (): string => {
+    if (!isCurrentMonth) {
+      return 'var(--ds-color-neutral-background-default)';
+    }
+    if (isSelected) {
+      return 'var(--ds-color-accent-surface-active)';
+    }
+    if (!cell) {
+      return 'var(--ds-color-neutral-surface-hover)';
+    }
+    return getCellBackgroundColor(status, false);
+  };
+
+  // Determine text color
+  const getTextColor = (): string => {
+    if (!isCurrentMonth) {
+      return 'var(--ds-color-neutral-text-subtle)';
+    }
+    if (isSelected) {
+      return 'var(--ds-color-accent-text-default)';
+    }
+    if (!cell) {
+      return 'var(--ds-color-neutral-text-subtle)';
+    }
+    return getCellTextColor(status, false);
+  };
+
+  return (
+    <div
+      className={cn('listing-calendar-day-cell', isSelected && 'selected')}
+      data-status={status}
+      data-current-month={isCurrentMonth}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={canClick ? 'button' : undefined}
+      tabIndex={canClick ? 0 : undefined}
+      aria-label={`${DAY_NAMES_FULL[date.getDay()]} ${date.getDate()}. ${MONTH_NAMES[date.getMonth()]} - ${cell ? getCalendarSlotLabel(status) : 'Stengt'}${isSelected ? ' (valgt)' : ''}`}
+      title={cell?.reasonKey ? cell.reasonKey : undefined}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '56px',
+        padding: 'var(--ds-spacing-2)',
+        backgroundColor: getBackgroundColor(),
+        color: getTextColor(),
+        cursor: canClick ? 'pointer' : 'default',
+        transition: 'all 0.15s ease',
+        borderRadius: 'var(--ds-border-radius-sm)',
+        border: isSelected
+          ? '2px solid var(--ds-color-accent-base-default)'
+          : today && isCurrentMonth
+            ? '2px solid var(--ds-color-accent-border-default)'
+            : '1px solid transparent',
+        opacity: isCurrentMonth ? 1 : 0.5,
+      }}
+    >
+      <span
+        style={{
+          fontSize: 'var(--ds-font-size-sm)',
+          fontWeight: today
+            ? 'var(--ds-font-weight-bold)'
+            : 'var(--ds-font-weight-medium)',
+        }}
+      >
+        {date.getDate()}
+      </span>
+      {today && isCurrentMonth && (
+        <span
+          style={{
+            fontSize: 'var(--ds-font-size-xs)',
+            color: 'var(--ds-color-accent-text-default)',
+          }}
+        >
+          i dag
+        </span>
+      )}
+    </div>
+  );
+}
+
 // =============================================================================
 // Main Component
 // =============================================================================
@@ -391,6 +571,42 @@ export function ListingAvailabilityCalendar({
     if (onDateChange) {
       const newDate = new Date(weekStart);
       newDate.setDate(newDate.getDate() + 7);
+      onDateChange(newDate);
+    }
+  };
+
+  // Get month start for ALL_DAY navigation
+  const monthStart = React.useMemo(() => getMonthStart(currentDate), [currentDate]);
+
+  // Generate month grid days for ALL_DAY mode
+  const monthGridDays = React.useMemo(() => getMonthGridDays(currentDate), [currentDate]);
+
+  // Get cell for a specific day (for ALL_DAY mode)
+  const getCellForDay = React.useCallback(
+    (date: Date): CalendarCell | undefined => {
+      return cells.find((cell) => {
+        const cellStart = new Date(cell.start);
+        return isSameDay(cellStart, date);
+      });
+    },
+    [cells]
+  );
+
+  // Month navigation handlers
+  const handlePrevMonth = () => {
+    if (onDateChange) {
+      const newDate = new Date(currentDate);
+      newDate.setMonth(newDate.getMonth() - 1);
+      newDate.setDate(1);
+      onDateChange(newDate);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (onDateChange) {
+      const newDate = new Date(currentDate);
+      newDate.setMonth(newDate.getMonth() + 1);
+      newDate.setDate(1);
       onDateChange(newDate);
     }
   };
@@ -656,19 +872,165 @@ export function ListingAvailabilityCalendar({
     );
   };
 
-  // Render ALL_DAY mode (placeholder for future subtask)
+  // Render ALL_DAY mode (month view day picker)
   const renderAllDayMode = (): React.ReactElement => {
+    // Norwegian weekday headers (Monday first)
+    const weekDayHeaders = ['MAN', 'TIR', 'ONS', 'TOR', 'FRE', 'LØR', 'SØN'];
+
     return (
       <div className="listing-calendar-allday">
-        <Alert data-color="info">
-          <Heading level={4} data-size="xs">
-            Heldagsmodus
-          </Heading>
-          <Paragraph data-size="sm">
-            Velg en dag fra kalenderen for å booke hele dagen.
+        {/* Month Navigation */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 'var(--ds-spacing-3)',
+          }}
+        >
+          <Button
+            type="button"
+            variant="tertiary"
+            data-size="sm"
+            onClick={handlePrevMonth}
+            aria-label="Forrige måned"
+            disabled={isLoading}
+          >
+            <ChevronLeftIcon size={16} />
+          </Button>
+          <Paragraph
+            data-size="sm"
+            style={{
+              margin: 0,
+              fontWeight: 'var(--ds-font-weight-medium)',
+            }}
+          >
+            {formatMonthYear(monthStart)}
           </Paragraph>
-        </Alert>
-        {/* Month view implementation will be added in subtask-6-3 */}
+          <Button
+            type="button"
+            variant="tertiary"
+            data-size="sm"
+            onClick={handleNextMonth}
+            aria-label="Neste måned"
+            disabled={isLoading}
+          >
+            <ChevronRightIcon size={16} />
+          </Button>
+        </div>
+
+        {/* Calendar Grid */}
+        <div
+          className="listing-calendar-month-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            border: '1px solid var(--ds-color-neutral-border-subtle)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            overflow: 'hidden',
+            gap: '1px',
+            backgroundColor: 'var(--ds-color-neutral-border-subtle)',
+          }}
+        >
+          {/* Weekday headers */}
+          {weekDayHeaders.map((day) => (
+            <div
+              key={day}
+              style={{
+                padding: 'var(--ds-spacing-2)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                textAlign: 'center',
+                fontSize: 'var(--ds-font-size-xs)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+              }}
+            >
+              {day}
+            </div>
+          ))}
+
+          {/* Day cells */}
+          {monthGridDays.map((date, index) => {
+            const cell = getCellForDay(date);
+            const isSelected = cell ? isCellSelected(cell) : false;
+            const isClickable = cell ? isCalendarSlotSelectable(cell.status) : false;
+            const isCurrentMonth = isInMonth(date, currentDate);
+
+            return (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  padding: 'var(--ds-spacing-1)',
+                }}
+              >
+                <AllDayCell
+                  date={date}
+                  cell={cell}
+                  isSelected={isSelected}
+                  isClickable={isClickable}
+                  isCurrentMonth={isCurrentMonth}
+                  readOnly={readOnly}
+                  onCellClick={onCellClick}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-4)',
+            marginTop: 'var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-neutral-background-default)',
+            border: '1px solid var(--ds-color-neutral-border-subtle)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Paragraph
+            data-size="sm"
+            style={{
+              margin: 0,
+              fontWeight: 'var(--ds-font-weight-medium)',
+              color: 'var(--ds-color-neutral-text-default)',
+            }}
+          >
+            Forklaring
+          </Paragraph>
+          {legend.map((item) => (
+            <div
+              key={item.status}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+              }}
+            >
+              <div
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: getLegendColor(item.status),
+                }}
+              />
+              <Paragraph
+                data-size="sm"
+                style={{
+                  margin: 0,
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              >
+                {item.label}
+              </Paragraph>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -787,7 +1149,7 @@ export function ListingAvailabilityCalendar({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: showTips && mode === 'TIME_SLOTS' ? '1fr 280px' : '1fr',
+          gridTemplateColumns: showTips && (mode === 'TIME_SLOTS' || mode === 'ALL_DAY') ? '1fr 280px' : '1fr',
           gap: 'var(--ds-spacing-4)',
         }}
       >
@@ -795,7 +1157,7 @@ export function ListingAvailabilityCalendar({
         <div>{renderContent()}</div>
 
         {/* Tips panel */}
-        {showTips && mode === 'TIME_SLOTS' && !isLoading && !errorMessage && (
+        {showTips && (mode === 'TIME_SLOTS' || mode === 'ALL_DAY') && !isLoading && !errorMessage && (
           <div>
             <div
               style={{
@@ -811,7 +1173,7 @@ export function ListingAvailabilityCalendar({
                 data-size="xs"
                 style={{ margin: '0 0 var(--ds-spacing-2) 0' }}
               >
-                Valgte tidspunkter
+                {mode === 'ALL_DAY' ? 'Valgte datoer' : 'Valgte tidspunkter'}
               </Heading>
               {selection && selection.cells.length > 0 ? (
                 <Paragraph
@@ -821,7 +1183,7 @@ export function ListingAvailabilityCalendar({
                     color: 'var(--ds-color-neutral-text-default)',
                   }}
                 >
-                  {selection.cells.length} tidspunkt{selection.cells.length > 1 ? 'er' : ''} valgt
+                  {selection.cells.length} {mode === 'ALL_DAY' ? 'dag' : 'tidspunkt'}{selection.cells.length > 1 ? 'er' : ''} valgt
                 </Paragraph>
               ) : (
                 <Paragraph
@@ -831,7 +1193,9 @@ export function ListingAvailabilityCalendar({
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  Klikk på ledige tidspunkter for å velge dem.
+                  {mode === 'ALL_DAY'
+                    ? 'Klikk på ledige dager for å velge dem.'
+                    : 'Klikk på ledige tidspunkter for å velge dem.'}
                 </Paragraph>
               )}
             </div>
@@ -872,10 +1236,21 @@ export function ListingAvailabilityCalendar({
                   fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
-                <li>Klikk på ledige (grønne) tidspunkter for å velge</li>
-                <li>Du kan velge flere tidspunkter samtidig</li>
-                <li>Bytt mellom uker med pilene</li>
-                {!readOnly && <li>Valgte tidspunkter vises med blå ramme</li>}
+                {mode === 'ALL_DAY' ? (
+                  <>
+                    <li>Klikk på ledige (grønne) dager for å velge</li>
+                    <li>Hver dag representerer en heldagsbooking</li>
+                    <li>Bytt mellom måneder med pilene</li>
+                    {!readOnly && <li>Valgte datoer vises med blå ramme</li>}
+                  </>
+                ) : (
+                  <>
+                    <li>Klikk på ledige (grønne) tidspunkter for å velge</li>
+                    <li>Du kan velge flere tidspunkter samtidig</li>
+                    <li>Bytt mellom uker med pilene</li>
+                    {!readOnly && <li>Valgte tidspunkter vises med blå ramme</li>}
+                  </>
+                )}
               </ul>
             </div>
           </div>
