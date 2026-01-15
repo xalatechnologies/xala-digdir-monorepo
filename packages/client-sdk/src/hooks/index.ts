@@ -168,6 +168,19 @@ export {
   type AuditStats
 } from './use-audit';
 
+// Discount Code hooks
+export {
+  useDiscountCodes,
+  useDiscountCode,
+  useCreateDiscountCode,
+  useUpdateDiscountCode,
+  useDeleteDiscountCode,
+  useValidateDiscountCode,
+  useToggleDiscountCode,
+  type DiscountCodeQueryParams,
+  type ValidateCodeResult
+} from './use-discount-codes';
+
 // Conversation hooks
 export {
   conversationKeys,
