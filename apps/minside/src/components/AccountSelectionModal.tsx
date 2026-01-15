@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@xala/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import type { Organization } from '@digilist/client-sdk/types';
@@ -76,6 +77,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     setRememberChoice,
   } = useAccountContext();
 
+  const navigate = useNavigate();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
@@ -97,6 +99,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToPersonal();
     markAccountAsSelected();
     dialogRef.current?.close();
+    // Navigate to personal dashboard
+    navigate('/');
   };
 
   const handleOrganizationSelect = () => {
@@ -114,6 +118,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToOrganization(selectedOrgId);
     markAccountAsSelected();
     dialogRef.current?.close();
+    // Navigate to organization dashboard
+    navigate('/org');
   };
 
   const handleBack = () => {
