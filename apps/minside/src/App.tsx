@@ -21,6 +21,7 @@ import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoic
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
+import { FavoritesPage } from './routes/favorites';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -106,7 +107,8 @@ function AppWithTheme() {
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="help" element={<HelpPage />} />
-              
+              <Route path="favorites" element={<FavoritesPage />} />
+
               {/* Organization portal routes */}
               <Route path="org" element={<OrganizationDashboardPage />} />
               <Route path="org/bookings" element={<OrganizationBookingsPage />} />
