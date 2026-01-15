@@ -585,23 +585,114 @@ Set on `<html>` element:
 
 ## Testing Strategy
 
+### Test Organization (REQUIRED STRUCTURE)
+
+All tests MUST be organized under the `tests/` directory:
+
+```
+tests/
+├── unit/              # Vitest unit tests
+│   ├── sdk/          # SDK service tests
+│   ├── components/   # React component tests
+│   ├── hooks/        # React hooks tests
+│   └── utils/        # Utility function tests
+├── e2e/              # Playwright E2E tests
+│   ├── auth/        # Authentication flows
+│   ├── booking/     # Booking journeys
+│   ├── scenarios/   # Real-world scenarios
+│   └── stories/     # User stories
+├── integration/      # Integration tests
+│   ├── api/         # API integration
+│   └── services/    # Service integration
+├── performance/      # Performance tests
+├── security/        # Security/penetration tests
+├── fixtures/        # Test data & fixtures
+├── helpers/         # Shared test utilities
+├── reports/         # All test output (gitignored)
+│   ├── unit/       # Vitest HTML reports
+│   ├── e2e/        # Playwright HTML reports
+│   ├── coverage/   # Coverage reports
+│   ├── compliance/ # Design system scans
+│   └── i18n/       # Localization scans
+├── screenshots/     # E2E failure screenshots (gitignored)
+└── artifacts/       # Other test artifacts (gitignored)
+```
+
+**⚠️ CRITICAL RULES:**
+- All test files MUST go in the appropriate `tests/` subdirectory
+- All test output (reports, screenshots, artifacts) MUST go in `tests/reports/`, `tests/screenshots/`, or `tests/artifacts/`
+- NEVER create test folders at the root level (e.g., `test-results/`, `playwright-report/`, `reports/`)
+- Legacy scattered folders are deprecated and will be removed
+
 ### Unit Tests (Vitest)
 
-Located in `**/*.{test,spec}.{ts,tsx}`:
+Located in `tests/unit/` AND co-located with source code:
 
-- Design system components: `packages/ds/src/**/*.test.tsx`
-- App components: `apps/*/src/**/*.test.tsx`
-- SDK services: `packages/client-sdk/src/**/*.test.ts`
+- **Co-located tests** (preferred for packages): `packages/*/src/**/*.{test,spec}.{ts,tsx}`
+- **Organized tests** (preferred for integration): `tests/unit/{sdk,components,hooks,utils}/`
 
 Configuration: `vitest.config.ts`
+
+**Commands:**
+```bash
+pnpm test              # Run all unit tests (watch mode)
+pnpm test:run          # Run once
+pnpm test:coverage     # With coverage report → tests/reports/coverage/
+```
 
 ### E2E Tests (Playwright)
 
 Located in `tests/e2e/`:
-
-Run with: `pnpm test:e2e`
+- `tests/e2e/auth/` - Authentication and RBAC flows
+- `tests/e2e/booking/` - Booking flows
+- `tests/e2e/scenarios/` - Real-world user scenarios
+- `tests/e2e/stories/` - User story tests
 
 Configuration: `playwright.config.ts`
+
+**Commands:**
+```bash
+pnpm test:e2e                    # Run all E2E tests
+pnpm test:e2e:auth               # Auth tests only
+pnpm test:e2e tests/e2e/auth/    # Specific folder
+```
+
+**Output:**
+- Reports: `tests/reports/e2e/`
+- Screenshots: `tests/screenshots/`
+- Videos: `tests/artifacts/videos/`
+
+### Integration Tests
+
+Located in `tests/integration/`:
+- `tests/integration/api/` - API endpoint integration
+- `tests/integration/services/` - Service-to-service integration
+
+### Performance Tests
+
+Located in `tests/performance/`:
+- Load testing
+- Response time benchmarks
+- Memory leak detection
+
+### Security Tests
+
+Located in `tests/security/`:
+- OWASP Top 10 coverage
+- Penetration testing
+- Vulnerability scans
+
+### Test Helpers & Fixtures
+
+**Helpers**: `tests/helpers/`
+- Shared test utilities
+- Custom matchers
+- Test setup functions
+
+**Fixtures**: `tests/fixtures/`
+- Mock data
+- Seed data
+- Test configurations
 
 ---
 

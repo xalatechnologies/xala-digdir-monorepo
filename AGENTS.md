@@ -28,25 +28,49 @@ Run from repo root unless noted.
 - Compliance scan: `pnpm scan:compliance`
 - All scans: `pnpm scan:all`
 
+### Test Organization (REQUIRED)
+
+All tests MUST be organized under the `tests/` directory:
+
+```
+tests/
+├── unit/           # Vitest unit tests
+├── e2e/            # Playwright E2E tests
+├── integration/    # Integration tests
+├── performance/    # Performance tests
+├── security/       # Security tests
+├── fixtures/       # Test data
+├── helpers/        # Test utilities
+├── reports/        # All output (gitignored)
+├── screenshots/    # E2E screenshots (gitignored)
+└── artifacts/      # Test artifacts (gitignored)
+```
+
+**CRITICAL:** Never create test folders at root level (e.g., `test-results/`, `playwright-report/`, `reports/`)
+
 ### Unit Tests (Vitest)
 
 - All tests (watch): `pnpm test`
 - All tests (run once): `pnpm test:run`
 - With UI: `pnpm test:ui`
 - Coverage: `pnpm test:coverage`
+  - Output: `tests/reports/coverage/`
 
 #### Single Test (Vitest)
 
 - Run by path: `pnpm test:run -- --run path/to/file.test.ts`
-- Run by pattern: `pnpm test:run -- --run src/**/__tests__/my-test.test.ts`
+- Run by pattern: `pnpm test:run -- --run tests/unit/**/*.test.ts`
 - SDK tests: `pnpm test:sdk`
 - SDK single test: `pnpm test:sdk:authz`
 
 ### E2E Tests (Playwright)
 
 - E2E all: `pnpm test:e2e`
-- E2E single file: `pnpm test:e2e -- tests/e2e/my.spec.ts`
-- Auth config: `pnpm test:e2e:auth:config`
+  - Reports: `tests/reports/e2e/`
+  - Screenshots: `tests/screenshots/`
+- E2E specific folder: `pnpm test:e2e tests/e2e/auth/`
+- E2E single file: `pnpm test:e2e tests/e2e/auth/login.spec.ts`
+- Auth tests: `pnpm test:e2e:auth:config`
 
 ### SDK / Contract Tests
 

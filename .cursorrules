@@ -43,6 +43,16 @@ function Component() {
 - [page].* - Page-specific
 - [component].* - Component-specific
 
+## Test Organization (REQUIRED)
+
+All tests MUST be organized under `tests/`:
+- tests/unit/ - Vitest unit tests
+- tests/e2e/ - Playwright E2E tests
+- tests/integration/ - Integration tests
+- tests/reports/ - All test output (gitignored)
+
+**NEVER create test folders at root level** (test-results/, playwright-report/, reports/)
+
 ## Other Critical Rules
 
 ### SDK-First: ONLY use @digilist/client-sdk (never fetch/axios)
