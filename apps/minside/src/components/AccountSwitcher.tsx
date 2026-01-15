@@ -108,7 +108,7 @@ export function AccountSwitcher() {
     switchToOrganization(orgId);
     setIsOpen(false);
     // Redirect to organization home when switching to organization context
-    navigate(`/org/${orgId}`);
+    navigate('/org');
   };
 
   return (
