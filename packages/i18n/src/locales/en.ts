@@ -712,4 +712,85 @@ export const en: Record<string, string> = {
   'common.selectOption': 'Select...',
   'common.moveUp': 'Move up',
   'common.moveDown': 'Move down',
+
+  // ============================================================================
+  // Notification Settings
+  // ============================================================================
+  'notifications.title': 'Notifications',
+  'notifications.settings.title': 'Notification Settings',
+  'notifications.settings.subtitle': 'Choose how you want to receive notifications about bookings and changes',
+  'notifications.settings.save': 'Saving settings...',
+
+  // Notification Channels
+  'notifications.channels.title': 'Notification Channels',
+  'notifications.channels.inApp': 'In-app',
+  'notifications.channels.inAppDesc': 'Show notifications in the notification center when logged in',
+  'notifications.channels.email': 'Email',
+  'notifications.channels.emailDesc': 'Receive notifications via email',
+  'notifications.channels.sms': 'SMS',
+  'notifications.channels.smsDesc': 'Receive important notifications via SMS',
+  'notifications.channels.smsRecommended': 'Recommended for reminders and cancellations',
+
+  // Master toggles
+  'notifications.masterToggles.title': 'Master Toggles',
+  'notifications.masterToggles.description': 'Enable/disable entire channels for all notification types',
+  'notifications.masterToggles.inAppAlwaysOn': 'In-app notifications are always on by default',
+
+  // Notification Types - Labels
+  'notifications.types.requestReceived': 'Request Received',
+  'notifications.types.requestReceivedDesc': 'When someone sends a booking request',
+  'notifications.types.approved': 'Approved',
+  'notifications.types.approvedDesc': 'When a booking or request is approved',
+  'notifications.types.rejected': 'Rejected',
+  'notifications.types.rejectedDesc': 'When a booking or request is rejected',
+  'notifications.types.requestMoreInfo': 'Request More Info',
+  'notifications.types.requestMoreInfoDesc': 'When we need more information from you',
+  'notifications.types.bookingChanged': 'Booking Changed',
+  'notifications.types.bookingChangedDesc': 'When a booking is modified (time, location, etc.)',
+  'notifications.types.cancelled': 'Cancelled',
+  'notifications.types.cancelledDesc': 'When a booking is cancelled',
+  'notifications.types.reminder24h': 'Reminder (24 hours)',
+  'notifications.types.reminder24hDesc': 'Reminder the day before the booking',
+  'notifications.types.reminder2h': 'Reminder (2 hours)',
+  'notifications.types.reminder2hDesc': 'Reminder just before the booking starts',
+  'notifications.types.invoiceAvailable': 'Invoice Available',
+  'notifications.types.invoiceAvailableDesc': 'When a new invoice is ready',
+  'notifications.types.paymentStatus': 'Payment Status',
+  'notifications.types.paymentStatusDesc': 'When payment status changes',
+
+  // Notification Categories
+  'notifications.categories.booking': 'Booking Notifications',
+  'notifications.categories.bookingDesc': 'Notifications about requests, approvals and changes',
+  'notifications.categories.reminder': 'Reminders',
+  'notifications.categories.reminderDesc': 'Notifications before bookings start',
+  'notifications.categories.billing': 'Billing',
+  'notifications.categories.billingDesc': 'Notifications about invoices and payments',
+
+  // Notification Matrix
+  'notifications.matrix.title': 'Notification Types',
+  'notifications.matrix.description': 'Choose which channels to use for each notification type',
+  'notifications.matrix.selectChannel': 'Select channel',
+
+  // Empty states
+  'notifications.empty': 'No notifications',
+  'notifications.emptyDesc': 'You have no new notifications right now',
+
+  // Organization notification settings
+  'notifications.org.title': 'Organization Notifications',
+  'notifications.org.subtitle': 'Configure how the organization receives notifications',
+  'notifications.org.recipients.title': 'Who should receive notifications',
+  'notifications.org.recipients.admins': 'Administrators',
+  'notifications.org.recipients.adminsDesc': 'Notify all org administrators',
+  'notifications.org.recipients.bookingManagers': 'Booking Managers',
+  'notifications.org.recipients.bookingManagersDesc': 'Notify members with booking responsibilities',
+  'notifications.org.recipients.allMembers': 'All Members',
+  'notifications.org.recipients.allMembersDesc': 'Notify everyone in the organization',
+  'notifications.org.contact.title': 'Contact Information',
+  'notifications.org.contact.primaryEmail': 'Primary email address',
+  'notifications.org.contact.primaryPhone': 'Primary phone number (for SMS)',
+  'notifications.org.quietHours.title': 'Quiet Hours',
+  'notifications.org.quietHours.description': 'Do not send notifications during this time period',
+  'notifications.org.quietHours.enabled': 'Enable quiet hours',
+  'notifications.org.quietHours.start': 'From',
+  'notifications.org.quietHours.end': 'To',
 };

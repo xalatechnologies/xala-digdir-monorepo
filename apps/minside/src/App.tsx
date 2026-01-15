@@ -19,7 +19,7 @@ import { BillingPage } from './routes/billing';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 // Organization pages
-import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage } from './routes/org';
+import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage, OrganizationNotificationsPage } from './routes/org';
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
@@ -142,6 +142,7 @@ function AppWithTheme() {
               <Route path="org/season-rental" element={<ProtectedRoute requiredContext="organization"><SeasonRentalPage /></ProtectedRoute>} />
               <Route path="org/settings" element={<ProtectedRoute requiredContext="organization"><OrganizationSettingsPage /></ProtectedRoute>} />
               <Route path="org/activity" element={<ProtectedRoute requiredContext="organization"><OrganizationActivityPage /></ProtectedRoute>} />
+              <Route path="org/notifications" element={<ProtectedRoute requiredContext="organization"><OrganizationNotificationsPage /></ProtectedRoute>} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

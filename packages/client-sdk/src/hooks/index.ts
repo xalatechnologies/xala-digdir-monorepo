@@ -34,8 +34,7 @@ export {
   type UseFlowContextReturn,
 } from './use-flow-context';
 
-// Rental Object hooks (Utleieobjekter) - PRIMARY
-// These are the main hooks for rental object operations
+// Rental Object hooks (Utleieobjekter) - Primary hooks for rental object operations
 export {
   rentalObjectKeys,
   // List hooks
@@ -76,37 +75,6 @@ export {
   useUploadRentalObjectMedia,
   useDeleteRentalObjectMedia,
 } from './use-rental-objects';
-
-/**
- * Listing hooks - DEPRECATED
- * @deprecated Use rental object hooks instead (useRentalObjects, useRentalObject, etc.)
- * These hooks are maintained for backward compatibility only.
- */
-export {
-  useListings,
-  useListing,
-  useListingBySlug,
-  useListingAvailability,
-  useListingStats,
-  useCreateListing,
-  useUpdateListing,
-  useDeleteListing,
-  usePublishListing,
-  useUnpublishListing,
-  useArchiveListing,
-  useRestoreListing,
-  useDuplicateListing,
-  usePublicListings,
-  usePublicUiListings,
-  usePublicListing,
-  usePublicUiListing,
-  usePublicAvailability,
-  usePublicCategories,
-  // Note: usePublicCities and usePublicMunicipalities are now in rental-objects
-  useFeaturedListings,
-  useUploadListingMedia,
-  useDeleteListingMedia
-} from './use-listings';
 
 // Booking hooks
 export {
@@ -230,7 +198,10 @@ export {
   useDeletePushSubscription,
   useUpdateNotificationPreferences,
   useTestPushNotification,
-  usePushSubscriptionFlow
+  usePushSubscriptionFlow,
+  // Organization notification preferences
+  useOrganizationNotificationPreferences,
+  useUpdateOrganizationNotificationPreferences,
 } from './use-push-notifications';
 
 // Audit hooks
@@ -455,3 +426,20 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// Integration Credentials hooks (super admin only)
+export {
+  CREDENTIAL_KEYS,
+  useIntegrationCredentials,
+  useIntegrationCredential,
+  useCredentialValue,
+  useCreateCredential,
+  useUpdateCredential,
+  useDeleteCredential,
+  useRotateCredential,
+  useCredentialTypes,
+  useIntegrationProviders,
+  type CredentialInfo,
+  type CreateCredentialInput,
+  type UpdateCredentialInput,
+} from './use-integration-credentials';

@@ -108,15 +108,9 @@ export {
 } from './session-storage';
 
 export {
-  // Category migration utilities
-  LISTING_TYPE_TO_CATEGORY,
-  CATEGORY_TO_LISTING_TYPE,
+  // Category utilities
   CATEGORY_DEFAULT_TIME_MODE,
-  migrateListingTypeToCategory,
-  migrateCategoryToListingType,
-  isLegacyListingType,
   isRentalObjectCategory,
-  normalizeToCategory,
   getDefaultTimeMode,
   // Display labels
   CATEGORY_LABELS_NB,
@@ -125,9 +119,4 @@ export {
   CATEGORY_ICONS,
   // API endpoint constants
   RENTAL_OBJECT_ENDPOINTS,
-  LEGACY_LISTING_ENDPOINTS,
-  // Migration guide mappings
-  HOOK_MIGRATION_MAP,
-  SERVICE_MIGRATION_MAP,
-  TYPE_MIGRATION_MAP,
-} from './listing-type-migration';
+} from './rental-object-categories';

@@ -6,8 +6,10 @@ import { getClient } from '../core/client-factory';
 import type {
   PushSubscription,
   NotificationPreferences,
+  OrganizationNotificationPreferences,
   RegisterPushSubscriptionDTO,
   UpdateNotificationPreferencesDTO,
+  UpdateOrganizationNotificationPreferencesDTO,
 } from '../types/push-notification';
 
 export interface PushSubscriptionResponse {
@@ -20,6 +22,10 @@ export interface PushSubscriptionsResponse {
 
 export interface NotificationPreferencesResponse {
   data: NotificationPreferences;
+}
+
+export interface OrganizationNotificationPreferencesResponse {
+  data: OrganizationNotificationPreferences;
 }
 
 export interface DeleteResponse {
@@ -83,6 +89,34 @@ class PushNotificationService {
    */
   async testPush(): Promise<{ success: boolean; message: string }> {
     return getClient().post<{ success: boolean; message: string }>(`${this.basePath}/test`);
+  }
+
+  // ===========================================================================
+  // Organization Notification Preferences
+  // ===========================================================================
+
+  /**
+   * Get notification preferences for an organization
+   * Returns organization's preferences for notification channels and types
+   */
+  async getOrganizationPreferences(organizationId?: string): Promise<OrganizationNotificationPreferencesResponse> {
+    return getClient().get<OrganizationNotificationPreferencesResponse>(
+      `${this.basePath}/organizations/${organizationId}/preferences`
+    );
+  }
+
+  /**
+   * Update notification preferences for an organization
+   * Allows organization admins to configure which notifications the org receives and how
+   */
+  async updateOrganizationPreferences(
+    organizationId: string,
+    data: UpdateOrganizationNotificationPreferencesDTO
+  ): Promise<OrganizationNotificationPreferencesResponse> {
+    return getClient().put<OrganizationNotificationPreferencesResponse>(
+      `${this.basePath}/organizations/${organizationId}/preferences`,
+      data
+    );
   }
 }
 

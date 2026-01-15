@@ -1,14 +1,11 @@
 /**
  * Rental Object Controller
  * REST API endpoints for rental objects (utleieobjekter) management
- * 
- * This is the primary controller for rental object operations.
- * The legacy /api/listings endpoint is deprecated and will be removed in a future version.
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
-import { ListingService } from '../listing/listing.service';
-import { toDetailsProjection } from '../listing/listing.projections';
+import { RentalObjectService } from './rental-object.service';
+import { toDetailsProjection } from './rental-object.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
@@ -21,7 +18,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 @Controller('/api/rental-objects')
 export class RentalObjectController {
   constructor(
-    @Inject('ListingService') private readonly service: ListingService
+    @Inject('RentalObjectService') private readonly service: RentalObjectService
   ) {}
 
   /**

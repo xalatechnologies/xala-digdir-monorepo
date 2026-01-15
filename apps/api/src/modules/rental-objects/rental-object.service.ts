@@ -1,9 +1,9 @@
 /**
- * Listing Service
+ * Rental Object Service
  * Business logic for rental objects (utleieobjekter) domain
  */
 import { Injectable, Inject } from '../../core/decorators';
-import { ListingRepository } from './listing.repository';
+import { RentalObjectRepository } from './rental-object.repository';
 import { validate } from '../../core/validation/zod-pipe';
 import { getAuditService } from '../../core/audit/audit.service';
 import {
@@ -18,9 +18,9 @@ import {
 import type { PaginatedResult } from '../../database/base.repository';
 
 @Injectable()
-export class ListingService {
+export class RentalObjectService {
   constructor(
-    @Inject('ListingRepository') private readonly repository: ListingRepository,
+    @Inject('RentalObjectRepository') private readonly repository: RentalObjectRepository,
     @Inject('Adapters') private readonly adapters: any
   ) {}
 
@@ -30,10 +30,9 @@ export class ListingService {
   async create(tenantId: string, data: CreateRentalObjectDTO): Promise<RentalObject> {
     const validated = validate(CreateRentalObjectSchema, data);
 
-    // Generate slug if not provided
     const slug = validated.slug || this.generateSlug(validated.name);
 
-    const listing = await this.repository.create({
+    const rentalObject = await this.repository.create({
       tenantId,
       name: validated.name,
       slug,
@@ -52,17 +51,17 @@ export class ListingService {
       metadata: validated.metadata || {},
     });
 
-    this.adapters?.log?.info('Rental object created', { id: listing.id, tenantId });
+    this.adapters?.log?.info('Rental object created', { id: rentalObject.id, tenantId });
 
     getAuditService().log({
       tenantId,
       action: 'create',
       resource: 'rental-object',
-      resourceId: listing.id,
-      metadata: { name: listing.name, category: listing.category },
+      resourceId: rentalObject.id,
+      metadata: { name: rentalObject.name, category: rentalObject.category },
     });
 
-    return listing as RentalObject;
+    return rentalObject as RentalObject;
   }
 
   /**
@@ -84,7 +83,6 @@ export class ListingService {
    */
   async findAll(tenantId: string | null, params: RentalObjectQueryParams): Promise<PaginatedResult<RentalObject>> {
     const validated = validate(RentalObjectQuerySchema, params);
-    // Pass null tenantId to repository to fetch all listings (public access)
     return this.repository.findWithFilters(tenantId, { 
       ...validated, 
       page: validated.page ?? 1, 
@@ -99,48 +97,66 @@ export class ListingService {
    */
   async update(id: string, data: UpdateRentalObjectDTO): Promise<RentalObject> {
     const validated = validate(UpdateRentalObjectSchema, data);
-    const listing = await this.repository.update(id, validated);
+    const rentalObject = await this.repository.update(id, validated);
     
     this.adapters?.log?.info('Rental object updated', { id, changes: Object.keys(validated) });
 
     getAuditService().log({
-      tenantId: listing.tenantId,
+      tenantId: rentalObject.tenantId,
       action: 'update',
       resource: 'rental-object',
       resourceId: id,
       metadata: { changes: Object.keys(validated) },
     });
 
-    return listing as RentalObject;
+    return rentalObject as RentalObject;
   }
 
   /**
    * Publish rental object
    */
   async publish(id: string): Promise<RentalObject> {
-    const listing = await this.repository.update(id, { status: 'published' });
+    const rentalObject = await this.repository.update(id, { status: 'published' });
     this.adapters?.log?.info('Rental object published', { id });
     
     getAuditService().log({
-      tenantId: listing.tenantId,
+      tenantId: rentalObject.tenantId,
       action: 'publish',
       resource: 'rental-object',
       resourceId: id,
       metadata: { newStatus: 'published' },
     });
     
-    return listing as RentalObject;
+    return rentalObject as RentalObject;
+  }
+
+  /**
+   * Unpublish rental object (set to draft)
+   */
+  async unpublish(id: string): Promise<RentalObject> {
+    const rentalObject = await this.repository.update(id, { status: 'draft' });
+    this.adapters?.log?.info('Rental object unpublished', { id });
+    
+    getAuditService().log({
+      tenantId: rentalObject.tenantId,
+      action: 'unpublish',
+      resource: 'rental-object',
+      resourceId: id,
+      metadata: { newStatus: 'draft' },
+    });
+    
+    return rentalObject as RentalObject;
   }
 
   /**
    * Archive rental object
    */
   async archive(id: string): Promise<RentalObject> {
-    const listing = await this.repository.update(id, { status: 'archived' });
+    const rentalObject = await this.repository.update(id, { status: 'archived' });
     this.adapters?.log?.info('Rental object archived', { id });
     
     getAuditService().log({
-      tenantId: listing.tenantId,
+      tenantId: rentalObject.tenantId,
       action: 'archive',
       resource: 'rental-object',
       resourceId: id,
@@ -148,18 +164,36 @@ export class ListingService {
       metadata: { newStatus: 'archived' },
     });
     
-    return listing as RentalObject;
+    return rentalObject as RentalObject;
   }
 
   /**
-   * Duplicate rental object - creates a copy with "(Kopi)" suffix and draft status
+   * Restore archived rental object (set to draft)
+   */
+  async restore(id: string): Promise<RentalObject> {
+    const rentalObject = await this.repository.update(id, { status: 'draft' });
+    this.adapters?.log?.info('Rental object restored', { id });
+    
+    getAuditService().log({
+      tenantId: rentalObject.tenantId,
+      action: 'restore',
+      resource: 'rental-object',
+      resourceId: id,
+      metadata: { newStatus: 'draft', previousStatus: 'archived' },
+    });
+    
+    return rentalObject as RentalObject;
+  }
+
+  /**
+   * Duplicate rental object
    */
   async duplicate(id: string): Promise<RentalObject> {
     const original = await this.repository.findByIdOrFail(id);
     
-    const newListing = await this.repository.create({
+    const newRentalObject = await this.repository.create({
       ...original,
-      id: undefined, // Let DB generate new ID
+      id: undefined,
       name: `${original.name} (Kopi)`,
       slug: `${original.slug}-kopi-${Date.now()}`,
       status: 'draft',
@@ -167,34 +201,34 @@ export class ListingService {
       updatedAt: undefined,
     } as any);
     
-    this.adapters?.log?.info('Rental object duplicated', { originalId: id, newId: newListing.id });
+    this.adapters?.log?.info('Rental object duplicated', { originalId: id, newId: newRentalObject.id });
     
     getAuditService().log({
-      tenantId: newListing.tenantId,
+      tenantId: newRentalObject.tenantId,
       action: 'duplicate',
       resource: 'rental-object',
-      resourceId: newListing.id,
+      resourceId: newRentalObject.id,
       metadata: { originalId: id, originalName: original.name },
     });
     
-    return newListing as RentalObject;
+    return newRentalObject as RentalObject;
   }
 
   /**
    * Delete rental object
    */
   async delete(id: string): Promise<void> {
-    const listing = await this.repository.findByIdOrFail(id);
+    const rentalObject = await this.repository.findByIdOrFail(id);
     await this.repository.delete(id);
     this.adapters?.log?.warn('Rental object deleted', { id });
     
     getAuditService().log({
-      tenantId: listing.tenantId,
+      tenantId: rentalObject.tenantId,
       action: 'delete',
       resource: 'rental-object',
       resourceId: id,
       severity: 'warning',
-      metadata: { name: listing.name },
+      metadata: { name: rentalObject.name },
     });
   }
 
@@ -218,84 +252,47 @@ export class ListingService {
   /**
    * Get rental object availability for date range
    */
-  async getAvailability(listingId: string, startDate: string, endDate: string): Promise<any> {
-    return this.repository.getAvailability(listingId, new Date(startDate), new Date(endDate));
+  async getAvailability(id: string, startDate: string, endDate: string): Promise<any> {
+    return this.repository.getAvailability(id, new Date(startDate), new Date(endDate));
   }
 
   /**
    * Add media to rental object
    */
-  async addMedia(listingId: string, url: string, type: string): Promise<RentalObject> {
-    const listing = await this.findByIdOrFail(listingId);
-    const images = [...(listing.images || []), url];
-    return this.update(listingId, { images }) as Promise<RentalObject>;
+  async addMedia(id: string, url: string, type: string): Promise<RentalObject> {
+    const rentalObject = await this.findByIdOrFail(id);
+    const images = [...(rentalObject.images || []), url];
+    return this.update(id, { images }) as Promise<RentalObject>;
   }
 
   /**
    * Remove media from rental object
    */
-  async removeMedia(listingId: string, mediaId: string): Promise<void> {
-    const listing = await this.findByIdOrFail(listingId);
-    const images = (listing.images || []).filter((img: string) => img !== mediaId);
-    await this.update(listingId, { images });
+  async removeMedia(id: string, mediaId: string): Promise<void> {
+    const rentalObject = await this.findByIdOrFail(id);
+    const images = (rentalObject.images || []).filter((img: string) => img !== mediaId);
+    await this.update(id, { images });
   }
 
   /**
    * Get rental object statistics
    */
-  async getStats(listingId: string): Promise<any> {
-    return this.repository.getStats(listingId);
-  }
-
-  /**
-   * Unpublish rental object (set to draft)
-   */
-  async unpublish(id: string): Promise<RentalObject> {
-    const listing = await this.repository.update(id, { status: 'draft' });
-    this.adapters?.log?.info('Rental object unpublished', { id });
-    
-    getAuditService().log({
-      tenantId: listing.tenantId,
-      action: 'unpublish',
-      resource: 'rental-object',
-      resourceId: id,
-      metadata: { newStatus: 'draft' },
-    });
-    
-    return listing as RentalObject;
-  }
-
-  /**
-   * Restore archived rental object (set to draft)
-   */
-  async restore(id: string): Promise<RentalObject> {
-    const listing = await this.repository.update(id, { status: 'draft' });
-    this.adapters?.log?.info('Rental object restored', { id });
-    
-    getAuditService().log({
-      tenantId: listing.tenantId,
-      action: 'restore',
-      resource: 'rental-object',
-      resourceId: id,
-      metadata: { newStatus: 'draft', previousStatus: 'archived' },
-    });
-    
-    return listing as RentalObject;
+  async getStats(id: string): Promise<any> {
+    return this.repository.getStats(id);
   }
 
   /**
    * Get calendar configuration for rental object
    */
-  async getCalendarConfig(listingId: string): Promise<any> {
-    const listing = await this.findByIdOrFail(listingId);
+  async getCalendarConfig(id: string): Promise<any> {
+    const rentalObject = await this.findByIdOrFail(id);
     
-    // Build calendar config based on rental object settings
     return {
-      rentalObjectId: listing.id,
-      rentalObjectName: listing.name,
-      granularity: listing.timeMode === 'ALL_DAY' ? 'DAY' : 'HOUR',
+      rentalObjectId: rentalObject.id,
+      rentalObjectName: rentalObject.name,
+      granularity: rentalObject.timeMode === 'ALL_DAY' ? 'DAY' : 'HOUR',
       timezone: 'Europe/Oslo',
-      slotDurationMinutes: listing.timeMode === 'SLOT' ? 60 : 30,
+      slotDurationMinutes: rentalObject.timeMode === 'SLOT' ? 60 : 30,
       allowSameDayBooking: true,
       bookingModes: [
         {
@@ -316,4 +313,3 @@ export class ListingService {
     };
   }
 }
-

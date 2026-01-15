@@ -738,6 +738,87 @@ export const nb: Record<string, string> = {
   'common.selectOption': 'Velg...',
   'common.moveUp': 'Flytt opp',
   'common.moveDown': 'Flytt ned',
+
+  // ============================================================================
+  // Notification Settings
+  // ============================================================================
+  'notifications.title': 'Varsler',
+  'notifications.settings.title': 'Varslingsinnstillinger',
+  'notifications.settings.subtitle': 'Velg hvordan du vil motta varsler om bookinger og endringer',
+  'notifications.settings.save': 'Lagrer innstillinger...',
+
+  // Notification Channels
+  'notifications.channels.title': 'Varslingskanaler',
+  'notifications.channels.inApp': 'I appen',
+  'notifications.channels.inAppDesc': 'Vis varsler i varslingssenteret når du er pålogget',
+  'notifications.channels.email': 'E-post',
+  'notifications.channels.emailDesc': 'Motta varsler på e-post',
+  'notifications.channels.sms': 'SMS',
+  'notifications.channels.smsDesc': 'Motta viktige varsler på SMS',
+  'notifications.channels.smsRecommended': 'Anbefalt for påminnelser og kanselleringer',
+
+  // Master toggles
+  'notifications.masterToggles.title': 'Hovedbrytere',
+  'notifications.masterToggles.description': 'Skru av/på hele kanaler for alle varseltyper',
+  'notifications.masterToggles.inAppAlwaysOn': 'Varsler i appen er alltid på som standard',
+
+  // Notification Types - Labels
+  'notifications.types.requestReceived': 'Forespørsel mottatt',
+  'notifications.types.requestReceivedDesc': 'Når noen sender en bookingforespørsel',
+  'notifications.types.approved': 'Godkjent',
+  'notifications.types.approvedDesc': 'Når en booking eller forespørsel blir godkjent',
+  'notifications.types.rejected': 'Avslått',
+  'notifications.types.rejectedDesc': 'Når en booking eller forespørsel blir avslått',
+  'notifications.types.requestMoreInfo': 'Be om mer info',
+  'notifications.types.requestMoreInfoDesc': 'Når vi trenger mer informasjon fra deg',
+  'notifications.types.bookingChanged': 'Endret booking',
+  'notifications.types.bookingChangedDesc': 'Når en booking er endret (tid, sted, etc.)',
+  'notifications.types.cancelled': 'Avlyst',
+  'notifications.types.cancelledDesc': 'Når en booking er kansellert',
+  'notifications.types.reminder24h': 'Påminnelse (24 timer)',
+  'notifications.types.reminder24hDesc': 'Påminnelse dagen før bookingen',
+  'notifications.types.reminder2h': 'Påminnelse (2 timer)',
+  'notifications.types.reminder2hDesc': 'Påminnelse rett før bookingen starter',
+  'notifications.types.invoiceAvailable': 'Faktura tilgjengelig',
+  'notifications.types.invoiceAvailableDesc': 'Når en ny faktura er klar',
+  'notifications.types.paymentStatus': 'Betalingsstatus',
+  'notifications.types.paymentStatusDesc': 'Når betalingsstatus endres',
+
+  // Notification Categories
+  'notifications.categories.booking': 'Bookingvarsler',
+  'notifications.categories.bookingDesc': 'Varsler om forespørsler, godkjenning og endringer',
+  'notifications.categories.reminder': 'Påminnelser',
+  'notifications.categories.reminderDesc': 'Varsler før bookinger starter',
+  'notifications.categories.billing': 'Fakturering',
+  'notifications.categories.billingDesc': 'Varsler om fakturaer og betaling',
+
+  // Notification Matrix
+  'notifications.matrix.title': 'Varseltyper',
+  'notifications.matrix.description': 'Velg hvilke kanaler du vil bruke for hver varseltype',
+  'notifications.matrix.selectChannel': 'Velg kanal',
+
+  // Empty states
+  'notifications.empty': 'Ingen varsler',
+  'notifications.emptyDesc': 'Du har ingen nye varsler akkurat nå',
+
+  // Organization notification settings
+  'notifications.org.title': 'Organisasjonsvarsler',
+  'notifications.org.subtitle': 'Konfigurer hvordan organisasjonen mottar varsler',
+  'notifications.org.recipients.title': 'Hvem skal motta varsler',
+  'notifications.org.recipients.admins': 'Administratorer',
+  'notifications.org.recipients.adminsDesc': 'Varsle alle org-administratorer',
+  'notifications.org.recipients.bookingManagers': 'Bookingansvarlige',
+  'notifications.org.recipients.bookingManagersDesc': 'Varsle medlemmer med bookingansvar',
+  'notifications.org.recipients.allMembers': 'Alle medlemmer',
+  'notifications.org.recipients.allMembersDesc': 'Varsle alle i organisasjonen',
+  'notifications.org.contact.title': 'Kontaktinformasjon',
+  'notifications.org.contact.primaryEmail': 'Primær e-postadresse',
+  'notifications.org.contact.primaryPhone': 'Primært telefonnummer (for SMS)',
+  'notifications.org.quietHours.title': 'Stille timer',
+  'notifications.org.quietHours.description': 'Ikke send varsler i dette tidsrommet',
+  'notifications.org.quietHours.enabled': 'Aktiver stille timer',
+  'notifications.org.quietHours.start': 'Fra kl.',
+  'notifications.org.quietHours.end': 'Til kl.',
 };
 
 

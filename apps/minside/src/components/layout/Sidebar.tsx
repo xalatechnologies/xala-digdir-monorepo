@@ -359,6 +359,7 @@ export function Sidebar() {
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon />, contexts: ['organization'] },
         { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon />, contexts: ['organization'] },
         { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon />, contexts: ['organization'] },
+        { name: 'Varsler', description: 'Konfigurer organisasjonens varsler', href: '/org/notifications', icon: <MessageIcon />, contexts: ['organization'] },
         { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
         { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
       ],

@@ -27,6 +27,171 @@ export type BookingNotificationType =
   | 'booking_upcoming'
   | 'booking_completed';
 
+/**
+ * Extended notification types for the complete notification system
+ * Based on Skien demo specification:
+ * - Request received (Forespørsel mottatt)
+ * - Approved (Godkjent)
+ * - Rejected (Avslått)
+ * - Request for more info (Be om mer info)
+ * - Booking changed (Endret booking)
+ * - Cancelled (Avlyst)
+ * - Reminder before start (Påminnelse før start)
+ * - Invoice/Payment status (Faktura tilgjengelig / betalingsstatus)
+ */
+export type NotificationType =
+  | 'request_received'      // Forespørsel mottatt
+  | 'approved'              // Godkjent
+  | 'rejected'              // Avslått
+  | 'request_more_info'     // Be om mer info
+  | 'booking_changed'       // Endret booking
+  | 'cancelled'             // Avlyst
+  | 'reminder_24h'          // Påminnelse 24t før start
+  | 'reminder_2h'           // Påminnelse 2t før start
+  | 'invoice_available'     // Faktura tilgjengelig
+  | 'payment_status';       // Betalingsstatus endret
+
+/**
+ * Notification channel types
+ * In-app is always the default and recommended to stay enabled
+ */
+export type NotificationChannel = 'in_app' | 'email' | 'sms';
+
+/**
+ * Per-channel enabled state for a single notification type
+ */
+export interface NotificationChannelSettings {
+  in_app: boolean;
+  email: boolean;
+  sms: boolean;
+}
+
+/**
+ * Granular notification preferences matrix
+ * Maps each notification type to its channel settings
+ */
+export interface NotificationPreferencesMatrix {
+  request_received: NotificationChannelSettings;
+  approved: NotificationChannelSettings;
+  rejected: NotificationChannelSettings;
+  request_more_info: NotificationChannelSettings;
+  booking_changed: NotificationChannelSettings;
+  cancelled: NotificationChannelSettings;
+  reminder_24h: NotificationChannelSettings;
+  reminder_2h: NotificationChannelSettings;
+  invoice_available: NotificationChannelSettings;
+  payment_status: NotificationChannelSettings;
+}
+
+/**
+ * Sensible default preferences based on Skien demo specification:
+ * - In-app: on for all
+ * - E-post: on for decisions and changes
+ * - SMS: off by default, but recommended for reminders and cancellations
+ */
+export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferencesMatrix = {
+  request_received: { in_app: true, email: true, sms: false },
+  approved: { in_app: true, email: true, sms: false },
+  rejected: { in_app: true, email: true, sms: false },
+  request_more_info: { in_app: true, email: true, sms: false },
+  booking_changed: { in_app: true, email: true, sms: true },  // SMS recommended
+  cancelled: { in_app: true, email: true, sms: true },        // SMS recommended
+  reminder_24h: { in_app: true, email: false, sms: true },    // SMS recommended
+  reminder_2h: { in_app: true, email: false, sms: true },     // SMS recommended
+  invoice_available: { in_app: true, email: true, sms: false },
+  payment_status: { in_app: true, email: true, sms: false },
+};
+
+/**
+ * Notification type metadata for UI display
+ */
+export interface NotificationTypeMetadata {
+  type: NotificationType;
+  labelKey: string;         // i18n key for the label
+  descriptionKey: string;   // i18n key for description
+  category: 'booking' | 'reminder' | 'billing';
+  smsRecommended: boolean;  // Whether SMS is recommended for this type
+}
+
+/**
+ * Complete notification types registry with metadata
+ */
+export const NOTIFICATION_TYPES_REGISTRY: NotificationTypeMetadata[] = [
+  // Booking category
+  {
+    type: 'request_received',
+    labelKey: 'notifications.types.requestReceived',
+    descriptionKey: 'notifications.types.requestReceivedDesc',
+    category: 'booking',
+    smsRecommended: false,
+  },
+  {
+    type: 'approved',
+    labelKey: 'notifications.types.approved',
+    descriptionKey: 'notifications.types.approvedDesc',
+    category: 'booking',
+    smsRecommended: false,
+  },
+  {
+    type: 'rejected',
+    labelKey: 'notifications.types.rejected',
+    descriptionKey: 'notifications.types.rejectedDesc',
+    category: 'booking',
+    smsRecommended: false,
+  },
+  {
+    type: 'request_more_info',
+    labelKey: 'notifications.types.requestMoreInfo',
+    descriptionKey: 'notifications.types.requestMoreInfoDesc',
+    category: 'booking',
+    smsRecommended: false,
+  },
+  {
+    type: 'booking_changed',
+    labelKey: 'notifications.types.bookingChanged',
+    descriptionKey: 'notifications.types.bookingChangedDesc',
+    category: 'booking',
+    smsRecommended: true,
+  },
+  {
+    type: 'cancelled',
+    labelKey: 'notifications.types.cancelled',
+    descriptionKey: 'notifications.types.cancelledDesc',
+    category: 'booking',
+    smsRecommended: true,
+  },
+  // Reminder category
+  {
+    type: 'reminder_24h',
+    labelKey: 'notifications.types.reminder24h',
+    descriptionKey: 'notifications.types.reminder24hDesc',
+    category: 'reminder',
+    smsRecommended: true,
+  },
+  {
+    type: 'reminder_2h',
+    labelKey: 'notifications.types.reminder2h',
+    descriptionKey: 'notifications.types.reminder2hDesc',
+    category: 'reminder',
+    smsRecommended: true,
+  },
+  // Billing category
+  {
+    type: 'invoice_available',
+    labelKey: 'notifications.types.invoiceAvailable',
+    descriptionKey: 'notifications.types.invoiceAvailableDesc',
+    category: 'billing',
+    smsRecommended: false,
+  },
+  {
+    type: 'payment_status',
+    labelKey: 'notifications.types.paymentStatus',
+    descriptionKey: 'notifications.types.paymentStatusDesc',
+    category: 'billing',
+    smsRecommended: false,
+  },
+];
+
 // =============================================================================
 // Push Subscription Entity
 // =============================================================================
@@ -57,23 +222,58 @@ export interface PushSubscription extends TenantEntity {
 export interface NotificationPreferences extends TenantEntity {
   userId: string;
 
-  // Channel preferences
+  // Master channel toggles (enable/disable entire channel)
   emailEnabled: boolean;
   pushEnabled: boolean;
-  inAppEnabled: boolean;
+  inAppEnabled: boolean;  // Recommended to always be true
   smsEnabled: boolean;
 
-  // Booking notification preferences
+  // Booking notification preferences (legacy - kept for backward compatibility)
   bookingConfirmationEnabled: boolean;
   bookingReminderEnabled: boolean;
   bookingCancellationEnabled: boolean;
   bookingModificationEnabled: boolean;
 
-  // Reminder timing preferences
+  // Reminder timing preferences (legacy - kept for backward compatibility)
   reminderTiming: {
     enabled24h: boolean;
     enabled1h: boolean;
   };
+
+  // Quiet hours (ISO 8601 time format HH:mm)
+  quietHoursEnabled: boolean;
+  quietHoursStart?: string;
+  quietHoursEnd?: string;
+
+  // NEW: Granular notification preferences matrix
+  // Maps each notification type to its per-channel settings
+  notificationMatrix?: NotificationPreferencesMatrix;
+}
+
+/**
+ * Extended notification preferences for organizations
+ * Organizations may have different notification needs than individual users
+ */
+export interface OrganizationNotificationPreferences extends TenantEntity {
+  organizationId: string;
+
+  // Master channel toggles
+  emailEnabled: boolean;
+  smsEnabled: boolean;
+  inAppEnabled: boolean;  // Always true by default
+
+  // Granular notification preferences matrix
+  notificationMatrix: NotificationPreferencesMatrix;
+
+  // Organization-specific settings
+  // Who receives notifications in the organization
+  notifyAdmins: boolean;
+  notifyBookingManagers: boolean;
+  notifyAllMembers: boolean;
+
+  // Contact preferences
+  primaryEmail?: string;
+  primaryPhone?: string;  // For SMS
 
   // Quiet hours (ISO 8601 time format HH:mm)
   quietHoursEnabled: boolean;
@@ -117,6 +317,35 @@ export interface UpdateNotificationPreferencesDTO {
   quietHoursEnabled?: boolean;
   quietHoursStart?: string;
   quietHoursEnd?: string;
+  // NEW: Granular notification preferences matrix
+  notificationMatrix?: Partial<NotificationPreferencesMatrix>;
+}
+
+/**
+ * Data for updating organization notification preferences
+ */
+export interface UpdateOrganizationNotificationPreferencesDTO {
+  emailEnabled?: boolean;
+  smsEnabled?: boolean;
+  inAppEnabled?: boolean;
+  notificationMatrix?: Partial<NotificationPreferencesMatrix>;
+  notifyAdmins?: boolean;
+  notifyBookingManagers?: boolean;
+  notifyAllMembers?: boolean;
+  primaryEmail?: string;
+  primaryPhone?: string;
+  quietHoursEnabled?: boolean;
+  quietHoursStart?: string;
+  quietHoursEnd?: string;
+}
+
+/**
+ * Update a single notification type's channel settings
+ */
+export interface UpdateNotificationTypeChannelDTO {
+  notificationType: NotificationType;
+  channel: NotificationChannel;
+  enabled: boolean;
 }
 
 // =============================================================================

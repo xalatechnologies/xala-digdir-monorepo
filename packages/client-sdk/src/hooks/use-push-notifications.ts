@@ -10,6 +10,7 @@ import { pushNotificationService } from '../services/push-notification.service';
 import type {
   RegisterPushSubscriptionDTO,
   UpdateNotificationPreferencesDTO,
+  UpdateOrganizationNotificationPreferencesDTO,
   PushPermissionState,
 } from '../types/push-notification';
 
@@ -249,6 +250,40 @@ export function usePushSubscriptionFlow() {
     isSupported,
     permission,
   };
+}
+
+// ============================================================================
+// Organization Notification Preferences Hooks
+// ============================================================================
+
+/**
+ * Get notification preferences for the current organization
+ * Returns organization's preferences for notification channels and types
+ */
+export function useOrganizationNotificationPreferences(organizationId?: string) {
+  return useQuery({
+    queryKey: queryKeys.pushNotifications.organizationPreferences(organizationId),
+    queryFn: () => pushNotificationService.getOrganizationPreferences(organizationId),
+    enabled: !!organizationId,
+  });
+}
+
+/**
+ * Update organization notification preferences
+ * Allows organization admins to configure which notifications the org receives and how
+ */
+export function useUpdateOrganizationNotificationPreferences() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ organizationId, data }: { organizationId: string; data: UpdateOrganizationNotificationPreferencesDTO }) =>
+      pushNotificationService.updateOrganizationPreferences(organizationId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.pushNotifications.organizationPreferences(variables.organizationId),
+      });
+    },
+  });
 }
 
 // ============================================================================

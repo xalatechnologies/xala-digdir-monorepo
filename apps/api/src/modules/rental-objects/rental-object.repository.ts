@@ -1,14 +1,14 @@
 /**
- * Listing Repository
- * Data access layer for listing entities
+ * Rental Object Repository
+ * Data access layer for rental object entities
  */
 import { Injectable } from '../../core/decorators';
 import { BaseRepository, type PaginatedResult, type FilterCondition } from '../../database/base.repository';
 import { listings, type Listing, type NewListing } from '../../database/schema';
-import type { ListingQueryParams } from '../../schemas/listing.schema';
+import type { RentalObjectQueryParams } from '../../schemas/rental-object.schema';
 
 @Injectable()
-export class ListingRepository extends BaseRepository<
+export class RentalObjectRepository extends BaseRepository<
   typeof listings,
   Listing,
   NewListing,
@@ -20,7 +20,7 @@ export class ListingRepository extends BaseRepository<
   }
 
   /**
-   * Find listing by slug within a tenant
+   * Find rental object by slug within a tenant
    */
   async findBySlug(tenantId: string, slug: string): Promise<Listing | null> {
     return this.findOne([
@@ -30,18 +30,17 @@ export class ListingRepository extends BaseRepository<
   }
 
   /**
-   * Find listings with query params
-   * If tenantId is null, fetch all published listings (public access)
-   * Supports: type, status, search, city, price range, capacity range, amenities, sorting
+   * Find rental objects with query params
+   * If tenantId is null, fetch all published rental objects (public access)
    */
-  async findWithFilters(tenantId: string | null, params: ListingQueryParams): Promise<PaginatedResult<Listing>> {
+  async findWithFilters(tenantId: string | null, params: RentalObjectQueryParams): Promise<PaginatedResult<Listing>> {
     const conditions: FilterCondition[] = [];
 
     // Only filter by tenant if tenantId is provided
     if (tenantId) {
       conditions.push({ field: 'tenantId', operator: 'eq', value: tenantId });
     } else {
-      // Public access: only show published listings
+      // Public access: only show published rental objects
       conditions.push({ field: 'status', operator: 'eq', value: 'published' });
     }
 
@@ -50,9 +49,19 @@ export class ListingRepository extends BaseRepository<
       conditions.push({ field: 'status', operator: 'eq', value: params.status });
     }
 
-    // Type filter
-    if (params.type) {
-      conditions.push({ field: 'type', operator: 'eq', value: params.type });
+    // Category filter
+    if (params.category) {
+      conditions.push({ field: 'category', operator: 'eq', value: params.category });
+    }
+
+    // Subcategory filter
+    if (params.subcategory) {
+      conditions.push({ field: 'subcategory', operator: 'eq', value: params.subcategory });
+    }
+
+    // Time mode filter
+    if (params.timeMode) {
+      conditions.push({ field: 'timeMode', operator: 'eq', value: params.timeMode });
     }
 
     // Organization filter
@@ -82,38 +91,37 @@ export class ListingRepository extends BaseRepository<
     });
 
     // Post-filter for JSON field queries (city, amenities, price range)
-    // These require filtering after fetch since they're in JSON metadata/pricing fields
     let filteredData = result.data;
 
     // City filter (from metadata.location.city)
     if (params.city) {
       const cityLower = params.city.toLowerCase();
-      filteredData = filteredData.filter((listing: any) => {
-        const city = listing.metadata?.location?.city;
+      filteredData = filteredData.filter((obj: any) => {
+        const city = obj.metadata?.location?.city;
         return city && city.toLowerCase().includes(cityLower);
+      });
+    }
+
+    // Municipality filter
+    if (params.municipality) {
+      const municipalityLower = params.municipality.toLowerCase();
+      filteredData = filteredData.filter((obj: any) => {
+        const municipality = obj.metadata?.location?.municipality;
+        return municipality && municipality.toLowerCase().includes(municipalityLower);
       });
     }
 
     // Price range filters (from pricing.basePrice)
     if (params.minPrice !== undefined) {
-      filteredData = filteredData.filter((listing: any) => {
-        const price = listing.pricing?.basePrice ?? 0;
+      filteredData = filteredData.filter((obj: any) => {
+        const price = obj.pricing?.basePrice ?? 0;
         return price >= params.minPrice!;
       });
     }
     if (params.maxPrice !== undefined) {
-      filteredData = filteredData.filter((listing: any) => {
-        const price = listing.pricing?.basePrice ?? 0;
+      filteredData = filteredData.filter((obj: any) => {
+        const price = obj.pricing?.basePrice ?? 0;
         return price <= params.maxPrice!;
-      });
-    }
-
-    // Amenities filter (from metadata.amenities)
-    if (params.amenities) {
-      const requiredAmenities = params.amenities.split(',').map(a => a.trim().toLowerCase());
-      filteredData = filteredData.filter((listing: any) => {
-        const listingAmenities = (listing.metadata?.amenities || []).map((a: string) => a.toLowerCase());
-        return requiredAmenities.every(required => listingAmenities.includes(required));
       });
     }
 
@@ -131,9 +139,9 @@ export class ListingRepository extends BaseRepository<
   }
 
   /**
-   * Find published listings
+   * Find published rental objects
    */
-  async findPublished(tenantId: string, params: ListingQueryParams): Promise<PaginatedResult<Listing>> {
+  async findPublished(tenantId: string, params: RentalObjectQueryParams): Promise<PaginatedResult<Listing>> {
     return this.findWithFilters(tenantId, { ...params, status: 'published' });
   }
 
@@ -145,28 +153,23 @@ export class ListingRepository extends BaseRepository<
   }
 
   /**
-   * Get listing availability for date range
+   * Get rental object availability for date range
    */
-  async getAvailability(listingId: string, startDate: Date, endDate: Date): Promise<any> {
-    // Query allocations and bookings for this listing in the date range
-    const db = (this as any).db;
-    
-    // Return blocked time slots
+  async getAvailability(id: string, startDate: Date, endDate: Date): Promise<any> {
     return {
-      listingId,
+      rentalObjectId: id,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
-      blockedSlots: [], // Would query allocations table
+      blockedSlots: [],
     };
   }
 
   /**
-   * Get listing statistics
+   * Get rental object statistics
    */
-  async getStats(listingId: string): Promise<any> {
-    // Return mock stats (in production, would aggregate from bookings)
+  async getStats(id: string): Promise<any> {
     return {
-      listingId,
+      rentalObjectId: id,
       totalBookings: 0,
       totalRevenue: 0,
       averageRating: 4.5,
@@ -176,7 +179,6 @@ export class ListingRepository extends BaseRepository<
   }
 
   protected getEntityName(): string {
-    return 'Listing';
+    return 'RentalObject';
   }
 }
-

@@ -5,7 +5,7 @@
  * Use these to transform raw API data into UI-friendly formats.
  */
 
-// Listing transforms
+// Rental Object transforms
 export {
   // Types
   type TransformedAddress,
@@ -13,30 +13,22 @@ export {
   type TransformedOpeningHoursDay,
   type TransformedOpeningHours,
   type TransformedAmenity,
-  type TransformedFacility,
-  type TransformedRule,
-  type TransformedFAQ,
   type TransformedImage,
-  type TransformedKeyFacts,
-  type TransformedPricing as TransformedListingPricing,
-  type TransformedListing,
+  type TransformedPricing as TransformedRentalObjectPricing,
+  type TransformedRentalObject,
   // Functions
-  getListingTypeLabel,
+  getCategoryLabel,
+  getTimeModeLabel,
   getPricingUnitLabel,
   transformAddress,
   transformContact,
   transformOpeningHours,
   transformAmenities,
-  transformFacilities,
-  transformRules,
-  transformFAQ,
   transformImages,
-  transformPricing as transformListingPricing,
-  transformKeyFacts,
-  getHighlights,
-  transformListing,
-  transformListings,
-} from './listing.transform';
+  transformPricing as transformRentalObjectPricing,
+  transformRentalObject,
+  transformRentalObjects,
+} from './rental-object.transform';
 
 // Booking transforms
 export {

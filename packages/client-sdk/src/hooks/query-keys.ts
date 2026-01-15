@@ -243,6 +243,8 @@ export const queryKeys = {
     all: ['pushNotifications'] as const,
     subscriptions: () => [...queryKeys.pushNotifications.all, 'subscriptions'] as const,
     preferences: () => [...queryKeys.pushNotifications.all, 'preferences'] as const,
+    organizationPreferences: (organizationId?: string) =>
+      [...queryKeys.pushNotifications.all, 'organization', organizationId] as const,
   },
 
   // =========================================================================

@@ -1,71 +1,50 @@
 /**
- * Listing Projections - API-Side Data Transformation
+ * Rental Object Projections - API-Side Data Transformation
  *
  * These functions convert raw database entities to screen-ready projection DTOs.
  * The transformation happens ONCE in the API, ensuring consistent data for all frontends.
- *
- * DESIGN PRINCIPLES:
- * - FLAT output (no nested objects for frontends to traverse)
- * - DISPLAY-READY values (labels, formatted strings)
- * - NULL-SAFE (defaults for missing data)
- * - CONSISTENT (same structure for web, backoffice, minside)
  */
 
 // =============================================================================
-// TYPE DEFINITIONS (Local - matches SDK's projection-dtos.ts)
+// TYPE DEFINITIONS
 // =============================================================================
 
-export interface ListingCardProjectionDTO {
-  // Identity
+export interface RentalObjectCardProjectionDTO {
   id: string;
   slug: string;
   name: string;
   tenantId: string;
-
-  // Type
-  type: string;
-  typeLabel: string;
-
-  // Location (Display-Ready)
+  category: string;
+  categoryLabel: string;
+  subcategory: string;
+  subcategoryLabel: string;
+  timeMode: string;
+  timeModeLabel: string;
   locationFormatted: string;
   city: string;
   latitude: number | null;
   longitude: number | null;
-
-  // Media
   primaryImageUrl: string;
   primaryImageThumbnail: string;
   primaryImageAlt: string;
   imageCount: number;
-
-  // Pricing
   priceAmount: number;
   priceCurrency: string;
   priceUnit: string;
   priceDisplay: string;
-
-  // Capacity
   capacity: number;
   capacityLabel: string;
-
-  // Features (top 3 for cards)
   amenities: string[];
   moreAmenitiesCount: number;
-
-  // Rating
   averageRating: number;
   reviewCount: number;
   ratingDisplay: string;
-
-  // Description (short excerpt for cards)
   descriptionExcerpt: string;
-
-  // Status
   isAvailable: boolean;
   isFeatured: boolean;
 }
 
-export interface ListingImageDTO {
+export interface RentalObjectImageDTO {
   id: string;
   url: string;
   thumbnailUrl: string;
@@ -74,21 +53,14 @@ export interface ListingImageDTO {
   order: number;
 }
 
-export interface ListingAmenityDTO {
+export interface RentalObjectAmenityDTO {
   id: string;
   name: string;
   icon: string;
   category: string;
 }
 
-export interface ListingEquipmentDTO {
-  id: string;
-  name: string;
-  quantity: number;
-  description: string;
-}
-
-export interface ListingOpeningHoursDTO {
+export interface RentalObjectOpeningHoursDTO {
   day: string;
   dayIndex: number;
   openTime: string;
@@ -97,80 +69,25 @@ export interface ListingOpeningHoursDTO {
   isClosed: boolean;
 }
 
-export interface ListingRuleDTO {
-  id: string;
-  title: string;
-  content: string;
-}
-
-export interface ListingFaqDTO {
-  id: string;
-  question: string;
-  answer: string;
-}
-
-export interface ListingAdditionalServiceDTO {
-  id: string;
-  name: string;
+export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjectionDTO {
   description: string;
-  price: number;
-  currency: string;
-  priceDisplay: string;
-  isOptional: boolean;
-}
-
-export interface ListingEventDTO {
-  id: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-
-export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
-  // Description
-  description: string;
-  descriptionExcerpt: string;
-
-  // All images
-  images: ListingImageDTO[];
-
-  // Full address
+  images: RentalObjectImageDTO[];
   addressStreet: string;
   addressPostalCode: string;
   addressCity: string;
   addressMunicipality: string;
   addressCountry: string;
-
-  // Contact
   contactName: string;
   contactEmail: string;
   contactPhone: string;
   contactWebsite: string;
-
-  // All amenities
-  allAmenities: ListingAmenityDTO[];
-
-  // Equipment
-  includedEquipment: ListingEquipmentDTO[];
-
-  // Additional services
-  additionalServices: ListingAdditionalServiceDTO[];
-
-  // Opening hours
-  openingHours: ListingOpeningHoursDTO[];
+  allAmenities: RentalObjectAmenityDTO[];
+  openingHours: RentalObjectOpeningHoursDTO[];
   isOpenNow: boolean;
   todayHoursDisplay: string;
-
-  // Rules & FAQ (for tabs)
-  rules: ListingRuleDTO[];
-  faq: ListingFaqDTO[];
+  rules: Array<{ id: string; title: string; content: string }>;
+  faq: Array<{ id: string; question: string; answer: string }>;
   highlights: string[];
-
-  // Events (for calendar tab)
-  upcomingEvents: ListingEventDTO[];
-
-  // Booking config (for booking widget)
   bookingCalendarType: 'time_slots' | 'day_booking' | 'season_allocation' | 'request_only';
   minBookingDuration: number;
   minBookingDurationDisplay: string;
@@ -181,31 +98,29 @@ export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
   cancellationPolicyDisplay: string;
   requiresApproval: boolean;
   instantBookingEnabled: boolean;
-
-  // Permissions (API-Computed)
   canBook: boolean;
   canEdit: boolean;
   canViewPricing: boolean;
   availableActions: string[];
-
-  // Timestamps
   createdAt: string;
   updatedAt: string;
 }
 
 // =============================================================================
-// LABEL MAPPINGS (Norwegian)
+// LABEL MAPPINGS
 // =============================================================================
 
-const TYPE_LABELS: Record<string, string> = {
-  SPACE: 'Lokale',
-  RESOURCE: 'Utstyr',
-  EVENT: 'Arrangement',
-  SERVICE: 'Tjeneste',
-  VEHICLE: 'Kjøretøy',
-  FACILITY: 'Anlegg',
-  EQUIPMENT: 'Utstyr',
-  OTHER: 'Annet',
+const CATEGORY_LABELS: Record<string, string> = {
+  LOKALER_OG_BANER: 'Lokaler og baner',
+  UTSTYR_OG_INVENTAR: 'Utstyr og inventar',
+  KJORETOY_OG_TRANSPORT: 'Kjoeretoy og transport',
+  OPPLEVELSER_OG_ARRANGEMENT: 'Opplevelser og arrangement',
+};
+
+const TIME_MODE_LABELS: Record<string, string> = {
+  PERIOD: 'Tidsperiode',
+  SLOT: 'Tidsluke',
+  ALL_DAY: 'Heldags',
 };
 
 const UNIT_LABELS: Record<string, string> = {
@@ -213,7 +128,7 @@ const UNIT_LABELS: Record<string, string> = {
   day: 'dag',
   booking: 'booking',
   week: 'uke',
-  month: 'måned',
+  month: 'maned',
 };
 
 const DAY_LABELS: Record<string, [string, number]> = {
@@ -222,21 +137,23 @@ const DAY_LABELS: Record<string, [string, number]> = {
   wednesday: ['Onsdag', 3],
   thursday: ['Torsdag', 4],
   friday: ['Fredag', 5],
-  saturday: ['Lørdag', 6],
-  sunday: ['Søndag', 0],
+  saturday: ['Lordag', 6],
+  sunday: ['Sondag', 0],
 };
 
 // =============================================================================
-// RAW DB TYPE (matches Drizzle schema)
+// RAW DB TYPE
 // =============================================================================
 
-interface DbListing {
+interface DbRentalObject {
   id: string;
   tenantId: string;
   organizationId?: string | null;
   name: string;
   slug: string;
-  type: string;
+  category: string;
+  subcategory?: string | null;
+  timeMode: string;
   status: string;
   description?: string | null;
   images?: string[] | null;
@@ -255,8 +172,12 @@ interface DbListing {
 // HELPER FUNCTIONS
 // =============================================================================
 
-function getTypeLabel(type: string): string {
-  return TYPE_LABELS[type] || type;
+function getCategoryLabel(category: string): string {
+  return CATEGORY_LABELS[category] || category;
+}
+
+function getTimeModeLabel(timeMode: string): string {
+  return TIME_MODE_LABELS[timeMode] || timeMode;
 }
 
 function getUnitLabel(unit: string): string {
@@ -275,8 +196,8 @@ function safeArray<T>(val: unknown): T[] {
   return Array.isArray(val) ? val : [];
 }
 
-function formatLocation(listing: DbListing): { formatted: string; city: string } {
-  const meta = listing.metadata || {};
+function formatLocation(obj: DbRentalObject): { formatted: string; city: string } {
+  const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
   const addr = (meta.address && typeof meta.address === 'object' ? meta.address : {}) as Record<string, string>;
 
@@ -290,33 +211,32 @@ function formatLocation(listing: DbListing): { formatted: string; city: string }
   return { formatted, city: city || 'Ukjent' };
 }
 
-function getCoordinates(listing: DbListing): { lat: number | null; lng: number | null } {
-  const meta = listing.metadata || {};
+function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number | null } {
+  const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
 
   const lat = safeNumber(location.lat) || safeNumber(location.latitude) || null;
   const lng = safeNumber(location.lng) || safeNumber(location.longitude) || null;
 
-  // Only return if both are valid numbers
   if (lat && lng && lat !== 0 && lng !== 0) {
     return { lat, lng };
   }
   return { lat: null, lng: null };
 }
 
-function getPrimaryImage(listing: DbListing): { url: string; thumbnail: string; alt: string } {
-  const images = safeArray<string>(listing.images);
+function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string; alt: string } {
+  const images = safeArray<string>(obj.images);
   const primaryUrl = images[0] || '';
 
   return {
     url: primaryUrl,
-    thumbnail: primaryUrl, // Could add thumbnail generation later
-    alt: primaryUrl ? `${listing.name} - bilde` : 'Ingen bilde',
+    thumbnail: primaryUrl,
+    alt: primaryUrl ? `${obj.name} - bilde` : 'Ingen bilde',
   };
 }
 
-function getAmenities(listing: DbListing, maxCount: number = 3): { visible: string[]; moreCount: number } {
-  const meta = listing.metadata || {};
+function getAmenities(obj: DbRentalObject, maxCount: number = 3): { visible: string[]; moreCount: number } {
+  const meta = obj.metadata || {};
   const all = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
 
   return {
@@ -330,7 +250,7 @@ function formatRating(rating?: number, count?: number): string {
   return `${rating.toFixed(1)} (${count} anmeldelser)`;
 }
 
-function formatPrice(pricing?: DbListing['pricing']): {
+function formatPrice(pricing?: DbRentalObject['pricing']): {
   amount: number;
   currency: string;
   unit: string;
@@ -362,132 +282,91 @@ function formatDuration(minutes: number): string {
 // =============================================================================
 
 /**
- * Convert a database Listing to a flat, screen-ready ListingCardProjectionDTO
+ * Convert a database rental object to a flat, screen-ready RentalObjectCardProjectionDTO
  */
-export function toCardProjection(listing: DbListing): ListingCardProjectionDTO {
-  const location = formatLocation(listing);
-  const coords = getCoordinates(listing);
-  const image = getPrimaryImage(listing);
-  const { visible: amenities, moreCount } = getAmenities(listing);
-  const price = formatPrice(listing.pricing);
-  const capacity = listing.capacity || 0;
-  const meta = listing.metadata || {};
+export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectionDTO {
+  const location = formatLocation(obj);
+  const coords = getCoordinates(obj);
+  const image = getPrimaryImage(obj);
+  const { visible: amenities, moreCount } = getAmenities(obj);
+  const price = formatPrice(obj.pricing);
+  const capacity = obj.capacity || 0;
+  const meta = obj.metadata || {};
 
-  // Rating comes from metadata (computed/cached field)
   const avgRating = safeNumber(meta.averageRating);
   const revCount = safeNumber(meta.reviewCount);
 
   return {
-    // Identity
-    id: listing.id,
-    slug: listing.slug,
-    name: listing.name,
-    tenantId: listing.tenantId,
-
-    // Type
-    type: listing.type,
-    typeLabel: getTypeLabel(listing.type),
-
-    // Location
+    id: obj.id,
+    slug: obj.slug,
+    name: obj.name,
+    tenantId: obj.tenantId,
+    category: obj.category,
+    categoryLabel: getCategoryLabel(obj.category),
+    subcategory: obj.subcategory || '',
+    subcategoryLabel: obj.subcategory || '',
+    timeMode: obj.timeMode,
+    timeModeLabel: getTimeModeLabel(obj.timeMode),
     locationFormatted: location.formatted,
     city: location.city,
     latitude: coords.lat,
     longitude: coords.lng,
-
-    // Media
     primaryImageUrl: image.url,
     primaryImageThumbnail: image.thumbnail,
     primaryImageAlt: image.alt,
-    imageCount: safeArray(listing.images).length,
-
-    // Pricing
+    imageCount: safeArray(obj.images).length,
     priceAmount: price.amount,
     priceCurrency: price.currency,
     priceUnit: price.unit,
     priceDisplay: price.display,
-
-    // Capacity
     capacity,
     capacityLabel: capacity > 0 ? `${capacity} personer` : '',
-
-    // Features
     amenities,
     moreAmenitiesCount: moreCount,
-
-    // Rating (from metadata cache)
     averageRating: avgRating,
     reviewCount: revCount,
     ratingDisplay: formatRating(avgRating, revCount),
-
-    // Description
-    descriptionExcerpt: listing.description 
-      ? (listing.description.length > 120 ? listing.description.slice(0, 117) + '...' : listing.description)
+    descriptionExcerpt: obj.description 
+      ? (obj.description.length > 120 ? obj.description.slice(0, 117) + '...' : obj.description)
       : '',
-
-    // Status
-    isAvailable: listing.status === 'published',
+    isAvailable: obj.status === 'published',
     isFeatured: Boolean(meta.featured),
   };
 }
 
 /**
- * Convert a database Listing to a full ListingDetailsProjectionDTO
+ * Convert a database rental object to a full RentalObjectDetailsProjectionDTO
  */
 export function toDetailsProjection(
-  listing: DbListing,
+  obj: DbRentalObject,
   options: { canBook?: boolean; canEdit?: boolean; canViewPricing?: boolean } = {}
-): ListingDetailsProjectionDTO {
-  const card = toCardProjection(listing);
-  const meta = listing.metadata || {};
+): RentalObjectDetailsProjectionDTO {
+  const card = toCardProjection(obj);
+  const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
   const addr = (meta.address && typeof meta.address === 'object' ? meta.address : {}) as Record<string, string>;
 
-  // All images
-  const images: ListingImageDTO[] = safeArray<string>(listing.images).map((url, index) => ({
+  const images: RentalObjectImageDTO[] = safeArray<string>(obj.images).map((url, index) => ({
     id: `img-${index}`,
     url,
     thumbnailUrl: url,
-    alt: `${listing.name} - bilde ${index + 1}`,
+    alt: `${obj.name} - bilde ${index + 1}`,
     isPrimary: index === 0,
     order: index,
   }));
 
-  // All amenities
   const rawAmenities = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
-  const allAmenities: ListingAmenityDTO[] = rawAmenities.map((name, i) => ({
+  const allAmenities: RentalObjectAmenityDTO[] = rawAmenities.map((name, i) => ({
     id: `amenity-${i}`,
     name,
     icon: 'check',
     category: 'general',
   }));
 
-  // Equipment
-  const rawEquipment = safeArray<{ name: string; quantity?: number; description?: string }>(meta.includedEquipment);
-  const includedEquipment: ListingEquipmentDTO[] = rawEquipment.map((item, i) => ({
-    id: `equip-${i}`,
-    name: item.name || '',
-    quantity: item.quantity || 1,
-    description: item.description || '',
-  }));
-
-  // Additional services
-  const rawServices = safeArray<{ name: string; price?: number; description?: string; optional?: boolean }>(meta.additionalServices);
-  const additionalServices: ListingAdditionalServiceDTO[] = rawServices.map((svc, i) => ({
-    id: `svc-${i}`,
-    name: svc.name || '',
-    description: svc.description || '',
-    price: svc.price || 0,
-    currency: listing.pricing?.currency || 'NOK',
-    priceDisplay: svc.price ? `${svc.price} ${listing.pricing?.currency || 'NOK'}` : 'Inkludert',
-    isOptional: svc.optional !== false,
-  }));
-
-  // Opening hours - handle both array and object formats
   const rawHoursData = meta.openingHours;
-  let openingHours: ListingOpeningHoursDTO[] = [];
+  let openingHours: RentalObjectOpeningHoursDTO[] = [];
   
   if (Array.isArray(rawHoursData)) {
-    // Array format: [{day: "Mandag", dayIndex: 1, open: "08:00", close: "22:00"}, ...]
     openingHours = rawHoursData.map((item: any, i: number) => {
       const dayName = safeString(item.day) || safeString(item.dayName) || `Day ${i}`;
       const dayIdx = typeof item.dayIndex === 'number' ? item.dayIndex : i;
@@ -504,7 +383,6 @@ export function toDetailsProjection(
       };
     });
   } else if (rawHoursData && typeof rawHoursData === 'object') {
-    // Object format: {monday: {open: "08:00", close: "22:00"}, ...}
     openingHours = Object.entries(rawHoursData as Record<string, { open?: string; close?: string }>)
       .map(([day, times]) => {
         const [label, idx] = DAY_LABELS[day.toLowerCase()] || [day, 0];
@@ -521,120 +399,72 @@ export function toDetailsProjection(
       .sort((a, b) => a.dayIndex - b.dayIndex);
   }
 
-  // Today's hours
   const todayIndex = new Date().getDay();
   const todayHours = openingHours.find(h => h.dayIndex === todayIndex);
 
-  // Rules
-  const rawRules = safeArray<{ id?: string; title?: string; content?: string } | string>(
-    meta.guidelines || meta.rules
-  );
-  const rules: ListingRuleDTO[] = rawRules.map((r, i) =>
+  const rawRules = safeArray<{ id?: string; title?: string; content?: string } | string>(meta.guidelines || meta.rules);
+  const rules = rawRules.map((r, i) =>
     typeof r === 'string'
       ? { id: `rule-${i}`, title: r, content: r }
       : { id: r.id || `rule-${i}`, title: r.title || '', content: r.content || '' }
   );
 
-  // FAQ
   const rawFaq = safeArray<{ question: string; answer: string }>(meta.faq);
-  const faq: ListingFaqDTO[] = rawFaq.map((item, i) => ({
+  const faq = rawFaq.map((item, i) => ({
     id: `faq-${i}`,
     question: item.question || '',
     answer: item.answer || '',
   }));
 
-  // Events
-  const rawEvents = safeArray<{ id?: string; title: string; startDate: string; endDate?: string; description?: string }>(meta.events);
-  const upcomingEvents: ListingEventDTO[] = rawEvents.map((evt, i) => ({
-    id: evt.id || `evt-${i}`,
-    title: evt.title || '',
-    startDate: evt.startDate || '',
-    endDate: evt.endDate || evt.startDate || '',
-    description: evt.description || '',
-  }));
-
-  // Booking config
   const bookingConfig = (meta.bookingConfig || {}) as Record<string, unknown>;
   const minDuration = safeNumber(bookingConfig.minDuration) || 60;
   const maxDuration = safeNumber(bookingConfig.maxDuration) || 480;
   const advanceDays = safeNumber(bookingConfig.advanceBookingDays) || 7;
 
-  // Description excerpt
-  const description = listing.description || '';
-  const descriptionExcerpt = description.length > 160 ? description.slice(0, 157) + '...' : description;
+  const description = obj.description || '';
 
   return {
     ...card,
-
-    // Description
     description,
-    descriptionExcerpt,
-
-    // All images
     images,
-
-    // Full address
     addressStreet: safeString(addr.street) || safeString(location.address) || '',
     addressPostalCode: safeString(addr.postalCode) || safeString(location.postalCode) || '',
     addressCity: safeString(addr.city) || safeString(location.city) || '',
     addressMunicipality: safeString(location.municipality) || '',
     addressCountry: safeString(location.country) || 'Norge',
-
-    // Contact
     contactName: safeString(meta.contactName) || '',
     contactEmail: safeString(meta.contactEmail) || '',
     contactPhone: safeString(meta.contactPhone) || '',
     contactWebsite: safeString(meta.contactWebsite) || '',
-
-    // All amenities
     allAmenities,
-
-    // Equipment
-    includedEquipment,
-
-    // Additional services
-    additionalServices,
-
-    // Opening hours
     openingHours,
-    isOpenNow: false, // Would need real-time calculation
+    isOpenNow: false,
     todayHoursDisplay: todayHours?.hoursDisplay || '',
-
-    // Rules, FAQ, highlights
     rules,
     faq,
     highlights: safeArray<string>(meta.highlights),
-
-    // Events
-    upcomingEvents,
-
-    // Booking config
-    bookingCalendarType: (safeString(bookingConfig.calendarType) || 'time_slots') as ListingDetailsProjectionDTO['bookingCalendarType'],
+    bookingCalendarType: (safeString(bookingConfig.calendarType) || 'time_slots') as RentalObjectDetailsProjectionDTO['bookingCalendarType'],
     minBookingDuration: minDuration,
     minBookingDurationDisplay: formatDuration(minDuration),
     maxBookingDuration: maxDuration,
     maxBookingDurationDisplay: formatDuration(maxDuration),
     advanceBookingDays: advanceDays,
-    advanceBookingDisplay: advanceDays === 1 ? '1 dag på forhånd' : `${advanceDays} dager på forhånd`,
+    advanceBookingDisplay: advanceDays === 1 ? '1 dag pa forhand' : `${advanceDays} dager pa forhand`,
     cancellationPolicyDisplay: safeString(bookingConfig.cancellationPolicy) || 'Standard avbestillingsregler',
     requiresApproval: Boolean(bookingConfig.requiresApproval),
     instantBookingEnabled: Boolean(bookingConfig.instantBooking),
-
-    // Permissions (from API auth layer)
     canBook: options.canBook ?? true,
     canEdit: options.canEdit ?? false,
     canViewPricing: options.canViewPricing ?? true,
     availableActions: [],
-
-    // Timestamps
-    createdAt: listing.createdAt.toISOString(),
-    updatedAt: listing.updatedAt.toISOString(),
+    createdAt: obj.createdAt.toISOString(),
+    updatedAt: obj.updatedAt.toISOString(),
   };
 }
 
 /**
- * Convert multiple listings to card projections
+ * Convert multiple rental objects to card projections
  */
-export function toCardProjections(listings: DbListing[]): ListingCardProjectionDTO[] {
-  return listings.map(toCardProjection);
+export function toCardProjections(objects: DbRentalObject[]): RentalObjectCardProjectionDTO[] {
+  return objects.map(toCardProjection);
 }

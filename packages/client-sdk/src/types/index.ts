@@ -15,16 +15,8 @@ export * from './projection-registry';
 // Projection DTOs (screen-ready, flat data structures)
 export * from './projection-dtos';
 
-// Rental Object types (PRIMARY)
-// This is the main type system for rental objects
+// Rental Object types - Primary type system for utleieobjekter
 export * from './rental-object';
-
-/**
- * Listing types - DEPRECATED
- * @deprecated Use rental-object types instead (RentalObject, CreateRentalObjectDTO, etc.)
- * These types are maintained for backward compatibility only.
- */
-export * from './listing';
 export * from './booking';
 export * from './organization';
 export * from './auth';
@@ -55,6 +47,9 @@ export {
   CALENDAR_GRANULARITY_LABELS,
   DEFAULT_SLOT_STATUS_LEGEND,
 } from './calendar';
+
+// Push notification and notification preferences types
+export * from './push-notification';
 
 // Additional types that don't fit a single domain
 export type {
