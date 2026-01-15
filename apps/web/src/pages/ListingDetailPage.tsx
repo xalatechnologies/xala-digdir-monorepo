@@ -5,7 +5,8 @@
  * Structure: Breadcrumb -> ImageSlider -> ListingDetailsLayout
  */
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import type { FlowContext } from '@digilist/client-sdk';
 import {
   ContentLayout,
   Breadcrumb,
@@ -44,6 +45,25 @@ import { ReviewForm } from '../features/reviews/components/ReviewForm';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;
+
+/**
+ * Navigation state passed when redirecting with flow context after login
+ * This allows the listing page to restore booking state (selected slots, etc.)
+ */
+interface FlowContextNavigationState {
+  /** The restored flow context containing booking state */
+  flowContext: FlowContext;
+  /** Whether this navigation is from a flow restoration */
+  isFlowRestoration: boolean;
+}
+
+/**
+ * Navigation state when flow context expired
+ */
+interface FlowContextExpiredState {
+  /** Indicates the booking session expired */
+  flowContextExpired: true;
+}
 
 /**
  * Adapt SDK TransformedListing to feature Listing type
@@ -182,21 +202,55 @@ function transformApiToListing(api: ApiListing): Listing {
 export function ListingDetailPage(): React.ReactElement {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   // Check if the ID looks like a UUID or slug
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.id || '');
-  
+
   // Fetch by ID if UUID, otherwise fetch by slug
-  const { data: apiResponse, isLoading, error } = isUuid 
+  const { data: apiResponse, isLoading, error } = isUuid
     ? useListing(params.id || '')
     : useListingBySlug(params.id || '');
-  
+
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
   // TODO: Replace with real auth state from SDK/provider
   const isAuthenticated = false;
   const [showReviewForm, setShowReviewForm] = React.useState(false);
   const hasCompletedBooking = false;
+
+  // Check for flow context restoration from login
+  const locationState = location.state as FlowContextNavigationState | FlowContextExpiredState | null;
+  const flowContext = locationState && 'flowContext' in locationState ? locationState.flowContext : undefined;
+  const isFlowRestoration = locationState && 'isFlowRestoration' in locationState ? locationState.isFlowRestoration : false;
+  const flowContextExpired = locationState && 'flowContextExpired' in locationState ? locationState.flowContextExpired : false;
+
+  // Track whether we've processed the flow restoration
+  const flowRestorationProcessed = React.useRef(false);
+
+  // Show notification when flow context has expired
+  React.useEffect(() => {
+    if (flowContextExpired && !flowRestorationProcessed.current) {
+      flowRestorationProcessed.current = true;
+      // Note: In production, this would show a toast notification
+      console.info('[ListingDetailPage] Booking session expired - user needs to re-select time slots');
+    }
+  }, [flowContextExpired]);
+
+  // Log flow restoration for debugging
+  React.useEffect(() => {
+    if (isFlowRestoration && flowContext && !flowRestorationProcessed.current) {
+      flowRestorationProcessed.current = true;
+      console.info('[ListingDetailPage] Restoring booking flow context:', {
+        listingId: flowContext.listingId,
+        bookingMode: flowContext.bookingMode,
+        selectedSlots: flowContext.selectedSlots?.length || 0,
+        hasFormData: !!flowContext.formData,
+      });
+      // Clear the navigation state to prevent re-processing on refresh
+      navigate(location.pathname, { replace: true, state: undefined });
+    }
+  }, [isFlowRestoration, flowContext, navigate, location.pathname]);
 
   // Transform API data
   const listing = React.useMemo((): Listing | null => {
