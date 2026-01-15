@@ -481,7 +481,7 @@ export function ListingsPage(): React.ReactElement {
                       showFacilities={true}
                       showCapacity={true}
                       showListingType={false}
-                      showRating={true}
+                      showRating={false}
                       showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}

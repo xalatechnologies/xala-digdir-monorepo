@@ -234,6 +234,19 @@ export class AuthController {
     const user = userResult[0];
     const permissions = getPermissionsForRole(user.role);
 
+    console.log('========================================');
+    console.log('[SESSION CHECK]');
+    console.log('========================================');
+    console.log('User Session:');
+    console.log('  ID:', user.id);
+    console.log('  Email:', user.email);
+    console.log('  Name:', user.name);
+    console.log('  Role:', user.role);
+    console.log('  Tenant ID:', user.tenantId);
+    console.log('  Status:', user.status);
+    console.log('  Permissions:', Object.keys(permissions).filter(k => permissions[k]).join(', '));
+    console.log('========================================');
+
     return {
       data: {
         user: {

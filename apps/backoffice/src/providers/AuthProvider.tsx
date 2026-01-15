@@ -170,6 +170,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
             role: legacyRole,
             grantedRoles: [effectiveRole], // Single role from DB
           };
+
+          console.log('========================================');
+          console.log('[BACKOFFICE AUTH] User loaded from session:');
+          console.log('  Email:', backofficeUser.email);
+          console.log('  Name:', backofficeUser.name);
+          console.log('  API Role:', apiUser.role);
+          console.log('  Legacy Role:', backofficeUser.role);
+          console.log('  Granted Roles:', backofficeUser.grantedRoles);
+          console.log('  Effective Role (will be assigned):', effectiveRole);
+          console.log('========================================');
+
           setUser(backofficeUser);
         } else {
           setUser(null);

@@ -9,10 +9,8 @@ import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { AccountContextProvider } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { ConsentPopup } from './components';
-// AccountSelectionModal disabled - using full-page /account-selection route instead
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
-import { AccountSelectionPage } from './routes/account-selection';
 import { DashboardPage } from './routes/dashboard';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
@@ -64,22 +62,11 @@ function NotificationCenterProvider({ children }: { children: React.ReactNode })
 
 /**
  * Account Selection Wrapper
- * DEPRECATED: Modal-based selection replaced with full-page /account-selection route
- * Kept for backwards compatibility but modal is disabled.
- * Users are now redirected to /account-selection after login (like backoffice role-selection).
+ * Account context is automatically loaded from user preferences in the database.
+ * Users can switch context using the AccountSwitcher component in the UI.
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
-  // Modal disabled - using full-page account-selection route instead
-  // const { hasSelectedAccount, rememberChoice } = useAccountContext();
-  // const showModal = !hasSelectedAccount && !rememberChoice;
-
-  return (
-    <>
-      {/* Modal disabled - full-page selection at /account-selection */}
-      {/* <AccountSelectionModal open={showModal} /> */}
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
 
 export function App() {
@@ -115,7 +102,6 @@ function AppWithTheme() {
             <ConsentPopup />
             <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/account-selection" element={<ProtectedRoute><AccountSelectionPage /></ProtectedRoute>} />
 
             <Route
               path="/"

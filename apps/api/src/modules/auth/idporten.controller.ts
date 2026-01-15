@@ -537,7 +537,20 @@ export class IdPortenAuthController {
       const user = userResult[0];
       const userId = user.id;
 
-      console.log('[ID-PORTEN CALLBACK] User found:', userId);
+      console.log('========================================');
+      console.log('[ID-PORTEN LOGIN SUCCESS]');
+      console.log('========================================');
+      console.log('User Details:');
+      console.log('  ID:', userId);
+      console.log('  Email:', user.email);
+      console.log('  Name:', user.name);
+      console.log('  Role:', user.role);
+      console.log('  NIN (masked):', nin.substring(0, 6) + '***');
+      console.log('  Status:', user.status);
+      console.log('Redirect Target:');
+      console.log('  returnTo:', returnTo);
+      console.log('  Final URL will be:', returnTo + '?auth_success=true&auth_provider=bankid');
+      console.log('========================================');
 
       // Clean up session
       await sessionStore.delete(state);
