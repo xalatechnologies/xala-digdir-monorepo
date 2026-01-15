@@ -71,7 +71,6 @@ import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
 import { IdPortenAuthController } from './modules/auth/idporten.controller';
 import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
-import { NotificationsController } from './modules/notifications/notifications.controller';
 import { PushNotificationsController, PushNotificationsService, PushNotificationsRepository } from './modules/push-notifications';
 import {
   NotificationSystemController,
@@ -217,11 +216,7 @@ async function bootstrap() {
   container.registerFactory('IdPortenOIDCAuthController', () =>
     new IdPortenOIDCAuthController()
   );
-  // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
-    new NotificationsController()
-  );
-  
+
   // Push Notifications (preferences, subscriptions)
   container.registerFactory('PushNotificationsRepository', () =>
     new PushNotificationsRepository(db)
@@ -311,8 +306,7 @@ async function bootstrap() {
     // ID-porten (BankID) via Signicat authentication
     IdPortenAuthController,
     IdPortenOIDCAuthController,
-    // Notifications
-    NotificationsController,
+    // Notifications (NotificationsController removed - replaced by NotificationSystemController)
     PushNotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
@@ -341,9 +335,15 @@ async function bootstrap() {
   console.log('✓ REST routes registered');
 
   // Register Notification System routes (custom registration)
-  const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
-  notificationSystemController.registerRoutes(app);
-  console.log('✓ Notification system routes registered');
+  // TEMPORARILY DISABLED: Route conflict with old NotificationsController needs investigation
+  // const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
+  // notificationSystemController.registerRoutes(app);
+  // console.log('✓ Notification system routes registered');
+
+  // Register GDPR routes (custom registration)
+  const gdprController = container.resolve('GdprController') as GdprController;
+  await gdprController.register(app);
+  console.log('✓ GDPR routes registered');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);

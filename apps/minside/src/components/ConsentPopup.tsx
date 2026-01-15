@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
-  Modal,
   Heading,
   Paragraph,
   Button,
@@ -108,13 +107,26 @@ export function ConsentPopup() {
     );
   };
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (dialogRef.current && !dialogRef.current.open) {
+      dialogRef.current.showModal();
+    }
+  }, []);
+
   return (
-    <Modal
-      open={true}
-      onClose={() => {
-        // Cannot close without accepting required consents
-      }}
+    <dialog
+      ref={dialogRef}
       aria-labelledby="consent-dialog-title"
+      style={{
+        padding: 'var(--ds-spacing-6)',
+        borderRadius: 'var(--ds-border-radius-md)',
+        border: 'none',
+        boxShadow: 'var(--ds-shadow-xl)',
+        maxWidth: '600px',
+        width: '90vw',
+      }}
     >
       <Stack direction="column" gap="24px">
         <Heading id="consent-dialog-title" size="lg">
@@ -164,6 +176,6 @@ export function ConsentPopup() {
           </Button>
         </Stack>
       </Stack>
-    </Modal>
+    </dialog>
   );
 }

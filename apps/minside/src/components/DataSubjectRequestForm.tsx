@@ -12,14 +12,14 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
-  useCreateDataRequest,
+  useCreateDataSubjectRequest,
   useMyDataRequests,
 } from '@digilist/client-sdk/hooks';
 import type { DataRequestType, DataSubjectRequestDTO } from '@digilist/client-sdk/types';
 
 export function DataSubjectRequestForm() {
   const t = useT();
-  const { mutate: createRequest, isPending, isSuccess } = useCreateDataRequest();
+  const { mutate: createRequest, isPending, isSuccess } = useCreateDataSubjectRequest();
   const { data: requestsData, isLoading: isLoadingRequests } = useMyDataRequests();
 
   const [requestType, setRequestType] = React.useState<DataRequestType>('access');

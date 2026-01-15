@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Tabs, TabList, Tab, TabPanel, Stack, Heading } from '@xala/ds';
+import { Container, Tabs, TabsList, TabsTab, TabsPanel, Stack, Heading } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { ConsentSettings, DataSubjectRequestForm } from '../components';
 
@@ -13,22 +13,22 @@ export function PrivacyPage() {
         <Heading size="xl">{t('gdpr.privacy.title')}</Heading>
 
         <Tabs value={activeTab} onChange={setActiveTab}>
-          <TabList aria-label={t('gdpr.settings.tabsLabel')}>
-            <Tab value="consents">{t('gdpr.settings.consentsTab')}</Tab>
-            <Tab value="requests">{t('gdpr.settings.requestsTab')}</Tab>
-          </TabList>
+          <TabsList aria-label={t('gdpr.settings.tabsLabel')}>
+            <TabsTab value="consents">{t('gdpr.settings.consentsTab')}</TabsTab>
+            <TabsTab value="requests">{t('gdpr.settings.requestsTab')}</TabsTab>
+          </TabsList>
 
-          <TabPanel value="consents">
+          <TabsPanel value="consents">
             <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
               <ConsentSettings />
             </div>
-          </TabPanel>
+          </TabsPanel>
 
-          <TabPanel value="requests">
+          <TabsPanel value="requests">
             <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
               <DataSubjectRequestForm />
             </div>
-          </TabPanel>
+          </TabsPanel>
         </Tabs>
       </Stack>
     </Container>

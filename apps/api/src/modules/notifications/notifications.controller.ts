@@ -62,7 +62,9 @@ const mockNotifications: Notification[] = [
   },
 ];
 
-@Controller('/api/notifications')
+// DEPRECATED: This controller has been replaced by NotificationSystemController
+// Commenting out to prevent route conflicts
+// @Controller('/api/notifications')
 export class NotificationsController {
   /**
    * GET /api/notifications/my

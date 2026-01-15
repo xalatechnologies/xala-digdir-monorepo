@@ -492,6 +492,13 @@ export class IdPortenAuthController {
         auth_success: 'true',
         auth_provider: 'bankid',
       });
+
+      // DEBUG: Log returnTo and redirectUrl
+      console.log('[ID-PORTEN CALLBACK] Success redirect:');
+      console.log('  returnTo:', returnTo);
+      console.log('  redirectUrl:', redirectUrl);
+      console.log('  session.returnTo:', session.returnTo);
+
       return reply.redirect(redirectUrl);
     } catch (error) {
       // Audit log callback error

@@ -15,12 +15,12 @@ export WEB_SUBDOMAIN="web-test"
 export BACKOFFICE_SUBDOMAIN="backoffice-test"
 export MINSIDE_SUBDOMAIN="minside-test"
 
-# Remote Paths (adjust based on your Hostinger setup)
-# For Hostinger VPS with multiple subdomains:
-export REMOTE_BASE="/home/${HOSTINGER_USER}/domains"
-export WEB_REMOTE_PATH="${REMOTE_BASE}/${WEB_SUBDOMAIN}.${DOMAIN_BASE}/public_html"
-export BACKOFFICE_REMOTE_PATH="${REMOTE_BASE}/${BACKOFFICE_SUBDOMAIN}.${DOMAIN_BASE}/public_html"
-export MINSIDE_REMOTE_PATH="${REMOTE_BASE}/${MINSIDE_SUBDOMAIN}.${DOMAIN_BASE}/public_html"
+# Remote Paths (matches nginx configuration)
+# Test environments are under /var/www/digilist/
+export REMOTE_BASE="/var/www/digilist"
+export WEB_REMOTE_PATH="${REMOTE_BASE}/web"
+export BACKOFFICE_REMOTE_PATH="${REMOTE_BASE}/backoffice"
+export MINSIDE_REMOTE_PATH="${REMOTE_BASE}/minside"
 
 # API Configuration
 export VITE_API_URL="https://api.digilist.no"
