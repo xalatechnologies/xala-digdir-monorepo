@@ -6,8 +6,9 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
-import { AccountContextProvider } from './providers/AccountContextProvider';
+import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
@@ -41,19 +42,38 @@ export function useNotificationCenter(): NotificationCenterContextValue {
 
 function NotificationCenterProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const openNotificationCenter = useCallback(() => {
     setIsOpen(true);
   }, []);
-  
+
   const closeNotificationCenter = useCallback(() => {
     setIsOpen(false);
   }, []);
-  
+
   return (
     <NotificationCenterContext.Provider value={{ openNotificationCenter, closeNotificationCenter, isOpen }}>
       {children}
     </NotificationCenterContext.Provider>
+  );
+}
+
+/**
+ * Account Selection Wrapper
+ * Displays the AccountSelectionModal when user hasn't selected an account yet
+ * and hasn't chosen to remember their choice.
+ */
+function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
+  const { hasSelectedAccount, rememberChoice } = useAccountContext();
+
+  // Show modal if user hasn't selected an account and hasn't remembered their choice
+  const showModal = !hasSelectedAccount && !rememberChoice;
+
+  return (
+    <>
+      <AccountSelectionModal open={showModal} />
+      {children}
+    </>
   );
 }
 
@@ -82,6 +102,7 @@ function AppWithTheme() {
         <NotificationCenterProvider>
           <AuthProvider>
             <AccountContextProvider>
+            <AccountSelectionWrapper>
             <RealtimeProvider
               wsUrl={import.meta.env.VITE_WS_URL}
               tenantId={import.meta.env.VITE_TENANT_ID}
@@ -123,6 +144,7 @@ function AppWithTheme() {
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             </RealtimeProvider>
+            </AccountSelectionWrapper>
             </AccountContextProvider>
           </AuthProvider>
         </NotificationCenterProvider>
