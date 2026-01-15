@@ -499,11 +499,7 @@ test.describe('Calendar Realtime Updates', () => {
     await navigateToListing(page);
 
     // Look for live/realtime indicator
-    const liveIndicator = page.locator(
-      '[data-realtime="connected"], ' +
-      '.live-indicator, ' +
-      'text=/live|sanntid/i'
-    );
+    const liveIndicator = page.locator('[data-realtime="connected"], .live-indicator');
 
     // Realtime indicator may or may not be visible
     const hasIndicator = await liveIndicator.count() > 0;
@@ -514,11 +510,7 @@ test.describe('Calendar Realtime Updates', () => {
     await navigateToListing(page);
 
     // Look for warning alerts
-    const warningAlert = page.locator(
-      '[role="alert"], ' +
-      '.warning-banner, ' +
-      'text=/ikke lenger tilgjengelig|no longer available/i'
-    );
+    const warningAlert = page.locator('[role="alert"], .warning-banner');
 
     // Warning should appear when selection conflicts
     // This is a placeholder - actual realtime testing requires backend
@@ -756,11 +748,7 @@ test.describe('Calendar Loading States', () => {
     const calendarSection = await findCalendarSection(page);
 
     // Look for error boundary or error message patterns
-    const errorIndicator = page.locator(
-      '[data-error="true"], ' +
-      '.error, ' +
-      'text=/feil|error|prøv igjen/i'
-    );
+    const errorIndicator = page.locator('[data-error="true"], .error');
 
     // Error handling should be present (but may not trigger in normal flow)
     const hasErrorHandling = await errorIndicator.count() >= 0;
@@ -777,7 +765,7 @@ test.describe('Calendar Loading States', () => {
       await expect(calendarSection).toBeVisible();
 
       // Look for empty state message
-      const emptyMessage = page.locator('text=/ingen ledige|no availability/i');
+      const emptyMessage = page.locator('.empty-state, [data-empty="true"]');
       const hasEmptyState = await emptyMessage.count() >= 0;
 
       expect(typeof hasEmptyState).toBe('boolean');

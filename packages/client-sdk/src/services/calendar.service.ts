@@ -94,7 +94,7 @@ export class AvailabilityMatrixService extends BaseService {
   ): Promise<SingleResponse<ListingAvailabilityMatrixProjectionDTO>> {
     return this.client.get(
       this.buildPath(`/${listingId}`),
-      { params: params as Record<string, string | number | boolean> }
+      { params: params as unknown as Record<string, string | number | boolean> }
     );
   }
 }
