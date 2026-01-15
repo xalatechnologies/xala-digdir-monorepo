@@ -14,6 +14,7 @@ import {
   LoginOption,
   IdPortenIcon,
   MicrosoftIcon,
+  BankIdIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
@@ -22,6 +23,8 @@ import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import type { FlowContext } from '@digilist/client-sdk';
+import { signicatService } from '@digilist/client-sdk';
+
 
 /**
  * Navigation state passed when redirecting with flow context
@@ -189,6 +192,12 @@ export function LoginPage(): React.ReactElement {
         title={t('auth.microsoft')}
         description={t('auth.microsoftDesc')}
         onClick={() => login('microsoft')}
+      />
+      <LoginOption
+        icon={<BankIdIcon />}
+        title={t('auth.bankid')}
+        description={t('auth.bankidDesc')}
+        onClick={() => signicatService.authorize('/role-selection')}
       />
     </LoginLayout>
   );

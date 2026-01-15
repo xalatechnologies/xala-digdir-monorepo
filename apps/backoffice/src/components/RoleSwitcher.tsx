@@ -82,7 +82,6 @@ export function RoleSwitcher() {
   const {
     effectiveRole,
     grantedRoles,
-    isDualRole,
     setEffectiveRole,
   } = useBackofficeRole();
 
@@ -90,12 +89,8 @@ export function RoleSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Only show for dual-role users
-  if (!isDualRole || !effectiveRole) {
-    return null;
-  }
-
   // Close dropdown when clicking outside
+  // IMPORTANT: This hook must be called before any early returns to follow Rules of Hooks
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -108,6 +103,11 @@ export function RoleSwitcher() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [isOpen]);
+
+  // Don't show if no role is set yet (still initializing)
+  if (!effectiveRole) {
+    return null;
+  }
 
   const handleRoleClick = (role: EffectiveBackofficeRole) => {
     if (role === effectiveRole) {
@@ -186,31 +186,12 @@ export function RoleSwitcher() {
             backgroundColor: 'var(--ds-color-neutral-background-default)',
             border: '1px solid var(--ds-color-neutral-border-default)',
             borderRadius: 'var(--ds-border-radius-md)',
-            boxShadow: 'var(--ds-shadow-large)',
-            zIndex: 1000,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            zIndex: 9999,
+            isolation: 'isolate',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          {/* Header */}
-          <div
-            style={{
-              padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-            }}
-          >
-            <Paragraph
-              data-size="xs"
-              style={{
-                margin: 0,
-                color: 'var(--ds-color-neutral-text-subtle)',
-                textTransform: 'uppercase',
-                letterSpacing: 'var(--ds-font-letter-spacing-wide)',
-                fontWeight: 'var(--ds-font-weight-semibold)',
-              }}
-            >
-              Bytt rolle
-            </Paragraph>
-          </div>
-
           {/* Role Options */}
           <div style={{ padding: 'var(--ds-spacing-2) 0' }}>
             {grantedRoles.map((role) => {

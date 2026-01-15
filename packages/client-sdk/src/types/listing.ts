@@ -3,9 +3,23 @@
  * Single Responsibility: All listing-related type definitions
  */
 
-import type { BaseEntity, TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
+import type { 
+  BaseEntity, 
+  TenantEntity, 
+  ListingType, 
+  ListingStatus, 
+  BookingModel, 
+  PricingUnit, 
+  BaseQueryParams,
+  // V2 types
+  ListingCategory,
+  BookingTimeMode,
+  ListingBookingFeatures,
+  ListingBookingConfig,
+} from './enums';
 import type { ReviewStats } from './review';
 import type { BookingMode, RecurringConstraintsDTO, InGameConstraintsDTO } from './booking';
+
 
 // =============================================================================
 // Listing Entity
@@ -108,6 +122,155 @@ export interface ListingQueryParams extends BaseQueryParams {
   maxCapacity?: number;
   amenities?: string;
 }
+
+// =============================================================================
+// V2 Listing Types (New Category & Booking Model)
+// =============================================================================
+
+/** Listing rules configuration */
+export interface ListingRulesConfig {
+  deposit?: { 
+    required: boolean; 
+    amount: number;
+    currency?: string;
+  };
+  pickup?: { 
+    location: string; 
+    instructions?: string;
+  };
+  ageRequirement?: number;
+  licenseRequired?: boolean;
+  cancellation?: { 
+    hoursNotice: number; 
+    refundPercent: number;
+  };
+}
+
+/**
+ * V2 Listing Entity with new category/timeMode structure
+ */
+export interface ListingV2 extends TenantEntity {
+  organizationId?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  images: string[];
+  
+  // New Category System
+  category: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  
+  // New Booking Configuration
+  booking: ListingBookingConfig;
+  
+  // Pricing
+  pricing: ListingPricing;
+  
+  // Location
+  location?: ListingLocation;
+  
+  // Rules & Logistics
+  rules?: ListingRulesConfig;
+  
+  // Status & Metadata
+  status: ListingStatus;
+  metadata?: ListingMetadata;
+  
+  // Review aggregation
+  averageRating?: number;
+  reviewCount?: number;
+  
+  // Deprecated fields for backward compatibility
+  /** @deprecated Use category instead */
+  type?: ListingType;
+  /** @deprecated Use booking.timeMode and booking.features instead */
+  bookingModel?: BookingModel;
+  capacity?: number;
+  quantity?: number;
+}
+
+/**
+ * V2 Query Parameters with new filter facets
+ */
+export interface ListingQueryParamsV2 extends BaseQueryParams {
+  // New Category Filter
+  category?: ListingCategory;
+  
+  // New Time Mode Filter
+  timeMode?: BookingTimeMode;
+  
+  // New Feature Toggles
+  hasInventory?: boolean;
+  sharedCapacityEnabled?: boolean;
+  packagesEnabled?: boolean;
+  
+  // Enhanced filters
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  capacityMin?: number;
+  availableFrom?: string;
+  availableTo?: string;
+  
+  // Existing filters
+  status?: ListingStatus;
+  organizationId?: string;
+  search?: string;
+  city?: string;
+  municipality?: string;
+}
+
+/**
+ * V2 Create Listing DTO
+ */
+export interface CreateListingV2DTO {
+  name: string;
+  slug?: string;
+  description?: string;
+  images?: string[];
+  
+  // Required category
+  category: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  
+  // Required booking config
+  booking: {
+    timeMode: BookingTimeMode;
+    features?: ListingBookingFeatures;
+  };
+  
+  // Optional
+  pricing?: Partial<ListingPricing>;
+  location?: ListingLocation;
+  rules?: ListingRulesConfig;
+  organizationId?: string;
+  metadata?: ListingMetadata;
+}
+
+/**
+ * V2 Update Listing DTO
+ */
+export interface UpdateListingV2DTO {
+  name?: string;
+  description?: string;
+  images?: string[];
+  category?: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  booking?: Partial<ListingBookingConfig>;
+  pricing?: Partial<ListingPricing>;
+  location?: ListingLocation;
+  rules?: ListingRulesConfig;
+  metadata?: ListingMetadata;
+}
+
 
 // =============================================================================
 // Listing Related Types

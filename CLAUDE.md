@@ -272,6 +272,59 @@ function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
 }
 ```
 
+### 8. i18n LOCALIZATION-FIRST
+
+```
+❌ NEVER use hardcoded strings in UI components
+❌ NEVER show untranslated text to users (Norwegian or English)
+✅ ALWAYS use t() function from @xala/i18n
+✅ ALWAYS define translations in both nb.ts AND en.ts
+```
+
+All user-facing text MUST go through the i18n system:
+
+**Required Pattern:**
+
+```tsx
+// ❌ WRONG - Hardcoded strings
+<Heading>Velg rolle</Heading>
+<Button>Submit</Button>
+<Text>Loading...</Text>
+
+// ✅ CORRECT - Use t() function
+import { useT } from '@xala/i18n';
+
+function MyComponent() {
+  const t = useT();
+  return (
+    <>
+      <Heading>{t('auth.roleSelection.title')}</Heading>
+      <Button>{t('common.submit')}</Button>
+      <Text>{t('common.loading')}</Text>
+    </>
+  );
+}
+```
+
+**When adding new text:**
+
+1. Add key to `packages/i18n/src/locales/nb.ts` (Norwegian)
+2. Add key to `packages/i18n/src/locales/en.ts` (English)
+3. Use `t('namespace.key')` in component
+4. Rebuild i18n package: `pnpm -F @xala/i18n build`
+
+**Key naming convention:**
+
+- `common.*` - Shared strings (save, cancel, loading, error)
+- `auth.*` - Authentication pages
+- `nav.*` - Navigation items
+- `dashboard.*` - Dashboard page
+- `listings.*` - Listing management
+- `bookings.*` - Booking management
+- `backoffice.*` - Backoffice-specific UI
+
+**If i18n key is missing → STOP and add it first.**
+
 ## Architecture Layers
 
 ```

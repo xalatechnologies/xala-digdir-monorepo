@@ -82,6 +82,29 @@ export const en: Record<string, string> = {
   'auth.terms': 'Terms of use',
   'auth.contactSupport': 'Contact support',
   'auth.copyright': '© 2026 Digilist. All rights reserved.',
+  'auth.bankid': 'BankID',
+  'auth.bankidDesc': 'Secure login with BankID',
+
+  // Auth - Role Selection Page
+  'auth.roleSelection.title': 'Select Role',
+  'auth.roleSelection.subtitle': 'You have access to multiple roles. Choose how you want to continue.',
+  'auth.roleSelection.panelTitle': 'Multiple Roles, One Login',
+  'auth.roleSelection.panelDescription': 'You have access to both administrator and case handler roles. Choose which role to use for this session.',
+  'auth.roleSelection.adminFeatures': 'Full Access',
+  'auth.roleSelection.adminFeaturesDesc': 'Manage users, organizations and settings',
+  'auth.roleSelection.caseHandlerFeatures': 'Case Handling',
+  'auth.roleSelection.caseHandlerFeaturesDesc': 'Process bookings, applications and inquiries',
+  'auth.roleSelection.roleSwitch': 'Flexible Switching',
+  'auth.roleSelection.roleSwitchDesc': 'Switch between roles anytime without re-login',
+
+  // Backoffice - Role Selection Component
+  'backoffice.roleSelection.title': 'Select Role',
+  'backoffice.roleSelection.subtitle': 'You have access to multiple roles. Choose how you want to continue.',
+  'backoffice.roleSelection.adminTitle': 'Administrator',
+  'backoffice.roleSelection.adminDescription': 'Full access to all features and settings',
+  'backoffice.roleSelection.caseHandlerTitle': 'Case Handler',
+  'backoffice.roleSelection.caseHandlerDescription': 'Process bookings, applications and inquiries',
+  'backoffice.roleSelection.rememberChoice': 'Remember my choice',
 
   // Dashboard
   'dashboard.welcomeBack': 'Welcome back, {{name}}',

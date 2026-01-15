@@ -48,7 +48,8 @@ export function LoginPage(): React.ReactElement {
   const flowRestorationProcessed = useRef(false);
 
   // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+  // Default to account-selection page so user can choose personal vs organization
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/account-selection';
 
   /**
    * Handle navigation after authentication
@@ -83,12 +84,11 @@ export function LoginPage(): React.ReactElement {
       // Handle expired flow context
       if (result.wasExpired) {
         flowRestorationProcessed.current = true;
-        // Navigate to home with notification that session expired
-        // The target page can show a toast about expired booking session
+        // Navigate to account-selection with notification that session expired
         const expiredState: FlowContextExpiredState = {
           flowContextExpired: true,
         };
-        navigate('/', {
+        navigate('/account-selection', {
           replace: true,
           state: expiredState,
         });

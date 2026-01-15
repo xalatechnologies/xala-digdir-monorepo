@@ -11,6 +11,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
+import { AccountSelectionPage } from './routes/account-selection';
 import { DashboardPage } from './routes/dashboard';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
@@ -117,6 +118,7 @@ function AppWithTheme() {
             >
             <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/account-selection" element={<ProtectedRoute><AccountSelectionPage /></ProtectedRoute>} />
 
             <Route
               path="/"

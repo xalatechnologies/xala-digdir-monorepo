@@ -267,10 +267,14 @@ export function BookingWidgetPlacement({
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
   const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
 
-  // Update lastUpdated when busySlots change (real-time updates)
+  // Create a stable key for busySlots to prevent infinite re-renders
+  // when the prop is a new array reference with the same content
+  const busySlotsKey = React.useMemo(() => JSON.stringify(busySlots), [busySlots]);
+
+  // Update lastUpdated when busySlots content actually changes (real-time updates)
   React.useEffect(() => {
     setLastUpdated(new Date());
-  }, [busySlots]);
+  }, [busySlotsKey]);
 
   // Update lastUpdated when week changes
   React.useEffect(() => {

@@ -83,6 +83,29 @@ export const nb: Record<string, string> = {
   'auth.terms': 'Vilkår for bruk',
   'auth.contactSupport': 'Kontakt support',
   'auth.copyright': '© 2026 Digilist. Alle rettigheter reservert.',
+  'auth.bankid': 'BankID',
+  'auth.bankidDesc': 'Sikker innlogging med BankID',
+
+  // Auth - Role Selection Page
+  'auth.roleSelection.title': 'Velg rolle',
+  'auth.roleSelection.subtitle': 'Du har tilgang til flere roller. Velg hvordan du vil fortsette.',
+  'auth.roleSelection.panelTitle': 'Flere roller, en innlogging',
+  'auth.roleSelection.panelDescription': 'Du har tilgang til både administrator- og saksbehandlerroller. Velg hvilken rolle du vil bruke for denne økten.',
+  'auth.roleSelection.adminFeatures': 'Full tilgang',
+  'auth.roleSelection.adminFeaturesDesc': 'Administrere brukere, organisasjoner og innstillinger',
+  'auth.roleSelection.caseHandlerFeatures': 'Saksbehandling',
+  'auth.roleSelection.caseHandlerFeaturesDesc': 'Behandle bookinger, søknader og henvendelser',
+  'auth.roleSelection.roleSwitch': 'Fleksibel bytte',
+  'auth.roleSelection.roleSwitchDesc': 'Bytt mellom roller når som helst uten ny innlogging',
+
+  // Backoffice - Role Selection Component
+  'backoffice.roleSelection.title': 'Velg rolle',
+  'backoffice.roleSelection.subtitle': 'Du har tilgang til flere roller. Velg hvordan du vil fortsette.',
+  'backoffice.roleSelection.adminTitle': 'Administrator',
+  'backoffice.roleSelection.adminDescription': 'Full tilgang til alle funksjoner og innstillinger',
+  'backoffice.roleSelection.caseHandlerTitle': 'Saksbehandler',
+  'backoffice.roleSelection.caseHandlerDescription': 'Behandle bookinger, søknader og henvendelser',
+  'backoffice.roleSelection.rememberChoice': 'Husk mitt valg',
 
   // Dashboard
   'dashboard.welcomeBack': 'Velkommen tilbake, {{name}}',
@@ -137,6 +160,30 @@ export const nb: Record<string, string> = {
   'listings.noEquipment': 'Ingen utstyr funnet.',
   'listings.noServices': 'Ingen tjenester funnet.',
   'listings.confirmArchive': 'Er du sikker på at du vil arkivere denne oppføringen?',
+
+  // Listing Categories (V2)
+  'categories.LOKALER_OG_BANER': 'Lokaler og baner',
+  'categories.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
+  'categories.KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
+  'categories.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
+
+  // Booking Time Modes
+  'timeMode.PERIOD': 'Tidsperiode',
+  'timeMode.SLOT': 'Tidsluke',
+  'timeMode.ALL_DAY': 'Heldags',
+  'timeMode.PERIOD.description': 'Velg start- og sluttidspunkt',
+  'timeMode.SLOT.description': 'Velg fra forhåndsdefinerte tidsluker',
+  'timeMode.ALL_DAY.description': 'Book hele dager eller flere dager',
+
+  // Booking Features
+  'features.inventory': 'Antall',
+  'features.inventory.description': 'Flere enheter tilgjengelig',
+  'features.sharedCapacity': 'Delt kapasitet',
+  'features.sharedCapacity.description': 'Dele plasser med andre',
+  'features.packages': 'Pakker',
+  'features.packages.description': 'Bunter med tjenester',
+  'features.remaining': '{{count}} igjen',
+  'features.seatsRemaining': '{{count}} plasser igjen',
 
   // Booking statuses
   'booking.pending': 'Venter',

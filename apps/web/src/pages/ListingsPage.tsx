@@ -38,7 +38,16 @@ import { useRealtimeListing } from '../providers';
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-// Listing type options (UI filter types)
+// V2 Listing Category Options (new 4-category system)
+const LISTING_CATEGORY_OPTIONS = [
+  { id: 'ALL', label: 'Alle kategorier' },
+  { id: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
+  { id: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
+  { id: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
+];
+
+// Legacy type options for backward compatibility (deprecated, remove when migration complete)
 const LISTING_TYPE_OPTIONS = [
   { id: 'ALL', label: 'Alle typer' },
   { id: 'SPACE', label: 'Lokale' },
@@ -48,6 +57,7 @@ const LISTING_TYPE_OPTIONS = [
   { id: 'EVENT', label: 'Arrangement' },
   { id: 'OTHER', label: 'Annet' },
 ];
+
 
 // Capacity filter options
 const CAPACITY_OPTIONS = [
@@ -268,26 +278,27 @@ export function ListingsPage(): React.ReactElement {
           </Stack>
         }
       >
-        <DrawerSection title="Type" collapsible>
+        <DrawerSection title="Kategori" collapsible>
           <Stack spacing="var(--ds-spacing-1)">
-            {(showMoreType ? LISTING_TYPE_OPTIONS : LISTING_TYPE_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((type) => (
+            {(showMoreType ? LISTING_CATEGORY_OPTIONS : LISTING_CATEGORY_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((category) => (
               <DrawerItem
-                key={type.id}
-                left={<Checkbox checked={listingType === type.id} onChange={() => setListingType(type.id)} aria-label={type.label} />}
-                right={<Text size="sm">({typeCounts[type.id] || 0})</Text>}
-                onClick={() => setListingType(type.id)}
-                selected={listingType === type.id}
+                key={category.id}
+                left={<Checkbox checked={listingType === category.id} onChange={() => setListingType(category.id)} aria-label={category.label} />}
+                right={<Text size="sm">({typeCounts[category.id] || 0})</Text>}
+                onClick={() => setListingType(category.id)}
+                selected={listingType === category.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{type.label}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{category.label}</Text>
               </DrawerItem>
             ))}
-            {LISTING_TYPE_OPTIONS.length > MAX_VISIBLE_ITEMS && (
+            {LISTING_CATEGORY_OPTIONS.length > MAX_VISIBLE_ITEMS && (
               <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreType(!showMoreType)}>
-                {showMoreType ? 'Vis mindre' : `Vis mer (${LISTING_TYPE_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
+                {showMoreType ? 'Vis mindre' : `Vis mer (${LISTING_CATEGORY_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
         </DrawerSection>
+
 
         <DrawerSection title="Område" collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">

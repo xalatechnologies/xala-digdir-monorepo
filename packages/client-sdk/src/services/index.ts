@@ -133,3 +133,12 @@ export type {
   InvoiceQueryParams 
 } from './billing.service';
 
+// Signicat (BankID/eID Hub)
+export { signicatService } from './signicat.service';
+export type {
+  SignicatConfig,
+  SignicatUser,
+  SignicatTokens,
+  SignicatAuthResult,
+  SignicatLogoutResult,
+} from './signicat.service';

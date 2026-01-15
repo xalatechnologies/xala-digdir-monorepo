@@ -55,9 +55,9 @@ export function I18nProvider({
       // Try current locale
       let value = translations[locale]?.[key];
 
-      // Fallback to English
-      if (!value && locale !== 'en') {
-        value = translations.en?.[key];
+      // Fallback to Norwegian (primary language)
+      if (!value && locale !== 'nb') {
+        value = translations.nb?.[key];
       }
 
       // Return short key if missing
