@@ -299,4 +299,24 @@ export const queryKeys = {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
   },
+
+  // =========================================================================
+  // Capabilities Keys
+  // =========================================================================
+  capabilities: {
+    all: ['capabilities'] as const,
+    current: () => [...queryKeys.capabilities.all, 'current'] as const,
+    features: () => [...queryKeys.capabilities.all, 'features'] as const,
+    feature: (key: string) => [...queryKeys.capabilities.all, 'feature', key] as const,
+  },
+
+  // =========================================================================
+  // Licensing Keys
+  // =========================================================================
+  licensing: {
+    all: ['licensing'] as const,
+    plans: () => [...queryKeys.licensing.all, 'plans'] as const,
+    current: () => [...queryKeys.licensing.all, 'current'] as const,
+    codes: () => [...queryKeys.licensing.all, 'codes'] as const,
+  },
 } as const;
