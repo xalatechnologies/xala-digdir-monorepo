@@ -13,7 +13,8 @@ import { LoginPage } from './routes/login';
 import { RoleSelectionPage } from './routes/role-selection';
 import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
-import { RentalObjectsPage, RentalObjectEditPage, RentalObjectDetailPage } from './routes/rental-objects';
+// TODO: Fix rental-objects feature exports before enabling
+// import { RentalObjectsPage, RentalObjectEditPage, RentalObjectDetailPage } from './routes/rental-objects';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
@@ -92,11 +93,11 @@ function AppWithTheme() {
               }
             >
               <Route index element={<DashboardPage />} />
-              {/* Rental Objects Routes (Primary) */}
-              <Route path="rental-objects" element={<RentalObjectsPage />} />
-              <Route path="rental-objects/new" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} />
+              {/* Rental Objects Routes (Primary) - DISABLED: Fix exports before enabling */}
+              {/* <Route path="rental-objects" element={<RentalObjectsPage />} /> */}
+              {/* <Route path="rental-objects/new" element={<RentalObjectEditPage />} /> */}
+              {/* <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} /> */}
+              {/* <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} /> */}
               {/* Listings Routes (Deprecated - kept for backward compatibility) */}
               <Route path="listings" element={<ListingsPage />} />
               <Route path="listings/new" element={<ListingEditPage />} />
