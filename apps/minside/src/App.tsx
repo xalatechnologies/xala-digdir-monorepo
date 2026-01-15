@@ -97,24 +97,27 @@ function AppWithTheme() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<DashboardPage />} />
-              <Route path="bookings" element={<BookingsPage />} />
-              <Route path="billing" element={<BillingPage />} />
-              <Route path="calendar" element={<CalendarPage />} />
-              <Route path="messages" element={<MessagesPage />} />
+              {/* Personal context routes */}
+              <Route index element={<ProtectedRoute requiredContext="personal"><DashboardPage /></ProtectedRoute>} />
+              <Route path="bookings" element={<ProtectedRoute requiredContext="personal"><BookingsPage /></ProtectedRoute>} />
+              <Route path="billing" element={<ProtectedRoute requiredContext="personal"><BillingPage /></ProtectedRoute>} />
+              <Route path="calendar" element={<ProtectedRoute requiredContext="personal"><CalendarPage /></ProtectedRoute>} />
+              <Route path="messages" element={<ProtectedRoute requiredContext="personal"><MessagesPage /></ProtectedRoute>} />
+
+              {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="help" element={<HelpPage />} />
-              
+
               {/* Organization portal routes */}
-              <Route path="org" element={<OrganizationDashboardPage />} />
-              <Route path="org/bookings" element={<OrganizationBookingsPage />} />
-              <Route path="org/invoices" element={<OrganizationInvoicesPage />} />
-              <Route path="org/members" element={<OrganizationMembersPage />} />
-              <Route path="org/season-rental" element={<SeasonRentalPage />} />
-              <Route path="org/settings" element={<OrganizationSettingsPage />} />
-              <Route path="org/activity" element={<OrganizationActivityPage />} />
+              <Route path="org" element={<ProtectedRoute requiredContext="organization"><OrganizationDashboardPage /></ProtectedRoute>} />
+              <Route path="org/bookings" element={<ProtectedRoute requiredContext="organization"><OrganizationBookingsPage /></ProtectedRoute>} />
+              <Route path="org/invoices" element={<ProtectedRoute requiredContext="organization"><OrganizationInvoicesPage /></ProtectedRoute>} />
+              <Route path="org/members" element={<ProtectedRoute requiredContext="organization"><OrganizationMembersPage /></ProtectedRoute>} />
+              <Route path="org/season-rental" element={<ProtectedRoute requiredContext="organization"><SeasonRentalPage /></ProtectedRoute>} />
+              <Route path="org/settings" element={<ProtectedRoute requiredContext="organization"><OrganizationSettingsPage /></ProtectedRoute>} />
+              <Route path="org/activity" element={<ProtectedRoute requiredContext="organization"><OrganizationActivityPage /></ProtectedRoute>} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
