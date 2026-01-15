@@ -4,10 +4,34 @@ Guidance for agentic coding assistants working in this repository.
 
 ## Repository Overview
 
-- Monorepo (Turborepo + pnpm workspaces)
-- Apps: `apps/web`, `apps/backoffice`, `apps/minside`
-- Packages: `packages/client-sdk`, `packages/ds`, `packages/i18n`, etc.
-- Platform: Xala / Digilist (multi-tenant, audit-first, RBAC)
+- **Monorepo** (Turborepo + pnpm workspaces)
+- **Apps:** `apps/web`, `apps/backoffice`, `apps/minside`, `apps/api`
+- **Packages:** `packages/client-sdk`, `packages/ds`, `packages/i18n`, etc.
+- **Platform:** Xala / Digilist (multi-tenant, audit-first, RBAC, production-live)
+
+### Quick Structure
+
+```
+xala-digdir-monorepo/
+├── apps/
+│   ├── web/          → Public website (5173)       [CLAUDE.md | AGENTS.md]
+│   ├── backoffice/   → Admin portal (5175)         [CLAUDE.md | AGENTS.md]
+│   ├── minside/      → User portal (5174)          [CLAUDE.md | AGENTS.md]
+│   └── api/          → API server (4000)           [CLAUDE.md | AGENTS.md]
+│
+├── packages/
+│   ├── client-sdk/   → Enterprise SDK ⭐           [CLAUDE.md | AGENTS.md]
+│   ├── ds/           → Design System facade ⭐     [CLAUDE.md | AGENTS.md]
+│   ├── i18n/         → Internationalization ⭐     [CLAUDE.md | AGENTS.md]
+│   └── eslint-config/→ Shared ESLint rules ⭐      [CLAUDE.md | AGENTS.md]
+│
+├── tests/            → Consolidated test structure ⭐
+├── scripts/          → Build & deployment scripts
+└── docs/             → Documentation
+    └── PROJECT_STRUCTURE.md → Complete directory trees
+```
+
+**See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) for complete directory trees of all apps and packages.**
 
 ## Essential Commands
 

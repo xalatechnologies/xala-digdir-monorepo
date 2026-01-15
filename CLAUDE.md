@@ -27,22 +27,181 @@ municipal booking and resource management system.
 
 This is a **Turborepo** using **pnpm workspaces**.
 
+```
+xala-digdir-monorepo/
+├── apps/                           # Applications
+│   ├── web/                        # Public web app (port 5173)
+│   ├── backoffice/                 # Admin portal (port 5175)
+│   ├── minside/                    # User portal (port 5174)
+│   └── api/                        # Fastify API server (port 4000)
+│
+├── packages/                       # Shared packages
+│   ├── client-sdk/                 # Enterprise SDK ⭐
+│   ├── ds/                         # Design System facade ⭐
+│   ├── ds-themes/                  # Theme CSS files
+│   ├── ds-registry/                # Component documentation
+│   ├── i18n/                       # Internationalization ⭐
+│   └── eslint-config/              # Shared ESLint rules
+│
+├── tests/                          # Consolidated test structure ⭐
+│   ├── e2e/                        # Playwright E2E tests
+│   ├── unit/                       # Vitest unit tests
+│   ├── integration/                # Integration tests
+│   ├── performance/                # Performance tests
+│   ├── security/                   # Security tests
+│   ├── fixtures/                   # Test data
+│   ├── helpers/                    # Test utilities
+│   ├── reports/                    # Test output (gitignored)
+│   ├── screenshots/                # E2E screenshots (gitignored)
+│   └── artifacts/                  # Test artifacts (gitignored)
+│
+├── scripts/                        # Build & deployment scripts
+├── docs/                           # Documentation
+└── (root config files)
+```
+
 ### Applications (apps/)
 
 - **apps/web** - Public-facing Vite + React app (port 5173)
-- **apps/backoffice** - Admin portal Vite + React app (port 5174)
-- **apps/minside** - User dashboard Vite + React app
+  - Public listing discovery and booking initiation
+  - SEO-optimized, mobile-first design
+  - [CLAUDE.md](./apps/web/CLAUDE.md) | [AGENTS.md](./apps/web/AGENTS.md)
+
+- **apps/backoffice** - Admin portal Vite + React app (port 5175)
+  - Protected admin application with RBAC
+  - Listing/booking management, reports, integrations
+  - Real-time updates via WebSocket
+  - [CLAUDE.md](./apps/backoffice/CLAUDE.md) | [AGENTS.md](./apps/backoffice/AGENTS.md)
+
+- **apps/minside** - User dashboard Vite + React app (port 5174)
+  - User portal for booking management
+  - Mobile-optimized, GDPR-compliant
+  - Notification center, profile management
+  - [CLAUDE.md](./apps/minside/CLAUDE.md) | [AGENTS.md](./apps/minside/AGENTS.md)
+
+- **apps/api** - Fastify API server (port 4000)
+  - Backend with 30+ feature modules
+  - PostgreSQL + Drizzle ORM
+  - Audit logging, multi-tenant isolation
+  - WebSocket server for real-time events
+  - [CLAUDE.md](./apps/api/CLAUDE.md) | [AGENTS.md](./apps/api/AGENTS.md)
 
 ### Packages (packages/)
 
 - **@digilist/client-sdk** - Enterprise-grade SDK with 24+ services, WebSocket
   realtime, React Query hooks
+  - [CLAUDE.md](./packages/client-sdk/CLAUDE.md) | [AGENTS.md](./packages/client-sdk/AGENTS.md)
+
 - **@xala/ds** - UI facade (ONLY allowed import for Designsystemet components)
+  - Re-exports @digdir/designsystemet-react
+  - Custom composed components, blocks, shells
+  - Single CSS import point
+  - [CLAUDE.md](./packages/ds/CLAUDE.md) | [AGENTS.md](./packages/ds/AGENTS.md)
+
 - **@xala/ds-themes** - Theme URL registry for runtime switching (digdir,
   altinn, uutilsynet, portal)
+
 - **@xala/ds-registry** - Documentation and examples
+
 - **@xala/i18n** - Internationalization utilities
+  - Norwegian (nb) and English (en) translations
+  - React hooks (useT)
+  - [CLAUDE.md](./packages/i18n/CLAUDE.md) | [AGENTS.md](./packages/i18n/AGENTS.md)
+
 - **@xala/eslint-config** - Shared ESLint with design system guardrails
+  - Custom rules for design tokens
+  - Component pattern enforcement
+  - Compliance scanner
+  - [CLAUDE.md](./packages/eslint-config/CLAUDE.md) | [AGENTS.md](./packages/eslint-config/AGENTS.md)
+
+### Dependency Graph
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        APPLICATIONS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  │ (port 5173) │  │ (port 5174)  │  │  (port 5175)   │         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │      @digilist/client-sdk ⭐          │              │
+│         │  (30+ services, React Query hooks)    │              │
+│         └────────────────┬───────────────────────┘              │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │          apps/api ⭐                   │              │
+│         │  (Fastify, PostgreSQL, WebSocket)     │              │
+│         │     https://api.digilist.no           │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                      UI COMPONENTS                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │            @xala/ds ⭐                 │              │
+│         │    (Design System Facade)             │              │
+│         │   - Primitives (re-exported)          │              │
+│         │   - Composed (custom)                 │              │
+│         │   - Blocks (business)                 │              │
+│         │   - Shells (layouts)                  │              │
+│         └────────────────┬───────────────────────┘              │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │  @digdir/designsystemet-react          │              │
+│         │  @digdir/designsystemet-css            │              │
+│         │  (Norwegian Design System)             │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                    INTERNATIONALIZATION                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │          @xala/i18n ⭐                 │              │
+│         │  (Norwegian & English translations)    │              │
+│         │         useT() hook                    │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Import Rules (Critical)
+
+```typescript
+// ✅ CORRECT - Apps import from facades
+import { Button } from '@xala/ds';              // Design system
+import { useListings } from '@digilist/client-sdk/hooks';  // SDK hooks
+import { useT } from '@xala/i18n';              // Translations
+
+// ❌ WRONG - Direct imports forbidden
+import { Button } from '@digdir/designsystemet-react';  // ❌
+import axios from 'axios';                              // ❌
+```
+
+**See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) for complete directory trees.**
 
 ---
 
