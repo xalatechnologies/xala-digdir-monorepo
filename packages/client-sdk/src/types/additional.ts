@@ -465,3 +465,34 @@ export interface CreateShareLinkDTO {
   resourceId: string;
   expiresIn?: number;
 }
+
+// =============================================================================
+// Likes (Favorites)
+// =============================================================================
+
+export interface Like {
+  id: string;
+  tenantId: string;
+  userId: string;
+  listingId: string;
+  createdAt: string;
+}
+
+export interface CreateLikeDTO {
+  listingId: string;
+}
+
+export interface LikeQueryParams extends BaseQueryParams {
+  listingId?: string;
+}
+
+export interface LikedListing {
+  id: string;
+  listingId: string;
+  listingName: string;
+  listingSlug: string;
+  listingImageUrl?: string;
+  listingDescription?: string;
+  listingAddress?: string;
+  likedAt: string;
+}
