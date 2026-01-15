@@ -129,6 +129,18 @@ export class ConflictError extends AppError {
   }
 }
 
+export class GoneError extends AppError {
+  constructor(detail?: string) {
+    super(
+      'Gone',
+      410,
+      detail || 'The requested resource is no longer available',
+      '/errors/gone'
+    );
+    this.name = 'GoneError';
+  }
+}
+
 export class RateLimitError extends AppError {
   constructor(retryAfter?: number) {
     super(
