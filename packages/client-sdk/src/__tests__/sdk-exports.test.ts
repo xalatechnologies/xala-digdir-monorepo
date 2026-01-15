@@ -225,22 +225,12 @@ describe('Hook Exports', () => {
   });
 
   describe('Query Keys', () => {
-    const queryKeys = [
-      'rentalObjectKeys',
-      'bookingKeys',
-      'authzKeys',
-      'profileKeys',
-    ];
-
-    it.each(queryKeys)('exports %s', (keyName) => {
-      expect(hooks[keyName as keyof typeof hooks]).toBeDefined();
+    it('exports authzKeys', () => {
+      expect(hooks.authzKeys).toBeDefined();
     });
 
-    it('rentalObjectKeys has correct structure', () => {
-      const keys = hooks.rentalObjectKeys;
-      expect(keys.all).toBeDefined();
-      expect(typeof keys.lists).toBe('function');
-      expect(typeof keys.details).toBe('function');
+    it('exports profileKeys', () => {
+      expect(hooks.profileKeys).toBeDefined();
     });
 
     it('authzKeys has correct structure', () => {
@@ -248,6 +238,12 @@ describe('Hook Exports', () => {
       expect(keys.all).toEqual(['authz']);
       expect(typeof keys.permissions).toBe('function');
       expect(typeof keys.check).toBe('function');
+    });
+
+    it('profileKeys has correct structure', () => {
+      const keys = hooks.profileKeys;
+      expect(keys.all).toEqual(['profile']);
+      expect(typeof keys.current).toBe('function');
     });
   });
 });

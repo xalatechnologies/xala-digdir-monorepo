@@ -60,7 +60,7 @@ export function DashboardPage() {
       {/* Welcome Section */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('minside.welcome')}, {user?.name?.split(' ')[0] || 'Bruker'}!
+          {t('minside.welcome')}, {user?.name?.split(' ')[0] || t('minside.user')}!
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
           {t('minside.dashboardDesc')}

@@ -13,7 +13,7 @@ import { type Page, type BrowserContext } from '@playwright/test';
  * User roles supported by the system (aligned with RBAC)
  * @see apps/api/src/__tests__/test-utils.ts for reference
  */
-export type UserRole = 'admin' | 'saksbehandler' | 'user' | 'guest';
+export type UserRole = 'admin' | 'saksbehandler' | 'super_admin' | 'user' | 'citizen' | 'guest';
 
 /**
  * Test user configuration
@@ -69,12 +69,26 @@ export const TEST_USERS: Record<Exclude<UserRole, 'guest'>, TestUser> = {
     role: 'saksbehandler',
     password: 'test-saksbehandler-password',
   },
+  super_admin: {
+    id: 'superadm-0000-0000-0000-000000000004',
+    email: 'super-admin@test.kommune.no',
+    name: 'Test Super Admin',
+    role: 'super_admin',
+    password: 'test-super-admin-password',
+  },
   user: {
     id: TEST_IDS.userId,
     email: 'user@test.kommune.no',
     name: 'Test User',
     role: 'user',
     password: 'test-user-password',
+  },
+  citizen: {
+    id: 'citizen01-0000-0000-0000-000000000005',
+    email: 'citizen@test.kommune.no',
+    name: 'Test Citizen',
+    role: 'citizen',
+    password: 'test-citizen-password',
   },
 };
 
@@ -91,8 +105,8 @@ export const APP_URLS = {
 /**
  * Login as a specific role for journey tests
  *
- * This utility handles authentication setup for E2E tests, supporting
- * both mock auth (for CI/offline) and real auth flows.
+ * This utility handles authentication setup for E2E tests using real backend API.
+ * Creates real session cookies via /api/auth/test-login endpoint.
  *
  * @param page - Playwright Page instance
  * @param role - User role to authenticate as
@@ -118,19 +132,28 @@ export async function loginAs(
   const user = TEST_USERS[role];
   const timeout = options.timeout ?? 10000;
 
-  // Set authentication state via localStorage/cookies
-  // This simulates a logged-in state without requiring actual auth flow
+  // Call real backend test-login endpoint to create session cookie
+  const response = await page.request.post(`${APP_URLS.api}/api/auth/test-login`, {
+    data: {
+      role,
+      tenantId: TEST_IDS.tenantId,
+    },
+  });
+
+  if (!response.ok()) {
+    const error = await response.text();
+    throw new Error(`Test login failed for role ${role}: ${response.status()} ${error}`);
+  }
+
+  const result = await response.json();
+
+  // Session cookie is automatically set by the API response
+  // Store user data in localStorage for frontend apps
   await page.addInitScript((userData) => {
-    // Store auth token in localStorage (SDK pattern)
-    localStorage.setItem('auth_token', `test-jwt-token-${userData.role}`);
-    localStorage.setItem('auth_user', JSON.stringify({
-      id: userData.id,
-      email: userData.email,
-      name: userData.name,
-      role: userData.role,
-    }));
-    localStorage.setItem('auth_expires_at', new Date(Date.now() + 3600000).toISOString());
-  }, user);
+    localStorage.setItem('auth_user', JSON.stringify(userData.user));
+    localStorage.setItem('auth_expires_at', userData.expiresAt);
+    localStorage.setItem('auth_token', `test-jwt-token-${userData.user.role}`);
+  }, result.data);
 
   // Navigate to initial page (triggers auth state hydration)
   const targetUrl = options.redirectTo ?? '/';
@@ -140,6 +163,8 @@ export async function loginAs(
   if (!options.skipWaitForIdle) {
     await page.waitForLoadState('networkidle', { timeout });
   }
+
+  console.log(`✓ Authenticated as ${role} (${user.email}) via real backend`);
 }
 
 /**
@@ -148,11 +173,48 @@ export async function loginAs(
  * @param page - Playwright Page instance
  */
 export async function logout(page: Page): Promise<void> {
+  // Call backend logout endpoint to clear session cookie
+  await page.request.post(`${APP_URLS.api}/api/auth/logout`);
+
   await page.evaluate(() => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
     localStorage.removeItem('auth_expires_at');
   });
+}
+
+/**
+ * Clear all session data (cookies + localStorage + sessionStorage)
+ *
+ * @param page - Playwright Page instance
+ */
+export async function clearSession(page: Page): Promise<void> {
+  // Clear cookies
+  await page.context().clearCookies();
+
+  // Navigate to blank page to avoid localStorage access errors
+  await page.goto('about:blank');
+
+  // Clear all storage
+  try {
+    await page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+  } catch (error) {
+    // Ignore errors (might happen if storage is already inaccessible)
+  }
+}
+
+/**
+ * Check if session cookie exists
+ *
+ * @param page - Playwright Page instance
+ * @returns true if digilist_session cookie exists
+ */
+export async function hasSessionCookie(page: Page): Promise<boolean> {
+  const cookies = await page.context().cookies();
+  return cookies.some(cookie => cookie.name === 'digilist_session');
 }
 
 /**

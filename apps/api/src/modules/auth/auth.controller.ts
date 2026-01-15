@@ -396,7 +396,7 @@ export class AuthController {
   @Get('/providers')
   async getProviders(request: AuthRequest, reply: FastifyReply) {
     const vippsEnabled = isVippsConfigured();
-    
+
     return {
       data: [
         { id: 'email', name: 'Email', enabled: true },
@@ -404,6 +404,157 @@ export class AuthController {
         { id: 'idporten', name: 'ID-porten', enabled: false },
         { id: 'vipps', name: 'Vipps', enabled: vippsEnabled },
       ],
+    };
+  }
+
+  /**
+   * POST /api/auth/test-login - Test authentication endpoint
+   *
+   * ⚠️ TEST/DEV ONLY - Creates real session cookies for E2E testing
+   *
+   * Body params:
+   * - role: User role (admin, saksbehandler, super_admin, user)
+   * - tenantId (optional): Tenant ID (defaults to first tenant in DB)
+   *
+   * Returns: User session with real HttpOnly session cookie
+   */
+  @Post('/test-login')
+  async testLogin(request: AuthRequest, reply: FastifyReply) {
+    // ⚠️ SECURITY: Only available in test/dev environment
+    if (process.env.NODE_ENV === 'production') {
+      reply.code(404);
+      return { error: { code: 'NOT_FOUND', message: 'Endpoint not found' } };
+    }
+
+    const body = request.body as { role?: string; tenantId?: string };
+    const db = container.resolve<any>('Database');
+
+    // Validate role
+    const validRoles = ['admin', 'saksbehandler', 'super_admin', 'user', 'citizen'];
+    const role = body.role || 'user';
+    if (!validRoles.includes(role)) {
+      reply.code(400);
+      return {
+        error: {
+          code: 'BAD_REQUEST',
+          message: `Invalid role. Must be one of: ${validRoles.join(', ')}`
+        }
+      };
+    }
+
+    // Get or create tenant
+    let tenantId = body.tenantId;
+    if (!tenantId) {
+      const defaultTenants = await db.select().from(tenants).limit(1);
+      tenantId = defaultTenants.length > 0 ? defaultTenants[0].id : 'test-tenant';
+    }
+
+    // Find or create test user with specified role
+    const testEmail = `test-${role}@test.kommune.no`;
+    let user = null;
+
+    const existingUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, testEmail))
+      .limit(1);
+
+    if (existingUsers.length > 0) {
+      user = existingUsers[0];
+
+      // Update role if different
+      if (user.role !== role) {
+        await db
+          .update(users)
+          .set({ role, updatedAt: new Date() })
+          .where(eq(users.id, user.id));
+        user.role = role;
+      }
+    } else {
+      // Create new test user
+      const newUserId = crypto.randomUUID();
+      await db.insert(users).values({
+        id: newUserId,
+        email: testEmail,
+        name: `Test ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+        role,
+        tenantId,
+        status: 'active',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const createdUsers = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, newUserId))
+        .limit(1);
+
+      user = createdUsers[0];
+    }
+
+    // Update last login
+    await db
+      .update(users)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(users.id, user.id));
+
+    // Create session cookie (same format as idporten.controller.ts line 564-580)
+    const cookieValue = encodeURIComponent(JSON.stringify({
+      userId: user.id,
+      tenantId: user.tenantId
+    }));
+
+    const cookieParts = [
+      `digilist_session=${cookieValue}`,
+      'Path=/',
+      'HttpOnly',
+      'Max-Age=86400', // 24 hours
+      'SameSite=Lax',
+    ];
+
+    reply.header('Set-Cookie', cookieParts.join('; '));
+
+    // Audit log test login
+    getAuditService().log({
+      tenantId: user.tenantId,
+      userId: user.id,
+      action: 'test_login',
+      resource: 'auth',
+      resourceId: user.id,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        role,
+        email: user.email,
+        method: 'test-endpoint',
+      },
+    });
+
+    console.log('========================================');
+    console.log('[TEST LOGIN] Session created');
+    console.log('========================================');
+    console.log('User:', user.email);
+    console.log('Role:', user.role);
+    console.log('User ID:', user.id);
+    console.log('Tenant ID:', user.tenantId);
+    console.log('Cookie:', cookieParts.join('; '));
+    console.log('========================================');
+
+    const permissions = getPermissionsForRole(user.role);
+
+    return {
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: user.tenantId,
+        },
+        expiresAt: new Date(Date.now() + 86400000).toISOString(),
+        permissions,
+      },
     };
   }
 
