@@ -101,14 +101,16 @@ export function AccountSwitcher() {
     switchToPersonal();
     setIsOpen(false);
     // Redirect to dashboard when switching to personal context
-    navigate('/');
+    // Pass intentionalSwitch flag to suppress redirect message
+    navigate('/', { state: { intentionalSwitch: true } });
   };
 
   const handleOrganizationClick = (orgId: string) => {
     switchToOrganization(orgId);
     setIsOpen(false);
     // Redirect to organization home when switching to organization context
-    navigate('/org');
+    // Pass intentionalSwitch flag to suppress redirect message
+    navigate('/org', { state: { intentionalSwitch: true } });
   };
 
   return (

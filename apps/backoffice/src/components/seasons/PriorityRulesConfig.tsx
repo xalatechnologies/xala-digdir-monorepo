@@ -3,7 +3,7 @@
  * Configure season priority rules for youth/senior and local/regional priorities
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ChangeEvent } from 'react';
 import {
   Button,
   Table,
@@ -13,27 +13,38 @@ import {
   Card,
   Spinner,
   Switch,
-  Dropdown,
-  Modal,
-  TextField,
-  Select,
+  Textfield,
   PlusIcon,
-  MoreVerticalIcon,
   EditIcon,
   TrashIcon,
   SettingsIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
 } from '@xala/ds';
-import {
-  // TODO: Implement priority rules hooks
-  // usePriorityRules,
-  // useCreatePriorityRule,
-  // useUpdatePriorityRule,
-  // useDeletePriorityRule,
-  // type PriorityRule,
-  // type RuleType,
-} from '@digilist/client-sdk';
+
+// Local icons (not exported from @xala/ds)
+function ChevronUpIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="18 15 12 9 6 15" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
 
 // Temporary type definitions and placeholder hooks until implemented in SDK
 type RuleType = 'youth_priority' | 'senior_priority' | 'local_priority' | 'regional_priority' | 'custom';
@@ -44,7 +55,7 @@ type RuleConditions = {
   locality?: 'local' | 'regional' | 'national';
 };
 
-type PriorityRule = {
+interface PriorityRule {
   id: string;
   tenantId: string;
   seasonId: string;
@@ -53,14 +64,31 @@ type PriorityRule = {
   priority: number;
   conditions: RuleConditions;
   enabled: boolean;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
-};
+}
+
+interface CreateRuleData {
+  seasonId: string;
+  name: string;
+  ruleType: RuleType;
+  priority: number;
+  conditions: RuleConditions;
+  enabled: boolean;
+}
+
+interface UpdateRuleData {
+  id: string;
+  name?: string;
+  priority?: number;
+  conditions?: RuleConditions;
+  enabled?: boolean;
+}
 
 const usePriorityRules = (_seasonId: string) => ({ data: { data: [] as PriorityRule[] }, isLoading: false });
-const useCreatePriorityRule = () => ({ mutateAsync: async (_data: any) => {}, isLoading: false });
-const useUpdatePriorityRule = () => ({ mutateAsync: async (_data: any) => {}, isLoading: false });
+const useCreatePriorityRule = () => ({ mutateAsync: async (_data: CreateRuleData) => {}, isLoading: false });
+const useUpdatePriorityRule = () => ({ mutateAsync: async (_data: UpdateRuleData) => {}, isLoading: false });
 const useDeletePriorityRule = () => ({ mutateAsync: async (_id: string) => {}, isLoading: false });
 
 interface PriorityRulesConfigProps {
@@ -340,24 +368,24 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                       </span>
                       {canEdit && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
-                          <Button
-                            variant="tertiary"
-                            data-size="xs"
-                            onClick={() => handleChangePriority(rule, 'up')}
+                          {/* eslint-disable-next-line digdir/prefer-ds-components -- Icon-only micro button, DS Button has no xs size */}
+                          <button
                             type="button"
+                            onClick={() => handleChangePriority(rule, 'up')}
                             aria-label="Øk prioritet"
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', display: 'flex' }}
                           >
                             <ChevronUpIcon />
-                          </Button>
-                          <Button
-                            variant="tertiary"
-                            data-size="xs"
-                            onClick={() => handleChangePriority(rule, 'down')}
+                          </button>
+                          {/* eslint-disable-next-line digdir/prefer-ds-components -- Icon-only micro button, DS Button has no xs size */}
+                          <button
                             type="button"
+                            onClick={() => handleChangePriority(rule, 'down')}
                             aria-label="Senk prioritet"
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', display: 'flex' }}
                           >
                             <ChevronDownIcon />
-                          </Button>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -382,7 +410,6 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                         checked={rule.enabled}
                         onChange={() => handleToggleEnabled(rule)}
                         aria-label={`${rule.enabled ? 'Deaktiver' : 'Aktiver'} ${rule.name}`}
-                        size="sm"
                       />
                     ) : (
                       <Badge color={rule.enabled ? 'success' : 'neutral'} size="sm">
@@ -392,23 +419,14 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                   </Table.Cell>
                   {canEdit && (
                     <Table.Cell>
-                      <Dropdown>
-                        <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" data-size="sm" type="button" aria-label="Flere handlinger">
-                            <MoreVerticalIcon />
-                          </Button>
-                        </Dropdown.Trigger>
-                        <Dropdown.Content>
-                          <Dropdown.Item onClick={() => handleOpenEditModal(rule)}>
-                            <EditIcon />
-                            Rediger
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
-                            <TrashIcon />
-                            Slett
-                          </Dropdown.Item>
-                        </Dropdown.Content>
-                      </Dropdown>
+                      <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label="Rediger" onClick={() => handleOpenEditModal(rule)}>
+                          <EditIcon />
+                        </Button>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label="Slett" onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
+                          <TrashIcon />
+                        </Button>
+                      </div>
                     </Table.Cell>
                   )}
                 </Table.Row>
@@ -418,105 +436,174 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
         </Card>
       )}
 
-      {/* Create/Edit Modal */}
-      <Modal open={isCreateModalOpen} onClose={handleCloseModal}>
-        <Modal.Header>
-          <Heading level={2} data-size="sm">
-            {editingRule ? 'Rediger prioriteringsregel' : 'Ny prioriteringsregel'}
-          </Heading>
-        </Modal.Header>
-        <Modal.Body>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            <TextField
-              label="Navn"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="F.eks. 'Ungdomsprioritet 2024'"
-              required
-            />
-
-            {!editingRule && (
-              <Select
-                label="Regeltype"
-                value={formData.ruleType}
-                onChange={(e) => {
-                  const ruleType = e.target.value as RuleType;
-                  setFormData({
-                    ...formData,
-                    ruleType,
-                    ageGroup: ruleType.includes('youth') ? 'youth' : ruleType.includes('senior') ? 'senior' : undefined,
-                    locality: ruleType.includes('local') ? 'local' : ruleType.includes('regional') ? 'regional' : undefined,
-                  });
-                }}
-                required
-              >
-                <option value="youth_priority">Ungdomsprioritet</option>
-                <option value="senior_priority">Seniorprioritet</option>
-                <option value="local_priority">Lokal prioritet</option>
-                <option value="regional_priority">Regional prioritet</option>
-                <option value="custom">Tilpasset regel</option>
-              </Select>
-            )}
-
-            <TextField
-              label="Prioritetsverdi"
-              type="number"
-              value={formData.priority}
-              onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
-              description="Høyere verdi gir høyere prioritet"
-              min={0}
-              required
-            />
-
-            {(formData.ruleType === 'youth_priority' || formData.ruleType === 'senior_priority') && (
-              <Select
-                label="Aldersgruppe"
-                value={formData.ageGroup || ''}
-                onChange={(e) => setFormData({ ...formData, ageGroup: e.target.value as 'youth' | 'senior' | 'adult' })}
-                required
-              >
-                <option value="">Velg aldersgruppe</option>
-                <option value="youth">Ungdom</option>
-                <option value="senior">Senior</option>
-                <option value="adult">Voksen</option>
-              </Select>
-            )}
-
-            {(formData.ruleType === 'local_priority' || formData.ruleType === 'regional_priority') && (
-              <Select
-                label="Lokalitet"
-                value={formData.locality || ''}
-                onChange={(e) => setFormData({ ...formData, locality: e.target.value as 'local' | 'regional' | 'national' })}
-                required
-              >
-                <option value="">Velg lokalitet</option>
-                <option value="local">Lokal</option>
-                <option value="regional">Regional</option>
-                <option value="national">Nasjonal</option>
-              </Select>
-            )}
-
-            <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-info-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-              <Paragraph data-size="sm">
-                <strong>Beskrivelse:</strong> {ruleTypeDescriptions[formData.ruleType]}
-              </Paragraph>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal} type="button">
-            Avbryt
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={!formData.name || formData.priority < 0}
-            type="button"
+      {/* Create/Edit Dialog */}
+      {isCreateModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'var(--ds-color-neutral-background-overlay)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={handleCloseModal}
+        >
+          <Card
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              padding: 'var(--ds-spacing-6)',
+            }}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            {editingRule ? 'Lagre endringer' : 'Opprett regel'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+              <Heading level={2} data-size="sm">
+                {editingRule ? 'Rediger prioriteringsregel' : 'Ny prioriteringsregel'}
+              </Heading>
+              {/* eslint-disable-next-line digdir/prefer-ds-components -- Close icon button for dialog */}
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                aria-label="Lukk"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
+              >
+                <XIcon />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+              <Textfield
+                label="Navn"
+                value={formData.name}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="F.eks. 'Ungdomsprioritet 2024'"
+              />
+
+              {!editingRule && (
+                <div>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Regeltype
+                  </label>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <select
+                    value={formData.ruleType}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                      const ruleType = e.target.value as RuleType;
+                      setFormData({
+                        ...formData,
+                        ruleType,
+                        ageGroup: ruleType.includes('youth') ? 'youth' : ruleType.includes('senior') ? 'senior' : undefined,
+                        locality: ruleType.includes('local') ? 'local' : ruleType.includes('regional') ? 'regional' : undefined,
+                      });
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: 'var(--ds-spacing-3)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      fontSize: 'var(--ds-font-size-md)',
+                    }}
+                  >
+                    <option value="youth_priority">Ungdomsprioritet</option>
+                    <option value="senior_priority">Seniorprioritet</option>
+                    <option value="local_priority">Lokal prioritet</option>
+                    <option value="regional_priority">Regional prioritet</option>
+                    <option value="custom">Tilpasset regel</option>
+                  </select>
+                </div>
+              )}
+
+              <Textfield
+                label="Prioritetsverdi"
+                type="number"
+                value={String(formData.priority)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
+                description="Høyere verdi gir høyere prioritet"
+              />
+
+              {(formData.ruleType === 'youth_priority' || formData.ruleType === 'senior_priority') && (
+                <div>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Aldersgruppe
+                  </label>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <select
+                    value={formData.ageGroup || ''}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, ageGroup: e.target.value as 'youth' | 'senior' | 'adult' })}
+                    style={{
+                      width: '100%',
+                      padding: 'var(--ds-spacing-3)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      fontSize: 'var(--ds-font-size-md)',
+                    }}
+                  >
+                    <option value="">Velg aldersgruppe</option>
+                    <option value="youth">Ungdom</option>
+                    <option value="senior">Senior</option>
+                    <option value="adult">Voksen</option>
+                  </select>
+                </div>
+              )}
+
+              {(formData.ruleType === 'local_priority' || formData.ruleType === 'regional_priority') && (
+                <div>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Lokalitet
+                  </label>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for form */}
+                  <select
+                    value={formData.locality || ''}
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, locality: e.target.value as 'local' | 'regional' | 'national' })}
+                    style={{
+                      width: '100%',
+                      padding: 'var(--ds-spacing-3)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      fontSize: 'var(--ds-font-size-md)',
+                    }}
+                  >
+                    <option value="">Velg lokalitet</option>
+                    <option value="local">Lokal</option>
+                    <option value="regional">Regional</option>
+                    <option value="national">Nasjonal</option>
+                  </select>
+                </div>
+              )}
+
+              <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-info-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                <Paragraph data-size="sm">
+                  <strong>Beskrivelse:</strong> {ruleTypeDescriptions[formData.ruleType]}
+                </Paragraph>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--ds-spacing-3)', marginTop: 'var(--ds-spacing-6)' }}>
+              <Button variant="secondary" onClick={handleCloseModal} type="button">
+                Avbryt
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleSubmit}
+                disabled={!formData.name || formData.priority < 0}
+                type="button"
+              >
+                {editingRule ? 'Lagre endringer' : 'Opprett regel'}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

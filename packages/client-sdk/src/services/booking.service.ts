@@ -17,7 +17,11 @@ import type {
   CalendarQueryParams,
   Allocation,
   CreateAllocationDTO,
-  PaymentTransaction
+  PaymentTransaction,
+  BookingSelectionDTO,
+  RecurringPreviewProjectionDTO,
+  CreateRecurringBookingDTO,
+  RecurringBookingResultProjectionDTO
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
@@ -127,6 +131,24 @@ export class BookingService extends BaseService {
     endDate: string;
     weekdays?: number[];
   }): Promise<SingleResponse<Booking[]>> {
+    return this.client.post(this.buildPath('/recurring'), data);
+  }
+
+  /**
+   * Get recurring booking preview
+   * Returns server-computed occurrence preview with conflict detection and availability status.
+   * Used to show the user what occurrences will be created before confirming.
+   */
+  async getRecurringPreview(selection: BookingSelectionDTO): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
+    return this.client.post(this.buildPath('/recurring/preview'), selection);
+  }
+
+  /**
+   * Create recurring booking with conflict policy
+   * Creates a series of recurring bookings with configurable conflict handling.
+   * Supports stopOnConflict (halt on first conflict) and allowPartial (create available only) policies.
+   */
+  async createRecurringBooking(data: CreateRecurringBookingDTO): Promise<SingleResponse<RecurringBookingResultProjectionDTO>> {
     return this.client.post(this.buildPath('/recurring'), data);
   }
 

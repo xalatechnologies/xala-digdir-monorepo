@@ -2,7 +2,7 @@
  * Audit Controller
  * Production-ready activity logging with database persistence
  */
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Post } from '../../core/decorators';
 import { getAuditService } from '../../core/audit/audit.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -13,6 +13,40 @@ interface AuditRequest extends FastifyRequest {
 
 @Controller('/api/audit')
 export class AuditController {
+  /**
+   * POST /api/audit - Create audit log entry from client-side
+   */
+  @Post()
+  async createAuditLog(request: AuditRequest, reply: FastifyReply) {
+    const body = request.body as {
+      action: string;
+      resource: string;
+      resourceId?: string;
+      severity?: string;
+      metadata?: Record<string, unknown>;
+    };
+
+    if (!body.action || !body.resource) {
+      reply.code(400);
+      return { error: { code: 'VALIDATION_ERROR', message: 'action and resource are required' } };
+    }
+
+    const auditService = getAuditService();
+    const result = await auditService.log({
+      tenantId: request.tenantId || undefined,
+      userId: request.userId || undefined,
+      action: body.action,
+      resource: body.resource,
+      resourceId: body.resourceId,
+      severity: body.severity as any,
+      metadata: body.metadata,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'] as string,
+    });
+
+    return reply.status(201).send({ data: result });
+  }
+
   /**
    * GET /api/audit - Get audit logs with filtering
    */

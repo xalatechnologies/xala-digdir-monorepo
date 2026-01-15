@@ -195,7 +195,7 @@ async function bootstrap() {
     DashboardController,
     CalendarController,
     ListingCalendarConfigController,
-    AvailabilityMatrixController,
+    // Note: AvailabilityMatrixController removed - functionality covered by AvailabilityController
     SeasonalLeaseController,
     MessagesController,
     ReportsController,
