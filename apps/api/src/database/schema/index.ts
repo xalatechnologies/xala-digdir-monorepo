@@ -310,6 +310,32 @@ export const likes = pgTable('likes', {
 }));
 
 // ============================================================================
+// Share Links
+// ============================================================================
+
+export const shareLinks = pgTable('share_links', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  type: varchar('type', { length: 50 }).notNull().default('listing'),
+  resourceId: uuid('resource_id').notNull(),
+  token: varchar('token', { length: 64 }).notNull().unique(),
+  createdById: uuid('created_by_id').references(() => users.id, { onDelete: 'set null' }),
+  expiresAt: timestamp('expires_at'),
+  revokedAt: timestamp('revoked_at'),
+  viewCount: integer('view_count').notNull().default(0),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('share_links_tenant_idx').on(table.tenantId),
+  tokenIdx: uniqueIndex('share_links_token_idx').on(table.token),
+  resourceIdx: index('share_links_resource_idx').on(table.type, table.resourceId),
+  statusIdx: index('share_links_status_idx').on(table.status),
+  createdByIdx: index('share_links_created_by_idx').on(table.createdById),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -343,4 +369,6 @@ export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
 export type Like = typeof likes.$inferSelect;
 export type NewLike = typeof likes.$inferInsert;
+export type ShareLink = typeof shareLinks.$inferSelect;
+export type NewShareLink = typeof shareLinks.$inferInsert;
 
