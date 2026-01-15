@@ -362,3 +362,12 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// Likes (Favorites) hooks
+export {
+  useMyLikes,
+  useLikeListing,
+  useUnlikeListing,
+  useIsLiked,
+  useLikeCount,
+} from './use-likes';
