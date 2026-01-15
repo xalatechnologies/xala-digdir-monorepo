@@ -76,4 +76,9 @@ export type {
   // Share
   ShareLink,
   CreateShareLinkDTO,
+  // Likes (Favorites)
+  Like,
+  CreateLikeDTO,
+  LikeQueryParams,
+  LikedListing,
 } from './additional';
