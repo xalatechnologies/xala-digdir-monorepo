@@ -41,7 +41,7 @@ import { IntegrationsController } from './modules/integrations/integrations.cont
 import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
-import { IdPortenOIDCController } from './modules/auth/idporten-oidc.controller';
+import { IdPortenAuthController } from './modules/auth/idporten.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
@@ -167,9 +167,9 @@ async function bootstrap() {
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
-  // ID-porten OIDC auth controller (no dependencies)
-  container.registerFactory('IdPortenOIDCController', () =>
-    new IdPortenOIDCController()
+  // ID-porten auth controller via Signicat (no dependencies)
+  container.registerFactory('IdPortenAuthController', () =>
+    new IdPortenAuthController()
   );
   // Notifications controller (no dependencies)
   container.registerFactory('NotificationsController', () => 
@@ -219,8 +219,8 @@ async function bootstrap() {
     IntegrationsController,
     WidgetsController,
     ShareController,
-    // ID-porten (BankID) OIDC authentication
-    IdPortenOIDCController,
+    // ID-porten (BankID) via Signicat authentication
+    IdPortenAuthController,
     // Notifications
     NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
