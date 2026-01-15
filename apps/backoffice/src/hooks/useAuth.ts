@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import type { FlowContext } from '@digilist/client-sdk';
 
 // Backoffice-specific user type
 export interface BackofficeUser {
@@ -10,6 +11,22 @@ export interface BackofficeUser {
 
 export type BackofficeRole = 'admin' | 'saksbehandler';
 
+/**
+ * Result from restoring flow context after authentication
+ */
+export interface RestoreFlowContextResult {
+  /** Whether there was a flow context to restore */
+  hasContext: boolean;
+  /** The restored flow context */
+  flowContext?: FlowContext;
+  /** Time remaining before context expires (ms) */
+  ttl?: number;
+  /** Whether the context was expired */
+  wasExpired?: boolean;
+  /** Whether the context was invalid */
+  wasInvalid?: boolean;
+}
+
 export interface AuthContextType {
   user: BackofficeUser | null;
   isLoading: boolean;
@@ -19,6 +36,12 @@ export interface AuthContextType {
   login: (provider?: 'idporten' | 'microsoft') => void;
   logout: () => Promise<void>;
   checkRole: (role: BackofficeRole) => boolean;
+  /** Whether there is a stored flow context */
+  hasStoredContext: boolean;
+  /** Restore flow context after authentication */
+  restoreFlowContext: (clearAfterLoad?: boolean) => RestoreFlowContextResult;
+  /** Clear any stored flow context */
+  clearFlowContext: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
