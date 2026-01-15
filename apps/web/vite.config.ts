@@ -4,6 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 export default defineConfig({
+  // Load .env from monorepo root
+  envDir: path.resolve(__dirname, '../..'),
   plugins: [
     react(),
     VitePWA({

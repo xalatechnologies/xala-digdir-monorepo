@@ -162,6 +162,11 @@ export {
   useRefundPayment,
   useCalendarSyncStatus,
   useSyncCalendar,
+  // Integration Configuration hooks
+  useIntegrationConfigs,
+  useIntegrationConfig,
+  useUpdateIntegrationConfig,
+  useTestIntegrationConfig,
 } from './use-integrations';
 
 // Realtime hooks (WebSocket)

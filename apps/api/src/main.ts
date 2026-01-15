@@ -2,6 +2,12 @@
  * Unified API - Main Entry Point
  * Enterprise-grade modular API with repository pattern, Zod validation, and GraphQL
  */
+
+// Load environment variables from monorepo root .env file
+import { config } from 'dotenv';
+import { resolve } from 'path';
+config({ path: resolve(__dirname, '../../../.env') });
+
 import 'reflect-metadata';
 import mercurius from 'mercurius';
 import { drizzle } from 'drizzle-orm/postgres-js';

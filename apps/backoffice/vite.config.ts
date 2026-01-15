@@ -4,6 +4,8 @@ import path from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
+  // Load .env from monorepo root
+  envDir: path.resolve(__dirname, '../..'),
   plugins: [
     react(),
     // Upload source maps to Sentry on production builds
