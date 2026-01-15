@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
 import { useAuth, type BackofficeRole } from '../hooks/useAuth';
+import { useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { useToast } from '../providers/ToastProvider';
 
 interface ProtectedRouteProps {
@@ -14,6 +15,9 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   const location = useLocation();
   const { error } = useToast();
   const hasShownToast = useRef(false);
+
+  // Check if dual-role user needs to select a role
+  const needsRoleSelection = useNeedsRoleSelection();
 
   const hasRequiredRole = !requiredRole || checkRole(requiredRole);
 
@@ -51,6 +55,11 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Dual-role users without selection must select a role first
+  if (needsRoleSelection) {
+    return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
   if (!hasRequiredRole) {
