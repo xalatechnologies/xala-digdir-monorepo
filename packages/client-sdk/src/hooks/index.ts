@@ -371,3 +371,13 @@ export {
   useIsLiked,
   useLikeCount,
 } from './use-likes';
+
+// Share links hooks
+export {
+  useMyShares,
+  useCreateShare,
+  useRevokeShare,
+  useShareByToken,
+  useResourceShares,
+  useValidateShare,
+} from './use-shares';
