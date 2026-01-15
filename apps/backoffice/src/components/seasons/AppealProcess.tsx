@@ -16,10 +16,10 @@ import {
 } from '@xala/ds';
 
 // Local icons since they're not exported from @xala/ds
-function MoreVerticalIcon() {
+function XIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" />
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
@@ -100,9 +100,9 @@ type SeasonApplication = {
 };
 
 const useSeasonApplications = (_seasonId: string) => ({ data: { data: [] as SeasonApplication[] }, isLoading: false });
-const useSubmitAppeal = () => ({ mutateAsync: async () => {}, isLoading: false });
-const useApproveAppeal = () => ({ mutateAsync: async () => {}, isLoading: false });
-const useRejectAppeal = () => ({ mutateAsync: async () => {}, isLoading: false });
+const useSubmitAppeal = () => ({ mutateAsync: async (_data: { applicationId: string; reason: string }) => {}, isLoading: false });
+const useApproveAppeal = () => ({ mutateAsync: async (_id: string) => {}, isLoading: false });
+const useRejectAppeal = () => ({ mutateAsync: async (_data: { id: string; reason?: string }) => {}, isLoading: false });
 
 interface AppealProcessProps {
   seasonId: string;
@@ -279,21 +279,28 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-        <Dropdown>
-          <Dropdown.Trigger asChild>
-            <Button variant="secondary" data-size="sm" type="button">
-              <FilterIcon />
-              Klagestatus: {filterAppealStatus === 'all' ? 'Alle' : appealStatusLabels[filterAppealStatus]}
-            </Button>
-          </Dropdown.Trigger>
-          <Dropdown.Content>
-            <Dropdown.Item onClick={() => setFilterAppealStatus('all')}>Alle</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterAppealStatus('no_appeal')}>Ingen klage</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterAppealStatus('appeal_pending')}>Klage venter</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterAppealStatus('appeal_approved')}>Klage godkjent</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterAppealStatus('appeal_rejected')}>Klage avslått</Dropdown.Item>
-          </Dropdown.Content>
-        </Dropdown>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+          <FilterIcon />
+          {/* eslint-disable-next-line digdir/prefer-ds-components -- Native select for filter */}
+          <select
+            value={filterAppealStatus}
+            onChange={(e) => setFilterAppealStatus(e.target.value as AppealStatus | 'all')}
+            style={{
+              padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+              borderRadius: 'var(--ds-border-radius-md)',
+              border: '1px solid var(--ds-color-neutral-border-default)',
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
+              fontSize: 'var(--ds-font-size-sm)',
+              cursor: 'pointer',
+            }}
+          >
+            <option value="all">Alle</option>
+            <option value="no_appeal">Ingen klage</option>
+            <option value="appeal_pending">Klage venter</option>
+            <option value="appeal_approved">Klage godkjent</option>
+            <option value="appeal_rejected">Klage avslått</option>
+          </select>
+        </div>
       </div>
 
       {/* Applications list */}
@@ -394,37 +401,50 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <Dropdown>
-                      <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" data-size="sm" type="button">
-                          <MoreVerticalIcon />
+                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flexWrap: 'wrap' }}>
+                      {canSubmitAppeal && (
+                        <Button
+                          variant="secondary"
+                          data-size="sm"
+                          type="button"
+                          onClick={() => handleOpenAppealModal(application)}
+                          title="Send klage"
+                        >
+                          <SendIcon />
                         </Button>
-                      </Dropdown.Trigger>
-                      <Dropdown.Content>
-                        {canSubmitAppeal && (
-                          <Dropdown.Item onClick={() => handleOpenAppealModal(application)}>
-                            <SendIcon />
-                            Send klage
-                          </Dropdown.Item>
-                        )}
-                        {canProcessAppeal && (
-                          <>
-                            <Dropdown.Item onClick={() => handleApproveAppeal(application.id)}>
-                              <CheckCircleIcon />
-                              Godkjenn klage
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleRejectAppeal(application.id)} color="danger">
-                              <XCircleIcon />
-                              Avslå klage
-                            </Dropdown.Item>
-                          </>
-                        )}
-                        <Dropdown.Item onClick={() => setSelectedApplication(application)}>
-                          <MessageSquareIcon />
-                          Se detaljer
-                        </Dropdown.Item>
-                      </Dropdown.Content>
-                    </Dropdown>
+                      )}
+                      {canProcessAppeal && (
+                        <>
+                          <Button
+                            variant="secondary"
+                            data-size="sm"
+                            type="button"
+                            onClick={() => handleApproveAppeal(application.id)}
+                            title="Godkjenn klage"
+                          >
+                            <CheckCircleIcon />
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            data-size="sm"
+                            type="button"
+                            onClick={() => handleRejectAppeal(application.id)}
+                            title="Avslå klage"
+                          >
+                            <XCircleIcon />
+                          </Button>
+                        </>
+                      )}
+                      <Button
+                        variant="tertiary"
+                        data-size="sm"
+                        type="button"
+                        onClick={() => setSelectedApplication(application)}
+                        title="Se detaljer"
+                      >
+                        <MessageSquareIcon />
+                      </Button>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               );
@@ -433,113 +453,165 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
         </Table>
       )}
 
-      {/* Appeal submission modal */}
-      <Modal open={showAppealModal} onOpenChange={setShowAppealModal}>
-        <Modal.Content style={{ maxWidth: '600px' }}>
-          <Modal.Header>
-            <Heading level={3} data-size="sm">
-              Send klage på avslag
-            </Heading>
-          </Modal.Header>
+      {/* Appeal submission modal - Card-based dialog overlay */}
+      {showAppealModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'var(--ds-color-neutral-background-overlay)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => setShowAppealModal(false)}
+        >
+          <Card
+            style={{
+              maxWidth: '600px',
+              width: '90%',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              padding: 0,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: 'var(--ds-spacing-4)',
+              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+            }}>
+              <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+                Send klage på avslag
+              </Heading>
+              {/* eslint-disable-next-line digdir/prefer-ds-components -- Close icon button for dialog */}
+              <button
+                type="button"
+                onClick={() => setShowAppealModal(false)}
+                aria-label="Lukk"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
+              >
+                <XIcon />
+              </button>
+            </div>
 
-          {selectedApplication && (
-            <div style={{ padding: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-              {/* Application summary */}
-              <Card style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                  <div>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Organisasjon:</span>{' '}
-                    {selectedApplication.organizationName}
-                  </div>
-                  <div>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Lokale:</span>{' '}
-                    {selectedApplication.listingName}
-                  </div>
-                  <div>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Tid:</span>{' '}
-                    {weekdayLabels[selectedApplication.weekday]} {formatTime(selectedApplication.startTime)} – {formatTime(selectedApplication.endTime)}
-                  </div>
-                  {selectedApplication.rejectionReason && (
+            {selectedApplication && (
+              <div style={{ padding: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                {/* Application summary */}
+                <Card style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
                     <div>
-                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Avslagsgrunn:</span>
-                      <div style={{
-                        marginTop: 'var(--ds-spacing-1)',
-                        padding: 'var(--ds-spacing-2)',
-                        backgroundColor: 'var(--ds-color-danger-surface-subtle)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        color: 'var(--ds-color-danger-text-default)'
-                      }}>
-                        {selectedApplication.rejectionReason}
-                      </div>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Organisasjon:</span>{' '}
+                      {selectedApplication.organizationName}
                     </div>
-                  )}
-                </div>
-              </Card>
+                    <div>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Lokale:</span>{' '}
+                      {selectedApplication.listingName}
+                    </div>
+                    <div>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Tid:</span>{' '}
+                      {weekdayLabels[selectedApplication.weekday]} {formatTime(selectedApplication.startTime)} – {formatTime(selectedApplication.endTime)}
+                    </div>
+                    {selectedApplication.rejectionReason && (
+                      <div>
+                        <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Avslagsgrunn:</span>
+                        <div style={{
+                          marginTop: 'var(--ds-spacing-1)',
+                          padding: 'var(--ds-spacing-2)',
+                          backgroundColor: 'var(--ds-color-danger-surface-subtle)',
+                          borderRadius: 'var(--ds-border-radius-md)',
+                          color: 'var(--ds-color-danger-text-default)'
+                        }}>
+                          {selectedApplication.rejectionReason}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
 
-              {/* Appeal reason input */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                <Label htmlFor="appeal-reason">
-                  Begrunnelse for klage <span style={{ color: 'var(--ds-color-danger-text-default)' }}>*</span>
-                </Label>
-                <Textarea
-                  id="appeal-reason"
-                  value={appealReason}
-                  onChange={(e) => setAppealReason(e.target.value)}
-                  placeholder="Beskriv hvorfor du ønsker å klage på avslaget..."
-                  rows={6}
-                  required
-                />
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Forklar hvorfor du mener søknaden burde godkjennes. Inkluder relevant informasjon som kan støtte klagen.
-                </Paragraph>
-              </div>
-
-              {/* Warning */}
-              <Card style={{
-                padding: 'var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-warning-surface-subtle)',
-                border: '1px solid var(--ds-color-warning-border-default)'
-              }}>
-                <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'flex-start' }}>
-                  <AlertCircleIcon style={{ color: 'var(--ds-color-warning-text-default)', flexShrink: 0 }} />
-                  <Paragraph data-size="sm">
-                    Klagen vil bli vurdert av administrator. Du vil motta svar når klagen er behandlet.
+                {/* Appeal reason input */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native label for form */}
+                  <label htmlFor="appeal-reason" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    Begrunnelse for klage <span style={{ color: 'var(--ds-color-danger-text-default)' }}>*</span>
+                  </label>
+                  {/* eslint-disable-next-line digdir/prefer-ds-components -- Native textarea for form */}
+                  <textarea
+                    id="appeal-reason"
+                    value={appealReason}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAppealReason(e.target.value)}
+                    placeholder="Beskriv hvorfor du ønsker å klage på avslaget..."
+                    rows={6}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: 'var(--ds-spacing-3)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-neutral-border-default)',
+                      fontSize: 'var(--ds-font-size-md)',
+                      fontFamily: 'inherit',
+                      resize: 'vertical',
+                    }}
+                  />
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Forklar hvorfor du mener søknaden burde godkjennes. Inkluder relevant informasjon som kan støtte klagen.
                   </Paragraph>
                 </div>
-              </Card>
 
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowAppealModal(false)}
-                  type="button"
-                >
-                  Avbryt
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleSubmitAppeal}
-                  disabled={!appealReason.trim() || submitAppealMutation.isLoading}
-                  type="button"
-                >
-                  {submitAppealMutation.isLoading ? (
-                    <>
-                      <Spinner data-size="sm" />
-                      Sender...
-                    </>
-                  ) : (
-                    <>
-                      <SendIcon />
-                      Send klage
-                    </>
-                  )}
-                </Button>
+                {/* Warning */}
+                <Card style={{
+                  padding: 'var(--ds-spacing-3)',
+                  backgroundColor: 'var(--ds-color-warning-surface-subtle)',
+                  border: '1px solid var(--ds-color-warning-border-default)'
+                }}>
+                  <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'flex-start' }}>
+                    <AlertCircleIcon style={{ color: 'var(--ds-color-warning-text-default)', flexShrink: 0 }} />
+                    <Paragraph data-size="sm">
+                      Klagen vil bli vurdert av administrator. Du vil motta svar når klagen er behandlet.
+                    </Paragraph>
+                  </div>
+                </Card>
+
+                {/* Actions */}
+                <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowAppealModal(false)}
+                    type="button"
+                  >
+                    Avbryt
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={handleSubmitAppeal}
+                    disabled={!appealReason.trim() || submitAppealMutation.isLoading}
+                    type="button"
+                  >
+                    {submitAppealMutation.isLoading ? (
+                      <>
+                        <Spinner data-size="sm" aria-hidden="true" />
+                        Sender...
+                      </>
+                    ) : (
+                      <>
+                        <SendIcon />
+                        Send klage
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
-        </Modal.Content>
-      </Modal>
+            )}
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
