@@ -4,6 +4,23 @@ const COOKIE_NAME = 'digilist_locale';
 const STORAGE_KEY = 'locale';
 
 /**
+ * SSR-safe check for production mode.
+ * Works in both Node.js and browser environments without requiring @types/node.
+ */
+function isProduction(): boolean {
+  try {
+    // Vite sets import.meta.env.PROD in browser environments
+    if (import.meta?.env?.PROD === true) {
+      return true;
+    }
+  } catch {
+    // Ignore errors - import.meta might not be available in all environments
+  }
+  // Default to false to allow dev over HTTP
+  return false;
+}
+
+/**
  * Cookie options for locale persistence
  * - 365 days expiry for long-term preference storage
  * - SameSite=Lax for security (prevents CSRF)
@@ -12,7 +29,7 @@ const STORAGE_KEY = 'locale';
 const COOKIE_OPTIONS: Cookies.CookieAttributes = {
   expires: 365,
   sameSite: 'lax',
-  secure: typeof process !== 'undefined' && process.env?.NODE_ENV === 'production',
+  secure: isProduction(),
 };
 
 /**
