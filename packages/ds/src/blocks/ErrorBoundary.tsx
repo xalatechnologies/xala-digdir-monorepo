@@ -7,6 +7,7 @@
  * This is a class component as required by React's error boundary API.
  */
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import * as Sentry from '@sentry/react';
 import { ErrorScreen } from './AuthComponents';
 
 // =============================================================================
@@ -52,8 +53,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Log error to console for development debugging
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Call the onError callback if provided (for error tracking services)
-    // TODO: Integrate with error tracking service (e.g., Sentry)
+    // Report error to Sentry with React ErrorInfo context
+    Sentry.withScope((scope) => {
+      // Attach React component stack trace and other error info
+      scope.setContext('react_error_info', {
+        componentStack: errorInfo.componentStack,
+      });
+      Sentry.captureException(error);
+    });
+
+    // Call the onError callback if provided (for custom error tracking)
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }

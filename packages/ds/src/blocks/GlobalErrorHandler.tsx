@@ -13,6 +13,7 @@
  */
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
+import * as Sentry from '@sentry/react';
 import { ErrorScreen } from './AuthComponents';
 
 // =============================================================================
@@ -126,8 +127,20 @@ export function GlobalErrorHandler({
 
       setError(globalError);
 
+      // Report to Sentry with additional context
+      if (globalError.error) {
+        Sentry.withScope((scope) => {
+          scope.setContext('window-error', {
+            source: globalError.source,
+            lineno: globalError.lineno,
+            colno: globalError.colno,
+            type: globalError.type,
+          });
+          Sentry.captureException(globalError.error);
+        });
+      }
+
       // Call the onError callback if provided
-      // TODO: Integrate with error tracking service (e.g., Sentry)
       if (onError) {
         onError(globalError);
       }
@@ -161,8 +174,28 @@ export function GlobalErrorHandler({
 
       setError(globalError);
 
+      // Report to Sentry with additional context
+      if (globalError.error) {
+        Sentry.withScope((scope) => {
+          scope.setContext('unhandled-rejection', {
+            type: globalError.type,
+            message: globalError.message,
+          });
+          Sentry.captureException(globalError.error);
+        });
+      } else {
+        // If no Error object, create one from the reason
+        const syntheticError = new Error(globalError.message);
+        Sentry.withScope((scope) => {
+          scope.setContext('unhandled-rejection', {
+            type: globalError.type,
+            reason: reason,
+          });
+          Sentry.captureException(syntheticError);
+        });
+      }
+
       // Call the onError callback if provided
-      // TODO: Integrate with error tracking service (e.g., Sentry)
       if (onError) {
         onError(globalError);
       }

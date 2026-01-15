@@ -6,6 +6,7 @@ import { initializeClient } from '@digilist/client-sdk';
 import '@xala/ds/styles';
 import './root.css';
 import { App } from './App';
+import { initSentry } from './lib/sentry';
 
 // Ola Hansen's user ID from seeded database
 const SEEDED_USER_ID = '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c';
@@ -29,6 +30,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

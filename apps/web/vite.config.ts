@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
   plugins: [
@@ -80,8 +81,20 @@ export default defineConfig({
         enabled: true,
       },
     }),
+    // Upload source maps to Sentry on production builds
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      // Only upload source maps in production builds
+      disable: process.env.NODE_ENV !== 'production',
+      sourcemaps: {
+        assets: './dist/**',
+      },
+    }),
   ],
   build: {
+    sourcemap: true, // Generate source maps for production builds
     rollupOptions: {
       output: {
         manualChunks: (id) => {

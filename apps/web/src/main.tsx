@@ -7,6 +7,7 @@ import '@xala/ds/styles';
 
 // Initialize SDK with API configuration
 import { initializeClient } from '@digilist/client-sdk';
+import { initSentry } from './lib/sentry';
 
 initializeClient({
   baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
@@ -32,6 +33,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Initialize Sentry error tracking before React rendering
+initSentry();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

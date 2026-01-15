@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
+import { DesignsystemetProvider, DialogProvider, ErrorBoundary, GlobalErrorHandler } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
@@ -56,6 +56,7 @@ function AppWithTheme() {
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
+      <GlobalErrorHandler>
       <ErrorBoundary>
       <ToastProvider>
       <BrowserRouter
@@ -65,8 +66,8 @@ function AppWithTheme() {
         }}
       >
         <AuthProvider>
-          <RealtimeProvider 
-            wsUrl={import.meta.env.VITE_WS_URL} 
+          <RealtimeProvider
+            wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
           >
           <Routes>
@@ -207,6 +208,7 @@ function AppWithTheme() {
       </BrowserRouter>
       </ToastProvider>
       </ErrorBoundary>
+      </GlobalErrorHandler>
       </DialogProvider>
       </DesignsystemetProvider>
     </I18nProvider>
