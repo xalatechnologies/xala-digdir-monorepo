@@ -22,8 +22,6 @@ import {
   isFlowContextExpired,
   validateReturnToUrl,
   sanitizeReturnToUrl,
-  createReturnToConfig,
-  validateReturnToConfig,
 } from '../utils/flow-context';
 
 // =============================================================================

@@ -7,10 +7,8 @@ import type { FlowContext } from '../../types/auth';
 import {
   AuthService,
   type RequireAuthOptions,
-  type RequireAuthResult,
-  type ResumeFlowResult,
 } from '../../services/auth.service';
-import { FLOW_CONTEXT_KEY, FLOW_CONTEXT_EXPIRY_MS } from '../../utils/flow-context';
+import { FLOW_CONTEXT_KEY } from '../../utils/flow-context';
 
 // =============================================================================
 // Mock client factory

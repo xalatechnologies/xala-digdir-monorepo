@@ -7,13 +7,12 @@
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import { authService } from '../services/auth.service';
 import type { RequireAuthOptions, RequireAuthResult, ResumeFlowResult } from '../services/auth.service';
-import type { FlowContext, ReturnToConfig } from '../types/auth';
+import type { FlowContext } from '../types/auth';
 import {
   FLOW_CONTEXT_KEY,
   hasStoredFlowContext as checkStoredFlowContext,
   loadFlowContextFromStorage,
   clearFlowContextFromStorage,
-  isFlowContextExpired,
   getFlowContextTTL,
   validateReturnToUrl,
 } from '../utils/flow-context';
