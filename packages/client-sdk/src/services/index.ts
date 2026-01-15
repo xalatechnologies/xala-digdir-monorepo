@@ -153,5 +153,13 @@ export type {
   IdPortenLogoutResult,
 } from './idporten.service';
 
+// Integrations Configuration (ID-porten, Vipps, Visma, RCO, ACOS)
+export { IntegrationsService, integrationsService } from './integrations.service';
+export type {
+  Integration,
+  IntegrationUpdate,
+  IntegrationTestResult,
+} from './integrations.service';
+
 // Profile & Preferences
 export { ProfileService, profileService } from './profile.service';
