@@ -17,6 +17,7 @@ import {
   ShieldCheckIcon,
 } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
+import { idportenService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -168,7 +169,12 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title="ID-porten"
         description="Personlig innlogging med BankID"
-        onClick={() => login('idporten')}
+        onClick={() => {
+          // Pass current URL for session persistence (booking flow)
+          // Backend will auto-redirect based on user role or create user if needed
+          const returnTo = window.location.href;
+          idportenService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<MicrosoftIcon />}

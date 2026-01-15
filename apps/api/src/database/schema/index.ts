@@ -91,7 +91,7 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
-// Listings
+// Listings (Rental Objects / Utleieobjekter)
 // ============================================================================
 
 export const listings = pgTable('listings', {
@@ -100,32 +100,33 @@ export const listings = pgTable('listings', {
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull(),
-  // Legacy type field (deprecated, use category_v2)
-  type: varchar('type', { length: 50 }).notNull().default('SPACE'),
+  
+  // Category system (4 main categories)
+  category: varchar('category', { length: 50 }).notNull().default('LOKALER_OG_BANER'),
+  subcategory: varchar('subcategory', { length: 100 }),
+  tags: jsonb('tags').default([]),
+  
+  // Booking configuration
+  timeMode: varchar('time_mode', { length: 20 }).default('PERIOD'),
+  bookingFeatures: jsonb('booking_features').default({}),
+  
+  // Common fields
   status: varchar('status', { length: 50 }).notNull().default('draft'),
   description: text('description'),
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
   capacity: integer('capacity'),
-  metadata: jsonb('metadata').default({}),
-  
-  // V2 Category & Booking Model columns
-  categoryV2: varchar('category_v2', { length: 50 }),
-  subcategory: varchar('subcategory', { length: 100 }),
-  tags: jsonb('tags').default([]),
   fixedLocation: boolean('fixed_location').default(true),
-  timeMode: varchar('time_mode', { length: 20 }).default('PERIOD'),
-  bookingFeatures: jsonb('booking_features').default({}),
-  migrationStatus: varchar('migration_status', { length: 20 }).default('pending'),
+  metadata: jsonb('metadata').default({}),
   
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('listings_tenant_idx').on(table.tenantId),
   statusIdx: index('listings_status_idx').on(table.status),
-  typeIdx: index('listings_type_idx').on(table.type),
+  categoryIdx: index('listings_category_idx').on(table.category),
+  subcategoryIdx: index('listings_subcategory_idx').on(table.subcategory),
   slugIdx: index('listings_slug_idx').on(table.tenantId, table.slug),
-  categoryV2Idx: index('listings_category_v2_idx').on(table.categoryV2),
   timeModeIdx: index('listings_time_mode_idx').on(table.timeMode),
 }));
 

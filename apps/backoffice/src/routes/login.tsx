@@ -184,7 +184,12 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
-        onClick={() => idportenService.authorize('/role-selection')}
+        onClick={() => {
+          // Pass current origin so backend knows this is backoffice
+          // Backend will automatically redirect to role-based dashboard
+          const returnTo = window.location.origin + '/';
+          idportenService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<MicrosoftIcon />}

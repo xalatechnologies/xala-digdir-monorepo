@@ -18,6 +18,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
+import { idportenService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -164,7 +165,12 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
-        onClick={() => login('idporten')}
+        onClick={() => {
+          // Pass current URL for session persistence
+          // Backend will auto-redirect to /minside or create user if needed
+          const returnTo = window.location.href;
+          idportenService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<VippsIcon />}
