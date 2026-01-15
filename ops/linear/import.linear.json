@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "exportedAt": "2026-01-15T11:36:00.000Z",
+  "workspace": {
+    "name": "Digilist Platform",
+    "description": "Norwegian municipal booking and resource management system - Master Roadmap",
+    "projects": [
+      {
+        "name": "Digilist Master Roadmap",
+        "description": "Complete implementation roadmap for the Digilist Platform with 8 phases covering core architecture, SDK foundation, multi-tenant isolation, API layer, infrastructure automation, production launch, and continuous improvement.",
+        "state": "started",
+        "milestones": [
+          {
+            "id": "P0",
+            "name": "P0 - Core Architecture & Constraints",
+            "description": "Establish non-negotiable architectural patterns: SDK-first, audit-first, RBAC, RFC 7807, Designsystemet guardrails, and zero-transformer contract-first principles.",
+            "sortOrder": 0,
+            "targetDate": null
+          },
+          {
+            "id": "P1",
+            "name": "P1 - SDK Foundation",
+            "description": "Build enterprise-grade @digilist/client-sdk with 24+ services, React Query hooks, WebSocket realtime, and TypeScript types.",
+            "sortOrder": 1,
+            "targetDate": null
+          },
+          {
+            "id": "P2",
+            "name": "P2 - Multi-Tenant Isolation",
+            "description": "Implement kommune-level tenant isolation with tenant context, data partitioning, and cross-tenant security.",
+            "sortOrder": 2,
+            "targetDate": null
+          },
+          {
+            "id": "P3",
+            "name": "P3 - API Layer",
+            "description": "Build Fastify API with business logic, Drizzle/Postgres persistence, audit logging, and RFC 7807 error handling.",
+            "sortOrder": 3,
+            "targetDate": null
+          },
+          {
+            "id": "P4",
+            "name": "P4 - UI Facade & Design System",
+            "description": "Implement @xala/ds facade layer with Designsystemet re-exports, theme system, and component hierarchy (Primitives, Composed, Blocks, Shells).",
+            "sortOrder": 4,
+            "targetDate": null
+          },
+          {
+            "id": "P5",
+            "name": "P5 - Audit & Compliance",
+            "description": "Ensure all mutations are auditable with required fields: who, what, when, tenantId, ip/ua. Implement audit service and logging.",
+            "sortOrder": 5,
+            "targetDate": null
+          },
+          {
+            "id": "P6",
+            "name": "P6 - Infrastructure & Deployment",
+            "description": "Configure Turborepo pipelines, pnpm workspaces, Vite builds, SSL certificates, and deployment automation for web, backoffice, and minside apps.",
+            "sortOrder": 6,
+            "targetDate": null
+          },
+          {
+            "id": "P7",
+            "name": "P7 - Continuous Improvement",
+            "description": "Ongoing optimization, performance monitoring, testing automation, and documentation updates.",
+            "sortOrder": 7,
+            "targetDate": null
+          }
+        ],
+        "labels": [
+          {
+            "name": "MUST_HAVE",
+            "color": "#dc2626",
+            "description": "Critical requirement - must be implemented"
+          },
+          {
+            "name": "SHOULD_HAVE",
+            "color": "#f97316",
+            "description": "Important requirement - should be implemented"
+          },
+          {
+            "name": "NICE_TO_HAVE",
+            "color": "#22c55e",
+            "description": "Optional enhancement - nice to have"
+          },
+          {
+            "name": "sdk",
+            "color": "#3b82f6",
+            "description": "@digilist/client-sdk related"
+          },
+          {
+            "name": "ui",
+            "color": "#8b5cf6",
+            "description": "@xala/ds design system related"
+          },
+          {
+            "name": "api",
+            "color": "#06b6d4",
+            "description": "Fastify API layer related"
+          },
+          {
+            "name": "audit",
+            "color": "#eab308",
+            "description": "Audit logging and compliance"
+          },
+          {
+            "name": "multi-tenant",
+            "color": "#ec4899",
+            "description": "Multi-tenancy and kommune isolation"
+          },
+          {
+            "name": "security",
+            "color": "#ef4444",
+            "description": "Security and RBAC related"
+          },
+          {
+            "name": "infra",
+            "color": "#64748b",
+            "description": "Infrastructure and deployment"
+          },
+          {
+            "name": "testing",
+            "color": "#14b8a6",
+            "description": "Testing and quality assurance"
+          },
+          {
+            "name": "docs",
+            "color": "#a855f7",
+            "description": "Documentation and CLAUDE.md"
+          }
+        ],
+        "issues": [
+          {
+            "id": "P0-01",
+            "title": "Enforce SDK-first rule - no direct fetch/axios in apps",
+            "description": "All API calls must use @digilist/client-sdk. Direct fetch(), axios, or graphql calls are forbidden in apps/. If SDK lacks a method, report gap - do NOT bypass.\n\nVerification:\n- Scan apps/** for axios, node-fetch imports\n- Verify @xala/client-sdk usage in all API-calling components",
+            "priority": 1,
+            "milestone": "P0",
+            "labels": ["MUST_HAVE", "sdk", "security"],
+            "state": "backlog"
+          },
+          {
+            "id": "P1-01",
+            "title": "Implement SDK session continuity and auth refresh",
+            "description": "SDK must maintain session state across page reloads and handle token refresh automatically. Use initializeClient() for configuration.\n\nAcceptance criteria:\n- Session persists across navigation\n- Token refresh happens before expiry\n- Auth errors trigger re-authentication flow",
+            "priority": 1,
+            "milestone": "P1",
+            "labels": ["MUST_HAVE", "sdk", "security"],
+            "state": "backlog"
+          },
+          {
+            "id": "P2-01",
+            "title": "Implement tenant context propagation in SDK",
+            "description": "All SDK service calls must include tenantId. Tenant context must be set at initialization and propagate to all API requests.\n\nAcceptance criteria:\n- tenantId included in all API headers\n- Cross-tenant data access blocked at SDK level\n- Tenant switching handled gracefully",
+            "priority": 1,
+            "milestone": "P2",
+            "labels": ["MUST_HAVE", "multi-tenant", "sdk"],
+            "state": "backlog"
+          },
+          {
+            "id": "P4-01",
+            "title": "Enforce Designsystemet guardrails - @xala/ds only",
+            "description": "Apps must import from @xala/ds only, never directly from @digdir/*. ESLint rules must block direct Designsystemet imports.\n\nVerification:\n- Scan apps/** for @digdir/* imports\n- Verify eslint-config/rules enforce import restrictions",
+            "priority": 1,
+            "milestone": "P4",
+            "labels": ["MUST_HAVE", "ui", "security"],
+            "state": "backlog"
+          },
+          {
+            "id": "P5-01",
+            "title": "Implement audit logging for all mutations",
+            "description": "Every state mutation must be auditable. Required audit fields: who, what, when, tenantId, ip/ua. If action is not logged, block implementation.\n\nAcceptance criteria:\n- auditService captures all mutations\n- Audit trail legally compliant\n- WebSocket realtime audit events working",
+            "priority": 1,
+            "milestone": "P5",
+            "labels": ["MUST_HAVE", "audit", "security"],
+            "state": "backlog"
+          },
+          {
+            "id": "P6-01",
+            "title": "Configure production deployment pipelines",
+            "description": "Set up Turborepo pipelines, deployment scripts for web/backoffice/minside, SSL certificate management, and environment configuration.\n\nDeliverables:\n- pnpm deploy:web, deploy:backoffice, deploy:minside\n- pnpm deploy:all for full deployment\n- SSL certificate automation",
+            "priority": 2,
+            "milestone": "P6",
+            "labels": ["SHOULD_HAVE", "infra"],
+            "state": "backlog"
+          }
+        ]
+      }
+    ]
+  }
+}
