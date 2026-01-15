@@ -7,7 +7,18 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
-import { bookingService, auditService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
+import {
+  bookingService,
+  auditService,
+  type CreateBookingDTO,
+  type BookingSelectionDTO,
+  type RecurringPreviewProjectionDTO,
+  type RecurringBookingResultProjectionDTO,
+  type CreateRecurringBookingDTO,
+  useOrganizations,
+  useRecurringPreview,
+  useCreateRecurringBooking,
+} from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { useAuth } from '../../../../hooks/useAuth';
@@ -18,6 +29,9 @@ import { BookingPricingStep, type PriceGroup, type AdditionalService } from './c
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
 import { BookingModeSelector, type BookingModeOption } from '../BookingModeSelector';
+import { RecurringPatternBuilder, type RecurringPatternData, DEFAULT_RECURRING_PATTERN } from '../RecurringPatternBuilder';
+import { RecurringPreviewTable } from '../RecurringPreviewTable';
+import { RecurringResultSummary } from '../RecurringResultSummary';
 import type { BookingMode } from '../../types';
 
 // =============================================================================
@@ -104,6 +118,20 @@ export interface BookingWidgetPlacementProps {
 const BOOKING_STEPS: BookingStep[] = [
   { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
   { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
+  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
+  { id: 'done', label: 'Sendt', icon: 'success' },
+];
+
+/**
+ * Booking steps for RECURRING mode flow:
+ * 1. Pattern builder - Define recurring pattern (frequency, weekdays, time, end condition)
+ * 2. Preview - Review occurrences with availability status
+ * 3. Confirm - Login and confirm booking
+ * 4. Done - Show result summary
+ */
+const RECURRING_BOOKING_STEPS: BookingStep[] = [
+  { id: 'pattern', label: 'Mønster', icon: 'calendar' },
+  { id: 'preview', label: 'Forhåndsvisning', icon: 'pricing' },
   { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
   { id: 'done', label: 'Sendt', icon: 'success' },
 ];
@@ -283,6 +311,25 @@ export function BookingWidgetPlacement({
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
 
+  // ==========================================================================
+  // Recurring Booking Flow State
+  // ==========================================================================
+
+  /** Current recurring pattern configuration */
+  const [recurringPattern, setRecurringPattern] = React.useState<RecurringPatternData>(DEFAULT_RECURRING_PATTERN);
+
+  /** Selected occurrence indices for partial creation */
+  const [selectedOccurrenceIndices, setSelectedOccurrenceIndices] = React.useState<number[]>([]);
+
+  /** Whether to use partial creation (only selected occurrences) */
+  const [usePartialCreation, setUsePartialCreation] = React.useState(false);
+
+  /** Result from recurring booking creation */
+  const [recurringResult, setRecurringResult] = React.useState<RecurringBookingResultProjectionDTO | null>(null);
+
+  /** Error state specific to recurring booking */
+  const [recurringError, setRecurringError] = React.useState<string | null>(null);
+
   // Booking mode state - use controlled or uncontrolled mode
   const enabledModes = bookingModes.filter(m => m.enabled);
   const defaultMode = enabledModes[0]?.mode ?? 'SINGLE_SLOT';
@@ -297,7 +344,73 @@ export function BookingWidgetPlacement({
     } else {
       setInternalBookingMode(mode);
     }
+    // Reset step when mode changes
+    setCurrentStep(0);
+    // Reset recurring state when mode changes
+    setRecurringPattern(DEFAULT_RECURRING_PATTERN);
+    setSelectedOccurrenceIndices([]);
+    setUsePartialCreation(false);
+    setRecurringResult(null);
+    setRecurringError(null);
   };
+
+  // ==========================================================================
+  // Recurring Booking Hooks
+  // ==========================================================================
+
+  /** Build recurring selection from pattern for preview API */
+  const recurringSelection = React.useMemo((): BookingSelectionDTO | null => {
+    if (currentBookingMode !== 'RECURRING' || !listingId) return null;
+
+    // Calculate start date (today or tomorrow if past opening hours)
+    const now = new Date();
+    const startDate = new Date(now);
+    startDate.setHours(0, 0, 0, 0);
+
+    // Find the next occurrence of the first selected weekday
+    const targetWeekday = recurringPattern.weekdays[0] ?? 1;
+    const currentWeekday = startDate.getDay();
+    const isoCurrentWeekday = currentWeekday === 0 ? 7 : currentWeekday;
+    let daysUntilTarget = targetWeekday - isoCurrentWeekday;
+    if (daysUntilTarget <= 0) daysUntilTarget += 7;
+    startDate.setDate(startDate.getDate() + daysUntilTarget);
+
+    // Set time on the date
+    const [startHour, startMinute] = recurringPattern.startTime.split(':').map(Number);
+    const [endHour, endMinute] = recurringPattern.endTime.split(':').map(Number);
+    startDate.setHours(startHour ?? 9, startMinute ?? 0, 0, 0);
+
+    const endDate = new Date(startDate);
+    endDate.setHours(endHour ?? 10, endMinute ?? 0, 0, 0);
+
+    return {
+      listingId,
+      mode: 'RECURRING',
+      startTime: startDate.toISOString(),
+      endTime: endDate.toISOString(),
+      frequency: recurringPattern.frequency,
+      weekdays: recurringPattern.weekdays,
+      endCondition: recurringPattern.endCondition,
+      userId: undefined,
+      organizationId: selectedOrganizationId,
+    };
+  }, [currentBookingMode, listingId, recurringPattern, selectedOrganizationId]);
+
+  /** Recurring preview query - only fetch when on preview step */
+  const {
+    data: recurringPreviewData,
+    isLoading: isLoadingPreview,
+    error: previewError,
+    refetch: refetchPreview,
+  } = useRecurringPreview(listingId ?? '', recurringSelection, {
+    enabled: currentBookingMode === 'RECURRING' && currentStep >= 1 && !!recurringSelection,
+  });
+
+  /** Recurring booking creation mutation */
+  const createRecurringMutation = useCreateRecurringBooking();
+
+  /** Get the current step configuration based on mode */
+  const currentSteps = currentBookingMode === 'RECURRING' ? RECURRING_BOOKING_STEPS : BOOKING_STEPS;
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -490,6 +603,61 @@ export function BookingWidgetPlacement({
     }
   };
 
+  /**
+   * Submit recurring booking with conflict handling policy.
+   * Creates all or selected occurrences based on usePartialCreation flag.
+   */
+  const handleSubmitRecurringBooking = async (): Promise<void> => {
+    if (!listingId || !recurringSelection) {
+      setRecurringError('Mangler booking-informasjon');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setRecurringError(null);
+
+    try {
+      const createDto: CreateRecurringBookingDTO = {
+        ...recurringSelection,
+        policy: {
+          stopOnConflict: !usePartialCreation,
+          allowPartial: usePartialCreation,
+        },
+        selectedOccurrences: usePartialCreation && selectedOccurrenceIndices.length > 0
+          ? selectedOccurrenceIndices
+          : undefined,
+      };
+
+      const result = await createRecurringMutation.mutateAsync(createDto);
+
+      // Store result for display
+      if (result.data) {
+        setRecurringResult(result.data);
+      }
+
+      // Move to done step
+      setCurrentStep(3);
+    } catch (error) {
+      setRecurringError(
+        error instanceof Error ? error.message : 'En feil oppstod ved opprettelse av gjentakende booking'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  /**
+   * Reset the booking flow to start fresh.
+   */
+  const handleResetRecurringFlow = (): void => {
+    setCurrentStep(0);
+    setRecurringPattern(DEFAULT_RECURRING_PATTERN);
+    setSelectedOccurrenceIndices([]);
+    setUsePartialCreation(false);
+    setRecurringResult(null);
+    setRecurringError(null);
+  };
+
   const navigateWeek = (direction: 'prev' | 'next'): void => {
     setWeekStart(prev => {
       const newDate = new Date(prev);
@@ -591,7 +759,7 @@ export function BookingWidgetPlacement({
     >
       {/* Header */}
       <BookingStepperHeader
-        steps={BOOKING_STEPS}
+        steps={currentSteps}
         currentStep={currentStep}
         listingTitle={listingTitle}
         isMobile={isMobile}
@@ -634,8 +802,19 @@ export function BookingWidgetPlacement({
             overflow: 'auto',
           }}
         >
-          {/* Step 0: Calendar Selection */}
-          {currentStep === 0 && (
+          {/* Step 0: Pattern Builder for RECURRING mode */}
+          {currentStep === 0 && currentBookingMode === 'RECURRING' && (
+            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+              <RecurringPatternBuilder
+                value={recurringPattern}
+                onChange={setRecurringPattern}
+                size="md"
+              />
+            </div>
+          )}
+
+          {/* Step 0: Calendar Selection for SINGLE_SLOT mode */}
+          {currentStep === 0 && currentBookingMode !== 'RECURRING' && (
             <>
               {/* Calendar Header */}
               <div
@@ -873,8 +1052,116 @@ export function BookingWidgetPlacement({
             </>
           )}
 
-          {/* Step 1: Pricing */}
-          {currentStep === 1 && (
+          {/* Step 1: Preview for RECURRING mode */}
+          {currentStep === 1 && currentBookingMode === 'RECURRING' && (
+            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+              {isLoadingPreview ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 'var(--ds-spacing-8)',
+                    gap: 'var(--ds-spacing-3)',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      border: '3px solid var(--ds-color-neutral-border-subtle)',
+                      borderTopColor: 'var(--ds-color-accent-base-default)',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                    }}
+                  />
+                  <Paragraph
+                    data-size="sm"
+                    style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
+                  >
+                    Henter tilgjengelighet...
+                  </Paragraph>
+                  <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                </div>
+              ) : previewError ? (
+                <div
+                  style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-danger-surface-default)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-danger-border-default)',
+                  }}
+                >
+                  <Paragraph
+                    data-size="sm"
+                    style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}
+                  >
+                    Kunne ikke hente forhåndsvisning. Vennligst prøv igjen.
+                  </Paragraph>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    data-size="sm"
+                    onClick={() => refetchPreview()}
+                    style={{ marginTop: 'var(--ds-spacing-3)' }}
+                  >
+                    Prøv igjen
+                  </Button>
+                </div>
+              ) : recurringPreviewData?.data ? (
+                <>
+                  <RecurringPreviewTable
+                    occurrences={recurringPreviewData.data.occurrences}
+                    summary={recurringPreviewData.data.summary}
+                    selectable={recurringPreviewData.data.summary.conflictCount > 0}
+                    selectedIndices={selectedOccurrenceIndices}
+                    onSelectionChange={(indices) => {
+                      setSelectedOccurrenceIndices(indices);
+                      setUsePartialCreation(indices.length > 0 && indices.length < recurringPreviewData.data!.summary.availableCount);
+                    }}
+                    showSummary={true}
+                    size="md"
+                  />
+
+                  {/* Error message */}
+                  {recurringError && (
+                    <div
+                      style={{
+                        marginTop: 'var(--ds-spacing-3)',
+                        padding: 'var(--ds-spacing-3)',
+                        backgroundColor: 'var(--ds-color-danger-surface-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        border: '1px solid var(--ds-color-danger-border-default)',
+                      }}
+                    >
+                      <Paragraph
+                        data-size="sm"
+                        style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}
+                      >
+                        {recurringError}
+                      </Paragraph>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div
+                  style={{
+                    padding: 'var(--ds-spacing-6)',
+                    textAlign: 'center',
+                    color: 'var(--ds-color-neutral-text-subtle)',
+                  }}
+                >
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    Ingen forhåndsvisning tilgjengelig
+                  </Paragraph>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 1: Pricing for SINGLE_SLOT mode */}
+          {currentStep === 1 && currentBookingMode !== 'RECURRING' && (
             <BookingPricingStep
               priceGroups={priceGroups}
               additionalServices={additionalServices}
@@ -894,15 +1181,25 @@ export function BookingWidgetPlacement({
               isAuthenticated={isAuthenticated}
               isLoggingIn={isLoggingIn}
               isSubmitting={isSubmitting}
-              bookingError={bookingError}
+              bookingError={currentBookingMode === 'RECURRING' ? recurringError : bookingError}
               isMobile={isMobile}
               selectedSlots={selectedSlots}
               slotDetails={slotDetails}
               weekStart={weekStart}
               onLoginWithVipps={handleLoginVipps}
               onLoginAsEmployee={handleLoginEmployee}
-              onConfirmBooking={handleSubmitBooking}
-              onClearError={() => setBookingError(null)}
+              onConfirmBooking={
+                currentBookingMode === 'RECURRING'
+                  ? handleSubmitRecurringBooking
+                  : handleSubmitBooking
+              }
+              onClearError={() => {
+                if (currentBookingMode === 'RECURRING') {
+                  setRecurringError(null);
+                } else {
+                  setBookingError(null);
+                }
+              }}
               bookingAccountType={bookingAccountType}
               selectedOrganizationId={selectedOrganizationId}
               onAccountTypeSelect={handleAccountTypeSelect}
@@ -912,8 +1209,20 @@ export function BookingWidgetPlacement({
             />
           )}
 
-          {/* Step 3: Success */}
-          {currentStep === 3 && (
+          {/* Step 3: Success for RECURRING mode */}
+          {currentStep === 3 && currentBookingMode === 'RECURRING' && recurringResult && (
+            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+              <RecurringResultSummary
+                result={recurringResult}
+                onNewBooking={handleResetRecurringFlow}
+                showDetails={true}
+                size="md"
+              />
+            </div>
+          )}
+
+          {/* Step 3: Success for SINGLE_SLOT mode */}
+          {currentStep === 3 && currentBookingMode !== 'RECURRING' && (
             <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
               <div
                 style={{
@@ -939,8 +1248,8 @@ export function BookingWidgetPlacement({
           )}
         </div>
 
-        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step */}
-        {!isMobile && currentStep < 3 && currentStep !== 2 && (
+        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step and for RECURRING mode */}
+        {!isMobile && currentStep < 3 && currentStep !== 2 && currentBookingMode !== 'RECURRING' && (
           <div
             style={{
               flex: '0 0 45%',
@@ -989,7 +1298,59 @@ export function BookingWidgetPlacement({
             Tilbake
           </Button>
         )}
-        {currentStep < 3 && (
+
+        {/* RECURRING mode action buttons */}
+        {currentBookingMode === 'RECURRING' && currentStep < 3 && (
+          <Button
+            type="button"
+            variant="primary"
+            data-size="lg"
+            data-color="accent"
+            onClick={() => {
+              if (currentStep === 0) {
+                // Proceed to preview
+                setCurrentStep(1);
+              } else if (currentStep === 1) {
+                // Proceed to confirmation
+                setCurrentStep(2);
+              } else if (currentStep === 2 && isAuthenticated && isAccountTypeConfirmed) {
+                // Submit recurring booking
+                handleSubmitRecurringBooking();
+              }
+            }}
+            disabled={
+              !isBookable ||
+              (currentStep === 0 && recurringPattern.weekdays.length === 0) ||
+              (currentStep === 1 && (!recurringPreviewData?.data || recurringPreviewData.data.summary.availableCount === 0 || isLoadingPreview)) ||
+              (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
+              isSubmitting
+            }
+            style={{ flex: 1 }}
+          >
+            {isSubmitting
+              ? 'Oppretter bookinger...'
+              : currentStep === 0
+                ? recurringPattern.weekdays.length > 0
+                  ? 'Se forhåndsvisning'
+                  : 'Velg minst én dag'
+                : currentStep === 1
+                  ? recurringPreviewData?.data
+                    ? `Fortsett med ${recurringPreviewData.data.summary.availableCount} tidspunkt${recurringPreviewData.data.summary.availableCount > 1 ? 'er' : ''}`
+                    : 'Laster...'
+                  : currentStep === 2
+                    ? isAuthenticated && isAccountTypeConfirmed
+                      ? 'Opprett gjentakende booking'
+                      : isAuthenticated && bookingAccountType
+                        ? 'Bekreft bookingtype'
+                        : isAuthenticated
+                          ? 'Velg bookingtype'
+                          : 'Logg inn for å fortsette'
+                    : 'Ferdig'}
+          </Button>
+        )}
+
+        {/* SINGLE_SLOT mode action buttons */}
+        {currentBookingMode !== 'RECURRING' && currentStep < 3 && (
           <Button
             type="button"
             variant="primary"
@@ -1033,7 +1394,9 @@ export function BookingWidgetPlacement({
                     : 'Ferdig'}
           </Button>
         )}
-        {currentStep === 3 && (
+
+        {/* Done step button for SINGLE_SLOT mode */}
+        {currentStep === 3 && currentBookingMode !== 'RECURRING' && (
           <Button
             type="button"
             variant="primary"
