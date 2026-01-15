@@ -1,0 +1,148 @@
+# AGENTS.md
+
+Guidance for agentic coding assistants working in this repository.
+
+## Repository Overview
+
+- Monorepo (Turborepo + pnpm workspaces)
+- Apps: `apps/web`, `apps/backoffice`, `apps/minside`
+- Packages: `packages/client-sdk`, `packages/ds`, `packages/i18n`, etc.
+- Platform: Xala / Digilist (multi-tenant, audit-first, RBAC)
+
+## Essential Commands
+
+Run from repo root unless noted.
+
+### Install & Dev
+
+- Install deps: `pnpm install`
+- Dev all apps: `pnpm dev`
+- Build all: `pnpm build`
+
+### Lint / Format / Compliance
+
+- Lint: `pnpm lint`
+- Format (Prettier): `pnpm format`
+- Design system scans: `pnpm scan`
+- Strict scan: `pnpm scan:strict`
+- Compliance scan: `pnpm scan:compliance`
+- All scans: `pnpm scan:all`
+
+### Unit Tests (Vitest)
+
+- All tests (watch): `pnpm test`
+- All tests (run once): `pnpm test:run`
+- With UI: `pnpm test:ui`
+- Coverage: `pnpm test:coverage`
+
+#### Single Test (Vitest)
+
+- Run by path: `pnpm test:run -- --run path/to/file.test.ts`
+- Run by pattern: `pnpm test:run -- --run src/**/__tests__/my-test.test.ts`
+- SDK tests: `pnpm test:sdk`
+- SDK single test: `pnpm test:sdk:authz`
+
+### E2E Tests (Playwright)
+
+- E2E all: `pnpm test:e2e`
+- E2E single file: `pnpm test:e2e -- tests/e2e/my.spec.ts`
+- Auth config: `pnpm test:e2e:auth:config`
+
+### SDK / Contract Tests
+
+- SDK all: `pnpm test:sdk:all`
+- RFC7807 contract: `pnpm test:rfc7807`
+- Contract parity: `pnpm test:contracts`
+- Lint contracts: `pnpm lint:contracts`
+
+### i18n Scanner (Required)
+
+- Scan app: `node scripts/scan-i18n.js apps/minside/src`
+- Scan dir: `node scripts/scan-i18n.js apps/minside/src/routes`
+- Scan file: `node scripts/scan-i18n.js apps/minside/src/routes/settings.tsx`
+
+## Code Style Guidelines
+
+### TypeScript
+
+- Use TypeScript everywhere; avoid `any`.
+- Prefer explicit types for public APIs and exported members.
+- Use SDK DTOs directly; do not reshape or transform.
+
+### Imports
+
+- UI components: ONLY from `@xala/ds`.
+- SDK access: ONLY from `@digilist/client-sdk` or `@digilist/client-sdk/hooks`.
+- Do NOT import from `@digdir/*` inside apps.
+- Do NOT use `fetch`, `axios`, or custom API wrappers.
+
+### React Components (Apps)
+
+- Keep components presentational (orchestration + rendering only).
+- No business logic in UI; logic lives in SDK/services.
+- No raw HTML elements; use Designsystemet components.
+- No inline styles; use design tokens and DS props.
+
+### Naming & Terminology
+
+- Use “listing” (never “facility”).
+- Use feature-based folders under `apps/*/src/features`.
+- Avoid ViewModel/UiModel/Adapter naming in apps.
+
+### i18n Localization (Critical)
+
+- NEVER use hardcoded strings in UI components.
+- ALWAYS use `t()` / `useT()` from `@xala/i18n`.
+- Add keys to BOTH:
+  - `packages/i18n/src/locales/nb.ts`
+  - `packages/i18n/src/locales/en.ts`
+- Rebuild i18n: `pnpm -F @xala/i18n build`.
+- Run the scanner before committing.
+
+### Error Handling (RFC 7807)
+
+- Errors must conform to Problem Details:
+  - `type`, `title`, `status`, optional `detail`.
+- Do not invent ad-hoc error shapes.
+
+### Audit & RBAC
+
+- All mutations must be auditable (`who`, `what`, `when`, `tenantId`, `ip/ua`).
+- Do not hardcode role checks; use capability-based guards.
+
+### Design System Guardrails
+
+- Only import `@xala/ds/styles` ONCE in `main.tsx`.
+- Use `DesignsystemetProvider` for theme control.
+- No hardcoded colors/spacing/typography; use tokens.
+
+### No Transformers (Contract-First)
+
+- Forbidden in `apps/`:
+  - `toXxx`, `fromXxx`, `mapXxx`, `adaptXxx`
+  - `*VM`, `*ViewModel`, `*UiModel`
+  - `select:` in React Query that reshapes data
+- Use SDK Projection DTOs directly in components.
+
+### Formatting & Linting
+
+- Prettier is the formatter; avoid manual formatting overrides.
+- Follow ESLint guardrails (design tokens, component patterns).
+- Keep diffs focused; do not change unrelated code.
+
+## Cursor Rules (from `.cursorrules`)
+
+- i18n-first: no hardcoded strings in UI.
+- Use `@xala/i18n` and add keys to `nb.ts` + `en.ts`.
+- SDK-first: ONLY use `@digilist/client-sdk`.
+- Design system: ONLY import from `@xala/ds`.
+- No transformers; use Projection DTOs.
+- No hardcoded values; use design tokens.
+
+## When in Doubt
+
+1. Check for SDK method and use it.
+2. Check for `@xala/ds` component before custom UI.
+3. Confirm i18n keys exist before adding text.
+4. Ensure audit + RBAC requirements are met.
+5. Stop and ask if any rule conflicts.

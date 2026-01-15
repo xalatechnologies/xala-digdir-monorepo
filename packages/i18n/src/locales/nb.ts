@@ -90,6 +90,7 @@ export const nb: Record<string, string> = {
   'auth.idportenDesc': 'Personlig innlogging med BankID',
   'auth.microsoft': 'Microsoft',
   'auth.microsoftDesc': 'Single Sign-On (SSO)',
+  'auth.microsoftComingSoon': 'Microsoft-innlogging kommer snart',
   'auth.backoffice': 'Backoffice',
   'auth.holisticSolution': 'En helhetlig bookingløsning',
   'auth.platformDesc': 'Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering.',

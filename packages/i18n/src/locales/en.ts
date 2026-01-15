@@ -89,6 +89,7 @@ export const en: Record<string, string> = {
   'auth.idportenDesc': 'Personal login with BankID',
   'auth.microsoft': 'Microsoft',
   'auth.microsoftDesc': 'Single Sign-On (SSO)',
+  'auth.microsoftComingSoon': 'Microsoft login coming soon',
   'auth.backoffice': 'Backoffice',
   'auth.holisticSolution': 'A holistic booking solution',
   'auth.platformDesc': 'Cloud-based platform for booking municipal facilities and resources with modern design, payment and reporting.',

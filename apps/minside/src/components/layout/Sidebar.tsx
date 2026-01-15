@@ -176,7 +176,7 @@ function SidebarNavItem({ item, onClick }: { item: NavItem; onClick?: () => void
 }
 
 // Shared sidebar content component
-function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: { name: string; email: string } | null; onItemClick?: () => void }) {
+function SidebarContent({ navSections, user, onItemClick, t }: { navSections: NavSection[]; user: { name: string; email: string } | null; onItemClick?: () => void; t: (key: string) => string }) {
   return (
     <>
       {/* Logo Section */}
@@ -449,7 +449,7 @@ export function Sidebar() {
             height: '100%',
           }}
         >
-          <SidebarContent navSections={filteredNavSections} user={user} />
+          <SidebarContent navSections={filteredNavSections} user={user} t={t} />
         </aside>
       )}
 
@@ -477,6 +477,7 @@ export function Sidebar() {
               navSections={filteredNavSections}
               user={user}
               onItemClick={() => setIsMobileMenuOpen(false)}
+              t={t}
             />
           </div>
         </Drawer>
