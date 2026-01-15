@@ -28,10 +28,60 @@ import {
   isCalendarSlotSelectable,
   getCalendarSlotLabel,
 } from '../types/listing-detail';
+import type { BadgeColor } from './StatusBadges';
 
 // =============================================================================
 // Types
 // =============================================================================
+
+/**
+ * Configuration for slot status display
+ */
+interface SlotStatusConfig {
+  /** Badge color from design system */
+  color: BadgeColor;
+  /** Norwegian status label */
+  label: string;
+  /** Description for tooltip */
+  description: string;
+}
+
+/**
+ * Slot status configuration following StatusBadges pattern
+ * Norwegian labels with semantic colors and descriptions
+ */
+const SLOT_STATUS_CONFIG: Record<CalendarSlotStatus, SlotStatusConfig> = {
+  AVAILABLE: {
+    color: 'success',
+    label: 'Ledig',
+    description: 'Dette tidspunktet kan bookes',
+  },
+  RESERVED: {
+    color: 'warning',
+    label: 'Reservert',
+    description: 'Midlertidig reservert av en annen bruker',
+  },
+  BOOKED: {
+    color: 'danger',
+    label: 'Booket',
+    description: 'Dette tidspunktet er allerede booket',
+  },
+  BLOCKED: {
+    color: 'neutral',
+    label: 'Blokkert',
+    description: 'Manuelt blokkert av administrator',
+  },
+  BLACKOUT: {
+    color: 'neutral',
+    label: 'Utilgjengelig',
+    description: 'Systemet er stengt i denne perioden',
+  },
+  CLOSED: {
+    color: 'neutral',
+    label: 'Stengt',
+    description: 'Utenfor åpningstider',
+  },
+};
 
 export interface ListingAvailabilityCalendarProps {
   /** Calendar mode from config projection (TIME_SLOTS, ALL_DAY, MULTI_DAY) */
@@ -278,6 +328,45 @@ function getLegendColor(status: CalendarSlotStatus): string {
   }
 }
 
+/**
+ * Get slot status configuration
+ */
+function getSlotStatusConfig(status: CalendarSlotStatus): SlotStatusConfig {
+  return SLOT_STATUS_CONFIG[status] ?? {
+    color: 'neutral',
+    label: status,
+    description: '',
+  };
+}
+
+/**
+ * Generate comprehensive tooltip text for a calendar slot
+ * Combines status label, description, and optional reason
+ */
+function getSlotTooltipText(
+  status: CalendarSlotStatus,
+  reasonKey?: string | null,
+  isSelected?: boolean
+): string {
+  const config = getSlotStatusConfig(status);
+  const parts: string[] = [];
+
+  // Add status label and description
+  parts.push(`${config.label}: ${config.description}`);
+
+  // Add reason if provided
+  if (reasonKey) {
+    parts.push(`Årsak: ${reasonKey}`);
+  }
+
+  // Add selection indicator
+  if (isSelected) {
+    parts.push('(Valgt)');
+  }
+
+  return parts.join('\n');
+}
+
 // =============================================================================
 // Sub-Components
 // =============================================================================
@@ -306,6 +395,8 @@ function TimeSlotsCell({
   const status = cell.status;
   const canClick = isClickable && !readOnly;
   const timeLabel = `${hour.toString().padStart(2, '0')}:00`;
+  const statusConfig = getSlotStatusConfig(status);
+  const tooltipText = getSlotTooltipText(status, cell.reasonKey, isSelected);
 
   const handleClick = () => {
     if (canClick && onCellClick) {
@@ -324,12 +415,13 @@ function TimeSlotsCell({
     <div
       className={cn('listing-calendar-cell', isSelected && 'selected')}
       data-status={status}
+      data-status-color={statusConfig.color}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role={canClick ? 'button' : undefined}
       tabIndex={canClick ? 0 : undefined}
-      aria-label={`${dayName} ${dayNumber} kl ${timeLabel} - ${getCalendarSlotLabel(status)}${isSelected ? ' (valgt)' : ''}`}
-      title={cell.reasonKey ? cell.reasonKey : undefined}
+      aria-label={`${dayName} ${dayNumber} kl ${timeLabel} - ${statusConfig.label}${isSelected ? ' (valgt)' : ''}`}
+      title={tooltipText}
       style={{
         padding: 'var(--ds-spacing-2)',
         display: 'flex',
@@ -373,6 +465,10 @@ function AllDayCell({
   const status = cell?.status ?? 'CLOSED';
   const canClick = isClickable && !readOnly && cell;
   const today = isToday(date);
+  const statusConfig = getSlotStatusConfig(status);
+  const tooltipText = cell
+    ? getSlotTooltipText(status, cell.reasonKey, isSelected)
+    : getSlotTooltipText('CLOSED', null, false);
 
   const handleClick = () => {
     if (canClick && onCellClick && cell) {
@@ -419,13 +515,14 @@ function AllDayCell({
     <div
       className={cn('listing-calendar-day-cell', isSelected && 'selected')}
       data-status={status}
+      data-status-color={statusConfig.color}
       data-current-month={isCurrentMonth}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role={canClick ? 'button' : undefined}
       tabIndex={canClick ? 0 : undefined}
-      aria-label={`${DAY_NAMES_FULL[date.getDay()]} ${date.getDate()}. ${MONTH_NAMES[date.getMonth()]} - ${cell ? getCalendarSlotLabel(status) : 'Stengt'}${isSelected ? ' (valgt)' : ''}`}
-      title={cell?.reasonKey ? cell.reasonKey : undefined}
+      aria-label={`${DAY_NAMES_FULL[date.getDay()]} ${date.getDate()}. ${MONTH_NAMES[date.getMonth()]} - ${statusConfig.label}${isSelected ? ' (valgt)' : ''}`}
+      title={tooltipText}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -496,6 +593,11 @@ function MultiDayCell({
   const status = cell?.status ?? 'CLOSED';
   const canClick = isClickable && !readOnly;
   const today = isToday(date);
+  const statusConfig = getSlotStatusConfig(status);
+  const isSelectedInRange = isRangeStart || isRangeEnd || isInRange;
+  const tooltipText = cell
+    ? getSlotTooltipText(status, cell.reasonKey, isSelectedInRange)
+    : getSlotTooltipText('CLOSED', null, false);
 
   const handleClick = () => {
     if (canClick && onDateClick) {
@@ -545,12 +647,11 @@ function MultiDayCell({
   const getAriaLabel = (): string => {
     const dayName = DAY_NAMES_FULL[date.getDay()];
     const dateStr = `${date.getDate()}. ${MONTH_NAMES[date.getMonth()]}`;
-    const statusLabel = cell ? getCalendarSlotLabel(status) : 'Stengt';
     let rangeLabel = '';
     if (isRangeStart) rangeLabel = ' (startdato)';
     else if (isRangeEnd) rangeLabel = ' (sluttdato)';
     else if (isInRange) rangeLabel = ' (i perioden)';
-    return `${dayName} ${dateStr} - ${statusLabel}${rangeLabel}`;
+    return `${dayName} ${dateStr} - ${statusConfig.label}${rangeLabel}`;
   };
 
   return (
@@ -562,13 +663,14 @@ function MultiDayCell({
         isInRange && 'in-range'
       )}
       data-status={status}
+      data-status-color={statusConfig.color}
       data-current-month={isCurrentMonth}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role={canClick ? 'button' : undefined}
       tabIndex={canClick ? 0 : undefined}
       aria-label={getAriaLabel()}
-      title={cell?.reasonKey ? cell.reasonKey : undefined}
+      title={tooltipText}
       style={{
         display: 'flex',
         flexDirection: 'column',
