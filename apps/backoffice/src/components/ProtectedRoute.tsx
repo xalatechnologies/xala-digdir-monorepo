@@ -1,17 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
-import { useAuth, type BackofficeRole } from '../hooks/useAuth';
-import { useNeedsRoleSelection } from '../hooks/useBackofficeRole';
+import { useAuth } from '../hooks/useAuth';
+import { useNeedsRoleSelection, useBackofficeRole } from '../hooks/useBackofficeRole';
 import { useToast } from '../providers/ToastProvider';
+import type { EffectiveBackofficeRole } from '../lib/capabilities';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: BackofficeRole;
+  /**
+   * Required role for accessing this route.
+   * Uses EffectiveBackofficeRole ('admin' | 'case_handler').
+   */
+  requiredRole?: EffectiveBackofficeRole;
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
-  const { isLoading, isAuthenticated, checkRole } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
+  const { effectiveRole, getHomeRoute } = useBackofficeRole();
   const location = useLocation();
   const { error } = useToast();
   const hasShownToast = useRef(false);
@@ -19,7 +25,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   // Check if dual-role user needs to select a role
   const needsRoleSelection = useNeedsRoleSelection();
 
-  const hasRequiredRole = !requiredRole || checkRole(requiredRole);
+  // Check role against effectiveRole from BackofficeRoleProvider
+  const hasRequiredRole = !requiredRole || effectiveRole === requiredRole;
 
   // Show toast when user lacks required role (only once per route)
   useEffect(() => {
@@ -63,7 +70,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   }
 
   if (!hasRequiredRole) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={getHomeRoute()} replace />;
   }
 
   return <>{children}</>;
