@@ -1,14 +1,37 @@
 import { createContext, useContext } from 'react';
+import type { EffectiveBackofficeRole } from '../lib/capabilities';
 
-// Backoffice-specific user type
+/**
+ * Re-export EffectiveBackofficeRole for convenience
+ */
+export type { EffectiveBackofficeRole } from '../lib/capabilities';
+
+/**
+ * Legacy role type for backward compatibility.
+ * Use EffectiveBackofficeRole for new implementations.
+ */
+export type BackofficeRole = 'admin' | 'saksbehandler';
+
+/**
+ * Backoffice-specific user type.
+ * Supports both legacy single role and new multi-role grant system.
+ */
 export interface BackofficeUser {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'saksbehandler';
+  /**
+   * Legacy role field for backward compatibility.
+   * @deprecated Use grantedRoles for new implementations.
+   */
+  role: BackofficeRole;
+  /**
+   * Array of roles the user has been granted.
+   * Dual-role users will have both 'admin' and 'case_handler'.
+   * Single-role users will have one entry.
+   */
+  grantedRoles?: EffectiveBackofficeRole[];
 }
-
-export type BackofficeRole = 'admin' | 'saksbehandler';
 
 export interface AuthContextType {
   user: BackofficeUser | null;
