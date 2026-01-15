@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   Paragraph,
   HomeIcon,
@@ -15,6 +15,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
+import { useAccountContext } from '../../providers/AccountContextProvider';
 
 // Icon for Billing/Credit Card
 function CreditCardIcon() {
@@ -316,6 +317,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
 
 export function Sidebar() {
   const { user } = useAuth();
+  const { accountType } = useAccountContext();
   const t = useT();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -359,6 +361,24 @@ export function Sidebar() {
       ],
     },
   ];
+
+  // Filter nav sections and items based on current account context
+  const filteredNavSections = useMemo(() => {
+    return navSections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => {
+          // If no contexts specified, show to all
+          if (!item.contexts || item.contexts.length === 0) {
+            return true;
+          }
+          // Show item if current accountType is in the item's contexts
+          return item.contexts.includes(accountType);
+        }),
+      }))
+      // Remove sections with no items after filtering
+      .filter((section) => section.items.length > 0);
+  }, [accountType, t]);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -425,7 +445,7 @@ export function Sidebar() {
             height: '100%',
           }}
         >
-          <SidebarContent navSections={navSections} user={user} />
+          <SidebarContent navSections={filteredNavSections} user={user} />
         </aside>
       )}
 
@@ -450,7 +470,7 @@ export function Sidebar() {
             }}
           >
             <SidebarContent
-              navSections={navSections}
+              navSections={filteredNavSections}
               user={user}
               onItemClick={() => setIsMobileMenuOpen(false)}
             />
