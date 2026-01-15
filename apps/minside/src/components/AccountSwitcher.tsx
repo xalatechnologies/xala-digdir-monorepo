@@ -107,6 +107,8 @@ export function AccountSwitcher() {
   const handleOrganizationClick = (orgId: string) => {
     switchToOrganization(orgId);
     setIsOpen(false);
+    // Redirect to organization home when switching to organization context
+    navigate(`/org/${orgId}`);
   };
 
   return (
