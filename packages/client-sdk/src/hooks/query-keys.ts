@@ -84,9 +84,10 @@ export const queryKeys = {
     details: () => [...queryKeys.listings.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.listings.details(), id] as const,
     slug: (slug: string) => [...queryKeys.listings.all, 'slug', slug] as const,
-    availability: (id: string, params: AvailabilityQueryParams) => 
+    availability: (id: string, params: AvailabilityQueryParams) =>
       [...queryKeys.listings.detail(id), 'availability', params] as const,
     stats: (id: string) => [...queryKeys.listings.detail(id), 'stats'] as const,
+    calendarConfig: (id: string) => [...queryKeys.listings.detail(id), 'calendarConfig'] as const,
   },
 
   // =========================================================================
@@ -121,6 +122,10 @@ export const queryKeys = {
       [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
     paymentHistory: (bookingId: string) =>
       [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
+    quote: (listingId: string, selectionHash: string) =>
+      [...queryKeys.bookings.all, 'quote', listingId, selectionHash] as const,
+    recurringPreview: (selectionHash: string) =>
+      [...queryKeys.bookings.all, 'recurringPreview', selectionHash] as const,
   },
 
   // =========================================================================
@@ -132,6 +137,10 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { listingId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
+    config: (listingId: string, params?: { bookingType?: string }) =>
+      [...queryKeys.calendar.all, 'config', listingId, params] as const,
+    availabilityMatrix: (listingId: string, params: { from: string; to: string; bookingType?: string }) =>
+      [...queryKeys.calendar.all, 'availabilityMatrix', listingId, params] as const,
   },
 
   // =========================================================================

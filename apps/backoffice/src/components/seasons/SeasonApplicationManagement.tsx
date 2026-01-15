@@ -22,32 +22,13 @@ import {
   MessageSquareIcon,
 } from '@xala/ds';
 import {
-  // TODO: Implement season application management hooks
-  // useSeasonApplications,
-  // useApproveApplication,
-  // useRejectApplication,
-  // type SeasonApplication,
-  // type ApplicationStatus,
+  useSeasonApplications,
+  useApproveSeasonApplication,
+  useRejectSeasonApplication,
+  type SeasonApplication,
 } from '@digilist/client-sdk';
 
-// Temporary type definitions and placeholder hooks until implemented in SDK
-type ApplicationStatus = 'pending' | 'approved' | 'rejected';
-type SeasonApplication = {
-  id: string;
-  seasonId: string;
-  organizationId: string;
-  organizationName: string;
-  status: ApplicationStatus;
-  requestedSlots: number;
-  notes?: string;
-  createdAt: string;
-  processedAt?: string;
-  processedBy?: string;
-};
-
-const useSeasonApplications = (_seasonId: string) => ({ data: { data: [] as SeasonApplication[] }, isLoading: false });
-const useApproveApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
-const useRejectApplication = () => ({ mutateAsync: async () => {}, isLoading: false });
+type ApplicationStatus = SeasonApplication['status'];
 
 interface SeasonApplicationManagementProps {
   seasonId: string;
@@ -79,8 +60,8 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   const applications = applicationsData?.data ?? [];
 
   // Mutations
-  const approveMutation = useApproveApplication();
-  const rejectMutation = useRejectApplication();
+  const approveMutation = useApproveSeasonApplication();
+  const rejectMutation = useRejectSeasonApplication();
 
   // Filtered applications
   const filteredApplications = useMemo(() => {

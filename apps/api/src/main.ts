@@ -19,7 +19,7 @@ import { BookingModule, BookingController, BookingService, BookingRepository } f
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
-import { CalendarController } from './modules/calendar/calendar.controller';
+import { CalendarModule, CalendarController, ListingCalendarConfigController, AvailabilityMatrixController, CalendarService } from './modules/calendar';
 import { SeasonalLeaseController } from './modules/seasonal-lease/seasonal-lease.controller';
 import { MessagesController } from './modules/messages/messages.controller';
 import { ReportsController } from './modules/reports/reports.controller';
@@ -41,7 +41,7 @@ import { IntegrationsController } from './modules/integrations/integrations.cont
 import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
-import { SignicatAuthController } from './modules/auth/signicat.controller';
+import { IdPortenOIDCController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
@@ -50,13 +50,16 @@ import { UserGroupController } from './modules/user-groups/user-group.controller
 import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
-import { SeasonsController } from './modules/seasons/seasons.controller';
+import { SeasonsController, PriorityRulesController } from './modules/seasons/seasons.controller';
 import { BlocksController } from './modules/blocks/blocks.controller';
+import { SeasonApplicationsController } from './modules/season-applications/season-applications.controller';
 // Phase 6: Profile
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
-// Phase 8: Capabilities and Licensing
+// Phase 8: Vipps Webhooks
+import { VippsWebhookController } from './modules/webhooks/vipps-webhook.controller';
+// Phase 9: Capabilities and Licensing
 import { CapabilitiesController, CapabilitiesService, CapabilitiesRepository } from './modules/capabilities';
 import { LicensingController, LicensingService, ATCService } from './modules/licensing';
 
@@ -102,57 +105,18 @@ async function bootstrap() {
   // Register adapters in container
   container.registerValue('Adapters', adapters);
 
-  // Connect to PostgreSQL database
+  // Connect to PostgreSQL database (required in production)
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    console.warn('⚠️ DATABASE_URL not set, using mock database');
+    console.error('❌ DATABASE_URL environment variable is required');
+    console.error('   Set DATABASE_URL to connect to your PostgreSQL database');
+    process.exit(1);
   }
 
-  let db: any;
-  if (databaseUrl) {
-    // Real PostgreSQL connection
-    const sql = postgres(databaseUrl, { max: 10 });
-    db = drizzle(sql, { schema });
-    console.log('✓ PostgreSQL database connected');
-  } else {
-    // Fallback mock database
-    const createQueryBuilder = (data: any[] = []) => ({
-      from: () => createQueryBuilder(data),
-      where: () => createQueryBuilder(data),
-      orderBy: () => createQueryBuilder(data),
-      limit: () => createQueryBuilder(data),
-      offset: () => createQueryBuilder(data),
-      leftJoin: () => createQueryBuilder(data),
-      innerJoin: () => createQueryBuilder(data),
-      groupBy: () => createQueryBuilder(data),
-      having: () => createQueryBuilder(data),
-      then: (resolve: (value: any[]) => void) => Promise.resolve(data).then(resolve),
-      [Symbol.toStringTag]: 'Promise',
-    });
-    db = {
-      select: () => createQueryBuilder([]),
-      insert: () => ({ 
-        values: () => ({ 
-          returning: () => Promise.resolve([{ id: `mock-${Date.now()}`, createdAt: new Date(), updatedAt: new Date() }]),
-          onConflictDoNothing: () => ({ returning: () => Promise.resolve([]) }),
-        }) 
-      }),
-      update: () => ({ 
-        set: () => ({ 
-          where: () => ({ 
-            returning: () => Promise.resolve([{ id: 'mock-id', updatedAt: new Date() }]) 
-          }) 
-        }) 
-      }),
-      delete: () => ({ 
-        where: () => ({ 
-          returning: () => Promise.resolve([{ id: 'mock-id' }]) 
-        }) 
-      }),
-      query: {},
-    };
-    console.log('✓ Mock database initialized');
-  }
+  // PostgreSQL connection
+  const sql = postgres(databaseUrl, { max: 10 });
+  const db = drizzle(sql, { schema });
+  console.log('✓ PostgreSQL database connected');
   container.registerValue('Database', db);
 
   // Register repositories
@@ -171,8 +135,8 @@ async function bootstrap() {
   container.registerFactory('ListingService', () => 
     new ListingService(container.resolve('ListingRepository'), adapters)
   );
-  container.registerFactory('BookingService', () => 
-    new BookingService(container.resolve('BookingRepository'), adapters)
+  container.registerFactory('BookingService', () =>
+    new BookingService(container.resolve('BookingRepository'), container.resolve('ListingRepository'), adapters)
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
@@ -184,6 +148,9 @@ async function bootstrap() {
       container.resolve('IncidentRepository'),
       adapters
     )
+  );
+  container.registerFactory('CalendarService', () =>
+    new CalendarService(adapters)
   );
 
   // Register Capabilities repository and service
@@ -211,12 +178,12 @@ async function bootstrap() {
   container.registerFactory('UserController', () => 
     new UserController(container.resolve('UserService'))
   );
-  container.registerFactory('MonitoringController', () => 
+  container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
-  // Signicat auth controller (no dependencies)
-  container.registerFactory('SignicatAuthController', () => 
-    new SignicatAuthController()
+  // ID-porten OIDC auth controller (no dependencies)
+  container.registerFactory('IdPortenOIDCController', () =>
+    new IdPortenOIDCController()
   );
   // Notifications controller (no dependencies)
   container.registerFactory('NotificationsController', () =>
@@ -241,6 +208,7 @@ async function bootstrap() {
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
+  await moduleLoader.load(CalendarModule);
   console.log('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
@@ -253,6 +221,8 @@ async function bootstrap() {
     // Backoffice modules
     DashboardController,
     CalendarController,
+    ListingCalendarConfigController,
+    // Note: AvailabilityMatrixController removed - functionality covered by AvailabilityController
     SeasonalLeaseController,
     MessagesController,
     ReportsController,
@@ -274,8 +244,8 @@ async function bootstrap() {
     IntegrationsController,
     WidgetsController,
     ShareController,
-    // Signicat eID Hub authentication
-    SignicatAuthController,
+    // ID-porten (BankID) OIDC authentication
+    IdPortenOIDCController,
     // Notifications
     NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
@@ -287,12 +257,16 @@ async function bootstrap() {
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,
+    PriorityRulesController,
     BlocksController,
+    SeasonApplicationsController,
     // Phase 6: Profile
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
-    // Phase 8: Capabilities and Licensing
+    // Phase 8: Vipps Webhooks
+    VippsWebhookController,
+    // Phase 9: Capabilities and Licensing
     CapabilitiesController,
     LicensingController,
   ];

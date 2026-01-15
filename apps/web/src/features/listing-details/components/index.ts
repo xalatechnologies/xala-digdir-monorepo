@@ -17,6 +17,14 @@ export { ActivityTab, type ActivityTabProps } from './ActivityTab';
 export { RulesTab, type RulesTabProps } from './RulesTab';
 export { FaqTab, type FaqTabProps } from './FaqTab';
 
+// Booking mode selector
+export {
+  BookingModeSelector,
+  createBookingModeOptions,
+  type BookingModeSelectorProps,
+  type BookingModeOption,
+} from './BookingModeSelector';
+
 // Sidebar widgets
 export {
   ContactWidget,
@@ -28,3 +36,6 @@ export {
   type OpeningHoursWidgetProps,
   type BookingWidgetPlacementProps,
 } from './Sidebar';
+
+// Calendar section
+export { CalendarSection, type CalendarSectionProps } from './CalendarSection';

@@ -1,17 +1,18 @@
 /**
  * Listing Controller
- * REST API endpoints for listing management
+ * REST API endpoints for rental object (utleieobjekter) management
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { ListingService } from './listing.service';
+import { toDetailsProjection } from './listing.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
-  CreateListingSchema,
-  UpdateListingSchema,
-  ListingQuerySchema,
-} from '../../schemas/listing.schema';
+  CreateRentalObjectSchema,
+  UpdateRentalObjectSchema,
+  RentalObjectQuerySchema,
+} from '../../schemas/rental-object.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller('/api/listings')
@@ -21,14 +22,14 @@ export class ListingController {
   ) {}
 
   /**
-   * GET /api/listings - List all listings
+   * GET /api/listings - List all rental objects
    * Returns { data, meta } format for SDK compatibility
    */
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     // Allow null tenantId for public access to all published listings
     const tenantId = getOptionalTenantId(request);
-    const params = validate(ListingQuerySchema, request.query);
+    const params = validate(RentalObjectQuerySchema, request.query);
     const result = await this.service.findAll(tenantId, { 
       ...params, 
       page: params.page ?? 1, 
@@ -59,22 +60,22 @@ export class ListingController {
   }
 
   /**
-   * POST /api/listings - Create new listing
+   * POST /api/listings - Create new rental object
    */
   @Post()
   async create(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
-    const data = validate(CreateListingSchema, request.body);
+    const data = validate(CreateRentalObjectSchema, request.body);
     const listing = await this.service.create(tenantId, data as any);
     return reply.status(201).send({ listing });
   }
 
   /**
-   * PUT /api/listings/:id - Update listing
+   * PUT /api/listings/:id - Update rental object
    */
   @Put('/:id')
   async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const data = validate(UpdateListingSchema, request.body);
+    const data = validate(UpdateRentalObjectSchema, request.body);
     const listing = await this.service.update(request.params.id, data);
     return { listing };
   }
@@ -118,6 +119,7 @@ export class ListingController {
 
   /**
    * GET /api/listings/slug/:slug - Get listing by slug
+   * Returns projected DTO with formatted address, contact, and display-ready fields
    */
   @Get('/slug/:slug')
   async findBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
@@ -126,7 +128,9 @@ export class ListingController {
       reply.code(404);
       return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
     }
-    return { data: listing };
+    // Apply projection to format address, contact, and all display-ready fields
+    const projected = toDetailsProjection(listing as any);
+    return { data: projected };
   }
 
   /**
@@ -179,16 +183,98 @@ export class ListingController {
  */
 @Controller('/api/categories')
 export class CategoriesController {
+  /**
+   * GET /api/categories - Get all V2 categories (new 4-category system)
+   */
   @Get()
   async getAll(request: FastifyRequest, reply: FastifyReply) {
     return {
       data: [
-        { id: 'SPACE', name: 'Lokaler', nameEn: 'Spaces', description: 'Fysiske lokaler og rom', icon: 'building' },
-        { id: 'RESOURCE', name: 'Utstyr', nameEn: 'Equipment', description: 'Utstyr til utleie', icon: 'tool' },
-        { id: 'SERVICE', name: 'Tjenester', nameEn: 'Services', description: 'Tjenester som tilbys', icon: 'briefcase' },
-        { id: 'EVENT', name: 'Arrangementer', nameEn: 'Events', description: 'Tidsbundne arrangementer', icon: 'calendar' },
-        { id: 'VEHICLE', name: 'Kjøretøy', nameEn: 'Vehicles', description: 'Kjøretøy til utleie', icon: 'car' },
+        { 
+          id: 'LOKALER_OG_BANER', 
+          name: 'Lokaler og baner', 
+          nameEn: 'Locations and Venues',
+          description: 'Fysiske lokaler, idrettsanlegg, møterom og utendørs baner',
+          icon: 'building',
+          examples: ['Idrettshall', 'Møterom', 'Grendehus', 'Fotballbane'],
+        },
+        { 
+          id: 'UTSTYR_OG_INVENTAR', 
+          name: 'Utstyr og inventar', 
+          nameEn: 'Equipment and Inventory',
+          description: 'Utlånbart utstyr, verktøy og inventar',
+          icon: 'tool',
+          examples: ['Grillhenger', 'Lydanlegg', 'Bord og stoler', 'Sportsutstyr'],
+        },
+        { 
+          id: 'KJORETOY_OG_TRANSPORT', 
+          name: 'Kjøretøy og transport', 
+          nameEn: 'Vehicles and Transport',
+          description: 'Kjøretøy, tilhengere og transportmidler',
+          icon: 'car',
+          examples: ['Minibuss', 'El-bil', 'Tilhenger', 'Sykkel'],
+        },
+        { 
+          id: 'OPPLEVELSER_OG_ARRANGEMENT', 
+          name: 'Opplevelser og arrangement', 
+          nameEn: 'Experiences and Events',
+          description: 'Tidsbundne arrangementer, kurs og aktiviteter',
+          icon: 'calendar',
+          examples: ['Konsert', 'Workshop', 'Guidet tur', 'Kurs'],
+        },
+      ],
+    };
+  }
+
+  /**
+   * GET /api/categories/v1 - Get legacy categories (deprecated)
+   * @deprecated Use GET /api/categories instead
+   */
+  @Get('/v1')
+  async getLegacy(request: FastifyRequest, reply: FastifyReply) {
+    return {
+      data: [
+        { id: 'SPACE', name: 'Lokaler', nameEn: 'Spaces', description: 'Fysiske lokaler og rom', icon: 'building', deprecated: true },
+        { id: 'RESOURCE', name: 'Utstyr', nameEn: 'Equipment', description: 'Utstyr til utleie', icon: 'tool', deprecated: true },
+        { id: 'SERVICE', name: 'Tjenester', nameEn: 'Services', description: 'Tjenester som tilbys', icon: 'briefcase', deprecated: true },
+        { id: 'EVENT', name: 'Arrangementer', nameEn: 'Events', description: 'Tidsbundne arrangementer', icon: 'calendar', deprecated: true },
+        { id: 'VEHICLE', name: 'Kjøretøy', nameEn: 'Vehicles', description: 'Kjøretøy til utleie', icon: 'car', deprecated: true },
+      ],
+      deprecated: true,
+      migrationInfo: 'Use GET /api/categories for the new 4-category system',
+    };
+  }
+
+  /**
+   * GET /api/categories/time-modes - Get available booking time modes
+   */
+  @Get('/time-modes')
+  async getTimeModes(request: FastifyRequest, reply: FastifyReply) {
+    return {
+      data: [
+        { 
+          id: 'PERIOD', 
+          name: 'Tidsperiode', 
+          nameEn: 'Time Period',
+          description: 'Velg start- og sluttidspunkt for booking',
+          calendarBehavior: 'drag-select',
+        },
+        { 
+          id: 'SLOT', 
+          name: 'Tidsluke', 
+          nameEn: 'Time Slot',
+          description: 'Velg fra forhåndsdefinerte tidsluker',
+          calendarBehavior: 'slot-grid',
+        },
+        { 
+          id: 'ALL_DAY', 
+          name: 'Heldags', 
+          nameEn: 'All Day',
+          description: 'Book hele dager eller flere dager',
+          calendarBehavior: 'date-picker',
+        },
       ],
     };
   }
 }
+

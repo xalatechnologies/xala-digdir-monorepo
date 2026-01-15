@@ -218,8 +218,8 @@ export function BookingWidgetPlacement({
   const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
   
-  // Use real authentication state
-  const { isAuthenticated: authIsAuthenticated, user, login: authLogin } = useAuth();
+  // Use real authentication state with flow context support
+  const { isAuthenticated: authIsAuthenticated, user, login: authLogin, loginWithFlowContext } = useAuth();
   const isAuthenticated = authIsAuthenticated;
   
   // Fetch user's organizations when authenticated
@@ -265,6 +265,21 @@ export function BookingWidgetPlacement({
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
+  const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
+
+  // Create a stable key for busySlots to prevent infinite re-renders
+  // when the prop is a new array reference with the same content
+  const busySlotsKey = React.useMemo(() => JSON.stringify(busySlots), [busySlots]);
+
+  // Update lastUpdated when busySlots content actually changes (real-time updates)
+  React.useEffect(() => {
+    setLastUpdated(new Date());
+  }, [busySlotsKey]);
+
+  // Update lastUpdated when week changes
+  React.useEffect(() => {
+    setLastUpdated(new Date());
+  }, [weekStart]);
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -404,6 +419,56 @@ export function BookingWidgetPlacement({
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'idporten' });
     } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  /**
+   * Handle login with full flow context preservation
+   * Called from BookingConfirmationStep when user needs to authenticate
+   * Saves complete booking state before OAuth redirect
+   */
+  const handleLoginWithFlowContext = (options: {
+    provider: 'idporten' | 'microsoft' | 'vipps';
+    bookingState: {
+      selectedSlots: Array<{ date: string; startTime: string; endTime: string }>;
+      slotDetails: Record<string, { duration: number; purpose?: string; attendees?: string; activityType?: string }>;
+      weekStart: string;
+      bookingAccountType?: 'private' | 'organization';
+      selectedOrganizationId?: string;
+    };
+    listingId?: string;
+    tenantId?: string;
+    bookingMode?: string;
+  }): void => {
+    setIsLoggingIn(true);
+    try {
+      // Get tenant ID from environment or props
+      const tenantId = options.tenantId || import.meta.env.VITE_TENANT_ID || 'default';
+
+      // Map booking mode to SDK type
+      const bookingMode = (options.bookingMode || bookingConfig?.mode || 'SLOTS') as 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE';
+
+      // Convert booking state to flow context format
+      loginWithFlowContext({
+        provider: options.provider,
+        tenantId,
+        listingId: options.listingId || listingId,
+        bookingMode,
+        selectedSlots: options.bookingState.selectedSlots,
+        formData: {
+          slotDetails: options.bookingState.slotDetails,
+          weekStart: options.bookingState.weekStart,
+          bookingAccountType: options.bookingState.bookingAccountType,
+          selectedOrganizationId: options.bookingState.selectedOrganizationId,
+        },
+      });
+      // Navigation will happen in loginWithFlowContext via OAuth redirect
+    } catch (error) {
+      auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), {
+        provider: options.provider,
+        flowContextEnabled: true,
+      });
       setIsLoggingIn(false);
     }
   };
@@ -849,6 +914,7 @@ export function BookingWidgetPlacement({
               weekStart={weekStart}
               onLoginWithVipps={handleLoginVipps}
               onLoginAsEmployee={handleLoginEmployee}
+              onLoginWithFlowContext={handleLoginWithFlowContext}
               onConfirmBooking={handleSubmitBooking}
               onClearError={() => setBookingError(null)}
               bookingAccountType={bookingAccountType}
@@ -857,6 +923,9 @@ export function BookingWidgetPlacement({
               onConfirmAccountType={handleConfirmAccountType}
               organizations={organizations}
               isAccountTypeConfirmed={isAccountTypeConfirmed}
+              listingId={listingId}
+              tenantId={import.meta.env.VITE_TENANT_ID}
+              bookingMode={bookingConfig?.mode || 'SLOTS'}
             />
           )}
 
@@ -913,6 +982,7 @@ export function BookingWidgetPlacement({
               onRemoveSlot={handleRemoveSlot}
               onAdjustTime={handleAdjustTime}
               onChangeDuration={handleChangeDuration}
+              lastUpdated={lastUpdated}
             />
           </div>
         )}
@@ -1019,6 +1089,7 @@ export function BookingWidgetPlacement({
         onChangeTime={handleChangeTimeFromConflict}
         onBookAvailable={handleBookAvailableSlots}
         listingTitle={listingTitle}
+        listingId={listingId ?? ''}
       />
     </div>
   );

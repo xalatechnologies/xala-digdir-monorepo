@@ -37,7 +37,10 @@ export type WSEventType =
   // Season events
   | 'season.updated'
   | 'application.submitted'
-  | 'application.allocated';
+  | 'application.allocated'
+  // Reservation events (recurring booking)
+  | 'reservation.created'
+  | 'reservation.expired';
 
 export interface WSEvent<T = unknown> {
   type: WSEventType;
@@ -142,6 +145,16 @@ export const wsInvalidationMap: Record<WSEventType, string[][]> = {
   'application.allocated': [
     ['season', 'applications'],
     ['allocation'],
+  ],
+
+  // Reservation events (recurring booking)
+  'reservation.created': [
+    ['listing', 'availability'],
+    ['recurringPreview'],
+  ],
+  'reservation.expired': [
+    ['listing', 'availability'],
+    ['recurringPreview'],
   ],
 };
 

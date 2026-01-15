@@ -38,6 +38,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.0.8",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.1",
@@ -52,13 +53,19 @@
     "react-dom": "^18.3.1",
     "turbo": "^2.0.0",
     "typescript": "^5.6.3",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.17",
+    "yaml": "^2.7.1",
+    "zod": "^3.23.0"
   },
   "pnpm": {
     "overrides": {
       "react": "^18.3.1",
       "react-dom": "^18.3.1",
-      "@tanstack/react-query": "^5.62.16"
+      "@tanstack/react-query": "^5.62.16",
+      "esbuild": "^0.27.2"
     }
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
   }
 }

@@ -82,6 +82,29 @@ export const en: Record<string, string> = {
   'auth.terms': 'Terms of use',
   'auth.contactSupport': 'Contact support',
   'auth.copyright': '© 2026 Digilist. All rights reserved.',
+  'auth.bankid': 'BankID',
+  'auth.bankidDesc': 'Secure login with BankID',
+
+  // Auth - Role Selection Page
+  'auth.roleSelection.title': 'Select Role',
+  'auth.roleSelection.subtitle': 'You have access to multiple roles. Choose how you want to continue.',
+  'auth.roleSelection.panelTitle': 'Multiple Roles, One Login',
+  'auth.roleSelection.panelDescription': 'You have access to both administrator and case handler roles. Choose which role to use for this session.',
+  'auth.roleSelection.adminFeatures': 'Full Access',
+  'auth.roleSelection.adminFeaturesDesc': 'Manage users, organizations and settings',
+  'auth.roleSelection.caseHandlerFeatures': 'Case Handling',
+  'auth.roleSelection.caseHandlerFeaturesDesc': 'Process bookings, applications and inquiries',
+  'auth.roleSelection.roleSwitch': 'Flexible Switching',
+  'auth.roleSelection.roleSwitchDesc': 'Switch between roles anytime without re-login',
+
+  // Backoffice - Role Selection Component
+  'backoffice.roleSelection.title': 'Select Role',
+  'backoffice.roleSelection.subtitle': 'You have access to multiple roles. Choose how you want to continue.',
+  'backoffice.roleSelection.adminTitle': 'Administrator',
+  'backoffice.roleSelection.adminDescription': 'Full access to all features and settings',
+  'backoffice.roleSelection.caseHandlerTitle': 'Case Handler',
+  'backoffice.roleSelection.caseHandlerDescription': 'Process bookings, applications and inquiries',
+  'backoffice.roleSelection.rememberChoice': 'Remember my choice',
 
   // Dashboard
   'dashboard.welcomeBack': 'Welcome back, {{name}}',
@@ -348,4 +371,72 @@ export const en: Record<string, string> = {
   'org.membersDesc': 'Manage members',
   'org.seasonRental': 'Season rental',
   'org.seasonRentalDesc': 'Fixed rental periods',
+
+  // Errors (generic)
+  'errors.generic': 'Something went wrong. Please try again.',
+  'errors.network': 'Network error. Check your connection.',
+  'errors.notFound': 'Resource not found.',
+  'errors.unauthorized': 'You do not have access to this resource.',
+  'errors.forbidden': 'This action is not allowed.',
+  'errors.validation': 'Please check that all fields are filled in correctly.',
+  'errors.timeout': 'Request timed out. Please try again.',
+  'errors.serverError': 'Server error. Contact support if the problem persists.',
+
+  // Errors (RFC 7807 ProblemDetails)
+  'errors.VALIDATION_ERROR.title': 'Validation Error',
+  'errors.VALIDATION_ERROR.description':
+    'The request contains invalid data. Please check the fields and try again.',
+  'errors.NOT_FOUND.title': 'Not Found',
+  'errors.NOT_FOUND.description': 'The requested resource was not found.',
+  'errors.UNAUTHORIZED.title': 'Unauthorized',
+  'errors.UNAUTHORIZED.description':
+    'You must log in to perform this action.',
+  'errors.FORBIDDEN.title': 'Forbidden',
+  'errors.FORBIDDEN.description':
+    'You do not have permission to perform this action.',
+  'errors.INTERNAL_ERROR.title': 'Server Error',
+  'errors.INTERNAL_ERROR.description':
+    'An unexpected error occurred. Please try again later.',
+
+  // Policy (pages)
+  'policy.terms': 'Terms of use',
+  'policy.privacy': 'Privacy policy',
+  'policy.cookies': 'Cookies',
+  'policy.cancellation': 'Cancellation policy',
+  'policy.rental': 'Rental terms',
+  'policy.accessibility': 'Accessibility',
+  'policy.gdpr': 'GDPR and privacy',
+  'policy.dataRetention': 'Data processing',
+
+  // Policy (API reason keys)
+  'policy.role.insufficient_permissions':
+    'You do not have sufficient permissions to perform this action.',
+  'policy.slot.already_booked': 'This time slot is already booked.',
+  'policy.booking.cancelled': 'This booking has been cancelled.',
+  'policy.booking.past': 'This booking has already taken place.',
+  'policy.listing.inactive': 'This listing is no longer active.',
+  'policy.user.not_verified':
+    'Your account is not verified. Please verify your account first.',
+  'policy.organization.suspended':
+    'This organization has been temporarily suspended.',
+
+  // Actions (buttons)
+  'actions.approve': 'Approve',
+  'actions.reject': 'Reject',
+  'actions.submit': 'Submit',
+  'actions.reset': 'Reset',
+  'actions.export': 'Export',
+  'actions.import': 'Import',
+  'actions.duplicate': 'Duplicate',
+  'actions.download': 'Download',
+
+  // Actions (API reason keys - disabled states)
+  'actions.book.disabled.slot_unavailable':
+    'This time slot is no longer available.',
+  'actions.book.disabled.not_authenticated':
+    'You must log in to make a booking.',
+  'actions.cancel.disabled.too_late':
+    'This booking cannot be cancelled within {{hours}} hours of start.',
+  'actions.edit.disabled.not_owner':
+    'You cannot edit this booking because you are not the owner.',
 };

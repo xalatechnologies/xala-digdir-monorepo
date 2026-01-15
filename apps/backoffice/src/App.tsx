@@ -3,12 +3,14 @@ import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds'
 import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
+import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
 import { ToastProvider } from './providers/ToastProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
+import { RoleSelectionPage } from './routes/role-selection';
 import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
 import { CalendarPage } from './routes/calendar';
@@ -65,12 +67,14 @@ function AppWithTheme() {
         }}
       >
         <AuthProvider>
-          <RealtimeProvider 
-            wsUrl={import.meta.env.VITE_WS_URL} 
+          <BackofficeRoleProvider>
+          <RealtimeProvider
+            wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
           >
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/role-selection" element={<RoleSelectionPage />} />
 
             <Route
               path="/"
@@ -160,18 +164,88 @@ function AppWithTheme() {
               />
               
               {/* Saksbehandler routes */}
-              <Route path="work-queue" element={<WorkQueuePage />} />
-              <Route path="season-applications" element={<SeasonApplicationsReviewPage />} />
-              <Route path="allocation-planner" element={<AllocationPlannerPage />} />
-              <Route path="decision-forms" element={<DecisionFormsPage />} />
-              <Route path="audit-timeline" element={<AuditTimelinePage />} />
+              <Route
+                path="work-queue"
+                element={
+                  <ProtectedRoute requiredRole="case_handler">
+                    <WorkQueuePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="season-applications"
+                element={
+                  <ProtectedRoute requiredRole="case_handler">
+                    <SeasonApplicationsReviewPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="allocation-planner"
+                element={
+                  <ProtectedRoute requiredRole="case_handler">
+                    <AllocationPlannerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="decision-forms"
+                element={
+                  <ProtectedRoute requiredRole="case_handler">
+                    <DecisionFormsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="audit-timeline"
+                element={
+                  <ProtectedRoute requiredRole="case_handler">
+                    <AuditTimelinePage />
+                  </ProtectedRoute>
+                }
+              />
               
               {/* Admin routes */}
-              <Route path="listings/wizard" element={<ListingWizardPage />} />
-              <Route path="listings/wizard/:id" element={<ListingWizardPage />} />
-              <Route path="pricing-rules" element={<PricingRulesPage />} />
-              <Route path="users-management" element={<UsersManagementPage />} />
-              <Route path="reports" element={<AdminReportsPage />} />
+              <Route
+                path="listings/wizard"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <ListingWizardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="listings/wizard/:id"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <ListingWizardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="pricing-rules"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <PricingRulesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="users-management"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <UsersManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin-reports"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminReportsPage />
+                  </ProtectedRoute>
+                }
+              />
               
               {/* TenantAdmin routes */}
               <Route
@@ -203,6 +277,7 @@ function AppWithTheme() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </RealtimeProvider>
+          </BackofficeRoleProvider>
         </AuthProvider>
       </BrowserRouter>
       </ToastProvider>

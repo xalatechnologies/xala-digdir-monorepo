@@ -1,11 +1,43 @@
 -- Seed: 40 Listings with 3+ images each
 -- Idempotent: uses ON CONFLICT on (tenant_id, slug) - assumes unique constraint exists
 -- Each listing has category, type=SPACE, status=published, 3+ Unsplash images
+-- Now includes full metadata: contact info, opening hours, FAQ, amenities, location
 
--- Use a fixed tenant ID for demo
+-- Use the production tenant ID for Skien Kommune
 DO $$
 DECLARE
-  demo_tenant_id UUID := 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+  demo_tenant_id UUID := 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+  
+  -- Standard opening hours (Monday-Friday 08:00-22:00, Sat-Sun 10:00-18:00)
+  standard_hours JSON := '[
+    {"day": "Mandag", "dayIndex": 1, "open": "08:00", "close": "22:00", "isClosed": false},
+    {"day": "Tirsdag", "dayIndex": 2, "open": "08:00", "close": "22:00", "isClosed": false},
+    {"day": "Onsdag", "dayIndex": 3, "open": "08:00", "close": "22:00", "isClosed": false},
+    {"day": "Torsdag", "dayIndex": 4, "open": "08:00", "close": "22:00", "isClosed": false},
+    {"day": "Fredag", "dayIndex": 5, "open": "08:00", "close": "22:00", "isClosed": false},
+    {"day": "Lørdag", "dayIndex": 6, "open": "10:00", "close": "18:00", "isClosed": false},
+    {"day": "Søndag", "dayIndex": 0, "open": "10:00", "close": "18:00", "isClosed": false}
+  ]'::json;
+  
+  -- Standard FAQ
+  standard_faq JSON := '[
+    {"question": "Hvordan booker jeg?", "answer": "Du kan booke direkte gjennom vår nettside. Velg dato og tid, og bekreft bookingen."},
+    {"question": "Kan jeg kansellere?", "answer": "Ja, du kan kansellere inntil 24 timer før leietiden uten kostnad."},
+    {"question": "Er parkering inkludert?", "answer": "Ja, gratis parkering er tilgjengelig for alle gjester."},
+    {"question": "Finnes det WiFi?", "answer": "Ja, gratis høyhastighets WiFi er tilgjengelig i hele lokalet."}
+  ]'::json;
+  
+  -- Standard rules
+  standard_rules JSON := '[
+    {"title": "Røykfritt", "content": "Røyking er ikke tillatt i lokalet."},
+    {"title": "Opprydding", "content": "Lokalet skal forlates i samme stand som ved ankomst."},
+    {"title": "Støy", "content": "Respekter naboer - unngå høy musikk etter kl. 22:00."},
+    {"title": "Ansvar", "content": "Leietaker er ansvarlig for eventuelle skader."}
+  ]'::json;
+  
+  -- Standard amenities
+  standard_amenities JSON := '["wifi", "parking", "wheelchair_access", "toilets", "kitchen"]'::json;
+  
 BEGIN
 
 -- GYMSAL (8 listings)

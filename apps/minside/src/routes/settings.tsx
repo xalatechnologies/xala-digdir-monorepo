@@ -33,6 +33,7 @@ import {
 import {
   useCurrentUser,
   useUpdateCurrentUser,
+  useUploadUserAvatar,
   useExportData,
   useDeleteAccount,
   useConsents,

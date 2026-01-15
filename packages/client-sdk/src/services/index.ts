@@ -9,21 +9,46 @@ export { BaseService } from './base.service';
 
 // Auth
 export { AuthService, authService } from './auth.service';
+export type {
+  RequireAuthOptions,
+  RequireAuthResult,
+  InitiateAuthWithContextOptions,
+  ResumeFlowResult,
+} from './auth.service';
 
 // Listings
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
+// Rental Objects (Utleieobjekter)
+export {
+  RentalObjectService,
+  PublicRentalObjectService,
+  rentalObjectService,
+  publicRentalObjectService,
+  type CategoryInfo,
+  type SubcategoryInfo,
+} from './rental-object.service';
+
 // Bookings
-export { 
-  BookingService, 
-  CalendarService, 
-  AllocationService, 
+export {
+  BookingService,
+  CalendarService,
+  AllocationService,
   AvailabilityService,
   bookingService,
   calendarService,
   allocationService,
   availabilityService
 } from './booking.service';
+
+// Calendar (Listing calendar config & availability matrix)
+export {
+  ListingCalendarService,
+  AvailabilityMatrixService,
+  listingCalendarService,
+  availabilityMatrixService,
+  type CalendarConfigQueryParams,
+} from './calendar.service';
 
 // Organizations & Users
 export { 
@@ -117,6 +142,19 @@ export type {
   Invoice,
   InvoiceQueryParams
 } from './billing.service';
+
+// ID-porten (BankID/eID Hub)
+export { idportenService } from './idporten.service';
+export type {
+  IdPortenConfig,
+  IdPortenUser,
+  IdPortenTokens,
+  IdPortenAuthResult,
+  IdPortenLogoutResult,
+} from './idporten.service';
+
+// Profile & Preferences
+export { ProfileService, profileService } from './profile.service';
 
 // Capabilities
 export { capabilitiesService } from './capabilities.service';

@@ -93,6 +93,7 @@ export interface BookingCartSidebarProps {
   onRemoveSlot: (slotKey: string) => void;
   onAdjustTime?: (slotKey: string, minutesDelta: number) => void;
   onChangeDuration?: (slotKey: string, duration: number) => void;
+  lastUpdated?: Date;
 }
 
 interface PriceBreakdown {
@@ -113,12 +114,36 @@ export function BookingCartSidebar({
   selectedServices,
   onRemoveSlot,
   onChangeDuration,
+  lastUpdated,
 }: BookingCartSidebarProps): React.ReactElement {
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(
     new Set(['slots', 'pricing'])
   );
 
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+
+  // Format last updated timestamp
+  const formatLastUpdated = (date: Date): string => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+
+    if (diffSeconds < 10) {
+      return 'Akkurat nå';
+    } else if (diffSeconds < 60) {
+      return `${diffSeconds} sekunder siden`;
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes} ${diffMinutes === 1 ? 'minutt' : 'minutter'} siden`;
+    } else if (diffHours < 24) {
+      return `${diffHours} ${diffHours === 1 ? 'time' : 'timer'} siden`;
+    } else {
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${date.getDate()}. ${monthNames[date.getMonth()]} kl. ${hours}:${minutes}`;
+    }
+  };
 
   const toggleSection = (section: string): void => {
     setExpandedSections(prev => {
@@ -187,31 +212,57 @@ export function BookingCartSidebar({
       <div
         style={{
           display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--ds-spacing-2)',
+          flexDirection: 'column',
+          gap: 'var(--ds-spacing-1)',
           padding: 'var(--ds-spacing-3) 0',
           borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          minHeight: '48px',
           boxSizing: 'border-box',
         }}
       >
-        <ShoppingCartIcon size={20} />
-        <Heading level={3} data-size="sm" style={{ margin: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          Din handlekurv
-        </Heading>
-        {slotCount > 0 && (
-          <span
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-2)',
+            minHeight: '32px',
+          }}
+        >
+          <ShoppingCartIcon size={20} />
+          <Heading level={3} data-size="sm" style={{ margin: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            Din handlekurv
+          </Heading>
+          {slotCount > 0 && (
+            <span
+              style={{
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+                color: 'var(--ds-color-accent-contrast-default)',
+                borderRadius: 'var(--ds-border-radius-full)',
+                padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: 'var(--ds-font-weight-semibold)',
+              }}
+            >
+              {slotCount} {slotCount === 1 ? 'booking' : 'bookinger'}
+            </span>
+          )}
+        </div>
+        {lastUpdated && (
+          <div
             style={{
-              backgroundColor: 'var(--ds-color-accent-base-default)',
-              color: 'var(--ds-color-accent-contrast-default)',
-              borderRadius: 'var(--ds-border-radius-full)',
-              padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-              fontSize: 'var(--ds-font-size-sm)',
-              fontWeight: 'var(--ds-font-weight-semibold)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-1)',
+              paddingLeft: 'var(--ds-spacing-5)',
             }}
           >
-            {slotCount} {slotCount === 1 ? 'booking' : 'bookinger'}
-          </span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontStyle: 'italic' }}>
+              Oppdatert: {formatLastUpdated(lastUpdated)}
+            </Paragraph>
+          </div>
         )}
       </div>
 

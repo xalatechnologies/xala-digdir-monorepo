@@ -22,6 +22,9 @@ vi.mock('../providers', () => ({
     isConnected: true,
     status: 'connected',
   }),
+  useRealtimeSlotAvailability: (callback: Function) => {
+    (global as any).__realtimeSlotAvailabilityCallback = callback;
+  },
 }));
 
 describe('RealtimeToast', () => {

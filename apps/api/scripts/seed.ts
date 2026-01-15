@@ -31,6 +31,12 @@ const USER_PIL_MEMBER = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 const USER_DEMO = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
 const USER_OLA_HANSEN = '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c'; // Citizen for Minside testing
 
+// ID-porten Test Users (with Norwegian national IDs)
+const USER_IDPORTEN_BRUKER = 'cccccccc-cccc-cccc-cccc-cccccccccccc'; // 15860771346 (Bruker/User)
+const USER_IDPORTEN_SAKSBEHANDLER = 'dddddddd-dddd-dddd-dddd-dddddddddddd'; // 06881271913 (Saksbehandler/Admin)
+const USER_IDPORTEN_ADMIN = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'; // 30916326773 (Admin)
+const USER_IDPORTEN_ORG = 'ffffffff-ffff-ffff-ffff-ffffffffffff'; // 03852358504 (Organisasjonskonto)
+
 // Bookings for Ola Hansen (Minside testing)
 const BOOKING_OLA_1 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4d';
 const BOOKING_OLA_2 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4e';
@@ -203,6 +209,47 @@ const USERS = [
     role: 'user',
     status: 'active',
   },
+  // ID-porten Test Users
+  {
+    id: USER_IDPORTEN_BRUKER,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'bruker@idporten.test',
+    name: 'Test Bruker',
+    nationalId: '15860771346',
+    role: 'user',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_SAKSBEHANDLER,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'saksbehandler@idporten.test',
+    name: 'Test Saksbehandler',
+    nationalId: '06881271913',
+    role: 'admin',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_ADMIN,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'admin@idporten.test',
+    name: 'Test Admin',
+    nationalId: '30916326773',
+    role: 'admin',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_ORG,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'org@idporten.test',
+    name: 'Test Organisasjonskonto',
+    nationalId: '03852358504',
+    role: 'org_admin',
+    status: 'active',
+  },
 ];
 
 const SUBSCRIPTIONS = [
@@ -233,6 +280,14 @@ const LISTINGS = [
     name: 'Hall A - Hovedhall',
     slug: 'hall-a-hovedhall',
     type: 'SPACE',
+    // V2 Category & Booking Model
+    categoryV2: 'LOKALER_OG_BANER',
+    subcategory: 'Idrettshall',
+    tags: ['handball', 'basketball', 'arrangement', 'tribune'],
+    fixedLocation: true,
+    timeMode: 'SLOT',
+    bookingFeatures: { sharedCapacity: { enabled: true, total: 500, policy: 'PER_SLOT' } },
+    migrationStatus: 'complete',
     status: 'published',
     description: 'Stor idrettshall for håndball, basketball og arrangementer. 1200 m². Moderne gulv, elektronisk måltavle og fullverdig tribuneanlegg.',
     capacity: 500,
@@ -245,6 +300,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Kari Nordmann',
+      contactEmail: 'booking@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 00',
       amenities: ['changing_rooms', 'showers', 'parking', 'scoreboard', 'tribune'],
       faq: [
         { question: 'Hva er gulvtypen?', answer: 'Sportsgulv av høy kvalitet, godkjent for konkurranser på nasjonalt nivå.' },
@@ -282,6 +340,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Ole Jensen',
+      contactEmail: 'booking@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 01',
       amenities: ['changing_rooms', 'showers', 'mirrors', 'mats', 'sound_system'],
       faq: [
         { question: 'Er matter inkludert?', answer: 'Ja, gymnastikkmatter og kampsportmatter er inkludert i prisen.' },
@@ -319,6 +380,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Anna Hansen',
+      contactEmail: 'moterom@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 02',
       amenities: ['projector', 'whiteboard', 'video_conference', 'wifi', 'coffee'],
       faq: [
         { question: 'Er det projektor?', answer: 'Ja, 4K-projektor med HDMI og trådløs tilkobling er inkludert.' },
@@ -359,6 +423,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Kulturhusgata 5', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Erik Johansen',
+      contactEmail: 'scene@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 00',
       amenities: ['stage', 'lighting', 'sound_system', 'backstage', 'greenroom', 'parking'],
       stageSpecs: { width: 15, depth: 10, height: 8, rigging: true },
       faq: [
@@ -401,6 +468,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Kulturhusgata 5', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Lisa Berg',
+      contactEmail: 'studio@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 01',
       amenities: ['soundproof', 'drums', 'amplifiers', 'pa_system', 'recording'],
       studioSpecs: { sqm: 40, soundproofing: 'Professional', backline: true },
       faq: [
@@ -426,6 +496,14 @@ const LISTINGS = [
     name: 'Projektor (4K)',
     slug: 'projektor-4k',
     type: 'RESOURCE',
+    // V2 Category & Booking Model
+    categoryV2: 'UTSTYR_OG_INVENTAR',
+    subcategory: 'AV-utstyr',
+    tags: ['projektor', '4k', 'presentasjon', 'film'],
+    fixedLocation: false,
+    timeMode: 'ALL_DAY',
+    bookingFeatures: { inventory: { enabled: true, total: 3, policy: 'FIFO' } },
+    migrationStatus: 'complete',
     status: 'published',
     description: 'Epson 4K-projektor for presentasjoner og film. 5000 lumen, HDMI og trådløs tilkobling.',
     capacity: 1,
@@ -436,6 +514,9 @@ const LISTINGS = [
       'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=1200&q=80',
     ],
     metadata: {
+      contactName: 'Teknisk avdeling',
+      contactEmail: 'utstyr@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 10',
       equipmentSpecs: { brand: 'Epson', resolution: '4K', lumens: 5000, connections: ['HDMI', 'USB-C', 'Wireless'] },
       faq: [
         { question: 'Hva er oppløsningen?', answer: '4K UHD (3840x2160), perfekt for film og presentasjoner.' },
@@ -460,6 +541,14 @@ const LISTINGS = [
     name: 'PA-anlegg',
     slug: 'pa-anlegg',
     type: 'RESOURCE',
+    // V2 Category & Booking Model
+    categoryV2: 'UTSTYR_OG_INVENTAR',
+    subcategory: 'Lydanlegg',
+    tags: ['lyd', 'mikser', 'høyttaler', 'mikrofon'],
+    fixedLocation: false,
+    timeMode: 'ALL_DAY',
+    bookingFeatures: { inventory: { enabled: true, total: 2, policy: 'FIFO' } },
+    migrationStatus: 'complete',
     status: 'published',
     description: 'Komplett PA-anlegg med mikser, høyttalere og mikrofoner. Egnet for arrangementer opp til 200 personer.',
     capacity: 1,
@@ -471,6 +560,9 @@ const LISTINGS = [
       'https://images.unsplash.com/photo-1571327073757-e928898c02f8?w=1200&q=80',
     ],
     metadata: {
+      contactName: 'Teknisk avdeling',
+      contactEmail: 'utstyr@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 10',
       equipmentSpecs: { type: 'PA System', power: '2000W', channels: 16, includes: ['Mixer', 'Speakers', 'Microphones', 'Cables'] },
       faq: [
         { question: 'Hva er inkludert?', answer: 'Mikser (16 kanaler), 2x høyttalere, 2x subwoofer, 4 mikrofoner, alle kabler.' },
@@ -495,6 +587,14 @@ const LISTINGS = [
     name: 'Fotballbane - Kunstgress',
     slug: 'fotballbane-kunstgress',
     type: 'SPACE',
+    // V2 Category & Booking Model
+    categoryV2: 'LOKALER_OG_BANER',
+    subcategory: 'Utendørs bane',
+    tags: ['fotball', 'kunstgress', 'flomlys', 'utendørs'],
+    fixedLocation: true,
+    timeMode: 'SLOT',
+    bookingFeatures: {},
+    migrationStatus: 'complete',
     status: 'published',
     description: 'Full størrelse kunstgressbane med flomlys. FIFA-godkjent underlag. Garderober og kafeteria på området.',
     capacity: 30,
@@ -507,6 +607,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Stadionveien 15', postalCode: '3933', city: 'Porsgrunn', country: 'Norway' },
+      contactName: 'Erik Larsen',
+      contactEmail: 'booking@porsgrunn-il.no',
+      contactPhone: '+47 35 55 10 00',
       amenities: ['changing_rooms', 'showers', 'floodlights', 'cafe', 'parking'],
       pitchSpecs: { surface: 'FIFA Quality Pro', size: '105x68m', floodlights: true },
       faq: [
@@ -545,6 +648,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Stadionveien 15', postalCode: '3933', city: 'Porsgrunn', country: 'Norway' },
+      contactName: 'Erik Larsen',
+      contactEmail: 'booking@porsgrunn-il.no',
+      contactPhone: '+47 35 55 10 00',
       amenities: ['kitchen', 'meeting_room', 'wifi', 'projector', 'handicap_access'],
       faq: [
         { question: 'Hva finnes på kjøkkenet?', answer: 'Komfyr, kjøleskap, oppvaskmaskin, kaffetrakter og grunnleggende bestikk.' },
@@ -581,6 +687,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Demo Street 1', postalCode: '0000', city: 'Oslo', country: 'Norway' },
+      contactName: 'Demo Support',
+      contactEmail: 'demo@xala.no',
+      contactPhone: '+47 22 00 00 00',
       amenities: ['demo', 'testing', 'wifi', 'projector'],
       faq: [
         { question: 'Hva er dette?', answer: 'Dette er en demo-oppføring for å teste alle funksjoner.' },

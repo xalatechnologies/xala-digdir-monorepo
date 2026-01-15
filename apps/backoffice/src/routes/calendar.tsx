@@ -700,7 +700,6 @@ export function CalendarPage() {
                   borderRadius: 'var(--ds-border-radius-sm)',
                   border: '1px solid var(--ds-color-success-border-default)',
                 }}
-                title={`Sist oppdatert: ${lastUpdate.toLocaleTimeString('nb-NO')}`}
               >
                 <div
                   style={{
@@ -711,7 +710,7 @@ export function CalendarPage() {
                     animation: 'pulse 2s ease-in-out infinite',
                   }}
                 />
-                <span>Live</span>
+                <span>Sist oppdatert: {lastUpdate.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
               </div>
             )}
           </div>

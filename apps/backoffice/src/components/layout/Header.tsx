@@ -12,6 +12,7 @@ import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { GlobalSearch } from '../GlobalSearch';
+import { RoleSwitcher } from '../RoleSwitcher';
 
 interface HeaderProps {
   title?: string;
@@ -45,8 +46,10 @@ export function Header({ title: _title }: HeaderProps) {
           padding: '0 var(--ds-spacing-6)',
         }}
       >
-        {/* Left spacer for balance */}
-        <div style={{ flex: '1 1 0', minWidth: 0 }} />
+        {/* Left side - Role Switcher */}
+        <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', alignItems: 'center' }}>
+          <RoleSwitcher />
+        </div>
 
         {/* Search - centered */}
         <div

@@ -209,18 +209,11 @@ export function usePublicListings(params?: PublicListingParams) {
 
 /**
  * Get public listings transformed to UI format
+ * @deprecated API now returns screen-ready projection DTOs directly via usePublicListings()
  */
 export function usePublicUiListings(params?: PublicListingParams) {
-  return useQuery({
-    queryKey: [...queryKeys.public.listings(params), 'ui'],
-    queryFn: async () => {
-      const response = await publicListingService.getListings(params);
-      return {
-        ...response,
-        data: toUiListings(response.data),
-      };
-    },
-  });
+  // API now returns projection DTOs, no transformation needed
+  return usePublicListings(params);
 }
 
 /**
@@ -236,18 +229,11 @@ export function usePublicListing(id: string) {
 
 /**
  * Get public listing by ID transformed to UI format
+ * @deprecated API now returns screen-ready projection DTOs directly via usePublicListing()
  */
 export function usePublicUiListing(id: string) {
-  return useQuery({
-    queryKey: [...queryKeys.public.listing(id), 'ui'],
-    queryFn: async () => {
-      const response = await publicListingService.getListing(id);
-      return {
-        data: toUiListing(response.data),
-      };
-    },
-    enabled: !!id,
-  });
+  // API now returns projection DTOs, no transformation needed
+  return usePublicListing(id);
 }
 
 /**

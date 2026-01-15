@@ -12,7 +12,10 @@ interface ConflictInfo {
     id: string;
     title?: string;
     listingName?: string;
+    isBufferConflict?: boolean;
   }>;
+  /** Whether all conflicts are buffer-only (no hard overlaps) */
+  isBufferOnly?: boolean;
 }
 
 export interface ConflictDetectionOptions {
@@ -20,14 +23,17 @@ export interface ConflictDetectionOptions {
   events: CalendarEvent[];
   /** Whether conflict detection is enabled */
   enabled?: boolean;
+  /** Buffer time in minutes to apply before/after each event */
+  bufferMinutes?: number;
 }
 
 /**
  * Hook for detecting conflicts between calendar events
  * Identifies overlapping bookings for the same listing
+ * Supports buffer time detection to prevent back-to-back bookings
  */
 export function useConflictDetection(options: ConflictDetectionOptions) {
-  const { events, enabled = true } = options;
+  const { events, enabled = true, bufferMinutes = 0 } = options;
 
   // Map of event IDs to their conflict info
   const conflictMap = useMemo(() => {
@@ -36,6 +42,7 @@ export function useConflictDetection(options: ConflictDetectionOptions) {
     }
 
     const conflicts = new Map<string, ConflictInfo>();
+    const bufferMs = bufferMinutes * 60 * 1000; // Convert minutes to milliseconds
 
     // Check each event against all others
     for (let i = 0; i < events.length; i++) {
@@ -54,7 +61,10 @@ export function useConflictDetection(options: ConflictDetectionOptions) {
         id: string;
         title?: string;
         listingName?: string;
+        isBufferConflict?: boolean;
       }> = [];
+
+      let hasHardOverlap = false;
 
       // Check against all other events
       for (let j = 0; j < events.length; j++) {
@@ -76,18 +86,33 @@ export function useConflictDetection(options: ConflictDetectionOptions) {
           continue;
         }
 
-        // Check for overlap: events overlap if one starts before the other ends
-        // and ends after the other starts
-        const hasOverlap =
+        // Check for hard overlap (direct time overlap)
+        const hasDirectOverlap =
           eventStart < otherEnd && eventEnd > otherStart;
 
-        if (hasOverlap) {
+        // Check for buffer overlap (within buffer time window)
+        const eventStartWithBuffer = new Date(eventStart.getTime() - bufferMs);
+        const eventEndWithBuffer = new Date(eventEnd.getTime() + bufferMs);
+
+        const hasBufferOverlap =
+          eventStartWithBuffer < otherEnd && eventEndWithBuffer > otherStart;
+
+        // If there's any overlap (hard or buffer), record it
+        if (hasBufferOverlap) {
+          const isBufferOnly = !hasDirectOverlap && hasBufferOverlap;
+
+          if (hasDirectOverlap) {
+            hasHardOverlap = true;
+          }
+
           const conflictInfo: {
             id: string;
             title?: string;
             listingName?: string;
+            isBufferConflict?: boolean;
           } = {
             id: otherEvent.id,
+            isBufferConflict: isBufferOnly,
           };
 
           if (otherEvent.title !== undefined) {
@@ -107,12 +132,13 @@ export function useConflictDetection(options: ConflictDetectionOptions) {
         conflicts.set(event.id, {
           eventId: event.id,
           conflictingEvents,
+          isBufferOnly: !hasHardOverlap,
         });
       }
     }
 
     return conflicts;
-  }, [events, enabled]);
+  }, [events, enabled, bufferMinutes]);
 
   // Check if a specific event has conflicts
   const hasConflict = useMemo(() => {

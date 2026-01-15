@@ -5,13 +5,15 @@
 import { Controller, Get } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { eq, and, gte, lte, count, sql, desc } from 'drizzle-orm';
+import { eq, and, gte, lte, count, desc } from 'drizzle-orm';
 import { listings, bookings, allocations } from '../../database/schema/index';
+import { toCardProjections, toDetailsProjection } from '../listing/listing.projections';
 
 @Controller('/api/public')
 export class PublicController {
   /**
    * GET /api/public/listings - Public listing search
+   * Returns: ListingCardProjectionDTO[] (screen-ready, flat structure)
    */
   @Get('/listings')
   async getListings(request: FastifyRequest, reply: FastifyReply) {
@@ -23,17 +25,7 @@ export class PublicController {
     // Note: In production, add city/search filters with proper metadata JSONB queries
 
     const result = await db
-      .select({
-        id: listings.id,
-        name: listings.name,
-        slug: listings.slug,
-        type: listings.type,
-        description: listings.description,
-        pricing: listings.pricing,
-        capacity: listings.capacity,
-        images: listings.images,
-        metadata: listings.metadata,
-      })
+      .select()
       .from(listings)
       .where(and(...conditions))
       .orderBy(desc(listings.createdAt))
@@ -45,8 +37,11 @@ export class PublicController {
       .from(listings)
       .where(and(...conditions));
 
+    // Transform to screen-ready projection DTOs
+    const projections = toCardProjections(result);
+
     return {
-      data: result,
+      data: projections,
       meta: {
         total: Number(countResult[0]?.count || 0),
         page: Number(page),
@@ -74,7 +69,8 @@ export class PublicController {
       return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
     }
 
-    return { data: result[0] };
+    // Transform to screen-ready projection DTO
+    return { data: toDetailsProjection(result[0]) };
   }
 
   /**
