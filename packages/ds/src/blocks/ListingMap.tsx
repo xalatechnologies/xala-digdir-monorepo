@@ -44,6 +44,8 @@ export interface ListingMapProps {
   initialZoom?: number;
   height?: string | number;
   onListingClick?: (id: string, slug?: string) => void;
+  onFavorite?: (id: string) => void;
+  onShare?: (id: string, slug?: string) => void;
   /** Override map style URL. If not provided, uses automatic light/dark switching */
   mapStyle?: string;
   /** Color scheme: 'light', 'dark', or 'auto' (detects from DOM). Defaults to 'auto' */
@@ -167,6 +169,8 @@ export function ListingMap({
   initialZoom: _initialZoom = 12,
   height = '600px',
   onListingClick,
+  onFavorite,
+  onShare,
   mapStyle,
   colorScheme = 'auto',
   className,
@@ -348,15 +352,23 @@ export function ListingMap({
               location={selectedListing.location}
               description={selectedListing.description || ''}
               image={selectedListing.image || ''}
-              variant="detailed"
+              variant="grid"
               onClose={handlePopupClose}
+              showFavoriteButton={!!onFavorite}
+              showShareButton={!!onShare}
+              showDescription={true}
+              showPrice={true}
               {...(selectedListing.listingType && {
                 listingType: selectedListing.listingType as 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER'
               })}
               {...(selectedListing.capacity !== undefined && { capacity: selectedListing.capacity })}
+              {...(selectedListing.price !== undefined && { price: selectedListing.price })}
+              {...(selectedListing.priceUnit && { priceUnit: selectedListing.priceUnit })}
               {...(selectedListing.facilities && { facilities: selectedListing.facilities })}
               {...(selectedListing.available !== undefined && { available: selectedListing.available })}
               {...(onListingClick && { onClick: () => onListingClick(selectedListing.id, selectedListing.slug) })}
+              {...(onFavorite && { onFavorite: () => onFavorite(selectedListing.id) })}
+              {...(onShare && { onShare: () => onShare(selectedListing.id, selectedListing.slug) })}
             />
           </div>
         </>

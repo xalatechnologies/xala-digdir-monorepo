@@ -635,8 +635,8 @@ export function ListingCard({
           </div>
         )}
 
-        {/* Footer with capacity and listing type */}
-        {(showCapacity || showListingType) && (
+        {/* Footer with capacity and price */}
+        {(showCapacity || showPrice) && (
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -659,15 +659,11 @@ export function ListingCard({
                 {capacity} personer
               </div>
             )}
-            {showListingType && listingType && (
-              <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)' }}>
-                {listingTypeLabels[listingType] || listingType}
-              </Tag>
-            )}
             {showPrice && price !== undefined && (
               <span style={{
                 fontSize: 'var(--ds-font-size-sm)',
-                color: 'var(--ds-color-neutral-text-subtle)',
+                color: 'var(--ds-color-neutral-text-default)',
+                fontWeight: 'var(--ds-font-weight-medium)',
                 fontFamily: 'var(--ds-font-family)'
               } as React.CSSProperties}>
                 fra {price} {currency}/{priceUnit}

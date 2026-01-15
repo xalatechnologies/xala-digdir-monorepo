@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, Outlet, useOutletContext } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Outlet, useOutletContext } from 'react-router-dom';
 import {
   AppHeader,
   HeaderLogo,
@@ -43,7 +43,7 @@ function useThemeContext() {
 function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
-  const { colorScheme, setColorScheme, effectiveScheme } = useThemeContext();
+  const { setColorScheme, effectiveScheme } = useThemeContext();
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
@@ -164,7 +164,7 @@ function MainLayout() {
       margin: 0,
       padding: 0
     }}>
-      {/* CSS for mobile-specific styles */}
+      {/* CSS for header and mobile-specific styles */}
       <style>{`
         @media (max-width: 599px) {
           .header-search-desktop { display: none !important; }
@@ -206,7 +206,7 @@ function MainLayout() {
             title="DIGILIST"
             subtitle="ENKEL BOOKING"
             href="/"
-            height="56px"
+            height="40px"
             hideTextOnMobile={true}
           />
         }
@@ -238,7 +238,6 @@ function MainLayout() {
                   // TODO: Open notification center modal
                 }}
                 aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-                size="md"
               />
             )}
             <HeaderLoginButton

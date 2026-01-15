@@ -29,10 +29,18 @@ export interface ListingListItemProps {
   moreFacilities?: number;
   /** Capacity (number of people) */
   capacity?: number;
+  /** Price amount */
+  price?: number;
+  /** Price unit (e.g., 'time', 'dag') */
+  priceUnit?: string;
+  /** Currency code */
+  currency?: string;
   /** Click handler for the item */
   onClick?: (id: string) => void;
   /** Click handler for favorite button */
   onFavorite?: (id: string) => void;
+  /** Click handler for share button */
+  onShare?: (id: string) => void;
   /** Whether this listing is favorited */
   isFavorited?: boolean;
   /** Custom class name */
@@ -49,7 +57,9 @@ export interface ListingListItemProps {
   showTypeBadge?: boolean;
   showMap?: boolean;
   showFavoriteButton?: boolean;
+  showShareButton?: boolean;
   showListingType?: boolean;
+  showPrice?: boolean;
   /** Max facilities to display */
   maxFacilities?: number;
   /** Latitude for map */
@@ -77,6 +87,16 @@ const UserIcon = () => (
 const HeartIcon = ({ filled }: { filled?: boolean }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+);
+
+const ShareIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3"/>
+    <circle cx="6" cy="12" r="3"/>
+    <circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
   </svg>
 );
 
@@ -111,12 +131,16 @@ export function ListingListItem({
   facilities = [],
   moreFacilities = 0,
   capacity,
+  price,
+  priceUnit = 'time',
+  currency = 'NOK',
   onClick,
   onFavorite,
+  onShare,
   isFavorited = false,
   className,
-  imageWidth = 336,
-  mapWidth = 294,
+  imageWidth = 380,
+  mapWidth = 340,
   showCapacity = true,
   showFacilities = true,
   showDescription = true,
@@ -124,7 +148,9 @@ export function ListingListItem({
   showTypeBadge = true,
   showMap = true,
   showFavoriteButton = true,
+  showShareButton = true,
   showListingType = true,
+  showPrice = true,
   maxFacilities = 4,
   latitude,
   longitude,
@@ -160,6 +186,7 @@ export function ListingListItem({
       style={{
         display: 'flex',
         flexWrap: 'wrap',
+        minHeight: '250px',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         borderRadius: 'var(--ds-border-radius-lg)',
         border: `0.5px solid ${isHovered ? 'var(--ds-color-accent-border-subtle)' : 'var(--ds-color-neutral-border-subtle)'}`,
@@ -199,33 +226,65 @@ export function ListingListItem({
           </div>
         )}
 
-        {/* Favorite button */}
-        {showFavoriteButton && onFavorite && (
-          <button
-            type="button"
-            style={{
-              position: 'absolute',
-              top: 'var(--ds-spacing-3)',
-              right: 'var(--ds-spacing-3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 'var(--ds-spacing-8)',
-              height: 'var(--ds-spacing-8)',
-              border: 'none',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-neutral-background-default)',
-              color: isFavorited ? 'var(--ds-color-danger-base-default)' : 'var(--ds-color-neutral-text-subtle)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
-            }}
-            onClick={handleFavorite}
-            title="Legg til favoritter"
-          >
-            <HeartIcon filled={isFavorited} />
-          </button>
-        )}
+        {/* Action buttons container */}
+        <div style={{
+          position: 'absolute',
+          top: 'var(--ds-spacing-3)',
+          right: 'var(--ds-spacing-3)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--ds-spacing-2)'
+        }}>
+          {showFavoriteButton && onFavorite && (
+            <button
+              type="button"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 'var(--ds-spacing-8)',
+                height: 'var(--ds-spacing-8)',
+                border: 'none',
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: isFavorited ? 'var(--ds-color-danger-base-default)' : 'var(--ds-color-neutral-text-subtle)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
+              }}
+              onClick={handleFavorite}
+              title="Legg til favoritter"
+            >
+              <HeartIcon filled={isFavorited} />
+            </button>
+          )}
+          {showShareButton && onShare && (
+            <button
+              type="button"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 'var(--ds-spacing-8)',
+                height: 'var(--ds-spacing-8)',
+                border: 'none',
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: 'var(--ds-shadow-sm, 0 2px 8px var(--ds-color-neutral-border-subtle))'
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare(id);
+              }}
+              title="Del"
+            >
+              <ShareIcon />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Content section */}
@@ -309,19 +368,41 @@ export function ListingListItem({
           </div>
         )}
 
-        {/* Capacity */}
-        {showCapacity && capacity !== undefined && (
+        {/* Footer with capacity and price */}
+        {(showCapacity || showPrice) && (
           <div style={{
             marginTop: 'auto',
             display: 'flex',
             alignItems: 'center',
-            gap: 'var(--ds-spacing-1)',
-            fontSize: 'var(--ds-font-size-sm)',
-            color: 'var(--ds-color-neutral-text-subtle)',
-            fontFamily: 'var(--ds-font-family)'
-          } as React.CSSProperties}>
-            <UserIcon />
-            {capacity} personer
+            justifyContent: 'space-between',
+            width: '100%',
+          }}>
+            {/* Capacity */}
+            {showCapacity && capacity !== undefined ? (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-1)',
+                fontSize: 'var(--ds-font-size-sm)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+                fontFamily: 'var(--ds-font-family)'
+              } as React.CSSProperties}>
+                <UserIcon />
+                {capacity} personer
+              </div>
+            ) : <div />}
+            
+            {/* Price */}
+            {showPrice && price !== undefined && (
+              <span style={{
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: 'var(--ds-font-weight-semibold)',
+                color: 'var(--ds-color-accent-text-default)',
+                fontFamily: 'var(--ds-font-family)'
+              } as React.CSSProperties}>
+                fra {price} {currency}/{priceUnit}
+              </span>
+            )}
           </div>
         )}
       </div>
