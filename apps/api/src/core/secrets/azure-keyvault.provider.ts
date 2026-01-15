@@ -37,6 +37,8 @@ interface AzureKeyVaultConfig {
  * Install them when using this provider:
  *   pnpm add @azure/identity @azure/keyvault-secrets
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Note: Azure SDK types are loaded dynamically - use 'any' for client
 export class AzureKeyVaultProvider implements ISecretsProvider {
   private readonly config: AzureKeyVaultConfig;
   private client: any = null;
