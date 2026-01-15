@@ -120,11 +120,15 @@ function transformApiToListing(api: ApiListing): Listing {
     bookingMode: 'SLOTS' as BookingMode,
   };
 
-  // Build contact if exists
-  const contact = transformed.contact ? {
-    ...(transformed.contact.name ? { name: transformed.contact.name } : {}),
-    ...(transformed.contact.email ? { email: transformed.contact.email } : {}),
-    ...(transformed.contact.phone ? { phone: transformed.contact.phone } : {}),
+  // Build contact from transformed data OR raw metadata (fallback)
+  const contactName = transformed.contact?.name || metaAny.contactName as string | undefined;
+  const contactEmail = transformed.contact?.email || metaAny.contactEmail as string | undefined;
+  const contactPhone = transformed.contact?.phone || metaAny.contactPhone as string | undefined;
+  
+  const contact = (contactName || contactEmail || contactPhone) ? {
+    ...(contactName ? { name: contactName } : {}),
+    ...(contactEmail ? { email: contactEmail } : {}),
+    ...(contactPhone ? { phone: contactPhone } : {}),
   } : undefined;
 
   return {

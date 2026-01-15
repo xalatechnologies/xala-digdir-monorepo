@@ -245,6 +245,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Kari Nordmann',
+      contactEmail: 'booking@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 00',
       amenities: ['changing_rooms', 'showers', 'parking', 'scoreboard', 'tribune'],
       faq: [
         { question: 'Hva er gulvtypen?', answer: 'Sportsgulv av høy kvalitet, godkjent for konkurranser på nasjonalt nivå.' },
@@ -282,6 +285,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Ole Jensen',
+      contactEmail: 'booking@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 01',
       amenities: ['changing_rooms', 'showers', 'mirrors', 'mats', 'sound_system'],
       faq: [
         { question: 'Er matter inkludert?', answer: 'Ja, gymnastikkmatter og kampsportmatter er inkludert i prisen.' },
@@ -319,6 +325,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Idrettsveien 1', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Anna Hansen',
+      contactEmail: 'moterom@skien-idrettshall.no',
+      contactPhone: '+47 35 58 20 02',
       amenities: ['projector', 'whiteboard', 'video_conference', 'wifi', 'coffee'],
       faq: [
         { question: 'Er det projektor?', answer: 'Ja, 4K-projektor med HDMI og trådløs tilkobling er inkludert.' },
@@ -359,6 +368,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Kulturhusgata 5', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Erik Johansen',
+      contactEmail: 'scene@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 00',
       amenities: ['stage', 'lighting', 'sound_system', 'backstage', 'greenroom', 'parking'],
       stageSpecs: { width: 15, depth: 10, height: 8, rigging: true },
       faq: [
@@ -401,6 +413,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Kulturhusgata 5', postalCode: '3724', city: 'Skien', country: 'Norway' },
+      contactName: 'Lisa Berg',
+      contactEmail: 'studio@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 01',
       amenities: ['soundproof', 'drums', 'amplifiers', 'pa_system', 'recording'],
       studioSpecs: { sqm: 40, soundproofing: 'Professional', backline: true },
       faq: [
@@ -436,6 +451,9 @@ const LISTINGS = [
       'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=1200&q=80',
     ],
     metadata: {
+      contactName: 'Teknisk avdeling',
+      contactEmail: 'utstyr@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 10',
       equipmentSpecs: { brand: 'Epson', resolution: '4K', lumens: 5000, connections: ['HDMI', 'USB-C', 'Wireless'] },
       faq: [
         { question: 'Hva er oppløsningen?', answer: '4K UHD (3840x2160), perfekt for film og presentasjoner.' },
@@ -471,6 +489,9 @@ const LISTINGS = [
       'https://images.unsplash.com/photo-1571327073757-e928898c02f8?w=1200&q=80',
     ],
     metadata: {
+      contactName: 'Teknisk avdeling',
+      contactEmail: 'utstyr@skien-kulturhus.no',
+      contactPhone: '+47 35 58 30 10',
       equipmentSpecs: { type: 'PA System', power: '2000W', channels: 16, includes: ['Mixer', 'Speakers', 'Microphones', 'Cables'] },
       faq: [
         { question: 'Hva er inkludert?', answer: 'Mikser (16 kanaler), 2x høyttalere, 2x subwoofer, 4 mikrofoner, alle kabler.' },
@@ -507,6 +528,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Stadionveien 15', postalCode: '3933', city: 'Porsgrunn', country: 'Norway' },
+      contactName: 'Erik Larsen',
+      contactEmail: 'booking@porsgrunn-il.no',
+      contactPhone: '+47 35 55 10 00',
       amenities: ['changing_rooms', 'showers', 'floodlights', 'cafe', 'parking'],
       pitchSpecs: { surface: 'FIFA Quality Pro', size: '105x68m', floodlights: true },
       faq: [
@@ -545,6 +569,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Stadionveien 15', postalCode: '3933', city: 'Porsgrunn', country: 'Norway' },
+      contactName: 'Erik Larsen',
+      contactEmail: 'booking@porsgrunn-il.no',
+      contactPhone: '+47 35 55 10 00',
       amenities: ['kitchen', 'meeting_room', 'wifi', 'projector', 'handicap_access'],
       faq: [
         { question: 'Hva finnes på kjøkkenet?', answer: 'Komfyr, kjøleskap, oppvaskmaskin, kaffetrakter og grunnleggende bestikk.' },
@@ -581,6 +608,9 @@ const LISTINGS = [
     ],
     metadata: {
       location: { address: 'Demo Street 1', postalCode: '0000', city: 'Oslo', country: 'Norway' },
+      contactName: 'Demo Support',
+      contactEmail: 'demo@xala.no',
+      contactPhone: '+47 22 00 00 00',
       amenities: ['demo', 'testing', 'wifi', 'projector'],
       faq: [
         { question: 'Hva er dette?', answer: 'Dette er en demo-oppføring for å teste alle funksjoner.' },

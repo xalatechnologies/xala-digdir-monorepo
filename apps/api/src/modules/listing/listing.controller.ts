@@ -5,6 +5,7 @@
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { ListingService } from './listing.service';
+import { toDetailsProjection } from './listing.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
@@ -118,6 +119,7 @@ export class ListingController {
 
   /**
    * GET /api/listings/slug/:slug - Get listing by slug
+   * Returns projected DTO with formatted address, contact, and display-ready fields
    */
   @Get('/slug/:slug')
   async findBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
@@ -126,7 +128,9 @@ export class ListingController {
       reply.code(404);
       return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
     }
-    return { data: listing };
+    // Apply projection to format address, contact, and all display-ready fields
+    const projected = toDetailsProjection(listing as any);
+    return { data: projected };
   }
 
   /**
