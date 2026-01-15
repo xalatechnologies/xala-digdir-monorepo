@@ -1,7 +1,7 @@
 /**
- * ListingDetailPage
+ * RentalObjectDetailPage
  *
- * Listing detail page using feature-based architecture.
+ * Rental object detail page using feature-based architecture.
  * Structure: Breadcrumb -> ImageSlider -> ListingDetailsLayout
  */
 import React from 'react';
@@ -191,7 +191,7 @@ function transformApiToListing(api: ApiListing): Listing {
 }
 
 
-export function ListingDetailPage(): React.ReactElement {
+export function RentalObjectDetailPage(): React.ReactElement {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -332,7 +332,7 @@ export function ListingDetailPage(): React.ReactElement {
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Hjem', href: '/', onClick: () => navigate('/') },
-    { label: 'Listing', href: '/', onClick: () => navigate('/') },
+    { label: 'Utleieobjekter', href: '/', onClick: () => navigate('/') },
     { label: listing.name },
   ];
 
@@ -519,4 +519,4 @@ export function ListingDetailPage(): React.ReactElement {
   );
 }
 
-export default ListingDetailPage;
+export default RentalObjectDetailPage;

@@ -15,7 +15,7 @@ import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { ListingsPage } from './pages/ListingsPage';
-import { ListingDetailPage } from './pages/ListingDetailPage';
+import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
@@ -225,7 +225,7 @@ function AppContent() {
                 <Route element={<MainLayout />}>
                   {/* PUBLIC ROUTES - No authentication required */}
                   <Route path="/" element={<ListingsPage />} />
-                  <Route path="/listing/:id" element={<ListingDetailPage />} />
+                  <Route path="/listing/:id" element={<RentalObjectDetailPage />} />
 
                   {/* PROTECTED ROUTES - Authentication required */}
                   <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
