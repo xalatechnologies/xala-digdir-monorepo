@@ -17,6 +17,8 @@ import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSid
 import { BookingPricingStep, type PriceGroup, type AdditionalService } from './components/BookingPricingStep';
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
+import { BookingModeSelector, type BookingModeOption } from '../BookingModeSelector';
+import type { BookingMode } from '../../types';
 
 // =============================================================================
 // Icons
@@ -87,6 +89,12 @@ export interface BookingWidgetPlacementProps {
   listingTitle?: string;
   openingHours?: Record<number, OpeningHours>;
   busySlots?: Array<{ date: string; startTime: string; endTime: string }>;
+  /** Available booking modes for this listing */
+  bookingModes?: BookingModeOption[];
+  /** Currently selected booking mode */
+  selectedBookingMode?: BookingMode;
+  /** Callback when booking mode changes */
+  onBookingModeChange?: (mode: BookingMode) => void;
 }
 
 // =============================================================================
@@ -120,6 +128,12 @@ const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
   5: { open: '08:00', close: '21:00' },
   6: { open: '10:00', close: '18:00' },
 };
+
+const DEFAULT_BOOKING_MODES: BookingModeOption[] = [
+  { mode: 'SINGLE_SLOT', enabled: true, label: 'Enkeltbooking', description: 'Book ett tidspunkt' },
+  { mode: 'IN_GAME', enabled: false, label: 'Hurtigbooking', description: 'Rask booking med kort varsel' },
+  { mode: 'RECURRING', enabled: false, label: 'Gjentakende', description: 'Ukentlig eller månedlig mønster' },
+];
 
 // =============================================================================
 // Helper Functions
@@ -204,6 +218,9 @@ export function BookingWidgetPlacement({
   listingTitle,
   openingHours = DEFAULT_OPENING_HOURS,
   busySlots = [],
+  bookingModes = DEFAULT_BOOKING_MODES,
+  selectedBookingMode,
+  onBookingModeChange,
 }: BookingWidgetPlacementProps): React.ReactElement {
   const [isMobile, setIsMobile] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -265,6 +282,22 @@ export function BookingWidgetPlacement({
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
+
+  // Booking mode state - use controlled or uncontrolled mode
+  const enabledModes = bookingModes.filter(m => m.enabled);
+  const defaultMode = enabledModes[0]?.mode ?? 'SINGLE_SLOT';
+  const [internalBookingMode, setInternalBookingMode] = React.useState<BookingMode>(defaultMode);
+
+  // Use controlled mode if props are provided, otherwise use internal state
+  const currentBookingMode = selectedBookingMode ?? internalBookingMode;
+
+  const handleBookingModeChange = (mode: BookingMode): void => {
+    if (onBookingModeChange) {
+      onBookingModeChange(mode);
+    } else {
+      setInternalBookingMode(mode);
+    }
+  };
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -563,6 +596,25 @@ export function BookingWidgetPlacement({
         listingTitle={listingTitle}
         isMobile={isMobile}
       />
+
+      {/* Booking Mode Selector - Only show on calendar step when multiple modes enabled */}
+      {currentStep === 0 && enabledModes.length > 1 && (
+        <div
+          style={{
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+            backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+          }}
+        >
+          <BookingModeSelector
+            modes={bookingModes}
+            selectedMode={currentBookingMode}
+            onModeChange={handleBookingModeChange}
+            size="sm"
+            variant="compact"
+          />
+        </div>
+      )}
 
       {/* Main Content */}
       <div
