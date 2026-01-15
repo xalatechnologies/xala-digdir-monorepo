@@ -135,7 +135,7 @@ export class IdPortenAuthController {
         // Log invalid returnTo attempt for security monitoring
         getAuditService().log({
           tenantId: tenantId || null,
-          userId: 'anonymous',
+          userId: null,
           action: 'auth_returnto_validation_failed',
           resource: 'idporten',
           resourceId: state,
@@ -186,7 +186,7 @@ export class IdPortenAuthController {
         // Log session creation failure
         getAuditService().log({
           tenantId: tenantId || null,
-          userId: 'anonymous',
+          userId: null,
           action: 'auth_session_creation_failed',
           resource: 'idporten',
           resourceId: state,
@@ -216,7 +216,7 @@ export class IdPortenAuthController {
       // Audit log auth initiation
       getAuditService().log({
         tenantId: tenantId || null,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_initiated',
         resource: 'idporten',
         resourceId: session.id,
@@ -235,7 +235,7 @@ export class IdPortenAuthController {
       // Log authorization error
       getAuditService().log({
         tenantId: tenantId || null,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_initiation_error',
         resource: 'idporten',
         resourceId: state,
@@ -287,7 +287,7 @@ export class IdPortenAuthController {
       // Audit log missing state
       getAuditService().log({
         tenantId: null,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_callback_missing_state',
         resource: 'idporten',
         resourceId: null,
@@ -309,7 +309,7 @@ export class IdPortenAuthController {
       // Audit log invalid state
       getAuditService().log({
         tenantId: null,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_callback_invalid_state',
         resource: 'idporten',
         resourceId: state,
@@ -335,7 +335,7 @@ export class IdPortenAuthController {
       // Audit log user abort
       getAuditService().log({
         tenantId,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_aborted',
         resource: 'idporten',
         resourceId: session.sessionId,
@@ -358,7 +358,7 @@ export class IdPortenAuthController {
       // Audit log auth error
       getAuditService().log({
         tenantId,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_failed',
         resource: 'idporten',
         resourceId: session.sessionId,
@@ -406,7 +406,7 @@ export class IdPortenAuthController {
         // Audit log incomplete session
         getAuditService().log({
           tenantId,
-          userId: 'anonymous',
+          userId: null,
           action: 'auth_incomplete',
           resource: 'idporten',
           resourceId: session.sessionId,
@@ -459,7 +459,7 @@ export class IdPortenAuthController {
       // Audit log callback error
       getAuditService().log({
         tenantId,
-        userId: 'anonymous',
+        userId: null,
         action: 'auth_callback_error',
         resource: 'idporten',
         resourceId: session.sessionId,

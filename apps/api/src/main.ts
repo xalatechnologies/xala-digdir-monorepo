@@ -213,7 +213,6 @@ async function bootstrap() {
     HelpController,
     DiscountCodesController,
     HealthController,
-    CategoriesController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,

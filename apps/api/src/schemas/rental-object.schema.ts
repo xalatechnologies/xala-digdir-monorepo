@@ -1,41 +1,110 @@
 /**
  * Rental Object Zod Schemas
- * Clean schema definitions for the 4-category rental objects system
+ * Clean schema definitions for the rental objects system
+ * 
+ * NOTE: Categories, time modes, statuses, and pricing units are now database-driven.
+ * Use ConfigurationService for validation and fetching valid values.
+ * The schemas here use string validation for flexibility with database-defined values.
  */
 import { z } from 'zod';
 
 // =============================================================================
-// Category Enum
+// Schema-Driven Configuration Types
+// These are string-based schemas that accept any valid code from the database.
+// Validation against actual database values should be done at the service layer.
 // =============================================================================
 
-export const RentalObjectCategorySchema = z.enum([
+/**
+ * Category Schema
+ * Accepts any string that matches a valid category code in the database.
+ * Default values represent the initial seed data but new categories can be added.
+ */
+export const RentalObjectCategorySchema = z.string().min(1).max(100);
+export type RentalObjectCategory = z.infer<typeof RentalObjectCategorySchema>;
+
+/**
+ * Time Mode Schema
+ * Accepts any string that matches a valid time mode code in the database.
+ */
+export const BookingTimeModeSchema = z.string().min(1).max(50);
+export type BookingTimeMode = z.infer<typeof BookingTimeModeSchema>;
+
+/**
+ * Status Schema
+ * Accepts any string that matches a valid rental object status code in the database.
+ */
+export const RentalObjectStatusSchema = z.string().min(1).max(50);
+export type RentalObjectStatus = z.infer<typeof RentalObjectStatusSchema>;
+
+/**
+ * Pricing Unit Schema
+ * Accepts any string that matches a valid pricing unit code in the database.
+ */
+export const PricingUnitSchema = z.string().min(1).max(50);
+export type PricingUnit = z.infer<typeof PricingUnitSchema>;
+
+// =============================================================================
+// Schema Factory for Dynamic Validation
+// Use these to create schemas with runtime-validated enum values
+// =============================================================================
+
+/**
+ * Creates a category schema that validates against provided valid codes
+ */
+export function createCategorySchema(validCodes: readonly string[]) {
+  return z.string().refine(
+    (val) => validCodes.includes(val),
+    (val) => ({ message: `Invalid category: ${val}. Valid options: ${validCodes.join(', ')}` })
+  );
+}
+
+/**
+ * Creates a time mode schema that validates against provided valid codes
+ */
+export function createTimeModeSchema(validCodes: readonly string[]) {
+  return z.string().refine(
+    (val) => validCodes.includes(val),
+    (val) => ({ message: `Invalid time mode: ${val}. Valid options: ${validCodes.join(', ')}` })
+  );
+}
+
+/**
+ * Creates a status schema that validates against provided valid codes
+ */
+export function createStatusSchema(validCodes: readonly string[]) {
+  return z.string().refine(
+    (val) => validCodes.includes(val),
+    (val) => ({ message: `Invalid status: ${val}. Valid options: ${validCodes.join(', ')}` })
+  );
+}
+
+/**
+ * Creates a pricing unit schema that validates against provided valid codes
+ */
+export function createPricingUnitSchema(validCodes: readonly string[]) {
+  return z.string().refine(
+    (val) => validCodes.includes(val),
+    (val) => ({ message: `Invalid pricing unit: ${val}. Valid options: ${validCodes.join(', ')}` })
+  );
+}
+
+// =============================================================================
+// Default Valid Values (for backwards compatibility)
+// These match the seed data - use ConfigurationService for runtime values
+// =============================================================================
+
+export const DEFAULT_CATEGORIES = [
   'LOKALER_OG_BANER',
   'UTSTYR_OG_INVENTAR',
   'KJORETOY_OG_TRANSPORT',
   'OPPLEVELSER_OG_ARRANGEMENT',
-]);
-export type RentalObjectCategory = z.infer<typeof RentalObjectCategorySchema>;
+] as const;
 
-// =============================================================================
-// Time Mode Enum
-// =============================================================================
+export const DEFAULT_TIME_MODES = ['PERIOD', 'SLOT', 'ALL_DAY'] as const;
 
-export const BookingTimeModeSchema = z.enum(['PERIOD', 'SLOT', 'ALL_DAY']);
-export type BookingTimeMode = z.infer<typeof BookingTimeModeSchema>;
+export const DEFAULT_STATUSES = ['draft', 'published', 'archived'] as const;
 
-// =============================================================================
-// Status Enum
-// =============================================================================
-
-export const RentalObjectStatusSchema = z.enum(['draft', 'published', 'archived']);
-export type RentalObjectStatus = z.infer<typeof RentalObjectStatusSchema>;
-
-// =============================================================================
-// Pricing Unit Enum
-// =============================================================================
-
-export const PricingUnitSchema = z.enum(['hour', 'day', 'booking', 'week', 'month']);
-export type PricingUnit = z.infer<typeof PricingUnitSchema>;
+export const DEFAULT_PRICING_UNITS = ['hour', 'day', 'booking', 'week', 'month'] as const;
 
 // =============================================================================
 // Pricing Schema
@@ -263,14 +332,19 @@ export const RentalObjectQuerySchema = z.object({
 export type RentalObjectQueryParams = z.infer<typeof RentalObjectQuerySchema>;
 
 // =============================================================================
-// Category Constants
+// Category Constants (Deprecated - use ConfigurationService instead)
+// These are kept for backwards compatibility but should be replaced with
+// dynamic values from the configuration module.
 // =============================================================================
 
-export const RENTAL_OBJECT_CATEGORIES = [
-  'LOKALER_OG_BANER',
-  'UTSTYR_OG_INVENTAR',
-  'KJORETOY_OG_TRANSPORT',
-  'OPPLEVELSER_OG_ARRANGEMENT',
-] as const;
+/** @deprecated Use ConfigurationService.getValidCategoryCodes() instead */
+export const RENTAL_OBJECT_CATEGORIES = DEFAULT_CATEGORIES;
 
-export const BOOKING_TIME_MODES = ['PERIOD', 'SLOT', 'ALL_DAY'] as const;
+/** @deprecated Use ConfigurationService.getValidTimeModeCodes() instead */
+export const BOOKING_TIME_MODES = DEFAULT_TIME_MODES;
+
+/** @deprecated Use ConfigurationService.getValidPricingUnitCodes() instead */
+export const PRICING_UNITS = DEFAULT_PRICING_UNITS;
+
+/** @deprecated Use ConfigurationService.getRentalObjectStatuses() instead */
+export const RENTAL_OBJECT_STATUSES = DEFAULT_STATUSES;
