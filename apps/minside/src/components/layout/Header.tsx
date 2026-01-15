@@ -130,28 +130,30 @@ export function Header({ title: _title }: HeaderProps) {
     >
       <div
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: '1fr auto 1fr',
           alignItems: 'center',
           height: '72px',
           padding: '0 var(--ds-spacing-6)',
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        {/* Left side - Account Switcher */}
-        <div style={{ flex: '0 0 auto' }}>
+        {/* Left zone - Account Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
           <AccountSwitcher />
         </div>
 
-        {/* Search - centered */}
+        {/* Center zone - Search */}
         <div
           style={{
-            flex: '1 1 600px',
-            maxWidth: '600px',
-            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            width: '650px',
+            maxWidth: '700px',
           }}
         >
           <HeaderSearch
-            placeholder="Søk i bookinger, brukere, innstillinger..."
+            placeholder="Søk i bookinger, brukere..."
             value={searchQuery}
             onSearchChange={handleSearchChange}
             onResultSelect={handleResultSelect}
@@ -162,9 +164,10 @@ export function Header({ title: _title }: HeaderProps) {
           />
         </div>
 
-        {/* Right side - Actions */}
-        <div style={{ flex: '0 0 auto', display: 'flex', justifyContent: 'flex-end' }}>
-          <HeaderActions spacing="var(--ds-spacing-3)">
+
+        {/* Right zone - Actions */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <HeaderActions spacing="var(--ds-spacing-2)">
             <HeaderThemeToggle
               isDark={isDark}
               onToggle={toggleTheme}
