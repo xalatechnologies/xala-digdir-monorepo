@@ -7,3 +7,4 @@ export * from './listing.schema';
 export * from './booking.schema';
 export * from './monitoring.schema';
 export * from './like.schema';
+export * from './share.schema';
