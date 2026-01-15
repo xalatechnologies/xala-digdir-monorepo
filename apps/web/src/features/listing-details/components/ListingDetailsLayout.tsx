@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { RequireAuthModal, ShareSheet } from '@xala/ds';
-import { useLikeListing, useUnlikeListing, useIsLiked } from '@digilist/client-sdk/hooks';
+import { useLikeListing, useUnlikeListing, useIsLiked, useCreateShare } from '@digilist/client-sdk/hooks';
 import type { Listing } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
 import {
@@ -122,6 +122,9 @@ export function ListingDetailsLayout({
   const likeMutation = useLikeListing();
   const unlikeMutation = useUnlikeListing();
 
+  // SDK hook for share functionality
+  const createShareMutation = useCreateShare();
+
   // Determine favorite state (SDK takes precedence over props)
   const isFavorited = isLikedData?.isLiked ?? isFavoritedProp ?? false;
   const isFavoriteLoading = likeMutation.isPending || unlikeMutation.isPending || isFavoriteLoadingProp;
@@ -138,19 +141,44 @@ export function ListingDetailsLayout({
     description: listing.metadata.shortDescription || listing.metadata.description?.slice(0, 150) || '',
   }), [listing]);
 
-  // Handle share action
+  // Handle share action with SDK integration
   const handleShare = React.useCallback(async () => {
     await logAuditEvent('LISTING_SHARED', listing.tenantId, listing.id, userId);
 
-    if (isNativeShareAvailable()) {
-      const result = await shareNative(shareData);
-      if (result.success) {
-        await shareWithAudit(shareData, 'native', listing.tenantId, listing.id, userId);
+    // Create share link via SDK
+    try {
+      const result = await createShareMutation.mutateAsync({
+        type: 'listing',
+        resourceId: listing.id,
+      });
+
+      // Use the generated share URL if available
+      const shareUrl = result?.data?.url || shareData.url;
+      const effectiveShareData: ShareData = {
+        ...shareData,
+        url: shareUrl,
+      };
+
+      if (isNativeShareAvailable()) {
+        const nativeResult = await shareNative(effectiveShareData);
+        if (nativeResult.success) {
+          await shareWithAudit(effectiveShareData, 'native', listing.tenantId, listing.id, userId);
+        }
+      } else {
+        setShowShareSheet(true);
       }
-    } else {
-      setShowShareSheet(true);
+    } catch {
+      // Fallback to direct share if SDK mutation fails
+      if (isNativeShareAvailable()) {
+        const result = await shareNative(shareData);
+        if (result.success) {
+          await shareWithAudit(shareData, 'native', listing.tenantId, listing.id, userId);
+        }
+      } else {
+        setShowShareSheet(true);
+      }
     }
-  }, [listing, shareData, userId]);
+  }, [listing, shareData, userId, createShareMutation]);
 
   // Handle share from sheet
   const handleShareFromSheet = React.useCallback(async (medium: ShareMedium) => {
