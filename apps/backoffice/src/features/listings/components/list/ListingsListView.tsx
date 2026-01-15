@@ -27,6 +27,7 @@ import { ListingsGrid } from './ListingsGrid';
 import { ListingsTable } from './ListingsTable';
 import { useListingFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../../hooks/useListingFilters';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
+import { LISTING_TYPE_OPTIONS } from '../../constants';
 
 // Capacity filter options
 const CAPACITY_OPTIONS = [

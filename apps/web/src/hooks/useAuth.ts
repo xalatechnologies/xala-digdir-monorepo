@@ -270,7 +270,12 @@ export function useAuth(): UseAuthReturn {
   /**
    * Logout user and clear flow context
    */
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    console.log('========================================');
+    console.log('[WEB AUTH] Logging out...');
+    console.log('========================================');
+
+    // Clear localStorage
     localStorage.removeItem('web_user');
     setUser(null);
 
@@ -278,9 +283,20 @@ export function useAuth(): UseAuthReturn {
     clearFlowContextFromStorage();
     notifySubscribers();
 
-    // Redirect to API logout
-    const baseUrl = import.meta.env.VITE_API_URL || 'https://api.digilist.no';
-    window.location.href = `${baseUrl}/auth/logout?returnUrl=${encodeURIComponent(window.location.origin)}`;
+    try {
+      // Call API logout to clear session cookie
+      await authService.logout();
+      console.log('[WEB AUTH] API logout successful');
+    } catch (error) {
+      console.error('[WEB AUTH] API logout failed:', error);
+      // Continue with logout even if API call fails
+    }
+
+    console.log('[WEB AUTH] Redirecting to home page...');
+    console.log('========================================');
+
+    // Redirect to home page
+    window.location.href = window.location.origin + '/';
   }, []);
 
   /**

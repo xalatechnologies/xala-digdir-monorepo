@@ -316,37 +316,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
-    try {
-      // ✅ SECURITY: Server-side session invalidation
-      // ---------------------------------------------------------------------------
-      // The backend invalidates the session and clears the HTTP-only cookie.
-      // This ensures:
-      //   ✅ Session token is revoked server-side (cannot be reused)
-      //   ✅ HTTP-only cookie is cleared from browser
-      //   ✅ No residual authentication credentials remain
-      //
-      // Even if an attacker has cached the cookie, the backend will reject it
-      // because the session has been invalidated in the database.
-      await authService.logout();
-    } catch (error) {
-      // Handle logout error - still clear local state
-      // Note: Even if backend logout fails, we clear local user data to prevent
-      // confusion. The session cookie will expire naturally or be rejected by backend.
-    }
-
-    // Clear user data from local storage (cached metadata only)
-    // ⚠️ IMPORTANT: This only clears non-sensitive user metadata (name, email, role).
-    // Authentication tokens were NEVER stored in localStorage - they are managed
-    // by HTTP-only cookies and have already been cleared by the backend above.
+    // ✅ CRITICAL: Clear local state FIRST before any async operations
+    // This ensures the UI immediately reflects logged-out state even if API call hangs
+    setUser(null);
     localStorage.removeItem('backoffice_mock_user');
     localStorage.removeItem('minside_user');
-
-    // Clear any stored flow context on logout
     clearFlowContextFromStorage();
     notifySubscribers();
 
-    setUser(null);
-    navigate('/login');
+    // ✅ SECURITY: Server-side session invalidation
+    // ---------------------------------------------------------------------------
+    // The backend invalidates the session and clears the HTTP-only cookie.
+    // This ensures:
+    //   ✅ Session token is revoked server-side (cannot be reused)
+    //   ✅ HTTP-only cookie is cleared from browser with Max-Age=0
+    //   ✅ No residual authentication credentials remain
+    //
+    // Even if an attacker has cached the cookie, the backend will reject it
+    // because the session has been invalidated.
+    try {
+      await authService.logout();
+    } catch (error) {
+      // Logout API call failed - local state is already cleared above
+      // This is acceptable because:
+      // 1. User state is already cleared in UI (user appears logged out)
+      // 2. Session cookie will expire naturally (24h max age)
+      // 3. Backend will reject expired/invalid cookies anyway
+      console.warn('Logout API call failed, but local state cleared:', error);
+    }
+
+    // Navigate to login page AFTER all cleanup is complete
+    navigate('/login', { replace: true });
   }, [navigate]);
 
   const checkRole = useCallback(

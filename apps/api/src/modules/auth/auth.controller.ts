@@ -312,6 +312,39 @@ export class AuthController {
       });
     }
 
+    // Clear session cookie by setting it with Max-Age=0 and expired date
+    // Must match the exact settings used when cookie was created (idporten.controller.ts line 564-580)
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Set expiration to past date (for browsers that don't support Max-Age)
+    const expiredDate = new Date(0).toUTCString();
+
+    const cookieParts = [
+      'digilist_session=',
+      'Path=/',
+      'HttpOnly',
+      'Max-Age=0', // Expire immediately
+      `Expires=${expiredDate}`, // Also set explicit expiration for older browsers
+    ];
+
+    if (isProduction) {
+      cookieParts.push('Secure');
+      cookieParts.push('SameSite=None');
+    } else {
+      cookieParts.push('SameSite=Lax');
+    }
+
+    const cookieHeader = cookieParts.join('; ');
+    reply.header('Set-Cookie', cookieHeader);
+
+    console.log('========================================');
+    console.log('[LOGOUT] Session cleared');
+    console.log('========================================');
+    console.log('User:', userId || 'unknown');
+    console.log('Cookie Header:', cookieHeader);
+    console.log('Return To:', validatedReturnTo);
+    console.log('========================================');
+
     return { data: { success: true, message: 'Logged out successfully', returnTo: validatedReturnTo } };
   }
 

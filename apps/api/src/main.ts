@@ -216,6 +216,10 @@ async function bootstrap() {
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
+  // Public controller (uses ConfigurationService for categories)
+  container.registerFactory('PublicController', () =>
+    new PublicController(container.resolve('ConfigurationService'))
+  );
   // ID-porten auth controllers via Signicat (no dependencies)
   container.registerFactory('IdPortenAuthController', () =>
     new IdPortenAuthController()

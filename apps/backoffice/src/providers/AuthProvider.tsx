@@ -234,6 +234,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
+    console.log('========================================');
+    console.log('[BACKOFFICE AUTH] Logging out...');
+    console.log('========================================');
+
     if (USE_MOCK_AUTH) {
       // Clear user session
       localStorage.removeItem('backoffice_mock_user');
@@ -243,6 +247,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
       localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
 
+      console.log('[BACKOFFICE AUTH] Mock auth cleared');
       setUser(null);
       navigate('/login');
       return;
@@ -251,14 +256,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Real logout - call API to clear session cookie
     try {
       await authService.logout();
+      console.log('[BACKOFFICE AUTH] API logout successful');
+
       // Clear role storage on logout
       localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
       localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
+      console.log('[BACKOFFICE AUTH] Role storage cleared');
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error('[BACKOFFICE AUTH] Logout failed:', error);
       // Continue with logout even if API call fails
     } finally {
       setUser(null);
+      console.log('[BACKOFFICE AUTH] User cleared, redirecting to login...');
+      console.log('========================================');
       navigate('/login');
     }
   }, [navigate]);
