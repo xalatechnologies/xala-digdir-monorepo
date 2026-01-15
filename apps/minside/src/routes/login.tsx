@@ -2,50 +2,118 @@
  * Login Page - Minside (User Dashboard)
  *
  * Uses reusable login components from @xala/ds
+ * Supports session-safe return-to-flow authentication with flow context preservation
  */
-import { useEffect } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LoginLayout,
   LoginOption,
   IdPortenIcon,
   MicrosoftIcon,
+  VippsIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
+import type { FlowContext } from '@digilist/client-sdk';
 
-// Simple Vipps icon (orange rounded square with white V)
-function VippsIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="4" fill="#FF5B24" />
-      <path
-        d="M7 8L12 16L17 8"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+/**
+ * Navigation state passed when redirecting with flow context
+ */
+export interface FlowContextNavigationState {
+  /** The restored flow context containing booking state */
+  flowContext: FlowContext;
+  /** Whether this navigation is from a flow restoration */
+  isFlowRestoration: boolean;
+}
+
+/**
+ * Navigation state passed when flow context was expired
+ */
+export interface FlowContextExpiredState {
+  /** Indicates the booking session expired */
+  flowContextExpired: true;
 }
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading, login } = useAuth();
+  const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
 
+  // Track if we've already processed flow restoration to prevent double navigation
+  const flowRestorationProcessed = useRef(false);
+
+  // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
+  /**
+   * Handle navigation after authentication
+   * Prioritizes stored flow context over simple location state
+   */
+  const handlePostAuthNavigation = useCallback(() => {
+    // Prevent double processing
+    if (flowRestorationProcessed.current) {
+      return;
+    }
+
+    // Check for stored flow context first (higher priority than location state)
+    if (hasStoredContext) {
+      const result = restoreFlowContext(true); // Clear after load
+
+      if (result.hasContext && result.flowContext) {
+        flowRestorationProcessed.current = true;
+
+        // Navigate to the returnTo URL with complete flow context
+        const navigationState: FlowContextNavigationState = {
+          flowContext: result.flowContext,
+          isFlowRestoration: true,
+        };
+
+        navigate(result.flowContext.returnTo, {
+          replace: true,
+          state: navigationState,
+        });
+        return;
+      }
+
+      // Handle expired flow context
+      if (result.wasExpired) {
+        flowRestorationProcessed.current = true;
+        // Navigate to home with notification that session expired
+        // The target page can show a toast about expired booking session
+        const expiredState: FlowContextExpiredState = {
+          flowContextExpired: true,
+        };
+        navigate('/', {
+          replace: true,
+          state: expiredState,
+        });
+        return;
+      }
+
+      // Handle invalid/corrupted flow context - gracefully fall back
+      if (result.wasInvalid) {
+        flowRestorationProcessed.current = true;
+        navigate(from, { replace: true });
+        return;
+      }
+    }
+
+    // No flow context - use simple location state fallback
+    flowRestorationProcessed.current = true;
+    navigate(from, { replace: true });
+  }, [hasStoredContext, restoreFlowContext, navigate, from]);
+
+  // Navigate after successful authentication
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      navigate(from, { replace: true });
+      handlePostAuthNavigation();
     }
-  }, [isAuthenticated, isLoading, navigate, from]);
+  }, [isAuthenticated, isLoading, handlePostAuthNavigation]);
 
   if (isLoading) {
     return <></>;
@@ -81,6 +149,7 @@ export function LoginPage(): React.ReactElement {
     <LoginLayout
       brandName="DIGILIST"
       brandTagline="ENKEL BOOKING"
+      logoHref="/"
       title={t('auth.login')}
       subtitle={t('auth.selectMethod')}
       panelTitle="MIN SIDE"
