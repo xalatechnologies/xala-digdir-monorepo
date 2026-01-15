@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
+import { useRealtimeUpdates } from '../../../adapters/realtimeClient';
+import type { RealtimeEvent } from '../../../adapters/realtimeClient';
 
 // Icons
 function WarningIcon({ size = 20 }: { size?: number }): React.ReactElement {
@@ -56,6 +58,7 @@ export interface BookingAvailabilityConflictDialogProps {
   onChangeTime: () => void;
   onBookAvailable: (availableSlotKeys: string[]) => void;
   listingTitle?: string;
+  listingId: string;
 }
 
 const dayNames = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
@@ -74,11 +77,58 @@ export function BookingAvailabilityConflictDialog({
   onChangeTime,
   onBookAvailable,
   listingTitle: _listingTitle,
+  listingId,
 }: BookingAvailabilityConflictDialogProps): React.ReactElement | null {
+  // Local state for slots that can be updated in real-time
+  const [localSlots, setLocalSlots] = React.useState<SlotAvailability[]>(slots);
+
+  // Sync with props when they change
+  React.useEffect(() => {
+    setLocalSlots(slots);
+  }, [slots]);
+
+  // Subscribe to real-time availability updates
+  useRealtimeUpdates(listingId, React.useCallback((event: RealtimeEvent) => {
+    // Only process availability change events
+    if (event.data && typeof event.data === 'object' && 'type' in event.data) {
+      const eventData = event.data as { type: string; payload?: unknown };
+
+      if (eventData.type === 'AVAILABILITY_CHANGED' && eventData.payload) {
+        const payload = eventData.payload as {
+          slots?: Array<{
+            slotKey: string;
+            isAvailable: boolean;
+            conflictReason?: string;
+          }>;
+        };
+
+        if (payload.slots && Array.isArray(payload.slots)) {
+          // Update local slots with new availability data
+          setLocalSlots(prevSlots => {
+            const updatedSlots = [...prevSlots];
+
+            payload.slots?.forEach(update => {
+              const slotIndex = updatedSlots.findIndex(s => s.slotKey === update.slotKey);
+              if (slotIndex !== -1) {
+                updatedSlots[slotIndex] = {
+                  ...updatedSlots[slotIndex],
+                  isAvailable: update.isAvailable,
+                  conflictReason: update.conflictReason,
+                };
+              }
+            });
+
+            return updatedSlots;
+          });
+        }
+      }
+    }
+  }, [listingId]));
+
   if (!isOpen) return null;
 
-  const availableSlots = slots.filter(s => s.isAvailable);
-  
+  const availableSlots = localSlots.filter(s => s.isAvailable);
+
   const handleBookAvailable = (): void => {
     const availableKeys = availableSlots.map(s => s.slotKey);
     onBookAvailable(availableKeys);
@@ -181,7 +231,7 @@ export function BookingAvailabilityConflictDialog({
               gap: 'var(--ds-spacing-2)',
             }}
           >
-            {slots.map((slot) => (
+            {localSlots.map((slot) => (
               <div
                 key={slot.slotKey}
                 style={{

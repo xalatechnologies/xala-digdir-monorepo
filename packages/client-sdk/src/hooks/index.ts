@@ -79,6 +79,13 @@ export {
   usePaymentReconciliation,
 } from './use-bookings';
 
+// Calendar hooks (config and availability matrix)
+export {
+  useListingCalendarConfig,
+  useAvailabilityMatrix,
+  useCalendarRealtime,
+} from './use-calendar';
+
 // Organization & User hooks
 export {
   useOrganizations,
@@ -135,6 +142,7 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
+  useRealtimeBookingConflicts,
   useRealtimeListings,
   useRealtimeCalendar,
   useRealtimeMessages,
@@ -180,6 +188,19 @@ export {
   type AuditQueryParams,
   type AuditStats
 } from './use-audit';
+
+// Discount Code hooks
+export {
+  useDiscountCodes,
+  useDiscountCode,
+  useCreateDiscountCode,
+  useUpdateDiscountCode,
+  useDeleteDiscountCode,
+  useValidateDiscountCode,
+  useToggleDiscountCode,
+  type DiscountCodeQueryParams,
+  type ValidateCodeResult
+} from './use-discount-codes';
 
 // Conversation hooks
 export {
@@ -357,6 +378,7 @@ export {
   useSeasons,
   useSeason,
   useSeasonStats,
+  useSeasonVenues,
   useCreateSeason,
   useUpdateSeason,
   useOpenSeason,
@@ -365,6 +387,8 @@ export {
   useCompleteSeason,
   useCancelSeason,
   useDeleteSeason,
+  useAddVenueToSeason,
+  useRemoveVenueFromSeason,
 } from './use-seasons';
 
 // Help & Support hooks

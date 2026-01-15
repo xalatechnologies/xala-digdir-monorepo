@@ -110,21 +110,40 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Get current session
+   * Get current session from HTTP-only cookie
+   *
+   * Note: This method relies on HTTP-only cookies for session management.
+   * The session cookie is automatically sent by the browser with this request.
+   * No manual token handling is required - the backend validates the session
+   * from the secure, HTTP-only cookie that was set during OAuth callback.
+   *
+   * @returns Current auth session if valid cookie exists
    */
   async getSession(): Promise<SingleResponse<AuthSession>> {
     return this.client.get(this.buildPath('/session'));
   }
 
   /**
-   * Logout current user
+   * Logout current user and clear HTTP-only session cookie
+   *
+   * Note: This endpoint clears the HTTP-only session cookie on the backend.
+   * The browser will automatically send the session cookie with this request
+   * to identify which session to terminate.
+   *
+   * @returns Success status
    */
   async logout(): Promise<SingleResponse<{ success: boolean }>> {
     return this.client.post(this.buildPath('/logout'));
   }
 
   /**
-   * Refresh auth token
+   * Refresh auth session using HTTP-only cookie
+   *
+   * Note: This endpoint validates the current session cookie and issues
+   * a new session cookie with extended expiration. The browser automatically
+   * sends the current session cookie with this request.
+   *
+   * @returns Updated auth session with refreshed expiration
    */
   async refreshToken(): Promise<SingleResponse<AuthSession>> {
     return this.client.post(this.buildPath('/refresh'));
@@ -385,6 +404,15 @@ export class AuthService extends BaseService {
     const loginPath = '/login';
 
     return `${loginPath}?returnTo=${encodedReturnTo}`;
+  }
+
+  /**
+   * Handle OAuth callback and exchange authorization code for session
+   * @param code - OAuth authorization code from callback URL
+   * @returns Auth session with HTTP-only cookie set by backend
+   */
+  async handleOAuthCallback(code: string): Promise<SingleResponse<AuthSession>> {
+    return this.client.post(this.buildPath('/callback'), { code });
   }
 }
 

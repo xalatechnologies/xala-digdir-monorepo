@@ -20,16 +20,25 @@ export type {
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
 // Bookings
-export { 
-  BookingService, 
-  CalendarService, 
-  AllocationService, 
+export {
+  BookingService,
+  CalendarService,
+  AllocationService,
   AvailabilityService,
   bookingService,
   calendarService,
   allocationService,
   availabilityService
 } from './booking.service';
+
+// Calendar (Listing calendar config & availability matrix)
+export {
+  ListingCalendarService,
+  AvailabilityMatrixService,
+  listingCalendarService,
+  availabilityMatrixService,
+  type CalendarConfigQueryParams,
+} from './calendar.service';
 
 // Organizations & Users
 export { 

@@ -265,6 +265,17 @@ export function BookingWidgetPlacement({
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedSlotForDialog, setSelectedSlotForDialog] = React.useState<BookingSlot | undefined>(undefined);
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
+  const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
+
+  // Update lastUpdated when busySlots change (real-time updates)
+  React.useEffect(() => {
+    setLastUpdated(new Date());
+  }, [busySlots]);
+
+  // Update lastUpdated when week changes
+  React.useEffect(() => {
+    setLastUpdated(new Date());
+  }, [weekStart]);
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -967,6 +978,7 @@ export function BookingWidgetPlacement({
               onRemoveSlot={handleRemoveSlot}
               onAdjustTime={handleAdjustTime}
               onChangeDuration={handleChangeDuration}
+              lastUpdated={lastUpdated}
             />
           </div>
         )}
@@ -1073,6 +1085,7 @@ export function BookingWidgetPlacement({
         onChangeTime={handleChangeTimeFromConflict}
         onBookAvailable={handleBookAvailableSlots}
         listingTitle={listingTitle}
+        listingId={listingId ?? ''}
       />
     </div>
   );

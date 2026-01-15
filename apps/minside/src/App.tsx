@@ -6,8 +6,9 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
-import { AccountContextProvider } from './providers/AccountContextProvider';
+import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
@@ -41,19 +42,46 @@ export function useNotificationCenter(): NotificationCenterContextValue {
 
 function NotificationCenterProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const openNotificationCenter = useCallback(() => {
     setIsOpen(true);
   }, []);
-  
+
   const closeNotificationCenter = useCallback(() => {
     setIsOpen(false);
   }, []);
-  
+
   return (
     <NotificationCenterContext.Provider value={{ openNotificationCenter, closeNotificationCenter, isOpen }}>
       {children}
     </NotificationCenterContext.Provider>
+  );
+}
+
+/**
+ * Account Selection Wrapper
+ * Displays the AccountSelectionModal when user hasn't selected an account yet
+ * and hasn't chosen to remember their choice.
+ *
+ * Edge case handling:
+ * - If rememberChoice is true (from localStorage), the modal is skipped
+ * - The persisted context (personal/organization) is automatically restored
+ *   by AccountContextProvider when rememberChoice is true
+ */
+function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
+  const { hasSelectedAccount, rememberChoice } = useAccountContext();
+
+  // Show modal only if:
+  // 1. User hasn't selected an account yet (hasSelectedAccount = false)
+  // 2. User hasn't chosen to remember their choice (rememberChoice = false)
+  // If rememberChoice is true, skip modal and use persisted context
+  const showModal = !hasSelectedAccount && !rememberChoice;
+
+  return (
+    <>
+      <AccountSelectionModal open={showModal} />
+      {children}
+    </>
   );
 }
 
@@ -82,6 +110,7 @@ function AppWithTheme() {
         <NotificationCenterProvider>
           <AuthProvider>
             <AccountContextProvider>
+            <AccountSelectionWrapper>
             <RealtimeProvider
               wsUrl={import.meta.env.VITE_WS_URL}
               tenantId={import.meta.env.VITE_TENANT_ID}
@@ -97,29 +126,33 @@ function AppWithTheme() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<DashboardPage />} />
-              <Route path="bookings" element={<BookingsPage />} />
-              <Route path="billing" element={<BillingPage />} />
-              <Route path="calendar" element={<CalendarPage />} />
-              <Route path="messages" element={<MessagesPage />} />
+              {/* Personal context routes */}
+              <Route index element={<ProtectedRoute requiredContext="personal"><DashboardPage /></ProtectedRoute>} />
+              <Route path="bookings" element={<ProtectedRoute requiredContext="personal"><BookingsPage /></ProtectedRoute>} />
+              <Route path="billing" element={<ProtectedRoute requiredContext="personal"><BillingPage /></ProtectedRoute>} />
+              <Route path="calendar" element={<ProtectedRoute requiredContext="personal"><CalendarPage /></ProtectedRoute>} />
+              <Route path="messages" element={<ProtectedRoute requiredContext="personal"><MessagesPage /></ProtectedRoute>} />
+
+              {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="help" element={<HelpPage />} />
-              
+
               {/* Organization portal routes */}
-              <Route path="org" element={<OrganizationDashboardPage />} />
-              <Route path="org/bookings" element={<OrganizationBookingsPage />} />
-              <Route path="org/invoices" element={<OrganizationInvoicesPage />} />
-              <Route path="org/members" element={<OrganizationMembersPage />} />
-              <Route path="org/season-rental" element={<SeasonRentalPage />} />
-              <Route path="org/settings" element={<OrganizationSettingsPage />} />
-              <Route path="org/activity" element={<OrganizationActivityPage />} />
+              <Route path="org" element={<ProtectedRoute requiredContext="organization"><OrganizationDashboardPage /></ProtectedRoute>} />
+              <Route path="org/bookings" element={<ProtectedRoute requiredContext="organization"><OrganizationBookingsPage /></ProtectedRoute>} />
+              <Route path="org/invoices" element={<ProtectedRoute requiredContext="organization"><OrganizationInvoicesPage /></ProtectedRoute>} />
+              <Route path="org/members" element={<ProtectedRoute requiredContext="organization"><OrganizationMembersPage /></ProtectedRoute>} />
+              <Route path="org/season-rental" element={<ProtectedRoute requiredContext="organization"><SeasonRentalPage /></ProtectedRoute>} />
+              <Route path="org/settings" element={<ProtectedRoute requiredContext="organization"><OrganizationSettingsPage /></ProtectedRoute>} />
+              <Route path="org/activity" element={<ProtectedRoute requiredContext="organization"><OrganizationActivityPage /></ProtectedRoute>} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             </RealtimeProvider>
+            </AccountSelectionWrapper>
             </AccountContextProvider>
           </AuthProvider>
         </NotificationCenterProvider>

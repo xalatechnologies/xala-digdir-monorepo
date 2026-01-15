@@ -1,9 +1,17 @@
 /**
  * Availability Controller
  * Time slot availability at /api/availability
+ * Includes matrix projection endpoint for calendar integration
  */
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
+import { validate } from '../../core/validation/zod-pipe';
+import { BadRequestError } from '../../core/errors/problem-details';
+import {
+  AvailabilityMatrixQuerySchema,
+  type ListingAvailabilityMatrixProjection,
+} from '../../schemas/calendar.schema';
+import { CalendarService } from '../calendar/calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
 import { allocations, bookings, listings } from '../../database/schema/index';
@@ -15,6 +23,38 @@ interface TenantRequest extends FastifyRequest {
 
 @Controller('/api/availability')
 export class AvailabilityController {
+  constructor(
+    @Inject('CalendarService') private readonly calendarService: CalendarService
+  ) {}
+
+  /**
+   * GET /api/availability/:listingId - Get availability matrix
+   * Returns ListingAvailabilityMatrixProjectionDTO with cell-by-cell availability
+   *
+   * Query params:
+   * - from: string (YYYY-MM-DD format, required) - Start date for availability range
+   * - to: string (YYYY-MM-DD format, required) - End date for availability range
+   * - bookingType: string (optional) - Filter by booking type
+   *
+   * Response: { data: ListingAvailabilityMatrixProjection }
+   */
+  @Get('/:listingId')
+  async getAvailabilityMatrix(
+    request: FastifyRequest<{ Params: { listingId: string } }>,
+    reply: FastifyReply
+  ): Promise<{ data: ListingAvailabilityMatrixProjection }> {
+    const params = validate(AvailabilityMatrixQuerySchema, request.query);
+    const matrix = await this.calendarService.getAvailabilityMatrix(
+      request.params.listingId,
+      params
+    );
+    return { data: matrix };
+  }
+
+  /**
+   * GET /api/availability/slots - Get available time slots (legacy endpoint)
+   * Returns simple slot availability for a single date
+   */
   @Get('/slots')
   async getSlots(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
@@ -40,6 +80,10 @@ export class AvailabilityController {
       reply.code(404);
       return { error: 'Listing not found' };
     }
+
+    // Extract buffer time from listing metadata (default to 0 if not set)
+    const bufferTimeMinutes = listing[0].metadata?.bufferTimeMinutes || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
 
     // Get all blocked times for this date
     const blocked = await db
@@ -86,14 +130,25 @@ export class AvailabilityController {
 
       if (slotEnd.getHours() > operatingEnd) continue;
 
-      // Check if slot overlaps with any blocked or booked time
-      const isBlocked = [...blocked, ...bookedSlots].some((b: any) => {
+      // Check if slot overlaps with any blocked time (allocations - no buffer)
+      const isBlockedByAllocation = blocked.some((b: any) => {
         const bStart = new Date(b.startTime).getTime();
         const bEnd = new Date(b.endTime).getTime();
         const sStart = slotStart.getTime();
         const sEnd = slotEnd.getTime();
         return sStart < bEnd && sEnd > bStart;
       });
+
+      // Check if slot overlaps with any booked time (including buffer time)
+      const isBlockedByBooking = bookedSlots.some((b: any) => {
+        const bStart = new Date(b.startTime).getTime() - bufferTimeMs; // Add buffer before
+        const bEnd = new Date(b.endTime).getTime() + bufferTimeMs; // Add buffer after
+        const sStart = slotStart.getTime();
+        const sEnd = slotEnd.getTime();
+        return sStart < bEnd && sEnd > bStart;
+      });
+
+      const isBlocked = isBlockedByAllocation || isBlockedByBooking;
 
       slots.push({
         startTime: slotStart.toISOString(),

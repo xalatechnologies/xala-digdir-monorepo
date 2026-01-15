@@ -50,6 +50,9 @@ export type { OpeningHoursCardProps } from './OpeningHoursCard';
 export { AvailabilityCalendar } from './AvailabilityCalendar';
 export type { AvailabilityCalendarProps } from './AvailabilityCalendar';
 
+export { ListingAvailabilityCalendar } from './ListingAvailabilityCalendar';
+export type { ListingAvailabilityCalendarProps } from './ListingAvailabilityCalendar';
+
 export { GuidelinesTab } from './GuidelinesTab';
 export type { GuidelinesTabProps } from './GuidelinesTab';
 

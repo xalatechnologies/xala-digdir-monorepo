@@ -25,6 +25,9 @@ import {
   PlayIcon,
   LockIcon,
   UnlockIcon,
+  AlertTriangleIcon,
+  SettingsIcon,
+  MessageSquareIcon,
 } from '@xala/ds';
 import {
   useSeasonalLease,
@@ -35,6 +38,10 @@ import { FormSection } from '../../components/shared';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
+import { ConflictViewer } from '../../components/seasons/ConflictViewer';
+import { PriorityRulesConfig } from '../../components/seasons/PriorityRulesConfig';
+import { AllocationProposal } from '../../components/seasons/AllocationProposal';
+import { AppealProcess } from '../../components/seasons/AppealProcess';
 
 // Temporary placeholder hooks until implemented in SDK
 const useSeasonVenues = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
@@ -281,10 +288,24 @@ export function SeasonDetailPage() {
             <ClipboardListIcon />
             Søknader ({applications.length})
           </Tabs.Trigger>
+          <Tabs.Trigger value="conflicts">
+            <AlertTriangleIcon />
+            Konflikter
+          </Tabs.Trigger>
+          <Tabs.Trigger value="priority">
+            <SettingsIcon />
+            Prioriteringsregler
+          </Tabs.Trigger>
           {(season.status === 'closed' || season.status === 'assigned') && (
             <Tabs.Trigger value="allocation">
               <CalendarIcon />
               Tildeling
+            </Tabs.Trigger>
+          )}
+          {(season.status === 'closed' || season.status === 'assigned') && (
+            <Tabs.Trigger value="appeals">
+              <MessageSquareIcon />
+              Klager
             </Tabs.Trigger>
           )}
         </Tabs.List>
@@ -364,15 +385,52 @@ export function SeasonDetailPage() {
           </Card>
         </Tabs.Panel>
 
+        {/* Conflicts Tab */}
+        <Tabs.Panel value="conflicts">
+          <Card>
+            <ConflictViewer seasonId={id!} />
+          </Card>
+        </Tabs.Panel>
+
+        {/* Priority Rules Tab */}
+        <Tabs.Panel value="priority">
+          <Card>
+            <PriorityRulesConfig
+              seasonId={id!}
+              canEdit={season.status === 'draft' || season.status === 'open'}
+            />
+          </Card>
+        </Tabs.Panel>
+
         {/* Allocation Tab */}
         {(season.status === 'closed' || season.status === 'assigned') && (
           <Tabs.Panel value="allocation">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+              <Card>
+                <AllocationProposal
+                  seasonId={id!}
+                  onApplyComplete={() => navigate(`/seasons/${id}`)}
+                />
+              </Card>
+              <Card>
+                <SeasonAllocationManagement
+                  seasonId={id!}
+                  seasonStartDate={season.startDate}
+                  seasonEndDate={season.endDate}
+                  onAllocationComplete={() => navigate(`/seasons/${id}`)}
+                />
+              </Card>
+            </div>
+          </Tabs.Panel>
+        )}
+
+        {/* Appeals Tab */}
+        {(season.status === 'closed' || season.status === 'assigned') && (
+          <Tabs.Panel value="appeals">
             <Card>
-              <SeasonAllocationManagement
+              <AppealProcess
                 seasonId={id!}
-                seasonStartDate={season.startDate}
-                seasonEndDate={season.endDate}
-                onAllocationComplete={() => navigate(`/seasons/${id}`)}
+                canProcess={true}
               />
             </Card>
           </Tabs.Panel>

@@ -20,6 +20,8 @@ packages/**/*.js
 packages/**/*.d.ts
 !packages/eslint-config/**/*.js
 !packages/ds-registry/examples/**/*.js
+!packages/i18n/eslint.config.js
+!packages/i18n/src/env.d.ts
 
 # Auto Claude data directory
 .auto-claude/

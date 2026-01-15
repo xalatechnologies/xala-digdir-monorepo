@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner, Heading, Paragraph } from '@xala/ds';
 import { useAuth, type BackofficeRole } from '../hooks/useAuth';
+import { useAccountContext, type DashboardContext } from '../providers/AccountContextProvider';
 import {
   createFlowContext,
   saveFlowContextToStorage,
@@ -18,6 +19,8 @@ interface ProtectedRouteProps {
   requiredRole?: BackofficeRole;
   /** Tenant ID for flow context (optional, defaults to env or 'minside') */
   tenantId?: string;
+  /** Required account context for this route */
+  requiredContext?: DashboardContext;
 }
 
 /**
@@ -77,8 +80,10 @@ export function ProtectedRoute({
   children,
   requiredRole,
   tenantId,
+  requiredContext,
 }: ProtectedRouteProps) {
   const { isLoading, isAuthenticated, checkRole } = useAuth();
+  const { accountType, isLoadingOrganizations } = useAccountContext();
   const location = useLocation();
 
   // Track if we've already saved context to prevent double-saves
@@ -125,7 +130,8 @@ export function ProtectedRoute({
     }
   }, [isLoading, isAuthenticated, location, resolvedTenantId]);
 
-  if (isLoading) {
+  // Show loading state while auth or account context is being determined
+  if (isLoading || (requiredContext && isLoadingOrganizations)) {
     return (
       <div
         style={{
@@ -181,6 +187,28 @@ export function ProtectedRoute({
           Kontakt administrator hvis du mener dette er feil.
         </Paragraph>
       </div>
+    );
+  }
+
+  // Context validation: Check if current account context matches required context
+  // If wrong context, redirect to current context's home page instead of showing an error
+  if (requiredContext && accountType !== requiredContext) {
+    // Redirect messages for optional toast notification on destination page
+    const redirectMessages: Record<DashboardContext, string> = {
+      personal: 'Denne siden krever personlig modus. Du har blitt omdirigert.',
+      organization: 'Denne siden krever organisasjonsmodus. Du har blitt omdirigert.',
+    };
+
+    // Redirect to current context's home (not the required context's home)
+    const redirectTo = accountType === 'organization' ? '/org' : '/';
+    const message = redirectMessages[requiredContext];
+
+    return (
+      <Navigate
+        to={redirectTo}
+        state={{ contextRedirectMessage: message, from: location }}
+        replace
+      />
     );
   }
 

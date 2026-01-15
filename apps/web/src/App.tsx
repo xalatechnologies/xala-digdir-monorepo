@@ -3,18 +3,12 @@ import { BrowserRouter, Routes, Route, useNavigate, Outlet, useOutletContext } f
 import {
   AppHeader,
   HeaderLogo,
-  HeaderSearch,
   HeaderActions,
   HeaderThemeToggle,
   HeaderLoginButton,
   NotificationBell,
-  CalendarIcon,
-  UserIcon,
-  SettingsIcon,
-  MapPinIcon,
   DialogProvider,
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
@@ -24,7 +18,7 @@ import { ListingDetailPage } from './pages/ListingDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast } from './components';
+import { RealtimeToast, GlobalSearch } from './components';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -45,9 +39,6 @@ function MainLayout() {
   const navigate = useNavigate();
   const { setColorScheme, effectiveScheme } = useThemeContext();
 
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
-  const [isSearching, setIsSearching] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   // Get real unread notification count (only for logged in users)
@@ -66,73 +57,6 @@ function MainLayout() {
       setIsLoggedIn(true);
     }
   }, []);
-
-  // Demo search data with translations
-  const demoSearchResults: SearchResultGroup[] = [
-    {
-      id: 'actions',
-      label: t('listings.quickActions'),
-      items: [
-        { id: 'new-booking', label: t('listings.newBooking'), description: t('listings.newBooking'), icon: <CalendarIcon size={18} />, shortcut: '⌘N' },
-        { id: 'settings', label: t('nav.settings'), description: t('listings.openSettings'), icon: <SettingsIcon size={18} />, shortcut: '⌘,' },
-      ]
-    },
-    {
-      id: 'locations',
-      label: t('listings.locations'),
-      items: [
-        { id: 'oslo', label: 'Oslo', description: t('listings.headquarters'), icon: <MapPinIcon size={18} />, meta: `12 ${t('listings.bookings')}` },
-        { id: 'bergen', label: 'Bergen', description: 'Vestlandskontor', icon: <MapPinIcon size={18} />, meta: `8 ${t('listings.bookings')}` },
-        { id: 'trondheim', label: 'Trondheim', description: 'Midtbykontor', icon: <MapPinIcon size={18} />, meta: `5 ${t('listings.bookings')}` },
-      ]
-    },
-    {
-      id: 'users',
-      label: t('listings.users'),
-      items: [
-        { id: 'user-1', label: 'Ola Nordmann', description: 'ola@example.com', icon: <UserIcon size={18} /> },
-        { id: 'user-2', label: 'Kari Hansen', description: 'kari@example.com', icon: <UserIcon size={18} /> },
-      ]
-    }
-  ];
-
-  // Simulated search function
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-
-    if (!value.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-
-    // Simulate API delay
-    setTimeout(() => {
-      const query = value.toLowerCase();
-      const filtered = demoSearchResults
-        .map(group => ({
-          ...group,
-          items: group.items.filter(item =>
-            item.label.toLowerCase().includes(query) ||
-            item.description?.toLowerCase().includes(query)
-          )
-        }))
-        .filter(group => group.items.length > 0);
-
-      setSearchResults(filtered);
-      setIsSearching(false);
-    }, 200);
-  };
-
-  const handleSearch = (_value: string) => {
-    // Search action handled
-  };
-
-  const handleResultSelect = (_result: SearchResultItem) => {
-    setSearchQuery('');
-    setSearchResults([]);
-  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -212,14 +136,8 @@ function MainLayout() {
         }
         search={
           <div className="header-search-desktop">
-            <HeaderSearch
+            <GlobalSearch
               placeholder={t('common.search')}
-              value={searchQuery}
-              onSearchChange={handleSearchChange}
-              onSearch={handleSearch}
-              results={searchResults}
-              onResultSelect={handleResultSelect}
-              isLoading={isSearching}
               showShortcut={true}
               enableGlobalShortcut={true}
             />
@@ -261,11 +179,35 @@ function MainLayoutWithContext({ colorScheme, setColorScheme, effectiveScheme }:
   return <Outlet context={{ colorScheme, setColorScheme, effectiveScheme }} />;
 }
 
+const THEME_STORAGE_KEY = 'theme-preference';
+
 // App content with theme provider
 function AppContent() {
   const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
-  const [colorScheme, setColorScheme] = React.useState<ColorScheme>('auto');
-  const [systemScheme, setSystemScheme] = React.useState<'light' | 'dark'>('light');
+  const [colorScheme, setColorSchemeState] = React.useState<ColorScheme>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark') {
+        return stored;
+      }
+    }
+    return 'auto';
+  });
+  const [systemScheme, setSystemScheme] = React.useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'light';
+  });
+
+  const setColorScheme = React.useCallback((scheme: ColorScheme) => {
+    setColorSchemeState(scheme);
+    if (scheme === 'auto') {
+      localStorage.removeItem(THEME_STORAGE_KEY);
+    } else {
+      localStorage.setItem(THEME_STORAGE_KEY, scheme);
+    }
+  }, []);
 
   // Detect system color scheme
   React.useEffect(() => {

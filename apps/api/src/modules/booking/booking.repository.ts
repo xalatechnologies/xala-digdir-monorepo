@@ -6,7 +6,8 @@ import { Injectable } from '../../core/decorators';
 import { BaseRepository, type PaginatedResult, type FilterCondition } from '../../database/base.repository';
 import { bookings, listings, type Booking, type NewBooking } from '../../database/schema';
 import type { BookingQueryParams } from '../../schemas/booking.schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
+import { ConflictError, NotFoundError } from '../../core/errors/problem-details';
 
 @Injectable()
 export class BookingRepository extends BaseRepository<
@@ -128,6 +129,68 @@ export class BookingRepository extends BaseRepository<
         hasPrev: page > 1,
       },
     };
+  }
+
+  /**
+   * Update booking with optimistic locking
+   * Prevents concurrent modification conflicts
+   */
+  async updateWithVersion(
+    id: string,
+    expectedVersion: number,
+    data: Partial<NewBooking>
+  ): Promise<Booking> {
+    // Fetch current booking to check version
+    const current = await this.findById(id);
+
+    if (!current) {
+      throw new NotFoundError(this.getEntityName(), id);
+    }
+
+    // Check version match (optimistic locking)
+    if (current.version !== expectedVersion) {
+      throw new ConflictError(
+        `Booking has been modified by another user. Expected version ${expectedVersion}, but current version is ${current.version}. Please refresh and try again.`
+      );
+    }
+
+    // Update with incremented version
+    const result = await this.db
+      .update(bookings)
+      .set({
+        ...data as any,
+        version: expectedVersion + 1,
+        updatedAt: new Date(),
+      })
+      .where(and(
+        eq(bookings.id, id),
+        eq(bookings.version, expectedVersion)
+      ))
+      .returning();
+
+    // Double-check that update succeeded (race condition protection)
+    if (!result[0]) {
+      throw new ConflictError(
+        'Booking was modified by another user while processing your request. Please refresh and try again.'
+      );
+    }
+
+    return result[0];
+  }
+
+  /**
+   * Override update to automatically handle version increment
+   */
+  async update(id: string, data: Partial<NewBooking>): Promise<Booking> {
+    // Fetch current booking to get version
+    const current = await this.findById(id);
+
+    if (!current) {
+      throw new NotFoundError(this.getEntityName(), id);
+    }
+
+    // Use optimistic locking with current version
+    return this.updateWithVersion(id, current.version, data);
   }
 
   protected getEntityName(): string {

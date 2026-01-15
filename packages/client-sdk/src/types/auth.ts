@@ -44,6 +44,13 @@ export interface OAuthLoginParams {
   callbackUrl?: string;
 }
 
+export interface OAuthCallbackParams {
+  code?: string;
+  state?: string;
+  error?: string;
+  error_description?: string;
+}
+
 // =============================================================================
 // Auth Providers
 // =============================================================================

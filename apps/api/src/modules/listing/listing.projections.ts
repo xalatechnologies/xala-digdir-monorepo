@@ -482,22 +482,44 @@ export function toDetailsProjection(
     isOptional: svc.optional !== false,
   }));
 
-  // Opening hours
-  const rawHours = (meta.openingHours || {}) as Record<string, { open?: string; close?: string }>;
-  const openingHours: ListingOpeningHoursDTO[] = Object.entries(rawHours)
-    .map(([day, times]) => {
-      const [label, idx] = DAY_LABELS[day.toLowerCase()] || [day, 0];
-      const isClosed = !times.open || !times.close;
+  // Opening hours - handle both array and object formats
+  const rawHoursData = meta.openingHours;
+  let openingHours: ListingOpeningHoursDTO[] = [];
+  
+  if (Array.isArray(rawHoursData)) {
+    // Array format: [{day: "Mandag", dayIndex: 1, open: "08:00", close: "22:00"}, ...]
+    openingHours = rawHoursData.map((item: any, i: number) => {
+      const dayName = safeString(item.day) || safeString(item.dayName) || `Day ${i}`;
+      const dayIdx = typeof item.dayIndex === 'number' ? item.dayIndex : i;
+      const openTime = safeString(item.open) || safeString(item.openTime) || '';
+      const closeTime = safeString(item.close) || safeString(item.closeTime) || '';
+      const isClosed = item.isClosed === true || (!openTime && !closeTime);
       return {
-        day: label,
-        dayIndex: idx,
-        openTime: times.open || '',
-        closeTime: times.close || '',
-        hoursDisplay: isClosed ? 'Stengt' : `${times.open} - ${times.close}`,
+        day: dayName,
+        dayIndex: dayIdx,
+        openTime,
+        closeTime,
+        hoursDisplay: isClosed ? 'Stengt' : `${openTime} - ${closeTime}`,
         isClosed,
       };
-    })
-    .sort((a, b) => a.dayIndex - b.dayIndex);
+    });
+  } else if (rawHoursData && typeof rawHoursData === 'object') {
+    // Object format: {monday: {open: "08:00", close: "22:00"}, ...}
+    openingHours = Object.entries(rawHoursData as Record<string, { open?: string; close?: string }>)
+      .map(([day, times]) => {
+        const [label, idx] = DAY_LABELS[day.toLowerCase()] || [day, 0];
+        const isClosed = !times.open || !times.close;
+        return {
+          day: label,
+          dayIndex: idx,
+          openTime: times.open || '',
+          closeTime: times.close || '',
+          hoursDisplay: isClosed ? 'Stengt' : `${times.open} - ${times.close}`,
+          isClosed,
+        };
+      })
+      .sort((a, b) => a.dayIndex - b.dayIndex);
+  }
 
   // Today's hours
   const todayIndex = new Date().getDay();

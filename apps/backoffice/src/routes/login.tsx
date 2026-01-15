@@ -1,8 +1,11 @@
 /**
  * Login Page - Backoffice App
  *
- * Uses reusable login components from @xala/ds
- * Supports session-safe return-to-flow authentication with flow context preservation
+ * Uses reusable login components from @xala/ds.
+ * Supports session-safe return-to-flow authentication with flow context preservation.
+ * After successful login, handles role detection:
+ * - Single-role users: auto-redirect to appropriate home
+ * - Dual-role users: redirect to role selection page
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -17,6 +20,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
+import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -38,7 +42,9 @@ export interface FlowContextExpiredState {
 }
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
+  const { isInitializing, getHomeRoute } = useBackofficeRole();
+  const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
@@ -46,8 +52,8 @@ export function LoginPage(): React.ReactElement {
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
-  // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+  // Get the intended destination from location state (set by ProtectedRoute or direct navigation)
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
 
   /**
    * Handle navigation after authentication
@@ -56,6 +62,16 @@ export function LoginPage(): React.ReactElement {
   const handlePostAuthNavigation = useCallback(() => {
     // Prevent double processing
     if (flowRestorationProcessed.current) {
+      return;
+    }
+
+    // Dual-role user: redirect to role selection, preserving intended destination
+    if (needsRoleSelection) {
+      flowRestorationProcessed.current = true;
+      navigate('/role-selection', {
+        replace: true,
+        state: from ? { from: { pathname: from } } : undefined,
+      });
       return;
     }
 
@@ -87,7 +103,7 @@ export function LoginPage(): React.ReactElement {
         const expiredState: FlowContextExpiredState = {
           flowContextExpired: true,
         };
-        navigate('/', {
+        navigate(getHomeRoute(), {
           replace: true,
           state: expiredState,
         });
@@ -97,24 +113,28 @@ export function LoginPage(): React.ReactElement {
       // Handle invalid/corrupted flow context - gracefully fall back
       if (result.wasInvalid) {
         flowRestorationProcessed.current = true;
-        navigate(from, { replace: true });
+        navigate(from ?? getHomeRoute(), { replace: true });
         return;
       }
     }
 
-    // No flow context - use simple location state fallback
+    // No flow context - use simple location state fallback or role-appropriate home
     flowRestorationProcessed.current = true;
-    navigate(from, { replace: true });
-  }, [hasStoredContext, restoreFlowContext, navigate, from]);
+    const destination = from ?? getHomeRoute();
+    navigate(destination, { replace: true });
+  }, [hasStoredContext, restoreFlowContext, navigate, from, needsRoleSelection, getHomeRoute]);
 
-  // Navigate after successful authentication
+  // Handle post-login redirect based on role state
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      handlePostAuthNavigation();
-    }
-  }, [isAuthenticated, isLoading, handlePostAuthNavigation]);
+    // Wait for both auth and role initialization to complete
+    if (authLoading || isInitializing) return;
+    if (!isAuthenticated) return;
 
-  if (isLoading) {
+    handlePostAuthNavigation();
+  }, [isAuthenticated, authLoading, isInitializing, handlePostAuthNavigation]);
+
+  // Show nothing while loading auth or role state
+  if (authLoading || isInitializing) {
     return <></>;
   }
 
