@@ -46,3 +46,10 @@ playwright-report-*/
 reports/
 screenshots/
 e2e/
+
+# Xaheen data directory
+.xaheen/
+
+# Xaheen generated files
+.xaheen-security.json
+.xaheen-status
