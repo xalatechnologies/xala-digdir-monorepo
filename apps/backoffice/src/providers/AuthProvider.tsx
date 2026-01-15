@@ -68,8 +68,8 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
   grantedRoles: ['admin', 'case_handler'],
 };
 
-// Simulated login - will be replaced with real OAuth when API is ready
-const USE_MOCK_AUTH = true;
+// Use real auth - fetches session from API
+const USE_MOCK_AUTH = false;
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)
@@ -149,16 +149,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      // Real auth flow - uncomment when API is ready
-      // try {
-      //   const response = await getMe();
-      //   setUser(response.data);
-      // } catch {
-      //   setUser(null);
-      // } finally {
-      //   setIsLoading(false);
-      // }
-      setIsLoading(false);
+      // Real auth flow - fetch session from API
+      try {
+        const response = await authService.getSession();
+        if (response.data?.user) {
+          const apiUser = response.data.user;
+          // Map API role to BackofficeRole (legacy) and EffectiveBackofficeRole
+          // API uses: 'admin', 'saksbehandler', etc.
+          // BackofficeRole (legacy): 'admin' | 'saksbehandler'
+          // EffectiveBackofficeRole: 'admin' | 'case_handler'
+          const legacyRole: BackofficeRole = apiUser.role === 'admin' ? 'admin' : 'saksbehandler';
+          const effectiveRole: import('../lib/capabilities').EffectiveBackofficeRole = 
+            apiUser.role === 'admin' ? 'admin' : 'case_handler';
+          
+          // Map API user to BackofficeUser format
+          const backofficeUser: BackofficeUser = {
+            id: apiUser.id,
+            name: apiUser.name || apiUser.email,
+            email: apiUser.email,
+            role: legacyRole,
+            grantedRoles: [effectiveRole], // Single role from DB
+          };
+          setUser(backofficeUser);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        // No session or error - user not authenticated
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();

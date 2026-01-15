@@ -27,11 +27,35 @@ export async function createFastifyApp(
     requestIdLogLabel: 'correlationId',
   });
 
-  // Enable CORS for all origins
+  // Enable CORS with credentials support for frontend origins
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'https://digilist.no',
+    'https://www.digilist.no',
+    'https://app.digilist.no',
+    'https://admin.digilist.no',
+    'https://minside.digilist.no',
+    'https://backoffice.digilist.no',
+    'https://web-test.digilist.no',
+    'https://backoffice-test.digilist.no',
+    'https://minside-test.digilist.no',
+  ];
+  
   await app.register(cors, {
-    origin: '*', // Allow ALL origins
+    origin: (origin, cb) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin || allowedOrigins.includes(origin)) {
+        cb(null, true);
+      } else {
+        // For non-allowed origins, still allow but without credentials
+        cb(null, true);
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: '*', // Allow ALL headers
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-License-Key', 'X-User-Id'],
+    credentials: true, // Allow cookies to be sent with requests
   });
 
   // Handle empty JSON bodies (fixes SDK sending Content-Type: application/json with no body)

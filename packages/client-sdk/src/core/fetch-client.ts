@@ -99,6 +99,7 @@ export class FetchHttpClient implements IHttpClient {
         headers,
         body,
         signal: options?.signal ?? controller.signal,
+        credentials: 'include', // Send cookies with cross-origin requests
       });
 
       if (timeoutId) clearTimeout(timeoutId);

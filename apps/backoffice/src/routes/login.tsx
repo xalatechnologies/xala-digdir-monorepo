@@ -65,11 +65,12 @@ export function LoginPage(): React.ReactElement {
   // Handle auth callback - redirect to dashboard after successful authentication
   useEffect(() => {
     if (authSuccess && !authError) {
-      // Clear the URL params and redirect to dashboard
-      // The session cookie should already be set by the API callback
-      navigate(getHomeRoute(), { replace: true });
+      // Clear the URL params and redirect to dashboard directly
+      // Don't use getHomeRoute() as it may return /role-selection
+      // The dashboard's ProtectedRoute will handle role-selection if needed
+      navigate('/dashboard', { replace: true });
     }
-  }, [authSuccess, authError, navigate, getHomeRoute]);
+  }, [authSuccess, authError, navigate]);
 
   /**
    * Handle navigation after authentication

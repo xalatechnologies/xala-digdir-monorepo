@@ -12,6 +12,7 @@ import { validateReturnToUrl } from '../../core/validation/return-to';
 import { isVippsConfigured, getVippsConfig } from '../../config/vipps.config';
 import { getVippsLoginService } from '../../integrations/vipps/vipps-login.service';
 import { vippsSessionStore } from './vipps-session-store';
+import crypto from 'crypto';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -465,6 +466,215 @@ export class AuthController {
         error: {
           code: 'INTERNAL_ERROR',
           message: 'Failed to initiate Vipps login',
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      };
+    }
+  }
+
+  /**
+   * GET /api/auth/vipps/callback - Handle Vipps OAuth callback
+   *
+   * Query params:
+   * - code: Authorization code from Vipps
+   * - state: State parameter for CSRF validation
+   * - error (optional): Error code if auth failed
+   * - error_description (optional): Error description
+   *
+   * Redirects user back to frontend with session
+   */
+  @Get('/vipps/callback')
+  async vippsCallbackGet(request: AuthRequest, reply: FastifyReply) {
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps login is not configured',
+        },
+      };
+    }
+
+    const query = request.query as {
+      code?: string;
+      state?: string;
+      error?: string;
+      error_description?: string;
+    };
+
+    // DEBUG: Log callback parameters
+    console.log('[VIPPS CALLBACK] Received callback:');
+    console.log('  code:', query.code ? `${query.code.substring(0, 20)}...` : 'missing');
+    console.log('  state:', query.state);
+    console.log('  error:', query.error);
+
+    // Handle error from Vipps
+    if (query.error) {
+      getAuditService().log({
+        tenantId: null,
+        userId: null,
+        action: 'vipps_callback_error',
+        resource: 'vipps',
+        resourceId: query.state || null,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          error: query.error,
+          errorDescription: query.error_description,
+        },
+      });
+
+      // Redirect to frontend with error
+      const errorUrl = `${process.env.FRONTEND_URL || 'https://web-test.digilist.no'}/login?error=${encodeURIComponent(query.error)}&error_description=${encodeURIComponent(query.error_description || '')}`;
+      return reply.redirect(errorUrl);
+    }
+
+    // Validate required fields
+    if (!query.code || !query.state) {
+      reply.code(400);
+      return {
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Missing required parameters: code, state',
+        },
+      };
+    }
+
+    try {
+      // Retrieve session from Redis
+      const session = await vippsSessionStore.get(query.state);
+
+      console.log('[VIPPS CALLBACK] Retrieved session:');
+      console.log('  session:', session ? 'found' : 'not found');
+      console.log('  returnTo:', session?.returnTo);
+
+      if (!session) {
+        getAuditService().log({
+          tenantId: null,
+          userId: null,
+          action: 'vipps_callback_session_expired',
+          resource: 'vipps',
+          resourceId: query.state,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            state: query.state,
+          },
+        });
+
+        // Redirect to frontend with error
+        const errorUrl = `${process.env.FRONTEND_URL || 'https://web-test.digilist.no'}/login?error=session_expired`;
+        return reply.redirect(errorUrl);
+      }
+
+      const loginService = getVippsLoginService();
+      const config = getVippsConfig();
+
+      // Exchange code for tokens
+      const result = await loginService.completeLogin(
+        query.code,
+        config.authCallbackUrl,
+        session.nonce
+      );
+
+      // Find or create user
+      const db = container.resolve<any>('Database');
+      let user = null;
+
+      if (result.userInfo.email) {
+        const existingUsers = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, result.userInfo.email))
+          .limit(1);
+
+        if (existingUsers.length > 0) {
+          user = existingUsers[0];
+        }
+      }
+
+      // If no user found, create new user
+      if (!user) {
+        const defaultTenant = await db
+          .select()
+          .from(tenants)
+          .limit(1);
+
+        const tenantId = session.tenantId || (defaultTenant.length > 0 ? defaultTenant[0].id : 'default-tenant');
+
+        const newUser = await db
+          .insert(users)
+          .values({
+            id: crypto.randomUUID(),
+            tenantId,
+            email: result.userInfo.email || `vipps_${result.claims.sub}@temp.digilist.no`,
+            name: result.userInfo.name || result.userInfo.given_name || 'Vipps User',
+            role: 'citizen',
+            phoneNumber: result.userInfo.phone_number,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          })
+          .returning();
+
+        user = newUser[0];
+      }
+
+      // Update last login
+      await db
+        .update(users)
+        .set({ lastLoginAt: new Date() })
+        .where(eq(users.id, user.id));
+
+      // Generate JWT token
+      const token = generateMockToken(user.id, user.tenantId);
+
+      // Audit successful login
+      getAuditService().log({
+        tenantId: user.tenantId,
+        userId: user.id,
+        action: 'vipps_login_success',
+        resource: 'auth',
+        resourceId: user.id,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          email: user.email,
+          returnTo: session.returnTo,
+        },
+      });
+
+      // Clean up session
+      await vippsSessionStore.delete(query.state);
+
+      // Redirect to frontend with token
+      const redirectUrl = new URL(session.returnTo);
+      redirectUrl.searchParams.set('token', token);
+      redirectUrl.searchParams.set('userId', user.id);
+
+      console.log('[VIPPS CALLBACK] Redirecting to:', redirectUrl.toString());
+
+      return reply.redirect(redirectUrl.toString());
+    } catch (error) {
+      console.error('[VIPPS CALLBACK] Error:', error);
+
+      getAuditService().log({
+        tenantId: null,
+        userId: null,
+        action: 'vipps_callback_error',
+        resource: 'vipps',
+        resourceId: query.state || null,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
+      });
+
+      reply.code(500);
+      return {
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: 'Failed to complete Vipps login',
           details: error instanceof Error ? error.message : 'Unknown error',
         },
       };
