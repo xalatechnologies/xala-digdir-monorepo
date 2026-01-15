@@ -12,7 +12,6 @@ import {
   auditService,
   type CreateBookingDTO,
   type BookingSelectionDTO,
-  type RecurringPreviewProjectionDTO,
   type RecurringBookingResultProjectionDTO,
   type CreateRecurringBookingDTO,
   useOrganizations,
@@ -333,10 +332,18 @@ export function BookingWidgetPlacement({
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
   const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
 
-  // Update lastUpdated when busySlots change (real-time updates)
+  // Stable reference for busySlots to prevent infinite re-renders
+  // (busySlots prop may be a new array reference on each render)
+  const busySlotsKey = React.useMemo(
+    () => JSON.stringify(busySlots),
+    [busySlots]
+  );
+
+  // Update lastUpdated when busySlots content actually changes (real-time updates)
   React.useEffect(() => {
     setLastUpdated(new Date());
-  }, [busySlots]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busySlotsKey]);
 
   // Update lastUpdated when week changes
   React.useEffect(() => {

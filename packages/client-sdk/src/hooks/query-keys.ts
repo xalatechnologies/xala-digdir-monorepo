@@ -124,6 +124,8 @@ export const queryKeys = {
       [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
     quote: (listingId: string, selectionHash: string) =>
       [...queryKeys.bookings.all, 'quote', listingId, selectionHash] as const,
+    recurringPreview: (selectionHash: string) =>
+      [...queryKeys.bookings.all, 'recurringPreview', selectionHash] as const,
   },
 
   // =========================================================================

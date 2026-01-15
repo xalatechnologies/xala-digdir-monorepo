@@ -243,25 +243,51 @@ export class AvailabilityController {
 
       if (slotEnd.getHours() > operatingEnd) continue;
 
+      const sStart = slotStart.getTime();
+      const sEnd = slotEnd.getTime();
+
       // Check if slot overlaps with any blocked time (allocations - no buffer)
-      const isBlockedByAllocation = blocked.some((b: any) => {
+      let blockingAllocation: AllocationRecord | undefined;
+      const isBlockedByAllocation = blocked.some((b: AllocationRecord) => {
         const bStart = new Date(b.startTime).getTime();
         const bEnd = new Date(b.endTime).getTime();
-        return sStart < bEnd && sEnd > bStart;
+        if (sStart < bEnd && sEnd > bStart) {
+          blockingAllocation = b;
+          return true;
+        }
+        return false;
       });
 
       // Check if slot overlaps with any booked time (including buffer time)
-      const isBlockedByBooking = bookedSlots.some((b: any) => {
+      let blockingBooking: BookingRecord | undefined;
+      const isBlockedByBooking = bookingRecords.some((b: BookingRecord) => {
         const bStart = new Date(b.startTime).getTime() - bufferTimeMs; // Add buffer before
         const bEnd = new Date(b.endTime).getTime() + bufferTimeMs; // Add buffer after
-        const sStart = slotStart.getTime();
-        const sEnd = slotEnd.getTime();
-        return sStart < bEnd && sEnd > bStart;
+        if (sStart < bEnd && sEnd > bStart) {
+          blockingBooking = b;
+          return true;
+        }
+        return false;
       });
 
-      const isBlocked = isBlockedByAllocation || isBlockedByBooking;
+      // Determine status and conflict details
+      let status: SlotStatus = 'AVAILABLE';
+      let conflictId: string | undefined;
+      let lockedUntil: string | undefined;
 
-      slots.push({
+      if (isBlockedByAllocation && blockingAllocation) {
+        status = mapAllocationStatus(blockingAllocation.status);
+        conflictId = blockingAllocation.id;
+      } else if (isBlockedByBooking && blockingBooking) {
+        status = mapBookingStatus(blockingBooking.status);
+        conflictId = blockingBooking.id;
+        // For reserved/pending bookings, include TTL if available
+        if (status === 'RESERVED' && blockingBooking.metadata?.lockedUntil) {
+          lockedUntil = String(blockingBooking.metadata.lockedUntil);
+        }
+      }
+
+      const slotInfo: SlotInfo = {
         startTime: slotStart.toISOString(),
         endTime: slotEnd.toISOString(),
         available: status === 'AVAILABLE',

@@ -19,7 +19,6 @@ import type {
   CancelBookingDTO,
   CreateAllocationDTO,
   BookingSelectionDTO,
-  RecurringPreviewProjectionDTO,
   CreateRecurringBookingDTO
 } from '../types/booking';
 
@@ -116,6 +115,25 @@ export function useBookingPricing(listingId: string, startTime: string, endTime:
 }
 
 /**
+ * Preview recurring booking occurrences before creation
+ * Returns server-computed occurrence preview with conflict detection and availability status
+ */
+export function useRecurringPreview(
+  selection: BookingSelectionDTO | null,
+  options?: { enabled?: boolean }
+) {
+  const isEnabled = !!selection && (options?.enabled ?? true);
+  const selectionHash = selection ? hashSelection(selection) : '';
+
+  return useQuery({
+    queryKey: queryKeys.bookings.recurringPreview(selectionHash),
+    queryFn: () => bookingService.getRecurringPreview(selection!),
+    enabled: isEnabled,
+    staleTime: 30 * 1000, // 30 seconds - preview data is relatively stable
+  });
+}
+
+/**
  * Create booking mutation with optimistic updates
  */
 export function useCreateBooking() {
@@ -168,6 +186,24 @@ export function useCreateBooking() {
     onSettled: () => {
       // Refetch to ensure consistency
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Create recurring booking mutation
+ * Creates a series of recurring bookings with configurable conflict handling
+ */
+export function useCreateRecurringBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateRecurringBookingDTO) => bookingService.createRecurringBooking(data),
+    onSettled: () => {
+      // Refetch to ensure consistency
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.recurring() });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
   });

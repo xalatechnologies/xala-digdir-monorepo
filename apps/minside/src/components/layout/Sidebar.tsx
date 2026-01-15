@@ -323,10 +323,14 @@ export function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Dynamic dashboard href based on current context
+  const dashboardHref = accountType === 'organization' ? '/org' : '/';
+
   const navSections: NavSection[] = [
     {
       items: [
-        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: '/', icon: <HomeIcon />, contexts: ['personal', 'organization'] },
+        // Single dashboard item that changes destination based on context
+        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: dashboardHref, icon: <HomeIcon /> },
       ],
     },
     {
@@ -351,7 +355,6 @@ export function Sidebar() {
     {
       title: t('org.organization'),
       items: [
-        { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon />, contexts: ['organization'] },
         { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon />, contexts: ['organization'] },
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon />, contexts: ['organization'] },
         { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon />, contexts: ['organization'] },
