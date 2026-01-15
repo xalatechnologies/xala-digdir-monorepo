@@ -1,10 +1,12 @@
 /**
  * BookingConfirmationStep Component
  * Step 2: Login prompt and booking confirmation
+ * Supports session-safe return-to-flow authentication by capturing booking state before auth redirect
  */
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
+import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
 
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   return (
@@ -13,6 +15,45 @@ function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
   );
+}
+
+/**
+ * Booking state to be captured before authentication redirect
+ * This data is serialized into FlowContext for session-safe return-to-flow
+ */
+export interface BookingFlowState {
+  /** Selected time slots with date and time information */
+  selectedSlots: FlowSelectedSlot[];
+  /** Details for each slot (duration, purpose, attendees, etc.) */
+  slotDetails: Record<string, {
+    duration: number;
+    purpose?: string;
+    attendees?: string;
+    activityType?: string;
+  }>;
+  /** Start of the week being viewed */
+  weekStart: string;
+  /** Selected booking account type */
+  bookingAccountType?: 'private' | 'organization';
+  /** Selected organization ID if booking as organization */
+  selectedOrganizationId?: string;
+}
+
+/**
+ * Options for login with flow context
+ * Contains everything needed to preserve booking state across auth redirect
+ */
+export interface LoginWithFlowContextOptions {
+  /** OAuth provider to use */
+  provider: 'vipps' | 'idporten';
+  /** Booking state to preserve */
+  bookingState: BookingFlowState;
+  /** Listing ID for flow context (passed through from props if available) */
+  listingId?: string;
+  /** Tenant ID for flow context (passed through from props if available) */
+  tenantId?: string;
+  /** Current booking mode for flow context (passed through from props if available) */
+  bookingMode?: FlowBookingMode;
 }
 
 export interface BookingConfirmationStepProps {
@@ -29,8 +70,16 @@ export interface BookingConfirmationStepProps {
     activityType?: string;
   }>;
   weekStart: Date;
+  /** @deprecated Use onLoginWithFlowContext instead for session-safe authentication */
   onLoginWithVipps?: () => void;
+  /** @deprecated Use onLoginWithFlowContext instead for session-safe authentication */
   onLoginAsEmployee?: () => void;
+  /**
+   * Handler for login with flow context preservation
+   * Called when user clicks login button, receives provider and current booking state
+   * If not provided, falls back to onLoginWithVipps/onLoginAsEmployee
+   */
+  onLoginWithFlowContext?: (options: LoginWithFlowContextOptions) => void;
   onConfirmBooking?: () => void;
   onClearError?: () => void;
   /** Selected booking account type */
@@ -45,6 +94,12 @@ export interface BookingConfirmationStepProps {
   organizations?: Array<{ id: string; name: string }>;
   /** Whether account type selection is confirmed */
   isAccountTypeConfirmed?: boolean;
+  /** Listing ID for flow context (required for session-safe return-to-flow) */
+  listingId?: string;
+  /** Tenant ID for flow context (required for session-safe return-to-flow) */
+  tenantId?: string;
+  /** Current booking mode for flow context */
+  bookingMode?: FlowBookingMode;
 }
 
 export function BookingConfirmationStep({
@@ -58,6 +113,7 @@ export function BookingConfirmationStep({
   weekStart,
   onLoginWithVipps,
   onLoginAsEmployee,
+  onLoginWithFlowContext,
   onConfirmBooking: _onConfirmBooking,
   onClearError,
   bookingAccountType,
@@ -66,9 +122,101 @@ export function BookingConfirmationStep({
   onConfirmAccountType,
   organizations = [],
   isAccountTypeConfirmed = false,
+  listingId,
+  tenantId,
+  bookingMode,
 }: BookingConfirmationStepProps): React.ReactElement {
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+
+  /**
+   * Convert internal slot format (Set<string> with "dayIndex-HH:MM" keys) to FlowSelectedSlot[]
+   * This transformation is needed for flow context serialization
+   */
+  const convertSlotsToFlowFormat = React.useCallback((): FlowSelectedSlot[] => {
+    const flowSlots: FlowSelectedSlot[] = [];
+
+    selectedSlots.forEach((slotKey) => {
+      const parts = slotKey.split('-');
+      const dayIdx = parseInt(parts[0] ?? '0', 10);
+      const timeStr = parts[1] ?? '00:00';
+      const details = slotDetails[slotKey] ?? { duration: 60 };
+
+      // Calculate the actual date from weekStart + dayIdx
+      const slotDate = new Date(weekStart);
+      slotDate.setDate(weekStart.getDate() + dayIdx);
+
+      // Calculate end time from start time + duration
+      const [startH, startM] = timeStr.split(':').map(Number);
+      const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
+      const endH = Math.floor(endMins / 60);
+      const endM = endMins % 60;
+      const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+
+      flowSlots.push({
+        date: slotDate.toISOString().split('T')[0] ?? '',
+        startTime: timeStr,
+        endTime,
+      });
+    });
+
+    return flowSlots;
+  }, [selectedSlots, slotDetails, weekStart]);
+
+  /**
+   * Capture current booking state for flow context preservation
+   */
+  const captureBookingState = React.useCallback((): BookingFlowState => {
+    return {
+      selectedSlots: convertSlotsToFlowFormat(),
+      slotDetails: { ...slotDetails },
+      weekStart: weekStart.toISOString(),
+      bookingAccountType,
+      selectedOrganizationId,
+    };
+  }, [convertSlotsToFlowFormat, slotDetails, weekStart, bookingAccountType, selectedOrganizationId]);
+
+  /**
+   * Handle Vipps login with flow context preservation
+   * Captures current booking state before initiating OAuth redirect
+   */
+  const handleLoginWithVipps = React.useCallback(() => {
+    // If flow context handler is available, use it to preserve booking state
+    if (onLoginWithFlowContext) {
+      const bookingState = captureBookingState();
+      onLoginWithFlowContext({
+        provider: 'vipps',
+        bookingState,
+        listingId,
+        tenantId,
+        bookingMode,
+      });
+    } else {
+      // Fall back to deprecated handler for backwards compatibility
+      onLoginWithVipps?.();
+    }
+  }, [onLoginWithFlowContext, captureBookingState, onLoginWithVipps, listingId, tenantId, bookingMode]);
+
+  /**
+   * Handle BankID/Employee login with flow context preservation
+   * Captures current booking state before initiating OAuth redirect
+   */
+  const handleLoginAsEmployee = React.useCallback(() => {
+    // If flow context handler is available, use it to preserve booking state
+    if (onLoginWithFlowContext) {
+      const bookingState = captureBookingState();
+      onLoginWithFlowContext({
+        provider: 'idporten',
+        bookingState,
+        listingId,
+        tenantId,
+        bookingMode,
+      });
+    } else {
+      // Fall back to deprecated handler for backwards compatibility
+      onLoginAsEmployee?.();
+    }
+  }, [onLoginWithFlowContext, captureBookingState, onLoginAsEmployee, listingId, tenantId, bookingMode]);
 
   // Show account selection if authenticated but no account type selected yet
   const showAccountSelection = isAuthenticated && !bookingAccountType;
@@ -111,7 +259,7 @@ export function BookingConfirmationStep({
             variant="primary"
             data-size="lg"
             data-color="accent"
-            onClick={onLoginWithVipps}
+            onClick={handleLoginWithVipps}
             disabled={isLoggingIn}
             style={{
               width: '100%',
@@ -126,7 +274,7 @@ export function BookingConfirmationStep({
             type="button"
             variant="secondary"
             data-size="lg"
-            onClick={onLoginAsEmployee}
+            onClick={handleLoginAsEmployee}
             disabled={isLoggingIn}
             style={{
               width: '100%',

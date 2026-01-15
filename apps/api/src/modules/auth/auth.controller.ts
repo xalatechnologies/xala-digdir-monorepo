@@ -8,11 +8,15 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users, tenants } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
+import { validateReturnToUrl } from '../../core/validation/return-to';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
 }
+
+/** Default redirect URL when returnTo is not provided or invalid */
+const DEFAULT_REDIRECT_URL = '/';
 
 // Mock JWT generation (in production, use proper JWT library)
 function generateMockToken(userId: string, tenantId: string): string {
@@ -24,11 +28,48 @@ function generateMockToken(userId: string, tenantId: string): string {
 export class AuthController {
   /**
    * POST /api/auth/login - Initiate login
+   *
+   * Body params:
+   * - email: User email address
+   * - password: User password (mock implementation)
+   * - returnTo (optional): URL to redirect to after successful auth
    */
   @Post('/login')
   async login(request: AuthRequest, reply: FastifyReply) {
-    const body = request.body as any;
+    const body = request.body as { email?: string; password?: string; returnTo?: string };
     const db = container.resolve<any>('Database');
+    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+
+    // Validate and sanitize returnTo URL (prevents open redirect)
+    let validatedReturnTo: string = DEFAULT_REDIRECT_URL;
+    if (body.returnTo) {
+      const validationResult = validateReturnToUrl(body.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        // Log invalid returnTo attempt for security monitoring
+        getAuditService().log({
+          tenantId: tenantId || 'unknown',
+          userId: 'anonymous',
+          action: 'auth_returnto_validation_failed',
+          resource: 'auth',
+          resourceId: 'login',
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            attemptedUrl: body.returnTo,
+            reason: validationResult.reason,
+          },
+        });
+        // Continue with default redirect instead of blocking
+      }
+    }
+
+    // Validate required fields
+    if (!body.email) {
+      reply.code(400);
+      return { error: { code: 'BAD_REQUEST', message: 'Email is required' } };
+    }
 
     // Find user by email
     const result = await db
@@ -57,7 +98,7 @@ export class AuthController {
       resourceId: user.id,
       ipAddress: request.ip,
       userAgent: request.headers['user-agent'],
-      metadata: { email: user.email, method: 'password' },
+      metadata: { email: user.email, method: 'password', returnTo: validatedReturnTo },
     });
 
     return {
@@ -71,21 +112,74 @@ export class AuthController {
           role: user.role,
           tenantId: user.tenantId,
         },
+        returnTo: validatedReturnTo,
       },
     };
   }
 
   /**
    * POST /api/auth/callback - OAuth callback
+   *
+   * Body params:
+   * - provider: OAuth provider name
+   * - code: Authorization code
+   * - state: State parameter for CSRF protection
+   * - returnTo (optional): URL to redirect to after successful auth
+   *
+   * On success: Returns auth data with validated returnTo URL
    */
   @Post('/callback')
   async callback(request: AuthRequest, reply: FastifyReply) {
     // Mock OAuth callback - in production integrates with BankID/ID-porten
-    const body = request.body as any;
+    const body = request.body as { provider?: string; code?: string; state?: string; returnTo?: string };
+    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+
+    // Validate and sanitize returnTo URL (prevents open redirect)
+    let validatedReturnTo: string = DEFAULT_REDIRECT_URL;
+    if (body.returnTo) {
+      const validationResult = validateReturnToUrl(body.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        // Log invalid returnTo attempt for security monitoring
+        getAuditService().log({
+          tenantId: tenantId || 'unknown',
+          userId: 'anonymous',
+          action: 'auth_returnto_validation_failed',
+          resource: 'auth',
+          resourceId: 'callback',
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            attemptedUrl: body.returnTo,
+            reason: validationResult.reason,
+            provider: body.provider || 'mock',
+          },
+        });
+        // Continue with default redirect instead of blocking
+      }
+    }
+
+    // Audit callback event
+    getAuditService().log({
+      tenantId: tenantId || 'unknown',
+      userId: 'anonymous',
+      action: 'auth_callback',
+      resource: 'auth',
+      resourceId: body.state || 'unknown',
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        provider: body.provider || 'mock',
+        returnTo: validatedReturnTo,
+      },
+    });
+
     return {
       data: {
         message: 'OAuth callback processed',
         provider: body.provider || 'mock',
+        returnTo: validatedReturnTo,
       },
     };
   }
@@ -131,11 +225,40 @@ export class AuthController {
 
   /**
    * POST /api/auth/logout - Logout user
+   *
+   * Body params:
+   * - returnTo (optional): URL to redirect to after logout
    */
   @Post('/logout')
   async logout(request: AuthRequest, reply: FastifyReply) {
+    const body = request.body as { returnTo?: string } | undefined;
     const userId = (request as any).userId || request.headers['x-user-id'];
     const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+
+    // Validate and sanitize returnTo URL (prevents open redirect)
+    let validatedReturnTo: string = DEFAULT_REDIRECT_URL;
+    if (body?.returnTo) {
+      const validationResult = validateReturnToUrl(body.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        // Log invalid returnTo attempt for security monitoring
+        getAuditService().log({
+          tenantId: tenantId || 'unknown',
+          userId: (userId as string) || 'anonymous',
+          action: 'auth_returnto_validation_failed',
+          resource: 'auth',
+          resourceId: 'logout',
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            attemptedUrl: body.returnTo,
+            reason: validationResult.reason,
+          },
+        });
+        // Continue with default redirect instead of blocking
+      }
+    }
 
     if (userId && tenantId) {
       getAuditService().log({
@@ -146,10 +269,11 @@ export class AuthController {
         resourceId: userId as string,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
+        metadata: { returnTo: validatedReturnTo },
       });
     }
 
-    return { data: { success: true, message: 'Logged out successfully' } };
+    return { data: { success: true, message: 'Logged out successfully', returnTo: validatedReturnTo } };
   }
 
   /**

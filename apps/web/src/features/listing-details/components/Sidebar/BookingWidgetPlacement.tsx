@@ -7,33 +7,16 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
-import {
-  bookingService,
-  auditService,
-  type CreateBookingDTO,
-  type BookingSelectionDTO,
-  type RecurringBookingResultProjectionDTO,
-  type CreateRecurringBookingDTO,
-  useOrganizations,
-  useRecurringPreview,
-  useCreateRecurringBooking,
-  type RealtimeEvent,
-} from '@digilist/client-sdk';
+import { bookingService, auditService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { useAuth } from '../../../../hooks/useAuth';
-import { useRealtimeUpdates } from '../../adapters/realtimeClient';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
 import { BookingPricingStep, type PriceGroup, type AdditionalService } from './components/BookingPricingStep';
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
-import { BookingModeSelector, type BookingModeOption } from '../BookingModeSelector';
-import { RecurringPatternBuilder, type RecurringPatternData, DEFAULT_RECURRING_PATTERN } from '../RecurringPatternBuilder';
-import { RecurringPreviewTable } from '../RecurringPreviewTable';
-import { RecurringResultSummary } from '../RecurringResultSummary';
-import type { BookingMode } from '../../types';
 
 // =============================================================================
 // Icons
@@ -60,25 +43,6 @@ function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-  );
-}
-
-function WarningTriangleIcon({ size = 20 }: { size?: number }): React.ReactElement {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
-}
-
-function XIcon({ size = 16 }: { size?: number }): React.ReactElement {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
@@ -123,12 +87,6 @@ export interface BookingWidgetPlacementProps {
   listingTitle?: string;
   openingHours?: Record<number, OpeningHours>;
   busySlots?: Array<{ date: string; startTime: string; endTime: string }>;
-  /** Available booking modes for this listing */
-  bookingModes?: BookingModeOption[];
-  /** Currently selected booking mode */
-  selectedBookingMode?: BookingMode;
-  /** Callback when booking mode changes */
-  onBookingModeChange?: (mode: BookingMode) => void;
 }
 
 // =============================================================================
@@ -138,20 +96,6 @@ export interface BookingWidgetPlacementProps {
 const BOOKING_STEPS: BookingStep[] = [
   { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
   { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
-  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
-  { id: 'done', label: 'Sendt', icon: 'success' },
-];
-
-/**
- * Booking steps for RECURRING mode flow:
- * 1. Pattern builder - Define recurring pattern (frequency, weekdays, time, end condition)
- * 2. Preview - Review occurrences with availability status
- * 3. Confirm - Login and confirm booking
- * 4. Done - Show result summary
- */
-const RECURRING_BOOKING_STEPS: BookingStep[] = [
-  { id: 'pattern', label: 'Mønster', icon: 'calendar' },
-  { id: 'preview', label: 'Forhåndsvisning', icon: 'pricing' },
   { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
   { id: 'done', label: 'Sendt', icon: 'success' },
 ];
@@ -176,12 +120,6 @@ const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
   5: { open: '08:00', close: '21:00' },
   6: { open: '10:00', close: '18:00' },
 };
-
-const DEFAULT_BOOKING_MODES: BookingModeOption[] = [
-  { mode: 'SINGLE_SLOT', enabled: true, label: 'Enkeltbooking', description: 'Book ett tidspunkt' },
-  { mode: 'IN_GAME', enabled: false, label: 'Hurtigbooking', description: 'Rask booking med kort varsel' },
-  { mode: 'RECURRING', enabled: false, label: 'Gjentakende', description: 'Ukentlig eller månedlig mønster' },
-];
 
 // =============================================================================
 // Helper Functions
@@ -266,9 +204,6 @@ export function BookingWidgetPlacement({
   listingTitle,
   openingHours = DEFAULT_OPENING_HOURS,
   busySlots = [],
-  bookingModes = DEFAULT_BOOKING_MODES,
-  selectedBookingMode,
-  onBookingModeChange,
 }: BookingWidgetPlacementProps): React.ReactElement {
   const [isMobile, setIsMobile] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -283,8 +218,8 @@ export function BookingWidgetPlacement({
   const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
   
-  // Use real authentication state
-  const { isAuthenticated: authIsAuthenticated, user, login: authLogin } = useAuth();
+  // Use real authentication state with flow context support
+  const { isAuthenticated: authIsAuthenticated, user, login: authLogin, loginWithFlowContext } = useAuth();
   const isAuthenticated = authIsAuthenticated;
   
   // Fetch user's organizations when authenticated
@@ -332,246 +267,15 @@ export function BookingWidgetPlacement({
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
   const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
 
-  // Stable reference for busySlots to prevent infinite re-renders
-  // (busySlots prop may be a new array reference on each render)
-  const busySlotsKey = React.useMemo(
-    () => JSON.stringify(busySlots),
-    [busySlots]
-  );
-
-  // Update lastUpdated when busySlots content actually changes (real-time updates)
+  // Update lastUpdated when busySlots change (real-time updates)
   React.useEffect(() => {
     setLastUpdated(new Date());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [busySlotsKey]);
+  }, [busySlots]);
 
   // Update lastUpdated when week changes
   React.useEffect(() => {
     setLastUpdated(new Date());
   }, [weekStart]);
-
-  // ==========================================================================
-  // Selection Invalidation State (WebSocket availability changes)
-  // ==========================================================================
-
-  /** Keys of slots that were selected but became unavailable via WebSocket */
-  const [invalidatedSlots, setInvalidatedSlots] = React.useState<Set<string>>(new Set());
-
-  /** Whether the invalidation banner is dismissed */
-  const [invalidationBannerDismissed, setInvalidationBannerDismissed] = React.useState(false);
-
-  // ==========================================================================
-  // Recurring Booking Flow State
-  // ==========================================================================
-
-  /** Current recurring pattern configuration */
-  const [recurringPattern, setRecurringPattern] = React.useState<RecurringPatternData>(DEFAULT_RECURRING_PATTERN);
-
-  /** Selected occurrence indices for partial creation */
-  const [selectedOccurrenceIndices, setSelectedOccurrenceIndices] = React.useState<number[]>([]);
-
-  /** Whether to use partial creation (only selected occurrences) */
-  const [usePartialCreation, setUsePartialCreation] = React.useState(false);
-
-  /** Result from recurring booking creation */
-  const [recurringResult, setRecurringResult] = React.useState<RecurringBookingResultProjectionDTO | null>(null);
-
-  /** Error state specific to recurring booking */
-  const [recurringError, setRecurringError] = React.useState<string | null>(null);
-
-  // Booking mode state - use controlled or uncontrolled mode
-  const enabledModes = bookingModes.filter(m => m.enabled);
-  const defaultMode = enabledModes[0]?.mode ?? 'SINGLE_SLOT';
-  const [internalBookingMode, setInternalBookingMode] = React.useState<BookingMode>(defaultMode);
-
-  // Use controlled mode if props are provided, otherwise use internal state
-  const currentBookingMode = selectedBookingMode ?? internalBookingMode;
-
-  const handleBookingModeChange = (mode: BookingMode): void => {
-    if (onBookingModeChange) {
-      onBookingModeChange(mode);
-    } else {
-      setInternalBookingMode(mode);
-    }
-    // Reset step when mode changes
-    setCurrentStep(0);
-    // Reset recurring state when mode changes
-    setRecurringPattern(DEFAULT_RECURRING_PATTERN);
-    setSelectedOccurrenceIndices([]);
-    setUsePartialCreation(false);
-    setRecurringResult(null);
-    setRecurringError(null);
-  };
-
-  // ==========================================================================
-  // Recurring Booking Hooks
-  // ==========================================================================
-
-  /** Build recurring selection from pattern for preview API */
-  const recurringSelection = React.useMemo((): BookingSelectionDTO | null => {
-    if (currentBookingMode !== 'RECURRING' || !listingId) return null;
-
-    // Calculate start date (today or tomorrow if past opening hours)
-    const now = new Date();
-    const startDate = new Date(now);
-    startDate.setHours(0, 0, 0, 0);
-
-    // Find the next occurrence of the first selected weekday
-    const targetWeekday = recurringPattern.weekdays[0] ?? 1;
-    const currentWeekday = startDate.getDay();
-    const isoCurrentWeekday = currentWeekday === 0 ? 7 : currentWeekday;
-    let daysUntilTarget = targetWeekday - isoCurrentWeekday;
-    if (daysUntilTarget <= 0) daysUntilTarget += 7;
-    startDate.setDate(startDate.getDate() + daysUntilTarget);
-
-    // Set time on the date
-    const [startHour, startMinute] = recurringPattern.startTime.split(':').map(Number);
-    const [endHour, endMinute] = recurringPattern.endTime.split(':').map(Number);
-    startDate.setHours(startHour ?? 9, startMinute ?? 0, 0, 0);
-
-    const endDate = new Date(startDate);
-    endDate.setHours(endHour ?? 10, endMinute ?? 0, 0, 0);
-
-    return {
-      listingId,
-      mode: 'RECURRING',
-      startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
-      frequency: recurringPattern.frequency,
-      weekdays: recurringPattern.weekdays,
-      endCondition: recurringPattern.endCondition,
-      userId: undefined,
-      organizationId: selectedOrganizationId,
-    };
-  }, [currentBookingMode, listingId, recurringPattern, selectedOrganizationId]);
-
-  /** Recurring preview query - only fetch when on preview step */
-  const {
-    data: recurringPreviewData,
-    isLoading: isLoadingPreview,
-    error: previewError,
-    refetch: refetchPreview,
-  } = useRecurringPreview(listingId ?? '', recurringSelection, {
-    enabled: currentBookingMode === 'RECURRING' && currentStep >= 1 && !!recurringSelection,
-  });
-
-  /** Recurring booking creation mutation */
-  const createRecurringMutation = useCreateRecurringBooking();
-
-  /** Get the current step configuration based on mode */
-  const currentSteps = currentBookingMode === 'RECURRING' ? RECURRING_BOOKING_STEPS : BOOKING_STEPS;
-
-  // ==========================================================================
-  // WebSocket Availability Change Handler
-  // ==========================================================================
-
-  /**
-   * Handle real-time availability updates from WebSocket.
-   * Checks if any selected slots are affected by availability changes.
-   */
-  const handleRealtimeUpdate = React.useCallback(
-    (event: RealtimeEvent) => {
-      // Only handle availability-related events
-      const availabilityEventTypes = [
-        'booking.created',
-        'booking.cancelled',
-        'availability.changed',
-        'block.created',
-        'block.removed',
-        'reservation.created',
-        'reservation.expired',
-      ];
-
-      if (!availabilityEventTypes.includes(event.type)) {
-        return;
-      }
-
-      // Extract affected slot information from event data
-      const eventData = event.data as {
-        listingId?: string;
-        date?: string;
-        startTime?: string;
-        endTime?: string;
-        slots?: Array<{ date: string; startTime: string; endTime: string }>;
-      } | null;
-
-      if (!eventData) return;
-
-      // Check if this event affects the current listing
-      if (eventData.listingId && eventData.listingId !== listingId) {
-        return;
-      }
-
-      // Collect newly busy slots from the event
-      const newBusySlots: Array<{ date: string; startTime: string; endTime: string }> = [];
-
-      if (eventData.slots) {
-        newBusySlots.push(...eventData.slots);
-      } else if (eventData.date && eventData.startTime && eventData.endTime) {
-        newBusySlots.push({
-          date: eventData.date,
-          startTime: eventData.startTime,
-          endTime: eventData.endTime,
-        });
-      }
-
-      // Check if any selected slots are now in conflict
-      const newInvalidated = new Set<string>();
-
-      selectedSlots.forEach(slotKey => {
-        const [dayIdxStr, timeStr] = slotKey.split('-');
-        const dayIdx = parseInt(dayIdxStr ?? '0', 10);
-        const details = slotDetails[slotKey] ?? { duration: 60 };
-
-        const slotDate = new Date(weekStart);
-        slotDate.setDate(weekStart.getDate() + dayIdx);
-        const dateStr = slotDate.toISOString().split('T')[0] ?? '';
-
-        const [startH, startM] = (timeStr ?? '00:00').split(':').map(Number);
-        const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
-        const endH = Math.floor(endMins / 60);
-        const endM = endMins % 60;
-        const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
-
-        // Check if this slot conflicts with any newly busy slot
-        const isConflicting = newBusySlots.some(busy => {
-          if (busy.date !== dateStr) return false;
-          // Check for time overlap
-          return (timeStr ?? '') < busy.endTime && endTime > busy.startTime;
-        });
-
-        if (isConflicting) {
-          newInvalidated.add(slotKey);
-        }
-      });
-
-      if (newInvalidated.size > 0) {
-        setInvalidatedSlots(prev => {
-          const next = new Set(prev);
-          newInvalidated.forEach(key => next.add(key));
-          return next;
-        });
-        setInvalidationBannerDismissed(false);
-      }
-    },
-    [listingId, selectedSlots, slotDetails, weekStart]
-  );
-
-  // Subscribe to realtime updates for this listing
-  useRealtimeUpdates(listingId ?? '', handleRealtimeUpdate);
-
-  // Clear invalidated slots when selections change
-  React.useEffect(() => {
-    setInvalidatedSlots(prev => {
-      const next = new Set<string>();
-      prev.forEach(key => {
-        if (selectedSlots.has(key)) {
-          next.add(key);
-        }
-      });
-      return next;
-    });
-  }, [selectedSlots]);
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -715,6 +419,56 @@ export function BookingWidgetPlacement({
     }
   };
 
+  /**
+   * Handle login with full flow context preservation
+   * Called from BookingConfirmationStep when user needs to authenticate
+   * Saves complete booking state before OAuth redirect
+   */
+  const handleLoginWithFlowContext = (options: {
+    provider: 'idporten' | 'microsoft' | 'vipps';
+    bookingState: {
+      selectedSlots: Array<{ date: string; startTime: string; endTime: string }>;
+      slotDetails: Record<string, { duration: number; purpose?: string; attendees?: string; activityType?: string }>;
+      weekStart: string;
+      bookingAccountType?: 'private' | 'organization';
+      selectedOrganizationId?: string;
+    };
+    listingId?: string;
+    tenantId?: string;
+    bookingMode?: string;
+  }): void => {
+    setIsLoggingIn(true);
+    try {
+      // Get tenant ID from environment or props
+      const tenantId = options.tenantId || import.meta.env.VITE_TENANT_ID || 'default';
+
+      // Map booking mode to SDK type
+      const bookingMode = (options.bookingMode || bookingConfig?.mode || 'SLOTS') as 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE';
+
+      // Convert booking state to flow context format
+      loginWithFlowContext({
+        provider: options.provider,
+        tenantId,
+        listingId: options.listingId || listingId,
+        bookingMode,
+        selectedSlots: options.bookingState.selectedSlots,
+        formData: {
+          slotDetails: options.bookingState.slotDetails,
+          weekStart: options.bookingState.weekStart,
+          bookingAccountType: options.bookingState.bookingAccountType,
+          selectedOrganizationId: options.bookingState.selectedOrganizationId,
+        },
+      });
+      // Navigation will happen in loginWithFlowContext via OAuth redirect
+    } catch (error) {
+      auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), {
+        provider: options.provider,
+        flowContextEnabled: true,
+      });
+      setIsLoggingIn(false);
+    }
+  };
+
   const handleSubmitBooking = async (): Promise<void> => {
     if (!listingId) {
       setBookingError('Mangler listing ID');
@@ -762,61 +516,6 @@ export function BookingWidgetPlacement({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  /**
-   * Submit recurring booking with conflict handling policy.
-   * Creates all or selected occurrences based on usePartialCreation flag.
-   */
-  const handleSubmitRecurringBooking = async (): Promise<void> => {
-    if (!listingId || !recurringSelection) {
-      setRecurringError('Mangler booking-informasjon');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setRecurringError(null);
-
-    try {
-      const createDto: CreateRecurringBookingDTO = {
-        ...recurringSelection,
-        policy: {
-          stopOnConflict: !usePartialCreation,
-          allowPartial: usePartialCreation,
-        },
-        selectedOccurrences: usePartialCreation && selectedOccurrenceIndices.length > 0
-          ? selectedOccurrenceIndices
-          : undefined,
-      };
-
-      const result = await createRecurringMutation.mutateAsync(createDto);
-
-      // Store result for display
-      if (result.data) {
-        setRecurringResult(result.data);
-      }
-
-      // Move to done step
-      setCurrentStep(3);
-    } catch (error) {
-      setRecurringError(
-        error instanceof Error ? error.message : 'En feil oppstod ved opprettelse av gjentakende booking'
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  /**
-   * Reset the booking flow to start fresh.
-   */
-  const handleResetRecurringFlow = (): void => {
-    setCurrentStep(0);
-    setRecurringPattern(DEFAULT_RECURRING_PATTERN);
-    setSelectedOccurrenceIndices([]);
-    setUsePartialCreation(false);
-    setRecurringResult(null);
-    setRecurringError(null);
   };
 
   const navigateWeek = (direction: 'prev' | 'next'): void => {
@@ -908,40 +607,6 @@ export function BookingWidgetPlacement({
     // Stay on calendar step to allow user to change selections
   };
 
-  // ==========================================================================
-  // Selection Invalidation Banner Handlers
-  // ==========================================================================
-
-  /**
-   * Dismiss the invalidation banner without removing the invalidated slots.
-   * User can still see the slots are invalid but continues with selection.
-   */
-  const handleDismissInvalidationBanner = (): void => {
-    setInvalidationBannerDismissed(true);
-  };
-
-  /**
-   * Remove all invalidated slots from the selection.
-   * This clears the warning and keeps only valid selections.
-   */
-  const handleRemoveInvalidatedSlots = (): void => {
-    setSelectedSlots(prev => {
-      const next = new Set(prev);
-      invalidatedSlots.forEach(key => next.delete(key));
-      return next;
-    });
-    setSlotDetails(prev => {
-      const next = { ...prev };
-      invalidatedSlots.forEach(key => delete next[key]);
-      return next;
-    });
-    setInvalidatedSlots(new Set());
-    setInvalidationBannerDismissed(false);
-  };
-
-  /** Check if we should show the invalidation banner */
-  const showInvalidationBanner = invalidatedSlots.size > 0 && !invalidationBannerDismissed && currentStep === 0;
-
   return (
     <div
       className={className}
@@ -954,121 +619,11 @@ export function BookingWidgetPlacement({
     >
       {/* Header */}
       <BookingStepperHeader
-        steps={currentSteps}
+        steps={BOOKING_STEPS}
         currentStep={currentStep}
         listingTitle={listingTitle}
         isMobile={isMobile}
       />
-
-      {/* Booking Mode Selector - Only show on calendar step when multiple modes enabled */}
-      {currentStep === 0 && enabledModes.length > 1 && (
-        <div
-          style={{
-            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-            borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-            backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-          }}
-        >
-          <BookingModeSelector
-            modes={bookingModes}
-            selectedMode={currentBookingMode}
-            onModeChange={handleBookingModeChange}
-            size="sm"
-            variant="compact"
-          />
-        </div>
-      )}
-
-      {/* Selection Invalidation Banner - Shows when WebSocket updates invalidate selected slots */}
-      {showInvalidationBanner && (
-        <div
-          style={{
-            margin: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-            padding: 'var(--ds-spacing-3)',
-            backgroundColor: 'var(--ds-color-warning-surface-default)',
-            borderRadius: 'var(--ds-border-radius-md)',
-            border: '1px solid var(--ds-color-warning-border-default)',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 'var(--ds-spacing-2)',
-            }}
-          >
-            <div style={{ color: 'var(--ds-color-warning-text-default)', flexShrink: 0, marginTop: '2px' }}>
-              <WarningTriangleIcon size={20} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <Paragraph
-                data-size="sm"
-                style={{
-                  margin: 0,
-                  fontWeight: 'var(--ds-font-weight-medium)',
-                  color: 'var(--ds-color-warning-text-default)',
-                }}
-              >
-                {invalidatedSlots.size === 1
-                  ? 'Et valgt tidspunkt er ikke lenger tilgjengelig'
-                  : `${invalidatedSlots.size} valgte tidspunkter er ikke lenger tilgjengelige`}
-              </Paragraph>
-              <Paragraph
-                data-size="xs"
-                style={{
-                  margin: 0,
-                  marginTop: 'var(--ds-spacing-1)',
-                  color: 'var(--ds-color-warning-text-default)',
-                  opacity: 0.9,
-                }}
-              >
-                Noen andre har booket disse tidspunktene. Fjern de ugyldige valgene eller velg nye tidspunkter.
-              </Paragraph>
-            </div>
-            <button
-              type="button"
-              onClick={handleDismissInvalidationBanner}
-              aria-label="Lukk varsel"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '24px',
-                height: '24px',
-                border: 'none',
-                backgroundColor: 'transparent',
-                cursor: 'pointer',
-                borderRadius: 'var(--ds-border-radius-sm)',
-                color: 'var(--ds-color-warning-text-default)',
-                opacity: 0.8,
-                flexShrink: 0,
-              }}
-            >
-              <XIcon size={16} />
-            </button>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--ds-spacing-2)',
-              marginTop: 'var(--ds-spacing-3)',
-              paddingLeft: 'calc(20px + var(--ds-spacing-2))',
-            }}
-          >
-            <Button
-              type="button"
-              variant="secondary"
-              data-size="sm"
-              onClick={handleRemoveInvalidatedSlots}
-              style={{
-                backgroundColor: 'var(--ds-color-neutral-background-default)',
-              }}
-            >
-              Fjern ugyldige ({invalidatedSlots.size})
-            </Button>
-          </div>
-        </div>
-      )}
 
       {/* Main Content */}
       <div
@@ -1088,19 +643,8 @@ export function BookingWidgetPlacement({
             overflow: 'auto',
           }}
         >
-          {/* Step 0: Pattern Builder for RECURRING mode */}
-          {currentStep === 0 && currentBookingMode === 'RECURRING' && (
-            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
-              <RecurringPatternBuilder
-                value={recurringPattern}
-                onChange={setRecurringPattern}
-                size="md"
-              />
-            </div>
-          )}
-
-          {/* Step 0: Calendar Selection for SINGLE_SLOT mode */}
-          {currentStep === 0 && currentBookingMode !== 'RECURRING' && (
+          {/* Step 0: Calendar Selection */}
+          {currentStep === 0 && (
             <>
               {/* Calendar Header */}
               <div
@@ -1338,116 +882,8 @@ export function BookingWidgetPlacement({
             </>
           )}
 
-          {/* Step 1: Preview for RECURRING mode */}
-          {currentStep === 1 && currentBookingMode === 'RECURRING' && (
-            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
-              {isLoadingPreview ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 'var(--ds-spacing-8)',
-                    gap: 'var(--ds-spacing-3)',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      border: '3px solid var(--ds-color-neutral-border-subtle)',
-                      borderTopColor: 'var(--ds-color-accent-base-default)',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite',
-                    }}
-                  />
-                  <Paragraph
-                    data-size="sm"
-                    style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
-                  >
-                    Henter tilgjengelighet...
-                  </Paragraph>
-                  <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                </div>
-              ) : previewError ? (
-                <div
-                  style={{
-                    padding: 'var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-danger-surface-default)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    border: '1px solid var(--ds-color-danger-border-default)',
-                  }}
-                >
-                  <Paragraph
-                    data-size="sm"
-                    style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}
-                  >
-                    Kunne ikke hente forhåndsvisning. Vennligst prøv igjen.
-                  </Paragraph>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    data-size="sm"
-                    onClick={() => refetchPreview()}
-                    style={{ marginTop: 'var(--ds-spacing-3)' }}
-                  >
-                    Prøv igjen
-                  </Button>
-                </div>
-              ) : recurringPreviewData?.data ? (
-                <>
-                  <RecurringPreviewTable
-                    occurrences={recurringPreviewData.data.occurrences}
-                    summary={recurringPreviewData.data.summary}
-                    selectable={recurringPreviewData.data.summary.conflictCount > 0}
-                    selectedIndices={selectedOccurrenceIndices}
-                    onSelectionChange={(indices) => {
-                      setSelectedOccurrenceIndices(indices);
-                      setUsePartialCreation(indices.length > 0 && indices.length < recurringPreviewData.data!.summary.availableCount);
-                    }}
-                    showSummary={true}
-                    size="md"
-                  />
-
-                  {/* Error message */}
-                  {recurringError && (
-                    <div
-                      style={{
-                        marginTop: 'var(--ds-spacing-3)',
-                        padding: 'var(--ds-spacing-3)',
-                        backgroundColor: 'var(--ds-color-danger-surface-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        border: '1px solid var(--ds-color-danger-border-default)',
-                      }}
-                    >
-                      <Paragraph
-                        data-size="sm"
-                        style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}
-                      >
-                        {recurringError}
-                      </Paragraph>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div
-                  style={{
-                    padding: 'var(--ds-spacing-6)',
-                    textAlign: 'center',
-                    color: 'var(--ds-color-neutral-text-subtle)',
-                  }}
-                >
-                  <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    Ingen forhåndsvisning tilgjengelig
-                  </Paragraph>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Step 1: Pricing for SINGLE_SLOT mode */}
-          {currentStep === 1 && currentBookingMode !== 'RECURRING' && (
+          {/* Step 1: Pricing */}
+          {currentStep === 1 && (
             <BookingPricingStep
               priceGroups={priceGroups}
               additionalServices={additionalServices}
@@ -1467,48 +903,30 @@ export function BookingWidgetPlacement({
               isAuthenticated={isAuthenticated}
               isLoggingIn={isLoggingIn}
               isSubmitting={isSubmitting}
-              bookingError={currentBookingMode === 'RECURRING' ? recurringError : bookingError}
+              bookingError={bookingError}
               isMobile={isMobile}
               selectedSlots={selectedSlots}
               slotDetails={slotDetails}
               weekStart={weekStart}
               onLoginWithVipps={handleLoginVipps}
               onLoginAsEmployee={handleLoginEmployee}
-              onConfirmBooking={
-                currentBookingMode === 'RECURRING'
-                  ? handleSubmitRecurringBooking
-                  : handleSubmitBooking
-              }
-              onClearError={() => {
-                if (currentBookingMode === 'RECURRING') {
-                  setRecurringError(null);
-                } else {
-                  setBookingError(null);
-                }
-              }}
+              onLoginWithFlowContext={handleLoginWithFlowContext}
+              onConfirmBooking={handleSubmitBooking}
+              onClearError={() => setBookingError(null)}
               bookingAccountType={bookingAccountType}
               selectedOrganizationId={selectedOrganizationId}
               onAccountTypeSelect={handleAccountTypeSelect}
               onConfirmAccountType={handleConfirmAccountType}
               organizations={organizations}
               isAccountTypeConfirmed={isAccountTypeConfirmed}
+              listingId={listingId}
+              tenantId={import.meta.env.VITE_TENANT_ID}
+              bookingMode={bookingConfig?.mode || 'SLOTS'}
             />
           )}
 
-          {/* Step 3: Success for RECURRING mode */}
-          {currentStep === 3 && currentBookingMode === 'RECURRING' && recurringResult && (
-            <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
-              <RecurringResultSummary
-                result={recurringResult}
-                onNewBooking={handleResetRecurringFlow}
-                showDetails={true}
-                size="md"
-              />
-            </div>
-          )}
-
-          {/* Step 3: Success for SINGLE_SLOT mode */}
-          {currentStep === 3 && currentBookingMode !== 'RECURRING' && (
+          {/* Step 3: Success */}
+          {currentStep === 3 && (
             <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
               <div
                 style={{
@@ -1534,8 +952,8 @@ export function BookingWidgetPlacement({
           )}
         </div>
 
-        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step and for RECURRING mode */}
-        {!isMobile && currentStep < 3 && currentStep !== 2 && currentBookingMode !== 'RECURRING' && (
+        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step */}
+        {!isMobile && currentStep < 3 && currentStep !== 2 && (
           <div
             style={{
               flex: '0 0 45%',
@@ -1585,59 +1003,7 @@ export function BookingWidgetPlacement({
             Tilbake
           </Button>
         )}
-
-        {/* RECURRING mode action buttons */}
-        {currentBookingMode === 'RECURRING' && currentStep < 3 && (
-          <Button
-            type="button"
-            variant="primary"
-            data-size="lg"
-            data-color="accent"
-            onClick={() => {
-              if (currentStep === 0) {
-                // Proceed to preview
-                setCurrentStep(1);
-              } else if (currentStep === 1) {
-                // Proceed to confirmation
-                setCurrentStep(2);
-              } else if (currentStep === 2 && isAuthenticated && isAccountTypeConfirmed) {
-                // Submit recurring booking
-                handleSubmitRecurringBooking();
-              }
-            }}
-            disabled={
-              !isBookable ||
-              (currentStep === 0 && recurringPattern.weekdays.length === 0) ||
-              (currentStep === 1 && (!recurringPreviewData?.data || recurringPreviewData.data.summary.availableCount === 0 || isLoadingPreview)) ||
-              (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
-              isSubmitting
-            }
-            style={{ flex: 1 }}
-          >
-            {isSubmitting
-              ? 'Oppretter bookinger...'
-              : currentStep === 0
-                ? recurringPattern.weekdays.length > 0
-                  ? 'Se forhåndsvisning'
-                  : 'Velg minst én dag'
-                : currentStep === 1
-                  ? recurringPreviewData?.data
-                    ? `Fortsett med ${recurringPreviewData.data.summary.availableCount} tidspunkt${recurringPreviewData.data.summary.availableCount > 1 ? 'er' : ''}`
-                    : 'Laster...'
-                  : currentStep === 2
-                    ? isAuthenticated && isAccountTypeConfirmed
-                      ? 'Opprett gjentakende booking'
-                      : isAuthenticated && bookingAccountType
-                        ? 'Bekreft bookingtype'
-                        : isAuthenticated
-                          ? 'Velg bookingtype'
-                          : 'Logg inn for å fortsette'
-                    : 'Ferdig'}
-          </Button>
-        )}
-
-        {/* SINGLE_SLOT mode action buttons */}
-        {currentBookingMode !== 'RECURRING' && currentStep < 3 && (
+        {currentStep < 3 && (
           <Button
             type="button"
             variant="primary"
@@ -1681,9 +1047,7 @@ export function BookingWidgetPlacement({
                     : 'Ferdig'}
           </Button>
         )}
-
-        {/* Done step button for SINGLE_SLOT mode */}
-        {currentStep === 3 && currentBookingMode !== 'RECURRING' && (
+        {currentStep === 3 && (
           <Button
             type="button"
             variant="primary"

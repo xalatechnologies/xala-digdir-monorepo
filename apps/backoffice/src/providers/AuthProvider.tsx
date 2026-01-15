@@ -1,6 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole } from '../hooks/useAuth';
+import {
+  authService,
+  FLOW_CONTEXT_KEY,
+  hasStoredFlowContext as checkStoredFlowContext,
+  clearFlowContextFromStorage,
+  getFlowContextTTL,
+} from '@digilist/client-sdk';
+import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
 
 // =============================================================================
 // Local Storage Keys
@@ -64,6 +71,55 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
 // Simulated login - will be replaced with real OAuth when API is ready
 const USE_MOCK_AUTH = true;
 
+// =============================================================================
+// Storage Event Subscription (for cross-tab sync of flow context)
+// =============================================================================
+
+/** Subscribers for storage changes */
+const subscribers = new Set<() => void>();
+
+/** Subscribe to storage changes */
+function subscribe(callback: () => void): () => void {
+  subscribers.add(callback);
+
+  // Listen for storage events from other tabs
+  const handleStorageChange = (event: StorageEvent) => {
+    if (event.key === FLOW_CONTEXT_KEY || event.key === null) {
+      callback();
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', handleStorageChange);
+  }
+
+  return () => {
+    subscribers.delete(callback);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('storage', handleStorageChange);
+    }
+  };
+}
+
+/** Get current snapshot of whether context exists */
+function getSnapshot(): boolean {
+  return checkStoredFlowContext();
+}
+
+/** Server snapshot (always false since no sessionStorage) */
+function getServerSnapshot(): boolean {
+  return false;
+}
+
+/** Notify all subscribers of changes */
+function notifySubscribers(): void {
+  subscribers.forEach((callback) => callback());
+}
+
+// =============================================================================
+// Provider Component
+// =============================================================================
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
@@ -72,6 +128,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Subscribe to storage changes for cross-tab synchronization of flow context
+  const hasStoredContext = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
 
   // Check for existing session on mount
   useEffect(() => {
@@ -176,6 +239,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [user]
   );
 
+  /**
+   * Restore flow context after authentication
+   * Uses authService.resumeFlow internally
+   */
+  const restoreFlowContext = useCallback((clearAfterLoad: boolean = true): RestoreFlowContextResult => {
+    const result = authService.resumeFlow(clearAfterLoad);
+
+    // If we cleared context, notify subscribers
+    if (clearAfterLoad && result.hasContext) {
+      notifySubscribers();
+    }
+
+    // Calculate TTL if we have context
+    const ttl = result.flowContext
+      ? getFlowContextTTL(result.flowContext)
+      : undefined;
+
+    return {
+      hasContext: result.hasContext,
+      flowContext: result.flowContext,
+      ttl,
+      wasExpired: result.wasExpired,
+      wasInvalid: result.wasInvalid,
+    };
+  }, []);
+
+  /**
+   * Clear any stored flow context
+   * Call this after flow completion or on explicit logout
+   */
+  const clearFlowContext = useCallback((): void => {
+    clearFlowContextFromStorage();
+    notifySubscribers();
+  }, []);
+
   const value = useMemo<AuthContextType>(
     () => ({
       user,
@@ -187,8 +285,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       login,
       logout,
       checkRole,
+      hasStoredContext,
+      restoreFlowContext,
+      clearFlowContext,
     }),
-    [user, isLoading, login, logout, checkRole]
+    [user, isLoading, login, logout, checkRole, hasStoredContext, restoreFlowContext, clearFlowContext]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

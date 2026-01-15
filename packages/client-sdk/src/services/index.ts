@@ -9,6 +9,12 @@ export { BaseService } from './base.service';
 
 // Auth
 export { AuthService, authService } from './auth.service';
+export type {
+  RequireAuthOptions,
+  RequireAuthResult,
+  InitiateAuthWithContextOptions,
+  ResumeFlowResult,
+} from './auth.service';
 
 // Listings
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
