@@ -15,26 +15,42 @@ import { RentalObjectWizard } from '../../components/wizard/RentalObjectWizard';
 import { RentalObjectDetailView } from '../../components/detail/RentalObjectDetailView';
 
 // Mock all dependencies
-vi.mock('@digilist/client-sdk', () => ({
-  useRentalObjects: vi.fn(() => ({
-    data: { data: [] },
-    isLoading: false,
-  })),
-  useRentalObjectBySlug: vi.fn(() => ({
-    data: { data: { id: '1', name: 'Test', slug: 'test' } },
-    isLoading: false,
-  })),
-  useRentalObject: vi.fn(() => ({
-    data: undefined,
-    isLoading: false,
-  })),
-  useCreateRentalObject: vi.fn(() => ({
-    mutateAsync: vi.fn().mockResolvedValue({ data: { id: 'new-id' } }),
-  })),
-  useUpdateRentalObject: vi.fn(() => ({
-    mutateAsync: vi.fn().mockResolvedValue({ data: { id: 'updated-id' } }),
-  })),
-}));
+vi.mock('@digilist/client-sdk', async () => {
+  const actual = await vi.importActual('@digilist/client-sdk');
+  return {
+    ...actual,
+    useRentalObjects: vi.fn(() => ({
+      data: { data: [] },
+      isLoading: false,
+    })),
+    useRentalObjectBySlug: vi.fn(() => ({
+      data: { data: { id: '1', name: 'Test', slug: 'test' } },
+      isLoading: false,
+    })),
+    useRentalObject: vi.fn(() => ({
+      data: undefined,
+      isLoading: false,
+    })),
+    useCreateRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({ data: { id: 'new-id' } }),
+    })),
+    useUpdateRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({ data: { id: 'updated-id' } }),
+    })),
+    usePublishRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    })),
+    useArchiveRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    })),
+    useDeleteRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    })),
+    useDuplicateRentalObject: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    })),
+  };
+});
 
 vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => key,
@@ -44,6 +60,8 @@ const mockUseListingPermissions = vi.fn(() => ({
   canCreateListing: () => true,
   canEditListing: () => true,
   canPublishListing: () => true,
+  canArchiveListing: () => true,
+  canDeleteListing: () => true,
   permissions: {
     canCreate: true,
     canEdit: true,
@@ -216,8 +234,8 @@ describe('Real-World Scenarios', () => {
   describe('Scenario 6: Network Failure Recovery', () => {
     it('should handle network errors gracefully', async () => {
       // Mock network error for this test
-      const sdk = await import('@digilist/client-sdk');
-      vi.mocked(sdk.useRentalObjects).mockReturnValueOnce({
+      const { useRentalObjects } = await import('@digilist/client-sdk');
+      vi.mocked(useRentalObjects).mockReturnValueOnce({
         data: undefined,
         isLoading: false,
         error: { message: 'Network error', status: 500 },

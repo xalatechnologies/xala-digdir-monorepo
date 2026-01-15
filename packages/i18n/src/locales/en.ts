@@ -1639,7 +1639,6 @@ export const en: Record<string, string> = {
   'common.to': 'To',
   'common.venue': 'Venue',
   'common.phone': 'Phone',
-  'common.amount': 'Amount',
   'common.download': 'Download',
   'common.viewAll': 'View all',
   'common.invite': 'Invite',

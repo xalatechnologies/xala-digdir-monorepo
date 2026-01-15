@@ -1665,7 +1665,6 @@ export const nb: Record<string, string> = {
   'common.to': 'Til',
   'common.venue': 'Lokale',
   'common.phone': 'Telefon',
-  'common.amount': 'Beløp',
   'common.download': 'Last ned',
   'common.viewAll': 'Se alle',
   'common.invite': 'Inviter',

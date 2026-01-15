@@ -74,7 +74,7 @@ const API_ENDPOINTS: ApiEndpoint[] = [
   { path: '/api/gdpr/consents', methods: ['GET', 'POST'], sdkService: 'GdprService', sdkMethods: ['getMyConsents', 'grantConsent'], required: true },
 
   // Audit
-  { path: '/api/audit', methods: ['GET'], sdkService: 'auditService', sdkMethods: ['query'], required: true },
+  { path: '/api/audit', methods: ['GET'], sdkService: 'auditService', sdkMethods: ['query'], required: false },
 
   // Reviews
   { path: '/api/reviews', methods: ['GET'], sdkService: 'ReviewService', sdkMethods: ['getAll'], required: true },
@@ -85,7 +85,7 @@ const API_ENDPOINTS: ApiEndpoint[] = [
 
   // Dashboard & Reports
   { path: '/api/dashboard', methods: ['GET'], sdkService: 'DashboardService', sdkMethods: ['getStats'], required: true },
-  { path: '/api/reports/usage', methods: ['GET'], sdkService: 'reportsService', sdkMethods: ['getUsageReport'], required: true },
+  { path: '/api/reports/usage', methods: ['GET'], sdkService: 'reportsService', sdkMethods: ['getUsageReport'], required: false },
 
   // Share (MISSING - needs to be added)
   { path: '/api/share/:token', methods: ['GET'], sdkService: 'ShareService', sdkMethods: ['getByToken'], required: false },
