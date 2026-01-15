@@ -487,3 +487,82 @@ export interface RecurringBookingResultProjectionDTO {
     canModify: boolean;
   };
 }
+
+// =============================================================================
+// Booking Quote Projection (rental_objects-driven)
+// =============================================================================
+
+/**
+ * Slot status from rental_objects availability
+ */
+export type SlotStatus = 'AVAILABLE' | 'RESERVED' | 'BOOKED' | 'BLOCKED' | 'BLACKOUT';
+
+/**
+ * Available actions for a booking quote
+ */
+export type BookingAction = 'BOOK' | 'REQUEST' | 'WAITLIST' | 'MODIFY';
+
+/**
+ * Booking quote selection input
+ */
+export interface BookingQuoteSelectionDTO {
+  /** Rental object ID */
+  listingId: string;
+  /** Start time (ISO 8601) */
+  startTime: string;
+  /** End time (ISO 8601) */
+  endTime: string;
+  /** Booking mode */
+  mode?: BookingMode;
+  /** User ID (optional) */
+  userId?: string;
+  /** Organization ID (optional) */
+  organizationId?: string;
+}
+
+/**
+ * Booking quote projection DTO
+ * All data driven by rental_objects configuration
+ * Returned from POST /api/bookings/quote
+ */
+export interface BookingQuoteProjectionDTO {
+  /** Rental object ID */
+  rentalObjectId: string;
+  /** Rental object display name */
+  rentalObjectName: string;
+  /** User's selection */
+  selection: {
+    startTime: string;
+    endTime: string;
+    mode: BookingMode;
+  };
+  /** Slot availability status */
+  slot: {
+    status: SlotStatus;
+    /** Localization key for policy reason (if blocked) */
+    policyReasonKey?: string;
+  };
+  /** Pricing calculated from rental_objects config */
+  pricing: {
+    basePrice: number;
+    discount: number;
+    totalPrice: number;
+    currency: string;
+    breakdown?: Array<{
+      label: string;
+      amount: number;
+    }>;
+  };
+  /** Booking constraints from rental_objects */
+  constraints: {
+    minDurationMinutes: number;
+    maxDurationMinutes: number;
+    bufferTimeMinutes: number;
+    advanceBookingDays: number;
+    cancellationDeadlineHours: number;
+  };
+  /** Available actions based on slot status and user permissions */
+  availableActions: BookingAction[];
+  /** Timestamp */
+  createdAt: string;
+}

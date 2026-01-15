@@ -8,6 +8,7 @@ import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { AccountContextProvider } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ConsentPopup } from './components';
 // AccountSelectionModal disabled - using full-page /account-selection route instead
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
@@ -23,6 +24,7 @@ import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoic
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
+import { PrivacyPage } from './routes/privacy';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -109,6 +111,7 @@ function AppWithTheme() {
               wsUrl={import.meta.env.VITE_WS_URL}
               tenantId={import.meta.env.VITE_TENANT_ID}
             >
+            <ConsentPopup />
             <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/account-selection" element={<ProtectedRoute><AccountSelectionPage /></ProtectedRoute>} />
@@ -132,6 +135,7 @@ function AppWithTheme() {
               <Route path="settings" element={<SettingsPage />} />
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
               <Route path="help" element={<HelpPage />} />
 
               {/* Organization portal routes */}

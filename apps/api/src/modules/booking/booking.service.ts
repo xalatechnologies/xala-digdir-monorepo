@@ -29,6 +29,7 @@ import {
   type RecurringCreateRequest,
   type RecurringBookingResultProjection,
   type FailedOccurrence,
+  type BookingQuoteProjection,
 } from '../../schemas/booking.schema';
 import type { PaginatedResult } from '../../database/base.repository';
 
@@ -822,6 +823,164 @@ export class BookingService {
     actions.push('MODIFY_SELECTION');
 
     return actions;
+  }
+
+  /**
+   * Get booking quote projection
+   * Returns rental-object-driven quote with pricing, availability, and available actions
+   * All booking rules enforced from rental_objects configuration
+   */
+  async getQuote(
+    tenantId: string,
+    userId: string | undefined,
+    selection: BookingSelection
+  ): Promise<BookingQuoteProjection> {
+    // Fetch the rental object (listing) to get configuration
+    const listing = await this.listingRepository.findById(selection.listingId);
+    if (!listing) {
+      throw new ForbiddenError('Rental object not found');
+    }
+
+    const metadata = (listing.metadata || {}) as Record<string, unknown>;
+    const pricing = (listing.pricing || { basePrice: 0, currency: 'NOK', unit: 'hour' }) as {
+      basePrice: number;
+      currency: string;
+      unit: string;
+    };
+
+    // Calculate duration
+    const startTime = new Date(selection.startTime);
+    const endTime = new Date(selection.endTime);
+    const durationMs = endTime.getTime() - startTime.getTime();
+    const durationHours = durationMs / (1000 * 60 * 60);
+    const durationMinutes = durationMs / (1000 * 60);
+
+    // Check availability
+    const conflicts = await this.repository.findByListingAndDateRange(
+      selection.listingId,
+      startTime,
+      endTime
+    );
+
+    const bufferTimeMinutes = (metadata.bufferTimeMinutes as number) || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
+    const requestedStart = startTime.getTime();
+    const requestedEnd = endTime.getTime();
+
+    const hasConflict = conflicts.some((existingBooking) => {
+      const existingStart = new Date(existingBooking.startTime).getTime() - bufferTimeMs;
+      const existingEnd = new Date(existingBooking.endTime).getTime() + bufferTimeMs;
+      return requestedStart < existingEnd && requestedEnd > existingStart;
+    });
+
+    // Calculate pricing based on rental object configuration
+    let basePrice = 0;
+    let totalPrice = 0;
+
+    switch (pricing.unit) {
+      case 'hour':
+        basePrice = pricing.basePrice * durationHours;
+        break;
+      case 'half_day':
+        basePrice = pricing.basePrice * Math.ceil(durationHours / 4);
+        break;
+      case 'day':
+        basePrice = pricing.basePrice * Math.ceil(durationHours / 24);
+        break;
+      case 'fixed':
+        basePrice = pricing.basePrice;
+        break;
+      default:
+        basePrice = pricing.basePrice * durationHours;
+    }
+
+    totalPrice = basePrice;
+
+    // Determine slot status
+    let slotStatus: 'AVAILABLE' | 'RESERVED' | 'BOOKED' | 'BLOCKED' | 'BLACKOUT' = 'AVAILABLE';
+    let policyReasonKey: string | undefined;
+
+    if (hasConflict) {
+      slotStatus = 'BOOKED';
+      policyReasonKey = 'booking.slot.alreadyBooked';
+    }
+
+    // Check booking constraints from rental object
+    const minBookingMinutes = (metadata.minBookingMinutes as number) || 30;
+    const maxBookingMinutes = (metadata.maxBookingMinutes as number) || 480;
+    const advanceBookingDays = (metadata.advanceBookingDays as number) || 90;
+
+    if (durationMinutes < minBookingMinutes) {
+      slotStatus = 'BLOCKED';
+      policyReasonKey = 'booking.constraint.minDuration';
+    }
+
+    if (durationMinutes > maxBookingMinutes) {
+      slotStatus = 'BLOCKED';
+      policyReasonKey = 'booking.constraint.maxDuration';
+    }
+
+    const now = new Date();
+    const daysInAdvance = (startTime.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysInAdvance > advanceBookingDays) {
+      slotStatus = 'BLOCKED';
+      policyReasonKey = 'booking.constraint.advanceBookingLimit';
+    }
+
+    if (startTime < now) {
+      slotStatus = 'BLOCKED';
+      policyReasonKey = 'booking.constraint.pastDate';
+    }
+
+    // Determine available actions based on status
+    const availableActions: Array<'BOOK' | 'REQUEST' | 'WAITLIST' | 'MODIFY'> = [];
+    if (slotStatus === 'AVAILABLE') {
+      availableActions.push('BOOK');
+      availableActions.push('MODIFY');
+    } else if (slotStatus === 'BOOKED' && metadata.allowWaitlist) {
+      availableActions.push('WAITLIST');
+      availableActions.push('MODIFY');
+    } else {
+      availableActions.push('MODIFY');
+    }
+
+    // Build the quote projection
+    const quote: BookingQuoteProjection = {
+      rentalObjectId: selection.listingId,
+      rentalObjectName: listing.name,
+      selection: {
+        startTime: selection.startTime,
+        endTime: selection.endTime,
+        mode: selection.mode || 'SINGLE',
+      },
+      slot: {
+        status: slotStatus,
+        policyReasonKey,
+      },
+      pricing: {
+        basePrice: Math.round(basePrice * 100) / 100,
+        discount: 0,
+        totalPrice: Math.round(totalPrice * 100) / 100,
+        currency: pricing.currency || 'NOK',
+        breakdown: [
+          {
+            label: `${pricing.unit === 'hour' ? durationHours.toFixed(1) + ' timer' : '1 ' + pricing.unit}`,
+            amount: Math.round(basePrice * 100) / 100,
+          },
+        ],
+      },
+      constraints: {
+        minDurationMinutes: minBookingMinutes,
+        maxDurationMinutes: maxBookingMinutes,
+        bufferTimeMinutes,
+        advanceBookingDays,
+        cancellationDeadlineHours: (metadata.cancellationDeadlineHours as number) || 24,
+      },
+      availableActions,
+      createdAt: new Date().toISOString(),
+    };
+
+    return quote;
   }
 }
 

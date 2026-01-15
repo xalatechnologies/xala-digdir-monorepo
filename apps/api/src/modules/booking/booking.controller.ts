@@ -114,7 +114,7 @@ export class BookingController {
   }
 
   /**
-   * GET /api/bookings/pricing - Calculate price
+   * GET /api/bookings/pricing - Calculate price (legacy)
    */
   @Get('/pricing')
   async calculatePricing(request: TenantRequest, reply: FastifyReply) {
@@ -125,6 +125,19 @@ export class BookingController {
     }
     const pricing = await this.service.calculatePricing(listingId, startTime, endTime);
     return { data: pricing };
+  }
+
+  /**
+   * POST /api/bookings/quote - Get booking quote projection
+   * Returns rental-object-driven quote with pricing, availability, and available actions
+   * Enforces booking rules from rental_objects configuration
+   */
+  @Post('/quote')
+  async getQuote(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getOptionalUserId(request);
+    const quote = await this.service.getQuote(tenantId, userId, request.body as any);
+    return { data: quote };
   }
 
   /**

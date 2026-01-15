@@ -43,6 +43,8 @@ import { TenantAuditLogPage } from './routes/tenant/audit-log';
 import { IntegrationsOverviewPage } from './routes/integrations';
 import { ArchivePage } from './routes/integrations/archive';
 import { CalendarIntegrationPage } from './routes/integrations/calendar';
+// GDPR pages
+import { GDPRManagementPage } from './routes/gdpr';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -115,6 +117,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AuditPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="gdpr"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <GDPRManagementPage />
                   </ProtectedRoute>
                 }
               />

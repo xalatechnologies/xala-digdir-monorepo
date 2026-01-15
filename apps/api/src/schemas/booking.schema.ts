@@ -403,3 +403,63 @@ export const RecurringBookingResultProjectionSchema = z.object({
   createdAt: z.string().datetime(),
 });
 export type RecurringBookingResultProjection = z.infer<typeof RecurringBookingResultProjectionSchema>;
+
+/**
+ * Slot Status - availability state from rental_objects
+ */
+export const SlotStatusSchema = z.enum(['AVAILABLE', 'RESERVED', 'BOOKED', 'BLOCKED', 'BLACKOUT']);
+export type SlotStatus = z.infer<typeof SlotStatusSchema>;
+
+/**
+ * Booking Quote Projection Schema
+ * Response for POST /api/bookings/quote
+ * All data driven by rental_objects configuration
+ */
+export const BookingQuoteProjectionSchema = z.object({
+  /** Rental object ID */
+  rentalObjectId: z.string().uuid(),
+
+  /** Rental object display name */
+  rentalObjectName: z.string(),
+
+  /** User's selection */
+  selection: z.object({
+    startTime: z.string().datetime(),
+    endTime: z.string().datetime(),
+    mode: BookingModeSchema.default('SINGLE_SLOT'),
+  }),
+
+  /** Slot availability status */
+  slot: z.object({
+    status: SlotStatusSchema,
+    policyReasonKey: z.string().optional(),
+  }),
+
+  /** Pricing calculated from rental_objects config */
+  pricing: z.object({
+    basePrice: z.number().nonnegative(),
+    discount: z.number().nonnegative().default(0),
+    totalPrice: z.number().nonnegative(),
+    currency: z.string().length(3).default('NOK'),
+    breakdown: z.array(z.object({
+      label: z.string(),
+      amount: z.number(),
+    })).optional(),
+  }),
+
+  /** Booking constraints from rental_objects */
+  constraints: z.object({
+    minDurationMinutes: z.number().int().nonnegative(),
+    maxDurationMinutes: z.number().int().nonnegative(),
+    bufferTimeMinutes: z.number().int().nonnegative(),
+    advanceBookingDays: z.number().int().nonnegative(),
+    cancellationDeadlineHours: z.number().int().nonnegative(),
+  }),
+
+  /** Available actions based on slot status and user permissions */
+  availableActions: z.array(z.enum(['BOOK', 'REQUEST', 'WAITLIST', 'MODIFY'])),
+
+  /** Timestamp */
+  createdAt: z.string().datetime(),
+});
+export type BookingQuoteProjection = z.infer<typeof BookingQuoteProjectionSchema>;

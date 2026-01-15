@@ -21,7 +21,9 @@ import type {
   BookingSelectionDTO,
   RecurringPreviewProjectionDTO,
   CreateRecurringBookingDTO,
-  RecurringBookingResultProjectionDTO
+  RecurringBookingResultProjectionDTO,
+  BookingQuoteSelectionDTO,
+  BookingQuoteProjectionDTO,
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
@@ -218,6 +220,15 @@ export class BookingService extends BaseService {
    */
   async getDocuments(id: string): Promise<SingleResponse<BookingDocument[]>> {
     return this.client.get(this.buildPath(`/${id}/documents`));
+  }
+
+  /**
+   * Get booking quote projection
+   * Returns rental-object-driven quote with pricing, availability, and available actions.
+   * All booking rules are enforced from rental_objects configuration.
+   */
+  async quote(selection: BookingQuoteSelectionDTO): Promise<SingleResponse<BookingQuoteProjectionDTO>> {
+    return this.client.post(this.buildPath('/quote'), selection);
   }
 }
 

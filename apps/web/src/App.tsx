@@ -18,8 +18,9 @@ import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
+import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast, GlobalSearch, ProtectedRoute } from './components';
+import { RealtimeToast, GlobalSearch, ProtectedRoute, ConsentPopup } from './components';
 import { useAuth } from './hooks/useAuth';
 
 // Theme context type
@@ -209,6 +210,7 @@ function AppContent() {
         <ErrorBoundary>
           <RealtimeProvider autoConnect={true} enableInDev={true}>
             <RealtimeToast />
+            <ConsentPopup />
             <style>{`
               *, *::before, *::after {
                 transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
@@ -227,6 +229,7 @@ function AppContent() {
 
                   {/* PROTECTED ROUTES - Authentication required */}
                   <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
+                  <Route path="/privacy" element={<ProtectedRoute><PrivacySettingsPage /></ProtectedRoute>} />
                 </Route>
               </Route>
             </Routes>
