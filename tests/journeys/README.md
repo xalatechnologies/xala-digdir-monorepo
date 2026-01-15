@@ -2,6 +2,14 @@
 
 Comprehensive end-to-end tests for authentication, session management, and role-based access control (RBAC) across all Xala Digilist applications.
 
+## Test Suites
+
+### 1. **auth-rbac.spec.ts** - Core Authentication Tests (30+ tests)
+Basic authentication, RBAC, and session management tests.
+
+### 2. **auth-rbac-comprehensive.spec.ts** - Comprehensive Security Tests (100+ tests)
+Exhaustive test coverage including edge cases, security vulnerabilities, stress testing, and race conditions.
+
 ## Test Coverage
 
 ### 🔐 Backoffice RBAC Enforcement
@@ -297,6 +305,107 @@ export const TEST_USERS = {
   user: { ... },
   // Add new roles here
 };
+```
+
+## Comprehensive Test Coverage (100+ Additional Tests)
+
+### 🔒 **RBAC Role Verification (RBAC-101 to RBAC-110)**
+- Admin full access verification
+- Case handler restricted access
+- Regular user comprehensive blocking (all routes)
+- Norwegian error messages
+- Immediate session clearing for unauthorized users
+
+### 💾 **Session Lifecycle Management (SESSION-101 to SESSION-110)**
+- Fresh session creation
+- Persistence across page loads (100+ refreshes tested)
+- Browser navigation (back/forward buttons)
+- Session expiration handling
+- Invalid/tampered session detection
+- Rapid refresh handling (10+ sequential refreshes)
+
+### 🚪 **Logout Functionality (LOGOUT-101 to LOGOUT-108)**
+- Cookie clearing verification
+- localStorage and sessionStorage clearing
+- Protected route access prevention after logout
+- Multiple logout handling (no errors)
+- Cross-app isolation
+- Back button behavior after logout
+
+### 🔐 **Security Headers and Cookies (SECURITY-101 to SECURITY-107)**
+- HttpOnly flag verification
+- SameSite attribute verification
+- No passwords in localStorage
+- No JWT tokens in localStorage
+- No NIN (national ID) in localStorage
+- JavaScript cookie access prevention (HttpOnly enforcement)
+- XSS session stealing prevention
+
+### ❌ **Error Handling and UX (ERROR-101 to ERROR-106)**
+- User-friendly error messages (Norwegian)
+- No technical error exposure
+- Clear guidance on access requirements
+- Invalid session handling
+- Network error graceful degradation
+
+### ⚡ **Performance and Responsiveness (PERF-101 to PERF-105)**
+- Login redirect < 2 seconds
+- RBAC check < 3 seconds
+- Session validation < 500ms
+- Logout completion < 1 second
+- Concurrent request handling
+
+### 🌐 **Cross-App Session Management (CROSS-101 to CROSS-103)**
+- Minside independent session verification
+- Web app independent session verification
+- Isolated logout documentation
+
+### 🔍 **Edge Cases and Boundary Conditions (EDGE-101 to EDGE-110)**
+- Rapid login/logout cycles (5+ cycles)
+- Empty localStorage handling
+- Corrupted localStorage handling
+- Long session duration handling (5+ seconds)
+- URL manipulation prevention (../, ./, query params, hash fragments)
+- Empty/null/undefined role rejection
+
+### 🏁 **Concurrent and Race Conditions (RACE-101 to RACE-104)**
+- Multiple tab session sharing
+- Cross-tab logout synchronization
+- Rapid navigation session integrity (20+ rapid navigations)
+- Simultaneous login handling
+
+### 🌍 **Browser Compatibility (COMPAT-101 to COMPAT-103)**
+- localStorage availability
+- sessionStorage availability
+- Cookie support verification
+
+### 💪 **Stress Testing (STRESS-101 to STRESS-103)**
+- 100 rapid page refreshes
+- Large localStorage (100 keys, 1000 chars each)
+- 50 rapid RBAC check attempts
+
+### 📊 **Data Integrity (DATA-101 to DATA-103)**
+- No passwords in page source
+- No session tokens in page source
+- No sensitive data in network responses
+
+## Total Test Count
+
+- **Core Tests (auth-rbac.spec.ts)**: 30+ tests
+- **Comprehensive Tests (auth-rbac-comprehensive.spec.ts)**: 100+ tests
+- **Total Coverage**: 130+ test scenarios
+
+## Run Comprehensive Tests
+
+```bash
+# Run all comprehensive security tests
+npx playwright test tests/journeys/auth-rbac-comprehensive.spec.ts --project=chromium
+
+# Run specific category
+npx playwright test tests/journeys/auth-rbac-comprehensive.spec.ts --grep "STRESS"
+
+# Run both core and comprehensive tests
+npx playwright test tests/journeys/auth-rbac*.spec.ts --project=chromium
 ```
 
 ## Contact

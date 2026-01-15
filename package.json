@@ -13,6 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:auth": "playwright test --config=playwright.auth.config.ts",
+    "test:e2e:auth:comprehensive": "playwright test tests/journeys/auth-rbac-comprehensive.spec.ts --config=playwright.auth-simple.config.ts",
+    "test:e2e:auth:all": "playwright test tests/journeys/auth-rbac*.spec.ts --config=playwright.auth-simple.config.ts",
     "scan": "node ./packages/eslint-config/scanner.js",
     "scan:strict": "node ./packages/eslint-config/scanner.js --strict",
     "scan:tokens": "node ./packages/eslint-config/scanner.js --tokens",

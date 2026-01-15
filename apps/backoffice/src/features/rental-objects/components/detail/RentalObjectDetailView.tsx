@@ -18,11 +18,11 @@ import {
 import { useRentalObjectBySlug, useRentalObject } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 // Reuse tab components from listings (they work with rental objects)
-import { DetailHeader } from '../../listings/components/detail/DetailHeader';
-import { OverviewTab } from '../../listings/components/detail/OverviewTab';
-import { BookingsTab } from '../../listings/components/detail/BookingsTab';
-import { AvailabilityTab } from '../../listings/components/detail/AvailabilityTab';
-import { AuditTab } from '../../listings/components/detail/AuditTab';
+import { DetailHeader } from '../../../listings/components/detail/DetailHeader';
+import { OverviewTab } from '../../../listings/components/detail/OverviewTab';
+import { BookingsTab } from '../../../listings/components/detail/BookingsTab';
+import { AvailabilityTab } from '../../../listings/components/detail/AvailabilityTab';
+import { AuditTab } from '../../../listings/components/detail/AuditTab';
 
 /**
  * Error Boundary to catch JavaScript runtime errors
