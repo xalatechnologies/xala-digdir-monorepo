@@ -83,7 +83,7 @@ export const TEST_USERS: Record<Exclude<UserRole, 'guest'>, TestUser> = {
  */
 export const APP_URLS = {
   web: 'http://localhost:5173',
-  backoffice: 'http://localhost:5174',
+  backoffice: 'http://localhost:5175',
   minside: 'http://localhost:5174',
   api: 'http://localhost:4000',
 } as const;
