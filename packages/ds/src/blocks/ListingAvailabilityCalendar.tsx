@@ -8,7 +8,7 @@
  * This component implements:
  * - TIME_SLOTS mode: Week/day timeline view with hourly slots
  * - ALL_DAY mode: Month view with day selection
- * - MULTI_DAY mode: Date range picker (future subtask)
+ * - MULTI_DAY mode: Date range picker for multi-day bookings
  */
 import * as React from 'react';
 import { Button, Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
@@ -470,6 +470,180 @@ function AllDayCell({
   );
 }
 
+interface MultiDayCellProps {
+  date: Date;
+  cell: CalendarCell | undefined;
+  isRangeStart: boolean;
+  isRangeEnd: boolean;
+  isInRange: boolean;
+  isClickable: boolean;
+  isCurrentMonth: boolean;
+  readOnly: boolean;
+  onDateClick?: (date: Date) => void;
+}
+
+function MultiDayCell({
+  date,
+  cell,
+  isRangeStart,
+  isRangeEnd,
+  isInRange,
+  isClickable,
+  isCurrentMonth,
+  readOnly,
+  onDateClick,
+}: MultiDayCellProps): React.ReactElement {
+  const status = cell?.status ?? 'CLOSED';
+  const canClick = isClickable && !readOnly;
+  const today = isToday(date);
+
+  const handleClick = () => {
+    if (canClick && onDateClick) {
+      onDateClick(date);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Enter' || e.key === ' ') && canClick && onDateClick) {
+      e.preventDefault();
+      onDateClick(date);
+    }
+  };
+
+  // Determine background color based on range state
+  const getBackgroundColor = (): string => {
+    if (!isCurrentMonth) {
+      return 'var(--ds-color-neutral-background-default)';
+    }
+    if (isRangeStart || isRangeEnd) {
+      return 'var(--ds-color-accent-surface-active)';
+    }
+    if (isInRange) {
+      return 'var(--ds-color-accent-surface-default)';
+    }
+    if (!cell) {
+      return 'var(--ds-color-neutral-surface-hover)';
+    }
+    return getCellBackgroundColor(status, false);
+  };
+
+  // Determine text color
+  const getTextColor = (): string => {
+    if (!isCurrentMonth) {
+      return 'var(--ds-color-neutral-text-subtle)';
+    }
+    if (isRangeStart || isRangeEnd || isInRange) {
+      return 'var(--ds-color-accent-text-default)';
+    }
+    if (!cell) {
+      return 'var(--ds-color-neutral-text-subtle)';
+    }
+    return getCellTextColor(status, false);
+  };
+
+  // Build aria label
+  const getAriaLabel = (): string => {
+    const dayName = DAY_NAMES_FULL[date.getDay()];
+    const dateStr = `${date.getDate()}. ${MONTH_NAMES[date.getMonth()]}`;
+    const statusLabel = cell ? getCalendarSlotLabel(status) : 'Stengt';
+    let rangeLabel = '';
+    if (isRangeStart) rangeLabel = ' (startdato)';
+    else if (isRangeEnd) rangeLabel = ' (sluttdato)';
+    else if (isInRange) rangeLabel = ' (i perioden)';
+    return `${dayName} ${dateStr} - ${statusLabel}${rangeLabel}`;
+  };
+
+  return (
+    <div
+      className={cn(
+        'listing-calendar-multiday-cell',
+        isRangeStart && 'range-start',
+        isRangeEnd && 'range-end',
+        isInRange && 'in-range'
+      )}
+      data-status={status}
+      data-current-month={isCurrentMonth}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={canClick ? 'button' : undefined}
+      tabIndex={canClick ? 0 : undefined}
+      aria-label={getAriaLabel()}
+      title={cell?.reasonKey ? cell.reasonKey : undefined}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '56px',
+        padding: 'var(--ds-spacing-2)',
+        backgroundColor: getBackgroundColor(),
+        color: getTextColor(),
+        cursor: canClick ? 'pointer' : 'default',
+        transition: 'all 0.15s ease',
+        borderRadius:
+          isRangeStart && !isRangeEnd
+            ? 'var(--ds-border-radius-sm) 0 0 var(--ds-border-radius-sm)'
+            : isRangeEnd && !isRangeStart
+              ? '0 var(--ds-border-radius-sm) var(--ds-border-radius-sm) 0'
+              : isRangeStart && isRangeEnd
+                ? 'var(--ds-border-radius-sm)'
+                : isInRange
+                  ? '0'
+                  : 'var(--ds-border-radius-sm)',
+        border:
+          isRangeStart || isRangeEnd
+            ? '2px solid var(--ds-color-accent-base-default)'
+            : today && isCurrentMonth
+              ? '2px solid var(--ds-color-accent-border-default)'
+              : '1px solid transparent',
+        opacity: isCurrentMonth ? 1 : 0.5,
+      }}
+    >
+      <span
+        style={{
+          fontSize: 'var(--ds-font-size-sm)',
+          fontWeight:
+            today || isRangeStart || isRangeEnd
+              ? 'var(--ds-font-weight-bold)'
+              : 'var(--ds-font-weight-medium)',
+        }}
+      >
+        {date.getDate()}
+      </span>
+      {today && isCurrentMonth && !isRangeStart && !isRangeEnd && (
+        <span
+          style={{
+            fontSize: 'var(--ds-font-size-xs)',
+            color: 'var(--ds-color-accent-text-default)',
+          }}
+        >
+          i dag
+        </span>
+      )}
+      {isRangeStart && (
+        <span
+          style={{
+            fontSize: 'var(--ds-font-size-xs)',
+            color: 'var(--ds-color-accent-text-default)',
+          }}
+        >
+          start
+        </span>
+      )}
+      {isRangeEnd && !isRangeStart && (
+        <span
+          style={{
+            fontSize: 'var(--ds-font-size-xs)',
+            color: 'var(--ds-color-accent-text-default)',
+          }}
+        >
+          slutt
+        </span>
+      )}
+    </div>
+  );
+}
+
 // =============================================================================
 // Main Component
 // =============================================================================
@@ -497,7 +671,7 @@ export function ListingAvailabilityCalendar({
   currentDate,
   onDateChange,
   onCellClick,
-  onSelectionChange: _onSelectionChange,
+  onSelectionChange,
   startHour = 8,
   endHour = 17,
   slotSizeMinutes = 60,
@@ -1035,19 +1209,394 @@ export function ListingAvailabilityCalendar({
     );
   };
 
-  // Render MULTI_DAY mode (placeholder for future subtask)
+  // =========================================================================
+  // MULTI_DAY mode state and helpers
+  // =========================================================================
+
+  // Internal state for range selection phase
+  // 'start' = selecting start date, 'end' = selecting end date
+  const [rangeSelectionPhase, setRangeSelectionPhase] = React.useState<'start' | 'end'>('start');
+
+  // Extract range from selection prop
+  const rangeStartDate = React.useMemo(() => {
+    if (selection?.range?.startDate) {
+      return new Date(selection.range.startDate);
+    }
+    return null;
+  }, [selection?.range?.startDate]);
+
+  const rangeEndDate = React.useMemo(() => {
+    if (selection?.range?.endDate) {
+      return new Date(selection.range.endDate);
+    }
+    return null;
+  }, [selection?.range?.endDate]);
+
+  // Check if a date is in the selected range
+  const isDateInRange = React.useCallback(
+    (date: Date): boolean => {
+      if (!rangeStartDate || !rangeEndDate) return false;
+      const dateTime = date.getTime();
+      const startTime = rangeStartDate.getTime();
+      const endTime = rangeEndDate.getTime();
+      return dateTime > startTime && dateTime < endTime;
+    },
+    [rangeStartDate, rangeEndDate]
+  );
+
+  // Handle date click in MULTI_DAY mode
+  const handleMultiDayDateClick = React.useCallback(
+    (date: Date) => {
+      if (readOnly || !onSelectionChange) return;
+
+      const cell = getCellForDay(date);
+      if (!cell || !isCalendarSlotSelectable(cell.status)) return;
+
+      const dateStr = date.toISOString();
+
+      if (rangeSelectionPhase === 'start' || !rangeStartDate) {
+        // Starting new selection - set start date
+        const newSelection: CalendarSelection = {
+          cells: [cell],
+          range: {
+            startDate: dateStr,
+            endDate: dateStr, // Same as start initially
+          },
+          isValid: true,
+        };
+        onSelectionChange(newSelection);
+        setRangeSelectionPhase('end');
+      } else {
+        // Selecting end date
+        const clickedTime = date.getTime();
+        const startTime = rangeStartDate.getTime();
+
+        if (clickedTime < startTime) {
+          // Clicked before start - swap and make this the new start
+          const newSelection: CalendarSelection = {
+            cells: [cell],
+            range: {
+              startDate: dateStr,
+              endDate: rangeStartDate.toISOString(),
+            },
+            isValid: true,
+          };
+          // Collect all cells in range
+          const rangeCells = cells.filter((c) => {
+            const cellDate = new Date(c.start);
+            return cellDate >= date && cellDate <= rangeStartDate;
+          });
+          newSelection.cells = rangeCells.length > 0 ? rangeCells : [cell];
+
+          // Check if all dates in range are available
+          const allAvailable = newSelection.cells.every((c) =>
+            isCalendarSlotSelectable(c.status)
+          );
+          newSelection.isValid = allAvailable;
+          if (!allAvailable) {
+            newSelection.errorKey = 'calendar.error.range_has_unavailable';
+          }
+
+          onSelectionChange(newSelection);
+          setRangeSelectionPhase('start'); // Reset for next selection
+        } else if (clickedTime === startTime) {
+          // Same date clicked - keep as single day selection
+          const newSelection: CalendarSelection = {
+            cells: [cell],
+            range: {
+              startDate: dateStr,
+              endDate: dateStr,
+            },
+            isValid: true,
+          };
+          onSelectionChange(newSelection);
+          setRangeSelectionPhase('start');
+        } else {
+          // Normal case - clicked after start date
+          const newSelection: CalendarSelection = {
+            cells: [],
+            range: {
+              startDate: rangeStartDate.toISOString(),
+              endDate: dateStr,
+            },
+            isValid: true,
+          };
+
+          // Collect all cells in range
+          const rangeCells = cells.filter((c) => {
+            const cellDate = new Date(c.start);
+            return cellDate >= rangeStartDate && cellDate <= date;
+          });
+          newSelection.cells = rangeCells.length > 0 ? rangeCells : [];
+
+          // Check if all dates in range are available
+          const allAvailable = newSelection.cells.every((c) =>
+            isCalendarSlotSelectable(c.status)
+          );
+          newSelection.isValid = allAvailable;
+          if (!allAvailable) {
+            newSelection.errorKey = 'calendar.error.range_has_unavailable';
+          }
+
+          onSelectionChange(newSelection);
+          setRangeSelectionPhase('start'); // Reset for next selection
+        }
+      }
+    },
+    [
+      readOnly,
+      onSelectionChange,
+      getCellForDay,
+      rangeSelectionPhase,
+      rangeStartDate,
+      cells,
+    ]
+  );
+
+  // Format selected range for display
+  const formatSelectedRange = React.useCallback((): string => {
+    if (!rangeStartDate) return '';
+
+    const startDay = rangeStartDate.getDate();
+    const startMonth = MONTH_NAMES[rangeStartDate.getMonth()];
+
+    if (!rangeEndDate || isSameDay(rangeStartDate, rangeEndDate)) {
+      return `${startDay}. ${startMonth}`;
+    }
+
+    const endDay = rangeEndDate.getDate();
+    const endMonth = MONTH_NAMES[rangeEndDate.getMonth()];
+
+    if (rangeStartDate.getMonth() === rangeEndDate.getMonth()) {
+      return `${startDay}. - ${endDay}. ${startMonth}`;
+    }
+    return `${startDay}. ${startMonth} - ${endDay}. ${endMonth}`;
+  }, [rangeStartDate, rangeEndDate]);
+
+  // Calculate number of days in selection
+  const calculateDaysInRange = React.useCallback((): number => {
+    if (!rangeStartDate || !rangeEndDate) return 0;
+    const diffTime = Math.abs(rangeEndDate.getTime() - rangeStartDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays;
+  }, [rangeStartDate, rangeEndDate]);
+
+  // Render MULTI_DAY mode (date range picker)
   const renderMultiDayMode = (): React.ReactElement => {
+    // Norwegian weekday headers (Monday first)
+    const weekDayHeaders = ['MAN', 'TIR', 'ONS', 'TOR', 'FRE', 'LØR', 'SØN'];
+
     return (
       <div className="listing-calendar-multiday">
-        <Alert data-color="info">
-          <Heading level={4} data-size="xs">
-            Flerdagsmodus
-          </Heading>
-          <Paragraph data-size="sm">
-            Velg start- og sluttdato for å booke flere dager.
+        {/* Selection phase indicator */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-3)',
+            marginBottom: 'var(--ds-spacing-3)',
+            padding: 'var(--ds-spacing-3)',
+            backgroundColor: 'var(--ds-color-info-surface-default)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            border: '1px solid var(--ds-color-info-border-default)',
+          }}
+        >
+          <InfoIcon size={16} style={{ color: 'var(--ds-color-info-text-default)' }} />
+          <Paragraph
+            data-size="sm"
+            style={{
+              margin: 0,
+              color: 'var(--ds-color-info-text-default)',
+            }}
+          >
+            {rangeSelectionPhase === 'start' || !rangeStartDate
+              ? 'Velg startdato for perioden'
+              : 'Velg sluttdato for perioden'}
           </Paragraph>
-        </Alert>
-        {/* Date range picker implementation will be added in subtask-6-4 */}
+        </div>
+
+        {/* Month Navigation */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 'var(--ds-spacing-3)',
+          }}
+        >
+          <Button
+            type="button"
+            variant="tertiary"
+            data-size="sm"
+            onClick={handlePrevMonth}
+            aria-label="Forrige måned"
+            disabled={isLoading}
+          >
+            <ChevronLeftIcon size={16} />
+          </Button>
+          <Paragraph
+            data-size="sm"
+            style={{
+              margin: 0,
+              fontWeight: 'var(--ds-font-weight-medium)',
+            }}
+          >
+            {formatMonthYear(monthStart)}
+          </Paragraph>
+          <Button
+            type="button"
+            variant="tertiary"
+            data-size="sm"
+            onClick={handleNextMonth}
+            aria-label="Neste måned"
+            disabled={isLoading}
+          >
+            <ChevronRightIcon size={16} />
+          </Button>
+        </div>
+
+        {/* Calendar Grid */}
+        <div
+          className="listing-calendar-month-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            border: '1px solid var(--ds-color-neutral-border-subtle)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            overflow: 'hidden',
+            gap: '1px',
+            backgroundColor: 'var(--ds-color-neutral-border-subtle)',
+          }}
+        >
+          {/* Weekday headers */}
+          {weekDayHeaders.map((day) => (
+            <div
+              key={day}
+              style={{
+                padding: 'var(--ds-spacing-2)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                textAlign: 'center',
+                fontSize: 'var(--ds-font-size-xs)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+              }}
+            >
+              {day}
+            </div>
+          ))}
+
+          {/* Day cells */}
+          {monthGridDays.map((date, index) => {
+            const cell = getCellForDay(date);
+            const isClickable = cell ? isCalendarSlotSelectable(cell.status) : false;
+            const isCurrentMonth = isInMonth(date, currentDate);
+            const isRangeStart = rangeStartDate ? isSameDay(date, rangeStartDate) : false;
+            const isRangeEnd = rangeEndDate ? isSameDay(date, rangeEndDate) : false;
+            const inRange = isDateInRange(date);
+
+            return (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  padding: 'var(--ds-spacing-1)',
+                }}
+              >
+                <MultiDayCell
+                  date={date}
+                  cell={cell}
+                  isRangeStart={isRangeStart}
+                  isRangeEnd={isRangeEnd}
+                  isInRange={inRange}
+                  isClickable={isClickable}
+                  isCurrentMonth={isCurrentMonth}
+                  readOnly={readOnly}
+                  onDateClick={handleMultiDayDateClick}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-4)',
+            marginTop: 'var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-neutral-background-default)',
+            border: '1px solid var(--ds-color-neutral-border-subtle)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Paragraph
+            data-size="sm"
+            style={{
+              margin: 0,
+              fontWeight: 'var(--ds-font-weight-medium)',
+              color: 'var(--ds-color-neutral-text-default)',
+            }}
+          >
+            Forklaring
+          </Paragraph>
+          {legend.map((item) => (
+            <div
+              key={item.status}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+              }}
+            >
+              <div
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: getLegendColor(item.status),
+                }}
+              />
+              <Paragraph
+                data-size="sm"
+                style={{
+                  margin: 0,
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              >
+                {item.label}
+              </Paragraph>
+            </div>
+          ))}
+          {/* Range indicator in legend */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-2)',
+            }}
+          >
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: 'var(--ds-border-radius-full)',
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+              }}
+            />
+            <Paragraph
+              data-size="sm"
+              style={{
+                margin: 0,
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              Valgt periode
+            </Paragraph>
+          </div>
+        </div>
       </div>
     );
   };
@@ -1149,7 +1698,7 @@ export function ListingAvailabilityCalendar({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: showTips && (mode === 'TIME_SLOTS' || mode === 'ALL_DAY') ? '1fr 280px' : '1fr',
+          gridTemplateColumns: showTips ? '1fr 280px' : '1fr',
           gap: 'var(--ds-spacing-4)',
         }}
       >
@@ -1157,7 +1706,7 @@ export function ListingAvailabilityCalendar({
         <div>{renderContent()}</div>
 
         {/* Tips panel */}
-        {showTips && (mode === 'TIME_SLOTS' || mode === 'ALL_DAY') && !isLoading && !errorMessage && (
+        {showTips && !isLoading && !errorMessage && (
           <div>
             <div
               style={{
@@ -1173,9 +1722,45 @@ export function ListingAvailabilityCalendar({
                 data-size="xs"
                 style={{ margin: '0 0 var(--ds-spacing-2) 0' }}
               >
-                {mode === 'ALL_DAY' ? 'Valgte datoer' : 'Valgte tidspunkter'}
+                {mode === 'MULTI_DAY' ? 'Valgt periode' : mode === 'ALL_DAY' ? 'Valgte datoer' : 'Valgte tidspunkter'}
               </Heading>
-              {selection && selection.cells.length > 0 ? (
+              {mode === 'MULTI_DAY' ? (
+                rangeStartDate ? (
+                  <div>
+                    <Paragraph
+                      data-size="sm"
+                      style={{
+                        margin: '0 0 var(--ds-spacing-1) 0',
+                        color: 'var(--ds-color-neutral-text-default)',
+                        fontWeight: 'var(--ds-font-weight-medium)',
+                      }}
+                    >
+                      {formatSelectedRange()}
+                    </Paragraph>
+                    {rangeEndDate && !isSameDay(rangeStartDate, rangeEndDate) && (
+                      <Paragraph
+                        data-size="sm"
+                        style={{
+                          margin: 0,
+                          color: 'var(--ds-color-neutral-text-subtle)',
+                        }}
+                      >
+                        {calculateDaysInRange()} dager totalt
+                      </Paragraph>
+                    )}
+                  </div>
+                ) : (
+                  <Paragraph
+                    data-size="sm"
+                    style={{
+                      margin: 0,
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                    }}
+                  >
+                    Velg start- og sluttdato for perioden.
+                  </Paragraph>
+                )
+              ) : selection && selection.cells.length > 0 ? (
                 <Paragraph
                   data-size="sm"
                   style={{
@@ -1236,7 +1821,14 @@ export function ListingAvailabilityCalendar({
                   fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
-                {mode === 'ALL_DAY' ? (
+                {mode === 'MULTI_DAY' ? (
+                  <>
+                    <li>Velg først en startdato, deretter en sluttdato</li>
+                    <li>Alle dager i perioden må være ledige</li>
+                    <li>Bytt mellom måneder med pilene</li>
+                    {!readOnly && <li>Valgt periode vises med blå markering</li>}
+                  </>
+                ) : mode === 'ALL_DAY' ? (
                   <>
                     <li>Klikk på ledige (grønne) dager for å velge</li>
                     <li>Hver dag representerer en heldagsbooking</li>
