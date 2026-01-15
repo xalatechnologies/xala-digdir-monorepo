@@ -1,11 +1,11 @@
 #!/bin/bash
-# Unified API Deployment Script
+# Digilist API Deployment Script
 # Usage: ./scripts/deploy.sh [production|staging]
 
 set -e
 
 ENV="${1:-production}"
-APP_NAME="unified-api"
+APP_NAME="digilist-api"
 PORT=4000
 
 # Colors
@@ -14,7 +14,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${GREEN}🚀 Deploying Unified API to ${ENV}${NC}"
+echo -e "${GREEN}🚀 Deploying Digilist API to ${ENV}${NC}"
 echo "================================================"
 
 # Load environment
@@ -44,7 +44,7 @@ cp .env.example "${DEPLOY_DIR}/.env.example"
 # Generate production package.json (strip workspace refs)
 cat > "${DEPLOY_DIR}/package.json" << 'EOF'
 {
-  "name": "@xala/unified-api",
+  "name": "@digilist/api",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/main.js",
@@ -53,6 +53,8 @@ cat > "${DEPLOY_DIR}/package.json" << 'EOF'
   },
   "dependencies": {
     "fastify": "^5.0.0",
+    "@fastify/cors": "^10.0.0",
+    "@fastify/websocket": "^11.0.0",
     "mercurius": "^16.0.0",
     "graphql": "^16.10.0",
     "drizzle-orm": "^0.33.0",
@@ -60,7 +62,9 @@ cat > "${DEPLOY_DIR}/package.json" << 'EOF'
     "zod": "^3.23.0",
     "reflect-metadata": "^0.2.0",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0"
+    "pino-pretty": "^11.0.0",
+    "redis": "^4.7.0",
+    "dotenv": "^17.0.0"
   }
 }
 EOF
@@ -114,8 +118,8 @@ REMOTE
 
 echo -e "\n${GREEN}✅ Deployment complete!${NC}"
 echo "================================================"
-echo -e "Health check: ${YELLOW}curl https://unified-api.digilist.no/health${NC}"
-echo -e "GraphQL:      ${YELLOW}https://unified-api.digilist.no/graphql${NC}"
+echo -e "Health check: ${YELLOW}curl https://api.digilist.no/health${NC}"
+echo -e "GraphQL:      ${YELLOW}https://api.digilist.no/graphql${NC}"
 
 # Cleanup
 rm -rf "${DEPLOY_DIR}"

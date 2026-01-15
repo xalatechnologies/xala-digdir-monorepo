@@ -11,7 +11,13 @@
 
 export type ListingType = 'FACILITY' | 'EQUIPMENT' | 'EVENT' | 'OTHER';
 
-export type BookingMode = 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE';
+/**
+ * Booking modes supported by listings.
+ * - SINGLE_SLOT: Standard one-time booking selection
+ * - IN_GAME: Short notice / live availability / rapid reserve-confirm patterns
+ * - RECURRING: Weekly/monthly patterns with conflict detection and preview
+ */
+export type BookingMode = 'SINGLE_SLOT' | 'IN_GAME' | 'RECURRING';
 
 export type ApprovalMode = 'NONE' | 'REQUIRED' | 'AUTO';
 

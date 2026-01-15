@@ -13,6 +13,7 @@ export {
   useRealtimeMessage,
   useRealtimeAll,
   useRealtimeStatus,
+  useRealtimeSlotAvailability,
 } from './RealtimeProvider';
 
 export type {

@@ -1,0 +1,10 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "never",
+    "source.fixAll": "never",
+    "source.organizeImports": "never"
+  },
+  "eslint.codeActionsOnSave.mode": "problems",
+  "eslint.run": "onType",
+  "editor.formatOnSave": false
+}

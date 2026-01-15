@@ -17,7 +17,11 @@ import type {
   CalendarQueryParams,
   Allocation,
   CreateAllocationDTO,
-  PaymentTransaction
+  PaymentTransaction,
+  BookingSelectionDTO,
+  RecurringPreviewProjectionDTO,
+  CreateRecurringBookingDTO,
+  RecurringBookingResultProjectionDTO
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
@@ -56,37 +60,44 @@ export class BookingService extends BaseService {
 
   /**
    * Update booking status
+   * @param version - Optional version for optimistic locking
    */
-  async updateStatus(id: string, status: string): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/status`), { status });
+  async updateStatus(id: string, status: string, version?: number): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/status`), { status, ...(version !== undefined && { version }) });
   }
 
   /**
    * Confirm pending booking
+   * @param version - Optional version for optimistic locking
    */
-  async confirm(id: string): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/confirm`));
+  async confirm(id: string, version?: number): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/confirm`), version !== undefined ? { version } : undefined);
   }
 
   /**
    * Cancel booking
+   * @param version - Optional version for optimistic locking
    */
-  async cancel(id: string, data?: CancelBookingDTO): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/cancel`), data);
+  async cancel(id: string, data?: CancelBookingDTO, version?: number): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/cancel`), { ...data, ...(version !== undefined && { version }) });
   }
 
   /**
    * Complete booking
+   * @param version - Optional version for optimistic locking
    */
-  async complete(id: string): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/complete`));
+  async complete(id: string, version?: number): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/complete`), version !== undefined ? { version } : undefined);
   }
 
   /**
    * Delete booking
+   * @param version - Optional version for optimistic locking
    */
-  async delete(id: string): Promise<SuccessResponse> {
-    return this.client.delete(this.buildPath(`/${id}`));
+  async delete(id: string, version?: number): Promise<SuccessResponse> {
+    return this.client.delete(this.buildPath(`/${id}`), {
+      body: version !== undefined ? { version } : undefined
+    });
   }
 
   /**
@@ -120,6 +131,24 @@ export class BookingService extends BaseService {
     endDate: string;
     weekdays?: number[];
   }): Promise<SingleResponse<Booking[]>> {
+    return this.client.post(this.buildPath('/recurring'), data);
+  }
+
+  /**
+   * Get recurring booking preview
+   * Returns server-computed occurrence preview with conflict detection and availability status.
+   * Used to show the user what occurrences will be created before confirming.
+   */
+  async getRecurringPreview(selection: BookingSelectionDTO): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
+    return this.client.post(this.buildPath('/recurring/preview'), selection);
+  }
+
+  /**
+   * Create recurring booking with conflict policy
+   * Creates a series of recurring bookings with configurable conflict handling.
+   * Supports stopOnConflict (halt on first conflict) and allowPartial (create available only) policies.
+   */
+  async createRecurringBooking(data: CreateRecurringBookingDTO): Promise<SingleResponse<RecurringBookingResultProjectionDTO>> {
     return this.client.post(this.buildPath('/recurring'), data);
   }
 
@@ -164,22 +193,24 @@ export class BookingService extends BaseService {
   /**
    * Change booking time (user-initiated reschedule)
    * Server enforces cancellation deadlines and availability
+   * @param version - Optional version for optimistic locking
    */
-  async changeTime(id: string, newTimeRange: { startTime: string; endTime: string }): Promise<SingleResponse<Booking>> {
-    return this.client.patch(this.buildPath(`/${id}/time`), newTimeRange);
+  async changeTime(id: string, newTimeRange: { startTime: string; endTime: string }, version?: number): Promise<SingleResponse<Booking>> {
+    return this.client.patch(this.buildPath(`/${id}/time`), { ...newTimeRange, ...(version !== undefined && { version }) });
   }
 
   /**
    * Request a change to a booking (when direct changes are locked)
    * Used for bookings that require approval for modifications
+   * @param version - Optional version for optimistic locking
    */
-  async requestChange(id: string, data: { 
-    requestedStartTime?: string; 
-    requestedEndTime?: string; 
+  async requestChange(id: string, data: {
+    requestedStartTime?: string;
+    requestedEndTime?: string;
     reason?: string;
     notes?: string;
-  }): Promise<SingleResponse<{ requestId: string; status: string }>> {
-    return this.client.post(this.buildPath(`/${id}/change-request`), data);
+  }, version?: number): Promise<SingleResponse<{ requestId: string; status: string }>> {
+    return this.client.post(this.buildPath(`/${id}/change-request`), { ...data, ...(version !== undefined && { version }) });
   }
 
   /**

@@ -2,8 +2,9 @@
  * Login Page - Web App
  *
  * Uses reusable login components from @xala/ds
+ * Supports session-safe return-to-flow authentication with flow context preservation
  */
-import { useEffect } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LoginLayout,
@@ -16,19 +17,102 @@ import {
   ShieldCheckIcon,
 } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
+import { idportenService } from '@digilist/client-sdk';
+import type { FlowContext } from '@digilist/client-sdk';
+
+/**
+ * Navigation state passed when redirecting with flow context
+ */
+export interface FlowContextNavigationState {
+  /** The restored flow context containing booking state */
+  flowContext: FlowContext;
+  /** Whether this navigation is from a flow restoration */
+  isFlowRestoration: boolean;
+}
+
+/**
+ * Navigation state passed when flow context was expired
+ */
+export interface FlowContextExpiredState {
+  /** Indicates the booking session expired */
+  flowContextExpired: true;
+}
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading, login } = useAuth();
+  const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Track if we've already processed flow restoration to prevent double navigation
+  const flowRestorationProcessed = useRef(false);
+
+  // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
+  /**
+   * Handle navigation after authentication
+   * Prioritizes stored flow context over simple location state
+   */
+  const handlePostAuthNavigation = useCallback(() => {
+    // Prevent double processing
+    if (flowRestorationProcessed.current) {
+      return;
+    }
+
+    // Check for stored flow context first (higher priority than location state)
+    if (hasStoredContext) {
+      const result = restoreFlowContext(true); // Clear after load
+
+      if (result.hasContext && result.flowContext) {
+        flowRestorationProcessed.current = true;
+
+        // Navigate to the returnTo URL with complete flow context
+        const navigationState: FlowContextNavigationState = {
+          flowContext: result.flowContext,
+          isFlowRestoration: true,
+        };
+
+        navigate(result.flowContext.returnTo, {
+          replace: true,
+          state: navigationState,
+        });
+        return;
+      }
+
+      // Handle expired flow context
+      if (result.wasExpired) {
+        flowRestorationProcessed.current = true;
+        // Navigate to home with notification that session expired
+        // The target page can show a toast about expired booking session
+        const expiredState: FlowContextExpiredState = {
+          flowContextExpired: true,
+        };
+        navigate('/', {
+          replace: true,
+          state: expiredState,
+        });
+        return;
+      }
+
+      // Handle invalid/corrupted flow context - gracefully fall back
+      if (result.wasInvalid) {
+        flowRestorationProcessed.current = true;
+        navigate(from, { replace: true });
+        return;
+      }
+    }
+
+    // No flow context - use simple location state fallback
+    flowRestorationProcessed.current = true;
+    navigate(from, { replace: true });
+  }, [hasStoredContext, restoreFlowContext, navigate, from]);
+
+  // Navigate after successful authentication
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      navigate(from, { replace: true });
+      handlePostAuthNavigation();
     }
-  }, [isAuthenticated, isLoading, navigate, from]);
+  }, [isAuthenticated, isLoading, handlePostAuthNavigation]);
 
   if (isLoading) {
     return <></>;
@@ -85,7 +169,12 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title="ID-porten"
         description="Personlig innlogging med BankID"
-        onClick={() => login('idporten')}
+        onClick={() => {
+          // Pass current URL for session persistence (booking flow)
+          // Backend will auto-redirect based on user role or create user if needed
+          const returnTo = window.location.href;
+          idportenService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<MicrosoftIcon />}

@@ -70,6 +70,39 @@ function broadcastAuditEvent(event: AuditLogResult) {
   });
 }
 
+/**
+ * Broadcast booking-specific events to WebSocket clients
+ * Used for real-time availability updates and conflict prevention
+ */
+export function broadcastBookingEvent(event: {
+  type: 'created' | 'updated' | 'cancelled' | 'confirmed' | 'completed';
+  bookingId: string;
+  listingId: string;
+  tenantId: string;
+  startTime: Date | string;
+  endTime: Date | string;
+  userId?: string;
+  version?: number;
+  metadata?: Record<string, unknown>;
+}) {
+  const message = JSON.stringify({
+    type: 'booking',
+    data: {
+      ...event,
+      timestamp: new Date().toISOString(),
+    },
+  });
+  wsConnections.forEach((ws) => {
+    try {
+      if (ws.readyState === 1) { // OPEN
+        ws.send(message);
+      }
+    } catch (err) {
+      // Ignore send errors
+    }
+  });
+}
+
 export class AuditService {
   private db: any;
 

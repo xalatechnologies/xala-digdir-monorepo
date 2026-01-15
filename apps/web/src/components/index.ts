@@ -7,3 +7,5 @@ export { RealtimeToast } from './RealtimeToast';
 export { SkipLinks } from './SkipLinks';
 export { PaymentStatusBadge } from './PaymentStatusBadge';
 export type { PaymentStatusBadgeProps, PaymentStatusType } from './PaymentStatusBadge';
+export { GlobalSearch } from './GlobalSearch';
+export { ProtectedRoute } from './ProtectedRoute';

@@ -1,13 +1,15 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Organization } from '@digilist/client-sdk/types';
 import { useOrganizations } from '@digilist/client-sdk/hooks';
+import { profileService } from '@digilist/client-sdk/services';
 
 /**
  * Account Context Provider
  * Manages user account type (personal vs organization) and selected organization
  *
  * Features:
- * - Persist account selection in localStorage
+ * - Persist account selection via API (profile preferences)
  * - Fetch user's organizations from SDK
  * - Provide methods to switch between personal/organization mode
  * - Validate organization selection
@@ -19,12 +21,21 @@ import { useOrganizations } from '@digilist/client-sdk/hooks';
 
 export type AccountType = 'personal' | 'organization';
 
+/**
+ * Dashboard context type for RBAC-based UI filtering
+ * Used by Sidebar, ProtectedRoute, and other context-aware components
+ */
+export type DashboardContext = 'personal' | 'organization';
+
 export interface AccountContextState {
   accountType: AccountType;
   selectedOrganization: Organization | null;
   organizations: Organization[];
   isLoadingOrganizations: boolean;
   hasSelectedAccount: boolean;
+  rememberChoice: boolean;
+  /** Message shown when user's organization membership was lost (e.g., removed from org) */
+  lostOrganizationMessage: string | null;
 }
 
 export interface AccountContextValue extends AccountContextState {
@@ -32,6 +43,9 @@ export interface AccountContextValue extends AccountContextState {
   switchToOrganization: (organizationId: string) => void;
   getActiveAccount: () => ActiveAccount;
   markAccountAsSelected: () => void;
+  setRememberChoice: (value: boolean) => void;
+  /** Clear the lost organization message after it has been displayed */
+  clearLostOrganizationMessage: () => void;
 }
 
 export interface ActiveAccount {
@@ -48,13 +62,11 @@ export interface ActiveAccount {
 const AccountContext = createContext<AccountContextValue | undefined>(undefined);
 
 // =============================================================================
-// Local Storage Keys
+// Query Keys
 // =============================================================================
 
-const STORAGE_KEYS = {
-  ACCOUNT_TYPE: 'minside_account_type',
-  SELECTED_ORG_ID: 'minside_selected_organization',
-  HAS_SELECTED: 'minside_has_selected_account',
+const QUERY_KEYS = {
+  PREFERENCES: ['profile', 'preferences'] as const,
 } as const;
 
 // =============================================================================
@@ -72,6 +84,21 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
   userId = 'current-user',
   userName = 'Bruker',
 }) => {
+  const queryClient = useQueryClient();
+
+  // Fetch user's preferences from API
+  const {
+    data: preferencesResponse,
+    isLoading: isLoadingPreferences,
+  } = useQuery({
+    queryKey: QUERY_KEYS.PREFERENCES,
+    queryFn: () => profileService.getPreferences(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+
+  const preferences = preferencesResponse?.data;
+
   // Fetch user's organizations from SDK
   const { data: organizationsResponse, isLoading: isLoadingOrganizations } = useOrganizations({
     status: 'active', // Only fetch active organizations
@@ -79,65 +106,70 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
 
   const organizations = organizationsResponse?.data ?? [];
 
-  // State: Account type (personal or organization)
-  const [accountType, setAccountType] = useState<AccountType>(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.ACCOUNT_TYPE);
-    return (stored === 'organization' || stored === 'personal') ? stored : 'personal';
+  // Mutation: Update preferences via API
+  const updatePreferencesMutation = useMutation({
+    mutationFn: profileService.updatePreferences.bind(profileService),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.PREFERENCES });
+    },
   });
 
-  // State: Selected organization
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(() => {
-    const storedOrgId = localStorage.getItem(STORAGE_KEYS.SELECTED_ORG_ID);
-    if (!storedOrgId) return null;
+  // Derive state from API preferences (with defaults)
+  const accountType: AccountType = preferences?.activeContext ?? 'personal';
+  const rememberChoice: boolean = preferences?.rememberAccountChoice ?? false;
+  const activeOrgId: string | undefined = preferences?.activeOrganizationId;
 
-    // Will be validated once organizations are loaded
-    return null;
-  });
+  // State: Selected organization (derived from preferences + organizations list)
+  const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
 
   // State: Has user made initial account selection
-  // Auto-mark as selected to skip the modal - users can switch via the dropdown
-  const [hasSelectedAccount, setHasSelectedAccount] = useState<boolean>(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.HAS_SELECTED);
-    if (stored === null) {
-      // First time - auto-mark as selected
-      localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
-      return true;
-    }
-    return stored === 'true';
-  });
+  // True if rememberChoice is true from API preferences
+  const hasSelectedAccount = rememberChoice;
 
-  // Effect: Restore selected organization from localStorage once organizations are loaded
+  // State: Lost organization message (shown when user's org membership was lost)
+  const [lostOrganizationMessage, setLostOrganizationMessage] = useState<string | null>(null);
+
+  // =============================================================================
+  // Context Validation & Sync
+  // =============================================================================
+
+  // Effect: Validate and restore organization context once organizations and preferences are loaded
   useEffect(() => {
-    if (isLoadingOrganizations || organizations.length === 0) return;
+    // Wait for both to finish loading
+    if (isLoadingOrganizations || isLoadingPreferences) return;
 
-    const storedOrgId = localStorage.getItem(STORAGE_KEYS.SELECTED_ORG_ID);
-    if (!storedOrgId) return;
-
-    // Find the organization in loaded organizations
-    const org = organizations.find(o => o.id === storedOrgId);
-
-    if (org) {
-      setSelectedOrganization(org);
-    } else {
-      // Organization not found (user no longer has access)
-      // Reset to personal mode
-      console.warn(`Organization ${storedOrgId} not found. Resetting to personal mode.`);
-      localStorage.removeItem(STORAGE_KEYS.SELECTED_ORG_ID);
-      setAccountType('personal');
+    // If account type is organization, validate the org still exists
+    if (accountType === 'organization' && activeOrgId) {
+      const org = organizations.find(o => o.id === activeOrgId);
+      if (org) {
+        setSelectedOrganization(org);
+      } else {
+        // Organization no longer accessible - force personal mode via API
+        setSelectedOrganization(null);
+        updatePreferencesMutation.mutate({
+          activeContext: 'personal',
+          activeOrganizationId: undefined,
+        });
+        setLostOrganizationMessage(
+          'Du har ikke lenger tilgang til den valgte organisasjonen. Du er nå i personlig modus.'
+        );
+      }
+    } else if (accountType === 'personal') {
       setSelectedOrganization(null);
     }
-  }, [isLoadingOrganizations, organizations]);
+  }, [isLoadingOrganizations, isLoadingPreferences, accountType, activeOrgId, organizations]);
 
   // Method: Switch to personal account
-  const switchToPersonal = () => {
-    setAccountType('personal');
+  const switchToPersonal = useCallback(() => {
     setSelectedOrganization(null);
-    localStorage.setItem(STORAGE_KEYS.ACCOUNT_TYPE, 'personal');
-    localStorage.removeItem(STORAGE_KEYS.SELECTED_ORG_ID);
-  };
+    updatePreferencesMutation.mutate({
+      activeContext: 'personal',
+      activeOrganizationId: undefined,
+    });
+  }, [updatePreferencesMutation]);
 
   // Method: Switch to organization account
-  const switchToOrganization = (organizationId: string) => {
+  const switchToOrganization = useCallback((organizationId: string) => {
     const org = organizations.find(o => o.id === organizationId);
 
     if (!org) {
@@ -145,14 +177,15 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       return;
     }
 
-    setAccountType('organization');
     setSelectedOrganization(org);
-    localStorage.setItem(STORAGE_KEYS.ACCOUNT_TYPE, 'organization');
-    localStorage.setItem(STORAGE_KEYS.SELECTED_ORG_ID, organizationId);
-  };
+    updatePreferencesMutation.mutate({
+      activeContext: 'organization',
+      activeOrganizationId: organizationId,
+    });
+  }, [organizations, updatePreferencesMutation]);
 
   // Method: Get active account details
-  const getActiveAccount = (): ActiveAccount => {
+  const getActiveAccount = useCallback((): ActiveAccount => {
     if (accountType === 'organization' && selectedOrganization) {
       return {
         type: 'organization',
@@ -168,13 +201,29 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       name: userName,
       displayName: userName,
     };
-  };
+  }, [accountType, selectedOrganization, userId, userName]);
 
-  // Method: Mark that user has made initial account selection
-  const markAccountAsSelected = () => {
-    setHasSelectedAccount(true);
-    localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
-  };
+  // Method: Mark that user has made initial account selection (sets rememberChoice to true)
+  const markAccountAsSelected = useCallback(() => {
+    updatePreferencesMutation.mutate({
+      rememberAccountChoice: true,
+    });
+  }, [updatePreferencesMutation]);
+
+  // Method: Set remember choice preference
+  const handleSetRememberChoice = useCallback((value: boolean) => {
+    updatePreferencesMutation.mutate({
+      rememberAccountChoice: value,
+    });
+  }, [updatePreferencesMutation]);
+
+  // Method: Clear the lost organization message after it has been displayed
+  const clearLostOrganizationMessage = useCallback(() => {
+    setLostOrganizationMessage(null);
+  }, []);
+
+  // Combined loading state
+  const isLoading = isLoadingOrganizations || isLoadingPreferences;
 
   // Memoized context value
   const value = useMemo<AccountContextValue>(
@@ -182,19 +231,31 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       accountType,
       selectedOrganization,
       organizations,
-      isLoadingOrganizations,
+      isLoadingOrganizations: isLoading,
       hasSelectedAccount,
+      rememberChoice,
+      lostOrganizationMessage,
       switchToPersonal,
       switchToOrganization,
       getActiveAccount,
       markAccountAsSelected,
+      setRememberChoice: handleSetRememberChoice,
+      clearLostOrganizationMessage,
     }),
     [
       accountType,
       selectedOrganization,
       organizations,
-      isLoadingOrganizations,
+      isLoading,
       hasSelectedAccount,
+      rememberChoice,
+      lostOrganizationMessage,
+      switchToPersonal,
+      switchToOrganization,
+      getActiveAccount,
+      markAccountAsSelected,
+      handleSetRememberChoice,
+      clearLostOrganizationMessage,
     ]
   );
 

@@ -66,3 +66,43 @@ export {
   // Upload progress tracking
   UploadProgressTracker,
 } from './upload-progress';
+
+export {
+  // Flow context constants
+  FLOW_CONTEXT_KEY,
+  MAX_FLOW_CONTEXT_SIZE,
+  FLOW_CONTEXT_EXPIRY_MS,
+  // Flow context serialization/deserialization
+  serializeFlowContext,
+  deserializeFlowContext,
+  isValidFlowContext,
+  // Flow context expiration
+  isFlowContextExpired,
+  getFlowContextTTL,
+  // URL validation
+  validateReturnToUrl,
+  sanitizeReturnToUrl,
+  // Flow context signature/verification
+  signFlowContext,
+  verifyFlowContext,
+  // Flow context storage helpers
+  saveFlowContextToStorage,
+  loadFlowContextFromStorage,
+  clearFlowContextFromStorage,
+  hasStoredFlowContext,
+  // ReturnToConfig helpers
+  createReturnToConfig,
+  validateReturnToConfig,
+  // Flow context factory
+  createFlowContext,
+} from './flow-context';
+
+export {
+  // Session persistence (auth flow state)
+  saveSessionState,
+  restoreSessionState,
+  clearSessionState,
+  hasPendingSession,
+  // Types
+  type SessionState,
+} from './session-storage';

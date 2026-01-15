@@ -4,10 +4,10 @@
  */
 
 import { BaseService } from './base.service';
-import type { 
-  Listing, 
-  ListingQueryParams, 
-  CreateListingDTO, 
+import type {
+  Listing,
+  ListingQueryParams,
+  CreateListingDTO,
   UpdateListingDTO,
   ListingAvailability,
   ListingStats,
@@ -16,10 +16,38 @@ import type {
   Municipality,
   TimeSlot,
   AvailabilityQueryParams,
-  PublicListingParams
+  PublicListingParams,
+  ListingCalendarConfigProjectionDTO,
+  // V2 Types
+  ListingV2,
+  ListingQueryParamsV2,
+  CreateListingV2DTO,
+  UpdateListingV2DTO,
 } from '../types/listing';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+import type { ListingCardProjectionDTO, ListingDetailsProjectionDTO } from '../types/projection-dtos';
+import type { PaginatedResponse, SingleResponse, SuccessResponse, ListingCategory, BookingTimeMode } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
+
+/** Time mode metadata returned from API */
+export interface TimeModeInfo {
+  id: BookingTimeMode;
+  name: string;
+  nameEn: string;
+  description: string;
+  calendarBehavior: string;
+}
+
+/** Category metadata returned from V2 API */
+export interface CategoryV2Info {
+  id: ListingCategory;
+  name: string;
+  nameEn: string;
+  description: string;
+  icon: string;
+  examples: string[];
+}
+
+
 
 export class ListingService extends BaseService {
   constructor() {
@@ -99,6 +127,18 @@ export class ListingService extends BaseService {
   }
 
   /**
+   * Get listing calendar configuration.
+   * Returns booking modes, constraints, and calendar display settings.
+   * This is a screen-ready projection containing all configuration needed to render the booking calendar UI.
+   *
+   * @param id - Listing ID
+   * @returns ListingCalendarConfigProjectionDTO with booking modes and constraints
+   */
+  async getCalendarConfig(id: string): Promise<SingleResponse<ListingCalendarConfigProjectionDTO>> {
+    return this.client.get(this.buildPath(`/${id}/calendar-config`));
+  }
+
+  /**
    * Add media to listing (legacy method - use uploadMedia for new implementations)
    * @deprecated Use uploadMedia() for new implementations
    */
@@ -145,7 +185,55 @@ export class ListingService extends BaseService {
   async restore(id: string): Promise<SuccessResponse> {
     return this.client.put(this.buildPath(`/${id}/restore`));
   }
+
+  // ==========================================================================
+  // V2 Methods (New Category & Booking Model System)
+  // ==========================================================================
+
+  /**
+   * Get paginated listings with V2 filters (category, timeMode, features)
+   */
+  async getAllV2(params?: ListingQueryParamsV2): Promise<PaginatedResponse<ListingV2>> {
+    return this.client.get(this.buildPath(), { params: params as Record<string, string | number | boolean> });
+  }
+
+  /**
+   * Create new listing with V2 structure (category + timeMode + features)
+   */
+  async createV2(data: CreateListingV2DTO): Promise<SingleResponse<ListingV2>> {
+    return this.client.post(this.buildPath(), data);
+  }
+
+  /**
+   * Update listing with V2 structure
+   */
+  async updateV2(id: string, data: UpdateListingV2DTO): Promise<SingleResponse<ListingV2>> {
+    return this.client.put(this.buildPath(`/${id}`), data);
+  }
+
+  /**
+   * Get V2 categories (4 top-level categories)
+   */
+  async getCategoriesV2(): Promise<SingleResponse<CategoryV2Info[]>> {
+    return this.client.get('/api/categories');
+  }
+
+  /**
+   * Get available booking time modes
+   */
+  async getTimeModes(): Promise<SingleResponse<TimeModeInfo[]>> {
+    return this.client.get('/api/categories/time-modes');
+  }
+
+  /**
+   * Get legacy categories (deprecated)
+   * @deprecated Use getCategoriesV2() instead
+   */
+  async getLegacyCategories(): Promise<SingleResponse<Category[]>> {
+    return this.client.get('/api/categories/v1');
+  }
 }
+
 
 /**
  * Public Listing Service (No Auth Required)
@@ -156,18 +244,18 @@ export class PublicListingService extends BaseService {
   }
 
   /**
-   * Get public listings
+   * Get public listings (returns screen-ready projection DTOs)
    */
-  async getListings(params?: PublicListingParams): Promise<PaginatedResponse<Listing>> {
+  async getListings(params?: PublicListingParams): Promise<PaginatedResponse<ListingCardProjectionDTO>> {
     return this.client.get(this.buildPath('/listings'), { 
       params: params as Record<string, string | number | boolean> 
     });
   }
 
   /**
-   * Get public listing by ID
+   * Get public listing by ID (returns screen-ready projection DTO)
    */
-  async getListing(id: string): Promise<SingleResponse<Listing>> {
+  async getListing(id: string): Promise<SingleResponse<ListingDetailsProjectionDTO>> {
     return this.client.get(this.buildPath(`/listings/${id}`));
   }
 

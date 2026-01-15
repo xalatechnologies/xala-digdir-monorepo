@@ -3,8 +3,23 @@
  * Single Responsibility: All listing-related type definitions
  */
 
-import type { BaseEntity, TenantEntity, ListingType, ListingStatus, BookingModel, PricingUnit, BaseQueryParams } from './enums';
+import type { 
+  BaseEntity, 
+  TenantEntity, 
+  ListingType, 
+  ListingStatus, 
+  BookingModel, 
+  PricingUnit, 
+  BaseQueryParams,
+  // V2 types
+  ListingCategory,
+  BookingTimeMode,
+  ListingBookingFeatures,
+  ListingBookingConfig,
+} from './enums';
 import type { ReviewStats } from './review';
+import type { BookingMode, RecurringConstraintsDTO, InGameConstraintsDTO } from './booking';
+
 
 // =============================================================================
 // Listing Entity
@@ -109,6 +124,155 @@ export interface ListingQueryParams extends BaseQueryParams {
 }
 
 // =============================================================================
+// V2 Listing Types (New Category & Booking Model)
+// =============================================================================
+
+/** Listing rules configuration */
+export interface ListingRulesConfig {
+  deposit?: { 
+    required: boolean; 
+    amount: number;
+    currency?: string;
+  };
+  pickup?: { 
+    location: string; 
+    instructions?: string;
+  };
+  ageRequirement?: number;
+  licenseRequired?: boolean;
+  cancellation?: { 
+    hoursNotice: number; 
+    refundPercent: number;
+  };
+}
+
+/**
+ * V2 Listing Entity with new category/timeMode structure
+ */
+export interface ListingV2 extends TenantEntity {
+  organizationId?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  images: string[];
+  
+  // New Category System
+  category: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  
+  // New Booking Configuration
+  booking: ListingBookingConfig;
+  
+  // Pricing
+  pricing: ListingPricing;
+  
+  // Location
+  location?: ListingLocation;
+  
+  // Rules & Logistics
+  rules?: ListingRulesConfig;
+  
+  // Status & Metadata
+  status: ListingStatus;
+  metadata?: ListingMetadata;
+  
+  // Review aggregation
+  averageRating?: number;
+  reviewCount?: number;
+  
+  // Deprecated fields for backward compatibility
+  /** @deprecated Use category instead */
+  type?: ListingType;
+  /** @deprecated Use booking.timeMode and booking.features instead */
+  bookingModel?: BookingModel;
+  capacity?: number;
+  quantity?: number;
+}
+
+/**
+ * V2 Query Parameters with new filter facets
+ */
+export interface ListingQueryParamsV2 extends BaseQueryParams {
+  // New Category Filter
+  category?: ListingCategory;
+  
+  // New Time Mode Filter
+  timeMode?: BookingTimeMode;
+  
+  // New Feature Toggles
+  hasInventory?: boolean;
+  sharedCapacityEnabled?: boolean;
+  packagesEnabled?: boolean;
+  
+  // Enhanced filters
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  capacityMin?: number;
+  availableFrom?: string;
+  availableTo?: string;
+  
+  // Existing filters
+  status?: ListingStatus;
+  organizationId?: string;
+  search?: string;
+  city?: string;
+  municipality?: string;
+}
+
+/**
+ * V2 Create Listing DTO
+ */
+export interface CreateListingV2DTO {
+  name: string;
+  slug?: string;
+  description?: string;
+  images?: string[];
+  
+  // Required category
+  category: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  
+  // Required booking config
+  booking: {
+    timeMode: BookingTimeMode;
+    features?: ListingBookingFeatures;
+  };
+  
+  // Optional
+  pricing?: Partial<ListingPricing>;
+  location?: ListingLocation;
+  rules?: ListingRulesConfig;
+  organizationId?: string;
+  metadata?: ListingMetadata;
+}
+
+/**
+ * V2 Update Listing DTO
+ */
+export interface UpdateListingV2DTO {
+  name?: string;
+  description?: string;
+  images?: string[];
+  category?: ListingCategory;
+  subcategory?: string;
+  tags?: string[];
+  fixedLocation?: boolean;
+  booking?: Partial<ListingBookingConfig>;
+  pricing?: Partial<ListingPricing>;
+  location?: ListingLocation;
+  rules?: ListingRulesConfig;
+  metadata?: ListingMetadata;
+}
+
+
+// =============================================================================
 // Listing Related Types
 // =============================================================================
 
@@ -181,6 +345,93 @@ export interface PublicListingParams extends BaseQueryParams {
   capacity?: number;
   date?: string;
   search?: string;
+}
+
+// =============================================================================
+// Listing Calendar Config Types
+// =============================================================================
+
+/**
+ * Constraints for single slot booking mode.
+ * Defines rules for standard one-time booking selection.
+ */
+export interface SingleSlotConstraintsDTO {
+  /** Whether single slot mode is enabled for this listing */
+  enabled: boolean;
+  /** Minimum booking duration in minutes */
+  minDurationMinutes?: number;
+  /** Maximum booking duration in minutes */
+  maxDurationMinutes?: number;
+  /** Minimum advance notice in minutes */
+  minNoticeMinutes?: number;
+  /** Maximum advance booking window in days */
+  maxAdvanceDays?: number;
+}
+
+/**
+ * Configuration for a single booking mode.
+ * Contains mode type, enabled status, label key, and mode-specific constraints.
+ */
+export interface BookingModeConfig {
+  /** The booking mode type */
+  mode: BookingMode;
+  /** Whether this mode is enabled for the listing */
+  enabled: boolean;
+  /** Localization key for display label (e.g., "booking.mode.single", "booking.mode.recurring") */
+  labelKey: string;
+  /** Optional description key for mode explanation */
+  descriptionKey?: string;
+  /** Mode-specific constraints */
+  constraints: SingleSlotConstraintsDTO | InGameConstraintsDTO | RecurringConstraintsDTO;
+}
+
+/**
+ * Calendar granularity for display purposes.
+ * - HOUR: Display time slots by hour
+ * - DAY: Display full-day slots
+ * - WEEK: Display weekly view
+ */
+export type CalendarGranularity = 'HOUR' | 'DAY' | 'WEEK';
+
+/**
+ * Listing calendar configuration projection DTO.
+ * Contains all configuration needed to render the booking calendar UI.
+ * This is a screen-ready projection - UI should use values directly without transformation.
+ */
+export interface ListingCalendarConfigProjectionDTO {
+  /** ID of the listing */
+  listingId: string;
+  /** Name of the listing */
+  listingName: string;
+  /** Calendar display granularity */
+  granularity: CalendarGranularity;
+  /** Available booking modes with their configurations */
+  bookingModes: BookingModeConfig[];
+  /** Default booking mode (first enabled mode) */
+  defaultMode: BookingMode;
+  /** Operating hours for the listing (ISO weekday 1-7 to open/close times) */
+  operatingHours?: Record<string, { open: string; close: string }>;
+  /** Time zone for the listing (IANA format, e.g., "Europe/Oslo") */
+  timezone: string;
+  /** Slot duration in minutes for calendar grid */
+  slotDurationMinutes: number;
+  /** Minimum selectable slots (for MIN_SLOT_COUNT validation) */
+  minSlots?: number;
+  /** Maximum selectable slots (for MAX_SLOT_COUNT validation) */
+  maxSlots?: number;
+  /** Whether the listing allows same-day booking */
+  allowSameDayBooking: boolean;
+  /** Lead time in minutes required before booking start */
+  leadTimeMinutes?: number;
+  /** Available actions based on user permissions */
+  availableActions: Array<'VIEW' | 'BOOK' | 'RESERVE' | 'MANAGE'>;
+  /** User permissions for this listing */
+  permissions: {
+    canBook: boolean;
+    canReserve: boolean;
+    canViewPricing: boolean;
+    canManageAvailability: boolean;
+  };
 }
 
 // =============================================================================

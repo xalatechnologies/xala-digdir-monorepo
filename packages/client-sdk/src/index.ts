@@ -108,6 +108,22 @@ export {
   formatProgress,
   // Upload progress tracking
   UploadProgressTracker,
+  // Flow context utilities (session-safe return-to-flow)
+  FLOW_CONTEXT_KEY,
+  MAX_FLOW_CONTEXT_SIZE,
+  FLOW_CONTEXT_EXPIRY_MS,
+  serializeFlowContext,
+  deserializeFlowContext,
+  isValidFlowContext,
+  isFlowContextExpired,
+  getFlowContextTTL,
+  validateReturnToUrl,
+  sanitizeReturnToUrl,
+  saveFlowContextToStorage,
+  loadFlowContextFromStorage,
+  clearFlowContextFromStorage,
+  hasStoredFlowContext,
+  createFlowContext,
 } from './utils';
 
 export type {

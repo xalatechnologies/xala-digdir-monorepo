@@ -12,16 +12,75 @@ export * from './actions';
 // Projection Registry (cost classification + metadata)
 export * from './projection-registry';
 
+// Projection DTOs (screen-ready, flat data structures)
+export * from './projection-dtos';
+
 // Domain types
 export * from './listing';
+// Rental object types - exclude duplicates from enums.ts (BookingTimeMode, PricingUnit, InventoryFeature, etc.)
+// and listing.ts (mapPricingUnit)
+export {
+  // Category types
+  type RentalObjectCategory,
+  type RentalObjectStatus,
+  // Supporting types (not duplicated)
+  type RentalObjectPricing,
+  type RentalObjectLocation,
+  type BookingFeatures,
+  type RentalObjectRules,
+  type RentalObjectMetadata,
+  // Entity
+  type RentalObject,
+  // DTOs
+  type CreateRentalObjectDTO,
+  type UpdateRentalObjectDTO,
+  type RentalObjectQueryParams,
+  // Responses
+  type RentalObjectsResponse,
+  type RentalObjectResponse,
+  // UI types
+  type UiRentalObject,
+  // Constants
+  RENTAL_OBJECT_CATEGORIES,
+  BOOKING_TIME_MODES,
+  CATEGORY_LABELS,
+  TIME_MODE_LABELS,
+  CATEGORY_OPTIONS,
+  // Functions
+  getCategoryLabel,
+  getTimeModeLabel,
+  toUiRentalObject,
+} from './rental-object';
 export * from './booking';
 export * from './organization';
 export * from './auth';
+export * from './profile';
 export * from './review';
 export * from './settings';
 export * from './upload';
 export * from './search';
 export * from './economy';
+// Calendar types - exclude duplicates that are also in listing.ts
+// CalendarGranularity and ListingCalendarConfigProjectionDTO are defined in both files with different values
+export {
+  type SlotStatus,
+  type SelectableUnit,
+  type CalendarView,
+  type DayOpeningHours,
+  type OpeningHoursException,
+  type OpeningHoursDTO,
+  type BookingTypeDTO,
+  type CalendarUIConfigDTO,
+  type CalendarPermissionsDTO,
+  type AvailabilityCellDTO,
+  type SlotStatusLegendDTO,
+  type ListingAvailabilityMatrixProjectionDTO,
+  type AvailabilityMatrixQueryParams,
+  SLOT_STATUS_LABELS,
+  SLOT_STATUS_LABEL_KEYS,
+  CALENDAR_GRANULARITY_LABELS,
+  DEFAULT_SLOT_STATUS_LEGEND,
+} from './calendar';
 
 // Additional types that don't fit a single domain
 export type {

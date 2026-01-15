@@ -4,6 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 export default defineConfig({
+  // Load .env from monorepo root
+  envDir: path.resolve(__dirname, '../..'),
   plugins: [
     react(),
     VitePWA({
@@ -130,9 +132,13 @@ export default defineConfig({
       'react-map-gl',
       'react-map-gl/mapbox',
     ],
+    force: true,
     esbuildOptions: {
       // Mapbox GL requires these Node.js polyfills
       target: 'esnext',
+      define: {
+        global: 'globalThis',
+      },
     },
   },
 });

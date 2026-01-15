@@ -39,9 +39,87 @@ print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+# =============================================================================
+# Safety Checks - Run before any deployment
+# =============================================================================
+
+# Check for duplicate Vite config files (prevents config conflicts)
+check_duplicate_configs() {
+    print_status "Checking for duplicate Vite configs..."
+    
+    for app in web backoffice minside; do
+        local js_config="$PROJECT_ROOT/apps/$app/vite.config.js"
+        local ts_config="$PROJECT_ROOT/apps/$app/vite.config.ts"
+        
+        if [ -f "$js_config" ] && [ -f "$ts_config" ]; then
+            print_warning "Duplicate configs found in $app - removing stale .js file"
+            rm "$js_config"
+        fi
+    done
+    
+    print_success "Config check passed"
 }
+
+# Ensure theme CSS files exist in public folders
+ensure_theme_files() {
+    print_status "Ensuring theme CSS files are in public folders..."
+    
+    local theme_src="$PROJECT_ROOT/packages/ds-themes"
+    
+    for app in web backoffice minside; do
+        local theme_dir="$PROJECT_ROOT/apps/$app/public/themes"
+        mkdir -p "$theme_dir"
+        
+        # Copy main theme
+        if [ -f "$theme_src/generated/digilist.css" ]; then
+            cp "$theme_src/generated/digilist.css" "$theme_dir/"
+        else
+            print_error "Missing: $theme_src/generated/digilist.css"
+            exit 1
+        fi
+        
+        # Copy extensions
+        if [ -f "$theme_src/themes/digilist-extensions.css" ]; then
+            cp "$theme_src/themes/digilist-extensions.css" "$theme_dir/"
+        else
+            print_warning "Missing: $theme_src/themes/digilist-extensions.css"
+        fi
+    done
+    
+    print_success "Theme files copied to all apps"
+}
+
+# Clear build caches to ensure fresh build
+clear_caches() {
+    print_status "Clearing build caches..."
+    
+    rm -rf "$PROJECT_ROOT/.turbo"
+    rm -rf "$PROJECT_ROOT/node_modules/.cache"
+    
+    for app in web backoffice minside; do
+        rm -rf "$PROJECT_ROOT/apps/$app/.turbo"
+        rm -rf "$PROJECT_ROOT/apps/$app/node_modules/.vite"
+        rm -rf "$PROJECT_ROOT/apps/$app/dist"
+    done
+    
+    print_success "Caches cleared"
+}
+
+# Validate build output for circular dependency warnings
+validate_build() {
+    local app_name=$1
+    local build_output=$2
+    
+    if echo "$build_output" | grep -qi "circular"; then
+        print_error "Circular chunk dependency detected in $app_name!"
+        print_error "Please check vite.config.ts manualChunks configuration."
+        exit 1
+    fi
+}
+
+# =============================================================================
+# Build Functions
+# =============================================================================
 
 # Function to build an app
 build_app() {
@@ -53,8 +131,13 @@ build_app() {
     # Create production env file
     create_prod_env "$app_name"
     
-    # Build the app
-    pnpm --filter "@xala/$app_name" build
+    # Build the app and capture output
+    local build_output
+    build_output=$(pnpm --filter "@xala/$app_name" build 2>&1)
+    echo "$build_output"
+    
+    # Validate no circular dependencies
+    validate_build "$app_name" "$build_output"
     
     print_success "$app_name built successfully!"
 }
@@ -150,6 +233,13 @@ main() {
     
     print_status "Starting deployment..."
     print_status "Target: $target"
+    echo ""
+    
+    # Run safety checks BEFORE any build/deploy
+    print_status "Running pre-flight checks..."
+    check_duplicate_configs
+    ensure_theme_files
+    clear_caches
     echo ""
     
     case "$target" in
