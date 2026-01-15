@@ -52,7 +52,8 @@
     "react-dom": "^18.3.1",
     "turbo": "^2.0.0",
     "typescript": "^5.6.3",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.17",
+    "yaml": "^2.8.2"
   },
   "pnpm": {
     "overrides": {
