@@ -222,6 +222,10 @@ async function bootstrap() {
   container.registerFactory('LikeController', () =>
     new LikeController(container.resolve('LikeService'))
   );
+  // Share controller with ShareService dependency
+  container.registerFactory('ShareController', () =>
+    new ShareController(container.resolve('ShareService'))
+  );
   console.log('✓ Controllers registered');
 
   // Load modules
