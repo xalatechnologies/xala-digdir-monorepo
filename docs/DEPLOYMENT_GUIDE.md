@@ -1,6 +1,6 @@
 # Deployment Guide & Lessons Learned
 
-> Last Updated: January 14, 2026
+> Last Updated: January 15, 2026
 
 This document captures the deployment process for the Digilist monorepo
 applications and the critical lessons learned from production deployment issues.
@@ -307,6 +307,238 @@ vendor-query.js    → React Query
 vendor.js          → All other node_modules (React, etc.)
 index.js           → Application code
 ```
+
+---
+
+## Database Migrations
+
+### Migration Process
+
+Database migrations must be run on the production database before deploying API changes.
+
+**Step-by-step:**
+
+```bash
+# 1. SSH into server
+ssh -p $HOSTINGER_PORT "$HOSTINGER_USER@$HOSTINGER_HOST"
+
+# 2. Navigate to API directory
+cd /var/www/digilist/api
+
+# 3. Backup database (CRITICAL!)
+sudo -u postgres pg_dump digilist_prod > /tmp/backup_$(date +%Y%m%d_%H%M%S).sql
+
+# 4. Run migration files
+psql -U digilist -d digilist_prod -f drizzle/0004_gdpr_consent_system.sql
+psql -U digilist -d digilist_prod -f drizzle/0005_notification_system.sql
+
+# 5. Verify migration
+psql -U digilist -d digilist_prod -c "\dt" | grep -E "(consent_|notification_|data_subject_)"
+
+# 6. Restart API
+pm2 restart xala-api
+
+# 7. Check logs
+pm2 logs xala-api --lines 50
+```
+
+### Recent Migrations
+
+| Tag | Date | Tables Created | Notes |
+|-----|------|----------------|-------|
+| `0004_gdpr_consent_system` | 2026-01-15 | 5 tables | GDPR compliance system |
+| `0005_notification_system` | 2026-01-15 | 6 tables | Multi-channel notifications |
+
+**GDPR Tables:**
+- `consent_types` - Consent definitions with versioning
+- `user_consents` - User consent records
+- `consent_audit_log` - Audit trail for consent changes
+- `data_subject_requests` - GDPR data requests
+- `data_processing_records` - Article 30 processing records
+
+**Notification Tables:**
+- `notification_templates` - Template definitions with i18n
+- `notifications` - Individual notification instances
+- `notification_delivery_logs` - Delivery tracking
+- `notification_queue` - Scheduled notifications
+- `sms_provider_configs` - SMS provider settings
+- `email_provider_configs` - Email provider settings
+
+### Schema Fixes Applied
+
+During deployment, several schema mismatches were discovered and fixed:
+
+```sql
+-- Missing columns in consent_types
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS tenant_id text;
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS code varchar(100);
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS display_order integer DEFAULT 0;
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS content text;
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS is_required boolean DEFAULT false;
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;
+ALTER TABLE consent_types ADD COLUMN IF NOT EXISTS show_on_registration boolean DEFAULT false;
+
+-- Update existing records
+UPDATE consent_types SET tenant_id = 'default' WHERE tenant_id IS NULL;
+UPDATE consent_types SET code = 'terms_of_service' WHERE name = 'Terms of Service';
+UPDATE consent_types SET code = 'privacy_policy' WHERE name = 'Privacy Policy';
+UPDATE consent_types SET code = 'marketing_emails' WHERE name = 'Marketing Emails';
+UPDATE consent_types SET code = 'analytics_cookies' WHERE name = 'Analytics Cookies';
+```
+
+### Rollback Procedures
+
+If migration fails or causes issues:
+
+```bash
+# Restore from backup
+psql -U digilist -d digilist_prod < /tmp/backup_YYYYMMDD_HHMMSS.sql
+
+# Verify restoration
+psql -U digilist -d digilist_prod -c "SELECT COUNT(*) FROM tenants;"
+
+# Restart API with old version
+pm2 stop xala-api
+cd /var/www/digilist/api.backup
+pm2 start ecosystem.config.cjs
+```
+
+---
+
+## GDPR + Notification System Deployment (2026-01-15)
+
+### Overview
+
+This deployment added comprehensive GDPR compliance and multi-channel notification system.
+
+**Features Added:**
+- Consent management with versioning
+- Data subject requests (6 types)
+- Multi-channel notifications (in-app, email, SMS, push)
+- Real-time WebSocket notifications
+- GDPR-notification integration
+- Frontend components across all 3 apps
+
+### Issues Encountered & Fixes
+
+#### Issue 1: Drizzle Interactive Prompts
+
+**Symptom**: `pnpm db:generate` prompted for user input, couldn't run non-interactively
+
+**Root Cause**: Drizzle detected schema changes and prompted for column categorization
+
+**Fix Applied**: Created manual SQL migration files instead of using Drizzle generate
+- Created `0004_gdpr_consent_system.sql` manually
+- Created `0005_notification_system.sql` manually
+- Updated `drizzle/meta/_journal.json` to register migrations
+
+#### Issue 2: Database Schema Mismatches
+
+**Symptom**: API errors `column "tenant_id" does not exist`, then `column "code" does not exist`
+
+**Root Cause**: Migration didn't include all columns expected by TypeScript types
+
+**Fix Applied**: Added missing columns via ALTER TABLE statements
+```sql
+ALTER TABLE consent_types ADD COLUMN tenant_id text NOT NULL DEFAULT 'default';
+ALTER TABLE consent_types ADD COLUMN code varchar(100) NOT NULL;
+ALTER TABLE consent_types ADD COLUMN display_order integer NOT NULL DEFAULT 0;
+-- Plus 4 more columns
+```
+
+#### Issue 3: Route Conflicts
+
+**Symptom**: `FastifyError: Method 'GET' already declared for route '/api/notifications/:id'`
+
+**Root Cause**: Both old `NotificationsController` and new `NotificationSystemController` were active
+
+**Fix Applied**: Disabled old controller
+```typescript
+// apps/api/src/modules/notifications/notifications.controller.ts
+// DEPRECATED: Commenting out to prevent route conflicts
+// @Controller('/api/notifications')
+export class NotificationsController {
+```
+
+#### Issue 4: GDPR Routes Not Registered
+
+**Symptom**: `curl https://api.digilist.no/api/gdpr/consent-types` returned 404
+
+**Root Cause**: GDPR controller imported but routes not registered (requires custom registration)
+
+**Fix Applied**: Added manual registration in main.ts
+```typescript
+// apps/api/src/main.ts
+const gdprController = container.resolve('GdprController') as GdprController;
+await gdprController.register(app);
+console.log('✓ GDPR routes registered');
+```
+
+### Post-Deployment Verification
+
+**Database:**
+```bash
+# Verify tables created
+psql -U digilist -d digilist_prod -c "\dt" | grep -E "(consent_|notification_|data_subject_)"
+
+# Expected: 11 new tables
+# - consent_types
+# - user_consents
+# - consent_audit_log
+# - data_subject_requests
+# - data_processing_records
+# - notification_templates
+# - notifications
+# - notification_delivery_logs
+# - notification_queue
+# - sms_provider_configs
+# - email_provider_configs
+```
+
+**API Endpoints:**
+```bash
+# Test GDPR endpoints
+curl https://api.digilist.no/api/gdpr/consent-types
+curl -H "Authorization: Bearer $TOKEN" https://api.digilist.no/api/gdpr/my-consents
+
+# Test notification endpoints
+curl -H "Authorization: Bearer $TOKEN" https://api.digilist.no/api/notifications
+curl -H "Authorization: Bearer $TOKEN" https://api.digilist.no/api/notifications/count
+```
+
+**Frontend:**
+```bash
+# Verify apps load
+curl -I https://web-test.digilist.no
+curl -I https://backoffice-test.digilist.no
+curl -I https://minside-test.digilist.no
+
+# Expected: HTTP 200 for all
+```
+
+**WebSocket:**
+```javascript
+// Test real-time notifications
+const ws = new WebSocket('wss://api.digilist.no/ws/notifications');
+ws.onopen = () => console.log('Connected');
+ws.onmessage = (e) => console.log('Notification:', JSON.parse(e.data));
+```
+
+### Files Modified
+
+| File | Change |
+|------|--------|
+| `apps/api/drizzle/0004_gdpr_consent_system.sql` | **CREATED** - GDPR database migration |
+| `apps/api/drizzle/0005_notification_system.sql` | **CREATED** - Notification system migration |
+| `apps/api/src/main.ts` | Added GDPR + notification route registration |
+| `apps/api/src/modules/notifications/notifications.controller.ts` | Disabled to prevent conflicts |
+| `apps/web/src/components/ConsentPopup.tsx` | **CREATED** - Initial consent collection |
+| `apps/web/src/components/ConsentSettings.tsx` | **CREATED** - Consent management page |
+| `apps/web/src/components/DataSubjectRequestForm.tsx` | **CREATED** - GDPR request form |
+| `apps/backoffice/src/routes/gdpr/index.tsx` | **CREATED** - Admin GDPR dashboard |
+| `packages/i18n/src/locales/nb.ts` | Added 100+ GDPR translation keys |
+| `packages/i18n/src/locales/en.ts` | Added 100+ GDPR translation keys |
+| `CLAUDE.md` | Updated with GDPR + notification system info |
 
 ---
 

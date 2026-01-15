@@ -11,6 +11,7 @@ import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
 import { isVippsConfigured, getVippsConfig } from '../../config/vipps.config';
 import { getVippsLoginService } from '../../integrations/vipps/vipps-login.service';
+import { vippsSessionStore } from './vipps-session-store';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -340,6 +341,135 @@ export class AuthController {
   // ===========================================================================
   // Vipps Login (OIDC) Endpoints
   // ===========================================================================
+
+  /**
+   * GET /api/auth/vipps/authorize - Initiate Vipps OIDC authorization flow
+   *
+   * Query params:
+   * - returnTo (optional): URL to redirect to after successful auth
+   * - tenantId (optional): Tenant context for multi-tenant isolation
+   *
+   * Redirects user to Vipps Login
+   */
+  @Get('/vipps/authorize')
+  async vippsAuthorize(request: AuthRequest, reply: FastifyReply) {
+    // Check if Vipps is configured
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps login is not configured',
+        },
+      };
+    }
+
+    const query = request.query as { returnTo?: string; tenantId?: string };
+    const tenantId = query.tenantId || (request.headers['x-tenant-id'] as string);
+
+    // Validate and sanitize returnTo URL (prevents open redirect)
+    let validatedReturnTo: string = DEFAULT_REDIRECT_URL;
+    if (query.returnTo) {
+      const validationResult = validateReturnToUrl(query.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        // Log invalid returnTo attempt for security monitoring
+        getAuditService().log({
+          tenantId: tenantId || null,
+          userId: null,
+          action: 'vipps_auth_returnto_validation_failed',
+          resource: 'vipps',
+          resourceId: null,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            attemptedUrl: query.returnTo,
+            reason: validationResult.reason,
+          },
+        });
+        // Continue with default redirect instead of blocking
+        validatedReturnTo = DEFAULT_REDIRECT_URL;
+      }
+    }
+
+    try {
+      const loginService = getVippsLoginService();
+      const config = getVippsConfig();
+
+      // Generate state and nonce for OIDC security
+      const state = loginService.generateState();
+      const nonce = loginService.generateNonce();
+
+      // Build redirect URI (callback URL)
+      const redirectUri = config.authCallbackUrl;
+
+      // DEBUG: Log what we're storing
+      console.log('[VIPPS AUTHORIZE] Initiating auth:');
+      console.log('  state:', state);
+      console.log('  validatedReturnTo:', validatedReturnTo);
+      console.log('  tenantId:', tenantId);
+      console.log('  redirectUri:', redirectUri);
+
+      // Store session with returnTo for post-auth redirect
+      await vippsSessionStore.set(state, {
+        state,
+        nonce,
+        createdAt: Date.now(),
+        returnTo: validatedReturnTo,
+        tenantId: tenantId || null,
+      });
+
+      // Get authorization URL from Vipps Login service
+      const result = await loginService.getAuthorizationUrl({
+        state,
+        nonce,
+        redirectUri,
+        scopes: undefined, // Use default scopes
+      });
+
+      // Audit log auth initiation
+      getAuditService().log({
+        tenantId: tenantId || null,
+        userId: null,
+        action: 'vipps_auth_initiated',
+        resource: 'vipps',
+        resourceId: state,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          returnTo: validatedReturnTo,
+          redirectUri,
+        },
+      });
+
+      // Redirect to Vipps authorization URL
+      return reply.redirect(result.authorizationUrl);
+    } catch (error) {
+      getAuditService().log({
+        tenantId: tenantId || null,
+        userId: null,
+        action: 'vipps_auth_initiation_error',
+        resource: 'vipps',
+        resourceId: null,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          returnTo: validatedReturnTo,
+        },
+      });
+
+      reply.code(500);
+      return {
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: 'Failed to initiate Vipps login',
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+      };
+    }
+  }
 
   /**
    * POST /api/auth/vipps/start - Initiate Vipps Login

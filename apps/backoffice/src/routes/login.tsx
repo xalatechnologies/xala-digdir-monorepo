@@ -8,7 +8,7 @@
  * - Dual-role users: redirect to role selection page
  */
 import { useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
   LoginOption,
@@ -49,13 +49,27 @@ export function LoginPage(): React.ReactElement {
   const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const t = useT();
 
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
+  // Check for auth callback params (returned from ID-porten/BankID)
+  const authSuccess = searchParams.get('auth_success') === 'true';
+  const authError = searchParams.get('auth_error');
+
   // Get the intended destination from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
+
+  // Handle auth callback - redirect to dashboard after successful authentication
+  useEffect(() => {
+    if (authSuccess && !authError) {
+      // Clear the URL params and redirect to dashboard
+      // The session cookie should already be set by the API callback
+      navigate(getHomeRoute(), { replace: true });
+    }
+  }, [authSuccess, authError, navigate, getHomeRoute]);
 
   /**
    * Handle navigation after authentication
@@ -185,9 +199,10 @@ export function LoginPage(): React.ReactElement {
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
         onClick={() => {
-          // Pass full current URL for session persistence
-          // User returns to exact page they were on after auth
-          const returnTo = window.location.href;
+          // Pass dashboard URL as returnTo - after auth, user goes directly to dashboard
+          // The login page will detect auth_success and redirect, but passing dashboard
+          // ensures the session stores the correct final destination
+          const returnTo = `${window.location.origin}/dashboard`;
           idportenService.authorize(returnTo);
         }}
       />
