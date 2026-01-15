@@ -15,6 +15,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
 import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
+import { sessionStore, type AuthSession } from './signicat-session-store';
 
 // =============================================================================
 // Configuration
@@ -51,23 +52,8 @@ function getConfig(): SignicatConfig {
   };
 }
 
-/**
- * Authentication session data stored during OAuth flow
- */
-interface AuthSession {
-  sessionId: string;
-  state: string;
-  createdAt: number;
-  status: 'pending' | 'completed' | 'failed';
-  userInfo?: Record<string, unknown>;
-  /** Validated returnTo URL for redirect after successful auth */
-  returnTo?: string;
-  /** Tenant ID for multi-tenant isolation */
-  tenantId?: string;
-}
-
-// In-memory session store (use Redis in production)
-const authSessions = new Map<string, AuthSession>();
+// AuthSession type is imported from signicat-session-store.ts
+// Session storage now uses Redis with in-memory fallback
 
 /** Default redirect URL when returnTo is not provided or invalid */
 const DEFAULT_REDIRECT_URL = '/';
@@ -215,10 +201,10 @@ export class SignicatAuthController {
         });
       }
 
-      const session = (await response.json()) as { id: string; url: string };
+      const session = (await response.json()) as { id: string; authenticationUrl: string };
 
-      // Store session with returnTo for post-auth redirect
-      authSessions.set(state, {
+      // Store session with returnTo for post-auth redirect (Redis-backed)
+      await sessionStore.set(state, {
         sessionId: session.id,
         state,
         createdAt: Date.now(),
@@ -244,7 +230,7 @@ export class SignicatAuthController {
       });
 
       // Redirect to Signicat authentication URL
-      return reply.redirect(session.url);
+      return reply.redirect(session.authenticationUrl);
     } catch (error) {
       // Log authorization error
       getAuditService().log({
@@ -318,7 +304,7 @@ export class SignicatAuthController {
       return reply.redirect(redirectUrl);
     }
 
-    const session = authSessions.get(state);
+    const session = await sessionStore.get(state);
     if (!session) {
       // Audit log invalid state
       getAuditService().log({
@@ -344,7 +330,7 @@ export class SignicatAuthController {
     const tenantId = session.tenantId || 'unknown';
 
     if (status === 'abort') {
-      authSessions.delete(state);
+      await sessionStore.delete(state);
 
       // Audit log user abort
       getAuditService().log({
@@ -367,7 +353,7 @@ export class SignicatAuthController {
     }
 
     if (status === 'error') {
-      authSessions.delete(state);
+      await sessionStore.delete(state);
 
       // Audit log auth error
       getAuditService().log({
@@ -416,7 +402,7 @@ export class SignicatAuthController {
         };
       };
 
-      if (sessionData.status !== 'success') {
+      if (sessionData.status.toLowerCase() !== 'success') {
         // Audit log incomplete session
         getAuditService().log({
           tenantId,
@@ -444,7 +430,7 @@ export class SignicatAuthController {
         'unknown';
 
       // Clean up session
-      authSessions.delete(state);
+      await sessionStore.delete(state);
 
       // Audit log successful authentication
       getAuditService().log({

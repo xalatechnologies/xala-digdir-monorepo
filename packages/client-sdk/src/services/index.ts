@@ -142,3 +142,6 @@ export type {
   SignicatAuthResult,
   SignicatLogoutResult,
 } from './signicat.service';
+
+// Profile & Preferences
+export { ProfileService, profileService } from './profile.service';

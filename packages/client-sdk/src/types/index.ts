@@ -20,6 +20,7 @@ export * from './listing';
 export * from './booking';
 export * from './organization';
 export * from './auth';
+export * from './profile';
 export * from './review';
 export * from './settings';
 export * from './upload';

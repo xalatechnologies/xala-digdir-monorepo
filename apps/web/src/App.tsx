@@ -18,7 +18,7 @@ import { ListingDetailPage } from './pages/ListingDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast, GlobalSearch } from './components';
+import { RealtimeToast, GlobalSearch, ProtectedRoute } from './components';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -242,9 +242,12 @@ function AppContent() {
             {/* Main pages with header - wrapped to provide theme context */}
             <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
               <Route element={<MainLayout />}>
+                {/* PUBLIC ROUTES - No authentication required */}
                 <Route path="/" element={<ListingsPage />} />
                 <Route path="/listing/:id" element={<ListingDetailPage />} />
-                <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+
+                {/* PROTECTED ROUTES - Authentication required */}
+                <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
               </Route>
             </Route>
           </Routes>

@@ -6,6 +6,9 @@
 // Query keys factory
 export { queryKeys } from './query-keys';
 
+// Utility hooks
+export { useDebounced } from './useDebounced';
+
 // Auth hooks
 export {
   useSession,

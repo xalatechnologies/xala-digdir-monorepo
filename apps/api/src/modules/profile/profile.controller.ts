@@ -12,6 +12,19 @@
 import { Controller, Get, Put } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
+interface UserPreferences {
+  language: string;
+  notifications: {
+    email: boolean;
+    sms: boolean;
+    push: boolean;
+  };
+  theme: 'light' | 'dark' | 'system';
+  activeContext: 'personal' | 'organization';
+  activeOrganizationId?: string;
+  rememberAccountChoice: boolean;
+}
+
 interface UserProfile {
   id: string;
   email: string;
@@ -25,18 +38,20 @@ interface UserProfile {
     postalCode?: string;
     city?: string;
   };
-  preferences?: {
-    language: string;
-    notifications: {
-      email: boolean;
-      sms: boolean;
-      push: boolean;
-    };
-    theme: 'light' | 'dark' | 'system';
-  };
+  preferences?: UserPreferences;
   createdAt: string;
   updatedAt: string;
 }
+
+// Default preferences for new users
+const defaultPreferences: UserPreferences = {
+  language: 'no',
+  notifications: { email: true, sms: false, push: true },
+  theme: 'system',
+  activeContext: 'personal',
+  activeOrganizationId: undefined,
+  rememberAccountChoice: false,
+};
 
 // Mock profile data
 const mockProfiles: Map<string, UserProfile> = new Map([
@@ -53,13 +68,7 @@ const mockProfiles: Map<string, UserProfile> = new Map([
       city: 'Skien',
     },
     preferences: {
-      language: 'no',
-      notifications: {
-        email: true,
-        sms: false,
-        push: true,
-      },
-      theme: 'system',
+      ...defaultPreferences,
     },
     createdAt: '2025-01-01T10:00:00Z',
     updatedAt: new Date().toISOString(),
@@ -84,11 +93,7 @@ export class ProfileController {
         id: userId as string,
         email: `user-${userId}@example.com`,
         name: 'New User',
-        preferences: {
-          language: 'no',
-          notifications: { email: true, sms: false, push: true },
-          theme: 'system',
-        },
+        preferences: { ...defaultPreferences },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -144,11 +149,7 @@ export class ProfileController {
     const userId = (request as any).userId || request.headers['x-user-id'] || 'demo-user';
     const profile = mockProfiles.get(userId as string);
     
-    const preferences = profile?.preferences || {
-      language: 'no',
-      notifications: { email: true, sms: false, push: true },
-      theme: 'system',
-    };
+    const preferences = profile?.preferences || { ...defaultPreferences };
     
     return reply.send({ data: preferences });
   }
@@ -169,15 +170,17 @@ export class ProfileController {
         id: userId as string,
         email: `user-${userId}@example.com`,
         name: 'New User',
+        preferences: { ...defaultPreferences },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
     }
     
     profile.preferences = {
+      ...defaultPreferences,
       ...profile.preferences,
       ...body,
-    } as UserProfile['preferences'];
+    };
     profile.updatedAt = new Date().toISOString();
     
     mockProfiles.set(userId as string, profile);
