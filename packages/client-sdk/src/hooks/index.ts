@@ -70,6 +70,7 @@ export {
 export {
   useListingCalendarConfig,
   useAvailabilityMatrix,
+  useCalendarRealtime,
 } from './use-calendar';
 
 // Organization & User hooks
