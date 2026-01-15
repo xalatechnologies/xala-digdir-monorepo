@@ -31,3 +31,7 @@ packages/**/*.d.ts
 .worktrees/
 .security-key
 logs/security/
+
+# Playwright test artifacts
+test-results/
+playwright-report/
