@@ -1,0 +1,13 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "ci-004",
+  "rationale": "The i18n package exports formatCurrency, formatDate, and formatNumber formatters. Relative time display ('2 hours ago') and duration formatting ('1h 30m') are common patterns throughout the apps (audit logs, booking duration, notification timestamps) but currently done ad-hoc. The formatter infrastructure exists and can be extended.",
+  "category": "feature",
+  "estimatedEffort": "small",
+  "complexity": "small",
+  "affectedFiles": [
+    "packages/i18n/src/formatters.ts",
+    "packages/i18n/src/index.ts"
+  ]
+}

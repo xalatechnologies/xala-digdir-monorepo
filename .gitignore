@@ -48,7 +48,7 @@ screenshots/
 e2e/
 
 # Xaheen data directory
-.xaheen/
+#.xaheen/
 
 # Xaheen generated files
 .xaheen-security.json

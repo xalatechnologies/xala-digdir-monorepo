@@ -1,0 +1,13 @@
+{
+  "feature": "Split UnifiedBookingEngine.tsx (3,667 lines) into domain-focused modules",
+  "description": "The UnifiedBookingEngine.tsx component has grown to 3,667 lines and handles 6 different booking modes (slots, daily, dateRange, event, recurring, instant). This violates single responsibility principle and makes the code extremely difficult to maintain, test, and review.",
+  "created_at": "2026-01-15T23:35:30.956Z",
+  "updated_at": "2026-01-15T23:40:15.048Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

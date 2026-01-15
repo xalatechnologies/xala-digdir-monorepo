@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_quality",
+  "ideaId": "cq-005",
+  "rationale": "Large route files violate single responsibility and make testing difficult. Each tab in settings.tsx handles different data models, has separate form validation, and makes different API calls. The 12+ useState hooks and inline form handlers indicate the need for decomposition into focused components with custom hooks.",
+  "category": "refactoring",
+  "codeQualitySeverity": "minor",
+  "priority": "medium"
+}

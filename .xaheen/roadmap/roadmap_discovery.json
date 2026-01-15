@@ -1,0 +1,162 @@
+{
+  "project_name": "Xala Digilist Platform",
+  "project_type": "web-app",
+  "tech_stack": {
+    "primary_language": "TypeScript",
+    "frameworks": [
+      "React 18",
+      "Fastify",
+      "Vite",
+      "Turborepo"
+    ],
+    "key_dependencies": [
+      "@digdir/designsystemet-react",
+      "@tanstack/react-query",
+      "drizzle-orm",
+      "postgres",
+      "ioredis",
+      "graphql",
+      "mercurius",
+      "zod",
+      "pino",
+      "react-router-dom",
+      "mapbox-gl",
+      "@sentry/react"
+    ]
+  },
+  "target_audience": {
+    "primary_persona": "Norwegian municipal administrators (kommune staff) who manage public resource bookings, listings, and citizen services",
+    "secondary_personas": [
+      "Norwegian citizens booking municipal facilities and resources",
+      "System administrators managing multi-tenant municipal deployments",
+      "Municipal IT departments integrating with existing infrastructure",
+      "Auditors requiring compliance verification and audit trail access"
+    ],
+    "pain_points": [
+      "Fragmented booking systems across different municipal departments",
+      "GDPR compliance challenges with citizen data management",
+      "Lack of audit trails for regulatory compliance",
+      "Poor multi-tenant isolation in existing solutions",
+      "Inadequate mobile experience for citizen self-service",
+      "No centralized notification system across communication channels",
+      "Complex permission management across organizational roles"
+    ],
+    "goals": [
+      "Centralized booking and resource management for all municipal facilities",
+      "Full GDPR compliance with consent management and data subject rights",
+      "Complete audit trails for all mutations and administrative actions",
+      "Real-time availability updates and booking notifications",
+      "Multi-channel communication (in-app, email, SMS, push)",
+      "Role-based access control matching municipal organizational structure",
+      "Norwegian language support with Norwegian Design System compliance"
+    ],
+    "usage_context": "Daily use by municipal staff managing bookings/listings from backoffice portal, and intermittent use by citizens via public web app and user portal (minside) for discovering facilities, making bookings, and managing their profiles"
+  },
+  "product_vision": {
+    "one_liner": "A production-ready Norwegian municipal booking and resource management platform with multi-tenant isolation, GDPR compliance, and audit-first architecture",
+    "problem_statement": "Norwegian municipalities struggle with fragmented, non-compliant booking systems that lack proper audit trails, GDPR compliance, and multi-tenant isolation for managing public resources and citizen services",
+    "value_proposition": "Provides a complete, enterprise-grade booking platform built on Norwegian Design System (Designsystemet) with built-in GDPR compliance, comprehensive audit logging, real-time WebSocket updates, and strict architectural patterns that ensure code quality and compliance across multiple municipal deployments",
+    "success_metrics": [
+      "Number of municipalities (kommuner) actively using the platform",
+      "Booking completion rate across all listing types",
+      "GDPR compliance audit pass rate (100% required)",
+      "System uptime and availability (99.9% SLA)",
+      "Average response time for API endpoints (<200ms)",
+      "User satisfaction scores from municipal staff and citizens",
+      "Audit trail completeness (100% of mutations logged)",
+      "Mobile responsiveness scores across devices"
+    ]
+  },
+  "current_state": {
+    "maturity": "growth",
+    "existing_features": [
+      "Multi-tenant architecture with kommune-level isolation",
+      "Authentication via ID-porten (Norwegian digital identity)",
+      "Role-based access control (RBAC) with capability-based guards",
+      "Listing/facility management with availability calendar",
+      "Booking system with recurring booking support",
+      "GDPR consent management and data subject request handling",
+      "Multi-channel notification system (in-app, email, SMS, push)",
+      "Real-time WebSocket updates for availability and notifications",
+      "Audit logging for all state mutations",
+      "Enterprise SDK with 30+ services and React Query hooks",
+      "Norwegian Design System facade (@xala/ds) with theme switching",
+      "Internationalization (Norwegian/English) via @xala/i18n",
+      "Discount code management",
+      "Dashboard with KPI reporting",
+      "Integration framework for third-party services",
+      "GraphQL API via Mercurius",
+      "Health checks and monitoring endpoints",
+      "Backoffice admin portal with comprehensive management features",
+      "User portal (minside) for citizen self-service",
+      "Public web app for listing discovery and booking initiation"
+    ],
+    "known_gaps": [
+      "Favorites/wishlist functionality (TODO in ListingsPage)",
+      "Social sharing for listings (TODO in ListingsPage)",
+      "Season management SDK hooks incomplete (multiple TODOs)",
+      "Linear issue tracking integration not implemented",
+      "Rental objects feature temporarily disabled due to export issues",
+      "Global search via SDK not implemented in minside header",
+      "Season application SDK hooks need completion",
+      "Organization creation flow incomplete",
+      "User info enrichment in notification service"
+    ],
+    "technical_debt": [
+      "Rental-objects feature disabled in backoffice App.tsx due to export issues",
+      "Some season-related routes using mock data instead of SDK",
+      "Notification service missing user info enrichment from user service",
+      "Type breakdown and priority breakdown in notification stats not implemented",
+      "Some components have placeholder onClick handlers"
+    ]
+  },
+  "competitive_context": {
+    "alternatives": [
+      "Traditional municipal booking systems (legacy, non-standardized)",
+      "Generic SaaS booking platforms (Calendly, Bookings.com)",
+      "Custom-built municipal solutions (high maintenance cost)",
+      "Microsoft Bookings (lacks Norwegian compliance features)",
+      "Norwegian-specific: FRI Utvikling, Spond (limited municipal features)"
+    ],
+    "differentiators": [
+      "Built on official Norwegian Design System (Designsystemet) for government compliance",
+      "Native multi-tenant architecture with kommune-level data isolation",
+      "GDPR-first design with built-in consent management and Article 30 compliance",
+      "Complete audit trails meeting Norwegian regulatory requirements",
+      "ID-porten integration for national digital identity",
+      "Enterprise SDK pattern ensuring code quality and maintainability",
+      "Real-time WebSocket updates for availability and notifications",
+      "RFC 7807 compliant error handling throughout the platform",
+      "Strict architectural guardrails enforced via ESLint rules"
+    ],
+    "market_position": "Purpose-built solution for Norwegian municipalities seeking a modern, compliant, and maintainable booking platform that integrates with national digital infrastructure (ID-porten) and follows government design standards",
+    "competitor_pain_points": [],
+    "competitor_analysis_available": false
+  },
+  "constraints": {
+    "technical": [
+      "Must use @xala/ds facade for all UI components (no direct Designsystemet imports)",
+      "All API calls must go through @digilist/client-sdk (no direct fetch/axios)",
+      "All errors must follow RFC 7807 Problem Details format",
+      "All mutations must be auditable (audit-first principle)",
+      "Must maintain multi-tenant isolation at all layers",
+      "TypeScript strict mode required throughout codebase",
+      "pnpm workspaces with Turborepo for monorepo management"
+    ],
+    "resources": [
+      "Primarily single contributor (xalatechnologies) with 626+ commits",
+      "Must maintain production system while developing new features",
+      "Limited capacity for major architectural changes",
+      "Documentation and testing must be maintained alongside development"
+    ],
+    "dependencies": [
+      "ID-porten (Signicat sandbox for authentication)",
+      "PostgreSQL database",
+      "Redis for caching",
+      "Mapbox for map/location features",
+      "Sentry for error monitoring",
+      "GitHub Actions for CI/CD"
+    ]
+  },
+  "created_at": "2026-01-16T00:45:00Z"
+}

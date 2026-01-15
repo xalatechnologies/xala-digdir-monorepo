@@ -1,0 +1,13 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-003",
+  "rationale": "apps/minside/src/components/layout/Header.tsx lines 149-155 show search container with hardcoded width: '650px' and maxWidth: '700px'. Between 768px-1100px viewport widths, this causes the header layout to break - the AccountSwitcher, Search, and HeaderActions compete for space. The 3-column grid (gridTemplateColumns: '1fr auto 1fr') doesn't properly constrain the center search when screen narrows.",
+  "category": "ui_ux",
+  "uiuxCategory": "usability",
+  "affectedFiles": [
+    "apps/minside/src/components/layout/Header.tsx",
+    "apps/backoffice/src/components/layout/Header.tsx"
+  ],
+  "problemSolved": "Header uses fixed 650px search width which overflows or causes cramped layout on tablets. No media query or responsive handling for intermediate viewport sizes."
+}

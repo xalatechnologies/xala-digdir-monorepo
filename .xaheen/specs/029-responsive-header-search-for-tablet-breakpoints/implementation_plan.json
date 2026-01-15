@@ -1,0 +1,13 @@
+{
+  "feature": "Responsive header search for tablet breakpoints",
+  "description": "Header search bar has fixed 650px width causing layout issues between tablet (768px) and desktop breakpoints",
+  "created_at": "2026-01-15T23:39:08.153Z",
+  "updated_at": "2026-01-15T23:40:37.745Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

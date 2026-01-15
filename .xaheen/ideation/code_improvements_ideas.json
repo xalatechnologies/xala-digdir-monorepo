@@ -1,0 +1,105 @@
+{
+  "code_improvements": [
+    {
+      "id": "ci-001",
+      "type": "code_improvements",
+      "title": "Add React Query hooks for Widget Service",
+      "description": "Create use-widgets.ts hook file with React Query hooks for widget CRUD operations including useWidgets, useWidget, useCreateWidget, useUpdateWidget, useDeleteWidget, and useWidgetEmbedCode following the established hook pattern.",
+      "rationale": "The widget.service.ts already exists with complete CRUD operations (getAll, getById, create, update, delete, getEmbedCode, preview) but has no corresponding React Query hooks. Every other service with CRUD operations has hooks (discount-codes, reviews, conversations, etc.). This is a clear gap the code reveals.",
+      "builds_upon": ["widget.service.ts", "use-discount-codes.ts pattern", "query-keys.ts factory"],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-widgets.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-discount-codes.ts - Same CRUD hook pattern",
+        "packages/client-sdk/src/hooks/use-reviews.ts - Similar service-to-hook mapping"
+      ],
+      "implementation_approach": "1. Add 'widgets' section to query-keys.ts following existing pattern (all, lists, list, details, detail). 2. Create use-widgets.ts with useQuery for read operations and useMutation with cache invalidation for mutations. 3. Export hooks from hooks/index.ts. Follow the exact structure of use-discount-codes.ts.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:35:00.000Z"
+    },
+    {
+      "id": "ci-002",
+      "type": "code_improvements",
+      "title": "Add React Query hooks for Monitoring Service",
+      "description": "Create use-monitoring.ts hook file with React Query hooks for monitoring operations including useHealthStatus, useSystemMetrics, useLogs, useIncidents, useDatabaseStats, useApiUsage, and useTriggerHealthCheck.",
+      "rationale": "The monitoring.service.ts exists with comprehensive monitoring operations (getHealth, getMetrics, getLogs, getIncidents, getDatabaseStats, getApiUsage, triggerHealthCheck) but has no React Query hooks. This service is valuable for admin dashboards but lacks the hook integration that all other services have.",
+      "builds_upon": ["monitoring.service.ts", "use-audit.ts pattern for admin data"],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-monitoring.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-audit.ts - Similar admin-focused hook file",
+        "packages/client-sdk/src/hooks/use-reports.ts - Similar read-heavy service pattern"
+      ],
+      "implementation_approach": "1. Add 'monitoring' section to query-keys.ts (health, metrics, logs, incidents, database, apiUsage). 2. Create use-monitoring.ts with useQuery hooks for all read operations with appropriate staleTime for metrics. 3. Add useTriggerHealthCheck as useMutation. 4. Export from index.ts. Use configurable polling intervals for real-time metrics.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:35:00.000Z"
+    },
+    {
+      "id": "ci-003",
+      "type": "code_improvements",
+      "title": "Add optimistic updates to discount code mutations",
+      "description": "Enhance use-discount-codes.ts with optimistic update patterns for create, update, and delete mutations, providing instant UI feedback before server confirmation like the booking hooks already do.",
+      "rationale": "The use-bookings.ts implements comprehensive optimistic updates for all mutations (create, update, delete, confirm, cancel, complete) with proper rollback on errors. The use-discount-codes.ts has the same mutation pattern but without optimistic updates, causing slower perceived performance in the admin UI.",
+      "builds_upon": ["use-discount-codes.ts", "use-bookings.ts optimistic update pattern"],
+      "estimated_effort": "trivial",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-discount-codes.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-bookings.ts lines 137-180 - onMutate with optimistic data, onError rollback, onSettled invalidation"
+      ],
+      "implementation_approach": "1. Add onMutate to useCreateDiscountCode to immediately add optimistic discount code with temporary ID. 2. Add onMutate to useUpdateDiscountCode to immediately update the discount code in cache. 3. Add onMutate to useDeleteDiscountCode to immediately remove from cache. 4. Add onError rollback using previousData pattern. 5. Keep onSettled invalidation for server sync. Copy exact pattern from use-bookings.ts createBooking mutation.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:35:00.000Z"
+    },
+    {
+      "id": "ci-004",
+      "type": "code_improvements",
+      "title": "Add relative time and duration formatters to i18n",
+      "description": "Add formatRelativeTime (e.g., '2 hours ago', 'in 3 days') and formatDuration (e.g., '1h 30m', '2 days') formatters to the i18n package, following the existing formatCurrency/formatDate/formatNumber pattern.",
+      "rationale": "The i18n package exports formatCurrency, formatDate, and formatNumber formatters. Relative time display ('2 hours ago') and duration formatting ('1h 30m') are common patterns throughout the apps (audit logs, booking duration, notification timestamps) but currently done ad-hoc. The formatter infrastructure exists and can be extended.",
+      "builds_upon": ["packages/i18n/src/formatters.ts", "Intl.RelativeTimeFormat API"],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/i18n/src/formatters.ts",
+        "packages/i18n/src/index.ts"
+      ],
+      "existing_patterns": [
+        "packages/i18n/src/formatters.ts - existing format functions with locale support",
+        "packages/i18n/src/index.ts - export pattern for formatters"
+      ],
+      "implementation_approach": "1. Add formatRelativeTime function using Intl.RelativeTimeFormat with automatic unit selection (seconds, minutes, hours, days, weeks, months). 2. Add formatDuration function that takes milliseconds and returns localized string (1h 30m or 1 time 30 min depending on locale). 3. Export both from formatters.ts. 4. Add to index.ts exports. 5. Add TypeScript interfaces RelativeTimeFormatOptions and DurationFormatOptions following existing pattern.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:35:00.000Z"
+    },
+    {
+      "id": "ci-005",
+      "type": "code_improvements",
+      "title": "Add useRealtimeMonitoring WebSocket hook",
+      "description": "Create a realtime WebSocket hook for monitoring data (health status, metrics, incidents) following the existing useRealtimeBookings and useRealtimeAudit patterns, enabling live admin dashboard updates.",
+      "rationale": "The realtime hooks exist for bookings (useRealtimeBookings), audit logs (useRealtimeAudit), calendar (useRealtimeCalendar), and notifications (useRealtimeNotifications). The WebSocket infrastructure is mature with connection management, automatic reconnect, and event handlers. System monitoring dashboards would benefit from realtime updates rather than polling.",
+      "builds_upon": ["use-realtime.ts", "websocket.controller.ts patterns", "monitoring.service.ts"],
+      "estimated_effort": "medium",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-realtime.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "apps/api/src/modules/websocket/websocket.controller.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-realtime.ts - useRealtimeAudit implementation",
+        "apps/api/src/modules/websocket/websocket.controller.ts - /ws/audit endpoint pattern"
+      ],
+      "implementation_approach": "1. Add /ws/monitoring/:tenantId WebSocket endpoint in websocket.controller.ts following /ws/audit pattern. 2. Create useRealtimeMonitoring hook in use-realtime.ts that subscribes to monitoring events. 3. Define event types: 'health:changed', 'metrics:updated', 'incident:created', 'incident:resolved'. 4. Hook returns { health, metrics, incidents, isConnected }. 5. Auto-invalidate monitoring query cache on WebSocket events. Export from index.ts.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:35:00.000Z"
+    }
+  ]
+}

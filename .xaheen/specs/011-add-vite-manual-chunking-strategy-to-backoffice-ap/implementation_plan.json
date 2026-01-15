@@ -1,0 +1,194 @@
+{
+  "feature": "Add Vite manual chunking strategy to backoffice app",
+  "workflow_type": "simple",
+  "workflow_rationale": "Single configuration file change with no cross-service dependencies. The task involves copying an existing pattern from web app to backoffice app, modifying only vite.config.ts.",
+  "phases": [
+    {
+      "id": "phase-1-implementation",
+      "name": "Add Manual Chunking Configuration",
+      "type": "implementation",
+      "description": "Add manual chunking strategy to backoffice vite.config.ts matching web app pattern",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add manual chunking configuration to backoffice vite.config.ts",
+          "service": "backoffice",
+          "files_to_modify": [
+            "apps/backoffice/vite.config.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/web/vite.config.ts"
+          ],
+          "implementation_details": {
+            "location": "build.rollupOptions.output section",
+            "chunks_to_add": [
+              "vendor-query: @tanstack/react-query",
+              "vendor-sdk: packages/client-sdk/src",
+              "vendor-ds: packages/ds/src or @xala/ds",
+              "vendor: all other node_modules"
+            ],
+            "note": "Do NOT add vendor-mapbox chunk - backoffice doesn't use mapbox",
+            "additional_config": "Set chunkSizeWarningLimit to 800"
+          },
+          "verification": {
+            "type": "command",
+            "command": "cd apps/backoffice && pnpm build",
+            "expected": "Build succeeds with no errors, separate vendor chunks created in dist/"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Verify chunk files are created correctly",
+          "service": "backoffice",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "ls -lh apps/backoffice/dist/assets/*.js | grep vendor",
+            "expected": "Multiple vendor-*.js files exist: vendor-query, vendor-sdk, vendor-ds, vendor"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-verification",
+      "name": "Verification",
+      "type": "implementation",
+      "description": "Verify the backoffice app still works correctly with new chunking strategy",
+      "depends_on": [
+        "phase-1-implementation"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Verify backoffice app runs in development mode",
+          "service": "backoffice",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "browser",
+            "url": "http://localhost:5175",
+            "checks": [
+              "App loads without errors",
+              "No console errors related to chunk loading",
+              "All features work normally"
+            ]
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Compare bundle sizes before and after",
+          "service": "backoffice",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Run 'cd apps/backoffice && pnpm build' and check dist/assets/ for vendor chunks. Verify chunks are split as expected and total size is reasonable."
+          },
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 2,
+    "total_subtasks": 4,
+    "services_involved": [
+      "backoffice"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution required - phases depend on each other"
+    },
+    "startup_command": "source xaheen/.venv/bin/activate && python xaheen/run.py --spec 011 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "test_creation_phase": "not_required",
+    "test_types_required": [],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "Backoffice vite.config.ts contains manualChunks configuration",
+      "Build produces separate vendor chunks (vendor-query, vendor-sdk, vendor-ds, vendor)",
+      "Build completes without errors",
+      "App runs correctly in dev and production modes",
+      "No console errors related to chunk loading"
+    ],
+    "verification_steps": [
+      {
+        "name": "Build Test",
+        "command": "cd apps/backoffice && pnpm build",
+        "expected_outcome": "Build succeeds, vendor chunks created",
+        "type": "build",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Dev Server Test",
+        "command": "cd apps/backoffice && pnpm dev",
+        "expected_outcome": "Dev server starts on port 5175 without errors",
+        "type": "manual",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Low risk configuration change - no functional code modified, only build optimization. No unit tests needed, just build verification."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": true,
+      "pages": [
+        {
+          "url": "http://localhost:5175/",
+          "checks": [
+            "App loads",
+            "No console errors",
+            "Chunks load correctly"
+          ]
+        }
+      ]
+    },
+    "build_verification": {
+      "required": true,
+      "checks": [
+        "Build succeeds without errors",
+        "Vendor chunks are created (vendor-query.js, vendor-sdk.js, vendor-ds.js, vendor.js)",
+        "No chunk size warnings above threshold",
+        "Total bundle size is reasonable"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "updated_at": "2026-01-15T23:43:20.325Z"
+}

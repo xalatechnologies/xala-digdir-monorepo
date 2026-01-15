@@ -1,0 +1,118 @@
+{
+  "documentation_gaps": [
+    {
+      "id": "doc-001",
+      "type": "documentation_gaps",
+      "title": "Create missing reference documentation (FAQ & Troubleshooting)",
+      "description": "The docs/README.md references docs/reference/02-troubleshooting.md and docs/reference/03-faq.md but these files don't exist. New developers following the documentation will hit 404 errors when trying to access troubleshooting guidance.",
+      "rationale": "Troubleshooting and FAQ sections are critical for developer onboarding. The README navigation explicitly links to these files, creating broken navigation. This affects both new team members and external contributors trying to debug issues.",
+      "category": "troubleshooting",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "docs/reference/02-troubleshooting.md",
+        "docs/reference/03-faq.md",
+        "docs/README.md"
+      ],
+      "currentDocumentation": "Files are referenced in docs/README.md but do not exist",
+      "proposedContent": "Create troubleshooting guide covering: common build errors, SDK initialization issues, WebSocket connection failures, authentication flow problems, design system import errors, and multi-tenant context issues. Create FAQ covering: SDK vs direct fetch, projection DTO usage, RBAC permission questions, i18n workflow, and theme switching.",
+      "priority": "high",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "doc-002",
+      "type": "documentation_gaps",
+      "title": "Add JSDoc documentation to SDK services (22+ undocumented services)",
+      "description": "The client-sdk has 30+ services but only 11 have any JSDoc documentation (63 total tags). Critical services like gdpr.service.ts, notification-system.service.ts, economy.service.ts, pricing.service.ts, and season.service.ts lack method-level documentation with @param, @returns, and @example tags.",
+      "rationale": "The SDK is the primary integration layer for all frontend apps (per CLAUDE.md rules). Without JSDoc, developers must read source code to understand method signatures, parameters, and return types. This slows onboarding and increases error risk.",
+      "category": "api_docs",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/client-sdk/src/services/gdpr.service.ts",
+        "packages/client-sdk/src/services/notification-system.service.ts",
+        "packages/client-sdk/src/services/economy.service.ts",
+        "packages/client-sdk/src/services/pricing.service.ts",
+        "packages/client-sdk/src/services/season.service.ts",
+        "packages/client-sdk/src/services/rental-object.service.ts",
+        "packages/client-sdk/src/services/profile.service.ts"
+      ],
+      "currentDocumentation": "Only service-level comments exist; methods lack @param, @returns, @example, and @throws documentation",
+      "proposedContent": "Add comprehensive JSDoc to each public method including: parameter descriptions with types, return value documentation, @example usage blocks, and @throws for potential errors (RFC 7807 format)",
+      "priority": "high",
+      "estimatedEffort": "high"
+    },
+    {
+      "id": "doc-003",
+      "type": "documentation_gaps",
+      "title": "Document WebSocket realtime event patterns and integration",
+      "description": "The realtime client (packages/client-sdk/src/realtime/index.ts) supports 15+ event types but lacks comprehensive integration documentation. The docs/apps/04-api.md mentions WebSocket briefly but doesn't document event payloads, reconnection handling, or React integration patterns.",
+      "rationale": "Real-time updates are critical for booking availability, notifications, and audit streams. Developers need clear examples of subscribing to events, handling reconnections, and integrating with React Query cache invalidation. The current onAll/onBooking methods exist but usage patterns aren't documented.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/client-sdk/src/realtime/index.ts",
+        "packages/client-sdk/src/realtime/ws-cache-sync.ts",
+        "docs/packages/01-client-sdk.md"
+      ],
+      "currentDocumentation": "Basic JSDoc on RealtimeClient class; no integration examples or event payload documentation",
+      "proposedContent": "Add documentation covering: event type payloads (RealtimeEvent interface), React hook integration examples (useEffect with cleanup), cache invalidation patterns with ws-cache-sync, reconnection handling with exponential backoff, and tenant-scoped vs global event subscriptions",
+      "priority": "medium",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "doc-004",
+      "type": "documentation_gaps",
+      "title": "Create missing deployment, performance, and accessibility guides",
+      "description": "The docs/README.md navigation references docs/guides/03-deployment.md, docs/guides/04-performance.md, and docs/guides/05-accessibility.md but these files don't exist. Only 2 of 5 referenced guide files are present.",
+      "rationale": "Deployment documentation is critical for operations teams and CI/CD setup. Performance guides help developers understand caching strategies and optimization patterns. Accessibility (a11y) guides ensure WCAG compliance for Norwegian government services (required by law).",
+      "category": "architecture",
+      "targetAudience": "maintainers",
+      "affectedAreas": [
+        "docs/guides/03-deployment.md",
+        "docs/guides/04-performance.md",
+        "docs/guides/05-accessibility.md"
+      ],
+      "currentDocumentation": "Referenced in docs/README.md but files do not exist",
+      "proposedContent": "Deployment guide: SSL setup, environment configuration, Docker deployment, health checks. Performance guide: React Query caching, bundle optimization, lazy loading patterns. Accessibility guide: Designsystemet a11y features, ARIA patterns, screen reader testing, WCAG 2.1 AA compliance checklist.",
+      "priority": "medium",
+      "estimatedEffort": "high"
+    },
+    {
+      "id": "doc-005",
+      "type": "documentation_gaps",
+      "title": "Add @xala/ds design system component usage examples",
+      "description": "The @xala/ds package contains 80+ components across primitives, composed, blocks, and shells but lacks a component catalog with usage examples. Developers must read source code to understand props, variants, and composition patterns.",
+      "rationale": "The design system facade (@xala/ds) is the ONLY allowed way to import UI components. Without usage examples, developers spend time reverse-engineering component APIs. The packages/ds-registry exists but doesn't provide searchable component documentation.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/ds/src/blocks/index.ts",
+        "packages/ds/src/composed/index.ts",
+        "packages/ds/src/shells/index.ts",
+        "docs/packages/02-design-system.md"
+      ],
+      "currentDocumentation": "TypeScript interfaces exist with basic JSDoc; no rendered examples or usage patterns",
+      "proposedContent": "Create component documentation for key blocks (ListingCard, BookingSection, AvailabilityCalendar, NotificationCenter), composed components (AppHeader, Navigation, FilterBar, ContentLayout), and shells (AppShell). Include prop tables, variant examples, and common composition patterns.",
+      "priority": "medium",
+      "estimatedEffort": "medium"
+    }
+  ],
+  "metadata": {
+    "filesAnalyzed": 180,
+    "documentedFunctions": 63,
+    "undocumentedFunctions": 150,
+    "readmeLastUpdated": "2026-01-16",
+    "generatedAt": "2026-01-16T00:30:00Z",
+    "analysisNotes": {
+      "sdkServices": "30+ services identified, only 11 have any JSDoc (63 tags total)",
+      "missingDocFiles": [
+        "docs/reference/02-troubleshooting.md",
+        "docs/reference/03-faq.md",
+        "docs/guides/03-deployment.md",
+        "docs/guides/04-performance.md",
+        "docs/guides/05-accessibility.md"
+      ],
+      "dsComponents": "80+ components in @xala/ds (blocks, composed, shells) lack usage examples",
+      "realtimeEvents": "15+ WebSocket event types undocumented"
+    }
+  }
+}

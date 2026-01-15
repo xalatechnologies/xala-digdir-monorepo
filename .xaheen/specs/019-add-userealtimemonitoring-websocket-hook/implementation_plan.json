@@ -1,0 +1,13 @@
+{
+  "feature": "Add useRealtimeMonitoring WebSocket hook",
+  "description": "Create a realtime WebSocket hook for monitoring data (health status, metrics, incidents) following the existing useRealtimeBookings and useRealtimeAudit patterns, enabling live admin dashboard updates.",
+  "created_at": "2026-01-15T23:38:00.371Z",
+  "updated_at": "2026-01-15T23:40:23.605Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

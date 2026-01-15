@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_quality",
+  "ideaId": "cq-002",
+  "rationale": "Code duplication leads to bugs when fixes are applied inconsistently. Currently any filter behavior change requires updating two files, increasing maintenance burden and risk of divergence. The components share 90%+ identical code.",
+  "category": "refactoring",
+  "codeQualitySeverity": "major",
+  "priority": "high"
+}

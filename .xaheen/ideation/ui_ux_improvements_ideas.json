@@ -1,0 +1,111 @@
+{
+  "ui_ux_improvements": [
+    {
+      "id": "uiux-001",
+      "type": "ui_ux_improvements",
+      "title": "Add skeleton loading states for data-heavy pages",
+      "description": "Replace spinner loading indicators with skeleton loading patterns on dashboard, bookings, and settings pages to improve perceived performance and reduce layout shift",
+      "rationale": "Skeleton loaders provide visual scaffolding that matches the actual content layout, reducing cognitive load during data fetching. Research shows skeleton screens improve perceived performance by 5-10% compared to spinners. The current implementation uses centered Spinner components which cause jarring layout shifts when content loads.",
+      "category": "performance",
+      "affected_components": [
+        "apps/minside/src/routes/dashboard.tsx",
+        "apps/minside/src/routes/bookings.tsx",
+        "apps/minside/src/routes/settings.tsx",
+        "apps/backoffice/src/routes/dashboard.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "All data-loading pages use centered Spinner components with generic 'Loading...' states. For example, dashboard.tsx line 321-324 shows a basic spinner that causes the entire page to be blank during load.",
+      "proposed_change": "1. Create a SkeletonCard component in @xala/ds that uses CSS animation with design tokens (--ds-color-neutral-surface-subtle for background, subtle shimmer effect). 2. Create skeleton variants for StatCard, BookingCard, and SettingsForm layouts. 3. Replace Spinner loading states with layout-matched skeleton screens: dashboard shows 3 skeleton stats cards + 4 action cards + booking list skeleton; bookings page shows skeleton filter bar + skeleton booking cards; settings shows skeleton tabs + skeleton form fields.",
+      "user_benefit": "Users see immediate visual feedback that matches the final layout, reducing perceived wait time and preventing jarring layout shifts when content appears. Especially important for users on slower connections.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:30:00.000Z"
+    },
+    {
+      "id": "uiux-002",
+      "type": "ui_ux_improvements",
+      "title": "Add interactive hover states to dashboard action cards",
+      "description": "Dashboard Quick Action cards have CSS transition defined but no actual hover styling, making them feel unresponsive to user interaction",
+      "rationale": "The dashboard.tsx Quick Action cards (lines 189-296) define 'transition: all 0.2s ease' but no :hover pseudo-class styles. This creates a disconnect - users expect interactive elements to respond visually. Cards already have cursor: pointer indicating they're clickable but lack visual feedback.",
+      "category": "interaction",
+      "affected_components": [
+        "apps/minside/src/routes/dashboard.tsx",
+        "apps/backoffice/src/routes/dashboard.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Quick Action cards use inline styles with 'transition: all 0.2s ease' and 'cursor: pointer' but have no hover state. The cards feel dead/unresponsive when hovered.",
+      "proposed_change": "1. Add onMouseEnter/onMouseLeave state to apply hover styles OR 2. Extract card styles to a CSS module with proper :hover/:focus-visible states. Recommended hover styles: backgroundColor: 'var(--ds-color-neutral-surface-hover)', transform: 'translateY(-2px)', boxShadow: 'var(--ds-shadow-sm)'. Also add focus-visible styles for keyboard navigation: outline: '2px solid var(--ds-color-focus-outer)', outlineOffset: '2px'.",
+      "user_benefit": "Users get immediate visual feedback when hovering over actionable elements, improving discoverability and confidence that clicking will perform an action. Keyboard users can see which element is focused.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:31:00.000Z"
+    },
+    {
+      "id": "uiux-003",
+      "type": "ui_ux_improvements",
+      "title": "Responsive header search for tablet breakpoints",
+      "description": "Header search bar has fixed 650px width causing layout issues between tablet (768px) and desktop breakpoints",
+      "rationale": "apps/minside/src/components/layout/Header.tsx lines 149-155 show search container with hardcoded width: '650px' and maxWidth: '700px'. Between 768px-1100px viewport widths, this causes the header layout to break - the AccountSwitcher, Search, and HeaderActions compete for space. The 3-column grid (gridTemplateColumns: '1fr auto 1fr') doesn't properly constrain the center search when screen narrows.",
+      "category": "usability",
+      "affected_components": [
+        "apps/minside/src/components/layout/Header.tsx",
+        "apps/backoffice/src/components/layout/Header.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Header uses fixed 650px search width which overflows or causes cramped layout on tablets. No media query or responsive handling for intermediate viewport sizes.",
+      "proposed_change": "1. Replace fixed width with responsive sizing: width: 'clamp(300px, 50vw, 650px)' or use CSS calc based on container width. 2. Add a tablet breakpoint (768px-1024px) where search collapses to an icon that expands on click (HeaderSearch already supports this via collapsed prop). 3. Consider moving to CSS-based responsive styles using the design system's responsive utilities rather than inline styles.",
+      "user_benefit": "Users on tablets and narrow laptops get a properly laid out header that doesn't overlap or cause horizontal scrolling. The search remains accessible but doesn't dominate limited space.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:32:00.000Z"
+    },
+    {
+      "id": "uiux-004",
+      "type": "ui_ux_improvements",
+      "title": "Add horizontal scroll indicators for mobile filter tabs",
+      "description": "Settings page tabs and booking filters are horizontally scrollable on mobile but lack visual indicators that more content exists off-screen",
+      "rationale": "apps/minside/src/routes/settings.tsx Tabs.List and apps/minside/src/routes/bookings.tsx filter buttons both implement horizontal overflow scrolling for mobile but provide no visual affordance (gradient fade, scroll arrows, or partial visibility of next item) to indicate more content is available. Users may not discover all tabs/filters.",
+      "category": "usability",
+      "affected_components": [
+        "apps/minside/src/routes/settings.tsx",
+        "apps/minside/src/routes/bookings.tsx",
+        "packages/ds/src/composed/FilterBar.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Mobile filter bar (bookings.tsx lines 190-251) uses overflowX: 'auto' with WebkitOverflowScrolling: 'touch' but no scroll indicators. Settings tabs have similar issue - 5 tabs on mobile with no indication that scrolling reveals more options.",
+      "proposed_change": "1. Add subtle gradient fade-out on the right edge when content is scrollable: linear-gradient(to right, transparent, var(--ds-color-neutral-background-default) 90%). 2. Alternatively, ensure the first off-screen item is partially visible (~30% showing) to signal scrollability. 3. Create a reusable HorizontalScrollContainer component in @xala/ds that handles scroll shadows and snap points. 4. Add scroll-snap-type: x mandatory and scroll-snap-align: start to items for predictable scroll behavior.",
+      "user_benefit": "Users immediately understand that more options exist beyond the visible area, improving feature discoverability. The visual indicator prevents users from missing important navigation options like Privacy or Notifications tabs.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:33:00.000Z"
+    },
+    {
+      "id": "uiux-005",
+      "type": "ui_ux_improvements",
+      "title": "Consolidate StatusBadge implementations to use @xala/ds components",
+      "description": "Backoffice has a custom StatusBadge component that duplicates functionality already available in @xala/ds GenericStatusBadge, causing visual inconsistency",
+      "rationale": "apps/backoffice/src/components/shared/StatusBadge.tsx (89 lines) implements a custom status badge with its own variant system (success, warning, danger, info, neutral, pending). Meanwhile, @xala/ds already exports GenericStatusBadge, BookingStatusBadge, PaymentStatusBadge, and other status-specific badges with consistent styling and design token usage. This duplication violates the CLAUDE.md rule: 'No custom UI components in apps'.",
+      "category": "visual",
+      "affected_components": [
+        "apps/backoffice/src/components/shared/StatusBadge.tsx",
+        "apps/backoffice/src/routes/*.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Backoffice StatusBadge uses inline style objects mapping variants to CSS variables. Uses borderRadius: 'var(--ds-border-radius-full)' which differs from @xala/ds badges. Components import from './shared/StatusBadge' instead of '@xala/ds'.",
+      "proposed_change": "1. Audit all usages of the custom StatusBadge in backoffice. 2. Replace with appropriate @xala/ds badge: use GenericStatusBadge for arbitrary status labels, BookingStatusBadge for booking statuses, etc. 3. If current variants don't map cleanly, extend GenericStatusBadge to support additional variants via props. 4. Delete apps/backoffice/src/components/shared/StatusBadge.tsx after migration. 5. Update ESLint to flag imports from local shared/StatusBadge.",
+      "user_benefit": "Consistent status badge appearance across all apps (web, minside, backoffice) builds user familiarity and reduces cognitive load. Centralized styling makes future design updates apply automatically.",
+      "status": "draft",
+      "created_at": "2026-01-16T00:34:00.000Z"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-01-16T00:35:00.000Z",
+    "analysis_type": "static_code_analysis",
+    "dev_server_status": "not_running",
+    "apps_analyzed": ["minside", "backoffice", "web"],
+    "total_ideas": 5,
+    "categories_covered": {
+      "usability": 2,
+      "accessibility": 0,
+      "performance": 1,
+      "visual": 1,
+      "interaction": 1
+    }
+  }
+}

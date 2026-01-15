@@ -1,0 +1,13 @@
+{
+  "feature": "Optimize design system barrel exports to improve tree-shaking",
+  "description": "The @xala/ds package uses `export * from '@digdir/designsystemet-react'` which can import the entire designsystemet library even when only a few components are used. Explicit named exports would enable better tree-shaking.",
+  "created_at": "2026-01-15T23:39:06.045Z",
+  "updated_at": "2026-01-15T23:40:34.925Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

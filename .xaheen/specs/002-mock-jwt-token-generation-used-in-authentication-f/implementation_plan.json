@@ -1,0 +1,381 @@
+{
+  "feature": "Replace Mock JWT with Proper Cryptographic JWT Tokens",
+  "workflow_type": "refactor",
+  "workflow_rationale": "This is a refactor workflow because we're replacing an existing insecure authentication system (mock JWT) with a proper cryptographic implementation. The old system must continue working during the transition, and we follow the pattern: Add New → Migrate → Remove Old → Verify.",
+  "phases": [
+    {
+      "id": "phase-1-add-new",
+      "name": "Add New JWT System",
+      "type": "implementation",
+      "description": "Install JWT library and create new JWT service and middleware alongside the existing mock implementation",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Install jsonwebtoken library and type definitions",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/package.json"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && pnpm list jsonwebtoken @types/jsonwebtoken",
+            "expected": "jsonwebtoken"
+          },
+          "status": "pending",
+          "notes": "Use jsonwebtoken library which is the industry standard for Node.js JWT handling"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create JWT service for token generation and verification",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [
+            "apps/api/src/core/auth/jwt.service.ts"
+          ],
+          "patterns_from": [
+            "apps/api/src/core/audit/audit.service.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && npx tsx -e \"import { JwtService } from './src/core/auth/jwt.service'; const service = new JwtService('test-secret'); const token = service.generateToken('user123', 'tenant456'); console.log(token.split('.').length === 3 ? 'OK' : 'FAIL');\"",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Service should have methods: generateToken(userId, tenantId, expiresIn?), verifyToken(token), decodeToken(token). Use HS256 algorithm for signing."
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Create JWT verification middleware for Fastify",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [
+            "apps/api/src/core/auth/jwt.middleware.ts"
+          ],
+          "patterns_from": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && npx tsx -e \"import { createJwtMiddleware } from './src/core/auth/jwt.middleware'; const middleware = createJwtMiddleware('test-secret'); console.log(typeof middleware === 'function' ? 'OK' : 'FAIL');\"",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Middleware should extract Bearer token from Authorization header, verify it, and set request.userId and request.tenantId. Should return RFC 7807 error for invalid tokens."
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Register JWT service in dependency container",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/core/container.ts",
+            "apps/api/src/main.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/main.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q \"JwtService\" src/main.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Register JwtService in container using JWT_SECRET from environment. Follow the pattern used for AuditService registration."
+        }
+      ]
+    },
+    {
+      "id": "phase-2-migrate",
+      "name": "Migrate to New JWT System",
+      "type": "integration",
+      "description": "Update auth.controller.ts to use the new JWT service and add middleware to Fastify request pipeline",
+      "depends_on": [
+        "phase-1-add-new"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Update auth.controller.ts to use JwtService instead of generateMockToken",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/modules/auth/auth.controller.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/modules/auth/auth.controller.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q \"jwtService.generateToken\" src/modules/auth/auth.controller.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Replace generateMockToken() calls with jwtService.generateToken() in login, refresh, and callback endpoints. Keep generateMockToken function for now (will remove in phase 3)."
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Add JWT verification middleware to Fastify request pipeline",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q \"jwtMiddleware\" src/adapters/fastify.adapter.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Add JWT middleware BEFORE the existing header extraction hook. Middleware should run on all routes except /api/auth/login, /api/auth/callback, and /api/public/*. Use onRequest hook with route filtering."
+        }
+      ]
+    },
+    {
+      "id": "phase-3-remove-old",
+      "name": "Remove Mock JWT Implementation",
+      "type": "cleanup",
+      "description": "Remove the old generateMockToken function and header-based auth",
+      "depends_on": [
+        "phase-2-migrate"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Remove generateMockToken function from auth.controller.ts",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/modules/auth/auth.controller.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && ! grep -q \"generateMockToken\" src/modules/auth/auth.controller.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Delete the generateMockToken function and its comment about being a mock implementation."
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Remove fallback header-based userId/tenantId extraction",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && ! grep -q \"x-user-id\" src/adapters/fastify.adapter.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Remove the lines that set request.userId and request.tenantId from headers. JWT middleware now handles this."
+        }
+      ]
+    },
+    {
+      "id": "phase-4-verification",
+      "name": "Integration Verification",
+      "type": "integration",
+      "description": "Verify all authentication flows work with proper JWT tokens and all tests pass",
+      "depends_on": [
+        "phase-3-remove-old"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Update auth controller tests to work with real JWT tokens",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/__tests__/controllers/auth.controller.test.ts",
+            "apps/api/src/__tests__/test-utils.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/__tests__/controllers/auth.controller.test.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && pnpm test auth.controller.test.ts",
+            "expected": "All tests pass"
+          },
+          "status": "pending",
+          "notes": "Update test-utils.ts to generate real JWT tokens for tests. Update auth.controller.test.ts to verify tokens are properly formatted JWTs (3 parts separated by dots)."
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "End-to-end verification of JWT authentication flow",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "e2e",
+            "steps": [
+              "Start API server",
+              "POST /api/auth/login with valid credentials",
+              "Verify response contains JWT token (3 parts)",
+              "Use token in Authorization: Bearer <token> header",
+              "GET /api/auth/session with token",
+              "Verify session is authenticated",
+              "Attempt GET /api/auth/session without token",
+              "Verify 401 Unauthorized response"
+            ]
+          },
+          "status": "pending",
+          "notes": "This verifies the complete flow: login → receive JWT → use JWT → verify protected routes require JWT"
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Verify JWT tokens cannot be forged",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "1. Generate a valid token via /api/auth/login\n2. Decode the token and modify the payload (change userId)\n3. Re-encode with Base64\n4. Attempt to use modified token\n5. Verify request is rejected with 401 Unauthorized\n6. Verify error message indicates invalid signature"
+          },
+          "status": "pending",
+          "notes": "This proves tokens are cryptographically signed and cannot be tampered with"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 11,
+    "services_involved": [
+      "api"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution required due to dependencies"
+    },
+    "startup_command": "source xaheen/.venv/bin/activate && python xaheen/run.py --spec 002 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "critical",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit",
+      "integration",
+      "manual_security"
+    ],
+    "security_scanning_required": true,
+    "staging_deployment_required": true,
+    "acceptance_criteria": [
+      "All auth endpoints return properly signed JWT tokens (3-part format)",
+      "JWT tokens include HS256 signature using JWT_SECRET",
+      "JWT tokens cannot be forged or modified without detection",
+      "All protected routes reject requests without valid JWT",
+      "All protected routes reject requests with invalid/expired JWT",
+      "All existing auth tests pass with real JWT tokens",
+      "No mock token generation code remains in codebase"
+    ],
+    "verification_steps": [
+      {
+        "name": "Unit Tests",
+        "command": "cd apps/api && pnpm test auth.controller.test.ts",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "All API Tests",
+        "command": "cd apps/api && pnpm test",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Security Scan - JWT Implementation",
+        "command": "cd apps/api && grep -r 'generateMockToken' src/ || echo 'OK: No mock tokens found'",
+        "expected_outcome": "OK: No mock tokens found",
+        "type": "security",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Security Scan - Proper JWT Usage",
+        "command": "cd apps/api && grep -r 'jsonwebtoken' src/core/auth/ && echo 'OK: JWT library in use' || echo 'FAIL'",
+        "expected_outcome": "OK: JWT library in use",
+        "type": "security",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Integration Test - Token Forgery Prevention",
+        "command": "Manual verification required",
+        "expected_outcome": "Modified tokens are rejected with 401",
+        "type": "manual_security",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Critical risk change - authentication is a foundational security control. Requires comprehensive testing including security verification to ensure tokens cannot be forged."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test auth.controller.test.ts",
+        "cd apps/api && pnpm test jwt.service.test.ts"
+      ],
+      "minimum_coverage": 90
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test"
+      ],
+      "services_to_test": [
+        "api"
+      ]
+    },
+    "e2e_tests": {
+      "required": true,
+      "commands": [],
+      "flows": [
+        "login-flow",
+        "token-verification",
+        "protected-route-access",
+        "token-expiry",
+        "token-forgery-prevention"
+      ]
+    },
+    "security_verification": {
+      "required": true,
+      "checks": [
+        "JWT tokens use HS256 algorithm",
+        "JWT_SECRET is loaded from environment",
+        "Tokens include proper exp claim",
+        "Tokens include iss and aud claims",
+        "Modified tokens are rejected",
+        "Expired tokens are rejected",
+        "No plaintext userId/tenantId in headers accepted"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "updated_at": "2026-01-15T23:43:57.332Z"
+}

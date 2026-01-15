@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "performance_optimizations",
+  "ideaId": "perf-002",
+  "rationale": "The @xala/ds package includes mapbox-gl and react-map-gl as dependencies. These are used by ListingMap component but loaded universally. Most pages (dashboard, bookings, settings) don't need maps, yet users pay the bundle size cost on every page load.",
+  "category": "performance",
+  "performanceCategory": "bundle_size",
+  "impact": "high"
+}

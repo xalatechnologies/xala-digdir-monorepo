@@ -1,0 +1,13 @@
+{
+  "feature": "Add unit test coverage to apps/minside (currently 0 tests)",
+  "description": "The apps/minside application has zero unit test files, while apps/web has 4 tests and apps/backoffice has 14+ test files covering calendar, rental objects, and critical features. This gap leaves minside's user-facing features completely untested.",
+  "created_at": "2026-01-15T23:37:05.670Z",
+  "updated_at": "2026-01-15T23:40:01.052Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

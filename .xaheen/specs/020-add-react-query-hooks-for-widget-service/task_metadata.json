@@ -1,0 +1,14 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "ci-001",
+  "rationale": "The widget.service.ts already exists with complete CRUD operations (getAll, getById, create, update, delete, getEmbedCode, preview) but has no corresponding React Query hooks. Every other service with CRUD operations has hooks (discount-codes, reviews, conversations, etc.). This is a clear gap the code reveals.",
+  "category": "feature",
+  "estimatedEffort": "small",
+  "complexity": "small",
+  "affectedFiles": [
+    "packages/client-sdk/src/hooks/use-widgets.ts",
+    "packages/client-sdk/src/hooks/index.ts",
+    "packages/client-sdk/src/hooks/query-keys.ts"
+  ]
+}

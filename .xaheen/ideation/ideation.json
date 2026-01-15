@@ -1,0 +1,787 @@
+{
+  "id": "ideation-20260116-003415",
+  "project_id": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo",
+  "config": {
+    "enabled_types": [
+      "code_improvements",
+      "ui_ux_improvements",
+      "security_hardening",
+      "documentation_gaps",
+      "performance_optimizations",
+      "code_quality"
+    ],
+    "include_roadmap_context": true,
+    "include_kanban_context": true,
+    "max_ideas_per_type": 5
+  },
+  "ideas": [
+    {
+      "id": "ci-001",
+      "type": "code_improvements",
+      "title": "Add React Query hooks for Widget Service",
+      "description": "Create use-widgets.ts hook file with React Query hooks for widget CRUD operations including useWidgets, useWidget, useCreateWidget, useUpdateWidget, useDeleteWidget, and useWidgetEmbedCode following the established hook pattern.",
+      "rationale": "The widget.service.ts already exists with complete CRUD operations (getAll, getById, create, update, delete, getEmbedCode, preview) but has no corresponding React Query hooks. Every other service with CRUD operations has hooks (discount-codes, reviews, conversations, etc.). This is a clear gap the code reveals.",
+      "builds_upon": [
+        "widget.service.ts",
+        "use-discount-codes.ts pattern",
+        "query-keys.ts factory"
+      ],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-widgets.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-discount-codes.ts - Same CRUD hook pattern",
+        "packages/client-sdk/src/hooks/use-reviews.ts - Similar service-to-hook mapping"
+      ],
+      "implementation_approach": "1. Add 'widgets' section to query-keys.ts following existing pattern (all, lists, list, details, detail). 2. Create use-widgets.ts with useQuery for read operations and useMutation with cache invalidation for mutations. 3. Export hooks from hooks/index.ts. Follow the exact structure of use-discount-codes.ts.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:35:00.000Z",
+      "linked_task_id": "020-add-react-query-hooks-for-widget-service"
+    },
+    {
+      "id": "ci-002",
+      "type": "code_improvements",
+      "title": "Add React Query hooks for Monitoring Service",
+      "description": "Create use-monitoring.ts hook file with React Query hooks for monitoring operations including useHealthStatus, useSystemMetrics, useLogs, useIncidents, useDatabaseStats, useApiUsage, and useTriggerHealthCheck.",
+      "rationale": "The monitoring.service.ts exists with comprehensive monitoring operations (getHealth, getMetrics, getLogs, getIncidents, getDatabaseStats, getApiUsage, triggerHealthCheck) but has no React Query hooks. This service is valuable for admin dashboards but lacks the hook integration that all other services have.",
+      "builds_upon": [
+        "monitoring.service.ts",
+        "use-audit.ts pattern for admin data"
+      ],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-monitoring.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-audit.ts - Similar admin-focused hook file",
+        "packages/client-sdk/src/hooks/use-reports.ts - Similar read-heavy service pattern"
+      ],
+      "implementation_approach": "1. Add 'monitoring' section to query-keys.ts (health, metrics, logs, incidents, database, apiUsage). 2. Create use-monitoring.ts with useQuery hooks for all read operations with appropriate staleTime for metrics. 3. Add useTriggerHealthCheck as useMutation. 4. Export from index.ts. Use configurable polling intervals for real-time metrics.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:35:00.000Z",
+      "linked_task_id": "021-add-react-query-hooks-for-monitoring-service"
+    },
+    {
+      "id": "ci-003",
+      "type": "code_improvements",
+      "title": "Add optimistic updates to discount code mutations",
+      "description": "Enhance use-discount-codes.ts with optimistic update patterns for create, update, and delete mutations, providing instant UI feedback before server confirmation like the booking hooks already do.",
+      "rationale": "The use-bookings.ts implements comprehensive optimistic updates for all mutations (create, update, delete, confirm, cancel, complete) with proper rollback on errors. The use-discount-codes.ts has the same mutation pattern but without optimistic updates, causing slower perceived performance in the admin UI.",
+      "builds_upon": [
+        "use-discount-codes.ts",
+        "use-bookings.ts optimistic update pattern"
+      ],
+      "estimated_effort": "trivial",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-discount-codes.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-bookings.ts lines 137-180 - onMutate with optimistic data, onError rollback, onSettled invalidation"
+      ],
+      "implementation_approach": "1. Add onMutate to useCreateDiscountCode to immediately add optimistic discount code with temporary ID. 2. Add onMutate to useUpdateDiscountCode to immediately update the discount code in cache. 3. Add onMutate to useDeleteDiscountCode to immediately remove from cache. 4. Add onError rollback using previousData pattern. 5. Keep onSettled invalidation for server sync. Copy exact pattern from use-bookings.ts createBooking mutation.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:35:00.000Z",
+      "linked_task_id": "022-add-optimistic-updates-to-discount-code-mutations"
+    },
+    {
+      "id": "ci-004",
+      "type": "code_improvements",
+      "title": "Add relative time and duration formatters to i18n",
+      "description": "Add formatRelativeTime (e.g., '2 hours ago', 'in 3 days') and formatDuration (e.g., '1h 30m', '2 days') formatters to the i18n package, following the existing formatCurrency/formatDate/formatNumber pattern.",
+      "rationale": "The i18n package exports formatCurrency, formatDate, and formatNumber formatters. Relative time display ('2 hours ago') and duration formatting ('1h 30m') are common patterns throughout the apps (audit logs, booking duration, notification timestamps) but currently done ad-hoc. The formatter infrastructure exists and can be extended.",
+      "builds_upon": [
+        "packages/i18n/src/formatters.ts",
+        "Intl.RelativeTimeFormat API"
+      ],
+      "estimated_effort": "small",
+      "affected_files": [
+        "packages/i18n/src/formatters.ts",
+        "packages/i18n/src/index.ts"
+      ],
+      "existing_patterns": [
+        "packages/i18n/src/formatters.ts - existing format functions with locale support",
+        "packages/i18n/src/index.ts - export pattern for formatters"
+      ],
+      "implementation_approach": "1. Add formatRelativeTime function using Intl.RelativeTimeFormat with automatic unit selection (seconds, minutes, hours, days, weeks, months). 2. Add formatDuration function that takes milliseconds and returns localized string (1h 30m or 1 time 30 min depending on locale). 3. Export both from formatters.ts. 4. Add to index.ts exports. 5. Add TypeScript interfaces RelativeTimeFormatOptions and DurationFormatOptions following existing pattern.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:35:00.000Z",
+      "linked_task_id": "023-add-relative-time-and-duration-formatters-to-i18n"
+    },
+    {
+      "id": "ci-005",
+      "type": "code_improvements",
+      "title": "Add useRealtimeMonitoring WebSocket hook",
+      "description": "Create a realtime WebSocket hook for monitoring data (health status, metrics, incidents) following the existing useRealtimeBookings and useRealtimeAudit patterns, enabling live admin dashboard updates.",
+      "rationale": "The realtime hooks exist for bookings (useRealtimeBookings), audit logs (useRealtimeAudit), calendar (useRealtimeCalendar), and notifications (useRealtimeNotifications). The WebSocket infrastructure is mature with connection management, automatic reconnect, and event handlers. System monitoring dashboards would benefit from realtime updates rather than polling.",
+      "builds_upon": [
+        "use-realtime.ts",
+        "websocket.controller.ts patterns",
+        "monitoring.service.ts"
+      ],
+      "estimated_effort": "medium",
+      "affected_files": [
+        "packages/client-sdk/src/hooks/use-realtime.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "apps/api/src/modules/websocket/websocket.controller.ts"
+      ],
+      "existing_patterns": [
+        "packages/client-sdk/src/hooks/use-realtime.ts - useRealtimeAudit implementation",
+        "apps/api/src/modules/websocket/websocket.controller.ts - /ws/audit endpoint pattern"
+      ],
+      "implementation_approach": "1. Add /ws/monitoring/:tenantId WebSocket endpoint in websocket.controller.ts following /ws/audit pattern. 2. Create useRealtimeMonitoring hook in use-realtime.ts that subscribes to monitoring events. 3. Define event types: 'health:changed', 'metrics:updated', 'incident:created', 'incident:resolved'. 4. Hook returns { health, metrics, incidents, isConnected }. 5. Auto-invalidate monitoring query cache on WebSocket events. Export from index.ts.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:35:00.000Z",
+      "linked_task_id": "019-add-userealtimemonitoring-websocket-hook"
+    },
+    {
+      "id": "uiux-001",
+      "type": "ui_ux_improvements",
+      "title": "Add skeleton loading states for data-heavy pages",
+      "description": "Replace spinner loading indicators with skeleton loading patterns on dashboard, bookings, and settings pages to improve perceived performance and reduce layout shift",
+      "rationale": "Skeleton loaders provide visual scaffolding that matches the actual content layout, reducing cognitive load during data fetching. Research shows skeleton screens improve perceived performance by 5-10% compared to spinners. The current implementation uses centered Spinner components which cause jarring layout shifts when content loads.",
+      "category": "performance",
+      "affected_components": [
+        "apps/minside/src/routes/dashboard.tsx",
+        "apps/minside/src/routes/bookings.tsx",
+        "apps/minside/src/routes/settings.tsx",
+        "apps/backoffice/src/routes/dashboard.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "All data-loading pages use centered Spinner components with generic 'Loading...' states. For example, dashboard.tsx line 321-324 shows a basic spinner that causes the entire page to be blank during load.",
+      "proposed_change": "1. Create a SkeletonCard component in @xala/ds that uses CSS animation with design tokens (--ds-color-neutral-surface-subtle for background, subtle shimmer effect). 2. Create skeleton variants for StatCard, BookingCard, and SettingsForm layouts. 3. Replace Spinner loading states with layout-matched skeleton screens: dashboard shows 3 skeleton stats cards + 4 action cards + booking list skeleton; bookings page shows skeleton filter bar + skeleton booking cards; settings shows skeleton tabs + skeleton form fields.",
+      "user_benefit": "Users see immediate visual feedback that matches the final layout, reducing perceived wait time and preventing jarring layout shifts when content appears. Especially important for users on slower connections.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:30:00.000Z",
+      "linked_task_id": "024-add-skeleton-loading-states-for-data-heavy-pages"
+    },
+    {
+      "id": "uiux-002",
+      "type": "ui_ux_improvements",
+      "title": "Add interactive hover states to dashboard action cards",
+      "description": "Dashboard Quick Action cards have CSS transition defined but no actual hover styling, making them feel unresponsive to user interaction",
+      "rationale": "The dashboard.tsx Quick Action cards (lines 189-296) define 'transition: all 0.2s ease' but no :hover pseudo-class styles. This creates a disconnect - users expect interactive elements to respond visually. Cards already have cursor: pointer indicating they're clickable but lack visual feedback.",
+      "category": "interaction",
+      "affected_components": [
+        "apps/minside/src/routes/dashboard.tsx",
+        "apps/backoffice/src/routes/dashboard.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Quick Action cards use inline styles with 'transition: all 0.2s ease' and 'cursor: pointer' but have no hover state. The cards feel dead/unresponsive when hovered.",
+      "proposed_change": "1. Add onMouseEnter/onMouseLeave state to apply hover styles OR 2. Extract card styles to a CSS module with proper :hover/:focus-visible states. Recommended hover styles: backgroundColor: 'var(--ds-color-neutral-surface-hover)', transform: 'translateY(-2px)', boxShadow: 'var(--ds-shadow-sm)'. Also add focus-visible styles for keyboard navigation: outline: '2px solid var(--ds-color-focus-outer)', outlineOffset: '2px'.",
+      "user_benefit": "Users get immediate visual feedback when hovering over actionable elements, improving discoverability and confidence that clicking will perform an action. Keyboard users can see which element is focused.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:31:00.000Z",
+      "linked_task_id": "030-add-interactive-hover-states-to-dashboard-action-c"
+    },
+    {
+      "id": "uiux-003",
+      "type": "ui_ux_improvements",
+      "title": "Responsive header search for tablet breakpoints",
+      "description": "Header search bar has fixed 650px width causing layout issues between tablet (768px) and desktop breakpoints",
+      "rationale": "apps/minside/src/components/layout/Header.tsx lines 149-155 show search container with hardcoded width: '650px' and maxWidth: '700px'. Between 768px-1100px viewport widths, this causes the header layout to break - the AccountSwitcher, Search, and HeaderActions compete for space. The 3-column grid (gridTemplateColumns: '1fr auto 1fr') doesn't properly constrain the center search when screen narrows.",
+      "category": "usability",
+      "affected_components": [
+        "apps/minside/src/components/layout/Header.tsx",
+        "apps/backoffice/src/components/layout/Header.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Header uses fixed 650px search width which overflows or causes cramped layout on tablets. No media query or responsive handling for intermediate viewport sizes.",
+      "proposed_change": "1. Replace fixed width with responsive sizing: width: 'clamp(300px, 50vw, 650px)' or use CSS calc based on container width. 2. Add a tablet breakpoint (768px-1024px) where search collapses to an icon that expands on click (HeaderSearch already supports this via collapsed prop). 3. Consider moving to CSS-based responsive styles using the design system's responsive utilities rather than inline styles.",
+      "user_benefit": "Users on tablets and narrow laptops get a properly laid out header that doesn't overlap or cause horizontal scrolling. The search remains accessible but doesn't dominate limited space.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:32:00.000Z",
+      "linked_task_id": "029-responsive-header-search-for-tablet-breakpoints"
+    },
+    {
+      "id": "uiux-004",
+      "type": "ui_ux_improvements",
+      "title": "Add horizontal scroll indicators for mobile filter tabs",
+      "description": "Settings page tabs and booking filters are horizontally scrollable on mobile but lack visual indicators that more content exists off-screen",
+      "rationale": "apps/minside/src/routes/settings.tsx Tabs.List and apps/minside/src/routes/bookings.tsx filter buttons both implement horizontal overflow scrolling for mobile but provide no visual affordance (gradient fade, scroll arrows, or partial visibility of next item) to indicate more content is available. Users may not discover all tabs/filters.",
+      "category": "usability",
+      "affected_components": [
+        "apps/minside/src/routes/settings.tsx",
+        "apps/minside/src/routes/bookings.tsx",
+        "packages/ds/src/composed/FilterBar.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Mobile filter bar (bookings.tsx lines 190-251) uses overflowX: 'auto' with WebkitOverflowScrolling: 'touch' but no scroll indicators. Settings tabs have similar issue - 5 tabs on mobile with no indication that scrolling reveals more options.",
+      "proposed_change": "1. Add subtle gradient fade-out on the right edge when content is scrollable: linear-gradient(to right, transparent, var(--ds-color-neutral-background-default) 90%). 2. Alternatively, ensure the first off-screen item is partially visible (~30% showing) to signal scrollability. 3. Create a reusable HorizontalScrollContainer component in @xala/ds that handles scroll shadows and snap points. 4. Add scroll-snap-type: x mandatory and scroll-snap-align: start to items for predictable scroll behavior.",
+      "user_benefit": "Users immediately understand that more options exist beyond the visible area, improving feature discoverability. The visual indicator prevents users from missing important navigation options like Privacy or Notifications tabs.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:33:00.000Z",
+      "linked_task_id": "025-add-horizontal-scroll-indicators-for-mobile-filter"
+    },
+    {
+      "id": "uiux-005",
+      "type": "ui_ux_improvements",
+      "title": "Consolidate StatusBadge implementations to use @xala/ds components",
+      "description": "Backoffice has a custom StatusBadge component that duplicates functionality already available in @xala/ds GenericStatusBadge, causing visual inconsistency",
+      "rationale": "apps/backoffice/src/components/shared/StatusBadge.tsx (89 lines) implements a custom status badge with its own variant system (success, warning, danger, info, neutral, pending). Meanwhile, @xala/ds already exports GenericStatusBadge, BookingStatusBadge, PaymentStatusBadge, and other status-specific badges with consistent styling and design token usage. This duplication violates the CLAUDE.md rule: 'No custom UI components in apps'.",
+      "category": "visual",
+      "affected_components": [
+        "apps/backoffice/src/components/shared/StatusBadge.tsx",
+        "apps/backoffice/src/routes/*.tsx"
+      ],
+      "screenshots": [],
+      "current_state": "Backoffice StatusBadge uses inline style objects mapping variants to CSS variables. Uses borderRadius: 'var(--ds-border-radius-full)' which differs from @xala/ds badges. Components import from './shared/StatusBadge' instead of '@xala/ds'.",
+      "proposed_change": "1. Audit all usages of the custom StatusBadge in backoffice. 2. Replace with appropriate @xala/ds badge: use GenericStatusBadge for arbitrary status labels, BookingStatusBadge for booking statuses, etc. 3. If current variants don't map cleanly, extend GenericStatusBadge to support additional variants via props. 4. Delete apps/backoffice/src/components/shared/StatusBadge.tsx after migration. 5. Update ESLint to flag imports from local shared/StatusBadge.",
+      "user_benefit": "Consistent status badge appearance across all apps (web, minside, backoffice) builds user familiarity and reduces cognitive load. Centralized styling makes future design updates apply automatically.",
+      "status": "archived",
+      "created_at": "2026-01-16T00:34:00.000Z",
+      "linked_task_id": "026-consolidate-statusbadge-implementations-to-use-xal"
+    },
+    {
+      "id": "sec-001",
+      "type": "security_hardening",
+      "title": "WebSocket endpoints lack authentication",
+      "description": "All WebSocket routes (/ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/notifications/:userId) allow unauthenticated connections. Anyone can connect and receive sensitive audit events, tenant-specific events, and user notifications without providing credentials or validating the userId/tenantId parameters against an authenticated session.",
+      "rationale": "This is a critical vulnerability in a multi-tenant regulated system. Malicious actors can: (1) Subscribe to audit events containing PII and business data, (2) Monitor other tenants' activity by guessing tenantIds, (3) Receive notifications intended for other users, (4) Enumerate valid tenantIds and userIds through subscription attempts. This violates GDPR data protection requirements and the system's multi-tenant isolation principles.",
+      "category": "authorization",
+      "severity": "critical",
+      "affectedFiles": [
+        "apps/api/src/modules/websocket/websocket.controller.ts"
+      ],
+      "vulnerability": "CWE-306: Missing Authentication for Critical Function",
+      "currentRisk": "Unauthenticated access to real-time audit logs, tenant events, and user notifications. GDPR compliance at risk due to potential data leakage across tenants.",
+      "remediation": "Implement WebSocket authentication by: (1) Validating session cookies on WebSocket upgrade, (2) Adding middleware to verify tenantId/userId parameters match authenticated user, (3) Requiring JWT token as query parameter or first message, (4) Implementing connection-level authorization checks. Consider using @fastify/jwt for token validation.",
+      "references": [
+        "https://owasp.org/www-community/attacks/Missing_Function_Level_Access_Control",
+        "https://cwe.mitre.org/data/definitions/306.html"
+      ],
+      "compliance": [
+        "GDPR",
+        "SOC2"
+      ],
+      "status": "archived",
+      "linked_task_id": "005-websocket-endpoints-lack-authentication"
+    },
+    {
+      "id": "sec-002",
+      "type": "security_hardening",
+      "title": "No rate limiting on authentication endpoints",
+      "description": "The API lacks rate limiting middleware (@fastify/rate-limit or equivalent). Authentication endpoints including /api/auth/login, /api/auth/callback, /api/auth/vipps/*, and /api/auth/test-login have no protection against brute force attacks or credential stuffing.",
+      "rationale": "Without rate limiting, attackers can: (1) Attempt unlimited login attempts to guess credentials, (2) Enumerate valid email addresses through response timing, (3) Overwhelm OAuth callback endpoints with requests, (4) Conduct denial-of-service attacks against the API. Norwegian governmental systems have strict availability requirements that rate limiting helps maintain.",
+      "category": "authentication",
+      "severity": "high",
+      "affectedFiles": [
+        "apps/api/src/adapters/fastify.adapter.ts",
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/package.json"
+      ],
+      "vulnerability": "CWE-307: Improper Restriction of Excessive Authentication Attempts",
+      "currentRisk": "Unlimited authentication attempts enable brute force attacks. No protection against credential stuffing or API abuse.",
+      "remediation": "Install and configure @fastify/rate-limit with tiered limits: (1) Strict limits on auth endpoints (5 req/min per IP), (2) Standard limits on API endpoints (100 req/min), (3) Relaxed limits on public endpoints. Consider Redis-backed rate limiting for distributed deployments. Add account lockout after failed attempts.",
+      "references": [
+        "https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks",
+        "https://cwe.mitre.org/data/definitions/307.html",
+        "https://github.com/fastify/fastify-rate-limit"
+      ],
+      "compliance": [
+        "SOC2",
+        "PCI-DSS"
+      ],
+      "status": "archived",
+      "linked_task_id": "004-no-rate-limiting-on-authentication-endpoints"
+    },
+    {
+      "id": "sec-003",
+      "type": "security_hardening",
+      "title": "Missing security headers (@fastify/helmet)",
+      "description": "The API does not implement security headers via @fastify/helmet or equivalent middleware. Missing headers include Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, and Referrer-Policy.",
+      "rationale": "Security headers provide defense-in-depth against common web attacks: (1) CSP prevents XSS and injection attacks, (2) HSTS ensures HTTPS-only connections, (3) X-Frame-Options prevents clickjacking, (4) X-Content-Type-Options prevents MIME-sniffing attacks. As a government platform serving Norwegian municipalities, security headers are essential for compliance.",
+      "category": "configuration",
+      "severity": "medium",
+      "affectedFiles": [
+        "apps/api/src/adapters/fastify.adapter.ts",
+        "apps/api/package.json"
+      ],
+      "vulnerability": "CWE-693: Protection Mechanism Failure",
+      "currentRisk": "API responses lack security headers, making client applications vulnerable to clickjacking, XSS, and man-in-the-middle attacks.",
+      "remediation": "Install @fastify/helmet and configure appropriate headers: await app.register(helmet, { contentSecurityPolicy: { directives: { defaultSrc: [\"'self'\"], ... }}, hsts: { maxAge: 31536000, includeSubDomains: true }}). Also configure HSTS preload for production domains.",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://cwe.mitre.org/data/definitions/693.html",
+        "https://github.com/fastify/fastify-helmet"
+      ],
+      "compliance": [
+        "SOC2"
+      ],
+      "status": "archived",
+      "linked_task_id": "003-missing-security-headers-fastify-helmet"
+    },
+    {
+      "id": "sec-004",
+      "type": "security_hardening",
+      "title": "Sensitive session data logged to console in production",
+      "description": "The authentication controllers contain console.log statements that output sensitive session information including user IDs, email addresses, roles, cookie headers, and full session data objects. These debug logs are not conditionally disabled in production and will expose PII in log files.",
+      "rationale": "Logging PII violates GDPR Article 25 (Data Protection by Design) and creates security risks: (1) Log files may be accessible to unauthorized personnel, (2) Log aggregation services may store data in non-compliant regions, (3) Session cookies in logs could enable session hijacking, (4) Norwegian regulatory requirements mandate protecting citizen data in transit and at rest.",
+      "category": "data_protection",
+      "severity": "medium",
+      "affectedFiles": [
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/src/modules/auth/idporten.controller.ts"
+      ],
+      "vulnerability": "CWE-532: Insertion of Sensitive Information into Log File",
+      "currentRisk": "User emails, session tokens, and cookie values are logged in production. PII exposure in logs violates GDPR and enables session hijacking if logs are compromised.",
+      "remediation": "Replace console.log with structured logging (pino) that: (1) Conditionally logs at debug level only in non-production, (2) Redacts sensitive fields (userId, email, cookie) in production, (3) Uses log masking for PII: logger.info({ userId: maskPII(userId) }). Consider using the existing pino adapter with LOG_LEVEL=info in production.",
+      "references": [
+        "https://owasp.org/www-community/attacks/Log_Injection",
+        "https://cwe.mitre.org/data/definitions/532.html"
+      ],
+      "compliance": [
+        "GDPR",
+        "SOC2"
+      ],
+      "status": "archived",
+      "linked_task_id": "001-sensitive-session-data-logged-to-console-in-produc"
+    },
+    {
+      "id": "sec-005",
+      "type": "security_hardening",
+      "title": "Mock JWT token generation used in authentication flow",
+      "description": "The auth.controller.ts uses a generateMockToken() function that creates non-cryptographic tokens using simple Base64 encoding. The function is labeled as 'Mock JWT generation (in production, use proper JWT library)' but is actively used in the production authentication flow for login, OAuth callbacks, and Vipps authentication.",
+      "rationale": "The current token implementation has critical weaknesses: (1) No cryptographic signature - tokens can be forged by anyone, (2) Payload is simply Base64-encoded and easily decoded/modified, (3) No audience/issuer claims for validation, (4) No key rotation mechanism, (5) Static 'signature' text provides no security. An attacker could forge tokens to impersonate any user.",
+      "category": "authentication",
+      "severity": "critical",
+      "affectedFiles": [
+        "apps/api/src/modules/auth/auth.controller.ts"
+      ],
+      "vulnerability": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+      "currentRisk": "Authentication tokens can be trivially forged. An attacker can create valid-looking tokens for any user ID and tenant, bypassing all authentication.",
+      "remediation": "Replace generateMockToken with proper JWT implementation: (1) Install @fastify/jwt or jsonwebtoken, (2) Use asymmetric (RS256) or symmetric (HS256) signatures with secure secrets, (3) Include standard claims (iss, aud, exp, iat, jti), (4) Store JWT_SECRET in secrets manager, (5) Implement token refresh with rotation. The JWT_SECRET environment variable already exists but is unused.",
+      "references": [
+        "https://owasp.org/www-community/attacks/JSON_Web_Token_Attacks",
+        "https://cwe.mitre.org/data/definitions/327.html",
+        "https://jwt.io/introduction"
+      ],
+      "compliance": [
+        "SOC2",
+        "PCI-DSS"
+      ],
+      "status": "archived",
+      "linked_task_id": "002-mock-jwt-token-generation-used-in-authentication-f"
+    },
+    {
+      "id": "doc-001",
+      "type": "documentation_gaps",
+      "title": "Create missing reference documentation (FAQ & Troubleshooting)",
+      "description": "The docs/README.md references docs/reference/02-troubleshooting.md and docs/reference/03-faq.md but these files don't exist. New developers following the documentation will hit 404 errors when trying to access troubleshooting guidance.",
+      "rationale": "Troubleshooting and FAQ sections are critical for developer onboarding. The README navigation explicitly links to these files, creating broken navigation. This affects both new team members and external contributors trying to debug issues.",
+      "category": "troubleshooting",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "docs/reference/02-troubleshooting.md",
+        "docs/reference/03-faq.md",
+        "docs/README.md"
+      ],
+      "currentDocumentation": "Files are referenced in docs/README.md but do not exist",
+      "proposedContent": "Create troubleshooting guide covering: common build errors, SDK initialization issues, WebSocket connection failures, authentication flow problems, design system import errors, and multi-tenant context issues. Create FAQ covering: SDK vs direct fetch, projection DTO usage, RBAC permission questions, i18n workflow, and theme switching.",
+      "priority": "high",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "017-create-missing-reference-documentation-faq-trouble"
+    },
+    {
+      "id": "doc-002",
+      "type": "documentation_gaps",
+      "title": "Add JSDoc documentation to SDK services (22+ undocumented services)",
+      "description": "The client-sdk has 30+ services but only 11 have any JSDoc documentation (63 total tags). Critical services like gdpr.service.ts, notification-system.service.ts, economy.service.ts, pricing.service.ts, and season.service.ts lack method-level documentation with @param, @returns, and @example tags.",
+      "rationale": "The SDK is the primary integration layer for all frontend apps (per CLAUDE.md rules). Without JSDoc, developers must read source code to understand method signatures, parameters, and return types. This slows onboarding and increases error risk.",
+      "category": "api_docs",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/client-sdk/src/services/gdpr.service.ts",
+        "packages/client-sdk/src/services/notification-system.service.ts",
+        "packages/client-sdk/src/services/economy.service.ts",
+        "packages/client-sdk/src/services/pricing.service.ts",
+        "packages/client-sdk/src/services/season.service.ts",
+        "packages/client-sdk/src/services/rental-object.service.ts",
+        "packages/client-sdk/src/services/profile.service.ts"
+      ],
+      "currentDocumentation": "Only service-level comments exist; methods lack @param, @returns, @example, and @throws documentation",
+      "proposedContent": "Add comprehensive JSDoc to each public method including: parameter descriptions with types, return value documentation, @example usage blocks, and @throws for potential errors (RFC 7807 format)",
+      "priority": "high",
+      "estimatedEffort": "high",
+      "status": "archived",
+      "linked_task_id": "016-add-jsdoc-documentation-to-sdk-services-22-undocum"
+    },
+    {
+      "id": "doc-003",
+      "type": "documentation_gaps",
+      "title": "Document WebSocket realtime event patterns and integration",
+      "description": "The realtime client (packages/client-sdk/src/realtime/index.ts) supports 15+ event types but lacks comprehensive integration documentation. The docs/apps/04-api.md mentions WebSocket briefly but doesn't document event payloads, reconnection handling, or React integration patterns.",
+      "rationale": "Real-time updates are critical for booking availability, notifications, and audit streams. Developers need clear examples of subscribing to events, handling reconnections, and integrating with React Query cache invalidation. The current onAll/onBooking methods exist but usage patterns aren't documented.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/client-sdk/src/realtime/index.ts",
+        "packages/client-sdk/src/realtime/ws-cache-sync.ts",
+        "docs/packages/01-client-sdk.md"
+      ],
+      "currentDocumentation": "Basic JSDoc on RealtimeClient class; no integration examples or event payload documentation",
+      "proposedContent": "Add documentation covering: event type payloads (RealtimeEvent interface), React hook integration examples (useEffect with cleanup), cache invalidation patterns with ws-cache-sync, reconnection handling with exponential backoff, and tenant-scoped vs global event subscriptions",
+      "priority": "medium",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "018-document-websocket-realtime-event-patterns-and-int"
+    },
+    {
+      "id": "doc-004",
+      "type": "documentation_gaps",
+      "title": "Create missing deployment, performance, and accessibility guides",
+      "description": "The docs/README.md navigation references docs/guides/03-deployment.md, docs/guides/04-performance.md, and docs/guides/05-accessibility.md but these files don't exist. Only 2 of 5 referenced guide files are present.",
+      "rationale": "Deployment documentation is critical for operations teams and CI/CD setup. Performance guides help developers understand caching strategies and optimization patterns. Accessibility (a11y) guides ensure WCAG compliance for Norwegian government services (required by law).",
+      "category": "architecture",
+      "targetAudience": "maintainers",
+      "affectedAreas": [
+        "docs/guides/03-deployment.md",
+        "docs/guides/04-performance.md",
+        "docs/guides/05-accessibility.md"
+      ],
+      "currentDocumentation": "Referenced in docs/README.md but files do not exist",
+      "proposedContent": "Deployment guide: SSL setup, environment configuration, Docker deployment, health checks. Performance guide: React Query caching, bundle optimization, lazy loading patterns. Accessibility guide: Designsystemet a11y features, ARIA patterns, screen reader testing, WCAG 2.1 AA compliance checklist.",
+      "priority": "medium",
+      "estimatedEffort": "high",
+      "status": "archived",
+      "linked_task_id": "015-create-missing-deployment-performance-and-accessib"
+    },
+    {
+      "id": "doc-005",
+      "type": "documentation_gaps",
+      "title": "Add @xala/ds design system component usage examples",
+      "description": "The @xala/ds package contains 80+ components across primitives, composed, blocks, and shells but lacks a component catalog with usage examples. Developers must read source code to understand props, variants, and composition patterns.",
+      "rationale": "The design system facade (@xala/ds) is the ONLY allowed way to import UI components. Without usage examples, developers spend time reverse-engineering component APIs. The packages/ds-registry exists but doesn't provide searchable component documentation.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "packages/ds/src/blocks/index.ts",
+        "packages/ds/src/composed/index.ts",
+        "packages/ds/src/shells/index.ts",
+        "docs/packages/02-design-system.md"
+      ],
+      "currentDocumentation": "TypeScript interfaces exist with basic JSDoc; no rendered examples or usage patterns",
+      "proposedContent": "Create component documentation for key blocks (ListingCard, BookingSection, AvailabilityCalendar, NotificationCenter), composed components (AppHeader, Navigation, FilterBar, ContentLayout), and shells (AppShell). Include prop tables, variant examples, and common composition patterns.",
+      "priority": "medium",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "014-add-xala-ds-design-system-component-usage-examples"
+    },
+    {
+      "id": "perf-001",
+      "type": "performance_optimizations",
+      "title": "Implement route-level code splitting with React.lazy for Backoffice app",
+      "description": "The backoffice app eagerly imports 30+ page components at startup (DashboardPage, ListingsPage, BookingsPage, etc.), creating a large initial bundle. Implementing React.lazy() for route components would split these into separate chunks loaded on demand.",
+      "rationale": "apps/backoffice/src/App.tsx imports all page components at the top level, meaning the entire admin interface (~30 pages) loads upfront even though users typically access one page at a time. This significantly impacts Time to Interactive (TTI) and First Contentful Paint (FCP). The .cursorrules file recommends React.lazy() but it's not implemented.",
+      "category": "bundle_size",
+      "impact": "high",
+      "affectedAreas": [
+        "apps/backoffice/src/App.tsx",
+        "apps/backoffice/src/routes/*.tsx",
+        "apps/web/src/App.tsx"
+      ],
+      "currentMetric": "All 30+ route components loaded in initial bundle (~200-300KB compressed)",
+      "expectedImprovement": "~60-70% reduction in initial bundle size, TTI improvement of 1-2 seconds on slower connections",
+      "implementation": "1. Create lazy wrapper: `const DashboardPage = lazy(() => import('./routes/dashboard'))`\n2. Wrap Routes in Suspense with loading fallback\n3. Apply to all route components in backoffice/App.tsx\n4. Add prefetching for likely navigation targets using `<link rel='prefetch'>`\n5. Consider route grouping by role to optimize chunk loading",
+      "tradeoffs": "Slightly slower navigation on first visit to each route; requires Suspense fallback UI; need to handle loading states gracefully",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "009-implement-route-level-code-splitting-with-react-la"
+    },
+    {
+      "id": "perf-002",
+      "type": "performance_optimizations",
+      "title": "Dynamically import Mapbox-GL to reduce initial bundle by ~500KB",
+      "description": "mapbox-gl (~500KB uncompressed, ~150KB gzipped) is bundled in @xala/ds package and loaded on every page, even those without maps. Moving map components to dynamic imports would eliminate this from the initial bundle.",
+      "rationale": "The @xala/ds package includes mapbox-gl and react-map-gl as dependencies. These are used by ListingMap component but loaded universally. Most pages (dashboard, bookings, settings) don't need maps, yet users pay the bundle size cost on every page load.",
+      "category": "bundle_size",
+      "impact": "high",
+      "affectedAreas": [
+        "packages/ds/package.json",
+        "packages/ds/src/blocks/ListingMap.tsx",
+        "apps/web/vite.config.ts"
+      ],
+      "currentMetric": "mapbox-gl adds ~500KB to vendor bundle, loaded on all pages",
+      "expectedImprovement": "~150KB gzipped reduction in initial bundle, ~500ms faster LCP on median connections",
+      "implementation": "1. Move mapbox-gl to peer/optional dependency in @xala/ds\n2. Create lazy-loaded ListingMap wrapper:\n   ```tsx\n   const ListingMap = lazy(() => import('./ListingMap.impl'))\n   ```\n3. Export ListingMap with Suspense boundary built-in\n4. Update apps to only load map chunk when map is visible\n5. Consider using IntersectionObserver to defer map loading until in viewport",
+      "tradeoffs": "Map will have brief loading state on first render; requires careful handling of map initialization; need to preload when user hovers over map tab",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "010-dynamically-import-mapbox-gl-to-reduce-initial-bun"
+    },
+    {
+      "id": "perf-003",
+      "type": "performance_optimizations",
+      "title": "Add staleTime configuration to frequently-used SDK query hooks",
+      "description": "Most React Query hooks in @digilist/client-sdk lack staleTime configuration, causing unnecessary refetches when components remount or focus returns to the window. Adding appropriate staleTime values would reduce API calls and improve perceived performance.",
+      "rationale": "Hooks like useBookings, useRentalObjects, useOrganizations, and useDashboardStats refetch on every component mount (staleTime defaults to 0). Only useBookingModeConfig (60s) and useRecurringPreview (30s) have explicit staleTime. This causes redundant network requests when navigating between tabs or returning to previously-viewed pages.",
+      "category": "network",
+      "impact": "medium",
+      "affectedAreas": [
+        "packages/client-sdk/src/hooks/use-bookings.ts",
+        "packages/client-sdk/src/hooks/use-rental-objects.ts",
+        "packages/client-sdk/src/hooks/use-organizations.ts",
+        "packages/client-sdk/src/hooks/use-reports.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "currentMetric": "~15 API calls on dashboard load, redundant fetches on tab switches",
+      "expectedImprovement": "~50% reduction in API calls, smoother navigation experience, reduced server load",
+      "implementation": "1. Add staleTime to list queries (30-60s for listings, bookings)\n2. Add longer staleTime for static data (5min for categories, configuration)\n3. Add gcTime (cacheTime) to keep data in memory during navigation\n4. Implement query defaults in QueryClient configuration:\n   ```ts\n   defaultOptions: {\n     queries: {\n       staleTime: 30_000, // 30s default\n       gcTime: 5 * 60 * 1000, // 5min\n     }\n   }\n   ```\n5. Use shorter staleTime for real-time sensitive data (availability: 5s)",
+      "tradeoffs": "Users may see slightly stale data between refetches; need to balance freshness vs. network calls; consider invalidation strategy for mutations",
+      "estimatedEffort": "small",
+      "status": "archived",
+      "linked_task_id": "027-add-staletime-configuration-to-frequently-used-sdk"
+    },
+    {
+      "id": "perf-004",
+      "type": "performance_optimizations",
+      "title": "Add Vite manual chunking strategy to backoffice app matching web app",
+      "description": "The backoffice app's vite.config.ts lacks the manual chunking strategy implemented in the web app. Adding vendor-specific chunks for mapbox, react-query, SDK, and design system would improve caching and parallel loading.",
+      "rationale": "apps/web/vite.config.ts splits vendors into: vendor-mapbox, vendor-query, vendor-sdk, vendor-ds, and vendor. apps/backoffice/vite.config.ts has no manualChunks configuration, resulting in a single large vendor bundle. This defeats browser caching when only SDK code changes and prevents parallel chunk loading.",
+      "category": "bundle_size",
+      "impact": "medium",
+      "affectedAreas": [
+        "apps/backoffice/vite.config.ts",
+        "apps/minside/vite.config.ts"
+      ],
+      "currentMetric": "Single vendor chunk ~800KB; full re-download on any dependency update",
+      "expectedImprovement": "Better cache utilization (70%+ cache hit rate), parallel loading of chunks, ~30% faster repeat visits",
+      "implementation": "1. Copy manualChunks configuration from apps/web/vite.config.ts to backoffice:\n   ```ts\n   build: {\n     rollupOptions: {\n       output: {\n         manualChunks: (id) => {\n           if (id.includes('mapbox-gl')) return 'vendor-mapbox';\n           if (id.includes('@tanstack/react-query')) return 'vendor-query';\n           if (id.includes('packages/client-sdk')) return 'vendor-sdk';\n           if (id.includes('packages/ds') || id.includes('@xala/ds')) return 'vendor-ds';\n           if (id.includes('node_modules')) return 'vendor';\n         }\n       }\n     }\n   }\n   ```\n2. Apply same config to minside app\n3. Increase chunkSizeWarningLimit to 800",
+      "tradeoffs": "More HTTP requests initially (though HTTP/2 mitigates this); need to verify no circular dependency issues between chunks",
+      "estimatedEffort": "small",
+      "status": "archived",
+      "linked_task_id": "011-add-vite-manual-chunking-strategy-to-backoffice-ap"
+    },
+    {
+      "id": "perf-005",
+      "type": "performance_optimizations",
+      "title": "Optimize design system barrel exports to improve tree-shaking",
+      "description": "The @xala/ds package uses `export * from '@digdir/designsystemet-react'` which can import the entire designsystemet library even when only a few components are used. Explicit named exports would enable better tree-shaking.",
+      "rationale": "packages/ds/src/index.ts re-exports everything from @digdir/designsystemet-react using `export *`. While modern bundlers handle this reasonably well, some components and their dependencies may be included unnecessarily. Apps only use a subset (~30-40 components) of the full library (~80+ components).",
+      "category": "bundle_size",
+      "impact": "medium",
+      "affectedAreas": [
+        "packages/ds/src/index.ts",
+        "packages/ds/package.json"
+      ],
+      "currentMetric": "Full designsystemet library included (~100KB), many unused components bundled",
+      "expectedImprovement": "~20-30KB reduction in DS bundle size, better tree-shaking accuracy",
+      "implementation": "1. Audit which @digdir components are actually used across all apps\n2. Replace `export * from '@digdir/designsystemet-react'` with explicit named exports:\n   ```ts\n   export {\n     Button,\n     Card,\n     Heading,\n     // ... only used components\n   } from '@digdir/designsystemet-react';\n   ```\n3. Add eslint-plugin-import to detect unused exports\n4. Consider using @rollup/plugin-unused for build-time detection\n5. Document which primitives are available from @xala/ds",
+      "tradeoffs": "More maintenance overhead to keep export list updated; may break apps if they use undocumented exports; need to verify all component dependencies are included",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "028-optimize-design-system-barrel-exports-to-improve-t"
+    },
+    {
+      "id": "cq-001",
+      "type": "code_quality",
+      "title": "Split UnifiedBookingEngine.tsx (3,667 lines) into domain-focused modules",
+      "description": "The UnifiedBookingEngine.tsx component has grown to 3,667 lines and handles 6 different booking modes (slots, daily, dateRange, event, recurring, instant). This violates single responsibility principle and makes the code extremely difficult to maintain, test, and review.",
+      "rationale": "This monolithic component has multiple responsibilities: calendar/date selection logic for 6 booking modes, price calculation, form handling, booking submission, and 500+ lines of inline CSS. Functions like RecurringModeView (181 lines) and BookingConfirmStep (202 lines) exceed reasonable sizes. Deep nesting makes flow hard to follow.",
+      "category": "large_files",
+      "severity": "critical",
+      "affectedFiles": [
+        "packages/ds/src/blocks/UnifiedBookingEngine.tsx"
+      ],
+      "currentState": "Single 3,667-line file handling all booking modes with inline CSS, nested sub-components, price calculations, and form logic",
+      "proposedChange": "Split into modular structure:\n- packages/ds/src/blocks/booking-engine/UnifiedBookingEngine.tsx (orchestrator, ~200 lines)\n- packages/ds/src/blocks/booking-engine/modes/SlotsModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/DailyModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/DateRangeModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/RecurringModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/EventModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/InstantModeView.tsx\n- packages/ds/src/blocks/booking-engine/components/BookingConfirmStep.tsx\n- packages/ds/src/blocks/booking-engine/hooks/useBookingCalendar.ts\n- packages/ds/src/blocks/booking-engine/utils/price-calculation.ts\n- packages/ds/src/blocks/booking-engine/styles/booking-engine.css",
+      "codeExample": "// Current (single massive file):\nexport function UnifiedBookingEngine({ config, onBook }) {\n  // 3,667 lines of mixed concerns\n  const DateRangeModeView = () => { /* 137 lines */ };\n  const RecurringModeView = () => { /* 181 lines */ };\n  // ...\n}\n\n// Proposed (modular):\n// booking-engine/UnifiedBookingEngine.tsx\nimport { SlotsModeView } from './modes/SlotsModeView';\nimport { DateRangeModeView } from './modes/DateRangeModeView';\nimport { useBookingCalendar } from './hooks/useBookingCalendar';\nimport './styles/booking-engine.css';\n\nexport function UnifiedBookingEngine({ config, onBook }) {\n  const calendar = useBookingCalendar(config);\n  const ModeComponent = BOOKING_MODES[config.mode];\n  return <ModeComponent calendar={calendar} onBook={onBook} />;\n}",
+      "bestPractice": "Single Responsibility Principle - each module should have one reason to change. Components over 500 lines are maintenance nightmares.",
+      "metrics": {
+        "lineCount": 3667,
+        "complexity": "very high",
+        "duplicateLines": null,
+        "testCoverage": null
+      },
+      "estimatedEffort": "large",
+      "breakingChange": false,
+      "prerequisites": [
+        "Create comprehensive tests for existing booking flows before refactoring",
+        "Document current behavior for each booking mode"
+      ],
+      "status": "archived",
+      "linked_task_id": "007-split-unifiedbookingengine-tsx-3-667-lines-into-do"
+    },
+    {
+      "id": "cq-002",
+      "type": "code_quality",
+      "title": "Extract duplicated ListingsFilterBar component into shared @xala/ds package",
+      "description": "The ListingsFilterBar component is nearly identically implemented in both apps/minside (687 lines) and apps/backoffice (682 lines). Both files share identical imports, props interface, CAPACITY_OPTIONS constant, and core logic for search debouncing, filter handling, and view mode changes.",
+      "rationale": "Code duplication leads to bugs when fixes are applied inconsistently. Currently any filter behavior change requires updating two files, increasing maintenance burden and risk of divergence. The components share 90%+ identical code.",
+      "category": "duplication",
+      "severity": "major",
+      "affectedFiles": [
+        "apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx",
+        "apps/backoffice/src/features/listings/components/list/ListingsFilterBar.tsx"
+      ],
+      "currentState": "Two nearly identical 680+ line components with same props interface, same CAPACITY_OPTIONS, same handler functions (handleSearchChange, handleTypeChange, handleStatusChange, handleSortChange), and same debounced search logic",
+      "proposedChange": "Move shared ListingsFilterBar to packages/ds/src/blocks/ListingsFilterBar.tsx with:\n1. Core component with configurable features via props\n2. App-specific customizations through composition pattern\n3. Shared constants (CAPACITY_OPTIONS, TYPE_TABS, etc.) in packages/ds/src/blocks/listings-filter/constants.ts\n4. useListingsFilter hook for reusable filter logic",
+      "codeExample": "// Current (duplicated in 2 apps):\n// apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx\nconst CAPACITY_OPTIONS = [\n  { id: 'any', label: 'Alle størrelser', min: undefined, max: undefined },\n  // ... identical in both apps\n];\n\n// Proposed (shared component):\n// packages/ds/src/blocks/ListingsFilterBar.tsx\nexport interface ListingsFilterBarConfig {\n  showViewModeToggle?: boolean;\n  showCreateButton?: boolean;\n  customActions?: ReactNode;\n}\n\nexport function ListingsFilterBar({ \n  filters, config, onFilterChange \n}: ListingsFilterBarProps) {\n  // Shared implementation\n}\n\n// apps/minside usage:\nimport { ListingsFilterBar } from '@xala/ds';\n<ListingsFilterBar config={{ showCreateButton: false }} />",
+      "bestPractice": "DRY (Don't Repeat Yourself) - extract common logic into reusable components in shared packages",
+      "metrics": {
+        "lineCount": 1369,
+        "complexity": null,
+        "duplicateLines": 620,
+        "testCoverage": null
+      },
+      "estimatedEffort": "medium",
+      "breakingChange": false,
+      "prerequisites": [
+        "Audit both components for subtle differences that need to be configurable"
+      ],
+      "status": "archived",
+      "linked_task_id": "012-extract-duplicated-listingsfilterbar-component-int"
+    },
+    {
+      "id": "cq-003",
+      "type": "code_quality",
+      "title": "Remove 231 console.log statements from production code",
+      "description": "Found 231 console.log/warn/error/debug statements across 30 files in apps/, with heavy concentration in critical modules: auth.controller.ts (42 occurrences), idporten.controller.ts (45 occurrences), main.ts (32 occurrences). These debug statements pollute production logs, risk exposing sensitive data, and indicate incomplete debugging cleanup.",
+      "rationale": "Console statements in production code are a code smell indicating incomplete development cleanup. They can expose sensitive information (tokens, credentials, user data), clutter production logs making real issues harder to find, and impact performance. The API module's auth controllers are particularly concerning as they may log authentication tokens.",
+      "category": "code_smells",
+      "severity": "major",
+      "affectedFiles": [
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/src/modules/auth/idporten.controller.ts",
+        "apps/api/src/main.ts",
+        "apps/api/src/modules/auth/vipps-session-store.ts",
+        "apps/api/src/modules/auth/idporten-session-store.ts",
+        "apps/minside/src/routes/settings.tsx",
+        "apps/minside/src/routes/login.tsx",
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "currentState": "231 console statements scattered across 30 files, particularly concentrated in authentication modules (87+ in auth-related files)",
+      "proposedChange": "1. Replace all console.log with structured logging using pino (already configured)\n2. Add ESLint rule to ban console.* in production code\n3. Create debug utility that respects environment:\n   - apps/api: use existing pino logger with appropriate log levels\n   - apps/*: create debug utility that only logs in development\n4. Review auth module logs for sensitive data exposure",
+      "codeExample": "// Current (in auth.controller.ts):\nconsole.log('Auth callback received:', req.query);\nconsole.log('Token exchange response:', tokenData);\nconsole.log('User session created:', session.id);\n\n// Proposed:\nimport { logger } from '@/core/logger';\n\nlogger.info({ query: req.query }, 'Auth callback received');\nlogger.debug({ tokenType: tokenData.token_type }, 'Token exchange completed');\nlogger.info({ sessionId: session.id }, 'User session created');\n\n// ESLint config addition:\nrules: {\n  'no-console': ['error', { allow: ['warn', 'error'] }]\n}",
+      "bestPractice": "Use structured logging in production - never console.log. Sensitive data should never be logged.",
+      "metrics": {
+        "lineCount": null,
+        "complexity": null,
+        "duplicateLines": null,
+        "testCoverage": null
+      },
+      "estimatedEffort": "medium",
+      "breakingChange": false,
+      "prerequisites": [
+        "Verify pino logger is properly configured across all API modules",
+        "Audit auth module logs for sensitive data before removal"
+      ],
+      "status": "archived",
+      "linked_task_id": "006-remove-231-console-log-statements-from-production-"
+    },
+    {
+      "id": "cq-004",
+      "type": "code_quality",
+      "title": "Add unit test coverage to apps/minside (currently 0 tests)",
+      "description": "The apps/minside application has zero unit test files, while apps/web has 4 tests and apps/backoffice has 14+ test files covering calendar, rental objects, and critical features. This gap leaves minside's user-facing features completely untested.",
+      "rationale": "apps/minside is the user portal handling critical user journeys: booking management, profile settings, notifications, GDPR compliance, and payment. Without tests, regressions can ship to production undetected. The settings.tsx (879 lines) and messages.tsx (916 lines) routes are particularly complex and need coverage.",
+      "category": "testing",
+      "severity": "major",
+      "affectedFiles": [
+        "apps/minside/src/routes/settings.tsx",
+        "apps/minside/src/routes/messages.tsx",
+        "apps/minside/src/routes/bookings.tsx",
+        "apps/minside/src/routes/login.tsx",
+        "apps/minside/src/hooks/useAuth.ts",
+        "apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx"
+      ],
+      "currentState": "0 test files in apps/minside, compared to 14+ in apps/backoffice and 4 in apps/web",
+      "proposedChange": "Add critical test coverage:\n1. apps/minside/src/hooks/useAuth.test.ts - Auth hook tests\n2. apps/minside/src/routes/settings.test.tsx - Settings page tests\n3. apps/minside/src/routes/bookings.test.tsx - Booking list/detail tests\n4. apps/minside/src/features/listings/components/list/ListingsFilterBar.test.tsx\n5. apps/minside/src/routes/messages.test.tsx - Messaging tests\n\nPrioritize: Auth flows, booking management, GDPR consent handling",
+      "codeExample": "// apps/minside/src/hooks/useAuth.test.ts\nimport { renderHook, waitFor } from '@testing-library/react';\nimport { useAuth } from './useAuth';\nimport { QueryClientProvider } from '@tanstack/react-query';\n\ndescribe('useAuth', () => {\n  it('should return authenticated user when session is valid', async () => {\n    const { result } = renderHook(() => useAuth(), { wrapper });\n    await waitFor(() => expect(result.current.isAuthenticated).toBe(true));\n  });\n\n  it('should handle logout correctly', async () => {\n    // Test logout clears session and redirects\n  });\n});\n\n// apps/minside/src/routes/settings.test.tsx\ndescribe('SettingsPage', () => {\n  it('should render all settings tabs', () => {});\n  it('should save profile changes', () => {});\n  it('should handle GDPR consent management', () => {});\n});",
+      "bestPractice": "Critical user-facing applications should have minimum 70% test coverage on business logic and UI components",
+      "metrics": {
+        "lineCount": null,
+        "complexity": null,
+        "duplicateLines": null,
+        "testCoverage": 0
+      },
+      "estimatedEffort": "large",
+      "breakingChange": false,
+      "prerequisites": [
+        "Set up Vitest configuration for apps/minside if not present",
+        "Create test utilities and fixtures"
+      ],
+      "status": "archived",
+      "linked_task_id": "013-add-unit-test-coverage-to-apps-minside-currently-0"
+    },
+    {
+      "id": "cq-005",
+      "type": "code_quality",
+      "title": "Split settings.tsx route files (1267 lines in backoffice, 879 lines in minside)",
+      "description": "The settings.tsx route files in both backoffice and minside have grown into monolithic components handling multiple unrelated settings domains. The backoffice version (1,267 lines) manages 7+ different settings tabs inline with complex form state management across profile, addresses, general settings, booking settings, notifications, integrations, and branding.",
+      "rationale": "Large route files violate single responsibility and make testing difficult. Each tab in settings.tsx handles different data models, has separate form validation, and makes different API calls. The 12+ useState hooks and inline form handlers indicate the need for decomposition into focused components with custom hooks.",
+      "category": "large_files",
+      "severity": "minor",
+      "affectedFiles": [
+        "apps/backoffice/src/routes/settings.tsx",
+        "apps/minside/src/routes/settings.tsx"
+      ],
+      "currentState": "Single massive route components with:\n- 12+ useState hooks for form state\n- 7 tabs rendered inline (100-200 lines each)\n- Integration modal with inline handler (28 lines)\n- Mixed mutation handlers and UI code",
+      "proposedChange": "Extract each tab into dedicated component:\n\nbackoffice/src/routes/settings/\n├── SettingsPage.tsx (orchestrator, ~100 lines)\n├── tabs/\n│   ├── ProfileTab.tsx\n│   ├── AddressesTab.tsx\n│   ├── GeneralTab.tsx\n│   ├── BookingTab.tsx\n│   ├── NotificationsTab.tsx\n│   ├── IntegrationsTab.tsx\n│   └── BrandingTab.tsx\n├── hooks/\n│   ├── useProfileForm.ts\n│   ├── useTenantSettings.ts\n│   └── useIntegrationSettings.ts\n└── components/\n    └── IntegrationConfigModal.tsx",
+      "codeExample": "// Current (1267 lines in single file):\nexport function SettingsPage() {\n  const [avatar, setAvatar] = useState(...);\n  const [firstName, setFirstName] = useState(...);\n  const [lastName, setLastName] = useState(...);\n  // 9 more useState hooks...\n  \n  return (\n    <Tabs>\n      <Tabs.Panel value=\"profile\">\n        {/* 200 lines of profile form */}\n      </Tabs.Panel>\n      <Tabs.Panel value=\"addresses\">\n        {/* 150 lines of addresses form */}\n      </Tabs.Panel>\n      {/* 5 more inline tabs... */}\n    </Tabs>\n  );\n}\n\n// Proposed (modular):\nexport function SettingsPage() {\n  return (\n    <Tabs defaultValue=\"profile\">\n      <Tabs.Panel value=\"profile\"><ProfileTab /></Tabs.Panel>\n      <Tabs.Panel value=\"addresses\"><AddressesTab /></Tabs.Panel>\n      <Tabs.Panel value=\"general\"><GeneralTab /></Tabs.Panel>\n    </Tabs>\n  );\n}\n\n// tabs/ProfileTab.tsx\nimport { useProfileForm } from '../hooks/useProfileForm';\n\nexport function ProfileTab() {\n  const { values, errors, handleChange, handleSubmit } = useProfileForm();\n  // Clean, focused component\n}",
+      "bestPractice": "Route components should be thin orchestrators. Extract forms, complex UI, and business logic into focused child components and hooks.",
+      "metrics": {
+        "lineCount": 2146,
+        "complexity": "high",
+        "duplicateLines": null,
+        "testCoverage": null
+      },
+      "estimatedEffort": "medium",
+      "breakingChange": false,
+      "prerequisites": [
+        "Document current form behavior for each tab",
+        "Identify shared form patterns that can become hooks"
+      ],
+      "status": "archived",
+      "linked_task_id": "008-split-settings-tsx-route-files-1267-lines-in-backo"
+    }
+  ],
+  "project_context": {
+    "existing_features": [
+      "Multi-tenant architecture with kommune-level isolation",
+      "Authentication via ID-porten (Norwegian digital identity)",
+      "Role-based access control (RBAC) with capability-based guards",
+      "Listing/facility management with availability calendar",
+      "Booking system with recurring booking support",
+      "GDPR consent management and data subject request handling",
+      "Multi-channel notification system (in-app, email, SMS, push)",
+      "Real-time WebSocket updates for availability and notifications",
+      "Audit logging for all state mutations",
+      "Enterprise SDK with 30+ services and React Query hooks",
+      "Norwegian Design System facade (@xala/ds) with theme switching",
+      "Internationalization (Norwegian/English) via @xala/i18n",
+      "Discount code management",
+      "Dashboard with KPI reporting",
+      "Integration framework for third-party services",
+      "GraphQL API via Mercurius",
+      "Health checks and monitoring endpoints",
+      "Backoffice admin portal with comprehensive management features",
+      "User portal (minside) for citizen self-service",
+      "Public web app for listing discovery and booking initiation"
+    ],
+    "tech_stack": [],
+    "target_audience": "Norwegian municipal administrators (kommune staff) who manage public resource bookings, listings, and citizen services",
+    "planned_features": []
+  },
+  "summary": {
+    "total_ideas": 30,
+    "by_type": {
+      "code_improvements": 5,
+      "ui_ux_improvements": 5,
+      "security_hardening": 5,
+      "documentation_gaps": 5,
+      "performance_optimizations": 5,
+      "code_quality": 5
+    },
+    "by_status": {
+      "draft": 30
+    }
+  },
+  "generated_at": "2026-01-16T00:34:15.832340",
+  "updated_at": "2026-01-15T23:39:10.759Z"
+}

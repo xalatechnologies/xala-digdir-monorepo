@@ -1,0 +1,13 @@
+{
+  "feature": "Dynamically import Mapbox-GL to reduce initial bundle by ~500KB",
+  "description": "mapbox-gl (~500KB uncompressed, ~150KB gzipped) is bundled in @xala/ds package and loaded on every page, even those without maps. Moving map components to dynamic imports would eliminate this from the initial bundle.",
+  "created_at": "2026-01-15T23:36:36.687Z",
+  "updated_at": "2026-01-15T23:40:09.041Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

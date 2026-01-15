@@ -1,0 +1,13 @@
+{
+  "feature": "Extract duplicated ListingsFilterBar component into shared @xala/ds package",
+  "description": "The ListingsFilterBar component is nearly identically implemented in both apps/minside (687 lines) and apps/backoffice (682 lines). Both files share identical imports, props interface, CAPACITY_OPTIONS constant, and core logic for search debouncing, filter handling, and view mode changes.",
+  "created_at": "2026-01-15T23:36:59.866Z",
+  "updated_at": "2026-01-15T23:40:06.915Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

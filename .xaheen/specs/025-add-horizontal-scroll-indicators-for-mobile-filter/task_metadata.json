@@ -1,0 +1,14 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-004",
+  "rationale": "apps/minside/src/routes/settings.tsx Tabs.List and apps/minside/src/routes/bookings.tsx filter buttons both implement horizontal overflow scrolling for mobile but provide no visual affordance (gradient fade, scroll arrows, or partial visibility of next item) to indicate more content is available. Users may not discover all tabs/filters.",
+  "category": "ui_ux",
+  "uiuxCategory": "usability",
+  "affectedFiles": [
+    "apps/minside/src/routes/settings.tsx",
+    "apps/minside/src/routes/bookings.tsx",
+    "packages/ds/src/composed/FilterBar.tsx"
+  ],
+  "problemSolved": "Mobile filter bar (bookings.tsx lines 190-251) uses overflowX: 'auto' with WebkitOverflowScrolling: 'touch' but no scroll indicators. Settings tabs have similar issue - 5 tabs on mobile with no indication that scrolling reveals more options."
+}

@@ -1,0 +1,13 @@
+{
+  "feature": "Add JSDoc documentation to SDK services (22+ undocumented services)",
+  "description": "The client-sdk has 30+ services but only 11 have any JSDoc documentation (63 total tags). Critical services like gdpr.service.ts, notification-system.service.ts, economy.service.ts, pricing.service.ts, and season.service.ts lack method-level documentation with @param, @returns, and @example tags.",
+  "created_at": "2026-01-15T23:37:35.000Z",
+  "updated_at": "2026-01-15T23:40:20.630Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

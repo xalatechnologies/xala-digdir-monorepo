@@ -1,0 +1,325 @@
+{
+  "feature": "Add security headers using @fastify/helmet",
+  "workflow_type": "simple",
+  "workflow_rationale": "Single-service security enhancement with straightforward implementation. Only affects API service, no multi-service coordination needed.",
+  "phases": [
+    {
+      "id": "phase-1-setup",
+      "name": "Install Dependencies",
+      "type": "setup",
+      "description": "Install @fastify/helmet package as a production dependency",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add @fastify/helmet to package.json dependencies",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/package.json"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/package.json"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q '@fastify/helmet' package.json && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully added @fastify/helmet version ^12.0.1 to apps/api/package.json dependencies. Verification passed and changes committed.",
+          "updated_at": "2026-01-15T23:44:00.178651+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Install dependencies using pnpm",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && ls node_modules/@fastify/helmet/package.json >/dev/null 2>&1 && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Run 'pnpm install' to install the package"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-implementation",
+      "name": "Configure Security Headers",
+      "type": "implementation",
+      "description": "Register @fastify/helmet plugin in Fastify adapter with appropriate configuration",
+      "depends_on": [
+        "phase-1-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Import and register @fastify/helmet in fastify.adapter.ts",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q \"@fastify/helmet\" src/adapters/fastify.adapter.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Import helmet at top of file, register after CORS plugin using app.register(helmet, {...}). Follow same pattern as CORS registration."
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Configure helmet with appropriate security headers for API",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review helmet configuration includes: contentSecurityPolicy, hsts, frameguard, noSniff, referrerPolicy"
+          },
+          "status": "pending",
+          "notes": "Configure helmet with settings appropriate for JSON API: CSP can be lenient for API, HSTS important for production, enable X-Frame-Options, X-Content-Type-Options, Referrer-Policy"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-verification",
+      "name": "Add Security Header Tests",
+      "type": "implementation",
+      "description": "Create tests to verify security headers are present in API responses",
+      "depends_on": [
+        "phase-2-implementation"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create security headers test file",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [
+            "apps/api/tests/security/headers.test.ts"
+          ],
+          "patterns_from": [
+            "apps/api/tests/security/owasp.test.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "test -f apps/api/tests/security/headers.test.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Follow pattern from owasp.test.ts with serverAvailable check, test suite structure"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Add tests for each security header",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/tests/security/headers.test.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/tests/security/owasp.test.ts"
+          ],
+          "verification": {
+            "type": "api",
+            "method": "GET",
+            "url": "http://localhost:4000/health",
+            "expected_headers": [
+              "x-content-type-options",
+              "x-frame-options",
+              "strict-transport-security",
+              "x-dns-prefetch-control"
+            ]
+          },
+          "status": "pending",
+          "notes": "Test that response headers contain: X-Content-Type-Options: nosniff, X-Frame-Options: SAMEORIGIN or DENY, Strict-Transport-Security, Referrer-Policy, Content-Security-Policy"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Run security tests to validate implementation",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && pnpm test:security",
+            "expected": "All tests pass"
+          },
+          "status": "pending",
+          "notes": "Start API server with 'pnpm dev' first, then run security tests"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-integration",
+      "name": "End-to-End Verification",
+      "type": "integration",
+      "description": "Verify security headers are working in running API server",
+      "depends_on": [
+        "phase-3-verification"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Manual verification of security headers via curl",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "curl -sI http://localhost:4000/health | grep -i 'x-frame-options\\|x-content-type-options\\|strict-transport-security' && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "With API server running, use curl to inspect response headers"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Verify no server version exposure",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "curl -sI http://localhost:4000/health | grep -i 'x-powered-by' && echo 'FAIL' || echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "notes": "Helmet should remove or hide X-Powered-By header - verify it's not present"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 9,
+    "services_involved": [
+      "api"
+    ],
+    "estimated_complexity": "low",
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution - no parallelism opportunities"
+    },
+    "startup_command": "cd apps/api && pnpm dev"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "phase-3-verification",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": true,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All security headers are present in API responses",
+      "X-Content-Type-Options: nosniff is set",
+      "X-Frame-Options is set to SAMEORIGIN or DENY",
+      "Strict-Transport-Security header is present",
+      "Content-Security-Policy header is configured",
+      "Referrer-Policy header is set",
+      "No X-Powered-By header exposing server version",
+      "All existing API tests continue to pass",
+      "New security header tests pass"
+    ],
+    "verification_steps": [
+      {
+        "name": "Security Header Tests",
+        "command": "cd apps/api && pnpm test:security",
+        "expected_outcome": "All security tests pass including new header tests",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Unit Tests",
+        "command": "cd apps/api && pnpm test:unit",
+        "expected_outcome": "All existing unit tests still pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Manual Header Inspection",
+        "command": "curl -sI http://localhost:4000/health",
+        "expected_outcome": "Response contains security headers: X-Content-Type-Options, X-Frame-Options, Strict-Transport-Security",
+        "type": "manual",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Medium risk security enhancement - adding security headers improves defense-in-depth but must not break existing functionality. Tests ensure headers are properly configured."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test:unit"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "security_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test:security"
+      ],
+      "checks": [
+        "All OWASP security tests pass",
+        "New security header tests pass",
+        "No X-Powered-By header present",
+        "All required security headers present"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "manual_verification": {
+      "required": true,
+      "steps": [
+        "Start API server with 'cd apps/api && pnpm dev'",
+        "Run 'curl -sI http://localhost:4000/health' and verify headers",
+        "Check for: X-Content-Type-Options, X-Frame-Options, Strict-Transport-Security, Referrer-Policy",
+        "Verify X-Powered-By header is NOT present"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "updated_at": "2026-01-15T23:44:11.481Z",
+  "last_updated": "2026-01-15T23:44:00.178658+00:00"
+}

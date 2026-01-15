@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "performance_optimizations",
+  "ideaId": "perf-001",
+  "rationale": "apps/backoffice/src/App.tsx imports all page components at the top level, meaning the entire admin interface (~30 pages) loads upfront even though users typically access one page at a time. This significantly impacts Time to Interactive (TTI) and First Contentful Paint (FCP). The .cursorrules file recommends React.lazy() but it's not implemented.",
+  "category": "performance",
+  "performanceCategory": "bundle_size",
+  "impact": "high"
+}

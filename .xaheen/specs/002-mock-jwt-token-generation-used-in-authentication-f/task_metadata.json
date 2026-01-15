@@ -1,0 +1,10 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "security_hardening",
+  "ideaId": "sec-005",
+  "rationale": "The current token implementation has critical weaknesses: (1) No cryptographic signature - tokens can be forged by anyone, (2) Payload is simply Base64-encoded and easily decoded/modified, (3) No audience/issuer claims for validation, (4) No key rotation mechanism, (5) Static 'signature' text provides no security. An attacker could forge tokens to impersonate any user.",
+  "category": "security",
+  "securitySeverity": "critical",
+  "impact": "critical",
+  "priority": "urgent"
+}

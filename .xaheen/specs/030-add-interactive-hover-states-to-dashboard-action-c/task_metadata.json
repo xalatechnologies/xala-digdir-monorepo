@@ -1,0 +1,13 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-002",
+  "rationale": "The dashboard.tsx Quick Action cards (lines 189-296) define 'transition: all 0.2s ease' but no :hover pseudo-class styles. This creates a disconnect - users expect interactive elements to respond visually. Cards already have cursor: pointer indicating they're clickable but lack visual feedback.",
+  "category": "ui_ux",
+  "uiuxCategory": "interaction",
+  "affectedFiles": [
+    "apps/minside/src/routes/dashboard.tsx",
+    "apps/backoffice/src/routes/dashboard.tsx"
+  ],
+  "problemSolved": "Quick Action cards use inline styles with 'transition: all 0.2s ease' and 'cursor: pointer' but have no hover state. The cards feel dead/unresponsive when hovered."
+}

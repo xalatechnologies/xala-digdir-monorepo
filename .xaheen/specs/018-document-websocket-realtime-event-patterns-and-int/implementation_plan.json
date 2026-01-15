@@ -1,0 +1,13 @@
+{
+  "feature": "Document WebSocket realtime event patterns and integration",
+  "description": "The realtime client (packages/client-sdk/src/realtime/index.ts) supports 15+ event types but lacks comprehensive integration documentation. The docs/apps/04-api.md mentions WebSocket briefly but doesn't document event payloads, reconnection handling, or React integration patterns.",
+  "created_at": "2026-01-15T23:37:41.391Z",
+  "updated_at": "2026-01-15T23:40:22.996Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

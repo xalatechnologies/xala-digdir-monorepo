@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-003",
+  "rationale": "Real-time updates are critical for booking availability, notifications, and audit streams. Developers need clear examples of subscribing to events, handling reconnections, and integrating with React Query cache invalidation. The current onAll/onBooking methods exist but usage patterns aren't documented.",
+  "category": "documentation",
+  "priority": "medium"
+}

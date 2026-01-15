@@ -1,0 +1,368 @@
+{
+  "feature": "Add rate limiting to authentication endpoints",
+  "workflow_type": "simple",
+  "workflow_rationale": "Single-service security hardening task with clear scope - adding @fastify/rate-limit middleware to protect authentication endpoints from brute force attacks. No multi-service coordination needed.",
+  "phases": [
+    {
+      "id": "phase-1-dependencies",
+      "name": "Add Dependencies",
+      "type": "setup",
+      "description": "Install @fastify/rate-limit package",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add @fastify/rate-limit to package.json dependencies",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/package.json"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/package.json"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q '@fastify/rate-limit' package.json && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Add @fastify/rate-limit to dependencies section. Current Fastify version is 5.0.0, so use compatible rate-limit version (^10.0.0 or later)."
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Install dependencies with pnpm",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && test -d node_modules/@fastify/rate-limit && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Run 'pnpm install' in the api directory to install the new dependency."
+        }
+      ]
+    },
+    {
+      "id": "phase-2-middleware",
+      "name": "Implement Rate Limit Middleware",
+      "type": "implementation",
+      "description": "Create and configure rate limiting middleware for authentication endpoints",
+      "depends_on": [
+        "phase-1-dependencies"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Create rate-limit middleware configuration module",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [
+            "apps/api/src/core/middleware/rate-limit.middleware.ts"
+          ],
+          "patterns_from": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && test -f src/core/middleware/rate-limit.middleware.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Create a middleware module that exports rate limit configurations for: (1) Global rate limit (general protection), (2) Auth endpoints rate limit (stricter limits for /api/auth/* routes). Use @fastify/rate-limit with Redis store if available, fallback to in-memory for development. Follow Fastify plugin pattern."
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Register rate limiting middleware in Fastify adapter",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/src/adapters/fastify.adapter.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q 'rate-limit' src/adapters/fastify.adapter.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Import and register rate-limit middleware in createFastifyApp() function. Apply global rate limit first, then register stricter limits for /api/auth/* routes using route-specific configuration. Register after CORS but before controller registration."
+        }
+      ]
+    },
+    {
+      "id": "phase-3-testing",
+      "name": "Security Testing",
+      "type": "implementation",
+      "description": "Create comprehensive tests to verify rate limiting works correctly",
+      "depends_on": [
+        "phase-2-middleware"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create rate-limit security tests",
+          "service": "api",
+          "files_to_modify": [],
+          "files_to_create": [
+            "apps/api/tests/security/rate-limit.test.ts"
+          ],
+          "patterns_from": [
+            "apps/api/tests/security/owasp.test.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && test -f tests/security/rate-limit.test.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Create comprehensive security tests that verify: (1) Rate limit headers are present (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset), (2) Auth endpoints return 429 after exceeding limit, (3) Different endpoints have appropriate rate limits, (4) Rate limits reset after time window. Follow the pattern from owasp.test.ts with server availability check."
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Update existing OWASP security test for rate limiting",
+          "service": "api",
+          "files_to_modify": [
+            "apps/api/tests/security/owasp.test.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/api/tests/security/owasp.test.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && grep -q 'X-RateLimit' tests/security/owasp.test.ts && echo 'OK' || echo 'FAIL'",
+            "expected": "OK"
+          },
+          "status": "pending",
+          "implementation_notes": "Update the existing 'Rate Limiting' test section (lines 150-158) to actually verify rate limit enforcement rather than just checking graceful handling. Add assertions for 429 status code and rate limit headers."
+        }
+      ]
+    },
+    {
+      "id": "phase-4-verification",
+      "name": "Integration Verification",
+      "type": "integration",
+      "description": "Run all tests and verify rate limiting works end-to-end",
+      "depends_on": [
+        "phase-3-testing"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Run security tests and verify rate limiting",
+          "service": "api",
+          "all_services": false,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/api && pnpm test:security",
+            "expected": "All security tests pass"
+          },
+          "status": "pending",
+          "implementation_notes": "Start the API server with 'pnpm dev' in background, then run 'pnpm test:security' to verify all security tests pass, including the new rate limit tests."
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Manual verification of rate limiting on auth endpoints",
+          "service": "api",
+          "all_services": false,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "With API running, use curl or Postman to: (1) Send multiple requests to POST /api/auth/login, (2) Verify first N requests succeed (200/401), (3) Verify subsequent requests return 429, (4) Verify X-RateLimit-* headers are present, (5) Wait for reset window, (6) Verify requests work again"
+          },
+          "status": "pending",
+          "implementation_notes": "Perform manual testing to ensure rate limiting works correctly in a real-world scenario. Document the rate limit thresholds and verify they align with security requirements."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 8,
+    "services_involved": [
+      "api"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution required due to dependencies"
+    },
+    "startup_command": "source xaheen/.venv/bin/activate && python xaheen/run.py --spec 004 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "high",
+    "skip_validation": false,
+    "test_creation_phase": "concurrent",
+    "test_types_required": [
+      "unit",
+      "security",
+      "integration"
+    ],
+    "security_scanning_required": true,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All authentication endpoints have rate limiting enabled",
+      "Rate limit returns 429 status code when exceeded",
+      "Rate limit headers (X-RateLimit-*) are present in responses",
+      "All existing tests continue to pass",
+      "New security tests verify rate limit enforcement",
+      "No secrets or credentials exposed in configuration"
+    ],
+    "verification_steps": [
+      {
+        "name": "Unit Tests",
+        "command": "cd apps/api && pnpm test:unit",
+        "expected_outcome": "All unit tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Security Tests",
+        "command": "cd apps/api && pnpm test:security",
+        "expected_outcome": "All security tests pass including new rate limit tests",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Integration Tests",
+        "command": "cd apps/api && pnpm test:integration",
+        "expected_outcome": "All integration tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Secrets Scan",
+        "command": "grep -r 'secret\\|password\\|api_key' apps/api/src/core/middleware/ || echo 'No secrets found'",
+        "expected_outcome": "No hardcoded secrets detected",
+        "type": "security",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Manual Rate Limit Verification",
+        "command": "manual",
+        "expected_outcome": "Rate limiting enforced on all auth endpoints",
+        "type": "manual",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "High risk security task requires comprehensive testing including unit, security, and integration tests. Security scanning ensures no credentials are exposed. Manual verification confirms rate limiting works as expected in real-world scenarios."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test:unit"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test:integration"
+      ],
+      "services_to_test": [
+        "api"
+      ]
+    },
+    "security_tests": {
+      "required": true,
+      "commands": [
+        "cd apps/api && pnpm test:security"
+      ],
+      "focus_areas": [
+        "rate_limiting",
+        "brute_force_protection",
+        "dos_prevention"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "api_verification": {
+      "required": true,
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "test": "Send 20 rapid requests, verify 429 after limit",
+          "expected_headers": [
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/callback",
+          "test": "Send 20 rapid requests, verify 429 after limit",
+          "expected_headers": [
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/api/auth/signicat/authorize",
+          "test": "Send 20 rapid requests, verify 429 after limit",
+          "expected_headers": [
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset"
+          ]
+        }
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "rate_limit_configuration": {
+    "global_rate_limit": {
+      "max_requests": 100,
+      "time_window": "1 minute",
+      "rationale": "General protection against DoS attacks"
+    },
+    "auth_endpoints_rate_limit": {
+      "max_requests": 5,
+      "time_window": "1 minute",
+      "rationale": "Strict limit to prevent brute force attacks on authentication"
+    },
+    "endpoints_protected": [
+      "POST /api/auth/login",
+      "POST /api/auth/callback",
+      "POST /api/auth/email",
+      "POST /api/auth/refresh",
+      "GET /api/auth/signicat/authorize",
+      "GET /api/auth/signicat/callback"
+    ]
+  },
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "updated_at": "2026-01-15T23:43:39.142Z"
+}

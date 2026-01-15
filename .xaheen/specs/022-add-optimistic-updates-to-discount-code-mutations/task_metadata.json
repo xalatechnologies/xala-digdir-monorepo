@@ -1,0 +1,12 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "ci-003",
+  "rationale": "The use-bookings.ts implements comprehensive optimistic updates for all mutations (create, update, delete, confirm, cancel, complete) with proper rollback on errors. The use-discount-codes.ts has the same mutation pattern but without optimistic updates, causing slower perceived performance in the admin UI.",
+  "category": "feature",
+  "estimatedEffort": "trivial",
+  "complexity": "trivial",
+  "affectedFiles": [
+    "packages/client-sdk/src/hooks/use-discount-codes.ts"
+  ]
+}

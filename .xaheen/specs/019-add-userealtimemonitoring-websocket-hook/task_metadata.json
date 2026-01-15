@@ -1,0 +1,14 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "ci-005",
+  "rationale": "The realtime hooks exist for bookings (useRealtimeBookings), audit logs (useRealtimeAudit), calendar (useRealtimeCalendar), and notifications (useRealtimeNotifications). The WebSocket infrastructure is mature with connection management, automatic reconnect, and event handlers. System monitoring dashboards would benefit from realtime updates rather than polling.",
+  "category": "feature",
+  "estimatedEffort": "medium",
+  "complexity": "medium",
+  "affectedFiles": [
+    "packages/client-sdk/src/hooks/use-realtime.ts",
+    "packages/client-sdk/src/hooks/index.ts",
+    "apps/api/src/modules/websocket/websocket.controller.ts"
+  ]
+}

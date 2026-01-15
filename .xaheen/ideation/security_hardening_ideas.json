@@ -1,0 +1,140 @@
+{
+  "security_hardening": [
+    {
+      "id": "sec-001",
+      "type": "security_hardening",
+      "title": "WebSocket endpoints lack authentication",
+      "description": "All WebSocket routes (/ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/notifications/:userId) allow unauthenticated connections. Anyone can connect and receive sensitive audit events, tenant-specific events, and user notifications without providing credentials or validating the userId/tenantId parameters against an authenticated session.",
+      "rationale": "This is a critical vulnerability in a multi-tenant regulated system. Malicious actors can: (1) Subscribe to audit events containing PII and business data, (2) Monitor other tenants' activity by guessing tenantIds, (3) Receive notifications intended for other users, (4) Enumerate valid tenantIds and userIds through subscription attempts. This violates GDPR data protection requirements and the system's multi-tenant isolation principles.",
+      "category": "authorization",
+      "severity": "critical",
+      "affectedFiles": [
+        "apps/api/src/modules/websocket/websocket.controller.ts"
+      ],
+      "vulnerability": "CWE-306: Missing Authentication for Critical Function",
+      "currentRisk": "Unauthenticated access to real-time audit logs, tenant events, and user notifications. GDPR compliance at risk due to potential data leakage across tenants.",
+      "remediation": "Implement WebSocket authentication by: (1) Validating session cookies on WebSocket upgrade, (2) Adding middleware to verify tenantId/userId parameters match authenticated user, (3) Requiring JWT token as query parameter or first message, (4) Implementing connection-level authorization checks. Consider using @fastify/jwt for token validation.",
+      "references": [
+        "https://owasp.org/www-community/attacks/Missing_Function_Level_Access_Control",
+        "https://cwe.mitre.org/data/definitions/306.html"
+      ],
+      "compliance": [
+        "GDPR",
+        "SOC2"
+      ]
+    },
+    {
+      "id": "sec-002",
+      "type": "security_hardening",
+      "title": "No rate limiting on authentication endpoints",
+      "description": "The API lacks rate limiting middleware (@fastify/rate-limit or equivalent). Authentication endpoints including /api/auth/login, /api/auth/callback, /api/auth/vipps/*, and /api/auth/test-login have no protection against brute force attacks or credential stuffing.",
+      "rationale": "Without rate limiting, attackers can: (1) Attempt unlimited login attempts to guess credentials, (2) Enumerate valid email addresses through response timing, (3) Overwhelm OAuth callback endpoints with requests, (4) Conduct denial-of-service attacks against the API. Norwegian governmental systems have strict availability requirements that rate limiting helps maintain.",
+      "category": "authentication",
+      "severity": "high",
+      "affectedFiles": [
+        "apps/api/src/adapters/fastify.adapter.ts",
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/package.json"
+      ],
+      "vulnerability": "CWE-307: Improper Restriction of Excessive Authentication Attempts",
+      "currentRisk": "Unlimited authentication attempts enable brute force attacks. No protection against credential stuffing or API abuse.",
+      "remediation": "Install and configure @fastify/rate-limit with tiered limits: (1) Strict limits on auth endpoints (5 req/min per IP), (2) Standard limits on API endpoints (100 req/min), (3) Relaxed limits on public endpoints. Consider Redis-backed rate limiting for distributed deployments. Add account lockout after failed attempts.",
+      "references": [
+        "https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks",
+        "https://cwe.mitre.org/data/definitions/307.html",
+        "https://github.com/fastify/fastify-rate-limit"
+      ],
+      "compliance": [
+        "SOC2",
+        "PCI-DSS"
+      ]
+    },
+    {
+      "id": "sec-003",
+      "type": "security_hardening",
+      "title": "Missing security headers (@fastify/helmet)",
+      "description": "The API does not implement security headers via @fastify/helmet or equivalent middleware. Missing headers include Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, and Referrer-Policy.",
+      "rationale": "Security headers provide defense-in-depth against common web attacks: (1) CSP prevents XSS and injection attacks, (2) HSTS ensures HTTPS-only connections, (3) X-Frame-Options prevents clickjacking, (4) X-Content-Type-Options prevents MIME-sniffing attacks. As a government platform serving Norwegian municipalities, security headers are essential for compliance.",
+      "category": "configuration",
+      "severity": "medium",
+      "affectedFiles": [
+        "apps/api/src/adapters/fastify.adapter.ts",
+        "apps/api/package.json"
+      ],
+      "vulnerability": "CWE-693: Protection Mechanism Failure",
+      "currentRisk": "API responses lack security headers, making client applications vulnerable to clickjacking, XSS, and man-in-the-middle attacks.",
+      "remediation": "Install @fastify/helmet and configure appropriate headers: await app.register(helmet, { contentSecurityPolicy: { directives: { defaultSrc: [\"'self'\"], ... }}, hsts: { maxAge: 31536000, includeSubDomains: true }}). Also configure HSTS preload for production domains.",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/",
+        "https://cwe.mitre.org/data/definitions/693.html",
+        "https://github.com/fastify/fastify-helmet"
+      ],
+      "compliance": [
+        "SOC2"
+      ]
+    },
+    {
+      "id": "sec-004",
+      "type": "security_hardening",
+      "title": "Sensitive session data logged to console in production",
+      "description": "The authentication controllers contain console.log statements that output sensitive session information including user IDs, email addresses, roles, cookie headers, and full session data objects. These debug logs are not conditionally disabled in production and will expose PII in log files.",
+      "rationale": "Logging PII violates GDPR Article 25 (Data Protection by Design) and creates security risks: (1) Log files may be accessible to unauthorized personnel, (2) Log aggregation services may store data in non-compliant regions, (3) Session cookies in logs could enable session hijacking, (4) Norwegian regulatory requirements mandate protecting citizen data in transit and at rest.",
+      "category": "data_protection",
+      "severity": "medium",
+      "affectedFiles": [
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/src/modules/auth/idporten.controller.ts"
+      ],
+      "vulnerability": "CWE-532: Insertion of Sensitive Information into Log File",
+      "currentRisk": "User emails, session tokens, and cookie values are logged in production. PII exposure in logs violates GDPR and enables session hijacking if logs are compromised.",
+      "remediation": "Replace console.log with structured logging (pino) that: (1) Conditionally logs at debug level only in non-production, (2) Redacts sensitive fields (userId, email, cookie) in production, (3) Uses log masking for PII: logger.info({ userId: maskPII(userId) }). Consider using the existing pino adapter with LOG_LEVEL=info in production.",
+      "references": [
+        "https://owasp.org/www-community/attacks/Log_Injection",
+        "https://cwe.mitre.org/data/definitions/532.html"
+      ],
+      "compliance": [
+        "GDPR",
+        "SOC2"
+      ]
+    },
+    {
+      "id": "sec-005",
+      "type": "security_hardening",
+      "title": "Mock JWT token generation used in authentication flow",
+      "description": "The auth.controller.ts uses a generateMockToken() function that creates non-cryptographic tokens using simple Base64 encoding. The function is labeled as 'Mock JWT generation (in production, use proper JWT library)' but is actively used in the production authentication flow for login, OAuth callbacks, and Vipps authentication.",
+      "rationale": "The current token implementation has critical weaknesses: (1) No cryptographic signature - tokens can be forged by anyone, (2) Payload is simply Base64-encoded and easily decoded/modified, (3) No audience/issuer claims for validation, (4) No key rotation mechanism, (5) Static 'signature' text provides no security. An attacker could forge tokens to impersonate any user.",
+      "category": "authentication",
+      "severity": "critical",
+      "affectedFiles": [
+        "apps/api/src/modules/auth/auth.controller.ts"
+      ],
+      "vulnerability": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+      "currentRisk": "Authentication tokens can be trivially forged. An attacker can create valid-looking tokens for any user ID and tenant, bypassing all authentication.",
+      "remediation": "Replace generateMockToken with proper JWT implementation: (1) Install @fastify/jwt or jsonwebtoken, (2) Use asymmetric (RS256) or symmetric (HS256) signatures with secure secrets, (3) Include standard claims (iss, aud, exp, iat, jti), (4) Store JWT_SECRET in secrets manager, (5) Implement token refresh with rotation. The JWT_SECRET environment variable already exists but is unused.",
+      "references": [
+        "https://owasp.org/www-community/attacks/JSON_Web_Token_Attacks",
+        "https://cwe.mitre.org/data/definitions/327.html",
+        "https://jwt.io/introduction"
+      ],
+      "compliance": [
+        "SOC2",
+        "PCI-DSS"
+      ]
+    }
+  ],
+  "metadata": {
+    "dependenciesScanned": 45,
+    "knownVulnerabilities": 0,
+    "filesAnalyzed": 25,
+    "criticalIssues": 2,
+    "highIssues": 1,
+    "mediumIssues": 2,
+    "lowIssues": 0,
+    "generatedAt": "2026-01-16T00:30:00Z",
+    "scanScope": [
+      "apps/api",
+      "packages/client-sdk"
+    ],
+    "notesOnAnalysis": "This security audit focused on authentication, authorization, input validation, data protection, and configuration. The codebase has good practices in place for returnTo URL validation (preventing open redirects), CORS configuration with allowed origins, and audit logging. Key gaps identified are WebSocket authentication, rate limiting, security headers, and the mock JWT implementation."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-004",
+  "rationale": "Deployment documentation is critical for operations teams and CI/CD setup. Performance guides help developers understand caching strategies and optimization patterns. Accessibility (a11y) guides ensure WCAG compliance for Norwegian government services (required by law).",
+  "category": "documentation",
+  "priority": "medium"
+}

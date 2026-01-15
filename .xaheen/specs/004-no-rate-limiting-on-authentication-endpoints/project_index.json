@@ -1,0 +1,48 @@
+{
+  "project_type": "monorepo",
+  "services": {
+    "api": {
+      "path": "./apps/api",
+      "tech_stack": ["typescript", "fastify", "drizzle-orm", "postgres"],
+      "port": 4000,
+      "dev_command": "pnpm dev",
+      "build_command": "pnpm build",
+      "test_command": "pnpm test",
+      "test_unit_command": "pnpm test:unit",
+      "test_integration_command": "pnpm test:integration",
+      "test_security_command": "pnpm test:security",
+      "test_e2e_command": "pnpm test:e2e"
+    },
+    "web": {
+      "path": "./apps/web",
+      "tech_stack": ["typescript", "react", "vite"],
+      "port": 5173,
+      "dev_command": "pnpm dev"
+    },
+    "backoffice": {
+      "path": "./apps/backoffice",
+      "tech_stack": ["typescript", "react", "vite"],
+      "port": 5174,
+      "dev_command": "pnpm dev"
+    },
+    "minside": {
+      "path": "./apps/minside",
+      "tech_stack": ["typescript", "react", "vite"],
+      "port": 5175,
+      "dev_command": "pnpm dev"
+    }
+  },
+  "infrastructure": {
+    "monorepo_tool": "turborepo",
+    "package_manager": "pnpm",
+    "workspaces": true,
+    "docker": false,
+    "database": "postgresql"
+  },
+  "conventions": {
+    "linter": "eslint",
+    "formatter": "prettier",
+    "testing": "vitest",
+    "e2e_testing": "playwright"
+  }
+}

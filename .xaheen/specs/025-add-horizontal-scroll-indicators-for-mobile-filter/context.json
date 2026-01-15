@@ -1,0 +1,38 @@
+{
+  "files_to_modify": {
+    "minside": [
+      "apps/minside/src/routes/settings.tsx",
+      "apps/minside/src/routes/bookings.tsx"
+    ]
+  },
+  "files_to_reference": [
+    "packages/ds/src/blocks/ImageSlider.tsx"
+  ],
+  "patterns": {
+    "scroll_indicator_pattern": "Gradient overlays using position: absolute with linear-gradient and pointerEvents: 'none' - see ImageSlider.tsx lines 222-248",
+    "responsive_pattern": "Uses isMobile state based on window.innerWidth < 768px",
+    "design_tokens": "All styling uses CSS custom properties from @xala/ds (var(--ds-*))",
+    "component_imports": "Only import from @xala/ds, never from @digdir/* directly"
+  },
+  "existing_implementations": {
+    "description": "ImageSlider.tsx already implements scroll indicators with gradient overlays on left/right edges",
+    "relevant_files": [
+      "packages/ds/src/blocks/ImageSlider.tsx"
+    ],
+    "pattern_location": "Lines 222-248 show gradient overlay implementation"
+  },
+  "affected_components": {
+    "settings_page": {
+      "file": "apps/minside/src/routes/settings.tsx",
+      "component": "Tabs.List",
+      "line": 257,
+      "current_state": "5 tabs (profile, addresses, privacy, notifications, preferences) with horizontal overflow but no visual indicators"
+    },
+    "bookings_page": {
+      "file": "apps/minside/src/routes/bookings.tsx",
+      "component": "Filter buttons container",
+      "lines": "189-251",
+      "current_state": "4 filter buttons with overflowX: 'auto' but no visual indicators"
+    }
+  }
+}

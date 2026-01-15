@@ -1,0 +1,13 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-005",
+  "rationale": "apps/backoffice/src/components/shared/StatusBadge.tsx (89 lines) implements a custom status badge with its own variant system (success, warning, danger, info, neutral, pending). Meanwhile, @xala/ds already exports GenericStatusBadge, BookingStatusBadge, PaymentStatusBadge, and other status-specific badges with consistent styling and design token usage. This duplication violates the CLAUDE.md rule: 'No custom UI components in apps'.",
+  "category": "ui_ux",
+  "uiuxCategory": "visual",
+  "affectedFiles": [
+    "apps/backoffice/src/components/shared/StatusBadge.tsx",
+    "apps/backoffice/src/routes/*.tsx"
+  ],
+  "problemSolved": "Backoffice StatusBadge uses inline style objects mapping variants to CSS variables. Uses borderRadius: 'var(--ds-border-radius-full)' which differs from @xala/ds badges. Components import from './shared/StatusBadge' instead of '@xala/ds'."
+}

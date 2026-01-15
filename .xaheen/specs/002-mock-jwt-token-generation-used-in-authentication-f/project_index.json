@@ -1,0 +1,45 @@
+{
+  "project_type": "monorepo",
+  "services": {
+    "api": {
+      "path": "./apps/api",
+      "tech_stack": ["typescript", "fastify", "drizzle-orm", "postgres"],
+      "port": 4000,
+      "dev_command": "pnpm --filter=api dev",
+      "test_command": "pnpm --filter=api test",
+      "build_command": "pnpm --filter=api build"
+    },
+    "web": {
+      "path": "./apps/web",
+      "tech_stack": ["typescript", "react", "vite"],
+      "port": 5173,
+      "dev_command": "pnpm --filter=web dev",
+      "test_command": "pnpm --filter=web test"
+    },
+    "backoffice": {
+      "path": "./apps/backoffice",
+      "tech_stack": ["typescript", "react", "vite"],
+      "port": 5174,
+      "dev_command": "pnpm --filter=backoffice dev",
+      "test_command": "pnpm --filter=backoffice test"
+    },
+    "client-sdk": {
+      "path": "./packages/client-sdk",
+      "tech_stack": ["typescript"],
+      "dev_command": "pnpm --filter=@digilist/client-sdk dev",
+      "test_command": "pnpm --filter=@digilist/client-sdk test"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "postgresql",
+    "package_manager": "pnpm",
+    "monorepo_tool": "turborepo"
+  },
+  "conventions": {
+    "linter": "eslint",
+    "formatter": "prettier",
+    "testing": "vitest",
+    "e2e_testing": "playwright"
+  }
+}

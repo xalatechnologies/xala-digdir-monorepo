@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "performance_optimizations",
+  "ideaId": "perf-004",
+  "rationale": "apps/web/vite.config.ts splits vendors into: vendor-mapbox, vendor-query, vendor-sdk, vendor-ds, and vendor. apps/backoffice/vite.config.ts has no manualChunks configuration, resulting in a single large vendor bundle. This defeats browser caching when only SDK code changes and prevents parallel chunk loading.",
+  "category": "performance",
+  "performanceCategory": "bundle_size",
+  "impact": "medium"
+}

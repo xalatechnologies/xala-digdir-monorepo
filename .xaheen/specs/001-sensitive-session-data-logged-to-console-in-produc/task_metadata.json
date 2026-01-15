@@ -1,0 +1,10 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "security_hardening",
+  "ideaId": "sec-004",
+  "rationale": "Logging PII violates GDPR Article 25 (Data Protection by Design) and creates security risks: (1) Log files may be accessible to unauthorized personnel, (2) Log aggregation services may store data in non-compliant regions, (3) Session cookies in logs could enable session hijacking, (4) Norwegian regulatory requirements mandate protecting citizen data in transit and at rest.",
+  "category": "security",
+  "securitySeverity": "medium",
+  "impact": "medium",
+  "priority": "medium"
+}

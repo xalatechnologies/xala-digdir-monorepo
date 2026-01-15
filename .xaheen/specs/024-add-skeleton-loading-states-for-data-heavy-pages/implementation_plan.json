@@ -1,0 +1,13 @@
+{
+  "feature": "Add skeleton loading states for data-heavy pages",
+  "description": "Replace spinner loading indicators with skeleton loading patterns on dashboard, bookings, and settings pages to improve perceived performance and reduce layout shift",
+  "created_at": "2026-01-15T23:38:32.267Z",
+  "updated_at": "2026-01-15T23:40:28.361Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

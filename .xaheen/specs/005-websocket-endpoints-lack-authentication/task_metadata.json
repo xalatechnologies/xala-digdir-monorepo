@@ -1,0 +1,10 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "security_hardening",
+  "ideaId": "sec-001",
+  "rationale": "This is a critical vulnerability in a multi-tenant regulated system. Malicious actors can: (1) Subscribe to audit events containing PII and business data, (2) Monitor other tenants' activity by guessing tenantIds, (3) Receive notifications intended for other users, (4) Enumerate valid tenantIds and userIds through subscription attempts. This violates GDPR data protection requirements and the system's multi-tenant isolation principles.",
+  "category": "security",
+  "securitySeverity": "critical",
+  "impact": "critical",
+  "priority": "urgent"
+}

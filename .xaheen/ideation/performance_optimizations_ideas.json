@@ -1,0 +1,118 @@
+{
+  "performance_optimizations": [
+    {
+      "id": "perf-001",
+      "type": "performance_optimizations",
+      "title": "Implement route-level code splitting with React.lazy for Backoffice app",
+      "description": "The backoffice app eagerly imports 30+ page components at startup (DashboardPage, ListingsPage, BookingsPage, etc.), creating a large initial bundle. Implementing React.lazy() for route components would split these into separate chunks loaded on demand.",
+      "rationale": "apps/backoffice/src/App.tsx imports all page components at the top level, meaning the entire admin interface (~30 pages) loads upfront even though users typically access one page at a time. This significantly impacts Time to Interactive (TTI) and First Contentful Paint (FCP). The .cursorrules file recommends React.lazy() but it's not implemented.",
+      "category": "bundle_size",
+      "impact": "high",
+      "affectedAreas": [
+        "apps/backoffice/src/App.tsx",
+        "apps/backoffice/src/routes/*.tsx",
+        "apps/web/src/App.tsx"
+      ],
+      "currentMetric": "All 30+ route components loaded in initial bundle (~200-300KB compressed)",
+      "expectedImprovement": "~60-70% reduction in initial bundle size, TTI improvement of 1-2 seconds on slower connections",
+      "implementation": "1. Create lazy wrapper: `const DashboardPage = lazy(() => import('./routes/dashboard'))`\n2. Wrap Routes in Suspense with loading fallback\n3. Apply to all route components in backoffice/App.tsx\n4. Add prefetching for likely navigation targets using `<link rel='prefetch'>`\n5. Consider route grouping by role to optimize chunk loading",
+      "tradeoffs": "Slightly slower navigation on first visit to each route; requires Suspense fallback UI; need to handle loading states gracefully",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "perf-002",
+      "type": "performance_optimizations",
+      "title": "Dynamically import Mapbox-GL to reduce initial bundle by ~500KB",
+      "description": "mapbox-gl (~500KB uncompressed, ~150KB gzipped) is bundled in @xala/ds package and loaded on every page, even those without maps. Moving map components to dynamic imports would eliminate this from the initial bundle.",
+      "rationale": "The @xala/ds package includes mapbox-gl and react-map-gl as dependencies. These are used by ListingMap component but loaded universally. Most pages (dashboard, bookings, settings) don't need maps, yet users pay the bundle size cost on every page load.",
+      "category": "bundle_size",
+      "impact": "high",
+      "affectedAreas": [
+        "packages/ds/package.json",
+        "packages/ds/src/blocks/ListingMap.tsx",
+        "apps/web/vite.config.ts"
+      ],
+      "currentMetric": "mapbox-gl adds ~500KB to vendor bundle, loaded on all pages",
+      "expectedImprovement": "~150KB gzipped reduction in initial bundle, ~500ms faster LCP on median connections",
+      "implementation": "1. Move mapbox-gl to peer/optional dependency in @xala/ds\n2. Create lazy-loaded ListingMap wrapper:\n   ```tsx\n   const ListingMap = lazy(() => import('./ListingMap.impl'))\n   ```\n3. Export ListingMap with Suspense boundary built-in\n4. Update apps to only load map chunk when map is visible\n5. Consider using IntersectionObserver to defer map loading until in viewport",
+      "tradeoffs": "Map will have brief loading state on first render; requires careful handling of map initialization; need to preload when user hovers over map tab",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "perf-003",
+      "type": "performance_optimizations",
+      "title": "Add staleTime configuration to frequently-used SDK query hooks",
+      "description": "Most React Query hooks in @digilist/client-sdk lack staleTime configuration, causing unnecessary refetches when components remount or focus returns to the window. Adding appropriate staleTime values would reduce API calls and improve perceived performance.",
+      "rationale": "Hooks like useBookings, useRentalObjects, useOrganizations, and useDashboardStats refetch on every component mount (staleTime defaults to 0). Only useBookingModeConfig (60s) and useRecurringPreview (30s) have explicit staleTime. This causes redundant network requests when navigating between tabs or returning to previously-viewed pages.",
+      "category": "network",
+      "impact": "medium",
+      "affectedAreas": [
+        "packages/client-sdk/src/hooks/use-bookings.ts",
+        "packages/client-sdk/src/hooks/use-rental-objects.ts",
+        "packages/client-sdk/src/hooks/use-organizations.ts",
+        "packages/client-sdk/src/hooks/use-reports.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
+      ],
+      "currentMetric": "~15 API calls on dashboard load, redundant fetches on tab switches",
+      "expectedImprovement": "~50% reduction in API calls, smoother navigation experience, reduced server load",
+      "implementation": "1. Add staleTime to list queries (30-60s for listings, bookings)\n2. Add longer staleTime for static data (5min for categories, configuration)\n3. Add gcTime (cacheTime) to keep data in memory during navigation\n4. Implement query defaults in QueryClient configuration:\n   ```ts\n   defaultOptions: {\n     queries: {\n       staleTime: 30_000, // 30s default\n       gcTime: 5 * 60 * 1000, // 5min\n     }\n   }\n   ```\n5. Use shorter staleTime for real-time sensitive data (availability: 5s)",
+      "tradeoffs": "Users may see slightly stale data between refetches; need to balance freshness vs. network calls; consider invalidation strategy for mutations",
+      "estimatedEffort": "small"
+    },
+    {
+      "id": "perf-004",
+      "type": "performance_optimizations",
+      "title": "Add Vite manual chunking strategy to backoffice app matching web app",
+      "description": "The backoffice app's vite.config.ts lacks the manual chunking strategy implemented in the web app. Adding vendor-specific chunks for mapbox, react-query, SDK, and design system would improve caching and parallel loading.",
+      "rationale": "apps/web/vite.config.ts splits vendors into: vendor-mapbox, vendor-query, vendor-sdk, vendor-ds, and vendor. apps/backoffice/vite.config.ts has no manualChunks configuration, resulting in a single large vendor bundle. This defeats browser caching when only SDK code changes and prevents parallel chunk loading.",
+      "category": "bundle_size",
+      "impact": "medium",
+      "affectedAreas": [
+        "apps/backoffice/vite.config.ts",
+        "apps/minside/vite.config.ts"
+      ],
+      "currentMetric": "Single vendor chunk ~800KB; full re-download on any dependency update",
+      "expectedImprovement": "Better cache utilization (70%+ cache hit rate), parallel loading of chunks, ~30% faster repeat visits",
+      "implementation": "1. Copy manualChunks configuration from apps/web/vite.config.ts to backoffice:\n   ```ts\n   build: {\n     rollupOptions: {\n       output: {\n         manualChunks: (id) => {\n           if (id.includes('mapbox-gl')) return 'vendor-mapbox';\n           if (id.includes('@tanstack/react-query')) return 'vendor-query';\n           if (id.includes('packages/client-sdk')) return 'vendor-sdk';\n           if (id.includes('packages/ds') || id.includes('@xala/ds')) return 'vendor-ds';\n           if (id.includes('node_modules')) return 'vendor';\n         }\n       }\n     }\n   }\n   ```\n2. Apply same config to minside app\n3. Increase chunkSizeWarningLimit to 800",
+      "tradeoffs": "More HTTP requests initially (though HTTP/2 mitigates this); need to verify no circular dependency issues between chunks",
+      "estimatedEffort": "small"
+    },
+    {
+      "id": "perf-005",
+      "type": "performance_optimizations",
+      "title": "Optimize design system barrel exports to improve tree-shaking",
+      "description": "The @xala/ds package uses `export * from '@digdir/designsystemet-react'` which can import the entire designsystemet library even when only a few components are used. Explicit named exports would enable better tree-shaking.",
+      "rationale": "packages/ds/src/index.ts re-exports everything from @digdir/designsystemet-react using `export *`. While modern bundlers handle this reasonably well, some components and their dependencies may be included unnecessarily. Apps only use a subset (~30-40 components) of the full library (~80+ components).",
+      "category": "bundle_size",
+      "impact": "medium",
+      "affectedAreas": [
+        "packages/ds/src/index.ts",
+        "packages/ds/package.json"
+      ],
+      "currentMetric": "Full designsystemet library included (~100KB), many unused components bundled",
+      "expectedImprovement": "~20-30KB reduction in DS bundle size, better tree-shaking accuracy",
+      "implementation": "1. Audit which @digdir components are actually used across all apps\n2. Replace `export * from '@digdir/designsystemet-react'` with explicit named exports:\n   ```ts\n   export {\n     Button,\n     Card,\n     Heading,\n     // ... only used components\n   } from '@digdir/designsystemet-react';\n   ```\n3. Add eslint-plugin-import to detect unused exports\n4. Consider using @rollup/plugin-unused for build-time detection\n5. Document which primitives are available from @xala/ds",
+      "tradeoffs": "More maintenance overhead to keep export list updated; may break apps if they use undocumented exports; need to verify all component dependencies are included",
+      "estimatedEffort": "medium"
+    }
+  ],
+  "metadata": {
+    "totalBundleSize": "~2.5MB (uncompressed initial bundle for backoffice)",
+    "largestDependencies": [
+      "mapbox-gl (~500KB)",
+      "@digdir/designsystemet-react (~100KB)",
+      "@tanstack/react-query (~40KB)",
+      "react-dom (~130KB)"
+    ],
+    "filesAnalyzed": 85,
+    "potentialSavings": "~700KB uncompressed, ~250KB gzipped",
+    "keyFindings": [
+      "No route-level code splitting in backoffice (30+ eager imports)",
+      "mapbox-gl loaded on all pages despite limited map usage",
+      "SDK hooks lack staleTime causing redundant fetches",
+      "Backoffice missing web app's manual chunk strategy",
+      "Barrel exports may defeat tree-shaking for design system"
+    ],
+    "generatedAt": "2026-01-16T00:30:00Z"
+  }
+}

@@ -1,0 +1,69 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Add Vite Manual Chunking Strategy to Backoffice App
+Task ID: 011
+Workspace: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/.xaheen/worktrees/tasks/011-add-vite-manual-chunking-strategy-to-backoffice-ap
+Started: 2026-01-16
+
+Workflow Type: simple
+Rationale: Single configuration file change with no cross-service dependencies. The task involves copying an existing pattern from web app to backoffice app, modifying only vite.config.ts.
+
+Session 1 (Planner):
+- Completed deep codebase investigation
+- Created project_index.json (monorepo structure documented)
+- Created context.json (patterns and dependencies documented)
+- Created implementation_plan.json with 2 phases, 4 subtasks
+- Created init.sh (environment setup script)
+- Created build-progress.txt (this file)
+
+Phase Summary:
+- Phase 1 (Add Manual Chunking Configuration): 2 subtasks, no dependencies
+  - Subtask 1-1: Add manual chunking to vite.config.ts
+  - Subtask 1-2: Verify chunk files are created
+
+- Phase 2 (Verification): 2 subtasks, depends on Phase 1
+  - Subtask 2-1: Verify app runs in dev mode
+  - Subtask 2-2: Compare bundle sizes
+
+Services Involved:
+- backoffice: Add manual chunking configuration to vite.config.ts
+
+Key Findings from Investigation:
+- Web app has manual chunking in apps/web/vite.config.ts (lines 87-113)
+- Backoffice app lacks this optimization (apps/backoffice/vite.config.ts)
+- Web app splits: vendor-mapbox, vendor-query, vendor-sdk, vendor-ds, vendor
+- Backoffice does NOT use mapbox, so vendor-mapbox chunk should NOT be added
+- Both apps share: @tanstack/react-query, @digilist/client-sdk, @xala/ds
+
+Strategy to Implement:
+1. Copy manualChunks pattern from web app
+2. Remove vendor-mapbox chunk (not used in backoffice)
+3. Keep: vendor-query, vendor-sdk, vendor-ds, vendor
+4. Add chunkSizeWarningLimit: 800
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Sequential execution required (Phase 2 depends on Phase 1)
+
+Risk Assessment:
+- Risk level: LOW
+- Configuration change only, no functional code modified
+- No unit tests required, only build verification
+- Security scanning: NOT required
+- Staging deployment: NOT required
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source xaheen/.venv/bin/activate && python xaheen/run.py --spec 011 --parallel 1
+
+Or manually:
+
+  cd apps/backoffice
+  # Edit vite.config.ts to add manual chunking
+  pnpm build
+  # Verify chunks in dist/assets/
+
+=== END SESSION 1 ===
