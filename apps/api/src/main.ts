@@ -56,6 +56,8 @@ import { BlocksController } from './modules/blocks/blocks.controller';
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+// Phase 8: Likes (Favorites)
+import { LikeController, LikeService, LikeRepository } from './modules/like';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -159,6 +161,7 @@ async function bootstrap() {
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
   container.registerFactory('AlertRepository', () => new AlertRepository(db));
   container.registerFactory('IncidentRepository', () => new IncidentRepository(db));
+  container.registerFactory('LikeRepository', () => new LikeRepository(db));
 
   // Register services
   container.registerFactory('TenantService', () => 
@@ -173,13 +176,16 @@ async function bootstrap() {
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () => 
+  container.registerFactory('MonitoringService', () =>
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
       container.resolve('IncidentRepository'),
       adapters
     )
+  );
+  container.registerFactory('LikeService', () =>
+    new LikeService(container.resolve('LikeRepository'), adapters)
   );
 
   console.log('✓ Services registered');
@@ -205,8 +211,12 @@ async function bootstrap() {
     new SignicatAuthController()
   );
   // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
+  container.registerFactory('NotificationsController', () =>
     new NotificationsController()
+  );
+  // Like controller with LikeService dependency
+  container.registerFactory('LikeController', () =>
+    new LikeController(container.resolve('LikeService'))
   );
   console.log('✓ Controllers registered');
 
@@ -267,6 +277,8 @@ async function bootstrap() {
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
+    // Phase 8: Likes (Favorites)
+    LikeController,
   ];
 
   // Create Fastify app with controllers
