@@ -11,6 +11,7 @@
 
 import * as React from 'react';
 import { RequireAuthModal, ShareSheet } from '@xala/ds';
+import { useLikeListing, useUnlikeListing, useIsLiked } from '@digilist/client-sdk/hooks';
 import type { Listing } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
 import {
@@ -41,9 +42,12 @@ export interface ListingDetailsLayoutProps {
   listing: Listing;
   isAuthenticated: boolean;
   userId?: string;
-  isFavorited: boolean;
+  /** @deprecated Use SDK hooks internally - prop kept for backward compatibility */
+  isFavorited?: boolean;
+  /** @deprecated Use SDK hooks internally - prop kept for backward compatibility */
   isFavoriteLoading?: boolean;
-  onFavoriteToggle: () => void;
+  /** @deprecated Use SDK hooks internally - prop kept for backward compatibility */
+  onFavoriteToggle?: () => void;
   onBookingClick?: () => void;
   mapboxToken?: string;
   className?: string;
@@ -100,9 +104,9 @@ export function ListingDetailsLayout({
   listing,
   isAuthenticated,
   userId,
-  isFavorited,
-  isFavoriteLoading = false,
-  onFavoriteToggle,
+  isFavorited: isFavoritedProp,
+  isFavoriteLoading: isFavoriteLoadingProp = false,
+  onFavoriteToggle: onFavoriteToggleProp,
   onBookingClick,
   mapboxToken,
   className,
@@ -112,6 +116,15 @@ export function ListingDetailsLayout({
   const [showShareSheet, setShowShareSheet] = React.useState(false);
 
   const presenter = React.useMemo(() => createPresenter(listing.type), [listing.type]);
+
+  // SDK hooks for favorite functionality
+  const { data: isLikedData } = useIsLiked(listing.id, { enabled: isAuthenticated });
+  const likeMutation = useLikeListing();
+  const unlikeMutation = useUnlikeListing();
+
+  // Determine favorite state (SDK takes precedence over props)
+  const isFavorited = isLikedData?.isLiked ?? isFavoritedProp ?? false;
+  const isFavoriteLoading = likeMutation.isPending || unlikeMutation.isPending || isFavoriteLoadingProp;
 
   // Subscribe to real-time updates
   useRealtimeUpdates(listing.id, (_event) => {
@@ -149,14 +162,23 @@ export function ListingDetailsLayout({
     setShowAuthModal(true);
   }, []);
 
-  // Handle favorite toggle with auth check
+  // Handle favorite toggle with auth check and SDK mutations
   const handleFavoriteToggle = React.useCallback(() => {
     if (!isAuthenticated) {
       setShowAuthModal(true);
       return;
     }
-    onFavoriteToggle();
-  }, [isAuthenticated, onFavoriteToggle]);
+
+    // Use SDK mutations for like/unlike
+    if (isFavorited) {
+      unlikeMutation.mutate(listing.id);
+    } else {
+      likeMutation.mutate(listing.id);
+    }
+
+    // Call legacy prop callback if provided (backward compatibility)
+    onFavoriteToggleProp?.();
+  }, [isAuthenticated, isFavorited, listing.id, likeMutation, unlikeMutation, onFavoriteToggleProp]);
 
   // Tab configuration
   const tabs = [
