@@ -16,7 +16,9 @@ export {
   useLogin,
   useEmailLogin,
   useLogout,
-  useRefreshToken
+  useRefreshToken,
+  useVippsLogin,
+  useVippsCallback,
 } from './use-auth';
 
 // Flow Context hooks (Session-Safe Return-to-Flow)
@@ -59,6 +61,27 @@ export {
   useUploadListingMedia,
   useDeleteListingMedia
 } from './use-listings';
+
+// Rental Object hooks (Utleieobjekter)
+export {
+  rentalObjectKeys,
+  useRentalObjects,
+  useRentalObjectsByCategory,
+  usePublicRentalObjects,
+  useRentalObject,
+  useRentalObjectBySlug,
+  useRentalObjectCategories,
+  useRentalObjectSubcategories,
+  useCreateRentalObject,
+  useUpdateRentalObject,
+  useDeleteRentalObject,
+  usePublishRentalObject,
+  useArchiveRentalObject,
+  useUnpublishRentalObject,
+  useRestoreRentalObject,
+  useDuplicateRentalObject,
+  useRentalObjectsList,
+} from './use-rental-objects';
 
 // Booking hooks
 export {

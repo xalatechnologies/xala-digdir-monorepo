@@ -19,6 +19,16 @@ export type {
 // Listings
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
+// Rental Objects (Utleieobjekter)
+export {
+  RentalObjectService,
+  PublicRentalObjectService,
+  rentalObjectService,
+  publicRentalObjectService,
+  type CategoryInfo,
+  type SubcategoryInfo,
+} from './rental-object.service';
+
 // Bookings
 export {
   BookingService,

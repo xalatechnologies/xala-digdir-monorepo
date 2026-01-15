@@ -1,6 +1,6 @@
 /**
  * Listing Controller
- * REST API endpoints for listing management
+ * REST API endpoints for rental object (utleieobjekter) management
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
@@ -9,10 +9,10 @@ import { toDetailsProjection } from './listing.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
-  CreateListingSchema,
-  UpdateListingSchema,
-  ListingQuerySchema,
-} from '../../schemas/listing.schema';
+  CreateRentalObjectSchema,
+  UpdateRentalObjectSchema,
+  RentalObjectQuerySchema,
+} from '../../schemas/rental-object.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller('/api/listings')
@@ -22,14 +22,14 @@ export class ListingController {
   ) {}
 
   /**
-   * GET /api/listings - List all listings
+   * GET /api/listings - List all rental objects
    * Returns { data, meta } format for SDK compatibility
    */
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     // Allow null tenantId for public access to all published listings
     const tenantId = getOptionalTenantId(request);
-    const params = validate(ListingQuerySchema, request.query);
+    const params = validate(RentalObjectQuerySchema, request.query);
     const result = await this.service.findAll(tenantId, { 
       ...params, 
       page: params.page ?? 1, 
@@ -60,22 +60,22 @@ export class ListingController {
   }
 
   /**
-   * POST /api/listings - Create new listing
+   * POST /api/listings - Create new rental object
    */
   @Post()
   async create(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
-    const data = validate(CreateListingSchema, request.body);
+    const data = validate(CreateRentalObjectSchema, request.body);
     const listing = await this.service.create(tenantId, data as any);
     return reply.status(201).send({ listing });
   }
 
   /**
-   * PUT /api/listings/:id - Update listing
+   * PUT /api/listings/:id - Update rental object
    */
   @Put('/:id')
   async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const data = validate(UpdateListingSchema, request.body);
+    const data = validate(UpdateRentalObjectSchema, request.body);
     const listing = await this.service.update(request.params.id, data);
     return { listing };
   }

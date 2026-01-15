@@ -101,3 +101,87 @@ export function useRefreshToken() {
     },
   });
 }
+
+// ============================================================================
+// Vipps OAuth Hooks
+// ============================================================================
+
+/**
+ * Initiate Vipps OAuth login
+ * 
+ * Returns authorization URL and state/nonce for validation
+ */
+export function useVippsLogin() {
+  return useMutation({
+    mutationFn: async ({
+      redirectUri,
+      returnTo,
+      scopes,
+    }: {
+      redirectUri: string;
+      returnTo?: string;
+      scopes?: string[];
+    }) => {
+      const response = await fetch('/api/auth/vipps/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ redirectUri, returnTo, scopes }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to initiate Vipps login');
+      }
+      
+      return response.json() as Promise<{
+        data: {
+          authorizationUrl: string;
+          state: string;
+          nonce: string;
+          returnTo: string;
+        };
+      }>;
+    },
+  });
+}
+
+/**
+ * Handle Vipps OAuth callback
+ * 
+ * Exchanges authorization code for session
+ */
+export function useVippsCallback() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({
+      code,
+      state,
+      nonce,
+      redirectUri,
+    }: {
+      code: string;
+      state: string;
+      nonce: string;
+      redirectUri: string;
+    }) => {
+      const response = await fetch('/api/auth/vipps/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, state, nonce, redirectUri }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'Vipps authentication failed');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (response) => {
+      if (response.data?.token) {
+        setAuthToken(response.data.token);
+      }
+      queryClient.setQueryData(queryKeys.auth.session(), response);
+    },
+  });
+}

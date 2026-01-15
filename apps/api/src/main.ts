@@ -41,7 +41,7 @@ import { IntegrationsController } from './modules/integrations/integrations.cont
 import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
-import { IdPortenAuthController } from './modules/auth/idporten.controller';
+import { IdPortenOIDCController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
@@ -57,6 +57,8 @@ import { SeasonApplicationsController } from './modules/season-applications/seas
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+// Phase 8: Vipps Webhooks
+import { VippsWebhookController } from './modules/webhooks/vipps-webhook.controller';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -165,9 +167,9 @@ async function bootstrap() {
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
-  // ID-porten auth controller (no dependencies)
-  container.registerFactory('IdPortenAuthController', () =>
-    new IdPortenAuthController()
+  // ID-porten OIDC auth controller (no dependencies)
+  container.registerFactory('IdPortenOIDCController', () =>
+    new IdPortenOIDCController()
   );
   // Notifications controller (no dependencies)
   container.registerFactory('NotificationsController', () => 
@@ -217,8 +219,8 @@ async function bootstrap() {
     IntegrationsController,
     WidgetsController,
     ShareController,
-    // ID-porten (BankID) authentication
-    IdPortenAuthController,
+    // ID-porten (BankID) OIDC authentication
+    IdPortenOIDCController,
     // Notifications
     NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
@@ -237,6 +239,8 @@ async function bootstrap() {
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
+    // Phase 8: Vipps Webhooks
+    VippsWebhookController,
   ];
 
   // Create Fastify app with controllers

@@ -17,6 +17,7 @@ export * from './projection-dtos';
 
 // Domain types
 export * from './listing';
+export * from './rental-object';
 export * from './booking';
 export * from './organization';
 export * from './auth';
