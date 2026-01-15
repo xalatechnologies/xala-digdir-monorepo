@@ -362,3 +362,22 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// Capabilities hooks (feature flags, licensing, activations)
+export {
+  useTenantCapabilities,
+  useFeatures,
+  useFeature,
+  useUpdateFeature,
+  useBulkUpdateFeatures,
+  useLicensePlans,
+  useLicensePlan,
+  useCurrentLicense,
+  useActivateLicense,
+  useLicenseCodes,
+  useIssueLicenseCode,
+  useRotateLicenseCode,
+  useRevokeLicenseCode,
+  useActivations,
+  useDeactivate,
+} from './use-capabilities';
