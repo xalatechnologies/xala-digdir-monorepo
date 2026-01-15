@@ -447,6 +447,12 @@ importers:
       '@types/react':
         specifier: ^18.3.18
         version: 18.3.27
+      '@xala/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.10.0
+        version: 9.39.2
       jsdom:
         specifier: ^24.0.0
         version: 24.1.3

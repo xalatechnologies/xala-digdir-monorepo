@@ -2,7 +2,7 @@ import { createContext, useState, useCallback, useEffect, type ReactNode } from 
 import type { SupportedLocale, TranslationParams, I18nContextValue, TranslationsRegistry } from './types';
 import { translations as defaultTranslations } from './locales';
 import { interpolate } from './utils';
-import { getCookieLocale, getPersistedLocale, persistLocale } from './storage';
+import { getPersistedLocale, persistLocale } from './storage';
 
 const DEFAULT_LOCALE: SupportedLocale = 'nb';
 

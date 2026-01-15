@@ -16,6 +16,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -29,6 +30,8 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.18",
+    "@xala/eslint-config": "workspace:*",
+    "eslint": "^9.10.0",
     "jsdom": "^24.0.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.8"
