@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   Paragraph,
   HomeIcon,
@@ -15,6 +15,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
+import { useAccountContext } from '../../providers/AccountContextProvider';
 
 // Icon for Billing/Credit Card
 function CreditCardIcon() {
@@ -26,11 +27,18 @@ function CreditCardIcon() {
   );
 }
 
+/** Dashboard context type for RBAC-based navigation filtering */
+type DashboardContext = 'personal' | 'organization';
+
 interface NavItem {
   name: string;
   description: string;
   href: string;
   icon: React.ReactNode;
+  /** Which dashboard contexts can see this nav item */
+  contexts?: DashboardContext[];
+  /** Optional RBAC permissions required to see this item */
+  requiredPermissions?: string[];
   badge?: number;
   badgeColor?: 'accent' | 'success' | 'warning' | 'danger' | 'info';
 }
@@ -309,6 +317,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
 
 export function Sidebar() {
   const { user } = useAuth();
+  const { accountType } = useAccountContext();
   const t = useT();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -317,41 +326,59 @@ export function Sidebar() {
   const navSections: NavSection[] = [
     {
       items: [
-        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: '/', icon: <HomeIcon /> },
+        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: '/', icon: <HomeIcon />, contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('minside.myActivity'),
       items: [
-        { name: t('minside.myBookings'), description: t('minside.myBookingsDesc'), href: '/bookings', icon: <BookOpenIcon /> },
-        { name: t('minside.myCalendar'), description: t('minside.myCalendarDesc'), href: '/calendar', icon: <CalendarIcon /> },
-        { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon /> },
-        { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon /> },
-        { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon /> },
-        { name: 'Varsler', description: 'Se alle varsler og påminnelser', href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger' },
+        { name: t('minside.myBookings'), description: t('minside.myBookingsDesc'), href: '/bookings', icon: <BookOpenIcon />, contexts: ['personal'] },
+        { name: t('minside.myCalendar'), description: t('minside.myCalendarDesc'), href: '/calendar', icon: <CalendarIcon />, contexts: ['personal'] },
+        { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon />, contexts: ['personal'] },
+        { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon />, contexts: ['personal', 'organization'] },
+        { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon />, contexts: ['personal'] },
+        { name: 'Varsler', description: 'Se alle varsler og påminnelser', href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger', contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('minside.account'),
       items: [
-        { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon /> },
-        { name: 'Preferanser', description: 'Varsler, personvern og visning', href: '/preferences', icon: <SettingsIcon /> },
-        { name: 'Hjelp', description: 'Spørsmål og svar, kontakt oss', href: '/help', icon: <BookOpenIcon /> },
+        { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon />, contexts: ['personal'] },
+        { name: 'Preferanser', description: 'Varsler, personvern og visning', href: '/preferences', icon: <SettingsIcon />, contexts: ['personal'] },
+        { name: 'Hjelp', description: 'Spørsmål og svar, kontakt oss', href: '/help', icon: <BookOpenIcon />, contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('org.organization'),
       items: [
-        { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon /> },
-        { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon /> },
-        { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon /> },
-        { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon /> },
-        { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon /> },
-        { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon /> },
-        { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon /> },
+        { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon />, contexts: ['organization'] },
+        { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon />, contexts: ['organization'] },
+        { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon />, contexts: ['organization'] },
+        { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon />, contexts: ['organization'] },
+        { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon />, contexts: ['organization'] },
+        { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
+        { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
       ],
     },
   ];
+
+  // Filter nav sections and items based on current account context
+  const filteredNavSections = useMemo(() => {
+    return navSections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => {
+          // If no contexts specified, show to all
+          if (!item.contexts || item.contexts.length === 0) {
+            return true;
+          }
+          // Show item if current accountType is in the item's contexts
+          return item.contexts.includes(accountType);
+        }),
+      }))
+      // Remove sections with no items after filtering
+      .filter((section) => section.items.length > 0);
+  }, [accountType, t]);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -418,7 +445,7 @@ export function Sidebar() {
             height: '100%',
           }}
         >
-          <SidebarContent navSections={navSections} user={user} />
+          <SidebarContent navSections={filteredNavSections} user={user} />
         </aside>
       )}
 
@@ -443,7 +470,7 @@ export function Sidebar() {
             }}
           >
             <SidebarContent
-              navSections={navSections}
+              navSections={filteredNavSections}
               user={user}
               onItemClick={() => setIsMobileMenuOpen(false)}
             />

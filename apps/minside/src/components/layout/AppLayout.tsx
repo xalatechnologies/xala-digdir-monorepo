@@ -7,9 +7,10 @@
  * - Follows DIGILIST design patterns
  */
 
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
+  Alert,
   BottomNavigation,
   type BottomNavigationItem,
   HomeIcon,
@@ -21,6 +22,12 @@ import {
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { useAccountContext } from '../../providers/AccountContextProvider';
+
+interface LocationState {
+  contextRedirectMessage?: string;
+  from?: { pathname: string };
+}
 
 const pageTitles: Record<string, string> = {
   '/': 'Dashboard',
@@ -34,11 +41,39 @@ const MOBILE_BREAKPOINT = 768;
 
 export function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const t = useT();
+  const { lostOrganizationMessage, clearLostOrganizationMessage } = useAccountContext();
   const title = pageTitles[location.pathname] ?? '';
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
+  const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
+
+  // Handle context redirect message from navigation state
+  useEffect(() => {
+    const state = location.state as LocationState | null;
+    if (state?.contextRedirectMessage) {
+      setRedirectMessage(state.contextRedirectMessage);
+      // Clear the message from navigation state to prevent showing on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+      // Auto-dismiss after 5 seconds
+      const timer = setTimeout(() => {
+        setRedirectMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state, location.pathname, navigate]);
+
+  // Handle lost organization message notification - auto-dismiss after 7 seconds
+  useEffect(() => {
+    if (lostOrganizationMessage) {
+      const timer = setTimeout(() => {
+        clearLostOrganizationMessage();
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [lostOrganizationMessage, clearLostOrganizationMessage]);
 
   // Track viewport size for mobile/desktop detection
   useEffect(() => {
@@ -109,6 +144,44 @@ export function AppLayout() {
         }}
       >
         <Header title={title} />
+
+        {/* Context redirect notification */}
+        {redirectMessage && (
+          <div
+            style={{
+              padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+              paddingBottom: 0,
+            }}
+          >
+            <Alert
+              data-color="info"
+              data-size="sm"
+              role="status"
+              aria-live="polite"
+            >
+              {redirectMessage}
+            </Alert>
+          </div>
+        )}
+
+        {/* Lost organization notification - shown when user's org membership was lost */}
+        {lostOrganizationMessage && (
+          <div
+            style={{
+              padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+              paddingBottom: 0,
+            }}
+          >
+            <Alert
+              data-color="warning"
+              data-size="sm"
+              role="alert"
+              aria-live="assertive"
+            >
+              {lostOrganizationMessage}
+            </Alert>
+          </div>
+        )}
 
         <main
           style={{

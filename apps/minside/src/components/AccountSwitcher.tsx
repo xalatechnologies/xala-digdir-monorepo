@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Paragraph } from '@xala/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 
@@ -76,6 +77,7 @@ export function AccountSwitcher() {
     getActiveAccount,
   } = useAccountContext();
 
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -98,11 +100,15 @@ export function AccountSwitcher() {
   const handlePersonalClick = () => {
     switchToPersonal();
     setIsOpen(false);
+    // Redirect to dashboard when switching to personal context
+    navigate('/');
   };
 
   const handleOrganizationClick = (orgId: string) => {
     switchToOrganization(orgId);
     setIsOpen(false);
+    // Redirect to organization home when switching to organization context
+    navigate(`/org/${orgId}`);
   };
 
   return (
