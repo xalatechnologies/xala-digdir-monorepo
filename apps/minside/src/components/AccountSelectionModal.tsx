@@ -72,12 +72,13 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToPersonal,
     switchToOrganization,
     markAccountAsSelected,
+    rememberChoice,
+    setRememberChoice,
   } = useAccountContext();
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
-  const [rememberChoice, setRememberChoice] = useState<boolean>(false);
 
   // Show/hide modal based on open prop
   useEffect(() => {
@@ -125,9 +126,10 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     if (!open) {
       setStep('account-type');
       setSelectedOrgId(null);
+      // Reset rememberChoice via context - it will persist to localStorage if needed
       setRememberChoice(false);
     }
-  }, [open]);
+  }, [open, setRememberChoice]);
 
   return (
     // eslint-disable-next-line digdir/prefer-ds-components -- Native dialog required for ref-based imperative API
