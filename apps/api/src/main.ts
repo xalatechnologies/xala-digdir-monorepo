@@ -98,57 +98,18 @@ async function bootstrap() {
   // Register adapters in container
   container.registerValue('Adapters', adapters);
 
-  // Connect to PostgreSQL database
+  // Connect to PostgreSQL database (required in production)
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    console.warn('⚠️ DATABASE_URL not set, using mock database');
+    console.error('❌ DATABASE_URL environment variable is required');
+    console.error('   Set DATABASE_URL to connect to your PostgreSQL database');
+    process.exit(1);
   }
 
-  let db: any;
-  if (databaseUrl) {
-    // Real PostgreSQL connection
-    const sql = postgres(databaseUrl, { max: 10 });
-    db = drizzle(sql, { schema });
-    console.log('✓ PostgreSQL database connected');
-  } else {
-    // Fallback mock database
-    const createQueryBuilder = (data: any[] = []) => ({
-      from: () => createQueryBuilder(data),
-      where: () => createQueryBuilder(data),
-      orderBy: () => createQueryBuilder(data),
-      limit: () => createQueryBuilder(data),
-      offset: () => createQueryBuilder(data),
-      leftJoin: () => createQueryBuilder(data),
-      innerJoin: () => createQueryBuilder(data),
-      groupBy: () => createQueryBuilder(data),
-      having: () => createQueryBuilder(data),
-      then: (resolve: (value: any[]) => void) => Promise.resolve(data).then(resolve),
-      [Symbol.toStringTag]: 'Promise',
-    });
-    db = {
-      select: () => createQueryBuilder([]),
-      insert: () => ({ 
-        values: () => ({ 
-          returning: () => Promise.resolve([{ id: `mock-${Date.now()}`, createdAt: new Date(), updatedAt: new Date() }]),
-          onConflictDoNothing: () => ({ returning: () => Promise.resolve([]) }),
-        }) 
-      }),
-      update: () => ({ 
-        set: () => ({ 
-          where: () => ({ 
-            returning: () => Promise.resolve([{ id: 'mock-id', updatedAt: new Date() }]) 
-          }) 
-        }) 
-      }),
-      delete: () => ({ 
-        where: () => ({ 
-          returning: () => Promise.resolve([{ id: 'mock-id' }]) 
-        }) 
-      }),
-      query: {},
-    };
-    console.log('✓ Mock database initialized');
-  }
+  // PostgreSQL connection
+  const sql = postgres(databaseUrl, { max: 10 });
+  const db = drizzle(sql, { schema });
+  console.log('✓ PostgreSQL database connected');
   container.registerValue('Database', db);
 
   // Register repositories

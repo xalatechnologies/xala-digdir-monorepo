@@ -53,13 +53,47 @@ export function MapWidget({
   height = 160,
   className,
 }: MapWidgetProps): React.ReactElement {
-  const hasCoordinates = address.coordinates?.latitude && address.coordinates?.longitude;
+  const [geocodedCoords, setGeocodedCoords] = React.useState<{ latitude: number; longitude: number } | null>(null);
+  const [isGeocoding, setIsGeocoding] = React.useState(false);
+
+  // Use provided coordinates or geocoded ones
+  const coordinates = address.coordinates || geocodedCoords;
+  const hasCoordinates = coordinates?.latitude && coordinates?.longitude;
+
+  // Geocode address when coordinates are not available
+  React.useEffect(() => {
+    if (address.coordinates || !mapboxToken || !address.formatted || geocodedCoords) {
+      return;
+    }
+
+    const geocodeAddress = async () => {
+      setIsGeocoding(true);
+      try {
+        const query = encodeURIComponent(address.formatted);
+        const response = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxToken}&country=NO&limit=1`
+        );
+        const data = await response.json();
+        
+        if (data.features && data.features.length > 0) {
+          const [lng, lat] = data.features[0].center;
+          setGeocodedCoords({ latitude: lat, longitude: lng });
+        }
+      } catch (error) {
+        console.warn('Geocoding failed:', error);
+      } finally {
+        setIsGeocoding(false);
+      }
+    };
+
+    geocodeAddress();
+  }, [address.formatted, address.coordinates, mapboxToken, geocodedCoords]);
 
   // Build Mapbox static image URL
   const mapUrl = React.useMemo(() => {
     if (!hasCoordinates || !mapboxToken) return null;
 
-    const { latitude, longitude } = address.coordinates!;
+    const { latitude, longitude } = coordinates!;
     const zoom = 14;
     const width = 400;
     const mapHeight = height;
@@ -67,16 +101,16 @@ export function MapWidget({
     const marker = `pin-s+2563eb(${longitude},${latitude})`;
 
     return `https://api.mapbox.com/styles/v1/${style}/static/${marker}/${longitude},${latitude},${zoom}/${width}x${mapHeight}@2x?access_token=${mapboxToken}`;
-  }, [address.coordinates, mapboxToken, height, hasCoordinates]);
+  }, [coordinates, mapboxToken, height, hasCoordinates]);
 
   // Google Maps link
   const googleMapsUrl = React.useMemo(() => {
     if (hasCoordinates) {
-      const { latitude, longitude } = address.coordinates!;
+      const { latitude, longitude } = coordinates!;
       return `https://www.google.com/maps?q=${latitude},${longitude}`;
     }
     return `https://www.google.com/maps/search/${encodeURIComponent(address.formatted)}`;
-  }, [address, hasCoordinates]);
+  }, [address, coordinates, hasCoordinates]);
 
   return (
     <div
@@ -114,11 +148,18 @@ export function MapWidget({
             height: `${height}px`,
             backgroundColor: 'var(--ds-color-neutral-surface-hover)',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: 'var(--ds-spacing-2)',
           }}
         >
           <MapPinIcon size={32} />
+          {isGeocoding && (
+            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              Laster kart...
+            </Paragraph>
+          )}
         </div>
       )}
 
