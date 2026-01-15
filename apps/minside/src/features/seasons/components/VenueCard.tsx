@@ -1,10 +1,10 @@
 import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
-import type { Listing } from '@digilist/client-sdk/types';
+import type { RentalObject, Listing } from '@digilist/client-sdk/types';
 
 /**
  * Venue Card Component
  *
- * Displays a venue/listing that supports season bookings.
+ * Displays a venue/rental object that supports season bookings.
  */
 
 // Icons
@@ -37,7 +37,7 @@ function SquareIcon() {
 }
 
 interface VenueCardProps {
-  venue: Listing;
+  venue: RentalObject | Listing; // Support both RentalObject (new) and Listing (backward compatibility)
   onApply?: (venueId: string) => void;
   showApplyButton?: boolean;
 }

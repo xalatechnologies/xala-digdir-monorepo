@@ -1,5 +1,5 @@
 /**
- * Listing Wizard Hook
+ * Rental Object Wizard Hook (formerly Listing Wizard Hook)
  * Manages wizard state, step navigation, and form data persistence
  */
 
@@ -110,7 +110,7 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
   const [errors, setErrorsState] = useState<Record<string, string[]>>({});
   const [isDirty, setIsDirty] = useState(false);
 
-  // Load existing listing data in edit mode
+  // Load existing rental object data in edit mode
   useEffect(() => {
     if (isEditMode && existingListing?.data) {
       const listing = existingListing.data;

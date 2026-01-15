@@ -2,14 +2,14 @@
  * Calendar Module
  */
 import { Module } from '../../core/decorators';
-import { CalendarController, ListingCalendarConfigController, AvailabilityMatrixController } from './calendar.controller';
+import { CalendarController, RentalObjectCalendarConfigController, AvailabilityMatrixController } from './calendar.controller';
 import { CalendarService } from './calendar.service';
 
 @Module({
-  controllers: [CalendarController, ListingCalendarConfigController, AvailabilityMatrixController],
+  controllers: [CalendarController, RentalObjectCalendarConfigController, AvailabilityMatrixController],
   providers: [CalendarService],
   exports: ['CalendarService'],
 })
 export class CalendarModule {}
 
-export { CalendarController, ListingCalendarConfigController, AvailabilityMatrixController, CalendarService };
+export { CalendarController, RentalObjectCalendarConfigController, AvailabilityMatrixController, CalendarService };

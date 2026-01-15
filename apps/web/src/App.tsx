@@ -225,6 +225,9 @@ function AppContent() {
                 <Route element={<MainLayout />}>
                   {/* PUBLIC ROUTES - No authentication required */}
                   <Route path="/" element={<ListingsPage />} />
+                  <Route path="/rental-objects" element={<ListingsPage />} />
+                  <Route path="/rental-object/:id" element={<RentalObjectDetailPage />} />
+                  {/* Backward compatibility - redirect old /listing/:id to /rental-object/:id */}
                   <Route path="/listing/:id" element={<RentalObjectDetailPage />} />
 
                   {/* PROTECTED ROUTES - Authentication required */}

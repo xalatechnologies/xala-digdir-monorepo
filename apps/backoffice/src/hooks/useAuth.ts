@@ -65,6 +65,8 @@ export interface AuthContextType {
   restoreFlowContext: (clearAfterLoad?: boolean) => RestoreFlowContextResult;
   /** Clear any stored flow context */
   clearFlowContext: () => void;
+  /** Access denied error message (when user role is not allowed) */
+  accessDeniedError: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);

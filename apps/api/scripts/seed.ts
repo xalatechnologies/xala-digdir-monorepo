@@ -53,17 +53,30 @@ const CONV_BOOKING_QUESTION = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4c';
 const CONV_WEEKEND_AVAILABILITY = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4d';
 const CONV_WEATHER_CANCEL = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4e';
 
-// Listings
-const LISTING_HALL_A = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
-const LISTING_HALL_B = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
-const LISTING_MEETING = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
-const LISTING_SCENE = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
-const LISTING_STUDIO = '11111111-2222-3333-4444-555555555555';
-const LISTING_PROJECTOR = '22222222-3333-4444-5555-666666666666';
-const LISTING_PA = '33333333-4444-5555-6666-777777777777';
-const LISTING_FOTBALL = '44444444-5555-6666-7777-888888888888';
-const LISTING_KLUBBHUS = '55555555-6666-7777-8888-999999999999';
-const LISTING_DEMO = '66666666-7777-8888-9999-aaaaaaaaaaaa';
+// Rental Objects (formerly "Listings")
+const RENTAL_OBJECT_HALL_A = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
+const RENTAL_OBJECT_HALL_B = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+const RENTAL_OBJECT_MEETING = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
+const RENTAL_OBJECT_SCENE = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+const RENTAL_OBJECT_STUDIO = '11111111-2222-3333-4444-555555555555';
+const RENTAL_OBJECT_PROJECTOR = '22222222-3333-4444-5555-666666666666';
+const RENTAL_OBJECT_PA = '33333333-4444-5555-6666-777777777777';
+const RENTAL_OBJECT_FOTBALL = '44444444-5555-6666-7777-888888888888';
+const RENTAL_OBJECT_KLUBBHUS = '55555555-6666-7777-8888-999999999999';
+const RENTAL_OBJECT_DEMO = '66666666-7777-8888-9999-aaaaaaaaaaaa';
+
+// Backward compatibility aliases (deprecated)
+/** @deprecated Use RENTAL_OBJECT_* constants instead */
+const LISTING_HALL_A = RENTAL_OBJECT_HALL_A;
+const LISTING_HALL_B = RENTAL_OBJECT_HALL_B;
+const LISTING_MEETING = RENTAL_OBJECT_MEETING;
+const LISTING_SCENE = RENTAL_OBJECT_SCENE;
+const LISTING_STUDIO = RENTAL_OBJECT_STUDIO;
+const LISTING_PROJECTOR = RENTAL_OBJECT_PROJECTOR;
+const LISTING_PA = RENTAL_OBJECT_PA;
+const LISTING_FOTBALL = RENTAL_OBJECT_FOTBALL;
+const LISTING_KLUBBHUS = RENTAL_OBJECT_KLUBBHUS;
+const LISTING_DEMO = RENTAL_OBJECT_DEMO;
 
 // ============================================================================
 // Seed Data
@@ -322,7 +335,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_HALL_B,
+    id: RENTAL_OBJECT_HALL_B,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
     name: 'Hall B - Treningshall',
@@ -361,7 +374,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_MEETING,
+    id: RENTAL_OBJECT_MEETING,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
     name: 'Møterom 1',
@@ -404,7 +417,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_SCENE,
+    id: RENTAL_OBJECT_SCENE,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Hovedscene',
@@ -450,7 +463,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_STUDIO,
+    id: RENTAL_OBJECT_STUDIO,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Øvingsstudio',
@@ -489,7 +502,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_PROJECTOR,
+    id: RENTAL_OBJECT_PROJECTOR,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Projektor (4K)',
@@ -576,7 +589,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_FOTBALL,
+    id: RENTAL_OBJECT_FOTBALL,
     tenantId: TENANT_PORSGRUNN,
     organizationId: ORG_PORSGRUNN,
     name: 'Fotballbane - Kunstgress',
@@ -624,7 +637,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_KLUBBHUS,
+    id: RENTAL_OBJECT_KLUBBHUS,
     tenantId: TENANT_PORSGRUNN,
     organizationId: ORG_PORSGRUNN,
     name: 'Klubbhus',
@@ -663,7 +676,7 @@ const LISTINGS = [
     },
   },
   {
-    id: LISTING_DEMO,
+    id: RENTAL_OBJECT_DEMO,
     tenantId: TENANT_DEMO,
     organizationId: ORG_DEMO,
     name: 'Demo Hall',
@@ -702,8 +715,10 @@ const LISTINGS = [
   },
 ];
 
-// Collect listing and user IDs for bookings
-const LISTING_IDS = [LISTING_HALL_A, LISTING_HALL_B, LISTING_MEETING, LISTING_SCENE, LISTING_STUDIO];
+// Collect rental object and user IDs for bookings
+const RENTAL_OBJECT_IDS = [RENTAL_OBJECT_HALL_A, RENTAL_OBJECT_HALL_B, RENTAL_OBJECT_MEETING, RENTAL_OBJECT_SCENE, RENTAL_OBJECT_STUDIO];
+/** @deprecated Use RENTAL_OBJECT_IDS instead */
+const LISTING_IDS = RENTAL_OBJECT_IDS;
 const USER_IDS = [USER_ADMIN, USER_MANAGER, USER_STAFF];
 
 // Generate bookings with proper UUIDs
@@ -731,7 +746,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_1,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(1, 10),
@@ -744,7 +759,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_2,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(4, 14),
@@ -757,7 +772,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_3,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(7, 18),
@@ -770,7 +785,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_4,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(10, 9),
@@ -783,7 +798,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_5,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(14, 14),
@@ -796,7 +811,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_6,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-7, 10),
@@ -809,7 +824,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_7,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-3, 16),
@@ -822,7 +837,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_8,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      listingId: RENTAL_OBJECT_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'cancelled',
       startTime: getTime(-1, 18),
@@ -852,7 +867,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i, 'b00c'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      listingId: RENTAL_OBJECT_IDS[Math.floor(Math.random() * RENTAL_OBJECT_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'completed',
       startTime: start,
@@ -873,7 +888,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i + 10, 'b00d'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      listingId: RENTAL_OBJECT_IDS[Math.floor(Math.random() * RENTAL_OBJECT_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'confirmed',
       startTime: start,
@@ -1123,7 +1138,7 @@ async function seed() {
     await db.delete(schema.alerts);
     await db.delete(schema.auditLogs);
     await db.delete(schema.bookings);
-    await db.delete(schema.listings);
+    await db.delete(schema.listings); // Uses backward-compatible alias for rental_objects table
     await db.delete(schema.subscriptions);
     await db.delete(schema.users);
     await db.delete(schema.organizations);
@@ -1158,9 +1173,9 @@ async function seed() {
     console.log('💳 Inserting subscriptions...');
     await db.insert(schema.subscriptions).values(SUBSCRIPTIONS);
 
-    // Insert listings
-    console.log('📋 Inserting listings...');
-    await db.insert(schema.listings).values(LISTINGS);
+    // Insert rental objects (using backward-compatible schema.listings alias)
+    console.log('📋 Inserting rental objects...');
+    await db.insert(schema.listings).values(RENTAL_OBJECTS);
 
     // Insert bookings
     console.log('📅 Inserting bookings...');
@@ -1190,7 +1205,7 @@ async function seed() {
     console.log(`   - ${ORGANIZATIONS.length} organizations`);
     console.log(`   - ${USERS.length} users`);
     console.log(`   - ${SUBSCRIPTIONS.length} subscriptions`);
-    console.log(`   - ${LISTINGS.length} listings`);
+    console.log(`   - ${RENTAL_OBJECTS.length} rental objects`);
     console.log(`   - ${bookings.length} bookings (${olaBookings.length} for Ola Hansen)`);
     console.log(`   - ${conversations.length} conversations`);
     console.log(`   - ${messages.length} messages`);

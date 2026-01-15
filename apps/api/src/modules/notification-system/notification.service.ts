@@ -318,7 +318,8 @@ export class NotificationService {
 
     const routes: Record<string, string> = {
       booking: `/bookings/${entityId}`,
-      listing: `/listings/${entityId}`,
+      listing: `/rental-objects/${entityId}`, // Backward compatibility alias
+      'rental-object': `/rental-objects/${entityId}`,
       organization: `/org/${entityId}`,
       invoice: `/billing/invoices/${entityId}`,
       season: `/seasons/${entityId}`,

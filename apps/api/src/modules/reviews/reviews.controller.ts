@@ -1,9 +1,10 @@
 /**
  * Reviews Controller
  *
- * API endpoints for listing reviews
+ * API endpoints for rental object reviews
  * - GET /api/reviews - List all reviews
- * - GET /api/reviews/listing/:listingId - Get reviews for a listing
+ * - GET /api/reviews/rental-object/:rentalObjectId - Get reviews for a rental object (primary)
+ * - GET /api/reviews/listing/:listingId - Get reviews for a listing (deprecated, backward compatibility)
  * - GET /api/reviews/:id - Get single review
  * - POST /api/reviews - Submit a new review
  * - PATCH /api/reviews/:id - Update review (admin)
@@ -113,14 +114,14 @@ export class ReviewsController {
   }
 
   /**
-   * GET /api/reviews/listing/:listingId - Get reviews for a specific listing
+   * GET /api/reviews/rental-object/:rentalObjectId - Get reviews for a specific rental object
    */
-  @Get('/listing/:listingId')
-  async getListingReviews(request: TenantRequest, reply: FastifyReply) {
-    const { listingId } = request.params as any;
+  @Get('/rental-object/:rentalObjectId')
+  async getRentalObjectReviews(request: TenantRequest, reply: FastifyReply) {
+    const { rentalObjectId } = request.params as any;
     const { status, limit } = request.query as any;
 
-    let reviews = mockReviews.filter(r => r.listingId === listingId);
+    let reviews = mockReviews.filter(r => r.listingId === rentalObjectId);
 
     if (status) {
       reviews = reviews.filter(r => r.status === status);
@@ -153,6 +154,103 @@ export class ReviewsController {
         stats,
       },
     };
+  }
+
+  /**
+   * GET /api/reviews/rental-object/:rentalObjectId/stats - Get review statistics for a rental object
+   */
+  @Get('/rental-object/:rentalObjectId/stats')
+  async getRentalObjectReviewStats(request: TenantRequest, reply: FastifyReply) {
+    const { rentalObjectId } = request.params as any;
+    const reviews = mockReviews.filter(r => r.listingId === rentalObjectId);
+
+    const stats = {
+      totalReviews: reviews.length,
+      averageRating: reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0,
+      ratingDistribution: {
+        5: reviews.filter(r => r.rating === 5).length,
+        4: reviews.filter(r => r.rating === 4).length,
+        3: reviews.filter(r => r.rating === 3).length,
+        2: reviews.filter(r => r.rating === 2).length,
+        1: reviews.filter(r => r.rating === 1).length,
+      },
+    };
+
+    return {
+      success: true,
+      data: stats,
+    };
+  }
+
+  /**
+   * GET /api/reviews/rental-object/:rentalObjectId/summary - Get review summary for a rental object
+   */
+  @Get('/rental-object/:rentalObjectId/summary')
+  async getRentalObjectReviewSummary(request: TenantRequest, reply: FastifyReply) {
+    const { rentalObjectId } = request.params as any;
+    const { limit = 5 } = request.query as any;
+
+    const reviews = mockReviews
+      .filter(r => r.listingId === rentalObjectId && r.status === 'approved')
+      .slice(0, Number(limit));
+
+    const stats = {
+      totalReviews: mockReviews.filter(r => r.listingId === rentalObjectId).length,
+      averageRating: mockReviews.filter(r => r.listingId === rentalObjectId).length > 0
+        ? mockReviews.filter(r => r.listingId === rentalObjectId).reduce((sum, r) => sum + r.rating, 0) / mockReviews.filter(r => r.listingId === rentalObjectId).length
+        : 0,
+      ratingDistribution: {
+        5: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 5).length,
+        4: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 4).length,
+        3: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 3).length,
+        2: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 2).length,
+        1: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 1).length,
+      },
+    };
+
+    return {
+      success: true,
+      data: {
+        stats,
+        recentReviews: reviews,
+      },
+    };
+  }
+
+  /**
+   * GET /api/reviews/listing/:listingId - Get reviews for a specific listing (deprecated)
+   * @deprecated Use /rental-object/:rentalObjectId instead
+   */
+  @Get('/listing/:listingId')
+  async getListingReviews(request: TenantRequest, reply: FastifyReply) {
+    // Forward to rental object endpoint for backward compatibility
+    const { listingId } = request.params as any;
+    request.params = { rentalObjectId: listingId } as any;
+    return this.getRentalObjectReviews(request, reply);
+  }
+
+  /**
+   * GET /api/reviews/listing/:listingId/stats - Get review statistics (deprecated)
+   * @deprecated Use /rental-object/:rentalObjectId/stats instead
+   */
+  @Get('/listing/:listingId/stats')
+  async getListingReviewStats(request: TenantRequest, reply: FastifyReply) {
+    const { listingId } = request.params as any;
+    request.params = { rentalObjectId: listingId } as any;
+    return this.getRentalObjectReviewStats(request, reply);
+  }
+
+  /**
+   * GET /api/reviews/listing/:listingId/summary - Get review summary (deprecated)
+   * @deprecated Use /rental-object/:rentalObjectId/summary instead
+   */
+  @Get('/listing/:listingId/summary')
+  async getListingReviewSummary(request: TenantRequest, reply: FastifyReply) {
+    const { listingId } = request.params as any;
+    request.params = { rentalObjectId: listingId } as any;
+    return this.getRentalObjectReviewSummary(request, reply);
   }
 
   /**
@@ -277,5 +375,5 @@ export class ReviewsController {
   }
 }
 
-// Also export the old Elysia controllers for backwards compatibility (unused)
+// Backward compatibility alias (deprecated - use ReviewsController instead)
 export { ReviewsController as ListingReviewsController };

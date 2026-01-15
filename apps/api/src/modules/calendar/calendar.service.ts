@@ -14,8 +14,8 @@ import {
   AvailabilityMatrixQuerySchema,
   type CalendarConfigQueryParams,
   type AvailabilityMatrixQueryParams,
-  type ListingCalendarConfigProjection,
-  type ListingAvailabilityMatrixProjection,
+  type ListingCalendarConfigProjection, // Deprecated alias, use RentalObjectCalendarConfigProjection
+  type ListingAvailabilityMatrixProjection, // Deprecated alias, use RentalObjectAvailabilityMatrixProjection
   type AvailabilityCell,
   type SlotStatus,
   type CalendarGranularity,

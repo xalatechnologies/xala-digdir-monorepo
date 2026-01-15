@@ -1,0 +1,151 @@
+name: Contract Compliance
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/api/src/**'
+      - 'packages/client-sdk/src/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/api/src/**'
+      - 'packages/client-sdk/src/**'
+
+jobs:
+  contract-compliance:
+    name: API ↔ SDK Contract Compliance
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build SDK
+        run: pnpm --filter @digilist/client-sdk build
+      
+      - name: Contract Parity Test
+        run: pnpm --filter @digilist/client-sdk test -- --run src/__tests__/contract-parity.test.ts
+        continue-on-error: false
+      
+      - name: RFC7807 Compliance Test
+        run: pnpm --filter @digilist/client-sdk test -- --run src/__tests__/rfc7807.test.ts
+        continue-on-error: false
+      
+      - name: No Raw Fetch Lint
+        run: pnpm lint:contracts
+        continue-on-error: true
+
+  terminology-check:
+    name: Rental Object Terminology Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for listing/facility terminology in API routes
+        run: |
+          echo "🔍 Checking for listing/facility terminology in API..."
+          
+          # Check API controllers for listing terminology in routes
+          if grep -r "@Controller.*listing" apps/api/src/modules/ --include="*.ts" 2>/dev/null; then
+            echo "❌ Found 'listing' in API controller routes"
+            exit 1
+          fi
+          
+          # Check SDK services for listing in base paths
+          if grep -r "super('/api/listing" packages/client-sdk/src/services/ --include="*.ts" 2>/dev/null; then
+            echo "❌ Found '/api/listing' in SDK service paths"
+            exit 1
+          fi
+          
+          echo "✅ No listing/facility terminology found in critical paths"
+      
+      - name: Check for deprecated type usage
+        run: |
+          echo "🔍 Checking for deprecated type usage in apps..."
+          
+          # Check apps for direct usage of deprecated Listing types
+          DEPRECATED_COUNT=$(grep -r "ListingCardProjectionDTO\|ListingDetailsProjectionDTO" apps/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "Deprecated" | wc -l || echo "0")
+          
+          if [ "$DEPRECATED_COUNT" -gt "10" ]; then
+            echo "⚠️ Warning: Found $DEPRECATED_COUNT usages of deprecated Listing* types"
+            echo "Consider migrating to RentalObject* types"
+          else
+            echo "✅ Deprecated type usage is minimal ($DEPRECATED_COUNT instances)"
+          fi
+
+  sdk-exports-check:
+    name: SDK Exports Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build SDK
+        run: pnpm --filter @digilist/client-sdk build
+      
+      - name: Verify SDK exports
+        run: |
+          echo "🔍 Verifying SDK exports..."
+          
+          # Create a test script to verify exports
+          cat > /tmp/verify-exports.mjs << 'EOF'
+          import * as sdk from '@digilist/client-sdk';
+          
+          const requiredExports = [
+            'initializeClient',
+            'rentalObjectService',
+            'bookingService',
+            'authService',
+            'ApiError',
+          ];
+          
+          let missingExports = [];
+          for (const exp of requiredExports) {
+            if (!(exp in sdk)) {
+              missingExports.push(exp);
+            }
+          }
+          
+          if (missingExports.length > 0) {
+            console.error('❌ Missing required exports:', missingExports);
+            process.exit(1);
+          }
+          
+          console.log('✅ All required exports present');
+          console.log('📦 Total exports:', Object.keys(sdk).length);
+          EOF
+          
+          cd packages/client-sdk
+          node /tmp/verify-exports.mjs

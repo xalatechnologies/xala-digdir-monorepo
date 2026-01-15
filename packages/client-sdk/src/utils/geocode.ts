@@ -138,7 +138,7 @@ export function getCachedGeocode(address: RentalObjectAddress): GeocodeResult | 
  * Get a cached geocode result from a string address without making an API call
  *
  * This adapter function allows looking up cached results using a plain string address
- * instead of a structured ListingAddress object. Useful for hooks that work with
+ * instead of a structured RentalObjectAddress object. Useful for hooks that work with
  * string addresses.
  *
  * @param addressString - The address string (e.g., "Storgata 1, 0155 Oslo")

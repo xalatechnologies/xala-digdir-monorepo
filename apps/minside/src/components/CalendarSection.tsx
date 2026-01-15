@@ -2,11 +2,11 @@
  * CalendarSection Component
  *
  * Integrates the ListingAvailabilityCalendar from @xala/ds with SDK hooks.
- * Displays dynamic availability calendar based on listing configuration.
+ * Displays dynamic availability calendar based on rental object configuration.
  * Supports TIME_SLOTS, ALL_DAY, and MULTI_DAY modes.
  *
- * This is the minside app version, intended for user's listing views
- * where users can view availability for listings they're interested in.
+ * This is the minside app version, intended for user's rental object views
+ * where users can view availability for rental objects they're interested in.
  *
  * Following the SDK-first rule: all data comes from API projection DTOs.
  * No local rule evaluation or transformation.
@@ -62,8 +62,10 @@ interface CalendarSelection {
 }
 
 export interface CalendarSectionProps {
-  /** Listing ID to fetch calendar data for */
-  listingId: string;
+  /** Rental object ID to fetch calendar data for */
+  rentalObjectId: string;
+  /** @deprecated Use rentalObjectId instead */
+  listingId?: string;
   /** Optional booking type filter */
   bookingType?: string;
   /** Callback when selection changes */
@@ -150,12 +152,15 @@ function mapToCalendarCell(cell: {
 // =============================================================================
 
 export function CalendarSection({
-  listingId,
+  rentalObjectId,
+  listingId: deprecatedListingId,
   bookingType,
   onSelectionChange,
   readOnly = false,
   className,
 }: CalendarSectionProps): React.ReactElement {
+  // Support both rentalObjectId (new) and listingId (backward compatibility)
+  const effectiveRentalObjectId = rentalObjectId || deprecatedListingId || '';
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
@@ -170,7 +175,7 @@ export function CalendarSection({
     data: configResponse,
     isLoading: isConfigLoading,
     error: configError,
-  } = useListingCalendarConfig(listingId, bookingType ? { bookingType } : undefined);
+  } = useListingCalendarConfig(effectiveRentalObjectId, bookingType ? { bookingType } : undefined);
 
   // Extract config from response
   const config = configResponse?.data;
@@ -202,7 +207,7 @@ export function CalendarSection({
     isLoading: isMatrixLoading,
     error: matrixError,
   } = useAvailabilityMatrix(
-    listingId,
+    effectiveRentalObjectId,
     {
       from: dateRange.from,
       to: dateRange.to,
@@ -223,8 +228,9 @@ export function CalendarSection({
     if (selection && selection.cells.length > 0) {
       // Check if event affects any selected cells
       const affectedSelection = selection.cells.some(() => {
-        // Simple check: if event is for this listing, we might need to revalidate
-        if ('listingId' in event && event.listingId === listingId) {
+        // Simple check: if event is for this rental object, we might need to revalidate
+        if (('rentalObjectId' in event && event.rentalObjectId === effectiveRentalObjectId) ||
+            ('listingId' in event && event.listingId === effectiveRentalObjectId)) {
           return true;
         }
         return false;

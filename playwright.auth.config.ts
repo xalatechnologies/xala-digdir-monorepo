@@ -68,7 +68,7 @@ export default defineConfig({
   /* Start all dev servers before running tests */
   webServer: [
     {
-      command: 'pnpm --filter @xala/api dev',
+      command: 'pnpm --filter @digilist/api dev',
       url: 'http://localhost:4000/api/health',
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,

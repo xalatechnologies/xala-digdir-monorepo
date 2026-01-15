@@ -17,7 +17,7 @@ import { validate } from '../../core/validation/zod-pipe';
 import { BadRequestError } from '../../core/errors/problem-details';
 import {
   AvailabilityMatrixQuerySchema,
-  type ListingAvailabilityMatrixProjection,
+  type ListingAvailabilityMatrixProjection, // Deprecated alias, use RentalObjectAvailabilityMatrixProjection
 } from '../../schemas/calendar.schema';
 import { CalendarService } from '../calendar/calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';

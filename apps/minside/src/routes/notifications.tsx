@@ -24,46 +24,47 @@ const MOBILE_BREAKPOINT = 768;
 
 type NotificationType = 'booking' | 'system' | 'message' | 'reminder';
 
-// Mock notifications
-const mockNotifications = [
-  {
-    id: 'notif-001',
-    type: 'booking' as NotificationType,
-    title: 'Booking bekreftet',
-    message: 'Din booking for Idrettshall A er bekreftet for 22. januar 18:00.',
-    read: false,
-    createdAt: '2026-01-14T15:00:00Z',
-  },
-  {
-    id: 'notif-002',
-    type: 'reminder' as NotificationType,
-    title: 'Påminnelse',
-    message: 'Du har en booking i morgen klokken 18:00.',
-    read: false,
-    createdAt: '2026-01-14T10:00:00Z',
-  },
-  {
-    id: 'notif-003',
-    type: 'message' as NotificationType,
-    title: 'Ny melding',
-    message: 'Du har mottatt svar på din henvendelse.',
-    read: true,
-    createdAt: '2026-01-13T14:30:00Z',
-  },
-  {
-    id: 'notif-004',
-    type: 'system' as NotificationType,
-    title: 'Vedlikehold',
-    message: 'Planlagt vedlikehold søndag 26. januar 02:00-04:00.',
-    read: true,
-    createdAt: '2026-01-12T09:00:00Z',
-  },
-];
-
 export function NotificationsPage() {
   const t = useT();
   const { locale } = useLocale();
-  const [notifications, setNotifications] = useState(mockNotifications);
+
+  // Mock notifications - using i18n keys
+  const getMockNotifications = () => [
+    {
+      id: 'notif-001',
+      type: 'booking' as NotificationType,
+      title: t('notifications.bookingConfirmed'),
+      message: t('notifications.bookingConfirmedDesc'),
+      read: false,
+      createdAt: '2026-01-14T15:00:00Z',
+    },
+    {
+      id: 'notif-002',
+      type: 'reminder' as NotificationType,
+      title: t('notifications.reminderTitle'),
+      message: t('notifications.reminderDesc'),
+      read: false,
+      createdAt: '2026-01-14T10:00:00Z',
+    },
+    {
+      id: 'notif-003',
+      type: 'message' as NotificationType,
+      title: t('notifications.newMessage'),
+      message: t('notifications.newMessageDesc'),
+      read: true,
+      createdAt: '2026-01-13T14:30:00Z',
+    },
+    {
+      id: 'notif-004',
+      type: 'system' as NotificationType,
+      title: t('notifications.maintenance'),
+      message: t('notifications.maintenanceDesc'),
+      read: true,
+      createdAt: '2026-01-12T09:00:00Z',
+    },
+  ];
+
+  const [notifications, setNotifications] = useState(getMockNotifications());
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'all'>('all');
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -89,19 +90,14 @@ export function NotificationsPage() {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffHours < 1) return locale === 'en' ? 'Just now' : 'Akkurat nå';
-    if (diffHours < 24) return locale === 'en' ? `${diffHours}h ago` : `${diffHours}t siden`;
-    if (diffDays < 7) return locale === 'en' ? `${diffDays}d ago` : `${diffDays}d siden`;
+    if (diffHours < 1) return t('notifications.justNow');
+    if (diffHours < 24) return t('notifications.hoursAgo', { hours: diffHours });
+    if (diffDays < 7) return t('notifications.daysAgo', { days: diffDays });
     return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
 
   const getTypeLabel = (type: NotificationType) => {
-    switch (type) {
-      case 'booking': return 'Booking';
-      case 'system': return 'System';
-      case 'message': return 'Melding';
-      case 'reminder': return 'Påminnelse';
-    }
+    return t(`notifications.type.${type}`);
   };
 
   const getTypeColor = (type: NotificationType) => {
@@ -141,7 +137,7 @@ export function NotificationsPage() {
           </Heading>
           {unreadCount > 0 && (
             <Badge style={{ backgroundColor: 'var(--ds-color-danger-surface-default)', color: 'var(--ds-color-danger-text-default)' }}>
-              {unreadCount} ulest
+              {unreadCount} {t('notifications.unread')}
             </Badge>
           )}
         </div>
@@ -151,17 +147,17 @@ export function NotificationsPage() {
             onChange={(e) => setTypeFilter(e.target.value as NotificationType | 'all')}
             style={{ minWidth: '120px' }}
           >
-            <option value="all">Alle</option>
-            <option value="booking">Bookinger</option>
-            <option value="message">Meldinger</option>
-            <option value="reminder">Påminnelser</option>
-            <option value="system">System</option>
+            <option value="all">{t('notifications.all')}</option>
+            <option value="booking">{t('notifications.bookings')}</option>
+            <option value="message">{t('notifications.messages')}</option>
+            <option value="reminder">{t('notifications.reminders')}</option>
+            <option value="system">{t('notifications.system')}</option>
           </Select>
           <Button type="button" variant="secondary" data-size="md" onClick={markAllAsRead} disabled={unreadCount === 0} style={{ minHeight: '44px' }}>
-            Merk alle lest
+            {t('notifications.markAllRead')}
           </Button>
           <Button type="button" variant="tertiary" data-size="md" onClick={clearAll} disabled={notifications.length === 0} style={{ minHeight: '44px' }}>
-            Tøm
+            {t('notifications.clear')}
           </Button>
         </div>
       </div>

@@ -130,6 +130,26 @@ pnpm scan:compliance:json
 pnpm scan:all
 ```
 
+### i18n Localization Compliance
+
+```bash
+# Scan entire minside app for hardcoded strings
+node scripts/scan-i18n.js apps/minside/src
+
+# Scan specific directory
+node scripts/scan-i18n.js apps/minside/src/routes
+
+# Scan single file
+node scripts/scan-i18n.js apps/minside/src/components/MyComponent.tsx
+
+# View detailed JSON report
+cat i18n-scan-report.json
+```
+
+**Exit codes:**
+- 0: No localization issues found
+- 1: Hardcoded strings detected (MUST fix before committing)
+
 ### Theme Generation
 
 ```bash
@@ -328,6 +348,43 @@ function MyComponent() {
 - `notifications.*` - Notification system UI
 
 **If i18n key is missing → STOP and add it first.**
+
+### i18n Localization Scanner
+
+**Before committing code, ALWAYS run the i18n scanner to verify compliance:**
+
+```bash
+# Scan entire app
+node scripts/scan-i18n.js apps/minside/src
+
+# Scan specific directory
+node scripts/scan-i18n.js apps/minside/src/routes
+
+# Scan single file
+node scripts/scan-i18n.js apps/minside/src/routes/settings.tsx
+```
+
+**The scanner detects:**
+- ✅ Hardcoded text in JSX elements
+- ✅ String props (title, label, placeholder, description, etc.)
+- ✅ Alert/confirm messages
+- ✅ Missing `useT()` imports in files with user-facing text
+- ✅ Object values that should be localized
+
+**The scanner intelligently ignores:**
+- ✅ Already localized strings using `t()`
+- ✅ URLs, file paths, CSS classes, data attributes
+- ✅ Code identifiers (camelCase, types, constants)
+- ✅ Environment variables, technical strings
+
+**Scanner output:**
+- Console report with file-by-file breakdown
+- JSON report: `i18n-scan-report.json` (for CI/CD integration)
+- Exit code 1 if issues found (fails CI builds)
+
+**If scanner finds issues → FIX them before committing.**
+
+See `docs/I18N_SCAN_REPORT_2026-01-15.md` for detailed analysis.
 
 ## Architecture Layers
 

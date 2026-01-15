@@ -1,7 +1,7 @@
 /**
  * Audit Tab Component
- * Displays audit trail for a specific listing with filtering
- * Shows timestamp, actor, and action for all listing-related events
+ * Displays audit trail for a specific rental object (formerly listing) with filtering
+ * Shows timestamp, actor, and action for all rental object-related events
  */
 
 /* eslint-disable digdir/prefer-ds-components -- Filter form with native HTML elements */

@@ -39,11 +39,11 @@ export {
   availabilityService
 } from './booking.service';
 
-// Calendar (Listing calendar config & availability matrix)
+// Calendar (Rental Object calendar config & availability matrix)
 export {
-  ListingCalendarService,
+  RentalObjectCalendarService,
   AvailabilityMatrixService,
-  listingCalendarService,
+  rentalObjectCalendarService,
   availabilityMatrixService,
   type CalendarConfigQueryParams,
 } from './calendar.service';

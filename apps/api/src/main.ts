@@ -32,12 +32,12 @@ import * as schema from './database/schema/index';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
-import { RentalObjectModule as ListingModule, RentalObjectController as ListingController, RentalObjectService as ListingService, RentalObjectRepository as ListingRepository } from './modules/rental-objects';
+import { RentalObjectModule, RentalObjectController, RentalObjectService, RentalObjectRepository } from './modules/rental-objects';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
-import { CalendarModule, CalendarController, ListingCalendarConfigController, AvailabilityMatrixController, CalendarService } from './modules/calendar';
+import { CalendarModule, CalendarController, RentalObjectCalendarConfigController, AvailabilityMatrixController, CalendarService } from './modules/calendar';
 import { SeasonalLeaseController } from './modules/seasonal-lease/seasonal-lease.controller';
 import { MessagesController } from './modules/messages/messages.controller';
 import { ReportsController } from './modules/reports/reports.controller';
@@ -81,7 +81,7 @@ import { registerWebSocketRoutes, getNotificationBroadcastFunction } from './mod
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
 import { UserGroupController } from './modules/user-groups/user-group.controller';
-import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
+import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeRentalObjectsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
 import { SeasonsController, PriorityRulesController } from './modules/seasons/seasons.controller';
@@ -153,7 +153,7 @@ async function bootstrap() {
 
   // Register repositories
   container.registerFactory('TenantRepository', () => new TenantRepository(db));
-  container.registerFactory('ListingRepository', () => new ListingRepository(db));
+  container.registerFactory('RentalObjectRepository', () => new RentalObjectRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
@@ -164,14 +164,11 @@ async function bootstrap() {
   container.registerFactory('TenantService', () => 
     new TenantService(container.resolve('TenantRepository'), adapters)
   );
-  container.registerFactory('ListingService', () => 
-    new ListingService(container.resolve('ListingRepository'), adapters)
+  container.registerFactory('RentalObjectService', () => 
+    new RentalObjectService(container.resolve('RentalObjectRepository'), adapters)
   );
-  // Alias for new naming convention
-  container.registerFactory('RentalObjectService', () => container.resolve('ListingService'));
-  container.registerFactory('RentalObjectRepository', () => container.resolve('ListingRepository'));
   container.registerFactory('BookingService', () =>
-    new BookingService(container.resolve('BookingRepository'), container.resolve('ListingRepository'), adapters)
+    new BookingService(container.resolve('BookingRepository'), container.resolve('RentalObjectRepository'), adapters)
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
@@ -200,12 +197,8 @@ async function bootstrap() {
   container.registerFactory('TenantController', () => 
     new TenantController(container.resolve('TenantService'))
   );
-  container.registerFactory('ListingController', () => 
-    new ListingController(container.resolve('ListingService'))
-  );
-  // Alias for new naming convention - must use actual class name
   container.registerFactory('RentalObjectController', () => 
-    new ListingController(container.resolve('RentalObjectService'))
+    new RentalObjectController(container.resolve('RentalObjectService'))
   );
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
@@ -267,7 +260,7 @@ async function bootstrap() {
 
   // Load modules
   await moduleLoader.load(TenantModule);
-  await moduleLoader.load(ListingModule);
+  await moduleLoader.load(RentalObjectModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
@@ -277,14 +270,14 @@ async function bootstrap() {
   // Get controllers (core + backoffice modules)
   const controllers = [
     TenantController, 
-    ListingController, 
+    RentalObjectController, 
     BookingController, 
     UserController, 
     MonitoringController,
     // Backoffice modules
     DashboardController,
     CalendarController,
-    ListingCalendarConfigController,
+    RentalObjectCalendarConfigController,
     // Note: AvailabilityMatrixController removed - functionality covered by AvailabilityController
     SeasonalLeaseController,
     MessagesController,
@@ -324,7 +317,7 @@ async function bootstrap() {
     UserGroupController,
     BackofficeUserGroupsController,
     BackofficePriceRulesController,
-    BackofficeListingsController,
+    BackofficeRentalObjectsController,
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,

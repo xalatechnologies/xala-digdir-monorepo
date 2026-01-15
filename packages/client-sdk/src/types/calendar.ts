@@ -69,14 +69,14 @@ export interface OpeningHoursDTO {
 // =============================================================================
 
 /**
- * Booking type configuration - defines allowed booking types for a listing
+ * Booking type configuration - defines allowed booking types for a rental object
  */
 export interface BookingTypeDTO {
   /** Unique code for this booking type, e.g., "HOURLY", "ALL_DAY", "MULTI_DAY" */
   code: string;
   /** i18n key for display label */
   labelKey: string;
-  /** Whether this is the default booking type for the listing */
+  /** Whether this is the default booking type for the rental object */
   default: boolean;
   /** Additional rules specific to this booking type */
   rules: Record<string, unknown>;
@@ -119,16 +119,16 @@ export interface CalendarPermissionsDTO {
 }
 
 // =============================================================================
-// Listing Calendar Config Projection DTO
+// Rental Object Calendar Config Projection DTO
 // =============================================================================
 
 /**
  * Calendar configuration projection - complete configuration for calendar behavior
- * Returned by GET /api/listings/:id/calendar-config
+ * Returned by GET /api/rental-objects/:id/calendar-config
  */
-export interface ListingCalendarConfigProjectionDTO {
-  /** Listing identifier */
-  listingId: string;
+export interface RentalObjectCalendarConfigProjectionDTO {
+  /** Rental object identifier */
+  rentalObjectId: string;
 
   /** Calendar mode determining UI rendering and selection behavior */
   granularity: CalendarGranularity;
@@ -163,7 +163,7 @@ export interface ListingCalendarConfigProjectionDTO {
   /** Opening hours configuration */
   openingHours: OpeningHoursDTO;
 
-  /** Available booking types for this listing */
+  /** Available booking types for this rental object */
   bookingTypes: BookingTypeDTO[];
 
   /** UI rendering hints */
@@ -179,6 +179,13 @@ export interface ListingCalendarConfigProjectionDTO {
   /** Policy decisions for transparency/debugging (optional) */
   policyDecisions?: PolicyDecisionDTO[];
 }
+
+// Backward compatibility alias (deprecated)
+/** @deprecated Use RentalObjectCalendarConfigProjectionDTO instead */
+export type ListingCalendarConfigProjectionDTO = RentalObjectCalendarConfigProjectionDTO & {
+  /** @deprecated Use rentalObjectId instead */
+  listingId?: string;
+};
 
 // =============================================================================
 // Availability Cell DTO
@@ -219,16 +226,16 @@ export interface SlotStatusLegendDTO {
 }
 
 // =============================================================================
-// Listing Availability Matrix Projection DTO
+// Rental Object Availability Matrix Projection DTO
 // =============================================================================
 
 /**
  * Availability matrix projection - cell-by-cell availability for a date range
- * Returned by GET /api/availability/:listingId
+ * Returned by GET /api/availability/:rentalObjectId
  */
-export interface ListingAvailabilityMatrixProjectionDTO {
-  /** Listing identifier */
-  listingId: string;
+export interface RentalObjectAvailabilityMatrixProjectionDTO {
+  /** Rental object identifier */
+  rentalObjectId: string;
 
   /** Start of the queried date range in ISO date format */
   from: string;
@@ -245,6 +252,13 @@ export interface ListingAvailabilityMatrixProjectionDTO {
   /** Legend mapping status codes to display labels */
   legend: SlotStatusLegendDTO[];
 }
+
+// Backward compatibility alias (deprecated)
+/** @deprecated Use RentalObjectAvailabilityMatrixProjectionDTO instead */
+export type ListingAvailabilityMatrixProjectionDTO = RentalObjectAvailabilityMatrixProjectionDTO & {
+  /** @deprecated Use rentalObjectId instead */
+  listingId?: string;
+};
 
 // =============================================================================
 // Query Parameters

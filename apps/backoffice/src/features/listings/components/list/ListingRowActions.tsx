@@ -29,6 +29,8 @@ interface ListingRowActionsProps {
   listingName: string;
   status: ListingStatus;
   onActionComplete?: (() => void) | undefined;
+  /** Base path for navigation (defaults to '/listings') */
+  basePath?: string;
 }
 
 export function ListingRowActions({
@@ -37,6 +39,7 @@ export function ListingRowActions({
   listingName,
   status,
   onActionComplete,
+  basePath = '/listings',
 }: ListingRowActionsProps) {
   const navigate = useNavigate();
   const toast = useToast();
@@ -53,13 +56,13 @@ export function ListingRowActions({
   const handleView = () => {
     // Use slug if available, fallback to ID
     const identifier = listingSlug || listingId;
-    navigate(`/listings/${identifier}/view`);
+    navigate(`${basePath}/${identifier}/view`);
   };
 
   const handleEdit = () => {
     // Use slug if available, fallback to ID
     const identifier = listingSlug || listingId;
-    navigate(`/listings/${identifier}`);
+    navigate(`${basePath}/${identifier}`);
   };
 
   const handlePublish = async () => {
@@ -106,7 +109,7 @@ export function ListingRowActions({
       toast.success('Duplisert', `"${listingName}" er duplisert!`);
       // Navigate to the new duplicate if we got a response
       if (result?.data?.slug) {
-        navigate(`/listings/${result.data.slug}`);
+        navigate(`${basePath}/${result.data.slug}`);
       }
     } catch (error) {
       console.error('Failed to duplicate listing:', error);

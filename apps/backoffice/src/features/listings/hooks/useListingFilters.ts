@@ -1,6 +1,6 @@
 /**
- * Listing Filters Hook
- * Manages filter state for the listings list view
+ * Rental Object Filters Hook (formerly Listing Filters Hook)
+ * Manages filter state for the rental objects list view
  */
 
 import { useState, useCallback, useMemo } from 'react';

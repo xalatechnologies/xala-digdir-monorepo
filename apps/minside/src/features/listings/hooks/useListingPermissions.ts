@@ -1,23 +1,31 @@
 /**
- * Listing Permissions Hook
- * RBAC-aware permission checks for listing operations
+ * Rental Object Permissions Hook (formerly Listing Permissions Hook)
+ * RBAC-aware permission checks for rental object operations
  */
 
 import { useMemo } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import type { ListingPermissions } from '../types';
-import type { ListingStatus } from '@digilist/client-sdk';
+import type { ListingStatus, RentalObjectStatus } from '@digilist/client-sdk';
 
-export interface UseListingPermissionsReturn {
+export interface UseRentalObjectPermissionsReturn {
   permissions: ListingPermissions;
   canPerformAction: (action: keyof ListingPermissions) => boolean;
+  canEditRentalObject: (status: RentalObjectStatus | ListingStatus) => boolean;
+  canPublishRentalObject: (status: RentalObjectStatus | ListingStatus) => boolean;
+  canArchiveRentalObject: (status: RentalObjectStatus | ListingStatus) => boolean;
+  canDeleteRentalObject: (status: RentalObjectStatus | ListingStatus) => boolean;
+}
+
+// Backward compatibility aliases
+export interface UseListingPermissionsReturn extends UseRentalObjectPermissionsReturn {
   canEditListing: (status: ListingStatus) => boolean;
   canPublishListing: (status: ListingStatus) => boolean;
   canArchiveListing: (status: ListingStatus) => boolean;
   canDeleteListing: (status: ListingStatus) => boolean;
 }
 
-export function useListingPermissions(): UseListingPermissionsReturn {
+export function useRentalObjectPermissions(): UseRentalObjectPermissionsReturn {
   const { isAdmin, user } = useAuth();
 
   const permissions = useMemo<ListingPermissions>(() => ({
@@ -44,12 +52,12 @@ export function useListingPermissions(): UseListingPermissionsReturn {
   }, [permissions]);
 
   /**
-   * Check if user can edit a listing based on its status
-   * - Admins can edit any listing
+   * Check if user can edit a rental object based on its status
+   * - Admins can edit any rental object
    * - Saksbehandler can only edit drafts
    */
-  const canEditListing = useMemo(() => {
-    return (status: ListingStatus): boolean => {
+  const canEditRentalObject = useMemo(() => {
+    return (status: RentalObjectStatus | ListingStatus): boolean => {
       if (!user) return false;
       if (isAdmin) return true;
       // Non-admins can only edit drafts
@@ -58,36 +66,36 @@ export function useListingPermissions(): UseListingPermissionsReturn {
   }, [isAdmin, user]);
 
   /**
-   * Check if user can publish a listing
+   * Check if user can publish a rental object
    * - Only admins can publish
    * - Can only publish drafts
    */
-  const canPublishListing = useMemo(() => {
-    return (status: ListingStatus): boolean => {
+  const canPublishRentalObject = useMemo(() => {
+    return (status: RentalObjectStatus | ListingStatus): boolean => {
       if (!isAdmin) return false;
       return status === 'draft';
     };
   }, [isAdmin]);
 
   /**
-   * Check if user can archive a listing
+   * Check if user can archive a rental object
    * - Only admins can archive
-   * - Can only archive published listings
+   * - Can only archive published rental objects
    */
-  const canArchiveListing = useMemo(() => {
-    return (status: ListingStatus): boolean => {
+  const canArchiveRentalObject = useMemo(() => {
+    return (status: RentalObjectStatus | ListingStatus): boolean => {
       if (!isAdmin) return false;
       return status === 'published';
     };
   }, [isAdmin]);
 
   /**
-   * Check if user can delete a listing
+   * Check if user can delete a rental object
    * - Only admins can delete
    * - Can delete any status
    */
-  const canDeleteListing = useMemo(() => {
-    return (_status: ListingStatus): boolean => {
+  const canDeleteRentalObject = useMemo(() => {
+    return (_status: RentalObjectStatus | ListingStatus): boolean => {
       return isAdmin;
     };
   }, [isAdmin]);
@@ -95,9 +103,21 @@ export function useListingPermissions(): UseListingPermissionsReturn {
   return {
     permissions,
     canPerformAction,
-    canEditListing,
-    canPublishListing,
-    canArchiveListing,
-    canDeleteListing,
+    canEditRentalObject,
+    canPublishRentalObject,
+    canArchiveRentalObject,
+    canDeleteRentalObject,
+  };
+}
+
+// Backward compatibility export
+export function useListingPermissions(): UseListingPermissionsReturn {
+  const rentalObjectPermissions = useRentalObjectPermissions();
+  return {
+    ...rentalObjectPermissions,
+    canEditListing: rentalObjectPermissions.canEditRentalObject,
+    canPublishListing: rentalObjectPermissions.canPublishRentalObject,
+    canArchiveListing: rentalObjectPermissions.canArchiveRentalObject,
+    canDeleteListing: rentalObjectPermissions.canDeleteRentalObject,
   };
 }

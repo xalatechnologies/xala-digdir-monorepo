@@ -62,17 +62,17 @@ export function UserPreferencesPage() {
   };
 
   const notificationSettings = [
-    { key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' },
-    { key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' },
-    { key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },
-    { key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },
-    { key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },
+    { key: 'emailBooking', label: t('preferences.emailBooking'), description: t('preferences.emailBookingDesc') },
+    { key: 'emailReminder', label: t('preferences.emailReminder'), description: t('preferences.emailReminderDesc') },
+    { key: 'emailNewsletter', label: t('preferences.emailNewsletter'), description: t('preferences.emailNewsletterDesc') },
+    { key: 'smsReminder', label: t('preferences.smsReminder'), description: t('preferences.smsReminderDesc') },
+    { key: 'pushNotifications', label: t('preferences.pushNotifications'), description: t('preferences.pushNotificationsDesc') },
   ];
 
   const privacySettings = [
-    { key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },
-    { key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjonen' },
-    { key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },
+    { key: 'showProfile', label: t('preferences.showProfile'), description: t('preferences.showProfileDesc') },
+    { key: 'shareActivity', label: t('preferences.shareActivity'), description: t('preferences.shareActivityDesc') },
+    { key: 'allowAnalytics', label: t('preferences.allowAnalytics'), description: t('preferences.allowAnalyticsDesc') },
   ];
 
   return (
@@ -93,10 +93,10 @@ export function UserPreferencesPage() {
             {t('settings.preferencesDesc')}
           </Paragraph>
         </div>
-        <Button 
-          type="button" 
-          variant="primary" 
-          data-size="md" 
+        <Button
+          type="button"
+          variant="primary"
+          data-size="md"
           onClick={handleSave}
           disabled={isSaving}
           style={{ minHeight: '44px' }}
@@ -108,7 +108,7 @@ export function UserPreferencesPage() {
       {/* Notifications */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Varsler
+          {t('preferences.notifications')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {notificationSettings.map(item => (
@@ -139,7 +139,7 @@ export function UserPreferencesPage() {
       {/* Privacy */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Personvern
+          {t('preferences.privacy')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {privacySettings.map(item => (
@@ -170,30 +170,30 @@ export function UserPreferencesPage() {
       {/* Display */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Visning
+          {t('preferences.display')}
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tema</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('preferences.theme')}</label>
             <Select
               value={prefs.theme}
               onChange={(e) => updatePref('theme', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="system">Følg system</option>
-              <option value="light">Lyst</option>
-              <option value="dark">Mørkt</option>
+              <option value="system">{t('preferences.themeSystem')}</option>
+              <option value="light">{t('preferences.themeLight')}</option>
+              <option value="dark">{t('preferences.themeDark')}</option>
             </Select>
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('preferences.language')}</label>
             <Select
               value={prefs.language}
               onChange={(e) => updatePref('language', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="no">Norsk</option>
-              <option value="en">English</option>
+              <option value="no">{t('preferences.languageNo')}</option>
+              <option value="en">{t('preferences.languageEn')}</option>
             </Select>
           </div>
         </div>
@@ -202,17 +202,17 @@ export function UserPreferencesPage() {
       {/* Danger Zone */}
       <Card style={{ padding: 'var(--ds-spacing-5)', border: '1px solid var(--ds-color-danger-border-default)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text-default)' }}>
-          Faresone
+          {t('preferences.dangerZone')}
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Disse handlingene kan ikke angres.
+          {t('preferences.dangerZoneDesc')}
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
           <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
-            Eksporter data
+            {t('preferences.exportData')}
           </Button>
           <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px', color: 'var(--ds-color-danger-text-default)' }}>
-            Slett konto
+            {t('preferences.deleteAccount')}
           </Button>
         </div>
       </Card>

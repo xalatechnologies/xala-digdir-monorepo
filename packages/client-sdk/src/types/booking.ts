@@ -10,7 +10,7 @@ import type { TenantEntity, BookingStatus, PaymentStatus, AllocationStatus, Base
 // =============================================================================
 
 /**
- * Booking modes supported by listings.
+ * Booking modes supported by rental objects (formerly listings).
  * - SINGLE_SLOT: Standard one-time booking selection
  * - IN_GAME: Short notice / live availability / rapid reserve-confirm patterns
  * - RECURRING: Weekly/monthly patterns with conflict detection and preview
@@ -22,7 +22,7 @@ export type BookingMode = 'SINGLE_SLOT' | 'IN_GAME' | 'RECURRING';
  * Defines rules and limits for recurring booking patterns.
  */
 export interface RecurringConstraintsDTO {
-  /** Whether recurring mode is enabled for this listing */
+  /** Whether recurring mode is enabled for this rental object */
   enabled: boolean;
   /** Allowed recurrence frequencies */
   allowedFrequencies: Array<'WEEKLY' | 'MONTHLY'>;

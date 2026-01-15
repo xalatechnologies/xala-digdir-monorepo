@@ -26,7 +26,7 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/rentalObjects - Public listing search
+   * GET /api/public/rentalObjects - Public rental object search
    * Returns: ListingCardProjectionDTO[] (screen-ready, flat structure)
    */
   @Get('/listings')
@@ -74,7 +74,7 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/rentalObjects/:id - Public listing details
+   * GET /api/public/rentalObjects/:id - Public rental object details (deprecated, backward compatibility)
    */
   @Get('/listings/:id')
   async getListing(request: FastifyRequest, reply: FastifyReply) {
@@ -88,7 +88,7 @@ export class PublicController {
 
     if (!result.length) {
       reply.code(404);
-      return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
+      return { error: { code: 'NOT_FOUND', message: 'Rental object not found' } };
     }
 
     // Transform to screen-ready projection DTO

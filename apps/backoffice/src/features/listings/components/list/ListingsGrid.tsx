@@ -16,6 +16,8 @@ interface ListingsGridProps {
   selectedIds: string[];
   onSelectOne: (id: string, selected: boolean) => void;
   onRefresh?: () => void;
+  /** Base path for navigation (defaults to '/listings') */
+  basePath?: string;
 }
 
 export function ListingsGrid({
@@ -24,12 +26,13 @@ export function ListingsGrid({
   selectedIds,
   onSelectOne,
   onRefresh,
+  basePath = '/listings',
 }: ListingsGridProps) {
   const navigate = useNavigate();
 
   const handleCardClick = (id: string, slug?: string) => {
     // Use slug for navigation, fall back to id if slug not available
-    navigate(`/listings/${slug || id}`);
+    navigate(`${basePath}/${slug || id}`);
   };
 
   if (isLoading) {
@@ -130,6 +133,7 @@ export function ListingsGrid({
                 listingName={listing.name}
                 status={listing.status as ListingStatus}
                 onActionComplete={onRefresh}
+                basePath={basePath}
               />
             </div>
 

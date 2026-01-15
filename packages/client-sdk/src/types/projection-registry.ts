@@ -38,13 +38,13 @@ export interface ProjectionMetadata {
 
 export const projectionRegistry: Record<string, ProjectionMetadata> = {
   // ============================================================================
-  // LISTING PROJECTIONS
+  // RENTAL OBJECT PROJECTIONS
   // ============================================================================
   
-  'ListingCardProjectionDTO': {
-    id: 'ListingCardProjectionDTO',
-    entity: 'Listing',
-    screens: ['SearchResults', 'FeaturedListings', 'CategoryGrid', 'MapView'],
+  'RentalObjectCardProjectionDTO': {
+    id: 'RentalObjectCardProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['SearchResults', 'FeaturedRentalObjects', 'CategoryGrid', 'MapView'],
     roles: ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'],
     cost: 'cheap',
     cacheTtl: 'medium',
@@ -52,10 +52,10 @@ export const projectionRegistry: Record<string, ProjectionMetadata> = {
     estimatedSize: 2,
   },
   
-  'ListingDetailsProjectionDTO': {
-    id: 'ListingDetailsProjectionDTO',
-    entity: 'Listing',
-    screens: ['ListingDetailPage', 'BookingModal'],
+  'RentalObjectDetailsProjectionDTO': {
+    id: 'RentalObjectDetailsProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['RentalObjectDetailPage', 'BookingModal'],
     roles: ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'],
     cost: 'medium',
     cacheTtl: 'medium',
@@ -63,10 +63,10 @@ export const projectionRegistry: Record<string, ProjectionMetadata> = {
     estimatedSize: 15,
   },
   
-  'ListingAdminProjectionDTO': {
-    id: 'ListingAdminProjectionDTO',
-    entity: 'Listing',
-    screens: ['ListingWizard', 'ListingEditForm', 'AdminListingList'],
+  'RentalObjectAdminProjectionDTO': {
+    id: 'RentalObjectAdminProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['RentalObjectWizard', 'RentalObjectEditForm', 'AdminRentalObjectList'],
     roles: ['admin', 'tenantAdmin'],
     cost: 'medium',
     cacheTtl: 'short',
@@ -74,9 +74,58 @@ export const projectionRegistry: Record<string, ProjectionMetadata> = {
     estimatedSize: 20,
   },
   
+  'RentalObjectCalendarProjectionDTO': {
+    id: 'RentalObjectCalendarProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['AvailabilityCalendar', 'AllocationPlanner'],
+    roles: ['public', 'user', 'saksbehandler', 'admin'],
+    cost: 'heavy',
+    cacheTtl: 'short',
+    hasRelations: true,
+    estimatedSize: 50,
+  },
+
+  // Backward compatibility aliases (deprecated)
+  /** @deprecated Use RentalObjectCardProjectionDTO instead */
+  'ListingCardProjectionDTO': {
+    id: 'RentalObjectCardProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['SearchResults', 'FeaturedRentalObjects', 'CategoryGrid', 'MapView'],
+    roles: ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'],
+    cost: 'cheap',
+    cacheTtl: 'medium',
+    hasRelations: false,
+    estimatedSize: 2,
+  },
+  
+  /** @deprecated Use RentalObjectDetailsProjectionDTO instead */
+  'ListingDetailsProjectionDTO': {
+    id: 'RentalObjectDetailsProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['RentalObjectDetailPage', 'BookingModal'],
+    roles: ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'],
+    cost: 'medium',
+    cacheTtl: 'medium',
+    hasRelations: true,
+    estimatedSize: 15,
+  },
+  
+  /** @deprecated Use RentalObjectAdminProjectionDTO instead */
+  'ListingAdminProjectionDTO': {
+    id: 'RentalObjectAdminProjectionDTO',
+    entity: 'RentalObject',
+    screens: ['RentalObjectWizard', 'RentalObjectEditForm', 'AdminRentalObjectList'],
+    roles: ['admin', 'tenantAdmin'],
+    cost: 'medium',
+    cacheTtl: 'short',
+    hasRelations: true,
+    estimatedSize: 20,
+  },
+  
+  /** @deprecated Use RentalObjectCalendarProjectionDTO instead */
   'ListingCalendarProjectionDTO': {
-    id: 'ListingCalendarProjectionDTO',
-    entity: 'Listing',
+    id: 'RentalObjectCalendarProjectionDTO',
+    entity: 'RentalObject',
     screens: ['AvailabilityCalendar', 'AllocationPlanner'],
     roles: ['public', 'user', 'saksbehandler', 'admin'],
     cost: 'heavy',

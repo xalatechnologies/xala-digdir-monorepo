@@ -11,6 +11,7 @@ import {
   type RealtimeEventHandler,
   type RealtimeClientConfig,
 } from '../realtime';
+import { queryKeys } from './query-keys';
 
 /**
  * Hook to connect to realtime WebSocket on mount
@@ -103,17 +104,19 @@ export function useRealtimeBookingConflicts(
 }
 
 /**
- * Hook to subscribe to listing events
- * Auto-invalidates listing queries when events arrive
+ * Hook to subscribe to rental object events
+ * Auto-invalidates rental object queries when events arrive
  */
-export function useRealtimeListings(handler?: RealtimeEventHandler) {
+export function useRealtimeRentalObjects(handler?: RealtimeEventHandler) {
   const queryClient = useQueryClient();
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
 
   useEffect(() => {
-    const unsubscribe = realtimeClient.onListing((event) => {
+    const unsubscribe = realtimeClient.onRentalObject((event) => {
       // Invalidate relevant queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.all });
+      // Also invalidate backward compatibility keys
       queryClient.invalidateQueries({ queryKey: ['listings'] });
 
       // Call custom handler if provided
@@ -122,6 +125,12 @@ export function useRealtimeListings(handler?: RealtimeEventHandler) {
 
     return unsubscribe;
   }, [queryClient]);
+}
+
+// Backward compatibility alias (deprecated)
+/** @deprecated Use useRealtimeRentalObjects instead */
+export function useRealtimeListings(handler?: RealtimeEventHandler) {
+  return useRealtimeRentalObjects(handler);
 }
 
 /**

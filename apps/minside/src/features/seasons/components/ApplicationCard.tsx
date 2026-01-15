@@ -80,10 +80,15 @@ export function ApplicationCard({ application, showActions = true }: Application
     navigate(`/seasons/${application.seasonId}`);
   };
 
-  const handleViewListing = () => {
-    // TODO: Navigate to listing detail page when available
-    navigate(`/listings/${application.listingId}`);
+  const handleViewRentalObject = () => {
+    // TODO: Navigate to rental object detail page when available
+    const rentalObjectId = application.listingId || application.rentalObjectId;
+    if (rentalObjectId) {
+      navigate(`/rental-objects/${rentalObjectId}`);
+    }
   };
+  // Backward compatibility alias
+  const handleViewListing = handleViewRentalObject;
 
   const statusConfig = APPLICATION_STATUS_CONFIG[application.status as keyof typeof APPLICATION_STATUS_CONFIG] || APPLICATION_STATUS_CONFIG.pending;
 
@@ -286,7 +291,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               type="button"
               variant="secondary"
               data-size="sm"
-              onClick={handleViewListing}
+              onClick={handleViewRentalObject}
             >
               Se lokale
             </Button>

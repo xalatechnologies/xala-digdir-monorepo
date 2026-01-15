@@ -61,8 +61,9 @@ interface UseBookingQuoteOptions {
 export function useBookingQuote(options: UseBookingQuoteOptions) {
   const { rentalObjectId, startTime, endTime, mode = 'SINGLE_SLOT', enabled = true } = options;
 
+  // Map rentalObjectId to listingId for DTO (backward compatibility with API/DB)
   const selection: BookingQuoteSelectionDTO = {
-    listingId: rentalObjectId,
+    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
     startTime,
     endTime,
     mode,
@@ -138,8 +139,9 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
     enabled = true 
   } = options;
 
+  // Map rentalObjectId to listingId for DTO (backward compatibility with API/DB)
   const selection = {
-    listingId: rentalObjectId,
+    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
     startTime,
     endTime,
     frequency,
@@ -148,7 +150,7 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
   };
 
   const selectionHash = createSelectionHash({
-    listingId: rentalObjectId,
+    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
     startTime,
     endTime,
     mode: 'RECURRING',
@@ -180,7 +182,7 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
  * // Only allow booking if quote says it's available
  * if (quote.slot.status === 'AVAILABLE' && quote.availableActions.includes('BOOK')) {
  *   createBooking.mutate({
- *     listingId: quote.rentalObjectId,
+ *     listingId: quote.rentalObjectId, // DTO uses listingId for backward compatibility
  *     startTime: quote.selection.startTime,
  *     endTime: quote.selection.endTime,
  *     totalPrice: quote.pricing.totalPrice,
@@ -195,6 +197,7 @@ export function useCreateBookingFromQuote() {
     mutationFn: (data: CreateBookingDTO) => bookingService.create(data),
     onSuccess: (_, variables) => {
       // Invalidate availability for the rental object
+      // Note: variables.listingId is used for backward compatibility with DTO/DB
       invalidateAvailability(queryClient, variables.listingId);
       // Invalidate all booking queries
       invalidateBookings(queryClient);

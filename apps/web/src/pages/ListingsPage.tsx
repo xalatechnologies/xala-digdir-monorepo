@@ -1,7 +1,7 @@
 /**
- * ListingsPage
+ * Rental Objects Page (formerly ListingsPage)
  *
- * Clean listings page using projection DTOs from API.
+ * Clean rental objects page using projection DTOs from API.
  * No client-side transformation - uses screen-ready data directly.
  */
 import React from 'react';
@@ -48,6 +48,7 @@ const LISTING_CATEGORY_OPTIONS = [
 ];
 
 // Legacy type options for backward compatibility (deprecated, remove when migration complete)
+// Backward compatibility alias
 const LISTING_TYPE_OPTIONS = [
   { id: 'ALL', label: 'Alle typer' },
   { id: 'SPACE', label: 'Lokale' },
@@ -81,17 +82,17 @@ const getListingTypeCounts = (listings: ListingCardProjectionDTO[]) => {
 };
 
 // Get all unique amenities for filter options
-const getAllAmenities = (listings: ListingCardProjectionDTO[]) => {
+const getAllAmenities = (rentalObjects: ListingCardProjectionDTO[]) => {
   const amenitySet = new Set<string>();
-  listings.forEach(l => l.amenities?.forEach((a: string) => amenitySet.add(a)));
+  rentalObjects.forEach(obj => obj.amenities?.forEach((a: string) => amenitySet.add(a)));
   return Array.from(amenitySet).sort();
 };
 
 // Get unique cities for location filter
-const getUniqueCities = (listings: ListingCardProjectionDTO[]) => {
+const getUniqueCities = (rentalObjects: ListingCardProjectionDTO[]) => {
   const citySet = new Set<string>();
-  listings.forEach(l => {
-    if (l.city && l.city !== 'Ukjent') citySet.add(l.city);
+  rentalObjects.forEach(obj => {
+    if (obj.city && obj.city !== 'Ukjent') citySet.add(obj.city);
   });
   return Array.from(citySet).sort();
 };
@@ -104,24 +105,25 @@ export function ListingsPage(): React.ReactElement {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // API query params - load all listings at once for client-side filtering
+  // API query params - load all rental objects at once for client-side filtering
   const [queryParams] = React.useState<RentalObjectQueryParams>({ limit: 100 });
 
-  // Fetch listings from real API - returns ListingCardProjectionDTO[] directly
+  // Fetch rental objects from real API - returns ListingCardProjectionDTO[] directly
   const { data: listingsResponse, isLoading, error } = usePublicRentalObjects(queryParams);
 
   // Fetch cities for location filter
   const { data: citiesResponse } = usePublicCities();
 
-  // Realtime updates - refetch when listings are created/updated/published
+  // Realtime updates - refetch when rental objects are created/updated/published
   const queryClient = useQueryClient();
   const handleListingEvent = React.useCallback((_event: { type: string; data?: unknown }) => {
-    // Invalidate all public listings queries to refetch
+    // Invalidate all public rental objects queries to refetch
     queryClient.invalidateQueries({ queryKey: ['public'] });
   }, [queryClient]);
   useRealtimeListing(handleListingEvent);
 
-  // Listings from API - already in screen-ready projection DTO format
+  // Rental objects from API - already in screen-ready projection DTO format
+  // Note: Variable name 'listings' kept for backward compatibility with existing code
   const listings = React.useMemo(() => {
     if (!listingsResponse?.data) return [] as ListingCardProjectionDTO[];
     return listingsResponse.data;
@@ -164,28 +166,28 @@ export function ListingsPage(): React.ReactElement {
     return areas;
   }, [citiesResponse, listings]);
 
-  // Filter listings using projection DTO fields
+  // Filter rental objects using projection DTO fields
   const filteredListings = React.useMemo(() => {
-    return listings.filter(l => {
+    return listings.filter(rentalObject => {
       // Filter by type using DTO's type field directly
-      if (listingType !== 'ALL' && l.type !== listingType) return false;
+      if (listingType !== 'ALL' && rentalObject.type !== listingType) return false;
 
       // Filter by area using DTO's city field
       if (selectedArea !== 'all') {
-        const cityLower = l.city.toLowerCase().replace(/\s+/g, '-');
+        const cityLower = rentalObject.city.toLowerCase().replace(/\s+/g, '-');
         if (cityLower !== selectedArea) return false;
       }
 
       // Filter by capacity
       if (selectedCapacity !== 'all') {
         const capacityOption = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);
-        if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
+        if (capacityOption && (rentalObject.capacity < capacityOption.min || rentalObject.capacity > capacityOption.max)) return false;
       }
 
       // Filter by amenities (renamed from facilities)
       if (selectedFacilities.length > 0) {
-        const listingAmenities = l.amenities || [];
-        if (!selectedFacilities.every(f => listingAmenities.includes(f))) return false;
+        const rentalObjectAmenities = rentalObject.amenities || [];
+        if (!selectedFacilities.every(f => rentalObjectAmenities.includes(f))) return false;
       }
 
       return true;
@@ -213,21 +215,21 @@ export function ListingsPage(): React.ReactElement {
 
     setIsSearching(true);
     const query = value.toLowerCase();
-    const matchingListings = listings.filter(listing =>
-      listing.name.toLowerCase().includes(query) ||
-      listing.locationFormatted.toLowerCase().includes(query) ||
-      listing.city.toLowerCase().includes(query)
+    const matchingRentalObjects = listings.filter(rentalObject =>
+      rentalObject.name.toLowerCase().includes(query) ||
+      rentalObject.locationFormatted.toLowerCase().includes(query) ||
+      rentalObject.city.toLowerCase().includes(query)
     );
 
-    const results: SearchResultGroup[] = matchingListings.length > 0
+    const results: SearchResultGroup[] = matchingRentalObjects.length > 0
       ? [{
-          id: 'listings',
-          label: 'Lokaler',
-          items: matchingListings.slice(0, 5).map(listing => ({
-            id: listing.id,
-            label: listing.name,
-            description: listing.locationFormatted,
-            meta: listing.typeLabel,
+          id: 'rental-objects',
+          label: 'Utleieobjekter',
+          items: matchingRentalObjects.slice(0, 5).map(rentalObject => ({
+            id: rentalObject.id,
+            label: rentalObject.name,
+            description: rentalObject.locationFormatted,
+            meta: rentalObject.typeLabel,
           })),
         }]
       : [];
@@ -237,17 +239,19 @@ export function ListingsPage(): React.ReactElement {
   };
 
   const handleResultSelect = (result: SearchResultItem) => {
-    const listing = listings.find(l => l.id === result.id);
-    if (listing) {
-      navigate(`/listing/${listing.slug || listing.id}`);
+    const rentalObject = listings.find(obj => obj.id === result.id);
+    if (rentalObject) {
+      navigate(`/rental-object/${rentalObject.slug || rentalObject.id}`);
     }
     setSearchQuery('');
     setSearchResults([]);
   };
 
-  const handleListingClick = (id: string, slug?: string) => {
-    navigate(`/listing/${slug || id}`);
+  const handleRentalObjectClick = (id: string, slug?: string) => {
+    navigate(`/rental-object/${slug || id}`);
   };
+  // Backward compatibility alias
+  const handleListingClick = handleRentalObjectClick;
 
   const activeFilterCount =
     (listingType !== 'ALL' ? 1 : 0) +
@@ -457,24 +461,24 @@ export function ListingsPage(): React.ReactElement {
 
               {viewMode === 'grid' ? (
                 <ListingGrid minCardWidth={300}>
-                  {visibleListings.map((listing) => (
+                  {visibleListings.map((rentalObject) => (
                     <ListingCard
-                      key={listing.id}
-                      id={listing.id}
-                      name={listing.name}
-                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      location={listing.locationFormatted}
-                      description={listing.descriptionExcerpt || ''}
-                      image={listing.primaryImageUrl}
-                      facilities={listing.amenities}
-                      moreFacilities={listing.moreAmenitiesCount}
-                      capacity={listing.capacity}
-                      price={listing.priceAmount}
-                      priceUnit={listing.priceUnit}
-                      currency={listing.priceCurrency}
-                      rating={listing.averageRating}
-                      reviewCount={listing.reviewCount}
+                      key={rentalObject.id}
+                      id={rentalObject.id}
+                      name={rentalObject.name}
+                      type={rentalObject.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      listingType={rentalObject.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      location={rentalObject.locationFormatted}
+                      description={rentalObject.descriptionExcerpt || ''}
+                      image={rentalObject.primaryImageUrl}
+                      facilities={rentalObject.amenities}
+                      moreFacilities={rentalObject.moreAmenitiesCount}
+                      capacity={rentalObject.capacity}
+                      price={rentalObject.priceAmount}
+                      priceUnit={rentalObject.priceUnit}
+                      currency={rentalObject.priceCurrency}
+                      rating={rentalObject.averageRating}
+                      reviewCount={rentalObject.reviewCount}
                       imageHeight={260}
                       showLocation={true}
                       showDescription={true}
@@ -483,7 +487,7 @@ export function ListingsPage(): React.ReactElement {
                       showListingType={false}
                       showRating={false}
                       showPrice={true}
-                      onClick={(id) => handleListingClick(id, listing.slug)}
+                      onClick={(id) => handleListingClick(id, rentalObject.slug)}
                       onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
                       onShare={(_id) => { /* TODO: Implement share */ }}
                     />
@@ -491,34 +495,34 @@ export function ListingsPage(): React.ReactElement {
                 </ListingGrid>
               ) : viewMode === 'list' ? (
                 <Stack spacing="var(--ds-spacing-4)">
-                  {visibleListings.map((listing) => (
+                  {visibleListings.map((rentalObject) => (
                     <ListingListItem
-                      key={listing.id}
-                      id={listing.id}
-                      name={listing.name}
-                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      location={listing.locationFormatted}
-                      description={listing.descriptionExcerpt || ''}
-                      image={listing.primaryImageUrl}
-                      facilities={listing.amenities}
-                      moreFacilities={listing.moreAmenitiesCount}
-                      capacity={listing.capacity}
-                      price={listing.priceAmount}
-                      priceUnit={listing.priceUnit}
-                      currency={listing.priceCurrency}
-                      {...(listing.latitude != null && { latitude: listing.latitude })}
-                      {...(listing.longitude != null && { longitude: listing.longitude })}
+                      key={rentalObject.id}
+                      id={rentalObject.id}
+                      name={rentalObject.name}
+                      type={rentalObject.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      listingType={rentalObject.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      location={rentalObject.locationFormatted}
+                      description={rentalObject.descriptionExcerpt || ''}
+                      image={rentalObject.primaryImageUrl}
+                      facilities={rentalObject.amenities}
+                      moreFacilities={rentalObject.moreAmenitiesCount}
+                      capacity={rentalObject.capacity}
+                      price={rentalObject.priceAmount}
+                      priceUnit={rentalObject.priceUnit}
+                      currency={rentalObject.priceCurrency}
+                      {...(rentalObject.latitude != null && { latitude: rentalObject.latitude })}
+                      {...(rentalObject.longitude != null && { longitude: rentalObject.longitude })}
                       mapboxToken={MAPBOX_TOKEN || ''}
                       showListingType={true}
                       showMap={true}
                       showPrice={true}
-                      onClick={(id) => handleListingClick(id, listing.slug)}
+                      onClick={(id) => handleListingClick(id, rentalObject.slug)}
                       onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
                       onShare={(_id) => { 
                         navigator.share?.({ 
-                          title: listing.name, 
-                          url: `${window.location.origin}/listings/${listing.slug}` 
+                          title: rentalObject.name, 
+                          url: `${window.location.origin}/rental-object/${rentalObject.slug}` 
                         }).catch(() => {});
                       }}
                     />
@@ -527,49 +531,49 @@ export function ListingsPage(): React.ReactElement {
               ) : viewMode === 'map' ? (
                 <ListingMap
                   listings={filteredListings
-                    .filter(l => l.latitude != null && l.longitude != null)
-                    .map(l => ({
-                      id: l.id,
-                      name: l.name,
-                      ...(l.slug && { slug: l.slug }),
-                      location: l.locationFormatted,
-                      image: l.primaryImageUrl,
-                      latitude: l.latitude!,
-                      longitude: l.longitude!,
-                      type: l.type,
-                      listingType: l.type,
-                      description: l.descriptionExcerpt || '',
-                      capacity: l.capacity,
-                      price: l.priceAmount,
-                      priceUnit: l.priceUnit,
-                      facilities: l.amenities,
-                      available: l.isAvailable,
+                    .filter(rentalObject => rentalObject.latitude != null && rentalObject.longitude != null)
+                    .map(rentalObject => ({
+                      id: rentalObject.id,
+                      name: rentalObject.name,
+                      ...(rentalObject.slug && { slug: rentalObject.slug }),
+                      location: rentalObject.locationFormatted,
+                      image: rentalObject.primaryImageUrl,
+                      latitude: rentalObject.latitude!,
+                      longitude: rentalObject.longitude!,
+                      type: rentalObject.type,
+                      listingType: rentalObject.type,
+                      description: rentalObject.descriptionExcerpt || '',
+                      capacity: rentalObject.capacity,
+                      price: rentalObject.priceAmount,
+                      priceUnit: rentalObject.priceUnit,
+                      facilities: rentalObject.amenities,
+                      available: rentalObject.isAvailable,
                     }))}
                   mapboxToken={MAPBOX_TOKEN || ''}
                   height="calc(100vh - 250px)"
                   onListingClick={handleListingClick}
                   onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
                   onShare={(id, slug) => {
-                    const listing = filteredListings.find(l => l.id === id);
+                    const rentalObject = filteredListings.find(obj => obj.id === id);
                     navigator.share?.({
-                      title: listing?.name || 'Digilist',
-                      url: `${window.location.origin}/listings/${slug || id}`
+                      title: rentalObject?.name || 'Digilist',
+                      url: `${window.location.origin}/rental-object/${slug || id}`
                     }).catch(() => {});
                   }}
                 />
               ) : (
                 <ListingTableView
-                  listings={filteredListings.map(l => ({
-                    id: l.id,
-                    name: l.name,
-                    ...(l.slug && { slug: l.slug }),
-                    location: l.locationFormatted,
-                    latitude: l.latitude ?? 0,
-                    longitude: l.longitude ?? 0,
-                    type: l.type,
-                    capacity: l.capacity,
-                    price: l.priceAmount,
-                    priceUnit: l.priceUnit,
+                  listings={filteredListings.map(rentalObject => ({
+                    id: rentalObject.id,
+                    name: rentalObject.name,
+                    ...(rentalObject.slug && { slug: rentalObject.slug }),
+                    location: rentalObject.locationFormatted,
+                    latitude: rentalObject.latitude ?? 0,
+                    longitude: rentalObject.longitude ?? 0,
+                    type: rentalObject.type,
+                    capacity: rentalObject.capacity,
+                    price: rentalObject.priceAmount,
+                    priceUnit: rentalObject.priceUnit,
                   }))}
                   height="calc(100vh - 250px)"
                   onListingClick={handleListingClick}

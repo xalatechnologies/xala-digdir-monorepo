@@ -14,7 +14,8 @@ export interface SimulateNotificationOptions {
   message?: string;
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   bookingId?: string;
-  listingId?: string;
+  listingId?: string; // @deprecated Use rentalObjectId instead
+  rentalObjectId?: string;
 }
 
 /**
@@ -28,7 +29,8 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
     message = 'This is a test notification',
     priority = 'medium',
     bookingId = 'test-booking-123',
-    listingId = 'test-listing-456',
+    listingId = 'test-listing-456', // @deprecated Use rentalObjectId instead
+    rentalObjectId = options.rentalObjectId || options.listingId || 'test-rental-object-456',
   } = options;
 
   // Create a mock notification event that matches the backend format
@@ -45,7 +47,8 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
       readAt: null,
       metadata: {
         bookingId,
-        listingId,
+        listingId, // Backward compatibility
+        rentalObjectId: rentalObjectId || listingId,
       },
     },
   };

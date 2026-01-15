@@ -356,18 +356,18 @@ export function useFlowContextReturnTo(): string | undefined {
 }
 
 /**
- * Hook to get flow context information for a specific listing.
- * Returns the context only if it matches the given listingId.
+ * Hook to get flow context information for a specific rental object.
+ * Returns the context only if it matches the given rentalObjectId.
  *
- * @param listingId - The listing ID to match
+ * @param rentalObjectId - The rental object ID to match
  * @returns FlowContext if it matches, undefined otherwise
  *
  * @example
  * ```typescript
- * function ListingDetail({ listingId }) {
- *   const savedContext = useListingFlowContext(listingId);
+ * function RentalObjectDetail({ rentalObjectId }) {
+ *   const savedContext = useRentalObjectFlowContext(rentalObjectId);
  *
- *   // If we have saved state for this listing, restore it
+ *   // If we have saved state for this rental object, restore it
  *   useEffect(() => {
  *     if (savedContext?.selectedSlots) {
  *       setSelectedSlots(savedContext.selectedSlots);
@@ -376,7 +376,7 @@ export function useFlowContextReturnTo(): string | undefined {
  * }
  * ```
  */
-export function useListingFlowContext(listingId: string): FlowContext | undefined {
+export function useRentalObjectFlowContext(rentalObjectId: string): FlowContext | undefined {
   const hasContext = useSyncExternalStore(
     subscribe,
     getSnapshot,
@@ -388,10 +388,16 @@ export function useListingFlowContext(listingId: string): FlowContext | undefine
       return undefined;
     }
     const context = loadFlowContextFromStorage();
-    // Only return if listingId matches
-    if (context?.listingId === listingId) {
+    // Only return if rentalObjectId matches (or listingId for backward compatibility)
+    if (context?.rentalObjectId === rentalObjectId || context?.listingId === rentalObjectId) {
       return context;
     }
     return undefined;
-  }, [hasContext, listingId]);
+  }, [hasContext, rentalObjectId]);
+}
+
+// Backward compatibility alias (deprecated)
+/** @deprecated Use useRentalObjectFlowContext instead */
+export function useListingFlowContext(listingId: string): FlowContext | undefined {
+  return useRentalObjectFlowContext(listingId);
 }

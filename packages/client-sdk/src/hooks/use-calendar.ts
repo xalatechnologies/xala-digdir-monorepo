@@ -11,7 +11,7 @@ import {
   type RealtimeEventHandler,
 } from '../realtime';
 import {
-  listingCalendarService,
+  rentalObjectCalendarService,
   availabilityMatrixService,
   type CalendarConfigQueryParams,
 } from '../services/calendar.service';
@@ -22,33 +22,43 @@ import type { AvailabilityMatrixQueryParams } from '../types/calendar';
 // ============================================================================
 
 /**
- * Get calendar configuration for a listing
+ * Get calendar configuration for a rental object
  * Returns complete calendar behavior including granularity, slot rules, booking window,
  * opening hours, allowed booking types, UI hints, and permissions.
  *
- * @param listingId - The listing ID
+ * @param rentalObjectId - The rental object ID
  * @param params - Optional query parameters (bookingType)
  * @param options - Query options
  *
  * @example
  * ```tsx
- * const { data, isLoading } = useListingCalendarConfig('listing-123');
+ * const { data, isLoading } = useRentalObjectCalendarConfig('rental-object-123');
  * if (data) {
  *   console.log(data.data.granularity); // 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY'
  *   console.log(data.data.slotSizeMinutes); // 30
  * }
  * ```
  */
+export function useRentalObjectCalendarConfig(
+  rentalObjectId: string,
+  params?: CalendarConfigQueryParams,
+  options?: { enabled?: boolean }
+) {
+  return useQuery({
+    queryKey: queryKeys.calendar.config(rentalObjectId, params),
+    queryFn: () => rentalObjectCalendarService.getCalendarConfig(rentalObjectId, params),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
+  });
+}
+
+// Backward compatibility alias (deprecated)
+/** @deprecated Use useRentalObjectCalendarConfig instead */
 export function useListingCalendarConfig(
   listingId: string,
   params?: CalendarConfigQueryParams,
   options?: { enabled?: boolean }
 ) {
-  return useQuery({
-    queryKey: queryKeys.calendar.config(listingId, params),
-    queryFn: () => listingCalendarService.getCalendarConfig(listingId, params),
-    enabled: !!listingId && (options?.enabled ?? true),
-  });
+  return useRentalObjectCalendarConfig(listingId, params, options);
 }
 
 // ============================================================================
@@ -56,18 +66,18 @@ export function useListingCalendarConfig(
 // ============================================================================
 
 /**
- * Get availability matrix for a listing
+ * Get availability matrix for a rental object
  * Returns cell-by-cell availability state for a date range, with each cell
  * containing status (AVAILABLE, RESERVED, BOOKED, BLOCKED, BLACKOUT, CLOSED)
  * and reason key for unavailable slots.
  *
- * @param listingId - The listing ID
+ * @param rentalObjectId - The rental object ID
  * @param params - Query parameters including from/to dates and optional bookingType
  * @param options - Query options
  *
  * @example
  * ```tsx
- * const { data, isLoading } = useAvailabilityMatrix('listing-123', {
+ * const { data, isLoading } = useAvailabilityMatrix('rental-object-123', {
  *   from: '2025-01-15',
  *   to: '2025-01-21',
  *   bookingType: 'HOURLY'
@@ -78,14 +88,14 @@ export function useListingCalendarConfig(
  * ```
  */
 export function useAvailabilityMatrix(
-  listingId: string,
+  rentalObjectId: string,
   params: AvailabilityMatrixQueryParams,
   options?: { enabled?: boolean }
 ) {
   return useQuery({
-    queryKey: queryKeys.calendar.availabilityMatrix(listingId, params),
-    queryFn: () => availabilityMatrixService.getAvailabilityMatrix(listingId, params),
-    enabled: !!listingId && !!params.from && !!params.to && (options?.enabled ?? true),
+    queryKey: queryKeys.calendar.availabilityMatrix(rentalObjectId, params),
+    queryFn: () => availabilityMatrixService.getAvailabilityMatrix(rentalObjectId, params),
+    enabled: !!rentalObjectId && !!params.from && !!params.to && (options?.enabled ?? true),
   });
 }
 
@@ -112,7 +122,7 @@ export function useAvailabilityMatrix(
  *     console.log('Calendar event:', event.type);
  *   });
  *
- *   const { data } = useAvailabilityMatrix('listing-123', { from: '2025-01-15', to: '2025-01-21' });
+ *   const { data } = useAvailabilityMatrix('rental-object-123', { from: '2025-01-15', to: '2025-01-21' });
  *   // ...
  * }
  * ```

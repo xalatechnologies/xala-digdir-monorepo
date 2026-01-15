@@ -4,7 +4,9 @@
  */
 import { Injectable } from '../../core/decorators';
 import { BaseRepository, type PaginatedResult, type FilterCondition } from '../../database/base.repository';
+// Import schema types (listings is backward-compatible alias for rental_objects table)
 import { listings, type Listing, type NewListing } from '../../database/schema';
+// Note: Listing and NewListing types are backward-compatible aliases for RentalObject types
 import type { RentalObjectQueryParams } from '../../schemas/rental-object.schema';
 
 @Injectable()

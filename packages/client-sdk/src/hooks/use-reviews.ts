@@ -39,40 +39,50 @@ export function useReview(id: string, options?: { enabled?: boolean }) {
 }
 
 /**
- * Get reviews for a specific listing
+ * Get reviews for a specific rental object
  */
+export function useRentalObjectReviews(
+  rentalObjectId: string,
+  params?: Omit<ReviewQueryParams, 'rentalObjectId' | 'listingId'>,
+  options?: { enabled?: boolean }
+) {
+  return useQuery({
+    queryKey: queryKeys.reviews.byRentalObject(rentalObjectId, params),
+    queryFn: () => reviewService.getByRentalObjectId(rentalObjectId, params),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get review statistics for a rental object
+ */
+export function useReviewStats(rentalObjectId: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.reviews.stats(rentalObjectId),
+    queryFn: () => reviewService.getStats(rentalObjectId),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get review summary for a rental object (stats + recent reviews)
+ */
+export function useReviewSummary(rentalObjectId: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: [...queryKeys.reviews.all, 'summary', rentalObjectId] as const,
+    queryFn: () => reviewService.getSummary(rentalObjectId),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
+  });
+}
+
+// Backward compatibility aliases (deprecated)
+/** @deprecated Use useRentalObjectReviews instead */
 export function useListingReviews(
   listingId: string,
   params?: Omit<ReviewQueryParams, 'listingId'>,
   options?: { enabled?: boolean }
 ) {
-  return useQuery({
-    queryKey: queryKeys.reviews.byListing(listingId, params),
-    queryFn: () => reviewService.getByListingId(listingId, params),
-    enabled: !!listingId && (options?.enabled ?? true),
-  });
-}
-
-/**
- * Get review statistics for a listing
- */
-export function useReviewStats(listingId: string, options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: queryKeys.reviews.stats(listingId),
-    queryFn: () => reviewService.getStats(listingId),
-    enabled: !!listingId && (options?.enabled ?? true),
-  });
-}
-
-/**
- * Get review summary for a listing (stats + recent reviews)
- */
-export function useReviewSummary(listingId: string, options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: [...queryKeys.reviews.all, 'summary', listingId] as const,
-    queryFn: () => reviewService.getSummary(listingId),
-    enabled: !!listingId && (options?.enabled ?? true),
-  });
+  return useRentalObjectReviews(listingId, params, options);
 }
 
 /**
@@ -102,7 +112,7 @@ export function useCreateReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
       // Invalidate my reviews
       queryClient.invalidateQueries({ queryKey: [...queryKeys.reviews.all, 'my'] });
-      // Invalidate specific listing's reviews and stats
+      // Invalidate specific rental object's reviews and stats
       if (variables.listingId) {
         queryClient.invalidateQueries({
           queryKey: [...queryKeys.reviews.all, 'byListing', variables.listingId],

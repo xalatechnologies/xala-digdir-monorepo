@@ -4,7 +4,7 @@
  */
 import { Injectable, Inject } from '../../core/decorators';
 import { BookingRepository } from './booking.repository';
-import { ListingRepository } from '../listing/listing.repository';
+import { RentalObjectRepository } from '../rental-objects/rental-object.repository';
 import { validate } from '../../core/validation/zod-pipe';
 import { ForbiddenError } from '../../core/errors/problem-details';
 import { getAuditService, broadcastBookingEvent } from '../../core/audit/audit.service';
@@ -37,7 +37,7 @@ import type { PaginatedResult } from '../../database/base.repository';
 export class BookingService {
   constructor(
     @Inject('BookingRepository') private readonly repository: BookingRepository,
-    @Inject('ListingRepository') private readonly listingRepository: ListingRepository,
+    @Inject('RentalObjectRepository') private readonly rentalObjectRepository: RentalObjectRepository,
     @Inject('Adapters') private readonly adapters: any
   ) {}
 
@@ -47,14 +47,14 @@ export class BookingService {
   async create(tenantId: string, userId: string, data: CreateBookingDTO): Promise<Booking> {
     const validated = validate(CreateBookingSchema, data);
 
-    // Fetch listing to get buffer time configuration
-    const listing = await this.listingRepository.findById(validated.listingId);
-    if (!listing) {
-      throw new ForbiddenError('Listing not found');
+    // Fetch rental object to get buffer time configuration
+    const rentalObject = await this.rentalObjectRepository.findById(validated.listingId);
+    if (!rentalObject) {
+      throw new ForbiddenError('Rental object not found');
     }
 
-    // Extract buffer time from listing metadata (default to 0 if not set)
-    const bufferTimeMinutes = (listing.metadata as any)?.bufferTimeMinutes || 0;
+    // Extract buffer time from rental object metadata (default to 0 if not set)
+    const bufferTimeMinutes = (rentalObject.metadata as any)?.bufferTimeMinutes || 0;
     const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
 
     // Check availability with buffer time
@@ -353,7 +353,7 @@ export class BookingService {
    * Calculate pricing for a booking
    */
   async calculatePricing(listingId: string, startTime: string, endTime: string): Promise<any> {
-    // In production, would fetch listing pricing and calculate
+    // In production, would fetch rental object pricing and calculate
     const start = new Date(startTime);
     const end = new Date(endTime);
     const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
@@ -791,7 +791,7 @@ export class BookingService {
     const blockedCount = occurrences.filter(o => o.status === 'BLOCKED').length;
     const blackoutCount = occurrences.filter(o => o.status === 'BLACKOUT').length;
 
-    // Mock pricing - in production would calculate based on listing rates
+    // Mock pricing - in production would calculate based on rental object rates
     const pricePerOccurrence = 500; // NOK
     const totalPrice = availableCount * pricePerOccurrence;
 
@@ -835,14 +835,14 @@ export class BookingService {
     userId: string | undefined,
     selection: BookingSelection
   ): Promise<BookingQuoteProjection> {
-    // Fetch the rental object (listing) to get configuration
-    const listing = await this.listingRepository.findById(selection.listingId);
-    if (!listing) {
+    // Fetch the rental object to get configuration
+    const rentalObject = await this.rentalObjectRepository.findById(selection.listingId);
+    if (!rentalObject) {
       throw new ForbiddenError('Rental object not found');
     }
 
-    const metadata = (listing.metadata || {}) as Record<string, unknown>;
-    const pricing = (listing.pricing || { basePrice: 0, currency: 'NOK', unit: 'hour' }) as {
+    const metadata = (rentalObject.metadata || {}) as Record<string, unknown>;
+    const pricing = (rentalObject.pricing || { basePrice: 0, currency: 'NOK', unit: 'hour' }) as {
       basePrice: number;
       currency: string;
       unit: string;
@@ -947,7 +947,7 @@ export class BookingService {
     // Build the quote projection
     const quote: BookingQuoteProjection = {
       rentalObjectId: selection.listingId,
-      rentalObjectName: listing.name,
+      rentalObjectName: rentalObject.name,
       selection: {
         startTime: selection.startTime,
         endTime: selection.endTime,

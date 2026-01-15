@@ -238,7 +238,8 @@ const availabilityConnections = new Map<string, Set<WebSocket>>();
 const globalAvailabilityConnections = new Set<WebSocket>();
 
 /**
- * Register a WebSocket connection for availability updates on a specific listing
+ * Register a WebSocket connection for availability updates on a specific rental object
+ * @param listingId - Rental object ID (parameter name kept for backward compatibility)
  */
 export function registerAvailabilityWebSocket(socket: WebSocket, listingId: string): void {
   if (listingId === '*') {
@@ -488,12 +489,13 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     });
   });
 
-  // WebSocket route for listing-specific availability events
+  // WebSocket route for rental object-specific availability events
+  // Note: Parameter name 'listingId' kept for backward compatibility
   app.get('/ws/availability/:listingId', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
     const { listingId } = req.params as { listingId: string };
     console.log(`[WS] Client connected to /ws/availability/${listingId}`);
 
-    // Register for availability broadcasts for this listing
+    // Register for availability broadcasts for this rental object
     registerAvailabilityWebSocket(socket, listingId);
 
     // Also register for general audit broadcasts
@@ -501,8 +503,8 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
 
     socket.send(JSON.stringify({
       type: 'connected',
-      listingId,
-      message: `Connected to availability events for listing ${listingId}`,
+      listingId, // Parameter name kept for backward compatibility
+      message: `Connected to availability events for rental object ${listingId}`,
       timestamp: new Date().toISOString(),
     }));
 

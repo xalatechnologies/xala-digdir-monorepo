@@ -262,6 +262,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
           role: session.user.role as BackofficeRole,
         };
 
+        console.log('========================================');
+        console.log('[MINSIDE AUTH] User loaded from session:');
+        console.log('  Email:', userData.email);
+        console.log('  Name:', userData.name);
+        console.log('  Role:', userData.role);
+        console.log('  User ID:', userData.id);
+        console.log('========================================');
+
         // Store user data in localStorage for quick access (NOT for authentication)
         // ⚠️ IMPORTANT: This is cached metadata only. If an attacker compromises
         // localStorage, they only get non-sensitive user info (name, email, role).
@@ -316,6 +324,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
+    console.log('========================================');
+    console.log('[MINSIDE AUTH] Logging out...');
+    console.log('========================================');
+
     // ✅ CRITICAL: Clear local state FIRST before any async operations
     // This ensures the UI immediately reflects logged-out state even if API call hangs
     setUser(null);
@@ -323,6 +335,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem('minside_user');
     clearFlowContextFromStorage();
     notifySubscribers();
+
+    console.log('[MINSIDE AUTH] Local state cleared (user, localStorage, flow context)');
 
     // ✅ SECURITY: Server-side session invalidation
     // ---------------------------------------------------------------------------
@@ -336,14 +350,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // because the session has been invalidated.
     try {
       await authService.logout();
+      console.log('[MINSIDE AUTH] API logout successful - session cookie cleared');
     } catch (error) {
       // Logout API call failed - local state is already cleared above
       // This is acceptable because:
       // 1. User state is already cleared in UI (user appears logged out)
       // 2. Session cookie will expire naturally (24h max age)
       // 3. Backend will reject expired/invalid cookies anyway
-      console.warn('Logout API call failed, but local state cleared:', error);
+      console.error('[MINSIDE AUTH] Logout API call failed:', error);
+      console.warn('[MINSIDE AUTH] Continuing with logout (local state already cleared)');
     }
+
+    console.log('[MINSIDE AUTH] Redirecting to login page...');
+    console.log('========================================');
 
     // Navigate to login page AFTER all cleanup is complete
     navigate('/login', { replace: true });

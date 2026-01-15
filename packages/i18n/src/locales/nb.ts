@@ -43,6 +43,26 @@ export const nb: Record<string, string> = {
   'common.details': 'Detaljer',
   'common.change': 'Endre',
   'common.moreOptions': 'Flere valg',
+  'common.reset': 'Nullstill',
+  'common.apply': 'Bruk',
+  'common.applyFilter': 'Bruk filter',
+  'common.selected': '{{count}} valgt',
+  'common.removeSelection': 'Fjern valg',
+  'common.page': 'Side',
+  'common.of': 'av',
+  'common.previousPage': 'Forrige side',
+  'common.nextPage': 'Neste side',
+  'common.filterAndSort': 'Filter og sortering',
+  'common.sorting': 'Sortering',
+  'common.showingResults': 'Viser {{count}} resultater',
+  'common.rentalObjects': 'utleieobjekter',
+  'common.newRentalObject': 'Nytt utleieobjekt',
+  'common.rentalObjectsCount': '{{count}} utleieobjekter',
+  'common.gridView': 'Rutenettvisning',
+  'common.listView': 'Listevisning',
+  'common.allSizes': 'Alle størrelser',
+  'common.persons': 'personer',
+  'common.over100': 'Over 100',
 
   // Navigation
   'nav.home': 'Hjem',
@@ -160,6 +180,38 @@ export const nb: Record<string, string> = {
   'listings.noEquipment': 'Ingen utstyr funnet.',
   'listings.noServices': 'Ingen tjenester funnet.',
   'listings.confirmArchive': 'Er du sikker på at du vil arkivere denne oppføringen?',
+
+  // Rental Objects (Admin/Backoffice) - New terminology
+  'rentalObjects.title': 'Utleieobjekter',
+  'rentalObjects.titleResources': 'Utleieobjekter & Ressurser',
+  'rentalObjects.subtitle': 'Administrer lokaler, utstyr og tjenester som kan leies ut.',
+  'rentalObjects.search': 'Søk utleieobjekter...',
+  'rentalObjects.filter': 'Filter',
+  'rentalObjects.type': 'Type',
+  'rentalObjects.area': 'Område',
+  'rentalObjects.allAreas': 'Alle områder',
+  'rentalObjects.capacity': 'Kapasitet',
+  'rentalObjects.facilities': 'Fasiliteter',
+  'rentalObjects.loading': 'Laster utleieobjekter...',
+  'rentalObjects.error': 'Kunne ikke laste data fra API. Prøv igjen senere.',
+  'rentalObjects.noRentalObjects': 'Ingen utleieobjekter funnet.',
+  'rentalObjects.showingResults': 'Viser {{count}} resultater',
+  'rentalObjects.showMore': 'Vis flere ({{remaining}} igjen)',
+  'rentalObjects.quickActions': 'Hurtighandlinger',
+  'rentalObjects.newBooking': 'Ny booking',
+  'rentalObjects.openSettings': 'Åpne innstillinger',
+  'rentalObjects.locations': 'Steder',
+  'rentalObjects.headquarters': 'Hovedkontor',
+  'rentalObjects.bookings': 'bookinger',
+  'rentalObjects.users': 'Brukere',
+  'rentalObjects.createNew': 'Opprett ny',
+  'rentalObjects.spaces': 'Lokaler',
+  'rentalObjects.equipment': 'Utstyr',
+  'rentalObjects.services': 'Tjenester',
+  'rentalObjects.noSpaces': 'Ingen lokaler funnet.',
+  'rentalObjects.noEquipment': 'Ingen utstyr funnet.',
+  'rentalObjects.noServices': 'Ingen tjenester funnet.',
+  'rentalObjects.confirmArchive': 'Er du sikker på at du vil arkivere dette utleieobjektet?',
 
   // Listing Categories (V2)
   'categories.LOKALER_OG_BANER': 'Lokaler og baner',
@@ -307,8 +359,7 @@ export const nb: Record<string, string> = {
   'users.noUsers': 'Ingen brukere funnet.',
   'users.loadingUsers': 'Laster brukere...',
 
-  // Settings
-  'settings.title': 'Innstillinger',
+  // Settings (Backoffice)
   'settings.systemSettings': 'Systeminnstillinger',
   'settings.configureSystem': 'Konfigurer systeminnstillinger og regler',
   'settings.bookingRules': 'Bookingsregler',
@@ -321,9 +372,6 @@ export const nb: Record<string, string> = {
   'settings.emailNotificationsDesc': 'Tilpass e-postmaler og varslingsinnstillinger.',
   'settings.underDevelopment': 'Under utvikling',
   'settings.underDevelopmentDesc': 'Innstillingssiden er under utvikling. Flere konfigurasjonsalternativer kommer snart.',
-  'settings.language': 'Språk',
-  'settings.theme': 'Tema',
-  'settings.notifications': 'Varsler',
 
   // Seasons
   'seasons.title': 'Sesongleie',
@@ -485,21 +533,17 @@ export const nb: Record<string, string> = {
   // Navigation
   'nav.rentalObjects': 'Utleieobjekter',
 
-  // Page titles
-  'rentalObjects.title': 'Utleieobjekter',
-  'rentalObjects.subtitle': 'Administrer lokaler, utstyr, kjøretøy og opplevelser',
+  // Page titles (Extended)
   'rentalObjects.createTitle': 'Opprett nytt utleieobjekt',
   'rentalObjects.editTitle': 'Rediger utleieobjekt',
   'rentalObjects.createDescription': 'Fyll ut informasjon om utleieobjektet. Du kan lagre som utkast og fortsette senere.',
   'rentalObjects.editDescription': 'Gjør endringer i utleieobjektet og lagre.',
-  'rentalObjects.loading': 'Laster utleieobjekt...',
   'rentalObjects.unknownStep': 'Ukjent steg',
   'rentalObjects.selectCategory': 'Velg kategori',
   'rentalObjects.saveDraft': 'Lagre utkast',
   'rentalObjects.complete': 'Fullfør',
   'rentalObjects.saveSuccess': 'Endringene er lagret',
   'rentalObjects.saveError': 'Kunne ikke lagre. Prøv igjen.',
-  'rentalObjects.createNew': 'Nytt utleieobjekt',
 
   // Categories
   'category.all': 'Alle',
@@ -1215,6 +1259,181 @@ export const nb: Record<string, string> = {
   // Common
   'common.submitting': 'Sender...',
   'common.saving': 'Lagrer...',
+  'common.saveChanges': 'Lagre endringer',
+
+  // ============================================================================
+  // Settings Page (Minside)
+  // ============================================================================
+  'settings.title': 'Innstillinger',
+  'settings.subtitle': 'Administrer din konto og preferanser',
+  'settings.changesSaved': 'Endringene ble lagret',
+  'settings.preferences': 'Preferanser',
+  'settings.preferencesDesc': 'Varsler, personvern og visning',
+
+  // Profile Tab
+  'settings.tabs.profile': 'Min profil',
+  'settings.tabs.addresses': 'Adresser',
+  'settings.tabs.privacy': 'Personvern',
+  'settings.tabs.notifications': 'Varsler',
+  'settings.tabs.preferences': 'Preferanser',
+
+  // Profile Section
+  'profile.avatar': 'Profilbilde',
+  'profile.avatarDesc': 'Last opp et profilbilde som vises i systemet',
+  'profile.changeAvatar': 'Endre bilde',
+  'profile.uploading': 'Laster opp...',
+  'profile.imageFormats': 'JPG, PNG eller GIF (maks 5MB)',
+  'profile.personalInfo': 'Personlig informasjon',
+  'profile.personalInfoDesc': 'Din grunnleggende kontaktinformasjon',
+  'profile.fullName': 'Fullt navn',
+  'profile.email': 'E-postadresse',
+  'profile.phone': 'Telefonnummer',
+  'profile.dateOfBirth': 'Fødselsdato',
+  'profile.nationalId': 'Fødselsnummer',
+  'profile.namePlaceholder': 'Ola Nordmann',
+  'profile.emailPlaceholder': 'ola.nordmann@example.com',
+  'profile.phonePlaceholder': '+47 123 45 678',
+  'profile.nationalIdPlaceholder': '11 siffer',
+  'profile.saveProfile': 'Lagre profilinnstillinger',
+  'profile.saving': 'Lagrer...',
+
+  // Address Section
+  'address.residence': 'Bostedsadresse',
+  'address.residenceDesc': 'Din registrerte bostedsadresse',
+  'address.invoice': 'Fakturaadresse',
+  'address.invoiceDesc': 'Adresse for fakturering',
+  'address.street': 'Gateadresse',
+  'address.city': 'Poststed',
+  'address.postalCode': 'Postnummer',
+  'address.country': 'Land',
+  'address.streetPlaceholder': 'Storgata 1',
+  'address.cityPlaceholder': 'Oslo',
+  'address.postalCodePlaceholder': '0010',
+  'address.copyFromResidence': 'Kopier fra bostedsadresse',
+  'address.saveAddresses': 'Lagre adresser',
+  'address.savingChanges': 'Lagrer endringer',
+  'address.saveAddressSettings': 'Lagre adresseinnstillinger',
+
+  // Countries
+  'countries.norway': 'Norge',
+  'countries.sweden': 'Sverige',
+  'countries.denmark': 'Danmark',
+  'countries.finland': 'Finland',
+
+  // Privacy Section
+  'privacy.dataExport': 'Dataeksport',
+  'privacy.dataExportDesc': 'Last ned en kopi av alle dine personopplysninger',
+  'privacy.gdprInfo': 'I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.',
+  'privacy.exportData': 'Last ned mine data',
+  'privacy.exporting': 'Eksporterer...',
+  'privacy.exportMyData': 'Eksporter mine data',
+  'privacy.consents': 'Samtykker',
+  'privacy.consentsDesc': 'Administrer hvordan vi bruker dine data',
+  'privacy.marketing': 'Markedsføring',
+  'privacy.marketingDesc': 'Motta tips, tilbud og nyheter på e-post',
+  'privacy.analytics': 'Analyse',
+  'privacy.analyticsDesc': 'Hjelp oss forbedre tjenesten med anonymisert bruksdata',
+  'privacy.thirdPartySharing': 'Deling med tredjeparter',
+  'privacy.thirdPartySharingDesc': 'Tillat deling av data med samarbeidspartnere',
+  'privacy.deleteAccount': 'Slett konto',
+  'privacy.deleteAccountDesc': 'Permanent sletting av din konto og alle tilknyttede data',
+  'privacy.cannotUndo': 'Dette kan ikke angres',
+  'privacy.deleteWarning': 'Ved sletting av kontoen vil alle dine personopplysninger, bookinger, meldinger og aktivitetshistorikk bli permanent fjernet. Denne handlingen kan ikke reverseres.',
+  'privacy.deleteMyAccount': 'Slett min konto',
+  'privacy.deleteConfirm': 'Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.',
+
+  // Notification Settings
+  'settings.notificationSettings': 'Varslingsinnstillinger',
+  'settings.notificationSettingsDesc': 'Administrer hvordan og når du mottar varsler',
+  'settings.notificationInfo': 'Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.',
+  'settings.openNotificationSettings': 'Åpne varslingsinnstillinger',
+
+  // Preferences Section
+  'preferences.language': 'Språk',
+  'preferences.languageDesc': 'Velg språk for brukergrensesnittet',
+  'preferences.preferredLanguage': 'Foretrukket språk',
+  'preferences.appearance': 'Utseende',
+  'preferences.appearanceDesc': 'Tilpass hvordan systemet ser ut',
+  'preferences.themeSoon': 'Tema og utseendeinnstillinger kommer snart',
+  'preferences.sessionSecurity': 'Økt og sikkerhet',
+  'preferences.sessionSecurityDesc': 'Administrer din pålogging og sikkerhet',
+  'preferences.logout': 'Logg ut',
+  'preferences.logoutDesc': 'Logg ut av din konto på denne enheten',
+
+  // Languages
+  'languages.nb': 'Norsk (Bokmål)',
+  'languages.nn': 'Norsk (Nynorsk)',
+  'languages.en': 'English',
+
+  // Preferences Page
+  'preferences.title': 'Preferanser',
+  'preferences.subtitle': 'Administrer dine preferanser',
+
+  // Notification Preferences
+  'preferences.notifications': 'Varsler',
+  'preferences.emailBooking': 'Bookingbekreftelser',
+  'preferences.emailBookingDesc': 'Motta e-post ved nye bookinger',
+  'preferences.emailReminder': 'E-post påminnelser',
+  'preferences.emailReminderDesc': 'Påminnelse 24 timer før booking',
+  'preferences.emailNewsletter': 'Nyhetsbrev',
+  'preferences.emailNewsletterDesc': 'Motta nyheter og tilbud',
+  'preferences.smsReminder': 'SMS-påminnelser',
+  'preferences.smsReminderDesc': 'Motta påminnelse via SMS',
+  'preferences.pushNotifications': 'Push-varsler',
+  'preferences.pushNotificationsDesc': 'Sanntidsvarsler i nettleseren',
+
+  // Privacy Preferences
+  'preferences.privacy': 'Personvern',
+  'preferences.showProfile': 'Vis profil',
+  'preferences.showProfileDesc': 'La andre brukere se profilen din',
+  'preferences.shareActivity': 'Del aktivitet',
+  'preferences.shareActivityDesc': 'Del bookinghistorikk med organisasjonen',
+  'preferences.allowAnalytics': 'Anonyme analyser',
+  'preferences.allowAnalyticsDesc': 'Hjelp oss forbedre tjenesten',
+
+  // Display Preferences
+  'preferences.display': 'Visning',
+  'preferences.theme': 'Tema',
+  'preferences.themeSystem': 'Følg system',
+  'preferences.themeLight': 'Lyst',
+  'preferences.themeDark': 'Mørkt',
+  'preferences.languageNo': 'Norsk',
+  'preferences.languageEn': 'English',
+
+  // Danger Zone
+  'preferences.dangerZone': 'Faresone',
+  'preferences.dangerZoneDesc': 'Disse handlingene kan ikke angres.',
+  'preferences.exportData': 'Eksporter data',
+  'preferences.deleteAccount': 'Slett konto',
+
+  // Notifications Page
+  'notifications.unread': 'ulest',
+  'notifications.all': 'Alle',
+  'notifications.bookings': 'Bookinger',
+  'notifications.messages': 'Meldinger',
+  'notifications.reminders': 'Påminnelser',
+  'notifications.system': 'System',
+  'notifications.markAllRead': 'Merk alle lest',
+  'notifications.clear': 'Tøm',
+
+  // Notification Types
+  'notifications.type.booking': 'Booking',
+  'notifications.type.system': 'System',
+  'notifications.type.message': 'Melding',
+  'notifications.type.reminder': 'Påminnelse',
+
+  // Notification Items
+  'notifications.bookingConfirmed': 'Booking bekreftet',
+  'notifications.bookingConfirmedDesc': 'Din booking for Idrettshall A er bekreftet for 22. januar 18:00.',
+  'notifications.reminderTitle': 'Påminnelse',
+  'notifications.reminderDesc': 'Du har en booking i morgen klokken 18:00.',
+  'notifications.newMessage': 'Ny melding',
+  'notifications.newMessageDesc': 'Du har mottatt svar på din henvendelse.',
+  'notifications.maintenance': 'Vedlikehold',
+  'notifications.maintenanceDesc': 'Planlagt vedlikehold søndag 26. januar 02:00-04:00.',
+  'notifications.justNow': 'Akkurat nå',
+  'notifications.hoursAgo': '{{hours}}t siden',
+  'notifications.daysAgo': '{{days}}d siden',
 };
 
 

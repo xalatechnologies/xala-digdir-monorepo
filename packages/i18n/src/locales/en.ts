@@ -42,6 +42,26 @@ export const en: Record<string, string> = {
   'common.details': 'Details',
   'common.change': 'Change',
   'common.moreOptions': 'More options',
+  'common.reset': 'Reset',
+  'common.apply': 'Apply',
+  'common.applyFilter': 'Apply filter',
+  'common.selected': '{{count}} selected',
+  'common.removeSelection': 'Remove selection',
+  'common.page': 'Page',
+  'common.of': 'of',
+  'common.previousPage': 'Previous page',
+  'common.nextPage': 'Next page',
+  'common.filterAndSort': 'Filter and sorting',
+  'common.sorting': 'Sorting',
+  'common.showingResults': 'Showing {{count}} results',
+  'common.rentalObjects': 'rental objects',
+  'common.newRentalObject': 'New rental object',
+  'common.rentalObjectsCount': '{{count}} rental objects',
+  'common.gridView': 'Grid view',
+  'common.listView': 'List view',
+  'common.allSizes': 'All sizes',
+  'common.persons': 'persons',
+  'common.over100': 'Over 100',
 
   // Navigation
   'nav.home': 'Home',
@@ -159,6 +179,38 @@ export const en: Record<string, string> = {
   'listings.noEquipment': 'No equipment found.',
   'listings.noServices': 'No services found.',
   'listings.confirmArchive': 'Are you sure you want to archive this listing?',
+
+  // Rental Objects (Admin/Backoffice) - New terminology
+  'rentalObjects.title': 'Rental Objects',
+  'rentalObjects.titleResources': 'Rental Objects & Resources',
+  'rentalObjects.subtitle': 'Manage spaces, equipment and services available for rent.',
+  'rentalObjects.search': 'Search rental objects...',
+  'rentalObjects.filter': 'Filter',
+  'rentalObjects.type': 'Type',
+  'rentalObjects.area': 'Area',
+  'rentalObjects.allAreas': 'All areas',
+  'rentalObjects.capacity': 'Capacity',
+  'rentalObjects.facilities': 'Facilities',
+  'rentalObjects.loading': 'Loading rental objects...',
+  'rentalObjects.error': 'Could not load data from API. Please try again later.',
+  'rentalObjects.noRentalObjects': 'No rental objects found.',
+  'rentalObjects.showingResults': 'Showing {{count}} results',
+  'rentalObjects.showMore': 'Show more ({{remaining}} left)',
+  'rentalObjects.quickActions': 'Quick actions',
+  'rentalObjects.newBooking': 'New booking',
+  'rentalObjects.openSettings': 'Open settings',
+  'rentalObjects.locations': 'Locations',
+  'rentalObjects.headquarters': 'Headquarters',
+  'rentalObjects.bookings': 'bookings',
+  'rentalObjects.users': 'Users',
+  'rentalObjects.createNew': 'Create new',
+  'rentalObjects.spaces': 'Spaces',
+  'rentalObjects.equipment': 'Equipment',
+  'rentalObjects.services': 'Services',
+  'rentalObjects.noSpaces': 'No spaces found.',
+  'rentalObjects.noEquipment': 'No equipment found.',
+  'rentalObjects.noServices': 'No services found.',
+  'rentalObjects.confirmArchive': 'Are you sure you want to archive this rental object?',
 
   // Booking statuses
   'booking.pending': 'Pending',
@@ -282,8 +334,7 @@ export const en: Record<string, string> = {
   'users.noUsers': 'No users found.',
   'users.loadingUsers': 'Loading users...',
 
-  // Settings
-  'settings.title': 'Settings',
+  // Settings (Backoffice)
   'settings.systemSettings': 'System settings',
   'settings.configureSystem': 'Configure system settings and rules',
   'settings.bookingRules': 'Booking rules',
@@ -296,9 +347,6 @@ export const en: Record<string, string> = {
   'settings.emailNotificationsDesc': 'Customize email templates and notification settings.',
   'settings.underDevelopment': 'Under development',
   'settings.underDevelopmentDesc': 'Settings page is under development. More configuration options coming soon.',
-  'settings.language': 'Language',
-  'settings.theme': 'Theme',
-  'settings.notifications': 'Notifications',
 
   // Seasons
   'seasons.title': 'Season leases',
@@ -459,21 +507,17 @@ export const en: Record<string, string> = {
   // Navigation
   'nav.rentalObjects': 'Rental Objects',
 
-  // Page titles
-  'rentalObjects.title': 'Rental Objects',
-  'rentalObjects.subtitle': 'Manage spaces, equipment, vehicles and experiences',
+  // Page titles (Extended)
   'rentalObjects.createTitle': 'Create New Rental Object',
   'rentalObjects.editTitle': 'Edit Rental Object',
   'rentalObjects.createDescription': 'Fill in information about the rental object. You can save as draft and continue later.',
   'rentalObjects.editDescription': 'Make changes to the rental object and save.',
-  'rentalObjects.loading': 'Loading rental object...',
   'rentalObjects.unknownStep': 'Unknown step',
   'rentalObjects.selectCategory': 'Select category',
   'rentalObjects.saveDraft': 'Save draft',
   'rentalObjects.complete': 'Complete',
   'rentalObjects.saveSuccess': 'Changes saved',
   'rentalObjects.saveError': 'Could not save. Please try again.',
-  'rentalObjects.createNew': 'New rental object',
 
   // Categories
   'category.all': 'All',
@@ -1189,4 +1233,179 @@ export const en: Record<string, string> = {
   // Common
   'common.submitting': 'Submitting...',
   'common.saving': 'Saving...',
+  'common.saveChanges': 'Save changes',
+
+  // ============================================================================
+  // Settings Page (Minside)
+  // ============================================================================
+  'settings.title': 'Settings',
+  'settings.subtitle': 'Manage your account and preferences',
+  'settings.changesSaved': 'Changes saved',
+  'settings.preferences': 'Preferences',
+  'settings.preferencesDesc': 'Notifications, privacy and display',
+
+  // Profile Tab
+  'settings.tabs.profile': 'My profile',
+  'settings.tabs.addresses': 'Addresses',
+  'settings.tabs.privacy': 'Privacy',
+  'settings.tabs.notifications': 'Notifications',
+  'settings.tabs.preferences': 'Preferences',
+
+  // Profile Section
+  'profile.avatar': 'Profile picture',
+  'profile.avatarDesc': 'Upload a profile picture shown in the system',
+  'profile.changeAvatar': 'Change picture',
+  'profile.uploading': 'Uploading...',
+  'profile.imageFormats': 'JPG, PNG or GIF (max 5MB)',
+  'profile.personalInfo': 'Personal information',
+  'profile.personalInfoDesc': 'Your basic contact information',
+  'profile.fullName': 'Full name',
+  'profile.email': 'Email address',
+  'profile.phone': 'Phone number',
+  'profile.dateOfBirth': 'Date of birth',
+  'profile.nationalId': 'National ID',
+  'profile.namePlaceholder': 'John Doe',
+  'profile.emailPlaceholder': 'john.doe@example.com',
+  'profile.phonePlaceholder': '+47 123 45 678',
+  'profile.nationalIdPlaceholder': '11 digits',
+  'profile.saveProfile': 'Save profile settings',
+  'profile.saving': 'Saving...',
+
+  // Address Section
+  'address.residence': 'Residence address',
+  'address.residenceDesc': 'Your registered residence address',
+  'address.invoice': 'Invoice address',
+  'address.invoiceDesc': 'Address for billing',
+  'address.street': 'Street address',
+  'address.city': 'City',
+  'address.postalCode': 'Postal code',
+  'address.country': 'Country',
+  'address.streetPlaceholder': 'Main Street 1',
+  'address.cityPlaceholder': 'Oslo',
+  'address.postalCodePlaceholder': '0010',
+  'address.copyFromResidence': 'Copy from residence address',
+  'address.saveAddresses': 'Save addresses',
+  'address.savingChanges': 'Saving changes',
+  'address.saveAddressSettings': 'Save address settings',
+
+  // Countries
+  'countries.norway': 'Norway',
+  'countries.sweden': 'Sweden',
+  'countries.denmark': 'Denmark',
+  'countries.finland': 'Finland',
+
+  // Privacy Section
+  'privacy.dataExport': 'Data export',
+  'privacy.dataExportDesc': 'Download a copy of all your personal data',
+  'privacy.gdprInfo': 'According to GDPR, you have the right to receive a copy of your personal data. The export includes profile, bookings, messages and activity log.',
+  'privacy.exportData': 'Download my data',
+  'privacy.exporting': 'Exporting...',
+  'privacy.exportMyData': 'Export my data',
+  'privacy.consents': 'Consents',
+  'privacy.consentsDesc': 'Manage how we use your data',
+  'privacy.marketing': 'Marketing',
+  'privacy.marketingDesc': 'Receive tips, offers and news via email',
+  'privacy.analytics': 'Analytics',
+  'privacy.analyticsDesc': 'Help us improve the service with anonymized usage data',
+  'privacy.thirdPartySharing': 'Third-party sharing',
+  'privacy.thirdPartySharingDesc': 'Allow data sharing with partners',
+  'privacy.deleteAccount': 'Delete account',
+  'privacy.deleteAccountDesc': 'Permanent deletion of your account and all associated data',
+  'privacy.cannotUndo': 'This cannot be undone',
+  'privacy.deleteWarning': 'When deleting your account, all your personal data, bookings, messages and activity history will be permanently removed. This action cannot be reversed.',
+  'privacy.deleteMyAccount': 'Delete my account',
+  'privacy.deleteConfirm': 'Are you sure you want to delete your account? This cannot be undone.',
+
+  // Notification Settings
+  'settings.notificationSettings': 'Notification settings',
+  'settings.notificationSettingsDesc': 'Manage how and when you receive notifications',
+  'settings.notificationInfo': 'Detailed notification settings are available on a separate page where you can configure email, SMS and push notifications for various events.',
+  'settings.openNotificationSettings': 'Open notification settings',
+
+  // Preferences Section
+  'preferences.language': 'Language',
+  'preferences.languageDesc': 'Select language for the user interface',
+  'preferences.preferredLanguage': 'Preferred language',
+  'preferences.appearance': 'Appearance',
+  'preferences.appearanceDesc': 'Customize how the system looks',
+  'preferences.themeSoon': 'Theme and appearance settings coming soon',
+  'preferences.sessionSecurity': 'Session and security',
+  'preferences.sessionSecurityDesc': 'Manage your login and security',
+  'preferences.logout': 'Log out',
+  'preferences.logoutDesc': 'Log out of your account on this device',
+
+  // Languages
+  'languages.nb': 'Norwegian (Bokmål)',
+  'languages.nn': 'Norwegian (Nynorsk)',
+  'languages.en': 'English',
+
+  // Preferences Page
+  'preferences.title': 'Preferences',
+  'preferences.subtitle': 'Manage your preferences',
+
+  // Notification Preferences
+  'preferences.notifications': 'Notifications',
+  'preferences.emailBooking': 'Booking confirmations',
+  'preferences.emailBookingDesc': 'Receive email for new bookings',
+  'preferences.emailReminder': 'Email reminders',
+  'preferences.emailReminderDesc': 'Reminder 24 hours before booking',
+  'preferences.emailNewsletter': 'Newsletter',
+  'preferences.emailNewsletterDesc': 'Receive news and offers',
+  'preferences.smsReminder': 'SMS reminders',
+  'preferences.smsReminderDesc': 'Receive reminder via SMS',
+  'preferences.pushNotifications': 'Push notifications',
+  'preferences.pushNotificationsDesc': 'Real-time notifications in the browser',
+
+  // Privacy Preferences
+  'preferences.privacy': 'Privacy',
+  'preferences.showProfile': 'Show profile',
+  'preferences.showProfileDesc': 'Let other users see your profile',
+  'preferences.shareActivity': 'Share activity',
+  'preferences.shareActivityDesc': 'Share booking history with the organization',
+  'preferences.allowAnalytics': 'Anonymous analytics',
+  'preferences.allowAnalyticsDesc': 'Help us improve the service',
+
+  // Display Preferences
+  'preferences.display': 'Display',
+  'preferences.theme': 'Theme',
+  'preferences.themeSystem': 'Follow system',
+  'preferences.themeLight': 'Light',
+  'preferences.themeDark': 'Dark',
+  'preferences.languageNo': 'Norwegian',
+  'preferences.languageEn': 'English',
+
+  // Danger Zone
+  'preferences.dangerZone': 'Danger zone',
+  'preferences.dangerZoneDesc': 'These actions cannot be undone.',
+  'preferences.exportData': 'Export data',
+  'preferences.deleteAccount': 'Delete account',
+
+  // Notifications Page
+  'notifications.unread': 'unread',
+  'notifications.all': 'All',
+  'notifications.bookings': 'Bookings',
+  'notifications.messages': 'Messages',
+  'notifications.reminders': 'Reminders',
+  'notifications.system': 'System',
+  'notifications.markAllRead': 'Mark all read',
+  'notifications.clear': 'Clear',
+
+  // Notification Types
+  'notifications.type.booking': 'Booking',
+  'notifications.type.system': 'System',
+  'notifications.type.message': 'Message',
+  'notifications.type.reminder': 'Reminder',
+
+  // Notification Items
+  'notifications.bookingConfirmed': 'Booking confirmed',
+  'notifications.bookingConfirmedDesc': 'Your booking for Sports Hall A is confirmed for January 22 at 18:00.',
+  'notifications.reminderTitle': 'Reminder',
+  'notifications.reminderDesc': 'You have a booking tomorrow at 18:00.',
+  'notifications.newMessage': 'New message',
+  'notifications.newMessageDesc': 'You have received a response to your inquiry.',
+  'notifications.maintenance': 'Maintenance',
+  'notifications.maintenanceDesc': 'Scheduled maintenance Sunday January 26 02:00-04:00.',
+  'notifications.justNow': 'Just now',
+  'notifications.hoursAgo': '{{hours}}h ago',
+  'notifications.daysAgo': '{{days}}d ago',
 };

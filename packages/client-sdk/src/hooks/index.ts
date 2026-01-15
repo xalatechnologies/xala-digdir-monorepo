@@ -26,7 +26,8 @@ export {
   useFlowContext,
   useHasFlowContext,
   useFlowContextReturnTo,
-  useListingFlowContext,
+  useRentalObjectFlowContext,
+  useListingFlowContext, // Deprecated alias
   type SaveFlowContextOptions,
   type SaveFlowContextResult,
   type RestoreFlowContextOptions,
@@ -167,7 +168,8 @@ export {
   useRealtimeConnection,
   useRealtimeBookings,
   useRealtimeBookingConflicts,
-  useRealtimeListings,
+  useRealtimeRentalObjects,
+  useRealtimeListings, // Deprecated alias
   useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
@@ -273,7 +275,8 @@ export {
 export {
   useReviews,
   useReview,
-  useListingReviews,
+  useRentalObjectReviews,
+  useListingReviews, // Deprecated alias
   useReviewStats,
   useReviewSummary,
   useMyReviews,

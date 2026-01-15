@@ -20,22 +20,22 @@ interface TenantRequest extends FastifyRequest {
 }
 
 // =============================================================================
-// Listing Calendar Config Controller
+// Rental Object Calendar Config Controller
 // =============================================================================
 
 /**
- * Listing Calendar Config Controller
- * Handles GET /api/listings/:id/calendar-config endpoint
+ * Rental Object Calendar Config Controller
+ * Handles GET /api/rental-objects/:id/calendar-config endpoint
  */
-@Controller('/api/listings')
-export class ListingCalendarConfigController {
+@Controller('/api/rental-objects')
+export class RentalObjectCalendarConfigController {
   constructor(
     @Inject('CalendarService') private readonly calendarService: CalendarService
   ) {}
 
   /**
-   * GET /api/listings/:id/calendar-config - Get calendar configuration
-   * Returns complete calendar behavior configuration for a listing
+   * GET /api/rental-objects/:id/calendar-config - Get calendar configuration
+   * Returns complete calendar behavior configuration for a rental object
    * including granularity, slot rules, permissions, and UI hints
    */
   @Get('/:id/calendar-config')
@@ -173,7 +173,7 @@ export class CalendarController {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Get all allocations for the listing in the date range
+    // Get all allocations for the rental object in the date range
     const allocationResults = await db
       .select({
         startTime: allocations.startTime,
@@ -189,7 +189,7 @@ export class CalendarController {
         )
       );
 
-    // Get all bookings for the listing in the date range
+    // Get all bookings for the rental object in the date range
     const bookingResults = await db
       .select({
         startTime: bookings.startTime,

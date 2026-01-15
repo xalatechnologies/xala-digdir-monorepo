@@ -77,26 +77,34 @@ export class ReviewService extends BaseService {
   }
 
   /**
-   * Get reviews for a specific listing
+   * Get reviews for a specific rental object
    */
-  async getByListingId(listingId: string, params?: ReviewQueryParams): Promise<PaginatedResponse<Review>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}`), {
+  async getByRentalObjectId(rentalObjectId: string, params?: ReviewQueryParams): Promise<PaginatedResponse<Review>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}`), {
       params: params as Record<string, string | number | boolean>
     });
   }
 
   /**
-   * Get review statistics for a listing
+   * Get review statistics for a rental object
    */
-  async getStats(listingId: string): Promise<SingleResponse<ReviewStats>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}/stats`));
+  async getStats(rentalObjectId: string): Promise<SingleResponse<ReviewStats>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}/stats`));
   }
 
   /**
-   * Get review summary for a listing (stats + recent reviews)
+   * Get review summary for a rental object (stats + recent reviews)
    */
-  async getSummary(listingId: string): Promise<SingleResponse<ReviewSummary>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}/summary`));
+  async getSummary(rentalObjectId: string): Promise<SingleResponse<ReviewSummary>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}/summary`));
+  }
+
+  // Backward compatibility aliases (deprecated)
+  /**
+   * @deprecated Use getByRentalObjectId instead
+   */
+  async getByListingId(listingId: string, params?: ReviewQueryParams): Promise<PaginatedResponse<Review>> {
+    return this.getByRentalObjectId(listingId, params);
   }
 
   /**

@@ -127,6 +127,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Subscribe to storage changes for cross-tab synchronization of flow context
@@ -154,14 +155,48 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const response = await authService.getSession();
         if (response.data?.user) {
           const apiUser = response.data.user;
+
+          console.log('========================================');
+          console.log('[BACKOFFICE AUTH] User session check:');
+          console.log('  Email:', apiUser.email);
+          console.log('  Name:', apiUser.name);
+          console.log('  API Role:', apiUser.role);
+          console.log('========================================');
+
+          // ✅ SECURITY: Role-Based Access Control
+          // Only allow admin, saksbehandler, and super_admin to access backoffice
+          const allowedRoles = ['admin', 'saksbehandler', 'super_admin'];
+
+          if (!allowedRoles.includes(apiUser.role)) {
+            console.error('[BACKOFFICE AUTH] Access denied - invalid role:', apiUser.role);
+            console.log('[BACKOFFICE AUTH] Allowed roles:', allowedRoles.join(', '));
+
+            setAccessDeniedError(
+              'Du har ikke tilgang til administrasjonspanelet. Kun administratorer og saksbehandlere har tilgang.'
+            );
+            setUser(null);
+
+            // Call logout to clear session cookie
+            try {
+              await authService.logout();
+            } catch (error) {
+              console.error('[BACKOFFICE AUTH] Logout after access denied failed:', error);
+            }
+
+            setIsLoading(false);
+            return;
+          }
+
           // Map API role to BackofficeRole (legacy) and EffectiveBackofficeRole
           // API uses: 'admin', 'saksbehandler', etc.
           // BackofficeRole (legacy): 'admin' | 'saksbehandler'
           // EffectiveBackofficeRole: 'admin' | 'case_handler'
-          const legacyRole: BackofficeRole = apiUser.role === 'admin' ? 'admin' : 'saksbehandler';
-          const effectiveRole: import('../lib/capabilities').EffectiveBackofficeRole = 
+          const legacyRole: BackofficeRole = apiUser.role === 'super_admin' ? 'super_admin' :
+                                            apiUser.role === 'admin' ? 'admin' : 'saksbehandler';
+          const effectiveRole: import('../lib/capabilities').EffectiveBackofficeRole =
+            apiUser.role === 'super_admin' ? 'super_admin' :
             apiUser.role === 'admin' ? 'admin' : 'case_handler';
-          
+
           // Map API user to BackofficeUser format
           const backofficeUser: BackofficeUser = {
             id: apiUser.id,
@@ -171,16 +206,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
             grantedRoles: [effectiveRole], // Single role from DB
           };
 
-          console.log('========================================');
-          console.log('[BACKOFFICE AUTH] User loaded from session:');
-          console.log('  Email:', backofficeUser.email);
-          console.log('  Name:', backofficeUser.name);
-          console.log('  API Role:', apiUser.role);
+          console.log('[BACKOFFICE AUTH] Access granted:');
           console.log('  Legacy Role:', backofficeUser.role);
           console.log('  Granted Roles:', backofficeUser.grantedRoles);
-          console.log('  Effective Role (will be assigned):', effectiveRole);
+          console.log('  Effective Role:', effectiveRole);
           console.log('========================================');
 
+          // Clear any previous access denied error
+          setAccessDeniedError(null);
           setUser(backofficeUser);
         } else {
           setUser(null);
@@ -333,8 +366,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       hasStoredContext,
       restoreFlowContext,
       clearFlowContext,
+      accessDeniedError,
     }),
-    [user, isLoading, login, logout, checkRole, hasStoredContext, restoreFlowContext, clearFlowContext]
+    [user, isLoading, login, logout, checkRole, hasStoredContext, restoreFlowContext, clearFlowContext, accessDeniedError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

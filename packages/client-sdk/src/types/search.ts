@@ -23,7 +23,8 @@ type Listing = RentalObject;
 // Search Entity Types
 // =============================================================================
 
-export type SearchEntityType = 'booking' | 'listing' | 'organization' | 'all';
+export type SearchEntityType = 'booking' | 'rental-object' | 'listing' | 'organization' | 'all';
+// Note: 'listing' is deprecated, use 'rental-object' instead
 
 // =============================================================================
 // Search Result Types
@@ -38,6 +39,16 @@ export interface BookingSearchResult {
   };
 }
 
+export interface RentalObjectSearchResult {
+  type: 'rental-object';
+  entity: RentalObject;
+  highlight?: {
+    field: string;
+    snippet: string;
+  };
+}
+
+/** @deprecated Use RentalObjectSearchResult instead */
 export interface ListingSearchResult {
   type: 'listing';
   entity: Listing;
@@ -87,7 +98,8 @@ export interface SearchFilters {
   // Related entity filters
   organizationId?: string;
   userId?: string;
-  listingId?: string;
+  rentalObjectId?: string; // Preferred filter for rental objects
+  listingId?: string; // @deprecated Use rentalObjectId instead (backward compatibility)
 
   // Additional filters
   minPrice?: number;

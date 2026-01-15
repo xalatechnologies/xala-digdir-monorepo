@@ -44,7 +44,7 @@ export interface FlowContextExpiredState {
 }
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading: authLoading, restoreFlowContext, hasStoredContext } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, restoreFlowContext, hasStoredContext, accessDeniedError } = useAuth();
   const { isInitializing, getHomeRoute } = useBackofficeRole();
   const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
@@ -195,6 +195,25 @@ export function LoginPage(): React.ReactElement {
       footerLinks={footerLinks}
       copyright={t('auth.copyright')}
     >
+      {accessDeniedError && (
+        <div
+          style={{
+            padding: '16px',
+            marginBottom: '24px',
+            backgroundColor: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '8px',
+            color: '#991b1b',
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+            Ingen tilgang
+          </div>
+          <div style={{ fontSize: '14px' }}>
+            {accessDeniedError}
+          </div>
+        </div>
+      )}
       <LoginOption
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}

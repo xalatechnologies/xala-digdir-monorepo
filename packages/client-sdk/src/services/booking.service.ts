@@ -27,6 +27,19 @@ import type {
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
+// Type aliases to avoid >> parsing issues with esbuild
+type TimeSlot = {
+  startTime: string;
+  endTime: string;
+  available: boolean;
+  price?: number;
+};
+
+type AvailabilityCheck = {
+  available: boolean;
+  conflicts?: Array<{ startTime: string; endTime: string }>;
+};
+
 export class BookingService extends BaseService {
   constructor() {
     super('/api/bookings');
@@ -105,10 +118,16 @@ export class BookingService extends BaseService {
   /**
    * Calculate booking pricing
    */
-  async calculatePricing(listingId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
+  async calculatePricing(rentalObjectId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
     return this.client.get(this.buildPath('/pricing'), { 
-      params: { listingId, startTime, endTime } 
+      params: { rentalObjectId, startTime, endTime } 
     });
+  }
+  /**
+   * @deprecated Use calculatePricing with rentalObjectId instead
+   */
+  async calculatePricingLegacy(listingId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
+    return this.calculatePricing(listingId, startTime, endTime);
   }
 
   /**
@@ -263,8 +282,17 @@ export class AllocationService extends BaseService {
   /**
    * Get allocations
    */
-  async getAll(params?: { listingId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
-    return this.client.get(this.buildPath(), { params });
+  async getAll(params?: { rentalObjectId?: string; listingId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
+    // Support both rentalObjectId (new) and listingId (backward compatibility)
+    const queryParams: Record<string, string> = {};
+    if (params?.rentalObjectId) {
+      queryParams.rentalObjectId = params.rentalObjectId;
+    } else if (params?.listingId) {
+      queryParams.rentalObjectId = params.listingId; // Map to new param name
+    }
+    if (params?.startDate) queryParams.startDate = params.startDate;
+    if (params?.endDate) queryParams.endDate = params.endDate;
+    return this.client.get(this.buildPath(), { params: queryParams });
   }
 
   /**
@@ -294,23 +322,39 @@ export class AvailabilityService extends BaseService {
   /**
    * Get available time slots
    */
-  async getSlots(params: { listingId: string; date: string; duration?: number }): Promise<SingleResponse<Array<{
-    startTime: string;
-    endTime: string;
-    available: boolean;
-    price?: number;
-  }>>> {
-    return this.client.get(this.buildPath('/slots'), { params });
+  async getSlots(params: { rentalObjectId: string; listingId?: string; date: string; duration?: number }): Promise<SingleResponse<TimeSlot[]>> {
+    // Support both rentalObjectId (new) and listingId (backward compatibility)
+    const queryParams: Record<string, string | number> = {
+      rentalObjectId: params.rentalObjectId || params.listingId!,
+      date: params.date,
+    };
+    if (params.duration) queryParams.duration = params.duration;
+    return this.client.get(this.buildPath('/slots'), { params: queryParams });
+  }
+  /**
+   * @deprecated Use getSlots with rentalObjectId instead
+   */
+  async getSlotsLegacy(params: { listingId: string; date: string; duration?: number }): Promise<SingleResponse<TimeSlot[]>> {
+    return this.getSlots({ rentalObjectId: params.listingId, date: params.date, duration: params.duration });
   }
 
   /**
    * Check if time range is available
    */
-  async check(params: { listingId: string; startTime: string; endTime: string }): Promise<SingleResponse<{
-    available: boolean;
-    conflicts?: Array<{ startTime: string; endTime: string }>;
-  }>> {
-    return this.client.get(this.buildPath('/check'), { params });
+  async check(params: { rentalObjectId: string; listingId?: string; startTime: string; endTime: string }): Promise<SingleResponse<AvailabilityCheck>> {
+    // Support both rentalObjectId (new) and listingId (backward compatibility)
+    const queryParams: Record<string, string> = {
+      rentalObjectId: params.rentalObjectId || params.listingId!,
+      startTime: params.startTime,
+      endTime: params.endTime,
+    };
+    return this.client.get(this.buildPath('/check'), { params: queryParams });
+  }
+  /**
+   * @deprecated Use check with rentalObjectId instead
+   */
+  async checkLegacy(params: { listingId: string; startTime: string; endTime: string }): Promise<SingleResponse<AvailabilityCheck>> {
+    return this.check({ rentalObjectId: params.listingId, startTime: params.startTime, endTime: params.endTime });
   }
 }
 

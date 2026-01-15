@@ -97,8 +97,8 @@ export * from './settings';
 export * from './upload';
 export * from './search';
 export * from './economy';
-// Calendar types - exclude duplicates that are also in listing.ts
-// CalendarGranularity and ListingCalendarConfigProjectionDTO are defined in both files with different values
+// Calendar types - exclude duplicates that are also in rental-object.ts
+// CalendarGranularity and RentalObjectCalendarConfigProjectionDTO are defined in both files with different values
 export {
   type SlotStatus,
   type SelectableUnit,
@@ -111,7 +111,10 @@ export {
   type CalendarPermissionsDTO,
   type AvailabilityCellDTO,
   type SlotStatusLegendDTO,
-  type ListingAvailabilityMatrixProjectionDTO,
+  type RentalObjectCalendarConfigProjectionDTO,
+  type RentalObjectAvailabilityMatrixProjectionDTO,
+  type ListingCalendarConfigProjectionDTO, // Deprecated alias
+  type ListingAvailabilityMatrixProjectionDTO, // Deprecated alias
   type AvailabilityMatrixQueryParams,
   SLOT_STATUS_LABELS,
   SLOT_STATUS_LABEL_KEYS,

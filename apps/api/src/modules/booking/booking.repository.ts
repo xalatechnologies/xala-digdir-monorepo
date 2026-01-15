@@ -33,6 +33,7 @@ export class BookingRepository extends BaseRepository<
       conditions.push({ field: 'status', operator: 'eq', value: params.status });
     }
 
+    // Note: listingId is the database column name (backward compatibility)
     if (params.listingId) {
       conditions.push({ field: 'listingId', operator: 'eq', value: params.listingId });
     }
@@ -58,10 +59,11 @@ export class BookingRepository extends BaseRepository<
   }
 
   /**
-   * Find bookings for a listing within a date range
+   * Find bookings for a rental object (formerly listing) within a date range
+   * Note: Parameter name 'listingId' kept for backward compatibility with database column
    */
   async findByListingAndDateRange(
-    listingId: string,
+    listingId: string, // Rental object ID (parameter name kept for DB compatibility)
     startDate: Date,
     endDate: Date
   ): Promise<Booking[]> {
@@ -76,7 +78,7 @@ export class BookingRepository extends BaseRepository<
   }
 
   /**
-   * Find bookings by user with listing details and pagination
+   * Find bookings by user with rental object details and pagination
    */
   async findByUser(
     userId: string,
@@ -93,7 +95,7 @@ export class BookingRepository extends BaseRepository<
       .where(eq(bookings.userId, userId));
     const total = countResult.length;
 
-    // Get paginated data with listing JOIN
+    // Get paginated data with rental object JOIN (listingId is database column name)
     const data = await this.db
       .select({
         id: bookings.id,

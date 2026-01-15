@@ -40,10 +40,11 @@ import {
   useUpdateConsents,
   type Address,
 } from '@digilist/client-sdk';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 
 export function SettingsPage() {
+  const t = useT();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { locale, setLocale } = useLocale();
@@ -75,13 +76,13 @@ export function SettingsPage() {
       street: '',
       city: '',
       postalCode: '',
-      country: 'Norge',
+      country: t('countries.norway'),
     } as Address,
     residenceAddress: {
       street: '',
       city: '',
       postalCode: '',
-      country: 'Norge',
+      country: t('countries.norway'),
     } as Address,
   });
 
@@ -105,8 +106,8 @@ export function SettingsPage() {
         phone: currentUser.phone || '',
         dateOfBirth: currentUser.dateOfBirth || '',
         nationalId: currentUser.nationalId || '',
-        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
-        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
+        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: t('countries.norway') },
+        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: t('countries.norway') },
       });
       if (currentUser.avatar) {
         setAvatarPreview(currentUser.avatar);
@@ -193,7 +194,7 @@ export function SettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm('Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.')) {
+    if (confirm(t('privacy.deleteConfirm'))) {
       try {
         await deleteAccountMutation.mutateAsync();
         logout();
@@ -217,7 +218,7 @@ export function SettingsPage() {
   if (isLoadingUser) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -228,20 +229,20 @@ export function SettingsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Innstillinger
+            {t('settings.title')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)', marginBottom: 0 }}
           >
-            Administrer din konto og preferanser
+            {t('settings.subtitle')}
           </Paragraph>
         </div>
         {saveSuccess && (
           <Alert style={{ maxWidth: '400px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CheckCircleIcon />
-              Endringene ble lagret
+              {t('settings.changesSaved')}
             </div>
           </Alert>
         )}
@@ -259,31 +260,31 @@ export function SettingsPage() {
             <Tabs.Tab value="profile">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <UserIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Min profil
+                {t('settings.tabs.profile')}
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="addresses">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <HomeIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Adresser
+                {t('settings.tabs.addresses')}
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="privacy">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <ShieldIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Personvern
+                {t('settings.tabs.privacy')}
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="notifications">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <BellIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Varsler
+                {t('settings.tabs.notifications')}
               </div>
             </Tabs.Tab>
             <Tabs.Tab value="preferences">
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <SettingsIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Preferanser
+                {t('settings.tabs.preferences')}
               </div>
             </Tabs.Tab>
           </Tabs.List>
@@ -296,10 +297,10 @@ export function SettingsPage() {
               <Stack spacing={5}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                    Profilbilde
+                    {t('profile.avatar')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Last opp et profilbilde som vises i systemet
+                    {t('profile.avatarDesc')}
                   </Paragraph>
                 </div>
 
@@ -345,13 +346,13 @@ export function SettingsPage() {
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploadingAvatar}
                       type="button"
-                      aria-label="Endre profilbilde"
+                      aria-label={t('profile.changeAvatar')}
                     >
                       <CameraIcon />
-                      {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
+                      {isUploadingAvatar ? t('profile.uploading') : t('profile.changeAvatar')}
                     </Button>
                     <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      JPG, PNG eller GIF (maks 5MB)
+                      {t('profile.imageFormats')}
                     </Paragraph>
                   </Stack>
                 </div>
@@ -363,69 +364,69 @@ export function SettingsPage() {
               <Stack spacing={5}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                    Personlig informasjon
+                    {t('profile.personalInfo')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Din grunnleggende kontaktinformasjon
+                    {t('profile.personalInfoDesc')}
                   </Paragraph>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Fullt navn" required>
+                  <FormField label={t('profile.fullName')} required>
                     <Textfield
                       value={profileData.name}
                       onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Ola Nordmann"
-                      aria-label="Fullt navn"
+                      placeholder={t('profile.namePlaceholder')}
+                      aria-label={t('profile.fullName')}
                     />
                   </FormField>
 
-                  <FormField label="E-postadresse" required>
+                  <FormField label={t('profile.email')} required>
                     <Textfield
                       type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="ola.nordmann@example.com"
-                      aria-label="E-postadresse"
+                      placeholder={t('profile.emailPlaceholder')}
+                      aria-label={t('profile.email')}
                     />
                   </FormField>
 
-                  <FormField label="Telefonnummer">
+                  <FormField label={t('profile.phone')}>
                     <Textfield
                       type="tel"
                       value={profileData.phone}
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="+47 123 45 678"
-                      aria-label="Telefonnummer"
+                      placeholder={t('profile.phonePlaceholder')}
+                      aria-label={t('profile.phone')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Fødselsdato">
+                    <FormField label={t('profile.dateOfBirth')}>
                       <Textfield
                         type="date"
                         value={profileData.dateOfBirth}
                         onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
-                        aria-label="Fødselsdato"
+                        aria-label={t('profile.dateOfBirth')}
                       />
                     </FormField>
 
-                    <FormField label="Fødselsnummer">
+                    <FormField label={t('profile.nationalId')}>
                       <Textfield
                         value={profileData.nationalId}
                         onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
-                        placeholder="11 siffer"
+                        placeholder={t('profile.nationalIdPlaceholder')}
                         maxLength={11}
-                        aria-label="Fødselsnummer"
+                        aria-label={t('profile.nationalId')}
                       />
                     </FormField>
                   </div>
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre profilinnstillinger">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('profile.saveProfile')}>
                     <SaveIcon />
-                    {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+                    {isSaving ? t('profile.saving') : t('common.saveChanges')}
                   </Button>
                 </div>
               </Stack>
@@ -442,65 +443,65 @@ export function SettingsPage() {
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                     <MapPinIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-                    Bostedsadresse
+                    {t('address.residence')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Din registrerte bostedsadresse
+                    {t('address.residenceDesc')}
                   </Paragraph>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Gateadresse">
+                  <FormField label={t('address.street')}>
                     <Textfield
                       value={profileData.residenceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, street: e.target.value }
                       }))}
-                      placeholder="Storgata 1"
-                      aria-label="Gateadresse"
+                      placeholder={t('address.streetPlaceholder')}
+                      aria-label={t('address.street')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Poststed">
+                    <FormField label={t('address.city')}>
                       <Textfield
                         value={profileData.residenceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, city: e.target.value }
                         }))}
-                        placeholder="Oslo"
-                        aria-label="Poststed"
+                        placeholder={t('address.cityPlaceholder')}
+                        aria-label={t('address.city')}
                       />
                     </FormField>
 
-                    <FormField label="Postnummer">
+                    <FormField label={t('address.postalCode')}>
                       <Textfield
                         value={profileData.residenceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
                         }))}
-                        placeholder="0010"
+                        placeholder={t('address.postalCodePlaceholder')}
                         maxLength={4}
-                        aria-label="Postnummer"
+                        aria-label={t('address.postalCode')}
                       />
                     </FormField>
                   </div>
 
-                  <FormField label="Land">
+                  <FormField label={t('address.country')}>
                     <Select
-                      value={profileData.residenceAddress.country || 'Norge'}
+                      value={profileData.residenceAddress.country || t('countries.norway')}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, country: e.target.value }
                       }))}
                     >
-                      <option value="Norge">Norge</option>
-                      <option value="Sverige">Sverige</option>
-                      <option value="Danmark">Danmark</option>
-                      <option value="Finland">Finland</option>
+                      <option value={t('countries.norway')}>{t('countries.norway')}</option>
+                      <option value={t('countries.sweden')}>{t('countries.sweden')}</option>
+                      <option value={t('countries.denmark')}>{t('countries.denmark')}</option>
+                      <option value={t('countries.finland')}>{t('countries.finland')}</option>
                     </Select>
                   </FormField>
                 </Stack>
@@ -514,10 +515,10 @@ export function SettingsPage() {
                   <div>
                     <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                       <HomeIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-                      Fakturaadresse
+                      {t('address.invoice')}
                     </Heading>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Adresse for fakturering
+                      {t('address.invoiceDesc')}
                     </Paragraph>
                   </div>
                   <Button
@@ -525,70 +526,70 @@ export function SettingsPage() {
                     data-size="sm"
                     onClick={handleCopyResidenceToInvoice} type="button"
                   >
-                    Kopier fra bostedsadresse
+                    {t('address.copyFromResidence')}
                   </Button>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Gateadresse">
+                  <FormField label={t('address.street')}>
                     <Textfield
                       value={profileData.invoiceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
                       }))}
-                      placeholder="Storgata 1"
-                      aria-label="Gateadresse"
+                      placeholder={t('address.streetPlaceholder')}
+                      aria-label={t('address.street')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Poststed">
+                    <FormField label={t('address.city')}>
                       <Textfield
                         value={profileData.invoiceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
                         }))}
-                        placeholder="Oslo"
-                        aria-label="Poststed"
+                        placeholder={t('address.cityPlaceholder')}
+                        aria-label={t('address.city')}
                       />
                     </FormField>
 
-                    <FormField label="Postnummer">
+                    <FormField label={t('address.postalCode')}>
                       <Textfield
                         value={profileData.invoiceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
                         }))}
-                        placeholder="0010"
+                        placeholder={t('address.postalCodePlaceholder')}
                         maxLength={4}
-                        aria-label="Postnummer"
+                        aria-label={t('address.postalCode')}
                       />
                     </FormField>
                   </div>
 
-                  <FormField label="Land">
+                  <FormField label={t('address.country')}>
                     <Select
-                      value={profileData.invoiceAddress.country || 'Norge'}
+                      value={profileData.invoiceAddress.country || t('countries.norway')}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
                       }))}
                     >
-                      <option value="Norge">Norge</option>
-                      <option value="Sverige">Sverige</option>
-                      <option value="Danmark">Danmark</option>
-                      <option value="Finland">Finland</option>
+                      <option value={t('countries.norway')}>{t('countries.norway')}</option>
+                      <option value={t('countries.sweden')}>{t('countries.sweden')}</option>
+                      <option value={t('countries.denmark')}>{t('countries.denmark')}</option>
+                      <option value={t('countries.finland')}>{t('countries.finland')}</option>
                     </Select>
                   </FormField>
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre adresseinnstillinger">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('address.saveAddressSettings')}>
                     <SaveIcon />
-                    {isSaving ? 'Lagrer endringer' : 'Lagre adresser'}
+                    {isSaving ? t('address.savingChanges') : t('address.saveAddresses')}
                   </Button>
                 </div>
               </Stack>
@@ -605,16 +606,16 @@ export function SettingsPage() {
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                     <ShieldIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-                    Dataeksport
+                    {t('privacy.dataExport')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Last ned en kopi av alle dine personopplysninger
+                    {t('privacy.dataExportDesc')}
                   </Paragraph>
                 </div>
 
                 <Alert>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+                    {t('privacy.gdprInfo')}
                   </Paragraph>
                 </Alert>
 
@@ -623,10 +624,10 @@ export function SettingsPage() {
                   onClick={handleExportData}
                   disabled={isExporting}
                   type="button"
-                  aria-label="Eksporter mine data"
+                  aria-label={t('privacy.exportMyData')}
                 >
                   <DownloadIcon />
-                  {isExporting ? 'Eksporterer...' : 'Last ned mine data'}
+                  {isExporting ? t('privacy.exporting') : t('privacy.exportData')}
                 </Button>
               </Stack>
             </Card>
@@ -636,10 +637,10 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Samtykker
+                    {t('privacy.consents')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Administrer hvordan vi bruker dine data
+                    {t('privacy.consentsDesc')}
                   </Paragraph>
                 </div>
 
@@ -654,16 +655,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Markedsføring
+                        {t('privacy.marketing')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Motta tips, tilbud og nyheter på e-post
+                        {t('privacy.marketingDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.marketing}
                       onChange={(e) => handleUpdateConsents('marketing', e.target.checked)}
-                      aria-label="Markedsføring"
+                      aria-label={t('privacy.marketing')}
                     />
                   </div>
 
@@ -677,16 +678,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Analyse
+                        {t('privacy.analytics')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Hjelp oss forbedre tjenesten med anonymisert bruksdata
+                        {t('privacy.analyticsDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.analytics}
                       onChange={(e) => handleUpdateConsents('analytics', e.target.checked)}
-                      aria-label="Analyse"
+                      aria-label={t('privacy.analytics')}
                     />
                   </div>
 
@@ -700,16 +701,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Deling med tredjeparter
+                        {t('privacy.thirdPartySharing')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Tillat deling av data med samarbeidspartnere
+                        {t('privacy.thirdPartySharingDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.thirdPartySharing}
                       onChange={(e) => handleUpdateConsents('thirdPartySharing', e.target.checked)}
-                      aria-label="Deling med tredjeparter"
+                      aria-label={t('privacy.thirdPartySharing')}
                     />
                   </div>
                 </Stack>
@@ -721,20 +722,20 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text-default)' }}>
-                    Slett konto
+                    {t('privacy.deleteAccount')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Permanent sletting av din konto og alle tilknyttede data
+                    {t('privacy.deleteAccountDesc')}
                   </Paragraph>
                 </div>
 
                 <Alert>
                   <Stack spacing={2}>
                     <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      Dette kan ikke angres
+                      {t('privacy.cannotUndo')}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0 }}>
-                      Ved sletting av kontoen vil alle dine personopplysninger, bookinger, meldinger og aktivitetshistorikk bli permanent fjernet. Denne handlingen kan ikke reverseres.
+                      {t('privacy.deleteWarning')}
                     </Paragraph>
                   </Stack>
                 </Alert>
@@ -749,7 +750,7 @@ export function SettingsPage() {
                   }} type="button"
                 >
                   <TrashIcon />
-                  Slett min konto
+                  {t('privacy.deleteMyAccount')}
                 </Button>
               </Stack>
             </Card>
@@ -763,22 +764,22 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Varslingsinnstillinger
+                    {t('settings.notificationSettings')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Administrer hvordan og når du mottar varsler
+                    {t('settings.notificationSettingsDesc')}
                   </Paragraph>
                 </div>
 
                 <Alert>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.
+                    {t('settings.notificationInfo')}
                   </Paragraph>
                 </Alert>
 
                 <Link to="/settings/notifications">
                   <Button variant="secondary" type="button">
-                    Åpne varslingsinnstillinger
+                    {t('settings.openNotificationSettings')}
                   </Button>
                 </Link>
               </Stack>
@@ -794,18 +795,18 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Språk
+                    {t('preferences.language')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Velg språk for brukergrensesnittet
+                    {t('preferences.languageDesc')}
                   </Paragraph>
                 </div>
 
-                <FormField label="Foretrukket språk">
+                <FormField label={t('preferences.preferredLanguage')}>
                   <Select value={locale} onChange={(e) => setLocale(e.target.value as 'nb' | 'en')}>
-                    <option value="nb">Norsk (Bokmål)</option>
-                    <option value="nn">Norsk (Nynorsk)</option>
-                    <option value="en">English</option>
+                    <option value="nb">{t('languages.nb')}</option>
+                    <option value="nn">{t('languages.nn')}</option>
+                    <option value="en">{t('languages.en')}</option>
                   </Select>
                 </FormField>
               </Stack>
@@ -816,10 +817,10 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Utseende
+                    {t('preferences.appearance')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Tilpass hvordan systemet ser ut
+                    {t('preferences.appearanceDesc')}
                   </Paragraph>
                 </div>
 
@@ -829,7 +830,7 @@ export function SettingsPage() {
                   borderRadius: 'var(--ds-border-radius-md)'
                 }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Tema og utseendeinnstillinger kommer snart
+                    {t('preferences.themeSoon')}
                   </Paragraph>
                 </div>
               </Stack>
@@ -840,10 +841,10 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Økt og sikkerhet
+                    {t('preferences.sessionSecurity')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Administrer din pålogging og sikkerhet
+                    {t('preferences.sessionSecurityDesc')}
                   </Paragraph>
                 </div>
 
@@ -857,14 +858,14 @@ export function SettingsPage() {
                 }}>
                   <div>
                     <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      Logg ut
+                      {t('preferences.logout')}
                     </Paragraph>
                     <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Logg ut av din konto på denne enheten
+                      {t('preferences.logoutDesc')}
                     </Paragraph>
                   </div>
                   <Button variant="secondary" data-size="sm" onClick={logout} type="button">
-                    Logg ut
+                    {t('preferences.logout')}
                   </Button>
                 </div>
               </Stack>

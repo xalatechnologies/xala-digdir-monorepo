@@ -141,7 +141,7 @@ export class BookingController {
   }
 
   /**
-   * GET /api/bookings/my - Get user's bookings with listing details
+   * GET /api/bookings/my - Get user's bookings with rental object details
    */
   @Get('/my')
   async getMyBookings(request: TenantRequest, reply: FastifyReply) {

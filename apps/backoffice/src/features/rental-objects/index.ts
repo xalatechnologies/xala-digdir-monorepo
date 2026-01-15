@@ -12,6 +12,7 @@ export * from './types';
 export * from './hooks';
 
 // Components
+export * from './components';
 export * from './components/wizard';
 
 // Utils

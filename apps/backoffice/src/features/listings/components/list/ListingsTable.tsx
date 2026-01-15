@@ -21,6 +21,8 @@ interface ListingsTableProps {
   sortBy?: ListingQueryFilters['sortBy'];
   sortOrder?: ListingQueryFilters['sortOrder'];
   onRefresh?: () => void;
+  /** Base path for navigation (defaults to '/listings') */
+  basePath?: string;
 }
 
 /**
@@ -62,12 +64,13 @@ export function ListingsTable({
   sortBy,
   sortOrder,
   onRefresh,
+  basePath = '/listings',
 }: ListingsTableProps) {
   const navigate = useNavigate();
   const allSelected = listings.length > 0 && selectedIds.length === listings.length;
 
   const handleRowClick = (slug: string) => {
-    navigate(`/listings/${slug}`);
+    navigate(`${basePath}/${slug}`);
   };
 
   const getSortIndicator = (field: ListingQueryFilters['sortBy']) => {
@@ -239,6 +242,7 @@ export function ListingsTable({
                   listingName={listing.name}
                   status={listing.status as ListingStatus}
                   onActionComplete={onRefresh}
+                  basePath={basePath}
                 />
               </Table.Cell>
             </Table.Row>
