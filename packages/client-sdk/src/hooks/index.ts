@@ -16,6 +16,19 @@ export {
   useRefreshToken
 } from './use-auth';
 
+// Flow Context hooks (Session-Safe Return-to-Flow)
+export {
+  useFlowContext,
+  useHasFlowContext,
+  useFlowContextReturnTo,
+  useListingFlowContext,
+  type SaveFlowContextOptions,
+  type SaveFlowContextResult,
+  type RestoreFlowContextOptions,
+  type RestoreFlowContextResult,
+  type UseFlowContextReturn,
+} from './use-flow-context';
+
 // Listing hooks
 export {
   useListings,
