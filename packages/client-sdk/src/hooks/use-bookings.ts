@@ -5,19 +5,59 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { 
-  bookingService, 
-  calendarService, 
-  allocationService, 
-  availabilityService 
+import {
+  bookingService,
+  calendarService,
+  allocationService,
+  availabilityService
 } from '../services/booking.service';
-import type { 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import { listingService } from '../services/listing.service';
+import type {
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
-  CreateAllocationDTO
+  CreateAllocationDTO,
+  BookingSelectionDTO,
+  RecurringPreviewProjectionDTO,
+  CreateRecurringBookingDTO
 } from '../types/booking';
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Generate a stable hash from a booking selection for cache key stability.
+ * Prevents unnecessary refetches when selection object reference changes but content is same.
+ */
+function hashSelection(selection: BookingSelectionDTO): string {
+  // Create a deterministic string from the selection properties
+  const parts = [
+    selection.listingId,
+    selection.mode,
+    selection.startTime,
+    selection.endTime,
+    selection.frequency ?? '',
+    selection.weekdays?.sort().join(',') ?? '',
+    selection.endCondition?.type ?? '',
+    selection.endCondition?.occurrences?.toString() ?? '',
+    selection.endCondition?.untilDate ?? '',
+    selection.durationMinutes?.toString() ?? '',
+    selection.userId ?? '',
+    selection.organizationId ?? '',
+  ];
+
+  // Simple string hash for cache key differentiation
+  const str = parts.join('|');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
 
 // ============================================================================
 // Booking Hooks
@@ -470,6 +510,33 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
     queryKey: queryKeys.calendar.slots(params),
     queryFn: () => availabilityService.getSlots(params),
     enabled: !!params.listingId && !!params.date,
+  });
+}
+
+/**
+ * Get listing calendar configuration including booking modes.
+ * Returns the ListingCalendarConfigProjectionDTO which contains:
+ * - Available booking modes (SINGLE_SLOT, IN_GAME, RECURRING) with constraints
+ * - Default mode and calendar granularity
+ * - Operating hours and timezone
+ * - Slot duration and selection limits
+ * - User permissions and available actions
+ *
+ * This is a screen-ready projection - UI should use values directly without transformation.
+ *
+ * @param listingId - ID of the listing to get calendar config for
+ * @param options - Query options including enabled flag
+ * @returns Query result with ListingCalendarConfigProjectionDTO
+ */
+export function useBookingModeConfig(
+  listingId: string,
+  options?: { enabled?: boolean }
+) {
+  return useQuery({
+    queryKey: queryKeys.listings.calendarConfig(listingId),
+    queryFn: () => listingService.getCalendarConfig(listingId),
+    enabled: !!listingId && (options?.enabled ?? true),
+    staleTime: 60_000, // 60s - config changes infrequently
   });
 }
 
