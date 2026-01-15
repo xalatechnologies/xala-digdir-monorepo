@@ -13,6 +13,7 @@ import {
   integer,
   decimal,
   index,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 // ============================================================================
@@ -292,6 +293,23 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// Likes (User Favorites)
+// ============================================================================
+
+export const likes = pgTable('likes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('likes_tenant_idx').on(table.tenantId),
+  userIdx: index('likes_user_idx').on(table.userId),
+  listingIdx: index('likes_listing_idx').on(table.listingId),
+  uniqueUserListingIdx: uniqueIndex('likes_unique_user_listing_idx').on(table.tenantId, table.userId, table.listingId),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -323,4 +341,6 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+export type Like = typeof likes.$inferSelect;
+export type NewLike = typeof likes.$inferInsert;
 
