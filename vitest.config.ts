@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     include: [
       'packages/ds/src/**/*.{test,spec}.{ts,tsx}',
+      'packages/i18n/src/**/*.{test,spec}.{ts,tsx}',
       'apps/web/src/**/*.{test,spec}.{ts,tsx}',
       'apps/backoffice/src/**/*.{test,spec}.{ts,tsx}',
     ],

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Heading, Paragraph, Card, Spinner } from '@xala/ds';
+import { useNavigate } from 'react-router-dom';
+import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@xala/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import type { Organization } from '@digilist/client-sdk/types';
 
@@ -72,8 +73,11 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToPersonal,
     switchToOrganization,
     markAccountAsSelected,
+    rememberChoice,
+    setRememberChoice,
   } = useAccountContext();
 
+  const navigate = useNavigate();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
@@ -95,6 +99,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToPersonal();
     markAccountAsSelected();
     dialogRef.current?.close();
+    // Navigate to personal dashboard
+    navigate('/');
   };
 
   const handleOrganizationSelect = () => {
@@ -112,6 +118,8 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     switchToOrganization(selectedOrgId);
     markAccountAsSelected();
     dialogRef.current?.close();
+    // Navigate to organization dashboard
+    navigate('/org');
   };
 
   const handleBack = () => {
@@ -119,7 +127,9 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     setSelectedOrgId(null);
   };
 
-  // Reset state when modal closes
+  // Reset local UI state when modal closes
+  // NOTE: Do NOT reset rememberChoice here - if user selected "remember my choice",
+  // it should persist so the modal is skipped on next login
   useEffect(() => {
     if (!open) {
       setStep('account-type');
@@ -387,28 +397,53 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
       <div
         style={{
           display: 'flex',
-          justifyContent: step === 'organization' ? 'space-between' : 'flex-end',
+          flexDirection: 'column',
           gap: 'var(--ds-spacing-3)',
           padding: 'var(--ds-spacing-4) var(--ds-spacing-6)',
           borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
           backgroundColor: 'var(--ds-color-neutral-background-subtle)',
         }}
       >
-        {step === 'organization' && (
-          <Button type="button" variant="secondary" onClick={handleBack}>
-            Tilbake
-          </Button>
-        )}
-        {step === 'organization' && (
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleOrganizationConfirm}
-            disabled={!selectedOrgId}
-          >
-            Fortsett
-          </Button>
-        )}
+        {/* Remember choice checkbox */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-2)',
+          }}
+        >
+          <Checkbox
+            id="remember-choice"
+            aria-label="Husk mitt valg"
+            checked={rememberChoice}
+            onChange={(e) => setRememberChoice(e.target.checked)}
+          />
+        </div>
+
+        {/* Action buttons */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: step === 'organization' ? 'space-between' : 'flex-end',
+            gap: 'var(--ds-spacing-3)',
+          }}
+        >
+          {step === 'organization' && (
+            <Button type="button" variant="secondary" onClick={handleBack}>
+              Tilbake
+            </Button>
+          )}
+          {step === 'organization' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleOrganizationConfirm}
+              disabled={!selectedOrgId}
+            >
+              Fortsett
+            </Button>
+          )}
+        </div>
       </div>
     </dialog>
   );

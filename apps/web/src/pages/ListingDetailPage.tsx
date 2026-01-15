@@ -19,9 +19,7 @@ import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
 import {
   useListing,
   useListingBySlug,
-  transformListing as sdkTransformListing,
   type Listing as ApiListing,
-  type TransformedListing,
 } from '@digilist/client-sdk';
 import {
   ListingDetailsLayout,
@@ -41,136 +39,134 @@ import {
 } from '../features/listing-details';
 import { ReviewList } from '../features/reviews/components/ReviewList';
 import { ReviewForm } from '../features/reviews/components/ReviewForm';
+import { useAuth } from '../hooks/useAuth';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;
 
 /**
- * Adapt SDK TransformedListing to feature Listing type
- * Uses the SDK's transformListing as base and maps to feature-specific types
+ * Map API DTO directly to feature Listing type
+ * The API now returns pre-formatted DTOs via toDetailsProjection,
+ * so we just need to map field names - no complex transformation needed.
  */
 function transformApiToListing(api: ApiListing): Listing {
-  // Use SDK transformer as base
-  const transformed = sdkTransformListing(api);
-  const meta = api.metadata || {};
-  const metaAny = meta as Record<string, unknown>;
+  // API DTO is already well-structured, just map to feature types
+  const dto = api as any; // API returns flat DTO with all fields
 
-  // Map listing type
+  // Map listing type - RESOURCE and SPACE are venues so map to FACILITY
   const typeMap: Record<string, ListingType> = {
-    EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', SPACE: 'FACILITY',
+    EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY', 
+    SPACE: 'FACILITY', RESOURCE: 'FACILITY',
   };
-  const listingType: ListingType = typeMap[api.type] || 'OTHER';
+  const listingType: ListingType = typeMap[dto.type] || 'OTHER';
 
-  // Map amenities to feature type
-  const amenities: Amenity[] = transformed.amenities.map((a) => ({
-    id: a.id,
-    name: a.name,
-    icon: a.icon,
-    category: a.category,
-    description: a.name,
+  // Map images directly from DTO (already has correct structure)
+  const images = (dto.images || []).map((img: any, index: number) => ({
+    id: img.id || `img-${index}`,
+    url: img.url || img.src || '',
+    alt: img.alt || dto.name || '',
+    isPrimary: img.isPrimary ?? index === 0,
+    order: img.order ?? index,
   }));
 
-  // Map facilities to feature type
-  const includedFacilities: IncludedFacility[] = transformed.facilities.map((f) => ({
-    id: f.id,
-    name: f.name,
-    quantity: f.quantity,
-    description: f.description,
+  // Map amenities from DTO
+  const amenities: Amenity[] = (dto.amenities || []).map((a: any, i: number) => ({
+    id: typeof a === 'string' ? a : a.id || `amenity-${i}`,
+    name: typeof a === 'string' ? a : a.name || a,
+    icon: typeof a === 'object' ? a.icon : undefined,
+    category: typeof a === 'object' ? a.category : 'general',
+    description: typeof a === 'string' ? a : a.name || a,
   }));
 
-  // Map rules to feature type
-  const rules: Rule[] = transformed.rules.map((r) => ({
-    id: r.id,
-    title: r.title,
-    content: r.content,
+  // Map FAQ from DTO
+  const faq: FAQItem[] = (dto.faq || []).map((f: any, i: number) => ({
+    id: f.id || `faq-${i}`,
+    question: f.question || '',
+    answer: f.answer || '',
+  }));
+
+  // Map rules from DTO
+  const rules: Rule[] = (dto.rules || []).map((r: any, i: number) => ({
+    id: r.id || `rule-${i}`,
+    title: r.title || '',
+    content: r.content || r.description || '',
     category: 'general' as const,
   }));
 
-  // Map FAQ to feature type
-  const faq: FAQItem[] = transformed.faq.map((f) => ({
-    id: f.id,
-    question: f.question,
-    answer: f.answer,
-  }));
-
-  // Map opening hours to feature type
+  // Map opening hours from DTO - API returns flat array, not object with regular property
   const openingHours: OpeningHours = {
-    regular: transformed.openingHours.regular.map((day) => ({
-      day: day.day,
-      dayIndex: day.dayIndex,
-      open: day.open,
-      close: day.close,
-      isClosed: day.isClosed,
+    regular: (Array.isArray(dto.openingHours) ? dto.openingHours : []).map((day: any) => ({
+      day: day.day || '',
+      dayIndex: day.dayIndex ?? 0,
+      open: day.open || day.openTime || '',
+      close: day.close || day.closeTime || '',
+      isClosed: day.isClosed ?? false,
     })),
   };
 
-  // Build feature metadata
-  const metadata: ListingMetadata = {
-    description: transformed.description || '',
-    amenities,
-    includedFacilities,
-    rules,
-    faq,
-    highlights: transformed.highlights,
+  // Build contact from flat DTO fields
+  const contact = (dto.contactName || dto.contactEmail || dto.contactPhone) ? {
+    ...(dto.contactName ? { name: dto.contactName } : {}),
+    ...(dto.contactEmail ? { email: dto.contactEmail } : {}),
+    ...(dto.contactPhone ? { phone: dto.contactPhone } : {}),
+  } : undefined;
+
+  // Build address from flat DTO fields
+  const address = {
+    formatted: dto.locationFormatted || '',
+    street: dto.addressStreet || '',
+    postalCode: dto.addressPostalCode || '',
+    city: dto.addressCity || dto.city || '',
+    ...(dto.latitude && dto.longitude ? {
+      coordinates: { latitude: dto.latitude, longitude: dto.longitude }
+    } : {}),
   };
 
-  // Build feature key facts
+  // Build metadata
+  const metadata: ListingMetadata = {
+    description: dto.description || '',
+    amenities,
+    includedFacilities: (dto.includedEquipment || []).map((f: any, i: number) => ({
+      id: f.id || `facility-${i}`,
+      name: f.name || f,
+      quantity: f.quantity,
+      description: f.description,
+    })),
+    rules,
+    faq,
+    highlights: dto.highlights || [],
+  };
+
+  // Build key facts
   const keyFacts: KeyFacts = {
-    ...(transformed.keyFacts.capacity ? { capacity: transformed.keyFacts.capacity } : {}),
+    ...(dto.capacity ? { capacity: dto.capacity } : {}),
     bookingMode: 'SLOTS' as BookingMode,
   };
 
-  // Build contact if exists
-  const contact = transformed.contact ? {
-    ...(transformed.contact.name ? { name: transformed.contact.name } : {}),
-    ...(transformed.contact.email ? { email: transformed.contact.email } : {}),
-    ...(transformed.contact.phone ? { phone: transformed.contact.phone } : {}),
-  } : undefined;
-
   return {
-    id: transformed.id,
-    tenantId: TENANT_ID,
+    id: dto.id,
+    tenantId: dto.tenantId || TENANT_ID,
     type: listingType,
-    name: transformed.name,
-    category: (metaAny.category as string) || api.type,
+    name: dto.name || '',
+    category: dto.typeLabel || dto.type,
     status: 'published',
-    images: transformed.images.map((img) => ({
-      id: img.id,
-      url: img.url,
-      alt: img.alt,
-      isPrimary: img.isPrimary,
-      order: img.order,
-    })),
-    address: {
-      formatted: transformed.address.formatted,
-      street: transformed.address.street,
-      postalCode: transformed.address.postalCode,
-      city: transformed.address.city,
-      ...(transformed.address.coordinates ? { coordinates: transformed.address.coordinates } : {}),
-    },
+    images,
+    address,
     ...(contact && Object.keys(contact).length > 0 ? { contact } : {}),
     openingHours,
     keyFacts,
     metadata,
-    // Activity data from API (if available)
-    ...((metaAny.events as ListingEvent[])?.length && {
-      activityData: {
-        type: 'events' as const,
-        events: metaAny.events as ListingEvent[],
-        totalCount: (metaAny.events as ListingEvent[]).length,
-      },
-    }),
     bookingConfig: { enabled: true, mode: 'SLOTS', approval: 'NONE', paymentRequired: false },
-    ...(transformed.pricing ? {
+    ...(dto.priceAmount ? {
       pricing: {
-        basePrice: transformed.pricing.basePrice,
-        currency: transformed.pricing.currency,
-        unit: transformed.pricing.unit,
-        displayPrice: transformed.pricing.displayPrice,
+        basePrice: dto.priceAmount,
+        currency: dto.priceCurrency || 'NOK',
+        unit: dto.priceUnit || 'hour',
+        displayPrice: dto.priceDisplay || `${dto.priceAmount} ${dto.priceCurrency}`,
       },
     } : {}),
-    createdAt: transformed.createdAt,
-    updatedAt: transformed.updatedAt,
+    createdAt: dto.createdAt || new Date().toISOString(),
+    updatedAt: dto.updatedAt || new Date().toISOString(),
   };
 }
 
@@ -189,8 +185,7 @@ export function ListingDetailPage(): React.ReactElement {
   
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);
-  // TODO: Replace with real auth state from SDK/provider
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuth();
   const [showReviewForm, setShowReviewForm] = React.useState(false);
   const hasCompletedBooking = false;
 
@@ -333,7 +328,7 @@ export function ListingDetailPage(): React.ReactElement {
             <div>
               <Heading
                 level={2}
-                size="lg"
+                data-size="lg"
                 style={{
                   marginBottom: 'var(--ds-spacing-2)',
                   color: 'var(--ds-color-neutral-text-default)',
@@ -342,7 +337,7 @@ export function ListingDetailPage(): React.ReactElement {
                 Anmeldelser
               </Heading>
               <Paragraph
-                size="md"
+                data-size="md"
                 style={{
                   color: 'var(--ds-color-neutral-text-subtle)',
                   margin: 0,

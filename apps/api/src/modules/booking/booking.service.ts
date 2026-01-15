@@ -4,9 +4,10 @@
  */
 import { Injectable, Inject } from '../../core/decorators';
 import { BookingRepository } from './booking.repository';
+import { ListingRepository } from '../listing/listing.repository';
 import { validate } from '../../core/validation/zod-pipe';
 import { ForbiddenError } from '../../core/errors/problem-details';
-import { getAuditService } from '../../core/audit/audit.service';
+import { getAuditService, broadcastBookingEvent } from '../../core/audit/audit.service';
 import {
   CreateBookingSchema,
   UpdateBookingSchema,
@@ -35,6 +36,7 @@ import type { PaginatedResult } from '../../database/base.repository';
 export class BookingService {
   constructor(
     @Inject('BookingRepository') private readonly repository: BookingRepository,
+    @Inject('ListingRepository') private readonly listingRepository: ListingRepository,
     @Inject('Adapters') private readonly adapters: any
   ) {}
 
@@ -44,15 +46,41 @@ export class BookingService {
   async create(tenantId: string, userId: string, data: CreateBookingDTO): Promise<Booking> {
     const validated = validate(CreateBookingSchema, data);
 
-    // Check availability (simplified - should check against existing bookings)
+    // Fetch listing to get buffer time configuration
+    const listing = await this.listingRepository.findById(validated.listingId);
+    if (!listing) {
+      throw new ForbiddenError('Listing not found');
+    }
+
+    // Extract buffer time from listing metadata (default to 0 if not set)
+    const bufferTimeMinutes = (listing.metadata as any)?.bufferTimeMinutes || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
+
+    // Check availability with buffer time
     const conflicts = await this.repository.findByListingAndDateRange(
       validated.listingId,
       validated.startTime,
       validated.endTime
     );
 
-    if (conflicts.length > 0) {
-      throw new ForbiddenError('The requested time slot is not available');
+    // Check if any existing booking conflicts with the requested time slot (including buffer time)
+    const requestedStart = new Date(validated.startTime).getTime();
+    const requestedEnd = new Date(validated.endTime).getTime();
+
+    const hasConflict = conflicts.some((existingBooking) => {
+      // Apply buffer time before and after existing bookings
+      const existingStart = new Date(existingBooking.startTime).getTime() - bufferTimeMs;
+      const existingEnd = new Date(existingBooking.endTime).getTime() + bufferTimeMs;
+
+      // Check for overlap
+      return requestedStart < existingEnd && requestedEnd > existingStart;
+    });
+
+    if (hasConflict) {
+      const bufferMsg = bufferTimeMinutes > 0
+        ? ` (including ${bufferTimeMinutes} minute buffer time)`
+        : '';
+      throw new ForbiddenError(`The requested time slot is not available${bufferMsg}`);
     }
 
     // Anonymous user placeholder UUID (database requires userId)
@@ -86,6 +114,18 @@ export class BookingService {
       metadata: { listingId: booking.listingId, startTime: booking.startTime, endTime: booking.endTime },
     });
 
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'created',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -112,61 +152,110 @@ export class BookingService {
   }
 
   /**
-   * Confirm booking
+   * Confirm booking with optimistic locking
    */
-  async confirm(id: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status: 'confirmed' });
-    this.adapters?.log?.info('Booking confirmed', { id });
-    
+  async confirm(id: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status: 'confirmed' })
+      : await this.repository.update(id, { status: 'confirmed' });
+
+    this.adapters?.log?.info('Booking confirmed', { id, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'confirm',
       resource: 'booking',
       resourceId: id,
-      metadata: { previousStatus: 'pending', newStatus: 'confirmed' },
+      metadata: { previousStatus: 'pending', newStatus: 'confirmed', version: booking.version },
     });
-    
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'confirmed',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+    });
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Cancel booking
+   * Cancel booking with optimistic locking
    */
-  async cancel(id: string, data: CancelBookingDTO): Promise<Booking> {
+  async cancel(id: string, data: CancelBookingDTO, version?: number): Promise<Booking> {
     const validated = validate(CancelBookingSchema, data);
-    const booking = await this.repository.update(id, {
-      status: 'cancelled',
+
+    const updateData = {
+      status: 'cancelled' as const,
       notes: validated.reason,
-    });
-    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason });
-    
+    };
+
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, updateData)
+      : await this.repository.update(id, updateData);
+
+    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'cancel',
       resource: 'booking',
       resourceId: id,
       severity: 'warning',
+      metadata: { reason: validated.reason, version: booking.version },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'cancelled',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
       metadata: { reason: validated.reason },
     });
-    
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Complete booking
+   * Complete booking with optimistic locking
    */
-  async complete(id: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status: 'completed' });
-    this.adapters?.log?.info('Booking completed', { id });
-    
+  async complete(id: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status: 'completed' })
+      : await this.repository.update(id, { status: 'completed' });
+
+    this.adapters?.log?.info('Booking completed', { id, version: booking.version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'complete',
       resource: 'booking',
       resourceId: id,
-      metadata: { newStatus: 'completed' },
+      metadata: { newStatus: 'completed', version: booking.version },
     });
-    
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'completed',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+    });
+
     return booking as unknown as Booking;
   }
 
@@ -186,30 +275,76 @@ export class BookingService {
   }
 
   /**
-   * Update booking
+   * Update booking with optimistic locking
    */
   async update(id: string, data: UpdateBookingDTO): Promise<Booking> {
     const validated = validate(UpdateBookingSchema, data);
-    const booking = await this.repository.update(id, validated);
-    this.adapters?.log?.info('Booking updated', { id });
-    
+
+    // Extract version for optimistic locking
+    const { version, ...updateData } = validated;
+
+    // Use optimistic locking if version is provided
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, updateData)
+      : await this.repository.update(id, updateData);
+
+    this.adapters?.log?.info('Booking updated', { id, version });
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'update',
       resource: 'booking',
       resourceId: id,
-      metadata: { changes: Object.keys(validated) },
+      metadata: { changes: Object.keys(updateData), version: booking.version },
     });
-    
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'updated',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { changes: Object.keys(updateData) },
+    });
+
     return booking as unknown as Booking;
   }
 
   /**
-   * Update booking status
+   * Update booking status with optimistic locking
    */
-  async updateStatus(id: string, status: string): Promise<Booking> {
-    const booking = await this.repository.update(id, { status });
-    this.adapters?.log?.info('Booking status updated', { id, status });
+  async updateStatus(id: string, status: string, version?: number): Promise<Booking> {
+    const booking = version !== undefined
+      ? await this.repository.updateWithVersion(id, version, { status })
+      : await this.repository.update(id, { status });
+
+    this.adapters?.log?.info('Booking status updated', { id, status, version: booking.version });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      action: 'update_status',
+      resource: 'booking',
+      resourceId: id,
+      metadata: { status, version: booking.version },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'updated',
+      bookingId: booking.id,
+      listingId: booking.listingId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { status },
+    });
+
     return booking as unknown as Booking;
   }
 

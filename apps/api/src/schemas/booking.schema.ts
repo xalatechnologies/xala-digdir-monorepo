@@ -25,6 +25,7 @@ export const BookingSchema = z.object({
   currency: z.string().length(3).default('NOK'),
   notes: z.string().optional().nullable(),
   metadata: z.record(z.unknown()).optional().default({}),
+  version: z.number().int().positive().default(1),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 }).refine((data) => data.endTime > data.startTime, {
@@ -56,6 +57,7 @@ export type CreateBookingDTO = z.infer<typeof CreateBookingSchema>;
  * Update Booking DTO
  */
 export const UpdateBookingSchema = z.object({
+  version: z.number().int().positive().optional(),
   startTime: z.coerce.date().optional(),
   endTime: z.coerce.date().optional(),
   notes: z.string().max(1000).optional().nullable(),

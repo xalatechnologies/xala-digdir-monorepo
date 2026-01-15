@@ -3,6 +3,11 @@ import { I18nContext } from './context';
 import type { I18nContextValue, TranslationFunction, SupportedLocale } from './types';
 
 /**
+ * All supported locales in the application
+ */
+export const supportedLocales: readonly SupportedLocale[] = ['nb', 'en'] as const;
+
+/**
  * Hook to access the full i18n context
  */
 export function useI18n(): I18nContextValue {
@@ -22,9 +27,13 @@ export function useT(): TranslationFunction {
 }
 
 /**
- * Hook to access locale state
+ * Hook to access locale state and available locales
  */
-export function useLocale(): { locale: SupportedLocale; setLocale: (locale: SupportedLocale) => void } {
+export function useLocale(): {
+  locale: SupportedLocale;
+  setLocale: (locale: SupportedLocale) => void;
+  supportedLocales: readonly SupportedLocale[];
+} {
   const { locale, setLocale } = useI18n();
-  return { locale, setLocale };
+  return { locale, setLocale, supportedLocales };
 }

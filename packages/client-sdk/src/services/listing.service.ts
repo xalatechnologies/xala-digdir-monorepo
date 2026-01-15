@@ -19,6 +19,7 @@ import type {
   PublicListingParams,
   ListingCalendarConfigProjectionDTO
 } from '../types/listing';
+import type { ListingCardProjectionDTO, ListingDetailsProjectionDTO } from '../types/projection-dtos';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
 
@@ -169,18 +170,18 @@ export class PublicListingService extends BaseService {
   }
 
   /**
-   * Get public listings
+   * Get public listings (returns screen-ready projection DTOs)
    */
-  async getListings(params?: PublicListingParams): Promise<PaginatedResponse<Listing>> {
+  async getListings(params?: PublicListingParams): Promise<PaginatedResponse<ListingCardProjectionDTO>> {
     return this.client.get(this.buildPath('/listings'), { 
       params: params as Record<string, string | number | boolean> 
     });
   }
 
   /**
-   * Get public listing by ID
+   * Get public listing by ID (returns screen-ready projection DTO)
    */
-  async getListing(id: string): Promise<SingleResponse<Listing>> {
+  async getListing(id: string): Promise<SingleResponse<ListingDetailsProjectionDTO>> {
     return this.client.get(this.buildPath(`/listings/${id}`));
   }
 

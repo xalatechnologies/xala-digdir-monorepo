@@ -284,6 +284,92 @@ export function transformOpeningHours(
   return { regular };
 }
 
+// =============================================================================
+// Norwegian Amenity Translations
+// =============================================================================
+
+const AMENITY_TRANSLATIONS_NO: Record<string, string> = {
+  // Connectivity
+  wifi: 'Wifi',
+  internet: 'Internett',
+  
+  // Parking
+  parking: 'Parkering',
+  free_parking: 'Gratis parkering',
+  paid_parking: 'Betalt parkering',
+  
+  // Facilities
+  changing_rooms: 'Garderobe',
+  changing_room: 'Garderobe',
+  shower: 'Dusj',
+  showers: 'Dusj',
+  toilet: 'Toalett',
+  toilets: 'Toaletter',
+  wc: 'WC',
+  kitchen: 'Kjøkken',
+  kitchenette: 'Tekjøkken',
+  
+  // Comfort
+  air_conditioning: 'Klimaanlegg',
+  ac: 'Klimaanlegg',
+  heating: 'Oppvarming',
+  ventilation: 'Ventilasjon',
+  
+  // Equipment
+  projector: 'Projektor',
+  whiteboard: 'Tavle',
+  screen: 'Skjerm',
+  tv: 'TV',
+  sound_system: 'Lydanlegg',
+  audio: 'Lydanlegg',
+  microphone: 'Mikrofon',
+  mic: 'Mikrofon',
+  speakers: 'Høyttalere',
+  video_conferencing: 'Videokonferanse',
+  
+  // Accessibility
+  wheelchair_accessible: 'Rullestoltilgjengelig',
+  wheelchair: 'Rullestoltilgjengelig',
+  elevator: 'Heis',
+  lift: 'Heis',
+  accessible: 'Tilgjengelig',
+  
+  // Sports
+  floodlights: 'Flomlys',
+  lighting: 'Belysning',
+  scoreboard: 'Resultattavle',
+  goals: 'Mål',
+  nets: 'Nett',
+  
+  // Other
+  storage: 'Oppbevaring',
+  lockers: 'Skap',
+  coffee: 'Kaffemaskin',
+  coffee_machine: 'Kaffemaskin',
+  water: 'Vannkjøler',
+  water_cooler: 'Vannkjøler',
+  catering: 'Servering',
+  reception: 'Resepsjon',
+  security: 'Sikkerhet',
+  cleaning: 'Renhold',
+  cleaning_included: 'Renhold inkludert',
+  first_aid: 'Førstehjelp',
+};
+
+/**
+ * Translate amenity key to Norwegian display name
+ */
+function translateAmenity(name: string): string {
+  // If it looks like a key (lowercase, underscores, no spaces), try to translate
+  if (/^[a-z_]+$/.test(name)) {
+    return AMENITY_TRANSLATIONS_NO[name] || 
+      // Fallback: capitalize first letter and replace underscores with spaces
+      name.charAt(0).toUpperCase() + name.slice(1).replace(/_/g, ' ');
+  }
+  // Already a display name, return as-is
+  return name;
+}
+
 /**
  * Transform amenities from metadata
  */
@@ -295,7 +381,7 @@ export function transformAmenities(metadata?: ListingMetadata): TransformedAmeni
 
   return items.map((name, index) => ({
     id: `amenity-${index}`,
-    name,
+    name: translateAmenity(name),
     category: 'general',
   }));
 }

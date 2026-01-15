@@ -306,7 +306,7 @@ export function RulesTab({
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  {config.label}
+                  {rule.content || config.label}
                 </Paragraph>
               </div>
             </div>

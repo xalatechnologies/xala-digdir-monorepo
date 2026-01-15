@@ -9,9 +9,17 @@
  * - BLOCKED: Slot is blocked by admin/maintenance
  * - BLACKOUT: Slot falls on holiday/blackout period
  * - CLOSED: Listing is closed during this time
+ * Includes matrix projection endpoint for calendar integration
  */
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
+import { validate } from '../../core/validation/zod-pipe';
+import { BadRequestError } from '../../core/errors/problem-details';
+import {
+  AvailabilityMatrixQuerySchema,
+  type ListingAvailabilityMatrixProjection,
+} from '../../schemas/calendar.schema';
+import { CalendarService } from '../calendar/calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
 import { allocations, bookings, listings } from '../../database/schema/index';
@@ -123,6 +131,38 @@ function getReasonKey(status: SlotStatus): string {
 
 @Controller('/api/availability')
 export class AvailabilityController {
+  constructor(
+    @Inject('CalendarService') private readonly calendarService: CalendarService
+  ) {}
+
+  /**
+   * GET /api/availability/:listingId - Get availability matrix
+   * Returns ListingAvailabilityMatrixProjectionDTO with cell-by-cell availability
+   *
+   * Query params:
+   * - from: string (YYYY-MM-DD format, required) - Start date for availability range
+   * - to: string (YYYY-MM-DD format, required) - End date for availability range
+   * - bookingType: string (optional) - Filter by booking type
+   *
+   * Response: { data: ListingAvailabilityMatrixProjection }
+   */
+  @Get('/:listingId')
+  async getAvailabilityMatrix(
+    request: FastifyRequest<{ Params: { listingId: string } }>,
+    reply: FastifyReply
+  ): Promise<{ data: ListingAvailabilityMatrixProjection }> {
+    const params = validate(AvailabilityMatrixQuerySchema, request.query);
+    const matrix = await this.calendarService.getAvailabilityMatrix(
+      request.params.listingId,
+      params
+    );
+    return { data: matrix };
+  }
+
+  /**
+   * GET /api/availability/slots - Get available time slots (legacy endpoint)
+   * Returns simple slot availability for a single date
+   */
   @Get('/slots')
   async getSlots(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
@@ -149,8 +189,12 @@ export class AvailabilityController {
       return { error: 'Listing not found' };
     }
 
-    // Get all blocked/blackout/closed times for this date (from allocations)
-    const allocationRecords: AllocationRecord[] = await db
+    // Extract buffer time from listing metadata (default to 0 if not set)
+    const bufferTimeMinutes = listing[0].metadata?.bufferTimeMinutes || 0;
+    const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
+
+    // Get all blocked times for this date
+    const blocked = await db
       .select({
         id: allocations.id,
         startTime: allocations.startTime,
@@ -199,47 +243,25 @@ export class AvailabilityController {
 
       if (slotEnd.getHours() > operatingEnd) continue;
 
-      const sStart = slotStart.getTime();
-      const sEnd = slotEnd.getTime();
-
-      // Check for overlapping allocations (blocked/blackout/closed)
-      const overlappingAllocation = allocationRecords.find((a) => {
-        const aStart = new Date(a.startTime).getTime();
-        const aEnd = new Date(a.endTime).getTime();
-        return sStart < aEnd && sEnd > aStart;
-      });
-
-      // Check for overlapping bookings (booked/reserved)
-      const overlappingBooking = bookingRecords.find((b) => {
+      // Check if slot overlaps with any blocked time (allocations - no buffer)
+      const isBlockedByAllocation = blocked.some((b: any) => {
         const bStart = new Date(b.startTime).getTime();
         const bEnd = new Date(b.endTime).getTime();
         return sStart < bEnd && sEnd > bStart;
       });
 
-      // Determine slot status with priority: allocation > booking > available
-      let status: SlotStatus = 'AVAILABLE';
-      let conflictId: string | undefined;
-      let lockedUntil: string | undefined;
+      // Check if slot overlaps with any booked time (including buffer time)
+      const isBlockedByBooking = bookedSlots.some((b: any) => {
+        const bStart = new Date(b.startTime).getTime() - bufferTimeMs; // Add buffer before
+        const bEnd = new Date(b.endTime).getTime() + bufferTimeMs; // Add buffer after
+        const sStart = slotStart.getTime();
+        const sEnd = slotEnd.getTime();
+        return sStart < bEnd && sEnd > bStart;
+      });
 
-      if (overlappingAllocation) {
-        // Allocations take priority (admin blocks, blackouts, etc.)
-        status = mapAllocationStatus(overlappingAllocation.status);
-        conflictId = overlappingAllocation.id;
-      } else if (overlappingBooking) {
-        // Bookings (confirmed or pending/reserved)
-        status = mapBookingStatus(overlappingBooking.status);
-        conflictId = overlappingBooking.id;
+      const isBlocked = isBlockedByAllocation || isBlockedByBooking;
 
-        // For reserved slots, extract TTL if available from metadata
-        if (status === 'RESERVED' && overlappingBooking.metadata) {
-          const metadata = overlappingBooking.metadata as { lockedUntil?: string };
-          if (metadata.lockedUntil) {
-            lockedUntil = metadata.lockedUntil;
-          }
-        }
-      }
-
-      const slotInfo: SlotInfo = {
+      slots.push({
         startTime: slotStart.toISOString(),
         endTime: slotEnd.toISOString(),
         available: status === 'AVAILABLE',

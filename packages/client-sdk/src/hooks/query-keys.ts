@@ -122,8 +122,8 @@ export const queryKeys = {
       [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
     paymentHistory: (bookingId: string) =>
       [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
-    recurringPreview: (listingId: string, selectionHash: string) =>
-      [...queryKeys.bookings.all, 'recurringPreview', listingId, selectionHash] as const,
+    quote: (listingId: string, selectionHash: string) =>
+      [...queryKeys.bookings.all, 'quote', listingId, selectionHash] as const,
   },
 
   // =========================================================================
@@ -135,6 +135,10 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { listingId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
+    config: (listingId: string, params?: { bookingType?: string }) =>
+      [...queryKeys.calendar.all, 'config', listingId, params] as const,
+    availabilityMatrix: (listingId: string, params: { from: string; to: string; bookingType?: string }) =>
+      [...queryKeys.calendar.all, 'availabilityMatrix', listingId, params] as const,
   },
 
   // =========================================================================
