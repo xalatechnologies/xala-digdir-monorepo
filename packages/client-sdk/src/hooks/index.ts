@@ -358,6 +358,7 @@ export {
   useSeasons,
   useSeason,
   useSeasonStats,
+  useSeasonVenues,
   useCreateSeason,
   useUpdateSeason,
   useOpenSeason,
@@ -366,6 +367,8 @@ export {
   useCompleteSeason,
   useCancelSeason,
   useDeleteSeason,
+  useAddVenueToSeason,
+  useRemoveVenueFromSeason,
 } from './use-seasons';
 
 // Help & Support hooks

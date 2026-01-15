@@ -48,6 +48,19 @@ export interface UpdateSeasonDTO {
   metadata?: Record<string, unknown>;
 }
 
+export interface SeasonVenue {
+  id: string;
+  seasonId: string;
+  listingId: string;
+  listingName: string;
+  listingSlug?: string;
+  capacity?: number;
+  category?: string;
+  isActive: boolean;
+  addedAt: string;
+  metadata?: Record<string, unknown>;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   meta: {
@@ -158,6 +171,27 @@ class SeasonService {
     }
   }> {
     return getClient().get(`${this.basePath}/${id}/stats`);
+  }
+
+  /**
+   * Get venues assigned to a season
+   */
+  async getSeasonVenues(seasonId: string): Promise<{ data: SeasonVenue[] }> {
+    return getClient().get<{ data: SeasonVenue[] }>(`${this.basePath}/${seasonId}/venues`);
+  }
+
+  /**
+   * Add a venue to a season
+   */
+  async addVenueToSeason(seasonId: string, listingId: string): Promise<{ data: SeasonVenue }> {
+    return getClient().post<{ data: SeasonVenue }>(`${this.basePath}/${seasonId}/venues`, { listingId });
+  }
+
+  /**
+   * Remove a venue from a season
+   */
+  async removeVenueFromSeason(seasonId: string, listingId: string): Promise<void> {
+    return getClient().delete(`${this.basePath}/${seasonId}/venues/${listingId}`);
   }
 }
 
