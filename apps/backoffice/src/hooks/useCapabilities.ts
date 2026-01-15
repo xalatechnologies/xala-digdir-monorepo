@@ -27,7 +27,6 @@ import { useBackofficeRole } from './useBackofficeRole';
 import {
   type Capability,
   type EffectiveBackofficeRole,
-  ROLE_CAPABILITIES,
   getCapabilitiesForRole,
   roleHasCapability,
 } from '../lib/capabilities';
