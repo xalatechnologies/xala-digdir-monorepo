@@ -58,7 +58,7 @@ const DANGEROUS_PATTERNS = [
   /on\w+\s*=/i,             // Event handlers
   /&#/,                     // HTML entities
   /\x00/,                   // Null bytes
-  /\/\//,                   // Protocol-relative (at start)
+  /^\/\//,                  // Protocol-relative (at start only)
 ];
 
 /**
