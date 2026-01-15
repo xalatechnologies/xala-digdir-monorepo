@@ -23,10 +23,12 @@ export class WidgetsController {
         id: listings.id,
         name: listings.name,
         slug: listings.slug,
-        type: listings.type,
+        category: listings.category,
+        subcategory: listings.subcategory,
         description: listings.description,
         pricing: listings.pricing,
         images: listings.images,
+        timeMode: listings.timeMode,
       })
       .from(listings)
       .where(eq(listings.status, 'published'))

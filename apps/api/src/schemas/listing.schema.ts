@@ -1,26 +1,37 @@
 /**
  * Listing Zod Schemas
  * Validation schemas for listing domain
+ * 
+ * NOTE: This file contains legacy schemas for backwards compatibility.
+ * For new implementations, use rental-object.schema.ts with the 
+ * ConfigurationService for dynamic validation.
  */
 import { z } from 'zod';
 
 /**
- * Listing Type Enum
+ * Listing Type Schema
+ * @deprecated Use RentalObjectCategorySchema from rental-object.schema.ts
+ * Legacy types are now mapped to the new 4-category system in the database
  */
-export const ListingTypeSchema = z.enum(['SPACE', 'RESOURCE', 'EVENT', 'SERVICE', 'VEHICLE', 'OTHER']);
+export const ListingTypeSchema = z.string().min(1).max(50);
 export type ListingType = z.infer<typeof ListingTypeSchema>;
 
 /**
- * Listing Status Enum
+ * Listing Status Schema
+ * Validates against database-defined status values
  */
-export const ListingStatusSchema = z.enum(['draft', 'published', 'archived']);
+export const ListingStatusSchema = z.string().min(1).max(50);
 export type ListingStatus = z.infer<typeof ListingStatusSchema>;
 
 /**
- * Pricing Unit Enum
+ * Pricing Unit Schema
+ * Validates against database-defined pricing unit values
  */
-export const PricingUnitSchema = z.enum(['hour', 'day', 'booking', 'week', 'month']);
+export const PricingUnitSchema = z.string().min(1).max(50);
 export type PricingUnit = z.infer<typeof PricingUnitSchema>;
+
+// Legacy type constants for backwards compatibility
+export const LEGACY_LISTING_TYPES = ['SPACE', 'RESOURCE', 'EVENT', 'SERVICE', 'VEHICLE', 'OTHER'] as const;
 
 /**
  * Pricing Schema
@@ -142,23 +153,24 @@ export type TimeSlot = z.infer<typeof TimeSlotSchema>;
 
 // =============================================================================
 // V2 Category & Booking Model Schemas
+// NOTE: These now use dynamic string validation instead of hardcoded enums.
+// Use ConfigurationService for fetching valid values at runtime.
 // =============================================================================
 
 /**
- * V2 Listing Category Enum (4 top-level categories)
+ * V2 Listing Category Schema
+ * Validates against database-defined category codes
+ * @see ConfigurationService.getValidCategoryCodes()
  */
-export const ListingCategorySchema = z.enum([
-  'LOKALER_OG_BANER',
-  'UTSTYR_OG_INVENTAR',
-  'KJORETOY_OG_TRANSPORT',
-  'OPPLEVELSER_OG_ARRANGEMENT',
-]);
+export const ListingCategorySchema = z.string().min(1).max(100);
 export type ListingCategory = z.infer<typeof ListingCategorySchema>;
 
 /**
- * Booking Time Mode Enum
+ * Booking Time Mode Schema
+ * Validates against database-defined time mode codes
+ * @see ConfigurationService.getValidTimeModeCodes()
  */
-export const BookingTimeModeSchema = z.enum(['PERIOD', 'SLOT', 'ALL_DAY']);
+export const BookingTimeModeSchema = z.string().min(1).max(50);
 export type BookingTimeMode = z.infer<typeof BookingTimeModeSchema>;
 
 /**

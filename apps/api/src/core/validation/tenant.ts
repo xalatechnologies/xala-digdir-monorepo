@@ -9,11 +9,22 @@ import type { FastifyRequest } from 'fastify';
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
+ * User context from authentication
+ */
+export interface UserContext {
+  id: string;
+  role: 'admin' | 'super_admin' | 'member' | 'guest';
+  email?: string;
+  name?: string;
+}
+
+/**
  * Interface for requests with tenant context
  */
 export interface TenantRequest extends FastifyRequest {
   tenantId?: string;
   userId?: string;
+  user?: UserContext;
 }
 
 /**

@@ -340,7 +340,7 @@ export class ConfigurationService {
 
   async isValidCategoryCode(code: string): Promise<boolean> {
     const category = await this.repository.findCategoryByCode(code);
-    return category !== null && category.enabled;
+    return category !== null && Boolean(category.enabled);
   }
 
   async isValidSubcategoryCode(categoryCode: string, subcategoryCode: string): Promise<boolean> {
@@ -348,17 +348,17 @@ export class ConfigurationService {
     if (!category || !category.enabled) return false;
     
     const subcategory = await this.repository.findSubcategoryByCode(category.id, subcategoryCode);
-    return subcategory !== null && subcategory.enabled;
+    return subcategory !== null && Boolean(subcategory.enabled);
   }
 
   async isValidTimeModeCode(code: string): Promise<boolean> {
     const mode = await this.repository.findTimeModeByCode(code);
-    return mode !== null && mode.enabled;
+    return mode !== null && Boolean(mode.enabled);
   }
 
   async isValidPricingUnitCode(code: string): Promise<boolean> {
     const unit = await this.repository.findPricingUnitByCode(code);
-    return unit !== null && unit.enabled;
+    return unit !== null && Boolean(unit.enabled);
   }
 
   async getValidCategoryCodes(): Promise<string[]> {
@@ -486,7 +486,134 @@ export class ConfigurationService {
     value: config.value,
     valueType: config.valueType,
     description: config.description,
-    isPublic: config.isPublic ?? false,
+    isPublic: Boolean(config.isPublic),
     tenantId: config.tenantId,
   });
+
+  // =============================================================================
+  // Integrations Management
+  // =============================================================================
+
+  async listIntegrations(tenantId: string) {
+    return this.repository.listIntegrations(tenantId);
+  }
+
+  async getIntegration(tenantId: string, provider: string) {
+    return this.repository.getIntegration(tenantId, provider);
+  }
+
+  async updateIntegration(
+    tenantId: string,
+    provider: string,
+    data: { name?: string; status?: string; config?: Record<string, any> },
+    userId?: string
+  ) {
+    return this.repository.updateIntegration(tenantId, provider, data, userId);
+  }
+
+  async testIntegration(tenantId: string, provider: string) {
+    const integration = await this.repository.getIntegration(tenantId, provider);
+
+    if (!integration) {
+      return null;
+    }
+
+    let testResult: { success: boolean; message: string; details?: any };
+
+    switch (provider) {
+      case 'idporten':
+        testResult = await this.testIdPorten(integration.config);
+        break;
+      case 'vipps':
+        testResult = await this.testVipps(integration.config);
+        break;
+      default:
+        testResult = {
+          success: false,
+          message: `Test not implemented for provider '${provider}'`,
+        };
+    }
+
+    // Update integration status based on test result
+    await this.repository.updateIntegrationStatus(
+      tenantId,
+      provider,
+      testResult.success ? 'active' : 'error'
+    );
+
+    return testResult;
+  }
+
+  private async testIdPorten(config: any): Promise<{ success: boolean; message: string; details?: any }> {
+    try {
+      const tokenUrl = `${config.baseUrl}/auth/open/connect/token`;
+
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`,
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          scope: config.scopes || 'signicat-api',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        return {
+          success: false,
+          message: `Failed to get access token: ${error}`,
+          details: { status: response.status },
+        };
+      }
+
+      const data = await response.json() as { access_token?: string };
+      return {
+        success: true,
+        message: 'Successfully connected to ID-porten/Signicat',
+        details: { hasAccessToken: !!data.access_token },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Connection failed',
+      };
+    }
+  }
+
+  private async testVipps(config: any): Promise<{ success: boolean; message: string; details?: any }> {
+    try {
+      const tokenUrl = `${config.baseUrl}/accesstoken/get`;
+
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'client_id': config.clientId,
+          'client_secret': config.clientSecret,
+          'Ocp-Apim-Subscription-Key': config.subscriptionKey,
+        },
+      });
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: `Failed to get Vipps access token`,
+          details: { status: response.status },
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Successfully connected to Vipps',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Connection failed',
+      };
+    }
+  }
 }

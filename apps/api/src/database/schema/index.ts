@@ -253,6 +253,28 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
+// Integrations Configuration
+// ============================================================================
+
+export const integrations = pgTable('integrations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  provider: varchar('provider', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('inactive'),
+  config: jsonb('config').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+}, (table) => ({
+  tenantIdx: index('integrations_tenant_id_idx').on(table.tenantId),
+  providerIdx: index('integrations_provider_idx').on(table.provider),
+  statusIdx: index('integrations_status_idx').on(table.status),
+  tenantProviderUnique: uniqueIndex('integrations_tenant_provider_unique').on(table.tenantId, table.provider),
+}));
+
+// ============================================================================
 // Listings (Rental Objects / Utleieobjekter)
 // ============================================================================
 
@@ -555,6 +577,8 @@ export type BookingStatus = typeof bookingStatuses.$inferSelect;
 export type NewBookingStatus = typeof bookingStatuses.$inferInsert;
 export type SystemConfiguration = typeof systemConfigurations.$inferSelect;
 export type NewSystemConfiguration = typeof systemConfigurations.$inferInsert;
+export type Integration = typeof integrations.$inferSelect;
+export type NewIntegration = typeof integrations.$inferInsert;
 
 // Entity Types
 export type Tenant = typeof tenants.$inferSelect;

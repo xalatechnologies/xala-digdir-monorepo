@@ -19,4 +19,5 @@ export {
   StatusesController,
   SystemConfigController,
   SchemaController,
+  IntegrationsConfigController,
 } from './configuration.controller';

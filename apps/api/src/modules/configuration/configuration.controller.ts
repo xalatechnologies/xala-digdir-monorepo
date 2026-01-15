@@ -481,3 +481,107 @@ export class SchemaController {
     return { valid: isValid };
   }
 }
+
+// =============================================================================
+// Integrations Configuration Controller
+// Manages external integration credentials (ID-porten, Vipps, Visma, RCO, ACOS)
+// =============================================================================
+
+@Controller('/api/configuration/integrations')
+export class IntegrationsConfigController {
+  /**
+   * GET /api/configuration/integrations
+   * List all integrations for tenant
+   */
+  @Get()
+  async listIntegrations(request: TenantRequest, reply: FastifyReply) {
+    const { container } = await import('../../core/container');
+    const configService = container.resolve<ConfigurationService>('ConfigurationService');
+    const tenantId = getTenantId(request);
+    const integrations = await configService.listIntegrations(tenantId);
+    return { data: integrations };
+  }
+
+  /**
+   * GET /api/configuration/integrations/:provider
+   * Get specific integration by provider
+   */
+  @Get('/:provider')
+  async getIntegration(
+    request: TenantRequest & FastifyRequest<{ Params: { provider: string } }>,
+    reply: FastifyReply
+  ) {
+    const { container } = await import('../../core/container');
+    const configService = container.resolve<ConfigurationService>('ConfigurationService');
+    const tenantId = getTenantId(request);
+    const integration = await configService.getIntegration(tenantId, request.params.provider);
+
+    if (!integration) {
+      reply.code(404);
+      return { error: { code: 'NOT_FOUND', message: `Integration '${request.params.provider}' not found` } };
+    }
+
+    return { data: integration };
+  }
+
+  /**
+   * PUT /api/configuration/integrations/:provider
+   * Update integration configuration (admin only)
+   */
+  @Put('/:provider')
+  async updateIntegration(
+    request: TenantRequest & FastifyRequest<{ Params: { provider: string } }>,
+    reply: FastifyReply
+  ) {
+    const { container } = await import('../../core/container');
+    const configService = container.resolve<ConfigurationService>('ConfigurationService');
+    const tenantId = getTenantId(request);
+    const body = request.body as {
+      name?: string;
+      status?: string;
+      config?: Record<string, any>;
+    };
+
+    // RBAC check - only admins can update integrations
+    if (request.user?.role !== 'admin' && request.user?.role !== 'super_admin') {
+      reply.code(403);
+      return { error: { code: 'FORBIDDEN', message: 'Only administrators can update integrations' } };
+    }
+
+    const integration = await configService.updateIntegration(
+      tenantId,
+      request.params.provider,
+      body,
+      request.user?.id
+    );
+
+    if (!integration) {
+      reply.code(404);
+      return { error: { code: 'NOT_FOUND', message: `Integration '${request.params.provider}' not found` } };
+    }
+
+    return { data: integration };
+  }
+
+  /**
+   * POST /api/configuration/integrations/:provider/test
+   * Test integration connection
+   */
+  @Post('/:provider/test')
+  async testIntegration(
+    request: TenantRequest & FastifyRequest<{ Params: { provider: string } }>,
+    reply: FastifyReply
+  ) {
+    const { container } = await import('../../core/container');
+    const configService = container.resolve<ConfigurationService>('ConfigurationService');
+    const tenantId = getTenantId(request);
+    const result = await configService.testIntegration(tenantId, request.params.provider);
+
+    if (!result) {
+      reply.code(404);
+      return { error: { code: 'NOT_FOUND', message: `Integration '${request.params.provider}' not found` } };
+    }
+
+    return { data: result };
+  }
+}

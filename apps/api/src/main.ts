@@ -35,6 +35,17 @@ import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
+import { 
+  CategoriesController, 
+  TimeModesController,
+  PricingUnitsController,
+  StatusesController,
+  SystemConfigController,
+  SchemaController,
+  IntegrationsConfigController,
+} from './modules/configuration/configuration.controller';
+import { ConfigurationRepository } from './modules/configuration/configuration.repository';
+import { ConfigurationService } from './modules/configuration/configuration.service';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
@@ -147,6 +158,12 @@ async function bootstrap() {
   container.registerFactory('CalendarService', () =>
     new CalendarService(adapters)
   );
+  
+  // Configuration module (schema-driven settings)
+  container.registerFactory('ConfigurationRepository', () => new ConfigurationRepository(db));
+  container.registerFactory('ConfigurationService', () =>
+    new ConfigurationService(container.resolve('ConfigurationRepository'))
+  );
 
   console.log('✓ Services registered');
 
@@ -213,6 +230,14 @@ async function bootstrap() {
     HelpController,
     DiscountCodesController,
     HealthController,
+    // Configuration module (schema-driven categories, time modes, pricing units, etc.)
+    CategoriesController,
+    TimeModesController,
+    PricingUnitsController,
+    StatusesController,
+    SystemConfigController,
+    SchemaController,
+    IntegrationsConfigController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,

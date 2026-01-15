@@ -2,8 +2,7 @@
  * Configuration Repository
  * Database operations for schema-driven configuration tables
  */
-import { eq, and, isNull, asc, desc } from 'drizzle-orm';
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { eq, and, isNull, asc } from 'drizzle-orm';
 import {
   rentalObjectCategories,
   rentalObjectSubcategories,
@@ -12,6 +11,7 @@ import {
   rentalObjectStatuses,
   bookingStatuses,
   systemConfigurations,
+  integrations,
   type RentalObjectCategory,
   type NewRentalObjectCategory,
   type RentalObjectSubcategory,
@@ -29,7 +29,8 @@ import {
 } from '../../database/schema';
 
 export class ConfigurationRepository {
-  constructor(private readonly db: PostgresJsDatabase) {}
+  // Using 'any' for db type to avoid generic parameter compatibility issues with Drizzle
+  constructor(private readonly db: any) {}
 
   // ==========================================================================
   // Rental Object Categories
@@ -408,18 +409,131 @@ export class ConfigurationRepository {
 
   async deleteConfiguration(key: string, tenantId?: string | null): Promise<boolean> {
     let conditions = [eq(systemConfigurations.key, key)];
-    
+
     if (tenantId) {
       conditions.push(eq(systemConfigurations.tenantId, tenantId));
     } else {
       conditions.push(isNull(systemConfigurations.tenantId));
     }
-    
+
     const results = await this.db
       .delete(systemConfigurations)
       .where(and(...conditions))
       .returning();
-    
+
     return results.length > 0;
+  }
+
+  // ==========================================================================
+  // Integrations
+  // ==========================================================================
+
+  async listIntegrations(tenantId: string) {
+    const results = await this.db
+      .select()
+      .from(integrations)
+      .where(eq(integrations.tenantId, tenantId))
+      .orderBy(integrations.provider);
+
+    // Mask sensitive fields
+    return results.map((integration: any) => ({
+      ...integration,
+      config: this.maskSensitiveFields(integration.config),
+    }));
+  }
+
+  async getIntegration(tenantId: string, provider: string) {
+    const results = await this.db
+      .select()
+      .from(integrations)
+      .where(and(
+        eq(integrations.tenantId, tenantId),
+        eq(integrations.provider, provider)
+      ))
+      .limit(1);
+
+    if (results.length === 0) return null;
+
+    return {
+      ...results[0],
+      config: this.maskSensitiveFields(results[0].config),
+    };
+  }
+
+  async updateIntegration(
+    tenantId: string,
+    provider: string,
+    data: { name?: string; status?: string; config?: Record<string, any> },
+    userId?: string
+  ) {
+    // Get existing config
+    const existing = await this.db
+      .select()
+      .from(integrations)
+      .where(and(
+        eq(integrations.tenantId, tenantId),
+        eq(integrations.provider, provider)
+      ))
+      .limit(1);
+
+    if (existing.length === 0) return null;
+
+    // Merge config (don't overwrite masked values)
+    const mergedConfig = { ...existing[0].config };
+    if (data.config) {
+      for (const [key, value] of Object.entries(data.config)) {
+        if (value !== '***' && value !== '') {
+          mergedConfig[key] = value;
+        }
+      }
+    }
+
+    const results = await this.db
+      .update(integrations)
+      .set({
+        ...(data.name && { name: data.name }),
+        ...(data.status && { status: data.status }),
+        config: mergedConfig,
+        updatedAt: new Date(),
+        updatedBy: userId || null,
+      })
+      .where(and(
+        eq(integrations.tenantId, tenantId),
+        eq(integrations.provider, provider)
+      ))
+      .returning();
+
+    if (results.length === 0) return null;
+
+    return {
+      ...results[0],
+      config: this.maskSensitiveFields(results[0].config),
+    };
+  }
+
+  async updateIntegrationStatus(tenantId: string, provider: string, status: string) {
+    await this.db
+      .update(integrations)
+      .set({
+        status,
+        updatedAt: new Date(),
+      })
+      .where(and(
+        eq(integrations.tenantId, tenantId),
+        eq(integrations.provider, provider)
+      ));
+  }
+
+  private maskSensitiveFields(config: any): any {
+    const sensitiveFields = ['clientSecret', 'apiKey', 'webhookSecret', 'password', 'subscriptionKey'];
+    const masked = { ...config };
+
+    for (const field of sensitiveFields) {
+      if (masked[field]) {
+        masked[field] = '***';
+      }
+    }
+
+    return masked;
   }
 }

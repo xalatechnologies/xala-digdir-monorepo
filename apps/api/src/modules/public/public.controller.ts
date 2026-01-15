@@ -2,15 +2,20 @@
  * Public Controller
  * No-auth public endpoints for website/widgets
  */
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, count, desc } from 'drizzle-orm';
 import { listings, bookings, allocations } from '../../database/schema/index';
 import { toCardProjections, toDetailsProjection } from '../listing/listing.projections';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Controller('/api/public')
 export class PublicController {
+  constructor(
+    @Inject('ConfigurationService') private readonly configService: ConfigurationService
+  ) {}
+
   /**
    * GET /api/public/listings - Public listing search
    * Returns: ListingCardProjectionDTO[] (screen-ready, flat structure)
@@ -18,7 +23,7 @@ export class PublicController {
   @Get('/listings')
   async getListings(request: FastifyRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { type, city, search, page = 1, limit = 20 } = request.query as any;
+    const { category, city, search, page = 1, limit = 20 } = request.query as any;
 
     const conditions = [eq(listings.status, 'published')];
     
@@ -134,17 +139,19 @@ export class PublicController {
 
   /**
    * GET /api/public/categories - List categories
+   * Now fetches from database via ConfigurationService
    */
   @Get('/categories')
   async getCategories(request: FastifyRequest, reply: FastifyReply) {
+    const categories = await this.configService.getCategories(false);
     return {
-      data: [
-        { id: 'SPACE', name: 'Lokaler', nameEn: 'Spaces', icon: 'building' },
-        { id: 'RESOURCE', name: 'Utstyr', nameEn: 'Equipment', icon: 'tool' },
-        { id: 'SERVICE', name: 'Tjenester', nameEn: 'Services', icon: 'briefcase' },
-        { id: 'EVENT', name: 'Arrangementer', nameEn: 'Events', icon: 'calendar' },
-        { id: 'VEHICLE', name: 'Kjøretøy', nameEn: 'Vehicles', icon: 'car' },
-      ],
+      data: categories.map(cat => ({
+        id: cat.code,
+        name: cat.name,
+        nameEn: cat.nameEn,
+        icon: cat.icon,
+        description: cat.description,
+      })),
     };
   }
 
@@ -189,10 +196,12 @@ export class PublicController {
         id: listings.id,
         name: listings.name,
         slug: listings.slug,
-        type: listings.type,
+        category: listings.category,
+        subcategory: listings.subcategory,
         description: listings.description,
         pricing: listings.pricing,
         images: listings.images,
+        timeMode: listings.timeMode,
       })
       .from(listings)
       .where(eq(listings.status, 'published'))

@@ -76,7 +76,8 @@ export class ListingController {
   @Put('/:id')
   async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const data = validate(UpdateRentalObjectSchema, request.body);
-    const listing = await this.service.update(request.params.id, data);
+    // Type assertion needed due to Zod optional nested object type inference
+    const listing = await this.service.update(request.params.id, data as Parameters<typeof this.service.update>[1]);
     return { listing };
   }
 

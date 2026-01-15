@@ -5,6 +5,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
+import { seedConfigurationData } from '../src/database/seeds/configuration.seed';
 
 // ============================================================================
 // UUID Constants (valid UUIDs for all entities)
@@ -279,15 +280,13 @@ const LISTINGS = [
     organizationId: ORG_SKIEN_HALL,
     name: 'Hall A - Hovedhall',
     slug: 'hall-a-hovedhall',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     // V2 Category & Booking Model
-    categoryV2: 'LOKALER_OG_BANER',
     subcategory: 'Idrettshall',
     tags: ['handball', 'basketball', 'arrangement', 'tribune'],
     fixedLocation: true,
     timeMode: 'SLOT',
     bookingFeatures: { sharedCapacity: { enabled: true, total: 500, policy: 'PER_SLOT' } },
-    migrationStatus: 'complete',
     status: 'published',
     description: 'Stor idrettshall for håndball, basketball og arrangementer. 1200 m². Moderne gulv, elektronisk måltavle og fullverdig tribuneanlegg.',
     capacity: 500,
@@ -328,7 +327,7 @@ const LISTINGS = [
     organizationId: ORG_SKIEN_HALL,
     name: 'Hall B - Treningshall',
     slug: 'hall-b-treningshall',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Mindre treningshall for gymnastikk og kampsport. 400 m². Speilvegg og matter tilgjengelig.',
     capacity: 100,
@@ -367,7 +366,7 @@ const LISTINGS = [
     organizationId: ORG_SKIEN_HALL,
     name: 'Møterom 1',
     slug: 'moterom-1',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Moderne møterom med projektor og whiteboard. Perfekt for styremøter og presentasjoner.',
     capacity: 20,
@@ -410,7 +409,7 @@ const LISTINGS = [
     organizationId: ORG_KULTURHUS,
     name: 'Hovedscene',
     slug: 'hovedscene',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Profesjonell scene med lyd- og lysanlegg. 800 sitteplasser. Perfekt for konserter, teater og store arrangementer.',
     capacity: 800,
@@ -456,7 +455,7 @@ const LISTINGS = [
     organizationId: ORG_KULTURHUS,
     name: 'Øvingsstudio',
     slug: 'ovingsstudio',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Lydtett studio for band og musikkøving. Backline inkludert med trommer, forsterker og PA.',
     capacity: 10,
@@ -495,15 +494,13 @@ const LISTINGS = [
     organizationId: ORG_KULTURHUS,
     name: 'Projektor (4K)',
     slug: 'projektor-4k',
-    type: 'RESOURCE',
+    category: 'UTSTYR_OG_INVENTAR',
     // V2 Category & Booking Model
-    categoryV2: 'UTSTYR_OG_INVENTAR',
     subcategory: 'AV-utstyr',
     tags: ['projektor', '4k', 'presentasjon', 'film'],
     fixedLocation: false,
     timeMode: 'ALL_DAY',
     bookingFeatures: { inventory: { enabled: true, total: 3, policy: 'FIFO' } },
-    migrationStatus: 'complete',
     status: 'published',
     description: 'Epson 4K-projektor for presentasjoner og film. 5000 lumen, HDMI og trådløs tilkobling.',
     capacity: 1,
@@ -540,15 +537,13 @@ const LISTINGS = [
     organizationId: ORG_KULTURHUS,
     name: 'PA-anlegg',
     slug: 'pa-anlegg',
-    type: 'RESOURCE',
+    category: 'UTSTYR_OG_INVENTAR',
     // V2 Category & Booking Model
-    categoryV2: 'UTSTYR_OG_INVENTAR',
     subcategory: 'Lydanlegg',
     tags: ['lyd', 'mikser', 'høyttaler', 'mikrofon'],
     fixedLocation: false,
     timeMode: 'ALL_DAY',
     bookingFeatures: { inventory: { enabled: true, total: 2, policy: 'FIFO' } },
-    migrationStatus: 'complete',
     status: 'published',
     description: 'Komplett PA-anlegg med mikser, høyttalere og mikrofoner. Egnet for arrangementer opp til 200 personer.',
     capacity: 1,
@@ -586,15 +581,13 @@ const LISTINGS = [
     organizationId: ORG_PORSGRUNN,
     name: 'Fotballbane - Kunstgress',
     slug: 'fotballbane-kunstgress',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     // V2 Category & Booking Model
-    categoryV2: 'LOKALER_OG_BANER',
     subcategory: 'Utendørs bane',
     tags: ['fotball', 'kunstgress', 'flomlys', 'utendørs'],
     fixedLocation: true,
     timeMode: 'SLOT',
     bookingFeatures: {},
-    migrationStatus: 'complete',
     status: 'published',
     description: 'Full størrelse kunstgressbane med flomlys. FIFA-godkjent underlag. Garderober og kafeteria på området.',
     capacity: 30,
@@ -636,7 +629,7 @@ const LISTINGS = [
     organizationId: ORG_PORSGRUNN,
     name: 'Klubbhus',
     slug: 'klubbhus',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Koselig klubbhus med kjøkken og møterom. Perfekt for årsmøter, feiringer og sosiale arrangementer.',
     capacity: 50,
@@ -675,7 +668,7 @@ const LISTINGS = [
     organizationId: ORG_DEMO,
     name: 'Demo Hall',
     slug: 'demo-hall',
-    type: 'SPACE',
+    category: 'LOKALER_OG_BANER',
     status: 'published',
     description: 'Demo facility for testing all booking features.',
     capacity: 100,
@@ -1135,6 +1128,19 @@ async function seed() {
     await db.delete(schema.users);
     await db.delete(schema.organizations);
     await db.delete(schema.tenants);
+    // Clear configuration tables
+    await db.delete(schema.rentalObjectSubcategories);
+    await db.delete(schema.rentalObjectCategories);
+    await db.delete(schema.bookingTimeModes);
+    await db.delete(schema.pricingUnits);
+    await db.delete(schema.rentalObjectStatuses);
+    await db.delete(schema.bookingStatuses);
+    await db.delete(schema.systemConfigurations);
+    await db.delete(schema.integrations);
+
+    // Seed configuration data (categories, time modes, pricing units, statuses)
+    console.log('⚙️ Seeding configuration data...');
+    await seedConfigurationData(db as any);
 
     // Insert tenants
     console.log('📦 Inserting tenants...');
