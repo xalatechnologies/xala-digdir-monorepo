@@ -23,10 +23,8 @@ const ROLE_STORAGE_KEYS = {
  * Admin-only user for testing admin-specific flows.
  * Can access all admin features, skips role selection.
  *
- * To use: swap MOCK_DUAL_ROLE_USER with MOCK_ADMIN_USER in login()
- * @see login function below
+ * Login provider: 'idporten' or 'dev-admin'
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MOCK_ADMIN_USER: BackofficeUser = {
   id: 'mock-admin-001',
   name: 'Kari Nordmann',
@@ -38,6 +36,8 @@ const MOCK_ADMIN_USER: BackofficeUser = {
 /**
  * Case handler-only user for testing saksbehandler-specific flows.
  * Limited access to booking/approval workflows, skips role selection.
+ *
+ * Login provider: 'microsoft'
  */
 const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
   id: 'mock-saksbehandler-001',
@@ -50,6 +50,8 @@ const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
 /**
  * Dual-role user for testing role selection flow.
  * Has both admin and case_handler roles, will be prompted to select.
+ *
+ * Login provider: 'dev-dual'
  */
 const MOCK_DUAL_ROLE_USER: BackofficeUser = {
   id: 'mock-dual-001',
@@ -99,14 +101,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuth();
   }, []);
 
-  const login = useCallback((provider: 'idporten' | 'microsoft' = 'idporten') => {
+  const login = useCallback((provider: 'idporten' | 'microsoft' | 'dev-admin' | 'dev-dual' = 'idporten') => {
     if (USE_MOCK_AUTH) {
       // Simulate login with a mock user based on provider:
-      // - ID-porten: Dual-role user (tests role selection flow)
+      // - ID-porten: Admin-only user (tests single-role admin flow)
       // - Microsoft: Case handler only (tests single-role auto-assignment)
-      //
-      // To test admin-only flow, modify MOCK_DUAL_ROLE_USER.grantedRoles to ['admin']
-      const mockUser = provider === 'idporten' ? MOCK_DUAL_ROLE_USER : MOCK_SAKSBEHANDLER_USER;
+      // - dev-admin: Admin-only user (same as ID-porten, for explicit testing)
+      // - dev-dual: Dual-role user (tests role selection flow)
+      let mockUser: BackofficeUser;
+      switch (provider) {
+        case 'idporten':
+        case 'dev-admin':
+          mockUser = MOCK_ADMIN_USER;
+          break;
+        case 'dev-dual':
+          mockUser = MOCK_DUAL_ROLE_USER;
+          break;
+        case 'microsoft':
+        default:
+          mockUser = MOCK_SAKSBEHANDLER_USER;
+          break;
+      }
       localStorage.setItem('backoffice_mock_user', JSON.stringify(mockUser));
       setUser(mockUser);
 

@@ -39,7 +39,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isSaksbehandler: boolean;
-  login: (provider?: 'idporten' | 'microsoft') => void;
+  login: (provider?: 'idporten' | 'microsoft' | 'dev-admin' | 'dev-dual') => void;
   logout: () => Promise<void>;
   checkRole: (role: BackofficeRole) => boolean;
 }
