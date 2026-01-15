@@ -341,23 +341,29 @@ export const en: Record<string, string> = {
   'minside.myBookingsDesc': 'View and manage bookings',
   'minside.myCalendar': 'My Calendar',
   'minside.myCalendarDesc': 'Calendar view',
+  'minside.seasons': 'Season Booking',
+  'minside.seasonsDesc': 'Apply for fixed times for the whole season',
   'minside.messages': 'Messages',
   'minside.messagesDesc': 'Communication',
+  'minside.billing': 'Billing',
+  'minside.billingDesc': 'View your invoices and payments',
+  'minside.notifications': 'Notifications',
+  'minside.notificationsDesc': 'View all notifications and reminders',
   'minside.account': 'Account',
   'minside.settings': 'Settings',
   'minside.settingsDesc': 'Your preferences',
+  'minside.preferences': 'Preferences',
+  'minside.preferencesDesc': 'Notifications, privacy and display',
+  'minside.help': 'Help',
+  'minside.helpDesc': 'Questions and answers, contact us',
   'minside.welcome': 'Welcome back',
   'minside.upcomingBookings': 'Upcoming bookings',
   'minside.noUpcomingBookings': 'You have no upcoming bookings.',
   'minside.bookNow': 'Book now',
   'minside.viewAll': 'View all',
   'minside.profile': 'My Profile',
-  'minside.preferences': 'Preferences',
-  'minside.notifications': 'Notifications',
   'minside.offlineMode': 'Offline Mode',
   'minside.viewingCachedBookings': 'You are viewing cached bookings. Connect to the internet for updates.',
-  'minside.billing': 'Billing',
-  'minside.billingDesc': 'View your invoices and payments',
 
   // Organization Portal (Minside)
   'org.organization': 'Organization',
@@ -371,6 +377,12 @@ export const en: Record<string, string> = {
   'org.membersDesc': 'Manage members',
   'org.seasonRental': 'Season rental',
   'org.seasonRentalDesc': 'Fixed rental periods',
+  'org.notifications': 'Notifications',
+  'org.notificationsDesc': 'Configure organization notifications',
+  'org.settings': 'Settings',
+  'org.settingsDesc': 'Organization profile and billing',
+  'org.activity': 'Activity Log',
+  'org.activityDesc': 'Events in the organization',
 
   // Errors (generic)
   'errors.generic': 'Something went wrong. Please try again.',
@@ -954,6 +966,54 @@ export const en: Record<string, string> = {
   // Booking
   'sdk.booking.advanceDays': 'days in advance',
   'sdk.booking.standardCancellation': 'Standard cancellation policy',
+
+  // ============================================================================
+  // Help & Support
+  // ============================================================================
+  'help.title': 'Help and Support',
+  'help.description': 'Find answers to your questions or contact us for help',
+  'help.searchPlaceholder': 'Search for help...',
+
+  // Quick Links
+  'help.quickLinks.booking': 'Booking',
+  'help.quickLinks.payment': 'Payment',
+  'help.quickLinks.account': 'Account',
+  'help.quickLinks.organization': 'Organization',
+
+  // FAQ Sections
+  'help.faq.bookingTitle': 'Booking and Reservations',
+  'help.faq.accountTitle': 'Account and Profile',
+  'help.faq.organizationTitle': 'Organizations',
+
+  // FAQ - Booking
+  'help.faq.booking.howToBook.question': 'How do I book a venue?',
+  'help.faq.booking.howToBook.answer': 'Go to the listings overview, select your desired venue and date, and click "Book now". You will receive a confirmation email.',
+  'help.faq.booking.changeOrCancel.question': 'Can I change or cancel a booking?',
+  'help.faq.booking.changeOrCancel.answer': 'Yes, you can change or cancel bookings up to 24 hours before. Go to "My Bookings" and select your booking.',
+  'help.faq.booking.payment.question': 'How do I pay?',
+  'help.faq.booking.payment.answer': 'Payment is usually made via invoice. For some venues, direct payment may be available.',
+
+  // FAQ - Account
+  'help.faq.account.create.question': 'How do I create an account?',
+  'help.faq.account.create.answer': 'Click "Register" and fill out the form with your name, email, and password.',
+  'help.faq.account.changePassword.question': 'How do I change my password?',
+  'help.faq.account.changePassword.answer': 'Go to Settings > Security and click "Change Password".',
+
+  // FAQ - Organization
+  'help.faq.organization.create.question': 'How do I create an organization?',
+  'help.faq.organization.create.answer': 'Go to Organization > New Organization and fill out the organization information.',
+  'help.faq.organization.invite.question': 'How do I invite members?',
+  'help.faq.organization.invite.answer': 'Under Organization > Members, you can invite new members via email.',
+
+  // Contact Form
+  'help.contact.title': 'Contact Us',
+  'help.contact.subject': 'Subject',
+  'help.contact.subjectPlaceholder': 'What is your inquiry about?',
+  'help.contact.message': 'Message',
+  'help.contact.messagePlaceholder': 'Describe your problem or question...',
+  'help.contact.submit': 'Send Inquiry',
+  'help.contact.submitting': 'Sending...',
+  'help.contact.success': 'Inquiry sent!',
 
   // ============================================================================
   // GDPR Consent

@@ -338,18 +338,18 @@ export function Sidebar() {
       items: [
         { name: t('minside.myBookings'), description: t('minside.myBookingsDesc'), href: '/bookings', icon: <BookOpenIcon />, contexts: ['personal'] },
         { name: t('minside.myCalendar'), description: t('minside.myCalendarDesc'), href: '/calendar', icon: <CalendarIcon />, contexts: ['personal'] },
-        { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon />, contexts: ['personal'] },
+        { name: t('minside.seasons'), description: t('minside.seasonsDesc'), href: '/seasons', icon: <RepeatIcon />, contexts: ['personal'] },
         { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon />, contexts: ['personal', 'organization'] },
         { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon />, contexts: ['personal'] },
-        { name: 'Varsler', description: 'Se alle varsler og påminnelser', href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger', contexts: ['personal', 'organization'] },
+        { name: t('minside.notifications'), description: t('minside.notificationsDesc'), href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger', contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('minside.account'),
       items: [
         { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon />, contexts: ['personal'] },
-        { name: 'Preferanser', description: 'Varsler, personvern og visning', href: '/preferences', icon: <SettingsIcon />, contexts: ['personal'] },
-        { name: 'Hjelp', description: 'Spørsmål og svar, kontakt oss', href: '/help', icon: <BookOpenIcon />, contexts: ['personal', 'organization'] },
+        { name: t('minside.preferences'), description: t('minside.preferencesDesc'), href: '/preferences', icon: <SettingsIcon />, contexts: ['personal'] },
+        { name: t('minside.help'), description: t('minside.helpDesc'), href: '/help', icon: <BookOpenIcon />, contexts: ['personal', 'organization'] },
       ],
     },
     {
@@ -359,9 +359,9 @@ export function Sidebar() {
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon />, contexts: ['organization'] },
         { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon />, contexts: ['organization'] },
         { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon />, contexts: ['organization'] },
-        { name: 'Varsler', description: 'Konfigurer organisasjonens varsler', href: '/org/notifications', icon: <MessageIcon />, contexts: ['organization'] },
-        { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
-        { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
+        { name: t('org.notifications'), description: t('org.notificationsDesc'), href: '/org/notifications', icon: <MessageIcon />, contexts: ['organization'] },
+        { name: t('org.settings'), description: t('org.settingsDesc'), href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
+        { name: t('org.activity'), description: t('org.activityDesc'), href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
       ],
     },
   ];

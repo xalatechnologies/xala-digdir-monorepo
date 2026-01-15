@@ -119,7 +119,7 @@ const MOCK_USER: BackofficeUser = {
  *   - Redirects to API for authentication
  *   - Receives token via OAuth callback
  */
-const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH !== 'false';
+const USE_MOCK_AUTH = false; // Disabled - require real OAuth authentication
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)

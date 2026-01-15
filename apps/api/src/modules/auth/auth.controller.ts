@@ -194,8 +194,30 @@ export class AuthController {
   @Get('/session')
   async getSession(request: AuthRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const userId = (request as any).userId || request.headers['x-user-id'];
-    const tenantId = request.tenantId || request.headers['x-tenant-id'];
+    
+    // Try to get userId from cookie first, then fallback to header
+    let userId = (request as any).userId || request.headers['x-user-id'];
+    let tenantId = request.tenantId || request.headers['x-tenant-id'];
+    
+    // Parse session cookie if present
+    const cookieHeader = request.headers.cookie;
+    if (cookieHeader && !userId) {
+      const cookies = cookieHeader.split(';').reduce((acc: Record<string, string>, cookie: string) => {
+        const [key, value] = cookie.trim().split('=');
+        if (key && value) acc[key] = value;
+        return acc;
+      }, {});
+      
+      if (cookies.digilist_session) {
+        try {
+          const session = JSON.parse(decodeURIComponent(cookies.digilist_session));
+          userId = session.userId;
+          tenantId = tenantId || session.tenantId;
+        } catch {
+          // Invalid cookie format
+        }
+      }
+    }
 
     if (!userId) {
       reply.code(401);

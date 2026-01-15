@@ -10,12 +10,15 @@
  * 5. Return user attributes or redirect to returnTo URL
  */
 
-import { Controller, Get, Post } from '../../core/decorators';
+import { Controller, Get } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
 import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
-import { sessionStore, type AuthSession } from './idporten-session-store';
+import { sessionStore } from './idporten-session-store';
+import { container } from '../../core/container';
+import { users } from '../../database/schema';
+import { eq } from 'drizzle-orm';
 
 // =============================================================================
 // Configuration
@@ -447,18 +450,12 @@ export class IdPortenAuthController {
         throw new Error('Failed to get session details');
       }
 
-      const sessionData = (await response.json()) as {
-        status: string;
-        identity?: {
-          firstName?: string;
-          lastName?: string;
-          dateOfBirth?: string;
-          nin?: string;
-          subject?: string;
-        };
-      };
+      const sessionData = (await response.json()) as any;
 
-      if (sessionData.status.toLowerCase() !== 'success') {
+      // DEBUG: Log complete session response to see what Signicat returns
+      console.log('[ID-PORTEN CALLBACK] Full session data:', JSON.stringify(sessionData, null, 2));
+
+      if (!sessionData || sessionData.status?.toLowerCase() !== 'success') {
         // Audit log incomplete session
         getAuditService().log({
           tenantId,
@@ -479,14 +476,78 @@ export class IdPortenAuthController {
         return reply.redirect(redirectUrl);
       }
 
-      // Derive user ID from identity (subject or NIN)
-      const userId =
-        sessionData.identity?.subject ||
-        sessionData.identity?.nin ||
-        'anonymous';
+      // Get NIN from identity - try multiple possible field names
+      let nin = null;
+
+      // Check various possible locations for the national ID
+      if (sessionData.identity) {
+        nin = sessionData.identity.nin ||
+              sessionData.identity.nationalIdentityNumber ||
+              sessionData.identity.nationalId ||
+              sessionData.identity.pid ||
+              sessionData.identity.sub;
+      } else if (sessionData.attributes) {
+        // Sometimes attributes are in a separate field
+        nin = sessionData.attributes.nin ||
+              sessionData.attributes.nationalIdentityNumber ||
+              sessionData.attributes.nationalId ||
+              sessionData.attributes.pid;
+      } else if (sessionData.subject) {
+        // BankID might return subject directly
+        nin = sessionData.subject.nin ||
+              sessionData.subject.nationalIdentityNumber;
+      }
+
+      console.log('[ID-PORTEN CALLBACK] Extracted NIN:', nin ? 'found' : 'NOT FOUND');
+
+      if (!nin) {
+        console.error('[ID-PORTEN CALLBACK] No NIN found in session data');
+        console.error('[ID-PORTEN CALLBACK] identity:', sessionData.identity);
+        console.error('[ID-PORTEN CALLBACK] attributes:', sessionData.attributes);
+        console.error('[ID-PORTEN CALLBACK] subject:', sessionData.subject);
+
+        const redirectUrl = buildRedirectUrl(returnTo, {
+          auth_error: 'no_identity',
+          auth_message: 'No national ID found in authentication response',
+        });
+        return reply.redirect(redirectUrl);
+      }
+
+      // Look up user by national ID in database
+      const db = container.resolve<any>('Database');
+      const userResult = await db.select().from(users).where(eq(users.nationalId, nin)).limit(1);
+      
+      if (!userResult.length) {
+        console.error('[ID-PORTEN CALLBACK] User not found for NIN:', nin.substring(0, 6) + '***');
+        const redirectUrl = buildRedirectUrl(returnTo, {
+          auth_error: 'user_not_found',
+          auth_message: 'No user account found for this identity',
+        });
+        return reply.redirect(redirectUrl);
+      }
+
+      const user = userResult[0];
+      const userId = user.id;
 
       // Clean up session
       await sessionStore.delete(state);
+
+      // Set session cookie with user ID using raw header
+      // Cookie is HttpOnly, Secure (in prod), SameSite=Lax for cross-site redirect
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieValue = encodeURIComponent(JSON.stringify({ userId, tenantId }));
+      const cookieParts = [
+        `digilist_session=${cookieValue}`,
+        'Path=/',
+        'HttpOnly',
+        'SameSite=Lax',
+        'Max-Age=86400',
+      ];
+      if (isProduction) {
+        cookieParts.push('Secure');
+        cookieParts.push('Domain=.digilist.no');
+      }
+      reply.header('Set-Cookie', cookieParts.join('; '));
 
       // Audit log successful authentication
       getAuditService().log({
@@ -501,21 +562,20 @@ export class IdPortenAuthController {
           provider: 'nbid',
           returnTo,
           hasIdentity: !!sessionData.identity,
+          userEmail: user.email,
         },
       });
 
       // Build success redirect URL with auth success flag
-      // The frontend will use this to know auth succeeded and can fetch session
       const redirectUrl = buildRedirectUrl(returnTo, {
         auth_success: 'true',
         auth_provider: 'bankid',
       });
 
-      // DEBUG: Log returnTo and redirectUrl
       console.log('[ID-PORTEN CALLBACK] Success redirect:');
+      console.log('  userId:', userId);
       console.log('  returnTo:', returnTo);
       console.log('  redirectUrl:', redirectUrl);
-      console.log('  session.returnTo:', session.returnTo);
 
       return reply.redirect(redirectUrl);
     } catch (error) {

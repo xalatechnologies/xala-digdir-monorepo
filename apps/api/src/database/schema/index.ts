@@ -330,10 +330,10 @@ export const integrationCredentials = pgTable('integration_credentials', {
 // with resource='credential' for unified audit management
 
 // ============================================================================
-// Listings (Rental Objects / Utleieobjekter)
+// Rental Objects (Utleieobjekter)
 // ============================================================================
 
-export const listings = pgTable('listings', {
+export const rentalObjects = pgTable('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
@@ -361,13 +361,16 @@ export const listings = pgTable('listings', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
-  tenantIdx: index('listings_tenant_idx').on(table.tenantId),
-  statusIdx: index('listings_status_idx').on(table.status),
-  categoryIdx: index('listings_category_idx').on(table.category),
-  subcategoryIdx: index('listings_subcategory_idx').on(table.subcategory),
-  slugIdx: index('listings_slug_idx').on(table.tenantId, table.slug),
-  timeModeIdx: index('listings_time_mode_idx').on(table.timeMode),
+  tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
+  statusIdx: index('rental_objects_status_idx').on(table.status),
+  categoryIdx: index('rental_objects_category_idx').on(table.category),
+  subcategoryIdx: index('rental_objects_subcategory_idx').on(table.subcategory),
+  slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
+  timeModeIdx: index('rental_objects_time_mode_idx').on(table.timeMode),
 }));
+
+// Alias for backward compatibility
+export const listings = rentalObjects;
 
 
 // ============================================================================

@@ -162,11 +162,11 @@ export function LoginPage(): React.ReactElement {
       <LoginOption
         icon={<VippsIcon />}
         title="Vipps"
-        description="Rask og enkel innlogging med Vipps"
+        description="Midlertidig deaktivert"
+        disabled
         onClick={() => {
-          // Pass current URL for session persistence (booking flow)
-          const returnTo = window.location.href;
-          vippsAuthService.authorize(returnTo);
+          // Vipps login temporarily disabled
+          console.log('Vipps login is temporarily disabled');
         }}
       />
       <LoginOption

@@ -6,7 +6,7 @@ import { Controller, Get, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, count, desc } from 'drizzle-orm';
-import { listings, bookings, allocations } from '../../database/schema/index';
+import { rentalObjects, bookings, allocations } from '../../database/schema/index';
 import { toCardProjections, toDetailsProjection } from '../rental-objects/rental-object.projections';
 import { ConfigurationService } from '../configuration/configuration.service';
 
@@ -17,7 +17,16 @@ export class PublicController {
   ) {}
 
   /**
-   * GET /api/public/listings - Public listing search
+   * GET /api/public/rental-objects - Public rental objects (alias for rentalObjects)
+   * Returns: ListingCardProjectionDTO[] (screen-ready, flat structure)
+   */
+  @Get('/rental-objects')
+  async getRentalObjects(request: FastifyRequest, reply: FastifyReply) {
+    return this.getListings(request, reply);
+  }
+
+  /**
+   * GET /api/public/rentalObjects - Public listing search
    * Returns: ListingCardProjectionDTO[] (screen-ready, flat structure)
    */
   @Get('/listings')
@@ -25,21 +34,21 @@ export class PublicController {
     const db = container.resolve<any>('Database');
     const { category, city, search, page = 1, limit = 20 } = request.query as any;
 
-    const conditions = [eq(listings.status, 'published')];
+    const conditions = [eq(rentalObjects.status, 'published')];
     
     // Note: In production, add city/search filters with proper metadata JSONB queries
 
     const result = await db
       .select()
-      .from(listings)
+      .from(rentalObjects)
       .where(and(...conditions))
-      .orderBy(desc(listings.createdAt))
+      .orderBy(desc(rentalObjects.createdAt))
       .limit(Number(limit))
       .offset((Number(page) - 1) * Number(limit));
 
     const countResult = await db
       .select({ count: count() })
-      .from(listings)
+      .from(rentalObjects)
       .where(and(...conditions));
 
     // Transform to screen-ready projection DTOs
@@ -57,7 +66,15 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/listings/:id - Public listing details
+   * GET /api/public/rental-objects/:id - Public rental object details
+   */
+  @Get('/rental-objects/:id')
+  async getRentalObject(request: FastifyRequest, reply: FastifyReply) {
+    return this.getListing(request, reply);
+  }
+
+  /**
+   * GET /api/public/rentalObjects/:id - Public listing details
    */
   @Get('/listings/:id')
   async getListing(request: FastifyRequest, reply: FastifyReply) {
@@ -66,8 +83,8 @@ export class PublicController {
 
     const result = await db
       .select()
-      .from(listings)
-      .where(and(eq(listings.id, id), eq(listings.status, 'published')));
+      .from(rentalObjects)
+      .where(and(eq(rentalObjects.id, id), eq(rentalObjects.status, 'published')));
 
     if (!result.length) {
       reply.code(404);
@@ -79,7 +96,7 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/listings/:id/availability - Public availability
+   * GET /api/public/rentalObjects/:id/availability - Public availability
    */
   @Get('/listings/:id/availability')
   async getAvailability(request: FastifyRequest, reply: FastifyReply) {
@@ -156,19 +173,19 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/cities - Cities with listings
+   * GET /api/public/cities - Cities with rentalObjects
    */
   @Get('/cities')
   async getCities(request: FastifyRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
 
-    // Get distinct cities from listings metadata
+    // Get distinct cities from rentalObjects metadata
     const result = await db
       .select({
-        metadata: listings.metadata,
+        metadata: rentalObjects.metadata,
       })
-      .from(listings)
-      .where(eq(listings.status, 'published'));
+      .from(rentalObjects)
+      .where(eq(rentalObjects.status, 'published'));
 
     const cities = new Set<string>();
     for (const row of result) {
@@ -185,7 +202,7 @@ export class PublicController {
   }
 
   /**
-   * GET /api/public/featured - Featured listings
+   * GET /api/public/featured - Featured rentalObjects
    */
   @Get('/featured')
   async getFeatured(request: FastifyRequest, reply: FastifyReply) {
@@ -193,18 +210,18 @@ export class PublicController {
 
     const result = await db
       .select({
-        id: listings.id,
-        name: listings.name,
-        slug: listings.slug,
-        category: listings.category,
-        subcategory: listings.subcategory,
-        description: listings.description,
-        pricing: listings.pricing,
-        images: listings.images,
-        timeMode: listings.timeMode,
+        id: rentalObjects.id,
+        name: rentalObjects.name,
+        slug: rentalObjects.slug,
+        category: rentalObjects.category,
+        subcategory: rentalObjects.subcategory,
+        description: rentalObjects.description,
+        pricing: rentalObjects.pricing,
+        images: rentalObjects.images,
+        timeMode: rentalObjects.timeMode,
       })
-      .from(listings)
-      .where(eq(listings.status, 'published'))
+      .from(rentalObjects)
+      .where(eq(rentalObjects.status, 'published'))
       .limit(6);
 
     return { data: result };

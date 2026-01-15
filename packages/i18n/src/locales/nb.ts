@@ -366,23 +366,29 @@ export const nb: Record<string, string> = {
   'minside.myBookingsDesc': 'Se og administrer bookinger',
   'minside.myCalendar': 'Min kalender',
   'minside.myCalendarDesc': 'Kalendervisning',
+  'minside.seasons': 'Sesongbooking',
+  'minside.seasonsDesc': 'Søk om faste tider for hele sesongen',
   'minside.messages': 'Meldinger',
   'minside.messagesDesc': 'Kommunikasjon',
+  'minside.billing': 'Faktura',
+  'minside.billingDesc': 'Se dine fakturaer og betalinger',
+  'minside.notifications': 'Varsler',
+  'minside.notificationsDesc': 'Se alle varsler og påminnelser',
   'minside.account': 'Konto',
   'minside.settings': 'Innstillinger',
   'minside.settingsDesc': 'Dine preferanser',
+  'minside.preferences': 'Preferanser',
+  'minside.preferencesDesc': 'Varsler, personvern og visning',
+  'minside.help': 'Hjelp',
+  'minside.helpDesc': 'Spørsmål og svar, kontakt oss',
   'minside.welcome': 'Velkommen tilbake',
   'minside.upcomingBookings': 'Kommende bookinger',
   'minside.noUpcomingBookings': 'Du har ingen kommende bookinger.',
   'minside.bookNow': 'Book nå',
   'minside.viewAll': 'Se alle',
   'minside.profile': 'Min profil',
-  'minside.preferences': 'Preferanser',
-  'minside.notifications': 'Varsler',
   'minside.offlineMode': 'Frakoblet modus',
   'minside.viewingCachedBookings': 'Du ser bufrede bookinger. Koble til nettet for oppdateringer.',
-  'minside.billing': 'Faktura',
-  'minside.billingDesc': 'Se dine fakturaer og betalinger',
 
   // Organization Portal (Minside)
   'org.organization': 'Organisasjon',
@@ -396,6 +402,12 @@ export const nb: Record<string, string> = {
   'org.membersDesc': 'Administrer medlemmer',
   'org.seasonRental': 'Sesongleie',
   'org.seasonRentalDesc': 'Faste leieperioder',
+  'org.notifications': 'Varsler',
+  'org.notificationsDesc': 'Konfigurer organisasjonens varsler',
+  'org.settings': 'Innstillinger',
+  'org.settingsDesc': 'Organisasjonsprofil og fakturering',
+  'org.activity': 'Aktivitetslogg',
+  'org.activityDesc': 'Hendelser i organisasjonen',
 
   // Errors (generic)
   'errors.generic': 'Noe gikk galt. Vennligst prøv igjen.',
@@ -980,6 +992,54 @@ export const nb: Record<string, string> = {
   // Booking
   'sdk.booking.advanceDays': 'dager paa forhaand',
   'sdk.booking.standardCancellation': 'Standard avbestillingsregler',
+
+  // ============================================================================
+  // Help & Support
+  // ============================================================================
+  'help.title': 'Hjelp og støtte',
+  'help.description': 'Finn svar på dine spørsmål eller kontakt oss for hjelp',
+  'help.searchPlaceholder': 'Søk etter hjelp...',
+
+  // Quick Links
+  'help.quickLinks.booking': 'Booking',
+  'help.quickLinks.payment': 'Betaling',
+  'help.quickLinks.account': 'Konto',
+  'help.quickLinks.organization': 'Organisasjon',
+
+  // FAQ Sections
+  'help.faq.bookingTitle': 'Booking og reservasjon',
+  'help.faq.accountTitle': 'Konto og profil',
+  'help.faq.organizationTitle': 'Organisasjoner',
+
+  // FAQ - Booking
+  'help.faq.booking.howToBook.question': 'Hvordan booker jeg et lokale?',
+  'help.faq.booking.howToBook.answer': 'Gå til listeoversikten, velg ønsket lokale og dato, og klikk "Book nå". Du vil motta bekreftelse på e-post.',
+  'help.faq.booking.changeOrCancel.question': 'Kan jeg endre eller kansellere en booking?',
+  'help.faq.booking.changeOrCancel.answer': 'Ja, du kan endre eller kansellere bookinger inntil 24 timer før. Gå til "Mine bookinger" og velg booking.',
+  'help.faq.booking.payment.question': 'Hvordan betaler jeg?',
+  'help.faq.booking.payment.answer': 'Betaling skjer vanligvis via faktura. For enkelte lokaler kan direkte betaling være tilgjengelig.',
+
+  // FAQ - Account
+  'help.faq.account.create.question': 'Hvordan oppretter jeg konto?',
+  'help.faq.account.create.answer': 'Klikk "Registrer" og fyll ut skjemaet med navn, e-post og passord.',
+  'help.faq.account.changePassword.question': 'Hvordan endrer jeg passordet mitt?',
+  'help.faq.account.changePassword.answer': 'Gå til Innstillinger > Sikkerhet og klikk "Endre passord".',
+
+  // FAQ - Organization
+  'help.faq.organization.create.question': 'Hvordan oppretter jeg en organisasjon?',
+  'help.faq.organization.create.answer': 'Gå til Organisasjon > Ny organisasjon og fyll ut informasjon om organisasjonen.',
+  'help.faq.organization.invite.question': 'Hvordan inviterer jeg medlemmer?',
+  'help.faq.organization.invite.answer': 'Under Organisasjon > Medlemmer kan du invitere nye medlemmer via e-post.',
+
+  // Contact Form
+  'help.contact.title': 'Kontakt oss',
+  'help.contact.subject': 'Emne',
+  'help.contact.subjectPlaceholder': 'Hva gjelder henvendelsen?',
+  'help.contact.message': 'Melding',
+  'help.contact.messagePlaceholder': 'Beskriv problemet eller spørsmålet ditt...',
+  'help.contact.submit': 'Send henvendelse',
+  'help.contact.submitting': 'Sender...',
+  'help.contact.success': 'Henvendelse sendt!',
 
   // ============================================================================
   // GDPR Consent
