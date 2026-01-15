@@ -487,3 +487,20 @@ export {
   useAvailableNotificationChannels,
   useNotificationRateLimits,
 } from './use-notification-system';
+
+// Booking Quote hooks (XALA-compliant projection-only)
+export {
+  bookingQuoteKeys,
+  useBookingQuote,
+  useRecurringPreview,
+  useCreateBookingFromQuote,
+} from './use-booking-quote';
+
+// Rental Object Calendar hooks (XALA-compliant)
+export {
+  calendarKeys,
+  useCalendarConfig,
+  useCalendarAvailability,
+  useRentalObjectCalendar,
+  useCalendarRealtime as useRentalObjectCalendarRealtime,
+} from './use-rental-object-calendar';

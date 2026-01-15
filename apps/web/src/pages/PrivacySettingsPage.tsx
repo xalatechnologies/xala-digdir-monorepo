@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Tabs, TabList, Tab, TabPanel } from '@xala/ds';
+import { Container, Tabs, TabsList, TabsTab, TabsPanel } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { ConsentSettings, DataSubjectRequestForm } from '../components';
 
@@ -10,22 +10,22 @@ export function PrivacySettingsPage() {
   return (
     <Container maxWidth="1200px" style={{ padding: 'var(--ds-spacing-6) var(--ds-spacing-4)' }}>
       <Tabs value={activeTab} onChange={setActiveTab}>
-        <TabList aria-label={t('gdpr.settings.tabsLabel')}>
-          <Tab value="consents">{t('gdpr.settings.consentsTab')}</Tab>
-          <Tab value="requests">{t('gdpr.settings.requestsTab')}</Tab>
-        </TabList>
+        <TabsList aria-label={t('gdpr.settings.tabsLabel')}>
+          <TabsTab value="consents">{t('gdpr.settings.consentsTab')}</TabsTab>
+          <TabsTab value="requests">{t('gdpr.settings.requestsTab')}</TabsTab>
+        </TabsList>
 
-        <TabPanel value="consents">
+        <TabsPanel value="consents">
           <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
             <ConsentSettings />
           </div>
-        </TabPanel>
+        </TabsPanel>
 
-        <TabPanel value="requests">
+        <TabsPanel value="requests">
           <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
             <DataSubjectRequestForm />
           </div>
-        </TabPanel>
+        </TabsPanel>
       </Tabs>
     </Container>
   );

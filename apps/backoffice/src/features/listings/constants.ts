@@ -13,3 +13,13 @@ export const LISTING_TYPE_OPTIONS: Array<{ id: ListingType | 'ALL'; label: strin
   { id: 'VEHICLE', label: 'Kjøretøy' },
   { id: 'OTHER', label: 'Annet' },
 ];
+
+// Listing type labels mapping
+export const LISTING_TYPE_LABELS: Record<ListingType, string> = {
+  SPACE: 'Lokaler',
+  RESOURCE: 'Ressurser',
+  SERVICE: 'Tjenester',
+  EVENT: 'Arrangementer',
+  VEHICLE: 'Kjøretøy',
+  OTHER: 'Annet',
+};

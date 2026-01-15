@@ -131,8 +131,8 @@ export type {
   GeocodeConfig,
 } from './utils';
 
-// Transforms - Data transformation utilities
-export * from './transforms';
+// DAL - Data Access Layer (cache management, query keys)
+export * from './dal';
 
 // Localization - Translation key constants for i18n
 export * from './localization';

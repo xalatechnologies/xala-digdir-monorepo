@@ -8,7 +8,8 @@ import * as React from 'react';
 import { ImageGallery, KeyFactsRow, FacilityChips, OpeningHoursCard, LocationCard, ContactInfoCard, Card, Heading, Paragraph, Badge, SeasonalLeaseStatusBadge, Button } from '@xala/ds';
 import type { Listing, SeasonalLease } from '@digilist/client-sdk';
 import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds';
-import { getListingTypeLabel, formatDateTime, useSeasonalLeases, formatWeekdays, formatPeriod, formatTimeSlot } from '@digilist/client-sdk';
+import { formatDateTime, useSeasonalLeases, formatWeekdays, formatPeriod, formatTimeSlot } from '@digilist/client-sdk';
+import { LISTING_TYPE_LABELS } from '../../constants';
 import { useNavigate } from 'react-router-dom';
 
 // =============================================================================
@@ -89,7 +90,7 @@ function buildKeyFacts(listing: Listing): KeyFact[] {
   facts.push({
     type: 'custom',
     label: 'Type',
-    value: getListingTypeLabel(listing.type),
+    value: LISTING_TYPE_LABELS[listing.type] || listing.type,
   });
 
   // Add status

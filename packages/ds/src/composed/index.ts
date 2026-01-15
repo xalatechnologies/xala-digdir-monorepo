@@ -121,3 +121,15 @@ export type {
   LocaleLabels,
   ConnectedLanguageSwitcherProps
 } from './LanguageSwitcher';
+
+// RentalObjectCalendar (XALA-compliant shared calendar)
+export { RentalObjectCalendar } from './RentalObjectCalendar';
+export type {
+  RentalObjectCalendarProps,
+  CalendarSlot,
+  CalendarMode,
+  SlotStatus as CalendarSlotStatus,
+  CalendarAction,
+  CalendarConfig,
+  CalendarSelection,
+} from './RentalObjectCalendar';

@@ -91,6 +91,8 @@ export {
   // Language Switcher
   LanguageSwitcher,
   ConnectedLanguageSwitcher,
+  // Calendar (XALA-compliant rental object calendar)
+  RentalObjectCalendar,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -143,6 +145,14 @@ export type {
   LanguageSwitcherSize,
   LocaleLabels,
   ConnectedLanguageSwitcherProps,
+  // Calendar Types (XALA-compliant)
+  RentalObjectCalendarProps,
+  CalendarSlot,
+  CalendarMode,
+  CalendarSlotStatus,
+  CalendarAction,
+  CalendarConfig,
+  CalendarSelection,
 } from './composed';
 
 // Primitives - Low-level building blocks

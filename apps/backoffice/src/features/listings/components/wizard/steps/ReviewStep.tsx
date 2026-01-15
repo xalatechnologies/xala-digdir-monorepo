@@ -5,7 +5,7 @@
  */
 
 import { Paragraph, Heading, Tag, ListingStatusBadge, Card } from '@xala/ds';
-import { LISTING_TYPE_LABELS } from '@digilist/client-sdk';
+import { LISTING_TYPE_LABELS } from '../../../constants';
 import type { BackofficeListing } from '../../../types';
 import { PUBLISH_REQUIREMENTS } from '../../../types';
 

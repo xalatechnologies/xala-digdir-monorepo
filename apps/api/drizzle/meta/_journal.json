@@ -22,6 +22,20 @@
       "when": 1768417430028,
       "tag": "0002_fancy_jack_power",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1768507200000,
+      "tag": "0003_rental_objects_category",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768510800000,
+      "tag": "0004_gdpr_consent_system",
+      "breakpoints": true
     }
   ]
 }
