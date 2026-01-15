@@ -18,10 +18,12 @@ import {
   useOrganizations,
   useRecurringPreview,
   useCreateRecurringBooking,
+  type RealtimeEvent,
 } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { useAuth } from '../../../../hooks/useAuth';
+import { useRealtimeUpdates } from '../../adapters/realtimeClient';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
@@ -59,6 +61,25 @@ function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+function WarningTriangleIcon({ size = 20 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+
+function XIcon({ size = 16 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
@@ -312,6 +333,16 @@ export function BookingWidgetPlacement({
   const [isCalendarExpanded, setIsCalendarExpanded] = React.useState(false);
 
   // ==========================================================================
+  // Selection Invalidation State (WebSocket availability changes)
+  // ==========================================================================
+
+  /** Keys of slots that were selected but became unavailable via WebSocket */
+  const [invalidatedSlots, setInvalidatedSlots] = React.useState<Set<string>>(new Set());
+
+  /** Whether the invalidation banner is dismissed */
+  const [invalidationBannerDismissed, setInvalidationBannerDismissed] = React.useState(false);
+
+  // ==========================================================================
   // Recurring Booking Flow State
   // ==========================================================================
 
@@ -411,6 +442,118 @@ export function BookingWidgetPlacement({
 
   /** Get the current step configuration based on mode */
   const currentSteps = currentBookingMode === 'RECURRING' ? RECURRING_BOOKING_STEPS : BOOKING_STEPS;
+
+  // ==========================================================================
+  // WebSocket Availability Change Handler
+  // ==========================================================================
+
+  /**
+   * Handle real-time availability updates from WebSocket.
+   * Checks if any selected slots are affected by availability changes.
+   */
+  const handleRealtimeUpdate = React.useCallback(
+    (event: RealtimeEvent) => {
+      // Only handle availability-related events
+      const availabilityEventTypes = [
+        'booking.created',
+        'booking.cancelled',
+        'availability.changed',
+        'block.created',
+        'block.removed',
+        'reservation.created',
+        'reservation.expired',
+      ];
+
+      if (!availabilityEventTypes.includes(event.type)) {
+        return;
+      }
+
+      // Extract affected slot information from event data
+      const eventData = event.data as {
+        listingId?: string;
+        date?: string;
+        startTime?: string;
+        endTime?: string;
+        slots?: Array<{ date: string; startTime: string; endTime: string }>;
+      } | null;
+
+      if (!eventData) return;
+
+      // Check if this event affects the current listing
+      if (eventData.listingId && eventData.listingId !== listingId) {
+        return;
+      }
+
+      // Collect newly busy slots from the event
+      const newBusySlots: Array<{ date: string; startTime: string; endTime: string }> = [];
+
+      if (eventData.slots) {
+        newBusySlots.push(...eventData.slots);
+      } else if (eventData.date && eventData.startTime && eventData.endTime) {
+        newBusySlots.push({
+          date: eventData.date,
+          startTime: eventData.startTime,
+          endTime: eventData.endTime,
+        });
+      }
+
+      // Check if any selected slots are now in conflict
+      const newInvalidated = new Set<string>();
+
+      selectedSlots.forEach(slotKey => {
+        const [dayIdxStr, timeStr] = slotKey.split('-');
+        const dayIdx = parseInt(dayIdxStr ?? '0', 10);
+        const details = slotDetails[slotKey] ?? { duration: 60 };
+
+        const slotDate = new Date(weekStart);
+        slotDate.setDate(weekStart.getDate() + dayIdx);
+        const dateStr = slotDate.toISOString().split('T')[0] ?? '';
+
+        const [startH, startM] = (timeStr ?? '00:00').split(':').map(Number);
+        const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
+        const endH = Math.floor(endMins / 60);
+        const endM = endMins % 60;
+        const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+
+        // Check if this slot conflicts with any newly busy slot
+        const isConflicting = newBusySlots.some(busy => {
+          if (busy.date !== dateStr) return false;
+          // Check for time overlap
+          return (timeStr ?? '') < busy.endTime && endTime > busy.startTime;
+        });
+
+        if (isConflicting) {
+          newInvalidated.add(slotKey);
+        }
+      });
+
+      if (newInvalidated.size > 0) {
+        setInvalidatedSlots(prev => {
+          const next = new Set(prev);
+          newInvalidated.forEach(key => next.add(key));
+          return next;
+        });
+        setInvalidationBannerDismissed(false);
+      }
+    },
+    [listingId, selectedSlots, slotDetails, weekStart]
+  );
+
+  // Subscribe to realtime updates for this listing
+  useRealtimeUpdates(listingId ?? '', handleRealtimeUpdate);
+
+  // Clear invalidated slots when selections change
+  React.useEffect(() => {
+    setInvalidatedSlots(prev => {
+      const next = new Set<string>();
+      prev.forEach(key => {
+        if (selectedSlots.has(key)) {
+          next.add(key);
+        }
+      });
+      return next;
+    });
+  }, [selectedSlots]);
 
   React.useEffect(() => {
     const checkMobile = (): void => setIsMobile(window.innerWidth < 768);
@@ -747,6 +890,40 @@ export function BookingWidgetPlacement({
     // Stay on calendar step to allow user to change selections
   };
 
+  // ==========================================================================
+  // Selection Invalidation Banner Handlers
+  // ==========================================================================
+
+  /**
+   * Dismiss the invalidation banner without removing the invalidated slots.
+   * User can still see the slots are invalid but continues with selection.
+   */
+  const handleDismissInvalidationBanner = (): void => {
+    setInvalidationBannerDismissed(true);
+  };
+
+  /**
+   * Remove all invalidated slots from the selection.
+   * This clears the warning and keeps only valid selections.
+   */
+  const handleRemoveInvalidatedSlots = (): void => {
+    setSelectedSlots(prev => {
+      const next = new Set(prev);
+      invalidatedSlots.forEach(key => next.delete(key));
+      return next;
+    });
+    setSlotDetails(prev => {
+      const next = { ...prev };
+      invalidatedSlots.forEach(key => delete next[key]);
+      return next;
+    });
+    setInvalidatedSlots(new Set());
+    setInvalidationBannerDismissed(false);
+  };
+
+  /** Check if we should show the invalidation banner */
+  const showInvalidationBanner = invalidatedSlots.size > 0 && !invalidationBannerDismissed && currentStep === 0;
+
   return (
     <div
       className={className}
@@ -781,6 +958,97 @@ export function BookingWidgetPlacement({
             size="sm"
             variant="compact"
           />
+        </div>
+      )}
+
+      {/* Selection Invalidation Banner - Shows when WebSocket updates invalidate selected slots */}
+      {showInvalidationBanner && (
+        <div
+          style={{
+            margin: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-3)',
+            backgroundColor: 'var(--ds-color-warning-surface-default)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            border: '1px solid var(--ds-color-warning-border-default)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 'var(--ds-spacing-2)',
+            }}
+          >
+            <div style={{ color: 'var(--ds-color-warning-text-default)', flexShrink: 0, marginTop: '2px' }}>
+              <WarningTriangleIcon size={20} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <Paragraph
+                data-size="sm"
+                style={{
+                  margin: 0,
+                  fontWeight: 'var(--ds-font-weight-medium)',
+                  color: 'var(--ds-color-warning-text-default)',
+                }}
+              >
+                {invalidatedSlots.size === 1
+                  ? 'Et valgt tidspunkt er ikke lenger tilgjengelig'
+                  : `${invalidatedSlots.size} valgte tidspunkter er ikke lenger tilgjengelige`}
+              </Paragraph>
+              <Paragraph
+                data-size="xs"
+                style={{
+                  margin: 0,
+                  marginTop: 'var(--ds-spacing-1)',
+                  color: 'var(--ds-color-warning-text-default)',
+                  opacity: 0.9,
+                }}
+              >
+                Noen andre har booket disse tidspunktene. Fjern de ugyldige valgene eller velg nye tidspunkter.
+              </Paragraph>
+            </div>
+            <button
+              type="button"
+              onClick={handleDismissInvalidationBanner}
+              aria-label="Lukk varsel"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '24px',
+                height: '24px',
+                border: 'none',
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+                borderRadius: 'var(--ds-border-radius-sm)',
+                color: 'var(--ds-color-warning-text-default)',
+                opacity: 0.8,
+                flexShrink: 0,
+              }}
+            >
+              <XIcon size={16} />
+            </button>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--ds-spacing-2)',
+              marginTop: 'var(--ds-spacing-3)',
+              paddingLeft: 'calc(20px + var(--ds-spacing-2))',
+            }}
+          >
+            <Button
+              type="button"
+              variant="secondary"
+              data-size="sm"
+              onClick={handleRemoveInvalidatedSlots}
+              style={{
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+              }}
+            >
+              Fjern ugyldige ({invalidatedSlots.size})
+            </Button>
+          </div>
         </div>
       )}
 
