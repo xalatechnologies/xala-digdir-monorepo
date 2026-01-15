@@ -1,7 +1,10 @@
 /**
  * Login Page - Backoffice App
  *
- * Uses reusable login components from @xala/ds
+ * Uses reusable login components from @xala/ds.
+ * After successful login, handles role detection:
+ * - Single-role users: auto-redirect to appropriate home
+ * - Dual-role users: redirect to role selection page
  */
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -16,22 +19,41 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
+import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading, login } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, login } = useAuth();
+  const { isInitializing, getHomeRoute } = useBackofficeRole();
+  const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+  // Get the intended destination from location state
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
 
+  // Handle post-login redirect based on role state
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate, from]);
+    // Wait for both auth and role initialization to complete
+    if (authLoading || isInitializing) return;
+    if (!isAuthenticated) return;
 
-  if (isLoading) {
+    // Dual-role user: redirect to role selection, preserving intended destination
+    if (needsRoleSelection) {
+      navigate('/role-selection', {
+        replace: true,
+        state: from ? { from: { pathname: from } } : undefined,
+      });
+      return;
+    }
+
+    // Single-role user or already selected: redirect to intended destination or role-appropriate home
+    const destination = from ?? getHomeRoute();
+    navigate(destination, { replace: true });
+  }, [isAuthenticated, authLoading, isInitializing, needsRoleSelection, navigate, from, getHomeRoute]);
+
+  // Show nothing while loading auth or role state
+  if (authLoading || isInitializing) {
     return <></>;
   }
 
