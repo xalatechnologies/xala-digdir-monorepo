@@ -15,14 +15,24 @@ import { BadRequestError } from '../errors/problem-details';
  * In production, these should come from environment variables
  */
 const ALLOWED_ORIGINS = [
+  // Local development
   'http://localhost:5173',  // web app dev
   'http://localhost:5174',  // minside dev
   'http://localhost:5175',  // backoffice dev
+  'http://localhost:5176',  // additional dev port
+  'http://localhost:5177',  // additional dev port
+  'http://localhost:5178',  // additional dev port
+  // Production
   'https://digilist.no',
   'https://www.digilist.no',
   'https://app.digilist.no',
   'https://admin.digilist.no',
   'https://minside.digilist.no',
+  'https://backoffice.digilist.no',
+  // Test/Staging
+  'https://web-test.digilist.no',
+  'https://backoffice-test.digilist.no',
+  'https://minside-test.digilist.no',
 ];
 
 /**
@@ -30,7 +40,9 @@ const ALLOWED_ORIGINS = [
  * Uses regex patterns to validate known routes
  */
 const ALLOWED_PATH_PATTERNS = [
-  /^\/$/,                                    // Root
+  /^\/$/, 
+  /^\/login$/,                              // Login page
+  /^\/auth(\/.+)?$/,                        // Auth routes                                   // Root
   /^\/listings(\/[a-zA-Z0-9-]+)?$/,         // Listings and listing details
   /^\/bookings(\/[a-zA-Z0-9-]+)?$/,         // Bookings
   /^\/dashboard$/,                           // Dashboard

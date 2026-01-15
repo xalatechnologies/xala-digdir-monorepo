@@ -335,10 +335,9 @@ async function bootstrap() {
   console.log('✓ REST routes registered');
 
   // Register Notification System routes (custom registration)
-  // TEMPORARILY DISABLED: Route conflict with old NotificationsController needs investigation
-  // const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
-  // notificationSystemController.registerRoutes(app);
-  // console.log('✓ Notification system routes registered');
+  const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
+  notificationSystemController.registerRoutes(app);
+  console.log('✓ Notification system routes registered');
 
   // Register GDPR routes (custom registration)
   const gdprController = container.resolve('GdprController') as GdprController;

@@ -264,16 +264,12 @@ Templates support multiple channels and locales (Norwegian and English):
 
 | Code | Description |
 |------|-------------|
-| `request_received` | Booking request received |
-| `approved` | Booking approved |
-| `rejected` | Booking rejected |
-| `booking_changed` | Booking modified |
-| `cancelled` | Booking cancelled |
-| `reminder_24h` | 24-hour reminder |
-| `reminder_2h` | 2-hour reminder |
-| `invoice_available` | Invoice ready |
-| `payment_status` | Payment status changed |
-| `request_more_info` | More info needed from booker |
+| `booking_approved` | Booking approved |
+| `booking_rejected` | Booking rejected |
+| `gdpr_request_received` | GDPR data request received |
+| `gdpr_request_completed` | GDPR data request completed |
+
+**Note:** More templates can be added via the API or database seeding.
 
 ### Variable Interpolation
 
@@ -443,6 +439,79 @@ Common error codes:
 - Tenant isolation enforced on all queries
 - WebSocket connections authenticated by user ID
 - No PII in logs
+
+## GDPR Integration
+
+The notification system is integrated with the GDPR module to provide automatic notifications for data subject requests.
+
+### GDPR Templates
+
+Two GDPR-specific templates are seeded automatically:
+
+1. **gdpr_request_received**
+   - Sent when user submits a data subject request
+   - Channels: in-app, email
+   - Variables: requestType, requestId, receivedDate, userName
+   - Purpose: Confirm receipt and set expectations (30-day timeline)
+
+2. **gdpr_request_completed**
+   - Sent when admin completes a data subject request
+   - Channels: in-app, email
+   - Variables: requestType, requestId, completedDate, completionNotes, userName
+   - Purpose: Inform user of outcome
+
+### Automatic Triggers
+
+The GDPR controller automatically sends notifications:
+
+```typescript
+// On request submission
+await notificationService.notify(
+  tenantId,
+  user,
+  'gdpr_request_received',
+  {
+    userName: user.name,
+    requestType: 'Data Access Request',
+    requestId: request.id,
+    receivedDate: '15. januar 2026',
+  },
+  {
+    channels: ['in_app', 'email'],
+    priority: 'normal',
+    relatedEntityType: 'gdpr_request',
+    relatedEntityId: request.id,
+  }
+);
+
+// On request completion
+await notificationService.notify(
+  tenantId,
+  user,
+  'gdpr_request_completed',
+  {
+    userName: user.name,
+    requestType: 'Data Access Request',
+    requestId: request.id,
+    completedDate: '20. januar 2026',
+    completionNotes: 'Your data has been exported and is available for download.',
+  },
+  {
+    channels: ['in_app', 'email'],
+    priority: 'normal',
+    relatedEntityType: 'gdpr_request',
+    relatedEntityId: request.id,
+  }
+);
+```
+
+### Compliance Benefits
+
+- **Transparency (GDPR Art. 12)** - Users receive clear communication about their requests
+- **Timely Response (GDPR Art. 12.3)** - 30-day timeline communicated upfront
+- **Audit Trail** - All notifications logged in `notification_delivery_logs`
+
+For detailed GDPR integration documentation, see: `/docs/NOTIFICATION_GDPR_INTEGRATION.md`
 
 ## Monitoring
 

@@ -36,6 +36,13 @@
       "when": 1768510800000,
       "tag": "0004_gdpr_consent_system",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768513200000,
+      "tag": "0005_notification_system",
+      "breakpoints": true
     }
   ]
 }

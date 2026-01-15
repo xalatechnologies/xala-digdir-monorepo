@@ -248,6 +248,12 @@ export class IdPortenAuthController {
 
       const session = (await response.json()) as { id: string; authenticationUrl: string };
 
+      // DEBUG: Log what returnTo is being stored
+      console.log('[ID-PORTEN AUTHORIZE] Storing session:');
+      console.log('  state:', state);
+      console.log('  validatedReturnTo:', validatedReturnTo);
+      console.log('  tenantId:', tenantId);
+
       // Store session with returnTo for post-auth redirect (Redis-backed)
       await sessionStore.set(state, {
         sessionId: session.id,
@@ -350,6 +356,12 @@ export class IdPortenAuthController {
     }
 
     const session = await sessionStore.get(state);
+
+    // DEBUG: Log retrieved session
+    console.log('[ID-PORTEN CALLBACK] Retrieved session:');
+    console.log('  state:', state);
+    console.log('  session:', session);
+
     if (!session) {
       // Audit log invalid state
       getAuditService().log({
@@ -373,6 +385,12 @@ export class IdPortenAuthController {
 
     const returnTo = session.returnTo || DEFAULT_REDIRECT_URL;
     const tenantId = session.tenantId || null;
+
+    // DEBUG: Log returnTo resolution
+    console.log('[ID-PORTEN CALLBACK] ReturnTo resolution:');
+    console.log('  session.returnTo:', session.returnTo);
+    console.log('  DEFAULT_REDIRECT_URL:', DEFAULT_REDIRECT_URL);
+    console.log('  resolved returnTo:', returnTo);
 
     if (status === 'abort') {
       await sessionStore.delete(state);

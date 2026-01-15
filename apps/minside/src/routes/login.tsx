@@ -18,7 +18,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
-import { idportenService } from '@digilist/client-sdk';
+import { idportenService, vippsAuthService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -176,7 +176,11 @@ export function LoginPage(): React.ReactElement {
         icon={<VippsIcon />}
         title="Vipps"
         description="Rask innlogging med Vipps"
-        onClick={() => login('vipps')}
+        onClick={() => {
+          // Pass current URL for session persistence
+          const returnTo = window.location.href;
+          vippsAuthService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<MicrosoftIcon />}

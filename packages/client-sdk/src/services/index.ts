@@ -143,6 +143,9 @@ export type {
 
 // ID-porten (BankID/eID Hub)
 export { idportenService } from './idporten.service';
+
+// Vipps Login (OIDC Authentication)
+export { vippsAuthService } from './vipps.service';
 export type {
   IdPortenConfig,
   IdPortenUser,

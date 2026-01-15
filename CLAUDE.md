@@ -17,6 +17,8 @@ municipal booking and resource management system.
 - SDK-driven (@digilist/client-sdk is THE integration layer)
 - RFC 7807 compliant (Problem Details for errors)
 - RBAC enforced (role-based access control)
+- GDPR compliant (consent management, data subject rights, Article 30 audit trails)
+- Multi-channel notifications (in-app, email, SMS, push with WebSocket realtime)
 - Production live
 
 ---
@@ -322,6 +324,8 @@ function MyComponent() {
 - `listings.*` - Listing management
 - `bookings.*` - Booking management
 - `backoffice.*` - Backoffice-specific UI
+- `gdpr.*` - GDPR consent and data subject requests
+- `notifications.*` - Notification system UI
 
 **If i18n key is missing → STOP and add it first.**
 
@@ -364,7 +368,7 @@ function MyComponent() {
 
 The `@digilist/client-sdk` package provides:
 
-### Services (24+)
+### Services (30+)
 
 Located in `packages/client-sdk/src/services/`:
 
@@ -375,10 +379,12 @@ Located in `packages/client-sdk/src/services/`:
 - `conversationService` - Messaging
 - `dashboardService` - Dashboard data
 - `discountCodeService` - Discount codes
+- `gdprService` - GDPR consent and data subject requests
 - `integrationService` - Third-party integrations
 - `listingService` - Listing management
 - `monitoringService` - System monitoring
-- `notificationService` - Push notifications
+- `notificationService` - Push notifications and preferences
+- `notificationSystemService` - Multi-channel notifications with templates
 - `organizationService` - Organization/Kommune management
 - `reportsService` - Analytics and reporting
 - And more...

@@ -185,9 +185,9 @@ export function LoginPage(): React.ReactElement {
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
         onClick={() => {
-          // Pass current origin so backend knows this is backoffice
-          // Backend will automatically redirect to role-based dashboard
-          const returnTo = window.location.origin + '/';
+          // Pass full current URL for session persistence
+          // User returns to exact page they were on after auth
+          const returnTo = window.location.href;
           idportenService.authorize(returnTo);
         }}
       />
