@@ -14,7 +14,6 @@ import {
   LoginOption,
   IdPortenIcon,
   MicrosoftIcon,
-  BankIdIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
@@ -185,19 +184,13 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
-        onClick={() => login('idporten')}
+        onClick={() => signicatService.authorize('/role-selection')}
       />
       <LoginOption
         icon={<MicrosoftIcon />}
         title={t('auth.microsoft')}
         description={t('auth.microsoftDesc')}
         onClick={() => login('microsoft')}
-      />
-      <LoginOption
-        icon={<BankIdIcon />}
-        title={t('auth.bankid')}
-        description={t('auth.bankidDesc')}
-        onClick={() => signicatService.authorize('/role-selection')}
       />
     </LoginLayout>
   );

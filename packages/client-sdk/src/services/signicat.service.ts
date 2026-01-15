@@ -12,7 +12,7 @@
  * window.location.href = signicatService.getAuthorizeUrl();
  */
 
-import { getClient } from '../core/client-factory';
+import { getClient, getClientConfig } from '../core/client-factory';
 
 // =============================================================================
 // Types
@@ -63,6 +63,18 @@ class SignicatService {
   private basePath = '/api/auth/signicat';
 
   /**
+   * Get the API base URL from SDK config
+   */
+  private getApiBaseUrl(): string {
+    const config = getClientConfig();
+    if (config?.baseUrl) {
+      return config.baseUrl;
+    }
+    // Fallback to window.location.origin if SDK not configured
+    return typeof window !== 'undefined' ? window.location.origin : '';
+  }
+
+  /**
    * Get Signicat configuration
    */
   async getConfig(): Promise<{ data: SignicatConfig }> {
@@ -74,13 +86,14 @@ class SignicatService {
    * @param redirectUrl - Where to redirect after authentication (optional)
    */
   getAuthorizeUrl(redirectUrl?: string): string {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const baseUrl = this.getApiBaseUrl();
     let url = `${baseUrl}${this.basePath}/authorize`;
     if (redirectUrl) {
-      url += `?redirect_url=${encodeURIComponent(redirectUrl)}`;
+      url += `?returnTo=${encodeURIComponent(redirectUrl)}`;
     }
     return url;
   }
+
 
   /**
    * Start authorization flow by redirecting to Signicat

@@ -38,14 +38,14 @@ export function AccountSelectionPage(): React.ReactElement {
     }
   }, [authLoading, isAuthenticated, navigate]);
 
-  // Redirect away if account is already selected and remembered
+  // Redirect away only if user chose to remember their choice
   useEffect(() => {
-    if (hasSelectedAccount && rememberChoice) {
-      // Navigate to the appropriate dashboard based on account type
+    if (rememberChoice && hasSelectedAccount) {
+      // User chose "remember my choice" - skip selection and go to dashboard
       const destination = from ?? (accountType === 'organization' ? '/org' : '/');
       navigate(destination, { replace: true });
     }
-  }, [hasSelectedAccount, rememberChoice, accountType, navigate, from]);
+  }, [rememberChoice, hasSelectedAccount, accountType, navigate, from]);
 
   // Show nothing while loading auth
   if (authLoading) {

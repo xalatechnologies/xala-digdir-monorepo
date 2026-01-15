@@ -6,9 +6,9 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
-import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
+import { AccountContextProvider } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { AccountSelectionModal } from './components/AccountSelectionModal';
+// AccountSelectionModal disabled - using full-page /account-selection route instead
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { AccountSelectionPage } from './routes/account-selection';
@@ -61,26 +61,19 @@ function NotificationCenterProvider({ children }: { children: React.ReactNode })
 
 /**
  * Account Selection Wrapper
- * Displays the AccountSelectionModal when user hasn't selected an account yet
- * and hasn't chosen to remember their choice.
- *
- * Edge case handling:
- * - If rememberChoice is true (from localStorage), the modal is skipped
- * - The persisted context (personal/organization) is automatically restored
- *   by AccountContextProvider when rememberChoice is true
+ * DEPRECATED: Modal-based selection replaced with full-page /account-selection route
+ * Kept for backwards compatibility but modal is disabled.
+ * Users are now redirected to /account-selection after login (like backoffice role-selection).
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
-  const { hasSelectedAccount, rememberChoice } = useAccountContext();
-
-  // Show modal only if:
-  // 1. User hasn't selected an account yet (hasSelectedAccount = false)
-  // 2. User hasn't chosen to remember their choice (rememberChoice = false)
-  // If rememberChoice is true, skip modal and use persisted context
-  const showModal = !hasSelectedAccount && !rememberChoice;
+  // Modal disabled - using full-page account-selection route instead
+  // const { hasSelectedAccount, rememberChoice } = useAccountContext();
+  // const showModal = !hasSelectedAccount && !rememberChoice;
 
   return (
     <>
-      <AccountSelectionModal open={showModal} />
+      {/* Modal disabled - full-page selection at /account-selection */}
+      {/* <AccountSelectionModal open={showModal} /> */}
       {children}
     </>
   );

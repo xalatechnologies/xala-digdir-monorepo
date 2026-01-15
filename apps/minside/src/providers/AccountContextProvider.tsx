@@ -115,24 +115,18 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
   });
 
   // State: Has user made initial account selection
-  // Auto-mark as selected to skip the modal - users can switch via the dropdown
-  // EDGE CASE: If rememberChoice is true, automatically mark as selected
+  // Now using full-page /account-selection route - only skip if rememberChoice is true
   const [hasSelectedAccount, setHasSelectedAccount] = useState<boolean>(() => {
     const storedRememberChoice = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE) === 'true';
     const stored = localStorage.getItem(STORAGE_KEYS.HAS_SELECTED);
 
-    // Edge case: If rememberChoice is true, skip modal and restore persisted context
-    if (storedRememberChoice) {
-      localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
+    // Only auto-mark as selected if user chose to remember their choice
+    if (storedRememberChoice && stored === 'true') {
       return true;
     }
 
-    if (stored === null) {
-      // First time - auto-mark as selected
-      localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
-      return true;
-    }
-    return stored === 'true';
+    // Default: require selection (user will see /account-selection page)
+    return false;
   });
 
   // State: Lost organization message (shown when user's org membership was lost)
