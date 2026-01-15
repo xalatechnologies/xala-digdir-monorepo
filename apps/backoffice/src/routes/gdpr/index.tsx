@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   Container,
   Stack,
@@ -9,7 +9,6 @@ import {
   Button,
   Select,
   Textarea,
-  Modal,
   Alert,
   Pagination,
   Spinner,
@@ -33,12 +32,22 @@ export function GDPRManagementPage() {
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 20;
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   const requests = requestsData?.data || [];
   const totalPages = Math.ceil(requests.length / itemsPerPage);
   const paginatedRequests = requests.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    if (selectedRequest && dialogRef.current && !dialogRef.current.open) {
+      dialogRef.current.showModal();
+    } else if (!selectedRequest && dialogRef.current && dialogRef.current.open) {
+      dialogRef.current.close();
+    }
+  }, [selectedRequest]);
 
   const handleOpenModal = (request: DataSubjectRequestDTO) => {
     setSelectedRequest(request);
@@ -204,10 +213,17 @@ export function GDPRManagementPage() {
       </Stack>
 
       {selectedRequest && (
-        <Modal
-          open={true}
-          onClose={handleCloseModal}
+        <dialog
+          ref={dialogRef}
           aria-labelledby="request-modal-title"
+          style={{
+            padding: 'var(--ds-spacing-6)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            border: 'none',
+            boxShadow: 'var(--ds-shadow-xl)',
+            maxWidth: '600px',
+            width: '90vw',
+          }}
         >
           <Stack direction="column" gap="24px">
             <Heading id="request-modal-title" size="lg">
@@ -297,7 +313,7 @@ export function GDPRManagementPage() {
               </Button>
             </Stack>
           </Stack>
-        </Modal>
+        </dialog>
       )}
     </Container>
   );

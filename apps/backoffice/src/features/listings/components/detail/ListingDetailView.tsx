@@ -78,7 +78,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
     enabled: !!slug && !isUuid,
   });
 
-  const idQuery = useListing(slug || '', {
+  const idQuery = useRentalObject(slug || '', {
     enabled: !!slug && !!isUuid,
   });
 

@@ -11,7 +11,7 @@ import { ListingRowActions } from './ListingRowActions';
 import type { Listing, ListingStatus } from '@digilist/client-sdk';
 
 interface ListingsGridProps {
-  listings: Listing[];
+  listings: RentalObject[];
   isLoading: boolean;
   selectedIds: string[];
   onSelectOne: (id: string, selected: boolean) => void;

@@ -12,7 +12,7 @@ import { ConflictIndicator, getConflictColors } from './ConflictIndicator';
 
 interface TimelineViewProps {
   events: CalendarEvent[];
-  listings: Listing[];
+  listings: RentalObject[];
   dateRange: { start: Date; end: Date };
   currentTime?: Date;
   isLoading?: boolean;

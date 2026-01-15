@@ -35,7 +35,7 @@ import {
   useBookings,
   useConfirmBooking,
   useCancelBooking,
-  useListings,
+  useRentalObjects,
   useUsers,
   type BookingStatus,
   type Booking,
@@ -116,7 +116,7 @@ export function BookingsPage() {
   ].filter(Boolean).length;
 
   // Fetch listings to create name lookup map
-  const { data: listingsData } = useListings({ limit: 100 });
+  const { data: listingsData } = useRentalObjects({ limit: 100 });
   const listingNameMap = useMemo(() => {
     const map = new Map<string, string>();
     listingsData?.data?.forEach(listing => {

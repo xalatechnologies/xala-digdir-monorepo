@@ -452,7 +452,7 @@ export function SeasonDetailPage() {
 
         {activeTab === 'venues' && (
           <>
-            {/* TODO: Replace with useListings({ seasonId: id }) from SDK */}
+            {/* TODO: Replace with useRentalObjects({ seasonId: id }) from SDK */}
             {/* For now, show empty state */}
             {[].length === 0 ? (
               <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

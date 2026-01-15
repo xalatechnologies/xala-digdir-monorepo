@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { TimelineView } from './TimelineView';
 import type { CalendarEvent, Listing } from '@digilist/client-sdk';
 
-const mockListings: Listing[] = [
+const mockListings: RentalObject[] = [
   { id: 'listing-1', name: 'Møterom A', status: 'published' } as Listing,
   { id: 'listing-2', name: 'Møterom B', status: 'published' } as Listing,
 ];
@@ -127,7 +127,7 @@ describe('TimelineView', () => {
   });
 
   it('should display capacity if available', () => {
-    const listingsWithCapacity: Listing[] = [
+    const listingsWithCapacity: RentalObject[] = [
       { id: 'listing-1', name: 'Møterom A', status: 'published', capacity: 10 } as Listing,
     ];
 

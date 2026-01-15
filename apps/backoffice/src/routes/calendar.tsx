@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
-import { useCalendarEvents, useListings, type CalendarEvent, type Listing, formatWeekRange } from '@digilist/client-sdk';
+import { useCalendarEvents, useRentalObjects, type CalendarEvent, type RentalObject, formatWeekRange } from '@digilist/client-sdk';
 import {
   CreateBlockModal,
   EventDrawer,
@@ -110,7 +110,7 @@ export function CalendarPage() {
   const monthStart = useMemo(() => getMonthStart(currentDate), [currentDate]);
 
   // Fetch listings for filter dropdown
-  const { data: listingsData } = useListings({ status: 'published' });
+  const { data: listingsData } = useRentalObjects({ status: 'published' });
   const listings = listingsData?.data ?? [];
 
   // Build calendar query params based on view

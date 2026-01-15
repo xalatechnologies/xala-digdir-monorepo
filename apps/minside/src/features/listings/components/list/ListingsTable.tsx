@@ -12,7 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { nb } from 'date-fns/locale';
 
 interface ListingsTableProps {
-  listings: Listing[];
+  listings: RentalObject[];
   isLoading: boolean;
   selectedIds: string[];
   onSelectAll: (selected: boolean) => void;

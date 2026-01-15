@@ -15,7 +15,7 @@ import {
 } from '@xala/ds';
 import {
   useOrganizations,
-  useListings,
+  useRentalObjects,
   type SeasonalLease,
   type CreateSeasonalLeaseDTO,
 } from '@digilist/client-sdk';
@@ -58,7 +58,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
   const { data: orgsData } = useOrganizations();
   const organizations = orgsData?.data ?? [];
 
-  const { data: listingsData } = useListings();
+  const { data: listingsData } = useRentalObjects();
   const listings = listingsData?.data ?? [];
 
   // Pre-fill form if editing

@@ -21,7 +21,7 @@ import {
   useCalendarEvents,
   type CalendarEvent,
   formatWeekRange,
-  useListing,
+  useRentalObject,
   useUpdateRentalObject,
 } from '@digilist/client-sdk';
 import {
@@ -111,7 +111,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
   const permissions = useCalendarPermissions();
 
   // Fetch listing data for opening hours
-  const { data: listingData, isLoading: isLoadingListing } = useListing(listingId);
+  const { data: listingData, isLoading: isLoadingListing } = useRentalObject(listingId);
   const listing = listingData?.data;
 
   // Update mutation for saving opening hours

@@ -20,7 +20,7 @@ import {
   CheckIcon,
 } from '@xala/ds';
 import {
-  useListings,
+  useRentalObjects,
   useSeasonVenues,
   useAddVenueToSeason,
   useRemoveVenueFromSeason,
@@ -35,7 +35,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   const [isAddingVenue, setIsAddingVenue] = useState(false);
 
   // Queries
-  const { data: allListingsData, isLoading: isLoadingAll } = useListings({
+  const { data: allListingsData, isLoading: isLoadingAll } = useRentalObjects({
     status: 'published',
     limit: 100,
   });

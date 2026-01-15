@@ -16,12 +16,12 @@ import {
   Alert,
 } from '@xala/ds';
 import {
-  useListings,
+  useRentalObjects,
   useCreateBlock,
   useCheckConflicts,
   type BlockType,
   type CreateBlockDTO,
-  type Listing,
+  type RentalObject,
 } from '@digilist/client-sdk';
 import {
   type BlockFormData,
@@ -69,9 +69,9 @@ export function CreateBlockModal({
   const [showRecurrence, setShowRecurrence] = useState(false);
   const [recurrence, setRecurrence] = useState<RecurrenceFormData>(DEFAULT_RECURRENCE_FORM);
 
-  // Fetch listings for dropdown
-  const { data: listingsData, isLoading: isLoadingListings } = useListings({ status: 'published' });
-  const listings = listingsData?.data ?? [];
+  // Fetch rental objects for dropdown
+  const { data: rentalObjectsData, isLoading: isLoadingRentalObjects } = useRentalObjects({ status: 'published' });
+  const rentalObjects = rentalObjectsData?.data ?? [];
 
   // Conflict check params
   const conflictParams = useMemo(() => {
@@ -209,7 +209,7 @@ export function CreateBlockModal({
               id="listing-select"
               value={formData.listingId}
               onChange={(e) => updateField('listingId', e.target.value)}
-              disabled={isLoadingListings}
+              disabled={isLoadingRentalObjects}
               style={{
                 width: '100%',
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -219,9 +219,9 @@ export function CreateBlockModal({
               }}
             >
               <option value="">Velg lokale...</option>
-              {listings.map((listing: Listing) => (
-                <option key={listing.id} value={listing.id}>
-                  {listing.name}
+              {rentalObjects.map((rentalObject: RentalObject) => (
+                <option key={rentalObject.id} value={rentalObject.id}>
+                  {rentalObject.name}
                 </option>
               ))}
             </select>

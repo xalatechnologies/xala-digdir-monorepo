@@ -26,7 +26,7 @@ import {
 import {
   useAuditLog,
   useUsers,
-  useListings,
+  useRentalObjects,
 } from '@digilist/client-sdk';
 import type { AuditLogEntry, AuditQueryParams } from '@digilist/client-sdk';
 import { useLocale } from '@xala/i18n';
@@ -153,7 +153,7 @@ export function AuditPage() {
   // Data fetching
   const { data: auditData, isLoading, error } = useAuditLog(queryParams);
   const { data: usersData } = useUsers({ limit: 100 });
-  const { data: listingsData } = useListings({ limit: 100 });
+  const { data: listingsData } = useRentalObjects({ limit: 100 });
 
   // Create lookup maps
   const userNameMap = useMemo(() => {
