@@ -192,11 +192,11 @@ export function Sidebar() {
     {
       title: 'Saksbehandler',
       items: [
-        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon /> },
-        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon /> },
-        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon /> },
-        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon /> },
-        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon /> },
+        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />, roles: ['case_handler'] },
+        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon />, roles: ['case_handler'] },
+        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon />, roles: ['case_handler'] },
+        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon />, roles: ['case_handler'] },
+        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon />, roles: ['case_handler'] },
       ],
     },
     {
