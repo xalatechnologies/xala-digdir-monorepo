@@ -1,18 +1,20 @@
 /**
  * Signicat eID Hub - Authentication REST API Controller
  * Uses the Signicat Authentication REST API (not OIDC)
- * 
+ *
  * Flow:
  * 1. Get access token using client credentials (OAuth2)
  * 2. Create authentication session via POST /auth/rest/sessions
  * 3. Redirect user to session URL
  * 4. Poll session or wait for callback
- * 5. Return user attributes
+ * 5. Return user attributes or redirect to returnTo URL
  */
 
 import { Controller, Get, Post } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
+import { getAuditService } from '../../core/audit/audit.service';
+import { validateReturnToUrl } from '../../core/validation/return-to';
 
 // =============================================================================
 // Configuration
@@ -49,14 +51,26 @@ function getConfig(): SignicatConfig {
   };
 }
 
-// In-memory session store (use Redis in production)
-const authSessions = new Map<string, {
+/**
+ * Authentication session data stored during OAuth flow
+ */
+interface AuthSession {
   sessionId: string;
   state: string;
   createdAt: number;
   status: 'pending' | 'completed' | 'failed';
   userInfo?: Record<string, unknown>;
-}>();
+  /** Validated returnTo URL for redirect after successful auth */
+  returnTo?: string;
+  /** Tenant ID for multi-tenant isolation */
+  tenantId?: string;
+}
+
+// In-memory session store (use Redis in production)
+const authSessions = new Map<string, AuthSession>();
+
+/** Default redirect URL when returnTo is not provided or invalid */
+const DEFAULT_REDIRECT_URL = '/';
 
 // In-memory token cache
 let cachedToken: { token: string; expiresAt: number } | null = null;
@@ -113,29 +127,56 @@ export class SignicatAuthController {
   /**
    * GET /api/auth/signicat/authorize
    * Create authentication session and redirect user
+   *
+   * Query params:
+   * - returnTo (optional): URL to redirect to after successful auth
+   * - tenantId (optional): Tenant context for multi-tenant isolation
    */
   @Get('/authorize')
   async authorize(request: FastifyRequest, reply: FastifyReply) {
     const config = getConfig();
     const state = crypto.randomBytes(16).toString('hex');
-    
+    const query = request.query as { returnTo?: string; tenantId?: string };
+    const tenantId = query.tenantId || (request.headers['x-tenant-id'] as string);
+
+    // Validate and sanitize returnTo URL (prevents open redirect)
+    let validatedReturnTo: string | undefined;
+    if (query.returnTo) {
+      const validationResult = validateReturnToUrl(query.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        // Log invalid returnTo attempt for security monitoring
+        getAuditService().log({
+          tenantId: tenantId || 'unknown',
+          userId: 'anonymous',
+          action: 'auth_returnto_validation_failed',
+          resource: 'signicat',
+          resourceId: state,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: {
+            attemptedUrl: query.returnTo,
+            reason: validationResult.reason,
+          },
+        });
+        // Continue with default redirect instead of blocking
+        validatedReturnTo = DEFAULT_REDIRECT_URL;
+      }
+    }
+
     try {
       // Get access token
       const accessToken = await getAccessToken();
-      
+
       // Create authentication session
       const sessionUrl = `${config.baseUrl}/auth/rest/sessions`;
-      
+
       const sessionPayload = {
         flow: 'redirect',
         allowedProviders: ['nbid'], // Norwegian BankID
         language: 'nb',
-        requestedAttributes: [
-          'firstName',
-          'lastName',
-          'dateOfBirth',
-          'nin',
-        ],
+        requestedAttributes: ['firstName', 'lastName', 'dateOfBirth', 'nin'],
         callbackUrls: {
           success: `${config.callbackUrl}?state=${state}&status=success`,
           abort: `${config.callbackUrl}?state=${state}&status=abort`,
@@ -144,40 +185,81 @@ export class SignicatAuthController {
         externalReference: state,
         sessionLifetime: 600, // 10 minutes
       };
-      
+
       const response = await fetch(sessionUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(sessionPayload),
       });
-      
+
       if (!response.ok) {
         const error = await response.text();
-        console.error('Session creation failed:', error);
+        // Log session creation failure
+        getAuditService().log({
+          tenantId: tenantId || 'unknown',
+          userId: 'anonymous',
+          action: 'auth_session_creation_failed',
+          resource: 'signicat',
+          resourceId: state,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: { error, returnTo: validatedReturnTo },
+        });
         return reply.status(500).send({
           error: 'session_creation_failed',
           message: 'Failed to create authentication session',
           details: error,
         });
       }
-      
-      const session = await response.json() as { id: string; url: string };
-      
-      // Store session
+
+      const session = (await response.json()) as { id: string; url: string };
+
+      // Store session with returnTo for post-auth redirect
       authSessions.set(state, {
         sessionId: session.id,
         state,
         createdAt: Date.now(),
         status: 'pending',
+        returnTo: validatedReturnTo,
+        tenantId,
       });
-      
+
+      // Audit log auth initiation
+      getAuditService().log({
+        tenantId: tenantId || 'unknown',
+        userId: 'anonymous',
+        action: 'auth_initiated',
+        resource: 'signicat',
+        resourceId: session.id,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          provider: 'nbid',
+          returnTo: validatedReturnTo,
+          state,
+        },
+      });
+
       // Redirect to Signicat authentication URL
       return reply.redirect(session.url);
     } catch (error) {
-      console.error('Authorization error:', error);
+      // Log authorization error
+      getAuditService().log({
+        tenantId: tenantId || 'unknown',
+        userId: 'anonymous',
+        action: 'auth_initiation_error',
+        resource: 'signicat',
+        resourceId: state,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          returnTo: validatedReturnTo,
+        },
+      });
       return reply.status(500).send({
         error: 'authorization_failed',
         message: error instanceof Error ? error.message : 'Unknown error',
@@ -188,60 +270,142 @@ export class SignicatAuthController {
   /**
    * GET /api/auth/signicat/callback
    * Handle callback from Signicat
+   *
+   * On success: Redirects to stored returnTo URL with auth data as query params
+   * On error: Redirects to returnTo URL with error query params
+   * Falls back to DEFAULT_REDIRECT_URL if no returnTo was stored
    */
   @Get('/callback')
   async callback(request: FastifyRequest, reply: FastifyReply) {
     const query = request.query as { state?: string; status?: string; sessionId?: string };
     const { state, status } = query;
-    
+
+    // Helper to build redirect URL with query params
+    const buildRedirectUrl = (
+      baseUrl: string,
+      params: Record<string, string>
+    ): string => {
+      const url = new URL(baseUrl, 'http://localhost');
+      // Preserve existing query params from the returnTo URL
+      for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, value);
+      }
+      // Return just path + search for relative URLs, full URL for absolute
+      if (baseUrl.startsWith('/')) {
+        return `${url.pathname}${url.search}`;
+      }
+      return url.toString();
+    };
+
     if (!state) {
-      return reply.status(400).send({
-        error: 'missing_state',
-        message: 'State parameter is required',
+      // Audit log missing state
+      getAuditService().log({
+        tenantId: 'unknown',
+        userId: 'anonymous',
+        action: 'auth_callback_missing_state',
+        resource: 'signicat',
+        resourceId: 'unknown',
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: { status },
       });
+
+      // Redirect to default with error
+      const redirectUrl = buildRedirectUrl(DEFAULT_REDIRECT_URL, {
+        auth_error: 'missing_state',
+        auth_message: 'State parameter is required',
+      });
+      return reply.redirect(redirectUrl);
     }
-    
+
     const session = authSessions.get(state);
     if (!session) {
-      return reply.status(400).send({
-        error: 'invalid_state',
-        message: 'Invalid or expired state',
+      // Audit log invalid state
+      getAuditService().log({
+        tenantId: 'unknown',
+        userId: 'anonymous',
+        action: 'auth_callback_invalid_state',
+        resource: 'signicat',
+        resourceId: state,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: { status },
       });
+
+      // Redirect to default with error
+      const redirectUrl = buildRedirectUrl(DEFAULT_REDIRECT_URL, {
+        auth_error: 'invalid_state',
+        auth_message: 'Invalid or expired state',
+      });
+      return reply.redirect(redirectUrl);
     }
-    
+
+    const returnTo = session.returnTo || DEFAULT_REDIRECT_URL;
+    const tenantId = session.tenantId || 'unknown';
+
     if (status === 'abort') {
       authSessions.delete(state);
-      return reply.status(400).send({
-        error: 'user_abort',
-        message: 'User aborted authentication',
+
+      // Audit log user abort
+      getAuditService().log({
+        tenantId,
+        userId: 'anonymous',
+        action: 'auth_aborted',
+        resource: 'signicat',
+        resourceId: session.sessionId,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: { returnTo },
       });
+
+      // Redirect with abort status
+      const redirectUrl = buildRedirectUrl(returnTo, {
+        auth_error: 'user_abort',
+        auth_message: 'User aborted authentication',
+      });
+      return reply.redirect(redirectUrl);
     }
-    
+
     if (status === 'error') {
       authSessions.delete(state);
-      return reply.status(400).send({
-        error: 'auth_error',
-        message: 'Authentication failed',
+
+      // Audit log auth error
+      getAuditService().log({
+        tenantId,
+        userId: 'anonymous',
+        action: 'auth_failed',
+        resource: 'signicat',
+        resourceId: session.sessionId,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: { returnTo, status: 'error' },
       });
+
+      // Redirect with error status
+      const redirectUrl = buildRedirectUrl(returnTo, {
+        auth_error: 'auth_error',
+        auth_message: 'Authentication failed',
+      });
+      return reply.redirect(redirectUrl);
     }
-    
+
     try {
       // Get session details
       const config = getConfig();
       const accessToken = await getAccessToken();
-      
+
       const sessionUrl = `${config.baseUrl}/auth/rest/sessions/${session.sessionId}`;
       const response = await fetch(sessionUrl, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to get session details');
       }
-      
-      const sessionData = await response.json() as {
+
+      const sessionData = (await response.json()) as {
         status: string;
         identity?: {
           firstName?: string;
@@ -251,29 +415,82 @@ export class SignicatAuthController {
           subject?: string;
         };
       };
-      
+
       if (sessionData.status !== 'success') {
-        return reply.status(400).send({
-          error: 'incomplete_session',
-          message: `Session status: ${sessionData.status}`,
+        // Audit log incomplete session
+        getAuditService().log({
+          tenantId,
+          userId: 'anonymous',
+          action: 'auth_incomplete',
+          resource: 'signicat',
+          resourceId: session.sessionId,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+          metadata: { sessionStatus: sessionData.status, returnTo },
         });
+
+        // Redirect with error status
+        const redirectUrl = buildRedirectUrl(returnTo, {
+          auth_error: 'incomplete_session',
+          auth_message: `Session status: ${sessionData.status}`,
+        });
+        return reply.redirect(redirectUrl);
       }
-      
+
+      // Derive user ID from identity (subject or NIN)
+      const userId =
+        sessionData.identity?.subject ||
+        sessionData.identity?.nin ||
+        'unknown';
+
       // Clean up session
       authSessions.delete(state);
-      
-      // Return user info
-      return reply.send({
-        success: true,
-        user: sessionData.identity,
-        message: 'Authentication successful',
+
+      // Audit log successful authentication
+      getAuditService().log({
+        tenantId,
+        userId,
+        action: 'auth_success',
+        resource: 'signicat',
+        resourceId: session.sessionId,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          provider: 'nbid',
+          returnTo,
+          hasIdentity: !!sessionData.identity,
+        },
       });
+
+      // Build success redirect URL with auth success flag
+      // The frontend will use this to know auth succeeded and can fetch session
+      const redirectUrl = buildRedirectUrl(returnTo, {
+        auth_success: 'true',
+        auth_provider: 'signicat',
+      });
+      return reply.redirect(redirectUrl);
     } catch (error) {
-      console.error('Callback error:', error);
-      return reply.status(500).send({
-        error: 'callback_failed',
-        message: error instanceof Error ? error.message : 'Unknown error',
+      // Audit log callback error
+      getAuditService().log({
+        tenantId,
+        userId: 'anonymous',
+        action: 'auth_callback_error',
+        resource: 'signicat',
+        resourceId: session.sessionId,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          returnTo,
+        },
       });
+
+      // Redirect with error status instead of returning JSON
+      const redirectUrl = buildRedirectUrl(returnTo, {
+        auth_error: 'callback_failed',
+        auth_message: error instanceof Error ? error.message : 'Unknown error',
+      });
+      return reply.redirect(redirectUrl);
     }
   }
 
