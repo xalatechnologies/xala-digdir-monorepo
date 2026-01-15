@@ -28,3 +28,6 @@ export {
   type OpeningHoursWidgetProps,
   type BookingWidgetPlacementProps,
 } from './Sidebar';
+
+// Calendar section
+export { CalendarSection, type CalendarSectionProps } from './CalendarSection';

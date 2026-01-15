@@ -68,6 +68,7 @@ export {
   MapWidget,
   OpeningHoursWidget,
   BookingWidgetPlacement,
+  CalendarSection,
 } from './components';
 
 export type {
@@ -84,4 +85,5 @@ export type {
   MapWidgetProps,
   OpeningHoursWidgetProps,
   BookingWidgetPlacementProps,
+  CalendarSectionProps,
 } from './components';

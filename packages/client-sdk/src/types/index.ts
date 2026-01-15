@@ -25,6 +25,7 @@ export * from './settings';
 export * from './upload';
 export * from './search';
 export * from './economy';
+export * from './calendar';
 
 // Additional types that don't fit a single domain
 export type {

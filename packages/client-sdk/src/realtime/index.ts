@@ -3,7 +3,21 @@
  * Provides real-time event streaming via WebSocket
  */
 
-export type RealtimeEventType = 'audit' | 'booking' | 'listing' | 'message' | 'notification' | 'connected' | 'pong';
+export type RealtimeEventType =
+  | 'audit'
+  | 'booking'
+  | 'booking.created'
+  | 'booking.updated'
+  | 'booking.cancelled'
+  | 'listing'
+  | 'message'
+  | 'notification'
+  | 'connected'
+  | 'pong'
+  | 'availability.updated'
+  | 'block.created'
+  | 'block.updated'
+  | 'block.deleted';
 
 export interface RealtimeEvent {
   type: RealtimeEventType;
@@ -61,7 +75,20 @@ class RealtimeClient {
             this.socket.send(JSON.stringify({
               type: 'subscribe',
               tenantId: config.tenantId,
-              events: ['booking', 'listing', 'message', 'notification', 'audit'],
+              events: [
+                'booking',
+                'booking.created',
+                'booking.updated',
+                'booking.cancelled',
+                'listing',
+                'message',
+                'notification',
+                'audit',
+                'availability.updated',
+                'block.created',
+                'block.updated',
+                'block.deleted',
+              ],
             }));
             if (this.debug) console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
           } catch {
@@ -152,6 +179,55 @@ class RealtimeClient {
    */
   onMessage(handler: RealtimeEventHandler): () => void {
     return this.on('message', handler);
+  }
+
+  /**
+   * Subscribe to availability update events
+   */
+  onAvailability(handler: RealtimeEventHandler): () => void {
+    return this.on('availability.updated', handler);
+  }
+
+  /**
+   * Subscribe to booking created events
+   */
+  onBookingCreated(handler: RealtimeEventHandler): () => void {
+    return this.on('booking.created', handler);
+  }
+
+  /**
+   * Subscribe to booking updated events
+   */
+  onBookingUpdated(handler: RealtimeEventHandler): () => void {
+    return this.on('booking.updated', handler);
+  }
+
+  /**
+   * Subscribe to booking cancelled events
+   */
+  onBookingCancelled(handler: RealtimeEventHandler): () => void {
+    return this.on('booking.cancelled', handler);
+  }
+
+  /**
+   * Subscribe to block created events
+   */
+  onBlockCreated(handler: RealtimeEventHandler): () => void {
+    return this.on('block.created', handler);
+  }
+
+  /**
+   * Subscribe to block updated events
+   */
+  onBlockUpdated(handler: RealtimeEventHandler): () => void {
+    return this.on('block.updated', handler);
+  }
+
+  /**
+   * Subscribe to block deleted events
+   */
+  onBlockDeleted(handler: RealtimeEventHandler): () => void {
+    return this.on('block.deleted', handler);
   }
 
   /**
