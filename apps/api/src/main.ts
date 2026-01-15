@@ -56,6 +56,9 @@ import { BlocksController } from './modules/blocks/blocks.controller';
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+// Phase 8: Capabilities and Licensing
+import { CapabilitiesController, CapabilitiesService, CapabilitiesRepository } from './modules/capabilities';
+import { LicensingController, LicensingService, ATCService } from './modules/licensing';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -173,7 +176,7 @@ async function bootstrap() {
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () => 
+  container.registerFactory('MonitoringService', () =>
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
@@ -181,6 +184,16 @@ async function bootstrap() {
       adapters
     )
   );
+
+  // Register Capabilities repository and service
+  container.registerFactory('CapabilitiesRepository', () => new CapabilitiesRepository(db));
+  container.registerFactory('CapabilitiesService', () =>
+    new CapabilitiesService(container.resolve('CapabilitiesRepository'), adapters)
+  );
+
+  // Register Licensing services
+  container.registerFactory('LicensingService', () => new LicensingService(db, adapters));
+  container.registerFactory('ATCService', () => new ATCService(db, adapters));
 
   console.log('✓ Services registered');
 
@@ -205,8 +218,19 @@ async function bootstrap() {
     new SignicatAuthController()
   );
   // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
+  container.registerFactory('NotificationsController', () =>
     new NotificationsController()
+  );
+  // Capabilities controller
+  container.registerFactory('CapabilitiesController', () =>
+    new CapabilitiesController(container.resolve('CapabilitiesService'))
+  );
+  // Licensing controller
+  container.registerFactory('LicensingController', () =>
+    new LicensingController(
+      container.resolve('LicensingService'),
+      container.resolve('ATCService')
+    )
   );
   console.log('✓ Controllers registered');
 
@@ -267,6 +291,9 @@ async function bootstrap() {
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
+    // Phase 8: Capabilities and Licensing
+    CapabilitiesController,
+    LicensingController,
   ];
 
   // Create Fastify app with controllers
@@ -314,6 +341,8 @@ async function bootstrap() {
   console.log(`  Bookings: GET  http://localhost:${port}/api/bookings`);
   console.log(`  Audit:    GET  http://localhost:${port}/api/audit`);
   console.log(`  WebSocket:     ws://localhost:${port}/ws/audit`);
+  console.log(`  Capabilities:  GET  http://localhost:${port}/api/capabilities/current`);
+  console.log(`  Licensing:     GET  http://localhost:${port}/api/licensing/plans`);
   console.log('');
 }
 

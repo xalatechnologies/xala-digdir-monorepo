@@ -41,12 +41,9 @@ interface LicensingRequest extends FastifyRequest {
  * License plans query parameters
  */
 const LicensePlansQuerySchema = z.object({
-  isActive: z.preprocess(
-    (val) => val === 'true' || val === true,
-    z.boolean().optional()
-  ),
-  page: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().positive().optional()),
-  limit: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().positive().max(100).optional()),
+  isActive: z.coerce.boolean().optional(),
+  page: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().positive().max(100).optional(),
 });
 
 /**
@@ -57,8 +54,8 @@ const ActivateLicenseCodeSchema = z.object({
     /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
     'License code must be in format XXXX-XXXX-XXXX-XXXX'
   ),
-  environment: z.string().min(1).max(50).default('production'),
-  appId: z.string().min(1).max(100).default('web'),
+  environment: z.string().min(1).max(50).default('production') as z.ZodDefault<z.ZodString>,
+  appId: z.string().min(1).max(100).default('web') as z.ZodDefault<z.ZodString>,
   moduleId: z.string().min(1).max(100).optional(),
 });
 
@@ -66,10 +63,7 @@ const ActivateLicenseCodeSchema = z.object({
  * Issue license code request body
  */
 const IssueLicenseCodeSchema = z.object({
-  expiresAt: z.preprocess(
-    (val) => (val ? new Date(val as string) : undefined),
-    z.date().optional()
-  ),
+  expiresAt: z.coerce.date().optional(),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -81,10 +75,7 @@ const RotateLicenseCodeSchema = z.object({
     /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
     'License code must be in format XXXX-XXXX-XXXX-XXXX'
   ),
-  expiresAt: z.preprocess(
-    (val) => (val ? new Date(val as string) : undefined),
-    z.date().optional()
-  ),
+  expiresAt: z.coerce.date().optional(),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -260,8 +251,8 @@ export class LicensingController {
       {
         tenantId,
         licenseCodeId: validation.codeId,
-        environment: body.environment,
-        appId: body.appId,
+        environment: body.environment ?? 'production',
+        appId: body.appId ?? 'web',
         moduleId: body.moduleId,
       },
       request.userId || undefined
