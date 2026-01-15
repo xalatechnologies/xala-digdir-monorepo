@@ -58,6 +58,7 @@ export const users = pgTable('users', {
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
   email: varchar('email', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
+  nationalId: varchar('national_id', { length: 11 }),
   role: varchar('role', { length: 50 }).notNull().default('member'),
   status: varchar('status', { length: 50 }).notNull().default('active'),
   metadata: jsonb('metadata').default({}),
@@ -66,6 +67,7 @@ export const users = pgTable('users', {
 }, (table) => ({
   tenantEmailIdx: index('users_tenant_email_idx').on(table.tenantId, table.email),
   tenantIdx: index('users_tenant_idx').on(table.tenantId),
+  nationalIdIdx: index('users_national_id_idx').on(table.nationalId),
 }));
 
 // ============================================================================

@@ -31,6 +31,12 @@ const USER_PIL_MEMBER = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 const USER_DEMO = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
 const USER_OLA_HANSEN = '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c'; // Citizen for Minside testing
 
+// ID-porten Test Users (with Norwegian national IDs)
+const USER_IDPORTEN_BRUKER = 'cccccccc-cccc-cccc-cccc-cccccccccccc'; // 15860771346 (Bruker/User)
+const USER_IDPORTEN_SAKSBEHANDLER = 'dddddddd-dddd-dddd-dddd-dddddddddddd'; // 06881271913 (Saksbehandler/Admin)
+const USER_IDPORTEN_ADMIN = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'; // 30916326773 (Admin)
+const USER_IDPORTEN_ORG = 'ffffffff-ffff-ffff-ffff-ffffffffffff'; // 03852358504 (Organisasjonskonto)
+
 // Bookings for Ola Hansen (Minside testing)
 const BOOKING_OLA_1 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4d';
 const BOOKING_OLA_2 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4e';
@@ -201,6 +207,47 @@ const USERS = [
     email: 'ola.hansen@kommune.no',
     name: 'Ola Hansen',
     role: 'user',
+    status: 'active',
+  },
+  // ID-porten Test Users
+  {
+    id: USER_IDPORTEN_BRUKER,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'bruker@idporten.test',
+    name: 'Test Bruker',
+    nationalId: '15860771346',
+    role: 'user',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_SAKSBEHANDLER,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'saksbehandler@idporten.test',
+    name: 'Test Saksbehandler',
+    nationalId: '06881271913',
+    role: 'admin',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_ADMIN,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'admin@idporten.test',
+    name: 'Test Admin',
+    nationalId: '30916326773',
+    role: 'admin',
+    status: 'active',
+  },
+  {
+    id: USER_IDPORTEN_ORG,
+    tenantId: TENANT_SKIEN,
+    organizationId: ORG_SKIEN_HALL,
+    email: 'org@idporten.test',
+    name: 'Test Organisasjonskonto',
+    nationalId: '03852358504',
+    role: 'org_admin',
     status: 'active',
   },
 ];

@@ -96,3 +96,13 @@ export {
   // Flow context factory
   createFlowContext,
 } from './flow-context';
+
+export {
+  // Session persistence (auth flow state)
+  saveSessionState,
+  restoreSessionState,
+  clearSessionState,
+  hasPendingSession,
+  // Types
+  type SessionState,
+} from './session-storage';
