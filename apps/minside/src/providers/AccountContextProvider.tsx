@@ -19,6 +19,12 @@ import { useOrganizations } from '@digilist/client-sdk/hooks';
 
 export type AccountType = 'personal' | 'organization';
 
+/**
+ * Dashboard context type for RBAC-based UI filtering
+ * Used by Sidebar, ProtectedRoute, and other context-aware components
+ */
+export type DashboardContext = 'personal' | 'organization';
+
 export interface AccountContextState {
   accountType: AccountType;
   selectedOrganization: Organization | null;
@@ -33,6 +39,7 @@ export interface AccountContextValue extends AccountContextState {
   switchToOrganization: (organizationId: string) => void;
   getActiveAccount: () => ActiveAccount;
   markAccountAsSelected: () => void;
+  setRememberChoice: (value: boolean) => void;
 }
 
 export interface ActiveAccount {
@@ -246,6 +253,12 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
   };
 
+  // Method: Set remember choice preference
+  const handleSetRememberChoice = (value: boolean) => {
+    setRememberChoice(value);
+    localStorage.setItem(STORAGE_KEYS.REMEMBER_CHOICE, String(value));
+  };
+
   // Memoized context value
   const value = useMemo<AccountContextValue>(
     () => ({
@@ -259,6 +272,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       switchToOrganization,
       getActiveAccount,
       markAccountAsSelected,
+      setRememberChoice: handleSetRememberChoice,
     }),
     [
       accountType,
