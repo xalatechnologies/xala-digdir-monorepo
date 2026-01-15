@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Heading, Paragraph, Card, Spinner } from '@xala/ds';
+import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@xala/ds';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import type { Organization } from '@digilist/client-sdk/types';
 
@@ -77,6 +77,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
+  const [rememberChoice, setRememberChoice] = useState<boolean>(false);
 
   // Show/hide modal based on open prop
   useEffect(() => {
@@ -124,6 +125,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     if (!open) {
       setStep('account-type');
       setSelectedOrgId(null);
+      setRememberChoice(false);
     }
   }, [open]);
 
@@ -387,28 +389,54 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
       <div
         style={{
           display: 'flex',
-          justifyContent: step === 'organization' ? 'space-between' : 'flex-end',
+          flexDirection: 'column',
           gap: 'var(--ds-spacing-3)',
           padding: 'var(--ds-spacing-4) var(--ds-spacing-6)',
           borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
           backgroundColor: 'var(--ds-color-neutral-background-subtle)',
         }}
       >
-        {step === 'organization' && (
-          <Button type="button" variant="secondary" onClick={handleBack}>
-            Tilbake
-          </Button>
-        )}
-        {step === 'organization' && (
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleOrganizationConfirm}
-            disabled={!selectedOrgId}
+        {/* Remember choice checkbox */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-2)',
+          }}
+        >
+          <Checkbox
+            id="remember-choice"
+            checked={rememberChoice}
+            onChange={(e) => setRememberChoice(e.target.checked)}
           >
-            Fortsett
-          </Button>
-        )}
+            Husk mitt valg
+          </Checkbox>
+        </div>
+
+        {/* Action buttons */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: step === 'organization' ? 'space-between' : 'flex-end',
+            gap: 'var(--ds-spacing-3)',
+          }}
+        >
+          {step === 'organization' && (
+            <Button type="button" variant="secondary" onClick={handleBack}>
+              Tilbake
+            </Button>
+          )}
+          {step === 'organization' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleOrganizationConfirm}
+              disabled={!selectedOrgId}
+            >
+              Fortsett
+            </Button>
+          )}
+        </div>
       </div>
     </dialog>
   );
