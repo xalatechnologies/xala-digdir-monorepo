@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   geocodeAddress,
   getCachedGeocode,
+  getCachedGeocodeFromString,
   buildAddressString,
   type GeocodedLocation,
   type GeocodeConfig,
@@ -88,8 +89,8 @@ export function useGeocodeListings<T extends { id: string }>(
       const address = getAddress(item);
       if (!address) return false;
       // Check if we already have a cached result
-      // const cached = getCachedGeocode(address, country); // TODO: Fix cache call
-      return true; // TODO: Check cache properly // undefined means not cached, null means failed
+      const cached = getCachedGeocodeFromString(address, country);
+      return cached === null; // null means not cached, needs geocoding
     });
   }, [items, getAddress, hasCoordinates, hasApiKeys, country, enabled]);
 
@@ -163,14 +164,14 @@ export function useGeocodeListings<T extends { id: string }>(
       }
 
       // Check cache first
-      // const cached = getCachedGeocode(address, country); // TODO: Fix cache call
-      // if (cached) {
-      //   return {
-      //     ...item,
-      //     latitude: cached.latitude,
-      //     longitude: cached.longitude,
-      //   };
-      // }
+      const cached = getCachedGeocodeFromString(address, country);
+      if (cached) {
+        return {
+          ...item,
+          latitude: cached.latitude,
+          longitude: cached.longitude,
+        };
+      }
 
       // Check our local state
       const geocoded = geocodedMap.get(address);
@@ -201,16 +202,24 @@ export function useGeocodeListings<T extends { id: string }>(
       const address = getAddress(item);
       if (!address) return;
 
-      // const cached = getCachedGeocode(address, country); // TODO: Fix cache call
-      // if (cached === null) {
-      //   failed++;
-      // } else if (cached !== undefined) {
-      //   geocoded++;
-      // }
+      // Check cache first
+      const cached = getCachedGeocodeFromString(address, country);
+      if (cached) {
+        geocoded++;
+        return;
+      }
+
+      // Check local state
+      const local = geocodedMap.get(address);
+      if (local === null) {
+        failed++;
+      } else if (local) {
+        geocoded++;
+      }
     });
 
     return { geocodedCount: geocoded, failedCount: failed };
-  }, [items, getAddress, hasCoordinates, country]);
+  }, [items, getAddress, hasCoordinates, geocodedMap, country]);
 
   const retry = useCallback(() => {
     setRetryTrigger(prev => prev + 1);
@@ -250,14 +259,13 @@ export function useGeocode(
       return;
     }
 
-    // Check cache first (note: getCachedGeocode expects ListingAddress object, not string)
-    // For now, skip caching for string addresses
-    // // const cached = getCachedGeocode(address, country); // TODO: Fix cache call
-    // if (cached !== undefined) {
-    //   setLocation(cached);
-    //   setError(cached === null);
-    //   return;
-    // }
+    // Check cache first
+    const cached = getCachedGeocodeFromString(address, country);
+    if (cached) {
+      setLocation(cached);
+      setError(false);
+      return;
+    }
 
     let cancelled = false;
     setIsGeocoding(true);
