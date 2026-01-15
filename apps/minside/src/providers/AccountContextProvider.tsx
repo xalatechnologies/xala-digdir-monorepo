@@ -32,6 +32,8 @@ export interface AccountContextState {
   isLoadingOrganizations: boolean;
   hasSelectedAccount: boolean;
   rememberChoice: boolean;
+  /** Message shown when user's organization membership was lost (e.g., removed from org) */
+  lostOrganizationMessage: string | null;
 }
 
 export interface AccountContextValue extends AccountContextState {
@@ -40,6 +42,8 @@ export interface AccountContextValue extends AccountContextState {
   getActiveAccount: () => ActiveAccount;
   markAccountAsSelected: () => void;
   setRememberChoice: (value: boolean) => void;
+  /** Clear the lost organization message after it has been displayed */
+  clearLostOrganizationMessage: () => void;
 }
 
 export interface ActiveAccount {
@@ -131,6 +135,9 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     return stored === 'true';
   });
 
+  // State: Lost organization message (shown when user's org membership was lost)
+  const [lostOrganizationMessage, setLostOrganizationMessage] = useState<string | null>(null);
+
   // =============================================================================
   // Context Validation
   // =============================================================================
@@ -204,6 +211,12 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       localStorage.setItem(STORAGE_KEYS.ACCOUNT_TYPE, 'personal');
       setAccountType('personal');
       setSelectedOrganization(null);
+
+      // Edge case: Show notification that org membership was lost
+      // This happens when user was removed from an organization or the org was deleted
+      setLostOrganizationMessage(
+        'Du har ikke lenger tilgang til den valgte organisasjonen. Du er nå i personlig modus.'
+      );
     } else if (validated.accountType === 'organization' && validated.organization) {
       // Valid organization context
       setAccountType('organization');
@@ -269,6 +282,11 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     localStorage.setItem(STORAGE_KEYS.REMEMBER_CHOICE, String(value));
   };
 
+  // Method: Clear the lost organization message after it has been displayed
+  const clearLostOrganizationMessage = () => {
+    setLostOrganizationMessage(null);
+  };
+
   // Memoized context value
   const value = useMemo<AccountContextValue>(
     () => ({
@@ -278,11 +296,13 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       isLoadingOrganizations,
       hasSelectedAccount,
       rememberChoice,
+      lostOrganizationMessage,
       switchToPersonal,
       switchToOrganization,
       getActiveAccount,
       markAccountAsSelected,
       setRememberChoice: handleSetRememberChoice,
+      clearLostOrganizationMessage,
     }),
     [
       accountType,
@@ -291,6 +311,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       isLoadingOrganizations,
       hasSelectedAccount,
       rememberChoice,
+      lostOrganizationMessage,
     ]
   );
 

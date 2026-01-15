@@ -22,6 +22,7 @@ import {
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { useAccountContext } from '../../providers/AccountContextProvider';
 
 interface LocationState {
   contextRedirectMessage?: string;
@@ -42,6 +43,7 @@ export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const t = useT();
+  const { lostOrganizationMessage, clearLostOrganizationMessage } = useAccountContext();
   const title = pageTitles[location.pathname] ?? '';
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -62,6 +64,16 @@ export function AppLayout() {
       return () => clearTimeout(timer);
     }
   }, [location.state, location.pathname, navigate]);
+
+  // Handle lost organization message notification - auto-dismiss after 7 seconds
+  useEffect(() => {
+    if (lostOrganizationMessage) {
+      const timer = setTimeout(() => {
+        clearLostOrganizationMessage();
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [lostOrganizationMessage, clearLostOrganizationMessage]);
 
   // Track viewport size for mobile/desktop detection
   useEffect(() => {
@@ -148,6 +160,25 @@ export function AppLayout() {
               aria-live="polite"
             >
               {redirectMessage}
+            </Alert>
+          </div>
+        )}
+
+        {/* Lost organization notification - shown when user's org membership was lost */}
+        {lostOrganizationMessage && (
+          <div
+            style={{
+              padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+              paddingBottom: 0,
+            }}
+          >
+            <Alert
+              data-color="warning"
+              data-size="sm"
+              role="alert"
+              aria-live="assertive"
+            >
+              {lostOrganizationMessage}
             </Alert>
           </div>
         )}
