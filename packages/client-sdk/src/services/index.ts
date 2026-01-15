@@ -112,9 +112,11 @@ export {
 } from './billing.service';
 
 // Re-export billing types for convenience
-export type { 
-  BillingSummary, 
+export type {
+  BillingSummary,
   Invoice,
-  InvoiceQueryParams 
+  InvoiceQueryParams
 } from './billing.service';
 
+// Capabilities
+export { capabilitiesService } from './capabilities.service';
