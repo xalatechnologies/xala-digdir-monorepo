@@ -176,9 +176,6 @@ export function RentalObjectWizard({ slug, initialCategory }: RentalObjectWizard
             fontSize: 'var(--ds-font-size-body-sm)',
           }}
         >
-          <span>{categoryConfig.icon === 'building' ? '🏢' : 
-                 categoryConfig.icon === 'box' ? '📦' :
-                 categoryConfig.icon === 'car' ? '🚗' : '🎭'}</span>
           <span>{t(`category.${currentCategory}`)}</span>
         </div>
       </div>
@@ -226,7 +223,7 @@ export function RentalObjectWizard({ slug, initialCategory }: RentalObjectWizard
           }}
         >
           <span style={{ fontSize: 'var(--ds-font-size-heading-sm)' }}>
-            {saveStatus === 'success' ? '✓' : '✕'}
+            {saveStatus === 'success' ? 'OK' : 'X'}
           </span>
           <Paragraph
             data-size="sm"
@@ -272,12 +269,12 @@ export function RentalObjectWizard({ slug, initialCategory }: RentalObjectWizard
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           {canGoPrev && (
             <Button type="button" variant="secondary" onClick={prevStep} disabled={isSaving}>
-              ← {t('common.previous')}
+              {t('common.previous')}
             </Button>
           )}
           {canGoNext && (
             <Button type="button" variant="primary" onClick={nextStep} disabled={isSaving}>
-              {t('common.next')} →
+              {t('common.next')}
             </Button>
           )}
           {isLastStep && (

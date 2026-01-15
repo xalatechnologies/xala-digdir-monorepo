@@ -75,7 +75,7 @@ export function InventoryStep({ data, onChange, errors }: InventoryStepProps): R
             }}
           >
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              💡 {t('rentalObjects.step.inventory.hint')}
+              {t('rentalObjects.step.inventory.hint')}
             </Paragraph>
           </div>
         </>

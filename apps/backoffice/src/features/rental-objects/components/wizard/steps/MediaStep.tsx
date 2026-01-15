@@ -99,7 +99,7 @@ export function MediaStep({ data, onChange, errors }: MediaStepProps): React.Rea
                   }}
                 />
               ) : (
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: '1.5rem' }}>📷</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-body-sm)' }}>{t('rentalObjects.image')}</span>
               )}
             </div>
 
@@ -143,7 +143,7 @@ export function MediaStep({ data, onChange, errors }: MediaStepProps): React.Rea
                 onClick={() => removeImage(index)}
                 aria-label={t('common.delete')}
               >
-                ✕
+                X
               </Button>
             </div>
           </div>
@@ -165,7 +165,7 @@ export function MediaStep({ data, onChange, errors }: MediaStepProps): React.Rea
         }}
       >
         <Paragraph data-size="sm" style={{ margin: 0 }}>
-          💡 {t('rentalObjects.step.media.hint')}
+          {t('rentalObjects.step.media.hint')}
         </Paragraph>
       </div>
     </div>

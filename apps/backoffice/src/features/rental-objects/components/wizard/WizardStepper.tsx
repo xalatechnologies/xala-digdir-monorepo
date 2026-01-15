@@ -97,7 +97,7 @@ export function WizardStepper({
                         : '2px solid var(--ds-color-neutral-border-subtle)',
                   }}
                 >
-                  {isCompleted ? (hasError ? '!' : '✓') : index + 1}
+                  {isCompleted ? (hasError ? '!' : 'OK') : index + 1}
                 </div>
 
                 {/* Step label */}

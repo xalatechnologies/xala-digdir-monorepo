@@ -39,6 +39,10 @@ import { AdminReportsPage } from './routes/admin-reports';
 import { TenantSettingsPage } from './routes/tenant/settings';
 import { TenantBrandingPage } from './routes/tenant/branding';
 import { TenantAuditLogPage } from './routes/tenant/audit-log';
+// Integrations pages
+import { IntegrationsOverviewPage } from './routes/integrations';
+import { ArchivePage } from './routes/integrations/archive';
+import { CalendarIntegrationPage } from './routes/integrations/calendar';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -269,6 +273,32 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <TenantAuditLogPage />
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Integrations routes - super_admin only */}
+              <Route
+                path="integrations"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <IntegrationsOverviewPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="integrations/archive"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <ArchivePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="integrations/calendar"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <CalendarIntegrationPage />
                   </ProtectedRoute>
                 }
               />

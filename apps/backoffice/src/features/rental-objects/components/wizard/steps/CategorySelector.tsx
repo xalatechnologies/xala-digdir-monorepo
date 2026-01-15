@@ -15,10 +15,10 @@ interface CategorySelectorProps {
 }
 
 const CATEGORY_ICONS: Record<RentalObjectCategory, string> = {
-  LOKALER_OG_BANER: '🏢',
-  UTSTYR_OG_INVENTAR: '📦',
-  KJORETOY_OG_TRANSPORT: '🚗',
-  OPPLEVELSER_OG_ARRANGEMENT: '🎭',
+  LOKALER_OG_BANER: 'building',
+  UTSTYR_OG_INVENTAR: 'package',
+  KJORETOY_OG_TRANSPORT: 'car',
+  OPPLEVELSER_OG_ARRANGEMENT: 'calendar',
 };
 
 export function CategorySelector({
