@@ -958,6 +958,28 @@ export const nb: Record<string, string> = {
   'sdk.error.forbidden': 'Ingen tilgang',
   'sdk.error.validation': 'Valideringsfeil',
   'sdk.error.serverError': 'Serverfeil',
+
+  // Rating Labels
+  'sdk.rating.1': 'Veldig daarlig',
+  'sdk.rating.2': 'Daarlig',
+  'sdk.rating.3': 'Middels',
+  'sdk.rating.4': 'Bra',
+  'sdk.rating.5': 'Utmerket',
+
+  // Priority
+  'sdk.priority.prefix': 'Prioritet',
+
+  // Additional Placeholders
+  'sdk.placeholder.closed': 'Stengt',
+  'sdk.placeholder.stars': 'stjerner',
+
+  // Duration (additional)
+  'sdk.duration.months': 'maaneder',
+  'sdk.duration.years': 'aar',
+
+  // Booking
+  'sdk.booking.advanceDays': 'dager paa forhaand',
+  'sdk.booking.standardCancellation': 'Standard avbestillingsregler',
 };
 
 

@@ -47,39 +47,33 @@ export function getDefaultTimeMode(category: RentalObjectCategory): BookingTimeM
 }
 
 // =============================================================================
-// Display Labels
+// Display Labels (i18n keys)
 // =============================================================================
 
 /**
- * Norwegian labels for categories
+ * i18n keys for category labels
+ * Use t(key) to resolve the actual translated label
  */
-export const CATEGORY_LABELS_NB: Record<RentalObjectCategory, string> = {
-  LOKALER_OG_BANER: 'Lokaler og baner',
-  UTSTYR_OG_INVENTAR: 'Utstyr og inventar',
-  KJORETOY_OG_TRANSPORT: 'Kjoeretoy og transport',
-  OPPLEVELSER_OG_ARRANGEMENT: 'Opplevelser og arrangement',
+export const CATEGORY_LABEL_KEYS: Record<RentalObjectCategory, string> = {
+  LOKALER_OG_BANER: 'sdk.rentalObject.category.LOKALER_OG_BANER',
+  UTSTYR_OG_INVENTAR: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
+  KJORETOY_OG_TRANSPORT: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
+  OPPLEVELSER_OG_ARRANGEMENT: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
 };
 
 /**
- * English labels for categories
+ * Get i18n key for category label
+ * Use t(key) to resolve the actual translated label
  */
-export const CATEGORY_LABELS_EN: Record<RentalObjectCategory, string> = {
-  LOKALER_OG_BANER: 'Spaces & Courts',
-  UTSTYR_OG_INVENTAR: 'Equipment & Inventory',
-  KJORETOY_OG_TRANSPORT: 'Vehicles & Transport',
-  OPPLEVELSER_OG_ARRANGEMENT: 'Experiences & Events',
-};
-
-/**
- * Get display label for a category
- */
-export function getCategoryLabel(
-  category: RentalObjectCategory,
-  locale: 'nb' | 'en' = 'nb'
-): string {
-  const labels = locale === 'nb' ? CATEGORY_LABELS_NB : CATEGORY_LABELS_EN;
-  return labels[category] || category;
+export function getCategoryLabel(category: RentalObjectCategory): string {
+  return CATEGORY_LABEL_KEYS[category] ?? `sdk.rentalObject.category.${category}`;
 }
+
+/** @deprecated Use CATEGORY_LABEL_KEYS and t() instead */
+export const CATEGORY_LABELS_NB = CATEGORY_LABEL_KEYS;
+
+/** @deprecated Use CATEGORY_LABEL_KEYS and t() instead */
+export const CATEGORY_LABELS_EN = CATEGORY_LABEL_KEYS;
 
 /**
  * Category icons (icon names for use with icon libraries)

@@ -1,22 +1,22 @@
 /**
- * ID-porten OIDC Authentication Controller
- * Uses standard OpenID Connect flow with PKCE
+ * IdPorten eID Hub - OIDC Controller
+ * Uses OpenID Connect (OIDC) protocol for authentication
  *
  * Flow:
- * 1. GET /authorize - Redirect to ID-porten with PKCE challenge
- * 2. ID-porten redirects back to /callback with authorization code
- * 3. Exchange code for tokens
- * 4. Verify ID token and extract user info
- * 5. Create/update user and redirect to app
+ * 1. Redirect user to /authorize endpoint with OIDC parameters
+ * 2. User authenticates via BankID on Signicat's page
+ * 3. Signicat redirects back to /callback with authorization code
+ * 4. Exchange code for tokens (ID token + access token)
+ * 5. Verify ID token and extract user claims
+ * 6. Redirect to returnTo URL with session
  */
 
-import { Controller, Get } from '../../core/decorators';
+import { Controller, Get, Post } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
 import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
 import { sessionStore } from './idporten-session-store';
-import { mockDb } from '../../adapters/db.adapter';
 
 // =============================================================================
 // Configuration
@@ -25,317 +25,256 @@ import { mockDb } from '../../adapters/db.adapter';
 interface OIDCConfig {
   clientId: string;
   clientSecret: string;
-  issuer: string;
+  baseUrl: string; // Tenant-specific URL
   redirectUri: string;
-  scopes: string;
+  scope: string;
 }
 
-function getConfig(): OIDCConfig {
+function getOIDCConfig(): OIDCConfig {
   return {
-    clientId: process.env.IDPORTEN_CLIENT_ID || '',
-    clientSecret: process.env.IDPORTEN_CLIENT_SECRET || '',
-    issuer: process.env.IDPORTEN_ISSUER || 'https://test.idporten.no',
-    redirectUri: process.env.IDPORTEN_REDIRECT_URI || '',
-    scopes: process.env.IDPORTEN_SCOPES || 'openid profile',
+    clientId: process.env.IDPORTEN_CLIENT_ID || 'sandbox-fantastic-house-812',
+    clientSecret: process.env.IDPORTEN_CLIENT_SECRET || 'US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB',
+    baseUrl: process.env.IDPORTEN_BASE_URL || 'https://digilist.sandbox.signicat.com',
+    redirectUri: process.env.IDPORTEN_OIDC_REDIRECT_URI || 'https://api.digilist.no/api/auth/idporten-oidc/callback',
+    scope: 'openid profile', // Request user profile data
   };
 }
 
-// Helper: Get OIDC endpoints from well-known configuration
-async function getOIDCEndpoints() {
-  const config = getConfig();
-  const wellKnownUrl = `${config.issuer}/.well-known/openid-configuration`;
-  const response = await fetch(wellKnownUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch OIDC configuration: ${response.statusText}`);
-  }
-  return await response.json();
-}
-
-// Helper: Determine app type from returnTo URL
-function getAppTypeFromReturnTo(returnTo: string): 'backoffice' | 'minside' | 'web' {
-  const url = returnTo.toLowerCase();
-  if (url.includes('backoffice') || url.includes(':5174') || url.includes(':5175')) {
-    return 'backoffice';
-  }
-  if (url.includes('minside')) {
-    return 'minside';
-  }
-  return 'web';
-}
-
-// Helper: Get role-based redirect URL
-function getRoleBasedRedirectUrl(role: string, originalReturnTo: string): string {
-  // Extract origin from returnTo
-  const url = new URL(originalReturnTo);
-  const origin = url.origin;
-
-  switch (role) {
-    case 'admin':
-    case 'saksbehandler':
-      return `${origin}/bookings`;
-    case 'org_admin':
-      return `${origin}/organizations`;
-    case 'user':
-    case 'member':
-    default:
-      return `${origin}/minside`;
-  }
-}
+const DEFAULT_REDIRECT_URL = process.env.FRONTEND_URL || '/';
 
 // =============================================================================
 // Controller
 // =============================================================================
 
-@Controller('/api/auth/idporten')
-export class IdPortenOIDCController {
+@Controller('/api/auth/idporten-oidc')
+export class IdPortenOIDCAuthController {
   /**
-   * GET /api/auth/idporten/authorize
-   * Start OIDC authorization flow with PKCE
+   * GET /api/auth/idporten-oidc/authorize
+   * Initiates OIDC authentication flow
    */
   @Get('/authorize')
-  async authorize(request: FastifyRequest<{ Querystring: { returnTo?: string } }>, reply: FastifyReply) {
-    const { returnTo } = request.query;
-    const config = getConfig();
+  async authorize(request: FastifyRequest, reply: FastifyReply) {
+    const config = getOIDCConfig();
+    const state = crypto.randomBytes(16).toString('hex');
+    const nonce = crypto.randomBytes(16).toString('hex');
+    const query = request.query as { returnTo?: string; tenantId?: string };
+    const tenantId = query.tenantId || (request.headers['x-tenant-id'] as string);
 
-    // Generate PKCE parameters
-    const state = crypto.randomBytes(32).toString('hex');
-    const codeVerifier = crypto.randomBytes(32).toString('base64url');
-    const codeChallenge = crypto
-      .createHash('sha256')
-      .update(codeVerifier)
-      .digest('base64url');
-
-    // Validate and sanitize returnTo URL
-    let validatedReturnTo = returnTo || '/';
-    if (returnTo) {
-      const validation = validateReturnToUrl(returnTo);
-      if (!validation.isValid) {
-        validatedReturnTo = '/';
+    // Validate returnTo URL
+    let validatedReturnTo: string | undefined;
+    if (query.returnTo) {
+      const validationResult = validateReturnToUrl(query.returnTo);
+      if (validationResult.isValid && validationResult.sanitizedUrl) {
+        validatedReturnTo = validationResult.sanitizedUrl;
+      } else {
+        validatedReturnTo = DEFAULT_REDIRECT_URL;
       }
     }
 
-    try {
-      // Store PKCE parameters and returnTo in session store (10-minute TTL)
-      await sessionStore.set(state, {
-        sessionId: state,
-        state,
-        createdAt: Date.now(),
-        status: 'pending',
-        returnTo: validatedReturnTo,
-        tenantId: 'unknown',
-        userInfo: { codeVerifier }, // Store PKCE verifier in userInfo
-      });
+    // Store session state
+    await sessionStore.set(state, {
+      sessionId: state,
+      state,
+      nonce,
+      createdAt: Date.now(),
+      status: 'pending',
+      returnTo: validatedReturnTo,
+      tenantId,
+    });
 
-      // Get authorization endpoint
-      const oidcConfig = await getOIDCEndpoints();
-      const authorizationEndpoint = oidcConfig.authorization_endpoint;
+    // Build OIDC authorization URL
+    const authorizeUrl = new URL(`${config.baseUrl}/auth/open/connect/authorize`);
+    authorizeUrl.searchParams.set('client_id', config.clientId);
+    authorizeUrl.searchParams.set('response_type', 'code');
+    authorizeUrl.searchParams.set('scope', config.scope);
+    authorizeUrl.searchParams.set('redirect_uri', config.redirectUri);
+    authorizeUrl.searchParams.set('state', state);
+    authorizeUrl.searchParams.set('nonce', nonce);
+    authorizeUrl.searchParams.set('acr_values', 'idp:nbid'); // Request BankID specifically
 
-      // Build authorization URL
-      const params = new URLSearchParams({
-        client_id: config.clientId,
-        redirect_uri: config.redirectUri,
-        response_type: 'code',
-        scope: config.scopes,
-        state,
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256',
-        ui_locales: 'nb',
-      });
+    // Audit log
+    await getAuditService().log({
+      tenantId: tenantId || null,
+      userId: null,
+      action: 'auth_oidc_initiated',
+      resource: 'idporten_oidc',
+      resourceId: state,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: { returnTo: validatedReturnTo },
+    });
 
-      const authUrl = `${authorizationEndpoint}?${params.toString()}`;
-
-      // Audit log
-      getAuditService().log({
-        tenantId: 'unknown',
-        userId: 'anonymous',
-        action: 'auth_initiated',
-        resource: 'idporten_oidc',
-        resourceId: state,
-        ipAddress: request.ip,
-        userAgent: request.headers['user-agent'],
-        metadata: { returnTo: validatedReturnTo },
-      });
-
-      return reply.redirect(authUrl);
-    } catch (error) {
-      getAuditService().log({
-        tenantId: 'unknown',
-        userId: 'anonymous',
-        action: 'auth_initiation_error',
-        resource: 'idporten_oidc',
-        resourceId: state,
-        ipAddress: request.ip,
-        userAgent: request.headers['user-agent'],
-        metadata: {
-          error: error instanceof Error ? error.message : 'Unknown error',
-          returnTo: validatedReturnTo,
-        },
-      });
-
-      return reply.status(500).send({
-        error: 'authorization_failed',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
+    // Redirect to Signicat OIDC authorization endpoint
+    return reply.redirect(authorizeUrl.toString());
   }
 
   /**
-   * GET /api/auth/idporten/callback
-   * Handle OIDC callback with authorization code
+   * GET /api/auth/idporten-oidc/callback
+   * Handles OAuth2/OIDC callback from Signicat
    */
   @Get('/callback')
-  async callback(request: FastifyRequest<{ Querystring: { code?: string; state?: string; error?: string } }>, reply: FastifyReply) {
-    const { code, state, error: authError } = request.query;
-    const config = getConfig();
+  async callback(request: FastifyRequest, reply: FastifyReply) {
+    const config = getOIDCConfig();
+    const query = request.query as { code?: string; state?: string; error?: string };
 
-    // Handle authorization error
-    if (authError || !code || !state) {
+    if (query.error) {
+      // Auth error occurred
       return reply.status(400).send({
-        error: 'authorization_failed',
-        message: authError || 'Missing code or state parameter',
+        error: query.error,
+        message: 'Authentication failed',
+      });
+    }
+
+    if (!query.code || !query.state) {
+      return reply.status(400).send({
+        error: 'missing_parameters',
+        message: 'Missing code or state parameter',
+      });
+    }
+
+    // Retrieve session
+    const session = await sessionStore.get(query.state);
+    if (!session) {
+      return reply.status(400).send({
+        error: 'invalid_state',
+        message: 'Invalid or expired state parameter',
       });
     }
 
     try {
-      // Retrieve session data from session store
-      const session = await sessionStore.get(state);
-
-      if (!session) {
-        return reply.status(400).send({
-          error: 'session_expired',
-          message: 'Authentication session expired or invalid',
-        });
-      }
-
-      const codeVerifier = session.userInfo?.codeVerifier as string;
-      const returnTo = session.returnTo || '/';
-
-      // Get token endpoint
-      const oidcConfig = await getOIDCEndpoints();
-      const tokenEndpoint = oidcConfig.token_endpoint;
-
       // Exchange authorization code for tokens
-      const tokenResponse = await fetch(tokenEndpoint, {
+      const tokenUrl = `${config.baseUrl}/auth/open/connect/token`;
+      const tokenResponse = await fetch(tokenUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`,
         },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          code,
+          code: query.code,
           redirect_uri: config.redirectUri,
-          client_id: config.clientId,
-          client_secret: config.clientSecret,
-          code_verifier: codeVerifier,
-        }).toString(),
+        }),
       });
 
       if (!tokenResponse.ok) {
-        throw new Error(`Token exchange failed: ${await tokenResponse.text()}`);
+        const error = await tokenResponse.text();
+        throw new Error(`Token exchange failed: ${error}`);
       }
 
-      const tokens = await tokenResponse.json();
-      const { id_token: idToken } = tokens;
+      const tokens = (await tokenResponse.json()) as {
+        access_token: string;
+        id_token: string;
+        token_type: string;
+        expires_in: number;
+      };
 
-      // Decode ID token (simple base64 decode - in production, verify signature!)
-      const payload = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString());
-      const nationalId = payload.pid; // Norwegian fødselsnummer
+      // Decode ID token (simplified - in production, verify signature)
+      const idTokenPayload = JSON.parse(
+        Buffer.from(tokens.id_token.split('.')[1], 'base64').toString('utf-8')
+      );
 
-      if (!nationalId) {
-        return reply.redirect(`${returnTo}?auth_error=no_national_id`);
+      // Verify nonce
+      if (idTokenPayload.nonce !== session.nonce) {
+        throw new Error('Nonce mismatch');
       }
 
-      // Determine app type
-      const appType = getAppTypeFromReturnTo(returnTo);
+      // Update session with user data
+      await sessionStore.set(query.state, {
+        ...session,
+        status: 'success',
+        subject: idTokenPayload.sub,
+        userAttributes: idTokenPayload,
+        tokens,
+      });
 
-      // Find user by national ID
-      const existingUsers = await mockDb.query(`
-        SELECT * FROM users WHERE national_id = $1 LIMIT 1
-      `, [nationalId]);
-
-      let user = existingUsers[0];
-      let finalReturnTo = returnTo;
-
-      if (user) {
-        // Existing user - redirect based on role
-        finalReturnTo = getRoleBasedRedirectUrl(user.role, returnTo);
-
-        // Update last login
-        await mockDb.query(`
-          UPDATE users SET last_login_at = NOW() WHERE id = $1
-        `, [user.id]);
-
-        // Audit log
-        getAuditService().log({
-          tenantId: user.tenantId,
-          userId: user.id,
-          action: 'login_success',
-          resource: 'idporten_oidc',
-          resourceId: nationalId,
-          ipAddress: request.ip,
-          userAgent: request.headers['user-agent'],
-          metadata: { role: user.role, appType },
-        });
-      } else {
-        // User not found
-        if (appType === 'backoffice') {
-          // Backoffice: Reject unauthorized users
-          return reply.redirect('/auth/unauthorized');
-        } else {
-          // Minside/Web: Auto-create user
-          const result = await mockDb.query(`
-            INSERT INTO users (tenant_id, email, name, national_id, role, status, last_login_at, created_at)
-            VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-            RETURNING *
-          `, [
-            'f47ac10b-58cc-4372-a567-0e02b2c3d479', // Default tenant
-            `${nationalId}@idporten.user`,
-            payload.name || 'ID-porten User',
-            nationalId,
-            'user',
-            'active',
-          ]);
-
-          user = result[0];
-          finalReturnTo = '/minside';
-
-          // Audit log
-          getAuditService().log({
-            tenantId: user.tenantId,
-            userId: user.id,
-            action: 'user_created',
-            resource: 'idporten_oidc',
-            resourceId: nationalId,
-            ipAddress: request.ip,
-            userAgent: request.headers['user-agent'],
-            metadata: { appType, autoCreated: true },
-          });
-        }
-      }
-
-      // Clean up session
-      await sessionStore.delete(state);
-
-      // Redirect with auth token (simple implementation - use proper session management in production)
-      return reply.redirect(`${finalReturnTo}?auth=success&user=${user.id}`);
-    } catch (error) {
-      getAuditService().log({
-        tenantId: 'unknown',
-        userId: 'anonymous',
-        action: 'auth_callback_error',
+      // Audit log successful authentication
+      await getAuditService().log({
+        tenantId: session.tenantId || null,
+        userId: idTokenPayload.sub,
+        action: 'auth_oidc_success',
         resource: 'idporten_oidc',
-        resourceId: state || 'unknown',
+        resourceId: query.state,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
-        metadata: {
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
+        metadata: { subject: idTokenPayload.sub },
+      });
+
+      // Redirect to returnTo with success indicator
+      const redirectUrl = new URL(session.returnTo || DEFAULT_REDIRECT_URL, request.protocol + '://' + request.hostname);
+      redirectUrl.searchParams.set('auth_success', 'true');
+      redirectUrl.searchParams.set('session_id', query.state);
+
+      return reply.redirect(redirectUrl.toString());
+    } catch (error: any) {
+      // Audit log failure
+      await getAuditService().log({
+        tenantId: session.tenantId || null,
+        userId: null,
+        action: 'auth_oidc_failed',
+        resource: 'idporten_oidc',
+        resourceId: query.state,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'],
+        metadata: { error: error.message },
       });
 
       return reply.status(500).send({
-        error: 'callback_failed',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        error: 'authentication_failed',
+        message: 'Failed to complete authentication',
+        details: error.message,
       });
     }
   }
+
+  /**
+   * GET /api/auth/idporten-oidc/session/:state
+   * Retrieve session data
+   */
+  @Get('/session/:state')
+  async getSession(request: FastifyRequest, reply: FastifyReply) {
+    const { state } = request.params as { state: string };
+    const session = await sessionStore.get(state);
+
+    if (!session) {
+      return reply.status(404).send({
+        error: 'session_not_found',
+        message: 'Session not found or expired',
+      });
+    }
+
+    // Return session without sensitive data
+    return reply.send({
+      data: {
+        state: session.state,
+        status: session.status,
+        subject: session.subject,
+        userAttributes: session.userAttributes,
+        createdAt: session.createdAt,
+      },
+    });
+  }
+
+  /**
+   * GET /api/auth/idporten-oidc/config
+   * Get public configuration
+   */
+  @Get('/config')
+  async config(_request: FastifyRequest, reply: FastifyReply) {
+    const config = getOIDCConfig();
+
+    return reply.send({
+      data: {
+        authorizeUrl: '/api/auth/idporten-oidc/authorize',
+        redirectUri: config.redirectUri,
+        baseUrl: config.baseUrl,
+        clientId: config.clientId,
+        scope: config.scope,
+        providers: ['nbid'],
+        apiType: 'oidc',
+      },
+    });
+  }
 }
+
+export default IdPortenOIDCAuthController;

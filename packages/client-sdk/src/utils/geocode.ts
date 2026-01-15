@@ -293,14 +293,14 @@ interface MapboxResponse {
 }
 
 /**
- * Geocode a listing address using Mapbox Forward Geocoding API
+ * Geocode a rental object address using Mapbox Forward Geocoding API
  *
  * @param address - The address to geocode
  * @param config - Geocoding configuration
  * @returns Promise resolving to GeocodeResult or GeocodeError
  */
-export async function geocodeListingAddress(
-  address: ListingAddress,
+export async function geocodeRentalObjectAddress(
+  address: RentalObjectAddress,
   config: GeocodeConfig
 ): Promise<GeocodeResult | GeocodeError> {
   // Validate config

@@ -3,9 +3,20 @@
  *
  * Reusable transformation utilities for season and application data.
  * Used by web, backoffice, and minside apps.
+ * 
+ * Note: All labels are returned as i18n translation keys.
+ * Use your app's t() function to resolve them.
  */
 
 import type { Season, SeasonStatus, SeasonApplication } from '../types';
+import {
+  SEASON_STATUS_KEYS,
+  SEASON_APPLICATION_STATUS_KEYS,
+  WEEKDAY_KEYS,
+  WEEKDAY_SHORT_KEYS,
+  DURATION_KEYS,
+  PRIORITY_KEYS,
+} from '../localization/keys';
 
 // =============================================================================
 // UI Types for Transformed Seasons
@@ -126,17 +137,8 @@ export interface TransformedSeasonApplication {
 }
 
 // =============================================================================
-// Transform Utilities
+// Status Colors (semantic)
 // =============================================================================
-
-const SEASON_STATUS_LABELS: Record<SeasonStatus, string> = {
-  draft: 'Utkast',
-  open: 'Åpen for søknader',
-  closed: 'Stengt',
-  active: 'Aktiv',
-  completed: 'Fullført',
-  cancelled: 'Kansellert',
-};
 
 const SEASON_STATUS_COLORS: Record<SeasonStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   draft: 'neutral',
@@ -147,80 +149,86 @@ const SEASON_STATUS_COLORS: Record<SeasonStatus, 'success' | 'warning' | 'danger
   cancelled: 'danger',
 };
 
-const APPLICATION_STATUS_LABELS: Record<string, string> = {
-  pending: 'Venter',
-  approved: 'Godkjent',
-  rejected: 'Avvist',
-  allocated: 'Tildelt',
-};
-
 const APPLICATION_STATUS_COLORS: Record<string, 'success' | 'warning' | 'danger' | 'neutral'> = {
   pending: 'warning',
   approved: 'success',
   rejected: 'danger',
   allocated: 'success',
+  waitlist: 'warning',
 };
 
-const WEEKDAY_LABELS: Record<number, string> = {
-  0: 'Søndag',
-  1: 'Mandag',
-  2: 'Tirsdag',
-  3: 'Onsdag',
-  4: 'Torsdag',
-  5: 'Fredag',
-  6: 'Lørdag',
+// Weekday index to key mapping
+const WEEKDAY_INDEX_KEYS: Record<number, string> = {
+  0: 'sunday',
+  1: 'monday',
+  2: 'tuesday',
+  3: 'wednesday',
+  4: 'thursday',
+  5: 'friday',
+  6: 'saturday',
 };
 
-const WEEKDAY_SHORT_LABELS: Record<number, string> = {
-  0: 'Søn',
-  1: 'Man',
-  2: 'Tir',
-  3: 'Ons',
-  4: 'Tor',
-  5: 'Fre',
-  6: 'Lør',
-};
+// =============================================================================
+// Label Functions (return i18n keys)
+// =============================================================================
 
 /**
- * Get display label for season status
+ * Get i18n key for season status label
+ * Use t(key) to resolve the actual label
  */
 export function getSeasonStatusLabel(status: SeasonStatus): string {
-  return SEASON_STATUS_LABELS[status] || status;
+  return SEASON_STATUS_KEYS[status as keyof typeof SEASON_STATUS_KEYS] ?? `sdk.season.status.${status}`;
 }
 
 /**
- * Get color for season status
+ * Get semantic color for season status
  */
 export function getSeasonStatusColor(status: SeasonStatus): 'success' | 'warning' | 'danger' | 'neutral' {
-  return SEASON_STATUS_COLORS[status] || 'neutral';
+  return SEASON_STATUS_COLORS[status] ?? 'neutral';
 }
 
 /**
- * Get display label for application status
+ * Get i18n key for application status label
+ * Use t(key) to resolve the actual label
  */
 export function getApplicationStatusLabel(status: string): string {
-  return APPLICATION_STATUS_LABELS[status] || status;
+  return SEASON_APPLICATION_STATUS_KEYS[status as keyof typeof SEASON_APPLICATION_STATUS_KEYS] ?? `sdk.seasonApplication.status.${status}`;
 }
 
 /**
- * Get color for application status
+ * Get semantic color for application status
  */
 export function getApplicationStatusColor(status: string): 'success' | 'warning' | 'danger' | 'neutral' {
-  return APPLICATION_STATUS_COLORS[status] || 'neutral';
+  return APPLICATION_STATUS_COLORS[status] ?? 'neutral';
 }
 
 /**
- * Get weekday label
+ * Get i18n key for weekday label
+ * Use t(key) to resolve the actual label
  */
 export function getWeekdayLabel(weekday: number): string {
-  return WEEKDAY_LABELS[weekday] || `Dag ${weekday}`;
+  const dayKey = WEEKDAY_INDEX_KEYS[weekday];
+  return dayKey ? WEEKDAY_KEYS[dayKey as keyof typeof WEEKDAY_KEYS] : `sdk.weekday.${weekday}`;
 }
 
 /**
- * Get short weekday label
+ * Get i18n key for short weekday label
+ * Use t(key) to resolve the actual label
  */
 export function getWeekdayShortLabel(weekday: number): string {
-  return WEEKDAY_SHORT_LABELS[weekday] || `D${weekday}`;
+  const dayKey = WEEKDAY_INDEX_KEYS[weekday];
+  return dayKey ? WEEKDAY_SHORT_KEYS[dayKey as keyof typeof WEEKDAY_SHORT_KEYS] : `sdk.weekday.short.${weekday}`;
+}
+
+/**
+ * Get i18n key for duration unit
+ * Use t(key) to resolve the actual label
+ */
+export function getDurationUnitKey(singular: boolean, unit: 'minute' | 'hour' | 'day'): string {
+  if (singular) {
+    return DURATION_KEYS[unit];
+  }
+  return DURATION_KEYS[`${unit}s` as keyof typeof DURATION_KEYS];
 }
 
 /**
@@ -265,16 +273,16 @@ export function transformSeasonDates(season: Season): TransformedSeasonDates {
   const isPast = now > endDate;
   const hasDeadlinePassed = now > deadline;
 
-  // Duration label
+  // Duration label - returns structured data for i18n interpolation
   let durationLabel: string;
   if (durationDays < 30) {
-    durationLabel = `${durationDays} dag${durationDays > 1 ? 'er' : ''}`;
+    durationLabel = durationDays === 1 ? `1 ${DURATION_KEYS.day}` : `${durationDays} ${DURATION_KEYS.days}`;
   } else if (durationDays < 365) {
     const months = Math.floor(durationDays / 30);
-    durationLabel = `${months} måned${months > 1 ? 'er' : ''}`;
+    durationLabel = `${months} sdk.duration.months`;
   } else {
     const years = Math.floor(durationDays / 365);
-    durationLabel = `${years} år`;
+    durationLabel = `${years} sdk.duration.years`;
   }
 
   return {
@@ -337,17 +345,17 @@ export function transformApplicationTime(
   const durationMinutes = endMinutes - startMinutes;
   const durationHours = durationMinutes / 60;
 
-  // Duration label
+  // Duration label - uses i18n keys
   let durationLabel: string;
   if (durationMinutes < 60) {
-    durationLabel = `${durationMinutes} min`;
+    durationLabel = durationMinutes === 1 ? `1 ${DURATION_KEYS.minute}` : `${durationMinutes} ${DURATION_KEYS.minutes}`;
   } else if (durationMinutes % 60 === 0) {
     const hours = durationMinutes / 60;
-    durationLabel = hours === 1 ? '1 time' : `${hours} timer`;
+    durationLabel = hours === 1 ? `1 ${DURATION_KEYS.hour}` : `${hours} ${DURATION_KEYS.hours}`;
   } else {
     const hours = Math.floor(durationMinutes / 60);
     const mins = durationMinutes % 60;
-    durationLabel = `${hours}t ${mins}min`;
+    durationLabel = `${hours} ${DURATION_KEYS.hours} ${mins} ${DURATION_KEYS.minutes}`;
   }
 
   return {
@@ -423,7 +431,7 @@ export function transformSeasonApplication(application: SeasonApplication): Tran
   contactInfo.push(application.applicantEmail);
   if (application.applicantPhone) contactInfo.push(application.applicantPhone);
 
-  const priorityLabel = application.priority ? `Prioritet ${application.priority}` : undefined;
+  const priorityLabel = application.priority ? `${PRIORITY_KEYS.prefix} ${application.priority}` : undefined;
 
   return {
     // Core

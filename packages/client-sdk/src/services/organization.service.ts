@@ -16,8 +16,8 @@ import type {
   UserQueryParams,
   GdprDataExport,
   ConsentSettings,
-  NotificationPreferences
 } from '../types/organization';
+import type { NotificationPreferences } from '../types/push-notification';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
 

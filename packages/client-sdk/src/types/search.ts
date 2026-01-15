@@ -13,8 +13,11 @@ import type {
   ExportFormat
 } from './enums';
 import type { Booking } from './booking';
-import type { Listing } from './listing';
+import type { RentalObject } from './rental-object';
 import type { Organization } from './organization';
+
+// Type alias for backward compatibility
+type Listing = RentalObject;
 
 // =============================================================================
 // Search Entity Types

@@ -107,38 +107,49 @@ export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjec
 }
 
 // =============================================================================
-// LABEL MAPPINGS
+// TRANSLATION KEY MAPPINGS
+// All labels are now i18n keys - use t() in the frontend to resolve them
 // =============================================================================
 
-const CATEGORY_LABELS: Record<string, string> = {
-  LOKALER_OG_BANER: 'Lokaler og baner',
-  UTSTYR_OG_INVENTAR: 'Utstyr og inventar',
-  KJORETOY_OG_TRANSPORT: 'Kjoeretoy og transport',
-  OPPLEVELSER_OG_ARRANGEMENT: 'Opplevelser og arrangement',
+const CATEGORY_LABEL_KEYS: Record<string, string> = {
+  LOKALER_OG_BANER: 'sdk.rentalObject.category.LOKALER_OG_BANER',
+  UTSTYR_OG_INVENTAR: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
+  KJORETOY_OG_TRANSPORT: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
+  OPPLEVELSER_OG_ARRANGEMENT: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
 };
 
-const TIME_MODE_LABELS: Record<string, string> = {
-  PERIOD: 'Tidsperiode',
-  SLOT: 'Tidsluke',
-  ALL_DAY: 'Heldags',
+const TIME_MODE_LABEL_KEYS: Record<string, string> = {
+  PERIOD: 'sdk.timeMode.PERIOD',
+  SLOT: 'sdk.timeMode.SLOT',
+  ALL_DAY: 'sdk.timeMode.ALL_DAY',
 };
 
-const UNIT_LABELS: Record<string, string> = {
-  hour: 'time',
-  day: 'dag',
-  booking: 'booking',
-  week: 'uke',
-  month: 'maned',
+const UNIT_LABEL_KEYS: Record<string, string> = {
+  hour: 'sdk.pricingUnit.hour',
+  day: 'sdk.pricingUnit.day',
+  booking: 'sdk.pricingUnit.booking',
+  week: 'sdk.pricingUnit.week',
+  month: 'sdk.pricingUnit.month',
 };
 
-const DAY_LABELS: Record<string, [string, number]> = {
-  monday: ['Mandag', 1],
-  tuesday: ['Tirsdag', 2],
-  wednesday: ['Onsdag', 3],
-  thursday: ['Torsdag', 4],
-  friday: ['Fredag', 5],
-  saturday: ['Lordag', 6],
-  sunday: ['Sondag', 0],
+const DAY_INDICES: Record<string, number> = {
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+  sunday: 0,
+};
+
+const DAY_LABEL_KEYS: Record<string, string> = {
+  monday: 'sdk.weekday.monday',
+  tuesday: 'sdk.weekday.tuesday',
+  wednesday: 'sdk.weekday.wednesday',
+  thursday: 'sdk.weekday.thursday',
+  friday: 'sdk.weekday.friday',
+  saturday: 'sdk.weekday.saturday',
+  sunday: 'sdk.weekday.sunday',
 };
 
 // =============================================================================
@@ -172,16 +183,21 @@ interface DbRentalObject {
 // HELPER FUNCTIONS
 // =============================================================================
 
-function getCategoryLabel(category: string): string {
-  return CATEGORY_LABELS[category] || category;
+function getCategoryLabelKey(category: string): string {
+  return CATEGORY_LABEL_KEYS[category] ?? `sdk.rentalObject.category.${category}`;
 }
 
-function getTimeModeLabel(timeMode: string): string {
-  return TIME_MODE_LABELS[timeMode] || timeMode;
+function getTimeModeLabelKey(timeMode: string): string {
+  return TIME_MODE_LABEL_KEYS[timeMode] ?? `sdk.timeMode.${timeMode}`;
 }
 
-function getUnitLabel(unit: string): string {
-  return UNIT_LABELS[unit] || unit;
+function getUnitLabelKey(unit: string): string {
+  return UNIT_LABEL_KEYS[unit] ?? `sdk.pricingUnit.${unit}`;
+}
+
+function getWeekdayLabelKey(day: string): string {
+  const dayLower = day.toLowerCase();
+  return DAY_LABEL_KEYS[dayLower] ?? `sdk.weekday.${dayLower}`;
 }
 
 function safeString(val: unknown): string {
@@ -206,9 +222,10 @@ function formatLocation(obj: DbRentalObject): { formatted: string; city: string 
   const city = safeString(addr.city) || safeString(location.city) || safeString(meta.city) || '';
 
   const parts = [street, postalCode, city].filter(Boolean);
-  const formatted = parts.length > 0 ? parts.join(', ') : 'Ingen adresse';
+  // Return i18n key for placeholder when no address
+  const formatted = parts.length > 0 ? parts.join(', ') : 'sdk.placeholder.noAddress';
 
-  return { formatted, city: city || 'Ukjent' };
+  return { formatted, city: city || 'sdk.placeholder.unknown' };
 }
 
 function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number | null } {
@@ -231,7 +248,7 @@ function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string;
   return {
     url: primaryUrl,
     thumbnail: primaryUrl,
-    alt: primaryUrl ? `${obj.name} - bilde` : 'Ingen bilde',
+    alt: primaryUrl ? `${obj.name}` : 'sdk.placeholder.noImage',
   };
 }
 
@@ -246,35 +263,37 @@ function getAmenities(obj: DbRentalObject, maxCount: number = 3): { visible: str
 }
 
 function formatRating(rating?: number, count?: number): string {
-  if (!rating || !count) return 'Ingen anmeldelser';
-  return `${rating.toFixed(1)} (${count} anmeldelser)`;
+  if (!rating || !count) return 'sdk.placeholder.noReviews';
+  return `${rating.toFixed(1)} (${count})`;
 }
 
 function formatPrice(pricing?: DbRentalObject['pricing']): {
   amount: number;
   currency: string;
   unit: string;
+  unitLabel: string;
   display: string;
 } {
   const amount = pricing?.basePrice || 0;
   const currency = pricing?.currency || 'NOK';
   const unit = pricing?.unit || 'hour';
-  const unitLabel = getUnitLabel(unit);
+  const unitLabel = getUnitLabelKey(unit);
 
   return {
     amount,
     currency,
     unit,
-    display: amount > 0 ? `${amount} ${currency}/${unitLabel}` : 'Pris ikke oppgitt',
+    unitLabel,
+    display: amount > 0 ? `${amount} ${currency}` : 'sdk.placeholder.priceNotSet',
   };
 }
 
 function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} minutter`;
+  if (minutes < 60) return `${minutes} sdk.duration.minutes`;
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
-  if (mins === 0) return hours === 1 ? '1 time' : `${hours} timer`;
-  return `${hours}t ${mins}m`;
+  if (mins === 0) return hours === 1 ? `1 sdk.duration.hour` : `${hours} sdk.duration.hours`;
+  return `${hours} sdk.duration.hours ${mins} sdk.duration.minutes`;
 }
 
 // =============================================================================
@@ -302,11 +321,11 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
     name: obj.name,
     tenantId: obj.tenantId,
     category: obj.category,
-    categoryLabel: getCategoryLabel(obj.category),
+    categoryLabel: getCategoryLabelKey(obj.category),
     subcategory: obj.subcategory || '',
     subcategoryLabel: obj.subcategory || '',
     timeMode: obj.timeMode,
-    timeModeLabel: getTimeModeLabel(obj.timeMode),
+    timeModeLabel: getTimeModeLabelKey(obj.timeMode),
     locationFormatted: location.formatted,
     city: location.city,
     latitude: coords.lat,
@@ -320,7 +339,7 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
     priceUnit: price.unit,
     priceDisplay: price.display,
     capacity,
-    capacityLabel: capacity > 0 ? `${capacity} personer` : '',
+    capacityLabel: capacity > 0 ? `${capacity}` : '',
     amenities,
     moreAmenitiesCount: moreCount,
     averageRating: avgRating,
@@ -350,7 +369,7 @@ export function toDetailsProjection(
     id: `img-${index}`,
     url,
     thumbnailUrl: url,
-    alt: `${obj.name} - bilde ${index + 1}`,
+    alt: `${obj.name} ${index + 1}`,
     isPrimary: index === 0,
     order: index,
   }));
@@ -368,7 +387,7 @@ export function toDetailsProjection(
   
   if (Array.isArray(rawHoursData)) {
     openingHours = rawHoursData.map((item: any, i: number) => {
-      const dayName = safeString(item.day) || safeString(item.dayName) || `Day ${i}`;
+      const dayName = safeString(item.day) || safeString(item.dayName) || getWeekdayLabelKey(`day${i}`);
       const dayIdx = typeof item.dayIndex === 'number' ? item.dayIndex : i;
       const openTime = safeString(item.open) || safeString(item.openTime) || '';
       const closeTime = safeString(item.close) || safeString(item.closeTime) || '';
@@ -378,21 +397,22 @@ export function toDetailsProjection(
         dayIndex: dayIdx,
         openTime,
         closeTime,
-        hoursDisplay: isClosed ? 'Stengt' : `${openTime} - ${closeTime}`,
+        hoursDisplay: isClosed ? 'sdk.placeholder.closed' : `${openTime} - ${closeTime}`,
         isClosed,
       };
     });
   } else if (rawHoursData && typeof rawHoursData === 'object') {
     openingHours = Object.entries(rawHoursData as Record<string, { open?: string; close?: string }>)
       .map(([day, times]) => {
-        const [label, idx] = DAY_LABELS[day.toLowerCase()] || [day, 0];
+        const dayLower = day.toLowerCase();
+        const idx = DAY_INDICES[dayLower] ?? 0;
         const isClosed = !times.open || !times.close;
         return {
-          day: label,
+          day: getWeekdayLabelKey(dayLower),
           dayIndex: idx,
           openTime: times.open || '',
           closeTime: times.close || '',
-          hoursDisplay: isClosed ? 'Stengt' : `${times.open} - ${times.close}`,
+          hoursDisplay: isClosed ? 'sdk.placeholder.closed' : `${times.open} - ${times.close}`,
           isClosed,
         };
       })
@@ -431,7 +451,7 @@ export function toDetailsProjection(
     addressPostalCode: safeString(addr.postalCode) || safeString(location.postalCode) || '',
     addressCity: safeString(addr.city) || safeString(location.city) || '',
     addressMunicipality: safeString(location.municipality) || '',
-    addressCountry: safeString(location.country) || 'Norge',
+    addressCountry: safeString(location.country) || '',
     contactName: safeString(meta.contactName) || '',
     contactEmail: safeString(meta.contactEmail) || '',
     contactPhone: safeString(meta.contactPhone) || '',
@@ -449,8 +469,8 @@ export function toDetailsProjection(
     maxBookingDuration: maxDuration,
     maxBookingDurationDisplay: formatDuration(maxDuration),
     advanceBookingDays: advanceDays,
-    advanceBookingDisplay: advanceDays === 1 ? '1 dag pa forhand' : `${advanceDays} dager pa forhand`,
-    cancellationPolicyDisplay: safeString(bookingConfig.cancellationPolicy) || 'Standard avbestillingsregler',
+    advanceBookingDisplay: `${advanceDays} sdk.booking.advanceDays`,
+    cancellationPolicyDisplay: safeString(bookingConfig.cancellationPolicy) || 'sdk.booking.standardCancellation',
     requiresApproval: Boolean(bookingConfig.requiresApproval),
     instantBookingEnabled: Boolean(bookingConfig.instantBooking),
     canBook: options.canBook ?? true,

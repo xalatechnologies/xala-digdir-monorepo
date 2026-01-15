@@ -9,6 +9,8 @@
  * - Contact information for notifications
  * - Quiet hours configuration
  *
+ * Production-ready: Uses SDK hooks for data fetching and mutations.
+ *
  * Based on Skien demo specification:
  * - In-app: always on by default
  * - E-post: on for decisions and changes
@@ -26,22 +28,28 @@ import {
   Spinner,
   Badge,
   Label,
+  Alert,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
-  NotificationPreferencesMatrix,
+  useOrganizationNotificationPreferences,
+  useUpdateOrganizationNotificationPreferences,
   DEFAULT_NOTIFICATION_PREFERENCES,
+} from '@digilist/client-sdk';
+import {
+  NotificationPreferencesMatrix,
 } from '../../components/notifications';
 import type {
   NotificationPreferencesMatrixType,
   NotificationChannel,
 } from '../../components/notifications';
+import { useAccountContext } from '../../providers/AccountContextProvider';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface OrganizationNotificationSettings {
+interface LocalSettings {
   // Master channel toggles
   inAppEnabled: boolean;
   emailEnabled: boolean;
@@ -65,7 +73,7 @@ interface OrganizationNotificationSettings {
   quietHoursEnd: string;
 }
 
-const DEFAULT_SETTINGS: OrganizationNotificationSettings = {
+const DEFAULT_LOCAL_SETTINGS: LocalSettings = {
   inAppEnabled: true,
   emailEnabled: true,
   smsEnabled: false,
@@ -86,10 +94,22 @@ const DEFAULT_SETTINGS: OrganizationNotificationSettings = {
 
 export function OrganizationNotificationsPage(): React.ReactElement {
   const t = useT();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const { selectedOrganization } = useAccountContext();
+  const organizationId = selectedOrganization?.id;
+
+  // SDK hooks
+  const {
+    data: preferencesData,
+    isLoading,
+    isError,
+    error,
+  } = useOrganizationNotificationPreferences(organizationId);
+
+  const updateMutation = useUpdateOrganizationNotificationPreferences();
+
+  // Local state for form
+  const [localSettings, setLocalSettings] = useState<LocalSettings>(DEFAULT_LOCAL_SETTINGS);
   const [hasChanges, setHasChanges] = useState(false);
-  const [settings, setSettings] = useState<OrganizationNotificationSettings>(DEFAULT_SETTINGS);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < 768 : false
   );
@@ -101,30 +121,35 @@ export function OrganizationNotificationsPage(): React.ReactElement {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Load settings (simulated - replace with SDK hook)
+  // Sync server data to local state when loaded
   useEffect(() => {
-    // TODO: Replace with actual SDK hook: useOrganizationNotificationPreferences()
-    const loadSettings = async () => {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // In production, this would come from the API
-      setSettings({
-        ...DEFAULT_SETTINGS,
-        primaryEmail: 'post@skien-il.no',
-        primaryPhone: '+47 35 50 12 34',
+    if (preferencesData?.data) {
+      const serverPrefs = preferencesData.data;
+      setLocalSettings({
+        inAppEnabled: serverPrefs.inAppEnabled ?? true,
+        emailEnabled: serverPrefs.emailEnabled ?? true,
+        smsEnabled: serverPrefs.smsEnabled ?? false,
+        notificationMatrix: serverPrefs.notificationMatrix ?? DEFAULT_NOTIFICATION_PREFERENCES,
+        notifyAdmins: serverPrefs.notifyAdmins ?? true,
+        notifyBookingManagers: serverPrefs.notifyBookingManagers ?? true,
+        notifyAllMembers: serverPrefs.notifyAllMembers ?? false,
+        primaryEmail: serverPrefs.primaryEmail ?? '',
+        primaryPhone: serverPrefs.primaryPhone ?? '',
+        quietHoursEnabled: serverPrefs.quietHoursEnabled ?? false,
+        quietHoursStart: serverPrefs.quietHoursStart ?? '22:00',
+        quietHoursEnd: serverPrefs.quietHoursEnd ?? '07:00',
       });
-      setIsLoading(false);
-    };
-    loadSettings();
-  }, []);
+      setHasChanges(false);
+    }
+  }, [preferencesData]);
 
   // Handle master toggle change
   const handleMasterToggleChange = useCallback(
     (channel: NotificationChannel, enabled: boolean) => {
-      setSettings((prev) => ({
+      const key = channel === 'in_app' ? 'inAppEnabled' : `${channel}Enabled`;
+      setLocalSettings((prev) => ({
         ...prev,
-        [`${channel === 'in_app' ? 'inApp' : channel}Enabled`]: enabled,
+        [key]: enabled,
       }));
       setHasChanges(true);
     },
@@ -133,7 +158,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
 
   // Handle notification matrix change
   const handleMatrixChange = useCallback((matrix: NotificationPreferencesMatrixType) => {
-    setSettings((prev) => ({
+    setLocalSettings((prev) => ({
       ...prev,
       notificationMatrix: matrix,
     }));
@@ -141,45 +166,97 @@ export function OrganizationNotificationsPage(): React.ReactElement {
   }, []);
 
   // Handle recipient setting change
-  const handleRecipientChange = useCallback((key: keyof OrganizationNotificationSettings, value: boolean) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+  const handleRecipientChange = useCallback((key: keyof LocalSettings, value: boolean) => {
+    setLocalSettings((prev) => ({ ...prev, [key]: value }));
     setHasChanges(true);
   }, []);
 
   // Handle contact info change
   const handleContactChange = useCallback((key: 'primaryEmail' | 'primaryPhone', value: string) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+    setLocalSettings((prev) => ({ ...prev, [key]: value }));
     setHasChanges(true);
   }, []);
 
   // Handle quiet hours change
   const handleQuietHoursChange = useCallback(
     (key: 'quietHoursEnabled' | 'quietHoursStart' | 'quietHoursEnd', value: string | boolean) => {
-      setSettings((prev) => ({ ...prev, [key]: value }));
+      setLocalSettings((prev) => ({ ...prev, [key]: value }));
       setHasChanges(true);
     },
     []
   );
 
-  // Save settings
-  const handleSave = async () => {
-    setIsSaving(true);
-    // TODO: Replace with actual SDK mutation: useUpdateOrganizationNotificationPreferences()
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSaving(false);
+  // Save settings via SDK mutation
+  const handleSave = useCallback(async () => {
+    if (!organizationId) return;
+
+    await updateMutation.mutateAsync({
+      organizationId,
+      data: {
+        emailEnabled: localSettings.emailEnabled,
+        smsEnabled: localSettings.smsEnabled,
+        inAppEnabled: localSettings.inAppEnabled,
+        notificationMatrix: localSettings.notificationMatrix,
+        notifyAdmins: localSettings.notifyAdmins,
+        notifyBookingManagers: localSettings.notifyBookingManagers,
+        notifyAllMembers: localSettings.notifyAllMembers,
+        primaryEmail: localSettings.primaryEmail || undefined,
+        primaryPhone: localSettings.primaryPhone || undefined,
+        quietHoursEnabled: localSettings.quietHoursEnabled,
+        quietHoursStart: localSettings.quietHoursStart,
+        quietHoursEnd: localSettings.quietHoursEnd,
+      },
+    });
     setHasChanges(false);
-  };
+  }, [organizationId, localSettings, updateMutation]);
 
   // Reset to defaults
-  const handleReset = () => {
-    setSettings(DEFAULT_SETTINGS);
+  const handleReset = useCallback(() => {
+    setLocalSettings(DEFAULT_LOCAL_SETTINGS);
     setHasChanges(true);
-  };
+  }, []);
 
+  // Derived state
+  const isSaving = updateMutation.isPending;
+  const saveError = updateMutation.error;
+
+  // Show error if no organization selected
+  if (!organizationId) {
+    return (
+      <div style={{ padding: 'var(--ds-spacing-8)' }}>
+        <Alert data-color="warning">
+          <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+            Ingen organisasjon valgt
+          </Heading>
+          <Paragraph style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
+            Velg en organisasjon for å konfigurere varslingsinnstillinger.
+          </Paragraph>
+        </Alert>
+      </div>
+    );
+  }
+
+  // Show loading state
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
         <Spinner aria-label={t('common.loading')} data-size="lg" />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (isError) {
+    return (
+      <div style={{ padding: 'var(--ds-spacing-8)' }}>
+        <Alert data-color="danger">
+          <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+            Kunne ikke laste innstillinger
+          </Heading>
+          <Paragraph style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
+            {error instanceof Error ? error.message : 'En feil oppstod ved lasting av varslingsinnstillinger.'}
+          </Paragraph>
+        </Alert>
       </div>
     );
   }
@@ -246,14 +323,23 @@ export function OrganizationNotificationsPage(): React.ReactElement {
         </div>
       </div>
 
+      {/* Save error alert */}
+      {saveError && (
+        <Alert data-color="danger">
+          <Paragraph style={{ margin: 0 }}>
+            Kunne ikke lagre innstillinger: {saveError instanceof Error ? saveError.message : 'Ukjent feil'}
+          </Paragraph>
+        </Alert>
+      )}
+
       {/* Notification Matrix */}
       <NotificationPreferencesMatrix
-        preferences={settings.notificationMatrix}
+        preferences={localSettings.notificationMatrix}
         onPreferencesChange={handleMatrixChange}
         masterToggles={{
-          inAppEnabled: settings.inAppEnabled,
-          emailEnabled: settings.emailEnabled,
-          smsEnabled: settings.smsEnabled,
+          inAppEnabled: localSettings.inAppEnabled,
+          emailEnabled: localSettings.emailEnabled,
+          smsEnabled: localSettings.smsEnabled,
         }}
         onMasterToggleChange={handleMasterToggleChange}
         showMasterToggles={true}
@@ -305,7 +391,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               </div>
               <Switch
                 aria-label={item.label}
-                checked={settings[item.key]}
+                checked={localSettings[item.key]}
                 onChange={(e) => handleRecipientChange(item.key, e.target.checked)}
               />
             </div>
@@ -337,7 +423,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             </Label>
             <Input
               type="email"
-              value={settings.primaryEmail}
+              value={localSettings.primaryEmail}
               onChange={(e) => handleContactChange('primaryEmail', e.target.value)}
               placeholder="post@organisasjon.no"
               style={{ width: '100%' }}
@@ -354,7 +440,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             </Label>
             <Input
               type="tel"
-              value={settings.primaryPhone}
+              value={localSettings.primaryPhone}
               onChange={(e) => handleContactChange('primaryPhone', e.target.value)}
               placeholder="+47 123 45 678"
               style={{ width: '100%' }}
@@ -390,12 +476,12 @@ export function OrganizationNotificationsPage(): React.ReactElement {
           </div>
           <Switch
             aria-label={t('notifications.org.quietHours.enabled')}
-            checked={settings.quietHoursEnabled}
+            checked={localSettings.quietHoursEnabled}
             onChange={(e) => handleQuietHoursChange('quietHoursEnabled', e.target.checked)}
           />
         </div>
 
-        {settings.quietHoursEnabled && (
+        {localSettings.quietHoursEnabled && (
           <div
             style={{
               display: 'grid',
@@ -414,7 +500,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               </Label>
               <Input
                 type="time"
-                value={settings.quietHoursStart}
+                value={localSettings.quietHoursStart}
                 onChange={(e) => handleQuietHoursChange('quietHoursStart', e.target.value)}
                 style={{ width: '100%' }}
               />
@@ -430,7 +516,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               </Label>
               <Input
                 type="time"
-                value={settings.quietHoursEnd}
+                value={localSettings.quietHoursEnd}
                 onChange={(e) => handleQuietHoursChange('quietHoursEnd', e.target.value)}
                 style={{ width: '100%' }}
               />
@@ -458,6 +544,28 @@ export function OrganizationNotificationsPage(): React.ReactElement {
           <Spinner data-size="sm" aria-hidden="true" />
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-brand-1-text-default)' }}>
             {t('notifications.settings.save')}
+          </Paragraph>
+        </div>
+      )}
+
+      {/* Success indicator */}
+      {updateMutation.isSuccess && !hasChanges && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 'var(--ds-spacing-6)',
+            right: 'var(--ds-spacing-6)',
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-success-surface-default)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            boxShadow: 'var(--ds-shadow-lg)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-3)',
+          }}
+        >
+          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
+            ✓ Innstillinger lagret
           </Paragraph>
         </div>
       )}

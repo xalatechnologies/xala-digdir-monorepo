@@ -16,10 +16,11 @@ export {
   type TransformedImage,
   type TransformedPricing as TransformedRentalObjectPricing,
   type TransformedRentalObject,
-  // Functions
-  getCategoryLabel,
-  getTimeModeLabel,
+  // Functions - note: getCategoryLabel and getTimeModeLabel are exported from types/rental-object.ts
+  getCategoryLabel as getRentalObjectCategoryLabel,
+  getTimeModeLabel as getRentalObjectTimeModeLabel,
   getPricingUnitLabel,
+  getWeekdayLabel as getRentalObjectWeekdayLabel,
   transformAddress,
   transformContact,
   transformOpeningHours,

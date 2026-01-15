@@ -7,7 +7,7 @@ import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, count, desc } from 'drizzle-orm';
 import { listings, bookings, allocations } from '../../database/schema/index';
-import { toCardProjections, toDetailsProjection } from '../listing/listing.projections';
+import { toCardProjections, toDetailsProjection } from '../rental-objects/rental-object.projections';
 import { ConfigurationService } from '../configuration/configuration.service';
 
 @Controller('/api/public')

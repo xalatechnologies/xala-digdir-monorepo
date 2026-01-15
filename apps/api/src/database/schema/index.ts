@@ -645,6 +645,110 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// Notification Preferences
+// ============================================================================
+
+/**
+ * User Notification Preferences
+ * Per-user notification channel and type preferences
+ */
+export const userNotificationPreferences = pgTable('user_notification_preferences', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  // Master channel toggles
+  emailEnabled: boolean('email_enabled').notNull().default(true),
+  pushEnabled: boolean('push_enabled').notNull().default(false),
+  inAppEnabled: boolean('in_app_enabled').notNull().default(true),
+  smsEnabled: boolean('sms_enabled').notNull().default(false),
+  
+  // Granular notification matrix (JSONB for flexibility)
+  // Structure: { request_received: { in_app: true, email: true, sms: false }, ... }
+  notificationMatrix: jsonb('notification_matrix').notNull().default({}),
+  
+  // Quiet hours
+  quietHoursEnabled: boolean('quiet_hours_enabled').notNull().default(false),
+  quietHoursStart: varchar('quiet_hours_start', { length: 5 }), // HH:mm format
+  quietHoursEnd: varchar('quiet_hours_end', { length: 5 }), // HH:mm format
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantUserIdx: uniqueIndex('user_notification_prefs_tenant_user_idx').on(table.tenantId, table.userId),
+  userIdx: index('user_notification_prefs_user_idx').on(table.userId),
+}));
+
+/**
+ * Organization Notification Preferences
+ * Per-organization notification settings for teams/groups
+ */
+export const organizationNotificationPreferences = pgTable('organization_notification_preferences', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  
+  // Master channel toggles
+  emailEnabled: boolean('email_enabled').notNull().default(true),
+  smsEnabled: boolean('sms_enabled').notNull().default(false),
+  inAppEnabled: boolean('in_app_enabled').notNull().default(true),
+  
+  // Granular notification matrix (JSONB for flexibility)
+  notificationMatrix: jsonb('notification_matrix').notNull().default({}),
+  
+  // Recipient settings
+  notifyAdmins: boolean('notify_admins').notNull().default(true),
+  notifyBookingManagers: boolean('notify_booking_managers').notNull().default(true),
+  notifyAllMembers: boolean('notify_all_members').notNull().default(false),
+  
+  // Contact information
+  primaryEmail: varchar('primary_email', { length: 255 }),
+  primaryPhone: varchar('primary_phone', { length: 50 }),
+  
+  // Quiet hours
+  quietHoursEnabled: boolean('quiet_hours_enabled').notNull().default(false),
+  quietHoursStart: varchar('quiet_hours_start', { length: 5 }),
+  quietHoursEnd: varchar('quiet_hours_end', { length: 5 }),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantOrgIdx: uniqueIndex('org_notification_prefs_tenant_org_idx').on(table.tenantId, table.organizationId),
+  orgIdx: index('org_notification_prefs_org_idx').on(table.organizationId),
+}));
+
+/**
+ * Push Subscriptions
+ * Browser push notification subscriptions for users
+ */
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  // Web Push API fields
+  endpoint: text('endpoint').notNull(),
+  p256dh: text('p256dh').notNull(),
+  auth: text('auth').notNull(),
+  
+  // Device info
+  userAgent: text('user_agent'),
+  deviceName: varchar('device_name', { length: 100 }),
+  
+  // Status
+  isActive: boolean('is_active').notNull().default(true),
+  lastUsedAt: timestamp('last_used_at'),
+  expiresAt: timestamp('expires_at'),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantUserIdx: index('push_subscriptions_tenant_user_idx').on(table.tenantId, table.userId),
+  endpointIdx: uniqueIndex('push_subscriptions_endpoint_idx').on(table.endpoint),
+  activeIdx: index('push_subscriptions_active_idx').on(table.isActive),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -705,4 +809,12 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+
+// Notification Preferences Types
+export type UserNotificationPreference = typeof userNotificationPreferences.$inferSelect;
+export type NewUserNotificationPreference = typeof userNotificationPreferences.$inferInsert;
+export type OrganizationNotificationPreference = typeof organizationNotificationPreferences.$inferSelect;
+export type NewOrganizationNotificationPreference = typeof organizationNotificationPreferences.$inferInsert;
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type NewPushSubscription = typeof pushSubscriptions.$inferInsert;
 

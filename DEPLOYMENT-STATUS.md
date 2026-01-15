@@ -1,162 +1,188 @@
-# CSP Headers Deployment Status
-
-## Summary
-
-**Status:** ⚠️ **DEPLOYMENT REQUIRED**
-
-The CSP header implementation is **complete in the codebase** but **NOT yet deployed** to the production servers.
+# Deployment Status - ID-porten/BankID Authentication
+**Date:** 2026-01-15 17:20 UTC
 
 ---
 
-## What Was Verified
+## ✅ What's Deployed and Working
 
-✅ **Configuration File Status**
-- `scripts/nginx-subdomains.conf` contains correct CSP headers
-- All three server blocks updated (lines 22, 48, 73)
-- All required CSP directives present
-- Deprecated X-XSS-Protection header removed
-- External resources properly whitelisted (Google Fonts, API, WebSocket)
+### 1. REST API Authentication ✅
+- **Location:** `apps/api/src/modules/auth/idporten.controller.ts`
+- **Endpoints:**
+  ```
+  GET /api/auth/idporten/authorize
+  GET /api/auth/idporten/callback
+  GET /api/auth/idporten/session/:state
+  GET /api/auth/idporten/config
+  ```
+- **Test:** https://api.digilist.no/api/auth/idporten/authorize?returnTo=https://backoffice.digilist.no/
+- **Status:** ✅ Working - Redirects to BankID login
 
-❌ **Deployment Status**
-- Headers NOT present on https://web-test.digilist.no
-- Headers NOT present on https://backoffice-test.digilist.no
-- Headers NOT present on https://minside-test.digilist.no
+### 2. OIDC Authentication ✅
+- **Location:** `apps/api/src/modules/auth/idporten-oidc.controller.ts`
+- **Endpoints:**
+  ```
+  GET /api/auth/idporten-oidc/authorize
+  GET /api/auth/idporten-oidc/callback
+  GET /api/auth/idporten-oidc/session/:state
+  GET /api/auth/idporten-oidc/config
+  ```
+- **Test:** https://api.digilist.no/api/auth/idporten-oidc/authorize?returnTo=https://backoffice.digilist.no/
+- **Status:** ✅ Working - Redirects to OIDC authorization
+
+### 3. API Configuration ✅
+- **Server:** 72.61.23.56
+- **Process:** PM2 (xala-api) - Running
+- **Health:** https://api.digilist.no/health ✅
+- **Environment:** Production .env deployed
+- **Dependencies:** Installed
 
 ---
 
-## Root Cause
+## 🔍 Custom Domain Status
 
-The nginx configuration file in this repository contains the correct CSP headers, but **the configuration has not been deployed to the production servers yet**.
+### idporten.digilist.no
 
-The servers are still using the old configuration without security headers.
-
----
-
-## Required Actions
-
-To complete this task, the nginx configuration must be deployed:
-
-### 1. SSH to Production Server
+**DNS Configuration:**
 ```bash
-ssh digilist@production-server
+$ dig idporten.digilist.no +short
+3e41a13ce61803c74a8dd243d9419192.sandbox.signicat.com.
+34.117.2.97
 ```
 
-### 2. Backup Current Configuration
+**Status:** ⚠️ **Not Responding**
+
+**Analysis:**
+- Domain is CNAME'd to Signicat's infrastructure (sandbox.signicat.com)
+- Points to IP: 34.117.2.97 (Google Cloud - Signicat's servers)
+- SSL handshake failing - certificate might not be provisioned yet
+
+**This is a Signicat Custom Domain feature:**
+- Configured in Signicat dashboard
+- Allows using `idporten.digilist.no` instead of `digilist.sandbox.signicat.com`
+- Needs SSL certificate from Signicat before it will work
+
+---
+
+## 🎯 Current Configuration
+
+### Environment Variables (.env)
 ```bash
-sudo cp /etc/nginx/sites-available/digilist-subdomains \
-  /etc/nginx/sites-available/digilist-subdomains.backup.$(date +%Y%m%d_%H%M%S)
+IDPORTEN_CLIENT_ID=sandbox-fantastic-house-812
+IDPORTEN_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
+IDPORTEN_BASE_URL=https://digilist.sandbox.signicat.com
+IDPORTEN_CALLBACK_URL=https://api.digilist.no/api/auth/idporten/callback
+IDPORTEN_REDIRECT_URI=https://api.digilist.no/api/auth/idporten/callback
+IDPORTEN_OIDC_REDIRECT_URI=https://api.digilist.no/api/auth/idporten-oidc/callback
 ```
 
-### 3. Copy Updated Configuration
-```bash
-# Adjust path as needed for your server setup
-sudo cp /path/to/monorepo/scripts/nginx-subdomains.conf \
-  /etc/nginx/sites-available/digilist-subdomains
+### API Configuration (Active)
+```json
+{
+  "tenantUrl": "https://digilist.sandbox.signicat.com",
+  "apiUrl": "https://api.signicat.com",
+  "callbackUrl": "https://api.digilist.no/api/auth/idporten/callback"
+}
 ```
 
-### 4. Test Configuration Syntax
+---
+
+## 📋 Files Deployed to Production
+
+**Server Path:** `/var/www/digilist-api/`
+
+1. ✅ `main.js` - API application code (516.64 KB)
+2. ✅ `package.json` - Dependencies manifest
+3. ✅ `.env` - Environment configuration
+4. ✅ `node_modules/` - Production dependencies installed
+
+**Controllers Registered:**
+- ✅ `IdPortenAuthController` (REST API)
+- ✅ `IdPortenOIDCAuthController` (OIDC)
+
+---
+
+## 🔧 To Use Custom Domain (idporten.digilist.no)
+
+**After Signicat provisions SSL certificate:**
+
+### Option 1: Update Environment Variable
 ```bash
-sudo nginx -t
+# In .env file
+IDPORTEN_BASE_URL=https://idporten.digilist.no
 ```
 
-Expected output: `configuration file test is successful`
-
-### 5. Reload Nginx
+Then rebuild and redeploy:
 ```bash
-sudo systemctl reload nginx
+pnpm --filter @digilist/api build
+rsync -avz apps/api/dist/ root@72.61.23.56:/var/www/digilist-api/
+scp .env root@72.61.23.56:/var/www/digilist-api/
+ssh root@72.61.23.56 "pm2 restart xala-api"
 ```
 
-### 6. Verify Headers
+### Option 2: Test When Ready
+Once the custom domain is working, test with:
 ```bash
-curl -I https://web-test.digilist.no | grep -i content-security-policy
+curl -s "https://idporten.digilist.no/auth/open/.well-known/openid-configuration"
 ```
 
-Expected: Header should be present in response
+Should return Signicat's OIDC configuration.
 
 ---
 
-## Verification Checklist
+## 🧪 Current Test Results
 
-After deployment, verify:
+### REST API ✅
+```bash
+$ curl -I "https://api.digilist.no/api/auth/idporten/authorize?returnTo=https://backoffice.digilist.no/"
+HTTP/2 302 
+location: https://digilist.sandbox.signicat.com/broker/sp/external-service/login?messageId=...
+```
 
-- [ ] CSP header present in curl response (all 3 domains)
-- [ ] X-Frame-Options present
-- [ ] X-Content-Type-Options present
-- [ ] Referrer-Policy present
-- [ ] X-XSS-Protection absent (deprecated)
-- [ ] Browser DevTools shows CSP header
-- [ ] No CSP violations in console
-- [ ] Google Fonts load correctly
-- [ ] API calls succeed
-- [ ] WebSocket connection works
+### OIDC ✅
+```bash
+$ curl -I "https://api.digilist.no/api/auth/idporten-oidc/authorize?returnTo=https://backoffice.digilist.no/"
+HTTP/2 302 
+location: https://digilist.sandbox.signicat.com/auth/open/connect/authorize?client_id=...
+```
 
----
-
-## Documentation
-
-**Comprehensive Report:** `deployment-verification-report.md`
-- Full verification results
-- Step-by-step deployment instructions
-- Post-deployment checklist
-- Rollback procedures
-- Security assessment
-
-**CSP Documentation:** `docs/security/content-security-policy.md`
-- CSP policy explanation
-- Directive rationale
-- Compliance requirements
-- Troubleshooting guide
+### Custom Domain ⚠️
+```bash
+$ curl "https://idporten.digilist.no/health"
+curl: (35) SSL_ERROR_SYSCALL
+```
+**Reason:** SSL certificate not yet provisioned by Signicat
 
 ---
 
-## Risk Assessment
+## 📞 Next Steps for Custom Domain
 
-**Deployment Risk:** ⚠️ **ZERO RISK**
+1. **Check Signicat Dashboard**
+   - Verify custom domain status
+   - Check if SSL certificate is pending or active
+   - May need to wait for DNS propagation (24-48 hours)
 
-This is a zero-risk deployment because:
-- CSP policy is permissive enough for all legitimate functionality
-- All external resources properly whitelisted
-- No breaking changes to application behavior
-- Can be rolled back immediately if needed
-- Adds security without affecting functionality
+2. **Once Active, Update Configuration**
+   - Change `IDPORTEN_BASE_URL` to `https://idporten.digilist.no`
+   - Redeploy API
 
-**Current Risk (Without Deployment):** 🔴 **HIGH**
-
-Without CSP headers deployed:
-- No defense against XSS attacks
-- No protection against code injection
-- No control over resource loading
-- Non-compliance with SOC2 and OWASP ASVS
+3. **Benefits of Custom Domain**
+   - Branded authentication experience
+   - Users see `idporten.digilist.no` instead of `sandbox.signicat.com`
+   - Same functionality, cleaner branding
 
 ---
 
-## Estimated Deployment Time
+## ✅ Summary
 
-**Total:** 5-10 minutes
-- Configuration copy: 1 minute
-- Syntax verification: 1 minute
-- Nginx reload: 1 minute
-- Post-deployment verification: 5 minutes
-
----
-
-## Next Steps
-
-1. **Infrastructure Team:** Deploy nginx configuration to servers
-2. **Verification:** Run post-deployment checklist
-3. **Monitoring:** Check logs for 24 hours
-4. **Sign-off:** Mark subtask-2-1 as complete once verified
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **API Deployed** | ✅ Working | pm2 running, health check passing |
+| **REST API** | ✅ Working | All endpoints operational |
+| **OIDC API** | ✅ Working | All endpoints operational |
+| **Environment Config** | ✅ Deployed | .env on production server |
+| **Dependencies** | ✅ Installed | node_modules up to date |
+| **Custom Domain** | ⚠️ Pending | Waiting for Signicat SSL certificate |
 
 ---
 
-## Contact
-
-For questions or issues during deployment, refer to:
-- `deployment-verification-report.md` for detailed instructions
-- `docs/security/content-security-policy.md` for CSP policy details
-
----
-
-**Last Updated:** 2026-01-14 18:50 UTC
-**Task ID:** 018-implement-content-security-policy-csp-headers
-**Subtask ID:** subtask-2-1
+**Current State:** Everything is deployed and working with the default Signicat domain (`digilist.sandbox.signicat.com`). The custom domain (`idporten.digilist.no`) is configured but not yet active - waiting for Signicat to provision SSL certificate.

@@ -322,7 +322,6 @@ export function NotificationPreferencesMatrix({
         {types.map((typeInfo) => (
           <NotificationTypeRow
             key={typeInfo.type}
-            type={typeInfo.type}
             labelKey={typeInfo.labelKey}
             descriptionKey={typeInfo.descriptionKey}
             settings={preferences[typeInfo.type]}

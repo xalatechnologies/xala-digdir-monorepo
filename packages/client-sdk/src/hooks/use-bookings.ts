@@ -11,7 +11,7 @@ import {
   allocationService,
   availabilityService
 } from '../services/booking.service';
-import { listingService } from '../services/listing.service';
+import { rentalObjectService } from '../services/rental-object.service';
 import type {
   BookingQueryParams,
   CreateBookingDTO,
@@ -570,7 +570,7 @@ export function useBookingModeConfig(
 ) {
   return useQuery({
     queryKey: queryKeys.listings.calendarConfig(listingId),
-    queryFn: () => listingService.getCalendarConfig(listingId),
+    queryFn: () => rentalObjectService.getCalendarConfig(listingId),
     enabled: !!listingId && (options?.enabled ?? true),
     staleTime: 60_000, // 60s - config changes infrequently
   });

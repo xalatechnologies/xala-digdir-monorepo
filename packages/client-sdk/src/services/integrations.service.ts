@@ -31,12 +31,16 @@ export interface IntegrationTestResult {
 }
 
 export class IntegrationsService extends BaseService {
+  constructor() {
+    super('/api/configuration/integrations');
+  }
+
   /**
    * List all integrations for current tenant
    */
   async listIntegrations(): Promise<Integration[]> {
     const response = await this.client.get<{ data: Integration[] }>(
-      '/api/configuration/integrations'
+      this.buildPath('')
     );
     return response.data;
   }
@@ -46,7 +50,7 @@ export class IntegrationsService extends BaseService {
    */
   async getIntegration(provider: string): Promise<Integration> {
     const response = await this.client.get<{ data: Integration }>(
-      `/api/configuration/integrations/${provider}`
+      this.buildPath(`/${provider}`)
     );
     return response.data;
   }
@@ -59,7 +63,7 @@ export class IntegrationsService extends BaseService {
     data: IntegrationUpdate
   ): Promise<Integration> {
     const response = await this.client.put<{ data: Integration }>(
-      `/api/configuration/integrations/${provider}`,
+      this.buildPath(`/${provider}`),
       data
     );
     return response.data;
@@ -70,7 +74,7 @@ export class IntegrationsService extends BaseService {
    */
   async testIntegration(provider: string): Promise<IntegrationTestResult> {
     const response = await this.client.post<{ data: IntegrationTestResult }>(
-      `/api/configuration/integrations/${provider}/test`,
+      this.buildPath(`/${provider}/test`),
       {}
     );
     return response.data;

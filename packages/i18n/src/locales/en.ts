@@ -932,4 +932,26 @@ export const en: Record<string, string> = {
   'sdk.error.forbidden': 'Access denied',
   'sdk.error.validation': 'Validation error',
   'sdk.error.serverError': 'Server error',
+
+  // Rating Labels
+  'sdk.rating.1': 'Very Poor',
+  'sdk.rating.2': 'Poor',
+  'sdk.rating.3': 'Average',
+  'sdk.rating.4': 'Good',
+  'sdk.rating.5': 'Excellent',
+
+  // Priority
+  'sdk.priority.prefix': 'Priority',
+
+  // Additional Placeholders
+  'sdk.placeholder.closed': 'Closed',
+  'sdk.placeholder.stars': 'stars',
+
+  // Duration (additional)
+  'sdk.duration.months': 'months',
+  'sdk.duration.years': 'years',
+
+  // Booking
+  'sdk.booking.advanceDays': 'days in advance',
+  'sdk.booking.standardCancellation': 'Standard cancellation policy',
 };

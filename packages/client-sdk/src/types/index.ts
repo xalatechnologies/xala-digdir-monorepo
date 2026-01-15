@@ -3,8 +3,48 @@
  * Exports all type definitions for the SDK
  */
 
-// Core types
-export * from './enums';
+// Core types (excluding types that are re-defined in rental-object.ts)
+export {
+  // Deprecated types (kept for backwards compatibility)
+  type ListingType,
+  type BookingModel,
+  // New V2 types from enums.ts
+  type ListingCategory,
+  type InventoryFeature,
+  type SharedCapacityFeature,
+  type PackageDefinition,
+  type PackagesFeature,
+  type ListingBookingFeatures,
+  type ListingBookingConfig,
+  LISTING_CATEGORY_LABEL_KEYS,
+  BOOKING_TIME_MODE_LABEL_KEYS,
+  LISTING_CATEGORY_LABELS,
+  BOOKING_TIME_MODE_LABELS,
+  // Standard status enums
+  type ListingStatus,
+  type BookingStatus,
+  type PaymentStatus,
+  type AllocationStatus,
+  type SeasonalLeaseStatus,
+  type ConversationStatus,
+  type OrganizationStatus,
+  type UserStatus,
+  type UserRole,
+  type ActorType,
+  type MessageSenderType,
+  type ReportPeriod,
+  type ExportFormat,
+  type DiscountType,
+  // Base interfaces
+  type BaseEntity,
+  type TenantEntity,
+  type PaginationMeta,
+  type PaginatedResponse,
+  type SingleResponse,
+  type ErrorResponse,
+  type SuccessResponse,
+  type BaseQueryParams,
+} from './enums';
 
 // Authorization types (ActionCode enums + helpers)
 export * from './actions';
@@ -17,7 +57,38 @@ export * from './projection-dtos';
 
 // Rental Object types - Primary type system for utleieobjekter
 export * from './rental-object';
-export * from './booking';
+
+// Booking types - exclude BookingMode (conflicts with rental-object.ts)
+export {
+  type Booking,
+  type CreateBookingDTO,
+  type UpdateBookingDTO,
+  type CancelBookingDTO,
+  type BookingQueryParams,
+  type Allocation,
+  type CreateAllocationDTO,
+  type CalendarEvent,
+  type CalendarQueryParams,
+  type BookingPricing,
+  type BookingMetadata,
+  type RecurringConstraintsDTO,
+  type InGameConstraintsDTO,
+  type PaymentTransaction,
+  type BookingReceipt,
+  type BookingDocument,
+  type RecurringFrequency,
+  type OccurrenceStatus,
+  type RecurringEndConditionType,
+  type RecurringEndCondition,
+  type RecurringOccurrenceDTO,
+  type BookingSelectionDTO,
+  type RecurringSummary,
+  type RecurringPreviewProjectionDTO,
+  type CreateRecurringBookingDTO,
+  type RecurringOccurrenceResultDTO,
+  type RecurringBookingResultProjectionDTO,
+  type BookingMode as LegacyBookingMode,
+} from './booking';
 export * from './organization';
 export * from './auth';
 export * from './profile';

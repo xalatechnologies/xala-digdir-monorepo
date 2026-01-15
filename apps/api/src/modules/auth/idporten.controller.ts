@@ -533,7 +533,8 @@ export class IdPortenAuthController {
         authorizeUrl: '/api/auth/idporten/authorize',
         callbackUrl: config.callbackUrl,
         providers: ['nbid'], // Norwegian BankID
-        baseUrl: config.baseUrl,
+        tenantUrl: config.tenantUrl, // For OIDC/token
+        apiUrl: config.apiUrl, // For REST API
         clientId: config.clientId,
         apiType: 'rest', // Using REST API, not OIDC
       },

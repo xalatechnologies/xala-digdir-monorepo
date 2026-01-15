@@ -32,7 +32,7 @@ import * as schema from './database/schema/index';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
-import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
+import { RentalObjectModule as ListingModule, RentalObjectController as ListingController, RentalObjectService as ListingService, RentalObjectRepository as ListingRepository } from './modules/rental-objects';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
@@ -70,7 +70,9 @@ import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
 import { IdPortenAuthController } from './modules/auth/idporten.controller';
+import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
+import { PushNotificationsController, PushNotificationsService, PushNotificationsRepository } from './modules/push-notifications';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
@@ -201,13 +203,27 @@ async function bootstrap() {
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
-  // ID-porten auth controller via Signicat (no dependencies)
+  // ID-porten auth controllers via Signicat (no dependencies)
   container.registerFactory('IdPortenAuthController', () =>
     new IdPortenAuthController()
+  );
+  container.registerFactory('IdPortenOIDCAuthController', () =>
+    new IdPortenOIDCAuthController()
   );
   // Notifications controller (no dependencies)
   container.registerFactory('NotificationsController', () => 
     new NotificationsController()
+  );
+  
+  // Push Notifications (preferences, subscriptions)
+  container.registerFactory('PushNotificationsRepository', () =>
+    new PushNotificationsRepository(db)
+  );
+  container.registerFactory('PushNotificationsService', () =>
+    new PushNotificationsService(container.resolve('PushNotificationsRepository'))
+  );
+  container.registerFactory('PushNotificationsController', () =>
+    new PushNotificationsController(container.resolve('PushNotificationsService'))
   );
   console.log('✓ Controllers registered');
 
@@ -262,8 +278,10 @@ async function bootstrap() {
     ShareController,
     // ID-porten (BankID) via Signicat authentication
     IdPortenAuthController,
+    IdPortenOIDCAuthController,
     // Notifications
     NotificationsController,
+    PushNotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
     UserGroupController,

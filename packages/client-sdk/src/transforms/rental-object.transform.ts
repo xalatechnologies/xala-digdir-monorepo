@@ -169,10 +169,11 @@ export function transformAddress(obj: RentalObject): TransformedAddress {
   const postalCode = location.postalCode || '';
   const city = location.city || '';
   const municipality = location.municipality || '';
-  const country = location.country || 'Norge';
+  const country = location.country || '';
   
   const parts = [street, postalCode, city].filter(Boolean);
-  const formatted = parts.length > 0 ? parts.join(', ') : 'Ingen adresse';
+  // Return i18n key for placeholder when no address
+  const formatted = parts.length > 0 ? parts.join(', ') : PLACEHOLDER_KEYS.noAddress;
   
   return {
     street,
@@ -255,10 +256,10 @@ export function transformImages(obj: RentalObject): TransformedImage[] {
 }
 
 export function transformPricing(obj: RentalObject): TransformedPricing {
-  const pricing = obj.pricing || {};
-  const basePrice = pricing.basePrice || 0;
-  const currency = pricing.currency || 'NOK';
-  const unit = pricing.unit || 'hour';
+  const pricing = obj.pricing ?? { basePrice: 0, currency: 'NOK', unit: 'hour' as const };
+  const basePrice = pricing.basePrice ?? 0;
+  const currency = pricing.currency ?? 'NOK';
+  const unit = pricing.unit ?? 'hour';
   const unitLabel = getPricingUnitLabel(unit);
   
   return {
@@ -272,7 +273,7 @@ export function transformPricing(obj: RentalObject): TransformedPricing {
 }
 
 export function transformRentalObject(obj: RentalObject): TransformedRentalObject {
-  const metadata = obj.metadata || {};
+  const metadata = (obj.metadata ?? {}) as Record<string, unknown>;
   const description = obj.description || '';
   const capacity = obj.capacity || 0;
   const rating = obj.averageRating || 0;
@@ -297,7 +298,7 @@ export function transformRentalObject(obj: RentalObject): TransformedRentalObjec
     images: transformImages(obj),
     pricing: transformPricing(obj),
     capacity,
-    capacityLabel: capacity > 0 ? `${capacity} personer` : '',
+    capacityLabel: capacity > 0 ? `${capacity}` : '',
     rating,
     reviewCount,
     ratingDisplay: rating > 0 ? `${rating.toFixed(1)} (${reviewCount})` : PLACEHOLDER_KEYS.noReviews,

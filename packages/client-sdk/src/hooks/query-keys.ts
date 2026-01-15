@@ -5,10 +5,14 @@
  */
 
 import type {
-  ListingQueryParams,
+  RentalObjectQueryParams,
   AvailabilityQueryParams,
-  PublicListingParams
-} from '../types/listing';
+  PublicRentalObjectParams
+} from '../types/rental-object';
+
+// Type aliases for backward compatibility
+type ListingQueryParams = RentalObjectQueryParams;
+type PublicListingParams = PublicRentalObjectParams;
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';

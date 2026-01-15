@@ -3,9 +3,17 @@
  *
  * Reusable transformation utilities for review data.
  * Used by web, backoffice, and minside apps.
+ * 
+ * Note: All labels are returned as i18n translation keys.
+ * Use your app's t() function to resolve them.
  */
 
 import type { Review, ReviewStatus, ReviewStats, ReviewSummary } from '../types';
+import {
+  REVIEW_STATUS_KEYS,
+  RATING_LABEL_KEYS,
+  PLACEHOLDER_KEYS,
+} from '../localization/keys';
 
 // =============================================================================
 // UI Types for Transformed Reviews
@@ -75,14 +83,8 @@ export interface TransformedReviewSummary {
 }
 
 // =============================================================================
-// Transform Utilities
+// Status Colors (semantic)
 // =============================================================================
-
-const REVIEW_STATUS_LABELS: Record<ReviewStatus, string> = {
-  pending: 'Venter på godkjenning',
-  approved: 'Godkjent',
-  rejected: 'Avvist',
-};
 
 const REVIEW_STATUS_COLORS: Record<ReviewStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   pending: 'warning',
@@ -90,33 +92,32 @@ const REVIEW_STATUS_COLORS: Record<ReviewStatus, 'success' | 'warning' | 'danger
   rejected: 'danger',
 };
 
-const RATING_LABELS: Record<number, string> = {
-  1: 'Veldig dårlig',
-  2: 'Dårlig',
-  3: 'Middels',
-  4: 'Bra',
-  5: 'Utmerket',
-};
+// =============================================================================
+// Label Functions (return i18n keys)
+// =============================================================================
 
 /**
- * Get display label for review status
+ * Get i18n key for review status label
+ * Use t(key) to resolve the actual label
  */
 export function getReviewStatusLabel(status: ReviewStatus): string {
-  return REVIEW_STATUS_LABELS[status] || status;
+  return REVIEW_STATUS_KEYS[status] ?? `sdk.review.status.${status}`;
 }
 
 /**
- * Get color for review status
+ * Get semantic color for review status
  */
 export function getReviewStatusColor(status: ReviewStatus): 'success' | 'warning' | 'danger' | 'neutral' {
-  return REVIEW_STATUS_COLORS[status] || 'neutral';
+  return REVIEW_STATUS_COLORS[status] ?? 'neutral';
 }
 
 /**
- * Get display label for rating
+ * Get i18n key for rating label
+ * Use t(key) to resolve the actual label
  */
 export function getRatingLabel(rating: number): string {
-  return RATING_LABELS[rating] || `${rating} stjerner`;
+  const key = RATING_LABEL_KEYS[rating as keyof typeof RATING_LABEL_KEYS];
+  return key ?? `${rating} ${PLACEHOLDER_KEYS.noReviews}`;
 }
 
 /**
