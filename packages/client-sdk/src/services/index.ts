@@ -133,15 +133,15 @@ export type {
   InvoiceQueryParams 
 } from './billing.service';
 
-// Signicat (BankID/eID Hub)
-export { signicatService } from './signicat.service';
+// ID-porten (BankID/eID Hub)
+export { idportenService } from './idporten.service';
 export type {
-  SignicatConfig,
-  SignicatUser,
-  SignicatTokens,
-  SignicatAuthResult,
-  SignicatLogoutResult,
-} from './signicat.service';
+  IdPortenConfig,
+  IdPortenUser,
+  IdPortenTokens,
+  IdPortenAuthResult,
+  IdPortenLogoutResult,
+} from './idporten.service';
 
 // Profile & Preferences
 export { ProfileService, profileService } from './profile.service';

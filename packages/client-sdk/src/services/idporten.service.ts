@@ -1,15 +1,15 @@
 /**
- * Signicat Authentication Service
- * Client-side service for Signicat eID Hub authentication
- * 
+ * ID-porten Authentication Service
+ * Client-side service for ID-porten (BankID) authentication
+ *
  * @example
- * import { signicatService } from '@digilist/client-sdk';
- * 
+ * import { idportenService } from '@digilist/client-sdk';
+ *
  * // Get auth config
- * const config = await signicatService.getConfig();
- * 
+ * const config = await idportenService.getConfig();
+ *
  * // Redirect to authorization
- * window.location.href = signicatService.getAuthorizeUrl();
+ * window.location.href = idportenService.getAuthorizeUrl();
  */
 
 import { getClient, getClientConfig } from '../core/client-factory';
@@ -18,7 +18,7 @@ import { getClient, getClientConfig } from '../core/client-factory';
 // Types
 // =============================================================================
 
-export interface SignicatConfig {
+export interface IdPortenConfig {
   authorizeUrl: string;
   callbackUrl: string;
   identityProvider: string;
@@ -26,7 +26,7 @@ export interface SignicatConfig {
   domain: string;
 }
 
-export interface SignicatUser {
+export interface IdPortenUser {
   sub: string;
   name?: string;
   givenName?: string;
@@ -37,21 +37,21 @@ export interface SignicatUser {
   locale?: string;
 }
 
-export interface SignicatTokens {
+export interface IdPortenTokens {
   accessToken: string;
   idToken: string;
   expiresIn: number;
   tokenType: string;
 }
 
-export interface SignicatAuthResult {
-  user: SignicatUser;
-  tokens: SignicatTokens;
+export interface IdPortenAuthResult {
+  user: IdPortenUser;
+  tokens: IdPortenTokens;
   provider: string;
   identityMethod: string;
 }
 
-export interface SignicatLogoutResult {
+export interface IdPortenLogoutResult {
   logoutUrl: string;
 }
 
@@ -59,8 +59,8 @@ export interface SignicatLogoutResult {
 // Service
 // =============================================================================
 
-class SignicatService {
-  private basePath = '/api/auth/signicat';
+class IdPortenService {
+  private basePath = '/api/auth/idporten';
 
   /**
    * Get the API base URL from SDK config
@@ -75,10 +75,10 @@ class SignicatService {
   }
 
   /**
-   * Get Signicat configuration
+   * Get ID-porten configuration
    */
-  async getConfig(): Promise<{ data: SignicatConfig }> {
-    return getClient().get<{ data: SignicatConfig }>(`${this.basePath}/config`);
+  async getConfig(): Promise<{ data: IdPortenConfig }> {
+    return getClient().get<{ data: IdPortenConfig }>(`${this.basePath}/config`);
   }
 
   /**
@@ -91,8 +91,8 @@ class SignicatService {
     if (redirectPath) {
       // Build full absolute URL using current origin + path
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullRedirectUrl = redirectPath.startsWith('http') 
-        ? redirectPath 
+      const fullRedirectUrl = redirectPath.startsWith('http')
+        ? redirectPath
         : `${origin}${redirectPath.startsWith('/') ? '' : '/'}${redirectPath}`;
       url += `?returnTo=${encodeURIComponent(fullRedirectUrl)}`;
     }
@@ -101,7 +101,7 @@ class SignicatService {
 
 
   /**
-   * Start authorization flow by redirecting to Signicat
+   * Start authorization flow by redirecting to ID-porten
    * @param redirectUrl - Where to redirect after authentication
    */
   authorize(redirectUrl?: string): void {
@@ -118,8 +118,8 @@ class SignicatService {
   async getLogoutUrl(
     idToken?: string,
     postLogoutRedirectUri?: string
-  ): Promise<{ data: SignicatLogoutResult }> {
-    return getClient().post<{ data: SignicatLogoutResult }>(
+  ): Promise<{ data: IdPortenLogoutResult }> {
+    return getClient().post<{ data: IdPortenLogoutResult }>(
       `${this.basePath}/logout`,
       {
         id_token: idToken,
@@ -129,7 +129,7 @@ class SignicatService {
   }
 
   /**
-   * Logout by redirecting to Signicat logout
+   * Logout by redirecting to ID-porten logout
    */
   async logout(idToken?: string, postLogoutRedirectUri?: string): Promise<void> {
     const result = await this.getLogoutUrl(idToken, postLogoutRedirectUri);
@@ -139,5 +139,5 @@ class SignicatService {
   }
 }
 
-export const signicatService = new SignicatService();
-export default signicatService;
+export const idportenService = new IdPortenService();
+export default idportenService;

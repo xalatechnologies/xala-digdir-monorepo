@@ -1,6 +1,6 @@
 /**
- * Signicat eID Hub - Authentication REST API Controller
- * Uses the Signicat Authentication REST API (not OIDC)
+ * IdPorten eID Hub - Authentication REST API Controller
+ * Uses the IdPorten Authentication REST API (not OIDC)
  *
  * Flow:
  * 1. Get access token using client credentials (OAuth2)
@@ -15,13 +15,13 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
 import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
-import { sessionStore, type AuthSession } from './signicat-session-store';
+import { sessionStore, type AuthSession } from './idporten-session-store';
 
 // =============================================================================
 // Configuration
 // =============================================================================
 
-interface SignicatConfig {
+interface IdPortenConfig {
   clientId: string;
   clientSecret: string;
   baseUrl: string;
@@ -29,12 +29,12 @@ interface SignicatConfig {
   privateKey: object;
 }
 
-function getConfig(): SignicatConfig {
+function getConfig(): IdPortenConfig {
   return {
-    clientId: process.env.SIGNICAT_CLIENT_ID || 'sandbox-fantastic-house-812',
-    clientSecret: process.env.SIGNICAT_CLIENT_SECRET || 'US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB',
-    baseUrl: process.env.SIGNICAT_BASE_URL || 'https://api.signicat.com',
-    callbackUrl: process.env.SIGNICAT_CALLBACK_URL || 'http://localhost:4000/api/auth/signicat/callback',
+    clientId: process.env.IDPORTEN_CLIENT_ID || 'sandbox-fantastic-house-812',
+    clientSecret: process.env.IDPORTEN_CLIENT_SECRET || 'US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB',
+    baseUrl: process.env.IDPORTEN_BASE_URL || 'https://api.idporten.com',
+    callbackUrl: process.env.IDPORTEN_CALLBACK_URL || 'http://localhost:4000/api/auth/idporten/callback',
     privateKey: {
       kty: 'RSA',
       kid: 'FAxRspOf1XW_EGZc6zUZysUiBAIz74XpU2eJNrbp0x0',
@@ -52,7 +52,7 @@ function getConfig(): SignicatConfig {
   };
 }
 
-// AuthSession type is imported from signicat-session-store.ts
+// AuthSession type is imported from idporten-session-store.ts
 // Session storage now uses Redis with in-memory fallback
 
 /** Default redirect URL when returnTo is not provided or invalid */
@@ -84,7 +84,7 @@ async function getAccessToken(): Promise<string> {
     },
     body: new URLSearchParams({
       grant_type: 'client_credentials',
-      scope: 'signicat-api',
+      scope: 'idporten-api',
     }),
   });
   
@@ -108,10 +108,10 @@ async function getAccessToken(): Promise<string> {
 // Controller
 // =============================================================================
 
-@Controller('/api/auth/signicat')
-export class SignicatAuthController {
+@Controller('/api/auth/idporten')
+export class IdPortenAuthController {
   /**
-   * GET /api/auth/signicat/authorize
+   * GET /api/auth/idporten/authorize
    * Create authentication session and redirect user
    *
    * Query params:
@@ -137,7 +137,7 @@ export class SignicatAuthController {
           tenantId: tenantId || 'unknown',
           userId: 'anonymous',
           action: 'auth_returnto_validation_failed',
-          resource: 'signicat',
+          resource: 'idporten',
           resourceId: state,
           ipAddress: request.ip,
           userAgent: request.headers['user-agent'],
@@ -188,7 +188,7 @@ export class SignicatAuthController {
           tenantId: tenantId || 'unknown',
           userId: 'anonymous',
           action: 'auth_session_creation_failed',
-          resource: 'signicat',
+          resource: 'idporten',
           resourceId: state,
           ipAddress: request.ip,
           userAgent: request.headers['user-agent'],
@@ -218,7 +218,7 @@ export class SignicatAuthController {
         tenantId: tenantId || 'unknown',
         userId: 'anonymous',
         action: 'auth_initiated',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.id,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -229,7 +229,7 @@ export class SignicatAuthController {
         },
       });
 
-      // Redirect to Signicat authentication URL
+      // Redirect to IdPorten authentication URL
       return reply.redirect(session.authenticationUrl);
     } catch (error) {
       // Log authorization error
@@ -237,7 +237,7 @@ export class SignicatAuthController {
         tenantId: tenantId || 'unknown',
         userId: 'anonymous',
         action: 'auth_initiation_error',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: state,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -254,8 +254,8 @@ export class SignicatAuthController {
   }
 
   /**
-   * GET /api/auth/signicat/callback
-   * Handle callback from Signicat
+   * GET /api/auth/idporten/callback
+   * Handle callback from IdPorten
    *
    * On success: Redirects to stored returnTo URL with auth data as query params
    * On error: Redirects to returnTo URL with error query params
@@ -289,7 +289,7 @@ export class SignicatAuthController {
         tenantId: 'unknown',
         userId: 'anonymous',
         action: 'auth_callback_missing_state',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: 'unknown',
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -311,7 +311,7 @@ export class SignicatAuthController {
         tenantId: 'unknown',
         userId: 'anonymous',
         action: 'auth_callback_invalid_state',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: state,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -337,7 +337,7 @@ export class SignicatAuthController {
         tenantId,
         userId: 'anonymous',
         action: 'auth_aborted',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -360,7 +360,7 @@ export class SignicatAuthController {
         tenantId,
         userId: 'anonymous',
         action: 'auth_failed',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -408,7 +408,7 @@ export class SignicatAuthController {
           tenantId,
           userId: 'anonymous',
           action: 'auth_incomplete',
-          resource: 'signicat',
+          resource: 'idporten',
           resourceId: session.sessionId,
           ipAddress: request.ip,
           userAgent: request.headers['user-agent'],
@@ -437,7 +437,7 @@ export class SignicatAuthController {
         tenantId,
         userId,
         action: 'auth_success',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -461,7 +461,7 @@ export class SignicatAuthController {
         tenantId,
         userId: 'anonymous',
         action: 'auth_callback_error',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
@@ -481,7 +481,7 @@ export class SignicatAuthController {
   }
 
   /**
-   * GET /api/auth/signicat/session/:id
+   * GET /api/auth/idporten/session/:id
    * Get session status (for polling)
    */
   @Get('/session/:id')
@@ -517,7 +517,7 @@ export class SignicatAuthController {
   }
 
   /**
-   * GET /api/auth/signicat/config
+   * GET /api/auth/idporten/config
    * Get public configuration
    */
   @Get('/config')
@@ -526,7 +526,7 @@ export class SignicatAuthController {
     
     return reply.send({
       data: {
-        authorizeUrl: '/api/auth/signicat/authorize',
+        authorizeUrl: '/api/auth/idporten/authorize',
         callbackUrl: config.callbackUrl,
         providers: ['nbid'], // Norwegian BankID
         baseUrl: config.baseUrl,
@@ -537,4 +537,4 @@ export class SignicatAuthController {
   }
 }
 
-export default SignicatAuthController;
+export default IdPortenAuthController;

@@ -8,6 +8,7 @@ import {
   HeaderLoginButton,
   NotificationBell,
   DialogProvider,
+  ErrorBoundary,
 } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
@@ -19,6 +20,7 @@ import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast, GlobalSearch, ProtectedRoute } from './components';
+import { useAuth } from './hooks/useAuth';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -38,8 +40,7 @@ function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
   const { setColorScheme, effectiveScheme } = useThemeContext();
-
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
 
   // Get real unread notification count (only for logged in users)
   const { data: unreadData } = useNotificationUnreadCount();
@@ -50,35 +51,12 @@ function MainLayout() {
     setColorScheme(effectiveScheme === 'dark' ? 'light' : 'dark');
   };
 
-  // Check for logged in user on mount
-  React.useEffect(() => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
   const handleLogin = () => {
     navigate('/login');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('web_user');
-    setIsLoggedIn(false);
-  };
-
-  // Get logged in user name
-  const getUserName = () => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        return user.name;
-      } catch {
-        return undefined;
-      }
-    }
-    return undefined;
+    logout();
   };
 
   return (
@@ -149,7 +127,7 @@ function MainLayout() {
               isDark={effectiveScheme === 'dark'}
               onToggle={handleThemeToggle}
             />
-            {isLoggedIn && (
+            {isAuthenticated && (
               <NotificationBell
                 count={unreadCount}
                 onClick={() => {
@@ -159,8 +137,8 @@ function MainLayout() {
               />
             )}
             <HeaderLoginButton
-              isLoggedIn={isLoggedIn}
-              userName={getUserName()}
+              isLoggedIn={isAuthenticated}
+              userName={user?.name}
               onLogin={handleLogin}
               onLogout={handleLogout}
               color="accent"
@@ -228,30 +206,32 @@ function AppContent() {
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
       <DialogProvider>
-        <RealtimeProvider autoConnect={true} enableInDev={true}>
-          <RealtimeToast />
-          <style>{`
-            *, *::before, *::after {
-              transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
-            }
-          `}</style>
-          <Routes>
-            {/* Login page - no header */}
-            <Route path="/login" element={<LoginPage />} />
+        <ErrorBoundary>
+          <RealtimeProvider autoConnect={true} enableInDev={true}>
+            <RealtimeToast />
+            <style>{`
+              *, *::before, *::after {
+                transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+              }
+            `}</style>
+            <Routes>
+              {/* Login page - no header */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Main pages with header - wrapped to provide theme context */}
-            <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
-              <Route element={<MainLayout />}>
-                {/* PUBLIC ROUTES - No authentication required */}
-                <Route path="/" element={<ListingsPage />} />
-                <Route path="/listing/:id" element={<ListingDetailPage />} />
+              {/* Main pages with header - wrapped to provide theme context */}
+              <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
+                <Route element={<MainLayout />}>
+                  {/* PUBLIC ROUTES - No authentication required */}
+                  <Route path="/" element={<ListingsPage />} />
+                  <Route path="/listing/:id" element={<ListingDetailPage />} />
 
-                {/* PROTECTED ROUTES - Authentication required */}
-                <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
+                  {/* PROTECTED ROUTES - Authentication required */}
+                  <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </RealtimeProvider>
+            </Routes>
+          </RealtimeProvider>
+        </ErrorBoundary>
       </DialogProvider>
     </DesignsystemetProvider>
   );
