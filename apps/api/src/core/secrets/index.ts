@@ -52,3 +52,4 @@ export {
 
 export { LocalEncryptionProvider } from './local-encryption.provider';
 export { AzureKeyVaultProvider } from './azure-keyvault.provider';
+export { CloudflareSecretsProvider } from './cloudflare.provider';

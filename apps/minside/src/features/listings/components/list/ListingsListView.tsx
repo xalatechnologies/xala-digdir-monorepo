@@ -21,7 +21,8 @@ import {
   Text,
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
-import { useListings, LISTING_TYPE_OPTIONS, type ListingType } from '@digilist/client-sdk';
+import { useRentalObjects, type ListingType } from '@digilist/client-sdk';
+import { LISTING_TYPE_OPTIONS } from "../../constants";
 import type { ListingStatus } from '@digilist/client-sdk';
 import { ListingsGrid } from './ListingsGrid';
 import { ListingsTable } from './ListingsTable';
@@ -73,7 +74,7 @@ export function ListingsListView() {
   if (filters.sortBy) queryParams.sortBy = filters.sortBy;
   if (filters.sortOrder) queryParams.sortOrder = filters.sortOrder;
 
-  const { data, isLoading, refetch } = useListings(queryParams);
+  const { data, isLoading, refetch } = useRentalObjects(queryParams);
 
   const listings = data?.data || [];
   const pagination = data?.meta;

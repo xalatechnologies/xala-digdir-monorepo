@@ -122,6 +122,33 @@ export {
 // Push notification and notification preferences types
 export * from './push-notification';
 
+// Notification System types (complete notification system)
+// Exclude types that conflict with push-notification
+export {
+  type NotificationDTO,
+  type NotificationListResponse,
+  type NotificationCountResponse,
+  type NotificationStatsResponse,
+  type NotificationQueryParams,
+  type NotificationTemplateDTO,
+  type CreateTemplateDTO,
+  type UpdateTemplateDTO,
+  type TemplatePreviewRequest,
+  type TemplatePreviewResponse,
+  type SendNotificationDTO,
+  type SendNotificationResponse,
+  type BroadcastNotificationDTO,
+  type BroadcastNotificationResponse,
+  type AvailableChannelsResponse,
+  type RateLimitsResponse,
+  // Export with different names to avoid conflict
+  type NotificationType as SystemNotificationType,
+  type NotificationChannel as SystemNotificationChannel,
+} from './notification-system';
+
+// GDPR Consent types
+export * from './gdpr';
+
 // Additional types that don't fit a single domain
 export type {
   // Seasonal Lease types

@@ -980,6 +980,93 @@ export const nb: Record<string, string> = {
   // Booking
   'sdk.booking.advanceDays': 'dager paa forhaand',
   'sdk.booking.standardCancellation': 'Standard avbestillingsregler',
+
+  // ============================================================================
+  // GDPR Consent
+  // ============================================================================
+  'gdpr.title': 'Personvern og samtykke',
+  'gdpr.subtitle': 'Vi bryr oss om personvernet ditt',
+  'gdpr.description': 'For aa bruke denne tjenesten maa du godta vaare vilkaar for behandling av personopplysninger.',
+
+  // Consent Types
+  'gdpr.consentType.terms': 'Vilkaar for bruk',
+  'gdpr.consentType.terms.description': 'Jeg godtar vilkaarene for bruk av tjenesten',
+  'gdpr.consentType.privacy': 'Personvernerklaering',
+  'gdpr.consentType.privacy.description': 'Jeg har lest og forstaar personvernerklaaeringen',
+  'gdpr.consentType.marketing': 'Markedsfoering',
+  'gdpr.consentType.marketing.description': 'Jeg oensker aa motta markedsfoeringsinformasjon',
+  'gdpr.consentType.analytics': 'Analyse og forbedring',
+  'gdpr.consentType.analytics.description': 'Jeg tillater bruk av analyseverktoy for aa forbedre tjenesten',
+
+  // Consent Actions
+  'gdpr.accept': 'Godta',
+  'gdpr.acceptAll': 'Godta alle',
+  'gdpr.acceptRequired': 'Godta paakrevde',
+  'gdpr.decline': 'Avslaa',
+  'gdpr.save': 'Lagre innstillinger',
+  'gdpr.cancel': 'Avbryt',
+  'gdpr.readMore': 'Les mer',
+  'gdpr.required': 'Paakrevd',
+  'gdpr.optional': 'Valgfri',
+
+  // Consent Status
+  'gdpr.status.granted': 'Godkjent',
+  'gdpr.status.revoked': 'Trukket tilbake',
+  'gdpr.status.pending': 'Venter',
+  'gdpr.status.needsUpdate': 'Krever oppdatering',
+
+  // Consent Popup
+  'gdpr.popup.title': 'Vi trenger ditt samtykke',
+  'gdpr.popup.description': 'Vi bruker informasjonskapsler og behandler personopplysninger for aa gi deg den beste opplevelsen. Vennligst velg dine preferanser nedenfor.',
+  'gdpr.popup.moreInfo': 'Mer informasjon',
+  'gdpr.popup.settings': 'Innstillinger',
+
+  // Settings Page
+  'gdpr.settings.title': 'Personverninnstillinger',
+  'gdpr.settings.subtitle': 'Administrer dine samtykker og personverninnstillinger',
+  'gdpr.settings.consentHistory': 'Samtykkehistorikk',
+  'gdpr.settings.dataRequests': 'Mine dataforespraker',
+  'gdpr.settings.downloadData': 'Last ned mine data',
+  'gdpr.settings.deleteAccount': 'Slett min konto',
+
+  // Data Subject Requests
+  'gdpr.request.title': 'Be om tilgang til data',
+  'gdpr.request.access': 'Innsyn i mine data',
+  'gdpr.request.access.description': 'Faa en kopi av alle personopplysninger vi har om deg',
+  'gdpr.request.erasure': 'Sletting av mine data',
+  'gdpr.request.erasure.description': 'Be om sletting av alle personopplysninger (retten til aa bli glemt)',
+  'gdpr.request.portability': 'Dataportabilitet',
+  'gdpr.request.portability.description': 'Faa dine data i et maskinlesbart format',
+  'gdpr.request.rectification': 'Retting av data',
+  'gdpr.request.rectification.description': 'Be om retting av unoyaktige personopplysninger',
+  'gdpr.request.restriction': 'Begrensning av behandling',
+  'gdpr.request.restriction.description': 'Be om begrensning av hvordan vi behandler dine data',
+  'gdpr.request.objection': 'Innsigelse mot behandling',
+  'gdpr.request.objection.description': 'Protestere mot vaar behandling av dine personopplysninger',
+
+  // Request Status
+  'gdpr.request.status.pending': 'Under behandling',
+  'gdpr.request.status.processing': 'Behandles',
+  'gdpr.request.status.completed': 'Fullfoert',
+  'gdpr.request.status.rejected': 'Avvist',
+  'gdpr.request.submitted': 'Foresporselen din er sendt',
+  'gdpr.request.submittedDescription': 'Vi behandler foresporselen din og svarer innen 30 dager.',
+
+  // Audit Log
+  'gdpr.audit.title': 'Samtykkehistorikk',
+  'gdpr.audit.action.granted': 'Samtykke gitt',
+  'gdpr.audit.action.revoked': 'Samtykke trukket tilbake',
+  'gdpr.audit.action.updated': 'Samtykke oppdatert',
+  'gdpr.audit.action.expired': 'Samtykke utloept',
+  'gdpr.audit.noRecords': 'Ingen samtykkehistorikk',
+
+  // Legal Basis
+  'gdpr.legalBasis.consent': 'Samtykke',
+  'gdpr.legalBasis.contract': 'Oppfyllelse av avtale',
+  'gdpr.legalBasis.legalObligation': 'Rettslig forpliktelse',
+  'gdpr.legalBasis.vitalInterests': 'Vitale interesser',
+  'gdpr.legalBasis.publicTask': 'Offentlig myndighetsutovelse',
+  'gdpr.legalBasis.legitimateInterests': 'Berettigede interesser',
 };
 
 

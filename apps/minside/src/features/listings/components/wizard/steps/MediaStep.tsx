@@ -5,7 +5,7 @@
 
 import { useCallback, useState } from 'react';
 import { Paragraph, Heading, Spinner } from '@xala/ds';
-import { useUploadListingMedia, useDeleteListingMedia } from '@digilist/client-sdk';
+import { useUploadRentalObjectMedia, useDeleteRentalObjectMedia } from '@digilist/client-sdk';
 import type { BackofficeListing } from '../../../types';
 
 export interface MediaStepProps {
@@ -16,8 +16,8 @@ export interface MediaStepProps {
 
 export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const uploadMutation = useUploadListingMedia();
-  const deleteMutation = useDeleteListingMedia();
+  const uploadMutation = useUploadRentalObjectMedia();
+  const deleteMutation = useDeleteRentalObjectMedia();
 
   const images = data.images || [];
   const listingId = data.id;

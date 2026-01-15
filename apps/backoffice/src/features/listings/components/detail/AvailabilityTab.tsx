@@ -22,7 +22,7 @@ import {
   type CalendarEvent,
   formatWeekRange,
   useListing,
-  useUpdateListing,
+  useUpdateRentalObject,
 } from '@digilist/client-sdk';
 import {
   CreateBlockModal,
@@ -115,7 +115,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
   const listing = listingData?.data;
 
   // Update mutation for saving opening hours
-  const updateMutation = useUpdateListing();
+  const updateMutation = useUpdateRentalObject();
 
   // Update current time every minute
   useEffect(() => {

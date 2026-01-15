@@ -11,7 +11,7 @@ import { LocalEncryptionProvider } from './local-encryption.provider';
 /**
  * Provider types
  */
-export type SecretsProviderType = 'local' | 'azure-keyvault' | 'aws-secrets-manager' | 'hashicorp-vault';
+export type SecretsProviderType = 'local' | 'azure-keyvault' | 'aws-secrets-manager' | 'hashicorp-vault' | 'cloudflare';
 
 /**
  * Create a secrets provider based on configuration
@@ -24,6 +24,9 @@ export async function createSecretsProvider(
   switch (providerType) {
     case 'azure-keyvault':
       return createAzureKeyVaultProvider(config);
+
+    case 'cloudflare':
+      return createCloudflareProvider();
 
     case 'aws-secrets-manager':
       throw new Error('AWS Secrets Manager provider is not yet implemented');
@@ -46,6 +49,11 @@ function getProviderFromEnv(): SecretsProviderType {
     return 'azure-keyvault';
   }
 
+  // Check for Cloudflare
+  if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) {
+    return 'cloudflare';
+  }
+
   // Check for AWS Secrets Manager
   if (process.env.AWS_SECRETS_MANAGER_REGION) {
     return 'aws-secrets-manager';
@@ -58,6 +66,20 @@ function getProviderFromEnv(): SecretsProviderType {
 
   // Default to local encryption
   return 'local';
+}
+
+/**
+ * Create Cloudflare provider with dynamic import
+ */
+async function createCloudflareProvider(): Promise<ISecretsProvider> {
+  try {
+    const { CloudflareSecretsProvider } = await import('./cloudflare.provider');
+    return new CloudflareSecretsProvider();
+  } catch (error) {
+    console.error('Failed to create Cloudflare secrets provider:', error);
+    console.warn('Falling back to local encryption provider');
+    return new LocalEncryptionProvider();
+  }
 }
 
 /**

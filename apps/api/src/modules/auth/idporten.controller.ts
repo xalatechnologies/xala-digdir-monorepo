@@ -79,7 +79,7 @@ async function getAccessToken(): Promise<string> {
 
   // Get new token using client credentials (uses tenant-specific URL)
   const tokenUrl = `${config.tenantUrl}/auth/open/connect/token`;
-  
+
   const response = await fetch(tokenUrl, {
     method: 'POST',
     headers: {
@@ -91,21 +91,71 @@ async function getAccessToken(): Promise<string> {
       scope: 'signicat-api',
     }),
   });
-  
+
   if (!response.ok) {
     const error = await response.text();
     throw new Error(`Failed to get access token: ${error}`);
   }
-  
+
   const data = await response.json() as { access_token: string; expires_in: number };
-  
+
   // Cache the token (with 5 minute buffer before expiry)
   cachedToken = {
     token: data.access_token,
     expiresAt: Date.now() + (data.expires_in - 300) * 1000,
   };
-  
+
   return data.access_token;
+}
+
+// =============================================================================
+// Session API Helpers with Fallback
+// =============================================================================
+
+/**
+ * Fetch session with automatic fallback between tenant and generic API URLs
+ * Tries tenant URL first (original working method), falls back to generic API URL
+ */
+async function fetchSessionWithFallback(
+  sessionId: string,
+  accessToken: string,
+  method: 'GET' | 'POST' = 'GET',
+  body?: object
+): Promise<Response> {
+  const config = getConfig();
+
+  // Try tenant URL first (original working method)
+  const tenantUrl = `${config.tenantUrl}/auth/rest/sessions${method === 'GET' ? `/${sessionId}` : ''}`;
+
+  try {
+    const response = await fetch(tenantUrl, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    // If successful or any error other than 404, return this response
+    if (response.ok || response.status !== 404) {
+      return response;
+    }
+  } catch (error) {
+    // Network errors - try fallback
+  }
+
+  // Fallback to generic API URL
+  const apiUrl = `${config.apiUrl}/auth/rest/sessions${method === 'GET' ? `/${sessionId}` : ''}`;
+
+  return fetch(apiUrl, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
 }
 
 // =============================================================================
@@ -159,9 +209,7 @@ export class IdPortenAuthController {
       // Get access token
       const accessToken = await getAccessToken();
 
-      // Create authentication session (uses generic API URL)
-      const sessionUrl = `${config.apiUrl}/auth/rest/sessions`;
-
+      // Create authentication session with fallback
       const sessionPayload = {
         flow: 'redirect',
         allowedProviders: ['nbid'], // Norwegian BankID
@@ -176,14 +224,7 @@ export class IdPortenAuthController {
         sessionLifetime: 600, // 10 minutes
       };
 
-      const response = await fetch(sessionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(sessionPayload),
-      });
+      const response = await fetchSessionWithFallback('', accessToken, 'POST', sessionPayload);
 
       if (!response.ok) {
         const error = await response.text();
@@ -380,16 +421,9 @@ export class IdPortenAuthController {
     }
 
     try {
-      // Get session details
-      const config = getConfig();
+      // Get session details with fallback
       const accessToken = await getAccessToken();
-
-      const sessionUrl = `${config.baseUrl}/auth/rest/sessions/${session.sessionId}`;
-      const response = await fetch(sessionUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await fetchSessionWithFallback(session.sessionId, accessToken, 'GET');
 
       if (!response.ok) {
         throw new Error('Failed to get session details');
@@ -491,25 +525,18 @@ export class IdPortenAuthController {
   @Get('/session/:id')
   async getSession(request: FastifyRequest, reply: FastifyReply) {
     const { id } = request.params as { id: string };
-    
+
     try {
-      const config = getConfig();
       const accessToken = await getAccessToken();
-      
-      const sessionUrl = `${config.baseUrl}/auth/rest/sessions/${id}`;
-      const response = await fetch(sessionUrl, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-      
+      const response = await fetchSessionWithFallback(id, accessToken, 'GET');
+
       if (!response.ok) {
         return reply.status(404).send({
           error: 'session_not_found',
           message: 'Session not found',
         });
       }
-      
+
       const sessionData = await response.json();
       return reply.send({ data: sessionData });
     } catch (error) {

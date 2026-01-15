@@ -161,3 +161,9 @@ export type {
 
 // Profile & Preferences
 export { ProfileService, profileService } from './profile.service';
+
+// GDPR Consent
+export { GdprService, gdprService } from './gdpr.service';
+
+// Notification System (complete notification system)
+export { notificationSystemService } from './notification-system.service';

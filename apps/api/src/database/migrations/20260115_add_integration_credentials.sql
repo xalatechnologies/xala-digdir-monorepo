@@ -61,52 +61,8 @@ CREATE INDEX IF NOT EXISTS integration_credentials_expires_idx
 CREATE UNIQUE INDEX IF NOT EXISTS integration_credentials_integration_type_unique 
     ON integration_credentials(integration_id, credential_type, name);
 
--- ============================================================================
--- Integration Audit Logs Table
--- Tracks all credential access and changes for security monitoring
--- ============================================================================
-
-CREATE TABLE IF NOT EXISTS integration_audit_logs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
-    integration_id UUID REFERENCES integrations(id) ON DELETE SET NULL,
-    credential_id UUID REFERENCES integration_credentials(id) ON DELETE SET NULL,
-    
-    -- Action details
-    action VARCHAR(50) NOT NULL, -- 'create', 'read', 'update', 'delete', 'rotate', 'test', 'use'
-    actor_id UUID REFERENCES users(id) ON DELETE SET NULL,
-    actor_email VARCHAR(255), -- Preserved even if user deleted
-    actor_ip VARCHAR(45), -- IPv4 or IPv6
-    user_agent TEXT,
-    
-    -- Result
-    success BOOLEAN NOT NULL DEFAULT true,
-    error_message TEXT,
-    
-    -- Context (non-sensitive)
-    context JSONB DEFAULT '{}'::jsonb,
-    
-    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
-    -- Constraints
-    CONSTRAINT integration_audit_logs_action_check CHECK (
-        action IN ('create', 'read', 'update', 'delete', 'rotate', 'test', 'use', 'export')
-    )
-);
-
--- Indexes for integration_audit_logs
-CREATE INDEX IF NOT EXISTS integration_audit_logs_tenant_idx 
-    ON integration_audit_logs(tenant_id);
-CREATE INDEX IF NOT EXISTS integration_audit_logs_integration_idx 
-    ON integration_audit_logs(integration_id);
-CREATE INDEX IF NOT EXISTS integration_audit_logs_credential_idx 
-    ON integration_audit_logs(credential_id);
-CREATE INDEX IF NOT EXISTS integration_audit_logs_action_idx 
-    ON integration_audit_logs(action);
-CREATE INDEX IF NOT EXISTS integration_audit_logs_actor_idx 
-    ON integration_audit_logs(actor_id);
-CREATE INDEX IF NOT EXISTS integration_audit_logs_timestamp_idx 
-    ON integration_audit_logs(timestamp);
+-- Note: Integration credential auditing uses the central audit_logs table
+-- with resource='credential' for unified audit management
 
 -- ============================================================================
 -- Row-Level Security Policies
@@ -118,15 +74,6 @@ ALTER TABLE integration_credentials ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Tenant isolation for integration_credentials
 CREATE POLICY integration_credentials_tenant_isolation ON integration_credentials
-    FOR ALL
-    USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
-    WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
-
--- Enable RLS on integration_audit_logs
-ALTER TABLE integration_audit_logs ENABLE ROW LEVEL SECURITY;
-
--- Policy: Tenant isolation for integration_audit_logs
-CREATE POLICY integration_audit_logs_tenant_isolation ON integration_audit_logs
     FOR ALL
     USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
     WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
@@ -167,5 +114,4 @@ COMMENT ON COLUMN integration_credentials.encryption_tag IS
 COMMENT ON COLUMN integration_credentials.encryption_version IS 
     'Version of encryption key used. Allows for key rotation without re-encrypting all values immediately.';
 
-COMMENT ON TABLE integration_audit_logs IS 
-    'Security audit log for all integration credential operations. Retained for compliance and security monitoring.';
+-- Note: Credential access auditing uses the central audit_logs table with resource='credential'

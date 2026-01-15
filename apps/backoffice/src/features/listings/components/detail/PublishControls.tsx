@@ -15,10 +15,10 @@ import {
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import {
-  usePublishListing,
-  useArchiveListing,
-  useDuplicateListing,
-  useDeleteListing,
+  usePublishRentalObject,
+  useArchiveRentalObject,
+  useDuplicateRentalObject,
+  useDeleteRentalObject,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
@@ -43,10 +43,10 @@ export function PublishControls({
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const publishMutation = usePublishListing();
-  const archiveMutation = useArchiveListing();
-  const duplicateMutation = useDuplicateListing();
-  const deleteMutation = useDeleteListing();
+  const publishMutation = usePublishRentalObject();
+  const archiveMutation = useArchiveRentalObject();
+  const duplicateMutation = useDuplicateRentalObject();
+  const deleteMutation = useDeleteRentalObject();
 
   const handlePublish = async () => {
     try {

@@ -443,3 +443,47 @@ export {
   type CreateCredentialInput,
   type UpdateCredentialInput,
 } from './use-integration-credentials';
+
+// GDPR Consent hooks
+export {
+  gdprKeys,
+  useConsentTypes,
+  useMyConsents,
+  useConsentStatus,
+  useConsentAuditLog,
+  useMyDataRequests,
+  usePendingDataRequests,
+  useGrantConsent,
+  useGrantMultipleConsents,
+  useCreateDataSubjectRequest,
+  useUpdateDataRequestStatus,
+  useShowConsentPopup,
+  usePendingRequiredConsents,
+} from './use-gdpr';
+
+// Notification System hooks (complete notification system)
+export {
+  notificationSystemKeys,
+  // User notifications
+  useNotifications as useNotificationSystemNotifications,
+  useNotification as useNotificationSystemNotification,
+  useUnreadNotificationCount,
+  useNotificationStats,
+  useMarkNotificationAsRead,
+  useMarkAllNotificationsAsRead,
+  useDismissNotification,
+  useDeleteNotification as useDeleteNotificationSystem,
+  // Admin - send notifications
+  useSendNotification,
+  useBroadcastNotification,
+  // Templates
+  useNotificationTemplates as useNotificationSystemTemplates,
+  useNotificationTemplate,
+  useCreateNotificationTemplate,
+  useUpdateNotificationTemplate,
+  useDeleteNotificationTemplate,
+  usePreviewNotificationTemplate,
+  // Channel configuration
+  useAvailableNotificationChannels,
+  useNotificationRateLimits,
+} from './use-notification-system';

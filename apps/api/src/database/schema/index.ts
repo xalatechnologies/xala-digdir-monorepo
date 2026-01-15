@@ -326,39 +326,8 @@ export const integrationCredentials = pgTable('integration_credentials', {
   ),
 }));
 
-/**
- * Integration Audit Log - Track all credential access and changes
- * Separate from main audit_logs for security isolation
- */
-export const integrationAuditLogs = pgTable('integration_audit_logs', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  integrationId: uuid('integration_id').references(() => integrations.id, { onDelete: 'set null' }),
-  credentialId: uuid('credential_id').references(() => integrationCredentials.id, { onDelete: 'set null' }),
-  
-  // Action details
-  action: varchar('action', { length: 50 }).notNull(), // 'create', 'read', 'update', 'delete', 'rotate', 'test', 'use'
-  actorId: uuid('actor_id').references(() => users.id, { onDelete: 'set null' }),
-  actorEmail: varchar('actor_email', { length: 255 }), // Preserved even if user deleted
-  actorIp: varchar('actor_ip', { length: 45 }), // IPv4 or IPv6
-  userAgent: text('user_agent'),
-  
-  // Result
-  success: boolean('success').notNull().default(true),
-  errorMessage: text('error_message'),
-  
-  // Context (non-sensitive)
-  context: jsonb('context').default({}), // e.g., { reason: 'scheduled_rotation', triggered_by: 'system' }
-  
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
-}, (table) => ({
-  tenantIdx: index('integration_audit_logs_tenant_idx').on(table.tenantId),
-  integrationIdx: index('integration_audit_logs_integration_idx').on(table.integrationId),
-  credentialIdx: index('integration_audit_logs_credential_idx').on(table.credentialId),
-  actionIdx: index('integration_audit_logs_action_idx').on(table.action),
-  actorIdx: index('integration_audit_logs_actor_idx').on(table.actorId),
-  timestampIdx: index('integration_audit_logs_timestamp_idx').on(table.timestamp),
-}));
+// Note: Integration credential auditing uses the central audit_logs table
+// with resource='credential' for unified audit management
 
 // ============================================================================
 // Listings (Rental Objects / Utleieobjekter)
@@ -749,6 +718,451 @@ export const pushSubscriptions = pgTable('push_subscriptions', {
 }));
 
 // ============================================================================
+// Notification System
+// ============================================================================
+
+/**
+ * Notification Templates
+ * Templates for different notification types with i18n support
+ */
+export const notificationTemplates = pgTable('notification_templates', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }), // null = global template
+  
+  // Template identification
+  code: varchar('code', { length: 100 }).notNull(), // e.g., 'booking_confirmed', 'reminder_24h'
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  
+  // Channel-specific content (JSONB for flexibility)
+  // Structure: { nb: { subject: "...", body: "..." }, en: { subject: "...", body: "..." } }
+  emailTemplate: jsonb('email_template').default({}),
+  smsTemplate: jsonb('sms_template').default({}),
+  pushTemplate: jsonb('push_template').default({}),
+  inAppTemplate: jsonb('in_app_template').default({}),
+  
+  // Variables available in this template (for documentation)
+  availableVariables: jsonb('available_variables').default([]),
+  
+  // Status
+  isActive: boolean('is_active').notNull().default(true),
+  isSystem: boolean('is_system').notNull().default(false), // System templates can't be deleted
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantCodeIdx: uniqueIndex('notification_templates_tenant_code_idx').on(table.tenantId, table.code),
+  codeIdx: index('notification_templates_code_idx').on(table.code),
+  activeIdx: index('notification_templates_active_idx').on(table.isActive),
+}));
+
+/**
+ * Notifications
+ * Individual notification instances sent to users
+ */
+export const notifications = pgTable('notifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  
+  // Recipient
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+  
+  // Notification type (maps to template code)
+  type: varchar('type', { length: 100 }).notNull(),
+  
+  // Content (rendered from template)
+  title: varchar('title', { length: 255 }).notNull(),
+  message: text('message').notNull(),
+  
+  // Priority for ordering and urgency
+  priority: varchar('priority', { length: 20 }).notNull().default('normal'), // low, normal, high, urgent
+  
+  // Related entities (for deep linking)
+  relatedEntityType: varchar('related_entity_type', { length: 50 }), // booking, listing, organization, etc.
+  relatedEntityId: uuid('related_entity_id'),
+  
+  // Action URL for click-through
+  actionUrl: varchar('action_url', { length: 500 }),
+  
+  // Additional data (JSONB for flexibility)
+  metadata: jsonb('metadata').default({}),
+  
+  // Read status
+  readAt: timestamp('read_at'),
+  dismissedAt: timestamp('dismissed_at'),
+  
+  // Expiration (auto-cleanup)
+  expiresAt: timestamp('expires_at'),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantUserIdx: index('notifications_tenant_user_idx').on(table.tenantId, table.userId),
+  userReadIdx: index('notifications_user_read_idx').on(table.userId, table.readAt),
+  typeIdx: index('notifications_type_idx').on(table.type),
+  priorityIdx: index('notifications_priority_idx').on(table.priority),
+  createdIdx: index('notifications_created_idx').on(table.createdAt),
+  expiresIdx: index('notifications_expires_idx').on(table.expiresAt),
+}));
+
+/**
+ * Notification Delivery Logs
+ * Track delivery attempts for each channel
+ */
+export const notificationDeliveryLogs = pgTable('notification_delivery_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  notificationId: uuid('notification_id').notNull().references(() => notifications.id, { onDelete: 'cascade' }),
+  
+  // Delivery channel
+  channel: varchar('channel', { length: 20 }).notNull(), // in_app, email, sms, push
+  
+  // Delivery status
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, sent, delivered, failed, bounced
+  
+  // Recipient address (email, phone, etc.)
+  recipientAddress: varchar('recipient_address', { length: 255 }),
+  
+  // Provider response
+  providerMessageId: varchar('provider_message_id', { length: 255 }),
+  providerResponse: jsonb('provider_response').default({}),
+  
+  // Error tracking
+  errorCode: varchar('error_code', { length: 100 }),
+  errorMessage: text('error_message'),
+  retryCount: integer('retry_count').notNull().default(0),
+  nextRetryAt: timestamp('next_retry_at'),
+  
+  // Timing
+  sentAt: timestamp('sent_at'),
+  deliveredAt: timestamp('delivered_at'),
+  failedAt: timestamp('failed_at'),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  notificationIdx: index('notification_delivery_logs_notification_idx').on(table.notificationId),
+  channelIdx: index('notification_delivery_logs_channel_idx').on(table.channel),
+  statusIdx: index('notification_delivery_logs_status_idx').on(table.status),
+  sentAtIdx: index('notification_delivery_logs_sent_at_idx').on(table.sentAt),
+}));
+
+/**
+ * Notification Queue
+ * Queue for pending notifications to be processed by workers
+ */
+export const notificationQueue = pgTable('notification_queue', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  
+  // Target
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+  
+  // Notification details
+  type: varchar('type', { length: 100 }).notNull(),
+  channels: jsonb('channels').notNull().default([]), // ['in_app', 'email', 'sms']
+  
+  // Template variables for rendering
+  templateVariables: jsonb('template_variables').notNull().default({}),
+  
+  // Related entities
+  relatedEntityType: varchar('related_entity_type', { length: 50 }),
+  relatedEntityId: uuid('related_entity_id'),
+  
+  // Priority and scheduling
+  priority: varchar('priority', { length: 20 }).notNull().default('normal'),
+  scheduledFor: timestamp('scheduled_for'), // null = process immediately
+  
+  // Processing status
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, processing, completed, failed
+  processedAt: timestamp('processed_at'),
+  errorMessage: text('error_message'),
+  retryCount: integer('retry_count').notNull().default(0),
+  maxRetries: integer('max_retries').notNull().default(3),
+  
+  // Result tracking
+  notificationId: uuid('notification_id').references(() => notifications.id, { onDelete: 'set null' }),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantStatusIdx: index('notification_queue_tenant_status_idx').on(table.tenantId, table.status),
+  scheduledIdx: index('notification_queue_scheduled_idx').on(table.scheduledFor),
+  priorityIdx: index('notification_queue_priority_idx').on(table.priority),
+  statusIdx: index('notification_queue_status_idx').on(table.status),
+}));
+
+/**
+ * SMS Provider Config
+ * Configuration for SMS providers (Twilio, Telenor, etc.)
+ */
+export const smsProviderConfigs = pgTable('sms_provider_configs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  
+  provider: varchar('provider', { length: 50 }).notNull(), // twilio, telenor, nexmo
+  isActive: boolean('is_active').notNull().default(true),
+  
+  // Encrypted configuration (similar to integration credentials)
+  config: jsonb('config').notNull().default({}),
+  
+  // Rate limiting
+  dailyLimit: integer('daily_limit').default(1000),
+  monthlyLimit: integer('monthly_limit').default(10000),
+  
+  // Usage tracking
+  dailyCount: integer('daily_count').notNull().default(0),
+  monthlyCount: integer('monthly_count').notNull().default(0),
+  lastResetDaily: timestamp('last_reset_daily').defaultNow(),
+  lastResetMonthly: timestamp('last_reset_monthly').defaultNow(),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: uniqueIndex('sms_provider_configs_tenant_idx').on(table.tenantId),
+  activeIdx: index('sms_provider_configs_active_idx').on(table.isActive),
+}));
+
+/**
+ * Email Provider Config
+ * Configuration for email providers (Sendgrid, SES, Postmark, etc.)
+ */
+export const emailProviderConfigs = pgTable('email_provider_configs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  
+  provider: varchar('provider', { length: 50 }).notNull(), // sendgrid, ses, postmark, smtp
+  isActive: boolean('is_active').notNull().default(true),
+  
+  // Configuration
+  config: jsonb('config').notNull().default({}),
+  
+  // Sender info
+  fromEmail: varchar('from_email', { length: 255 }).notNull(),
+  fromName: varchar('from_name', { length: 255 }),
+  replyToEmail: varchar('reply_to_email', { length: 255 }),
+  
+  // Rate limiting
+  dailyLimit: integer('daily_limit').default(10000),
+  monthlyLimit: integer('monthly_limit').default(100000),
+  
+  // Usage tracking
+  dailyCount: integer('daily_count').notNull().default(0),
+  monthlyCount: integer('monthly_count').notNull().default(0),
+  lastResetDaily: timestamp('last_reset_daily').defaultNow(),
+  lastResetMonthly: timestamp('last_reset_monthly').defaultNow(),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: uniqueIndex('email_provider_configs_tenant_idx').on(table.tenantId),
+  activeIdx: index('email_provider_configs_active_idx').on(table.isActive),
+}));
+
+// ============================================================================
+// GDPR Consent Management
+// ============================================================================
+
+/**
+ * Consent Types
+ * Defines the different types of consent that can be collected
+ */
+export const consentTypes = pgTable('consent_types', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }), // null = global
+  
+  // Consent type identification
+  code: varchar('code', { length: 100 }).notNull(), // e.g., 'terms', 'privacy', 'marketing', 'analytics'
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  
+  // Consent content (i18n)
+  // Structure: { nb: { title: "...", content: "..." }, en: { ... } }
+  content: jsonb('content').notNull().default({}),
+  
+  // Version tracking for consent updates
+  version: varchar('version', { length: 50 }).notNull().default('1.0'),
+  
+  // Requirements
+  isRequired: boolean('is_required').notNull().default(false), // Must be accepted to use service
+  isActive: boolean('is_active').notNull().default(true),
+  
+  // Display settings
+  displayOrder: integer('display_order').notNull().default(0),
+  showOnRegistration: boolean('show_on_registration').notNull().default(true),
+  showOnDashboard: boolean('show_on_dashboard').notNull().default(false),
+  
+  // External link (for full legal document)
+  externalUrl: varchar('external_url', { length: 500 }),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantCodeIdx: uniqueIndex('consent_types_tenant_code_idx').on(table.tenantId, table.code),
+  codeIdx: index('consent_types_code_idx').on(table.code),
+  activeIdx: index('consent_types_active_idx').on(table.isActive),
+}));
+
+/**
+ * User Consents
+ * Records of user consent decisions with full audit trail
+ */
+export const userConsents = pgTable('user_consents', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  consentTypeId: uuid('consent_type_id').notNull().references(() => consentTypes.id, { onDelete: 'cascade' }),
+  
+  // Consent status
+  granted: boolean('granted').notNull(),
+  
+  // Version of consent at time of decision
+  consentVersion: varchar('consent_version', { length: 50 }).notNull(),
+  
+  // Context
+  source: varchar('source', { length: 50 }).notNull().default('web'), // web, minside, backoffice, app
+  ipAddress: varchar('ip_address', { length: 45 }), // IPv6 compatible
+  userAgent: text('user_agent'),
+  
+  // Timestamps
+  grantedAt: timestamp('granted_at'),
+  revokedAt: timestamp('revoked_at'),
+  expiresAt: timestamp('expires_at'), // Optional expiration
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantUserIdx: index('user_consents_tenant_user_idx').on(table.tenantId, table.userId),
+  userConsentTypeIdx: index('user_consents_user_consent_type_idx').on(table.userId, table.consentTypeId),
+  grantedIdx: index('user_consents_granted_idx').on(table.granted),
+  createdAtIdx: index('user_consents_created_at_idx').on(table.createdAt),
+}));
+
+/**
+ * Consent Audit Log
+ * Complete audit trail of all consent changes (GDPR requirement)
+ */
+export const consentAuditLog = pgTable('consent_audit_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  consentTypeId: uuid('consent_type_id').notNull().references(() => consentTypes.id, { onDelete: 'cascade' }),
+  
+  // Action
+  action: varchar('action', { length: 20 }).notNull(), // granted, revoked, expired, updated
+  
+  // State before and after
+  previousState: boolean('previous_state'),
+  newState: boolean('new_state').notNull(),
+  
+  // Version tracking
+  consentVersion: varchar('consent_version', { length: 50 }).notNull(),
+  
+  // Context (immutable audit record)
+  source: varchar('source', { length: 50 }).notNull(),
+  ipAddress: varchar('ip_address', { length: 45 }),
+  userAgent: text('user_agent'),
+  
+  // Additional metadata
+  metadata: jsonb('metadata').default({}),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('consent_audit_log_tenant_idx').on(table.tenantId),
+  userIdx: index('consent_audit_log_user_idx').on(table.userId),
+  consentTypeIdx: index('consent_audit_log_consent_type_idx').on(table.consentTypeId),
+  actionIdx: index('consent_audit_log_action_idx').on(table.action),
+  createdAtIdx: index('consent_audit_log_created_at_idx').on(table.createdAt),
+}));
+
+/**
+ * Data Processing Records
+ * GDPR Article 30 - Records of processing activities
+ */
+export const dataProcessingRecords = pgTable('data_processing_records', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  
+  // Processing activity identification
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  
+  // Purpose of processing
+  purpose: text('purpose').notNull(),
+  legalBasis: varchar('legal_basis', { length: 100 }).notNull(), // consent, contract, legal_obligation, vital_interests, public_task, legitimate_interests
+  
+  // Data categories
+  dataCategories: jsonb('data_categories').notNull().default([]), // ['personal', 'contact', 'booking_history', etc.]
+  
+  // Data subjects
+  dataSubjectCategories: jsonb('data_subject_categories').notNull().default([]), // ['users', 'organizations', 'guests']
+  
+  // Retention
+  retentionPeriod: varchar('retention_period', { length: 100 }), // e.g., '3 years', '7 years', 'indefinite'
+  retentionDays: integer('retention_days'),
+  
+  // Third parties
+  thirdPartyRecipients: jsonb('third_party_recipients').default([]),
+  
+  // Technical measures
+  securityMeasures: jsonb('security_measures').default([]),
+  
+  // Status
+  isActive: boolean('is_active').notNull().default(true),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('data_processing_records_tenant_idx').on(table.tenantId),
+  legalBasisIdx: index('data_processing_records_legal_basis_idx').on(table.legalBasis),
+  activeIdx: index('data_processing_records_active_idx').on(table.isActive),
+}));
+
+/**
+ * Data Subject Requests
+ * GDPR data subject rights requests (access, erasure, portability, etc.)
+ */
+export const dataSubjectRequests = pgTable('data_subject_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  // Request type
+  requestType: varchar('request_type', { length: 50 }).notNull(), // access, erasure, portability, rectification, restriction, objection
+  
+  // Status
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, processing, completed, rejected
+  
+  // Request details
+  description: text('description'),
+  
+  // Processing
+  assignedTo: uuid('assigned_to').references(() => users.id, { onDelete: 'set null' }),
+  processedBy: uuid('processed_by').references(() => users.id, { onDelete: 'set null' }),
+  
+  // Response
+  responseNotes: text('response_notes'),
+  responseData: jsonb('response_data').default({}), // For access/portability requests
+  
+  // Timing (GDPR requires response within 30 days)
+  requestedAt: timestamp('requested_at').notNull().defaultNow(),
+  dueDate: timestamp('due_date').notNull(),
+  completedAt: timestamp('completed_at'),
+  
+  // Verification
+  identityVerified: boolean('identity_verified').notNull().default(false),
+  verifiedAt: timestamp('verified_at'),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('data_subject_requests_tenant_idx').on(table.tenantId),
+  userIdx: index('data_subject_requests_user_idx').on(table.userId),
+  statusIdx: index('data_subject_requests_status_idx').on(table.status),
+  requestTypeIdx: index('data_subject_requests_request_type_idx').on(table.requestType),
+  dueDateIdx: index('data_subject_requests_due_date_idx').on(table.dueDate),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -771,8 +1185,6 @@ export type Integration = typeof integrations.$inferSelect;
 export type NewIntegration = typeof integrations.$inferInsert;
 export type IntegrationCredential = typeof integrationCredentials.$inferSelect;
 export type NewIntegrationCredential = typeof integrationCredentials.$inferInsert;
-export type IntegrationAuditLog = typeof integrationAuditLogs.$inferSelect;
-export type NewIntegrationAuditLog = typeof integrationAuditLogs.$inferInsert;
 
 // Entity Types
 export type Tenant = typeof tenants.$inferSelect;
@@ -818,3 +1230,28 @@ export type NewOrganizationNotificationPreference = typeof organizationNotificat
 export type PushSubscription = typeof pushSubscriptions.$inferSelect;
 export type NewPushSubscription = typeof pushSubscriptions.$inferInsert;
 
+// Notification System Types
+export type NotificationTemplate = typeof notificationTemplates.$inferSelect;
+export type NewNotificationTemplate = typeof notificationTemplates.$inferInsert;
+export type Notification = typeof notifications.$inferSelect;
+export type NewNotification = typeof notifications.$inferInsert;
+export type NotificationDeliveryLog = typeof notificationDeliveryLogs.$inferSelect;
+export type NewNotificationDeliveryLog = typeof notificationDeliveryLogs.$inferInsert;
+export type NotificationQueueItem = typeof notificationQueue.$inferSelect;
+export type NewNotificationQueueItem = typeof notificationQueue.$inferInsert;
+export type SmsProviderConfig = typeof smsProviderConfigs.$inferSelect;
+export type NewSmsProviderConfig = typeof smsProviderConfigs.$inferInsert;
+export type EmailProviderConfig = typeof emailProviderConfigs.$inferSelect;
+export type NewEmailProviderConfig = typeof emailProviderConfigs.$inferInsert;
+
+// GDPR Consent Types
+export type ConsentType = typeof consentTypes.$inferSelect;
+export type NewConsentType = typeof consentTypes.$inferInsert;
+export type UserConsent = typeof userConsents.$inferSelect;
+export type NewUserConsent = typeof userConsents.$inferInsert;
+export type ConsentAuditLogEntry = typeof consentAuditLog.$inferSelect;
+export type NewConsentAuditLogEntry = typeof consentAuditLog.$inferInsert;
+export type DataProcessingRecord = typeof dataProcessingRecords.$inferSelect;
+export type NewDataProcessingRecord = typeof dataProcessingRecords.$inferInsert;
+export type DataSubjectRequest = typeof dataSubjectRequests.$inferSelect;
+export type NewDataSubjectRequest = typeof dataSubjectRequests.$inferInsert;

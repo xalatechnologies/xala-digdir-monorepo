@@ -77,6 +77,157 @@ export type AvailabilityEvent =
   | BlockDeletedEvent;
 
 // ============================================================================
+// Notification Event Types
+// ============================================================================
+
+export interface NotificationNewEvent {
+  type: 'notification:new';
+  id: string;
+  notificationType: string;
+  title: string;
+  message: string;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  actionUrl?: string;
+  metadata?: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface NotificationReadEvent {
+  type: 'notification:read';
+  id: string;
+}
+
+export interface NotificationDismissedEvent {
+  type: 'notification:dismissed';
+  id: string;
+}
+
+export interface NotificationCountEvent {
+  type: 'notification:count';
+  unreadCount: number;
+}
+
+export type NotificationEvent =
+  | NotificationNewEvent
+  | NotificationReadEvent
+  | NotificationDismissedEvent
+  | NotificationCountEvent;
+
+// ============================================================================
+// Notification WebSocket Connection Management
+// ============================================================================
+
+// Map of userId -> Set of WebSocket connections
+const notificationConnections = new Map<string, Set<WebSocket>>();
+
+/**
+ * Register a WebSocket connection for user notifications
+ */
+export function registerNotificationWebSocket(socket: WebSocket, userId: string): void {
+  if (!notificationConnections.has(userId)) {
+    notificationConnections.set(userId, new Set());
+  }
+  notificationConnections.get(userId)!.add(socket);
+
+  socket.on('close', () => {
+    const connections = notificationConnections.get(userId);
+    if (connections) {
+      connections.delete(socket);
+      if (connections.size === 0) {
+        notificationConnections.delete(userId);
+      }
+    }
+  });
+}
+
+/**
+ * Broadcast a notification event to a specific user
+ */
+export function broadcastNotificationToUser(userId: string, event: NotificationEvent): void {
+  const message = JSON.stringify({
+    ...event,
+    timestamp: new Date().toISOString(),
+  });
+
+  const userConnections = notificationConnections.get(userId);
+  if (userConnections) {
+    userConnections.forEach((socket) => {
+      try {
+        if (socket.readyState === 1) { // WebSocket.OPEN
+          socket.send(message);
+        }
+      } catch (err) {
+        // Ignore send errors
+      }
+    });
+  }
+}
+
+/**
+ * Broadcast a new notification to a user
+ */
+export function broadcastNewNotification(
+  userId: string,
+  notification: Omit<NotificationNewEvent, 'type'>
+): void {
+  broadcastNotificationToUser(userId, {
+    type: 'notification:new',
+    ...notification,
+  });
+}
+
+/**
+ * Broadcast notification read event to user
+ */
+export function broadcastNotificationRead(userId: string, notificationId: string): void {
+  broadcastNotificationToUser(userId, {
+    type: 'notification:read',
+    id: notificationId,
+  });
+}
+
+/**
+ * Broadcast notification dismissed event to user
+ */
+export function broadcastNotificationDismissed(userId: string, notificationId: string): void {
+  broadcastNotificationToUser(userId, {
+    type: 'notification:dismissed',
+    id: notificationId,
+  });
+}
+
+/**
+ * Broadcast updated unread count to user
+ */
+export function broadcastNotificationCount(userId: string, unreadCount: number): void {
+  broadcastNotificationToUser(userId, {
+    type: 'notification:count',
+    unreadCount,
+  });
+}
+
+/**
+ * Get the broadcast function for use in notification service
+ */
+export function getNotificationBroadcastFunction(): (userId: string, event: string, data: unknown) => void {
+  return (userId: string, event: string, data: unknown) => {
+    if (event === 'notification:new') {
+      const notification = data as Omit<NotificationNewEvent, 'type'>;
+      broadcastNewNotification(userId, notification);
+    } else if (event === 'notification:read') {
+      const { id } = data as { id: string };
+      broadcastNotificationRead(userId, id);
+    } else if (event === 'notification:dismissed') {
+      const { id } = data as { id: string };
+      broadcastNotificationDismissed(userId, id);
+    } else if (event === 'notification:count') {
+      const { unreadCount } = data as { unreadCount: number };
+      broadcastNotificationCount(userId, unreadCount);
+    }
+  };
+}
+
+// ============================================================================
 // Availability WebSocket Connection Management
 // ============================================================================
 
@@ -405,5 +556,37 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     });
   });
 
-  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/availability');
+  // WebSocket route for user-specific notifications
+  app.get('/ws/notifications/:userId', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
+    const { userId } = req.params as { userId: string };
+    console.log(`[WS] Client connected to /ws/notifications/${userId}`);
+
+    // Register for notification broadcasts for this user
+    registerNotificationWebSocket(socket, userId);
+
+    socket.send(JSON.stringify({
+      type: 'connected',
+      userId,
+      message: `Connected to notifications for user ${userId}`,
+      timestamp: new Date().toISOString(),
+    }));
+
+    // Handle incoming messages
+    socket.on('message', (data: Buffer) => {
+      try {
+        const message = JSON.parse(data.toString());
+        if (message.type === 'ping') {
+          socket.send(JSON.stringify({ type: 'pong', timestamp: new Date().toISOString() }));
+        }
+      } catch (err) {
+        // Ignore parse errors
+      }
+    });
+
+    socket.on('close', () => {
+      console.log(`[WS] Client disconnected from /ws/notifications/${userId}`);
+    });
+  });
+
+  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/availability, /ws/notifications/:userId');
 }

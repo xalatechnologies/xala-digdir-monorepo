@@ -9,7 +9,6 @@ import { eq, and } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import {
   integrationCredentials,
-  integrationAuditLogs,
   type IntegrationCredential,
   type NewIntegrationCredential,
 } from '../../database/schema';
@@ -18,6 +17,7 @@ import {
   getEncryptionService,
   type CredentialType,
 } from '../../core/encryption';
+import { getAuditService } from '../../core/audit/audit.service';
 
 /**
  * Input for creating a new credential
@@ -85,20 +85,19 @@ export interface CredentialInfo {
 }
 
 /**
- * Audit log input
+ * Audit context for credential operations
  */
-interface AuditLogInput {
+interface AuditContext {
   tenantId: string;
   integrationId?: string;
   credentialId?: string;
   action: string;
   actorId?: string;
-  actorEmail?: string;
   actorIp?: string;
   userAgent?: string;
   success: boolean;
   errorMessage?: string;
-  context?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 export class IntegrationCredentialsRepository {
@@ -142,7 +141,7 @@ export class IntegrationCredentialsRepository {
       action: 'create',
       actorId: input.createdBy,
       success: true,
-      context: { credentialType: input.credentialType, name: input.name },
+      metadata: { credentialType: input.credentialType, name: input.name },
     });
 
     return this.toCredentialInfo(credential, input.value);
@@ -211,7 +210,7 @@ export class IntegrationCredentialsRepository {
       action: input.value ? 'rotate' : 'update',
       actorId: input.updatedBy,
       success: true,
-      context: { fieldsUpdated: Object.keys(input) },
+      metadata: { fieldsUpdated: Object.keys(input) },
     });
 
     return this.toCredentialInfo(updated, newValue);
@@ -436,26 +435,30 @@ export class IntegrationCredentialsRepository {
   }
 
   /**
-   * Log an audit entry
+   * Log an audit entry using the central audit service
    */
-  private async logAudit(input: AuditLogInput): Promise<void> {
+  private async logAudit(input: AuditContext): Promise<void> {
     try {
-      await this.db.insert(integrationAuditLogs).values({
+      const auditService = getAuditService();
+      await auditService.log({
         tenantId: input.tenantId,
-        integrationId: input.integrationId,
-        credentialId: input.credentialId,
+        userId: input.actorId,
         action: input.action,
-        actorId: input.actorId,
-        actorEmail: input.actorEmail,
-        actorIp: input.actorIp,
+        resource: 'credential',
+        resourceId: input.credentialId,
+        severity: input.success ? 'info' : 'warning',
+        ipAddress: input.actorIp,
         userAgent: input.userAgent,
-        success: input.success,
-        errorMessage: input.errorMessage,
-        context: input.context ?? {},
+        metadata: {
+          integrationId: input.integrationId,
+          success: input.success,
+          errorMessage: input.errorMessage,
+          ...input.metadata,
+        },
       });
     } catch (error) {
       // Log but don't fail the operation if audit logging fails
-      console.error('Failed to log integration audit:', error);
+      console.error('Failed to log credential audit:', error);
     }
   }
 }

@@ -4,8 +4,19 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { LISTING_TYPE_OPTIONS, type ListingType } from '@digilist/client-sdk';
+import type { ListingType } from "../../../constants";
 import type { ListingQueryFilters, ViewMode } from '../types';
+
+// Listing type options for filtering
+const LISTING_TYPE_OPTIONS: Array<{ id: ListingType | 'ALL'; label: string }> = [
+  { id: 'ALL', label: 'Alle typer' },
+  { id: 'SPACE', label: 'Lokaler' },
+  { id: 'RESOURCE', label: 'Ressurser' },
+  { id: 'SERVICE', label: 'Tjenester' },
+  { id: 'EVENT', label: 'Arrangementer' },
+  { id: 'VEHICLE', label: 'Kjøretøy' },
+  { id: 'OTHER', label: 'Annet' },
+];
 
 export interface UseListingFiltersReturn {
   filters: ListingQueryFilters;

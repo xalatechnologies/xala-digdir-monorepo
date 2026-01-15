@@ -16,7 +16,8 @@ export type AuditAction =
 export type AuditResource =
   | 'booking' | 'listing' | 'user' | 'tenant' | 'organization'
   | 'conversation' | 'message' | 'allocation' | 'subscription'
-  | 'setting' | 'integration' | 'report' | 'auth';
+  | 'setting' | 'integration' | 'report' | 'auth'
+  | 'credential' | 'consent';
 
 export type AuditSeverity = 'debug' | 'info' | 'warning' | 'error' | 'critical';
 

@@ -179,8 +179,12 @@ export function LoginPage(): React.ReactElement {
       <LoginOption
         icon={<MicrosoftIcon />}
         title="Microsoft"
-        description="For ansatte med organisasjonskonto"
-        onClick={() => login('microsoft')}
+        description="Kommer snart"
+        disabled
+        onClick={() => {
+          // Microsoft login temporarily disabled
+          console.warn('Microsoft login is temporarily disabled');
+        }}
       />
     </LoginLayout>
   );

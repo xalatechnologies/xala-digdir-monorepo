@@ -7,8 +7,8 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useListing,
-  useCreateListing,
-  useUpdateListing,
+  useCreateRentalObject,
+  useUpdateRentalObject,
 } from '@digilist/client-sdk';
 import type { ListingType } from '@digilist/client-sdk';
 import type {
@@ -85,8 +85,8 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
   const { data: existingListing, isLoading: isLoadingListing } = useListing(listingId || '', {
     enabled: isEditMode,
   });
-  const createMutation = useCreateListing();
-  const updateMutation = useUpdateListing();
+  const createMutation = useCreateRentalObject();
+  const updateMutation = useUpdateRentalObject();
 
   // Local state
   const [currentStep, setCurrentStep] = useState(0);

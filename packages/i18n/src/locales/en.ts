@@ -954,4 +954,91 @@ export const en: Record<string, string> = {
   // Booking
   'sdk.booking.advanceDays': 'days in advance',
   'sdk.booking.standardCancellation': 'Standard cancellation policy',
+
+  // ============================================================================
+  // GDPR Consent
+  // ============================================================================
+  'gdpr.title': 'Privacy and Consent',
+  'gdpr.subtitle': 'We care about your privacy',
+  'gdpr.description': 'To use this service, you must accept our terms for processing personal data.',
+
+  // Consent Types
+  'gdpr.consentType.terms': 'Terms of Service',
+  'gdpr.consentType.terms.description': 'I accept the terms of service',
+  'gdpr.consentType.privacy': 'Privacy Policy',
+  'gdpr.consentType.privacy.description': 'I have read and understand the privacy policy',
+  'gdpr.consentType.marketing': 'Marketing',
+  'gdpr.consentType.marketing.description': 'I wish to receive marketing communications',
+  'gdpr.consentType.analytics': 'Analytics and Improvement',
+  'gdpr.consentType.analytics.description': 'I allow the use of analytics tools to improve the service',
+
+  // Consent Actions
+  'gdpr.accept': 'Accept',
+  'gdpr.acceptAll': 'Accept All',
+  'gdpr.acceptRequired': 'Accept Required',
+  'gdpr.decline': 'Decline',
+  'gdpr.save': 'Save Settings',
+  'gdpr.cancel': 'Cancel',
+  'gdpr.readMore': 'Read More',
+  'gdpr.required': 'Required',
+  'gdpr.optional': 'Optional',
+
+  // Consent Status
+  'gdpr.status.granted': 'Granted',
+  'gdpr.status.revoked': 'Revoked',
+  'gdpr.status.pending': 'Pending',
+  'gdpr.status.needsUpdate': 'Needs Update',
+
+  // Consent Popup
+  'gdpr.popup.title': 'We Need Your Consent',
+  'gdpr.popup.description': 'We use cookies and process personal data to provide you with the best experience. Please select your preferences below.',
+  'gdpr.popup.moreInfo': 'More Information',
+  'gdpr.popup.settings': 'Settings',
+
+  // Settings Page
+  'gdpr.settings.title': 'Privacy Settings',
+  'gdpr.settings.subtitle': 'Manage your consents and privacy settings',
+  'gdpr.settings.consentHistory': 'Consent History',
+  'gdpr.settings.dataRequests': 'My Data Requests',
+  'gdpr.settings.downloadData': 'Download My Data',
+  'gdpr.settings.deleteAccount': 'Delete My Account',
+
+  // Data Subject Requests
+  'gdpr.request.title': 'Request Data Access',
+  'gdpr.request.access': 'Access My Data',
+  'gdpr.request.access.description': 'Get a copy of all personal data we have about you',
+  'gdpr.request.erasure': 'Delete My Data',
+  'gdpr.request.erasure.description': 'Request deletion of all personal data (right to be forgotten)',
+  'gdpr.request.portability': 'Data Portability',
+  'gdpr.request.portability.description': 'Get your data in a machine-readable format',
+  'gdpr.request.rectification': 'Correct Data',
+  'gdpr.request.rectification.description': 'Request correction of inaccurate personal data',
+  'gdpr.request.restriction': 'Restrict Processing',
+  'gdpr.request.restriction.description': 'Request restriction on how we process your data',
+  'gdpr.request.objection': 'Object to Processing',
+  'gdpr.request.objection.description': 'Object to our processing of your personal data',
+
+  // Request Status
+  'gdpr.request.status.pending': 'Pending',
+  'gdpr.request.status.processing': 'Processing',
+  'gdpr.request.status.completed': 'Completed',
+  'gdpr.request.status.rejected': 'Rejected',
+  'gdpr.request.submitted': 'Your request has been submitted',
+  'gdpr.request.submittedDescription': 'We will process your request and respond within 30 days.',
+
+  // Audit Log
+  'gdpr.audit.title': 'Consent History',
+  'gdpr.audit.action.granted': 'Consent granted',
+  'gdpr.audit.action.revoked': 'Consent revoked',
+  'gdpr.audit.action.updated': 'Consent updated',
+  'gdpr.audit.action.expired': 'Consent expired',
+  'gdpr.audit.noRecords': 'No consent history',
+
+  // Legal Basis
+  'gdpr.legalBasis.consent': 'Consent',
+  'gdpr.legalBasis.contract': 'Contract Performance',
+  'gdpr.legalBasis.legalObligation': 'Legal Obligation',
+  'gdpr.legalBasis.vitalInterests': 'Vital Interests',
+  'gdpr.legalBasis.publicTask': 'Public Task',
+  'gdpr.legalBasis.legitimateInterests': 'Legitimate Interests',
 };

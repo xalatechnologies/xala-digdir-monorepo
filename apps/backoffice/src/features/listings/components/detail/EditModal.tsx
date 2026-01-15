@@ -16,7 +16,7 @@ import {
   Card,
   Select,
 } from '@xala/ds';
-import { useUpdateListing, type Listing } from '@digilist/client-sdk';
+import { useUpdateRentalObject, type Listing } from '@digilist/client-sdk';
 import { useToast } from '../../../../providers/ToastProvider';
 
 export interface EditModalProps {
@@ -61,7 +61,7 @@ const VISIBILITY_LABELS: Record<string, string> = {
  * ```
  */
 export function EditModal({ isOpen, onClose, listing, onSuccess }: EditModalProps) {
-  const updateMutation = useUpdateListing();
+  const updateMutation = useUpdateRentalObject();
   const toast = useToast();
 
   // Form state

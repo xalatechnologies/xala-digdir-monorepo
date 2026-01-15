@@ -15,7 +15,7 @@ import {
   ChevronLeftIcon,
   AlertTriangleIcon,
 } from '@xala/ds';
-import { useListingBySlug, useListing } from '@digilist/client-sdk';
+import { useRentalObjectBySlug, useListing } from '@digilist/client-sdk';
 import { DetailHeader } from './DetailHeader';
 import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
@@ -74,7 +74,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
   const isUuid = slug?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
 
   // Fetch listing data by slug or ID
-  const slugQuery = useListingBySlug(slug || '', {
+  const slugQuery = useRentalObjectBySlug(slug || '', {
     enabled: !!slug && !isUuid,
   });
 

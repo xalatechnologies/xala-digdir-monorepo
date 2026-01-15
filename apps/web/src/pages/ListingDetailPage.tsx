@@ -18,8 +18,8 @@ import {
 } from '@xala/ds';
 import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
 import {
-  useListing,
-  useListingBySlug,
+  useRentalObject,
+  useRentalObjectBySlug,
   type Listing as ApiListing,
 } from '@digilist/client-sdk';
 import {
@@ -201,8 +201,8 @@ export function ListingDetailPage(): React.ReactElement {
 
   // Fetch by ID if UUID, otherwise fetch by slug
   const { data: apiResponse, isLoading, error } = isUuid
-    ? useListing(params.id || '')
-    : useListingBySlug(params.id || '');
+    ? useRentalObject(params.id || '')
+    : useRentalObjectBySlug(params.id || '');
 
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = React.useState(false);

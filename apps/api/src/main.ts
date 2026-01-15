@@ -73,7 +73,12 @@ import { IdPortenAuthController } from './modules/auth/idporten.controller';
 import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { PushNotificationsController, PushNotificationsService, PushNotificationsRepository } from './modules/push-notifications';
-import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
+import {
+  NotificationSystemController,
+  NotificationService,
+  NotificationRepository,
+} from './modules/notification-system';
+import { registerWebSocketRoutes, getNotificationBroadcastFunction } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
 import { UserGroupController } from './modules/user-groups/user-group.controller';
@@ -89,6 +94,8 @@ import { ProfileController } from './modules/profile/profile.controller';
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
 // Phase 8: Vipps Webhooks
 import { VippsWebhookController } from './modules/webhooks/vipps-webhook.controller';
+// Phase 9: GDPR Consent
+import { GdprController, GdprService, GdprRepository } from './modules/gdpr';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -225,6 +232,31 @@ async function bootstrap() {
   container.registerFactory('PushNotificationsController', () =>
     new PushNotificationsController(container.resolve('PushNotificationsService'))
   );
+  
+  // Notification System (full notification system with templates, channels, delivery)
+  container.registerFactory('NotificationRepository', () =>
+    new NotificationRepository(db)
+  );
+  container.registerFactory('NotificationService', () =>
+    new NotificationService(
+      container.resolve('NotificationRepository'),
+      container.resolve('PushNotificationsRepository')
+    )
+  );
+  container.registerFactory('NotificationSystemController', () =>
+    new NotificationSystemController(container.resolve('NotificationService'))
+  );
+  
+  // GDPR Consent (consent management, data subject requests)
+  container.registerFactory('GdprRepository', () =>
+    new GdprRepository(db)
+  );
+  container.registerFactory('GdprService', () =>
+    new GdprService(container.resolve('GdprRepository'))
+  );
+  container.registerFactory('GdprController', () =>
+    new GdprController(container.resolve('GdprService'))
+  );
   console.log('✓ Controllers registered');
 
   // Load modules
@@ -300,15 +332,27 @@ async function bootstrap() {
     ReviewsController,
     // Phase 8: Vipps Webhooks
     VippsWebhookController,
+    // Phase 9: GDPR Consent
+    GdprController,
   ];
 
   // Create Fastify app with controllers
   const app = await createFastifyApp(controllers, { adapters });
   console.log('✓ REST routes registered');
 
+  // Register Notification System routes (custom registration)
+  const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
+  notificationSystemController.registerRoutes(app);
+  console.log('✓ Notification system routes registered');
+
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);
   console.log('✓ WebSocket routes registered');
+
+  // Wire up WebSocket broadcast to notification service for real-time delivery
+  const notificationService = container.resolve('NotificationService') as NotificationService;
+  notificationService.setWebSocketBroadcast(getNotificationBroadcastFunction());
+  console.log('✓ Notification WebSocket broadcast connected');
 
   // Register GraphQL (Mercurius)
   await app.register(mercurius, {

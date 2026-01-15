@@ -181,8 +181,12 @@ export function LoginPage(): React.ReactElement {
       <LoginOption
         icon={<MicrosoftIcon />}
         title={t('auth.microsoft')}
-        description={t('auth.microsoftDesc')}
-        onClick={() => login('microsoft')}
+        description={t('auth.microsoftComingSoon')}
+        disabled
+        onClick={() => {
+          // Microsoft login temporarily disabled
+          console.warn('Microsoft login is temporarily disabled');
+        }}
       />
     </LoginLayout>
   );

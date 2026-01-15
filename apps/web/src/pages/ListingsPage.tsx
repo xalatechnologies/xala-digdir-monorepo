@@ -27,10 +27,10 @@ import {
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import {
-  usePublicListings,
+  usePublicRentalObjects,
   usePublicCities,
   type ListingCardProjectionDTO,
-  type PublicListingParams,
+  type RentalObjectQueryParams,
 } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeListing } from '../providers';
@@ -105,10 +105,10 @@ export function ListingsPage(): React.ReactElement {
   const [isSearching, setIsSearching] = React.useState(false);
 
   // API query params - load all listings at once for client-side filtering
-  const [queryParams] = React.useState<PublicListingParams>({ limit: 100 });
+  const [queryParams] = React.useState<RentalObjectQueryParams>({ limit: 100 });
 
   // Fetch listings from real API - returns ListingCardProjectionDTO[] directly
-  const { data: listingsResponse, isLoading, error } = usePublicListings(queryParams);
+  const { data: listingsResponse, isLoading, error } = usePublicRentalObjects(queryParams);
 
   // Fetch cities for location filter
   const { data: citiesResponse } = usePublicCities();

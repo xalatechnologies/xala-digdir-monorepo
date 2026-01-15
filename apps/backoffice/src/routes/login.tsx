@@ -44,7 +44,7 @@ export interface FlowContextExpiredState {
 }
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading: authLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, restoreFlowContext, hasStoredContext } = useAuth();
   const { isInitializing, getHomeRoute } = useBackofficeRole();
   const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
@@ -194,8 +194,12 @@ export function LoginPage(): React.ReactElement {
       <LoginOption
         icon={<MicrosoftIcon />}
         title={t('auth.microsoft')}
-        description={t('auth.microsoftDesc')}
-        onClick={() => login('microsoft')}
+        description={t('auth.microsoftComingSoon')}
+        disabled
+        onClick={() => {
+          // Microsoft login temporarily disabled
+          console.warn('Microsoft login is temporarily disabled');
+        }}
       />
     </LoginLayout>
   );

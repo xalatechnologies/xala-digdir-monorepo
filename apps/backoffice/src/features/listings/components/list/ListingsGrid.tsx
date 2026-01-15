@@ -9,7 +9,6 @@ import { Paragraph, Spinner, ListingCard, ListingGrid as DSListingGrid, ListingS
 import { useNavigate } from 'react-router-dom';
 import { ListingRowActions } from './ListingRowActions';
 import type { Listing, ListingStatus } from '@digilist/client-sdk';
-import { transformListing } from '@digilist/client-sdk';
 
 interface ListingsGridProps {
   listings: Listing[];
@@ -72,8 +71,6 @@ export function ListingsGrid({
   return (
     <DSListingGrid minCardWidth={320} gap="var(--ds-spacing-4)">
       {listings.map((listing) => {
-        // Transform raw Listing to UiListing for consistent data display
-        const uiListing = transformListing(listing);
 
         return (
           <div key={listing.id} style={{ position: 'relative' }}>
@@ -138,31 +135,31 @@ export function ListingsGrid({
 
             {/* Reusable ListingCard from DS - using transformed UiListing */}
             <ListingCard
-              id={uiListing.id}
-              name={uiListing.name}
-              type={uiListing.type}
-              listingType={uiListing.listingType}
-              location={uiListing.location || '-'}
-              description={uiListing.description}
-              image={uiListing.image}
-              facilities={uiListing.facilities}
-              moreFacilities={uiListing.moreFacilities}
-              {...(uiListing.capacity > 0 ? { capacity: uiListing.capacity } : {})}
-              {...(uiListing.price > 0 ? { price: uiListing.price } : {})}
-              priceUnit={uiListing.priceUnit}
-              currency={uiListing.currency}
+              id={listing.id}
+              name={listing.name}
+              type={listing.type}
+              listingType={listing.listingType}
+              location={listing.location || '-'}
+              description={listing.description}
+              image={listing.image}
+              facilities={listing.facilities}
+              moreFacilities={listing.moreFacilities}
+              {...(listing.capacity > 0 ? { capacity: listing.capacity } : {})}
+              {...(listing.price > 0 ? { price: listing.price } : {})}
+              priceUnit={listing.priceUnit}
+              currency={listing.currency}
               onClick={() => handleCardClick(listing.id, listing.slug)}
               imageHeight={200}
               showTypeBadge={false}
               showFavoriteButton={false}
               showShareButton={false}
               showRating={false}
-              showPrice={uiListing.price > 0}
+              showPrice={listing.price > 0}
               showListingType
-              showCapacity={uiListing.capacity > 0}
+              showCapacity={listing.capacity > 0}
               showLocation
               showDescription
-              showFacilities={uiListing.facilities.length > 0}
+              showFacilities={listing.facilities.length > 0}
               maxFacilities={3}
             />
           </div>

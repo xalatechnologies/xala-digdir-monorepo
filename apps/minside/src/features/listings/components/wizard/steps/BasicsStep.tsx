@@ -4,7 +4,8 @@
  */
 
 import { Textfield, Select, Paragraph, Heading, Label, Textarea } from '@xala/ds';
-import { LISTING_TYPE_OPTIONS } from '@digilist/client-sdk';
+import { LISTING_TYPE_OPTIONS } from "@digilist/client-sdk";
+import { LISTING_TYPE_OPTIONS } from "../../constants";
 import type { BackofficeListing, BackofficeListingType } from '../../../types';
 
 export interface BasicsStepProps {

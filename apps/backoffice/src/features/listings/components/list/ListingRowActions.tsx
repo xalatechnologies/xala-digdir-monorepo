@@ -14,10 +14,10 @@ import {
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import {
-  usePublishListing,
-  useArchiveListing,
-  useDeleteListing,
-  useDuplicateListing,
+  usePublishRentalObject,
+  useArchiveRentalObject,
+  useDeleteRentalObject,
+  useDuplicateRentalObject,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
@@ -45,10 +45,10 @@ export function ListingRowActions({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
 
-  const publishMutation = usePublishListing();
-  const archiveMutation = useArchiveListing();
-  const deleteMutation = useDeleteListing();
-  const duplicateMutation = useDuplicateListing();
+  const publishMutation = usePublishRentalObject();
+  const archiveMutation = useArchiveRentalObject();
+  const deleteMutation = useDeleteRentalObject();
+  const duplicateMutation = useDuplicateRentalObject();
 
   const handleView = () => {
     // Use slug if available, fallback to ID
