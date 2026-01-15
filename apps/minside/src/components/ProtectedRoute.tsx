@@ -1,17 +1,21 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner, Heading, Paragraph } from '@xala/ds';
 import { useAuth, type BackofficeRole } from '../hooks/useAuth';
+import { useAccountContext, type DashboardContext } from '../providers/AccountContextProvider';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: BackofficeRole;
+  requiredContext?: DashboardContext;
 }
 
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, requiredRole, requiredContext }: ProtectedRouteProps) {
   const { isLoading, isAuthenticated, checkRole } = useAuth();
+  const { accountType, isLoadingOrganizations } = useAccountContext();
   const location = useLocation();
 
-  if (isLoading) {
+  // Show loading state while auth or account context is being determined
+  if (isLoading || (requiredContext && isLoadingOrganizations)) {
     return (
       <div
         style={{
@@ -56,6 +60,48 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
           Du har ikke tilgang til denne siden.
           <br />
           Kontakt administrator hvis du mener dette er feil.
+        </Paragraph>
+      </div>
+    );
+  }
+
+  // Context validation: Check if current account context matches required context
+  if (requiredContext && accountType !== requiredContext) {
+    const contextMessages: Record<DashboardContext, { title: string; description: string }> = {
+      personal: {
+        title: 'Personlig konto påkrevd',
+        description: 'Denne siden er kun tilgjengelig i personlig modus. Bytt til personlig konto for å få tilgang.',
+      },
+      organization: {
+        title: 'Organisasjonskonto påkrevd',
+        description: 'Denne siden er kun tilgjengelig for organisasjoner. Velg en organisasjon for å få tilgang.',
+      },
+    };
+
+    const message = contextMessages[requiredContext];
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          gap: 'var(--ds-spacing-4)',
+          padding: 'var(--ds-spacing-6)',
+          textAlign: 'center',
+        }}
+      >
+        <Heading
+          level={1}
+          data-size="lg"
+          style={{ color: 'var(--ds-color-warning-text-default)' }}
+        >
+          {message.title}
+        </Heading>
+        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          {message.description}
         </Paragraph>
       </div>
     );
