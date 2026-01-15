@@ -1,0 +1,177 @@
+# Cursor AI Rules for apps/api
+
+> **Extends:** [Root .cursorrules](../../.cursorrules)
+
+## App Context
+
+This is the **Fastify API server** for Xala/Digilist Platform.
+
+**Critical:** All mutations require audit logging. All queries must be tenant-scoped.
+
+## API-Specific Rules
+
+### 1. RFC 7807 Error Format (REQUIRED)
+```typescript
+// ✅ CORRECT - RFC 7807 compliant
+return reply.status(404).send({
+  type: '/errors/not-found',
+  title: 'Resource Not Found',
+  status: 404,
+  detail: `Listing with ID ${id} not found`,
+});
+
+// ❌ WRONG - Non-compliant error
+return reply.status(404).send({ error: 'Not found' });
+```
+
+### 2. Audit Logging (REQUIRED)
+```typescript
+// ✅ CORRECT - Audit all mutations
+import { auditLog } from '../utils/audit';
+
+async function updateResource(request, reply) {
+  const resource = await db.update(resources)
+    .set(updates)
+    .where(eq(resources.id, id));
+
+  await auditLog({
+    action: 'resource:update',
+    resourceType: 'resource',
+    resourceId: id,
+    userId: request.user.id,
+    tenantId: request.tenant.id,
+    changes: updates,
+  });
+
+  return resource;
+}
+```
+
+### 3. Tenant Isolation (REQUIRED)
+```typescript
+// ✅ CORRECT - Tenant-scoped query
+const listings = await db.select()
+  .from(listings)
+  .where(
+    and(
+      eq(listings.tenantId, request.tenant.id),
+      eq(listings.userId, request.user.id)
+    )
+  );
+
+// ❌ WRONG - No tenant isolation
+const listings = await db.select().from(listings);
+```
+
+### 4. Input Validation (REQUIRED)
+```typescript
+// ✅ CORRECT - Zod validation
+import { z } from 'zod';
+
+const createSchema = z.object({
+  title: z.string().min(3).max(200),
+  price: z.number().positive(),
+});
+
+const data = createSchema.parse(request.body);
+```
+
+### 5. Rate Limiting
+```typescript
+// ✅ REQUIRED for user-facing endpoints
+fastify.route({
+  method: 'POST',
+  url: '/api/bookings',
+  config: {
+    rateLimit: {
+      max: 10,
+      timeWindow: '1 minute',
+    },
+  },
+  handler: createBooking,
+});
+```
+
+## File Organization
+
+```
+src/
+├── modules/              # Feature modules
+│   ├── auth/
+│   ├── listings/
+│   ├── bookings/
+│   └── users/
+├── db/
+│   ├── schema/           # Drizzle schemas
+│   └── migrations/       # Database migrations
+├── middleware/           # Fastify middleware
+├── websocket/            # WebSocket server
+└── main.ts               # Entry point
+```
+
+## Database (Drizzle ORM)
+
+```typescript
+// Define schema
+export const listings = pgTable('listings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+});
+
+// Query with Drizzle
+const listings = await db.select()
+  .from(listings)
+  .where(eq(listings.tenantId, tenantId));
+```
+
+## WebSocket Events
+
+```typescript
+import { websocketServer } from '../websocket';
+
+// Broadcast event
+websocketServer.broadcast({
+  event: 'booking:created',
+  tenantId: booking.tenantId,
+  data: booking,
+});
+```
+
+## Testing
+
+- Unit tests: Co-located `*.test.ts`
+- E2E tests: `tests/e2e/`
+
+## Common Mistakes to Avoid
+
+❌ Missing audit logging for mutations
+❌ Missing tenant isolation in queries
+❌ Non-RFC 7807 error responses
+❌ Missing input validation
+❌ Missing rate limiting
+❌ Hardcoded tenant IDs or user IDs
+❌ No WebSocket events for real-time updates
+
+## Required Middleware
+
+- `authMiddleware` - JWT validation
+- `tenantMiddleware` - Tenant isolation
+- `auditMiddleware` - Audit logging
+- `errorMiddleware` - RFC 7807 errors
+- `rateLimitMiddleware` - Rate limiting
+
+## Database Commands
+
+```bash
+pnpm db:generate    # Generate migrations
+pnpm db:migrate     # Run migrations
+pnpm db:seed        # Seed data
+pnpm db:studio      # Open GUI
+```
+
+## See Also
+
+- [CLAUDE.md](./CLAUDE.md) - Full context
+- [AGENTS.md](./AGENTS.md) - Commands
+- [Root CLAUDE.md](../../CLAUDE.md) - Architecture rules
