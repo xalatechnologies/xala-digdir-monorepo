@@ -25,6 +25,7 @@ export interface AccountContextState {
   organizations: Organization[];
   isLoadingOrganizations: boolean;
   hasSelectedAccount: boolean;
+  rememberChoice: boolean;
 }
 
 export interface AccountContextValue extends AccountContextState {
@@ -55,6 +56,7 @@ const STORAGE_KEYS = {
   ACCOUNT_TYPE: 'minside_account_type',
   SELECTED_ORG_ID: 'minside_selected_organization',
   HAS_SELECTED: 'minside_has_selected_account',
+  REMEMBER_CHOICE: 'minside_remember_choice',
 } as const;
 
 // =============================================================================
@@ -103,6 +105,12 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
       return true;
     }
+    return stored === 'true';
+  });
+
+  // State: Remember choice preference for account selection
+  const [rememberChoice, setRememberChoice] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE);
     return stored === 'true';
   });
 
@@ -184,6 +192,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       organizations,
       isLoadingOrganizations,
       hasSelectedAccount,
+      rememberChoice,
       switchToPersonal,
       switchToOrganization,
       getActiveAccount,
@@ -195,6 +204,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       organizations,
       isLoadingOrganizations,
       hasSelectedAccount,
+      rememberChoice,
     ]
   );
 
