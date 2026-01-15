@@ -16,10 +16,8 @@ export type {
   ResumeFlowResult,
 } from './auth.service';
 
-// Listings
-export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
-
-// Rental Objects (Utleieobjekter)
+// Rental Objects (Utleieobjekter) - PRIMARY
+// These are the main services for rental object operations
 export {
   RentalObjectService,
   PublicRentalObjectService,
@@ -27,7 +25,15 @@ export {
   publicRentalObjectService,
   type CategoryInfo,
   type SubcategoryInfo,
+  type TimeModeInfo,
 } from './rental-object.service';
+
+/**
+ * Listing services - DEPRECATED
+ * @deprecated Use RentalObjectService and PublicRentalObjectService instead.
+ * These services are maintained for backward compatibility only.
+ */
+export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
 // Bookings
 export {

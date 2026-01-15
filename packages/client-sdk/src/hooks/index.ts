@@ -34,7 +34,54 @@ export {
   type UseFlowContextReturn,
 } from './use-flow-context';
 
-// Listing hooks
+// Rental Object hooks (Utleieobjekter) - PRIMARY
+// These are the main hooks for rental object operations
+export {
+  rentalObjectKeys,
+  // List hooks
+  useRentalObjects,
+  useRentalObjectsByCategory,
+  useRentalObjectsList,
+  // Detail hooks
+  useRentalObject,
+  useRentalObjectBySlug,
+  // Category hooks
+  useRentalObjectCategories,
+  useRentalObjectSubcategories,
+  useBookingTimeModes,
+  // Mutation hooks
+  useCreateRentalObject,
+  useUpdateRentalObject,
+  useDeleteRentalObject,
+  usePublishRentalObject,
+  useArchiveRentalObject,
+  useUnpublishRentalObject,
+  useRestoreRentalObject,
+  useDuplicateRentalObject,
+  // Availability & Stats hooks
+  useRentalObjectAvailability,
+  useRentalObjectStats,
+  useRentalObjectCalendarConfig,
+  // Public hooks (no auth)
+  usePublicRentalObjects,
+  usePublicRentalObjectsList,
+  usePublicRentalObject,
+  usePublicRentalObjectBySlug,
+  usePublicRentalObjectAvailability,
+  usePublicRentalObjectCategories,
+  usePublicCities,
+  usePublicMunicipalities,
+  useFeaturedRentalObjects,
+  // Media hooks
+  useUploadRentalObjectMedia,
+  useDeleteRentalObjectMedia,
+} from './use-rental-objects';
+
+/**
+ * Listing hooks - DEPRECATED
+ * @deprecated Use rental object hooks instead (useRentalObjects, useRentalObject, etc.)
+ * These hooks are maintained for backward compatibility only.
+ */
 export {
   useListings,
   useListing,
@@ -55,33 +102,11 @@ export {
   usePublicUiListing,
   usePublicAvailability,
   usePublicCategories,
-  usePublicCities,
-  usePublicMunicipalities,
+  // Note: usePublicCities and usePublicMunicipalities are now in rental-objects
   useFeaturedListings,
   useUploadListingMedia,
   useDeleteListingMedia
 } from './use-listings';
-
-// Rental Object hooks (Utleieobjekter)
-export {
-  rentalObjectKeys,
-  useRentalObjects,
-  useRentalObjectsByCategory,
-  usePublicRentalObjects,
-  useRentalObject,
-  useRentalObjectBySlug,
-  useRentalObjectCategories,
-  useRentalObjectSubcategories,
-  useCreateRentalObject,
-  useUpdateRentalObject,
-  useDeleteRentalObject,
-  usePublishRentalObject,
-  useArchiveRentalObject,
-  useUnpublishRentalObject,
-  useRestoreRentalObject,
-  useDuplicateRentalObject,
-  useRentalObjectsList,
-} from './use-rental-objects';
 
 // Booking hooks
 export {

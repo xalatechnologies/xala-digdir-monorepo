@@ -1,10 +1,21 @@
 /**
  * Listing Types
- * Single Responsibility: All listing-related type definitions
+ * 
+ * @deprecated This file is deprecated. Use rental-object.ts instead.
+ * 
+ * Migration guide:
+ * - Listing -> RentalObject
+ * - ListingV2 -> RentalObject
+ * - CreateListingDTO -> CreateRentalObjectDTO
+ * - UpdateListingDTO -> UpdateRentalObjectDTO
+ * - ListingQueryParams -> RentalObjectQueryParams
+ * - toUiListing -> toUiRentalObject
+ * 
+ * The "listing" terminology is deprecated in favor of "rental object" (utleieobjekt)
+ * to better reflect the domain model of municipal facility/equipment rental.
  */
 
 import type { 
-  BaseEntity, 
   TenantEntity, 
   ListingType, 
   ListingStatus, 

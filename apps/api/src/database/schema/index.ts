@@ -274,6 +274,92 @@ export const integrations = pgTable('integrations', {
   tenantProviderUnique: uniqueIndex('integrations_tenant_provider_unique').on(table.tenantId, table.provider),
 }));
 
+/**
+ * Integration Credentials - Encrypted storage for API keys, secrets, certificates
+ * 
+ * Security model:
+ * - All sensitive values are encrypted at rest using AES-256-GCM
+ * - Encryption key is derived from INTEGRATION_ENCRYPTION_KEY env var
+ * - Each credential has its own IV for encryption
+ * - Audit trail: who created/updated credentials and when
+ * - Credentials are never logged or exposed in API responses
+ */
+export const integrationCredentials = pgTable('integration_credentials', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  integrationId: uuid('integration_id').notNull().references(() => integrations.id, { onDelete: 'cascade' }),
+  
+  // Credential identification
+  credentialType: varchar('credential_type', { length: 50 }).notNull(), // 'api_key', 'client_secret', 'certificate', 'oauth_token', 'webhook_secret'
+  name: varchar('name', { length: 100 }).notNull(), // Human-readable name, e.g., 'Production API Key'
+  
+  // Encrypted value storage
+  encryptedValue: text('encrypted_value').notNull(), // AES-256-GCM encrypted value
+  encryptionIv: varchar('encryption_iv', { length: 32 }).notNull(), // Initialization vector (hex encoded)
+  encryptionTag: varchar('encryption_tag', { length: 32 }).notNull(), // Authentication tag (hex encoded)
+  encryptionVersion: integer('encryption_version').notNull().default(1), // For key rotation support
+  
+  // Metadata (non-sensitive)
+  expiresAt: timestamp('expires_at'), // For tokens/certs with expiration
+  lastUsedAt: timestamp('last_used_at'), // Track usage for security monitoring
+  lastRotatedAt: timestamp('last_rotated_at'), // Track key rotation
+  isActive: boolean('is_active').notNull().default(true),
+  
+  // Audit trail
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+  
+  // Additional metadata (non-sensitive config)
+  metadata: jsonb('metadata').default({}), // e.g., { environment: 'production', scope: 'read_write' }
+}, (table) => ({
+  tenantIdx: index('integration_credentials_tenant_idx').on(table.tenantId),
+  integrationIdx: index('integration_credentials_integration_idx').on(table.integrationId),
+  typeIdx: index('integration_credentials_type_idx').on(table.credentialType),
+  activeIdx: index('integration_credentials_active_idx').on(table.isActive),
+  expiresIdx: index('integration_credentials_expires_idx').on(table.expiresAt),
+  integrationTypeUnique: uniqueIndex('integration_credentials_integration_type_unique').on(
+    table.integrationId, 
+    table.credentialType,
+    table.name
+  ),
+}));
+
+/**
+ * Integration Audit Log - Track all credential access and changes
+ * Separate from main audit_logs for security isolation
+ */
+export const integrationAuditLogs = pgTable('integration_audit_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  integrationId: uuid('integration_id').references(() => integrations.id, { onDelete: 'set null' }),
+  credentialId: uuid('credential_id').references(() => integrationCredentials.id, { onDelete: 'set null' }),
+  
+  // Action details
+  action: varchar('action', { length: 50 }).notNull(), // 'create', 'read', 'update', 'delete', 'rotate', 'test', 'use'
+  actorId: uuid('actor_id').references(() => users.id, { onDelete: 'set null' }),
+  actorEmail: varchar('actor_email', { length: 255 }), // Preserved even if user deleted
+  actorIp: varchar('actor_ip', { length: 45 }), // IPv4 or IPv6
+  userAgent: text('user_agent'),
+  
+  // Result
+  success: boolean('success').notNull().default(true),
+  errorMessage: text('error_message'),
+  
+  // Context (non-sensitive)
+  context: jsonb('context').default({}), // e.g., { reason: 'scheduled_rotation', triggered_by: 'system' }
+  
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('integration_audit_logs_tenant_idx').on(table.tenantId),
+  integrationIdx: index('integration_audit_logs_integration_idx').on(table.integrationId),
+  credentialIdx: index('integration_audit_logs_credential_idx').on(table.credentialId),
+  actionIdx: index('integration_audit_logs_action_idx').on(table.action),
+  actorIdx: index('integration_audit_logs_actor_idx').on(table.actorId),
+  timestampIdx: index('integration_audit_logs_timestamp_idx').on(table.timestamp),
+}));
+
 // ============================================================================
 // Listings (Rental Objects / Utleieobjekter)
 // ============================================================================
@@ -579,6 +665,10 @@ export type SystemConfiguration = typeof systemConfigurations.$inferSelect;
 export type NewSystemConfiguration = typeof systemConfigurations.$inferInsert;
 export type Integration = typeof integrations.$inferSelect;
 export type NewIntegration = typeof integrations.$inferInsert;
+export type IntegrationCredential = typeof integrationCredentials.$inferSelect;
+export type NewIntegrationCredential = typeof integrationCredentials.$inferInsert;
+export type IntegrationAuditLog = typeof integrationAuditLogs.$inferSelect;
+export type NewIntegrationAuditLog = typeof integrationAuditLogs.$inferInsert;
 
 // Entity Types
 export type Tenant = typeof tenants.$inferSelect;

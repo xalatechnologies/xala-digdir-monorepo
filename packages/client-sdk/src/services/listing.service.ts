@@ -1,6 +1,16 @@
 /**
  * Listing Service
- * Single Responsibility: Handle all listing-related API operations
+ * 
+ * @deprecated This service is deprecated. Use RentalObjectService instead.
+ * 
+ * Migration guide:
+ * - ListingService -> RentalObjectService
+ * - PublicListingService -> PublicRentalObjectService
+ * - listingService -> rentalObjectService
+ * - publicListingService -> publicRentalObjectService
+ * 
+ * The "listing" terminology is deprecated in favor of "rental object" (utleieobjekt)
+ * to better reflect the domain model of municipal facility/equipment rental.
  */
 
 import { BaseService } from './base.service';

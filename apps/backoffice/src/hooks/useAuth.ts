@@ -11,7 +11,7 @@ export type { EffectiveBackofficeRole } from '../lib/capabilities';
  * Legacy role type for backward compatibility.
  * Use EffectiveBackofficeRole for new implementations.
  */
-export type BackofficeRole = 'admin' | 'saksbehandler';
+export type BackofficeRole = 'super_admin' | 'admin' | 'saksbehandler';
 
 /**
  * Backoffice-specific user type.

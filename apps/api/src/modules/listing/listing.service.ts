@@ -246,5 +246,74 @@ export class ListingService {
   async getStats(listingId: string): Promise<any> {
     return this.repository.getStats(listingId);
   }
+
+  /**
+   * Unpublish rental object (set to draft)
+   */
+  async unpublish(id: string): Promise<RentalObject> {
+    const listing = await this.repository.update(id, { status: 'draft' });
+    this.adapters?.log?.info('Rental object unpublished', { id });
+    
+    getAuditService().log({
+      tenantId: listing.tenantId,
+      action: 'unpublish',
+      resource: 'rental-object',
+      resourceId: id,
+      metadata: { newStatus: 'draft' },
+    });
+    
+    return listing as RentalObject;
+  }
+
+  /**
+   * Restore archived rental object (set to draft)
+   */
+  async restore(id: string): Promise<RentalObject> {
+    const listing = await this.repository.update(id, { status: 'draft' });
+    this.adapters?.log?.info('Rental object restored', { id });
+    
+    getAuditService().log({
+      tenantId: listing.tenantId,
+      action: 'restore',
+      resource: 'rental-object',
+      resourceId: id,
+      metadata: { newStatus: 'draft', previousStatus: 'archived' },
+    });
+    
+    return listing as RentalObject;
+  }
+
+  /**
+   * Get calendar configuration for rental object
+   */
+  async getCalendarConfig(listingId: string): Promise<any> {
+    const listing = await this.findByIdOrFail(listingId);
+    
+    // Build calendar config based on rental object settings
+    return {
+      rentalObjectId: listing.id,
+      rentalObjectName: listing.name,
+      granularity: listing.timeMode === 'ALL_DAY' ? 'DAY' : 'HOUR',
+      timezone: 'Europe/Oslo',
+      slotDurationMinutes: listing.timeMode === 'SLOT' ? 60 : 30,
+      allowSameDayBooking: true,
+      bookingModes: [
+        {
+          mode: 'single',
+          enabled: true,
+          labelKey: 'booking.mode.single',
+          constraints: {},
+        },
+      ],
+      defaultMode: 'single',
+      availableActions: ['VIEW', 'BOOK'],
+      permissions: {
+        canBook: true,
+        canReserve: false,
+        canViewPricing: true,
+        canManageAvailability: false,
+      },
+    };
+  }
 }
 

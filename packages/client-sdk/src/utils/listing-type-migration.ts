@@ -1,14 +1,23 @@
 /**
- * Listing Type Migration Utilities
+ * Rental Object Migration Utilities
  * 
- * This file provides utilities for migrating from the legacy ListingType
- * system to the new RentalObjectCategory (4-category) system.
+ * This file provides utilities for migrating from legacy terminology and types:
  * 
- * @deprecated These utilities are for migration purposes only.
- * Use RentalObjectCategory directly in new code.
+ * 1. TERMINOLOGY MIGRATION:
+ *    - "Listing" -> "RentalObject" (utleieobjekt)
+ *    - /api/listings -> /api/rental-objects
+ *    - ListingService -> RentalObjectService
+ *    - useListings -> useRentalObjects
+ * 
+ * 2. TYPE/CATEGORY MIGRATION:
+ *    - ListingType (SPACE, RESOURCE, etc.) -> RentalObjectCategory (4 categories)
+ *    - Deprecated 6-type system -> New 4-category system
+ * 
+ * The "rental object" terminology better reflects the domain model of 
+ * Norwegian municipal facility/equipment rental (utleie av kommunale anlegg).
  */
 
-import type { ListingType, ListingCategory, BookingTimeMode } from '../types/enums';
+import type { ListingType, BookingTimeMode } from '../types/enums';
 import type { RentalObjectCategory } from '../types/rental-object';
 
 // =============================================================================
@@ -164,3 +173,93 @@ export const CATEGORY_ICONS: Record<RentalObjectCategory, string> = {
   KJORETOY_OG_TRANSPORT: 'car',
   OPPLEVELSER_OG_ARRANGEMENT: 'calendar',
 };
+
+// =============================================================================
+// API Endpoint Migration
+// =============================================================================
+
+/**
+ * New API endpoints (preferred)
+ */
+export const RENTAL_OBJECT_ENDPOINTS = {
+  base: '/api/rental-objects',
+  byId: (id: string) => `/api/rental-objects/${id}`,
+  bySlug: (slug: string) => `/api/rental-objects/slug/${slug}`,
+  availability: (id: string) => `/api/rental-objects/${id}/availability`,
+  calendarConfig: (id: string) => `/api/rental-objects/${id}/calendar-config`,
+  stats: (id: string) => `/api/rental-objects/${id}/stats`,
+  media: (id: string) => `/api/rental-objects/${id}/media`,
+  publish: (id: string) => `/api/rental-objects/${id}/publish`,
+  unpublish: (id: string) => `/api/rental-objects/${id}/unpublish`,
+  archive: (id: string) => `/api/rental-objects/${id}/archive`,
+  restore: (id: string) => `/api/rental-objects/${id}/restore`,
+  duplicate: (id: string) => `/api/rental-objects/${id}/duplicate`,
+} as const;
+
+/**
+ * Legacy API endpoints (deprecated)
+ * @deprecated Use RENTAL_OBJECT_ENDPOINTS instead
+ */
+export const LEGACY_LISTING_ENDPOINTS = {
+  base: '/api/listings',
+  byId: (id: string) => `/api/listings/${id}`,
+  bySlug: (slug: string) => `/api/listings/slug/${slug}`,
+} as const;
+
+// =============================================================================
+// Import/Hook Migration Guide
+// =============================================================================
+
+/**
+ * Migration mapping for hooks
+ * Use this as a reference when migrating from listing to rental object hooks
+ */
+export const HOOK_MIGRATION_MAP = {
+  // List hooks
+  useListings: 'useRentalObjects',
+  usePublicListings: 'usePublicRentalObjects',
+  useFeaturedListings: 'useFeaturedRentalObjects',
+  // Detail hooks
+  useListing: 'useRentalObject',
+  useListingBySlug: 'useRentalObjectBySlug',
+  usePublicListing: 'usePublicRentalObject',
+  // CRUD hooks
+  useCreateListing: 'useCreateRentalObject',
+  useUpdateListing: 'useUpdateRentalObject',
+  useDeleteListing: 'useDeleteRentalObject',
+  usePublishListing: 'usePublishRentalObject',
+  useUnpublishListing: 'useUnpublishRentalObject',
+  useArchiveListing: 'useArchiveRentalObject',
+  useRestoreListing: 'useRestoreRentalObject',
+  useDuplicateListing: 'useDuplicateRentalObject',
+  // Stats & Availability
+  useListingAvailability: 'useRentalObjectAvailability',
+  useListingStats: 'useRentalObjectStats',
+  // Media
+  useUploadListingMedia: 'useUploadRentalObjectMedia',
+  useDeleteListingMedia: 'useDeleteRentalObjectMedia',
+} as const;
+
+/**
+ * Migration mapping for services
+ */
+export const SERVICE_MIGRATION_MAP = {
+  ListingService: 'RentalObjectService',
+  PublicListingService: 'PublicRentalObjectService',
+  listingService: 'rentalObjectService',
+  publicListingService: 'publicRentalObjectService',
+} as const;
+
+/**
+ * Migration mapping for types
+ */
+export const TYPE_MIGRATION_MAP = {
+  Listing: 'RentalObject',
+  ListingV2: 'RentalObject',
+  CreateListingDTO: 'CreateRentalObjectDTO',
+  UpdateListingDTO: 'UpdateRentalObjectDTO',
+  ListingQueryParams: 'RentalObjectQueryParams',
+  ListingAvailability: 'RentalObjectAvailability',
+  ListingStats: 'RentalObjectStats',
+  UiListing: 'UiRentalObject',
+} as const;

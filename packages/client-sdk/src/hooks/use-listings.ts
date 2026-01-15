@@ -1,6 +1,21 @@
 /**
  * Listing Hooks
- * Single Responsibility: React Query hooks for listings
+ * 
+ * @deprecated This file is deprecated. Use use-rental-objects.ts instead.
+ * 
+ * Migration guide:
+ * - useListings -> useRentalObjects
+ * - useListing -> useRentalObject
+ * - useCreateListing -> useCreateRentalObject
+ * - useUpdateListing -> useUpdateRentalObject
+ * - useDeleteListing -> useDeleteRentalObject
+ * - usePublishListing -> usePublishRentalObject
+ * - useArchiveListing -> useArchiveRentalObject
+ * - usePublicListings -> usePublicRentalObjects
+ * - useUploadListingMedia -> useUploadRentalObjectMedia
+ * 
+ * The "listing" terminology is deprecated in favor of "rental object" (utleieobjekt)
+ * to better reflect the domain model of municipal facility/equipment rental.
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,7 +28,6 @@ import type {
   AvailabilityQueryParams,
   PublicListingParams
 } from '../types/listing';
-import { toUiListings, toUiListing } from '../types/listing';
 import type { UploadOptions } from '../types/upload';
 import { compressImage, isImageFile } from '../utils/image-compression';
 

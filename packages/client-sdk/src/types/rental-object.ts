@@ -1,6 +1,10 @@
 /**
  * Rental Object Types
- * Type definitions for the 4-category rental objects system
+ * Primary type definitions for rental objects (utleieobjekter)
+ * 
+ * This is the unified type system for all rental object operations.
+ * Uses the 4-category system: LOKALER_OG_BANER, UTSTYR_OG_INVENTAR, 
+ * KJORETOY_OG_TRANSPORT, OPPLEVELSER_OG_ARRANGEMENT
  */
 
 // =============================================================================
@@ -353,4 +357,125 @@ export function toUiRentalObject(obj: RentalObject): UiRentalObject {
     slug: obj.slug,
     timeMode: obj.timeMode,
   };
+}
+
+export function toUiRentalObjects(objects: RentalObject[]): UiRentalObject[] {
+  return objects.map(toUiRentalObject);
+}
+
+// =============================================================================
+// Availability Types
+// =============================================================================
+
+export interface RentalObjectAvailability {
+  rentalObjectId: string;
+  startDate: string;
+  endDate: string;
+  blockedSlots: Array<{
+    startTime: string;
+    endTime: string;
+    status: string;
+  }>;
+}
+
+export interface AvailabilityQueryParams {
+  startDate: string;
+  endDate: string;
+  duration?: number;
+}
+
+export interface TimeSlot {
+  startTime: string;
+  endTime: string;
+  available: boolean;
+  price?: number;
+}
+
+// =============================================================================
+// Statistics Types
+// =============================================================================
+
+export interface RentalObjectStats {
+  rentalObjectId: string;
+  totalBookings: number;
+  totalRevenue: number;
+  averageRating: number;
+  utilizationRate: number;
+  lastBooking?: string;
+}
+
+// =============================================================================
+// Calendar Configuration Types
+// =============================================================================
+
+export type CalendarGranularity = 'HOUR' | 'DAY' | 'WEEK';
+
+export type BookingMode = 'single' | 'recurring' | 'in-game';
+
+export interface BookingModeConfig {
+  mode: BookingMode;
+  enabled: boolean;
+  labelKey: string;
+  descriptionKey?: string;
+  constraints: Record<string, unknown>;
+}
+
+export interface RentalObjectCalendarConfig {
+  rentalObjectId: string;
+  rentalObjectName: string;
+  granularity: CalendarGranularity;
+  bookingModes: BookingModeConfig[];
+  defaultMode: BookingMode;
+  operatingHours?: Record<string, { open: string; close: string }>;
+  timezone: string;
+  slotDurationMinutes: number;
+  minSlots?: number;
+  maxSlots?: number;
+  allowSameDayBooking: boolean;
+  leadTimeMinutes?: number;
+  availableActions: Array<'VIEW' | 'BOOK' | 'RESERVE' | 'MANAGE'>;
+  permissions: {
+    canBook: boolean;
+    canReserve: boolean;
+    canViewPricing: boolean;
+    canManageAvailability: boolean;
+  };
+}
+
+// =============================================================================
+// Public Query Types
+// =============================================================================
+
+export interface PublicRentalObjectParams {
+  category?: RentalObjectCategory;
+  subcategory?: string;
+  timeMode?: BookingTimeMode;
+  city?: string;
+  municipality?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  capacity?: number;
+  date?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'capacity';
+  sortOrder?: 'asc' | 'desc';
+}
+
+// =============================================================================
+// City and Municipality Types
+// =============================================================================
+
+export interface City {
+  name: string;
+  slug: string;
+  rentalObjectCount?: number;
+}
+
+export interface Municipality {
+  code: string;
+  name: string;
+  county: string;
+  rentalObjectCount?: number;
 }

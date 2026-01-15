@@ -1,20 +1,14 @@
 /**
- * Listing Controller
- * REST API endpoints for rental object (utleieobjekter) management
+ * Rental Object Controller
+ * REST API endpoints for rental objects (utleieobjekter) management
  * 
- * @deprecated Use /api/rental-objects endpoints instead. 
- * This controller is maintained for backward compatibility only.
- * It will be removed in a future major version.
- * 
- * Migration guide:
- * - /api/listings -> /api/rental-objects
- * - ListingService -> RentalObjectService (SDK)
- * - useListings -> useRentalObjects (SDK hooks)
+ * This is the primary controller for rental object operations.
+ * The legacy /api/listings endpoint is deprecated and will be removed in a future version.
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
-import { ListingService } from './listing.service';
-import { toDetailsProjection } from './listing.projections';
+import { ListingService } from '../listing/listing.service';
+import { toDetailsProjection } from '../listing/listing.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
@@ -24,19 +18,18 @@ import {
 } from '../../schemas/rental-object.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
-@Controller('/api/listings')
-export class ListingController {
+@Controller('/api/rental-objects')
+export class RentalObjectController {
   constructor(
     @Inject('ListingService') private readonly service: ListingService
   ) {}
 
   /**
-   * GET /api/listings - List all rental objects
+   * GET /api/rental-objects - List all rental objects
    * Returns { data, meta } format for SDK compatibility
    */
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
-    // Allow null tenantId for public access to all published listings
     const tenantId = getOptionalTenantId(request);
     const params = validate(RentalObjectQuerySchema, request.query);
     const result = await this.service.findAll(tenantId, { 
@@ -47,7 +40,6 @@ export class ListingController {
       sortOrder: params.sortOrder ?? 'desc',
     });
     
-    // Transform response to SDK expected format (pagination -> meta)
     return {
       data: result.data,
       meta: {
@@ -60,66 +52,83 @@ export class ListingController {
   }
 
   /**
-   * GET /api/listings/:id - Get listing by ID
+   * GET /api/rental-objects/:id - Get rental object by ID
    */
   @Get('/:id')
   async findById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const listing = await this.service.findByIdOrFail(request.params.id);
-    return { listing };
+    const rentalObject = await this.service.findByIdOrFail(request.params.id);
+    return { data: rentalObject };
   }
 
   /**
-   * POST /api/listings - Create new rental object
+   * POST /api/rental-objects - Create new rental object
    */
   @Post()
   async create(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
     const data = validate(CreateRentalObjectSchema, request.body);
-    const listing = await this.service.create(tenantId, data as any);
-    return reply.status(201).send({ listing });
+    const rentalObject = await this.service.create(tenantId, data as any);
+    return reply.status(201).send({ data: rentalObject });
   }
 
   /**
-   * PUT /api/listings/:id - Update rental object
+   * PUT /api/rental-objects/:id - Update rental object
    */
   @Put('/:id')
   async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const data = validate(UpdateRentalObjectSchema, request.body);
-    // Type assertion needed due to Zod optional nested object type inference
-    const listing = await this.service.update(request.params.id, data as Parameters<typeof this.service.update>[1]);
-    return { listing };
+    const rentalObject = await this.service.update(request.params.id, data as Parameters<typeof this.service.update>[1]);
+    return { data: rentalObject };
   }
 
   /**
-   * PUT /api/listings/:id/publish - Publish listing
+   * PUT /api/rental-objects/:id/publish - Publish rental object
    */
   @Put('/:id/publish')
   async publish(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const listing = await this.service.publish(request.params.id);
-    return { listing };
+    const rentalObject = await this.service.publish(request.params.id);
+    return { data: rentalObject };
   }
 
   /**
-   * POST /api/listings/:id/duplicate - Duplicate listing
+   * PUT /api/rental-objects/:id/unpublish - Unpublish rental object (set to draft)
+   */
+  @Put('/:id/unpublish')
+  async unpublish(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const rentalObject = await this.service.unpublish(request.params.id);
+    return { data: rentalObject };
+  }
+
+  /**
+   * POST /api/rental-objects/:id/duplicate - Duplicate rental object
    */
   @Post('/:id/duplicate')
   async duplicate(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const listing = await this.service.duplicate(request.params.id);
+    const rentalObject = await this.service.duplicate(request.params.id);
     reply.code(201);
-    return { listing };
+    return { data: rentalObject };
   }
 
   /**
-   * PUT /api/listings/:id/archive - Archive listing
+   * PUT /api/rental-objects/:id/archive - Archive rental object
    */
   @Put('/:id/archive')
   async archive(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const listing = await this.service.archive(request.params.id);
-    return { listing };
+    const rentalObject = await this.service.archive(request.params.id);
+    return { data: rentalObject };
   }
 
   /**
-   * DELETE /api/listings/:id - Delete listing
+   * PUT /api/rental-objects/:id/restore - Restore archived rental object
+   */
+  @Put('/:id/restore')
+  async restore(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const rentalObject = await this.service.restore(request.params.id);
+    return { data: rentalObject };
+  }
+
+  /**
+   * DELETE /api/rental-objects/:id - Delete rental object
    */
   @Delete('/:id')
   async delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
@@ -128,23 +137,21 @@ export class ListingController {
   }
 
   /**
-   * GET /api/listings/slug/:slug - Get listing by slug
-   * Returns projected DTO with formatted address, contact, and display-ready fields
+   * GET /api/rental-objects/slug/:slug - Get rental object by slug
    */
   @Get('/slug/:slug')
   async findBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
-    const listing = await this.service.findBySlug(request.params.slug);
-    if (!listing) {
+    const rentalObject = await this.service.findBySlug(request.params.slug);
+    if (!rentalObject) {
       reply.code(404);
-      return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
+      return { error: { code: 'NOT_FOUND', message: 'Rental object not found' } };
     }
-    // Apply projection to format address, contact, and all display-ready fields
-    const projected = toDetailsProjection(listing as any);
+    const projected = toDetailsProjection(rentalObject as any);
     return { data: projected };
   }
 
   /**
-   * GET /api/listings/:id/availability - Get listing availability
+   * GET /api/rental-objects/:id/availability - Get rental object availability
    */
   @Get('/:id/availability')
   async getAvailability(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
@@ -158,18 +165,27 @@ export class ListingController {
   }
 
   /**
-   * POST /api/listings/:id/media - Upload media
+   * GET /api/rental-objects/:id/calendar-config - Get calendar configuration
+   */
+  @Get('/:id/calendar-config')
+  async getCalendarConfig(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const config = await this.service.getCalendarConfig(request.params.id);
+    return { data: config };
+  }
+
+  /**
+   * POST /api/rental-objects/:id/media - Upload media
    */
   @Post('/:id/media')
   async uploadMedia(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const body = request.body as any;
-    const listing = await this.service.addMedia(request.params.id, body.url, body.type || 'image');
+    const rentalObject = await this.service.addMedia(request.params.id, body.url, body.type || 'image');
     reply.code(201);
-    return { data: listing };
+    return { data: rentalObject };
   }
 
   /**
-   * DELETE /api/listings/:id/media/:mediaId - Delete media
+   * DELETE /api/rental-objects/:id/media/:mediaId - Delete media
    */
   @Delete('/:id/media/:mediaId')
   async deleteMedia(request: FastifyRequest<{ Params: { id: string; mediaId: string } }>, reply: FastifyReply) {
@@ -178,7 +194,7 @@ export class ListingController {
   }
 
   /**
-   * GET /api/listings/:id/stats - Get listing statistics
+   * GET /api/rental-objects/:id/stats - Get rental object statistics
    */
   @Get('/:id/stats')
   async getStats(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
@@ -186,8 +202,3 @@ export class ListingController {
     return { data: stats };
   }
 }
-
-// Note: CategoriesController has been moved to the configuration module
-// Import from '@/modules/configuration' for category management
-// All categories, time modes, and pricing units are now database-driven
-

@@ -108,8 +108,7 @@ export {
 } from './session-storage';
 
 export {
-  // ListingType to Category migration utilities
-  // @deprecated These utilities are for migration purposes only
+  // Category migration utilities
   LISTING_TYPE_TO_CATEGORY,
   CATEGORY_TO_LISTING_TYPE,
   CATEGORY_DEFAULT_TIME_MODE,
@@ -124,4 +123,11 @@ export {
   CATEGORY_LABELS_EN,
   getCategoryLabel,
   CATEGORY_ICONS,
+  // API endpoint constants
+  RENTAL_OBJECT_ENDPOINTS,
+  LEGACY_LISTING_ENDPOINTS,
+  // Migration guide mappings
+  HOOK_MIGRATION_MAP,
+  SERVICE_MIGRATION_MAP,
+  TYPE_MIGRATION_MAP,
 } from './listing-type-migration';
