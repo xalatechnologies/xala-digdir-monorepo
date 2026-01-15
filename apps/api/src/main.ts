@@ -167,6 +167,9 @@ async function bootstrap() {
   container.registerFactory('ListingService', () => 
     new ListingService(container.resolve('ListingRepository'), adapters)
   );
+  // Alias for new naming convention
+  container.registerFactory('RentalObjectService', () => container.resolve('ListingService'));
+  container.registerFactory('RentalObjectRepository', () => container.resolve('ListingRepository'));
   container.registerFactory('BookingService', () =>
     new BookingService(container.resolve('BookingRepository'), container.resolve('ListingRepository'), adapters)
   );
@@ -199,6 +202,10 @@ async function bootstrap() {
   );
   container.registerFactory('ListingController', () => 
     new ListingController(container.resolve('ListingService'))
+  );
+  // Alias for new naming convention - must use actual class name
+  container.registerFactory('RentalObjectController', () => 
+    new ListingController(container.resolve('RentalObjectService'))
   );
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))

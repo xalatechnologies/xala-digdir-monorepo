@@ -477,28 +477,31 @@ export class IdPortenAuthController {
       }
 
       // Get NIN from identity - try multiple possible field names
-      let nin = null;
+      let nin: string | null = null;
 
       // Check various possible locations for the national ID
       if (sessionData.identity) {
-        nin = sessionData.identity.nin ||
-              sessionData.identity.nationalIdentityNumber ||
-              sessionData.identity.nationalId ||
-              sessionData.identity.pid ||
-              sessionData.identity.sub;
+        const ninField = sessionData.identity.nin ||
+                         sessionData.identity.nationalIdentityNumber ||
+                         sessionData.identity.nationalId ||
+                         sessionData.identity.pid;
+        // Handle both string and object formats
+        nin = typeof ninField === 'string' ? ninField : ninField?.value;
       } else if (sessionData.attributes) {
         // Sometimes attributes are in a separate field
-        nin = sessionData.attributes.nin ||
-              sessionData.attributes.nationalIdentityNumber ||
-              sessionData.attributes.nationalId ||
-              sessionData.attributes.pid;
+        const ninField = sessionData.attributes.nin ||
+                         sessionData.attributes.nationalIdentityNumber ||
+                         sessionData.attributes.nationalId ||
+                         sessionData.attributes.pid;
+        nin = typeof ninField === 'string' ? ninField : ninField?.value;
       } else if (sessionData.subject) {
-        // BankID might return subject directly
-        nin = sessionData.subject.nin ||
-              sessionData.subject.nationalIdentityNumber;
+        // BankID/Signicat returns subject with nin object
+        const ninField = sessionData.subject.nin ||
+                         sessionData.subject.nationalIdentityNumber;
+        nin = typeof ninField === 'string' ? ninField : ninField?.value;
       }
 
-      console.log('[ID-PORTEN CALLBACK] Extracted NIN:', nin ? 'found' : 'NOT FOUND');
+      console.log('[ID-PORTEN CALLBACK] Extracted NIN:', nin || 'NOT FOUND');
 
       if (!nin) {
         console.error('[ID-PORTEN CALLBACK] No NIN found in session data');
@@ -515,8 +518,13 @@ export class IdPortenAuthController {
 
       // Look up user by national ID in database
       const db = container.resolve<any>('Database');
+
+      console.log('[ID-PORTEN CALLBACK] Looking up user with NIN:', nin.substring(0, 6) + '***');
+
       const userResult = await db.select().from(users).where(eq(users.nationalId, nin)).limit(1);
-      
+
+      console.log('[ID-PORTEN CALLBACK] Database query result:', userResult.length > 0 ? 'user found' : 'NO USER');
+
       if (!userResult.length) {
         console.error('[ID-PORTEN CALLBACK] User not found for NIN:', nin.substring(0, 6) + '***');
         const redirectUrl = buildRedirectUrl(returnTo, {
@@ -529,25 +537,38 @@ export class IdPortenAuthController {
       const user = userResult[0];
       const userId = user.id;
 
+      console.log('[ID-PORTEN CALLBACK] User found:', userId);
+
       // Clean up session
       await sessionStore.delete(state);
 
       // Set session cookie with user ID using raw header
-      // Cookie is HttpOnly, Secure (in prod), SameSite=Lax for cross-site redirect
+      // Cookie is HttpOnly, Secure (in prod), SameSite=None for cross-site redirects
       const isProduction = process.env.NODE_ENV === 'production';
       const cookieValue = encodeURIComponent(JSON.stringify({ userId, tenantId }));
+
+      // Always use Secure and SameSite=None in production for cross-domain cookies
       const cookieParts = [
         `digilist_session=${cookieValue}`,
         'Path=/',
         'HttpOnly',
-        'SameSite=Lax',
         'Max-Age=86400',
       ];
+
       if (isProduction) {
         cookieParts.push('Secure');
-        cookieParts.push('Domain=.digilist.no');
+        // SameSite=None is required for cross-domain cookies with Secure
+        cookieParts.push('SameSite=None');
+        // Don't set Domain - let browser use the API domain for same-site requests
+      } else {
+        cookieParts.push('SameSite=Lax');
       }
+
       reply.header('Set-Cookie', cookieParts.join('; '));
+
+      console.log('[ID-PORTEN CALLBACK] Cookie configuration:');
+      console.log('  isProduction:', isProduction);
+      console.log('  cookieParts:', cookieParts);
 
       // Audit log successful authentication
       getAuditService().log({
@@ -574,11 +595,16 @@ export class IdPortenAuthController {
 
       console.log('[ID-PORTEN CALLBACK] Success redirect:');
       console.log('  userId:', userId);
+      console.log('  userEmail:', user.email);
       console.log('  returnTo:', returnTo);
       console.log('  redirectUrl:', redirectUrl);
+      console.log('  Cookie set:', cookieParts.join('; '));
 
       return reply.redirect(redirectUrl);
     } catch (error) {
+      console.error('[ID-PORTEN CALLBACK] Error occurred:', error);
+      console.error('[ID-PORTEN CALLBACK] Error stack:', error instanceof Error ? error.stack : 'No stack');
+
       // Audit log callback error
       getAuditService().log({
         tenantId,
