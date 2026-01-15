@@ -208,7 +208,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 letterSpacing: 'var(--ds-font-letter-spacing-wide)',
               }}
             >
-              DIGILIST
+              {t('components.sidebar.appName')}
             </div>
             <div
               style={{
@@ -219,7 +219,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 textTransform: 'uppercase',
               }}
             >
-              Min Side
+              {t('components.sidebar.appSubtitle')}
             </div>
           </div>
         </div>
@@ -407,7 +407,7 @@ export function Sidebar() {
         <Button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
+          aria-label={t('components.sidebar.openMenu')}
           style={{
             position: 'fixed',
             top: 'var(--ds-spacing-4)',

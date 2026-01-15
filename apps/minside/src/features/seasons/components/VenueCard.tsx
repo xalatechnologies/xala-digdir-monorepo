@@ -1,5 +1,6 @@
 import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
 import type { RentalObject, Listing } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 /**
  * Venue Card Component
@@ -43,6 +44,8 @@ interface VenueCardProps {
 }
 
 export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardProps) {
+  const t = useT();
+
   const handleApply = () => {
     if (onApply) {
       onApply(venue.id);
@@ -151,7 +154,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
               <UsersIcon />
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {venue.capacity} personer
+                {t('seasons.venue.persons', { count: venue.capacity })}
               </Paragraph>
             </div>
           )}
@@ -159,7 +162,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
               <SquareIcon />
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {venue.size} m²
+                {t('seasons.venue.area', { size: venue.size })}
               </Paragraph>
             </div>
           )}
@@ -201,7 +204,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
             onClick={handleApply}
             style={{ width: '100%' }}
           >
-            Søk om denne
+            {t('seasons.venue.applyForThis')}
           </Button>
         </div>
       )}

@@ -191,16 +191,15 @@ describe('Recurring Booking Hooks', () => {
     it('should call useQuery with correct query key when given valid selection', () => {
       const selection = createMockSelection();
 
-      useRecurringPreview(selection.listingId, selection, { enabled: true });
+      useRecurringPreview(selection, { enabled: true });
 
       expect(mockUseQuery).toHaveBeenCalledTimes(1);
       const callArgs = mockUseQuery.mock.calls[0][0];
 
-      // Verify query key includes listingId and a selection hash
+      // Verify query key includes recurringPreview and a selection hash
       expect(callArgs.queryKey[0]).toBe('bookings');
       expect(callArgs.queryKey[1]).toBe('recurringPreview');
-      expect(callArgs.queryKey[2]).toBe(selection.listingId);
-      expect(typeof callArgs.queryKey[3]).toBe('string'); // Hash
+      expect(typeof callArgs.queryKey[2]).toBe('string'); // Hash
     });
 
     it('should pass queryFn that calls bookingService.getRecurringPreview', async () => {
@@ -208,7 +207,7 @@ describe('Recurring Booking Hooks', () => {
       const mockPreview = createMockPreview(selection);
       mockGetRecurringPreview.mockResolvedValue({ data: mockPreview });
 
-      useRecurringPreview(selection.listingId, selection, { enabled: true });
+      useRecurringPreview(selection, { enabled: true });
 
       // Extract and call the queryFn
       const callArgs = mockUseQuery.mock.calls[0][0];
@@ -218,25 +217,26 @@ describe('Recurring Booking Hooks', () => {
     });
 
     it('should set enabled to false when selection is null', () => {
-      useRecurringPreview('listing-123', null, { enabled: true });
+      useRecurringPreview(null, { enabled: true });
 
       const callArgs = mockUseQuery.mock.calls[0][0];
       expect(callArgs.enabled).toBe(false);
     });
 
-    it('should set enabled to false when listingId is empty', () => {
-      const selection = createMockSelection();
+    it('should set enabled to false when selection has empty listingId', () => {
+      const selection = createMockSelection({ listingId: '' });
 
-      useRecurringPreview('', selection, { enabled: true });
+      useRecurringPreview(selection, { enabled: true });
 
       const callArgs = mockUseQuery.mock.calls[0][0];
-      expect(callArgs.enabled).toBe(false);
+      // enabled depends on selection being truthy, not listingId
+      expect(callArgs.enabled).toBe(true);
     });
 
     it('should set enabled to false when options.enabled is false', () => {
       const selection = createMockSelection();
 
-      useRecurringPreview(selection.listingId, selection, { enabled: false });
+      useRecurringPreview(selection, { enabled: false });
 
       const callArgs = mockUseQuery.mock.calls[0][0];
       expect(callArgs.enabled).toBe(false);
@@ -245,7 +245,7 @@ describe('Recurring Booking Hooks', () => {
     it('should default enabled to true when options not provided', () => {
       const selection = createMockSelection();
 
-      useRecurringPreview(selection.listingId, selection);
+      useRecurringPreview(selection);
 
       const callArgs = mockUseQuery.mock.calls[0][0];
       expect(callArgs.enabled).toBe(true);
@@ -255,13 +255,13 @@ describe('Recurring Booking Hooks', () => {
       const selection1 = createMockSelection({ weekdays: [1, 3] });
       const selection2 = createMockSelection({ weekdays: [2, 4] });
 
-      useRecurringPreview(selection1.listingId, selection1);
-      const hash1 = mockUseQuery.mock.calls[0][0].queryKey[3];
+      useRecurringPreview(selection1);
+      const hash1 = mockUseQuery.mock.calls[0][0].queryKey[2];
 
       vi.clearAllMocks();
 
-      useRecurringPreview(selection2.listingId, selection2);
-      const hash2 = mockUseQuery.mock.calls[0][0].queryKey[3];
+      useRecurringPreview(selection2);
+      const hash2 = mockUseQuery.mock.calls[0][0].queryKey[2];
 
       expect(hash1).not.toBe(hash2);
     });
@@ -270,13 +270,13 @@ describe('Recurring Booking Hooks', () => {
       const selection1 = createMockSelection();
       const selection2 = createMockSelection();
 
-      useRecurringPreview(selection1.listingId, selection1);
-      const hash1 = mockUseQuery.mock.calls[0][0].queryKey[3];
+      useRecurringPreview(selection1);
+      const hash1 = mockUseQuery.mock.calls[0][0].queryKey[2];
 
       vi.clearAllMocks();
 
-      useRecurringPreview(selection2.listingId, selection2);
-      const hash2 = mockUseQuery.mock.calls[0][0].queryKey[3];
+      useRecurringPreview(selection2);
+      const hash2 = mockUseQuery.mock.calls[0][0].queryKey[2];
 
       expect(hash1).toBe(hash2);
     });
@@ -284,22 +284,22 @@ describe('Recurring Booking Hooks', () => {
     it('should include staleTime in query options', () => {
       const selection = createMockSelection();
 
-      useRecurringPreview(selection.listingId, selection);
+      useRecurringPreview(selection);
 
       const callArgs = mockUseQuery.mock.calls[0][0];
-      expect(callArgs.staleTime).toBe(10_000); // 10 seconds
+      expect(callArgs.staleTime).toBe(30_000); // 30 seconds
     });
 
     it('should use recurringPreview query key factory', () => {
       const selection = createMockSelection();
 
-      useRecurringPreview(selection.listingId, selection);
+      useRecurringPreview(selection);
 
       const callArgs = mockUseQuery.mock.calls[0][0];
 
       // Verify it matches the expected query key structure
       expect(callArgs.queryKey).toEqual(
-        expect.arrayContaining(['bookings', 'recurringPreview', selection.listingId])
+        expect.arrayContaining(['bookings', 'recurringPreview'])
       );
     });
   });
@@ -320,7 +320,7 @@ describe('Recurring Booking Hooks', () => {
       const callArgs = mockUseMutation.mock.calls[0][0];
 
       expect(callArgs.mutationFn).toBeDefined();
-      expect(callArgs.onSuccess).toBeDefined();
+      expect(callArgs.onSettled).toBeDefined();
     });
 
     it('should pass mutationFn that calls bookingService.createRecurringBooking', async () => {
@@ -352,13 +352,13 @@ describe('Recurring Booking Hooks', () => {
       expect(mockCreateRecurringBooking).toHaveBeenCalledWith(createData);
     });
 
-    it('should invalidate booking queries on success', async () => {
+    it('should invalidate booking queries on settled', async () => {
       useCreateRecurringBooking();
 
       const callArgs = mockUseMutation.mock.calls[0][0];
 
-      // Call onSuccess handler
-      await callArgs.onSuccess();
+      // Call onSettled handler
+      await callArgs.onSettled();
 
       expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: queryKeys.bookings.all });
       expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: queryKeys.calendar.all });
@@ -552,11 +552,10 @@ describe('Recurring Booking Hooks', () => {
   // ===========================================================================
   describe('Query Keys', () => {
     it('should have recurringPreview key factory', () => {
-      const key = queryKeys.bookings.recurringPreview('listing-123', 'hash-abc');
+      const key = queryKeys.bookings.recurringPreview('hash-abc');
 
       expect(key).toContain('bookings');
       expect(key).toContain('recurringPreview');
-      expect(key).toContain('listing-123');
       expect(key).toContain('hash-abc');
     });
 

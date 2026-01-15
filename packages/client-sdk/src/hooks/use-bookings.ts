@@ -541,11 +541,11 @@ export function useCalendarEvents(params?: { listingId?: string; startDate?: str
 /**
  * Get available time slots
  */
-export function useAvailabilitySlots(params: { listingId: string; date: string; duration?: number }) {
+export function useAvailabilitySlots(params: { rentalObjectId: string; date: string; duration?: number; listingId?: string }) {
   return useQuery({
     queryKey: queryKeys.calendar.slots(params),
     queryFn: () => availabilityService.getSlots(params),
-    enabled: !!params.listingId && !!params.date,
+    enabled: !!params.rentalObjectId && !!params.date,
   });
 }
 

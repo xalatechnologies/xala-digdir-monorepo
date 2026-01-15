@@ -15,6 +15,7 @@ import {
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { useNotificationCenter } from '../../App';
@@ -28,7 +29,7 @@ interface HeaderProps {
  * Get navigation search results based on query
  * TODO: Replace with SDK global search when available
  */
-const getNavigationResults = (query: string): SearchResultGroup[] => {
+const getNavigationResults = (query: string, t: ReturnType<typeof useT>): SearchResultGroup[] => {
   if (!query.trim()) return [];
 
   const q = query.toLowerCase();
@@ -38,8 +39,8 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
   if ('dashboard'.includes(q) || 'hjem'.includes(q) || 'oversikt'.includes(q)) {
     navItems.push({
       id: 'nav-dashboard',
-      label: 'Dashboard',
-      description: 'Gå til oversikt',
+      label: t('components.header.dashboard'),
+      description: t('components.header.goToOverview'),
       icon: <SearchIcon size={18} />,
       href: '/',
     });
@@ -49,8 +50,8 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
   if ('booking'.includes(q) || 'bestilling'.includes(q)) {
     navItems.push({
       id: 'nav-bookings',
-      label: 'Bookinger',
-      description: 'Se alle dine bookinger',
+      label: t('components.header.bookings'),
+      description: t('components.header.seeAllBookings'),
       icon: <CalendarIcon size={18} />,
       href: '/bookings',
     });
@@ -60,8 +61,8 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
   if ('kalender'.includes(q) || 'calendar'.includes(q)) {
     navItems.push({
       id: 'nav-calendar',
-      label: 'Kalender',
-      description: 'Se bookinger i kalendervisning',
+      label: t('components.header.calendar'),
+      description: t('components.header.calendarView'),
       icon: <CalendarIcon size={18} />,
       href: '/calendar',
     });
@@ -71,8 +72,8 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
   if ('melding'.includes(q) || 'message'.includes(q) || 'samtale'.includes(q)) {
     navItems.push({
       id: 'nav-messages',
-      label: 'Meldinger',
-      description: 'Se samtaler og meldinger',
+      label: t('components.header.messages'),
+      description: t('components.header.conversationsAndMessages'),
       icon: <PeopleIcon size={18} />,
       href: '/messages',
     });
@@ -82,8 +83,8 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
   if ('innstilling'.includes(q) || 'setting'.includes(q)) {
     navItems.push({
       id: 'nav-settings',
-      label: 'Innstillinger',
-      description: 'Systemkonfigurasjon',
+      label: t('components.header.settings'),
+      description: t('nav.settings'),
       icon: <SettingsIcon size={18} />,
       href: '/settings',
     });
@@ -91,7 +92,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
 
   if (navItems.length === 0) return [];
 
-  return [{ id: 'navigation', label: 'Sider', items: navItems }];
+  return [{ id: 'navigation', label: t('components.header.pages'), items: navItems }];
 };
 
 export function Header({ title: _title }: HeaderProps) {
@@ -99,6 +100,7 @@ export function Header({ title: _title }: HeaderProps) {
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { openNotificationCenter } = useNotificationCenter();
+  const t = useT();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
 
@@ -108,7 +110,7 @@ export function Header({ title: _title }: HeaderProps) {
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setSearchResults(getNavigationResults(value));
+    setSearchResults(getNavigationResults(value, t));
   };
 
   const handleResultSelect = (result: SearchResultItem) => {
@@ -153,14 +155,14 @@ export function Header({ title: _title }: HeaderProps) {
           }}
         >
           <HeaderSearch
-            placeholder="Søk i bookinger, brukere..."
+            placeholder={t('components.header.searchPlaceholder')}
             value={searchQuery}
             onSearchChange={handleSearchChange}
             onResultSelect={handleResultSelect}
             results={searchResults}
             showShortcut
             enableGlobalShortcut
-            noResultsText="Ingen resultater funnet"
+            noResultsText={t('components.header.noResults')}
           />
         </div>
 
@@ -175,13 +177,13 @@ export function Header({ title: _title }: HeaderProps) {
             <NotificationBell
               count={unreadCount}
               onClick={openNotificationCenter}
-              aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
+              aria-label={unreadCount > 0 ? t('components.header.notificationsWithCount', { count: unreadCount }) : t('components.header.notifications')}
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
               size="md"
-              aria-label="Innstillinger"
-              title="Innstillinger"
+              aria-label={t('components.header.settings')}
+              title={t('components.header.settings')}
               onClick={() => navigate('/settings')}
             />
             <div
@@ -198,11 +200,11 @@ export function Header({ title: _title }: HeaderProps) {
                 variant="tertiary"
                 data-size="md"
                 onClick={logout}
-                aria-label="Logg ut"
+                aria-label={t('components.header.logout')}
                 style={{ whiteSpace: 'nowrap' }}
               >
                 <LogOutIcon size={20} />
-                Logg ut
+                {t('components.header.logout')}
               </Button>
             )}
           </HeaderActions>

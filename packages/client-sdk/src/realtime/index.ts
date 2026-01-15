@@ -175,6 +175,13 @@ class RealtimeClient {
   }
 
   /**
+   * Subscribe to rental object events (alias for listing events)
+   */
+  onRentalObject(handler: RealtimeEventHandler): () => void {
+    return this.on('listing', handler);
+  }
+
+  /**
    * Subscribe to message/notification events
    */
   onMessage(handler: RealtimeEventHandler): () => void {

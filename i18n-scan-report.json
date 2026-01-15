@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-01-15T19:01:17.934Z",
+  "timestamp": "2026-01-15T20:01:15.832Z",
   "summary": {
     "filesScanned": 82,
     "filesSkipped": 0,
     "totalFiles": 82,
-    "totalIssues": 373,
-    "hardcodedStrings": 362,
-    "missingT": 11,
+    "totalIssues": 285,
+    "hardcodedStrings": 275,
+    "missingT": 10,
     "suspiciousPatterns": 0
   },
   "issuesByFile": {
@@ -163,7 +163,7 @@
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx": [
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 355,
+        "line": 361,
         "type": "hardcoded_prop",
         "string": "Velg tidspunkt",
         "prop": "title",
@@ -172,7 +172,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 305,
+        "line": 311,
         "type": "hardcoded_object_value",
         "string": "Ledig",
         "key": "label",
@@ -181,7 +181,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 306,
+        "line": 312,
         "type": "hardcoded_object_value",
         "string": "Reservert",
         "key": "label",
@@ -190,7 +190,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 307,
+        "line": 313,
         "type": "hardcoded_object_value",
         "string": "Booket",
         "key": "label",
@@ -199,7 +199,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 308,
+        "line": 314,
         "type": "hardcoded_object_value",
         "string": "Blokkert",
         "key": "label",
@@ -208,7 +208,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 309,
+        "line": 315,
         "type": "hardcoded_object_value",
         "string": "Utilgjengelig",
         "key": "label",
@@ -217,7 +217,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-        "line": 310,
+        "line": 316,
         "type": "hardcoded_object_value",
         "string": "Stengt",
         "key": "label",
@@ -1873,44 +1873,6 @@
         "severity": "high"
       }
     ],
-    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx": [
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-        "line": 196,
-        "type": "hardcoded_prop",
-        "string": "Søk etter samtaler...",
-        "prop": "placeholder",
-        "context": "placeholder=\"Søk etter samtaler...\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-        "line": 680,
-        "type": "hardcoded_prop",
-        "string": "Skriv en melding...",
-        "prop": "placeholder",
-        "context": "placeholder=\"Skriv en melding...\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-        "line": 223,
-        "type": "hardcoded_object_value",
-        "string": "Alle",
-        "key": "label",
-        "context": "{ key: 'all' as FilterType, label: 'Alle', count: conversations.length },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-        "line": 224,
-        "type": "hardcoded_object_value",
-        "string": "Uleste",
-        "key": "label",
-        "context": "{ key: 'unread' as FilterType, label: 'Uleste', count: totalUnread },",
-        "severity": "medium"
-      }
-    ],
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx": [
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx",
@@ -2001,84 +1963,6 @@
         "prop": "aria-label",
         "context": "aria-label=\"Endringer\"",
         "severity": "high"
-      }
-    ],
-    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx": [
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 154,
-        "type": "hardcoded_jsx_text",
-        "string": "Alle",
-        "context": "<option value=\"all\">Alle</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 155,
-        "type": "hardcoded_jsx_text",
-        "string": "Bookinger",
-        "context": "<option value=\"booking\">Bookinger</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 156,
-        "type": "hardcoded_jsx_text",
-        "string": "Meldinger",
-        "context": "<option value=\"message\">Meldinger</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 157,
-        "type": "hardcoded_jsx_text",
-        "string": "Påminnelser",
-        "context": "<option value=\"reminder\">Påminnelser</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 158,
-        "type": "hardcoded_jsx_text",
-        "string": "System",
-        "context": "<option value=\"system\">System</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 32,
-        "type": "hardcoded_object_value",
-        "string": "Booking bekreftet",
-        "key": "title",
-        "context": "title: 'Booking bekreftet',",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 40,
-        "type": "hardcoded_object_value",
-        "string": "Påminnelse",
-        "key": "title",
-        "context": "title: 'Påminnelse',",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 48,
-        "type": "hardcoded_object_value",
-        "string": "Ny melding",
-        "key": "title",
-        "context": "title: 'Ny melding',",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-        "line": 56,
-        "type": "hardcoded_object_value",
-        "string": "Vedlikehold",
-        "key": "title",
-        "context": "title: 'Vedlikehold',",
-        "severity": "medium"
       }
     ],
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/org/activity.tsx": [
@@ -2532,208 +2416,6 @@
         "severity": "medium"
       }
     ],
-    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx": [
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 177,
-        "type": "hardcoded_jsx_text",
-        "string": "Tema",
-        "context": "<label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tema</labe",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 183,
-        "type": "hardcoded_jsx_text",
-        "string": "Følg system",
-        "context": "<option value=\"system\">Følg system</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 184,
-        "type": "hardcoded_jsx_text",
-        "string": "Lyst",
-        "context": "<option value=\"light\">Lyst</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 185,
-        "type": "hardcoded_jsx_text",
-        "string": "Mørkt",
-        "context": "<option value=\"dark\">Mørkt</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 189,
-        "type": "hardcoded_jsx_text",
-        "string": "Språk",
-        "context": "<label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</lab",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 195,
-        "type": "hardcoded_jsx_text",
-        "string": "Norsk",
-        "context": "<option value=\"no\">Norsk</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 196,
-        "type": "hardcoded_jsx_text",
-        "string": "English",
-        "context": "<option value=\"en\">English</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 65,
-        "type": "hardcoded_object_value",
-        "string": "Bookingbekreftelser",
-        "key": "label",
-        "context": "{ key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' }",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 65,
-        "type": "hardcoded_object_value",
-        "string": "Motta e-post ved nye bookinger",
-        "key": "description",
-        "context": "{ key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' }",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 66,
-        "type": "hardcoded_object_value",
-        "string": "E-post påminnelser",
-        "key": "label",
-        "context": "{ key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' ",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 66,
-        "type": "hardcoded_object_value",
-        "string": "Påminnelse 24 timer før booking",
-        "key": "description",
-        "context": "{ key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' ",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 67,
-        "type": "hardcoded_object_value",
-        "string": "Nyhetsbrev",
-        "key": "label",
-        "context": "{ key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 67,
-        "type": "hardcoded_object_value",
-        "string": "Motta nyheter og tilbud",
-        "key": "description",
-        "context": "{ key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 68,
-        "type": "hardcoded_object_value",
-        "string": "SMS-påminnelser",
-        "key": "label",
-        "context": "{ key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 68,
-        "type": "hardcoded_object_value",
-        "string": "Motta påminnelse via SMS",
-        "key": "description",
-        "context": "{ key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 69,
-        "type": "hardcoded_object_value",
-        "string": "Push-varsler",
-        "key": "label",
-        "context": "{ key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 69,
-        "type": "hardcoded_object_value",
-        "string": "Sanntidsvarsler i nettleseren",
-        "key": "description",
-        "context": "{ key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 73,
-        "type": "hardcoded_object_value",
-        "string": "Vis profil",
-        "key": "label",
-        "context": "{ key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 73,
-        "type": "hardcoded_object_value",
-        "string": "La andre brukere se profilen din",
-        "key": "description",
-        "context": "{ key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 74,
-        "type": "hardcoded_object_value",
-        "string": "Del aktivitet",
-        "key": "label",
-        "context": "{ key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjone",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 74,
-        "type": "hardcoded_object_value",
-        "string": "Del bookinghistorikk med organisasjonen",
-        "key": "description",
-        "context": "{ key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjone",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 75,
-        "type": "hardcoded_object_value",
-        "string": "Anonyme analyser",
-        "key": "label",
-        "context": "{ key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-        "line": 75,
-        "type": "hardcoded_object_value",
-        "string": "Hjelp oss forbedre tjenesten",
-        "key": "description",
-        "context": "{ key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },",
-        "severity": "medium"
-      }
-    ],
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/season-applications.tsx": [
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/season-applications.tsx",
@@ -2837,479 +2519,21 @@
         "severity": "medium"
       }
     ],
-    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/seasons.tsx": [
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/seasons.tsx",
-        "line": 278,
-        "type": "hardcoded_prop",
-        "string": "Laster sesonger...",
-        "prop": "aria-label",
-        "context": "<Spinner aria-label=\"Laster sesonger...\" />",
-        "severity": "high"
-      }
-    ],
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx": [
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 500,
-        "type": "hardcoded_jsx_text",
-        "string": "Norge",
-        "context": "<option value=\"Norge\">Norge</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 501,
-        "type": "hardcoded_jsx_text",
-        "string": "Sverige",
-        "context": "<option value=\"Sverige\">Sverige</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 502,
-        "type": "hardcoded_jsx_text",
-        "string": "Danmark",
-        "context": "<option value=\"Danmark\">Danmark</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 503,
-        "type": "hardcoded_jsx_text",
-        "string": "Finland",
-        "context": "<option value=\"Finland\">Finland</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 580,
-        "type": "hardcoded_jsx_text",
-        "string": "Norge",
-        "context": "<option value=\"Norge\">Norge</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 581,
-        "type": "hardcoded_jsx_text",
-        "string": "Sverige",
-        "context": "<option value=\"Sverige\">Sverige</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 582,
-        "type": "hardcoded_jsx_text",
-        "string": "Danmark",
-        "context": "<option value=\"Danmark\">Danmark</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 583,
-        "type": "hardcoded_jsx_text",
-        "string": "Finland",
-        "context": "<option value=\"Finland\">Finland</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 806,
-        "type": "hardcoded_jsx_text",
-        "string": "Norsk (Bokmål)",
-        "context": "<option value=\"nb\">Norsk (Bokmål)</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 807,
-        "type": "hardcoded_jsx_text",
-        "string": "Norsk (Nynorsk)",
-        "context": "<option value=\"nn\">Norsk (Nynorsk)</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 808,
-        "type": "hardcoded_jsx_text",
-        "string": "English",
-        "context": "<option value=\"en\">English</option>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 321,
+        "line": 322,
         "type": "hardcoded_prop",
         "string": "Avatar",
         "prop": "alt",
         "context": "alt=\"Avatar\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 348,
-        "type": "hardcoded_prop",
-        "string": "Endre profilbilde",
-        "prop": "aria-label",
-        "context": "aria-label=\"Endre profilbilde\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 374,
-        "type": "hardcoded_prop",
-        "string": "Fullt navn",
-        "prop": "label",
-        "context": "<FormField label=\"Fullt navn\" required>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 378,
-        "type": "hardcoded_prop",
-        "string": "Ola Nordmann",
-        "prop": "placeholder",
-        "context": "placeholder=\"Ola Nordmann\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 379,
-        "type": "hardcoded_prop",
-        "string": "Fullt navn",
-        "prop": "aria-label",
-        "context": "aria-label=\"Fullt navn\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 383,
-        "type": "hardcoded_prop",
-        "string": "E-postadresse",
-        "prop": "label",
-        "context": "<FormField label=\"E-postadresse\" required>",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 389,
-        "type": "hardcoded_prop",
-        "string": "E-postadresse",
-        "prop": "aria-label",
-        "context": "aria-label=\"E-postadresse\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 393,
-        "type": "hardcoded_prop",
-        "string": "Telefonnummer",
-        "prop": "label",
-        "context": "<FormField label=\"Telefonnummer\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 399,
-        "type": "hardcoded_prop",
-        "string": "Telefonnummer",
-        "prop": "aria-label",
-        "context": "aria-label=\"Telefonnummer\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 404,
-        "type": "hardcoded_prop",
-        "string": "Fødselsdato",
-        "prop": "label",
-        "context": "<FormField label=\"Fødselsdato\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 409,
-        "type": "hardcoded_prop",
-        "string": "Fødselsdato",
-        "prop": "aria-label",
-        "context": "aria-label=\"Fødselsdato\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 413,
-        "type": "hardcoded_prop",
-        "string": "Fødselsnummer",
-        "prop": "label",
-        "context": "<FormField label=\"Fødselsnummer\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 417,
-        "type": "hardcoded_prop",
-        "string": "11 siffer",
-        "prop": "placeholder",
-        "context": "placeholder=\"11 siffer\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 419,
-        "type": "hardcoded_prop",
-        "string": "Fødselsnummer",
-        "prop": "aria-label",
-        "context": "aria-label=\"Fødselsnummer\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 426,
-        "type": "hardcoded_prop",
-        "string": "Lagre profilinnstillinger",
-        "prop": "aria-label",
-        "context": "<Button onClick={handleSaveProfile} disabled={isSaving} type=\"button\" aria-label=\"Lagre profilinnsti",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 453,
-        "type": "hardcoded_prop",
-        "string": "Gateadresse",
-        "prop": "label",
-        "context": "<FormField label=\"Gateadresse\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 460,
-        "type": "hardcoded_prop",
-        "string": "Storgata 1",
-        "prop": "placeholder",
-        "context": "placeholder=\"Storgata 1\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 461,
-        "type": "hardcoded_prop",
-        "string": "Gateadresse",
-        "prop": "aria-label",
-        "context": "aria-label=\"Gateadresse\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 466,
-        "type": "hardcoded_prop",
-        "string": "Poststed",
-        "prop": "label",
-        "context": "<FormField label=\"Poststed\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 473,
-        "type": "hardcoded_prop",
-        "string": "Oslo",
-        "prop": "placeholder",
-        "context": "placeholder=\"Oslo\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 474,
-        "type": "hardcoded_prop",
-        "string": "Poststed",
-        "prop": "aria-label",
-        "context": "aria-label=\"Poststed\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 478,
-        "type": "hardcoded_prop",
-        "string": "Postnummer",
-        "prop": "label",
-        "context": "<FormField label=\"Postnummer\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 487,
-        "type": "hardcoded_prop",
-        "string": "Postnummer",
-        "prop": "aria-label",
-        "context": "aria-label=\"Postnummer\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 492,
-        "type": "hardcoded_prop",
-        "string": "Land",
-        "prop": "label",
-        "context": "<FormField label=\"Land\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 533,
-        "type": "hardcoded_prop",
-        "string": "Gateadresse",
-        "prop": "label",
-        "context": "<FormField label=\"Gateadresse\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 540,
-        "type": "hardcoded_prop",
-        "string": "Storgata 1",
-        "prop": "placeholder",
-        "context": "placeholder=\"Storgata 1\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 541,
-        "type": "hardcoded_prop",
-        "string": "Gateadresse",
-        "prop": "aria-label",
-        "context": "aria-label=\"Gateadresse\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 546,
-        "type": "hardcoded_prop",
-        "string": "Poststed",
-        "prop": "label",
-        "context": "<FormField label=\"Poststed\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 553,
-        "type": "hardcoded_prop",
-        "string": "Oslo",
-        "prop": "placeholder",
-        "context": "placeholder=\"Oslo\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 554,
-        "type": "hardcoded_prop",
-        "string": "Poststed",
-        "prop": "aria-label",
-        "context": "aria-label=\"Poststed\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 558,
-        "type": "hardcoded_prop",
-        "string": "Postnummer",
-        "prop": "label",
-        "context": "<FormField label=\"Postnummer\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 567,
-        "type": "hardcoded_prop",
-        "string": "Postnummer",
-        "prop": "aria-label",
-        "context": "aria-label=\"Postnummer\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 572,
-        "type": "hardcoded_prop",
-        "string": "Land",
-        "prop": "label",
-        "context": "<FormField label=\"Land\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 589,
-        "type": "hardcoded_prop",
-        "string": "Lagre adresseinnstillinger",
-        "prop": "aria-label",
-        "context": "<Button onClick={handleSaveProfile} disabled={isSaving} type=\"button\" aria-label=\"Lagre adresseinnst",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 626,
-        "type": "hardcoded_prop",
-        "string": "Eksporter mine data",
-        "prop": "aria-label",
-        "context": "aria-label=\"Eksporter mine data\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 666,
-        "type": "hardcoded_prop",
-        "string": "Markedsføring",
-        "prop": "aria-label",
-        "context": "aria-label=\"Markedsføring\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 689,
-        "type": "hardcoded_prop",
-        "string": "Analyse",
-        "prop": "aria-label",
-        "context": "aria-label=\"Analyse\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 712,
-        "type": "hardcoded_prop",
-        "string": "Deling med tredjeparter",
-        "prop": "aria-label",
-        "context": "aria-label=\"Deling med tredjeparter\"",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 804,
-        "type": "hardcoded_prop",
-        "string": "Foretrukket språk",
-        "prop": "label",
-        "context": "<FormField label=\"Foretrukket språk\">",
-        "severity": "high"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 196,
-        "type": "hardcoded_alert",
-        "string": "Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.",
-        "method": "confirm",
-        "context": "if (confirm('Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.')) {",
-        "severity": "medium"
-      },
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-        "line": 1,
-        "type": "missing_t_import",
-        "string": "",
-        "context": "File contains user-facing text but does not import useT()",
         "severity": "high"
       }
     ],
     "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts": [
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 27,
+        "line": 28,
         "type": "hardcoded_prop",
         "string": "Test Notification",
         "prop": "title",
@@ -3318,7 +2542,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 28,
+        "line": 29,
         "type": "hardcoded_prop",
         "string": "This is a test notification",
         "prop": "message",
@@ -3327,7 +2551,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 73,
+        "line": 76,
         "type": "hardcoded_object_value",
         "string": "Booking bekreftet",
         "key": "title",
@@ -3336,7 +2560,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 85,
+        "line": 88,
         "type": "hardcoded_object_value",
         "string": "Påminnelse: Booking i morgen",
         "key": "title",
@@ -3345,7 +2569,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 97,
+        "line": 100,
         "type": "hardcoded_object_value",
         "string": "Påminnelse: Booking om 1 time",
         "key": "title",
@@ -3354,7 +2578,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 109,
+        "line": 112,
         "type": "hardcoded_object_value",
         "string": "Booking kansellert",
         "key": "title",
@@ -3363,7 +2587,7 @@
       },
       {
         "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-        "line": 121,
+        "line": 124,
         "type": "hardcoded_object_value",
         "string": "Booking endret",
         "key": "title",
@@ -3519,7 +2743,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 355,
+      "line": 361,
       "type": "hardcoded_prop",
       "string": "Velg tidspunkt",
       "prop": "title",
@@ -3528,7 +2752,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 305,
+      "line": 311,
       "type": "hardcoded_object_value",
       "string": "Ledig",
       "key": "label",
@@ -3537,7 +2761,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 306,
+      "line": 312,
       "type": "hardcoded_object_value",
       "string": "Reservert",
       "key": "label",
@@ -3546,7 +2770,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 307,
+      "line": 313,
       "type": "hardcoded_object_value",
       "string": "Booket",
       "key": "label",
@@ -3555,7 +2779,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 308,
+      "line": 314,
       "type": "hardcoded_object_value",
       "string": "Blokkert",
       "key": "label",
@@ -3564,7 +2788,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 309,
+      "line": 315,
       "type": "hardcoded_object_value",
       "string": "Utilgjengelig",
       "key": "label",
@@ -3573,7 +2797,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/CalendarSection.tsx",
-      "line": 310,
+      "line": 316,
       "type": "hardcoded_object_value",
       "string": "Stengt",
       "key": "label",
@@ -5173,42 +4397,6 @@
       "severity": "high"
     },
     {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-      "line": 196,
-      "type": "hardcoded_prop",
-      "string": "Søk etter samtaler...",
-      "prop": "placeholder",
-      "context": "placeholder=\"Søk etter samtaler...\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-      "line": 680,
-      "type": "hardcoded_prop",
-      "string": "Skriv en melding...",
-      "prop": "placeholder",
-      "context": "placeholder=\"Skriv en melding...\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-      "line": 223,
-      "type": "hardcoded_object_value",
-      "string": "Alle",
-      "key": "label",
-      "context": "{ key: 'all' as FilterType, label: 'Alle', count: conversations.length },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/messages.tsx",
-      "line": 224,
-      "type": "hardcoded_object_value",
-      "string": "Uleste",
-      "key": "label",
-      "context": "{ key: 'unread' as FilterType, label: 'Uleste', count: totalUnread },",
-      "severity": "medium"
-    },
-    {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx",
       "line": 186,
       "type": "hardcoded_prop",
@@ -5297,82 +4485,6 @@
       "prop": "aria-label",
       "context": "aria-label=\"Endringer\"",
       "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 154,
-      "type": "hardcoded_jsx_text",
-      "string": "Alle",
-      "context": "<option value=\"all\">Alle</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 155,
-      "type": "hardcoded_jsx_text",
-      "string": "Bookinger",
-      "context": "<option value=\"booking\">Bookinger</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 156,
-      "type": "hardcoded_jsx_text",
-      "string": "Meldinger",
-      "context": "<option value=\"message\">Meldinger</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 157,
-      "type": "hardcoded_jsx_text",
-      "string": "Påminnelser",
-      "context": "<option value=\"reminder\">Påminnelser</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 158,
-      "type": "hardcoded_jsx_text",
-      "string": "System",
-      "context": "<option value=\"system\">System</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 32,
-      "type": "hardcoded_object_value",
-      "string": "Booking bekreftet",
-      "key": "title",
-      "context": "title: 'Booking bekreftet',",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 40,
-      "type": "hardcoded_object_value",
-      "string": "Påminnelse",
-      "key": "title",
-      "context": "title: 'Påminnelse',",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 48,
-      "type": "hardcoded_object_value",
-      "string": "Ny melding",
-      "key": "title",
-      "context": "title: 'Ny melding',",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notifications.tsx",
-      "line": 56,
-      "type": "hardcoded_object_value",
-      "string": "Vedlikehold",
-      "key": "title",
-      "context": "title: 'Vedlikehold',",
-      "severity": "medium"
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/org/activity.tsx",
@@ -5820,206 +4932,6 @@
       "severity": "medium"
     },
     {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 177,
-      "type": "hardcoded_jsx_text",
-      "string": "Tema",
-      "context": "<label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tema</labe",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 183,
-      "type": "hardcoded_jsx_text",
-      "string": "Følg system",
-      "context": "<option value=\"system\">Følg system</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 184,
-      "type": "hardcoded_jsx_text",
-      "string": "Lyst",
-      "context": "<option value=\"light\">Lyst</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 185,
-      "type": "hardcoded_jsx_text",
-      "string": "Mørkt",
-      "context": "<option value=\"dark\">Mørkt</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 189,
-      "type": "hardcoded_jsx_text",
-      "string": "Språk",
-      "context": "<label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</lab",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 195,
-      "type": "hardcoded_jsx_text",
-      "string": "Norsk",
-      "context": "<option value=\"no\">Norsk</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 196,
-      "type": "hardcoded_jsx_text",
-      "string": "English",
-      "context": "<option value=\"en\">English</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 65,
-      "type": "hardcoded_object_value",
-      "string": "Bookingbekreftelser",
-      "key": "label",
-      "context": "{ key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' }",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 65,
-      "type": "hardcoded_object_value",
-      "string": "Motta e-post ved nye bookinger",
-      "key": "description",
-      "context": "{ key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' }",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 66,
-      "type": "hardcoded_object_value",
-      "string": "E-post påminnelser",
-      "key": "label",
-      "context": "{ key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' ",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 66,
-      "type": "hardcoded_object_value",
-      "string": "Påminnelse 24 timer før booking",
-      "key": "description",
-      "context": "{ key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' ",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 67,
-      "type": "hardcoded_object_value",
-      "string": "Nyhetsbrev",
-      "key": "label",
-      "context": "{ key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 67,
-      "type": "hardcoded_object_value",
-      "string": "Motta nyheter og tilbud",
-      "key": "description",
-      "context": "{ key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 68,
-      "type": "hardcoded_object_value",
-      "string": "SMS-påminnelser",
-      "key": "label",
-      "context": "{ key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 68,
-      "type": "hardcoded_object_value",
-      "string": "Motta påminnelse via SMS",
-      "key": "description",
-      "context": "{ key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 69,
-      "type": "hardcoded_object_value",
-      "string": "Push-varsler",
-      "key": "label",
-      "context": "{ key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 69,
-      "type": "hardcoded_object_value",
-      "string": "Sanntidsvarsler i nettleseren",
-      "key": "description",
-      "context": "{ key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 73,
-      "type": "hardcoded_object_value",
-      "string": "Vis profil",
-      "key": "label",
-      "context": "{ key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 73,
-      "type": "hardcoded_object_value",
-      "string": "La andre brukere se profilen din",
-      "key": "description",
-      "context": "{ key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 74,
-      "type": "hardcoded_object_value",
-      "string": "Del aktivitet",
-      "key": "label",
-      "context": "{ key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjone",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 74,
-      "type": "hardcoded_object_value",
-      "string": "Del bookinghistorikk med organisasjonen",
-      "key": "description",
-      "context": "{ key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjone",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 75,
-      "type": "hardcoded_object_value",
-      "string": "Anonyme analyser",
-      "key": "label",
-      "context": "{ key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/preferences.tsx",
-      "line": 75,
-      "type": "hardcoded_object_value",
-      "string": "Hjelp oss forbedre tjenesten",
-      "key": "description",
-      "context": "{ key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },",
-      "severity": "medium"
-    },
-    {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/season-applications.tsx",
       "line": 321,
       "type": "hardcoded_prop",
@@ -6119,105 +5031,8 @@
       "severity": "medium"
     },
     {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/seasons.tsx",
-      "line": 278,
-      "type": "hardcoded_prop",
-      "string": "Laster sesonger...",
-      "prop": "aria-label",
-      "context": "<Spinner aria-label=\"Laster sesonger...\" />",
-      "severity": "high"
-    },
-    {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 500,
-      "type": "hardcoded_jsx_text",
-      "string": "Norge",
-      "context": "<option value=\"Norge\">Norge</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 501,
-      "type": "hardcoded_jsx_text",
-      "string": "Sverige",
-      "context": "<option value=\"Sverige\">Sverige</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 502,
-      "type": "hardcoded_jsx_text",
-      "string": "Danmark",
-      "context": "<option value=\"Danmark\">Danmark</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 503,
-      "type": "hardcoded_jsx_text",
-      "string": "Finland",
-      "context": "<option value=\"Finland\">Finland</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 580,
-      "type": "hardcoded_jsx_text",
-      "string": "Norge",
-      "context": "<option value=\"Norge\">Norge</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 581,
-      "type": "hardcoded_jsx_text",
-      "string": "Sverige",
-      "context": "<option value=\"Sverige\">Sverige</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 582,
-      "type": "hardcoded_jsx_text",
-      "string": "Danmark",
-      "context": "<option value=\"Danmark\">Danmark</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 583,
-      "type": "hardcoded_jsx_text",
-      "string": "Finland",
-      "context": "<option value=\"Finland\">Finland</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 806,
-      "type": "hardcoded_jsx_text",
-      "string": "Norsk (Bokmål)",
-      "context": "<option value=\"nb\">Norsk (Bokmål)</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 807,
-      "type": "hardcoded_jsx_text",
-      "string": "Norsk (Nynorsk)",
-      "context": "<option value=\"nn\">Norsk (Nynorsk)</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 808,
-      "type": "hardcoded_jsx_text",
-      "string": "English",
-      "context": "<option value=\"en\">English</option>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 321,
+      "line": 322,
       "type": "hardcoded_prop",
       "string": "Avatar",
       "prop": "alt",
@@ -6225,367 +5040,8 @@
       "severity": "high"
     },
     {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 348,
-      "type": "hardcoded_prop",
-      "string": "Endre profilbilde",
-      "prop": "aria-label",
-      "context": "aria-label=\"Endre profilbilde\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 374,
-      "type": "hardcoded_prop",
-      "string": "Fullt navn",
-      "prop": "label",
-      "context": "<FormField label=\"Fullt navn\" required>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 378,
-      "type": "hardcoded_prop",
-      "string": "Ola Nordmann",
-      "prop": "placeholder",
-      "context": "placeholder=\"Ola Nordmann\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 379,
-      "type": "hardcoded_prop",
-      "string": "Fullt navn",
-      "prop": "aria-label",
-      "context": "aria-label=\"Fullt navn\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 383,
-      "type": "hardcoded_prop",
-      "string": "E-postadresse",
-      "prop": "label",
-      "context": "<FormField label=\"E-postadresse\" required>",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 389,
-      "type": "hardcoded_prop",
-      "string": "E-postadresse",
-      "prop": "aria-label",
-      "context": "aria-label=\"E-postadresse\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 393,
-      "type": "hardcoded_prop",
-      "string": "Telefonnummer",
-      "prop": "label",
-      "context": "<FormField label=\"Telefonnummer\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 399,
-      "type": "hardcoded_prop",
-      "string": "Telefonnummer",
-      "prop": "aria-label",
-      "context": "aria-label=\"Telefonnummer\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 404,
-      "type": "hardcoded_prop",
-      "string": "Fødselsdato",
-      "prop": "label",
-      "context": "<FormField label=\"Fødselsdato\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 409,
-      "type": "hardcoded_prop",
-      "string": "Fødselsdato",
-      "prop": "aria-label",
-      "context": "aria-label=\"Fødselsdato\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 413,
-      "type": "hardcoded_prop",
-      "string": "Fødselsnummer",
-      "prop": "label",
-      "context": "<FormField label=\"Fødselsnummer\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 417,
-      "type": "hardcoded_prop",
-      "string": "11 siffer",
-      "prop": "placeholder",
-      "context": "placeholder=\"11 siffer\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 419,
-      "type": "hardcoded_prop",
-      "string": "Fødselsnummer",
-      "prop": "aria-label",
-      "context": "aria-label=\"Fødselsnummer\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 426,
-      "type": "hardcoded_prop",
-      "string": "Lagre profilinnstillinger",
-      "prop": "aria-label",
-      "context": "<Button onClick={handleSaveProfile} disabled={isSaving} type=\"button\" aria-label=\"Lagre profilinnsti",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 453,
-      "type": "hardcoded_prop",
-      "string": "Gateadresse",
-      "prop": "label",
-      "context": "<FormField label=\"Gateadresse\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 460,
-      "type": "hardcoded_prop",
-      "string": "Storgata 1",
-      "prop": "placeholder",
-      "context": "placeholder=\"Storgata 1\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 461,
-      "type": "hardcoded_prop",
-      "string": "Gateadresse",
-      "prop": "aria-label",
-      "context": "aria-label=\"Gateadresse\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 466,
-      "type": "hardcoded_prop",
-      "string": "Poststed",
-      "prop": "label",
-      "context": "<FormField label=\"Poststed\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 473,
-      "type": "hardcoded_prop",
-      "string": "Oslo",
-      "prop": "placeholder",
-      "context": "placeholder=\"Oslo\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 474,
-      "type": "hardcoded_prop",
-      "string": "Poststed",
-      "prop": "aria-label",
-      "context": "aria-label=\"Poststed\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 478,
-      "type": "hardcoded_prop",
-      "string": "Postnummer",
-      "prop": "label",
-      "context": "<FormField label=\"Postnummer\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 487,
-      "type": "hardcoded_prop",
-      "string": "Postnummer",
-      "prop": "aria-label",
-      "context": "aria-label=\"Postnummer\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 492,
-      "type": "hardcoded_prop",
-      "string": "Land",
-      "prop": "label",
-      "context": "<FormField label=\"Land\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 533,
-      "type": "hardcoded_prop",
-      "string": "Gateadresse",
-      "prop": "label",
-      "context": "<FormField label=\"Gateadresse\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 540,
-      "type": "hardcoded_prop",
-      "string": "Storgata 1",
-      "prop": "placeholder",
-      "context": "placeholder=\"Storgata 1\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 541,
-      "type": "hardcoded_prop",
-      "string": "Gateadresse",
-      "prop": "aria-label",
-      "context": "aria-label=\"Gateadresse\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 546,
-      "type": "hardcoded_prop",
-      "string": "Poststed",
-      "prop": "label",
-      "context": "<FormField label=\"Poststed\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 553,
-      "type": "hardcoded_prop",
-      "string": "Oslo",
-      "prop": "placeholder",
-      "context": "placeholder=\"Oslo\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 554,
-      "type": "hardcoded_prop",
-      "string": "Poststed",
-      "prop": "aria-label",
-      "context": "aria-label=\"Poststed\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 558,
-      "type": "hardcoded_prop",
-      "string": "Postnummer",
-      "prop": "label",
-      "context": "<FormField label=\"Postnummer\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 567,
-      "type": "hardcoded_prop",
-      "string": "Postnummer",
-      "prop": "aria-label",
-      "context": "aria-label=\"Postnummer\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 572,
-      "type": "hardcoded_prop",
-      "string": "Land",
-      "prop": "label",
-      "context": "<FormField label=\"Land\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 589,
-      "type": "hardcoded_prop",
-      "string": "Lagre adresseinnstillinger",
-      "prop": "aria-label",
-      "context": "<Button onClick={handleSaveProfile} disabled={isSaving} type=\"button\" aria-label=\"Lagre adresseinnst",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 626,
-      "type": "hardcoded_prop",
-      "string": "Eksporter mine data",
-      "prop": "aria-label",
-      "context": "aria-label=\"Eksporter mine data\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 666,
-      "type": "hardcoded_prop",
-      "string": "Markedsføring",
-      "prop": "aria-label",
-      "context": "aria-label=\"Markedsføring\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 689,
-      "type": "hardcoded_prop",
-      "string": "Analyse",
-      "prop": "aria-label",
-      "context": "aria-label=\"Analyse\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 712,
-      "type": "hardcoded_prop",
-      "string": "Deling med tredjeparter",
-      "prop": "aria-label",
-      "context": "aria-label=\"Deling med tredjeparter\"",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 804,
-      "type": "hardcoded_prop",
-      "string": "Foretrukket språk",
-      "prop": "label",
-      "context": "<FormField label=\"Foretrukket språk\">",
-      "severity": "high"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 196,
-      "type": "hardcoded_alert",
-      "string": "Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.",
-      "method": "confirm",
-      "context": "if (confirm('Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.')) {",
-      "severity": "medium"
-    },
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx",
-      "line": 1,
-      "type": "missing_t_import",
-      "string": "",
-      "context": "File contains user-facing text but does not import useT()",
-      "severity": "high"
-    },
-    {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 27,
+      "line": 28,
       "type": "hardcoded_prop",
       "string": "Test Notification",
       "prop": "title",
@@ -6594,7 +5050,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 28,
+      "line": 29,
       "type": "hardcoded_prop",
       "string": "This is a test notification",
       "prop": "message",
@@ -6603,7 +5059,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 73,
+      "line": 76,
       "type": "hardcoded_object_value",
       "string": "Booking bekreftet",
       "key": "title",
@@ -6612,7 +5068,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 85,
+      "line": 88,
       "type": "hardcoded_object_value",
       "string": "Påminnelse: Booking i morgen",
       "key": "title",
@@ -6621,7 +5077,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 97,
+      "line": 100,
       "type": "hardcoded_object_value",
       "string": "Påminnelse: Booking om 1 time",
       "key": "title",
@@ -6630,7 +5086,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 109,
+      "line": 112,
       "type": "hardcoded_object_value",
       "string": "Booking kansellert",
       "key": "title",
@@ -6639,7 +5095,7 @@
     },
     {
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/utils/notification-test.ts",
-      "line": 121,
+      "line": 124,
       "type": "hardcoded_object_value",
       "string": "Booking endret",
       "key": "title",

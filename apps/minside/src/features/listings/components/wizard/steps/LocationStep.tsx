@@ -4,6 +4,7 @@
  */
 
 import { Textfield, Paragraph, Heading } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import type { BackofficeListing } from '../../../types';
 
 export interface LocationStepProps {
@@ -13,6 +14,7 @@ export interface LocationStepProps {
 }
 
 export function LocationStep({ data, onChange, errors = [] }: LocationStepProps) {
+  const t = useT();
   const location = data.location || {};
 
   const handleLocationChange = (field: keyof NonNullable<BackofficeListing['location']>, value: string | number) => {
@@ -28,10 +30,10 @@ export function LocationStep({ data, onChange, errors = [] }: LocationStepProps)
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
         <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          Lokasjon
+          {t('listings.wizard.location.title')}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Oppgi adresse og plassering for utleieobjektet
+          {t('listings.wizard.location.description')}
         </Paragraph>
       </div>
 
@@ -55,11 +57,11 @@ export function LocationStep({ data, onChange, errors = [] }: LocationStepProps)
       {/* Address */}
       <div>
         <Textfield
-          label="Adresse"
-          description="Gateadresse til utleieobjektet"
+          label={t('listings.wizard.location.address')}
+          description={t('listings.wizard.location.addressDescription')}
           value={location.address || ''}
           onChange={(e) => handleLocationChange('address', e.target.value)}
-          placeholder="f.eks. Storgata 1"
+          placeholder={t('listings.wizard.location.addressPlaceholder')}
         />
       </div>
 
@@ -67,18 +69,18 @@ export function LocationStep({ data, onChange, errors = [] }: LocationStepProps)
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--ds-spacing-4)' }}>
         <div>
           <Textfield
-            label="Postnummer"
+            label={t('listings.wizard.location.postalCode')}
             value={location.postalCode || ''}
             onChange={(e) => handleLocationChange('postalCode', e.target.value)}
-            placeholder="0001"
+            placeholder={t('listings.wizard.location.postalCodePlaceholder')}
           />
         </div>
         <div>
           <Textfield
-            label="By"
+            label={t('listings.wizard.location.city')}
             value={location.city || ''}
             onChange={(e) => handleLocationChange('city', e.target.value)}
-            placeholder="Oslo"
+            placeholder={t('listings.wizard.location.cityPlaceholder')}
           />
         </div>
       </div>
@@ -86,51 +88,51 @@ export function LocationStep({ data, onChange, errors = [] }: LocationStepProps)
       {/* Municipality */}
       <div>
         <Textfield
-          label="Kommune"
-          description="Kommune der objektet ligger"
+          label={t('listings.wizard.location.municipality')}
+          description={t('listings.wizard.location.municipalityDescription')}
           value={location.municipality || ''}
           onChange={(e) => handleLocationChange('municipality', e.target.value)}
-          placeholder="f.eks. Oslo"
+          placeholder={t('listings.wizard.location.municipalityPlaceholder')}
         />
       </div>
 
       {/* Country */}
       <div>
         <Textfield
-          label="Land"
+          label={t('listings.wizard.location.country')}
           value={location.country || 'Norge'}
           onChange={(e) => handleLocationChange('country', e.target.value)}
-          placeholder="Norge"
+          placeholder={t('listings.wizard.location.countryPlaceholder')}
         />
       </div>
 
       {/* Coordinates */}
       <div>
         <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-          Koordinater (valgfritt)
+          {t('listings.wizard.location.coordinates')}
         </Heading>
         <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Oppgi koordinater for nøyaktig plassering på kart
+          {t('listings.wizard.location.coordinatesDescription')}
         </Paragraph>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
             <Textfield
-              label="Breddegrad (latitude)"
+              label={t('listings.wizard.location.latitude')}
               type="number"
               step="any"
               value={location.latitude?.toString() || ''}
               onChange={(e) => handleLocationChange('latitude', parseFloat(e.target.value) || 0)}
-              placeholder="59.9139"
+              placeholder={t('listings.wizard.location.latitudePlaceholder')}
             />
           </div>
           <div>
             <Textfield
-              label="Lengdegrad (longitude)"
+              label={t('listings.wizard.location.longitude')}
               type="number"
               step="any"
               value={location.longitude?.toString() || ''}
               onChange={(e) => handleLocationChange('longitude', parseFloat(e.target.value) || 0)}
-              placeholder="10.7522"
+              placeholder={t('listings.wizard.location.longitudePlaceholder')}
             />
           </div>
         </div>

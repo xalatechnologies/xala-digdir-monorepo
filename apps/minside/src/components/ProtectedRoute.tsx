@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner, Heading, Paragraph } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth, type BackofficeRole } from '../hooks/useAuth';
 import { useAccountContext, type DashboardContext } from '../providers/AccountContextProvider';
 import {
@@ -85,6 +86,7 @@ export function ProtectedRoute({
   const { isLoading, isAuthenticated, checkRole } = useAuth();
   const { accountType, isLoadingOrganizations } = useAccountContext();
   const location = useLocation();
+  const t = useT();
 
   // Track if we've already saved context to prevent double-saves
   const hasStoredContext = useRef(false);
@@ -142,7 +144,7 @@ export function ProtectedRoute({
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label={t('components.protected.loading')} data-size="lg" />
       </div>
     );
   }
@@ -179,12 +181,12 @@ export function ProtectedRoute({
           data-size="lg"
           style={{ color: 'var(--ds-color-danger-text-default)' }}
         >
-          Ingen tilgang
+          {t('components.protected.noAccess')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Du har ikke tilgang til denne siden.
+          {t('components.protected.noAccessDescription')}
           <br />
-          Kontakt administrator hvis du mener dette er feil.
+          {t('components.protected.contactAdmin')}
         </Paragraph>
       </div>
     );

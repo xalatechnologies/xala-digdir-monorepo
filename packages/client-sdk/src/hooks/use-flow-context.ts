@@ -388,8 +388,8 @@ export function useRentalObjectFlowContext(rentalObjectId: string): FlowContext 
       return undefined;
     }
     const context = loadFlowContextFromStorage();
-    // Only return if rentalObjectId matches (or listingId for backward compatibility)
-    if (context?.rentalObjectId === rentalObjectId || context?.listingId === rentalObjectId) {
+    // Only return if listingId matches the provided rentalObjectId parameter
+    if (context?.listingId === rentalObjectId) {
       return context;
     }
     return undefined;

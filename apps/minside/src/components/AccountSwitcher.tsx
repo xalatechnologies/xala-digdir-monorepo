@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Paragraph } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAccountContext } from '../providers/AccountContextProvider';
 
 /**
@@ -78,6 +79,7 @@ export function AccountSwitcher() {
   } = useAccountContext();
 
   const navigate = useNavigate();
+  const t = useT();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -228,7 +230,7 @@ export function AccountSwitcher() {
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  Som privatperson
+                  {t('components.accountSwitcher.personal')}
                 </Paragraph>
               </div>
               {accountType === 'personal' && (
@@ -268,7 +270,7 @@ export function AccountSwitcher() {
                     fontWeight: 'var(--ds-font-weight-semibold)',
                   }}
                 >
-                  Organisasjoner
+                  {t('components.accountSwitcher.organizations')}
                 </Paragraph>
               </div>
               {organizations.map((org) => (
@@ -401,7 +403,7 @@ export function AccountSwitcher() {
                 data-size="sm"
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
               >
-                Administrer organisasjoner
+                {t('components.accountSwitcher.manageOrganizations')}
               </Paragraph>
             </Button>
           </div>

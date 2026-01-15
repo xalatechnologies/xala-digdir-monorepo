@@ -14,6 +14,7 @@
 
 import * as React from 'react';
 import { Paragraph, ListingAvailabilityCalendar } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import {
   useListingCalendarConfig,
   useAvailabilityMatrix,
@@ -161,6 +162,7 @@ export function CalendarSection({
 }: CalendarSectionProps): React.ReactElement {
   // Support both rentalObjectId (new) and listingId (backward compatibility)
   const effectiveRentalObjectId = rentalObjectId || deprecatedListingId || '';
+  const t = useT();
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
@@ -238,7 +240,7 @@ export function CalendarSection({
 
       if (affectedSelection) {
         setWarningMessage(
-          'Din valgte tid kan ha blitt endret. Vennligst kontroller at valget ditt fortsatt er tilgjengelig.'
+          t('components.calendar.selectionChanged')
         );
       }
     }
@@ -296,31 +298,31 @@ export function CalendarSection({
   // Error message
   const errorMessage = React.useMemo(() => {
     if (configError) {
-      return 'Kunne ikke laste kalenderinnstillinger. Vennligst prøv igjen.';
+      return t('components.calendar.couldNotLoadSettings');
     }
     if (matrixError) {
-      return 'Kunne ikke laste tilgjengelighet. Vennligst prøv igjen.';
+      return t('components.calendar.couldNotLoadAvailability');
     }
     return undefined;
-  }, [configError, matrixError]);
+  }, [configError, matrixError, t]);
 
   // Get legend from matrix or use default
   const legend = React.useMemo(() => {
     if (!matrixResponse?.data?.legend) {
       return [
-        { status: 'AVAILABLE' as const, label: 'Ledig' },
-        { status: 'RESERVED' as const, label: 'Reservert' },
-        { status: 'BOOKED' as const, label: 'Booket' },
-        { status: 'BLOCKED' as const, label: 'Blokkert' },
-        { status: 'BLACKOUT' as const, label: 'Utilgjengelig' },
-        { status: 'CLOSED' as const, label: 'Stengt' },
+        { status: 'AVAILABLE' as const, label: t('components.calendar.statusAvailable') },
+        { status: 'RESERVED' as const, label: t('components.calendar.statusReserved') },
+        { status: 'BOOKED' as const, label: t('components.calendar.statusBooked') },
+        { status: 'BLOCKED' as const, label: t('components.calendar.statusBlocked') },
+        { status: 'BLACKOUT' as const, label: t('components.calendar.statusBlackout') },
+        { status: 'CLOSED' as const, label: t('components.calendar.statusClosed') },
       ];
     }
     return matrixResponse.data.legend.map((item: { status: string; labelKey: string }) => ({
       status: item.status as CalendarCell['status'],
       label: item.labelKey.includes('.') ? item.labelKey.split('.').pop()! : item.labelKey,
     }));
-  }, [matrixResponse]);
+  }, [matrixResponse, t]);
 
   // Check permissions
   const canSelect = config?.permissions?.canSelectSlot ?? true;
@@ -337,7 +339,7 @@ export function CalendarSection({
         }}
       >
         <Paragraph data-size="sm" style={{ margin: 0, fontStyle: 'italic' }}>
-          Kalender er ikke tilgjengelig for dette lokalet.
+          {t('components.calendar.notAvailable')}
         </Paragraph>
       </div>
     );
@@ -358,8 +360,8 @@ export function CalendarSection({
         endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
         slotSizeMinutes={config?.slotSizeMinutes ?? 60}
         showTips={true}
-        title="Velg tidspunkt"
-        subtitle={calendarMode === 'TIME_SLOTS' ? 'Velg ledige tidspunkter' : calendarMode === 'ALL_DAY' ? 'Velg ledige dager' : 'Velg periode'}
+        title={t('components.calendar.selectTime')}
+        subtitle={calendarMode === 'TIME_SLOTS' ? t('components.calendar.selectTimeSlots') : calendarMode === 'ALL_DAY' ? t('components.calendar.selectDays') : t('components.calendar.selectPeriod')}
         isLoading={isLoading}
         errorMessage={errorMessage}
         warningMessage={warningMessage}

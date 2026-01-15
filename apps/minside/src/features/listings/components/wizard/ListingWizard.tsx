@@ -4,6 +4,7 @@
  */
 
 import { Button, Heading, Paragraph, Spinner } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useListingWizard } from '../../hooks/useListingWizard';
 import { WizardStepper } from './WizardStepper';
 import { BasicsStep } from './steps/BasicsStep';
@@ -22,6 +23,7 @@ export interface ListingWizardProps {
 }
 
 export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
+  const t = useT();
   const wizard = useListingWizard({
     listingId,
     initialType,
@@ -59,8 +61,8 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner aria-label="Laster..." />
-        <Paragraph>Laster utleieobjekt...</Paragraph>
+        <Spinner aria-label={t('common.loading')} />
+        <Paragraph>{t('listings.wizard.loading')}</Paragraph>
       </div>
     );
   }
@@ -86,7 +88,7 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       default:
         return (
           <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
-            <Paragraph>Ukjent steg: {currentStepId}</Paragraph>
+            <Paragraph>{t('listings.wizard.unknownStep')}: {currentStepId}</Paragraph>
           </div>
         );
     }
@@ -105,12 +107,12 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       {/* Page header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {isEditMode ? 'Rediger utleieobjekt' : 'Opprett nytt utleieobjekt'}
+          {isEditMode ? t('listings.wizard.editTitle') : t('listings.wizard.createTitle')}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {isEditMode
-            ? 'Gjør endringer i utleieobjektet og lagre'
-            : 'Fyll ut informasjon om utleieobjektet. Du kan lagre som utkast og fortsette senere.'}
+            ? t('listings.wizard.editDescription')
+            : t('listings.wizard.createDescription')}
         </Paragraph>
       </div>
 
@@ -120,7 +122,7 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
           steps={steps}
           currentStep={currentStep}
           onStepClick={goToStep}
-          title={isEditMode ? 'Rediger utleieobjekt' : 'Opprett utleieobjekt'}
+          title={isEditMode ? t('listings.wizard.edit') : t('listings.wizard.create')}
           errors={errors}
         />
       </div>
@@ -152,29 +154,29 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       >
         {/* Left side - Cancel */}
         <Button type="button" variant="tertiary" onClick={cancel} disabled={isSaving}>
-          Avbryt
+          {t('common.cancel')}
         </Button>
 
         {/* Center - Save draft */}
         <Button type="button" variant="secondary" onClick={handleSaveDraft} loading={isSaving}>
-          Lagre utkast
+          {t('listings.wizard.saveDraft')}
         </Button>
 
         {/* Right side - Navigation */}
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           {canGoPrev && (
             <Button type="button" variant="secondary" onClick={prevStep} disabled={isSaving}>
-              ← Forrige
+              ← {t('common.previous')}
             </Button>
           )}
           {canGoNext && (
             <Button type="button" variant="primary" onClick={nextStep} disabled={isSaving}>
-              Neste →
+              {t('common.next')} →
             </Button>
           )}
           {isLastStep && (
             <Button type="button" variant="primary" onClick={handleSaveDraft} loading={isSaving}>
-              Fullfør
+              {t('listings.wizard.complete')}
             </Button>
           )}
         </div>

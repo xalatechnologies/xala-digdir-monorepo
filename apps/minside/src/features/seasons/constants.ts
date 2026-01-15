@@ -2,96 +2,97 @@
  * Season Feature Constants
  *
  * Centralized constants for the season booking feature.
+ * Note: Labels are now managed via i18n keys. Use useT() hook in components.
  */
 
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 
 // =============================================================================
-// Season Status Configuration
+// Season Status Configuration (Colors only - labels from i18n)
 // =============================================================================
 
 export const SEASON_STATUS_CONFIG = {
   draft: {
-    label: 'Utkast',
+    labelKey: 'seasons.status.draft',
     color: 'var(--ds-color-neutral-text-subtle)',
     bgColor: 'var(--ds-color-neutral-surface-default)',
   },
   open: {
-    label: 'Åpen for søknader',
+    labelKey: 'seasons.status.open',
     color: 'var(--ds-color-success-text-default)',
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   closed: {
-    label: 'Stengt',
+    labelKey: 'seasons.status.closed',
     color: 'var(--ds-color-neutral-text-subtle)',
     bgColor: 'var(--ds-color-neutral-surface-default)',
   },
   active: {
-    label: 'Aktiv',
+    labelKey: 'seasons.status.active',
     color: 'var(--ds-color-accent-text-default)',
     bgColor: 'var(--ds-color-accent-surface-default)',
   },
   completed: {
-    label: 'Avsluttet',
+    labelKey: 'seasons.status.completed',
     color: 'var(--ds-color-neutral-text-subtle)',
     bgColor: 'var(--ds-color-neutral-surface-default)',
   },
   cancelled: {
-    label: 'Kansellert',
+    labelKey: 'seasons.status.cancelled',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
 } as const;
 
 // =============================================================================
-// Application Status Configuration
+// Application Status Configuration (Colors only - labels from i18n)
 // =============================================================================
 
 export const APPLICATION_STATUS_CONFIG = {
   pending: {
-    label: 'Venter',
+    labelKey: 'seasons.application.pending',
     color: 'var(--ds-color-warning-text-default)',
     bgColor: 'var(--ds-color-warning-surface-default)',
   },
   approved: {
-    label: 'Godkjent',
+    labelKey: 'seasons.application.approved',
     color: 'var(--ds-color-success-text-default)',
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
-    label: 'Avslått',
+    labelKey: 'seasons.application.rejected',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
   allocated: {
-    label: 'Tildelt',
+    labelKey: 'seasons.application.allocated',
     color: 'var(--ds-color-accent-text-default)',
     bgColor: 'var(--ds-color-accent-surface-default)',
   },
 } as const;
 
 // =============================================================================
-// Weekday Configuration
+// Weekday Configuration (i18n keys only - use with useT() hook)
 // =============================================================================
 
-export const WEEKDAY_LABELS = [
-  'Søndag',
-  'Mandag',
-  'Tirsdag',
-  'Onsdag',
-  'Torsdag',
-  'Fredag',
-  'Lørdag',
+export const WEEKDAY_LABEL_KEYS = [
+  'seasons.weekday.sunday',
+  'seasons.weekday.monday',
+  'seasons.weekday.tuesday',
+  'seasons.weekday.wednesday',
+  'seasons.weekday.thursday',
+  'seasons.weekday.friday',
+  'seasons.weekday.saturday',
 ] as const;
 
-export const WEEKDAY_SHORT_LABELS = [
-  'Søn',
-  'Man',
-  'Tir',
-  'Ons',
-  'Tor',
-  'Fre',
-  'Lør',
+export const WEEKDAY_SHORT_LABEL_KEYS = [
+  'seasons.weekday.short.sunday',
+  'seasons.weekday.short.monday',
+  'seasons.weekday.short.tuesday',
+  'seasons.weekday.short.wednesday',
+  'seasons.weekday.short.thursday',
+  'seasons.weekday.short.friday',
+  'seasons.weekday.short.saturday',
 ] as const;
 
 // =============================================================================
@@ -105,14 +106,14 @@ export const TIME_SLOT_CONFIG = {
 } as const;
 
 // =============================================================================
-// Filter Options
+// Filter Options (i18n keys - use with useT() hook)
 // =============================================================================
 
-export const SEASON_FILTER_OPTIONS: { label: string; value: SeasonStatus | 'all' }[] = [
-  { label: 'Alle', value: 'all' },
-  { label: 'Åpne', value: 'open' },
-  { label: 'Aktive', value: 'active' },
-  { label: 'Kommende', value: 'draft' },
+export const SEASON_FILTER_OPTIONS: { labelKey: string; value: SeasonStatus | 'all' }[] = [
+  { labelKey: 'seasons.allSeasons', value: 'all' },
+  { labelKey: 'seasons.filterOpen', value: 'open' },
+  { labelKey: 'seasons.filterActive', value: 'active' },
+  { labelKey: 'seasons.filterUpcoming', value: 'draft' },
 ];
 
 // =============================================================================

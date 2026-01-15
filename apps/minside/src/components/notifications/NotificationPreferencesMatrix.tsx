@@ -191,7 +191,7 @@ function NotificationTypeRow({
                 color: 'var(--ds-color-info-text-default)',
               }}
             >
-              SMS anbefalt
+              {t('notifications.channels.smsRecommended')}
             </Badge>
           )}
         </div>

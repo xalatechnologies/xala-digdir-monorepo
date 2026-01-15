@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Heading, Paragraph, Button } from '@xala/ds';
 import type { Season } from '@digilist/client-sdk/types';
 import { SeasonStatusBadge } from './SeasonStatusBadge';
+import { useT } from '@xala/i18n';
 
 /**
  * Season Card Component
@@ -46,6 +47,7 @@ interface SeasonCardProps {
 
 export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
   const navigate = useNavigate();
+  const t = useT();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -135,7 +137,7 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Periode
+              {t('seasons.card.period')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
               {formatDate(season.startDate)} - {formatDate(season.endDate)}
@@ -162,7 +164,7 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Søknadsfrist
+              {t('seasons.card.applicationDeadline')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
               {formatDate(season.applicationDeadline)}
@@ -190,11 +192,11 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Søknader
+                {t('seasons.card.applications')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {season.totalApplications ?? 0} totalt
-                {season.approvedApplications !== undefined && ` • ${season.approvedApplications} godkjent`}
+                {t('seasons.card.applicationsTotal', { count: season.totalApplications ?? 0 })}
+                {season.approvedApplications !== undefined && ` • ${t('seasons.card.applicationsApproved', { count: season.approvedApplications })}`}
               </Paragraph>
             </div>
           </div>
@@ -219,7 +221,7 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
             data-size="sm"
             onClick={handleViewDetails}
           >
-            Se detaljer
+            {t('seasons.card.viewDetails')}
           </Button>
           {isOpen && (
             <Button
@@ -228,7 +230,7 @@ export function SeasonCard({ season, showActions = true }: SeasonCardProps) {
               data-size="sm"
               onClick={handleApply}
             >
-              Søk nå
+              {t('seasons.card.applyNow')}
             </Button>
           )}
         </div>

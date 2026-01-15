@@ -19,38 +19,67 @@ import {
 } from '@xala/ds';
 import { useConversations, useMessages, useSendMessage, type Conversation, type Message, formatTime } from '@digilist/client-sdk';
 import { useAuth } from '../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
-// Time ago formatting
-function formatTimeAgo(dateStr: string): string {
+// Time ago formatting (returns key for translation)
+function getTimeAgoKey(dateStr: string): { key: string; value?: number } {
   const date = new Date(dateStr);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
-  
-  if (diffMins < 1) return 'Nå';
-  if (diffMins < 60) return `${diffMins}m`;
-  if (diffHours < 24) return `${diffHours}t`;
-  if (diffDays < 7) return `${diffDays}d`;
-  return date.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+
+  if (diffMins < 1) return { key: 'messages.timeNow' };
+  if (diffMins < 60) return { key: 'short', value: diffMins }; // Returns "Xm"
+  if (diffHours < 24) return { key: 'short', value: diffHours }; // Returns "Xt"
+  if (diffDays < 7) return { key: 'short', value: diffDays }; // Returns "Xd"
+  return { key: 'date', value: 0 }; // Will format as date
+}
+
+function formatTimeAgo(dateStr: string, locale: string = 'nb-NO'): string {
+  const result = getTimeAgoKey(dateStr);
+  if (result.key === 'short' && result.value !== undefined) {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}t`;
+    return `${result.value}d`;
+  }
+  if (result.key === 'date') {
+    return new Date(dateStr).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+  }
+  return result.key; // Will be translated
 }
 
 // Date grouping
-function formatMessageDate(dateStr: string): string {
+function getMessageDateKey(dateStr: string): string {
   const date = new Date(dateStr);
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  
-  if (date.toDateString() === today.toDateString()) return 'I dag';
-  if (date.toDateString() === yesterday.toDateString()) return 'I går';
-  return date.toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  if (date.toDateString() === today.toDateString()) return 'messages.timeToday';
+  if (date.toDateString() === yesterday.toDateString()) return 'messages.timeYesterday';
+  return 'date';
+}
+
+function formatMessageDate(dateStr: string, t: (key: string) => string, locale: string = 'nb-NO'): string {
+  const key = getMessageDateKey(dateStr);
+  if (key === 'date') {
+    return new Date(dateStr).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  return t(key);
 }
 
 type FilterType = 'all' | 'unread' | 'booking';
 
 export function MessagesPage() {
+  const t = useT();
   const { user } = useAuth();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -124,12 +153,12 @@ export function MessagesPage() {
   // Group messages by date
   const groupedMessages = useMemo(() => {
     return messages.reduce((groups: Record<string, Message[]>, message: Message) => {
-      const dateKey = formatMessageDate(message.createdAt);
+      const dateKey = formatMessageDate(message.createdAt, t);
       if (!groups[dateKey]) groups[dateKey] = [];
       groups[dateKey].push(message);
       return groups;
     }, {});
-  }, [messages]);
+  }, [messages, t]);
 
   // Stats
   const totalUnread = conversations.reduce((sum: number, c: Conversation) => sum + (c.unreadCount ?? 0), 0);
@@ -171,7 +200,7 @@ export function MessagesPage() {
                 <MessageSquareIcon />
               </div>
               <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-                Meldinger
+                {t('messages.headerTitle')}
               </Heading>
             </div>
             {totalUnread > 0 && (
@@ -183,7 +212,7 @@ export function MessagesPage() {
                 fontSize: 'var(--ds-font-size-xs)',
                 fontWeight: 'var(--ds-font-weight-semibold)',
               }}>
-                {totalUnread} uleste
+                {totalUnread} {t('messages.unreadCount')}
               </div>
             )}
           </div>
@@ -193,7 +222,7 @@ export function MessagesPage() {
             {/* eslint-disable-next-line digdir/prefer-ds-components -- Custom search input with icon positioning */}
             <input
               type="text"
-              placeholder="Søk etter samtaler..."
+              placeholder={t('messages.searchPlaceholder')}
               value={searchQuery}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               style={{
@@ -220,8 +249,8 @@ export function MessagesPage() {
           {/* Filter Tabs */}
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             {[
-              { key: 'all' as FilterType, label: 'Alle', count: conversations.length },
-              { key: 'unread' as FilterType, label: 'Uleste', count: totalUnread },
+              { key: 'all' as FilterType, label: t('messages.filterAll'), count: conversations.length },
+              { key: 'unread' as FilterType, label: t('messages.filterUnread'), count: totalUnread },
             ].map((tab) => (
               // eslint-disable-next-line digdir/prefer-ds-components -- Custom styled tab button
               <button
@@ -263,11 +292,11 @@ export function MessagesPage() {
         <div style={{ flex: 1, overflow: 'auto' }}>
           {loadingConversations ? (
             <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-              <Spinner aria-label="Laster samtaler..." data-size="md" />
+              <Spinner aria-label={t('messages.loadingConversations')} data-size="md" />
             </div>
           ) : filteredConversations.length === 0 ? (
-            <div style={{ 
-              padding: 'var(--ds-spacing-8)', 
+            <div style={{
+              padding: 'var(--ds-spacing-8)',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
@@ -287,7 +316,7 @@ export function MessagesPage() {
                 <MessageSquareIcon />
               </div>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
-                {filter === 'unread' ? 'Ingen uleste meldinger' : 'Ingen samtaler'}
+                {filter === 'unread' ? t('messages.noUnreadMessages') : t('messages.noConversationsYet')}
               </Paragraph>
             </div>
           ) : (
@@ -346,15 +375,15 @@ export function MessagesPage() {
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
-                        <Paragraph data-size="sm" style={{ 
-                          margin: 0, 
-                          fontWeight: hasUnread ? 700 : 500, 
+                        <Paragraph data-size="sm" style={{
+                          margin: 0,
+                          fontWeight: hasUnread ? 700 : 500,
                           color: 'var(--ds-color-neutral-text-default)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
                         }}>
-                          {String(conversation.subject || 'Ukjent avsender')}
+                          {String(conversation.subject || t('messages.unknownSender'))}
                         </Paragraph>
                         <span style={{
                           fontSize: 'var(--ds-font-size-xs)',
@@ -382,8 +411,8 @@ export function MessagesPage() {
                           }}
                         >
                           {typeof conversation.lastMessage === 'object' && conversation.lastMessage !== null
-                            ? String((conversation.lastMessage as { content?: string }).content || 'Ingen meldinger')
-                            : String(conversation.lastMessage || 'Ingen meldinger')}
+                            ? String((conversation.lastMessage as { content?: string }).content || t('messages.noMessagesInConversation'))
+                            : String(conversation.lastMessage || t('messages.noMessagesInConversation'))}
                         </Paragraph>
                         {hasUnread && (
                           <div style={{
@@ -458,10 +487,10 @@ export function MessagesPage() {
                 
                 <div>
                   <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                    {String(selectedConversation.subject || 'Ukjent avsender')}
+                    {String(selectedConversation.subject || t('messages.unknownSender'))}
                   </Heading>
                   <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
-                    Aktiv nå
+                    {t('messages.activeNow')}
                   </Paragraph>
                 </div>
               </div>
@@ -486,10 +515,10 @@ export function MessagesPage() {
             }}>
               {loadingMessages ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                  <Spinner aria-label="Laster meldinger..." data-size="md" />
+                  <Spinner aria-label={t('messages.loadingMessages')} data-size="md" />
                 </div>
               ) : messages.length === 0 ? (
-                <div style={{ 
+                <div style={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -510,10 +539,10 @@ export function MessagesPage() {
                     <MessageSquareIcon />
                   </div>
                   <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
-                    Ingen meldinger ennå
+                    {t('messages.noMessagesInConversation')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                    Si hei for å starte samtalen!
+                    {t('messages.startConversation')}
                   </Paragraph>
                 </div>
               ) : (
@@ -677,7 +706,7 @@ export function MessagesPage() {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Skriv en melding..."
+                  placeholder={t('messages.writeMessage')}
                   value={newMessage}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => setNewMessage(e.target.value)}
                   onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -703,7 +732,7 @@ export function MessagesPage() {
                   disabled={!newMessage.trim() || sendMessageMutation.isPending}
                 >
                   <SendIcon />
-                  Send
+                  {t('messages.send')}
                 </Button>
               </div>
             </div>
@@ -733,15 +762,15 @@ export function MessagesPage() {
               <MessageSquareIcon />
             </div>
             <Heading level={3} data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-default)' }}>
-              Velg en samtale
+              {t('messages.selectConversationToView')}
             </Heading>
-            <Paragraph style={{ 
-              color: 'var(--ds-color-neutral-text-subtle)', 
-              margin: 0, 
+            <Paragraph style={{
+              color: 'var(--ds-color-neutral-text-subtle)',
+              margin: 0,
               textAlign: 'center',
               maxWidth: '280px',
             }}>
-              Klikk på en samtale i listen for å se og sende meldinger
+              {t('messages.clickToViewMessages')}
             </Paragraph>
           </div>
         )}
@@ -778,7 +807,7 @@ export function MessagesPage() {
               <OrganizationIcon />
             </div>
             <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-              {String(selectedConversation.subject || 'Ukjent avsender')}
+              {String(selectedConversation.subject || t('messages.unknownSender'))}
             </Heading>
             <div style={{
               display: 'inline-flex',
@@ -797,7 +826,7 @@ export function MessagesPage() {
                 borderRadius: 'var(--ds-border-radius-full)',
                 backgroundColor: 'var(--ds-color-success-base-default)',
               }} />
-              Aktiv bruker
+              {t('messages.activeUser')}
             </div>
           </div>
 
@@ -805,15 +834,15 @@ export function MessagesPage() {
           <div style={{ padding: 'var(--ds-spacing-4)', flex: 1, overflow: 'auto' }}>
             {/* Contact Info Section */}
             <div style={{ marginBottom: 'var(--ds-spacing-5)' }}>
-              <Paragraph data-size="xs" style={{ 
-                margin: 0, 
-                marginBottom: 'var(--ds-spacing-2)', 
-                fontWeight: 'var(--ds-font-weight-semibold)', 
+              <Paragraph data-size="xs" style={{
+                margin: 0,
+                marginBottom: 'var(--ds-spacing-2)',
+                fontWeight: 'var(--ds-font-weight-semibold)',
                 color: 'var(--ds-color-neutral-text-subtle)',
                 textTransform: 'uppercase',
                 letterSpacing: 'var(--ds-font-letter-spacing-normal)',
               }}>
-                Kontakt
+                {t('messages.contactInfo')}
               </Paragraph>
               <div style={{ 
                 display: 'flex', 
@@ -840,33 +869,33 @@ export function MessagesPage() {
 
             {/* Quick Actions */}
             <div>
-              <Paragraph data-size="xs" style={{ 
-                margin: 0, 
-                marginBottom: 'var(--ds-spacing-2)', 
-                fontWeight: 'var(--ds-font-weight-semibold)', 
+              <Paragraph data-size="xs" style={{
+                margin: 0,
+                marginBottom: 'var(--ds-spacing-2)',
+                fontWeight: 'var(--ds-font-weight-semibold)',
                 color: 'var(--ds-color-neutral-text-subtle)',
                 textTransform: 'uppercase',
                 letterSpacing: 'var(--ds-font-letter-spacing-normal)',
               }}>
-                Hurtigvalg
+                {t('messages.quickActions')}
               </Paragraph>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
                 <Link to="/bookings" style={{ textDecoration: 'none' }}>
                   <Button type="button" variant="secondary" data-size="sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
                     <CalendarIcon />
-                    Se mine bookinger
+                    {t('messages.viewMyBookings')}
                   </Button>
                 </Link>
                 <Link to="/calendar" style={{ textDecoration: 'none' }}>
                   <Button type="button" variant="secondary" data-size="sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
                     <ClockIcon />
-                    Åpne kalender
+                    {t('messages.openCalendar')}
                   </Button>
                 </Link>
                 <Link to="/" style={{ textDecoration: 'none' }}>
                   <Button type="button" variant="secondary" data-size="sm" style={{ width: '100%', justifyContent: 'flex-start' }}>
                     <HomeIcon />
-                    Gå til dashbord
+                    {t('messages.goToDashboard')}
                   </Button>
                 </Link>
               </div>

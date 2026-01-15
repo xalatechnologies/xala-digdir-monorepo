@@ -1,6 +1,7 @@
 import { Badge } from '@xala/ds';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { SEASON_STATUS_CONFIG } from '../constants';
+import { useT } from '@xala/i18n';
 
 /**
  * Season Status Badge Component
@@ -14,6 +15,7 @@ interface SeasonStatusBadgeProps {
 }
 
 export function SeasonStatusBadge({ status, size = 'md' }: SeasonStatusBadgeProps) {
+  const t = useT();
   const config = SEASON_STATUS_CONFIG[status];
 
   if (!config) {
@@ -30,7 +32,7 @@ export function SeasonStatusBadge({ status, size = 'md' }: SeasonStatusBadgeProp
         fontWeight: 'var(--ds-font-weight-medium)',
       }}
     >
-      {config.label}
+      {t(config.labelKey)}
     </Badge>
   );
 }

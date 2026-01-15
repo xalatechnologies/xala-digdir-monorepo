@@ -292,19 +292,19 @@ export function AccountSelector({
         >
           <AccountOption
             icon={<UserIcon />}
-            title={t('minside.accountSelection.personalTitle') || 'Som privatperson'}
-            description={t('minside.accountSelection.personalDescription') || 'Book og administrer egne aktiviteter'}
+            title={t('minside.accountSelection.personalTitle')}
+            description={t('minside.accountSelection.personalDescription')}
             onClick={handlePersonalSelect}
           />
           <AccountOption
             icon={<BuildingIcon />}
-            title={t('minside.accountSelection.organizationTitle') || 'På vegne av organisasjon'}
+            title={t('minside.accountSelection.organizationTitle')}
             description={
               isLoadingOrganizations
-                ? t('minside.accountSelection.loadingOrgs') || 'Laster organisasjoner...'
+                ? t('minside.accountSelection.loadingOrgs')
                 : organizations.length === 0
-                  ? t('minside.accountSelection.noOrgs') || 'Ingen organisasjoner tilgjengelig'
-                  : t('minside.accountSelection.organizationDescription') || 'Administrer bookinger for din organisasjon'
+                  ? t('minside.accountSelection.noOrgs')
+                  : t('minside.accountSelection.organizationDescription')
             }
             onClick={handleOrganizationClick}
             disabled={isLoadingOrganizations || organizations.length === 0}
@@ -324,7 +324,7 @@ export function AccountSelector({
               checked={rememberChoice}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRememberChoice(e.target.checked)}
               value="remember"
-              label={t('minside.accountSelection.rememberChoice') || 'Husk mitt valg'}
+              label={t('minside.accountSelection.rememberChoice')}
             />
           </div>
         )}
@@ -346,7 +346,7 @@ export function AccountSelector({
         type="button"
         variant="tertiary"
         onClick={handleBack}
-        aria-label={t('common.back') || 'Tilbake'}
+        aria-label={t('common.back')}
         style={{
           marginBottom: 'var(--ds-spacing-4)',
           display: 'flex',
@@ -355,13 +355,13 @@ export function AccountSelector({
         }}
       >
         <ArrowLeftIcon />
-        {t('common.back') || 'Tilbake'}
+        {t('common.back')}
       </Button>
 
       {/* Organization List */}
       {isLoadingOrganizations ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label="Laster organisasjoner..." />
+          <Spinner aria-label={t('minside.accountSelection.loadingOrgs')} />
         </div>
       ) : (
         <div
@@ -391,7 +391,7 @@ export function AccountSelector({
         disabled={!selectedOrgId}
         style={{ width: '100%' }}
       >
-        {t('minside.accountSelection.continue') || 'Fortsett'}
+        {t('minside.accountSelection.continue')}
       </Button>
 
       {/* Remember Choice Checkbox */}
@@ -408,7 +408,7 @@ export function AccountSelector({
             checked={rememberChoice}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRememberChoice(e.target.checked)}
             value="remember"
-            label={t('minside.accountSelection.rememberChoice') || 'Husk mitt valg'}
+            label={t('minside.accountSelection.rememberChoice')}
           />
         </div>
       )}

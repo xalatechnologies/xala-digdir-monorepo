@@ -162,15 +162,6 @@ export class RentalObjectController {
   }
 
   /**
-   * GET /api/rental-objects/:id/calendar-config - Get calendar configuration
-   */
-  @Get('/:id/calendar-config')
-  async getCalendarConfig(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const config = await this.service.getCalendarConfig(request.params.id);
-    return { data: config };
-  }
-
-  /**
    * POST /api/rental-objects/:id/media - Upload media
    */
   @Post('/:id/media')

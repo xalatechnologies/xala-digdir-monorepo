@@ -226,10 +226,10 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       <div style={{ padding: 'var(--ds-spacing-8)' }}>
         <Alert data-color="warning">
           <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-            Ingen organisasjon valgt
+            {t('org.noOrganizationSelected')}
           </Heading>
           <Paragraph style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-            Velg en organisasjon for å konfigurere varslingsinnstillinger.
+            {t('org.noOrganizationSelectedDesc')}
           </Paragraph>
         </Alert>
       </div>
@@ -251,10 +251,10 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       <div style={{ padding: 'var(--ds-spacing-8)' }}>
         <Alert data-color="danger">
           <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-            Kunne ikke laste innstillinger
+            {t('org.notificationSettings.loadError')}
           </Heading>
           <Paragraph style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-            {error instanceof Error ? error.message : 'En feil oppstod ved lasting av varslingsinnstillinger.'}
+            {error instanceof Error ? error.message : t('org.notificationSettings.loadErrorDesc')}
           </Paragraph>
         </Alert>
       </div>
@@ -296,7 +296,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             disabled={isSaving}
             style={{ minHeight: '44px' }}
           >
-            Tilbakestill til standard
+            {t('org.notificationSettings.resetToDefault')}
           </Button>
           <Button
             type="button"
@@ -316,7 +316,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
                   color: 'var(--ds-color-accent-text-default)',
                 }}
               >
-                Endringer
+                {t('common.changes')}
               </Badge>
             )}
           </Button>
@@ -327,7 +327,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       {saveError && (
         <Alert data-color="danger">
           <Paragraph style={{ margin: 0 }}>
-            Kunne ikke lagre innstillinger: {saveError instanceof Error ? saveError.message : 'Ukjent feil'}
+            {t('org.notificationSettings.saveError')}: {saveError instanceof Error ? saveError.message : t('common.unknownError')}
           </Paragraph>
         </Alert>
       )}
@@ -543,7 +543,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
         >
           <Spinner data-size="sm" aria-hidden="true" />
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-brand-1-text-default)' }}>
-            {t('notifications.settings.save')}
+            {t('common.saving')}
           </Paragraph>
         </div>
       )}
@@ -565,7 +565,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
-            ✓ Innstillinger lagret
+            ✓ {t('org.notificationSettings.settingsSaved')}
           </Paragraph>
         </div>
       )}

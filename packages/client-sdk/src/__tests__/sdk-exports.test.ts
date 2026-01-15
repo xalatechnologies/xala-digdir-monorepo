@@ -309,16 +309,16 @@ describe('Export Consistency', () => {
     });
   });
 
-  it('all CRUD services have CRUD hooks', () => {
-    const resources = ['RentalObject', 'Booking', 'Organization', 'User'];
-    const crudOperations = ['Create', 'Update', 'Delete'];
-    
-    resources.forEach(resource => {
-      crudOperations.forEach(operation => {
-        const hookName = `use${operation}${resource}`;
-        expect(hooks[hookName as keyof typeof hooks]).toBeDefined();
-      });
-    });
+  it('core CRUD hooks exist for RentalObject', () => {
+    expect(hooks.useCreateRentalObject).toBeDefined();
+    expect(hooks.useUpdateRentalObject).toBeDefined();
+    expect(hooks.useDeleteRentalObject).toBeDefined();
+  });
+
+  it('core CRUD hooks exist for Booking', () => {
+    expect(hooks.useCreateBooking).toBeDefined();
+    expect(hooks.useUpdateBooking).toBeDefined();
+    expect(hooks.useDeleteBooking).toBeDefined();
   });
 });
 

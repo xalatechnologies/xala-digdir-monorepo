@@ -1,7 +1,7 @@
 import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
-import { WEEKDAY_LABELS } from '../constants';
+import { useT } from '@xala/i18n';
 
 /**
  * Application Card Component
@@ -39,25 +39,21 @@ function MapPinIcon() {
   );
 }
 
-// Status configuration
+// Status configuration (colors only - labels from i18n)
 const APPLICATION_STATUS_CONFIG = {
   pending: {
-    label: 'Til behandling',
     color: 'var(--ds-color-warning-text-default)',
     bgColor: 'var(--ds-color-warning-surface-default)',
   },
   approved: {
-    label: 'Godkjent',
     color: 'var(--ds-color-success-text-default)',
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
-    label: 'Avslått',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
   cancelled: {
-    label: 'Kansellert',
     color: 'var(--ds-color-neutral-text-subtle)',
     bgColor: 'var(--ds-color-neutral-surface-default)',
   },
@@ -70,10 +66,31 @@ interface ApplicationCardProps {
 
 export function ApplicationCard({ application, showActions = true }: ApplicationCardProps) {
   const navigate = useNavigate();
+  const t = useT();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('no-NO', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  // Get weekday label
+  const getWeekdayLabel = (weekday: number) => {
+    const weekdays = [
+      'seasons.weekday.sunday',
+      'seasons.weekday.monday',
+      'seasons.weekday.tuesday',
+      'seasons.weekday.wednesday',
+      'seasons.weekday.thursday',
+      'seasons.weekday.friday',
+      'seasons.weekday.saturday',
+    ];
+    return t(weekdays[weekday] || weekdays[0]);
+  };
+
+  // Get status label
+  const getStatusLabel = (status: string) => {
+    const statusKey = `seasons.application.${status}`;
+    return t(statusKey);
   };
 
   const handleViewSeason = () => {
@@ -115,10 +132,10 @@ export function ApplicationCard({ application, showActions = true }: Application
       >
         <div style={{ flex: 1, minWidth: 0 }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-            {application.season?.name || 'Sesong'}
+            {application.season?.name || t('seasons.applicationCard.season')}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Søknad sendt {formatDate(application.createdAt)}
+            {t('seasons.applicationCard.applicationSent', { date: formatDate(application.createdAt) })}
           </Paragraph>
         </div>
         <Badge
@@ -131,7 +148,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             flexShrink: 0,
           }}
         >
-          {statusConfig.label}
+          {getStatusLabel(application.status)}
         </Badge>
       </div>
 
@@ -163,10 +180,10 @@ export function ApplicationCard({ application, showActions = true }: Application
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Lokale
+              {t('seasons.applicationCard.venue')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {application.listing?.name || 'Ukjent lokale'}
+              {application.listing?.name || t('seasons.applicationCard.unknownVenue')}
             </Paragraph>
           </div>
         </div>
@@ -190,10 +207,10 @@ export function ApplicationCard({ application, showActions = true }: Application
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Dag og tid
+              {t('seasons.applicationCard.dayAndTime')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {WEEKDAY_LABELS[application.weekday]} • {application.startTime} - {application.endTime}
+              {getWeekdayLabel(application.weekday)} • {application.startTime} - {application.endTime}
             </Paragraph>
           </div>
         </div>
@@ -218,7 +235,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Sesongperiode
+                {t('seasons.applicationCard.seasonPeriod')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {formatDate(application.season.startDate)} - {formatDate(application.season.endDate)}
@@ -238,7 +255,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             }}
           >
             <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
-              Merknad
+              {t('seasons.applicationCard.note')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               {application.notes}
@@ -257,7 +274,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             }}
           >
             <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-danger-text-default)' }}>
-              Årsak til avslag
+              {t('seasons.applicationCard.rejectionReason')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
               {application.rejectionReason}
@@ -284,7 +301,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             data-size="sm"
             onClick={handleViewSeason}
           >
-            Se sesong
+            {t('seasons.applicationCard.viewSeason')}
           </Button>
           {application.status === 'approved' && (
             <Button
@@ -293,7 +310,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               data-size="sm"
               onClick={handleViewRentalObject}
             >
-              Se lokale
+              {t('seasons.applicationCard.viewVenue')}
             </Button>
           )}
         </div>

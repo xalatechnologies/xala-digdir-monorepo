@@ -431,6 +431,90 @@ export const en: Record<string, string> = {
   'seasons.filterActive': 'Active',
   'seasons.filterUpcoming': 'Upcoming',
 
+  // Season Status
+  'seasons.status.draft': 'Draft',
+  'seasons.status.open': 'Open for applications',
+  'seasons.status.closed': 'Closed',
+  'seasons.status.active': 'Active',
+  'seasons.status.completed': 'Completed',
+  'seasons.status.cancelled': 'Cancelled',
+
+  // Application Status
+  'seasons.application.pending': 'Under review',
+  'seasons.application.approved': 'Approved',
+  'seasons.application.rejected': 'Rejected',
+  'seasons.application.cancelled': 'Cancelled',
+  'seasons.application.allocated': 'Allocated',
+
+  // Weekdays
+  'seasons.weekday.sunday': 'Sunday',
+  'seasons.weekday.monday': 'Monday',
+  'seasons.weekday.tuesday': 'Tuesday',
+  'seasons.weekday.wednesday': 'Wednesday',
+  'seasons.weekday.thursday': 'Thursday',
+  'seasons.weekday.friday': 'Friday',
+  'seasons.weekday.saturday': 'Saturday',
+
+  // Weekdays (short)
+  'seasons.weekday.short.sunday': 'Sun',
+  'seasons.weekday.short.monday': 'Mon',
+  'seasons.weekday.short.tuesday': 'Tue',
+  'seasons.weekday.short.wednesday': 'Wed',
+  'seasons.weekday.short.thursday': 'Thu',
+  'seasons.weekday.short.friday': 'Fri',
+  'seasons.weekday.short.saturday': 'Sat',
+
+  // Season Card
+  'seasons.card.period': 'Period',
+  'seasons.card.applicationDeadline': 'Application deadline',
+  'seasons.card.applications': 'Applications',
+  'seasons.card.applicationsTotal': '{{count}} total',
+  'seasons.card.applicationsApproved': '{{count}} approved',
+  'seasons.card.viewDetails': 'View details',
+  'seasons.card.applyNow': 'Apply now',
+
+  // Application Card
+  'seasons.applicationCard.season': 'Season',
+  'seasons.applicationCard.applicationSent': 'Application sent {{date}}',
+  'seasons.applicationCard.venue': 'Venue',
+  'seasons.applicationCard.unknownVenue': 'Unknown venue',
+  'seasons.applicationCard.dayAndTime': 'Day and time',
+  'seasons.applicationCard.seasonPeriod': 'Season period',
+  'seasons.applicationCard.note': 'Note',
+  'seasons.applicationCard.rejectionReason': 'Rejection reason',
+  'seasons.applicationCard.viewSeason': 'View season',
+  'seasons.applicationCard.viewVenue': 'View venue',
+
+  // Application Drawer
+  'seasons.drawer.title': 'Apply for season booking',
+  'seasons.drawer.closeLabel': 'Close application form',
+  'seasons.drawer.applyingOnBehalfOf': 'Applying on behalf of: {{org}}',
+  'seasons.drawer.applicationAsOrganization': 'Application submitted as organization',
+  'seasons.drawer.selectVenue': 'Select venue *',
+  'seasons.drawer.selectVenuePlaceholder': 'Select a venue',
+  'seasons.drawer.selectVenueHelp': 'Choose which venue you want to book',
+  'seasons.drawer.selectWeekday': 'Weekday *',
+  'seasons.drawer.selectWeekdayHelp': 'Which weekday do you want fixed times?',
+  'seasons.drawer.startTime': 'From *',
+  'seasons.drawer.endTime': 'To *',
+  'seasons.drawer.notes': 'Note (optional)',
+  'seasons.drawer.notesPlaceholder': 'Add any notes or special requirements...',
+  'seasons.drawer.notesHelp': 'Share information that may be important for processing the application',
+  'seasons.drawer.submit': 'Submit application',
+  'seasons.drawer.submitting': 'Submitting...',
+  'seasons.drawer.cancel': 'Cancel',
+
+  // Application Drawer Errors
+  'seasons.drawer.error.selectVenue': 'Please select a venue',
+  'seasons.drawer.error.selectTime': 'Please select start and end time',
+  'seasons.drawer.error.invalidTime': 'Start time must be before end time',
+  'seasons.drawer.error.generic': 'Something went wrong. Please try again.',
+
+  // Venue Card
+  'seasons.venue.persons': '{{count}} persons',
+  'seasons.venue.area': '{{size}} m²',
+  'seasons.venue.applyForThis': 'Apply for this',
+
   // Billing Page
   'billing.totalPaid': 'Total paid',
   'billing.outstanding': 'Outstanding',
@@ -451,11 +535,10 @@ export const en: Record<string, string> = {
   // Bookings Page - additional
   'bookings.cancel': 'Cancel',
 
-  // Messages Page
+  // Messages Page - additional keys
   'messages.headerTitle': 'Messages',
   'messages.unreadCount': 'unread',
   'messages.searchPlaceholder': 'Search conversations...',
-  'messages.loadingConversations': 'Loading conversations...',
   'messages.loadingMessages': 'Loading messages...',
   'messages.filterAll': 'All',
   'messages.filterUnread': 'Unread',
@@ -475,18 +558,15 @@ export const en: Record<string, string> = {
   'messages.activeUser': 'Active user',
   'messages.call': 'Call',
   'messages.schedule': 'Schedule',
-  'messages.writeMessage': 'Write a message...',
   'messages.timeNow': 'Now',
   'messages.timeToday': 'Today',
   'messages.timeYesterday': 'Yesterday',
 
-  // Calendar Page
+  // Calendar Page - additional keys
   'calendar.previousWeek': 'Previous week',
   'calendar.nextWeek': 'Next week',
-  'calendar.today': 'Today',
   'calendar.loading': 'Loading',
   'calendar.bookingLabel': 'Booking',
-  'calendar.noBookingsThisWeek': 'No bookings this week',
 
   // Organization Portal (Minside)
   'org.organization': 'Organization',
@@ -1483,4 +1563,73 @@ export const en: Record<string, string> = {
   'notifications.justNow': 'Just now',
   'notifications.hoursAgo': '{{hours}}h ago',
   'notifications.daysAgo': '{{days}}d ago',
+
+  // Components - Header
+  'components.header.searchPlaceholder': 'Search in bookings, users...',
+  'components.header.noResults': 'No results found',
+  'components.header.notifications': 'Notifications',
+  'components.header.notificationsWithCount': 'Notifications ({{count}} unread)',
+  'components.header.settings': 'Settings',
+  'components.header.logout': 'Log out',
+  'components.header.dashboard': 'Dashboard',
+  'components.header.goToOverview': 'Go to overview',
+  'components.header.bookings': 'Bookings',
+  'components.header.seeAllBookings': 'See all your bookings',
+  'components.header.calendar': 'Calendar',
+  'components.header.calendarView': 'See bookings in calendar view',
+  'components.header.messages': 'Messages',
+  'components.header.conversationsAndMessages': 'See conversations and messages',
+  'components.header.pages': 'Pages',
+
+  // Components - Sidebar
+  'components.sidebar.appName': 'DIGILIST',
+  'components.sidebar.appSubtitle': 'My Page',
+  'components.sidebar.openMenu': 'Open menu',
+
+  // Components - Account Selection Modal
+  'components.accountModal.title': 'How would you like to continue?',
+  'components.accountModal.subtitle': 'Choose whether to use the service as an individual or on behalf of an organization',
+  'components.accountModal.selectOrganization': 'Select organization',
+  'components.accountModal.selectOrganizationSubtitle': 'Choose which organization you represent',
+  'components.accountModal.personalAccount': 'As an individual',
+  'components.accountModal.personalAccountDesc': 'Book and manage your own activities',
+  'components.accountModal.organizationAccount': 'On behalf of organization',
+  'components.accountModal.organizationAccountDesc': 'Represent an organization you are affiliated with',
+  'components.accountModal.noOrganizations': 'You are not affiliated with any organizations yet.',
+  'components.accountModal.orgNumber': 'Org.no',
+  'components.accountModal.rememberChoice': 'Remember my choice',
+  'components.accountModal.back': 'Back',
+  'components.accountModal.continue': 'Continue',
+
+  // Components - Calendar Section
+  'components.calendar.notAvailable': 'Calendar is not available for this venue.',
+  'components.calendar.selectTime': 'Select time',
+  'components.calendar.selectTimeSlots': 'Select available time slots',
+  'components.calendar.selectDays': 'Select available days',
+  'components.calendar.selectPeriod': 'Select period',
+  'components.calendar.couldNotLoadSettings': 'Could not load calendar settings. Please try again.',
+  'components.calendar.couldNotLoadAvailability': 'Could not load availability. Please try again.',
+  'components.calendar.selectionChanged': 'Your selected time may have changed. Please verify that your selection is still available.',
+  'components.calendar.statusAvailable': 'Available',
+  'components.calendar.statusReserved': 'Reserved',
+  'components.calendar.statusBooked': 'Booked',
+  'components.calendar.statusBlocked': 'Blocked',
+  'components.calendar.statusBlackout': 'Unavailable',
+  'components.calendar.statusClosed': 'Closed',
+
+  // Components - Account Switcher
+  'components.accountSwitcher.personal': 'As an individual',
+  'components.accountSwitcher.organizations': 'Organizations',
+  'components.accountSwitcher.manageOrganizations': 'Manage organizations',
+
+  // Components - Error Boundary
+  'components.error.title': 'Something went wrong',
+  'components.error.description': 'An unexpected error has occurred. Please try again.',
+  'components.error.retry': 'Reload page',
+
+  // Components - Protected Route
+  'components.protected.loading': 'Loading...',
+  'components.protected.noAccess': 'No access',
+  'components.protected.noAccessDescription': 'You do not have access to this page.',
+  'components.protected.contactAdmin': 'Contact administrator if you believe this is incorrect.',
 };

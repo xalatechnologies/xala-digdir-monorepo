@@ -4,8 +4,8 @@
  */
 
 import { Textfield, Select, Paragraph, Heading, Label, Textarea } from '@xala/ds';
-import { LISTING_TYPE_OPTIONS } from "@digilist/client-sdk";
-import { LISTING_TYPE_OPTIONS } from "../../constants";
+import { useT } from '@xala/i18n';
+import { LISTING_TYPE_OPTIONS } from '../../constants';
 import type { BackofficeListing, BackofficeListingType } from '../../../types';
 
 export interface BasicsStepProps {
@@ -14,13 +14,14 @@ export interface BasicsStepProps {
   errors?: string[];
 }
 
-const VISIBILITY_OPTIONS = [
-  { value: 'public', label: 'Offentlig - Synlig for alle' },
-  { value: 'unlisted', label: 'Ulistet - Kun tilgjengelig med direkte lenke' },
-  { value: 'private', label: 'Privat - Kun for interne brukere' },
-];
-
 export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
+  const t = useT();
+
+  const VISIBILITY_OPTIONS = [
+    { value: 'public', label: t('listings.wizard.visibility.public') },
+    { value: 'unlisted', label: t('listings.wizard.visibility.unlisted') },
+    { value: 'private', label: t('listings.wizard.visibility.private') },
+  ];
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange({ type: e.target.value as BackofficeListingType });
   };
@@ -54,10 +55,10 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
         <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          Grunnleggende informasjon
+          {t('listings.wizard.basics.title')}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Fyll ut grunnleggende informasjon om utleieobjektet
+          {t('listings.wizard.basics.description')}
         </Paragraph>
       </div>
 
@@ -81,19 +82,19 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
       {/* Type selection */}
       <div>
         <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
-          Type utleieobjekt
+          {t('listings.wizard.basics.type')}
         </Heading>
         <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Velg hvilken type objekt dette er
+          {t('listings.wizard.basics.typeDescription')}
         </Paragraph>
         <Select
           value={data.type || 'SPACE'}
           onChange={handleTypeChange}
-          aria-label="Type utleieobjekt"
+          aria-label={t('listings.wizard.basics.type')}
         >
           {LISTING_TYPE_OPTIONS.filter(opt => opt.id !== 'ALL').map((option) => (
             <option key={option.id} value={option.id}>
-              {option.label}
+              {t(`listings.type.${option.id}`)}
             </option>
           ))}
         </Select>
@@ -102,11 +103,11 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
       {/* Name */}
       <div>
         <Textfield
-          label="Navn"
-          description="Et beskrivende navn for utleieobjektet"
+          label={t('listings.wizard.basics.name')}
+          description={t('listings.wizard.basics.nameDescription')}
           value={data.name || ''}
           onChange={handleNameChange}
-          placeholder="f.eks. Stort møterom med projektor"
+          placeholder={t('listings.wizard.basics.namePlaceholder')}
           required
         />
       </div>
@@ -114,15 +115,15 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
       {/* Slug */}
       <div>
         <Textfield
-          label="URL-slug"
-          description="Brukes i URL-en til objektet. Genereres automatisk fra navnet."
+          label={t('listings.wizard.basics.slug')}
+          description={t('listings.wizard.basics.slugDescription')}
           value={data.slug || ''}
           onChange={handleSlugChange}
-          placeholder="stort-moterom-med-projektor"
+          placeholder={t('listings.wizard.basics.slugPlaceholder')}
         />
         {data.slug && (
           <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            URL: /utleie/{data.slug}
+            {t('listings.wizard.basics.urlPreview')}: /utleie/{data.slug}
           </Paragraph>
         )}
       </div>
@@ -130,15 +131,15 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
       {/* Visibility */}
       <div>
         <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
-          Synlighet
+          {t('listings.wizard.basics.visibility')}
         </Heading>
         <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Hvem kan se dette utleieobjektet
+          {t('listings.wizard.basics.visibilityDescription')}
         </Paragraph>
         <Select
           value={data.visibility || 'public'}
           onChange={handleVisibilityChange}
-          aria-label="Synlighet"
+          aria-label={t('listings.wizard.basics.visibility')}
         >
           {VISIBILITY_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -157,19 +158,19 @@ export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
             marginBottom: 'var(--ds-spacing-2)',
           }}
         >
-          Kort beskrivelse
+          {t('listings.wizard.basics.description')}
         </Label>
         <Paragraph
           data-size="xs"
           style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}
         >
-          En kort introduksjon som vises i søkeresultater og kort-visning
+          {t('listings.wizard.basics.descriptionHint')}
         </Paragraph>
         <Textarea
           id="description"
           value={data.description || ''}
           onChange={handleDescriptionChange}
-          placeholder="Skriv en kort beskrivelse av utleieobjektet..."
+          placeholder={t('listings.wizard.basics.descriptionPlaceholder')}
           rows={4}
           style={{
             width: '100%',
