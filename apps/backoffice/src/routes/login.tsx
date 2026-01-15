@@ -22,7 +22,7 @@ import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import type { FlowContext } from '@digilist/client-sdk';
-import { signicatService } from '@digilist/client-sdk';
+import { idportenService } from '@digilist/client-sdk';
 
 
 /**
@@ -184,7 +184,7 @@ export function LoginPage(): React.ReactElement {
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
-        onClick={() => signicatService.authorize('/role-selection')}
+        onClick={() => idportenService.authorize('/role-selection')}
       />
       <LoginOption
         icon={<MicrosoftIcon />}

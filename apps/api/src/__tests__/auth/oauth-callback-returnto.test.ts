@@ -21,7 +21,7 @@ interface OAuthTestContext {
   cleanup: () => Promise<void>;
 }
 
-// Mock session store for testing (simulates in-memory store from signicat.controller)
+// Mock session store for testing (simulates in-memory store from idporten.controller)
 interface MockAuthSession {
   sessionId: string;
   state: string;
@@ -42,7 +42,7 @@ const mockAuditLogs: Array<{
   metadata?: Record<string, unknown>;
 }> = [];
 
-// Default redirect URL (matches signicat.controller.ts)
+// Default redirect URL (matches idporten.controller.ts)
 const DEFAULT_REDIRECT_URL = '/';
 
 // =============================================================================
@@ -84,9 +84,9 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
   };
 
   // =============================================================================
-  // OAuth Callback Route (mirrors signicat.controller.ts /callback endpoint)
+  // OAuth Callback Route (mirrors idporten.controller.ts /callback endpoint)
   // =============================================================================
-  app.get('/api/auth/signicat/callback', async (request, reply) => {
+  app.get('/api/auth/idporten/callback', async (request, reply) => {
     const query = request.query as { state?: string; status?: string; sessionId?: string };
     const { state, status } = query;
 
@@ -96,7 +96,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
         tenantId: 'unknown',
         userId: 'anonymous',
         action: 'auth_callback_missing_state',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: 'unknown',
         metadata: { status },
       });
@@ -115,7 +115,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
         tenantId: 'unknown',
         userId: 'anonymous',
         action: 'auth_callback_invalid_state',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: state,
         metadata: { status },
       });
@@ -138,7 +138,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
         tenantId,
         userId: 'anonymous',
         action: 'auth_aborted',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         metadata: { returnTo },
       });
@@ -158,7 +158,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
         tenantId,
         userId: 'anonymous',
         action: 'auth_failed',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         metadata: { returnTo, status: 'error' },
       });
@@ -180,7 +180,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
         tenantId,
         userId,
         action: 'auth_success',
-        resource: 'signicat',
+        resource: 'idporten',
         resourceId: session.sessionId,
         metadata: {
           provider: 'nbid',
@@ -191,7 +191,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
 
       const redirectUrl = buildRedirectUrl(returnTo, {
         auth_success: 'true',
-        auth_provider: 'signicat',
+        auth_provider: 'idporten',
       });
       return reply.redirect(redirectUrl);
     }
@@ -201,7 +201,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
       tenantId,
       userId: 'anonymous',
       action: 'auth_incomplete',
-      resource: 'signicat',
+      resource: 'idporten',
       resourceId: session.sessionId,
       metadata: { sessionStatus: status, returnTo },
     });
@@ -216,7 +216,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
   // =============================================================================
   // OAuth Authorize Route (for testing session creation with returnTo)
   // =============================================================================
-  app.get('/api/auth/signicat/authorize', async (request, reply) => {
+  app.get('/api/auth/idporten/authorize', async (request, reply) => {
     const query = request.query as { returnTo?: string; tenantId?: string };
     const tenantId = query.tenantId || (request.headers['x-tenant-id'] as string);
 
@@ -235,7 +235,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
           tenantId: tenantId || 'unknown',
           userId: 'anonymous',
           action: 'auth_returnto_validation_failed',
-          resource: 'signicat',
+          resource: 'idporten',
           resourceId: state,
           metadata: {
             attemptedUrl: query.returnTo,
@@ -262,7 +262,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
       tenantId: tenantId || 'unknown',
       userId: 'anonymous',
       action: 'auth_initiated',
-      resource: 'signicat',
+      resource: 'idporten',
       resourceId: sessionId,
       metadata: {
         provider: 'nbid',
@@ -271,7 +271,7 @@ async function createOAuthTestApp(): Promise<OAuthTestContext> {
       },
     });
 
-    // Return state for testing (in real controller this would redirect to Signicat)
+    // Return state for testing (in real controller this would redirect to IdPorten)
     return reply.send({
       data: {
         state,
@@ -430,11 +430,11 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
-      expect(response.headers.location).toBe('/listings/my-listing?auth_success=true&auth_provider=signicat');
+      expect(response.headers.location).toBe('/listings/my-listing?auth_success=true&auth_provider=idporten');
     });
 
     it('should include auth_success and auth_provider params in redirect URL', async () => {
@@ -447,13 +447,13 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
       const location = response.headers.location as string;
       expect(location).toContain('auth_success=true');
-      expect(location).toContain('auth_provider=signicat');
+      expect(location).toContain('auth_provider=idporten');
     });
 
     it('should preserve query parameters in returnTo URL', async () => {
@@ -466,7 +466,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -487,7 +487,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(mockSessions.has(state)).toBe(false);
@@ -504,7 +504,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       const successLog = mockAuditLogs.find(log => log.action === 'auth_success');
@@ -531,17 +531,17 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
-      expect(response.headers.location).toBe('/?auth_success=true&auth_provider=signicat');
+      expect(response.headers.location).toBe('/?auth_success=true&auth_provider=idporten');
     });
 
     it('should redirect to default URL on missing state', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/callback?status=success',
+        url: '/api/auth/idporten/callback?status=success',
       });
 
       expect(response.statusCode).toBe(302);
@@ -551,7 +551,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should redirect to default URL on invalid state', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/callback?state=nonexistent-state&status=success',
+        url: '/api/auth/idporten/callback?state=nonexistent-state&status=success',
       });
 
       expect(response.statusCode).toBe(302);
@@ -574,7 +574,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=abort`,
+        url: `/api/auth/idporten/callback?state=${state}&status=abort`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -594,7 +594,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=abort`,
+        url: `/api/auth/idporten/callback?state=${state}&status=abort`,
       });
 
       const abortLog = mockAuditLogs.find(log => log.action === 'auth_aborted');
@@ -613,7 +613,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=error`,
+        url: `/api/auth/idporten/callback?state=${state}&status=error`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -633,7 +633,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=error`,
+        url: `/api/auth/idporten/callback?state=${state}&status=error`,
       });
 
       const failedLog = mockAuditLogs.find(log => log.action === 'auth_failed');
@@ -652,7 +652,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=pending`,
+        url: `/api/auth/idporten/callback?state=${state}&status=pending`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -671,7 +671,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}`,
+        url: `/api/auth/idporten/callback?state=${state}`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -689,7 +689,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should log auth_callback_missing_state audit event', async () => {
       await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/callback?status=success',
+        url: '/api/auth/idporten/callback?status=success',
       });
 
       const missingStateLog = mockAuditLogs.find(log => log.action === 'auth_callback_missing_state');
@@ -701,7 +701,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should log auth_callback_invalid_state audit event', async () => {
       await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/callback?state=invalid-state-xyz&status=success',
+        url: '/api/auth/idporten/callback?state=invalid-state-xyz&status=success',
       });
 
       const invalidStateLog = mockAuditLogs.find(log => log.action === 'auth_callback_invalid_state');
@@ -721,7 +721,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=abort`,
+        url: `/api/auth/idporten/callback?state=${state}&status=abort`,
       });
 
       expect(mockSessions.has(state)).toBe(false);
@@ -739,7 +739,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=error`,
+        url: `/api/auth/idporten/callback?state=${state}&status=error`,
       });
 
       expect(mockSessions.has(state)).toBe(false);
@@ -754,7 +754,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should accept valid relative path returnTo in authorize', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/listings/test-listing&tenantId=test-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=/listings/test-listing&tenantId=test-tenant',
       });
 
       expect(response.statusCode).toBe(200);
@@ -765,7 +765,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should accept valid absolute URL from allowed origin', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=http://localhost:5173/dashboard&tenantId=test-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=http://localhost:5173/dashboard&tenantId=test-tenant',
       });
 
       expect(response.statusCode).toBe(200);
@@ -776,7 +776,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should reject external URL and use default', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=https://evil.com/steal&tenantId=test-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=https://evil.com/steal&tenantId=test-tenant',
       });
 
       expect(response.statusCode).toBe(200);
@@ -787,7 +787,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should log auth_returnto_validation_failed for invalid returnTo', async () => {
       await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=javascript:alert(1)&tenantId=audit-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=javascript:alert(1)&tenantId=audit-tenant',
       });
 
       const validationFailedLog = mockAuditLogs.find(
@@ -801,7 +801,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should reject protocol-relative URLs', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=//evil.com/path&tenantId=test-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=//evil.com/path&tenantId=test-tenant',
       });
 
       expect(response.statusCode).toBe(200);
@@ -820,7 +820,7 @@ describe('OAuth Callback with ReturnTo', () => {
       for (const attempt of xssAttempts) {
         const response = await ctx.app.inject({
           method: 'GET',
-          url: `/api/auth/signicat/authorize?returnTo=${encodeURIComponent(attempt)}&tenantId=test-tenant`,
+          url: `/api/auth/idporten/authorize?returnTo=${encodeURIComponent(attempt)}&tenantId=test-tenant`,
         });
 
         expect(response.statusCode).toBe(200);
@@ -832,7 +832,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should log auth_initiated with returnTo context', async () => {
       await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/bookings/my-booking&tenantId=init-audit-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=/bookings/my-booking&tenantId=init-audit-tenant',
       });
 
       const initiatedLog = mockAuditLogs.find(log => log.action === 'auth_initiated');
@@ -845,7 +845,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should handle missing returnTo (undefined)', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?tenantId=test-tenant',
+        url: '/api/auth/idporten/authorize?tenantId=test-tenant',
       });
 
       expect(response.statusCode).toBe(200);
@@ -863,7 +863,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 1: Initiate authorization with returnTo
       const authorizeResponse = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/listings/booking-flow&tenantId=flow-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=/listings/booking-flow&tenantId=flow-tenant',
       });
 
       expect(authorizeResponse.statusCode).toBe(200);
@@ -875,12 +875,12 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 2: Simulate callback with success
       const callbackResponse = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(callbackResponse.statusCode).toBe(302);
       expect(callbackResponse.headers.location).toBe(
-        '/listings/booking-flow?auth_success=true&auth_provider=signicat'
+        '/listings/booking-flow?auth_success=true&auth_provider=idporten'
       );
 
       // Verify audit logs for full flow
@@ -897,7 +897,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 1: Initiate authorization
       const authorizeResponse = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/dashboard&tenantId=abort-flow-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=/dashboard&tenantId=abort-flow-tenant',
       });
 
       const { state } = authorizeResponse.json().data;
@@ -905,7 +905,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 2: User aborts at provider
       const callbackResponse = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=abort`,
+        url: `/api/auth/idporten/callback?state=${state}&status=abort`,
       });
 
       expect(callbackResponse.statusCode).toBe(302);
@@ -918,7 +918,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 1: Initiate authorization
       const authorizeResponse = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/profile&tenantId=error-flow-tenant',
+        url: '/api/auth/idporten/authorize?returnTo=/profile&tenantId=error-flow-tenant',
       });
 
       const { state } = authorizeResponse.json().data;
@@ -926,7 +926,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Step 2: Provider returns error
       const callbackResponse = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=error`,
+        url: `/api/auth/idporten/callback?state=${state}&status=error`,
       });
 
       expect(callbackResponse.statusCode).toBe(302);
@@ -951,12 +951,12 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
       expect(response.headers.location).toBe(
-        '/listings/category/sports/oslo/hall-123?auth_success=true&auth_provider=signicat'
+        '/listings/category/sports/oslo/hall-123?auth_success=true&auth_provider=idporten'
       );
     });
 
@@ -970,7 +970,7 @@ describe('OAuth Callback with ReturnTo', () => {
 
       const response = await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       expect(response.statusCode).toBe(302);
@@ -996,12 +996,12 @@ describe('OAuth Callback with ReturnTo', () => {
       for (let i = states.length - 1; i >= 0; i--) {
         const response = await ctx.app.inject({
           method: 'GET',
-          url: `/api/auth/signicat/callback?state=${states[i]}&status=success`,
+          url: `/api/auth/idporten/callback?state=${states[i]}&status=success`,
         });
 
         expect(response.statusCode).toBe(302);
         expect(response.headers.location).toBe(
-          `${returnTos[i]}?auth_success=true&auth_provider=signicat`
+          `${returnTos[i]}?auth_success=true&auth_provider=idporten`
         );
       }
 
@@ -1012,7 +1012,7 @@ describe('OAuth Callback with ReturnTo', () => {
     it('should handle tenantId in header when not in query', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/authorize?returnTo=/dashboard',
+        url: '/api/auth/idporten/authorize?returnTo=/dashboard',
         headers: {
           'x-tenant-id': 'header-tenant',
         },
@@ -1048,7 +1048,7 @@ describe('OAuth Callback with ReturnTo', () => {
       async (maliciousUrl) => {
         const response = await ctx.app.inject({
           method: 'GET',
-          url: `/api/auth/signicat/authorize?returnTo=${encodeURIComponent(maliciousUrl)}&tenantId=security-test`,
+          url: `/api/auth/idporten/authorize?returnTo=${encodeURIComponent(maliciousUrl)}&tenantId=security-test`,
         });
 
         expect(response.statusCode).toBe(200);
@@ -1077,14 +1077,14 @@ describe('OAuth Callback with ReturnTo', () => {
 
       await ctx.app.inject({
         method: 'GET',
-        url: `/api/auth/signicat/callback?state=${state}&status=success`,
+        url: `/api/auth/idporten/callback?state=${state}&status=success`,
       });
 
       const successLog = mockAuditLogs.find(log => log.action === 'auth_success');
       expect(successLog).toBeDefined();
       expect(successLog?.tenantId).toBe('audit-coverage-tenant');
       expect(successLog?.userId).toBe('audit-user');
-      expect(successLog?.resource).toBe('signicat');
+      expect(successLog?.resource).toBe('idporten');
       expect(successLog?.metadata).toMatchObject({
         provider: 'nbid',
         returnTo: '/dashboard',
@@ -1095,7 +1095,7 @@ describe('OAuth Callback with ReturnTo', () => {
       // Trigger missing state error
       await ctx.app.inject({
         method: 'GET',
-        url: '/api/auth/signicat/callback?status=success',
+        url: '/api/auth/idporten/callback?status=success',
       });
 
       const log = mockAuditLogs[0];

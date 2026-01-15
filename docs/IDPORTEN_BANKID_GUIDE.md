@@ -1,9 +1,9 @@
-# Signicat BankID Integration Guide
+# ID-porten BankID Integration Guide
 
 ## Overview
 
-This guide documents the Signicat BankID integration for Digilist, enabling
-Norwegian users to authenticate via BankID through the Signicat eID Hub.
+This guide documents the ID-porten BankID integration for Digilist, enabling
+Norwegian users to authenticate via BankID through the ID-porten eID Hub.
 
 ---
 
@@ -14,20 +14,20 @@ sequenceDiagram
     participant User
     participant Frontend as Backoffice/Web/Minside
     participant API as Digilist API
-    participant Signicat as Signicat eID Hub
+    participant ID-porten as ID-porten eID Hub
     participant BankID as Norwegian BankID
 
     User->>Frontend: Click "ID-porten"
-    Frontend->>API: GET /api/auth/signicat/authorize
-    API->>Signicat: POST /auth/rest/sessions
-    Signicat-->>API: { authenticationUrl }
+    Frontend->>API: GET /api/auth/idporten/authorize
+    API->>ID-porten: POST /auth/rest/sessions
+    ID-porten-->>API: { authenticationUrl }
     API-->>Frontend: 302 Redirect
-    Frontend->>Signicat: Show BankID login
-    Signicat->>BankID: Authenticate
+    Frontend->>ID-porten: Show BankID login
+    ID-porten->>BankID: Authenticate
     BankID-->>User: Enter Fødselsnummer + OTP
     User->>BankID: Submit credentials
-    BankID-->>Signicat: Authentication result
-    Signicat-->>API: Callback with session
+    BankID-->>ID-porten: Authentication result
+    ID-porten-->>API: Callback with session
     API-->>Frontend: Redirect to /role-selection
 ```
 
@@ -56,18 +56,18 @@ Use these test personnummer (national ID) numbers to test BankID login:
 
 ---
 
-## Signicat Dashboard Configuration
+## ID-porten Dashboard Configuration
 
 ### 1. Access Dashboard
 
-- **Dashboard URL**: https://dashboard.signicat.com
-- **API Base URL**: `https://api.signicat.com`
+- **Dashboard URL**: https://dashboard.idporten.com
+- **API Base URL**: `https://api.idporten.com`
 
 ### 2. Domain Types
 
 | Type     | URL Format                     | Use Case                    |
 | -------- | ------------------------------ | --------------------------- |
-| Standard | `YOUR_DOMAIN.app.signicat.com` | Quick setup, no DNS changes |
+| Standard | `YOUR_DOMAIN.app.idporten.com` | Quick setup, no DNS changes |
 | Custom   | `login.YOUR_DOMAIN.com`        | Branded experience          |
 
 ### 3. Setting Up a Domain
@@ -99,11 +99,11 @@ Use these test personnummer (national ID) numbers to test BankID login:
 ## API Credentials (Current)
 
 ```env
-# Sandbox Credentials (hardcoded in signicat.controller.ts)
-SIGNICAT_CLIENT_ID=sandbox-fantastic-house-812
-SIGNICAT_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
-SIGNICAT_BASE_URL=https://api.signicat.com
-SIGNICAT_CALLBACK_URL=https://api.digilist.no/api/auth/signicat/callback
+# Sandbox Credentials (hardcoded in idporten.controller.ts)
+IDPORTEN_CLIENT_ID=sandbox-fantastic-house-812
+IDPORTEN_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
+IDPORTEN_BASE_URL=https://api.idporten.com
+IDPORTEN_CALLBACK_URL=https://api.digilist.no/api/auth/idporten/callback
 ```
 
 ---
@@ -112,10 +112,10 @@ SIGNICAT_CALLBACK_URL=https://api.digilist.no/api/auth/signicat/callback
 
 | Endpoint                         | Method | Description                                  |
 | -------------------------------- | ------ | -------------------------------------------- |
-| `/api/auth/signicat/authorize`   | GET    | Initiates BankID flow, redirects to Signicat |
-| `/api/auth/signicat/callback`    | GET    | Handles Signicat callback after auth         |
-| `/api/auth/signicat/session/:id` | GET    | Poll session status                          |
-| `/api/auth/signicat/config`      | GET    | Get public Signicat config                   |
+| `/api/auth/idporten/authorize`   | GET    | Initiates BankID flow, redirects to ID-porten |
+| `/api/auth/idporten/callback`    | GET    | Handles ID-porten callback after auth         |
+| `/api/auth/idporten/session/:id` | GET    | Poll session status                          |
+| `/api/auth/idporten/config`      | GET    | Get public ID-porten config                   |
 
 ### Query Parameters
 
@@ -128,7 +128,7 @@ SIGNICAT_CALLBACK_URL=https://api.digilist.no/api/auth/signicat/callback
 
 ## Production Checklist
 
-- [ ] Create production Signicat account
+- [ ] Create production ID-porten account
 - [ ] Set up production domain (branded)
 - [ ] Configure production callback URL
 - [ ] Update environment variables on VPS
@@ -145,7 +145,7 @@ SIGNICAT_CALLBACK_URL=https://api.digilist.no/api/auth/signicat/callback
 
 **Cause**: `session.url` was used instead of `session.authenticationUrl`
 
-**Fix**: Line 218 & 247 in `signicat.controller.ts`:
+**Fix**: Line 218 & 247 in `idporten.controller.ts`:
 
 ```typescript
 const session = await response.json() as {
@@ -186,6 +186,6 @@ pm2 restart digilist-api
 
 | File                                                   | Purpose        |
 | ------------------------------------------------------ | -------------- |
-| `apps/api/src/modules/auth/signicat.controller.ts`     | API controller |
-| `packages/client-sdk/src/services/signicat.service.ts` | SDK service    |
+| `apps/api/src/modules/auth/idporten.controller.ts`     | API controller |
+| `packages/client-sdk/src/services/idporten.service.ts` | SDK service    |
 | `apps/backoffice/src/routes/login.tsx`                 | Login UI       |
