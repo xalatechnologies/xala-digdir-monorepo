@@ -88,6 +88,9 @@ export {
   useDialog,
   ConfirmDialog,
   AlertDialog,
+  // Language Switcher
+  LanguageSwitcher,
+  ConnectedLanguageSwitcher,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -134,6 +137,12 @@ export type {
   ConfirmDialogProps,
   AlertDialogProps,
   DialogVariant,
+  // Language Switcher Types
+  LanguageSwitcherProps,
+  LanguageSwitcherVariant,
+  LanguageSwitcherSize,
+  LocaleLabels,
+  ConnectedLanguageSwitcherProps,
 } from './composed';
 
 // Primitives - Low-level building blocks

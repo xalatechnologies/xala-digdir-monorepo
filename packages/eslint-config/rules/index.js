@@ -12,6 +12,7 @@ import requireButtonType from './require-button-type.js';
 import requireInteractiveLabels from './require-interactive-labels.js';
 import preferDsComponents from './prefer-ds-components.js';
 import requireProvider from './require-provider.js';
+import i18nNoHardcodedStrings from './i18n-no-hardcoded-strings.js';
 
 export const rules = {
   'no-hardcoded-colors': noHardcodedColors,
@@ -23,6 +24,7 @@ export const rules = {
   'require-interactive-labels': requireInteractiveLabels,
   'prefer-ds-components': preferDsComponents,
   'require-provider': requireProvider,
+  'i18n-no-hardcoded-strings': i18nNoHardcodedStrings,
 };
 
 export default rules;
