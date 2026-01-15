@@ -10,7 +10,7 @@ import type {
   PublicListingParams
 } from '../types/listing';
 import type { BookingQueryParams } from '../types/booking';
-import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
+import type { ReportQueryParams, AuditQueryParams, LikeQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
 import type { EconomyQueryParams } from '../types/economy';
 import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
@@ -298,5 +298,29 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
+  },
+
+  // =========================================================================
+  // Likes (Favorites) Keys
+  // =========================================================================
+  likes: {
+    all: ['likes'] as const,
+    myLists: () => [...queryKeys.likes.all, 'myList'] as const,
+    myList: (params?: LikeQueryParams) => [...queryKeys.likes.myLists(), params] as const,
+    checks: () => [...queryKeys.likes.all, 'check'] as const,
+    check: (listingId: string) => [...queryKeys.likes.checks(), listingId] as const,
+    byListing: (listingId: string) => [...queryKeys.likes.all, 'byListing', listingId] as const,
+  },
+
+  // =========================================================================
+  // Shares Keys
+  // =========================================================================
+  shares: {
+    all: ['shares'] as const,
+    lists: () => [...queryKeys.shares.all, 'list'] as const,
+    list: (params?: { type?: string; page?: number; limit?: number }) => [...queryKeys.shares.lists(), params] as const,
+    details: () => [...queryKeys.shares.all, 'detail'] as const,
+    detail: (token: string) => [...queryKeys.shares.details(), token] as const,
+    byResource: (type: string, resourceId: string) => [...queryKeys.shares.all, 'byResource', type, resourceId] as const,
   },
 } as const;
