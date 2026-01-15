@@ -127,15 +127,15 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
     setSelectedOrgId(null);
   };
 
-  // Reset state when modal closes
+  // Reset local UI state when modal closes
+  // NOTE: Do NOT reset rememberChoice here - if user selected "remember my choice",
+  // it should persist so the modal is skipped on next login
   useEffect(() => {
     if (!open) {
       setStep('account-type');
       setSelectedOrgId(null);
-      // Reset rememberChoice via context - it will persist to localStorage if needed
-      setRememberChoice(false);
     }
-  }, [open, setRememberChoice]);
+  }, [open]);
 
   return (
     // eslint-disable-next-line digdir/prefer-ds-components -- Native dialog required for ref-based imperative API

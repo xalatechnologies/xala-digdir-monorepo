@@ -62,11 +62,19 @@ function NotificationCenterProvider({ children }: { children: React.ReactNode })
  * Account Selection Wrapper
  * Displays the AccountSelectionModal when user hasn't selected an account yet
  * and hasn't chosen to remember their choice.
+ *
+ * Edge case handling:
+ * - If rememberChoice is true (from localStorage), the modal is skipped
+ * - The persisted context (personal/organization) is automatically restored
+ *   by AccountContextProvider when rememberChoice is true
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
   const { hasSelectedAccount, rememberChoice } = useAccountContext();
 
-  // Show modal if user hasn't selected an account and hasn't remembered their choice
+  // Show modal only if:
+  // 1. User hasn't selected an account yet (hasSelectedAccount = false)
+  // 2. User hasn't chosen to remember their choice (rememberChoice = false)
+  // If rememberChoice is true, skip modal and use persisted context
   const showModal = !hasSelectedAccount && !rememberChoice;
 
   return (

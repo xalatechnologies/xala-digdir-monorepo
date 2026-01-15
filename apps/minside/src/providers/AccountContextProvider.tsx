@@ -103,21 +103,31 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     return null;
   });
 
+  // State: Remember choice preference for account selection
+  // NOTE: Must be initialized before hasSelectedAccount to handle the edge case
+  const [rememberChoice, setRememberChoice] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE);
+    return stored === 'true';
+  });
+
   // State: Has user made initial account selection
   // Auto-mark as selected to skip the modal - users can switch via the dropdown
+  // EDGE CASE: If rememberChoice is true, automatically mark as selected
   const [hasSelectedAccount, setHasSelectedAccount] = useState<boolean>(() => {
+    const storedRememberChoice = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE) === 'true';
     const stored = localStorage.getItem(STORAGE_KEYS.HAS_SELECTED);
+
+    // Edge case: If rememberChoice is true, skip modal and restore persisted context
+    if (storedRememberChoice) {
+      localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
+      return true;
+    }
+
     if (stored === null) {
       // First time - auto-mark as selected
       localStorage.setItem(STORAGE_KEYS.HAS_SELECTED, 'true');
       return true;
     }
-    return stored === 'true';
-  });
-
-  // State: Remember choice preference for account selection
-  const [rememberChoice, setRememberChoice] = useState<boolean>(() => {
-    const stored = localStorage.getItem(STORAGE_KEYS.REMEMBER_CHOICE);
     return stored === 'true';
   });
 
