@@ -106,3 +106,22 @@ export {
   // Types
   type SessionState,
 } from './session-storage';
+
+export {
+  // ListingType to Category migration utilities
+  // @deprecated These utilities are for migration purposes only
+  LISTING_TYPE_TO_CATEGORY,
+  CATEGORY_TO_LISTING_TYPE,
+  CATEGORY_DEFAULT_TIME_MODE,
+  migrateListingTypeToCategory,
+  migrateCategoryToListingType,
+  isLegacyListingType,
+  isRentalObjectCategory,
+  normalizeToCategory,
+  getDefaultTimeMode,
+  // Display labels
+  CATEGORY_LABELS_NB,
+  CATEGORY_LABELS_EN,
+  getCategoryLabel,
+  CATEGORY_ICONS,
+} from './listing-type-migration';

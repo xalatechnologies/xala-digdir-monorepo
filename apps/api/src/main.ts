@@ -5,8 +5,20 @@
 
 // Load environment variables from monorepo root .env file
 import { config } from 'dotenv';
-import { resolve } from 'path';
-config({ path: resolve(__dirname, '../../../.env') });
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
+
+// ES module compatibility: get __dirname equivalent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Try to load .env from current directory first (production), then from monorepo root (development)
+const envPathProduction = resolve(__dirname, '.env');
+const envPathDevelopment = resolve(__dirname, '../../../.env');
+const envPath = existsSync(envPathProduction) ? envPathProduction : envPathDevelopment;
+
+config({ path: envPath });
 
 import 'reflect-metadata';
 import mercurius from 'mercurius';
