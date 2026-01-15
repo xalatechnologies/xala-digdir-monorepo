@@ -39,7 +39,7 @@ import { CategoriesController } from './modules/listing/listing.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
-import { ShareController } from './modules/share/share.controller';
+import { ShareController, ShareService, ShareRepository } from './modules/share';
 import { HelpController } from './modules/help/help.controller';
 import { SignicatAuthController } from './modules/auth/signicat.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
@@ -162,6 +162,7 @@ async function bootstrap() {
   container.registerFactory('AlertRepository', () => new AlertRepository(db));
   container.registerFactory('IncidentRepository', () => new IncidentRepository(db));
   container.registerFactory('LikeRepository', () => new LikeRepository(db));
+  container.registerFactory('ShareRepository', () => new ShareRepository(db));
 
   // Register services
   container.registerFactory('TenantService', () => 
@@ -186,6 +187,9 @@ async function bootstrap() {
   );
   container.registerFactory('LikeService', () =>
     new LikeService(container.resolve('LikeRepository'), adapters)
+  );
+  container.registerFactory('ShareService', () =>
+    new ShareService(container.resolve('ShareRepository'), adapters)
   );
 
   console.log('✓ Services registered');
