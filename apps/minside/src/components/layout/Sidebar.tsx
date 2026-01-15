@@ -26,11 +26,18 @@ function CreditCardIcon() {
   );
 }
 
+/** Dashboard context type for RBAC-based navigation filtering */
+type DashboardContext = 'personal' | 'organization';
+
 interface NavItem {
   name: string;
   description: string;
   href: string;
   icon: React.ReactNode;
+  /** Which dashboard contexts can see this nav item */
+  contexts?: DashboardContext[];
+  /** Optional RBAC permissions required to see this item */
+  requiredPermissions?: string[];
   badge?: number;
   badgeColor?: 'accent' | 'success' | 'warning' | 'danger' | 'info';
 }
