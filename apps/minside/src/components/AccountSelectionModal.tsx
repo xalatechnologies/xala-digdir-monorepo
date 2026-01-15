@@ -414,11 +414,10 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         >
           <Checkbox
             id="remember-choice"
+            aria-label="Husk mitt valg"
             checked={rememberChoice}
             onChange={(e) => setRememberChoice(e.target.checked)}
-          >
-            Husk mitt valg
-          </Checkbox>
+          />
         </div>
 
         {/* Action buttons */}
