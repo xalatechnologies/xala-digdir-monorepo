@@ -66,44 +66,24 @@ export function ProtectedRoute({ children, requiredRole, requiredContext }: Prot
   }
 
   // Context validation: Check if current account context matches required context
+  // If wrong context, redirect to current context's home page instead of showing an error
   if (requiredContext && accountType !== requiredContext) {
-    const contextMessages: Record<DashboardContext, { title: string; description: string }> = {
-      personal: {
-        title: 'Personlig konto påkrevd',
-        description: 'Denne siden er kun tilgjengelig i personlig modus. Bytt til personlig konto for å få tilgang.',
-      },
-      organization: {
-        title: 'Organisasjonskonto påkrevd',
-        description: 'Denne siden er kun tilgjengelig for organisasjoner. Velg en organisasjon for å få tilgang.',
-      },
+    // Redirect messages for optional toast notification on destination page
+    const redirectMessages: Record<DashboardContext, string> = {
+      personal: 'Denne siden krever personlig modus. Du har blitt omdirigert.',
+      organization: 'Denne siden krever organisasjonsmodus. Du har blitt omdirigert.',
     };
 
-    const message = contextMessages[requiredContext];
+    // Redirect to current context's home (not the required context's home)
+    const redirectTo = accountType === 'organization' ? '/org' : '/';
+    const message = redirectMessages[requiredContext];
 
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          gap: 'var(--ds-spacing-4)',
-          padding: 'var(--ds-spacing-6)',
-          textAlign: 'center',
-        }}
-      >
-        <Heading
-          level={1}
-          data-size="lg"
-          style={{ color: 'var(--ds-color-warning-text-default)' }}
-        >
-          {message.title}
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {message.description}
-        </Paragraph>
-      </div>
+      <Navigate
+        to={redirectTo}
+        state={{ contextRedirectMessage: message, from: location }}
+        replace
+      />
     );
   }
 
