@@ -16,6 +16,7 @@ import {
   CheckCircleIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
+import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 
 interface NavItem {
   name: string;
@@ -24,7 +25,11 @@ interface NavItem {
   icon: React.ReactNode;
   badge?: number;
   badgeColor?: 'accent' | 'success' | 'warning' | 'danger' | 'info';
-  adminOnly?: boolean;
+  /**
+   * Roles that can view this nav item.
+   * Empty array or undefined = visible to all authenticated users.
+   */
+  roles?: EffectiveBackofficeRole[];
 }
 
 interface NavSection {
@@ -147,7 +152,8 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 }
 
 export function Sidebar() {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
+  const { effectiveRole } = useBackofficeRole();
 
   const navSections: NavSection[] = [
     {
@@ -173,8 +179,8 @@ export function Sidebar() {
     {
       title: 'Brukere & Org',
       items: [
-        { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, adminOnly: true },
-        { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, adminOnly: true },
+        { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, roles: ['admin'] },
+        { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, roles: ['admin'] },
       ],
     },
     {
@@ -196,35 +202,44 @@ export function Sidebar() {
     {
       title: 'Admin',
       items: [
-        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, adminOnly: true },
-        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, adminOnly: true },
-        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, adminOnly: true },
-        { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, adminOnly: true },
+        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, roles: ['admin'] },
+        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, roles: ['admin'] },
+        { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, roles: ['admin'] },
       ],
     },
     {
       title: 'Tenant',
       items: [
-        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, adminOnly: true },
-        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, adminOnly: true },
-        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, adminOnly: true },
+        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, roles: ['admin'] },
+        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, roles: ['admin'] },
       ],
     },
     {
       title: 'System',
       items: [
-        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, adminOnly: true },
-        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, adminOnly: true },
-        { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, adminOnly: true },
+        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
+        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
+        { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
       ],
     },
   ];
 
-  // Filter items based on role
+  // Filter items based on effective role
+  // Items with no roles array or empty roles array are visible to all authenticated users
+  // Items with roles array are only visible if the current effectiveRole is in that array
   const filteredSections = navSections
     .map((section) => ({
       ...section,
-      items: section.items.filter((item) => !item.adminOnly || isAdmin),
+      items: section.items.filter((item) => {
+        // If no roles specified or empty array, visible to all
+        if (!item.roles || item.roles.length === 0) {
+          return true;
+        }
+        // Otherwise, check if current effective role is in the allowed roles
+        return effectiveRole ? item.roles.includes(effectiveRole) : false;
+      }),
     }))
     .filter((section) => section.items.length > 0);
 
