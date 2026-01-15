@@ -24,16 +24,20 @@ import { sessionStore, type AuthSession } from './idporten-session-store';
 interface IdPortenConfig {
   clientId: string;
   clientSecret: string;
-  baseUrl: string;
+  tenantUrl: string; // Tenant-specific URL for OIDC/token endpoints
+  apiUrl: string; // Generic API URL for REST endpoints
   callbackUrl: string;
   privateKey: object;
 }
 
 function getConfig(): IdPortenConfig {
+  const tenantUrl = process.env.IDPORTEN_BASE_URL || 'https://digilist.sandbox.signicat.com';
+
   return {
     clientId: process.env.IDPORTEN_CLIENT_ID || 'sandbox-fantastic-house-812',
     clientSecret: process.env.IDPORTEN_CLIENT_SECRET || 'US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB',
-    baseUrl: process.env.IDPORTEN_BASE_URL || 'https://api.idporten.com',
+    tenantUrl, // For OIDC/token endpoints
+    apiUrl: 'https://api.signicat.com', // For REST API sessions (production: api.signicat.com, sandbox: api.sandbox.signicat.com with same endpoint)
     callbackUrl: process.env.IDPORTEN_CALLBACK_URL || 'http://localhost:4000/api/auth/idporten/callback',
     privateKey: {
       kty: 'RSA',
@@ -67,14 +71,14 @@ let cachedToken: { token: string; expiresAt: number } | null = null;
 
 async function getAccessToken(): Promise<string> {
   const config = getConfig();
-  
+
   // Check if we have a valid cached token
   if (cachedToken && cachedToken.expiresAt > Date.now()) {
     return cachedToken.token;
   }
-  
-  // Get new token using client credentials
-  const tokenUrl = `${config.baseUrl}/auth/open/connect/token`;
+
+  // Get new token using client credentials (uses tenant-specific URL)
+  const tokenUrl = `${config.tenantUrl}/auth/open/connect/token`;
   
   const response = await fetch(tokenUrl, {
     method: 'POST',
@@ -155,8 +159,8 @@ export class IdPortenAuthController {
       // Get access token
       const accessToken = await getAccessToken();
 
-      // Create authentication session
-      const sessionUrl = `${config.baseUrl}/auth/rest/sessions`;
+      // Create authentication session (uses generic API URL)
+      const sessionUrl = `${config.apiUrl}/auth/rest/sessions`;
 
       const sessionPayload = {
         flow: 'redirect',

@@ -793,4 +793,143 @@ export const en: Record<string, string> = {
   'notifications.org.quietHours.enabled': 'Enable quiet hours',
   'notifications.org.quietHours.start': 'From',
   'notifications.org.quietHours.end': 'To',
+
+  // ============================================================================
+  // SDK Translation Keys
+  // ============================================================================
+
+  // Rental Object Categories
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Spaces & Courts',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Equipment & Inventory',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Vehicles & Transport',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Experiences & Events',
+
+  // Rental Object Status
+  'sdk.rentalObject.status.draft': 'Draft',
+  'sdk.rentalObject.status.published': 'Published',
+  'sdk.rentalObject.status.archived': 'Archived',
+  'sdk.rentalObject.status.maintenance': 'Maintenance',
+
+  // Time Modes
+  'sdk.timeMode.PERIOD': 'Time Period',
+  'sdk.timeMode.SLOT': 'Time Slot',
+  'sdk.timeMode.ALL_DAY': 'Full Day',
+
+  // Pricing Units
+  'sdk.pricingUnit.hour': 'hour',
+  'sdk.pricingUnit.day': 'day',
+  'sdk.pricingUnit.booking': 'booking',
+  'sdk.pricingUnit.week': 'week',
+  'sdk.pricingUnit.month': 'month',
+
+  // Booking Status
+  'sdk.booking.status.pending': 'Pending',
+  'sdk.booking.status.confirmed': 'Confirmed',
+  'sdk.booking.status.cancelled': 'Cancelled',
+  'sdk.booking.status.completed': 'Completed',
+
+  // Payment Status
+  'sdk.payment.status.unpaid': 'Unpaid',
+  'sdk.payment.status.paid': 'Paid',
+  'sdk.payment.status.partial': 'Partially Paid',
+  'sdk.payment.status.refunded': 'Refunded',
+
+  // Allocation Types
+  'sdk.allocation.type.BOOKING': 'Booking',
+  'sdk.allocation.type.BLOCK': 'Blocked',
+  'sdk.allocation.type.MAINTENANCE': 'Maintenance',
+  'sdk.allocation.type.SEASONAL': 'Seasonal Lease',
+
+  // Actor Types
+  'sdk.actorType.private': 'Private Person',
+  'sdk.actorType.business': 'Business',
+  'sdk.actorType.sports_club': 'Sports Club',
+  'sdk.actorType.youth_organization': 'Youth Organization',
+  'sdk.actorType.school': 'School',
+  'sdk.actorType.municipality': 'Municipality',
+
+  // Organization Status
+  'sdk.organization.status.active': 'Active',
+  'sdk.organization.status.inactive': 'Inactive',
+  'sdk.organization.status.suspended': 'Suspended',
+
+  // User Roles
+  'sdk.user.role.super_admin': 'Super Administrator',
+  'sdk.user.role.admin': 'Administrator',
+  'sdk.user.role.saksbehandler': 'Case Handler',
+  'sdk.user.role.user': 'User',
+
+  // User Status
+  'sdk.user.status.active': 'Active',
+  'sdk.user.status.inactive': 'Inactive',
+  'sdk.user.status.suspended': 'Suspended',
+
+  // Member Roles
+  'sdk.member.role.admin': 'Administrator',
+  'sdk.member.role.member': 'Member',
+
+  // Review Status
+  'sdk.review.status.pending': 'Pending Review',
+  'sdk.review.status.approved': 'Approved',
+  'sdk.review.status.rejected': 'Rejected',
+
+  // Season Status
+  'sdk.season.status.draft': 'Draft',
+  'sdk.season.status.open': 'Open for Applications',
+  'sdk.season.status.closed': 'Closed for Applications',
+  'sdk.season.status.active': 'Active',
+  'sdk.season.status.completed': 'Completed',
+
+  // Season Application Status
+  'sdk.seasonApplication.status.pending': 'Under Review',
+  'sdk.seasonApplication.status.approved': 'Approved',
+  'sdk.seasonApplication.status.rejected': 'Rejected',
+  'sdk.seasonApplication.status.waitlist': 'On Waitlist',
+
+  // Weekdays
+  'sdk.weekday.monday': 'Monday',
+  'sdk.weekday.tuesday': 'Tuesday',
+  'sdk.weekday.wednesday': 'Wednesday',
+  'sdk.weekday.thursday': 'Thursday',
+  'sdk.weekday.friday': 'Friday',
+  'sdk.weekday.saturday': 'Saturday',
+  'sdk.weekday.sunday': 'Sunday',
+
+  // Weekdays Short
+  'sdk.weekday.short.monday': 'Mon',
+  'sdk.weekday.short.tuesday': 'Tue',
+  'sdk.weekday.short.wednesday': 'Wed',
+  'sdk.weekday.short.thursday': 'Thu',
+  'sdk.weekday.short.friday': 'Fri',
+  'sdk.weekday.short.saturday': 'Sat',
+  'sdk.weekday.short.sunday': 'Sun',
+
+  // Duration
+  'sdk.duration.minute': 'minute',
+  'sdk.duration.minutes': 'minutes',
+  'sdk.duration.hour': 'hour',
+  'sdk.duration.hours': 'hours',
+  'sdk.duration.day': 'day',
+  'sdk.duration.days': 'days',
+
+  // Verification
+  'sdk.verification.verified': 'Verified',
+  'sdk.verification.notVerified': 'Not Verified',
+
+  // Placeholders
+  'sdk.placeholder.noAddress': 'No address registered',
+  'sdk.placeholder.noReviews': 'No reviews',
+  'sdk.placeholder.noImage': 'No image',
+  'sdk.placeholder.unknown': 'Unknown',
+  'sdk.placeholder.priceNotSet': 'Price not set',
+
+  // Error Messages
+  'sdk.error.notFound': 'Not found',
+  'sdk.error.invalidAddress': 'Invalid address',
+  'sdk.error.providerError': 'Service error',
+  'sdk.error.timeout': 'Request timed out',
+  'sdk.error.unauthorized': 'Unauthorized',
+  'sdk.error.forbidden': 'Access denied',
+  'sdk.error.validation': 'Validation error',
+  'sdk.error.serverError': 'Server error',
 };

@@ -819,6 +819,145 @@ export const nb: Record<string, string> = {
   'notifications.org.quietHours.enabled': 'Aktiver stille timer',
   'notifications.org.quietHours.start': 'Fra kl.',
   'notifications.org.quietHours.end': 'Til kl.',
+
+  // ============================================================================
+  // SDK Translation Keys
+  // ============================================================================
+
+  // Rental Object Categories
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Lokaler og baner',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Kjoretoey og transport',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
+
+  // Rental Object Status
+  'sdk.rentalObject.status.draft': 'Utkast',
+  'sdk.rentalObject.status.published': 'Publisert',
+  'sdk.rentalObject.status.archived': 'Arkivert',
+  'sdk.rentalObject.status.maintenance': 'Vedlikehold',
+
+  // Time Modes
+  'sdk.timeMode.PERIOD': 'Tidsperiode',
+  'sdk.timeMode.SLOT': 'Tidsluke',
+  'sdk.timeMode.ALL_DAY': 'Heldags',
+
+  // Pricing Units
+  'sdk.pricingUnit.hour': 'time',
+  'sdk.pricingUnit.day': 'dag',
+  'sdk.pricingUnit.booking': 'booking',
+  'sdk.pricingUnit.week': 'uke',
+  'sdk.pricingUnit.month': 'maaned',
+
+  // Booking Status
+  'sdk.booking.status.pending': 'Venter',
+  'sdk.booking.status.confirmed': 'Bekreftet',
+  'sdk.booking.status.cancelled': 'Kansellert',
+  'sdk.booking.status.completed': 'Fullfoert',
+
+  // Payment Status
+  'sdk.payment.status.unpaid': 'Ubetalt',
+  'sdk.payment.status.paid': 'Betalt',
+  'sdk.payment.status.partial': 'Delvis betalt',
+  'sdk.payment.status.refunded': 'Refundert',
+
+  // Allocation Types
+  'sdk.allocation.type.BOOKING': 'Booking',
+  'sdk.allocation.type.BLOCK': 'Blokkert',
+  'sdk.allocation.type.MAINTENANCE': 'Vedlikehold',
+  'sdk.allocation.type.SEASONAL': 'Sesongleie',
+
+  // Actor Types
+  'sdk.actorType.private': 'Privatperson',
+  'sdk.actorType.business': 'Bedrift',
+  'sdk.actorType.sports_club': 'Idrettslag',
+  'sdk.actorType.youth_organization': 'Ungdomsorganisasjon',
+  'sdk.actorType.school': 'Skole',
+  'sdk.actorType.municipality': 'Kommune',
+
+  // Organization Status
+  'sdk.organization.status.active': 'Aktiv',
+  'sdk.organization.status.inactive': 'Inaktiv',
+  'sdk.organization.status.suspended': 'Suspendert',
+
+  // User Roles
+  'sdk.user.role.super_admin': 'Superadministrator',
+  'sdk.user.role.admin': 'Administrator',
+  'sdk.user.role.saksbehandler': 'Saksbehandler',
+  'sdk.user.role.user': 'Bruker',
+
+  // User Status
+  'sdk.user.status.active': 'Aktiv',
+  'sdk.user.status.inactive': 'Inaktiv',
+  'sdk.user.status.suspended': 'Suspendert',
+
+  // Member Roles
+  'sdk.member.role.admin': 'Administrator',
+  'sdk.member.role.member': 'Medlem',
+
+  // Review Status
+  'sdk.review.status.pending': 'Venter paa godkjenning',
+  'sdk.review.status.approved': 'Godkjent',
+  'sdk.review.status.rejected': 'Avslatt',
+
+  // Season Status
+  'sdk.season.status.draft': 'Utkast',
+  'sdk.season.status.open': 'Aapen for soeknader',
+  'sdk.season.status.closed': 'Stengt for soeknader',
+  'sdk.season.status.active': 'Aktiv',
+  'sdk.season.status.completed': 'Fullfoert',
+
+  // Season Application Status
+  'sdk.seasonApplication.status.pending': 'Under behandling',
+  'sdk.seasonApplication.status.approved': 'Godkjent',
+  'sdk.seasonApplication.status.rejected': 'Avslatt',
+  'sdk.seasonApplication.status.waitlist': 'Paa venteliste',
+
+  // Weekdays
+  'sdk.weekday.monday': 'Mandag',
+  'sdk.weekday.tuesday': 'Tirsdag',
+  'sdk.weekday.wednesday': 'Onsdag',
+  'sdk.weekday.thursday': 'Torsdag',
+  'sdk.weekday.friday': 'Fredag',
+  'sdk.weekday.saturday': 'Loerdag',
+  'sdk.weekday.sunday': 'Soendag',
+
+  // Weekdays Short
+  'sdk.weekday.short.monday': 'Man',
+  'sdk.weekday.short.tuesday': 'Tir',
+  'sdk.weekday.short.wednesday': 'Ons',
+  'sdk.weekday.short.thursday': 'Tor',
+  'sdk.weekday.short.friday': 'Fre',
+  'sdk.weekday.short.saturday': 'Loer',
+  'sdk.weekday.short.sunday': 'Soen',
+
+  // Duration
+  'sdk.duration.minute': 'minutt',
+  'sdk.duration.minutes': 'minutter',
+  'sdk.duration.hour': 'time',
+  'sdk.duration.hours': 'timer',
+  'sdk.duration.day': 'dag',
+  'sdk.duration.days': 'dager',
+
+  // Verification
+  'sdk.verification.verified': 'Verifisert',
+  'sdk.verification.notVerified': 'Ikke verifisert',
+
+  // Placeholders
+  'sdk.placeholder.noAddress': 'Ingen adresse registrert',
+  'sdk.placeholder.noReviews': 'Ingen anmeldelser',
+  'sdk.placeholder.noImage': 'Ingen bilde',
+  'sdk.placeholder.unknown': 'Ukjent',
+  'sdk.placeholder.priceNotSet': 'Pris ikke oppgitt',
+
+  // Error Messages
+  'sdk.error.notFound': 'Ikke funnet',
+  'sdk.error.invalidAddress': 'Ugyldig adresse',
+  'sdk.error.providerError': 'Tjenestefeil',
+  'sdk.error.timeout': 'Foresporselen tok for lang tid',
+  'sdk.error.unauthorized': 'Ikke autorisert',
+  'sdk.error.forbidden': 'Ingen tilgang',
+  'sdk.error.validation': 'Valideringsfeil',
+  'sdk.error.serverError': 'Serverfeil',
 };
 
 

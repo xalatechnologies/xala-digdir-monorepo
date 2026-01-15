@@ -185,25 +185,41 @@ pm2 restart xala-api
 
 ## 📞 Action Required: Contact Signicat
 
+**UPDATED FINDINGS (2026-01-15 16:05 UTC):**
+
+After extensive testing, the REST API endpoints are not accessible. Tested endpoints all return 404:
+- `POST /auth/rest/sessions` → 404
+- `POST /auth/rest/v2/sessions` → 404
+- `POST /rest/sessions` → 404
+- `POST /authentication/v2/sessions` → 404
+- `POST /api/authentication/v2/sessions` → 404
+
+**However, OIDC endpoints ARE available:**
+- ✅ Token endpoint: `https://digilist.sandbox.signicat.com/auth/open/connect/token` (works)
+- ✅ Authorize endpoint: `https://digilist.sandbox.signicat.com/auth/open/connect/authorize` (accessible)
+- ✅ OIDC Discovery: `https://digilist.sandbox.signicat.com/auth/open/.well-known/openid-configuration` (works)
+
 **Information Needed from Signicat Support:**
 
-1. **Correct API Base URL for Digilist tenant**
-   - Current: `https://digilist.sandbox.signicat.com`
-   - Is this correct?
+1. **REST API Availability**
+   - Is the Authentication REST API enabled for account `sandbox-fantastic-house-812`?
+   - If not, how do we enable it?
+   - Or should we use OIDC instead?
 
-2. **Correct REST API Endpoints**
-   - Token endpoint: `/auth/open/connect/token` (currently working)
+2. **Correct REST API Endpoints** (if REST is available)
+   - Token endpoint: `/auth/open/connect/token` ✅ Working
    - Sessions endpoint: What is the correct path?
-   - Current attempt: `/auth/rest/sessions` (returns 404)
+   - All tested paths return 404
 
-3. **Account Verification**
+3. **Account Configuration**
    - Client ID: `sandbox-fantastic-house-812`
-   - Is this account active and properly configured?
-   - Are REST API features enabled?
+   - Tenant: `digilist.sandbox.signicat.com`
+   - Base URL confirmed via OIDC discovery: `https://digilist.sandbox.signicat.com`
 
-4. **API Documentation**
-   - Request latest REST API documentation
-   - Include authentication flow examples
+4. **Integration Recommendation**
+   - Should we use REST API or OIDC for BankID integration?
+   - Current implementation uses REST API pattern
+   - OIDC endpoints are accessible and working
 
 5. **Callback URL Whitelist**
    - Register callback URL: `https://api.digilist.no/api/auth/idporten/callback`

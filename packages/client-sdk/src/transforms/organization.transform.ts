@@ -3,6 +3,9 @@
  *
  * Reusable transformation utilities for organization and user data.
  * Used by web, backoffice, and minside apps.
+ * 
+ * Note: All labels are returned as i18n translation keys.
+ * Use your app's t() function to resolve them.
  */
 
 import type {
@@ -15,6 +18,15 @@ import type {
   Address,
   OrganizationMember,
 } from '../types';
+import {
+  ACTOR_TYPE_KEYS,
+  ORGANIZATION_STATUS_KEYS,
+  USER_ROLE_KEYS,
+  USER_STATUS_KEYS,
+  MEMBER_ROLE_KEYS,
+  VERIFICATION_KEYS,
+  PLACEHOLDER_KEYS,
+} from '../localization/keys';
 
 // =============================================================================
 // UI Types for Transformed Organizations
@@ -117,35 +129,13 @@ export interface TransformedUser {
 }
 
 // =============================================================================
-// Transform Utilities
+// Status Colors (semantic)
 // =============================================================================
-
-const ACTOR_TYPE_LABELS: Record<ActorType, string> = {
-  private: 'Privatperson',
-  business: 'Bedrift',
-  sports_club: 'Idrettslag',
-  youth_organization: 'Ungdomsorganisasjon',
-  school: 'Skole',
-  municipality: 'Kommune',
-};
-
-const ORGANIZATION_STATUS_LABELS: Record<OrganizationStatus, string> = {
-  active: 'Aktiv',
-  inactive: 'Inaktiv',
-  suspended: 'Suspendert',
-};
 
 const ORGANIZATION_STATUS_COLORS: Record<OrganizationStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   active: 'success',
   inactive: 'neutral',
   suspended: 'danger',
-};
-
-const USER_ROLE_LABELS: Record<UserRole, string> = {
-  super_admin: 'Superadministrator',
-  admin: 'Administrator',
-  saksbehandler: 'Saksbehandler',
-  user: 'Bruker',
 };
 
 const USER_ROLE_COLORS: Record<UserRole, 'success' | 'warning' | 'danger' | 'neutral'> = {
@@ -155,70 +145,83 @@ const USER_ROLE_COLORS: Record<UserRole, 'success' | 'warning' | 'danger' | 'neu
   user: 'success',
 };
 
-const USER_STATUS_LABELS: Record<UserStatus, string> = {
-  active: 'Aktiv',
-  inactive: 'Inaktiv',
-  suspended: 'Suspendert',
-};
-
 const USER_STATUS_COLORS: Record<UserStatus, 'success' | 'warning' | 'danger' | 'neutral'> = {
   active: 'success',
   inactive: 'neutral',
   suspended: 'danger',
 };
 
-const MEMBER_ROLE_LABELS: Record<'admin' | 'member', string> = {
-  admin: 'Administrator',
-  member: 'Medlem',
-};
+// =============================================================================
+// Label Functions (return i18n keys)
+// =============================================================================
 
 /**
- * Get display label for actor type
+ * Get i18n key for actor type label
+ * Use t(key) to resolve the actual label
  */
 export function getActorTypeLabel(type: ActorType): string {
-  return ACTOR_TYPE_LABELS[type] || type;
+  return ACTOR_TYPE_KEYS[type] ?? `sdk.actorType.${type}`;
 }
 
 /**
- * Get display label for organization status
+ * Get i18n key for organization status label
+ * Use t(key) to resolve the actual label
  */
 export function getOrganizationStatusLabel(status: OrganizationStatus): string {
-  return ORGANIZATION_STATUS_LABELS[status] || status;
+  return ORGANIZATION_STATUS_KEYS[status] ?? `sdk.organization.status.${status}`;
 }
 
 /**
- * Get color for organization status
+ * Get semantic color for organization status
  */
 export function getOrganizationStatusColor(status: OrganizationStatus): 'success' | 'warning' | 'danger' | 'neutral' {
-  return ORGANIZATION_STATUS_COLORS[status] || 'neutral';
+  return ORGANIZATION_STATUS_COLORS[status] ?? 'neutral';
 }
 
 /**
- * Get display label for user role
+ * Get i18n key for user role label
+ * Use t(key) to resolve the actual label
  */
 export function getUserRoleLabel(role: UserRole): string {
-  return USER_ROLE_LABELS[role] || role;
+  return USER_ROLE_KEYS[role] ?? `sdk.user.role.${role}`;
 }
 
 /**
- * Get color for user role
+ * Get semantic color for user role
  */
 export function getUserRoleColor(role: UserRole): 'success' | 'warning' | 'danger' | 'neutral' {
-  return USER_ROLE_COLORS[role] || 'neutral';
+  return USER_ROLE_COLORS[role] ?? 'neutral';
 }
 
 /**
- * Get display label for user status
+ * Get i18n key for user status label
+ * Use t(key) to resolve the actual label
  */
 export function getUserStatusLabel(status: UserStatus): string {
-  return USER_STATUS_LABELS[status] || status;
+  return USER_STATUS_KEYS[status] ?? `sdk.user.status.${status}`;
 }
 
 /**
- * Get color for user status
+ * Get semantic color for user status
  */
 export function getUserStatusColor(status: UserStatus): 'success' | 'warning' | 'danger' | 'neutral' {
-  return USER_STATUS_COLORS[status] || 'neutral';
+  return USER_STATUS_COLORS[status] ?? 'neutral';
+}
+
+/**
+ * Get i18n key for member role label
+ * Use t(key) to resolve the actual label
+ */
+export function getMemberRoleLabel(role: 'admin' | 'member'): string {
+  return MEMBER_ROLE_KEYS[role] ?? `sdk.member.role.${role}`;
+}
+
+/**
+ * Get i18n key for verification status
+ * Use t(key) to resolve the actual label
+ */
+export function getVerificationLabel(verified: boolean): string {
+  return verified ? VERIFICATION_KEYS.verified : VERIFICATION_KEYS.notVerified;
 }
 
 /**
@@ -253,6 +256,7 @@ function calculateAge(dateOfBirth: string): number {
 
 /**
  * Transform address to formatted string
+ * Returns i18n key for placeholder when no address
  */
 export function transformAddress(address?: Address): TransformedAddress | undefined {
   if (!address) return undefined;
@@ -263,7 +267,8 @@ export function transformAddress(address?: Address): TransformedAddress | undefi
   if (address.city) parts.push(address.city);
   if (address.country) parts.push(address.country);
 
-  const formatted = parts.length > 0 ? parts.join(', ') : 'Ingen adresse registrert';
+  // Return i18n key for placeholder when no address parts
+  const formatted = parts.length > 0 ? parts.join(', ') : PLACEHOLDER_KEYS.noAddress;
 
   return {
     ...address,
@@ -308,7 +313,7 @@ export function transformOrganization(organization: Organization): TransformedOr
     statusLabel: getOrganizationStatusLabel(organization.status),
     statusColor: getOrganizationStatusColor(organization.status),
     verified: organization.verified,
-    verifiedLabel: organization.verified ? 'Verifisert' : 'Ikke verifisert',
+    verifiedLabel: getVerificationLabel(organization.verified),
 
     // Metadata
     metadata: organization.metadata,
@@ -335,7 +340,7 @@ export function transformOrganizationMember(member: OrganizationMember): Transfo
     organizationId: member.organizationId,
     userId: member.userId,
     role: member.role,
-    roleLabel: MEMBER_ROLE_LABELS[member.role],
+    roleLabel: getMemberRoleLabel(member.role),
     user: member.user ? transformUser(member.user) : undefined,
     joinedAt: member.joinedAt,
     joinedAtFormatted: formatDate(member.joinedAt),

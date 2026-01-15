@@ -70,20 +70,32 @@ export interface ListingBookingConfig {
   features: ListingBookingFeatures;
 }
 
-/** Norwegian display labels for categories */
-export const LISTING_CATEGORY_LABELS: Record<ListingCategory, string> = {
-  LOKALER_OG_BANER: 'Lokaler og baner',
-  UTSTYR_OG_INVENTAR: 'Utstyr og inventar',
-  KJORETOY_OG_TRANSPORT: 'Kjøretøy og transport',
-  OPPLEVELSER_OG_ARRANGEMENT: 'Opplevelser og arrangement',
+/**
+ * i18n keys for category labels
+ * Use t(key) to resolve the actual translated label
+ */
+export const LISTING_CATEGORY_LABEL_KEYS: Record<ListingCategory, string> = {
+  LOKALER_OG_BANER: 'sdk.rentalObject.category.LOKALER_OG_BANER',
+  UTSTYR_OG_INVENTAR: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
+  KJORETOY_OG_TRANSPORT: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
+  OPPLEVELSER_OG_ARRANGEMENT: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
 };
 
-/** Norwegian display labels for time modes */
-export const BOOKING_TIME_MODE_LABELS: Record<BookingTimeMode, string> = {
-  PERIOD: 'Tidsperiode',
-  SLOT: 'Tidsluke',
-  ALL_DAY: 'Heldags',
+/**
+ * i18n keys for time mode labels
+ * Use t(key) to resolve the actual translated label
+ */
+export const BOOKING_TIME_MODE_LABEL_KEYS: Record<BookingTimeMode, string> = {
+  PERIOD: 'sdk.timeMode.PERIOD',
+  SLOT: 'sdk.timeMode.SLOT',
+  ALL_DAY: 'sdk.timeMode.ALL_DAY',
 };
+
+/** @deprecated Use LISTING_CATEGORY_LABEL_KEYS and t() instead */
+export const LISTING_CATEGORY_LABELS = LISTING_CATEGORY_LABEL_KEYS;
+
+/** @deprecated Use BOOKING_TIME_MODE_LABEL_KEYS and t() instead */
+export const BOOKING_TIME_MODE_LABELS = BOOKING_TIME_MODE_LABEL_KEYS;
 
 // =============================================================================
 // Standard Status Enums

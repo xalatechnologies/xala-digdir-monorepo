@@ -1,9 +1,18 @@
 /**
  * Rental Object Transform Utilities
  * Transform raw API data into UI-friendly formats
+ * 
+ * Note: All labels are returned as i18n translation keys.
+ * Use your app's t() function to resolve them.
  */
 
 import type { RentalObject, RentalObjectCategory, BookingTimeMode, PricingUnit } from '../types/rental-object';
+import {
+  RENTAL_OBJECT_CATEGORY_KEYS,
+  TIME_MODE_KEYS,
+  PRICING_UNIT_KEYS,
+  PLACEHOLDER_KEYS,
+} from '../localization/keys';
 
 // =============================================================================
 // Types
@@ -98,54 +107,54 @@ export interface TransformedRentalObject {
 }
 
 // =============================================================================
-// Label Mappings
+// Day Index Mappings (for sorting)
 // =============================================================================
 
-const CATEGORY_LABELS: Record<RentalObjectCategory, string> = {
-  LOKALER_OG_BANER: 'Lokaler og baner',
-  UTSTYR_OG_INVENTAR: 'Utstyr og inventar',
-  KJORETOY_OG_TRANSPORT: 'Kjoeretoy og transport',
-  OPPLEVELSER_OG_ARRANGEMENT: 'Opplevelser og arrangement',
-};
-
-const TIME_MODE_LABELS: Record<BookingTimeMode, string> = {
-  PERIOD: 'Tidsperiode',
-  SLOT: 'Tidsluke',
-  ALL_DAY: 'Heldags',
-};
-
-const PRICING_UNIT_LABELS: Record<PricingUnit, string> = {
-  hour: 'time',
-  day: 'dag',
-  booking: 'booking',
-  week: 'uke',
-  month: 'maned',
-};
-
-const DAY_LABELS: Record<string, [string, number]> = {
-  monday: ['Mandag', 1],
-  tuesday: ['Tirsdag', 2],
-  wednesday: ['Onsdag', 3],
-  thursday: ['Torsdag', 4],
-  friday: ['Fredag', 5],
-  saturday: ['Lordag', 6],
-  sunday: ['Sondag', 0],
+const DAY_INDICES: Record<string, number> = {
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+  sunday: 0,
 };
 
 // =============================================================================
-// Label Functions
+// Label Functions (return i18n keys)
 // =============================================================================
 
+/**
+ * Get i18n key for rental object category label
+ * Use t(key) to resolve the actual label
+ */
 export function getCategoryLabel(category: RentalObjectCategory): string {
-  return CATEGORY_LABELS[category] || category;
+  return RENTAL_OBJECT_CATEGORY_KEYS[category] ?? `sdk.rentalObject.category.${category}`;
 }
 
+/**
+ * Get i18n key for time mode label
+ * Use t(key) to resolve the actual label
+ */
 export function getTimeModeLabel(timeMode: BookingTimeMode): string {
-  return TIME_MODE_LABELS[timeMode] || timeMode;
+  return TIME_MODE_KEYS[timeMode] ?? `sdk.timeMode.${timeMode}`;
 }
 
+/**
+ * Get i18n key for pricing unit label
+ * Use t(key) to resolve the actual label
+ */
 export function getPricingUnitLabel(unit: PricingUnit): string {
-  return PRICING_UNIT_LABELS[unit] || unit;
+  return PRICING_UNIT_KEYS[unit] ?? `sdk.pricingUnit.${unit}`;
+}
+
+/**
+ * Get i18n key for weekday label
+ * Use t(key) to resolve the actual label
+ */
+export function getWeekdayLabel(day: string): string {
+  const key = day.toLowerCase();
+  return `sdk.weekday.${key}`;
 }
 
 // =============================================================================
@@ -197,14 +206,15 @@ export function transformOpeningHours(obj: RentalObject): TransformedOpeningHour
   const days: TransformedOpeningHoursDay[] = Object.entries(rawHours)
     .map(([day, times]) => {
       const typedTimes = times as { open?: string; close?: string };
-      const [label, idx] = DAY_LABELS[day.toLowerCase()] || [day, 0];
+      const dayLower = day.toLowerCase();
+      const idx = DAY_INDICES[dayLower] ?? 0;
       const isClosed = !typedTimes.open || !typedTimes.close;
       return {
-        day: label,
+        day: getWeekdayLabel(dayLower), // Returns i18n key
         dayIndex: idx,
         open: typedTimes.open || '',
         close: typedTimes.close || '',
-        display: isClosed ? 'Stengt' : `${typedTimes.open} - ${typedTimes.close}`,
+        display: isClosed ? 'sdk.placeholder.closed' : `${typedTimes.open} - ${typedTimes.close}`,
         isClosed,
       };
     })
@@ -256,7 +266,7 @@ export function transformPricing(obj: RentalObject): TransformedPricing {
     currency,
     unit,
     unitLabel,
-    display: basePrice > 0 ? `${basePrice} ${currency}/${unitLabel}` : 'Pris ikke oppgitt',
+    display: basePrice > 0 ? `${basePrice} ${currency}` : PLACEHOLDER_KEYS.priceNotSet,
     hasPricing: basePrice > 0,
   };
 }
@@ -290,7 +300,7 @@ export function transformRentalObject(obj: RentalObject): TransformedRentalObjec
     capacityLabel: capacity > 0 ? `${capacity} personer` : '',
     rating,
     reviewCount,
-    ratingDisplay: rating > 0 ? `${rating.toFixed(1)} (${reviewCount} anmeldelser)` : 'Ingen anmeldelser',
+    ratingDisplay: rating > 0 ? `${rating.toFixed(1)} (${reviewCount})` : PLACEHOLDER_KEYS.noReviews,
     isAvailable: obj.status === 'published',
     isFeatured: Boolean(metadata.featured),
     createdAt: obj.createdAt,

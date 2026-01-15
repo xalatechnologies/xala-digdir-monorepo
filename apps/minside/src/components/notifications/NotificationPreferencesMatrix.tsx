@@ -10,7 +10,7 @@
  * - SMS: off by default, but recommended for reminders and cancellations
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   Card,
   Heading,
@@ -131,7 +131,6 @@ function ChannelHeader({ channel, label, enabled = true }: ChannelHeaderProps) {
 }
 
 interface NotificationTypeRowProps {
-  type: NotificationType;
   labelKey: string;
   descriptionKey: string;
   settings: NotificationChannelSettings;
@@ -146,7 +145,6 @@ interface NotificationTypeRowProps {
 }
 
 function NotificationTypeRow({
-  type,
   labelKey,
   descriptionKey,
   settings,
@@ -250,7 +248,7 @@ export function NotificationPreferencesMatrix({
   onPreferencesChange,
   masterToggles,
   onMasterToggleChange,
-  isLoading = false,
+  isLoading: _isLoading = false,
   showMasterToggles = true,
   showSmsRecommended = true,
   title,

@@ -138,10 +138,14 @@ export interface ConsentSettings {
 }
 
 // =============================================================================
-// Notification Preferences
+// Notification Preferences (Legacy - kept for backward compatibility)
+// For new implementations, use NotificationPreferences from push-notification.ts
 // =============================================================================
 
-export interface NotificationPreferences {
+/**
+ * @deprecated Use NotificationPreferences from push-notification.ts instead
+ */
+export interface LegacyNotificationPreferences {
   email: {
     bookingConfirmation: boolean;
     bookingReminder: boolean;

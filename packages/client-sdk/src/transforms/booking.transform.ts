@@ -3,9 +3,17 @@
  *
  * Reusable transformation utilities for booking data.
  * Used by web, backoffice, and minside apps.
+ * 
+ * Note: All labels are returned as i18n translation keys.
+ * Use your app's t() function to resolve them.
  */
 
 import type { Booking, BookingStatus, PaymentStatus, CalendarEvent, Allocation } from '../types';
+import {
+  BOOKING_STATUS_KEYS,
+  PAYMENT_STATUS_KEYS,
+  ALLOCATION_TYPE_KEYS,
+} from '../localization/keys';
 
 // =============================================================================
 // UI Types for Transformed Bookings
@@ -114,35 +122,14 @@ export interface TransformedAllocation {
 }
 
 // =============================================================================
-// Status Labels and Colors
+// Status Colors (semantic, not hardcoded strings)
 // =============================================================================
 
-const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
-  pending: 'Venter',
-  confirmed: 'Bekreftet',
-  cancelled: 'Kansellert',
-  completed: 'Fullført',
-};
-
 const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
-  pending: '#F59E0B', // amber
-  confirmed: '#10B981', // green
-  cancelled: '#EF4444', // red
-  completed: '#6B7280', // gray
-};
-
-const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-  unpaid: 'Ubetalt',
-  paid: 'Betalt',
-  partial: 'Delvis betalt',
-  refunded: 'Refundert',
-};
-
-const ALLOCATION_TYPE_LABELS: Record<string, string> = {
-  BOOKING: 'Booking',
-  BLOCK: 'Blokkert',
-  MAINTENANCE: 'Vedlikehold',
-  SEASONAL: 'Sesongleie',
+  pending: 'warning',
+  confirmed: 'success',
+  cancelled: 'danger',
+  completed: 'neutral',
 };
 
 // =============================================================================
@@ -150,24 +137,34 @@ const ALLOCATION_TYPE_LABELS: Record<string, string> = {
 // =============================================================================
 
 /**
- * Get display label for booking status
+ * Get i18n key for booking status label
+ * Use t(key) to resolve the actual label
  */
 export function getBookingStatusLabel(status: BookingStatus): string {
-  return BOOKING_STATUS_LABELS[status] || status;
+  return BOOKING_STATUS_KEYS[status] ?? `sdk.booking.status.${status}`;
 }
 
 /**
- * Get color for booking status
+ * Get semantic color for booking status
  */
 export function getBookingStatusColor(status: BookingStatus): string {
-  return BOOKING_STATUS_COLORS[status] || '#6B7280';
+  return BOOKING_STATUS_COLORS[status] ?? 'neutral';
 }
 
 /**
- * Get display label for payment status
+ * Get i18n key for payment status label
+ * Use t(key) to resolve the actual label
  */
 export function getPaymentStatusLabel(status: PaymentStatus): string {
-  return PAYMENT_STATUS_LABELS[status] || status;
+  return PAYMENT_STATUS_KEYS[status] ?? `sdk.payment.status.${status}`;
+}
+
+/**
+ * Get i18n key for allocation type label
+ * Use t(key) to resolve the actual label
+ */
+export function getAllocationTypeLabel(type: string): string {
+  return ALLOCATION_TYPE_KEYS[type as keyof typeof ALLOCATION_TYPE_KEYS] ?? `sdk.allocation.type.${type}`;
 }
 
 /**
@@ -349,12 +346,13 @@ export function transformCalendarEvents(events: CalendarEvent[]): TransformedCal
  * Transform an allocation
  */
 export function transformAllocation(allocation: Allocation): TransformedAllocation {
+  const type = allocation.allocationType || 'BOOKING';
   return {
     id: allocation.id,
     listingId: allocation.listingId,
     bookingId: allocation.bookingId,
-    type: allocation.allocationType || 'BOOKING',
-    typeLabel: ALLOCATION_TYPE_LABELS[allocation.allocationType || 'BOOKING'] || allocation.allocationType || 'Booking',
+    type,
+    typeLabel: getAllocationTypeLabel(type),
     status: allocation.status,
     title: allocation.title,
     notes: allocation.notes,

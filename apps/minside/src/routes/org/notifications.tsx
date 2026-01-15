@@ -25,6 +25,7 @@ import {
   Switch,
   Spinner,
   Badge,
+  Label,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
@@ -326,16 +327,14 @@ export function OrganizationNotificationsPage(): React.ReactElement {
           }}
         >
           <div>
-            <label
+            <Label
               style={{
                 display: 'block',
                 marginBottom: 'var(--ds-spacing-2)',
-                fontWeight: 'var(--ds-font-weight-medium)',
-                fontSize: 'var(--ds-font-size-sm)',
               }}
             >
               {t('notifications.org.contact.primaryEmail')}
-            </label>
+            </Label>
             <Input
               type="email"
               value={settings.primaryEmail}
@@ -345,16 +344,14 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             />
           </div>
           <div>
-            <label
+            <Label
               style={{
                 display: 'block',
                 marginBottom: 'var(--ds-spacing-2)',
-                fontWeight: 'var(--ds-font-weight-medium)',
-                fontSize: 'var(--ds-font-size-sm)',
               }}
             >
               {t('notifications.org.contact.primaryPhone')}
-            </label>
+            </Label>
             <Input
               type="tel"
               value={settings.primaryPhone}
@@ -407,16 +404,14 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             }}
           >
             <div>
-              <label
+              <Label
                 style={{
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 'var(--ds-font-weight-medium)',
-                  fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
                 {t('notifications.org.quietHours.start')}
-              </label>
+              </Label>
               <Input
                 type="time"
                 value={settings.quietHoursStart}
@@ -425,16 +420,14 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               />
             </div>
             <div>
-              <label
+              <Label
                 style={{
                   display: 'block',
                   marginBottom: 'var(--ds-spacing-2)',
-                  fontWeight: 'var(--ds-font-weight-medium)',
-                  fontSize: 'var(--ds-font-size-sm)',
                 }}
               >
                 {t('notifications.org.quietHours.end')}
-              </label>
+              </Label>
               <Input
                 type="time"
                 value={settings.quietHoursEnd}
