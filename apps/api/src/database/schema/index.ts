@@ -102,6 +102,24 @@ export const accessGrants = pgTable('access_grants', {
   orgRentalObjectIdx: index('access_grants_org_rental_object_idx').on(table.orgId, table.rentalObjectId),
 }));
 
+export const permissionAssignments = pgTable('permission_assignments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  permissions: jsonb('permissions').notNull().default([]),
+  assignedBy: uuid('assigned_by').references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  orgIdx: index('permission_assignments_org_idx').on(table.orgId),
+  userIdx: index('permission_assignments_user_idx').on(table.userId),
+  rentalObjectIdx: index('permission_assignments_rental_object_idx').on(table.rentalObjectId),
+  orgUserRentalObjectIdx: index('permission_assignments_org_user_rental_object_idx').on(table.orgId, table.userId, table.rentalObjectId),
+}));
+
 // ============================================================================
 // Subscriptions & Billing
 // ============================================================================
@@ -339,6 +357,8 @@ export type OrgMembership = typeof orgMemberships.$inferSelect;
 export type NewOrgMembership = typeof orgMemberships.$inferInsert;
 export type AccessGrant = typeof accessGrants.$inferSelect;
 export type NewAccessGrant = typeof accessGrants.$inferInsert;
+export type PermissionAssignment = typeof permissionAssignments.$inferSelect;
+export type NewPermissionAssignment = typeof permissionAssignments.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
