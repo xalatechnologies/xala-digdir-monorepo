@@ -4,7 +4,7 @@ import { I18nProvider } from '@xala/i18n';
 import { AuthProvider, ToastProvider } from './providers';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage, TenantsListPage, TenantDetailPage } from './routes';
+import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage } from './routes';
 
 function DashboardPage() {
   return (
@@ -41,6 +41,7 @@ export function App() {
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/tenants" element={<TenantsListPage />} />
                     <Route path="/tenants/:id" element={<TenantDetailPage />} />
+                    <Route path="/plans" element={<PlansListPage />} />
                   </Route>
                 </Routes>
               </AuthProvider>

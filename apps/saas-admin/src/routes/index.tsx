@@ -8,3 +8,4 @@
 export { LoginPage } from './login';
 export { TenantsListPage } from './tenants';
 export { TenantDetailPage } from './tenants/[id]';
+export { PlansListPage } from './plans';
