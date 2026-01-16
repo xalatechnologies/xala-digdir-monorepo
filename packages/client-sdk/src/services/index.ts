@@ -10,6 +10,11 @@ export { BaseService } from './base.service';
 // Auth
 export { AuthService, authService } from './auth.service';
 
+// Authorization / RBAC
+export { AuthzService, authzService } from './authz.service';
+export { AccessGrantService, accessGrantService } from './access-grant.service';
+export { PermissionAssignmentService, permissionAssignmentService } from './permission-assignment.service';
+
 // Rental Objects (primary)
 export {
   RentalObjectService,
@@ -149,9 +154,15 @@ export {
 } from './billing.service';
 
 // Re-export billing types for convenience
-export type { 
-  BillingSummary, 
+export type {
+  BillingSummary,
   Invoice,
-  InvoiceQueryParams 
+  InvoiceQueryParams
 } from './billing.service';
+
+// SaaS Admin - Service only (types from ./types)
+export { saasService } from './saas.service';
+
+// Tenant Admin - Service only (types from ./types)
+export { tenantAdminService } from './tenant-admin.service';
 

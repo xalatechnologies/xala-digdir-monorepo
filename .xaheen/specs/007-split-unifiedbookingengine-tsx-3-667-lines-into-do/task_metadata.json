@@ -1,9 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "code_quality",
-  "ideaId": "cq-001",
-  "rationale": "This monolithic component has multiple responsibilities: calendar/date selection logic for 6 booking modes, price calculation, form handling, booking submission, and 500+ lines of inline CSS. Functions like RecurringModeView (181 lines) and BookingConfirmStep (202 lines) exceed reasonable sizes. Deep nesting makes flow hard to follow.",
-  "category": "refactoring",
-  "codeQualitySeverity": "critical",
-  "priority": "urgent"
-}

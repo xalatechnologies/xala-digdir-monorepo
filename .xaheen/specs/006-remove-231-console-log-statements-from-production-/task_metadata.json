@@ -1,9 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "code_quality",
-  "ideaId": "cq-003",
-  "rationale": "Console statements in production code are a code smell indicating incomplete development cleanup. They can expose sensitive information (tokens, credentials, user data), clutter production logs making real issues harder to find, and impact performance. The API module's auth controllers are particularly concerning as they may log authentication tokens.",
-  "category": "refactoring",
-  "codeQualitySeverity": "major",
-  "priority": "high"
-}

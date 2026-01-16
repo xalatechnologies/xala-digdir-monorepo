@@ -23,6 +23,7 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "tsx scripts/migrate.ts",
+    "db:migrate:validate": "tsx scripts/migrate.ts --validate",
     "db:seed": "tsx scripts/seed.ts",
     "db:seed:demo": "tsx src/database/seeds/demo-seed.ts",
     "db:seed:v3": "tsx src/database/seeds/demo-seed-v3.ts",

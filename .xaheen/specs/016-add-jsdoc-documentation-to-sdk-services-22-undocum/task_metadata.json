@@ -1,8 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "documentation_gaps",
-  "ideaId": "doc-002",
-  "rationale": "The SDK is the primary integration layer for all frontend apps (per CLAUDE.md rules). Without JSDoc, developers must read source code to understand method signatures, parameters, and return types. This slows onboarding and increases error risk.",
-  "category": "documentation",
-  "priority": "high"
-}

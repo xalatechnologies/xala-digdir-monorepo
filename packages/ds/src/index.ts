@@ -224,13 +224,22 @@ export {
   FileTextIcon,
   ClipboardListIcon,
   PlayIcon,
+  PauseIcon,
   LockIcon,
   UnlockIcon,
   UploadIcon,
   CameraIcon,
   ImageIcon,
+  TableIcon,
+  KeyIcon,
+  RefreshCwIcon,
+  DatabaseIcon,
+  ToggleLeftIcon,
+  CreditCardIcon,
+  StorageIcon,
   KeyIcon,
   FormField,
+  Progress,
 } from './primitives';
 export type {
   ContainerProps,
@@ -242,6 +251,7 @@ export type {
   BadgeProps,
   LayoutGridProps,
   FormFieldProps,
+  ProgressProps,
 } from './primitives';
 
 // Blocks - Business logic components

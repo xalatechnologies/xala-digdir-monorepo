@@ -273,6 +273,79 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // RBAC Keys
+  // =========================================================================
+  rbac: {
+    all: ['rbac'] as const,
+    capabilities: () => [...queryKeys.rbac.all, 'capabilities'] as const,
+    roles: () => [...queryKeys.rbac.all, 'roles'] as const,
+    roleMatrix: () => [...queryKeys.rbac.all, 'roleMatrix'] as const,
+    userCapabilities: (userId: string) => [...queryKeys.rbac.all, 'userCapabilities', userId] as const,
+  },
+
+  // =========================================================================
+  // Access Grant Keys
+  // =========================================================================
+  accessGrants: {
+    all: ['accessGrants'] as const,
+    lists: () => [...queryKeys.accessGrants.all, 'list'] as const,
+    list: (params?: { orgId?: string; rentalObjectId?: string; status?: string }) =>
+      [...queryKeys.accessGrants.lists(), params] as const,
+    details: () => [...queryKeys.accessGrants.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.accessGrants.details(), id] as const,
+    byOrganization: (orgId: string) => [...queryKeys.accessGrants.all, 'byOrg', orgId] as const,
+    byRentalObject: (rentalObjectId: string) => [...queryKeys.accessGrants.all, 'byRO', rentalObjectId] as const,
+  },
+
+  // =========================================================================
+  // Permission Assignment Keys
+  // =========================================================================
+  permissionAssignments: {
+    all: ['permissionAssignments'] as const,
+    lists: () => [...queryKeys.permissionAssignments.all, 'list'] as const,
+    list: (params?: { orgId?: string; userId?: string; rentalObjectId?: string }) =>
+      [...queryKeys.permissionAssignments.lists(), params] as const,
+    details: () => [...queryKeys.permissionAssignments.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.permissionAssignments.details(), id] as const,
+    byOrganization: (orgId: string) => [...queryKeys.permissionAssignments.all, 'byOrg', orgId] as const,
+    byUser: (userId: string) => [...queryKeys.permissionAssignments.all, 'byUser', userId] as const,
+    byRentalObject: (orgId: string, rentalObjectId: string) =>
+      [...queryKeys.permissionAssignments.all, 'byRO', orgId, rentalObjectId] as const,
+    forOrgRentalObject: (orgId: string, rentalObjectId: string, userId?: string) =>
+      [...queryKeys.permissionAssignments.all, 'orgRO', orgId, rentalObjectId, userId] as const,
+    availablePermissions: () => [...queryKeys.permissionAssignments.all, 'availablePermissions'] as const,
+  },
+
+  // =========================================================================
+  // Case Handler Scope Keys
+  // =========================================================================
+  caseHandlerScopes: {
+    all: ['caseHandlerScopes'] as const,
+    lists: () => [...queryKeys.caseHandlerScopes.all, 'list'] as const,
+    list: (params?: { scopeType?: 'COMMUNE' | 'ORG'; orgId?: string; userId?: string }) =>
+      [...queryKeys.caseHandlerScopes.lists(), params] as const,
+    details: () => [...queryKeys.caseHandlerScopes.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.caseHandlerScopes.details(), id] as const,
+    byUser: (userId: string) => [...queryKeys.caseHandlerScopes.all, 'byUser', userId] as const,
+    byRentalObject: (rentalObjectId: string) => [...queryKeys.caseHandlerScopes.all, 'byRO', rentalObjectId] as const,
+  },
+
+  // =========================================================================
+  // Organization Membership Keys
+  // =========================================================================
+  orgMemberships: {
+    all: ['orgMemberships'] as const,
+    lists: () => [...queryKeys.orgMemberships.all, 'list'] as const,
+    list: (params?: { orgId?: string; userId?: string; role?: string; status?: string }) =>
+      [...queryKeys.orgMemberships.lists(), params] as const,
+    details: () => [...queryKeys.orgMemberships.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.orgMemberships.details(), id] as const,
+    byOrganization: (orgId: string) => [...queryKeys.orgMemberships.all, 'byOrg', orgId] as const,
+    byUser: (userId: string) => [...queryKeys.orgMemberships.all, 'byUser', userId] as const,
+    myMemberships: () => [...queryKeys.orgMemberships.all, 'my'] as const,
+  },
+
+  // =========================================================================
   // Settings Keys
   // =========================================================================
   settings: {
@@ -312,6 +385,64 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // SaaS Admin Keys (Platform-wide administration)
+  // =========================================================================
+  saas: {
+    all: ['saas:'] as const,
+    me: () => [...queryKeys.saas.all, 'me'] as const,
+
+    // Tenant management
+    tenants: {
+      all: () => [...queryKeys.saas.all, 'tenants'] as const,
+      lists: () => [...queryKeys.saas.tenants.all(), 'list'] as const,
+      list: (params?: { page?: number; limit?: number; search?: string; status?: string; planId?: string }) =>
+        [...queryKeys.saas.tenants.lists(), params] as const,
+      details: () => [...queryKeys.saas.tenants.all(), 'detail'] as const,
+      detail: (tenantId: string) => [...queryKeys.saas.tenants.details(), tenantId] as const,
+      flags: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'flags'] as const,
+      billing: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'billing'] as const,
+      secrets: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'secrets'] as const,
+      categories: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'categories'] as const,
+    },
+
+    // Plans management
+    plans: {
+      all: () => [...queryKeys.saas.all, 'plans'] as const,
+      lists: () => [...queryKeys.saas.plans.all(), 'list'] as const,
+      list: (params?: { page?: number; limit?: number; status?: string; isPublic?: boolean }) =>
+        [...queryKeys.saas.plans.lists(), params] as const,
+      details: () => [...queryKeys.saas.plans.all(), 'detail'] as const,
+      detail: (planId: string) => [...queryKeys.saas.plans.details(), planId] as const,
+    },
+
+    // Feature flags catalog
+    featureFlags: {
+      all: () => [...queryKeys.saas.all, 'featureFlags'] as const,
+      catalog: (params?: { category?: string; status?: string }) =>
+        [...queryKeys.saas.featureFlags.all(), 'catalog', params] as const,
+    },
+
+    // Platform-wide billing
+    billing: {
+      all: () => [...queryKeys.saas.all, 'billing'] as const,
+      overview: () => [...queryKeys.saas.billing.all(), 'overview'] as const,
+    },
+  },
+
+  // =========================================================================
+  // Tenant Admin Keys (Tenant-scoped administration)
+  // =========================================================================
+  tenantAdmin: {
+    all: ['tenantAdmin:'] as const,
+    capabilities: () => [...queryKeys.tenantAdmin.all, 'capabilities'] as const,
+    subscription: () => [...queryKeys.tenantAdmin.all, 'subscription'] as const,
+    flags: () => [...queryKeys.tenantAdmin.all, 'flags'] as const,
+    branding: () => [...queryKeys.tenantAdmin.all, 'branding'] as const,
+    integrations: {
+      all: () => [...queryKeys.tenantAdmin.all, 'integrations'] as const,
+      list: () => [...queryKeys.tenantAdmin.integrations.all(), 'list'] as const,
+      provider: (provider: string) => [...queryKeys.tenantAdmin.integrations.all(), provider] as const,
+    },
   // Security Dashboard Keys
   // =========================================================================
   security: {

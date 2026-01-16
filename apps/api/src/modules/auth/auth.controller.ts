@@ -8,6 +8,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users, tenants } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
+import { getPermissionsForRole, getCapabilityProjection, isValidRole } from './rbac';
 import type { JwtService } from '../../core/auth/jwt.service';
 
 interface AuthRequest extends FastifyRequest {
@@ -207,6 +208,8 @@ export class AuthController {
   }
 }
 
+// Note: getPermissionsForRole is now imported from './rbac'
+// This provides comprehensive RBAC with SaaS, Tenant, Commune, and Org level roles
 // Helper: Get permissions based on role
 function getPermissionsForRole(role: string): string[] {
   const permissions: Record<string, string[]> = {

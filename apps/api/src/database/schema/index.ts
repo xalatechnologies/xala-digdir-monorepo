@@ -13,6 +13,7 @@ import {
   integer,
   decimal,
   index,
+  unique,
 } from 'drizzle-orm/pg-core';
 
 // ============================================================================
@@ -26,6 +27,21 @@ export const tenants = pgTable('tenants', {
   domain: varchar('domain', { length: 255 }),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  // Subscription & Plan references
+  subscriptionPlanId: uuid('subscription_plan_id'),
+  // License key (stored as hash only, never plaintext)
+  licenseKeyHash: text('license_key_hash'),
+  licenseKeyRotatedAt: timestamp('license_key_rotated_at'),
+  // Seat limits (overrides plan defaults when set)
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  // Branding reference (active branding version ID)
+  brandingVersionId: uuid('branding_version_id'),
   
   // Feature flags and category controls
   featureFlags: jsonb('feature_flags').notNull().default({}),
@@ -36,6 +52,7 @@ export const tenants = pgTable('tenants', {
 }, (table) => ({
   slugIdx: index('tenants_slug_idx').on(table.slug),
   statusIdx: index('tenants_status_idx').on(table.status),
+  subscriptionPlanIdx: index('tenants_subscription_plan_idx').on(table.subscriptionPlanId),
 }));
 
 export const organizations = pgTable('organizations', {
@@ -46,11 +63,16 @@ export const organizations = pgTable('organizations', {
   type: varchar('type', { length: 50 }).notNull().default('other'),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  // Brønnøysund sync fields
+  externalOrgId: varchar('external_org_id', { length: 50 }),
+  source: varchar('source', { length: 50 }).default('manual'),
+  lastSyncedAt: timestamp('last_synced_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('orgs_tenant_idx').on(table.tenantId),
   slugIdx: index('orgs_slug_idx').on(table.tenantId, table.slug),
+  externalOrgIdx: index('orgs_external_org_idx').on(table.externalOrgId),
 }));
 
 // ============================================================================
@@ -75,13 +97,136 @@ export const users = pgTable('users', {
   nationalIdIdx: index('users_national_id_idx').on(table.nationalId),
 }));
 
+export const orgMemberships = pgTable('org_memberships', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  orgRole: varchar('org_role', { length: 50 }).notNull().default('member'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  userIdx: index('org_memberships_user_idx').on(table.userId),
+  orgIdx: index('org_memberships_org_idx').on(table.orgId),
+  userOrgIdx: index('org_memberships_user_org_idx').on(table.userId, table.orgId),
+}));
+
+export const accessGrants = pgTable('access_grants', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  grantedBy: uuid('granted_by').notNull().references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  validFrom: timestamp('valid_from'),
+  validUntil: timestamp('valid_until'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('access_grants_tenant_idx').on(table.tenantId),
+  orgIdx: index('access_grants_org_idx').on(table.orgId),
+  rentalObjectIdx: index('access_grants_rental_object_idx').on(table.rentalObjectId),
+  orgRentalObjectIdx: index('access_grants_org_rental_object_idx').on(table.orgId, table.rentalObjectId),
+}));
+
+export const permissionAssignments = pgTable('permission_assignments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  permissions: jsonb('permissions').notNull().default([]),
+  assignedBy: uuid('assigned_by').references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  orgIdx: index('permission_assignments_org_idx').on(table.orgId),
+  userIdx: index('permission_assignments_user_idx').on(table.userId),
+  rentalObjectIdx: index('permission_assignments_rental_object_idx').on(table.rentalObjectId),
+  orgUserRentalObjectIdx: index('permission_assignments_org_user_rental_object_idx').on(table.orgId, table.userId, table.rentalObjectId),
+}));
+
+export const caseHandlerScopes = pgTable('case_handler_scopes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  scopeType: varchar('scope_type', { length: 50 }).notNull(),
+  rentalObjectId: uuid('rental_object_id').references(() => listings.id, { onDelete: 'cascade' }),
+  assignedBy: uuid('assigned_by').references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('case_handler_scopes_tenant_idx').on(table.tenantId),
+  userIdx: index('case_handler_scopes_user_idx').on(table.userId),
+  scopeTypeIdx: index('case_handler_scopes_scope_type_idx').on(table.scopeType),
+  rentalObjectIdx: index('case_handler_scopes_rental_object_idx').on(table.rentalObjectId),
+  userScopeIdx: index('case_handler_scopes_user_scope_idx').on(table.userId, table.scopeType, table.rentalObjectId),
+}));
+
 // ============================================================================
-// Subscriptions & Billing
+// Plans & Subscriptions
 // ============================================================================
+
+export const plans = pgTable('plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 100 }).notNull(),
+  slug: varchar('slug', { length: 50 }).notNull().unique(),
+  description: text('description'),
+  displayOrder: integer('display_order').notNull().default(0),
+  basePrice: decimal('base_price', { precision: 10, scale: 2 }).notNull().default('0'),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+  billingPeriod: varchar('billing_period', { length: 20 }).notNull().default('monthly'),
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  entitlements: jsonb('entitlements').default({
+    modules: {
+      rating: false,
+      recommendations: false,
+      feedback: true,
+      favorites: true,
+      share: true,
+      recurringBookings: false,
+    },
+    integrations: {
+      visma: false,
+      rco: false,
+      acos: false,
+      outlook: false,
+      vipps: false,
+    },
+    features: {
+      customBranding: false,
+      advancedReporting: false,
+      apiAccess: false,
+      prioritySupport: false,
+    },
+  }),
+  trialDays: integer('trial_days').default(0),
+  isPublic: boolean('is_public').notNull().default(true),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index('plans_slug_idx').on(table.slug),
+  statusIdx: index('plans_status_idx').on(table.status),
+  displayOrderIdx: index('plans_display_order_idx').on(table.displayOrder),
+}));
 
 export const subscriptions = pgTable('subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  planId: uuid('plan_id').references(() => plans.id, { onDelete: 'set null' }),
   stripeCustomerId: varchar('stripe_customer_id', { length: 255 }),
   stripeSubscriptionId: varchar('stripe_subscription_id', { length: 255 }),
   plan: varchar('plan', { length: 50 }).notNull().default('free'),
@@ -93,6 +238,84 @@ export const subscriptions = pgTable('subscriptions', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('subscriptions_tenant_idx').on(table.tenantId),
+  planIdx: index('subscriptions_plan_idx').on(table.planId),
+}));
+
+// ============================================================================
+// Feature Flags
+// ============================================================================
+
+export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: varchar('key', { length: 100 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  type: varchar('type', { length: 50 }).notNull().default('boolean'),
+  defaultValue: jsonb('default_value').notNull().default(false),
+  category: varchar('category', { length: 50 }).notNull().default('module'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  keyIdx: index('feature_flags_catalog_key_idx').on(table.key),
+  categoryIdx: index('feature_flags_catalog_category_idx').on(table.category),
+  statusIdx: index('feature_flags_catalog_status_idx').on(table.status),
+}));
+
+export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('tenant_feature_flags_tenant_idx').on(table.tenantId),
+  featureFlagIdx: index('tenant_feature_flags_flag_idx').on(table.featureFlagId),
+  tenantFlagUnique: unique('tenant_feature_flags_unique').on(table.tenantId, table.featureFlagId),
+}));
+
+export const orgFeatureFlags = pgTable('org_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  orgIdx: index('org_feature_flags_org_idx').on(table.organizationId),
+  featureFlagIdx: index('org_feature_flags_flag_idx').on(table.featureFlagId),
+  orgFlagUnique: unique('org_feature_flags_unique').on(table.organizationId, table.featureFlagId),
+}));
+
+// ============================================================================
+// Category Entitlements (Rental Object Category Access Control)
+// ============================================================================
+
+export const categoryEntitlements = pgTable('category_entitlements', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'cascade' }),
+  category: varchar('category', { length: 100 }).notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  restrictions: jsonb('restrictions').default({}),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('category_entitlements_tenant_idx').on(table.tenantId),
+  orgIdx: index('category_entitlements_org_idx').on(table.organizationId),
+  categoryIdx: index('category_entitlements_category_idx').on(table.category),
+  tenantCategoryUnique: unique('category_entitlements_tenant_unique').on(table.tenantId, table.category),
+  orgCategoryUnique: unique('category_entitlements_org_unique').on(table.organizationId, table.category),
 }));
 
 // ============================================================================
@@ -317,6 +540,51 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// Branding & White-Label
+// ============================================================================
+
+export const brandingTokens = pgTable('branding_tokens', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  name: varchar('name', { length: 255 }),
+  logoUrl: text('logo_url'),
+  faviconUrl: text('favicon_url'),
+  primaryColor: varchar('primary_color', { length: 50 }),
+  secondaryColor: varchar('secondary_color', { length: 50 }),
+  accentColor: varchar('accent_color', { length: 50 }),
+  tokens: jsonb('tokens').default({}),
+  typography: jsonb('typography').default({}),
+  activeVersionId: uuid('active_version_id'),
+  previewVersionId: uuid('preview_version_id'),
+  previewMode: boolean('preview_mode').notNull().default(false),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_tokens_tenant_idx').on(table.tenantId),
+}));
+
+export const brandingVersions = pgTable('branding_versions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  brandingTokensId: uuid('branding_tokens_id').notNull().references(() => brandingTokens.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  name: varchar('name', { length: 255 }),
+  description: text('description'),
+  snapshot: jsonb('snapshot').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  publishedAt: timestamp('published_at'),
+  publishedBy: uuid('published_by').references(() => users.id, { onDelete: 'set null' }),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_versions_tenant_idx').on(table.tenantId),
+  brandingTokensIdx: index('branding_versions_tokens_idx').on(table.brandingTokensId),
+  versionIdx: index('branding_versions_version_idx').on(table.brandingTokensId, table.version),
+  statusIdx: index('branding_versions_status_idx').on(table.status),
+  tenantVersionUnique: unique('branding_versions_tenant_version_unique').on(table.tenantId, table.version),
+}));
 // GDPR Requests
 // ============================================================================
 
@@ -332,6 +600,16 @@ export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type Plan = typeof plans.$inferSelect;
+export type NewPlan = typeof plans.$inferInsert;
+export type OrgMembership = typeof orgMemberships.$inferSelect;
+export type NewOrgMembership = typeof orgMemberships.$inferInsert;
+export type AccessGrant = typeof accessGrants.$inferSelect;
+export type NewAccessGrant = typeof accessGrants.$inferInsert;
+export type PermissionAssignment = typeof permissionAssignments.$inferSelect;
+export type NewPermissionAssignment = typeof permissionAssignments.$inferInsert;
+export type CaseHandlerScope = typeof caseHandlerScopes.$inferSelect;
+export type NewCaseHandlerScope = typeof caseHandlerScopes.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type RentalObject = typeof rentalObjects.$inferSelect;
@@ -354,6 +632,18 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+export type FeatureFlagCatalog = typeof featureFlagsCatalog.$inferSelect;
+export type NewFeatureFlagCatalog = typeof featureFlagsCatalog.$inferInsert;
+export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
+export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
+export type OrgFeatureFlag = typeof orgFeatureFlags.$inferSelect;
+export type NewOrgFeatureFlag = typeof orgFeatureFlags.$inferInsert;
+export type CategoryEntitlement = typeof categoryEntitlements.$inferSelect;
+export type NewCategoryEntitlement = typeof categoryEntitlements.$inferInsert;
+export type BrandingToken = typeof brandingTokens.$inferSelect;
+export type NewBrandingToken = typeof brandingTokens.$inferInsert;
+export type BrandingVersion = typeof brandingVersions.$inferSelect;
+export type NewBrandingVersion = typeof brandingVersions.$inferInsert;
 export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 
 // =============================================================================

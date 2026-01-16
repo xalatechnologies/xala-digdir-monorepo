@@ -1,8 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "documentation_gaps",
-  "ideaId": "doc-001",
-  "rationale": "Troubleshooting and FAQ sections are critical for developer onboarding. The README navigation explicitly links to these files, creating broken navigation. This affects both new team members and external contributors trying to debug issues.",
-  "category": "documentation",
-  "priority": "high"
-}

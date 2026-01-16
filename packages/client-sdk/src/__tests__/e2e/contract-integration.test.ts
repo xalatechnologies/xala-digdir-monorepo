@@ -398,6 +398,10 @@ describe('SDK Selectors - View Slices', () => {
 // ==============================================================================
 
 describe('RBAC Integration Tests', () => {
+  // Role definitions for future parameterized tests
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const roles = ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'] as const;
+
   describe('Listing permissions by role', () => {
     it('public: can view, can book (if enabled), cannot edit', () => {
       const publicPerms = { canView: true, canBook: true, canEdit: false, canDelete: false };

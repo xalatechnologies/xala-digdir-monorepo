@@ -1,9 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "performance_optimizations",
-  "ideaId": "perf-005",
-  "rationale": "packages/ds/src/index.ts re-exports everything from @digdir/designsystemet-react using `export *`. While modern bundlers handle this reasonably well, some components and their dependencies may be included unnecessarily. Apps only use a subset (~30-40 components) of the full library (~80+ components).",
-  "category": "performance",
-  "performanceCategory": "bundle_size",
-  "impact": "medium"
-}

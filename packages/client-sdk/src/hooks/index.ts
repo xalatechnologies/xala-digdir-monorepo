@@ -416,6 +416,86 @@ export {
   useSubmitContact,
 } from './useHelp';
 
+// SaaS Admin hooks (Platform-wide administration)
+export {
+  useSaasMe,
+  useSaasTenants,
+  useSaasTenant,
+  useCreateSaasTenant,
+  useUpdateSaasTenant,
+  useSuspendSaasTenant,
+  useReactivateSaasTenant,
+  useUpdateSaasSeatLimits,
+  useSaasFeatureFlagsCatalog,
+  useSaasTenantFlags,
+  useUpdateSaasTenantFlags,
+  useRotateSaasLicenseKey,
+  useValidateSaasLicenseKey,
+  useSaasTenantBilling,
+  useSaasBillingOverview,
+  useSaasTenantSecrets,
+  useUpdateSaasTenantSecret,
+  useSaasPlans,
+  useSaasPlan,
+  useCreateSaasPlan,
+  useUpdateSaasPlan,
+  useSaasTenantCategories,
+  useUpdateSaasTenantCategories,
+} from './use-saas';
+
+// Tenant Admin hooks (Tenant-scoped administration)
+export {
+  useTenantCapabilities,
+  useTenantSubscription,
+  useTenantFlags,
+  useTenantBranding,
+  useUpdateTenantBranding,
+  useTenantIntegrations,
+  useUpdateTenantIntegration,
+} from './use-tenant-admin';
+// RBAC hooks (Role-Based Access Control)
+export {
+  // Capabilities
+  useCapabilities,
+  usePermissions,
+  useCheckPermission,
+  useHasPermission,
+  useEffectiveRole,
+  // Access Grants
+  useAccessGrants,
+  useAccessGrant,
+  useAccessGrantsByOrganization,
+  useAccessGrantsByRentalObject,
+  useAccessibleRentalObjects,
+  useGrantedOrganizations,
+  useCheckAccess,
+  useGrantAccess,
+  useBulkGrantAccess,
+  useUpdateAccessGrant,
+  useRevokeAccess,
+  useDeleteAccessGrant,
+  // Permission Assignments
+  usePermissionAssignments,
+  usePermissionAssignment,
+  usePermissionAssignmentsByOrganization,
+  usePermissionAssignmentsByUser,
+  usePermissionAssignmentsByRentalObject,
+  useMemberPermissions,
+  useUserPermissionsSummary,
+  useAvailablePermissions,
+  useAssignPermissions,
+  useUpdatePermissionAssignment,
+  useRevokePermissions,
+  useDeletePermissionAssignment,
+  useCheckRentalObjectPermission,
+  useBulkAssignPermissions,
+  useCopyPermissions,
+  // Utility hooks
+  useBackofficeRole,
+  useMyOrgMemberships,
+  useMyAccessibleRentalObjects,
+} from './use-rbac';
+
 // GDPR hooks
 export {
   useMyGdprRequests,
