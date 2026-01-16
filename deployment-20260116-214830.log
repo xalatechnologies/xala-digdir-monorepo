@@ -1,0 +1,383 @@
+
+> xala-digdir-monorepo@ deploy:all /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo
+> ./scripts/deploy.sh all
+
+[0;34m[DEPLOY][0m Starting deployment...
+[0;34m[DEPLOY][0m Target: all
+
+[0;34m[DEPLOY][0m Running pre-flight checks...
+[0;34m[DEPLOY][0m Checking for duplicate Vite configs...
+[0;32m[SUCCESS][0m Config check passed
+[0;34m[DEPLOY][0m Ensuring theme CSS files are in public folders...
+[0;32m[SUCCESS][0m Theme files copied to all apps
+[0;34m[DEPLOY][0m Clearing build caches...
+[0;32m[SUCCESS][0m Caches cleared
+
+[0;34m[DEPLOY][0m Building web...
+[0;34m[DEPLOY][0m Creating production environment for web...
+[0;32m[SUCCESS][0m Created /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/.env.production
+
+> @xala/web@0.0.0 build /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1911 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                          0.13 kB
+dist/manifest.webmanifest                   0.33 kB
+dist/index.html                             1.62 kB │ gzip:   0.63 kB
+dist/assets/index-oAzDeqnn.css              1.19 kB │ gzip:   0.59 kB
+dist/assets/vendor-ds-CSSb_G_8.css          6.75 kB │ gzip:   1.31 kB
+dist/assets/vendor-mapbox-vV3jbIp0.css     38.58 kB │ gzip:   5.43 kB
+dist/assets/vendor-PcqqEfsq.css           154.61 kB │ gzip:  20.52 kB
+dist/assets/vendor-query-xn0-J7yS.js        3.44 kB │ gzip:   1.60 kB
+dist/assets/vendor-sdk-FbAwlrwr.js         51.21 kB │ gzip:  12.03 kB
+dist/assets/vendor-ds-7NGKLPUZ.js         246.54 kB │ gzip:  36.30 kB
+dist/assets/index-BfeE42Tt.js             589.32 kB │ gzip: 108.24 kB
+dist/assets/vendor-XSJef1Yt.js            698.74 kB │ gzip: 220.46 kB
+dist/assets/vendor-mapbox-Bkgr5U3A.js   1,677.25 kB │ gzip: 463.88 kB
+
+(!) Some chunks are larger than 800 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.99s
+
+PWA v1.2.0
+mode      generateSW
+precache  21 entries (5785.05 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-ebf8facd.js
+[0;32m[SUCCESS][0m web built successfully!
+[0;34m[DEPLOY][0m Deploying web to web-test.digilist.no...
+Transfer starting: 24 files
+./
+icon.png
+index.html
+logo.svg
+manifest.json
+manifest.webmanifest
+registerSW.js
+service-worker.js
+sw.js
+workbox-ebf8facd.js
+assets/
+assets/index-BfeE42Tt.js
+assets/index-oAzDeqnn.css
+assets/vendor-PcqqEfsq.css
+assets/vendor-XSJef1Yt.js
+assets/vendor-ds-7NGKLPUZ.js
+assets/vendor-ds-CSSb_G_8.css
+assets/vendor-mapbox-Bkgr5U3A.js
+assets/vendor-mapbox-vV3jbIp0.css
+assets/vendor-query-xn0-J7yS.js
+assets/vendor-sdk-FbAwlrwr.js
+themes/
+themes/digilist-extensions.css
+themes/digilist.css
+
+sent 184304 bytes  received 30494 bytes  1027250 bytes/sec
+total size is 6112807  speedup is 28.46
+[0;32m[SUCCESS][0m web deployed to https://web-test.digilist.no
+[0;34m[DEPLOY][0m Building backoffice...
+[0;34m[DEPLOY][0m Creating production environment for backoffice...
+[0;32m[SUCCESS][0m Created /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/.env.production
+
+> @xala/backoffice@0.0.0 build /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice
+> vite build
+
+[sentry-vite-plugin] Warning: No auth token provided. Will not create release. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+[sentry-vite-plugin] Warning: No auth token provided. Will not upload source maps. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+vite v5.4.21 building for production...
+[sentry-vite-plugin] Info: Sending telemetry data on issues and performance to Sentry. To disable telemetry, set `options.telemetry` to `false`.
+transforming...
+✓ 2608 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  1.11 kB │ gzip:   0.43 kB
+dist/assets/index-BFGPME4z.css                   0.40 kB │ gzip:   0.29 kB
+dist/assets/vendor-ds-CSSb_G_8.css               6.75 kB │ gzip:   1.31 kB
+dist/assets/vendor-mapbox-vV3jbIp0.css          38.58 kB │ gzip:   5.43 kB
+dist/assets/vendor-PcqqEfsq.css                154.61 kB │ gzip:  20.52 kB
+dist/assets/FormActions-D_6t27jy.js              1.42 kB │ gzip:   0.72 kB │ map:     3.56 kB
+dist/assets/vendor-query-CWFylCxn.js             3.21 kB │ gzip:   1.49 kB │ map:    16.36 kB
+dist/assets/pricing-rules-FoMj-Ks-.js            5.46 kB │ gzip:   1.81 kB │ map:    12.82 kB
+dist/assets/users-CddPzjkO.js                    6.27 kB │ gzip:   2.04 kB │ map:    18.25 kB
+dist/assets/users-management-DoRYEJRy.js         6.42 kB │ gzip:   2.07 kB │ map:    16.51 kB
+dist/assets/allocation-planner-p5unhH3-.js       6.52 kB │ gzip:   1.90 kB │ map:    16.09 kB
+dist/assets/audit-timeline-n-xPiWwe.js           6.70 kB │ gzip:   2.16 kB │ map:    16.38 kB
+dist/assets/work-queue-BNA_SWYr.js               6.88 kB │ gzip:   2.10 kB │ map:    17.61 kB
+dist/assets/admin-reports-D5OV0H9R.js            7.05 kB │ gzip:   2.13 kB │ map:    16.60 kB
+dist/assets/decision-forms-DSn7W6E0.js           7.20 kB │ gzip:   2.33 kB │ map:    18.88 kB
+dist/assets/settings-1uVeakgE.js                 7.55 kB │ gzip:   2.01 kB │ map:    17.68 kB
+dist/assets/audit-log-Ylj-gL1E.js                7.70 kB │ gzip:   2.17 kB │ map:    18.10 kB
+dist/assets/dashboard-9H_0TU_0.js                7.79 kB │ gzip:   2.05 kB │ map:    20.62 kB
+dist/assets/branding-ChEZFay1.js                 8.38 kB │ gzip:   2.03 kB │ map:    19.73 kB
+dist/assets/season-applications-C7mayOUb.js      9.33 kB │ gzip:   2.68 kB │ map:    22.90 kB
+dist/assets/index-DhGRy5u0.js                   10.22 kB │ gzip:   3.25 kB │ map:    30.80 kB
+dist/assets/reviews-UGxj0InN.js                 10.44 kB │ gzip:   3.17 kB │ map:    33.70 kB
+dist/assets/audit-D-Ch6aph.js                   15.31 kB │ gzip:   3.70 kB │ map:    46.32 kB
+dist/assets/rental-objects-BubJubSa.js          16.25 kB │ gzip:   4.38 kB │ map:    54.63 kB
+dist/assets/bookings-BG1N_6IA.js                18.44 kB │ gzip:   5.34 kB │ map:    56.84 kB
+dist/assets/messages-CeZFTO8g.js                21.63 kB │ gzip:   4.49 kB │ map:    62.44 kB
+dist/assets/reports-BU_NmohY.js                 23.79 kB │ gzip:   4.56 kB │ map:    65.69 kB
+dist/assets/settings-B39spdAG.js                34.11 kB │ gzip:   5.97 kB │ map:    90.37 kB
+dist/assets/index-DWAOKFva.js                   35.95 kB │ gzip:   7.47 kB │ map:   106.86 kB
+dist/assets/calendar-DerdkvqI.js                51.00 kB │ gzip:  10.94 kB │ map:   170.40 kB
+dist/assets/index-BQRscyF7.js                   77.01 kB │ gzip:  14.21 kB │ map:   225.46 kB
+dist/assets/vendor-sdk-D1tdCW6K.js              77.71 kB │ gzip:  17.11 kB │ map:   555.34 kB
+dist/assets/vendor-ds-BoFAsVKu.js               95.55 kB │ gzip:  21.16 kB │ map:   375.48 kB
+dist/assets/index-Bm30gv9B.js                  220.22 kB │ gzip:  63.00 kB │ map:   459.68 kB
+dist/assets/vendor-DlJRz-TV.js                 392.84 kB │ gzip: 124.76 kB │ map: 1,661.78 kB
+dist/assets/vendor-mapbox-DRP-ZEBo.js        1,677.66 kB │ gzip: 464.06 kB │ map: 3,481.98 kB
+
+(!) Some chunks are larger than 800 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.08s
+[0;32m[SUCCESS][0m backoffice built successfully!
+[0;34m[DEPLOY][0m Deploying backoffice to backoffice-test.digilist.no...
+Transfer starting: 74 files
+./
+icon.png
+index.html
+logo.svg
+assets/
+assets/FormActions-D_6t27jy.js
+assets/FormActions-D_6t27jy.js.map
+assets/admin-reports-D5OV0H9R.js
+assets/admin-reports-D5OV0H9R.js.map
+assets/allocation-planner-p5unhH3-.js
+assets/allocation-planner-p5unhH3-.js.map
+assets/audit-D-Ch6aph.js
+assets/audit-D-Ch6aph.js.map
+assets/audit-log-Ylj-gL1E.js
+assets/audit-log-Ylj-gL1E.js.map
+assets/audit-timeline-n-xPiWwe.js
+assets/audit-timeline-n-xPiWwe.js.map
+assets/bookings-BG1N_6IA.js
+assets/bookings-BG1N_6IA.js.map
+assets/branding-ChEZFay1.js
+assets/branding-ChEZFay1.js.map
+assets/calendar-DerdkvqI.js
+assets/calendar-DerdkvqI.js.map
+assets/dashboard-9H_0TU_0.js
+assets/dashboard-9H_0TU_0.js.map
+assets/decision-forms-DSn7W6E0.js
+assets/decision-forms-DSn7W6E0.js.map
+assets/index-BFGPME4z.css
+assets/index-BQRscyF7.js
+assets/index-BQRscyF7.js.map
+assets/index-Bm30gv9B.js
+assets/index-Bm30gv9B.js.map
+assets/index-DWAOKFva.js
+assets/index-DWAOKFva.js.map
+assets/index-DhGRy5u0.js
+assets/index-DhGRy5u0.js.map
+assets/messages-CeZFTO8g.js
+assets/messages-CeZFTO8g.js.map
+assets/pricing-rules-FoMj-Ks-.js
+assets/pricing-rules-FoMj-Ks-.js.map
+assets/rental-objects-BubJubSa.js
+assets/rental-objects-BubJubSa.js.map
+assets/reports-BU_NmohY.js
+assets/reports-BU_NmohY.js.map
+assets/reviews-UGxj0InN.js
+assets/reviews-UGxj0InN.js.map
+assets/season-applications-C7mayOUb.js
+assets/season-applications-C7mayOUb.js.map
+assets/settings-1uVeakgE.js
+assets/settings-1uVeakgE.js.map
+assets/settings-B39spdAG.js
+assets/settings-B39spdAG.js.map
+assets/users-CddPzjkO.js
+assets/users-CddPzjkO.js.map
+assets/users-management-DoRYEJRy.js
+assets/users-management-DoRYEJRy.js.map
+assets/vendor-DlJRz-TV.js
+assets/vendor-DlJRz-TV.js.map
+assets/vendor-PcqqEfsq.css
+assets/vendor-ds-BoFAsVKu.js
+assets/vendor-ds-BoFAsVKu.js.map
+assets/vendor-ds-CSSb_G_8.css
+assets/vendor-mapbox-DRP-ZEBo.js
+assets/vendor-mapbox-DRP-ZEBo.js.map
+assets/vendor-mapbox-vV3jbIp0.css
+assets/vendor-query-CWFylCxn.js
+assets/vendor-query-CWFylCxn.js.map
+assets/vendor-sdk-D1tdCW6K.js
+assets/vendor-sdk-D1tdCW6K.js.map
+assets/work-queue-BNA_SWYr.js
+assets/work-queue-BNA_SWYr.js.map
+themes/
+themes/digilist-extensions.css
+themes/digilist.css
+
+sent 2519374 bytes  received 16990 bytes  7328413 bytes/sec
+total size is 13256966  speedup is 5.23
+[0;32m[SUCCESS][0m backoffice deployed to https://backoffice-test.digilist.no
+[0;34m[DEPLOY][0m Building minside...
+[0;34m[DEPLOY][0m Creating production environment for minside...
+[0;32m[SUCCESS][0m Created /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/.env.production
+
+> @xala/minside@0.0.0 build /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1501 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                     0.13 kB
+dist/manifest.webmanifest              0.30 kB
+dist/index.html                        0.59 kB │ gzip:   0.36 kB
+dist/assets/index-BUeg45z4.css       200.34 kB │ gzip:  27.30 kB
+dist/assets/index-Cmga3hSN.js      1,379.31 kB │ gzip: 310.95 kB
+dist/assets/mapbox-gl-DLVf0IVd.js  1,677.25 kB │ gzip: 463.88 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.45s
+
+PWA v0.20.5
+mode      generateSW
+precache  14 entries (5577.74 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-ebf8facd.js
+[0;32m[SUCCESS][0m minside built successfully!
+[0;34m[DEPLOY][0m Deploying minside to minside-test.digilist.no...
+Transfer starting: 17 files
+./
+icon.png
+index.html
+logo.svg
+manifest.json
+manifest.webmanifest
+registerSW.js
+service-worker.js
+sw.js
+workbox-ebf8facd.js
+assets/
+assets/index-BUeg45z4.css
+assets/index-Cmga3hSN.js
+assets/mapbox-gl-DLVf0IVd.js
+themes/
+themes/digilist-extensions.css
+themes/digilist.css
+
+sent 788365 bytes  received 17422 bytes  3677713 bytes/sec
+total size is 5900329  speedup is 7.32
+[0;32m[SUCCESS][0m minside deployed to https://minside-test.digilist.no
+[0;34m[DEPLOY][0m Building saas-admin...
+[0;34m[DEPLOY][0m Creating production environment for saas-admin...
+[0;32m[SUCCESS][0m Created /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/.env.production
+
+> @xala/saas-admin@0.0.0 build /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin
+> vite build
+
+[sentry-vite-plugin] Warning: No auth token provided. Will not create release. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+[sentry-vite-plugin] Warning: No auth token provided. Will not upload source maps. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+vite v5.4.21 building for production...
+[sentry-vite-plugin] Info: Sending telemetry data on issues and performance to Sentry. To disable telemetry, set `options.telemetry` to `false`.
+transforming...
+✓ 1486 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.47 kB │ gzip:   0.30 kB
+dist/assets/index--gTUmGHX.css       215.12 kB │ gzip:  29.61 kB
+dist/assets/index-By7SKHuk.js        707.48 kB │ gzip: 204.50 kB │ map: 2,619.21 kB
+dist/assets/mapbox-gl-By1ztv5s.js  1,677.65 kB │ gzip: 464.06 kB │ map: 3,481.97 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.07s
+[0;32m[SUCCESS][0m saas-admin built successfully!
+[0;34m[DEPLOY][0m Deploying saas-admin to saas-admin.digilist.no...
+Transfer starting: 11 files
+./
+index.html
+assets/
+assets/index--gTUmGHX.css
+assets/index-By7SKHuk.js
+assets/index-By7SKHuk.js.map
+assets/mapbox-gl-By1ztv5s.js
+assets/mapbox-gl-By1ztv5s.js.map
+themes/
+themes/digilist-extensions.css
+themes/digilist.css
+
+sent 2059684 bytes  received 2902 bytes  7664756 bytes/sec
+total size is 8801270  speedup is 4.27
+[0;32m[SUCCESS][0m saas-admin deployed to https://saas-admin.digilist.no
+[0;34m[DEPLOY][0m Building tenant-admin...
+[0;34m[DEPLOY][0m Creating production environment for tenant-admin...
+[0;32m[SUCCESS][0m Created /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/.env.production
+
+> @xala/tenant-admin@0.0.0 build /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin
+> vite build
+
+[sentry-vite-plugin] Warning: No auth token provided. Will not create release. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+[sentry-vite-plugin] Warning: No auth token provided. Will not upload source maps. Please set the `authToken` option. You can find information on how to generate a Sentry auth token here: https://docs.sentry.io/api/auth/
+vite v5.4.21 building for production...
+[sentry-vite-plugin] Info: Sending telemetry data on issues and performance to Sentry. To disable telemetry, set `options.telemetry` to `false`.
+transforming...
+✓ 1483 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.47 kB │ gzip:   0.30 kB
+dist/assets/index-v7JcIZ1P.css       205.83 kB │ gzip:  28.34 kB
+dist/assets/index-DhEeOmiJ.js        690.46 kB │ gzip: 195.38 kB │ map: 2,473.27 kB
+dist/assets/mapbox-gl-DG5KKXgt.js  1,677.65 kB │ gzip: 464.06 kB │ map: 3,481.97 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.04s
+[0;32m[SUCCESS][0m tenant-admin built successfully!
+[0;34m[DEPLOY][0m Deploying tenant-admin to tenant-admin.digilist.no...
+Transfer starting: 11 files
+./
+index.html
+assets/
+assets/index-DhEeOmiJ.js
+assets/index-DhEeOmiJ.js.map
+assets/index-v7JcIZ1P.css
+assets/mapbox-gl-DG5KKXgt.js
+assets/mapbox-gl-DG5KKXgt.js.map
+themes/
+themes/digilist-extensions.css
+themes/digilist.css
+
+sent 2013298 bytes  received 2824 bytes  7692186 bytes/sec
+total size is 8628982  speedup is 4.28
+[0;32m[SUCCESS][0m tenant-admin deployed to https://tenant-admin.digilist.no
+
+[0;32m[SUCCESS][0m Deployment complete!
+
+[0;34m[DEPLOY][0m Verifying deployments...
+[0;32m[SUCCESS][0m Web Test is accessible at https://web-test.digilist.no
+[0;32m[SUCCESS][0m Backoffice Test is accessible at https://backoffice-test.digilist.no
+[0;32m[SUCCESS][0m Minside Test is accessible at https://minside-test.digilist.no
+[0;32m[SUCCESS][0m SaaS Admin is accessible at https://saas-admin.digilist.no
+[0;32m[SUCCESS][0m Tenant Admin is accessible at https://tenant-admin.digilist.no
+[0;32m[SUCCESS][0m All deployed sites are accessible!
+
+Next steps:
+  1. Check the sites in your browser:
+     - https://web-test.digilist.no
+     - https://backoffice-test.digilist.no
+     - https://minside-test.digilist.no
+     - https://saas-admin.digilist.no
+     - https://tenant-admin.digilist.no
+
+  2. If SSL not configured, run: ./scripts/setup-ssl.sh

@@ -11,10 +11,30 @@ import { container } from '../core/container';
 import type { JwtService } from '../core/auth/jwt.service';
 import { COOKIE_CONFIG } from '../config/cookies';
 
+/**
+ * Public endpoints that don't require authentication
+ * These endpoints create authentication sessions, so they can't require auth
+ */
+const PUBLIC_ENDPOINTS = [
+  '/api/auth/login',
+  '/api/auth/callback',
+  '/api/auth/demo-token',
+  '/api/auth/oauth/initiate',
+  '/api/auth/idporten',
+  '/api/auth/signicat',
+  '/health',
+  '/graphql',
+];
+
 export async function authCookieMiddleware(
   request: FastifyRequest,
   reply: FastifyReply
 ): Promise<void> {
+  // Skip authentication for public endpoints
+  if (PUBLIC_ENDPOINTS.some(endpoint => request.url.startsWith(endpoint))) {
+    return;
+  }
+
   const jwtService = container.resolve<JwtService>('JwtService');
 
   // Try to extract JWT from access cookie first (new, secure method)

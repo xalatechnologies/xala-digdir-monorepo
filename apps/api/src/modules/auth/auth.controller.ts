@@ -119,10 +119,11 @@ export class AuthController {
 
     // Demo: Find user by demo token (in production, validate OAuth code)
     // For now, use a default user for testing
+    // Use lars.andersen@example.com for Minside (role: user)
     const userResult = await db
       .select()
       .from(users)
-      .where(eq(users.email, 'admin@digilist.no'))
+      .where(eq(users.email, 'lars.andersen@example.com'))
       .limit(1);
 
     if (!userResult.length) {

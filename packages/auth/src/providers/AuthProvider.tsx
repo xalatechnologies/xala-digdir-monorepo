@@ -56,7 +56,7 @@ import type {
  * Default role requirements per app type
  */
 const DEFAULT_ALLOWED_ROLES: Record<AppType, UserRole[]> = {
-  'minside': ['citizen', 'admin', 'super_admin'],
+  'minside': [], // All authenticated users allowed
   'backoffice': ['admin', 'saksbehandler', 'super_admin', 'case_handler'],
   'saas-admin': ['super_admin', 'admin'],
   'tenant-admin': ['tenant_admin', 'admin', 'super_admin'],  
