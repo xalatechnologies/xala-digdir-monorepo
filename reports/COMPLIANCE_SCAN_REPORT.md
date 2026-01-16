@@ -10,7 +10,7 @@
 
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
-| Hardcoded Colors | 104 | high | ❌ Needs Fix |
+| Hardcoded Colors | 100 | high | ❌ Needs Fix |
 | Hardcoded Font Family | 1 | medium | ⚠️ Minor |
 | Hardcoded Letter Spacing | 0 | low | ✅ Clean |
 | Hardcoded Line Height | 0 | low | ✅ Clean |
@@ -19,7 +19,7 @@
 | Hardcoded Transition Duration | 12 | low | ❌ Needs Fix |
 | Hardcoded Opacity | 1 | low | ⚠️ Minor |
 | Hardcoded Spacing | 36 | high | ❌ Needs Fix |
-| Hardcoded Typography | 33 | medium | ❌ Needs Fix |
+| Hardcoded Typography | 30 | medium | ❌ Needs Fix |
 | Hardcoded Border Radius | 9 | medium | ❌ Needs Fix |
 | Raw HTML Layouts in Apps | 70 | medium | ❌ Needs Fix |
 | Hardcoded Dimensions | 320 | low | ❌ Needs Fix |
@@ -32,8 +32,8 @@
 | Inconsistent Icon Size | 14 | low | ❌ Needs Fix |
 | Raw Div with Click Handler | 0 | medium | ✅ Clean |
 
-**Total Issues:** 636
-**High Severity:** 152
+**Total Issues:** 629
+**High Severity:** 148
 
 ---
 
@@ -41,7 +41,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use design tokens: var(--ds-color-*)
-**Issues Found:** 104
+**Issues Found:** 100
 
 ### Findings by File
 
@@ -230,15 +230,6 @@
 | Line | Issue | Content |
 |------|-------|--------|
 | 85 | RGB/RGBA color | `background: 'linear-gradient(90deg, transparent, r...` |
-
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 365 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
-| 387 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
-| 408 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
-| 421 | Hex color | `borderTop: '1px solid #e5e7eb'...` |
 
 ---
 
@@ -489,7 +480,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use typography tokens: var(--ds-font-size-*), var(--ds-font-weight-*)
-**Issues Found:** 33
+**Issues Found:** 30
 
 ### Findings by File
 
@@ -567,14 +558,6 @@
 | Line | Issue | Content |
 |------|-------|--------|
 | 571 | Font size in px | `fontSize: '11px',...` |
-
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 365 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
-| 387 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
-| 408 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
 
 ---
 
@@ -1587,14 +1570,14 @@
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 104 hardcoded colors issues
+- [ ] Fix 100 hardcoded colors issues
 - [ ] Fix 36 hardcoded spacing issues
 - [ ] Fix 12 hardcoded gap issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 1 hardcoded font family issues
 - [ ] Fix 13 hardcoded box shadow issues
-- [ ] Fix 33 hardcoded typography issues
+- [ ] Fix 30 hardcoded typography issues
 - [ ] Fix 9 hardcoded border radius issues
 - [ ] Fix 70 raw html layouts in apps issues
 - [ ] Fix 2 touch target size issues

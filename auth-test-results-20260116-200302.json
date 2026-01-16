@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-01-16T19:03:05Z",
+  "api_base": "https://api.digilist.no",
+  "total_tests": 15,
+  "passed": 4,
+  "failed": 11,
+  "results": [
+    {
+      "test": "Demo Login [backoffice]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Demo Login [minside]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Demo Login [saas-admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Demo Login [tenant-admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Demo Login [invalid token]",
+      "status": "PASS",
+      "message": "HTTP 401 - Correctly rejected"
+    },
+    {
+      "test": "Session Validation [authenticated]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Logout",
+      "status": "PASS",
+      "message": "HTTP 200 - Logged out successfully"
+    },
+    {
+      "test": "Session After Logout",
+      "status": "PASS",
+      "message": "HTTP 401 - Session correctly invalidated"
+    },
+    {
+      "test": "Session Validation [unauthenticated]",
+      "status": "PASS",
+      "message": "HTTP 401 - Correctly unauthenticated"
+    },
+    {
+      "test": "RBAC [backoffice - super_admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "RBAC [backoffice - admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "RBAC [minside - citizen]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "RBAC [saas-admin - super_admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "RBAC [tenant-admin - tenant_admin]",
+      "status": "FAIL",
+      "message": "Expected HTTP 200, got 401"
+    },
+    {
+      "test": "Multi-App Token",
+      "status": "FAIL",
+      "message": "Token failed for one or more apps"
+    }
+  ]
+}

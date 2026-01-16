@@ -40,13 +40,14 @@ import {
   useUpdateConsents,
   type Address,
 } from '@digilist/client-sdk';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 
 export function SettingsPage() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { locale, setLocale } = useLocale();
+  const t = useT();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -78,13 +79,13 @@ export function SettingsPage() {
       street: '',
       city: '',
       postalCode: '',
-      country: 'Norge',
+      country: '',
     } as Address,
     residenceAddress: {
       street: '',
       city: '',
       postalCode: '',
-      country: 'Norge',
+      country: '',
     } as Address,
   });
 
@@ -108,8 +109,8 @@ export function SettingsPage() {
         phone: currentUser.phone || '',
         dateOfBirth: currentUser.dateOfBirth || '',
         nationalId: currentUser.nationalId || '',
-        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
-        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: 'Norge' },
+        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: '' },
+        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: '' },
       });
       if (currentUser.avatar) {
         setAvatarPreview(currentUser.avatar);
@@ -196,7 +197,7 @@ export function SettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm('Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.')) {
+    if (confirm(t('settings.data.deleteAccountConfirm'))) {
       try {
         await deleteAccountMutation.mutateAsync();
         logout();
@@ -415,7 +416,7 @@ export function SettingsPage() {
                     {avatarPreview ? (
                       <img
                         src={avatarPreview}
-                        alt="Avatar"
+                        alt={t('settings.profile.avatar')}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -442,13 +443,13 @@ export function SettingsPage() {
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploadingAvatar}
                       type="button"
-                      aria-label="Endre profilbilde"
+                      aria-label={t('settings.profile.changeAvatar')}
                     >
                       <CameraIcon />
-                      {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
+                      {isUploadingAvatar ? t('settings.profile.uploading') : t('settings.profile.changeImage')}
                     </Button>
                     <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      JPG, PNG eller GIF (maks 5MB)
+                      {t('settings.profile.imageFormats')}
                     </Paragraph>
                   </Stack>
                 </div>
@@ -460,69 +461,69 @@ export function SettingsPage() {
               <Stack spacing={5}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                    Personlig informasjon
+                    {t('settings.profile.personalInfo')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Din grunnleggende kontaktinformasjon
+                    {t('settings.profile.personalInfoDesc')}
                   </Paragraph>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Fullt navn" required>
+                  <FormField label={t('settings.profile.fullName')} required>
                     <Textfield
                       value={profileData.name}
                       onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Ola Nordmann"
-                      aria-label="Fullt navn"
+                      placeholder={t('settings.profile.fullNamePlaceholder')}
+                      aria-label={t('settings.profile.fullName')}
                     />
                   </FormField>
 
-                  <FormField label="E-postadresse" required>
+                  <FormField label={t('settings.profile.email')} required>
                     <Textfield
                       type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="ola.nordmann@example.com"
-                      aria-label="E-postadresse"
+                      placeholder={t('settings.profile.emailPlaceholder')}
+                      aria-label={t('settings.profile.email')}
                     />
                   </FormField>
 
-                  <FormField label="Telefonnummer">
+                  <FormField label={t('settings.profile.phone')}>
                     <Textfield
                       type="tel"
                       value={profileData.phone}
                       onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="+47 123 45 678"
-                      aria-label="Telefonnummer"
+                      placeholder={t('settings.profile.phonePlaceholder')}
+                      aria-label={t('settings.profile.phone')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Fødselsdato">
+                    <FormField label={t('settings.profile.dateOfBirth')}>
                       <Textfield
                         type="date"
                         value={profileData.dateOfBirth}
                         onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
-                        aria-label="Fødselsdato"
+                        aria-label={t('settings.profile.dateOfBirth')}
                       />
                     </FormField>
 
-                    <FormField label="Fødselsnummer">
+                    <FormField label={t('settings.profile.nationalId')}>
                       <Textfield
                         value={profileData.nationalId}
                         onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
-                        placeholder="11 siffer"
+                        placeholder={t('settings.profile.nationalIdPlaceholder')}
                         maxLength={11}
-                        aria-label="Fødselsnummer"
+                        aria-label={t('settings.profile.nationalId')}
                       />
                     </FormField>
                   </div>
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre profilinnstillinger">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('settings.profile.save')}>
                     <SaveIcon />
-                    {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+                    {isSaving ? t('settings.profile.saving') : t('settings.profile.save')}
                   </Button>
                 </div>
               </Stack>
@@ -539,65 +540,65 @@ export function SettingsPage() {
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                     <MapPinIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-                    Bostedsadresse
+                    {t('settings.address.residence')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Din registrerte bostedsadresse
+                    {t('settings.address.residenceDesc')}
                   </Paragraph>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Gateadresse">
+                  <FormField label={t('settings.address.street')}>
                     <Textfield
                       value={profileData.residenceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, street: e.target.value }
                       }))}
-                      placeholder="Storgata 1"
-                      aria-label="Gateadresse"
+                      placeholder={t('settings.address.streetPlaceholder')}
+                      aria-label={t('settings.address.street')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Poststed">
+                    <FormField label={t('settings.address.city')}>
                       <Textfield
                         value={profileData.residenceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, city: e.target.value }
                         }))}
-                        placeholder="Oslo"
-                        aria-label="Poststed"
+                        placeholder={t('settings.address.cityPlaceholder')}
+                        aria-label={t('settings.address.city')}
                       />
                     </FormField>
 
-                    <FormField label="Postnummer">
+                    <FormField label={t('settings.address.postalCode')}>
                       <Textfield
                         value={profileData.residenceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
                         }))}
-                        placeholder="0010"
+                        placeholder={t('settings.address.postalCodePlaceholder')}
                         maxLength={4}
-                        aria-label="Postnummer"
+                        aria-label={t('settings.address.postalCode')}
                       />
                     </FormField>
                   </div>
 
-                  <FormField label="Land">
+                  <FormField label={t('settings.address.country')}>
                     <Select
-                      value={profileData.residenceAddress.country || 'Norge'}
+                      value={profileData.residenceAddress.country || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         residenceAddress: { ...prev.residenceAddress, country: e.target.value }
                       }))}
                     >
-                      <option value="Norge">Norge</option>
-                      <option value="Sverige">Sverige</option>
-                      <option value="Danmark">Danmark</option>
-                      <option value="Finland">Finland</option>
+                      <option value={t('norge')}>{t('norge')}</option>
+                      <option value={t('sverige')}>{t('sverige')}</option>
+                      <option value={t('danmark')}>{t('danmark')}</option>
+                      <option value={t('finland')}>{t('finland')}</option>
                     </Select>
                   </FormField>
                 </Stack>
@@ -611,10 +612,10 @@ export function SettingsPage() {
                   <div>
                     <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                       <HomeIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-                      Fakturaadresse
+                      {t('settings.address.invoice')}
                     </Heading>
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Adresse for fakturering
+                      {t('settings.address.invoiceDesc')}
                     </Paragraph>
                   </div>
                   <Button
@@ -622,70 +623,70 @@ export function SettingsPage() {
                     data-size="sm"
                     onClick={handleCopyResidenceToInvoice} type="button"
                   >
-                    Kopier fra bostedsadresse
+                    {t('settings.address.copyResidence')}
                   </Button>
                 </div>
 
                 <Stack spacing={4}>
-                  <FormField label="Gateadresse">
+                  <FormField label={t('settings.address.street')}>
                     <Textfield
                       value={profileData.invoiceAddress.street || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
                       }))}
-                      placeholder="Storgata 1"
-                      aria-label="Gateadresse"
+                      placeholder={t('settings.address.streetPlaceholder')}
+                      aria-label={t('settings.address.street')}
                     />
                   </FormField>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <FormField label="Poststed">
+                    <FormField label={t('settings.address.city')}>
                       <Textfield
                         value={profileData.invoiceAddress.city || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
                         }))}
-                        placeholder="Oslo"
-                        aria-label="Poststed"
+                        placeholder={t('settings.address.cityPlaceholder')}
+                        aria-label={t('settings.address.city')}
                       />
                     </FormField>
 
-                    <FormField label="Postnummer">
+                    <FormField label={t('settings.address.postalCode')}>
                       <Textfield
                         value={profileData.invoiceAddress.postalCode || ''}
                         onChange={(e) => setProfileData(prev => ({
                           ...prev,
                           invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
                         }))}
-                        placeholder="0010"
+                        placeholder={t('settings.address.postalCodePlaceholder')}
                         maxLength={4}
-                        aria-label="Postnummer"
+                        aria-label={t('settings.address.postalCode')}
                       />
                     </FormField>
                   </div>
 
-                  <FormField label="Land">
+                  <FormField label={t('settings.address.country')}>
                     <Select
-                      value={profileData.invoiceAddress.country || 'Norge'}
+                      value={profileData.invoiceAddress.country || ''}
                       onChange={(e) => setProfileData(prev => ({
                         ...prev,
                         invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
                       }))}
                     >
-                      <option value="Norge">Norge</option>
-                      <option value="Sverige">Sverige</option>
-                      <option value="Danmark">Danmark</option>
-                      <option value="Finland">Finland</option>
+                      <option value={t('norge')}>{t('norge')}</option>
+                      <option value={t('sverige')}>{t('sverige')}</option>
+                      <option value={t('danmark')}>{t('danmark')}</option>
+                      <option value={t('finland')}>{t('finland')}</option>
                     </Select>
                   </FormField>
                 </Stack>
 
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre adresseinnstillinger">
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('settings.profile.saveAddresses')}>
                     <SaveIcon />
-                    {isSaving ? 'Lagrer endringer' : 'Lagre adresser'}
+                    {isSaving ? t('settings.profile.savingAddresses') : t('settings.profile.saveAddresses')}
                   </Button>
                 </div>
               </Stack>
@@ -720,10 +721,10 @@ export function SettingsPage() {
                   onClick={handleExportData}
                   disabled={isExporting}
                   type="button"
-                  aria-label="Eksporter mine data"
+                  aria-label={t('settings.data.export')}
                 >
                   <DownloadIcon />
-                  {isExporting ? 'Eksporterer...' : 'Last ned mine data'}
+                  {isExporting ? t('settings.data.exporting') : t('settings.data.download')}
                 </Button>
               </Stack>
             </Card>
@@ -733,10 +734,10 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Samtykker
+                    {t('settings.consent.title')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Administrer hvordan vi bruker dine data
+                    {t('settings.consent.desc')}
                   </Paragraph>
                 </div>
 
@@ -751,16 +752,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Markedsføring
+                        {t('settings.consent.marketing')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Motta tips, tilbud og nyheter på e-post
+                        {t('settings.consent.marketingDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.marketing}
                       onChange={(e) => handleUpdateConsents('marketing', e.target.checked)}
-                      aria-label="Markedsføring"
+                      aria-label={t('settings.consent.marketing')}
                     />
                   </div>
 
@@ -774,16 +775,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Analyse
+                        {t('settings.consent.analytics')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Hjelp oss forbedre tjenesten med anonymisert bruksdata
+                        {t('settings.consent.analyticsDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.analytics}
                       onChange={(e) => handleUpdateConsents('analytics', e.target.checked)}
-                      aria-label="Analyse"
+                      aria-label={t('settings.consent.analytics')}
                     />
                   </div>
 
@@ -797,16 +798,16 @@ export function SettingsPage() {
                   }}>
                     <div>
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Deling med tredjeparter
+                        {t('settings.consent.thirdParty')}
                       </Paragraph>
                       <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Tillat deling av data med samarbeidspartnere
+                        {t('settings.consent.thirdPartyDesc')}
                       </Paragraph>
                     </div>
                     <Switch
                       checked={consentSettings.thirdPartySharing}
                       onChange={(e) => handleUpdateConsents('thirdPartySharing', e.target.checked)}
-                      aria-label="Deling med tredjeparter"
+                      aria-label={t('settings.consent.thirdParty')}
                     />
                   </div>
                 </Stack>
@@ -898,11 +899,11 @@ export function SettingsPage() {
                   </Paragraph>
                 </div>
 
-                <FormField label="Foretrukket språk">
+                <FormField label={t('settings.language.preferred')}>
                   <Select value={locale} onChange={(e) => setLocale(e.target.value as 'nb' | 'en')}>
-                    <option value="nb">Norsk (Bokmål)</option>
-                    <option value="nn">Norsk (Nynorsk)</option>
-                    <option value="en">English</option>
+                    <option value="nb">{t('settings.language.norskBokmal')}</option>
+                    <option value="nn">{t('settings.language.norskNynorsk')}</option>
+                    <option value="en">{t('settings.language.english')}</option>
                   </Select>
                 </FormField>
               </Stack>
