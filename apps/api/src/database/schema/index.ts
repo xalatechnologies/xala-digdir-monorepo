@@ -68,6 +68,21 @@ export const users = pgTable('users', {
   tenantIdx: index('users_tenant_idx').on(table.tenantId),
 }));
 
+export const orgMemberships = pgTable('org_memberships', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  orgRole: varchar('org_role', { length: 50 }).notNull().default('member'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  userIdx: index('org_memberships_user_idx').on(table.userId),
+  orgIdx: index('org_memberships_org_idx').on(table.orgId),
+  userOrgIdx: index('org_memberships_user_org_idx').on(table.userId, table.orgId),
+}));
+
 // ============================================================================
 // Subscriptions & Billing
 // ============================================================================
@@ -301,6 +316,8 @@ export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type OrgMembership = typeof orgMemberships.$inferSelect;
+export type NewOrgMembership = typeof orgMemberships.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
