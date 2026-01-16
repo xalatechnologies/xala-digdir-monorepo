@@ -11,7 +11,7 @@ export * from './types';
 export * from './hooks';
 
 // Components - List View
-export { ListingsListView, ListingsFilterBar, ListingsTable, ListingsGrid, ListingRowActions } from './components/list';
+export { ListingsListView, RentalObjectsFilterBar, ListingsTable, ListingsGrid, ListingRowActions } from './components/list';
 
 // Components - Wizard (Create/Edit)
 export { ListingWizard, WizardStepper } from './components/wizard';

@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "004-no-rate-limiting-on-authentication-endpoints",
-  "state": "building",
+  "spec": "012-extract-duplicated-listingsfilterbar-component-int",
+  "state": "complete",
   "subtasks": {
-    "completed": 7,
-    "total": 8,
-    "in_progress": 1,
+    "completed": 15,
+    "total": 15,
+    "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Integration Verification",
+    "current": "Final Cleanup and Verification",
     "id": null,
-    "total": 2
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 9,
-    "started_at": "2026-01-16T00:39:31.992047"
+    "number": 222,
+    "started_at": "2026-01-16T00:40:06.910521"
   },
-  "last_update": "2026-01-16T01:06:51.032234"
+  "last_update": "2026-01-16T02:04:14.333599"
 }

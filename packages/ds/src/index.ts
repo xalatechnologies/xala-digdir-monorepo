@@ -245,7 +245,9 @@ export {
   ListingListItem,
   ListingGrid,
   ListingToolbar,
+  ListingMap,
   ListingTableView,
+  RentalObjectsFilterBar,
   ImageGallery,
   ImageSlider,
   ListingDetailHeader,
@@ -322,7 +324,10 @@ export type {
   ListingListItemProps,
   ListingGridProps,
   ListingToolbarProps,
+  ListingMapProps,
+  MapListing,
   ListingTableViewProps,
+  RentalObjectsFilterBarProps,
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
@@ -456,6 +461,25 @@ export {
   formatPrice,
   formatPriceUnit
 } from './types/booking';
+
+// Rental Object Management Types
+export type {
+  RentalObjectQueryFilters,
+  ViewMode,
+  RentalObjectFilterState,
+  ListingStatus,
+  ListingType,
+  RentalObjectStatus,
+  RentalObjectType
+} from './types/rental-objects';
+
+// Rental Object Management Constants
+export {
+  TYPE_TABS,
+  STATUS_OPTIONS,
+  SORT_OPTIONS,
+  CAPACITY_OPTIONS
+} from './constants/rental-objects';
 
 // =============================================================================
 // Design System Utilities & Tokens

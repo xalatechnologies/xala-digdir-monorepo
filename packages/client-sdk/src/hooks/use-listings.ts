@@ -25,7 +25,7 @@ import { compressImage, isImageFile } from '../utils/image-compression';
  */
 export function useListings(params?: ListingQueryParams) {
   return useQuery({
-    queryKey: queryKeys.rentalObjects.list(params),
+    queryKey: queryKeys.listings.list(params),
     queryFn: () => listingService.getAll(params),
   });
 }
@@ -35,7 +35,7 @@ export function useListings(params?: ListingQueryParams) {
  */
 export function useListing(id: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: queryKeys.rentalObjects.detail(id),
+    queryKey: queryKeys.listings.detail(id),
     queryFn: () => listingService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
   });
@@ -46,7 +46,7 @@ export function useListing(id: string, options?: { enabled?: boolean }) {
  */
 export function useListingBySlug(slug: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: queryKeys.rentalObjects.slug(slug),
+    queryKey: queryKeys.listings.slug(slug),
     queryFn: () => listingService.getBySlug(slug),
     enabled: !!slug && (options?.enabled ?? true),
   });
@@ -57,7 +57,7 @@ export function useListingBySlug(slug: string, options?: { enabled?: boolean }) 
  */
 export function useListingAvailability(id: string, params: AvailabilityQueryParams) {
   return useQuery({
-    queryKey: queryKeys.rentalObjects.availability(id, params),
+    queryKey: queryKeys.listings.availability(id, params),
     queryFn: () => listingService.getAvailability(id, params),
     enabled: !!id && !!params.startDate,
   });
@@ -68,7 +68,7 @@ export function useListingAvailability(id: string, params: AvailabilityQueryPara
  */
 export function useListingStats(id: string) {
   return useQuery({
-    queryKey: queryKeys.rentalObjects.stats(id),
+    queryKey: queryKeys.listings.stats(id),
     queryFn: () => listingService.getStats(id),
     enabled: !!id,
   });
@@ -83,7 +83,7 @@ export function useCreateListing() {
   return useMutation({
     mutationFn: (data: CreateListingDTO) => listingService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -98,8 +98,8 @@ export function useUpdateListing() {
     mutationFn: ({ id, data }: { id: string; data: UpdateListingDTO }) => 
       listingService.update(id, data),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -113,7 +113,7 @@ export function useDeleteListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.all });
     },
   });
 }
@@ -127,8 +127,8 @@ export function usePublishListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.publish(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -142,8 +142,8 @@ export function useArchiveListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.archive(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -157,7 +157,7 @@ export function useDuplicateListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.duplicate(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -171,8 +171,8 @@ export function useUnpublishListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.unpublish(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -186,8 +186,8 @@ export function useRestoreListing() {
   return useMutation({
     mutationFn: (id: string) => listingService.restore(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.lists() });
     },
   });
 }
@@ -201,7 +201,7 @@ export function useRestoreListing() {
  */
 export function usePublicListings(params?: PublicListingParams) {
   return useQuery({
-    queryKey: queryKeys.public.rentalObjects(params),
+    queryKey: queryKeys.public.listings(params),
     queryFn: () => publicListingService.getListings(params),
   });
 }
@@ -220,7 +220,7 @@ export function usePublicUiListings(params?: PublicListingParams) {
  */
 export function usePublicListing(id: string) {
   return useQuery({
-    queryKey: queryKeys.public.rentalObject(id),
+    queryKey: queryKeys.public.listing(id),
     queryFn: () => publicListingService.getListing(id),
     enabled: !!id,
   });
@@ -332,7 +332,7 @@ export function useUploadListingMedia() {
       return listingService.uploadMedia(id, processedFiles, options);
     },
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(id) });
     },
   });
 }
@@ -348,7 +348,7 @@ export function useDeleteListingMedia() {
       return listingService.removeMedia(listingId, mediaId);
     },
     onSuccess: (_, { listingId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.detail(listingId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.listings.detail(listingId) });
     },
   });
 }

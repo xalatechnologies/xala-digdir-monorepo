@@ -375,7 +375,7 @@ describe('SDK Selectors - View Slices', () => {
     expect(selectors.listing.isBookable(listing)).toBe(true);
 
     const draftListing = { ...listing, status: 'draft' as const };
-    expect(selectors.listing.isBookable(draftListing as typeof listing)).toBe(false);
+    expect(selectors.listing.isBookable(draftListing as any)).toBe(false);
   });
 
   it('should check action availability from availableActions', () => {
