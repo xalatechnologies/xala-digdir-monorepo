@@ -34,7 +34,17 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       include: ['packages/ds/src/**/*.{ts,tsx}', 'apps/web/src/**/*.{ts,tsx}', 'apps/backoffice/src/**/*.{ts,tsx}', 'apps/saas-admin/src/**/*.{ts,tsx}'],
-      exclude: ['**/*.{test,spec}.{ts,tsx}', '**/*.d.ts', '**/node_modules/**'],
+      exclude: [
+        '**/*.{test,spec}.{ts,tsx}',
+        '**/*.d.ts',
+        '**/node_modules/**',
+        // Exclude entry points and bootstrap files (not meaningfully testable)
+        '**/main.tsx',
+        '**/App.tsx',
+        '**/vite-env.d.ts',
+        // Exclude barrel files (re-exports only)
+        '**/index.ts',
+      ],
     },
   },
 });
