@@ -28,11 +28,11 @@ import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 
 const statusLabels: Record<SeasonStatus, string> = {
-  draft: t("status.draft"),
+  draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
   active: 'Aktiv',
-  completed: t("status.completed"),
+  completed: 'Fullført',
   cancelled: 'Kansellert',
 };
 

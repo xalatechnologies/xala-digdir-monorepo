@@ -18,6 +18,7 @@ import {
   Select,
   SelectOption,
 } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 import { PaymentSection } from './PaymentSection';
 
 // =============================================================================
@@ -136,12 +137,12 @@ export interface BookingDialogProps {
 // =============================================================================
 
 const WEEKDAYS = [
-  { key: 'ma', label: t('ma') },
-  { key: 'ti', label: t('ti') },
-  { key: 'on', label: t('on') },
-  { key: 'to', label: t('to') },
-  { key: 'fr', label: t('fr') },
-  { key: 'lo', label: t('lø') },
+  { key: 'ma', label: 'Ma' },
+  { key: 'ti', label: 'Ti' },
+  { key: 'on', label: 'On' },
+  { key: 'to', label: 'To' },
+  { key: 'fr', label: 'Fr' },
+  { key: 'lo', label: 'Lø' },
 ];
 
 const DAY_NAMES = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];

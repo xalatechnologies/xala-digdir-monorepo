@@ -95,21 +95,21 @@ export interface BookingWidgetPlacementProps {
 // =============================================================================
 
 const BOOKING_STEPS: BookingStep[] = [
-  { id: 'calendar', label: t('velg.tidspunkter'), icon: 'calendar' },
-  { id: 'details', label: t('detaljer.og.vilkår'), icon: 'pricing' },
-  { id: 'confirm', label: t('bekreft'), icon: 'confirm' },
-  { id: 'done', label: t('sendt'), icon: 'success' },
+  { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
+  { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
+  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
+  { id: 'done', label: 'Sendt', icon: 'success' },
 ];
 
 const DEFAULT_PRICE_GROUPS: PriceGroup[] = [
-  { id: 'standard', label: t('standard'), pricePerHour: 500, description: t('vanlig.pris.for.alle') },
-  { id: 'member', label: t('medlem'), pricePerHour: 350, description: t('rabattert.pris.for.medlemmer') },
-  { id: 'youth', label: t('ungdom.under.26'), pricePerHour: 250, description: t('redusert.pris.for.unge') },
+  { id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },
+  { id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },
+  { id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },
 ];
 
 const DEFAULT_ADDITIONAL_SERVICES: AdditionalService[] = [
-  { id: 'cleaning', label: t('rengjøring'), description: t('profesjonell.rengjøring.etter.bruk'), price: 500 },
-  { id: 'equipment', label: t('utstyrspakke'), description: t('inkluderer.bord.stoler.og.projektor'), price: 300 },
+  { id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500 },
+  { id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price: 300 },
 ];
 
 const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {

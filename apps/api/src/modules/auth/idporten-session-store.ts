@@ -1,9 +1,7 @@
 /**
- * Redis Session Store for IdPorten Authentication
- * Provides persistent session storage that survives PM2 restarts
+ * In-Memory Session Store for IdPorten Authentication
+ * For demo purposes - use Redis session store in production for persistence
  */
-
-import { createClient, RedisClientType } from 'redis';
 
 export interface AuthSession {
   sessionId: string;
@@ -15,118 +13,50 @@ export interface AuthSession {
   tenantId?: string;
 }
 
-const SESSION_PREFIX = 'idporten:session:';
-const SESSION_TTL_SECONDS = 600; // 10 minutes
+const SESSION_TTL_MS = 600000; // 10 minutes
 
-let redisClient: RedisClientType | null = null;
-let isConnected = false;
+// In-memory session storage
+const sessionStorage = new Map<string, AuthSession>();
+
+// Periodic cleanup of expired sessions
+setInterval(() => {
+  const now = Date.now();
+  for (const [state, session] of sessionStorage.entries()) {
+    if (now - session.createdAt > SESSION_TTL_MS) {
+      sessionStorage.delete(state);
+    }
+  }
+}, 60000); // Clean up every minute
 
 /**
- * Initialize Redis client
- */
-async function getRedisClient(): Promise<RedisClientType | null> {
-  if (redisClient && isConnected) {
-    return redisClient;
-  }
-
-  const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-  
-  try {
-    redisClient = createClient({ url: redisUrl }) as RedisClientType;
-    
-    redisClient.on('error', (err: Error) => {
-      console.error('[Redis] Connection error:', err.message);
-      isConnected = false;
-    });
-    
-    redisClient.on('connect', () => {
-      console.log('[Redis] Connected for IdPorten sessions');
-      isConnected = true;
-    });
-    
-    await redisClient.connect();
-    return redisClient;
-  } catch (error) {
-    console.error('[Redis] Failed to connect:', error);
-    return null;
-  }
-}
-
-/**
- * Session store with Redis backing and in-memory fallback
+ * Session store with in-memory storage
  */
 export const sessionStore = {
   /**
    * Store a session
    */
   async set(state: string, session: AuthSession): Promise<void> {
-    const client = await getRedisClient();
-    
-    if (client) {
-      try {
-        await client.setEx(
-          `${SESSION_PREFIX}${state}`,
-          SESSION_TTL_SECONDS,
-          JSON.stringify(session)
-        );
-        return;
-      } catch (error) {
-        console.error('[Redis] Failed to set session:', error);
-      }
-    }
-    
-    // Fallback to in-memory (for local dev without Redis)
-    memoryFallback.set(state, session);
+    sessionStorage.set(state, session);
   },
 
   /**
    * Get a session by state
    */
   async get(state: string): Promise<AuthSession | undefined> {
-    const client = await getRedisClient();
-    
-    if (client) {
-      try {
-        const data = await client.get(`${SESSION_PREFIX}${state}`);
-        if (data) {
-          return JSON.parse(data) as AuthSession;
-        }
-        return undefined;
-      } catch (error) {
-        console.error('[Redis] Failed to get session:', error);
-      }
-    }
-    
-    // Fallback to in-memory
-    return memoryFallback.get(state);
+    return sessionStorage.get(state);
   },
 
   /**
    * Delete a session
    */
   async delete(state: string): Promise<void> {
-    const client = await getRedisClient();
-    
-    if (client) {
-      try {
-        await client.del(`${SESSION_PREFIX}${state}`);
-        return;
-      } catch (error) {
-        console.error('[Redis] Failed to delete session:', error);
-      }
-    }
-    
-    // Fallback to in-memory
-    memoryFallback.delete(state);
+    sessionStorage.delete(state);
   },
 
   /**
-   * Check if Redis is connected
+   * Check if Redis is connected (always false for in-memory)
    */
   isRedisConnected(): boolean {
-    return isConnected;
+    return false;
   }
 };
-
-// In-memory fallback for local development without Redis
-const memoryFallback = new Map<string, AuthSession>();

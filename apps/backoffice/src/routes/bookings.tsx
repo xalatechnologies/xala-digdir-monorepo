@@ -55,8 +55,8 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
 // Status tabs for main navigation
 const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
-  { id: 'confirmed', label: t("status.confirmed"), icon: '✓', color: 'success' },
-  { id: 'completed', label: t("status.completed"), icon: '✓', color: 'info' },
+  { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
+  { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
   { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
 ] as const;

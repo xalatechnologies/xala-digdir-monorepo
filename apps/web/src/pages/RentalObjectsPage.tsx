@@ -41,18 +41,18 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 // Listing type options (UI filter types)
 const LISTING_TYPE_OPTIONS = [
-  { id: 'ALL', label: t('alle.typer') },
-  { id: 'SPACE', label: t('lokale') },
-  { id: 'RESOURCE', label: t('utstyr') },
-  { id: 'SERVICE', label: t('tjeneste') },
-  { id: 'VEHICLE', label: t('kjøretøy') },
-  { id: 'EVENT', label: t('arrangement') },
-  { id: 'OTHER', label: t('annet') },
+  { id: 'ALL', label: 'Alle typer' },
+  { id: 'SPACE', label: 'Lokale' },
+  { id: 'RESOURCE', label: 'Utstyr' },
+  { id: 'SERVICE', label: 'Tjeneste' },
+  { id: 'VEHICLE', label: 'Kjøretøy' },
+  { id: 'EVENT', label: 'Arrangement' },
+  { id: 'OTHER', label: 'Annet' },
 ];
 
 // Capacity filter options
 const CAPACITY_OPTIONS = [
-  { id: 'all', label: t('alle.størrelser'), min: 0, max: Infinity },
+  { id: 'all', label: 'Alle størrelser', min: 0, max: Infinity },
   { id: '1-5', label: '1-5 personer', min: 1, max: 5 },
   { id: '6-10', label: '6-10 personer', min: 6, max: 10 },
   { id: '11-20', label: '11-20 personer', min: 11, max: 20 },

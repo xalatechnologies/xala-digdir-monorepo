@@ -7,7 +7,6 @@
  */
 
 import type { RentalObjectType, KeyFacts, BookingMode } from '../types';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Presenter Configuration Types
@@ -144,7 +143,7 @@ const facilityConfig: RentalObjectTypeConfig = {
   amenityCategories: ['equipment', 'comfort', 'technology', 'accessibility'],
   defaultBookingMode: 'SLOTS',
   emptyStates: {
-    description: t('status.available'),
+    description: 'Ingen beskrivelse tilgjengelig.',
     amenities: 'Ingen fasiliteter er registrert for dette lokalet.',
     rules: 'Ingen regler er spesifisert for dette lokalet.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -210,7 +209,7 @@ const equipmentConfig: RentalObjectTypeConfig = {
   amenityCategories: ['included', 'accessories'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: t('status.available'),
+    description: 'Ingen beskrivelse tilgjengelig.',
     amenities: 'Ingen tilleggsutstyr er registrert.',
     rules: 'Ingen regler er spesifisert for dette utstyret.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -269,7 +268,7 @@ const eventConfig: RentalObjectTypeConfig = {
   amenityCategories: ['included', 'accessibility'],
   defaultBookingMode: 'TICKETS',
   emptyStates: {
-    description: t('status.available'),
+    description: 'Ingen beskrivelse tilgjengelig.',
     amenities: 'Ingen fasiliteter er registrert.',
     rules: 'Ingen regler er spesifisert for dette arrangementet.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -329,7 +328,7 @@ const otherConfig: RentalObjectTypeConfig = {
   amenityCategories: ['general'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: t('status.available'),
+    description: 'Ingen beskrivelse tilgjengelig.',
     amenities: 'Ingen fasiliteter er registrert.',
     rules: 'Ingen regler er spesifisert.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -438,7 +437,6 @@ export class RentalObjectTypePresenter {
 // =============================================================================
 
 export function createPresenter(rentalObjectType: RentalObjectType): RentalObjectTypePresenter {
-  const t = useT();
   return new RentalObjectTypePresenter(rentalObjectType);
 }
 

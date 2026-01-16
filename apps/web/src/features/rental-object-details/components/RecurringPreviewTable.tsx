@@ -168,42 +168,42 @@ const MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'se
  */
 const STATUS_CONFIG: Record<OccurrenceStatus, StatusConfig> = {
   AVAILABLE: {
-    label: t('status.available'),
+    label: 'Ledig',
     color: 'var(--ds-color-success-text-default)',
     backgroundColor: 'var(--ds-color-success-surface-default)',
     borderColor: 'var(--ds-color-success-border-default)',
     icon: <CheckCircleIcon size={14} />,
   },
   CONFLICT: {
-    label: t('konflikt'),
+    label: 'Konflikt',
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   RESERVED: {
-    label: t('status.reserved'),
+    label: 'Reservert',
     color: 'var(--ds-color-warning-text-default)',
     backgroundColor: 'var(--ds-color-warning-surface-default)',
     borderColor: 'var(--ds-color-warning-border-default)',
     icon: <ClockIcon size={14} />,
   },
   BLOCKED: {
-    label: t('status.blocked'),
+    label: 'Blokkert',
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   BLACKOUT: {
-    label: t('status.closed'),
+    label: 'Stengt',
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',
     icon: <AlertCircleIcon size={14} />,
   },
   CLOSED: {
-    label: t('status.closed'),
+    label: 'Stengt',
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',

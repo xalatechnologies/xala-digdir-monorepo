@@ -122,29 +122,29 @@ export interface RecurringPatternBuilderProps {
  * Weekday options with ISO weekday numbers (1=Monday, 7=Sunday)
  */
 const WEEKDAY_OPTIONS: Array<{ value: number; label: string; shortLabel: string }> = [
-  { value: 1, label: t('day.monday'), shortLabel: 'Man' },
-  { value: 2, label: t('day.tuesday'), shortLabel: 'Tir' },
-  { value: 3, label: t('day.wednesday'), shortLabel: 'Ons' },
-  { value: 4, label: t('day.thursday'), shortLabel: 'Tor' },
-  { value: 5, label: t('day.friday'), shortLabel: 'Fre' },
-  { value: 6, label: t('day.saturday'), shortLabel: 'Lør' },
-  { value: 7, label: t('day.sunday'), shortLabel: 'Søn' },
+  { value: 1, label: 'Mandag', shortLabel: 'Man' },
+  { value: 2, label: 'Tirsdag', shortLabel: 'Tir' },
+  { value: 3, label: 'Onsdag', shortLabel: 'Ons' },
+  { value: 4, label: 'Torsdag', shortLabel: 'Tor' },
+  { value: 5, label: 'Fredag', shortLabel: 'Fre' },
+  { value: 6, label: 'Lørdag', shortLabel: 'Lør' },
+  { value: 7, label: 'Søndag', shortLabel: 'Søn' },
 ];
 
 /**
  * Frequency options with labels
  */
 const FREQUENCY_OPTIONS: Array<{ value: RecurringFrequency; label: string }> = [
-  { value: 'WEEKLY', label: t('ukentlig') },
-  { value: 'MONTHLY', label: t('månedlig') },
+  { value: 'WEEKLY', label: 'Ukentlig' },
+  { value: 'MONTHLY', label: 'Månedlig' },
 ];
 
 /**
  * End condition type options with labels
  */
 const END_CONDITION_OPTIONS: Array<{ value: RecurringEndConditionType; label: string }> = [
-  { value: 'AFTER_OCCURRENCES', label: t('etter.antall.ganger') },
-  { value: 'UNTIL_DATE', label: t('til.en.bestemt.dato') },
+  { value: 'AFTER_OCCURRENCES', label: 'Etter antall ganger' },
+  { value: 'UNTIL_DATE', label: 'Til en bestemt dato' },
 ];
 
 /**

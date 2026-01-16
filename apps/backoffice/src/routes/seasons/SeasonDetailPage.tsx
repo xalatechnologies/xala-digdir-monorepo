@@ -42,11 +42,11 @@ import { SeasonAllocationManagement } from '../../components/seasons/SeasonAlloc
 import { useT } from '@xala/i18n';
 
 const statusLabels: Record<SeasonStatus, string> = {
-  draft: t("status.draft"),
+  draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
   active: 'Aktiv',
-  completed: t("status.completed"),
+  completed: 'Fullført',
   cancelled: 'Kansellert',
 };
 

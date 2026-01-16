@@ -3,17 +3,18 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { useT } from '@xala/i18n';
 
-const pageTitles: Record<string, string> = {
-  '/': 'Dashboard',
-  '/bookings': 'Bookinger',
-  '/reports': 'Rapporter',
-  '/users': 'Brukere',
-  '/settings': t("ui.settings"),
-};
-
 export function AppLayout() {
   const t = useT();
   const location = useLocation();
+  
+  const pageTitles: Record<string, string> = {
+    '/': 'Dashboard',
+    '/bookings': 'Bookinger',
+    '/reports': 'Rapporter',
+    '/users': 'Brukere',
+    '/settings': t('ui.settings') || 'Innstillinger',
+  };
+  
   const title = pageTitles[location.pathname] ?? '';
 
   return (

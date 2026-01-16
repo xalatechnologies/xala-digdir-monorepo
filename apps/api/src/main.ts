@@ -45,6 +45,8 @@ import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
 import { SignicatAuthController } from './modules/auth/signicat.controller';
+import { IdPortenAuthController } from './modules/auth/idporten.controller';
+import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
@@ -251,6 +253,9 @@ async function bootstrap() {
     ShareController,
     // Signicat eID Hub authentication
     SignicatAuthController,
+    // IDporten authentication
+    IdPortenAuthController,
+    IdPortenOIDCAuthController,
     // TODO: Notifications (disabled until schema tables are added)
     // NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
