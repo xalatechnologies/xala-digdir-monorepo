@@ -83,6 +83,25 @@ export const orgMemberships = pgTable('org_memberships', {
   userOrgIdx: index('org_memberships_user_org_idx').on(table.userId, table.orgId),
 }));
 
+export const accessGrants = pgTable('access_grants', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  grantedBy: uuid('granted_by').notNull().references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  validFrom: timestamp('valid_from'),
+  validUntil: timestamp('valid_until'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('access_grants_tenant_idx').on(table.tenantId),
+  orgIdx: index('access_grants_org_idx').on(table.orgId),
+  rentalObjectIdx: index('access_grants_rental_object_idx').on(table.rentalObjectId),
+  orgRentalObjectIdx: index('access_grants_org_rental_object_idx').on(table.orgId, table.rentalObjectId),
+}));
+
 // ============================================================================
 // Subscriptions & Billing
 // ============================================================================
@@ -318,6 +337,8 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type OrgMembership = typeof orgMemberships.$inferSelect;
 export type NewOrgMembership = typeof orgMemberships.$inferInsert;
+export type AccessGrant = typeof accessGrants.$inferSelect;
+export type NewAccessGrant = typeof accessGrants.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
