@@ -3,116 +3,136 @@
     {
       "id": "perf-001",
       "type": "performance_optimizations",
-      "title": "Implement route-level code splitting with React.lazy for Backoffice app",
-      "description": "The backoffice app eagerly imports 30+ page components at startup (DashboardPage, ListingsPage, BookingsPage, etc.), creating a large initial bundle. Implementing React.lazy() for route components would split these into separate chunks loaded on demand.",
-      "rationale": "apps/backoffice/src/App.tsx imports all page components at the top level, meaning the entire admin interface (~30 pages) loads upfront even though users typically access one page at a time. This significantly impacts Time to Interactive (TTI) and First Contentful Paint (FCP). The .cursorrules file recommends React.lazy() but it's not implemented.",
-      "category": "bundle_size",
+      "title": "Add virtualized list rendering for large data tables",
+      "description": "The codebase has multiple list-rendering components (ListingTableView, NotificationCenter, AuditLog, BookingsTab) that render potentially hundreds of items without virtualization. Implement react-window or @tanstack/react-virtual for windowed rendering.",
+      "rationale": "Analysis found no virtualization libraries in use. Components like ListingsListView, NotificationCenter, and audit tables can display 100+ items, causing DOM bloat and scroll jank. Each table row creates ~10-20 DOM nodes, meaning 100 rows = 1000-2000 DOM nodes. Virtualization would render only visible rows (~10-15), reducing DOM nodes by 90%+.",
+      "category": "rendering",
       "impact": "high",
       "affectedAreas": [
-        "apps/backoffice/src/App.tsx",
-        "apps/backoffice/src/routes/*.tsx",
-        "apps/web/src/App.tsx"
+        "packages/ds/src/blocks/ListingTableView.tsx",
+        "packages/ds/src/blocks/NotificationCenter.tsx",
+        "apps/backoffice/src/features/listings/components/list/ListingsListView.tsx",
+        "apps/backoffice/src/features/listings/components/detail/AuditTab.tsx",
+        "apps/backoffice/src/features/listings/components/detail/BookingsTab.tsx",
+        "apps/minside/src/features/listings/components/list/ListingsListView.tsx"
       ],
-      "currentMetric": "All 30+ route components loaded in initial bundle (~200-300KB compressed)",
-      "expectedImprovement": "~60-70% reduction in initial bundle size, TTI improvement of 1-2 seconds on slower connections",
-      "implementation": "1. Create lazy wrapper: `const DashboardPage = lazy(() => import('./routes/dashboard'))`\n2. Wrap Routes in Suspense with loading fallback\n3. Apply to all route components in backoffice/App.tsx\n4. Add prefetching for likely navigation targets using `<link rel='prefetch'>`\n5. Consider route grouping by role to optimize chunk loading",
-      "tradeoffs": "Slightly slower navigation on first visit to each route; requires Suspense fallback UI; need to handle loading states gracefully",
+      "currentMetric": "Rendering 100+ items causes noticeable frame drops on mid-range devices",
+      "expectedImprovement": "90%+ reduction in DOM nodes for large lists, 60fps scroll performance, ~200ms faster initial render",
+      "implementation": "1. Install @tanstack/react-virtual\n2. Create VirtualizedTable wrapper component in @xala/ds\n3. Refactor ListingTableView to use row virtualization\n4. Apply to AuditTab, BookingsTab, NotificationCenter\n5. Add dynamic row height support for variable content",
+      "tradeoffs": "Slightly more complex component code, need to handle dynamic row heights for variable content",
       "estimatedEffort": "medium"
     },
     {
       "id": "perf-002",
       "type": "performance_optimizations",
-      "title": "Dynamically import Mapbox-GL to reduce initial bundle by ~500KB",
-      "description": "mapbox-gl (~500KB uncompressed, ~150KB gzipped) is bundled in @xala/ds package and loaded on every page, even those without maps. Moving map components to dynamic imports would eliminate this from the initial bundle.",
-      "rationale": "The @xala/ds package includes mapbox-gl and react-map-gl as dependencies. These are used by ListingMap component but loaded universally. Most pages (dashboard, bookings, settings) don't need maps, yet users pay the bundle size cost on every page load.",
-      "category": "bundle_size",
+      "title": "Implement route prefetching for predictable navigation patterns",
+      "description": "The SDK has React Query integration but minimal prefetching. Analysis found only 3 files with prefetch patterns. Implement smart prefetching for common navigation flows: listing detail from listing list, booking form from listing detail, dashboard data on login.",
+      "rationale": "Users follow predictable paths: listing list -> detail -> booking. Currently each route loads data on demand, causing visible loading states. With prefetching, data is already available when user navigates. The SDK already has query key factories in place, making prefetching straightforward to implement.",
+      "category": "network",
       "impact": "high",
       "affectedAreas": [
-        "packages/ds/package.json",
-        "packages/ds/src/blocks/ListingMap.tsx",
-        "apps/web/vite.config.ts"
+        "packages/client-sdk/src/hooks/query-keys.ts",
+        "packages/client-sdk/src/hooks/use-rental-objects.ts",
+        "apps/web/src/pages/ListingsPage.tsx",
+        "apps/backoffice/src/routes/index.tsx",
+        "apps/minside/src/routes/dashboard.tsx"
       ],
-      "currentMetric": "mapbox-gl adds ~500KB to vendor bundle, loaded on all pages",
-      "expectedImprovement": "~150KB gzipped reduction in initial bundle, ~500ms faster LCP on median connections",
-      "implementation": "1. Move mapbox-gl to peer/optional dependency in @xala/ds\n2. Create lazy-loaded ListingMap wrapper:\n   ```tsx\n   const ListingMap = lazy(() => import('./ListingMap.impl'))\n   ```\n3. Export ListingMap with Suspense boundary built-in\n4. Update apps to only load map chunk when map is visible\n5. Consider using IntersectionObserver to defer map loading until in viewport",
-      "tradeoffs": "Map will have brief loading state on first render; requires careful handling of map initialization; need to preload when user hovers over map tab",
+      "currentMetric": "Average 400-800ms loading spinner on route transitions",
+      "expectedImprovement": "Instant navigation for 70%+ of route transitions, perceived load time < 100ms",
+      "implementation": "1. Add usePrefetch variants to SDK hooks (useRentalObjectPrefetch, useBookingsPrefetch)\n2. Prefetch listing detail on row hover in ListingTableView\n3. Prefetch booking data when user selects dates\n4. Prefetch dashboard KPIs during login callback\n5. Use queryClient.prefetchQuery with appropriate staleTime",
+      "tradeoffs": "Increased API calls (some wasted if user doesn't navigate), slight memory overhead for cached data",
       "estimatedEffort": "medium"
     },
     {
       "id": "perf-003",
       "type": "performance_optimizations",
-      "title": "Add staleTime configuration to frequently-used SDK query hooks",
-      "description": "Most React Query hooks in @digilist/client-sdk lack staleTime configuration, causing unnecessary refetches when components remount or focus returns to the window. Adding appropriate staleTime values would reduce API calls and improve perceived performance.",
-      "rationale": "Hooks like useBookings, useRentalObjects, useOrganizations, and useDashboardStats refetch on every component mount (staleTime defaults to 0). Only useBookingModeConfig (60s) and useRecurringPreview (30s) have explicit staleTime. This causes redundant network requests when navigating between tabs or returning to previously-viewed pages.",
-      "category": "network",
+      "title": "Extract inline arrow functions from event handlers to prevent re-renders",
+      "description": "Found 67+ instances of inline arrow functions in onClick handlers across @xala/ds components (ListingTableView, ImageSlider, AvailabilityCalendar, etc.). These create new function references on each render, breaking React.memo optimization and causing unnecessary child re-renders.",
+      "rationale": "Inline arrow functions like `onClick={() => handleClick(id)}` create new references every render. When passed to memoized children or used in dependency arrays, they trigger unnecessary re-renders. The BookingSection, ImageSlider, and Calendar components have 3-7 inline handlers each, multiplying the impact.",
+      "category": "rendering",
       "impact": "medium",
       "affectedAreas": [
-        "packages/client-sdk/src/hooks/use-bookings.ts",
-        "packages/client-sdk/src/hooks/use-rental-objects.ts",
-        "packages/client-sdk/src/hooks/use-organizations.ts",
-        "packages/client-sdk/src/hooks/use-reports.ts",
-        "packages/client-sdk/src/hooks/query-keys.ts"
+        "packages/ds/src/blocks/ListingTableView.tsx",
+        "packages/ds/src/blocks/ImageSlider.tsx",
+        "packages/ds/src/blocks/AvailabilityCalendar.tsx",
+        "packages/ds/src/blocks/BookingSection.tsx",
+        "packages/ds/src/blocks/booking-engine/modes/DailyModeView.tsx",
+        "packages/ds/src/composed/RentalObjectCalendar/RentalObjectCalendar.tsx"
       ],
-      "currentMetric": "~15 API calls on dashboard load, redundant fetches on tab switches",
-      "expectedImprovement": "~50% reduction in API calls, smoother navigation experience, reduced server load",
-      "implementation": "1. Add staleTime to list queries (30-60s for listings, bookings)\n2. Add longer staleTime for static data (5min for categories, configuration)\n3. Add gcTime (cacheTime) to keep data in memory during navigation\n4. Implement query defaults in QueryClient configuration:\n   ```ts\n   defaultOptions: {\n     queries: {\n       staleTime: 30_000, // 30s default\n       gcTime: 5 * 60 * 1000, // 5min\n     }\n   }\n   ```\n5. Use shorter staleTime for real-time sensitive data (availability: 5s)",
-      "tradeoffs": "Users may see slightly stale data between refetches; need to balance freshness vs. network calls; consider invalidation strategy for mutations",
+      "currentMetric": "Each parent re-render cascades to all children with inline handlers",
+      "expectedImprovement": "50-70% reduction in component re-renders for interactive components, smoother interactions",
+      "implementation": "1. Extract inline handlers to useCallback hooks\n2. Pass stable callback references to child components\n3. Add React.memo to frequently re-rendered components\n4. Use ESLint rule to prevent future inline handlers in @xala/ds\n5. Profile before/after with React DevTools Profiler",
+      "tradeoffs": "More verbose code with useCallback declarations, need to manage dependency arrays correctly",
       "estimatedEffort": "small"
     },
     {
       "id": "perf-004",
       "type": "performance_optimizations",
-      "title": "Add Vite manual chunking strategy to backoffice app matching web app",
-      "description": "The backoffice app's vite.config.ts lacks the manual chunking strategy implemented in the web app. Adding vendor-specific chunks for mapbox, react-query, SDK, and design system would improve caching and parallel loading.",
-      "rationale": "apps/web/vite.config.ts splits vendors into: vendor-mapbox, vendor-query, vendor-sdk, vendor-ds, and vendor. apps/backoffice/vite.config.ts has no manualChunks configuration, resulting in a single large vendor bundle. This defeats browser caching when only SDK code changes and prevents parallel chunk loading.",
-      "category": "bundle_size",
+      "title": "Add cleanup functions to useEffect hooks with subscriptions/timers",
+      "description": "Found 109 usages of addEventListener/setTimeout/setInterval across 76 TSX files. Many useEffect hooks lack proper cleanup functions, risking memory leaks from orphaned event listeners and timers, especially during rapid navigation or component unmounting.",
+      "rationale": "Event listeners and timers that aren't cleaned up continue running after component unmount, causing memory leaks and potential errors when they reference stale state. Files like Sidebar.tsx, settings.tsx routes, and various providers have multiple listeners. In a SPA with frequent navigation, this compounds over time.",
+      "category": "memory",
       "impact": "medium",
       "affectedAreas": [
-        "apps/backoffice/vite.config.ts",
-        "apps/minside/vite.config.ts"
+        "apps/minside/src/components/layout/Sidebar.tsx",
+        "apps/minside/src/routes/settings.tsx",
+        "apps/backoffice/src/routes/settings.tsx",
+        "apps/backoffice/src/features/listings/components/wizard/steps/MediaStep.tsx",
+        "packages/ds/src/blocks/ImageSlider.tsx",
+        "packages/ds/src/composed/Drawer.tsx"
       ],
-      "currentMetric": "Single vendor chunk ~800KB; full re-download on any dependency update",
-      "expectedImprovement": "Better cache utilization (70%+ cache hit rate), parallel loading of chunks, ~30% faster repeat visits",
-      "implementation": "1. Copy manualChunks configuration from apps/web/vite.config.ts to backoffice:\n   ```ts\n   build: {\n     rollupOptions: {\n       output: {\n         manualChunks: (id) => {\n           if (id.includes('mapbox-gl')) return 'vendor-mapbox';\n           if (id.includes('@tanstack/react-query')) return 'vendor-query';\n           if (id.includes('packages/client-sdk')) return 'vendor-sdk';\n           if (id.includes('packages/ds') || id.includes('@xala/ds')) return 'vendor-ds';\n           if (id.includes('node_modules')) return 'vendor';\n         }\n       }\n     }\n   }\n   ```\n2. Apply same config to minside app\n3. Increase chunkSizeWarningLimit to 800",
-      "tradeoffs": "More HTTP requests initially (though HTTP/2 mitigates this); need to verify no circular dependency issues between chunks",
-      "estimatedEffort": "small"
+      "currentMetric": "Memory grows ~2-5MB per 10 route navigations without page refresh",
+      "expectedImprovement": "Stable memory usage during long sessions, prevent 'Can't perform state update on unmounted component' errors",
+      "implementation": "1. Audit all useEffect hooks with addEventListener/setTimeout/setInterval\n2. Add cleanup return functions to remove listeners and clear timers\n3. Create useEventListener and useTimeout custom hooks in @xala/ds\n4. Add ESLint rule to warn about missing cleanup in effects with subscriptions\n5. Add memory leak detection to E2E test suite",
+      "tradeoffs": "Requires careful review of each useEffect to ensure cleanup logic is correct",
+      "estimatedEffort": "medium"
     },
     {
       "id": "perf-005",
       "type": "performance_optimizations",
-      "title": "Optimize design system barrel exports to improve tree-shaking",
-      "description": "The @xala/ds package uses `export * from '@digdir/designsystemet-react'` which can import the entire designsystemet library even when only a few components are used. Explicit named exports would enable better tree-shaking.",
-      "rationale": "packages/ds/src/index.ts re-exports everything from @digdir/designsystemet-react using `export *`. While modern bundlers handle this reasonably well, some components and their dependencies may be included unnecessarily. Apps only use a subset (~30-40 components) of the full library (~80+ components).",
-      "category": "bundle_size",
+      "title": "Implement request deduplication and batching for dashboard loading",
+      "description": "Dashboard pages make multiple parallel API calls (KPIs, stats, activity, pending items, upcoming bookings). While some batching exists with Promise.all, implement systematic request deduplication and GraphQL-style batching to reduce total requests and connection overhead.",
+      "rationale": "Dashboard routes fire 5-8 separate useQuery hooks simultaneously. Each creates a separate HTTP request with full overhead (TLS, headers, parsing). The API already has GraphQL via Mercurius. Implement a batch endpoint or leverage DataLoader pattern to combine related queries into single requests.",
+      "category": "network",
       "impact": "medium",
       "affectedAreas": [
-        "packages/ds/src/index.ts",
-        "packages/ds/package.json"
+        "packages/client-sdk/src/hooks/use-reports.ts",
+        "apps/backoffice/src/routes/index.tsx",
+        "apps/minside/src/routes/dashboard.tsx",
+        "apps/api/src/modules/dashboard/dashboard.controller.ts"
       ],
-      "currentMetric": "Full designsystemet library included (~100KB), many unused components bundled",
-      "expectedImprovement": "~20-30KB reduction in DS bundle size, better tree-shaking accuracy",
-      "implementation": "1. Audit which @digdir components are actually used across all apps\n2. Replace `export * from '@digdir/designsystemet-react'` with explicit named exports:\n   ```ts\n   export {\n     Button,\n     Card,\n     Heading,\n     // ... only used components\n   } from '@digdir/designsystemet-react';\n   ```\n3. Add eslint-plugin-import to detect unused exports\n4. Consider using @rollup/plugin-unused for build-time detection\n5. Document which primitives are available from @xala/ds",
-      "tradeoffs": "More maintenance overhead to keep export list updated; may break apps if they use undocumented exports; need to verify all component dependencies are included",
+      "currentMetric": "Dashboard load triggers 5-8 parallel requests, ~1.2s total waterfall time",
+      "expectedImprovement": "Reduce dashboard API calls from 5-8 to 1-2, ~40% faster dashboard load time",
+      "implementation": "1. Create /api/dashboard/batch endpoint accepting array of requested data types\n2. Implement DataLoader pattern for automatic request batching\n3. Add useDashboardBatch hook combining KPIs, stats, activity into single query\n4. Configure React Query to deduplicate identical queries across components\n5. Use GraphQL queries for complex dashboard data needs",
+      "tradeoffs": "More complex backend logic, need to handle partial failures in batched responses",
       "estimatedEffort": "medium"
     }
   ],
   "metadata": {
-    "totalBundleSize": "~2.5MB (uncompressed initial bundle for backoffice)",
+    "totalBundleSize": "~2.5MB (estimated with mapbox-gl)",
     "largestDependencies": [
       "mapbox-gl (~500KB)",
+      "react-dom (~140KB)",
       "@digdir/designsystemet-react (~100KB)",
-      "@tanstack/react-query (~40KB)",
-      "react-dom (~130KB)"
+      "@tanstack/react-query (~50KB)"
     ],
-    "filesAnalyzed": 85,
-    "potentialSavings": "~700KB uncompressed, ~250KB gzipped",
-    "keyFindings": [
-      "No route-level code splitting in backoffice (30+ eager imports)",
-      "mapbox-gl loaded on all pages despite limited map usage",
-      "SDK hooks lack staleTime causing redundant fetches",
-      "Backoffice missing web app's manual chunk strategy",
-      "Barrel exports may defeat tree-shaking for design system"
+    "filesAnalyzed": 250,
+    "potentialSavings": "~60% reduction in dashboard load time, 90% reduction in large list DOM nodes",
+    "codebaseInsights": {
+      "reactQueryHooksCount": 130,
+      "useCallbackUsage": "470 occurrences across 107 files",
+      "eventListenerUsage": "109 occurrences across 76 files",
+      "prefetchUsage": "8 occurrences across 3 files (limited)",
+      "virtualizationUsage": "0 (not implemented)"
+    },
+    "excludedFromAnalysis": [
+      "Mapbox dynamic import (already planned)",
+      "Route-level code splitting (already planned)",
+      "Caching layer (already planned)",
+      "Barrel export optimization (already planned)",
+      "staleTime configuration (already planned)",
+      "Vite manual chunking (already implemented)"
     ],
-    "generatedAt": "2026-01-16T00:30:00Z"
+    "generatedAt": "2026-01-16T10:45:00Z"
   }
 }

@@ -3,173 +3,150 @@
     {
       "id": "cq-001",
       "type": "code_quality",
-      "title": "Split UnifiedBookingEngine.tsx (3,667 lines) into domain-focused modules",
-      "description": "The UnifiedBookingEngine.tsx component has grown to 3,667 lines and handles 6 different booking modes (slots, daily, dateRange, event, recurring, instant). This violates single responsibility principle and makes the code extremely difficult to maintain, test, and review.",
-      "rationale": "This monolithic component has multiple responsibilities: calendar/date selection logic for 6 booking modes, price calculation, form handling, booking submission, and 500+ lines of inline CSS. Functions like RecurringModeView (181 lines) and BookingConfirmStep (202 lines) exceed reasonable sizes. Deep nesting makes flow hard to follow.",
-      "category": "large_files",
-      "severity": "critical",
+      "title": "Extract shared SidebarNavItem component to @xala/ds package",
+      "description": "The SidebarNavItem component is nearly identical in both apps/backoffice/src/components/layout/Sidebar.tsx (408 lines) and apps/minside/src/components/layout/Sidebar.tsx (498 lines). Both implementations have the same styling patterns, active state handling, badge display logic, and visual structure with only minor differences in props.",
+      "rationale": "Code duplication leads to maintenance burden where fixes must be applied in multiple places. As both sidebars share ~80% identical code for the nav item component, extracting to @xala/ds would ensure consistency and reduce total codebase size by ~200 lines.",
+      "category": "duplication",
+      "severity": "minor",
       "affectedFiles": [
-        "packages/ds/src/blocks/UnifiedBookingEngine.tsx"
+        "apps/backoffice/src/components/layout/Sidebar.tsx",
+        "apps/minside/src/components/layout/Sidebar.tsx"
       ],
-      "currentState": "Single 3,667-line file handling all booking modes with inline CSS, nested sub-components, price calculations, and form logic",
-      "proposedChange": "Split into modular structure:\n- packages/ds/src/blocks/booking-engine/UnifiedBookingEngine.tsx (orchestrator, ~200 lines)\n- packages/ds/src/blocks/booking-engine/modes/SlotsModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/DailyModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/DateRangeModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/RecurringModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/EventModeView.tsx\n- packages/ds/src/blocks/booking-engine/modes/InstantModeView.tsx\n- packages/ds/src/blocks/booking-engine/components/BookingConfirmStep.tsx\n- packages/ds/src/blocks/booking-engine/hooks/useBookingCalendar.ts\n- packages/ds/src/blocks/booking-engine/utils/price-calculation.ts\n- packages/ds/src/blocks/booking-engine/styles/booking-engine.css",
-      "codeExample": "// Current (single massive file):\nexport function UnifiedBookingEngine({ config, onBook }) {\n  // 3,667 lines of mixed concerns\n  const DateRangeModeView = () => { /* 137 lines */ };\n  const RecurringModeView = () => { /* 181 lines */ };\n  // ...\n}\n\n// Proposed (modular):\n// booking-engine/UnifiedBookingEngine.tsx\nimport { SlotsModeView } from './modes/SlotsModeView';\nimport { DateRangeModeView } from './modes/DateRangeModeView';\nimport { useBookingCalendar } from './hooks/useBookingCalendar';\nimport './styles/booking-engine.css';\n\nexport function UnifiedBookingEngine({ config, onBook }) {\n  const calendar = useBookingCalendar(config);\n  const ModeComponent = BOOKING_MODES[config.mode];\n  return <ModeComponent calendar={calendar} onBook={onBook} />;\n}",
-      "bestPractice": "Single Responsibility Principle - each module should have one reason to change. Components over 500 lines are maintenance nightmares.",
+      "currentState": "Two separate SidebarNavItem implementations with nearly identical styling, active state logic, and badge rendering. Both use the same design tokens and visual patterns but were developed independently.",
+      "proposedChange": "Create packages/ds/src/composed/sidebar-nav.tsx with a configurable SidebarNavItem component that accepts NavItem props, handles active state via react-router-dom integration, and supports badges. Both apps would import and use this shared component with app-specific navigation data.",
+      "codeExample": "// Current (duplicated in 2 files):\nfunction SidebarNavItem({ item }: { item: NavItem }) {\n  const isActive = location.pathname.startsWith(item.href);\n  return <NavLink style={{ borderLeft: isActive ? '3px solid...' }}>{item.icon}</NavLink>;\n}\n\n// Proposed (@xala/ds):\nexport const SidebarNavItem = ({ item, onClick, isActive }: SidebarNavItemProps) => { ... };\n\n// Usage in apps:\nimport { SidebarNavItem } from '@xala/ds';",
+      "bestPractice": "DRY (Don't Repeat Yourself) - extract shared UI components into the design system package",
       "metrics": {
-        "lineCount": 3667,
-        "complexity": "very high",
-        "duplicateLines": null,
+        "lineCount": null,
+        "complexity": null,
+        "duplicateLines": 180,
         "testCoverage": null
       },
-      "estimatedEffort": "large",
+      "estimatedEffort": "small",
       "breakingChange": false,
-      "prerequisites": [
-        "Create comprehensive tests for existing booking flows before refactoring",
-        "Document current behavior for each booking mode"
-      ]
+      "prerequisites": null
     },
     {
       "id": "cq-002",
       "type": "code_quality",
-      "title": "Extract duplicated ListingsFilterBar component into shared @xala/ds package",
-      "description": "The ListingsFilterBar component is nearly identically implemented in both apps/minside (687 lines) and apps/backoffice (682 lines). Both files share identical imports, props interface, CAPACITY_OPTIONS constant, and core logic for search debouncing, filter handling, and view mode changes.",
-      "rationale": "Code duplication leads to bugs when fixes are applied inconsistently. Currently any filter behavior change requires updating two files, increasing maintenance burden and risk of divergence. The components share 90%+ identical code.",
+      "title": "Extract messaging utilities into shared SDK utils",
+      "description": "Both apps/backoffice/src/routes/messages.tsx (951 lines) and apps/minside/src/routes/messages.tsx (916 lines) contain duplicated utility functions: formatTimeAgo(), formatMessageDate(), and getTimeAgoKey(). These time formatting utilities are used for conversation timestamps and message grouping.",
+      "rationale": "Time formatting utilities are a common need across messaging features. Having two slightly different implementations risks inconsistent behavior and requires maintaining the same logic in multiple places. The SDK already exports formatTime, so these utilities logically belong there.",
       "category": "duplication",
-      "severity": "major",
+      "severity": "minor",
       "affectedFiles": [
-        "apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx",
-        "apps/backoffice/src/features/listings/components/list/ListingsFilterBar.tsx"
+        "apps/backoffice/src/routes/messages.tsx",
+        "apps/minside/src/routes/messages.tsx",
+        "packages/client-sdk/src/utils/date-utils.ts"
       ],
-      "currentState": "Two nearly identical 680+ line components with same props interface, same CAPACITY_OPTIONS, same handler functions (handleSearchChange, handleTypeChange, handleStatusChange, handleSortChange), and same debounced search logic",
-      "proposedChange": "Move shared ListingsFilterBar to packages/ds/src/blocks/ListingsFilterBar.tsx with:\n1. Core component with configurable features via props\n2. App-specific customizations through composition pattern\n3. Shared constants (CAPACITY_OPTIONS, TYPE_TABS, etc.) in packages/ds/src/blocks/listings-filter/constants.ts\n4. useListingsFilter hook for reusable filter logic",
-      "codeExample": "// Current (duplicated in 2 apps):\n// apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx\nconst CAPACITY_OPTIONS = [\n  { id: 'any', label: 'Alle størrelser', min: undefined, max: undefined },\n  // ... identical in both apps\n];\n\n// Proposed (shared component):\n// packages/ds/src/blocks/ListingsFilterBar.tsx\nexport interface ListingsFilterBarConfig {\n  showViewModeToggle?: boolean;\n  showCreateButton?: boolean;\n  customActions?: ReactNode;\n}\n\nexport function ListingsFilterBar({ \n  filters, config, onFilterChange \n}: ListingsFilterBarProps) {\n  // Shared implementation\n}\n\n// apps/minside usage:\nimport { ListingsFilterBar } from '@xala/ds';\n<ListingsFilterBar config={{ showCreateButton: false }} />",
-      "bestPractice": "DRY (Don't Repeat Yourself) - extract common logic into reusable components in shared packages",
+      "currentState": "formatTimeAgo(), formatMessageDate(), and related time-relative functions are duplicated. Backoffice version returns Norwegian hardcoded strings ('Nå', 'I dag', 'I går'), while minside version attempts i18n integration but still has hardcoded fallbacks.",
+      "proposedChange": "Add formatRelativeTime(), formatMessageGroupDate(), and getRelativeTimeUnit() to packages/client-sdk/src/utils/date-utils.ts. These would return either formatted strings or keys for i18n lookup. Update both message pages to use the shared utilities.",
+      "codeExample": "// Current (duplicated):\nfunction formatTimeAgo(dateStr: string): string {\n  const diffMins = Math.floor(diffMs / 60000);\n  if (diffMins < 1) return 'Nå';\n  if (diffMins < 60) return `${diffMins}m`;\n  ...\n}\n\n// Proposed (packages/client-sdk/src/utils/date-utils.ts):\nexport function formatRelativeTime(date: Date | string, options?: RelativeTimeOptions): string;\nexport function getMessageGroupLabel(date: Date | string): 'today' | 'yesterday' | Date;",
+      "bestPractice": "DRY principle - consolidate date/time utilities in the SDK where they can be tested, documented, and reused",
       "metrics": {
-        "lineCount": 1369,
+        "lineCount": null,
         "complexity": null,
-        "duplicateLines": 620,
+        "duplicateLines": 60,
         "testCoverage": null
       },
-      "estimatedEffort": "medium",
+      "estimatedEffort": "small",
       "breakingChange": false,
-      "prerequisites": [
-        "Audit both components for subtle differences that need to be configurable"
-      ]
+      "prerequisites": ["Add relative time and duration formatters to i18n (already planned)"]
     },
     {
       "id": "cq-003",
       "type": "code_quality",
-      "title": "Remove 231 console.log statements from production code",
-      "description": "Found 231 console.log/warn/error/debug statements across 30 files in apps/, with heavy concentration in critical modules: auth.controller.ts (42 occurrences), idporten.controller.ts (45 occurrences), main.ts (32 occurrences). These debug statements pollute production logs, risk exposing sensitive data, and indicate incomplete debugging cleanup.",
-      "rationale": "Console statements in production code are a code smell indicating incomplete development cleanup. They can expose sensitive information (tokens, credentials, user data), clutter production logs making real issues harder to find, and impact performance. The API module's auth controllers are particularly concerning as they may log authentication tokens.",
-      "category": "code_smells",
+      "title": "Split ListingAvailabilityCalendar.tsx into mode-specific modules",
+      "description": "packages/ds/src/blocks/ListingAvailabilityCalendar.tsx is 1957 lines and handles three distinct calendar modes: TIME_SLOTS (week/day timeline), ALL_DAY (month view with day selection), and MULTI_DAY (date range picker). Each mode has unique rendering logic, state management, and interaction patterns bundled into one massive component.",
+      "rationale": "At nearly 2000 lines, this file violates single responsibility principle and is difficult to maintain, test, and review. The three modes are distinct enough that they could be separate components with shared utilities, improving code organization and making each mode easier to understand and modify.",
+      "category": "large_files",
       "severity": "major",
       "affectedFiles": [
-        "apps/api/src/modules/auth/auth.controller.ts",
-        "apps/api/src/modules/auth/idporten.controller.ts",
-        "apps/api/src/main.ts",
-        "apps/api/src/modules/auth/vipps-session-store.ts",
-        "apps/api/src/modules/auth/idporten-session-store.ts",
-        "apps/minside/src/routes/settings.tsx",
-        "apps/minside/src/routes/login.tsx",
-        "apps/backoffice/src/routes/users-management.tsx"
+        "packages/ds/src/blocks/ListingAvailabilityCalendar.tsx",
+        "packages/ds/src/__tests__/ListingAvailabilityCalendar.test.tsx"
       ],
-      "currentState": "231 console statements scattered across 30 files, particularly concentrated in authentication modules (87+ in auth-related files)",
-      "proposedChange": "1. Replace all console.log with structured logging using pino (already configured)\n2. Add ESLint rule to ban console.* in production code\n3. Create debug utility that respects environment:\n   - apps/api: use existing pino logger with appropriate log levels\n   - apps/*: create debug utility that only logs in development\n4. Review auth module logs for sensitive data exposure",
-      "codeExample": "// Current (in auth.controller.ts):\nconsole.log('Auth callback received:', req.query);\nconsole.log('Token exchange response:', tokenData);\nconsole.log('User session created:', session.id);\n\n// Proposed:\nimport { logger } from '@/core/logger';\n\nlogger.info({ query: req.query }, 'Auth callback received');\nlogger.debug({ tokenType: tokenData.token_type }, 'Token exchange completed');\nlogger.info({ sessionId: session.id }, 'User session created');\n\n// ESLint config addition:\nrules: {\n  'no-console': ['error', { allow: ['warn', 'error'] }]\n}",
-      "bestPractice": "Use structured logging in production - never console.log. Sensitive data should never be logged.",
+      "currentState": "Single 1957-line component with mode-specific rendering blocks, shared types, utility functions, and CSS-in-JS styles all in one file. Contains TIME_SLOTS (week view with hourly slots), ALL_DAY (month calendar), and MULTI_DAY (date range) implementations.",
+      "proposedChange": "Split into: 1) packages/ds/src/blocks/calendar/types.ts - shared types and constants 2) packages/ds/src/blocks/calendar/TimeSlotsCalendar.tsx - TIME_SLOTS mode 3) packages/ds/src/blocks/calendar/AllDayCalendar.tsx - ALL_DAY mode 4) packages/ds/src/blocks/calendar/MultiDayCalendar.tsx - MULTI_DAY mode 5) packages/ds/src/blocks/calendar/CalendarLegend.tsx - shared legend component 6) packages/ds/src/blocks/ListingAvailabilityCalendar.tsx - thin wrapper that selects the appropriate mode component",
+      "codeExample": "// Current:\nexport function ListingAvailabilityCalendar({ mode, ... }) {\n  // 1957 lines handling all three modes\n}\n\n// Proposed:\n// calendar/types.ts - shared types\n// calendar/TimeSlotsCalendar.tsx (~500 lines)\n// calendar/AllDayCalendar.tsx (~400 lines)\n// calendar/MultiDayCalendar.tsx (~400 lines)\nexport function ListingAvailabilityCalendar({ mode, ...props }) {\n  switch (mode) {\n    case 'TIME_SLOTS': return <TimeSlotsCalendar {...props} />;\n    case 'ALL_DAY': return <AllDayCalendar {...props} />;\n    case 'MULTI_DAY': return <MultiDayCalendar {...props} />;\n  }\n}",
+      "bestPractice": "Single Responsibility Principle - each module should have one reason to change; component files should typically be 300-500 lines",
       "metrics": {
-        "lineCount": null,
+        "lineCount": 1957,
         "complexity": null,
         "duplicateLines": null,
         "testCoverage": null
       },
       "estimatedEffort": "medium",
       "breakingChange": false,
-      "prerequisites": [
-        "Verify pino logger is properly configured across all API modules",
-        "Audit auth module logs for sensitive data before removal"
-      ]
+      "prerequisites": ["Ensure test coverage exists before refactoring"]
     },
     {
       "id": "cq-004",
       "type": "code_quality",
-      "title": "Add unit test coverage to apps/minside (currently 0 tests)",
-      "description": "The apps/minside application has zero unit test files, while apps/web has 4 tests and apps/backoffice has 14+ test files covering calendar, rental objects, and critical features. This gap leaves minside's user-facing features completely untested.",
-      "rationale": "apps/minside is the user portal handling critical user journeys: booking management, profile settings, notifications, GDPR compliance, and payment. Without tests, regressions can ship to production undetected. The settings.tsx (879 lines) and messages.tsx (916 lines) routes are particularly complex and need coverage.",
-      "category": "testing",
-      "severity": "major",
-      "affectedFiles": [
-        "apps/minside/src/routes/settings.tsx",
-        "apps/minside/src/routes/messages.tsx",
-        "apps/minside/src/routes/bookings.tsx",
-        "apps/minside/src/routes/login.tsx",
-        "apps/minside/src/hooks/useAuth.ts",
-        "apps/minside/src/features/listings/components/list/ListingsFilterBar.tsx"
-      ],
-      "currentState": "0 test files in apps/minside, compared to 14+ in apps/backoffice and 4 in apps/web",
-      "proposedChange": "Add critical test coverage:\n1. apps/minside/src/hooks/useAuth.test.ts - Auth hook tests\n2. apps/minside/src/routes/settings.test.tsx - Settings page tests\n3. apps/minside/src/routes/bookings.test.tsx - Booking list/detail tests\n4. apps/minside/src/features/listings/components/list/ListingsFilterBar.test.tsx\n5. apps/minside/src/routes/messages.test.tsx - Messaging tests\n\nPrioritize: Auth flows, booking management, GDPR consent handling",
-      "codeExample": "// apps/minside/src/hooks/useAuth.test.ts\nimport { renderHook, waitFor } from '@testing-library/react';\nimport { useAuth } from './useAuth';\nimport { QueryClientProvider } from '@tanstack/react-query';\n\ndescribe('useAuth', () => {\n  it('should return authenticated user when session is valid', async () => {\n    const { result } = renderHook(() => useAuth(), { wrapper });\n    await waitFor(() => expect(result.current.isAuthenticated).toBe(true));\n  });\n\n  it('should handle logout correctly', async () => {\n    // Test logout clears session and redirects\n  });\n});\n\n// apps/minside/src/routes/settings.test.tsx\ndescribe('SettingsPage', () => {\n  it('should render all settings tabs', () => {});\n  it('should save profile changes', () => {});\n  it('should handle GDPR consent management', () => {});\n});",
-      "bestPractice": "Critical user-facing applications should have minimum 70% test coverage on business logic and UI components",
-      "metrics": {
-        "lineCount": null,
-        "complexity": null,
-        "duplicateLines": null,
-        "testCoverage": 0
-      },
-      "estimatedEffort": "large",
-      "breakingChange": false,
-      "prerequisites": [
-        "Set up Vitest configuration for apps/minside if not present",
-        "Create test utilities and fixtures"
-      ]
-    },
-    {
-      "id": "cq-005",
-      "type": "code_quality",
-      "title": "Split settings.tsx route files (1267 lines in backoffice, 879 lines in minside)",
-      "description": "The settings.tsx route files in both backoffice and minside have grown into monolithic components handling multiple unrelated settings domains. The backoffice version (1,267 lines) manages 7+ different settings tabs inline with complex form state management across profile, addresses, general settings, booking settings, notifications, integrations, and branding.",
-      "rationale": "Large route files violate single responsibility and make testing difficult. Each tab in settings.tsx handles different data models, has separate form validation, and makes different API calls. The 12+ useState hooks and inline form handlers indicate the need for decomposition into focused components with custom hooks.",
+      "title": "Split header-parts.tsx into individual component files",
+      "description": "packages/ds/src/composed/header-parts.tsx is 1473 lines containing 10+ distinct header subcomponents: HeaderLogo, HeaderSearch, HeaderThemeToggle, HeaderLanguageSelector, HeaderActions, HeaderUserMenu, HeaderNotificationBell, HeaderMobileMenu, HeaderLoginButton, and more. Each component has its own props interface, styles, and logic.",
+      "rationale": "The file is essentially a module dump of unrelated components. While they're all 'header parts', they serve different purposes and change for different reasons. This makes the file hard to navigate, increases merge conflict risk, and makes individual components difficult to test in isolation.",
       "category": "large_files",
       "severity": "minor",
       "affectedFiles": [
-        "apps/backoffice/src/routes/settings.tsx",
-        "apps/minside/src/routes/settings.tsx"
+        "packages/ds/src/composed/header-parts.tsx"
       ],
-      "currentState": "Single massive route components with:\n- 12+ useState hooks for form state\n- 7 tabs rendered inline (100-200 lines each)\n- Integration modal with inline handler (28 lines)\n- Mixed mutation handlers and UI code",
-      "proposedChange": "Extract each tab into dedicated component:\n\nbackoffice/src/routes/settings/\n├── SettingsPage.tsx (orchestrator, ~100 lines)\n├── tabs/\n│   ├── ProfileTab.tsx\n│   ├── AddressesTab.tsx\n│   ├── GeneralTab.tsx\n│   ├── BookingTab.tsx\n│   ├── NotificationsTab.tsx\n│   ├── IntegrationsTab.tsx\n│   └── BrandingTab.tsx\n├── hooks/\n│   ├── useProfileForm.ts\n│   ├── useTenantSettings.ts\n│   └── useIntegrationSettings.ts\n└── components/\n    └── IntegrationConfigModal.tsx",
-      "codeExample": "// Current (1267 lines in single file):\nexport function SettingsPage() {\n  const [avatar, setAvatar] = useState(...);\n  const [firstName, setFirstName] = useState(...);\n  const [lastName, setLastName] = useState(...);\n  // 9 more useState hooks...\n  \n  return (\n    <Tabs>\n      <Tabs.Panel value=\"profile\">\n        {/* 200 lines of profile form */}\n      </Tabs.Panel>\n      <Tabs.Panel value=\"addresses\">\n        {/* 150 lines of addresses form */}\n      </Tabs.Panel>\n      {/* 5 more inline tabs... */}\n    </Tabs>\n  );\n}\n\n// Proposed (modular):\nexport function SettingsPage() {\n  return (\n    <Tabs defaultValue=\"profile\">\n      <Tabs.Panel value=\"profile\"><ProfileTab /></Tabs.Panel>\n      <Tabs.Panel value=\"addresses\"><AddressesTab /></Tabs.Panel>\n      <Tabs.Panel value=\"general\"><GeneralTab /></Tabs.Panel>\n    </Tabs>\n  );\n}\n\n// tabs/ProfileTab.tsx\nimport { useProfileForm } from '../hooks/useProfileForm';\n\nexport function ProfileTab() {\n  const { values, errors, handleChange, handleSubmit } = useProfileForm();\n  // Clean, focused component\n}",
-      "bestPractice": "Route components should be thin orchestrators. Extract forms, complex UI, and business logic into focused child components and hooks.",
+      "currentState": "Single 1473-line file containing HeaderLogo (50 lines), HeaderSearch (200+ lines with animation states), HeaderThemeToggle (100 lines), HeaderLanguageSelector (150 lines), HeaderActions (50 lines), HeaderUserMenu (200+ lines with dropdown), HeaderNotificationBell (100 lines), HeaderMobileMenu (200+ lines), HeaderLoginButton (70 lines), plus helper functions and types.",
+      "proposedChange": "Create packages/ds/src/composed/header/ directory with: HeaderLogo.tsx, HeaderSearch.tsx, HeaderThemeToggle.tsx, HeaderLanguageSelector.tsx, HeaderActions.tsx, HeaderUserMenu.tsx, HeaderNotificationBell.tsx, HeaderMobileMenu.tsx, HeaderLoginButton.tsx, types.ts (shared types), and index.ts (barrel export). Keep backward-compatible re-exports from header-parts.tsx.",
+      "codeExample": "// Current: packages/ds/src/composed/header-parts.tsx (1473 lines)\nexport const HeaderLogo = ...;\nexport const HeaderSearch = ...;\nexport const HeaderThemeToggle = ...;\n// ... 10+ more exports\n\n// Proposed: packages/ds/src/composed/header/\n// header/HeaderLogo.tsx (~60 lines)\n// header/HeaderSearch.tsx (~200 lines)\n// header/index.ts (barrel exports)\nexport * from './HeaderLogo';\nexport * from './HeaderSearch';",
+      "bestPractice": "Single Responsibility Principle and file organization - each component in its own file makes the codebase easier to navigate and reduces cognitive load",
       "metrics": {
-        "lineCount": 2146,
-        "complexity": "high",
+        "lineCount": 1473,
+        "complexity": null,
         "duplicateLines": null,
         "testCoverage": null
       },
       "estimatedEffort": "medium",
       "breakingChange": false,
-      "prerequisites": [
-        "Document current form behavior for each tab",
-        "Identify shared form patterns that can become hooks"
-      ]
+      "prerequisites": null
+    },
+    {
+      "id": "cq-005",
+      "type": "code_quality",
+      "title": "Convert booking-engine/styles.ts CSS-in-JS to CSS modules",
+      "description": "packages/ds/src/blocks/booking-engine/styles.ts is a 1500-line file containing CSS template strings for the UnifiedBookingEngine component. This CSS-in-JS approach creates a massive string that gets injected at runtime, hurts performance, and makes styles difficult to maintain, lint, and debug.",
+      "rationale": "CSS-in-JS template strings at this scale have several drawbacks: no syntax highlighting or linting in the string, runtime style injection overhead, difficult to identify unused styles, and no CSS module scoping. Converting to CSS modules would improve developer experience, enable IDE support, and potentially reduce bundle size through CSS minification.",
+      "category": "code_smells",
+      "severity": "minor",
+      "affectedFiles": [
+        "packages/ds/src/blocks/booking-engine/styles.ts",
+        "packages/ds/src/blocks/booking-engine/UnifiedBookingEngine.tsx"
+      ],
+      "currentState": "1500 lines of CSS in a template literal string exported as unifiedBookingEngineStyles. Contains ~50 CSS classes for header, stepper, calendar, pricing, confirmation, and other booking engine sections. The style tag is injected into the component on render.",
+      "proposedChange": "Convert to packages/ds/src/blocks/booking-engine/styles.module.css (or .css if not using modules). Update the component to import and use CSS class names. This enables CSS tooling, better tree-shaking, and proper CSS minification. As an alternative, consider converting to Tailwind utility classes if the project moves in that direction.",
+      "codeExample": "// Current: styles.ts\nexport const unifiedBookingEngineStyles = `\n  .unified-booking-engine { --ube-radius: var(--ds-border-radius-xl); }\n  .booking-engine-card { background: var(--ds-color-neutral-background-default); }\n  // ... 1500 lines\n`;\n\n// Component injects:\n<style>{unifiedBookingEngineStyles}</style>\n\n// Proposed: styles.module.css\n.unifiedBookingEngine { --ube-radius: var(--ds-border-radius-xl); }\n.bookingEngineCard { background: var(--ds-color-neutral-background-default); }\n\n// Component imports:\nimport styles from './styles.module.css';\n<div className={styles.unifiedBookingEngine}>",
+      "bestPractice": "Prefer CSS files over CSS-in-JS for large style blocks - enables better tooling, IDE support, and optimization",
+      "metrics": {
+        "lineCount": 1500,
+        "complexity": null,
+        "duplicateLines": null,
+        "testCoverage": null
+      },
+      "estimatedEffort": "medium",
+      "breakingChange": false,
+      "prerequisites": ["Verify CSS module support in build configuration"]
     }
   ],
   "metadata": {
-    "filesAnalyzed": 250,
-    "largeFilesFound": 12,
-    "duplicateBlocksFound": 3,
+    "filesAnalyzed": 167,
+    "largeFilesFound": 167,
+    "duplicateBlocksFound": 4,
     "lintingConfigured": true,
     "testsPresent": true,
-    "generatedAt": "2026-01-16T00:30:00Z",
+    "generatedAt": "2026-01-16T11:00:00Z",
     "summary": {
-      "criticalIssues": 1,
-      "majorIssues": 3,
-      "minorIssues": 1,
+      "criticalIssues": 0,
+      "majorIssues": 1,
+      "minorIssues": 4,
       "topPriorities": [
-        "Split UnifiedBookingEngine.tsx (3667 lines) - blocking maintainability",
-        "Extract duplicated ListingsFilterBar - preventing inconsistent behavior",
-        "Remove console.log from production - security/logging concern",
-        "Add minside unit tests - critical gap in user-facing app"
+        "Split ListingAvailabilityCalendar.tsx (1957 lines) - improves maintainability",
+        "Extract SidebarNavItem to shared component - reduces duplication",
+        "Extract messaging utilities to SDK - consistent time formatting",
+        "Split header-parts.tsx (1473 lines) - better component organization"
       ]
     }
   }

@@ -32,8 +32,9 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
-  useOrganizationNotificationPreferences,
-  useUpdateOrganizationNotificationPreferences,
+  // TODO: Re-enable when backend organization notification service is implemented
+  // useOrganizationNotificationPreferences,
+  // useUpdateOrganizationNotificationPreferences,
   DEFAULT_NOTIFICATION_PREFERENCES,
 } from '@digilist/client-sdk';
 import {
@@ -98,14 +99,25 @@ export function OrganizationNotificationsPage(): React.ReactElement {
   const organizationId = selectedOrganization?.id;
 
   // SDK hooks
-  const {
-    data: preferencesData,
-    isLoading,
-    isError,
-    error,
-  } = useOrganizationNotificationPreferences(organizationId);
+  // TODO: Re-enable when backend service is implemented
+  const preferencesData = null;
+  const isLoading = false;
+  const isError = false;
+  const error = null;
+  // const {
+  //   data: preferencesData,
+  //   isLoading,
+  //   isError,
+  //   error,
+  // } = useOrganizationNotificationPreferences(organizationId);
 
-  const updateMutation = useUpdateOrganizationNotificationPreferences();
+  const updateMutation = {
+    mutate: () => {
+      console.log('[TODO] Organization notification preferences update - backend not implemented');
+    },
+    isPending: false
+  };
+  // const updateMutation = useUpdateOrganizationNotificationPreferences();
 
   // Local state for form
   const [localSettings, setLocalSettings] = useState<LocalSettings>(DEFAULT_LOCAL_SETTINGS);

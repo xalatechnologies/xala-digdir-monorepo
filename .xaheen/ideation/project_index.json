@@ -1415,11 +1415,11 @@
         ],
         "total_routes": 84,
         "methods": [
-          "PATCH",
-          "GET",
           "DELETE",
-          "PUT",
-          "POST"
+          "GET",
+          "PATCH",
+          "POST",
+          "PUT"
         ],
         "protected_routes": [
           "/api/auth/login",

@@ -507,9 +507,9 @@
     "issues_found": 0,
     "acceptance_criteria_met": "6/6 applicable criteria passed"
   },
-  "status": "human_review",
-  "planStatus": "review",
-  "updated_at": "2026-01-16T08:47:27.997Z",
+  "status": "error",
+  "planStatus": "pending",
+  "updated_at": "2026-01-16T09:17:04.468Z",
   "last_updated": "2026-01-16T01:03:15.471585+00:00",
   "qa_iteration_history": [
     {

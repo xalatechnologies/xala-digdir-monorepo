@@ -60,6 +60,7 @@ export {
   // Private query hooks (backoffice)
   useListing,
   useListingBySlug,
+  useListingCalendarConfig,
   // Mutation hooks (backoffice backward compatibility)
   useCreateListing,
   useUpdateListing,
@@ -114,6 +115,10 @@ export {
   useDeleteOrganization,
   useVerifyOrganization,
   useUploadOrganizationLogo,
+  // Organization settings & branding (TODO: implement backend)
+  useOrganizationSettings,
+  useUpdateOrganizationSettings,
+  useUpdateOrganizationBranding,
   useUsers,
   useUser,
   useCurrentUser,

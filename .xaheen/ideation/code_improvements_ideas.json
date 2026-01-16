@@ -3,103 +3,114 @@
     {
       "id": "ci-001",
       "type": "code_improvements",
-      "title": "Add React Query hooks for Widget Service",
-      "description": "Create use-widgets.ts hook file with React Query hooks for widget CRUD operations including useWidgets, useWidget, useCreateWidget, useUpdateWidget, useDeleteWidget, and useWidgetEmbedCode following the established hook pattern.",
-      "rationale": "The widget.service.ts already exists with complete CRUD operations (getAll, getById, create, update, delete, getEmbedCode, preview) but has no corresponding React Query hooks. Every other service with CRUD operations has hooks (discount-codes, reviews, conversations, etc.). This is a clear gap the code reveals.",
-      "builds_upon": ["widget.service.ts", "use-discount-codes.ts pattern", "query-keys.ts factory"],
+      "title": "Add React Query hooks for Tenant Service",
+      "description": "Create React Query hooks for tenant management (getCurrent, getSubscription, getLicense, getStats, upgradePlan, cancelSubscription, getBillingPortalUrl). This enables tenant admin dashboards to use the same hooks pattern as other SDK services.",
+      "rationale": "tenant.service.ts exists with 7 complete methods but has no corresponding React Query hooks. The hook pattern is mature in use-discount-codes.ts and use-organizations.ts. Query key factory pattern in query-keys.ts can be extended.",
+      "builds_upon": ["tenant.service.ts", "use-discount-codes.ts hook pattern", "query-keys.ts factory"],
       "estimated_effort": "small",
       "affected_files": [
-        "packages/client-sdk/src/hooks/use-widgets.ts",
+        "packages/client-sdk/src/hooks/use-tenant.ts",
         "packages/client-sdk/src/hooks/index.ts",
         "packages/client-sdk/src/hooks/query-keys.ts"
       ],
       "existing_patterns": [
-        "packages/client-sdk/src/hooks/use-discount-codes.ts - Same CRUD hook pattern",
-        "packages/client-sdk/src/hooks/use-reviews.ts - Similar service-to-hook mapping"
+        "packages/client-sdk/src/hooks/use-organizations.ts - similar admin hook pattern",
+        "packages/client-sdk/src/hooks/use-discount-codes.ts - mutation with optimistic updates",
+        "packages/client-sdk/src/hooks/query-keys.ts - key factory pattern"
       ],
-      "implementation_approach": "1. Add 'widgets' section to query-keys.ts following existing pattern (all, lists, list, details, detail). 2. Create use-widgets.ts with useQuery for read operations and useMutation with cache invalidation for mutations. 3. Export hooks from hooks/index.ts. Follow the exact structure of use-discount-codes.ts.",
+      "implementation_approach": "1. Add tenant key factory to query-keys.ts (tenant: { all, current, subscription, license, stats }). 2. Create use-tenant.ts with hooks: useTenant(), useTenantSubscription(), useTenantLicense(), useTenantStats(), useUpgradePlan(), useCancelSubscription(), useBillingPortalUrl(). 3. Export from hooks/index.ts. Follow the existing hook pattern with staleTime for read operations.",
       "status": "draft",
-      "created_at": "2026-01-16T00:35:00.000Z"
+      "created_at": "2026-01-16T10:45:00.000Z"
     },
     {
       "id": "ci-002",
       "type": "code_improvements",
-      "title": "Add React Query hooks for Monitoring Service",
-      "description": "Create use-monitoring.ts hook file with React Query hooks for monitoring operations including useHealthStatus, useSystemMetrics, useLogs, useIncidents, useDatabaseStats, useApiUsage, and useTriggerHealthCheck.",
-      "rationale": "The monitoring.service.ts exists with comprehensive monitoring operations (getHealth, getMetrics, getLogs, getIncidents, getDatabaseStats, getApiUsage, triggerHealthCheck) but has no React Query hooks. This service is valuable for admin dashboards but lacks the hook integration that all other services have.",
-      "builds_upon": ["monitoring.service.ts", "use-audit.ts pattern for admin data"],
+      "title": "Add React Query hooks for User Group Service",
+      "description": "Create React Query hooks for user group management (getUserGroup, list user groups, create user group). Enables backoffice admin UIs to manage pricing user groups (U19, ADULT_ORG, OTHER) using the standard hooks pattern.",
+      "rationale": "user-group.service.ts exports userGroupService and backofficeUserGroupsService with 4 methods total but no React Query hooks exist. Pattern is well-established in other CRUD services like use-seasons.ts and use-discount-codes.ts.",
+      "builds_upon": ["user-group.service.ts", "use-seasons.ts hook pattern", "backoffice admin patterns"],
       "estimated_effort": "small",
       "affected_files": [
-        "packages/client-sdk/src/hooks/use-monitoring.ts",
+        "packages/client-sdk/src/hooks/use-user-groups.ts",
         "packages/client-sdk/src/hooks/index.ts",
         "packages/client-sdk/src/hooks/query-keys.ts"
       ],
       "existing_patterns": [
-        "packages/client-sdk/src/hooks/use-audit.ts - Similar admin-focused hook file",
-        "packages/client-sdk/src/hooks/use-reports.ts - Similar read-heavy service pattern"
+        "packages/client-sdk/src/hooks/use-seasons.ts - admin CRUD hooks pattern",
+        "packages/client-sdk/src/services/user-group.service.ts - service to wrap",
+        "packages/client-sdk/src/hooks/query-keys.ts - key factory pattern"
       ],
-      "implementation_approach": "1. Add 'monitoring' section to query-keys.ts (health, metrics, logs, incidents, database, apiUsage). 2. Create use-monitoring.ts with useQuery hooks for all read operations with appropriate staleTime for metrics. 3. Add useTriggerHealthCheck as useMutation. 4. Export from index.ts. Use configurable polling intervals for real-time metrics.",
+      "implementation_approach": "1. Add userGroups key factory to query-keys.ts (userGroups: { all, lists, list, my }). 2. Create use-user-groups.ts with hooks: useUserGroups(), useMyUserGroup(), useCreateUserGroup(). 3. Include staleTime of 5 minutes (rarely changes). 4. Export from hooks/index.ts.",
       "status": "draft",
-      "created_at": "2026-01-16T00:35:00.000Z"
+      "created_at": "2026-01-16T10:45:00.000Z"
     },
     {
       "id": "ci-003",
       "type": "code_improvements",
-      "title": "Add optimistic updates to discount code mutations",
-      "description": "Enhance use-discount-codes.ts with optimistic update patterns for create, update, and delete mutations, providing instant UI feedback before server confirmation like the booking hooks already do.",
-      "rationale": "The use-bookings.ts implements comprehensive optimistic updates for all mutations (create, update, delete, confirm, cancel, complete) with proper rollback on errors. The use-discount-codes.ts has the same mutation pattern but without optimistic updates, causing slower perceived performance in the admin UI.",
-      "builds_upon": ["use-discount-codes.ts", "use-bookings.ts optimistic update pattern"],
-      "estimated_effort": "trivial",
+      "title": "Add React Query hooks for Price Rules Service",
+      "description": "Create React Query hooks for backoffice price rules management (getPriceRules, replacePriceRules, getListingRules, upsertListingRules). Enables admin UIs to manage listing-specific pricing without direct service calls.",
+      "rationale": "price-rules.service.ts exports BackofficePriceRulesService with 4 methods but no hooks. The hooks pattern for backoffice admin CRUD is established in use-seasons.ts and use-rental-objects.ts.",
+      "builds_upon": ["price-rules.service.ts", "backoffice admin patterns", "use-rental-objects.ts mutation pattern"],
+      "estimated_effort": "small",
       "affected_files": [
-        "packages/client-sdk/src/hooks/use-discount-codes.ts"
+        "packages/client-sdk/src/hooks/use-price-rules.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
       ],
       "existing_patterns": [
-        "packages/client-sdk/src/hooks/use-bookings.ts lines 137-180 - onMutate with optimistic data, onError rollback, onSettled invalidation"
+        "packages/client-sdk/src/services/price-rules.service.ts - service to wrap",
+        "packages/client-sdk/src/hooks/use-rental-objects.ts - listing-related hooks pattern",
+        "packages/client-sdk/src/hooks/use-seasons.ts - admin mutation pattern"
       ],
-      "implementation_approach": "1. Add onMutate to useCreateDiscountCode to immediately add optimistic discount code with temporary ID. 2. Add onMutate to useUpdateDiscountCode to immediately update the discount code in cache. 3. Add onMutate to useDeleteDiscountCode to immediately remove from cache. 4. Add onError rollback using previousData pattern. 5. Keep onSettled invalidation for server sync. Copy exact pattern from use-bookings.ts createBooking mutation.",
+      "implementation_approach": "1. Add priceRules key factory to query-keys.ts with listing scoping. 2. Create use-price-rules.ts with hooks: usePriceRules(listingId), useReplacePriceRules(), useListingRules(listingId), useUpsertListingRules(). 3. Mutations should invalidate both priceRules and rentalObjects keys. 4. Export from hooks/index.ts.",
       "status": "draft",
-      "created_at": "2026-01-16T00:35:00.000Z"
+      "created_at": "2026-01-16T10:45:00.000Z"
     },
     {
       "id": "ci-004",
       "type": "code_improvements",
-      "title": "Add relative time and duration formatters to i18n",
-      "description": "Add formatRelativeTime (e.g., '2 hours ago', 'in 3 days') and formatDuration (e.g., '1h 30m', '2 days') formatters to the i18n package, following the existing formatCurrency/formatDate/formatNumber pattern.",
-      "rationale": "The i18n package exports formatCurrency, formatDate, and formatNumber formatters. Relative time display ('2 hours ago') and duration formatting ('1h 30m') are common patterns throughout the apps (audit logs, booking duration, notification timestamps) but currently done ad-hoc. The formatter infrastructure exists and can be extended.",
-      "builds_upon": ["packages/i18n/src/formatters.ts", "Intl.RelativeTimeFormat API"],
+      "title": "Add User Settings and Booking Policy hooks",
+      "description": "Extend settings hooks to cover user settings, booking policy, and branding. Currently only useTenantSettings and useUpdateTenantSettings exist in use-integrations.ts, but settings.service.ts has 9 methods including getUserSettings, updateUserSettings, getBookingPolicy, updateBookingPolicy, getBranding, updateBranding.",
+      "rationale": "settings.service.ts has comprehensive methods for user preferences and booking configuration, but only tenant settings have hooks. The hook pattern from use-integrations.ts can be extended to cover all settings endpoints.",
+      "builds_upon": ["settings.service.ts", "use-integrations.ts tenant settings hooks", "use-profile.ts pattern"],
       "estimated_effort": "small",
       "affected_files": [
-        "packages/i18n/src/formatters.ts",
-        "packages/i18n/src/index.ts"
+        "packages/client-sdk/src/hooks/use-settings.ts",
+        "packages/client-sdk/src/hooks/index.ts",
+        "packages/client-sdk/src/hooks/query-keys.ts"
       ],
       "existing_patterns": [
-        "packages/i18n/src/formatters.ts - existing format functions with locale support",
-        "packages/i18n/src/index.ts - export pattern for formatters"
+        "packages/client-sdk/src/services/settings.service.ts - complete service with 9 methods",
+        "packages/client-sdk/src/hooks/use-integrations.ts - existing useTenantSettings pattern",
+        "packages/client-sdk/src/hooks/use-profile.ts - user-scoped settings pattern"
       ],
-      "implementation_approach": "1. Add formatRelativeTime function using Intl.RelativeTimeFormat with automatic unit selection (seconds, minutes, hours, days, weeks, months). 2. Add formatDuration function that takes milliseconds and returns localized string (1h 30m or 1 time 30 min depending on locale). 3. Export both from formatters.ts. 4. Add to index.ts exports. 5. Add TypeScript interfaces RelativeTimeFormatOptions and DurationFormatOptions following existing pattern.",
+      "implementation_approach": "1. Create dedicated use-settings.ts hook file. 2. Add hooks: useUserSettings(), useUpdateUserSettings(), useBookingPolicy(), useUpdateBookingPolicy(), useBranding(), useUpdateBranding(), useResetSettings(). 3. Extend query-keys.ts settings section with user/booking/branding keys. 4. Add optimistic updates to mutation hooks. 5. Export from hooks/index.ts.",
       "status": "draft",
-      "created_at": "2026-01-16T00:35:00.000Z"
+      "created_at": "2026-01-16T10:45:00.000Z"
     },
     {
       "id": "ci-005",
       "type": "code_improvements",
-      "title": "Add useRealtimeMonitoring WebSocket hook",
-      "description": "Create a realtime WebSocket hook for monitoring data (health status, metrics, incidents) following the existing useRealtimeBookings and useRealtimeAudit patterns, enabling live admin dashboard updates.",
-      "rationale": "The realtime hooks exist for bookings (useRealtimeBookings), audit logs (useRealtimeAudit), calendar (useRealtimeCalendar), and notifications (useRealtimeNotifications). The WebSocket infrastructure is mature with connection management, automatic reconnect, and event handlers. System monitoring dashboards would benefit from realtime updates rather than polling.",
-      "builds_upon": ["use-realtime.ts", "websocket.controller.ts patterns", "monitoring.service.ts"],
+      "title": "Add Share Service and SDK hooks for shareable links",
+      "description": "Create SDK service and React Query hooks for the share API (createShareLink, getShareData). The API exists at /api/share but has no SDK coverage. Enables listing and booking sharing functionality through the SDK-first architecture.",
+      "rationale": "apps/api/src/modules/share/share.controller.ts exists with create and get endpoints but no corresponding SDK service or hooks. The service pattern from booking.service.ts and hooks pattern from use-discount-codes.ts can be replicated.",
+      "builds_upon": ["share.controller.ts API", "booking.service.ts service pattern", "use-discount-codes.ts hooks pattern"],
       "estimated_effort": "medium",
       "affected_files": [
-        "packages/client-sdk/src/hooks/use-realtime.ts",
+        "packages/client-sdk/src/services/share.service.ts",
+        "packages/client-sdk/src/services/index.ts",
+        "packages/client-sdk/src/hooks/use-share.ts",
         "packages/client-sdk/src/hooks/index.ts",
-        "apps/api/src/modules/websocket/websocket.controller.ts"
+        "packages/client-sdk/src/hooks/query-keys.ts"
       ],
       "existing_patterns": [
-        "packages/client-sdk/src/hooks/use-realtime.ts - useRealtimeAudit implementation",
-        "apps/api/src/modules/websocket/websocket.controller.ts - /ws/audit endpoint pattern"
+        "apps/api/src/modules/share/share.controller.ts - API endpoints to integrate",
+        "packages/client-sdk/src/services/booking.service.ts - service class pattern",
+        "packages/client-sdk/src/hooks/use-discount-codes.ts - complete CRUD hooks pattern"
       ],
-      "implementation_approach": "1. Add /ws/monitoring/:tenantId WebSocket endpoint in websocket.controller.ts following /ws/audit pattern. 2. Create useRealtimeMonitoring hook in use-realtime.ts that subscribes to monitoring events. 3. Define event types: 'health:changed', 'metrics:updated', 'incident:created', 'incident:resolved'. 4. Hook returns { health, metrics, incidents, isConnected }. 5. Auto-invalidate monitoring query cache on WebSocket events. Export from index.ts.",
+      "implementation_approach": "1. Create share.service.ts with ShareService class extending BaseService. Methods: createShareLink(type, resourceId, expiresIn), getShareData(token). 2. Export from services/index.ts. 3. Add share key factory to query-keys.ts. 4. Create use-share.ts with hooks: useShareData(token), useCreateShareLink() with mutation. 5. Export from hooks/index.ts. Types: ShareData, CreateShareLinkDTO.",
       "status": "draft",
-      "created_at": "2026-01-16T00:35:00.000Z"
+      "created_at": "2026-01-16T10:45:00.000Z"
     }
   ]
 }

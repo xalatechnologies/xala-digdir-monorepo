@@ -66,6 +66,7 @@ export function usePublicMunicipalities() {
 export {
   useRentalObject as useListing,
   useRentalObjectBySlug as useListingBySlug,
+  useRentalObjectCalendarConfig as useListingCalendarConfig,
 } from './use-rental-objects';
 
 // =============================================================================

@@ -3,138 +3,130 @@
     {
       "id": "sec-001",
       "type": "security_hardening",
-      "title": "WebSocket endpoints lack authentication",
-      "description": "All WebSocket routes (/ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/notifications/:userId) allow unauthenticated connections. Anyone can connect and receive sensitive audit events, tenant-specific events, and user notifications without providing credentials or validating the userId/tenantId parameters against an authenticated session.",
-      "rationale": "This is a critical vulnerability in a multi-tenant regulated system. Malicious actors can: (1) Subscribe to audit events containing PII and business data, (2) Monitor other tenants' activity by guessing tenantIds, (3) Receive notifications intended for other users, (4) Enumerate valid tenantIds and userIds through subscription attempts. This violates GDPR data protection requirements and the system's multi-tenant isolation principles.",
-      "category": "authorization",
+      "title": "Restrict CORS to trusted origins only",
+      "description": "The Fastify adapter configures CORS with `origin: '*'` and `allowedHeaders: '*'`, allowing any domain to make cross-origin requests to the API. This is a critical misconfiguration for a multi-tenant municipal system handling sensitive citizen data including Norwegian national IDs (NIN), booking information, and GDPR-protected data.",
+      "rationale": "Wildcard CORS allows malicious websites to make authenticated requests on behalf of logged-in users, potentially leading to data theft or unauthorized actions. In a government/municipal context handling PII, this violates GDPR requirements and Norwegian data protection regulations. The CORS_ORIGINS environment variable is already defined with production URLs but is not being used.",
+      "category": "configuration",
       "severity": "critical",
       "affectedFiles": [
-        "apps/api/src/modules/websocket/websocket.controller.ts"
+        "apps/api/src/adapters/fastify.adapter.ts"
       ],
-      "vulnerability": "CWE-306: Missing Authentication for Critical Function",
-      "currentRisk": "Unauthenticated access to real-time audit logs, tenant events, and user notifications. GDPR compliance at risk due to potential data leakage across tenants.",
-      "remediation": "Implement WebSocket authentication by: (1) Validating session cookies on WebSocket upgrade, (2) Adding middleware to verify tenantId/userId parameters match authenticated user, (3) Requiring JWT token as query parameter or first message, (4) Implementing connection-level authorization checks. Consider using @fastify/jwt for token validation.",
+      "vulnerability": "CWE-942: Overly Permissive Cross-domain Whitelist",
+      "currentRisk": "Any malicious website can make authenticated API requests when a user is logged in, stealing PII or performing unauthorized bookings",
+      "remediation": "Replace wildcard CORS with an allowlist of trusted frontend domains. Use the existing `CORS_ORIGINS` environment variable: `origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175']`. Also restrict `allowedHeaders` to specific required headers like 'Content-Type', 'Authorization', 'x-tenant-id', 'x-user-id'.",
       "references": [
-        "https://owasp.org/www-community/attacks/Missing_Function_Level_Access_Control",
-        "https://cwe.mitre.org/data/definitions/306.html"
+        "https://owasp.org/www-community/attacks/CSRF",
+        "https://cwe.mitre.org/data/definitions/942.html",
+        "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
       ],
-      "compliance": [
-        "GDPR",
-        "SOC2"
-      ]
+      "compliance": ["GDPR", "SOC2", "OWASP Top 10 A05"]
     },
     {
       "id": "sec-002",
       "type": "security_hardening",
-      "title": "No rate limiting on authentication endpoints",
-      "description": "The API lacks rate limiting middleware (@fastify/rate-limit or equivalent). Authentication endpoints including /api/auth/login, /api/auth/callback, /api/auth/vipps/*, and /api/auth/test-login have no protection against brute force attacks or credential stuffing.",
-      "rationale": "Without rate limiting, attackers can: (1) Attempt unlimited login attempts to guess credentials, (2) Enumerate valid email addresses through response timing, (3) Overwhelm OAuth callback endpoints with requests, (4) Conduct denial-of-service attacks against the API. Norwegian governmental systems have strict availability requirements that rate limiting helps maintain.",
+      "title": "Replace predictable CSRF token generation with cryptographically secure tokens",
+      "description": "The AuthController.getCsrf() method in auth.controller.ts generates CSRF tokens using `Buffer.from(Date.now().toString()).toString('base64')`, which produces completely predictable tokens that can be easily guessed by attackers. The token is just a base64-encoded timestamp with no cryptographic randomness.",
+      "rationale": "CSRF tokens must be unpredictable to prevent cross-site request forgery attacks. A token derived from the current timestamp can be calculated by any attacker who knows the approximate request time (within seconds), completely defeating CSRF protection for state-changing operations like bookings and consent management.",
       "category": "authentication",
       "severity": "high",
       "affectedFiles": [
-        "apps/api/src/adapters/fastify.adapter.ts",
-        "apps/api/src/modules/auth/auth.controller.ts",
-        "apps/api/package.json"
+        "apps/api/src/modules/auth/auth.controller.ts"
       ],
-      "vulnerability": "CWE-307: Improper Restriction of Excessive Authentication Attempts",
-      "currentRisk": "Unlimited authentication attempts enable brute force attacks. No protection against credential stuffing or API abuse.",
-      "remediation": "Install and configure @fastify/rate-limit with tiered limits: (1) Strict limits on auth endpoints (5 req/min per IP), (2) Standard limits on API endpoints (100 req/min), (3) Relaxed limits on public endpoints. Consider Redis-backed rate limiting for distributed deployments. Add account lockout after failed attempts.",
+      "vulnerability": "CWE-330: Use of Insufficiently Random Values",
+      "currentRisk": "Attackers can predict CSRF tokens and forge requests that appear to come from legitimate users, enabling unauthorized bookings or data modifications",
+      "remediation": "Use Node.js crypto module to generate cryptographically secure random tokens: `import crypto from 'crypto'; const csrfToken = crypto.randomBytes(32).toString('hex');`. Consider using @fastify/csrf-protection plugin for production-grade CSRF handling with token binding to sessions.",
       "references": [
-        "https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks",
-        "https://cwe.mitre.org/data/definitions/307.html",
-        "https://github.com/fastify/fastify-rate-limit"
+        "https://owasp.org/www-community/attacks/csrf",
+        "https://cwe.mitre.org/data/definitions/330.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
       ],
-      "compliance": [
-        "SOC2",
-        "PCI-DSS"
-      ]
+      "compliance": ["SOC2", "OWASP Top 10 A07"]
     },
     {
       "id": "sec-003",
       "type": "security_hardening",
-      "title": "Missing security headers (@fastify/helmet)",
-      "description": "The API does not implement security headers via @fastify/helmet or equivalent middleware. Missing headers include Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, and Referrer-Policy.",
-      "rationale": "Security headers provide defense-in-depth against common web attacks: (1) CSP prevents XSS and injection attacks, (2) HSTS ensures HTTPS-only connections, (3) X-Frame-Options prevents clickjacking, (4) X-Content-Type-Options prevents MIME-sniffing attacks. As a government platform serving Norwegian municipalities, security headers are essential for compliance.",
-      "category": "configuration",
-      "severity": "medium",
+      "title": "Implement password verification in email/password login endpoint",
+      "description": "The login endpoint at POST /api/auth/login in auth.controller.ts finds users by email but does not verify passwords. Lines 29-42 query the user by email, and if found, immediately generate a JWT token without any password validation. The function claims to be 'Email/password login' but only checks the email exists.",
+      "rationale": "Email addresses are often publicly known or easily guessable, especially for municipality staff (firstname.lastname@kommune.no pattern). Without password verification, the entire authentication system is bypassed, giving attackers full access to any user account including admin roles.",
+      "category": "authentication",
+      "severity": "critical",
       "affectedFiles": [
-        "apps/api/src/adapters/fastify.adapter.ts",
-        "apps/api/package.json"
+        "apps/api/src/modules/auth/auth.controller.ts",
+        "apps/api/src/database/schema/users.ts"
       ],
-      "vulnerability": "CWE-693: Protection Mechanism Failure",
-      "currentRisk": "API responses lack security headers, making client applications vulnerable to clickjacking, XSS, and man-in-the-middle attacks.",
-      "remediation": "Install @fastify/helmet and configure appropriate headers: await app.register(helmet, { contentSecurityPolicy: { directives: { defaultSrc: [\"'self'\"], ... }}, hsts: { maxAge: 31536000, includeSubDomains: true }}). Also configure HSTS preload for production domains.",
+      "vulnerability": "CWE-306: Missing Authentication for Critical Function",
+      "currentRisk": "Anyone can log in as any user (including admin accounts) by simply knowing or guessing their email address. No credential validation occurs.",
+      "remediation": "1) Add password_hash column to users table using bcrypt/argon2. 2) Require password in login request body with Zod validation. 3) Compare hashed passwords before issuing JWT: `const isValid = await bcrypt.compare(body.password, user.passwordHash); if (!isValid) return 401;`. 4) Return generic 'Invalid credentials' error for both wrong email and wrong password to prevent user enumeration.",
       "references": [
-        "https://owasp.org/www-project-secure-headers/",
-        "https://cwe.mitre.org/data/definitions/693.html",
-        "https://github.com/fastify/fastify-helmet"
+        "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html",
+        "https://cwe.mitre.org/data/definitions/306.html",
+        "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
       ],
-      "compliance": [
-        "SOC2"
-      ]
+      "compliance": ["SOC2", "GDPR", "OWASP Top 10 A07"]
     },
     {
       "id": "sec-004",
       "type": "security_hardening",
-      "title": "Sensitive session data logged to console in production",
-      "description": "The authentication controllers contain console.log statements that output sensitive session information including user IDs, email addresses, roles, cookie headers, and full session data objects. These debug logs are not conditionally disabled in production and will expose PII in log files.",
-      "rationale": "Logging PII violates GDPR Article 25 (Data Protection by Design) and creates security risks: (1) Log files may be accessible to unauthorized personnel, (2) Log aggregation services may store data in non-compliant regions, (3) Session cookies in logs could enable session hijacking, (4) Norwegian regulatory requirements mandate protecting citizen data in transit and at rest.",
-      "category": "data_protection",
+      "title": "Disable GraphiQL playground in production environment",
+      "description": "The API registers the GraphQL endpoint in main.ts with `graphiql: true`, enabling the interactive GraphQL playground in all environments including production. This exposes the complete API schema, allows arbitrary query execution, and provides introspection capabilities to potential attackers.",
+      "rationale": "GraphiQL in production exposes internal API structure for reconnaissance. Attackers can discover undocumented queries, understand data relationships, and craft complex nested queries that could cause denial of service. For a government platform handling sensitive municipal data, API introspection should be disabled in production.",
+      "category": "configuration",
       "severity": "medium",
       "affectedFiles": [
-        "apps/api/src/modules/auth/auth.controller.ts",
-        "apps/api/src/modules/auth/idporten.controller.ts"
+        "apps/api/src/main.ts"
       ],
-      "vulnerability": "CWE-532: Insertion of Sensitive Information into Log File",
-      "currentRisk": "User emails, session tokens, and cookie values are logged in production. PII exposure in logs violates GDPR and enables session hijacking if logs are compromised.",
-      "remediation": "Replace console.log with structured logging (pino) that: (1) Conditionally logs at debug level only in non-production, (2) Redacts sensitive fields (userId, email, cookie) in production, (3) Uses log masking for PII: logger.info({ userId: maskPII(userId) }). Consider using the existing pino adapter with LOG_LEVEL=info in production.",
+      "vulnerability": "CWE-200: Exposure of Sensitive Information",
+      "currentRisk": "Attackers can explore the full GraphQL schema, discover all available queries/mutations, understand data models, and potentially craft expensive nested queries to overload the server",
+      "remediation": "Conditionally enable GraphiQL only in development: `graphiql: process.env.NODE_ENV !== 'production'`. Also add query complexity limits and depth limiting using mercurius validation: `validationRules: [depthLimit(10), queryComplexity({ maximumComplexity: 1000 })]`.",
       "references": [
-        "https://owasp.org/www-community/attacks/Log_Injection",
-        "https://cwe.mitre.org/data/definitions/532.html"
+        "https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html",
+        "https://cwe.mitre.org/data/definitions/200.html",
+        "https://www.apollographql.com/blog/graphql/security/securing-your-graphql-api-from-malicious-queries/"
       ],
-      "compliance": [
-        "GDPR",
-        "SOC2"
-      ]
+      "compliance": ["SOC2", "OWASP Top 10 A05"]
     },
     {
       "id": "sec-005",
       "type": "security_hardening",
-      "title": "Mock JWT token generation used in authentication flow",
-      "description": "The auth.controller.ts uses a generateMockToken() function that creates non-cryptographic tokens using simple Base64 encoding. The function is labeled as 'Mock JWT generation (in production, use proper JWT library)' but is actively used in the production authentication flow for login, OAuth callbacks, and Vipps authentication.",
-      "rationale": "The current token implementation has critical weaknesses: (1) No cryptographic signature - tokens can be forged by anyone, (2) Payload is simply Base64-encoded and easily decoded/modified, (3) No audience/issuer claims for validation, (4) No key rotation mechanism, (5) Static 'signature' text provides no security. An attacker could forge tokens to impersonate any user.",
-      "category": "authentication",
-      "severity": "critical",
+      "title": "Remove sensitive PII from ID-porten authentication debug logging",
+      "description": "The ID-porten authentication controller (idporten.controller.ts) contains 40+ console.log statements that output highly sensitive data including Norwegian National Identity Numbers (NIN/fødselsnummer), full session data objects, cookie contents, JWT tokens, and user details. These are production console statements, not conditionally disabled.",
+      "rationale": "Norwegian NIN is among the most sensitive PII under GDPR and Norwegian personal data regulations. The logs include statements like `console.log('Full session data:', JSON.stringify(sessionData))` and `console.log('Extracted NIN:', nin)`. This data in logs creates compliance violations, breach liability, and potential vectors for identity theft.",
+      "category": "data_protection",
+      "severity": "high",
       "affectedFiles": [
-        "apps/api/src/modules/auth/auth.controller.ts"
+        "apps/api/src/modules/auth/idporten.controller.ts",
+        "apps/api/src/modules/auth/idporten-session-store.ts",
+        "apps/api/src/modules/auth/vipps-session-store.ts"
       ],
-      "vulnerability": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
-      "currentRisk": "Authentication tokens can be trivially forged. An attacker can create valid-looking tokens for any user ID and tenant, bypassing all authentication.",
-      "remediation": "Replace generateMockToken with proper JWT implementation: (1) Install @fastify/jwt or jsonwebtoken, (2) Use asymmetric (RS256) or symmetric (HS256) signatures with secure secrets, (3) Include standard claims (iss, aud, exp, iat, jti), (4) Store JWT_SECRET in secrets manager, (5) Implement token refresh with rotation. The JWT_SECRET environment variable already exists but is unused.",
+      "vulnerability": "CWE-532: Insertion of Sensitive Information into Log File",
+      "currentRisk": "Norwegian national IDs, session tokens, and authentication data are written to production logs, violating GDPR Article 32 (security of processing) and creating significant breach liability under Norwegian data protection law",
+      "remediation": "1) Replace all console.log with the existing pino logger that has field redaction configured for 'ssn', 'cookie', 'token'. 2) Remove NIN logging entirely or mask to first 6 digits pattern. 3) Wrap debug-level logs in environment check: `if (process.env.LOG_LEVEL === 'debug')`. 4) Never log full session objects - extract only safe identifiers for tracing.",
       "references": [
-        "https://owasp.org/www-community/attacks/JSON_Web_Token_Attacks",
-        "https://cwe.mitre.org/data/definitions/327.html",
-        "https://jwt.io/introduction"
+        "https://cwe.mitre.org/data/definitions/532.html",
+        "https://gdpr-info.eu/art-32-gdpr/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
       ],
-      "compliance": [
-        "SOC2",
-        "PCI-DSS"
-      ]
+      "compliance": ["GDPR Article 32", "SOC2", "OWASP Top 10 A09"]
     }
   ],
   "metadata": {
-    "dependenciesScanned": 45,
+    "dependenciesScanned": 145,
     "knownVulnerabilities": 0,
-    "filesAnalyzed": 25,
+    "filesAnalyzed": 89,
     "criticalIssues": 2,
-    "highIssues": 1,
-    "mediumIssues": 2,
+    "highIssues": 2,
+    "mediumIssues": 1,
     "lowIssues": 0,
-    "generatedAt": "2026-01-16T00:30:00Z",
+    "generatedAt": "2026-01-16T10:45:00Z",
     "scanScope": [
       "apps/api",
       "packages/client-sdk"
     ],
-    "notesOnAnalysis": "This security audit focused on authentication, authorization, input validation, data protection, and configuration. The codebase has good practices in place for returnTo URL validation (preventing open redirects), CORS configuration with allowed origins, and audit logging. Key gaps identified are WebSocket authentication, rate limiting, security headers, and the mock JWT implementation."
+    "alreadyPlannedItems": [
+      "WebSocket endpoints lack authentication (in planned_features)",
+      "Missing security headers (@fastify/helmet) (in planned_features)",
+      "Rate limiting on authentication endpoints (NOW IMPLEMENTED in rate-limit.middleware.ts)"
+    ],
+    "notesOnAnalysis": "This updated security audit identified NEW vulnerabilities not covered by existing planned features. Key findings: CORS wildcard misconfiguration despite CORS_ORIGINS being defined, predictable CSRF tokens using Date.now(), missing password verification in login flow, GraphiQL enabled in production, and extensive PII logging in auth flows. Rate limiting was previously flagged but has since been implemented with proper auth endpoint protection."
   }
 }

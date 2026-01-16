@@ -22,8 +22,9 @@ export type { ListingMapProps, MapListing } from './ListingMap';
 export { ListingTableView } from './ListingTableView';
 export type { ListingTableViewProps } from './ListingTableView';
 
-export { RentalObjectsFilterBar } from './RentalObjectsFilterBar';
-export type { RentalObjectsFilterBarProps } from './RentalObjectsFilterBar';
+// TODO: Create RentalObjectsFilterBar component or remove export
+// export { RentalObjectsFilterBar } from './RentalObjectsFilterBar';
+// export type { RentalObjectsFilterBarProps } from './RentalObjectsFilterBar';
 
 // Listing Detail Components
 export { ImageGallery } from './ImageGallery';
@@ -79,8 +80,9 @@ export { BookingSection } from './BookingSection';
 export type { BookingSectionProps } from './BookingSection';
 
 // Unified Booking Engine - Dynamic booking system for all listing types
-export { UnifiedBookingEngine } from './UnifiedBookingEngine';
-export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
+// TODO: Create UnifiedBookingEngine component or remove export
+// export { UnifiedBookingEngine } from './UnifiedBookingEngine';
+// export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
 
 // Key Facts Row - Display key listing information
 export { KeyFactsRow } from './KeyFactsRow';
