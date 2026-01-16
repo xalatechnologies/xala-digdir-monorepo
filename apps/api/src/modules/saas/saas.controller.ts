@@ -11,6 +11,7 @@ import { validate } from '../../core/validation/zod-pipe';
 import {
   ForbiddenError,
   BadRequestError,
+  UnauthorizedError,
 } from '../../core/errors/problem-details';
 import {
   SaasTenantQuerySchema,
@@ -33,11 +34,12 @@ interface UserContext {
 
 /**
  * Extract user from request with proper type narrowing
+ * Returns 401 Unauthorized if no user is present (authentication required)
  */
 function getAuthenticatedUser(request: FastifyRequest): UserContext {
   const user = (request as FastifyRequest & { user?: UserContext }).user;
   if (!user) {
-    throw new ForbiddenError('Authentication required');
+    throw new UnauthorizedError('Authentication required');
   }
   return user;
 }
