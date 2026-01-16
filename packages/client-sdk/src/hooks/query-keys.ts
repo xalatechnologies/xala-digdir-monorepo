@@ -298,5 +298,20 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
+    acos: {
+      status: () => [...queryKeys.integrations.all, 'acos', 'status'] as const,
+      cases: {
+        all: () => [...queryKeys.integrations.all, 'acos', 'cases'] as const,
+        list: (params?: { status?: string; caseType?: string; page?: number; limit?: number }) =>
+          [...queryKeys.integrations.acos.cases.all(), 'list', params] as const,
+        detail: (caseId: string) => [...queryKeys.integrations.acos.cases.all(), 'detail', caseId] as const,
+        byBooking: (bookingId: string) => [...queryKeys.integrations.acos.cases.all(), 'byBooking', bookingId] as const,
+      },
+      documents: {
+        all: () => [...queryKeys.integrations.all, 'acos', 'documents'] as const,
+        detail: (documentId: string) => [...queryKeys.integrations.acos.documents.all(), 'detail', documentId] as const,
+        byCase: (caseId: string) => [...queryKeys.integrations.acos.documents.all(), 'byCase', caseId] as const,
+      },
+    },
   },
 } as const;

@@ -42,14 +42,19 @@ export {
   NifService,
   VippsService,
   CalendarSyncService,
+  AcosWebSakService,
   settingsService as integrationSettingsService,
   rcoService,
   vismaService,
   brregService,
   nifService,
   vippsService,
-  calendarSyncService
+  calendarSyncService,
+  acosWebSakService
 } from './integration.service';
+
+// ACOS (standalone re-export for cleaner imports)
+export { AcosWebSakService as AcosService, acosWebSakService as acosService } from './acos.service';
 
 // ============================================================================
 // Enterprise Services (service instances only - types from ./types)

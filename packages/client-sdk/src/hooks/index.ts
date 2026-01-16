@@ -118,6 +118,22 @@ export {
   useSyncCalendar,
 } from './use-integrations';
 
+// ACOS WebSak hooks (Norwegian Municipal Case Management)
+export {
+  useAcosStatus,
+  useSyncAcos,
+  useAcosCases,
+  useAcosCase,
+  useAcosCaseByBooking,
+  useCreateAcosCase,
+  useUpdateAcosCaseStatus,
+  useArchiveAcosCase,
+  useAcosCaseDocuments,
+  useAcosDocument,
+  useUploadAcosDocument,
+  useArchiveAcosDocument,
+} from './use-acos';
+
 // Realtime hooks (WebSocket)
 export {
   useRealtimeConnection,
