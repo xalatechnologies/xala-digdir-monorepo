@@ -98,6 +98,50 @@ export {
 } from './outlook';
 
 // =============================================================================
+// Vipps Payment Integration
+// =============================================================================
+export {
+  // Client factory
+  getVippsClient,
+  getVippsClientSingleton,
+  resetVippsClient,
+  vippsClient,
+
+  // Client classes
+  VippsClient,
+  VippsMockClient,
+
+  // Types
+  type IVippsClient,
+  type VippsConfig,
+  type VippsConnectionStatus,
+  type VippsPayment,
+  type VippsPaymentExtended,
+  type VippsPaymentResponse,
+  type VippsPaymentStatus,
+  type VippsPaymentQueryParams,
+  type VippsAmount,
+  type VippsPaymentMethod,
+  type VippsUserProfile,
+  type VippsTransactionEvent,
+  type VippsEventType,
+  type CreateVippsPaymentDTO,
+  type CaptureVippsPaymentDTO,
+  type RefundVippsPaymentDTO,
+  type VippsRefundResponse,
+  type VippsWebhookPayload,
+  type VippsWebhookVerificationResult,
+  type VippsAgreement,
+  type VippsAgreementStatus,
+  type VippsInterval,
+  type VippsCampaign,
+  type CreateVippsAgreementDTO,
+  type VippsChargeDTO,
+  type VippsCharge,
+  type VippsIntegrationEvent,
+} from './vipps';
+
+// =============================================================================
 // Integration Status Helper
 // =============================================================================
 
@@ -108,6 +152,7 @@ export {
 export async function getAllIntegrationStatuses(): Promise<{
   visma: { connected: boolean; provider: string; error?: string };
   outlook: { connected: boolean; provider: string; error?: string };
+  vipps: { connected: boolean; provider: string; error?: string };
 }> {
   const statuses: Record<string, { connected: boolean; provider: string; error?: string }> = {};
 
@@ -139,6 +184,22 @@ export async function getAllIntegrationStatuses(): Promise<{
     statuses.outlook = {
       connected: false,
       provider: 'Microsoft Outlook',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+
+  // Vipps status
+  try {
+    const { vippsClient } = await import('./vipps');
+    const vippsStatus = await vippsClient.getStatus();
+    statuses.vipps = {
+      connected: vippsStatus.connected,
+      provider: vippsStatus.provider,
+    };
+  } catch (error) {
+    statuses.vipps = {
+      connected: false,
+      provider: 'Vipps',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
