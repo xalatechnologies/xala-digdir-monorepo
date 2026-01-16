@@ -546,7 +546,7 @@ export function RentalObjectsPage(): React.ReactElement {
                 className="listing-toolbar"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'minmax(auto, max-content) 1fr minmax(auto, max-content)',
+                  gridTemplateColumns: 'auto 1fr auto',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-4)',
                   marginBottom: 'var(--ds-spacing-6)',
