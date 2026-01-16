@@ -248,9 +248,11 @@ export function RentalObjectDetailPage(): React.ReactElement {
   const getDisplayName = (listing: RentalObject): string => listing.title || listing.name;
 
   // Gallery images for ImageSlider
-  const galleryImages: GalleryImage[] = React.useMemo(() =>
-    listing?.images.map(img => ({ id: img.id, src: img.url, alt: img.alt || getDisplayName(listing), thumbnail: img.url })) || [],
-  [listing]);
+  const galleryImages: GalleryImage[] = React.useMemo(() => {
+    if (!listing) return [];
+    const displayName = getDisplayName(listing);
+    return listing.images.map(img => ({ id: img.id, src: img.url, alt: img.alt || displayName, thumbnail: img.url }));
+  }, [listing]);
 
 
   // Handle favorite toggle
