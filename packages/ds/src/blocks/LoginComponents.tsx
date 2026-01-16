@@ -582,4 +582,413 @@ export function LoginLayout({
   );
 }
 
+// =============================================================================
+// DemoLoginFormData - Form data type for demo login
+// =============================================================================
+
+export interface DemoLoginFormData {
+  /** User's display name */
+  name: string;
+  /** User's email address */
+  email: string;
+  /** Demo token for authentication */
+  token: string;
+  /** Selected role (optional) */
+  role?: string;
+}
+
+// =============================================================================
+// DemoLoginDialog - Demo Login Modal
+// =============================================================================
+
+export interface DemoLoginDialogProps {
+  /** Whether the dialog is open */
+  open: boolean;
+  /** Callback when dialog is closed */
+  onClose: () => void;
+  /** Callback when form is submitted */
+  onSubmit: (data: DemoLoginFormData) => Promise<void>;
+  /** Dialog title */
+  title?: string;
+  /** Dialog description */
+  description?: string;
+  /** Cancel button text */
+  cancelText?: string;
+  /** Submit button text */
+  submitText?: string;
+  /** Loading text shown during submission */
+  loadingText?: string;
+  /** Validation error messages */
+  validationMessages?: {
+    nameRequired?: string;
+    emailRequired?: string;
+    tokenRequired?: string;
+    invalidEmail?: string;
+  };
+  /** Form field labels */
+  labels?: {
+    name?: string;
+    email?: string;
+    token?: string;
+    role?: string;
+  };
+  /** Form field placeholders */
+  placeholders?: {
+    name?: string;
+    email?: string;
+    token?: string;
+    role?: string;
+  };
+  /** Available roles for selection */
+  roles?: Array<{ value: string; label: string }>;
+  /** Custom class name */
+  className?: string;
+}
+
+export function DemoLoginDialog({
+  open,
+  onClose,
+  onSubmit,
+  title = 'Demo Login',
+  description = 'Enter your details to login with a demo token.',
+  cancelText = 'Cancel',
+  submitText = 'Login',
+  loadingText = 'Logging in...',
+  validationMessages = {},
+  labels = {},
+  placeholders = {},
+  roles,
+  className,
+}: DemoLoginDialogProps): React.ReactElement | null {
+  const [formData, setFormData] = React.useState<DemoLoginFormData>({
+    name: '',
+    email: '',
+    token: '',
+    role: roles?.[0]?.value || '',
+  });
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
+  // Reset form when dialog opens
+  React.useEffect(() => {
+    if (open) {
+      setFormData({
+        name: '',
+        email: '',
+        token: '',
+        role: roles?.[0]?.value || '',
+      });
+      setErrors({});
+      setSubmitError(null);
+      setIsSubmitting(false);
+    }
+  }, [open, roles]);
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = validationMessages.nameRequired || 'Name is required';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = validationMessages.emailRequired || 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = validationMessages.invalidEmail || 'Invalid email format';
+    }
+
+    if (!formData.token.trim()) {
+      newErrors.token = validationMessages.tokenRequired || 'Token is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit(formData);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: keyof DemoLoginFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className={cn('demo-login-dialog-overlay', className)}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="demo-login-title"
+    >
+      <div
+        className="demo-login-dialog"
+        style={{
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+          borderRadius: 'var(--ds-border-radius-lg)',
+          padding: 'var(--ds-spacing-6)',
+          width: '100%',
+          maxWidth: '400px',
+          maxHeight: '90vh',
+          overflow: 'auto',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Heading level={2} data-size="lg" id="demo-login-title" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+          {title}
+        </Heading>
+        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
+          {description}
+        </Paragraph>
+
+        <form onSubmit={handleSubmit}>
+          {/* Name field */}
+          <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <label
+              htmlFor="demo-name"
+              style={{
+                display: 'block',
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                marginBottom: 'var(--ds-spacing-1)',
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              {labels.name || 'Name'}
+            </label>
+            <input
+              type="text"
+              id="demo-name"
+              name="name"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              placeholder={placeholders.name || 'Enter your name'}
+              disabled={isSubmitting}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? 'demo-name-error' : undefined}
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-3)',
+                border: `1px solid ${errors.name ? 'var(--ds-color-danger-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                borderRadius: 'var(--ds-border-radius-md)',
+                fontSize: 'var(--ds-font-size-md)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: 'var(--ds-color-neutral-text-default)',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.name && (
+              <Paragraph id="demo-name-error" data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', marginTop: 'var(--ds-spacing-1)' }}>
+                {errors.name}
+              </Paragraph>
+            )}
+          </div>
+
+          {/* Email field */}
+          <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <label
+              htmlFor="demo-email"
+              style={{
+                display: 'block',
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                marginBottom: 'var(--ds-spacing-1)',
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              {labels.email || 'Email'}
+            </label>
+            <input
+              type="email"
+              id="demo-email"
+              name="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder={placeholders.email || 'Enter your email'}
+              disabled={isSubmitting}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? 'demo-email-error' : undefined}
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-3)',
+                border: `1px solid ${errors.email ? 'var(--ds-color-danger-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                borderRadius: 'var(--ds-border-radius-md)',
+                fontSize: 'var(--ds-font-size-md)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: 'var(--ds-color-neutral-text-default)',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.email && (
+              <Paragraph id="demo-email-error" data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', marginTop: 'var(--ds-spacing-1)' }}>
+                {errors.email}
+              </Paragraph>
+            )}
+          </div>
+
+          {/* Role field (optional) */}
+          {roles && roles.length > 0 && (
+            <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+              <label
+                htmlFor="demo-role"
+                style={{
+                  display: 'block',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  fontWeight: 'var(--ds-font-weight-medium)',
+                  marginBottom: 'var(--ds-spacing-1)',
+                  color: 'var(--ds-color-neutral-text-default)',
+                }}
+              >
+                {labels.role || 'Role'}
+              </label>
+              <select
+                id="demo-role"
+                name="role"
+                value={formData.role}
+                onChange={(e) => handleInputChange('role', e.target.value)}
+                disabled={isSubmitting}
+                style={{
+                  width: '100%',
+                  padding: 'var(--ds-spacing-3)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  fontSize: 'var(--ds-font-size-md)',
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  color: 'var(--ds-color-neutral-text-default)',
+                  boxSizing: 'border-box',
+                }}
+              >
+                {roles.map((role) => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Token field */}
+          <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
+            <label
+              htmlFor="demo-token"
+              style={{
+                display: 'block',
+                fontSize: 'var(--ds-font-size-sm)',
+                fontWeight: 'var(--ds-font-weight-medium)',
+                marginBottom: 'var(--ds-spacing-1)',
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              {labels.token || 'Demo Token'}
+            </label>
+            <input
+              type="text"
+              id="demo-token"
+              name="token"
+              value={formData.token}
+              onChange={(e) => handleInputChange('token', e.target.value)}
+              placeholder={placeholders.token || 'Enter demo token'}
+              disabled={isSubmitting}
+              aria-invalid={!!errors.token}
+              aria-describedby={errors.token ? 'demo-token-error' : undefined}
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-3)',
+                border: `1px solid ${errors.token ? 'var(--ds-color-danger-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                borderRadius: 'var(--ds-border-radius-md)',
+                fontSize: 'var(--ds-font-size-md)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
+                color: 'var(--ds-color-neutral-text-default)',
+                boxSizing: 'border-box',
+              }}
+            />
+            {errors.token && (
+              <Paragraph id="demo-token-error" data-size="xs" style={{ color: 'var(--ds-color-danger-text-default)', marginTop: 'var(--ds-spacing-1)' }}>
+                {errors.token}
+              </Paragraph>
+            )}
+          </div>
+
+          {/* Submit error */}
+          {submitError && (
+            <div
+              style={{
+                padding: 'var(--ds-spacing-3)',
+                backgroundColor: 'var(--ds-color-danger-surface-default)',
+                border: '1px solid var(--ds-color-danger-border-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                marginBottom: 'var(--ds-spacing-4)',
+              }}
+              role="alert"
+            >
+              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-danger-text-default)', margin: 0 }}>
+                {submitError}
+              </Paragraph>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              {cancelText}
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? loadingText : submitText}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default LoginLayout;

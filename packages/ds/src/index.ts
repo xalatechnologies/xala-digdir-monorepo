@@ -227,7 +227,10 @@ export {
   ImageIcon,
   TableIcon,
   KeyIcon,
+  StorageIcon,
+  CreditCardIcon,
   FormField,
+  Progress,
 } from './primitives';
 export type {
   ContainerProps,
@@ -239,6 +242,7 @@ export type {
   BadgeProps,
   LayoutGridProps,
   FormFieldProps,
+  ProgressProps,
 } from './primitives';
 
 // Blocks - Business logic components
@@ -281,6 +285,7 @@ export {
   IntegrationBadge,
   LoginFooterLink,
   LoginLayout,
+  DemoLoginDialog,
   StatCard,
   ActivityItem,
   ActivityFeed,
@@ -367,6 +372,8 @@ export type {
   IntegrationBadgeProps,
   LoginFooterLinkProps,
   LoginLayoutProps,
+  DemoLoginDialogProps,
+  DemoLoginFormData,
   StatCardProps,
   ActivityItemProps,
   ActivityStatus,

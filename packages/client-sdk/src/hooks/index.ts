@@ -362,3 +362,20 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// Tenant Admin hooks
+export {
+  tenantKeys,
+  useTenantCapabilities,
+  useTenantSubscription,
+  useTenantIntegrations,
+  useUpdateTenantIntegration,
+} from './use-tenant';
+export type {
+  TenantUsage,
+  TenantSeatLimits,
+  TenantFeatureFlags,
+  TenantCapabilities,
+  TenantSubscription,
+  IntegrationSettings,
+} from './use-tenant';

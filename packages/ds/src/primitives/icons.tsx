@@ -786,3 +786,20 @@ export const KeyIcon = (props: React.ComponentProps<typeof Icon>) => (
   </Icon>
 );
 
+// Storage Icon - for data/file storage
+export const StorageIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+    <path d="M3 12a9 3 0 0 0 18 0" />
+  </Icon>
+);
+
+// Credit Card Icon - for billing/payment
+export const CreditCardIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+    <line x1="1" y1="10" x2="23" y2="10" />
+  </Icon>
+);
+

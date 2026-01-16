@@ -99,19 +99,22 @@ export { RequireAuthModal } from './RequireAuthModal';
 export type { RequireAuthModalProps } from './RequireAuthModal';
 
 // Login Components
-export { 
-  LoginOption, 
-  FeatureItem, 
-  IntegrationBadge, 
-  LoginFooterLink, 
-  LoginLayout 
+export {
+  LoginOption,
+  FeatureItem,
+  IntegrationBadge,
+  LoginFooterLink,
+  LoginLayout,
+  DemoLoginDialog,
 } from './LoginComponents';
-export type { 
-  LoginOptionProps, 
-  FeatureItemProps, 
-  IntegrationBadgeProps, 
-  LoginFooterLinkProps, 
-  LoginLayoutProps 
+export type {
+  LoginOptionProps,
+  FeatureItemProps,
+  IntegrationBadgeProps,
+  LoginFooterLinkProps,
+  LoginLayoutProps,
+  DemoLoginDialogProps,
+  DemoLoginFormData,
 } from './LoginComponents';
 
 // Dashboard Components

@@ -107,6 +107,8 @@ export {
   ImageIcon,
   TableIcon,
   KeyIcon,
+  StorageIcon,
+  CreditCardIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility
@@ -115,3 +117,6 @@ export type { LayoutGridProps } from './layout-grid';
 
 export { FormField } from './FormField';
 export type { FormFieldProps } from './FormField';
+
+export { Progress } from './progress';
+export type { ProgressProps } from './progress';
