@@ -1,0 +1,239 @@
+{/*
+ * Citizen Role Documentation
+ *
+ * Documentation for public users (citizens) of the Xala/Digilist platform.
+ * Describes permissions, capabilities, and typical user flows.
+ */}
+
+import { Callout, Steps, Checklist, MediaPlaceholder, RoleMatrix, CodeBlock } from '../../components/docs';
+
+# Citizen Role
+
+Citizens are public users who interact with the booking and resource management system.
+They can browse listings, create bookings, and manage their personal account.
+
+## What you can do
+
+<Checklist
+  title="Citizen Capabilities"
+  items={[
+    { text: 'Browse and search available listings', checked: true },
+    { text: 'View listing details and availability', checked: true },
+    { text: 'Create bookings for available resources', checked: true },
+    { text: 'View and manage your booking history', checked: true },
+    { text: 'Receive notifications about bookings', checked: true },
+    { text: 'Update your profile and preferences', checked: true },
+    { text: 'Contact organizations through messages', checked: true },
+  ]}
+/>
+
+## Key Screens
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Listing Browse View"
+  notes="The main view where citizens browse and search for available listings"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Booking Calendar"
+  notes="Calendar interface showing available time slots for a selected listing"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="My Bookings Dashboard"
+  notes="Overview of all active and past bookings for the logged-in citizen"
+  aspectRatio="16/9"
+/>
+
+## Typical Booking Flow
+
+<Steps
+  title="How to Create a Booking"
+  items={[
+    {
+      title: 'Browse Listings',
+      description: 'Navigate to the listings page and search for resources by name, category, or location.',
+    },
+    {
+      title: 'Select a Listing',
+      description: 'Click on a listing card to view details including availability, pricing, and rules.',
+    },
+    {
+      title: 'Choose Date and Time',
+      description: 'Use the calendar picker to select your preferred date and time slot.',
+    },
+    {
+      title: 'Fill Booking Details',
+      description: 'Provide any required information such as purpose, number of participants, or special requests.',
+    },
+    {
+      title: 'Review and Submit',
+      description: 'Review your booking summary and submit. Some bookings may require approval.',
+    },
+    {
+      title: 'Receive Confirmation',
+      description: 'Get a confirmation via email/SMS with booking details and any payment instructions.',
+    },
+  ]}
+/>
+
+## Permissions
+
+<RoleMatrix
+  title="Citizen Permissions"
+  roles={[
+    { id: 'citizen', name: 'Citizen', description: 'Public user' },
+    { id: 'guest', name: 'Guest', description: 'Unauthenticated visitor' },
+  ]}
+  permissions={[
+    {
+      permission: 'View public listings',
+      category: 'Listings',
+      description: 'Browse and search available listings',
+      roles: { citizen: true, guest: true },
+    },
+    {
+      permission: 'View listing details',
+      category: 'Listings',
+      description: 'See full listing information and availability',
+      roles: { citizen: true, guest: true },
+    },
+    {
+      permission: 'Create booking',
+      category: 'Bookings',
+      description: 'Submit a new booking request',
+      roles: { citizen: true, guest: false },
+    },
+    {
+      permission: 'View own bookings',
+      category: 'Bookings',
+      description: 'See your booking history and status',
+      roles: { citizen: true, guest: false },
+    },
+    {
+      permission: 'Cancel own booking',
+      category: 'Bookings',
+      description: 'Cancel a booking within policy rules',
+      roles: { citizen: true, guest: false },
+    },
+    {
+      permission: 'Send messages',
+      category: 'Communication',
+      description: 'Contact organizations about bookings',
+      roles: { citizen: true, guest: false },
+    },
+    {
+      permission: 'Update profile',
+      category: 'Account',
+      description: 'Edit personal information and preferences',
+      roles: { citizen: true, guest: false },
+    },
+  ]}
+  showLegend
+/>
+
+## Common Errors
+
+<Callout variant="danger" title="booking/availability-conflict">
+**Error Code:** `booking/availability-conflict`
+
+**Cause:** The selected time slot is no longer available. Another user may have booked it while you were completing the form.
+
+**Solution:** Choose a different time slot from the availability calendar and try again.
+</Callout>
+
+<Callout variant="danger" title="booking/validation-failed">
+**Error Code:** `booking/validation-failed`
+
+**Cause:** Required booking information is missing or invalid (e.g., missing contact details, invalid date range).
+
+**Solution:** Review the booking form and ensure all required fields are filled correctly.
+</Callout>
+
+<Callout variant="warning" title="booking/approval-required">
+**Error Code:** `booking/approval-required`
+
+**Cause:** This listing requires approval from an organization administrator before the booking is confirmed.
+
+**Solution:** Your booking has been submitted for review. You will receive a notification once it's approved or denied.
+</Callout>
+
+## SDK Usage Examples
+
+<CodeBlock
+  title="Fetching Listings"
+  language="tsx"
+  code={`import { useListings } from '@digilist/client-sdk/hooks';
+
+function ListingBrowser() {
+  const { data: listings, isLoading } = useListings({
+    category: 'sports',
+    status: 'available',
+  });
+
+  if (isLoading) return <Loading />;
+
+  return (
+    <ul>
+      {listings.map((listing) => (
+        <li key={listing.id}>{listing.title}</li>
+      ))}
+    </ul>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Creating a Booking"
+  language="tsx"
+  code={`import { useCreateBooking } from '@digilist/client-sdk/hooks';
+
+function BookingForm({ listingId }) {
+  const { mutate: createBooking, isPending } = useCreateBooking();
+
+  const handleSubmit = (formData) => {
+    createBooking({
+      listingId,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+      notes: formData.notes,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+    </form>
+  );
+}`}
+  showLineNumbers
+/>
+
+## Demo Notes
+
+<Callout variant="info" title="For Evaluators">
+When testing the citizen role in a demo environment:
+
+- **Test Account:** `citizen@example.com` / `demo123`
+- **Seed Command:** `pnpm seed:demo` creates sample listings and availability
+- **Sample Listings:** Look for "Kulturhus", "Idrettshall", and "Møterom" in the demo data
+
+**Quick Test Path:**
+1. Log in as the test citizen
+2. Navigate to Listings
+3. Search for "Idrettshall"
+4. Create a booking for tomorrow
+5. Verify confirmation email in the demo mailbox
+</Callout>
+
+## Related Documentation
+
+- [Booking Flow Journey](/journeys/booking) - Detailed end-to-end booking process
+- [Organization Member Role](/roles/org-member) - For users managing organization resources
+- [Platform Overview](/platform) - System architecture and capabilities

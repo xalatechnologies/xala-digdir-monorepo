@@ -1,0 +1,417 @@
+{/*
+ * Caseworker Role Documentation
+ *
+ * Documentation for municipal caseworkers (saksbehandlere) in the Xala/Digilist platform.
+ * Describes permissions, capabilities, and case processing workflows.
+ */}
+
+import { Callout, Steps, Checklist, MediaPlaceholder, RoleMatrix, CodeBlock } from '../../components/docs';
+
+# Caseworker Role
+
+Caseworkers (saksbehandlere) are municipal employees who process applications,
+manage allocations, handle disputes, and ensure compliance with booking policies.
+They serve as the link between citizens, organizations, and municipal administration.
+
+## What you can do
+
+<Checklist
+  title="Caseworker Capabilities"
+  items={[
+    { text: 'View all bookings within your municipality (tenant)', checked: true },
+    { text: 'Process seasonal allocation applications', checked: true },
+    { text: 'Override booking conflicts with proper justification', checked: true },
+    { text: 'Handle disputes between citizens and organizations', checked: true },
+    { text: 'Access audit logs for compliance review', checked: true },
+    { text: 'Generate reports and statistics', checked: true },
+    { text: 'Manage discount codes and pricing exceptions', checked: true },
+    { text: 'View organization compliance status', checked: true },
+    { text: 'Approve organization registrations', checked: true },
+  ]}
+/>
+
+<Callout variant="warning">
+All caseworker actions are logged in the audit trail for compliance and accountability.
+Ensure you have proper authorization before performing administrative overrides.
+</Callout>
+
+## Key Screens
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Caseworker Dashboard"
+  notes="Main dashboard showing pending cases, allocation queues, and municipal KPIs"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Case Processing Queue"
+  notes="List of cases requiring review, approval, or action"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Seasonal Allocation Interface"
+  notes="Allocation tool for distributing seasonal time slots to organizations"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Audit Log Viewer"
+  notes="Interface for searching and reviewing system audit events"
+  aspectRatio="16/9"
+/>
+
+## Processing Seasonal Allocations
+
+<Steps
+  title="Seasonal Allocation Workflow"
+  items={[
+    {
+      title: 'Open Allocation Period',
+      description: 'Configure the application window and notify organizations that applications are open.',
+    },
+    {
+      title: 'Receive Applications',
+      description: 'Organizations submit their time slot requests with priority justifications.',
+    },
+    {
+      title: 'Review Applications',
+      description: 'Evaluate each application based on criteria: membership size, previous usage, community benefit.',
+    },
+    {
+      title: 'Resolve Conflicts',
+      description: 'When multiple organizations request the same slots, apply allocation rules or mediate.',
+    },
+    {
+      title: 'Generate Allocation Draft',
+      description: 'Create a draft allocation plan showing proposed assignments.',
+    },
+    {
+      title: 'Review and Approve',
+      description: 'Review the draft with stakeholders, make adjustments, and finalize.',
+    },
+    {
+      title: 'Notify Organizations',
+      description: 'System sends allocation decisions to all applicants with appeal instructions.',
+    },
+  ]}
+/>
+
+## Handling Disputes
+
+<Steps
+  title="Dispute Resolution Process"
+  items={[
+    {
+      title: 'Receive Dispute',
+      description: 'A citizen or organization files a dispute through the messaging system.',
+    },
+    {
+      title: 'Gather Information',
+      description: 'Review booking history, audit logs, and communication between parties.',
+    },
+    {
+      title: 'Contact Parties',
+      description: 'Reach out to involved parties for additional context if needed.',
+    },
+    {
+      title: 'Make Determination',
+      description: 'Apply policies and guidelines to reach a fair resolution.',
+    },
+    {
+      title: 'Document Decision',
+      description: 'Record the decision with full justification in the case file.',
+    },
+    {
+      title: 'Implement Resolution',
+      description: 'Take necessary actions (refunds, rebookings, warnings) and notify all parties.',
+    },
+  ]}
+/>
+
+## Permissions
+
+<RoleMatrix
+  title="Caseworker Permissions"
+  roles={[
+    { id: 'caseworker', name: 'Caseworker', description: 'Standard case handler' },
+    { id: 'senior-caseworker', name: 'Senior Caseworker', description: 'Elevated permissions' },
+    { id: 'admin', name: 'Admin', description: 'System administrator' },
+  ]}
+  permissions={[
+    {
+      permission: 'View all bookings',
+      category: 'Bookings',
+      description: 'See all bookings in the municipality',
+      roles: { caseworker: true, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Override booking conflicts',
+      category: 'Bookings',
+      description: 'Force-approve conflicting bookings',
+      roles: { caseworker: 'partial', 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Cancel any booking',
+      category: 'Bookings',
+      description: 'Cancel bookings regardless of owner',
+      roles: { caseworker: false, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Process allocations',
+      category: 'Allocations',
+      description: 'Handle seasonal allocation requests',
+      roles: { caseworker: true, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Approve allocations',
+      category: 'Allocations',
+      description: 'Finalize allocation decisions',
+      roles: { caseworker: false, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'View audit logs',
+      category: 'Compliance',
+      description: 'Access system audit trail',
+      roles: { caseworker: true, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Export audit logs',
+      category: 'Compliance',
+      description: 'Download audit data for external review',
+      roles: { caseworker: false, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Manage organizations',
+      category: 'Organizations',
+      description: 'Approve, suspend, or modify organizations',
+      roles: { caseworker: 'partial', 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Create discount codes',
+      category: 'Finance',
+      description: 'Generate discount codes and exceptions',
+      roles: { caseworker: true, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Issue refunds',
+      category: 'Finance',
+      description: 'Process refunds for cancelled bookings',
+      roles: { caseworker: 'partial', 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Generate reports',
+      category: 'Reports',
+      description: 'Create and view municipal reports',
+      roles: { caseworker: true, 'senior-caseworker': true, admin: true },
+    },
+    {
+      permission: 'Configure system settings',
+      category: 'System',
+      description: 'Modify tenant-level configuration',
+      roles: { caseworker: false, 'senior-caseworker': false, admin: true },
+    },
+  ]}
+  showLegend
+  legendLabels={{
+    allowed: 'Full access',
+    denied: 'No access',
+    partial: 'With approval',
+  }}
+/>
+
+## Common Errors
+
+<Callout variant="danger" title="allocation/period-closed">
+**Error Code:** `allocation/period-closed`
+
+**Cause:** Attempted to modify allocations outside the designated allocation period.
+
+**Solution:** The allocation period must be reopened by an administrator. Contact your supervisor.
+</Callout>
+
+<Callout variant="danger" title="casework/unauthorized-override">
+**Error Code:** `casework/unauthorized-override`
+
+**Cause:** Attempted to perform an override action without sufficient privileges.
+
+**Solution:** Submit an escalation request to a senior caseworker or system administrator.
+</Callout>
+
+<Callout variant="warning" title="audit/justification-required">
+**Error Code:** `audit/justification-required`
+
+**Cause:** Administrative actions require a documented justification for audit purposes.
+
+**Solution:** Provide a clear, written justification in the designated field before proceeding.
+</Callout>
+
+<Callout variant="danger" title="organization/pending-review">
+**Error Code:** `organization/pending-review`
+
+**Cause:** This organization is under review and certain actions are restricted.
+
+**Solution:** Complete the organization review process before performing this action.
+</Callout>
+
+## SDK Usage Examples
+
+<CodeBlock
+  title="Fetching Pending Cases"
+  language="tsx"
+  code={`import { useCases } from '@digilist/client-sdk/hooks';
+
+function CaseQueue() {
+  const { data: cases, isLoading } = useCases({
+    status: 'pending',
+    type: ['allocation', 'dispute', 'approval'],
+  });
+
+  if (isLoading) return <Loading />;
+
+  return (
+    <ul>
+      {cases.map((caseItem) => (
+        <CaseCard key={caseItem.id} case={caseItem} />
+      ))}
+    </ul>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Processing an Allocation"
+  language="tsx"
+  code={`import { useProcessAllocation } from '@digilist/client-sdk/hooks';
+
+function AllocationActions({ allocationId, organizationId, slots }) {
+  const { mutate: process, isPending } = useProcessAllocation();
+
+  const handleApprove = () => {
+    process({
+      allocationId,
+      decision: 'approved',
+      allocatedSlots: slots,
+      justification: 'Meets criteria: established organization with 200+ members',
+    });
+  };
+
+  return (
+    <Button onClick={handleApprove} loading={isPending}>
+      Approve Allocation
+    </Button>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Querying Audit Logs"
+  language="tsx"
+  code={`import { useAuditLogs } from '@digilist/client-sdk/hooks';
+
+function AuditViewer({ entityId }) {
+  const { data: logs, isLoading } = useAuditLogs({
+    entityId,
+    entityType: 'booking',
+    dateRange: {
+      start: new Date('2024-01-01'),
+      end: new Date(),
+    },
+  });
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Action</th>
+          <th>User</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {logs?.map((log) => (
+          <tr key={log.id}>
+            <td>{log.timestamp}</td>
+            <td>{log.action}</td>
+            <td>{log.user.name}</td>
+            <td>{log.details}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}`}
+  showLineNumbers
+/>
+
+## Compliance and Audit Requirements
+
+<Callout variant="info" title="Audit Trail">
+All caseworker actions are automatically logged with:
+
+- **Who:** User ID and name of the caseworker
+- **What:** Action performed and affected entities
+- **When:** Timestamp with timezone
+- **Where:** Tenant ID and IP address
+- **Why:** Justification provided (when required)
+
+These logs are retained for 7 years per Norwegian municipal regulations.
+</Callout>
+
+## Demo Notes
+
+<Callout variant="info" title="For Evaluators">
+When testing the caseworker role in a demo environment:
+
+- **Test Account:** `caseworker@example.com` / `demo123`
+- **Municipality:** "Demo Kommune" with pre-configured test data
+- **Seed Command:** `pnpm seed:demo` creates sample cases and allocations
+
+**Quick Test Paths:**
+
+**Allocation Processing:**
+1. Log in as caseworker
+2. Navigate to Allocations > Pending
+3. Review "Vår 2024" allocation applications
+4. Process and approve test allocations
+
+**Audit Log Review:**
+1. Navigate to Compliance > Audit Logs
+2. Filter by entity type "booking"
+3. Review the action history for a specific booking
+
+**Dispute Handling:**
+1. Navigate to Cases > Disputes
+2. Open a test dispute case
+3. Review evidence and make a determination
+</Callout>
+
+## Case Processing Best Practices
+
+<Checklist
+  title="Before Making a Decision"
+  iconStyle="square"
+  items={[
+    { text: 'Review all relevant booking history', checked: true },
+    { text: 'Check audit logs for previous actions', checked: true },
+    { text: 'Consider impact on all affected parties', checked: true },
+    { text: 'Document your reasoning clearly', checked: true },
+    { text: 'Ensure decision aligns with municipal policies', checked: true },
+    { text: 'Notify all affected parties promptly', checked: true },
+  ]}
+/>
+
+## Related Documentation
+
+- [Case Processing Journey](/journeys/case-processing) - Detailed case handling workflows
+- [Seasonal Leases Journey](/journeys/seasonal) - Complete allocation process
+- [Audit Logging](/platform/audit-logging) - Understanding the audit system
+- [Admin Role](/roles/admin) - System administrator responsibilities
+- [Multi-tenancy](/platform/multi-tenancy) - Municipal data isolation

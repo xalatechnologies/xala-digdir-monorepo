@@ -1,0 +1,365 @@
+{/*
+ * Organization Member Role Documentation
+ *
+ * Documentation for organization members in the Xala/Digilist platform.
+ * Describes permissions, capabilities, and organization management tasks.
+ */}
+
+import { Callout, Steps, Checklist, MediaPlaceholder, RoleMatrix, CodeBlock } from '../../components/docs';
+
+# Organization Member Role
+
+Organization members are users who represent an organization (idrettslag, kulturforening, etc.)
+and manage their organization's resources, listings, and bookings within the platform.
+
+## What you can do
+
+<Checklist
+  title="Organization Member Capabilities"
+  items={[
+    { text: 'View organization profile and settings', checked: true },
+    { text: 'Manage listings owned by your organization', checked: true },
+    { text: 'View and respond to booking requests', checked: true },
+    { text: 'Access organization booking calendar', checked: true },
+    { text: 'Communicate with citizens about bookings', checked: true },
+    { text: 'View organization reports and statistics', checked: true },
+    { text: 'Invite new members to the organization', checked: false },
+    { text: 'Modify organization settings', checked: false },
+  ]}
+/>
+
+<Callout variant="info">
+Some capabilities are limited to organization administrators. Members with basic access
+can view and manage day-to-day operations but cannot change organization settings.
+</Callout>
+
+## Key Screens
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Organization Dashboard"
+  notes="Main dashboard showing organization overview, recent activity, and quick actions"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Listing Management"
+  notes="Interface for managing organization listings, availability, and pricing"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Booking Requests Queue"
+  notes="List of pending booking requests requiring approval or action"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Organization Calendar"
+  notes="Calendar view showing all bookings across organization resources"
+  aspectRatio="4/3"
+/>
+
+## Managing Booking Requests
+
+<Steps
+  title="How to Process a Booking Request"
+  items={[
+    {
+      title: 'Access Booking Queue',
+      description: 'Navigate to the booking requests section from your organization dashboard.',
+    },
+    {
+      title: 'Review Request Details',
+      description: 'Click on a pending request to view full details including requester info, dates, and purpose.',
+    },
+    {
+      title: 'Check Availability',
+      description: 'Verify the requested time slot does not conflict with existing reservations or maintenance.',
+    },
+    {
+      title: 'Approve or Decline',
+      description: 'Make a decision. If declining, provide a reason to help the citizen understand.',
+    },
+    {
+      title: 'Automatic Notification',
+      description: 'The system automatically notifies the citizen of your decision via email and SMS.',
+    },
+  ]}
+/>
+
+## Creating and Managing Listings
+
+<Steps
+  title="How to Create a New Listing"
+  items={[
+    {
+      title: 'Navigate to Listings',
+      description: 'From the organization dashboard, go to the Listings section.',
+    },
+    {
+      title: 'Click Create New',
+      description: 'Start the listing creation wizard with the "New Listing" button.',
+    },
+    {
+      title: 'Enter Basic Information',
+      description: 'Provide title, description, category, and location details.',
+    },
+    {
+      title: 'Set Availability Rules',
+      description: 'Define operating hours, blocked dates, and seasonal availability.',
+    },
+    {
+      title: 'Configure Pricing',
+      description: 'Set pricing tiers, member discounts, and payment requirements.',
+    },
+    {
+      title: 'Add Media',
+      description: 'Upload photos, floor plans, or other relevant media.',
+    },
+    {
+      title: 'Review and Publish',
+      description: 'Review all settings and publish the listing to make it available.',
+    },
+  ]}
+/>
+
+## Permissions
+
+<RoleMatrix
+  title="Organization Member Permissions"
+  roles={[
+    { id: 'org-admin', name: 'Org Admin', description: 'Organization administrator' },
+    { id: 'org-member', name: 'Org Member', description: 'Standard member' },
+    { id: 'org-viewer', name: 'Org Viewer', description: 'Read-only access' },
+  ]}
+  permissions={[
+    {
+      permission: 'View organization dashboard',
+      category: 'Organization',
+      description: 'Access organization overview and statistics',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': true },
+    },
+    {
+      permission: 'Edit organization settings',
+      category: 'Organization',
+      description: 'Modify organization profile and preferences',
+      roles: { 'org-admin': true, 'org-member': false, 'org-viewer': false },
+    },
+    {
+      permission: 'Manage members',
+      category: 'Organization',
+      description: 'Add, remove, or modify member access',
+      roles: { 'org-admin': true, 'org-member': false, 'org-viewer': false },
+    },
+    {
+      permission: 'Create listings',
+      category: 'Listings',
+      description: 'Create new listings for the organization',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': false },
+    },
+    {
+      permission: 'Edit listings',
+      category: 'Listings',
+      description: 'Modify existing listing details',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': false },
+    },
+    {
+      permission: 'Delete listings',
+      category: 'Listings',
+      description: 'Remove listings from the platform',
+      roles: { 'org-admin': true, 'org-member': false, 'org-viewer': false },
+    },
+    {
+      permission: 'View bookings',
+      category: 'Bookings',
+      description: 'See all organization bookings',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': true },
+    },
+    {
+      permission: 'Approve/Decline bookings',
+      category: 'Bookings',
+      description: 'Process booking requests',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': false },
+    },
+    {
+      permission: 'Cancel bookings',
+      category: 'Bookings',
+      description: 'Cancel existing confirmed bookings',
+      roles: { 'org-admin': true, 'org-member': 'partial', 'org-viewer': false },
+    },
+    {
+      permission: 'View reports',
+      category: 'Reports',
+      description: 'Access organization analytics',
+      roles: { 'org-admin': true, 'org-member': true, 'org-viewer': true },
+    },
+    {
+      permission: 'Export data',
+      category: 'Reports',
+      description: 'Download reports and data exports',
+      roles: { 'org-admin': true, 'org-member': false, 'org-viewer': false },
+    },
+  ]}
+  showLegend
+/>
+
+## Common Errors
+
+<Callout variant="danger" title="organization/access-denied">
+**Error Code:** `organization/access-denied`
+
+**Cause:** You attempted to perform an action that requires higher privileges than your current role allows.
+
+**Solution:** Contact your organization administrator to request elevated permissions if needed.
+</Callout>
+
+<Callout variant="danger" title="listing/publish-failed">
+**Error Code:** `listing/publish-failed`
+
+**Cause:** The listing cannot be published due to missing required information or validation errors.
+
+**Solution:** Review the listing editor for validation messages and ensure all required fields are completed.
+</Callout>
+
+<Callout variant="warning" title="booking/conflict-detected">
+**Error Code:** `booking/conflict-detected`
+
+**Cause:** Approving this booking would create a scheduling conflict with an existing reservation.
+
+**Solution:** Review the calendar to identify the conflict. Either decline one booking or reschedule if possible.
+</Callout>
+
+<Callout variant="danger" title="organization/member-limit-reached">
+**Error Code:** `organization/member-limit-reached`
+
+**Cause:** Your organization has reached the maximum number of allowed members based on your subscription tier.
+
+**Solution:** Contact the system administrator or upgrade your organization's subscription.
+</Callout>
+
+## SDK Usage Examples
+
+<CodeBlock
+  title="Fetching Organization Bookings"
+  language="tsx"
+  code={`import { useOrganizationBookings } from '@digilist/client-sdk/hooks';
+
+function BookingQueue({ organizationId }) {
+  const { data: bookings, isLoading } = useOrganizationBookings({
+    organizationId,
+    status: 'pending',
+  });
+
+  if (isLoading) return <Loading />;
+
+  return (
+    <ul>
+      {bookings.map((booking) => (
+        <BookingRequestCard key={booking.id} booking={booking} />
+      ))}
+    </ul>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Approving a Booking"
+  language="tsx"
+  code={`import { useApproveBooking } from '@digilist/client-sdk/hooks';
+
+function BookingActions({ bookingId }) {
+  const { mutate: approve, isPending } = useApproveBooking();
+
+  const handleApprove = () => {
+    approve({
+      bookingId,
+      notes: 'Approved - welcome to our facility!',
+    }, {
+      onSuccess: () => {
+        // Booking approved, citizen notified automatically
+      },
+    });
+  };
+
+  return (
+    <Button onClick={handleApprove} loading={isPending}>
+      Approve Booking
+    </Button>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Creating a Listing"
+  language="tsx"
+  code={`import { useCreateListing } from '@digilist/client-sdk/hooks';
+
+function ListingForm({ organizationId }) {
+  const { mutate: createListing, isPending } = useCreateListing();
+
+  const handleSubmit = (formData) => {
+    createListing({
+      organizationId,
+      title: formData.title,
+      description: formData.description,
+      category: formData.category,
+      location: formData.location,
+      availability: formData.availability,
+      pricing: formData.pricing,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form fields */}
+    </form>
+  );
+}`}
+  showLineNumbers
+/>
+
+## Demo Notes
+
+<Callout variant="info" title="For Evaluators">
+When testing the organization member role in a demo environment:
+
+- **Test Account:** `org-member@example.com` / `demo123`
+- **Organization:** "Demo Idrettslag" with pre-configured listings
+- **Seed Command:** `pnpm seed:demo` creates sample organization data
+
+**Quick Test Paths:**
+
+**Booking Approval:**
+1. Log in as the org member
+2. Navigate to Bookings > Pending
+3. Approve or decline a test booking
+4. Verify notification sent to citizen
+
+**Listing Management:**
+1. Navigate to Listings
+2. Edit "Idrettshall A" availability
+3. Create a new listing
+4. Verify it appears in public search
+</Callout>
+
+## Organization Hierarchy
+
+<MediaPlaceholder
+  type="diagram"
+  label="Organization Role Hierarchy"
+  notes="Diagram showing the relationship between organization roles and their permissions"
+  aspectRatio="16/9"
+/>
+
+## Related Documentation
+
+- [Organization Onboarding Journey](/journeys/org-onboarding) - Setting up new organizations
+- [Citizen Role](/roles/citizen) - Understanding citizen permissions
+- [Caseworker Role](/roles/caseworker) - Municipal case handler responsibilities
+- [Multi-tenancy](/platform/multi-tenancy) - How organizations are isolated
