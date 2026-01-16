@@ -7,54 +7,12 @@ import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users } from '../../database/schema/index';
+import { PERMISSION_MATRIX } from '../../core/rbac/permission-matrix';
 
 interface AuthzRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
 }
-
-// Permission matrix
-const PERMISSION_MATRIX: Record<string, Record<string, string[]>> = {
-  admin: {
-    dashboard: ['read', 'write'],
-    listings: ['create', 'read', 'update', 'delete', 'publish', 'archive'],
-    bookings: ['create', 'read', 'update', 'delete', 'confirm', 'cancel'],
-    users: ['create', 'read', 'update', 'delete', 'deactivate', 'reactivate'],
-    organizations: ['create', 'read', 'update', 'delete', 'verify'],
-    reports: ['read', 'export'],
-    settings: ['read', 'write'],
-    calendar: ['read', 'write', 'block'],
-    messages: ['read', 'write', 'resolve'],
-    'seasonal-leases': ['create', 'read', 'update', 'delete', 'terminate'],
-    audit: ['read'],
-  },
-  saksbehandler: {
-    dashboard: ['read'],
-    listings: ['create', 'read', 'update', 'publish', 'archive'],
-    bookings: ['create', 'read', 'update', 'confirm', 'cancel'],
-    users: [],
-    organizations: ['read'],
-    reports: ['read'],
-    settings: [],
-    calendar: ['read', 'write', 'block'],
-    messages: ['read', 'write', 'resolve'],
-    'seasonal-leases': ['create', 'read', 'update'],
-    audit: [],
-  },
-  user: {
-    dashboard: [],
-    listings: ['read'],
-    bookings: ['create', 'read'],
-    users: [],
-    organizations: [],
-    reports: [],
-    settings: [],
-    calendar: ['read'],
-    messages: ['read', 'write'],
-    'seasonal-leases': [],
-    audit: [],
-  },
-};
 
 @Controller('/api/authz')
 export class AuthzController {
@@ -144,6 +102,92 @@ export class AuthzController {
         allowed,
         role: user.role,
         permissions: resourceActions.map((a: string) => `${resource}:${a}`),
+      },
+    };
+  }
+}
+
+/**
+ * Me Controller
+ * User-centric endpoints for current user data
+ */
+@Controller('/api/me')
+export class MeController {
+  /**
+   * GET /api/me/capabilities - Get current user's capabilities projection
+   * Returns a comprehensive view of what the authenticated user can do
+   */
+  @Get('/capabilities')
+  async getCapabilities(request: AuthzRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const userId = (request as any).userId || request.headers['x-user-id'];
+
+    if (!userId) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
+    }
+
+    const userResult = await db.select().from(users).where(eq(users.id, userId as string)).limit(1);
+
+    if (!userResult.length) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'User not found' } };
+    }
+
+    const user = userResult[0];
+    const role = user.role || 'user';
+    const rolePermissions = PERMISSION_MATRIX[role] || PERMISSION_MATRIX.user;
+
+    // Build capabilities object grouped by resource
+    const capabilities: Record<string, { actions: string[]; canRead: boolean; canWrite: boolean; canDelete: boolean }> = {};
+
+    for (const [resource, actions] of Object.entries(rolePermissions)) {
+      capabilities[resource] = {
+        actions,
+        canRead: actions.includes('read'),
+        canWrite: actions.includes('write') || actions.includes('create') || actions.includes('update'),
+        canDelete: actions.includes('delete'),
+      };
+    }
+
+    // Build flat permission strings
+    const permissions: string[] = [];
+    for (const [resource, actions] of Object.entries(rolePermissions)) {
+      for (const action of actions) {
+        permissions.push(`${resource}:${action}`);
+      }
+    }
+
+    // Determine high-level capabilities based on role
+    const isAdmin = role === 'admin' || role === 'COMMUNE_ADMIN';
+    const isCaseHandler = role === 'saksbehandler' || role === 'ORG_CASE_HANDLER';
+    const isOrgAdmin = role === 'ORG_ADMIN';
+    const isOrgMember = role === 'ORG_MEMBER';
+
+    return {
+      data: {
+        userId: user.id,
+        role,
+        organizationId: user.organizationId || null,
+        permissions,
+        capabilities,
+        // High-level capability flags for easy frontend checks
+        flags: {
+          isAdmin,
+          isCaseHandler,
+          isOrgAdmin,
+          isOrgMember,
+          canManageUsers: rolePermissions.users?.includes('create') || rolePermissions.users?.includes('update') || false,
+          canManageOrganizations: rolePermissions.organizations?.includes('create') || rolePermissions.organizations?.includes('update') || false,
+          canApproveBookings: rolePermissions.bookings?.includes('approve') || false,
+          canDenyBookings: rolePermissions.bookings?.includes('deny') || false,
+          canManageListings: rolePermissions.listings?.includes('create') || rolePermissions.listings?.includes('update') || false,
+          canViewAudit: rolePermissions.audit?.includes('read') || false,
+          canExportReports: rolePermissions.reports?.includes('export') || false,
+          canManageAccessGrants: rolePermissions['access-grants']?.includes('create') || rolePermissions['access-grants']?.includes('update') || false,
+          canManageOrgMembers: rolePermissions['org-members']?.includes('create') || rolePermissions['org-members']?.includes('update') || false,
+          canManageCaseHandlerScopes: rolePermissions['case-handler-scopes']?.includes('create') || rolePermissions['case-handler-scopes']?.includes('update') || false,
+        },
       },
     };
   }

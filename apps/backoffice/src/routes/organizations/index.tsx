@@ -6,3 +6,5 @@
 export { OrganizationsListPage } from './OrganizationsListPage';
 export { OrganizationDetailPage } from './OrganizationDetailPage';
 export { OrganizationFormPage } from './OrganizationFormPage';
+export { OrganizationMembersPage } from './OrganizationMembersPage';
+export { PermissionAssignmentPage } from './PermissionAssignmentPage';

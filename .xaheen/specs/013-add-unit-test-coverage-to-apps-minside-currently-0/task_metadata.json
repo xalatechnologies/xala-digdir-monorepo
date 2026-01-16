@@ -1,9 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "code_quality",
-  "ideaId": "cq-004",
-  "rationale": "apps/minside is the user portal handling critical user journeys: booking management, profile settings, notifications, GDPR compliance, and payment. Without tests, regressions can ship to production undetected. The settings.tsx (879 lines) and messages.tsx (916 lines) routes are particularly complex and need coverage.",
-  "category": "refactoring",
-  "codeQualitySeverity": "major",
-  "priority": "high"
-}

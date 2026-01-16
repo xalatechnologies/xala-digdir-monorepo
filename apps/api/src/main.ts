@@ -32,13 +32,17 @@ import { AllocationsController } from './modules/allocations/allocations.control
 import { AvailabilityController } from './modules/availability/availability.controller';
 // Phase 2: Auth, RBAC, Public, Audit, Settings
 import { AuthController } from './modules/auth/auth.controller';
-import { AuthzController } from './modules/authz/authz.controller';
+import { AuthzController, MeController } from './modules/authz/authz.controller';
 import { PublicController } from './modules/public/public.controller';
 import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
 import { CategoriesController } from './modules/rental-objects/rental-object.controller';
+// RBAC Controllers (Access Grants, Permissions, Case Handler Scopes)
+import { AccessGrantController } from './modules/access-grant/access-grant.controller';
+import { PermissionAssignmentController } from './modules/permission-assignment/permission-assignment.controller';
+import { CaseHandlerScopeController } from './modules/case-handler-scope/case-handler-scope.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
@@ -240,6 +244,7 @@ async function bootstrap() {
     // Phase 2: Auth, RBAC, Public, Audit, Settings
     AuthController,
     AuthzController,
+    MeController,
     PublicController,
     AuditController,
     SettingsController,
@@ -247,6 +252,10 @@ async function bootstrap() {
     DiscountCodesController,
     HealthController,
     CategoriesController,
+    // RBAC Controllers
+    AccessGrantController,
+    PermissionAssignmentController,
+    CaseHandlerScopeController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,
