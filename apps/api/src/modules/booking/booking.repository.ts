@@ -4,7 +4,7 @@
  */
 import { Injectable } from '../../core/decorators';
 import { BaseRepository, type PaginatedResult, type FilterCondition } from '../../database/base.repository';
-import { bookings, listings, type Booking, type NewBooking } from '../../database/schema';
+import { bookings, rentalObjects, type Booking, type NewBooking } from '../../database/schema';
 import type { BookingQueryParams } from '../../schemas/booking.schema';
 import { eq, desc, and } from 'drizzle-orm';
 import { ConflictError, NotFoundError } from '../../core/errors/problem-details';
@@ -33,9 +33,9 @@ export class BookingRepository extends BaseRepository<
       conditions.push({ field: 'status', operator: 'eq', value: params.status });
     }
 
-    // Note: listingId is the database column name (backward compatibility)
-    if (params.listingId) {
-      conditions.push({ field: 'listingId', operator: 'eq', value: params.listingId });
+    // Note: rentalObjectId is the database column name (backward compatibility)
+    if (params.rentalObjectId) {
+      conditions.push({ field: 'rentalObjectId', operator: 'eq', value: params.rentalObjectId });
     }
 
     if (params.userId) {
@@ -60,7 +60,7 @@ export class BookingRepository extends BaseRepository<
 
   /**
    * Find bookings for a rental object (formerly listing) within a date range
-   * Note: Parameter name 'listingId' kept for backward compatibility with database column
+   * Note: Parameter name 'rentalObjectId' kept for backward compatibility with database column
    */
   async findByListingAndDateRange(
     rentalObjectId: string, // Rental object ID (parameter name kept for DB compatibility)
@@ -68,7 +68,7 @@ export class BookingRepository extends BaseRepository<
     endDate: Date
   ): Promise<Booking[]> {
     const result = await this.findMany([
-      { field: 'listingId', operator: 'eq', value: listingId },
+      { field: 'rentalObjectId', operator: 'eq', value: rentalObjectId },
       { field: 'startTime', operator: 'lt', value: endDate },
       { field: 'endTime', operator: 'gt', value: startDate },
       { field: 'status', operator: 'ne', value: 'cancelled' },
@@ -95,7 +95,7 @@ export class BookingRepository extends BaseRepository<
       .where(eq(bookings.userId, userId));
     const total = countResult.length;
 
-    // Get paginated data with rental object JOIN (listingId is database column name)
+    // Get paginated data with rental object JOIN (rentalObjectId is database column name)
     const data = await this.db
       .select({
         id: bookings.id,

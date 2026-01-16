@@ -64,12 +64,12 @@ export class BlocksController {
    */
   @Get()
   async findAll(request: FastifyRequest, reply: FastifyReply) {
-    const query = request.query as { listingId?: string; from?: string; to?: string; limit?: string };
+    const query = request.query as { rentalObjectId?: string; from?: string; to?: string; limit?: string };
     
     let blocks = [...mockBlocks];
     
-    if (query.listingId) {
-      blocks = blocks.filter(b => b.listingId === query.listingId);
+    if (query.rentalObjectId) {
+      blocks = blocks.filter(b => b.rentalObjectId === query.rentalObjectId);
     }
     
     if (query.from) {
@@ -118,7 +118,7 @@ export class BlocksController {
     
     const newBlock: Block = {
       id: `block-${Date.now()}`,
-      rentalObjectId: body.listingId || '',
+      rentalObjectId: body.rentalObjectId || '',
       title: body.title || 'Blocked',
       reason: body.reason,
       startDate: body.startDate || new Date().toISOString(),

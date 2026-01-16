@@ -120,7 +120,7 @@ export class PolicyEvaluationTracker {
 
 export function evaluateBookingPolicy(
   userId: string | null,
-  listingId: string,
+  rentalObjectId: string,
   action: string,
   tracker?: PolicyEvaluationTracker
 ): { allowed: boolean; reasonKey: string } {
@@ -161,7 +161,7 @@ export function evaluateBookingPolicy(
   tracker?.track(
     'listing_availability',
     'Listing Availability Check',
-    { listingId, action },
+    { rentalObjectId, action },
     listingAvailable ? 'allow' : 'deny',
     listingAvailable ? 'listing.available' : 'listing.not_available',
     Date.now() - listingCheckStart

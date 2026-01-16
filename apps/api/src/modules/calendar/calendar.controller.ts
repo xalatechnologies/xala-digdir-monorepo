@@ -12,7 +12,7 @@ import {
 import { CalendarService } from './calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, sql } from 'drizzle-orm';
-import { allocations, listings, users, bookings } from '../../database/schema/index';
+import { allocations, rentalObjects, users, bookings } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -58,7 +58,7 @@ export class RentalObjectCalendarConfigController {
 
 /**
  * Availability Matrix Controller
- * Handles GET /api/availability/:listingId endpoint
+ * Handles GET /api/availability/:rentalObjectId endpoint
  */
 @Controller('/api/availability')
 export class AvailabilityMatrixController {
@@ -67,12 +67,12 @@ export class AvailabilityMatrixController {
   ) {}
 
   /**
-   * GET /api/availability/:listingId - Get availability matrix
+   * GET /api/availability/:rentalObjectId - Get availability matrix
    * Returns cell-by-cell availability state for a date range
    * Each cell contains status (AVAILABLE, RESERVED, BOOKED, BLOCKED, BLACKOUT, CLOSED)
    * and optional reason key for localized tooltips
    */
-  @Get('/:listingId')
+  @Get('/:rentalObjectId')
   async getAvailabilityMatrix(
     request: FastifyRequest<{ Params: { rentalObjectId: string } }>,
     reply: FastifyReply
@@ -99,7 +99,7 @@ export class CalendarController {
 
     // Build query conditions
     const conditions = [];
-    if (listingId) conditions.push(eq(allocations.rentalObjectId, listingId));
+    if (rentalObjectId) conditions.push(eq(allocations.rentalObjectId, rentalObjectId));
     if (startDate) conditions.push(gte(allocations.startTime, new Date(startDate)));
     if (endDate) conditions.push(lte(allocations.endTime, new Date(endDate)));
     if (status) conditions.push(eq(allocations.status, status));
@@ -108,7 +108,7 @@ export class CalendarController {
       .select({
         id: allocations.id,
         rentalObjectId: allocations.rentalObjectId,
-        listingName: listings.name,
+        listingName: rentalObjects.name,
         title: allocations.title,
         startTime: allocations.startTime,
         endTime: allocations.endTime,
@@ -120,7 +120,7 @@ export class CalendarController {
         metadata: allocations.metadata,
       })
       .from(allocations)
-      .leftJoin(listings, eq(allocations.rentalObjectId, listings.id))
+      .leftJoin(rentalObjects, eq(allocations.rentalObjectId, rentalObjects.id))
       .leftJoin(users, eq(allocations.userId, users.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(allocations.startTime);
@@ -165,7 +165,7 @@ export class CalendarController {
     const db = container.resolve<any>('Database');
     const { rentalObjectId, startDate, endDate } = request.query as any;
 
-    if (!listingId || !startDate || !endDate) {
+    if (!rentalObjectId || !startDate || !endDate) {
       reply.code(400);
       return { error: 'rentalObjectId, startDate, and endDate are required' };
     }
@@ -183,7 +183,7 @@ export class CalendarController {
       .from(allocations)
       .where(
         and(
-          eq(allocations.rentalObjectId, listingId),
+          eq(allocations.rentalObjectId, rentalObjectId),
           gte(allocations.startTime, start),
           lte(allocations.endTime, end)
         )
@@ -199,7 +199,7 @@ export class CalendarController {
       .from(bookings)
       .where(
         and(
-          eq(bookings.rentalObjectId, listingId),
+          eq(bookings.rentalObjectId, rentalObjectId),
           gte(bookings.startTime, start),
           lte(bookings.endTime, end)
         )

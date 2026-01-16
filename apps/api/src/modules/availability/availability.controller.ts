@@ -22,7 +22,7 @@ import {
 import { CalendarService } from '../calendar/calendar.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
-import { allocations, bookings, listings } from '../../database/schema/index';
+import { allocations, bookings, rentalObjects } from '../../database/schema/index';
 
 /**
  * Slot status types matching SDK OccurrenceStatus
@@ -136,7 +136,7 @@ export class AvailabilityController {
   ) {}
 
   /**
-   * GET /api/availability/:listingId - Get availability matrix
+   * GET /api/availability/:rentalObjectId - Get availability matrix
    * Returns ListingAvailabilityMatrixProjectionDTO with cell-by-cell availability
    *
    * Query params:
@@ -146,7 +146,7 @@ export class AvailabilityController {
    *
    * Response: { data: ListingAvailabilityMatrixProjection }
    */
-  @Get('/:listingId')
+  @Get('/:rentalObjectId')
   async getAvailabilityMatrix(
     request: FastifyRequest<{ Params: { rentalObjectId: string } }>,
     reply: FastifyReply
@@ -168,9 +168,9 @@ export class AvailabilityController {
     const db = container.resolve<any>('Database');
     const { rentalObjectId, date, duration = 60 } = request.query as any;
 
-    if (!listingId || !date) {
+    if (!rentalObjectId || !date) {
       reply.code(400);
-      return { error: 'listingId and date are required' };
+      return { error: 'rentalObjectId and date are required' };
     }
 
     const dateStart = new Date(date);
@@ -178,18 +178,18 @@ export class AvailabilityController {
     const dateEnd = new Date(date);
     dateEnd.setHours(23, 59, 59, 999);
 
-    // Get listing info
+    // Get rental object info
     const listing = await db
       .select()
-      .from(listings)
-      .where(eq(listings.id, listingId));
+      .from(rentalObjects)
+      .where(eq(rentalObjects.id, rentalObjectId));
 
     if (!listing.length) {
       reply.code(404);
-      return { error: 'Listing not found' };
+      return { error: 'Rental object not found' };
     }
 
-    // Extract buffer time from listing metadata (default to 0 if not set)
+    // Extract buffer time from rental object metadata (default to 0 if not set)
     const bufferTimeMinutes = listing[0].metadata?.bufferTimeMinutes || 0;
     const bufferTimeMs = bufferTimeMinutes * 60 * 1000;
 
@@ -205,7 +205,7 @@ export class AvailabilityController {
       .from(allocations)
       .where(
         and(
-          eq(allocations.rentalObjectId, listingId),
+          eq(allocations.rentalObjectId, rentalObjectId),
           gte(allocations.endTime, dateStart),
           lte(allocations.startTime, dateEnd)
         )
@@ -223,7 +223,7 @@ export class AvailabilityController {
       .from(bookings)
       .where(
         and(
-          eq(bookings.rentalObjectId, listingId),
+          eq(bookings.rentalObjectId, rentalObjectId),
           gte(bookings.endTime, dateStart),
           lte(bookings.startTime, dateEnd),
           or(eq(bookings.status, 'confirmed'), eq(bookings.status, 'pending'))

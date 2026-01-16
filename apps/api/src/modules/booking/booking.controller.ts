@@ -116,12 +116,12 @@ export class BookingController {
    */
   @Get('/pricing')
   async calculatePricing(request: TenantRequest, reply: FastifyReply) {
-    const { listingId, startTime, endTime } = request.query as any;
-    if (!listingId || !startTime || !endTime) {
+    const { rentalObjectId, startTime, endTime } = request.query as any;
+    if (!rentalObjectId || !startTime || !endTime) {
       reply.code(400);
-      return { error: { code: 'VALIDATION_ERROR', message: 'listingId, startTime, endTime required' } };
+      return { error: { code: 'VALIDATION_ERROR', message: 'rentalObjectId, startTime, endTime required' } };
     }
-    const pricing = await this.service.calculatePricing(listingId, startTime, endTime);
+    const pricing = await this.service.calculatePricing(rentalObjectId, startTime, endTime);
     return { data: pricing };
   }
 

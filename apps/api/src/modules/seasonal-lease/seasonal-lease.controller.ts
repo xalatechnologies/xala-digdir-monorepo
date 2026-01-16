@@ -6,7 +6,7 @@ import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, sql, count } from 'drizzle-orm';
-import { seasonalLeases, listings, organizations } from '../../database/schema/index';
+import { seasonalLeases, rentalObjects, organizations } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -22,7 +22,7 @@ export class SeasonalLeaseController {
 
     // Build conditions
     const conditions = [];
-    if (listingId) conditions.push(eq(seasonalLeases.rentalObjectId, listingId));
+    if (rentalObjectId) conditions.push(eq(seasonalLeases.rentalObjectId, rentalObjectId));
     if (organizationId) conditions.push(eq(seasonalLeases.organizationId, organizationId));
     if (status) conditions.push(eq(seasonalLeases.status, status));
 
@@ -31,7 +31,7 @@ export class SeasonalLeaseController {
         id: seasonalLeases.id,
         tenantId: seasonalLeases.tenantId,
         rentalObjectId: seasonalLeases.rentalObjectId,
-        listingName: listings.name,
+        listingName: rentalObjects.name,
         organizationId: seasonalLeases.organizationId,
         organizationName: organizations.name,
         startDate: seasonalLeases.startDate,
@@ -47,7 +47,7 @@ export class SeasonalLeaseController {
         updatedAt: seasonalLeases.updatedAt,
       })
       .from(seasonalLeases)
-      .leftJoin(listings, eq(seasonalLeases.rentalObjectId, listings.id))
+      .leftJoin(rentalObjects, eq(seasonalLeases.rentalObjectId, rentalObjects.id))
       .leftJoin(organizations, eq(seasonalLeases.organizationId, organizations.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(seasonalLeases.startDate)
@@ -86,7 +86,7 @@ export class SeasonalLeaseController {
         id: seasonalLeases.id,
         tenantId: seasonalLeases.tenantId,
         rentalObjectId: seasonalLeases.rentalObjectId,
-        listingName: listings.name,
+        listingName: rentalObjects.name,
         organizationId: seasonalLeases.organizationId,
         organizationName: organizations.name,
         startDate: seasonalLeases.startDate,
@@ -102,7 +102,7 @@ export class SeasonalLeaseController {
         updatedAt: seasonalLeases.updatedAt,
       })
       .from(seasonalLeases)
-      .leftJoin(listings, eq(seasonalLeases.rentalObjectId, listings.id))
+      .leftJoin(rentalObjects, eq(seasonalLeases.rentalObjectId, rentalObjects.id))
       .leftJoin(organizations, eq(seasonalLeases.organizationId, organizations.id))
       .where(eq(seasonalLeases.id, id));
 
@@ -153,7 +153,7 @@ export class SeasonalLeaseController {
     const existingLeases = await db
       .select()
       .from(seasonalLeases)
-      .where(listingId ? eq(seasonalLeases.rentalObjectId, listingId) : undefined)
+      .where(rentalObjectId ? eq(seasonalLeases.rentalObjectId, rentalObjectId) : undefined)
       .limit(10);
 
     // Get organizations that have previously leased
@@ -189,7 +189,7 @@ export class SeasonalLeaseController {
     return {
       data: {
         season,
-        rentalObjectId: listingId || 'all',
+        rentalObjectId: rentalObjectId || 'all',
         generatedAt: new Date().toISOString(),
         suggestions: suggestions.length > 0 ? suggestions : [
           {

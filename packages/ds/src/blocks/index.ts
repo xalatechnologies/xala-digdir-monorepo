@@ -151,6 +151,15 @@ export {
   UserStatusBadge,
   GenericStatusBadge,
   statusConfigs,
+  // V3 Model Badges
+  CategoryBadge,
+  TimeModeBadge,
+  FeatureBadge,
+  InventoryBadge,
+  CapacityBadge,
+  BlackoutIndicator,
+  RequiresApprovalBadge,
+  RuleSetBadge,
 } from './StatusBadges';
 export type {
   StatusTagProps,
@@ -171,6 +180,18 @@ export type {
   UserStatusType,
   UserStatusBadgeProps,
   GenericStatusBadgeProps,
+  // V3 Model Badge Types
+  CategoryKey,
+  CategoryBadgeProps,
+  TimeMode,
+  TimeModeBadgeProps,
+  FeatureKey,
+  FeatureBadgeProps,
+  InventoryBadgeProps,
+  CapacityBadgeProps,
+  BlackoutIndicatorProps,
+  RequiresApprovalBadgeProps,
+  RuleSetBadgeProps,
 } from './StatusBadges';
 
 // Chart Components

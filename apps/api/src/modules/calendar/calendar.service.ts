@@ -8,7 +8,7 @@ import { NotFoundError, BadRequestError } from '../../core/errors/problem-detail
 import { validate } from '../../core/validation/zod-pipe';
 import { getAuditService } from '../../core/audit/audit.service';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
-import { listings, allocations, bookings } from '../../database/schema/index';
+import { rentalObjects, allocations, bookings } from '../../database/schema/index';
 import {
   CalendarConfigQuerySchema,
   AvailabilityMatrixQuerySchema,
@@ -86,12 +86,12 @@ export class CalendarService {
     // Fetch listing to determine calendar config
     const [listing] = await db
       .select()
-      .from(listings)
-      .where(eq(listings.id, listingId))
+      .from(rentalObjects)
+      .where(eq(rentalObjects.id, rentalObjectId))
       .limit(1);
 
     if (!listing) {
-      throw new NotFoundError('Listing', listingId);
+      throw new NotFoundError('Listing', rentalObjectId);
     }
 
     // Determine granularity based on listing type and metadata
@@ -134,12 +134,12 @@ export class CalendarService {
     // Fetch listing to determine granularity
     const [listing] = await db
       .select()
-      .from(listings)
-      .where(eq(listings.id, listingId))
+      .from(rentalObjects)
+      .where(eq(rentalObjects.id, rentalObjectId))
       .limit(1);
 
     if (!listing) {
-      throw new NotFoundError('Listing', listingId);
+      throw new NotFoundError('Listing', rentalObjectId);
     }
 
     const granularity = this.determineGranularity(listing);
@@ -162,7 +162,7 @@ export class CalendarService {
       .from(allocations)
       .where(
         and(
-          eq(allocations.rentalObjectId, listingId),
+          eq(allocations.rentalObjectId, rentalObjectId),
           or(
             and(gte(allocations.startTime, fromDate), lte(allocations.startTime, toDate)),
             and(gte(allocations.endTime, fromDate), lte(allocations.endTime, toDate)),
@@ -182,7 +182,7 @@ export class CalendarService {
       .from(bookings)
       .where(
         and(
-          eq(bookings.rentalObjectId, listingId),
+          eq(bookings.rentalObjectId, rentalObjectId),
           or(
             and(gte(bookings.startTime, fromDate), lte(bookings.startTime, toDate)),
             and(gte(bookings.endTime, fromDate), lte(bookings.endTime, toDate)),

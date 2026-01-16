@@ -298,3 +298,170 @@ export const statusConfigs = {
   organization: organizationStatusConfig,
   user: userStatusConfig,
 };
+
+// =============================================================================
+// V3 MODEL BADGES: Category, TimeMode, Inventory, Capacity, Feature
+// =============================================================================
+
+// Category Badge
+export type CategoryKey = 'LOKALER_OG_BANER' | 'UTSTYR_OG_INVENTAR' | 'KJORETOY_OG_TRANSPORT' | 'OPPLEVELSER_OG_ARRANGEMENT';
+
+const categoryConfig: Record<CategoryKey, StatusBadgeConfig & { icon: string }> = {
+  LOKALER_OG_BANER: { color: 'info', label: 'Lokaler og baner', icon: '🏢' },
+  UTSTYR_OG_INVENTAR: { color: 'warning', label: 'Utstyr og inventar', icon: '🔧' },
+  KJORETOY_OG_TRANSPORT: { color: 'neutral', label: 'Kjøretøy og transport', icon: '🚗' },
+  OPPLEVELSER_OG_ARRANGEMENT: { color: 'success', label: 'Opplevelser og arrangement', icon: '🎉' },
+};
+
+export interface CategoryBadgeProps {
+  category: CategoryKey;
+  size?: 'sm' | 'md' | 'lg';
+  showIcon?: boolean;
+}
+
+export function CategoryBadge({ category, size = 'sm', showIcon = true }: CategoryBadgeProps): React.ReactElement {
+  const config = categoryConfig[category] || { color: 'neutral' as BadgeColor, label: category, icon: '' };
+  return (
+    <StatusTag color={config.color} size={size}>
+      {showIcon && config.icon && <span style={{ marginRight: '4px' }}>{config.icon}</span>}
+      {config.label}
+    </StatusTag>
+  );
+}
+
+// Time Mode Badge
+export type TimeMode = 'PERIOD' | 'SLOT' | 'ALL_DAY';
+
+const timeModeConfig: Record<TimeMode, StatusBadgeConfig & { icon: string }> = {
+  PERIOD: { color: 'info', label: 'Tidsperiode', icon: '📅' },
+  SLOT: { color: 'warning', label: 'Tidsluke', icon: '⏰' },
+  ALL_DAY: { color: 'success', label: 'Heldags', icon: '☀️' },
+};
+
+export interface TimeModeBadgeProps {
+  timeMode: TimeMode;
+  size?: 'sm' | 'md' | 'lg';
+  showIcon?: boolean;
+}
+
+export function TimeModeBadge({ timeMode, size = 'sm', showIcon = true }: TimeModeBadgeProps): React.ReactElement {
+  const config = timeModeConfig[timeMode] || { color: 'neutral' as BadgeColor, label: timeMode, icon: '' };
+  return (
+    <StatusTag color={config.color} size={size}>
+      {showIcon && config.icon && <span style={{ marginRight: '4px' }}>{config.icon}</span>}
+      {config.label}
+    </StatusTag>
+  );
+}
+
+// Feature Badge
+export type FeatureKey = 'INVENTORY' | 'SHARED_CAPACITY' | 'PACKAGES';
+
+const featureConfig: Record<FeatureKey, StatusBadgeConfig & { icon: string }> = {
+  INVENTORY: { color: 'warning', label: 'Beholdning', icon: '📦' },
+  SHARED_CAPACITY: { color: 'info', label: 'Delt kapasitet', icon: '👥' },
+  PACKAGES: { color: 'success', label: 'Pakker', icon: '🎁' },
+};
+
+export interface FeatureBadgeProps {
+  feature: FeatureKey;
+  size?: 'sm' | 'md' | 'lg';
+  showIcon?: boolean;
+}
+
+export function FeatureBadge({ feature, size = 'sm', showIcon = true }: FeatureBadgeProps): React.ReactElement {
+  const config = featureConfig[feature] || { color: 'neutral' as BadgeColor, label: feature, icon: '' };
+  return (
+    <StatusTag color={config.color} size={size}>
+      {showIcon && config.icon && <span style={{ marginRight: '4px' }}>{config.icon}</span>}
+      {config.label}
+    </StatusTag>
+  );
+}
+
+// Inventory Badge - Shows remaining inventory (x igjen)
+export interface InventoryBadgeProps {
+  total: number;
+  available: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function InventoryBadge({ total, available, size = 'sm' }: InventoryBadgeProps): React.ReactElement {
+  const color: BadgeColor = available === 0 ? 'danger' : available <= 2 ? 'warning' : 'success';
+  const label = available === 0 ? 'Utsolgt' : `${available} igjen`;
+  
+  return (
+    <StatusTag color={color} size={size}>
+      📦 {label}
+    </StatusTag>
+  );
+}
+
+// Capacity Badge - Shows remaining capacity (plasser igjen)
+export interface CapacityBadgeProps {
+  total: number;
+  booked: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function CapacityBadge({ total, booked, size = 'sm' }: CapacityBadgeProps): React.ReactElement {
+  const available = total - booked;
+  const color: BadgeColor = available === 0 ? 'danger' : available <= 5 ? 'warning' : 'success';
+  const label = available === 0 ? 'Fullt' : `${available} plasser igjen`;
+  
+  return (
+    <StatusTag color={color} size={size}>
+      👥 {label}
+    </StatusTag>
+  );
+}
+
+// Blackout Indicator
+export interface BlackoutIndicatorProps {
+  title?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function BlackoutIndicator({ title = 'Utilgjengelig', size = 'sm' }: BlackoutIndicatorProps): React.ReactElement {
+  return (
+    <StatusTag color="neutral" size={size}>
+      🚫 {title}
+    </StatusTag>
+  );
+}
+
+// Requires Approval Badge
+export interface RequiresApprovalBadgeProps {
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function RequiresApprovalBadge({ size = 'sm' }: RequiresApprovalBadgeProps): React.ReactElement {
+  return (
+    <StatusTag color="warning" size={size}>
+      ⏳ Krever godkjenning
+    </StatusTag>
+  );
+}
+
+// Rule Set Badge
+export interface RuleSetBadgeProps {
+  ruleSetKey: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const ruleSetLabels: Record<string, string> = {
+  RS_LOKALE_STANDARD: 'Standard lokale',
+  RS_BANE_SLOT: 'Bane med luker',
+  RS_UTSTYR_HELDAG: 'Utstyr heldags',
+  RS_KJORETOY: 'Kjøretøy',
+  RS_EVENT_KAPASITET: 'Arrangement',
+};
+
+export function RuleSetBadge({ ruleSetKey, size = 'sm' }: RuleSetBadgeProps): React.ReactElement {
+  const label = ruleSetLabels[ruleSetKey] || ruleSetKey;
+  return (
+    <StatusTag color="info" size={size}>
+      📋 {label}
+    </StatusTag>
+  );
+}

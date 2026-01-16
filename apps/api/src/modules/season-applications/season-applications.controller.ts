@@ -140,7 +140,7 @@ export class SeasonApplicationsController {
     // Build conditions
     const conditions = [];
     if (seasonId) conditions.push(eq(seasonApplications.seasonId, seasonId));
-    if (listingId) conditions.push(eq(seasonApplications.rentalObjectId, listingId));
+    if (rentalObjectId) conditions.push(eq(seasonApplications.rentalObjectId, rentalObjectId));
     if (organizationId) conditions.push(eq(seasonApplications.organizationId, organizationId));
     if (status) conditions.push(eq(seasonApplications.status, status));
 
@@ -615,11 +615,11 @@ export class SeasonApplicationsController {
   @Get('/conflicts')
   async getConflicts(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { seasonId, listingId } = request.query as any;
+    const { seasonId, rentalObjectId } = request.query as any;
 
-    if (!seasonId || !listingId) {
+    if (!seasonId || !rentalObjectId) {
       reply.code(400);
-      return { error: 'seasonId and listingId are required' };
+      return { error: 'seasonId and rentalObjectId are required' };
     }
 
     // Get all applications for this season and listing
@@ -637,7 +637,7 @@ export class SeasonApplicationsController {
       .where(
         and(
           eq(seasonApplications.seasonId, seasonId),
-          eq(seasonApplications.rentalObjectId, listingId),
+          eq(seasonApplications.rentalObjectId, rentalObjectId),
           eq(seasonApplications.status, 'pending')
         )
       );

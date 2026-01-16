@@ -221,7 +221,7 @@ export async function generateAllocationProposal(
     const listingResult = await db
       .select({ name: listings.name })
       .from(listings)
-      .where(eq(listings.id, app.listingId))
+      .where(eq(listings.id, app.rentalObjectId))
       .limit(1);
 
     enrichedApplications.push({

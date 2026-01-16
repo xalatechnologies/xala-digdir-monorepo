@@ -4,7 +4,7 @@
  * API endpoints for rental object reviews
  * - GET /api/reviews - List all reviews
  * - GET /api/reviews/rental-object/:rentalObjectId - Get reviews for a rental object (primary)
- * - GET /api/reviews/listing/:listingId - Get reviews for a listing (deprecated, backward compatibility)
+ * - GET /api/reviews/listing/:rentalObjectId - Get reviews for a listing (deprecated, backward compatibility)
  * - GET /api/reviews/:id - Get single review
  * - POST /api/reviews - Submit a new review
  * - PATCH /api/reviews/:id - Update review (admin)
@@ -121,7 +121,7 @@ export class ReviewsController {
     const { rentalObjectId } = request.params as any;
     const { status, limit } = request.query as any;
 
-    let reviews = mockReviews.filter(r => r.listingId === rentalObjectId);
+    let reviews = mockReviews.filter(r => r.rentalObjectId === rentalObjectId);
 
     if (status) {
       reviews = reviews.filter(r => r.status === status);
@@ -162,7 +162,7 @@ export class ReviewsController {
   @Get('/rental-object/:rentalObjectId/stats')
   async getRentalObjectReviewStats(request: TenantRequest, reply: FastifyReply) {
     const { rentalObjectId } = request.params as any;
-    const reviews = mockReviews.filter(r => r.listingId === rentalObjectId);
+    const reviews = mockReviews.filter(r => r.rentalObjectId === rentalObjectId);
 
     const stats = {
       totalReviews: reviews.length,
@@ -193,20 +193,20 @@ export class ReviewsController {
     const { limit = 5 } = request.query as any;
 
     const reviews = mockReviews
-      .filter(r => r.listingId === rentalObjectId && r.status === 'approved')
+      .filter(r => r.rentalObjectId === rentalObjectId && r.status === 'approved')
       .slice(0, Number(limit));
 
     const stats = {
-      totalReviews: mockReviews.filter(r => r.listingId === rentalObjectId).length,
-      averageRating: mockReviews.filter(r => r.listingId === rentalObjectId).length > 0
-        ? mockReviews.filter(r => r.listingId === rentalObjectId).reduce((sum, r) => sum + r.rating, 0) / mockReviews.filter(r => r.listingId === rentalObjectId).length
+      totalReviews: mockReviews.filter(r => r.rentalObjectId === rentalObjectId).length,
+      averageRating: mockReviews.filter(r => r.rentalObjectId === rentalObjectId).length > 0
+        ? mockReviews.filter(r => r.rentalObjectId === rentalObjectId).reduce((sum, r) => sum + r.rating, 0) / mockReviews.filter(r => r.rentalObjectId === rentalObjectId).length
         : 0,
       ratingDistribution: {
-        5: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 5).length,
-        4: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 4).length,
-        3: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 3).length,
-        2: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 2).length,
-        1: mockReviews.filter(r => r.listingId === rentalObjectId && r.rating === 1).length,
+        5: mockReviews.filter(r => r.rentalObjectId === rentalObjectId && r.rating === 5).length,
+        4: mockReviews.filter(r => r.rentalObjectId === rentalObjectId && r.rating === 4).length,
+        3: mockReviews.filter(r => r.rentalObjectId === rentalObjectId && r.rating === 3).length,
+        2: mockReviews.filter(r => r.rentalObjectId === rentalObjectId && r.rating === 2).length,
+        1: mockReviews.filter(r => r.rentalObjectId === rentalObjectId && r.rating === 1).length,
       },
     };
 
@@ -220,36 +220,36 @@ export class ReviewsController {
   }
 
   /**
-   * GET /api/reviews/listing/:listingId - Get reviews for a specific listing (deprecated)
+   * GET /api/reviews/listing/:rentalObjectId - Get reviews for a specific listing (deprecated)
    * @deprecated Use /rental-object/:rentalObjectId instead
    */
-  @Get('/listing/:listingId')
+  @Get('/listing/:rentalObjectId')
   async getListingReviews(request: TenantRequest, reply: FastifyReply) {
     // Forward to rental object endpoint for backward compatibility
-    const { listingId } = request.params as any;
-    request.params = { rentalObjectId: listingId } as any;
+    const { rentalObjectId } = request.params as any;
+    request.params = { rentalObjectId: rentalObjectId } as any;
     return this.getRentalObjectReviews(request, reply);
   }
 
   /**
-   * GET /api/reviews/listing/:listingId/stats - Get review statistics (deprecated)
+   * GET /api/reviews/listing/:rentalObjectId/stats - Get review statistics (deprecated)
    * @deprecated Use /rental-object/:rentalObjectId/stats instead
    */
-  @Get('/listing/:listingId/stats')
+  @Get('/listing/:rentalObjectId/stats')
   async getListingReviewStats(request: TenantRequest, reply: FastifyReply) {
-    const { listingId } = request.params as any;
-    request.params = { rentalObjectId: listingId } as any;
+    const { rentalObjectId } = request.params as any;
+    request.params = { rentalObjectId: rentalObjectId } as any;
     return this.getRentalObjectReviewStats(request, reply);
   }
 
   /**
-   * GET /api/reviews/listing/:listingId/summary - Get review summary (deprecated)
+   * GET /api/reviews/listing/:rentalObjectId/summary - Get review summary (deprecated)
    * @deprecated Use /rental-object/:rentalObjectId/summary instead
    */
-  @Get('/listing/:listingId/summary')
+  @Get('/listing/:rentalObjectId/summary')
   async getListingReviewSummary(request: TenantRequest, reply: FastifyReply) {
-    const { listingId } = request.params as any;
-    request.params = { rentalObjectId: listingId } as any;
+    const { rentalObjectId } = request.params as any;
+    request.params = { rentalObjectId: rentalObjectId } as any;
     return this.getRentalObjectReviewSummary(request, reply);
   }
 
@@ -285,7 +285,7 @@ export class ReviewsController {
   async createReview(request: TenantRequest, reply: FastifyReply) {
     const { rentalObjectId, rating, title, comment } = request.body as any;
 
-    if (!listingId || !rating || !title) {
+    if (!rentalObjectId || !rating || !title) {
       reply.code(400);
       return {
         success: false,
@@ -376,4 +376,4 @@ export class ReviewsController {
 }
 
 // Backward compatibility alias (deprecated - use ReviewsController instead)
-export { ReviewsController as ListingReviewsController };
+export { ReviewsController as RentalObjectReviewsController };

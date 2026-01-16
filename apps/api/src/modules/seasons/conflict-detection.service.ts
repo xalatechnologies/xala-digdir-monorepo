@@ -151,7 +151,7 @@ export async function findConflictsForApplication(
       and(
         eq(seasonApplications.tenantId, tenantId),
         eq(seasonApplications.seasonId, app.seasonId),
-        eq(seasonApplications.rentalObjectId, app.listingId),
+        eq(seasonApplications.rentalObjectId, app.rentalObjectId),
         eq(seasonApplications.weekday, app.weekday),
         ne(seasonApplications.id, applicationId),
         or(
@@ -277,7 +277,7 @@ export async function getConflictSummary(
 
   for (const conflict of conflicts) {
     // Count by listing
-    conflictsByListing[conflict.listingId] = (conflictsByListing[conflict.listingId] || 0) + 1;
+    conflictsByListing[conflict.rentalObjectId] = (conflictsByListing[conflict.rentalObjectId] || 0) + 1;
 
     // Count by weekday
     conflictsByWeekday[conflict.weekday] = (conflictsByWeekday[conflict.weekday] || 0) + 1;
@@ -316,7 +316,7 @@ export async function checkTimeSlotConflict(
   // Get all applications for the same season, listing, weekday
   const conditions = [
     eq(seasonApplications.seasonId, seasonId),
-    eq(seasonApplications.rentalObjectId, listingId),
+    eq(seasonApplications.rentalObjectId, rentalObjectId),
     eq(seasonApplications.weekday, weekday),
     eq(seasonApplications.tenantId, tenantId),
     or(

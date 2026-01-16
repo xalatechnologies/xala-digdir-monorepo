@@ -38,7 +38,7 @@ import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
-import { CategoriesController } from './modules/rental-objects/rental-objects.controller';
+import { CategoriesController } from './modules/rental-objects/rental-object.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
@@ -145,13 +145,17 @@ async function bootstrap() {
   container.registerFactory('RentalObjectService', () => 
     new RentalObjectService(container.resolve('RentalObjectRepository'), adapters)
   );
-  container.registerFactory('BookingService', () => 
-    new BookingService(container.resolve('BookingRepository'), adapters)
+  container.registerFactory('BookingService', () =>
+    new BookingService(
+      container.resolve('BookingRepository'),
+      container.resolve('RentalObjectRepository'),
+      adapters
+    )
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () => 
+  container.registerFactory('MonitoringService', () =>
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
@@ -159,6 +163,24 @@ async function bootstrap() {
       adapters
     )
   );
+
+  // TODO: Notification service (requires notifications and deliveryAttempts tables in schema)
+  // const { NotificationService } = await import('./modules/notifications/notification.service');
+  // const { NotificationRepository } = await import('./modules/notifications/notification.repository');
+  // const { DeduplicationService } = await import('./modules/notifications/deduplication.service');
+  // const { DeliveryService } = await import('./modules/notifications/delivery.service');
+
+  // container.registerFactory('NotificationRepository', () => new NotificationRepository(db));
+  // container.registerFactory('DeduplicationService', () => new DeduplicationService(container.resolve('NotificationRepository'), adapters));
+  // container.registerFactory('DeliveryService', () => new DeliveryService(container.resolve('NotificationRepository'), adapters));
+  // container.registerFactory('NotificationService', () =>
+  //   new NotificationService(
+  //     container.resolve('NotificationRepository'),
+  //     container.resolve('DeduplicationService'),
+  //     container.resolve('DeliveryService'),
+  //     adapters
+  //   )
+  // );
 
   console.log('✓ Services registered');
 
@@ -182,10 +204,10 @@ async function bootstrap() {
   container.registerFactory('SignicatAuthController', () => 
     new SignicatAuthController()
   );
-  // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
-    new NotificationsController()
-  );
+  // TODO: Notifications controller (disabled until NotificationService is ready)
+  // container.registerFactory('NotificationsController', () =>
+  //   new NotificationsController(container.resolve('NotificationService'))
+  // );
   console.log('✓ Controllers registered');
 
   // Load modules
@@ -229,8 +251,8 @@ async function bootstrap() {
     ShareController,
     // Signicat eID Hub authentication
     SignicatAuthController,
-    // Notifications
-    NotificationsController,
+    // TODO: Notifications (disabled until schema tables are added)
+    // NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
     UserGroupController,
@@ -248,7 +270,7 @@ async function bootstrap() {
   ];
 
   // Create Fastify app with controllers
-  const app = await createFastifyApp(controllers, { adapters, jwtSecret });
+  const app = await createFastifyApp(controllers, { adapters });
   console.log('✓ REST routes registered');
 
   // Register WebSocket routes for real-time events
@@ -288,7 +310,7 @@ async function bootstrap() {
   console.log(`  Health:   GET  http://localhost:${port}/health`);
   console.log(`  GraphQL:  POST http://localhost:${port}/graphql`);
   console.log(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
-  console.log(`  Listings: GET  http://localhost:${port}/api/listings`);
+  console.log(`  Rental Objects: GET  http://localhost:${port}/api/rental-objects`);
   console.log(`  Bookings: GET  http://localhost:${port}/api/bookings`);
   console.log(`  Audit:    GET  http://localhost:${port}/api/audit`);
   console.log(`  WebSocket:     ws://localhost:${port}/ws/audit`);

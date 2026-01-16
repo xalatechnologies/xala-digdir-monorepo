@@ -6,7 +6,7 @@ import { Controller, Get, Post, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte } from 'drizzle-orm';
-import { allocations, listings, users } from '../../database/schema/index';
+import { allocations, rentalObjects, users } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
 
 interface TenantRequest extends FastifyRequest {
@@ -22,7 +22,7 @@ export class AllocationsController {
     const { rentalObjectId, startDate, endDate, status } = request.query as any;
 
     const conditions = [];
-    if (listingId) conditions.push(eq(allocations.rentalObjectId, listingId));
+    if (rentalObjectId) conditions.push(eq(allocations.rentalObjectId, rentalObjectId));
     if (startDate) conditions.push(gte(allocations.startTime, new Date(startDate)));
     if (endDate) conditions.push(lte(allocations.endTime, new Date(endDate)));
     if (status) conditions.push(eq(allocations.status, status));
@@ -32,7 +32,7 @@ export class AllocationsController {
         id: allocations.id,
         tenantId: allocations.tenantId,
         rentalObjectId: allocations.rentalObjectId,
-        listingName: listings.name,
+        listingName: rentalObjects.name,
         title: allocations.title,
         startTime: allocations.startTime,
         endTime: allocations.endTime,
@@ -45,7 +45,7 @@ export class AllocationsController {
         createdAt: allocations.createdAt,
       })
       .from(allocations)
-      .leftJoin(listings, eq(allocations.rentalObjectId, listings.id))
+      .leftJoin(rentalObjects, eq(allocations.rentalObjectId, rentalObjects.id))
       .leftJoin(users, eq(allocations.userId, users.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(allocations.startTime);

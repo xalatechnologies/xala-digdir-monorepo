@@ -189,4 +189,147 @@ export class RentalObjectController {
     const stats = await this.service.getStats(request.params.id);
     return { data: stats };
   }
+
+  /**
+   * GET /api/rental-objects/:id/calendar-config - Get calendar configuration
+   * Returns booking modes, constraints, and calendar display settings.
+   */
+  @Get('/:id/calendar-config')
+  async getCalendarConfig(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const config = await this.service.getCalendarConfig(request.params.id);
+    return { data: config };
+  }
+}
+
+// =============================================================================
+// CATEGORIES CONTROLLER
+// =============================================================================
+
+@Controller('/api/categories')
+export class CategoriesController {
+  /**
+   * GET /api/categories - Get all rental object categories
+   */
+  @Get()
+  async getCategories(request: FastifyRequest, reply: FastifyReply) {
+    const categories = [
+      {
+        id: 'LOKALER_OG_BANER',
+        key: 'LOKALER_OG_BANER',
+        name: 'Lokaler og baner',
+        nameEn: 'Venues and courts',
+        description: 'Møterom, saler, idrettshaller, baner',
+        icon: 'building',
+        defaultTimeMode: 'PERIOD',
+        allowedTimeModes: ['PERIOD', 'SLOT', 'ALL_DAY'],
+        allowedFeatures: ['SHARED_CAPACITY'],
+        examples: ['Kulturhus', 'Idrettshall', 'Møterom', 'Padelbane'],
+      },
+      {
+        id: 'UTSTYR_OG_INVENTAR',
+        key: 'UTSTYR_OG_INVENTAR',
+        name: 'Utstyr og inventar',
+        nameEn: 'Equipment and inventory',
+        description: 'Utstyr som kan lånes med beholdningskontroll',
+        icon: 'tool',
+        defaultTimeMode: 'ALL_DAY',
+        allowedTimeModes: ['ALL_DAY', 'PERIOD'],
+        allowedFeatures: ['INVENTORY'],
+        examples: ['Partytelt', 'Projektor', 'Lydanlegg', 'Stoler'],
+      },
+      {
+        id: 'KJORETOY_OG_TRANSPORT',
+        key: 'KJORETOY_OG_TRANSPORT',
+        name: 'Kjøretøy og transport',
+        nameEn: 'Vehicles and transport',
+        description: 'Biler, sykler, tilhengere',
+        icon: 'car',
+        defaultTimeMode: 'ALL_DAY',
+        allowedTimeModes: ['ALL_DAY', 'PERIOD'],
+        allowedFeatures: ['INVENTORY'],
+        examples: ['Kommunebil', 'El-sykkel', 'Tilhenger'],
+      },
+      {
+        id: 'OPPLEVELSER_OG_ARRANGEMENT',
+        key: 'OPPLEVELSER_OG_ARRANGEMENT',
+        name: 'Opplevelser og arrangement',
+        nameEn: 'Experiences and events',
+        description: 'Kurs, konferanser, workshops med kapasitet',
+        icon: 'calendar',
+        defaultTimeMode: 'SLOT',
+        allowedTimeModes: ['SLOT', 'PERIOD'],
+        allowedFeatures: ['SHARED_CAPACITY', 'PACKAGES'],
+        examples: ['Konferanse', 'Workshop', 'Kurs', 'Konsert'],
+      },
+    ];
+    return { data: categories };
+  }
+
+  /**
+   * GET /api/categories/time-modes - Get all booking time modes
+   */
+  @Get('/time-modes')
+  async getTimeModes(request: FastifyRequest, reply: FastifyReply) {
+    const timeModes = [
+      {
+        id: 'PERIOD',
+        key: 'PERIOD',
+        name: 'Tidsperiode',
+        nameEn: 'Time period',
+        description: 'Velg start- og sluttid fritt',
+        calendarBehavior: 'Timeline drag-select',
+        calendarUiVariant: 'timeline',
+      },
+      {
+        id: 'SLOT',
+        key: 'SLOT',
+        name: 'Tidsluke',
+        nameEn: 'Time slot',
+        description: 'Velg faste tidsluk er',
+        calendarBehavior: 'Slot grid selection',
+        calendarUiVariant: 'slot-grid',
+      },
+      {
+        id: 'ALL_DAY',
+        key: 'ALL_DAY',
+        name: 'Heldags',
+        nameEn: 'Full day',
+        description: 'Book hele dager',
+        calendarBehavior: 'Day cards with multi-day picker',
+        calendarUiVariant: 'day-cards',
+      },
+    ];
+    return { data: timeModes };
+  }
+
+  /**
+   * GET /api/categories/features - Get all booking features
+   */
+  @Get('/features')
+  async getFeatures(request: FastifyRequest, reply: FastifyReply) {
+    const features = [
+      {
+        id: 'INVENTORY',
+        key: 'INVENTORY',
+        name: 'Beholdning',
+        nameEn: 'Inventory',
+        description: 'Spor antall tilgjengelig (x igjen)',
+      },
+      {
+        id: 'SHARED_CAPACITY',
+        key: 'SHARED_CAPACITY',
+        name: 'Delt kapasitet',
+        nameEn: 'Shared capacity',
+        description: 'Spor plasser tilgjengelig (plasser igjen)',
+      },
+      {
+        id: 'PACKAGES',
+        key: 'PACKAGES',
+        name: 'Pakker',
+        nameEn: 'Packages',
+        description: 'Sett sammen tilleggstjenester ved checkout',
+      },
+    ];
+    return { data: features };
+  }
 }

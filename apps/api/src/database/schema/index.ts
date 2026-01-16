@@ -354,3 +354,48 @@ export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
 export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 
+// =============================================================================
+// LEGACY ALIASES (for backwards compatibility)
+// =============================================================================
+// These exports maintain compatibility with code still using "listing" terminology.
+// All new code should use "rentalObject" terminology.
+
+/** @deprecated Use rentalObjects instead */
+export const listings = rentalObjects;
+
+/** @deprecated Use RentalObject instead */
+export type Listing = RentalObject;
+
+/** @deprecated Use NewRentalObject instead */
+export type NewListing = NewRentalObject;
+
+// Stub exports for seasons module (pending implementation)
+export const seasons = pgTable('seasons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  startDate: timestamp('start_date').notNull(),
+  endDate: timestamp('end_date').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const seasonApplications = pgTable('season_applications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const priorityRules = pgTable('priority_rules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  priority: integer('priority').notNull().default(0),
+  conditions: jsonb('conditions').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
