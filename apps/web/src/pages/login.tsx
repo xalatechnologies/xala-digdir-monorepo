@@ -138,27 +138,27 @@ export function LoginPage(): React.ReactElement {
   const features = [
     {
       icon: <PlatformIcon size={20} />,
-      title: t('komplett.plattform'),
-      description: t('booking.betaling.kalender.og.rapportering.i.n.løsn'),
+      title: t('auth.completePlatform'),
+      description: t('auth.completePlatformDesc'),
     },
     {
       icon: <AutomationIcon size={20} />,
-      title: t('automatisering'),
-      description: t('regelbasert.godkjenning.reduserer.manuelt.arbeid'),
+      title: t('auth.automation'),
+      description: t('auth.automationDesc'),
     },
     {
       icon: <ShieldCheckIcon size={20} />,
-      title: t('gdprklar.sikker'),
-      description: t('full.etterlevelse.av.personvernregler.og.norske.st'),
+      title: t('auth.gdprSecure'),
+      description: t('auth.gdprSecureDesc'),
     },
   ];
 
   const integrations = ['BankID', 'Vipps', 'Visma', 'RCO', 'ISO 27001', 'ISO 27701'];
 
   const footerLinks = [
-    { href: 'https://digilist.no/personvern', label: t('personvern') },
-    { href: 'https://digilist.no/cookies', label: t('vilkår.for.bruk') },
-    { href: 'https://digilist.no/#book-demo', label: t('kontakt.support') },
+    { href: 'https://digilist.no/personvern', label: t('auth.privacy') },
+    { href: 'https://digilist.no/cookies', label: t('auth.terms') },
+    { href: 'https://digilist.no/#book-demo', label: t('auth.contactSupport') },
   ];
 
   return (
@@ -166,20 +166,20 @@ export function LoginPage(): React.ReactElement {
       brandName={t('brand.name')}
       brandTagline={t('brand.tagline')}
       logoHref="/"
-      title={t('logg.inn')}
-      subtitle={t('velg.innloggingsmetode.for.å.fortsette')}
-      panelTitle={t('booking')}
-      panelSubtitle={t('en.helhetlig.bookingløsning')}
-      panelDescription="Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering."
+      title={t('auth.login')}
+      subtitle={t('auth.selectMethod')}
+      panelTitle={t('auth.backoffice')}
+      panelSubtitle={t('auth.holisticSolution')}
+      panelDescription={t('auth.platformDesc')}
       features={features}
       integrations={integrations}
       footerLinks={footerLinks}
-      copyright="© 2026 Digilist. Alle rettigheter reservert."
+      copyright={t('auth.copyright')}
     >
       <LoginOption
         icon={<VippsIcon />}
-        title={t('vipps')}
-        description={t('status.active')}
+        title={t('auth.vipps')}
+        description={t('auth.temporarilyDisabled')}
         disabled
         onClick={() => {
           // Vipps login temporarily disabled
@@ -188,8 +188,8 @@ export function LoginPage(): React.ReactElement {
       />
       <LoginOption
         icon={<IdPortenIcon />}
-        title={t('idporten')}
-        description={t('personlig.innlogging.med.bankid')}
+        title={t('auth.idporten')}
+        description={t('auth.idportenDesc')}
         onClick={() => {
           // Pass current URL for session persistence (booking flow)
           // Backend will auto-redirect based on user role or create user if needed
@@ -199,8 +199,8 @@ export function LoginPage(): React.ReactElement {
       />
       <LoginOption
         icon={<MicrosoftIcon />}
-        title={t('microsoft')}
-        description={t('kommer.snart')}
+        title={t('auth.microsoft')}
+        description={t('auth.comingSoon')}
         disabled
         onClick={() => {
           // Microsoft login temporarily disabled
