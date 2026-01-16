@@ -31,3 +31,6 @@ packages/**/*.d.ts
 .worktrees/
 .security-key
 logs/security/
+
+# Xaheen data directory
+.xaheen/
