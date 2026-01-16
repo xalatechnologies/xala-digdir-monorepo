@@ -22,6 +22,7 @@ export class BookingRepository extends BaseRepository<
 
   /**
    * Find bookings with query params
+   * Supports org-scoped access via orgId filter (joins to listings.organizationId)
    */
   async findWithFilters(tenantId: string, params: BookingQueryParams): Promise<PaginatedResult<Booking>> {
     const conditions: FilterCondition[] = [
@@ -48,12 +49,97 @@ export class BookingRepository extends BaseRepository<
       conditions.push({ field: 'endTime', operator: 'lte', value: params.to });
     }
 
+    // Handle org-scoped access by filtering via listings.organizationId
+    if (params.orgId) {
+      return this.findWithOrgFilter(tenantId, params);
+    }
+
     return this.findMany(conditions, {
       page: params.page,
       limit: params.limit,
       sortBy: 'startTime',
       sortOrder: 'asc',
     });
+  }
+
+  /**
+   * Find bookings filtered by organization (via listings join)
+   * Used for org-scoped RBAC access control
+   */
+  private async findWithOrgFilter(tenantId: string, params: BookingQueryParams): Promise<PaginatedResult<Booking>> {
+    const page = params.page ?? 1;
+    const limit = params.limit ?? 20;
+    const offset = (page - 1) * limit;
+
+    // Build WHERE conditions
+    const conditions: any[] = [
+      eq(bookings.tenantId, tenantId),
+      eq(listings.organizationId, params.orgId!),
+    ];
+
+    if (params.status) {
+      conditions.push(eq(bookings.status, params.status));
+    }
+    if (params.listingId) {
+      conditions.push(eq(bookings.listingId, params.listingId));
+    }
+    if (params.userId) {
+      conditions.push(eq(bookings.userId, params.userId));
+    }
+
+    // Import and for combining conditions
+    const { and, gte, lte, sql } = await import('drizzle-orm');
+
+    if (params.from) {
+      conditions.push(gte(bookings.startTime, params.from));
+    }
+    if (params.to) {
+      conditions.push(lte(bookings.endTime, params.to));
+    }
+
+    // Get total count
+    const countResult = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings)
+      .innerJoin(listings, eq(bookings.listingId, listings.id))
+      .where(and(...conditions));
+    const total = Number(countResult[0]?.count || 0);
+
+    // Get paginated data
+    const data = await this.db
+      .select({
+        id: bookings.id,
+        tenantId: bookings.tenantId,
+        listingId: bookings.listingId,
+        userId: bookings.userId,
+        status: bookings.status,
+        startTime: bookings.startTime,
+        endTime: bookings.endTime,
+        totalPrice: bookings.totalPrice,
+        currency: bookings.currency,
+        notes: bookings.notes,
+        metadata: bookings.metadata,
+        createdAt: bookings.createdAt,
+        updatedAt: bookings.updatedAt,
+      })
+      .from(bookings)
+      .innerJoin(listings, eq(bookings.listingId, listings.id))
+      .where(and(...conditions))
+      .orderBy(bookings.startTime)
+      .limit(limit)
+      .offset(offset);
+
+    return {
+      data: data as Booking[],
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1,
+      },
+    };
   }
 
   /**

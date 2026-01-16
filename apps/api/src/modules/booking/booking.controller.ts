@@ -26,12 +26,35 @@ export class BookingController {
 
   /**
    * GET /api/bookings - List all bookings
+   *
+   * Query params:
+   * - listingId: Filter by listing
+   * - userId: Filter by user
+   * - orgId: Filter by organization (for org-scoped RBAC access)
+   * - status: Filter by booking status
+   * - from: Filter bookings starting from this date
+   * - to: Filter bookings ending before this date
+   * - page: Page number (default: 1)
+   * - limit: Results per page (default: 20, max: 100)
+   *
+   * Scope enforcement:
+   * - admin/COMMUNE_ADMIN: Can view all bookings in tenant
+   * - ORG_ADMIN/ORG_CASE_HANDLER: Should pass orgId to filter to org's bookings
    */
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
     const params = validate(BookingQuerySchema, request.query);
-    const result = await this.service.findAll(tenantId, { ...params, page: params.page ?? 1, limit: params.limit ?? 20 });
+
+    // Extract orgId for org-scoped access (filters via listings.organizationId)
+    const { orgId, ...otherParams } = params;
+
+    const result = await this.service.findAll(tenantId, {
+      ...otherParams,
+      orgId, // Pass orgId for org-scoped filtering
+      page: params.page ?? 1,
+      limit: params.limit ?? 20
+    });
     return result;
   }
 

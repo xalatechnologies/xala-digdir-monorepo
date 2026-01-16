@@ -97,6 +97,7 @@ export type DenyBookingDTO = z.infer<typeof DenyBookingSchema>;
 export const BookingQuerySchema = z.object({
   listingId: z.string().uuid().optional(),
   userId: z.string().uuid().optional(),
+  orgId: z.string().uuid().optional(), // Organization filter for org-scoped access
   status: BookingStatusSchema.optional(),
   from: z.coerce.date().optional(),
   to: z.coerce.date().optional(),
