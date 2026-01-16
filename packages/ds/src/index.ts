@@ -225,6 +225,8 @@ export {
   UploadIcon,
   CameraIcon,
   ImageIcon,
+  TableIcon,
+  KeyIcon,
   FormField,
 } from './primitives';
 export type {
