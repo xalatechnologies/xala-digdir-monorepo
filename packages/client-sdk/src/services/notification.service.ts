@@ -65,6 +65,46 @@ export interface PaginatedResponse<T> {
   };
 }
 
+export interface DeliveryAttempt {
+  id: string;
+  notificationId: string;
+  attemptNumber: number;
+  status: 'pending' | 'sent' | 'failed';
+  error?: string | null;
+  retriedAt?: string | null;
+  nextRetryAt?: string | null;
+  createdAt: string;
+}
+
+export interface NotificationDeliveryStatus {
+  notification: Notification;
+  attempts: DeliveryAttempt[];
+  totalAttempts: number;
+  lastAttemptAt?: string | null;
+}
+
+export interface DeliveryReport {
+  id: string;
+  type: 'email' | 'push' | 'in_app' | 'sms';
+  recipient: string;
+  subject?: string | null;
+  status: 'pending' | 'sent' | 'delivered' | 'failed' | 'read';
+  attemptCount: number;
+  lastAttemptAt?: string | null;
+  sentAt?: string | null;
+  deliveredAt?: string | null;
+  failedAt?: string | null;
+  createdAt: string;
+}
+
+export interface DeliveryReportQueryParams {
+  type?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
 class NotificationService {
   private basePath = '/api/notifications';
 
@@ -147,6 +187,36 @@ class NotificationService {
    */
   async delete(id: string): Promise<{ success: boolean }> {
     return getClient().delete<{ success: boolean }>(`${this.basePath}/${id}`);
+  }
+
+  /**
+   * Get delivery status for a specific notification
+   */
+  async getDeliveryStatus(id: string): Promise<{ data: NotificationDeliveryStatus }> {
+    return getClient().get<{ data: NotificationDeliveryStatus }>(`${this.basePath}/delivery-status/${id}`);
+  }
+
+  /**
+   * Get delivery reports with filtering
+   */
+  async getDeliveryReports(params: DeliveryReportQueryParams = {}): Promise<PaginatedResponse<DeliveryReport>> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) queryParams.set(key, String(value));
+    });
+
+    const url = queryParams.toString()
+      ? `${this.basePath}/delivery-reports?${queryParams.toString()}`
+      : `${this.basePath}/delivery-reports`;
+
+    return getClient().get<PaginatedResponse<DeliveryReport>>(url);
+  }
+
+  /**
+   * Retry failed notifications
+   */
+  async retryFailed(): Promise<{ success: boolean; retried: number }> {
+    return getClient().post<{ success: boolean; retried: number }>(`${this.basePath}/retry-failed`);
   }
 }
 

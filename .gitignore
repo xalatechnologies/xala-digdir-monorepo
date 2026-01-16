@@ -20,8 +20,6 @@ packages/**/*.js
 packages/**/*.d.ts
 !packages/eslint-config/**/*.js
 !packages/ds-registry/examples/**/*.js
-!packages/i18n/eslint.config.js
-!packages/i18n/src/env.d.ts
 
 # Auto Claude data directory
 .auto-claude/
@@ -34,22 +32,5 @@ packages/**/*.d.ts
 .security-key
 logs/security/
 
-# Test artifacts and reports (organized under tests/ folder)
-tests/reports/
-tests/screenshots/
-tests/artifacts/
-
-# Legacy test folders (deprecated - use tests/ structure)
-test-results/
-playwright-report/
-playwright-report-*/
-reports/
-screenshots/
-e2e/
-
 # Xaheen data directory
 .xaheen/
-
-# Xaheen generated files
-.xaheen-security.json
-.xaheen-status

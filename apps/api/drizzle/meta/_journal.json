@@ -5,43 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768417207552,
-      "tag": "0000_mute_agent_zero",
+      "when": 1768521233649,
+      "tag": "0000_melodic_hulk",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1768417335292,
-      "tag": "0001_sparkling_microchip",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1768417430028,
-      "tag": "0002_fancy_jack_power",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1768507200000,
-      "tag": "0003_rental_objects_category",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1768510800000,
-      "tag": "0004_gdpr_consent_system",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1768513200000,
-      "tag": "0005_notification_system",
+      "when": 1768521335065,
+      "tag": "0001_sparkling_wiccan",
       "breakpoints": true
     }
   ]

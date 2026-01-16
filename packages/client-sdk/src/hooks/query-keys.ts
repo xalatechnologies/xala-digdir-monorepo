@@ -5,14 +5,10 @@
  */
 
 import type {
-  RentalObjectQueryParams,
+  ListingQueryParams,
   AvailabilityQueryParams,
-  PublicRentalObjectParams
-} from '../types/rental-object';
-
-// Type aliases for backward compatibility
-type ListingQueryParams = RentalObjectQueryParams;
-type PublicListingParams = PublicRentalObjectParams;
+  PublicListingParams
+} from '../types/listing';
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
@@ -79,34 +75,18 @@ export const queryKeys = {
 
 
   // =========================================================================
-  // Rental Object Keys
+  // Listing Keys
   // =========================================================================
-  rentalObjects: {
-    all: ['rentalObjects'] as const,
-    lists: () => [...queryKeys.rentalObjects.all, 'list'] as const,
-    list: (params?: RentalObjectQueryParams) => [...queryKeys.rentalObjects.lists(), params] as const,
-    details: () => [...queryKeys.rentalObjects.all, 'detail'] as const,
-    detail: (id: string) => [...queryKeys.rentalObjects.details(), id] as const,
-    slug: (slug: string) => [...queryKeys.rentalObjects.all, 'slug', slug] as const,
-    availability: (id: string, params: AvailabilityQueryParams) =>
-      [...queryKeys.rentalObjects.detail(id), 'availability', params] as const,
-    stats: (id: string) => [...queryKeys.rentalObjects.detail(id), 'stats'] as const,
-    calendarConfig: (id: string) => [...queryKeys.rentalObjects.detail(id), 'calendarConfig'] as const,
-  },
-
-  // Backward compatibility alias (deprecated)
-  /** @deprecated Use rentalObjects instead */
   listings: {
-    all: ['rentalObjects'] as const,
-    lists: () => [...queryKeys.rentalObjects.lists()] as const,
-    list: (params?: ListingQueryParams) => [...queryKeys.rentalObjects.list(params)] as const,
-    details: () => [...queryKeys.rentalObjects.details()] as const,
-    detail: (id: string) => [...queryKeys.rentalObjects.detail(id)] as const,
-    slug: (slug: string) => [...queryKeys.rentalObjects.slug(slug)] as const,
-    availability: (id: string, params: AvailabilityQueryParams) =>
-      [...queryKeys.rentalObjects.availability(id, params)] as const,
-    stats: (id: string) => [...queryKeys.rentalObjects.stats(id)] as const,
-    calendarConfig: (id: string) => [...queryKeys.rentalObjects.calendarConfig(id)] as const,
+    all: ['listings'] as const,
+    lists: () => [...queryKeys.listings.all, 'list'] as const,
+    list: (params?: ListingQueryParams) => [...queryKeys.listings.lists(), params] as const,
+    details: () => [...queryKeys.listings.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.listings.details(), id] as const,
+    slug: (slug: string) => [...queryKeys.listings.all, 'slug', slug] as const,
+    availability: (id: string, params: AvailabilityQueryParams) => 
+      [...queryKeys.listings.detail(id), 'availability', params] as const,
+    stats: (id: string) => [...queryKeys.listings.detail(id), 'stats'] as const,
   },
 
   // =========================================================================
@@ -114,19 +94,14 @@ export const queryKeys = {
   // =========================================================================
   public: {
     all: ['public'] as const,
-    rentalObjects: (params?: PublicRentalObjectParams) => [...queryKeys.public.all, 'rentalObjects', params] as const,
-    rentalObject: (id: string) => [...queryKeys.public.all, 'rentalObject', id] as const,
-    availability: (rentalObjectId: string, params: AvailabilityQueryParams) =>
-      [...queryKeys.public.all, 'availability', rentalObjectId, params] as const,
+    listings: (params?: PublicListingParams) => [...queryKeys.public.all, 'listings', params] as const,
+    listing: (id: string) => [...queryKeys.public.all, 'listing', id] as const,
+    availability: (listingId: string, params: AvailabilityQueryParams) =>
+      [...queryKeys.public.all, 'availability', listingId, params] as const,
     categories: () => [...queryKeys.public.all, 'categories'] as const,
     cities: () => [...queryKeys.public.all, 'cities'] as const,
     municipalities: () => [...queryKeys.public.all, 'municipalities'] as const,
     featured: () => [...queryKeys.public.all, 'featured'] as const,
-    // Backward compatibility aliases (deprecated)
-    /** @deprecated Use rentalObjects instead */
-    listings: (params?: PublicListingParams) => [...queryKeys.public.rentalObjects(params)] as const,
-    /** @deprecated Use rentalObject instead */
-    listing: (id: string) => [...queryKeys.public.rentalObject(id)] as const,
   },
 
   // =========================================================================
@@ -140,16 +115,12 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.bookings.details(), id] as const,
     my: (params?: BookingQueryParams) => [...queryKeys.bookings.all, 'my', params] as const,
     recurring: () => [...queryKeys.bookings.all, 'recurring'] as const,
-    pricing: (rentalObjectId: string, start: string, end: string) =>
-      [...queryKeys.bookings.all, 'pricing', rentalObjectId, start, end] as const,
+    pricing: (listingId: string, start: string, end: string) =>
+      [...queryKeys.bookings.all, 'pricing', listingId, start, end] as const,
     paymentReconciliation: (params?: { startDate?: string; endDate?: string; status?: string; provider?: string }) =>
       [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
     paymentHistory: (bookingId: string) =>
       [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
-    quote: (rentalObjectId: string, selectionHash: string) =>
-      [...queryKeys.bookings.all, 'quote', rentalObjectId, selectionHash] as const,
-    recurringPreview: (selectionHash: string) =>
-      [...queryKeys.bookings.all, 'recurringPreview', selectionHash] as const,
   },
 
   // =========================================================================
@@ -157,14 +128,10 @@ export const queryKeys = {
   // =========================================================================
   calendar: {
     all: ['calendar'] as const,
-    events: (params?: { rentalObjectId?: string; listingId?: string; startDate?: string; endDate?: string }) =>
-      [...queryKeys.calendar.all, 'events', { ...params, rentalObjectId: params?.rentalObjectId || params?.listingId }] as const,
-    slots: (params: { rentalObjectId?: string; listingId?: string; date: string; duration?: number }) =>
-      [...queryKeys.calendar.all, 'slots', { ...params, rentalObjectId: params.rentalObjectId || params.listingId }] as const,
-    config: (rentalObjectId: string, params?: { bookingType?: string }) =>
-      [...queryKeys.calendar.all, 'config', rentalObjectId, params] as const,
-    availabilityMatrix: (rentalObjectId: string, params: { from: string; to: string; bookingType?: string }) =>
-      [...queryKeys.calendar.all, 'availabilityMatrix', rentalObjectId, params] as const,
+    events: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
+      [...queryKeys.calendar.all, 'events', params] as const,
+    slots: (params: { listingId: string; date: string; duration?: number }) =>
+      [...queryKeys.calendar.all, 'slots', params] as const,
   },
 
   // =========================================================================
@@ -172,8 +139,8 @@ export const queryKeys = {
   // =========================================================================
   allocations: {
     all: ['allocations'] as const,
-    list: (params?: { rentalObjectId?: string; listingId?: string; startDate?: string; endDate?: string }) =>
-      [...queryKeys.allocations.all, 'list', { ...params, rentalObjectId: params?.rentalObjectId || params?.listingId }] as const,
+    list: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
+      [...queryKeys.allocations.all, 'list', params] as const,
   },
 
   // =========================================================================
@@ -258,6 +225,9 @@ export const queryKeys = {
     my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
       [...queryKeys.notifications.all, 'my', params] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
+    deliveryStatus: (id: string) => [...queryKeys.notifications.all, 'deliveryStatus', id] as const,
+    deliveryReports: (params?: { type?: string; status?: string; search?: string; page?: number; limit?: number }) =>
+      [...queryKeys.notifications.all, 'deliveryReports', params] as const,
   },
 
   // =========================================================================
@@ -267,8 +237,6 @@ export const queryKeys = {
     all: ['pushNotifications'] as const,
     subscriptions: () => [...queryKeys.pushNotifications.all, 'subscriptions'] as const,
     preferences: () => [...queryKeys.pushNotifications.all, 'preferences'] as const,
-    organizationPreferences: (organizationId?: string) =>
-      [...queryKeys.pushNotifications.all, 'organization', organizationId] as const,
   },
 
   // =========================================================================
@@ -289,15 +257,11 @@ export const queryKeys = {
     list: (params?: ReviewQueryParams) => [...queryKeys.reviews.lists(), params] as const,
     details: () => [...queryKeys.reviews.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.reviews.details(), id] as const,
-    byRentalObject: (rentalObjectId: string, params?: Omit<ReviewQueryParams, 'rentalObjectId' | 'listingId'>) =>
-      [...queryKeys.reviews.all, 'byRentalObject', rentalObjectId, params] as const,
+    byListing: (listingId: string, params?: Omit<ReviewQueryParams, 'listingId'>) =>
+      [...queryKeys.reviews.all, 'byListing', listingId, params] as const,
     byUser: (userId: string, params?: Omit<ReviewQueryParams, 'userId'>) =>
       [...queryKeys.reviews.all, 'byUser', userId, params] as const,
-    stats: (rentalObjectId: string) => [...queryKeys.reviews.all, 'stats', rentalObjectId] as const,
-    // Backward compatibility alias (deprecated)
-    /** @deprecated Use byRentalObject instead */
-    byListing: (listingId: string, params?: Omit<ReviewQueryParams, 'listingId'>) =>
-      [...queryKeys.reviews.byRentalObject(listingId, params)] as const,
+    stats: (listingId: string) => [...queryKeys.reviews.all, 'stats', listingId] as const,
   },
 
   // =========================================================================

@@ -13,8 +13,6 @@ import { LoginPage } from './routes/login';
 import { RoleSelectionPage } from './routes/role-selection';
 import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
-// TODO: Fix rental-objects feature exports before enabling
-// import { RentalObjectsPage, RentalObjectEditPage, RentalObjectDetailPage } from './routes/rental-objects';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
@@ -37,16 +35,11 @@ import { ListingWizardPage } from './routes/listing-wizard';
 import { PricingRulesPage } from './routes/pricing-rules';
 import { UsersManagementPage } from './routes/users-management';
 import { AdminReportsPage } from './routes/admin-reports';
+import { NotificationDeliveryPage } from './routes/notification-delivery';
 // New TenantAdmin pages
 import { TenantSettingsPage } from './routes/tenant/settings';
 import { TenantBrandingPage } from './routes/tenant/branding';
 import { TenantAuditLogPage } from './routes/tenant/audit-log';
-// Integrations pages
-import { IntegrationsOverviewPage } from './routes/integrations';
-import { ArchivePage } from './routes/integrations/archive';
-import { CalendarIntegrationPage } from './routes/integrations/calendar';
-// GDPR pages
-import { GDPRManagementPage } from './routes/gdpr';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -93,12 +86,6 @@ function AppWithTheme() {
               }
             >
               <Route index element={<DashboardPage />} />
-              {/* Rental Objects Routes (Primary) - DISABLED: Fix exports before enabling */}
-              {/* <Route path="rental-objects" element={<RentalObjectsPage />} /> */}
-              {/* <Route path="rental-objects/new" element={<RentalObjectEditPage />} /> */}
-              {/* <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} /> */}
-              {/* <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} /> */}
-              {/* Listings Routes (Deprecated - kept for backward compatibility) */}
               <Route path="listings" element={<ListingsPage />} />
               <Route path="listings/new" element={<ListingEditPage />} />
               <Route path="listings/:slug" element={<ListingEditPage />} />
@@ -125,14 +112,6 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AuditPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="gdpr"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <GDPRManagementPage />
                   </ProtectedRoute>
                 }
               />
@@ -268,7 +247,15 @@ function AppWithTheme() {
                   </ProtectedRoute>
                 }
               />
-              
+              <Route
+                path="notifications/delivery-reports"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <NotificationDeliveryPage />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* TenantAdmin routes */}
               <Route
                 path="tenant/settings"
@@ -291,32 +278,6 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <TenantAuditLogPage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Integrations routes - super_admin only */}
-              <Route
-                path="integrations"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <IntegrationsOverviewPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="integrations/archive"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <ArchivePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="integrations/calendar"
-                element={
-                  <ProtectedRoute requiredRole="super_admin">
-                    <CalendarIntegrationPage />
                   </ProtectedRoute>
                 }
               />
