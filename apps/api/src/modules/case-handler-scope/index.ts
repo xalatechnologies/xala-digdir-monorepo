@@ -5,6 +5,7 @@
 export { CaseHandlerScopeController } from './case-handler-scope.controller';
 export { CaseHandlerScopeService, getCaseHandlerScopeService } from './case-handler-scope.service';
 export type {
+  CaseHandlerScope,
   CaseHandlerScopeQueryParams,
   CreateCaseHandlerScopeInput,
   UpdateCaseHandlerScopeInput,

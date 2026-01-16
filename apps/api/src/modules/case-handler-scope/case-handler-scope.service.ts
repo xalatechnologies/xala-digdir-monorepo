@@ -60,7 +60,7 @@ interface PaginatedResult<T> {
 /**
  * Case Handler Scope type
  */
-interface CaseHandlerScope {
+export interface CaseHandlerScope {
   id: string;
   tenantId: string;
   userId: string;
