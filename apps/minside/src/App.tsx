@@ -10,6 +10,7 @@ import { AccountContextProvider, useAccountContext } from './providers/AccountCo
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
+import { useOAuthCallback } from './hooks/useOAuthCallback';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
 import { CalendarPage } from './routes/calendar';
@@ -96,6 +97,9 @@ export function App() {
 
 function AppWithTheme() {
   const { colorScheme } = useTheme();
+  
+  // Handle OAuth/BankID redirects automatically
+  useOAuthCallback();
   
   return (
     <I18nProvider>
