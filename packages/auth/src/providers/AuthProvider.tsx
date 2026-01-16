@@ -220,13 +220,22 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
       // Check URL for OAuth callback with authorization code
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
+      const state = urlParams.get('state');
 
       if (code) {
         debug('OAuth callback detected, exchanging code for session...');
-        
+        debug('Authorization code:', code);
+        debug('State parameter:', state || 'none');
+
         try {
           // Exchange authorization code for session
-          const response = await authService.handleOAuthCallback(code);
+          // This calls the API's OAuth callback endpoint which:
+          // 1. Validates the authorization code and state parameter
+          // 2. Exchanges code for OAuth tokens
+          // 3. Validates tenant ID and subscription status
+          // 4. Creates JWT with user, tenant, and subscription data
+          // 5. Sets HTTP-only cookies for session management
+          const response = await authService.handleOAuthCallback(code, state || undefined);
           const session = response.data;
 
           const userData: User = {

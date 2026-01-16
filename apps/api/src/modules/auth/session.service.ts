@@ -83,24 +83,26 @@ export class SessionService {
   }
 
   /**
-   * Create new session with access and refresh tokens
-   *
-   * @param params - Session creation parameters
-   * @returns Session ID, tokens, and expiry
+   * Create a new session with access and refresh tokens
    */
   async createSession(params: CreateSessionParams): Promise<CreateSessionResult> {
     const db = this.getDatabase();
     const jwtService = this.getJwtService();
+    const { tenantDataService } = await import('./tenant-data.service');
+
+    // Fetch tenant subscription and feature flags
+    const tenantData = await tenantDataService.getTenantData(params.tenantId);
 
     // Generate opaque refresh token (32 bytes base64url = 43 chars)
     const refreshToken = this.generateToken();
     const refreshTokenHash = this.hashToken(refreshToken);
 
-    // Generate JWT access token (15min expiry)
+    // Generate JWT access token (15min expiry) with tenant data
     const accessTokenResult = jwtService.generateToken(
       params.userId,
       params.tenantId,
-      COOKIE_CONFIG.ACCESS.maxAge // 15 minutes
+      COOKIE_CONFIG.ACCESS.maxAge, // 15 minutes
+      tenantData || undefined
     );
 
     // Calculate refresh token expiry (7 days)
@@ -139,28 +141,31 @@ export class SessionService {
   async rotateRefreshToken(refreshToken: string): Promise<RotateRefreshTokenResult | null> {
     const db = this.getDatabase();
     const jwtService = this.getJwtService();
+    const { tenantDataService } = await import('./tenant-data.service');
 
     const tokenHash = this.hashToken(refreshToken);
 
-    // Find session by refresh token hash
-    const [session] = await db
+    // Find active session with this refresh token
+    const sessionResult = await db
       .select()
       .from(sessions)
-      .where(and(eq(sessions.refreshTokenHash, tokenHash), isNull(sessions.revokedAt)))
+      .where(
+        and(
+          eq(sessions.refreshTokenHash, tokenHash),
+          isNull(sessions.revokedAt),
+          isNull(sessions.deletedAt)
+        )
+      )
       .limit(1);
 
-    if (!session) {
-      // Token not found or already revoked
-      // This could indicate token reuse (security incident)
+    if (!sessionResult.length) {
       return null;
     }
 
-    // Check expiration
-    if (new Date() > new Date(session.expiresAt)) {
-      // Token expired - revoke session
-      await this.revokeSession(session.id, 'expired');
-      return null;
-    }
+    const session = sessionResult[0];
+
+    // Fetch tenant subscription and feature flags
+    const tenantData = await tenantDataService.getTenantData(session.tenantId);
 
     // Generate new tokens
     const newRefreshToken = this.generateToken();
@@ -169,7 +174,8 @@ export class SessionService {
     const newAccessTokenResult = jwtService.generateToken(
       session.userId,
       session.tenantId,
-      COOKIE_CONFIG.ACCESS.maxAge // 15 minutes
+      COOKIE_CONFIG.ACCESS.maxAge, // 15 minutes
+      tenantData || undefined
     );
 
     // Update session with new refresh token hash

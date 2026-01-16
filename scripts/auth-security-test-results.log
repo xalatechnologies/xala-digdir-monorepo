@@ -1,0 +1,15 @@
+[0;34m
+╔═══════════════════════════════════════════════════════════════╗
+║  Xala/Digilist Enterprise Authentication Security Test Suite ║
+╚═══════════════════════════════════════════════════════════════╝
+[0m
+API URL: https://api.digilist.no
+Tenant ID: f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mTEST 1: Cookie Security Configuration[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33mTesting:[0m Cookie names are short and opaque
+[0;32m✓ PASS:[0m Cookie names are secure (dl_at, dl_rt, dl_csrf)

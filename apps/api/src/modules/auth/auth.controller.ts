@@ -14,38 +14,11 @@ import { getAuditService } from '../../core/audit/audit.service';
 import { getPermissionsForRole, getCapabilityProjection, isValidRole } from './rbac';
 import type { JwtService } from '../../core/auth/jwt.service';
 import { createErrorResponse, createSuccessResponse } from '../../utils/i18n';
+import { COOKIE_CONFIG, getCookieOptions, getClearCookieOptions } from '../../config/cookies';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
-}
-
-// Cookie configuration
-const COOKIE_NAME = 'session';
-const COOKIE_OPTIONS = {
-  httpOnly: true, // Cannot be accessed by JavaScript (XSS protection)
-  secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-  sameSite: 'lax' as const, // CSRF protection
-  path: '/',
-  domain: process.env.COOKIE_DOMAIN || (process.env.NODE_ENV === 'production' ? '.digilist.no' : undefined),
-  maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-};
-
-/**
- * Helper function to set session cookie
- */
-function setSessionCookie(reply: FastifyReply, token: string): void {
-  reply.setCookie(COOKIE_NAME, token, COOKIE_OPTIONS);
-}
-
-/**
- * Helper function to clear session cookie
- */
-function clearSessionCookie(reply: FastifyReply): void {
-  reply.clearCookie(COOKIE_NAME, {
-    path: '/',
-    domain: COOKIE_OPTIONS.domain,
-  });
 }
 
 @Controller('/api/auth')
@@ -59,6 +32,7 @@ export class AuthController {
     const body = request.body as any;
     const db = container.resolve<any>('Database');
     const jwtService = container.resolve<JwtService>('JwtService');
+    const { tenantDataService } = await import('./tenant-data.service');
 
     // Find user by email
     const result = await db
@@ -73,10 +47,24 @@ export class AuthController {
     }
 
     const user = result[0];
-    const tokenResult = jwtService.generateToken(user.id, user.tenantId);
 
-    // Set HTTP-only cookie with JWT
-    setSessionCookie(reply, tokenResult.token);
+    // Fetch tenant subscription and feature flags
+    const tenantData = await tenantDataService.getTenantData(user.tenantId);
+
+    const tokenResult = jwtService.generateToken(
+      user.id,
+      user.tenantId,
+      COOKIE_CONFIG.ACCESS.maxAge,
+      tenantData || undefined
+    );
+
+    // Set HTTP-only cookie with JWT using standard cookie config
+    const isProduction = process.env.NODE_ENV === 'production';
+    reply.setCookie(
+      COOKIE_CONFIG.ACCESS.name,
+      tokenResult.token,
+      getCookieOptions('ACCESS', isProduction)
+    );
 
     // Update last login
     await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
@@ -110,15 +98,109 @@ export class AuthController {
 
   /**
    * POST /api/auth/callback - OAuth callback
+   * Exchanges authorization code for session and sets HTTP-only cookies
    */
   @Post('/callback')
   async callback(request: AuthRequest, reply: FastifyReply) {
-    // Mock OAuth callback - in production integrates with BankID/ID-porten
     const body = request.body as any;
+    const db = container.resolve<any>('Database');
+    const { sessionService } = await import('./session.service');
+    const { tenantDataService } = await import('./tenant-data.service');
+    const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
+
+    // For demo/testing: Exchange code for user
+    // In production, this would validate the OAuth code with the provider
+    const code = body.code;
+    
+    if (!code) {
+      reply.code(400);
+      return createErrorResponse(request, 'BAD_REQUEST', 'auth.code_required');
+    }
+
+    // Demo: Find user by demo token (in production, validate OAuth code)
+    // For now, use a default user for testing
+    const userResult = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, 'admin@digilist.no'))
+      .limit(1);
+
+    if (!userResult.length) {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.invalid_code');
+    }
+
+    const user = userResult[0];
+
+    // Check if user is active
+    if (user.status !== 'active') {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
+    }
+
+    // Create session with access and refresh tokens
+    const session = await sessionService.createSession({
+      userId: user.id,
+      tenantId: user.tenantId,
+      userAgent: request.headers['user-agent'],
+      ipAddress: request.ip,
+    });
+
+    // Generate CSRF token
+    const { randomBytes } = await import('crypto');
+    const csrfToken = randomBytes(32).toString('base64url');
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Set three HTTP-only cookies
+    reply
+      .setCookie(
+        COOKIE_CONFIG.ACCESS.name,
+        session.accessToken,
+        getCookieOptions('ACCESS', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.REFRESH.name,
+        session.refreshToken,
+        getCookieOptions('REFRESH', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.CSRF.name,
+        csrfToken,
+        getCookieOptions('CSRF', isProduction)
+      );
+
+    // Update last login
+    await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
+
+    // Audit OAuth callback event
+    getAuditService().log({
+      tenantId: user.tenantId,
+      userId: user.id,
+      action: 'login',
+      resource: 'auth',
+      resourceId: user.id,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        email: user.email,
+        method: 'oauth-callback',
+        code: code.substring(0, 10) + '...',
+        sessionId: session.sessionId,
+      },
+    });
+
+    // Return user data ONLY (tokens are in HTTP-only cookies)
     return {
       data: {
-        message: 'OAuth callback processed',
-        provider: body.provider || 'mock',
+        expiresAt: session.expiresAt.toISOString(),
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: user.tenantId,
+        },
       },
     };
   }

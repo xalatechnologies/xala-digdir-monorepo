@@ -45,12 +45,17 @@ export async function authCookieMiddleware(
   }
 
   try {
-    // Verify JWT token
-    const decoded = jwtService.verify(token);
+    // Verify JWT token with comprehensive validation
+    const decoded = jwtService.verifyToken(token, {
+      validateTenant: true,
+      validateSubscription: true,
+    });
 
     // Attach user info to request
     (request as any).userId = decoded.userId;
     (request as any).tenantId = decoded.tenantId;
+    (request as any).subscription = decoded.subscription;
+    (request as any).featureFlags = decoded.featureFlags;
     (request as any).authSource = authSource;
 
     request.log.debug(

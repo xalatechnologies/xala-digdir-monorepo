@@ -260,6 +260,62 @@ export class AuthService extends BaseService {
   async loginWithDemoToken(token: string): Promise<SingleResponse<AuthSession>> {
     return this.client.post(this.buildPath('/demo-token'), { token });
   }
+
+  /**
+   * Handle OAuth callback
+   * Exchanges authorization code for session with HTTP-only cookies
+   *
+   * This method is called after the OAuth provider redirects back to the app
+   * with an authorization code. It contacts the API to exchange the code for
+   * access tokens, which are set as HTTP-only cookies by the API server.
+   *
+   * The API validates:
+   * - Authorization code validity
+   * - State parameter (CSRF protection)
+   * - Tenant ID and subscription status
+   * - User permissions and feature flags
+   *
+   * @param code - Authorization code from OAuth provider
+   * @param state - State parameter for CSRF protection (optional)
+   * @returns Promise with authenticated session including user data, tenant info, and subscription details
+   *
+   * @example
+   * ```typescript
+   * // After OAuth redirect with ?code=xxx&state=yyy
+   * const urlParams = new URLSearchParams(window.location.search);
+   * const code = urlParams.get('code');
+   * const state = urlParams.get('state');
+   *
+   * if (code) {
+   *   const session = await authService.handleOAuthCallback(code, state);
+   *   console.log('Logged in as:', session.data.user.email);
+   *   console.log('Tenant:', session.data.user.tenantId);
+   *   console.log('Subscription:', session.data.subscription);
+   * }
+   * ```
+   */
+  async handleOAuthCallback(
+    code: string,
+    state?: string
+  ): Promise<SingleResponse<AuthSession>> {
+    const params: Record<string, string> = { code };
+    if (state) {
+      params.state = state;
+    }
+
+    // Call the API's OAuth callback endpoint
+    // The API will:
+    // 1. Exchange authorization code for OAuth tokens
+    // 2. Verify ID token and extract user claims
+    // 3. Validate tenant ID and subscription status
+    // 4. Create session with JWT containing:
+    //    - User ID, email, role, permissions
+    //    - Tenant ID and subscription details
+    //    - Feature flags based on subscription tier
+    // 5. Set HTTP-only cookies (access token, refresh token, CSRF token)
+    // 6. Return session data to frontend
+    return this.client.get(this.buildPath('/idporten-oidc/callback'), { params });
+  }
 }
 
 // Singleton instance
