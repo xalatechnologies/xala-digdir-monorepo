@@ -4,6 +4,7 @@
  */
 import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
 import { getControllerMetadata } from '../core/decorators';
@@ -27,35 +28,48 @@ export async function createFastifyApp(
     requestIdLogLabel: 'correlationId',
   });
 
-  // Enable CORS with credentials support for frontend origins
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'https://digilist.no',
-    'https://www.digilist.no',
-    'https://app.digilist.no',
-    'https://admin.digilist.no',
-    'https://minside.digilist.no',
-    'https://backoffice.digilist.no',
-    'https://web-test.digilist.no',
-    'https://backoffice-test.digilist.no',
-    'https://minside-test.digilist.no',
-  ];
-  
+  // Enable CORS for all origins
   await app.register(cors, {
-    origin: (origin, cb) => {
-      // Allow requests with no origin (like mobile apps or curl)
-      if (!origin || allowedOrigins.includes(origin)) {
-        cb(null, true);
-      } else {
-        // For non-allowed origins, still allow but without credentials
-        cb(null, true);
-      }
-    },
+    origin: '*', // Allow ALL origins
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-License-Key', 'X-User-Id'],
-    credentials: true, // Allow cookies to be sent with requests
+    allowedHeaders: '*', // Allow ALL headers
+  });
+
+  // Enable security headers
+  await app.register(helmet, {
+    // Content Security Policy - disabled for JSON API
+    contentSecurityPolicy: false,
+
+    // HTTP Strict Transport Security - enforce HTTPS
+    hsts: {
+      maxAge: 31536000, // 1 year in seconds
+      includeSubDomains: true,
+      preload: true,
+    },
+
+    // X-Frame-Options - prevent clickjacking
+    frameguard: {
+      action: 'deny', // Don't allow API to be embedded in iframes
+    },
+
+    // X-Content-Type-Options - prevent MIME-sniffing
+    noSniff: true,
+
+    // Referrer-Policy - control referrer information
+    referrerPolicy: {
+      policy: 'strict-origin-when-cross-origin',
+    },
+
+    // X-DNS-Prefetch-Control - control DNS prefetching
+    dnsPrefetchControl: {
+      allow: false,
+    },
+
+    // X-Download-Options - prevent IE from executing downloads
+    ieNoOpen: true,
+
+    // Hide X-Powered-By header
+    hidePoweredBy: true,
   });
 
   // Handle empty JSON bodies (fixes SDK sending Content-Type: application/json with no body)

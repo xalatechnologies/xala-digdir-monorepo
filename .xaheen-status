@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "005-websocket-endpoints-lack-authentication",
+  "spec": "003-missing-security-headers-fastify-helmet",
   "state": "building",
   "subtasks": {
-    "completed": 5,
-    "total": 6,
+    "completed": 7,
+    "total": 9,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Phase 1",
-    "id": 1,
-    "total": 6
+    "current": "End-to-End Verification",
+    "id": null,
+    "total": 2
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 7,
-    "started_at": "2026-01-16T00:39:29.874443"
+    "number": 9,
+    "started_at": "2026-01-16T00:39:27.569534"
   },
-  "last_update": "2026-01-16T00:58:27.192077"
+  "last_update": "2026-01-16T00:59:55.252745"
 }
