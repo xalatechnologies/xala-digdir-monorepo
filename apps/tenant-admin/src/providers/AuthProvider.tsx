@@ -66,7 +66,7 @@ const MOCK_TECH_ADMIN: TenantAdminUser = {
 };
 
 // Simulated login - will be replaced with real OAuth when API is ready
-const USE_MOCK_AUTH = true;
+const USE_MOCK_AUTH = false; // SECURITY: Disabled for production
 
 interface AuthProviderProps {
   children: React.ReactNode;

@@ -65,6 +65,11 @@ export function LoginPage(): React.ReactElement {
   const [showDemoDialog, setShowDemoDialog] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState({
+    name: '',
+    email: '',
+    token: '',
+  });
   const [demoForm, setDemoForm] = useState({
     name: '',
     email: '',
@@ -212,7 +217,24 @@ export function LoginPage(): React.ReactElement {
   const handleDemoLogin = () => {
     setShowDemoDialog(true);
     setLoginError(null);
+    setFieldErrors({ name: '', email: '', token: '' });
     setDemoForm({ name: '', email: '', token: '' });
+  };
+
+  /**
+   * Validate individual field
+   */
+  const validateField = (field: 'name' | 'email' | 'token', value: string) => {
+    let error = '';
+
+    if (field === 'email' && value.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        error = t('auth.demoForm.invalidEmail');
+      }
+    }
+
+    setFieldErrors(prev => ({ ...prev, [field]: error }));
   };
 
   /**
@@ -221,14 +243,37 @@ export function LoginPage(): React.ReactElement {
   const handleDemoFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Clear previous errors
+    setLoginError(null);
+    const errors = { name: '', email: '', token: '' };
+
     // Validate all fields
-    if (!demoForm.name.trim() || !demoForm.email.trim() || !demoForm.token.trim()) {
-      setLoginError(t('auth.demoForm.allFieldsRequired'));
+    if (!demoForm.name.trim()) {
+      errors.name = t('auth.demoForm.nameRequired');
+    }
+
+    if (!demoForm.email.trim()) {
+      errors.email = t('auth.demoForm.emailRequired');
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(demoForm.email)) {
+        errors.email = t('auth.demoForm.invalidEmail');
+      }
+    }
+
+    if (!demoForm.token.trim()) {
+      errors.token = t('auth.demoForm.tokenRequired');
+    }
+
+    // Show field errors
+    setFieldErrors(errors);
+
+    // Stop if there are validation errors
+    if (errors.name || errors.email || errors.token) {
       return;
     }
 
     setIsLoggingIn(true);
-    setLoginError(null);
 
     try {
       // Call the auth service to validate the demo token
@@ -241,9 +286,21 @@ export function LoginPage(): React.ReactElement {
         // Close dialog
         setShowDemoDialog(false);
 
-        // Redirect to home
-        navigate('/', { replace: true });
-        // Reload to pick up the new auth state
+        // Determine redirect based on user role
+        const user = response.data.user;
+        let redirectPath = '/';
+
+        // Role-based routing for backoffice
+        if (user.role === 'super_admin' || user.role === 'admin') {
+          redirectPath = '/dashboard';
+        } else if (user.role === 'tenant_admin') {
+          redirectPath = '/rental-objects';
+        } else {
+          redirectPath = '/';
+        }
+
+        // Navigate and reload to pick up auth state
+        navigate(redirectPath, { replace: true });
         window.location.reload();
       } else {
         setLoginError(t('auth.invalidToken'));
@@ -311,47 +368,92 @@ export function LoginPage(): React.ReactElement {
 
       <Dialog
         open={showDemoDialog}
-        onClose={() => setShowDemoDialog(false)}
+        onClose={() => !isLoggingIn && setShowDemoDialog(false)}
         title={t('auth.demoForm.title')}
         description={t('auth.demoForm.description')}
       >
         <form onSubmit={handleDemoFormSubmit}>
-          <Stack direction="column" gap={16}>
+          <Stack direction="column" gap={20}>
             {loginError && (
               <Alert variant="error">
                 {loginError}
               </Alert>
             )}
 
-            <Textfield
-              label={t('auth.demoForm.name')}
-              value={demoForm.name}
-              onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
-              placeholder={t('auth.demoForm.namePlaceholder')}
-              disabled={isLoggingIn}
-              required
-            />
+            <div>
+              <Textfield
+                label={t('auth.demoForm.name')}
+                value={demoForm.name}
+                onChange={(e) => {
+                  setDemoForm({ ...demoForm, name: e.target.value });
+                  if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: '' });
+                }}
+                onBlur={(e) => validateField('name', e.target.value)}
+                placeholder={t('auth.demoForm.namePlaceholder')}
+                disabled={isLoggingIn}
+                required
+                error={!!fieldErrors.name}
+              />
+              {fieldErrors.name && (
+                <span style={{ fontSize: '14px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                  {fieldErrors.name}
+                </span>
+              )}
+            </div>
 
-            <Textfield
-              label={t('auth.demoForm.email')}
-              type="email"
-              value={demoForm.email}
-              onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
-              placeholder={t('auth.demoForm.emailPlaceholder')}
-              disabled={isLoggingIn}
-              required
-            />
+            <div>
+              <Textfield
+                label={t('auth.demoForm.email')}
+                type="email"
+                value={demoForm.email}
+                onChange={(e) => {
+                  setDemoForm({ ...demoForm, email: e.target.value });
+                  if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
+                }}
+                onBlur={(e) => validateField('email', e.target.value)}
+                placeholder={t('auth.demoForm.emailPlaceholder')}
+                disabled={isLoggingIn}
+                required
+                error={!!fieldErrors.email}
+              />
+              {fieldErrors.email && (
+                <span style={{ fontSize: '14px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                  {fieldErrors.email}
+                </span>
+              )}
+            </div>
 
-            <Textfield
-              label={t('auth.demoForm.token')}
-              value={demoForm.token}
-              onChange={(e) => setDemoForm({ ...demoForm, token: e.target.value })}
-              placeholder={t('auth.demoForm.tokenPlaceholder')}
-              disabled={isLoggingIn}
-              required
-            />
+            <div>
+              <Textfield
+                label={t('auth.demoForm.token')}
+                value={demoForm.token}
+                onChange={(e) => {
+                  setDemoForm({ ...demoForm, token: e.target.value });
+                  if (fieldErrors.token) setFieldErrors({ ...fieldErrors, token: '' });
+                }}
+                onBlur={(e) => validateField('token', e.target.value)}
+                placeholder={t('auth.demoForm.tokenPlaceholder')}
+                disabled={isLoggingIn}
+                required
+                error={!!fieldErrors.token}
+              />
+              {fieldErrors.token && (
+                <span style={{ fontSize: '14px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                  {fieldErrors.token}
+                </span>
+              )}
+            </div>
 
-            <Stack direction="horizontal" gap={8} justify="end" style={{ marginTop: 8 }}>
+            <Stack
+              direction="horizontal"
+              gap={12}
+              justify="end"
+              style={{
+                marginTop: 8,
+                paddingTop: 16,
+                borderTop: '1px solid #e5e7eb'
+              }}
+            >
               <Button
                 type="button"
                 variant="secondary"
@@ -363,7 +465,7 @@ export function LoginPage(): React.ReactElement {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={isLoggingIn}
+                disabled={isLoggingIn || !demoForm.name || !demoForm.email || !demoForm.token}
               >
                 {isLoggingIn ? t('common.loading') : t('auth.login')}
               </Button>

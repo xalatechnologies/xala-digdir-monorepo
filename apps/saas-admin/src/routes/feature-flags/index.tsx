@@ -17,6 +17,9 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   HeaderSearch,
+  Stack,
+  Grid,
+  Text,
 } from '@xala/ds';
 import { useSaasFeatureFlagsCatalog } from '@digilist/client-sdk/hooks';
 import type { FeatureFlagCatalogItem, FeatureFlagCategory } from '@digilist/client-sdk/types';
@@ -87,12 +90,12 @@ export function FeatureFlagsCatalogPage() {
     if (flag.type === 'boolean') {
       return flag.defaultValue ? (
         <Badge color="success">
-          <CheckCircleIcon style={{ fontSize: '0.875rem' }} />
+          <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-sm)' }} />
           På
         </Badge>
       ) : (
         <Badge color="neutral">
-          <XCircleIcon style={{ fontSize: '0.875rem' }} />
+          <XCircleIcon style={{ fontSize: 'var(--ds-font-size-sm)' }} />
           Av
         </Badge>
       );
@@ -101,7 +104,7 @@ export function FeatureFlagsCatalogPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+    <Stack direction="column" gap={20}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
@@ -118,12 +121,9 @@ export function FeatureFlagsCatalogPage() {
       </div>
 
       {/* Stats */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          gap: 'var(--ds-spacing-3)',
-        }}
+      <Grid
+        columns="repeat(auto-fit, minmax(var(--ds-size-20, 150px), 1fr))"
+        gap={12}
       >
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph
@@ -169,12 +169,12 @@ export function FeatureFlagsCatalogPage() {
             {stats.policy}
           </Heading>
         </Card>
-      </div>
+      </Grid>
 
       {/* Filters */}
       <Card>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
+        <Stack direction="horizontal" gap={12} wrap align="center">
+          <div style={{ flex: '1 1 var(--ds-size-container-sm, 300px)', minWidth: 'var(--ds-size-20, 200px)' }}>
             <HeaderSearch
               placeholder="Søk etter flag..."
               value={searchQuery}
@@ -224,7 +224,7 @@ export function FeatureFlagsCatalogPage() {
               </Dropdown.List>
             </Dropdown>
           </Dropdown.TriggerContext>
-        </div>
+        </Stack>
       </Card>
 
       {/* Results */}
@@ -268,35 +268,37 @@ export function FeatureFlagsCatalogPage() {
               {filteredFlags.map((flag) => (
                 <Table.Row key={flag.id}>
                   <Table.Cell>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <Stack direction="horizontal" gap={8} align="center">
                       <SettingsIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                      <div
+                      <Text
+                        data-size="sm"
                         style={{
                           fontFamily: 'var(--ds-font-family-monospace)',
-                          fontSize: 'var(--ds-font-size-sm)',
                           fontWeight: 'var(--ds-font-weight-medium)',
                         }}
                       >
                         {flag.key}
-                      </div>
-                    </div>
+                      </Text>
+                    </Stack>
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{flag.name}</div>
+                    <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {flag.name}
+                    </Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={categoryColors[flag.category]}>{categoryLabels[flag.category]}</Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <div
+                    <Text
+                      data-size="sm"
                       style={{
                         fontFamily: 'var(--ds-font-family-monospace)',
-                        fontSize: 'var(--ds-font-size-sm)',
                         color: 'var(--ds-color-neutral-text-subtle)',
                       }}
                     >
                       {flag.type}
-                    </div>
+                    </Text>
                   </Table.Cell>
                   <Table.Cell>{formatDefaultValue(flag)}</Table.Cell>
                   <Table.Cell>
@@ -304,11 +306,11 @@ export function FeatureFlagsCatalogPage() {
                   </Table.Cell>
                   <Table.Cell>
                     {flag.description ? (
-                      <div
+                      <Text
+                        data-size="sm"
                         style={{
-                          fontSize: 'var(--ds-font-size-sm)',
                           color: 'var(--ds-color-neutral-text-subtle)',
-                          maxWidth: '300px',
+                          maxWidth: 'var(--ds-size-container-sm, 300px)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
@@ -316,9 +318,11 @@ export function FeatureFlagsCatalogPage() {
                         title={flag.description}
                       >
                         {flag.description}
-                      </div>
+                      </Text>
                     ) : (
-                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>—</span>
+                      <Text data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        —
+                      </Text>
                     )}
                   </Table.Cell>
                 </Table.Row>
@@ -329,20 +333,12 @@ export function FeatureFlagsCatalogPage() {
       </Card>
 
       {/* Results info */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          color: 'var(--ds-color-neutral-text-subtle)',
-          fontSize: 'var(--ds-font-size-sm)',
-        }}
-      >
-        <span>
+      <Stack direction="horizontal" justify="end" align="center">
+        <Text data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           Viser {filteredFlags.length} av {flags.length} feature flags
-        </span>
-      </div>
-    </div>
+        </Text>
+      </Stack>
+    </Stack>
   );
 }
 

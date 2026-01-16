@@ -133,3 +133,10 @@ export type {
   CalendarConfig,
   CalendarSelection,
 } from './RentalObjectCalendar';
+
+// Demo Login Dialog
+export { DemoLoginDialog } from './DemoLoginDialog';
+export type {
+  DemoLoginDialogProps,
+  DemoLoginFormData
+} from './DemoLoginDialog';

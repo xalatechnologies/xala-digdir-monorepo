@@ -116,6 +116,10 @@ export const nb: Record<string, string> = {
   'auth.demoForm.token': 'Demo Token',
   'auth.demoForm.tokenPlaceholder': 'Skriv inn token du mottok',
   'auth.demoForm.allFieldsRequired': 'Alle feltene er påkrevd',
+  'auth.demoForm.nameRequired': 'Navn er påkrevd',
+  'auth.demoForm.emailRequired': 'E-post er påkrevd',
+  'auth.demoForm.tokenRequired': 'Token er påkrevd',
+  'auth.demoForm.invalidEmail': 'Vennligst skriv inn en gyldig e-postadresse',
   // Demo account selector
   'auth.demoAccount.selectTitle': 'Velg Demo Konto',
   'auth.demoAccount.selectDescription': 'Velg en demokonto for å logge inn og teste systemet',

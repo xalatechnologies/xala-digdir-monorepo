@@ -10,7 +10,7 @@
 
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
-| Hardcoded Colors | 108 | high | ❌ Needs Fix |
+| Hardcoded Colors | 104 | high | ❌ Needs Fix |
 | Hardcoded Font Family | 1 | medium | ⚠️ Minor |
 | Hardcoded Letter Spacing | 0 | low | ✅ Clean |
 | Hardcoded Line Height | 0 | low | ✅ Clean |
@@ -18,22 +18,22 @@
 | Hardcoded Z-Index | 0 | low | ✅ Clean |
 | Hardcoded Transition Duration | 12 | low | ❌ Needs Fix |
 | Hardcoded Opacity | 1 | low | ⚠️ Minor |
-| Hardcoded Spacing | 42 | high | ❌ Needs Fix |
+| Hardcoded Spacing | 36 | high | ❌ Needs Fix |
 | Hardcoded Typography | 33 | medium | ❌ Needs Fix |
-| Hardcoded Border Radius | 11 | medium | ❌ Needs Fix |
-| Raw HTML Layouts in Apps | 73 | medium | ❌ Needs Fix |
+| Hardcoded Border Radius | 9 | medium | ❌ Needs Fix |
+| Raw HTML Layouts in Apps | 70 | medium | ❌ Needs Fix |
 | Hardcoded Dimensions | 320 | low | ❌ Needs Fix |
 | Hardcoded Breakpoints | 0 | low | ✅ Clean |
 | SVG Hardcoded Colors | 9 | low | ❌ Needs Fix |
 | Touch Target Size | 2 | medium | ⚠️ Minor |
 | Missing Button Type | 0 | medium | ✅ Clean |
 | Inline !important | 0 | low | ✅ Clean |
-| Hardcoded Gap | 15 | high | ❌ Needs Fix |
+| Hardcoded Gap | 12 | high | ❌ Needs Fix |
 | Inconsistent Icon Size | 14 | low | ❌ Needs Fix |
 | Raw Div with Click Handler | 0 | medium | ✅ Clean |
 
-**Total Issues:** 654
-**High Severity:** 165
+**Total Issues:** 636
+**High Severity:** 152
 
 ---
 
@@ -41,7 +41,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use design tokens: var(--ds-color-*)
-**Issues Found:** 108
+**Issues Found:** 104
 
 ### Findings by File
 
@@ -235,14 +235,10 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 305 | Hex color | `backgroundColor: '#fef2f2',...` |
-| 306 | Hex color | `border: '1px solid #fecaca',...` |
-| 308 | Hex color | `color: '#991b1b',...` |
-| 323 | Hex color | `border: '1px solid #e5e7eb',...` |
-| 332 | Hex color | `<Paragraph size="sm" style={{ margin: 0, color: '#...` |
-| 338 | Hex color | `backgroundColor: '#eff6ff',...` |
-| 342 | Hex color | `color: '#1e40af',...` |
-| 348 | Hex color | `<Paragraph size="sm" style={{ margin: 0, color: '#...` |
+| 365 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
+| 387 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
+| 408 | Hex color | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
+| 421 | Hex color | `borderTop: '1px solid #e5e7eb'...` |
 
 ---
 
@@ -387,7 +383,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 42
+**Issues Found:** 36
 
 ### Findings by File
 
@@ -487,17 +483,6 @@
 |------|-------|--------|
 | 92 | Pixel spacing | `<div style={{ display: 'flex', gap: '8px', marginB...` |
 
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 300 | Pixel spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 304 | Pixel spacing | `padding: '12px',...` |
-| 320 | Pixel spacing | `padding: '16px',...` |
-| 328 | Pixel spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 337 | Pixel spacing | `padding: '4px 8px',...` |
-| 355 | Pixel spacing | `<div style={{ display: 'flex', gap: '8px', justify...` |
-
 ---
 
 ## Hardcoded Typography
@@ -587,9 +572,9 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 309 | Font size in px | `fontSize: '14px',...` |
-| 340 | Font size in px | `fontSize: '12px',...` |
-| 341 | Numeric font weight | `fontWeight: 600,...` |
+| 365 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
+| 387 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
+| 408 | Font size in px | `<span style={{ fontSize: '14px', color: '#dc2626',...` |
 
 ---
 
@@ -597,7 +582,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use border radius tokens: var(--ds-border-radius-*)
-**Issues Found:** 11
+**Issues Found:** 9
 
 ### Findings by File
 
@@ -625,20 +610,13 @@
 | 98 | Border radius in px | `<div style={{ height: '20px', width: '60px', backg...` |
 | 133 | Border radius in px | `borderRadius: '999px',...` |
 
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 307 | Border radius in px | `borderRadius: '8px',...` |
-| 339 | Border radius in px | `borderRadius: '4px',...` |
-
 ---
 
 ## Raw HTML Layouts in Apps
 
 **Severity:** MEDIUM
 **Recommendation:** Use layout primitives: <Stack>, <Grid>, <Flex>
-**Issues Found:** 73
+**Issues Found:** 70
 
 ### Findings by File
 
@@ -786,14 +764,6 @@
 | 147 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
 | 557 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
 | 825 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
-
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 300 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 328 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 355 | Div with inline flex | `<div style={{ display: 'flex', gap: '8px', justify...` |
 
 ---
 
@@ -1472,7 +1442,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 15
+**Issues Found:** 12
 
 ### Findings by File
 
@@ -1522,14 +1492,6 @@
 | Line | Issue | Content |
 |------|-------|--------|
 | 92 | Gap in px | `<div style={{ display: 'flex', gap: '8px', marginB...` |
-
-#### `apps/web/src/pages/login.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 300 | Gap in px | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 328 | Gap in px | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 355 | Gap in px | `<div style={{ display: 'flex', gap: '8px', justify...` |
 
 ---
 
@@ -1625,16 +1587,16 @@
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 108 hardcoded colors issues
-- [ ] Fix 42 hardcoded spacing issues
-- [ ] Fix 15 hardcoded gap issues
+- [ ] Fix 104 hardcoded colors issues
+- [ ] Fix 36 hardcoded spacing issues
+- [ ] Fix 12 hardcoded gap issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 1 hardcoded font family issues
 - [ ] Fix 13 hardcoded box shadow issues
 - [ ] Fix 33 hardcoded typography issues
-- [ ] Fix 11 hardcoded border radius issues
-- [ ] Fix 73 raw html layouts in apps issues
+- [ ] Fix 9 hardcoded border radius issues
+- [ ] Fix 70 raw html layouts in apps issues
 - [ ] Fix 2 touch target size issues
 
 ### Priority 3 (Low Severity / Acceptable)

@@ -1,0 +1,12 @@
+/**
+ * ProtectedRoute styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--ds-color-neutral-background-default);
+}

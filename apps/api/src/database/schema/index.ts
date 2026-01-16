@@ -88,6 +88,7 @@ export const users = pgTable('users', {
   nationalId: varchar('national_id', { length: 11 }), // Norwegian national identity number (fødselsnummer)
   role: varchar('role', { length: 50 }).notNull().default('member'),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  demoToken: varchar('demo_token', { length: 100 }), // Demo login token for testing
   metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   lastLoginAt: timestamp('last_login_at'),
@@ -95,6 +96,7 @@ export const users = pgTable('users', {
   tenantEmailIdx: index('users_tenant_email_idx').on(table.tenantId, table.email),
   tenantIdx: index('users_tenant_idx').on(table.tenantId),
   nationalIdIdx: index('users_national_id_idx').on(table.nationalId),
+  demoTokenIdx: index('users_demo_token_idx').on(table.demoToken),
 }));
 
 export const orgMemberships = pgTable('org_memberships', {

@@ -1,0 +1,36 @@
+/**
+ * ToastProvider styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.toastContainer {
+  position: fixed;
+  top: var(--ds-spacing-4);
+  right: var(--ds-spacing-4);
+  z-index: var(--ds-z-index-modal, 9999);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-2);
+  max-width: var(--ds-size-container-sm, 400px);
+  width: 100%;
+}
+
+.toast {
+  box-shadow: var(--ds-shadow-md);
+  animation: slideIn 0.2s ease-out;
+}
+
+.toastMessage {
+  margin: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

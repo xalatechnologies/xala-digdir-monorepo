@@ -10,6 +10,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
 import { useAuth, type SaasAdminRole } from '../hooks/useAuth';
 import { useToast } from '../providers/ToastProvider';
+import styles from './ProtectedRoute.module.css';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -47,15 +48,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          backgroundColor: 'var(--ds-color-neutral-background-default)',
-        }}
-      >
+      <div className={styles.loadingContainer}>
         <Spinner aria-label="Laster..." data-size="lg" />
       </div>
     );

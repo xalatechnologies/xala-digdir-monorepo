@@ -60,7 +60,7 @@ const MOCK_SUPPORT_AGENT: SaasAdminUser = {
 };
 
 // Simulated login - will be replaced with real OAuth when API is ready
-const USE_MOCK_AUTH = false; // SECURITY: Disabled for production
+const USE_MOCK_AUTH = true;
 
 interface AuthProviderProps {
   children: React.ReactNode;

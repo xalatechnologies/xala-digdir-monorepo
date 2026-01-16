@@ -4,7 +4,8 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { Alert } from '@xala/ds';
+import { Alert, Paragraph } from '@xala/ds';
+import styles from './ToastProvider.module.css';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';
 
@@ -93,48 +94,19 @@ export function ToastProvider({ children }: ToastProviderProps): React.ReactElem
 
       {/* Toast container - fixed at top right */}
       {toasts.length > 0 && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 'var(--ds-spacing-4)',
-            right: 'var(--ds-spacing-4)',
-            zIndex: 9999,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--ds-spacing-2)',
-            maxWidth: '400px',
-            width: '100%',
-          }}
-        >
+        <div className={styles.toastContainer}>
           {toasts.map((toast) => (
             <Alert
               key={toast.id}
               data-color={toast.type}
-              style={{
-                boxShadow: 'var(--ds-shadow-md)',
-                animation: 'slideIn 0.2s ease-out',
-              }}
+              className={styles.toast}
             >
               <strong>{toast.title}</strong>
-              {toast.message && <p style={{ margin: 0 }}>{toast.message}</p>}
+              {toast.message && <Paragraph data-size="sm" className={styles.toastMessage}>{toast.message}</Paragraph>}
             </Alert>
           ))}
         </div>
       )}
-
-      {/* Animation keyframes */}
-      <style>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </ToastContext.Provider>
   );
 }

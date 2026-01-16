@@ -184,6 +184,77 @@ export class AuthController {
   }
 
   /**
+   * POST /api/auth/demo-token - Demo token login
+   * Authenticates user using a demo token for testing purposes
+   */
+  @Post('/demo-token')
+  async demoTokenLogin(request: AuthRequest, reply: FastifyReply) {
+    const body = request.body as any;
+    const db = container.resolve<any>('Database');
+    const jwtService = container.resolve<JwtService>('JwtService');
+
+    if (!body.token) {
+      reply.code(400);
+      return { error: { code: 'BAD_REQUEST', message: 'Token is required' } };
+    }
+
+    // Find user by demo token
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.demoToken, body.token))
+      .limit(1);
+
+    if (!result.length) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'Invalid demo token' } };
+    }
+
+    const user = result[0];
+
+    // Check if user is active
+    if (user.status !== 'active') {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'User account is inactive' } };
+    }
+
+    const tokenResult = jwtService.generateToken(user.id, user.tenantId);
+
+    // Update last login
+    await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
+
+    // Audit demo login event
+    getAuditService().log({
+      tenantId: user.tenantId,
+      userId: user.id,
+      action: 'login',
+      resource: 'auth',
+      resourceId: user.id,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        email: user.email,
+        method: 'demo-token',
+        demoToken: body.token,
+      },
+    });
+
+    return {
+      data: {
+        token: tokenResult.token,
+        expiresAt: tokenResult.expiresAt.toISOString(),
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: user.tenantId,
+        },
+      },
+    };
+  }
+
+  /**
    * POST /api/auth/email - Email/password login
    */
   @Post('/email')

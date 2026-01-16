@@ -71,7 +71,7 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
 
 // Use mock auth for local development (cross-origin cookies don't work with api.digilist.no)
 // Set VITE_USE_MOCK_AUTH=true in .env.local for local development
-const USE_MOCK_AUTH = false; // SECURITY: Disabled for production
+const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)

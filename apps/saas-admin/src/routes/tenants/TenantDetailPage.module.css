@@ -1,0 +1,305 @@
+/**
+ * TenantDetailPage styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-5);
+  max-width: var(--ds-size-container-xl, 1400px);
+  margin: 0 auto;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-spacing-8);
+}
+
+.notFoundContainer {
+  text-align: center;
+  padding: var(--ds-spacing-8);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-3);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--ds-spacing-4);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-2);
+}
+
+.badges {
+  display: flex;
+  gap: var(--ds-spacing-2);
+  flex-wrap: wrap;
+}
+
+.metaInfo {
+  display: flex;
+  gap: var(--ds-spacing-4);
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}
+
+.monospace {
+  font-family: var(--ds-font-family-monospace);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--ds-spacing-2);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--ds-size-20, 180px), 1fr));
+  gap: var(--ds-spacing-3);
+}
+
+.licenseKeyCard {
+  background-color: var(--ds-color-success-surface-default);
+  padding: var(--ds-spacing-4);
+}
+
+.licenseKeyContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.licenseKeyCode {
+  display: block;
+  padding: var(--ds-spacing-2);
+  background-color: var(--ds-color-neutral-surface-default);
+  border-radius: var(--ds-border-radius-sm);
+  font-family: var(--ds-font-family-monospace);
+  font-size: var(--ds-font-size-sm);
+  word-break: break-all;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--ds-size-container-sm, 400px), 1fr));
+  gap: var(--ds-spacing-4);
+}
+
+.infoLabel {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-spacing-1);
+}
+
+.infoValue {
+  font-family: var(--ds-font-family-monospace);
+  font-size: var(--ds-font-size-sm);
+}
+
+.infoValueSmall {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.limitsRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flagsHeader {
+  margin-bottom: var(--ds-spacing-4);
+}
+
+.flagsLoading {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-spacing-6);
+}
+
+.flagsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-6);
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-2);
+  margin-bottom: var(--ds-spacing-3);
+}
+
+.flagItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-spacing-3);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+  border: none;
+}
+
+.flagItemOverridden {
+  background-color: var(--ds-color-info-surface-default);
+  border: 1px solid var(--ds-color-info-border-default);
+}
+
+.flagContent {
+  flex: 1;
+}
+
+.flagHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-2);
+}
+
+.flagKey {
+  font-size: var(--ds-font-size-xs);
+  padding: 2px 6px;
+  background-color: var(--ds-color-neutral-surface-default);
+  border-radius: var(--ds-border-radius-sm);
+}
+
+.billingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--ds-size-20, 200px), 1fr));
+  gap: var(--ds-spacing-4);
+}
+
+.billingLoading {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-spacing-6);
+}
+
+.billingContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-4);
+}
+
+.billingField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-1);
+}
+
+.billingLabel {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.billingValue {
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.billingValueDanger {
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-danger-text-default);
+}
+
+.invoicesSection {
+  margin-top: var(--ds-spacing-4);
+}
+
+.secretsHeader {
+  margin-bottom: var(--ds-spacing-4);
+}
+
+.secretsLoading {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-spacing-6);
+}
+
+.secretsEmpty {
+  text-align: center;
+  padding: var(--ds-spacing-8);
+}
+
+.secretsEmptyIcon {
+  font-size: var(--ds-font-size-heading-lg);
+  color: var(--ds-color-neutral-text-subtle);
+  margin-bottom: var(--ds-spacing-3);
+}
+
+.licenseContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-4);
+}
+
+.licenseInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+}
+
+.licenseFingerprint {
+  font-family: var(--ds-font-family-monospace);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.licenseWarning {
+  padding: var(--ds-spacing-4);
+  background-color: var(--ds-color-warning-surface-default);
+  border-radius: var(--ds-border-radius-md);
+  margin-top: var(--ds-spacing-2);
+}
+
+.licenseWarningText {
+  margin: 0;
+  color: var(--ds-color-warning-text-default);
+}
+
+.tableCellMonospace {
+  font-family: var(--ds-font-family-monospace);
+}
+
+.tableCellMonospaceSmall {
+  font-family: var(--ds-font-family-monospace);
+  font-size: var(--ds-font-size-xs);
+}
+
+.tableCellMedium {
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.tableCellSmall {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.tableCellSmallSubtle {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.tableCellDescription {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  max-width: var(--ds-size-container-sm, 300px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultsInfo {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--ds-color-neutral-text-subtle);
+  font-size: var(--ds-font-size-sm);
+}

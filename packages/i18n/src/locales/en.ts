@@ -115,6 +115,10 @@ export const en: Record<string, string> = {
   'auth.demoForm.token': 'Demo Token',
   'auth.demoForm.tokenPlaceholder': 'Enter the token you received',
   'auth.demoForm.allFieldsRequired': 'All fields are required',
+  'auth.demoForm.nameRequired': 'Name is required',
+  'auth.demoForm.emailRequired': 'Email is required',
+  'auth.demoForm.tokenRequired': 'Token is required',
+  'auth.demoForm.invalidEmail': 'Please enter a valid email address',
   // Demo account selector
   'auth.demoAccount.selectTitle': 'Select Demo Account',
   'auth.demoAccount.selectDescription': 'Choose a demo account to login and test the system',
