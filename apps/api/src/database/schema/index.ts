@@ -142,6 +142,28 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
+// Feature Flags
+// ============================================================================
+
+export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: varchar('key', { length: 100 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  type: varchar('type', { length: 50 }).notNull().default('boolean'),
+  defaultValue: jsonb('default_value').notNull().default(false),
+  category: varchar('category', { length: 50 }).notNull().default('module'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  keyIdx: index('feature_flags_catalog_key_idx').on(table.key),
+  categoryIdx: index('feature_flags_catalog_category_idx').on(table.category),
+  statusIdx: index('feature_flags_catalog_status_idx').on(table.status),
+}));
+
+// ============================================================================
 // Listings
 // ============================================================================
 
@@ -378,4 +400,6 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+export type FeatureFlagCatalog = typeof featureFlagsCatalog.$inferSelect;
+export type NewFeatureFlagCatalog = typeof featureFlagsCatalog.$inferInsert;
 
