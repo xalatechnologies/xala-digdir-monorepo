@@ -1,0 +1,268 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main       # Deploy from main branch to production
+      - staging    # Deploy from staging branch to staging environment
+      - demo       # Deploy from demo branch to demo environment
+  workflow_dispatch: # Manual trigger
+
+env:
+  NODE_VERSION: '20.x'
+  PNPM_VERSION: '9.x'
+
+jobs:
+  # =============================================================================
+  # Build and Test Job
+  # =============================================================================
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for better caching
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache Turbo build
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Run tests
+        run: pnpm test:run
+
+      - name: Build all apps
+        run: pnpm build
+        env:
+          VITE_API_URL: https://api.digilist.no
+          VITE_WS_URL: wss://api.digilist.no/ws/events
+          VITE_TENANT_ID: f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            apps/*/dist
+            !apps/*/dist/**/*.map
+          retention-days: 7
+
+  # =============================================================================
+  # Deploy Job
+  # =============================================================================
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/demo'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Clean and Deploy Web App
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist/web/* && mkdir -p /var/www/digilist/web"
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/web/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist/web/
+
+      - name: Clean and Deploy Backoffice App
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist/backoffice/* && mkdir -p /var/www/digilist/backoffice"
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/backoffice/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist/backoffice/
+
+      - name: Clean and Deploy Minside App
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist/minside/* && mkdir -p /var/www/digilist/minside"
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/minside/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist/minside/
+
+      - name: Clean and Deploy SaaS Admin App
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist/saas-admin/* && mkdir -p /var/www/digilist/saas-admin"
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/saas-admin/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist/saas-admin/
+
+      - name: Clean and Deploy Tenant Admin App
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist/tenant-admin/* && mkdir -p /var/www/digilist/tenant-admin"
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/tenant-admin/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist/tenant-admin/
+
+      - name: Verify deployments
+        run: |
+          echo "Verifying deployed sites..."
+          curl -f https://web.digilist.no || exit 1
+          curl -f https://backoffice.digilist.no || exit 1
+          curl -f https://minside.digilist.no || exit 1
+          curl -f https://saas-admin.digilist.no || exit 1
+          curl -f https://tenant-admin.digilist.no || exit 1
+          echo "✅ All sites verified!"
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Deployment successful!"
+          echo "Web: https://web.digilist.no"
+          echo "Backoffice: https://backoffice.digilist.no"
+          echo "Minside: https://minside.digilist.no"
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed!"
+          exit 1
+
+  # =============================================================================
+  # Deploy API Job (if API code changed)
+  # =============================================================================
+  deploy-api:
+    name: Deploy API
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Build API
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @digilist/api build
+
+      - name: Clean API deployment directory
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "rm -rf /var/www/digilist-api/dist/* && mkdir -p /var/www/digilist-api/dist"
+
+      - name: Deploy API
+        run: |
+          rsync -avz \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            apps/api/dist/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/digilist-api/dist/
+
+      - name: Create .env file from GitHub Secrets
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "cat > /var/www/digilist-api/.env << 'EOF'
+          NODE_ENV=${{ secrets.NODE_ENV }}
+          API_PORT=${{ secrets.API_PORT }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
+          CSRF_SECRET=${{ secrets.CSRF_SECRET }}
+          SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+          CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+          VITE_API_URL=${{ secrets.VITE_API_URL }}
+          VITE_WS_URL=${{ secrets.VITE_WS_URL }}
+          EOF
+          "
+
+      - name: Restart API server
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "cd /var/www/digilist-api && pm2 restart digilist-api || pm2 start dist/main.js --name digilist-api"
+
+      - name: Verify API
+        run: |
+          sleep 5
+          curl -f https://api.digilist.no/health || exit 1
+          echo "✅ API verified!"
