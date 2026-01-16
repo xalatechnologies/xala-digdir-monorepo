@@ -332,7 +332,7 @@ export type {
   RentalObjectMapProps,
   MapRentalObject,
   RentalObjectTableViewProps,
-  RentalObjectsFilterBarProps,
+  // TODO: RentalObjectsFilterBarProps - type not yet implemented
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
@@ -353,7 +353,7 @@ export type {
   BookingConfirmationProps,
   BookingSuccessProps,
   BookingSectionProps,
-  UnifiedBookingEngineProps,
+  // TODO: UnifiedBookingEngineProps - type not yet implemented
   // New listing detail types
   KeyFactsRowProps,
   KeyFact,
