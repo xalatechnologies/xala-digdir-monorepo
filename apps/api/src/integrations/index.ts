@@ -1,0 +1,132 @@
+/**
+ * Integration Adapters Index
+ * Third-party service integrations for Digilist platform
+ *
+ * Each integration follows the adapter pattern:
+ * - Interface definition (IXxxClient)
+ * - Real client for production
+ * - Mock client for demo/testing
+ * - Config-based provider selection
+ *
+ * Integrations:
+ * - Visma Enterprise: ERP/invoicing (Norwegian municipal financial system)
+ * - ACOS WebSak: Case management (NOARK-compliant archive system) - TODO
+ * - RCO Security: Physical access control - TODO
+ * - Vipps: Payment processing - TODO
+ * - Outlook/Google Calendar: Calendar sync - TODO
+ *
+ * Environment variables control mock vs real implementation.
+ */
+
+// =============================================================================
+// Visma Enterprise (ERP/Invoicing)
+// =============================================================================
+export {
+  // Client factory
+  getVismaClient,
+  getVismaClientSingleton,
+  resetVismaClient,
+  vismaClient,
+
+  // Client classes
+  VismaClient,
+  VismaMockClient,
+
+  // Types
+  type IVismaClient,
+  type VismaConfig,
+  type VismaConnectionStatus,
+  type VismaSyncResult,
+  type VismaInvoice,
+  type VismaInvoiceExtended,
+  type VismaInvoiceLine,
+  type VismaInvoiceStatus,
+  type VismaInvoiceQueryParams,
+  type CreateVismaInvoiceDTO,
+  type VismaCustomer,
+  type VismaAddress,
+  type CreateVismaCustomerDTO,
+  type VismaCreditNote,
+  type CreateVismaCreditNoteDTO,
+  type VismaPayment,
+  type VismaPaymentMethod,
+  type RegisterVismaPaymentDTO,
+  type VismaFinancialSummary,
+  type VismaAgedReceivables,
+  type VismaExportResult,
+  type VismaExportFormat,
+  type SendInvoiceReminderDTO,
+  type VismaIntegrationEvent,
+  type VismaEventType,
+} from './visma';
+
+// =============================================================================
+// Integration Status Helper
+// =============================================================================
+
+/**
+ * Get status of all configured integrations
+ * Useful for health checks and admin dashboards
+ */
+export async function getAllIntegrationStatuses(): Promise<{
+  visma: { connected: boolean; provider: string; error?: string };
+  // Future integrations will be added here
+}> {
+  const statuses: Record<string, { connected: boolean; provider: string; error?: string }> = {};
+
+  // Visma status
+  try {
+    const { vismaClient } = await import('./visma');
+    const vismaStatus = await vismaClient.getStatus();
+    statuses.visma = {
+      connected: vismaStatus.connected,
+      provider: vismaStatus.provider,
+    };
+  } catch (error) {
+    statuses.visma = {
+      connected: false,
+      provider: 'Visma Enterprise',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+
+  return statuses as any;
+}
+
+/**
+ * Integration provider names for UI display
+ */
+export const INTEGRATION_PROVIDERS = {
+  visma: {
+    name: 'Visma Enterprise',
+    description: 'Norwegian municipal ERP/invoicing system',
+    category: 'financial',
+  },
+  acos: {
+    name: 'ACOS WebSak',
+    description: 'Norwegian municipal case management (NOARK)',
+    category: 'archive',
+  },
+  rco: {
+    name: 'RCO Security',
+    description: 'Physical access control system',
+    category: 'access',
+  },
+  vipps: {
+    name: 'Vipps',
+    description: 'Norwegian mobile payment solution',
+    category: 'payment',
+  },
+  outlook: {
+    name: 'Microsoft Outlook',
+    description: 'Calendar sync via Microsoft Graph API',
+    category: 'calendar',
+  },
+  google: {
+    name: 'Google Calendar',
+    description: 'Calendar sync via Google APIs',
+    category: 'calendar',
+  },
+} as const;
+
+export type IntegrationProviderKey = keyof typeof INTEGRATION_PROVIDERS;
