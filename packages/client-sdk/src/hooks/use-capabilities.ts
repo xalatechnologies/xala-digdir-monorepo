@@ -4,6 +4,8 @@
  * Provides React Query hooks for fetching app-specific capabilities
  * from the server. Replaces client-side capability mapping.
  *
+ * Types are imported from @xala/contracts for schema-agnostic architecture.
+ *
  * @example
  * ```tsx
  * // In backoffice app
@@ -25,7 +27,7 @@
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { getClient } from '../core/client-factory';
-import { queryKeys } from './query-keys';
+import type { CapabilitiesProjection } from '@xala/contracts/projections';
 
 // =============================================================================
 // Types
@@ -33,29 +35,10 @@ import { queryKeys } from './query-keys';
 
 /**
  * App-specific capabilities response
+ * 
+ * @see CapabilitiesProjection from @xala/contracts
  */
-export interface AppCapabilities {
-  /** Effective role for this app context */
-  role: string;
-
-  /** List of granted capabilities */
-  capabilities: string[];
-
-  /** Tenant-specific feature flags */
-  featureFlags: Record<string, boolean>;
-
-  /** UI hints for rendering (computed server-side) */
-  uiHints?: {
-    showAdminNav?: boolean;
-    showReports?: boolean;
-    showAudit?: boolean;
-    showIntegrations?: boolean;
-    showSettings?: boolean;
-  };
-
-  /** Organization scopes (for multi-org users) */
-  organizationScopes?: string[];
-}
+export type AppCapabilities = CapabilitiesProjection;
 
 /**
  * Capabilities API response wrapper

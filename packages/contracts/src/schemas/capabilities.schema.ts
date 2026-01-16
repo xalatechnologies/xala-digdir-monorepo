@@ -6,6 +6,37 @@
 import { z } from 'zod';
 
 // =============================================================================
+// Action Codes
+// =============================================================================
+
+/**
+ * Action codes used in availableActions arrays on projections
+ */
+export const ActionCodeSchema = z.enum([
+  'create',
+  'update',
+  'delete',
+  'publish',
+  'unpublish',
+  'archive',
+  'restore',
+  'approve',
+  'reject',
+  'cancel',
+  'complete',
+  'view',
+  'edit',
+  'share',
+  'duplicate',
+  'export',
+  'book',
+  'modify',
+  'rebook',
+]);
+
+export type ActionCode = z.infer<typeof ActionCodeSchema>;
+
+// =============================================================================
 // Capability Types
 // =============================================================================
 
