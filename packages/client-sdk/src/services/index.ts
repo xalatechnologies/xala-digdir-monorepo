@@ -159,3 +159,24 @@ export {
   type UpdateSecretRequest,
 } from './saas.service';
 
+// Tenant Admin
+export {
+  tenantAdminService,
+  type TenantAdminSeatLimits,
+  type TenantUsageStats,
+  type TenantAdminAllowedActions,
+  type TenantAdminCapabilities,
+  type TenantSubscription,
+  type TenantFlags,
+  type TenantBranding,
+  type TenantIntegration,
+  type TenantIntegrationsResponse,
+  type UpdateBrandingRequest,
+  type UpdateIntegrationRequest,
+  type SingleResponse as TenantAdminSingleResponse,
+  type CapabilitiesResponse,
+  type SubscriptionResponse,
+  type BrandingResponse,
+  type IntegrationResponse,
+} from './tenant-admin.service';
+
