@@ -49,14 +49,14 @@ import type { TenantIntegration } from '@digilist/client-sdk/services/tenant-adm
 const MOBILE_BREAKPOINT = 768;
 
 /**
- * Integration provider configuration
- * Defines display names, descriptions, and required fields for each provider
+ * Integration provider static configuration (non-translatable fields)
+ * Defines technical requirements for each provider
  */
-const INTEGRATION_CONFIG: Record<
+const INTEGRATION_STATIC_CONFIG: Record<
   string,
   {
-    name: string;
-    description: string;
+    nameKey: string;
+    descriptionKey: string;
     category: 'payment' | 'sync' | 'notification' | 'calendar';
     icon: string;
     requiresApiKey: boolean;
@@ -66,8 +66,8 @@ const INTEGRATION_CONFIG: Record<
   }
 > = {
   vipps: {
-    name: 'Vipps',
-    description: 'Norsk betalingsløsning for online betaling',
+    nameKey: 'tenantAdmin.integrations.providers.vipps.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.vipps.description',
     category: 'payment',
     icon: '💳',
     requiresApiKey: true,
@@ -76,8 +76,8 @@ const INTEGRATION_CONFIG: Record<
     docsUrl: 'https://developer.vipps.no/',
   },
   visma: {
-    name: 'Visma',
-    description: 'Integrasjon med Visma for regnskapsføring og fakturering',
+    nameKey: 'tenantAdmin.integrations.providers.visma.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.visma.description',
     category: 'sync',
     icon: '📊',
     requiresApiKey: true,
@@ -85,8 +85,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   rco: {
-    name: 'RCO Access',
-    description: 'Adgangskontrollsystem for fysiske lokaler',
+    nameKey: 'tenantAdmin.integrations.providers.rco.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.rco.description',
     category: 'sync',
     icon: '🔐',
     requiresApiKey: true,
@@ -94,8 +94,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   acos: {
-    name: 'Acos',
-    description: 'Kommunal sakssystem-integrasjon',
+    nameKey: 'tenantAdmin.integrations.providers.acos.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.acos.description',
     category: 'sync',
     icon: '📁',
     requiresApiKey: true,
@@ -103,8 +103,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   outlook: {
-    name: 'Microsoft Outlook',
-    description: 'Kalendersynkronisering med Microsoft 365',
+    nameKey: 'tenantAdmin.integrations.providers.outlook.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.outlook.description',
     category: 'calendar',
     icon: '📅',
     requiresApiKey: false,
@@ -112,8 +112,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   smtp: {
-    name: 'SMTP E-post',
-    description: 'Egendefinert e-postserver for varslinger',
+    nameKey: 'tenantAdmin.integrations.providers.smtp.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.smtp.description',
     category: 'notification',
     icon: '📧',
     requiresApiKey: true,
@@ -121,8 +121,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   sms: {
-    name: 'SMS Gateway',
-    description: 'SMS-varsler via tredjeparts gateway',
+    nameKey: 'tenantAdmin.integrations.providers.sms.name',
+    descriptionKey: 'tenantAdmin.integrations.providers.sms.description',
     category: 'notification',
     icon: '📱',
     requiresApiKey: true,
@@ -131,11 +131,11 @@ const INTEGRATION_CONFIG: Record<
   },
 };
 
-const CATEGORY_LABELS: Record<string, { name: string; color: 'info' | 'success' | 'warning' | 'danger' }> = {
-  payment: { name: 'Betaling', color: 'success' },
-  sync: { name: 'Synkronisering', color: 'info' },
-  notification: { name: 'Varsler', color: 'warning' },
-  calendar: { name: 'Kalender', color: 'info' },
+const CATEGORY_KEYS: Record<string, { nameKey: string; color: 'info' | 'success' | 'warning' | 'danger' }> = {
+  payment: { nameKey: 'tenantAdmin.integrations.categories.payment', color: 'success' },
+  sync: { nameKey: 'tenantAdmin.integrations.categories.sync', color: 'info' },
+  notification: { nameKey: 'tenantAdmin.integrations.categories.notification', color: 'warning' },
+  calendar: { nameKey: 'tenantAdmin.integrations.categories.calendar', color: 'info' },
 };
 
 interface IntegrationEditState {
@@ -276,17 +276,43 @@ export function IntegrationsSettingsPage(): React.ReactElement {
     });
   };
 
-  const renderIntegrationCard = (integration: TenantIntegration) => {
-    const config = INTEGRATION_CONFIG[integration.provider] ?? {
-      name: integration.provider,
-      description: 'Unknown integration',
-      category: 'sync' as const,
-      icon: '🔗',
-      requiresApiKey: false,
-      requiresApiSecret: false,
-      requiresWebhook: false,
+  // Helper function to get translated integration config
+  const getIntegrationConfig = (provider: string) => {
+    const staticConfig = INTEGRATION_STATIC_CONFIG[provider];
+    if (!staticConfig) {
+      return {
+        name: provider,
+        description: t('tenantAdmin.integrations.unknownIntegration', { defaultValue: 'Unknown integration' }),
+        category: 'sync' as const,
+        icon: '🔗',
+        requiresApiKey: false,
+        requiresApiSecret: false,
+        requiresWebhook: false,
+        docsUrl: undefined,
+      };
+    }
+    return {
+      ...staticConfig,
+      name: t(staticConfig.nameKey, { defaultValue: provider }),
+      description: t(staticConfig.descriptionKey, { defaultValue: '' }),
     };
-    const category = CATEGORY_LABELS[config.category] ?? { name: config.category, color: 'info' as const };
+  };
+
+  // Helper function to get translated category label
+  const getCategoryLabel = (category: string) => {
+    const categoryConfig = CATEGORY_KEYS[category];
+    if (!categoryConfig) {
+      return { name: category, color: 'info' as const };
+    }
+    return {
+      name: t(categoryConfig.nameKey, { defaultValue: category }),
+      color: categoryConfig.color,
+    };
+  };
+
+  const renderIntegrationCard = (integration: TenantIntegration) => {
+    const config = getIntegrationConfig(integration.provider);
+    const category = getCategoryLabel(config.category);
     const isEditing = editingProvider === integration.provider;
 
     return (
@@ -570,8 +596,8 @@ export function IntegrationsSettingsPage(): React.ReactElement {
   // Group integrations by category
   const groupedIntegrations = integrations.reduce(
     (acc, integration) => {
-      const config = INTEGRATION_CONFIG[integration.provider];
-      const category = config?.category ?? 'sync';
+      const staticConfig = INTEGRATION_STATIC_CONFIG[integration.provider];
+      const category = staticConfig?.category ?? 'sync';
       if (!acc[category]) {
         acc[category] = [];
       }
@@ -631,7 +657,7 @@ export function IntegrationsSettingsPage(): React.ReactElement {
 
       {/* Integrations by Category */}
       {Object.entries(groupedIntegrations).map(([category, categoryIntegrations]) => {
-        const categoryConfig = CATEGORY_LABELS[category] ?? { name: category, color: 'info' as const };
+        const categoryLabel = getCategoryLabel(category);
         return (
           <div key={category}>
             <div
@@ -643,9 +669,9 @@ export function IntegrationsSettingsPage(): React.ReactElement {
               }}
             >
               <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-                {categoryConfig.name}
+                {categoryLabel.name}
               </Heading>
-              <Badge data-color={categoryConfig.color} data-size="sm">
+              <Badge data-color={categoryLabel.color} data-size="sm">
                 {categoryIntegrations.length}
               </Badge>
             </div>

@@ -9,6 +9,7 @@ import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
 import { useAuth, type TenantAdminRole } from '@xala/auth';
+import { useT } from '@xala/i18n';
 import { useToast } from '../providers/ToastProvider';
 
 interface ProtectedRouteProps {
@@ -24,6 +25,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   const { isLoading, isAuthenticated, checkRole } = useAuth();
   const location = useLocation();
   const { error } = useToast();
+  const t = useT();
   const hasShownToast = useRef(false);
 
   // Check if user has required role (tenant admin always has access)
@@ -34,11 +36,14 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     if (!isLoading && isAuthenticated && !hasRequiredRole && !hasShownToast.current) {
       hasShownToast.current = true;
       error(
-        'Ingen tilgang',
-        'Du har ikke tilgang til denne siden. Kontakt tenant-administrator hvis du mener dette er feil.'
+        t('tenantAdmin.auth.noAccess', { defaultValue: 'No access' }),
+        t('tenantAdmin.auth.noAccessDescription', {
+          defaultValue:
+            'You do not have access to this page. Contact tenant administrator if you believe this is an error.',
+        })
       );
     }
-  }, [isLoading, isAuthenticated, hasRequiredRole, error]);
+  }, [isLoading, isAuthenticated, hasRequiredRole, error, t]);
 
   // Reset toast flag when location changes
   useEffect(() => {
@@ -56,7 +61,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label={t('common.loading', { defaultValue: 'Loading...' })} data-size="lg" />
       </div>
     );
   }
