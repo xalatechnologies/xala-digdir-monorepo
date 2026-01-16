@@ -269,6 +269,22 @@ export {
   type AriaAnnouncementMetric,
 } from './use-accessibility-monitoring';
 
+// Monitoring hooks
+export {
+  useHealthStatus,
+  useSystemMetrics,
+  useLogs,
+  useIncidents,
+  useDatabaseStats,
+  useApiUsage,
+  useTriggerHealthCheck,
+  type HealthStatus,
+  type SystemMetrics,
+  type LogEntry,
+  type LogQueryParams,
+  type Incident,
+} from './use-monitoring';
+
 // Search hooks
 export {
   useGlobalSearch,
@@ -362,14 +378,3 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
-
-// Widget hooks
-export {
-  useWidgets,
-  useWidget,
-  useWidgetEmbedCode,
-  useWidgetPreview,
-  useCreateWidget,
-  useUpdateWidget,
-  useDeleteWidget,
-} from './use-widgets';
