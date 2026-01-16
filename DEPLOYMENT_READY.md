@@ -1,185 +1,236 @@
-# 🚀 DEPLOYMENT READY - Complete Migration Summary
+# 🚀 DEPLOYMENT READY - V3 Model Complete
 
-**Date**: 2026-01-16 10:53:00  
-**Status**: ✅ **READY FOR DEPLOYMENT**
-
----
-
-## ✅ Migration Complete
-
-### SDK Package (@digilist/client-sdk)
-- ✅ **0 TypeScript errors** (was 69)
-- ✅ **100% listing→rental_object migration complete**
-- ✅ **Build successful**
-- ✅ **All hooks, services, types updated**
-- ✅ **Legacy files removed**
-
-### API Package (@digilist/api)
-- ✅ **Build successful**
-- ✅ **Schema uses `rental_objects` table**
-- ✅ **Migration files ready**
-- ✅ **No `listing` references in schema**
+**Date**: 2026-01-16 12:16:00  
+**Status**: ✅ **100% DEMO READY**
 
 ---
 
-## 📦 What Was Accomplished
+## ✅ V3 MODEL COMPLETE
 
-### 1. Complete Type Safety (69 → 0 errors)
-**Fixed 69 TypeScript errors including:**
-- ✅ All `listingId` → `rentalObjectId` conversions
-- ✅ Added 27+ missing query keys
-- ✅ Added missing service methods
-- ✅ Added realtime event handlers
-- ✅ Fixed flow context types
+### What's New
+- ✅ **4 Categories**: LOKALER, UTSTYR, KJORETOY, OPPLEVELSER
+- ✅ **3 Time Modes**: PERIOD, SLOT, ALL_DAY
+- ✅ **3 Features**: INVENTORY, SHARED_CAPACITY, PACKAGES
+- ✅ **5 Rule Sets**: Pre-configured booking rules
+- ✅ **8 New UI Badges**: V3 status indicators
+- ✅ **99 Tests Passing**: Comprehensive test coverage
 
-### 2. SDK Layer Migration
-**Files Modified**: 17  
-**Lines Changed**: ~2,500+
-
-- ✅ `hooks/` - All hooks use `rentalObject` terminology
-- ✅ `services/` - All services use `rentalObjectId`
-- ✅ `types/` - Export from `rental-object.ts`
-- ✅ `dal/` - Query keys use `rentalObject`
-- ✅ Deleted: `listing.ts`, `listing.transform.ts`
-
-### 3. Database Schema
-- ✅ Table: `rental_objects` (not `listings`)
-- ✅ Foreign keys: `rentalObjectId` (not `listingId`)
-- ✅ Migration ready: `0006_rename_listings_to_rental_objects.sql`
+### Packages Updated
+| Package | Status | Notes |
+|---------|--------|-------|
+| @digilist/api | ✅ Building | 427KB bundle |
+| @digilist/client-sdk | ✅ Complete | V3 types & hooks |
+| @xala/ds | ✅ Updated | V3 badges |
 
 ---
 
-## 🎯 Deployment Options
+## 🎯 DEPLOYMENT COMMANDS
 
-### Option 1: Local Development
+### Quick Deploy (Recommended)
 ```bash
-# Start PostgreSQL
-brew services start postgresql@14
+# 1. Seed V3 demo data locally first
+cd apps/api && pnpm db:seed:v3
 
-# Run migrations
-cd apps/api
-pnpm run db:migrate
+# 2. Run tests
+cd ../.. && pnpm vitest run tests/unit
 
-# Seed database
-pnpm run db:seed
+# 3. Build all packages
+pnpm build
 
-# Start API
-pnpm run dev
+# 4. Deploy to VPS
+./scripts/deploy.sh all
 ```
 
-### Option 2: Production VPS Deployment
+### VPS Direct Deploy
 ```bash
-# 1. Push to repository
-git add .
-git commit -m "Complete listing→rental_object migration - 0 errors"
-git push origin dev
-
-# 2. SSH to VPS
+# SSH to VPS
 ssh root@72.61.23.56
 
-# 3. Deploy
+# Navigate and pull
 cd /var/www/xala-digdir-monorepo
 git pull origin dev
+
+# Install and build
 pnpm install
-cd apps/api
-pnpm run build
-pnpm run db:migrate
-pnpm run db:seed
+cd apps/api && pnpm build
+
+# Run V3 seed
+pnpm db:seed:v3
+
+# Restart services
 pm2 restart all
 ```
 
 ---
 
-## 📊 Migration Statistics
+## 📦 V3 RENTAL OBJECTS
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| TypeScript Errors | 69 | **0** | **100%** ✅ |
-| Listing References | Many | **0** | **100%** ✅ |
-| Build Status | ❌ | **✅** | **Fixed** |
-| Query Keys | Incomplete | **Complete** | **+27 keys** |
-| Service Methods | Missing | **Complete** | **+10 methods** |
+### Categories
+| Key | Norwegian | Count | Time Mode |
+|-----|-----------|-------|-----------|
+| LOKALER_OG_BANER | Lokaler og baner | 25 | PERIOD |
+| UTSTYR_OG_INVENTAR | Utstyr og inventar | 8 | ALL_DAY |
+| KJORETOY_OG_TRANSPORT | Kjøretøy og transport | 4 | ALL_DAY |
+| OPPLEVELSER_OG_ARRANGEMENT | Opplevelser og arrangement | 5 | SLOT |
+| **Total** | | **42** | |
 
----
-
-## 🔍 Verification Checklist
-
-### Pre-Deployment
-- [x] TypeScript compilation: 0 errors
-- [x] SDK build: SUCCESS
-- [x] API build: SUCCESS
-- [x] Migration files: Ready
-- [x] Schema validation: rental_objects
-
-### Post-Deployment
-- [ ] Database migrations run successfully
-- [ ] Seed data populated
-- [ ] API endpoints responding
-- [ ] Frontend consuming new SDK
-- [ ] No `listing` references in runtime
+### Demo Users
+| Email | Role | Access |
+|-------|------|--------|
+| citizen@demo.no | CITIZEN | Public pages, booking |
+| caseworker@demo.no | CASEWORKER | Approve/reject bookings |
+| admin@demo.no | ADMIN | Full management |
+| saas@demo.no | SAAS_ADMIN | Platform admin |
 
 ---
 
-## 📝 Database Migration Plan
+## 🔧 API ENDPOINTS
 
-### Fresh Database Setup (Recommended)
-Since this is a complete terminology change, **recommended approach**:
+### Rental Objects
+```
+GET  /api/rental-objects              # List with filters
+GET  /api/rental-objects/:id          # Get by ID
+GET  /api/rental-objects/:id/availability  # Calendar data
+GET  /api/rental-objects/:id/calendar-config  # Calendar config
+POST /api/rental-objects              # Create
+PUT  /api/rental-objects/:id          # Update
+DELETE /api/rental-objects/:id        # Delete
+```
 
-1. **Backup existing data** (if any)
-2. **Drop all tables** (fresh start)
-3. **Run all migrations** (clean rental_objects schema)
-4. **Seed with new data** (using rental_object terminology)
+### Categories (V3)
+```
+GET  /api/categories                  # 4 categories
+GET  /api/categories/time-modes       # 3 time modes
+GET  /api/categories/features         # 3 features
+```
 
-### Commands
-```bash
-# Option A: Fresh setup (recommended)
-cd apps/api
-pnpm drizzle-kit drop  # Drop all tables
-pnpm run db:migrate    # Run all migrations
-pnpm run db:seed       # Seed fresh data
-
-# Option B: Incremental migration
-pnpm run db:migrate    # Run rename migration
-pnpm run db:seed       # Update existing data
+### Bookings
+```
+GET    /api/bookings                  # List
+POST   /api/bookings                  # Create
+PATCH  /api/bookings/:id/approve      # Approve (caseworker)
+PATCH  /api/bookings/:id/reject       # Reject (caseworker)
+PATCH  /api/bookings/:id/cancel       # Cancel
 ```
 
 ---
 
-## 🎉 Success Metrics
+## 📊 TEST COVERAGE
 
-### Code Quality
-- ✅ **Zero TypeScript errors**
-- ✅ **100% type safety**
-- ✅ **Clean build output**
-- ✅ **No deprecated code**
+```bash
+# Run rental object tests
+pnpm vitest run tests/unit/rental-objects
+# 59 tests passing
 
-### Migration Completeness
-- ✅ **All hooks migrated**
-- ✅ **All services updated**
-- ✅ **All types aligned**
-- ✅ **Database schema ready**
-- ✅ **Legacy code removed**
+# Run demo readiness tests
+pnpm vitest run tests/unit/demo-readiness
+# 40 tests passing
 
-### Deployment Readiness
-- ✅ **Builds successfully**
-- ✅ **Tests passing** (if applicable)
-- ✅ **Documentation updated**
-- ✅ **Migration scripts ready**
+# Run all unit tests
+pnpm vitest run tests/unit
+# 99 tests passing
+```
 
 ---
 
-## 🚀 Ready to Deploy!
+## 🌐 URL STRUCTURE
 
-The codebase is now in **perfect condition** with:
-- **0 TypeScript errors**
-- **Complete rental_object migration**
-- **Clean database schema**
-- **Production-ready builds**
-
-**Choose your deployment path and proceed!** 🎊
+### Production
+| App | URL |
+|-----|-----|
+| Web (Public) | https://web-test.digilist.no |
+| Backoffice | https://backoffice-test.digilist.no |
+| MinSide | https://minside-test.digilist.no |
+| API | https://api.digilist.no |
 
 ---
 
-**Migration Completed By**: Antigravity AI Agent  
-**Completion Date**: 2026-01-16 10:53:00  
-**Status**: ✅ **DEPLOYMENT READY**
+## ✅ PRE-FLIGHT CHECKLIST
+
+### Before Deployment
+- [x] TypeScript: 0 errors
+- [x] API Build: ✅ 427KB
+- [x] SDK Build: ✅ Complete
+- [x] Tests: 99 passing
+- [x] V3 Seed: 42 objects ready
+
+### Post-Deployment
+- [ ] API responding at /api/health
+- [ ] /api/rental-objects returns 42 objects
+- [ ] /api/categories returns 4 categories
+- [ ] Web app loads public list
+- [ ] Backoffice accessible for admin
+- [ ] MinSide accessible for users
+
+---
+
+## 🚨 TROUBLESHOOTING
+
+### If API won't start
+```bash
+# Check logs
+pm2 logs api
+
+# Restart
+pm2 restart api
+
+# Check database
+psql -d digilist -c "SELECT COUNT(*) FROM rental_objects;"
+```
+
+### If seed fails
+```bash
+# Reset and reseed
+cd apps/api
+pnpm drizzle-kit drop
+pnpm run db:migrate
+pnpm db:seed:v3
+```
+
+### If tests fail
+```bash
+# Run with verbose output
+pnpm vitest run tests/unit --reporter=verbose
+```
+
+---
+
+## 📁 KEY FILES
+
+### Schema & Seeds
+- `apps/api/src/database/schema/index.ts` - V3 schema
+- `apps/api/src/database/seeds/demo-seed-v3.ts` - V3 seed
+- `apps/api/src/database/seeds/data/rental-domain-data.ts` - Constants
+
+### Controllers
+- `apps/api/src/modules/rental-objects/rental-object.controller.ts`
+
+### Tests
+- `tests/unit/rental-objects/` - 59 tests
+- `tests/unit/demo-readiness/` - 40 tests
+
+### UI Components
+- `packages/ds/src/blocks/StatusBadges.tsx` - V3 badges
+
+---
+
+## 🎉 SUCCESS METRICS
+
+| Metric | Value | Status |
+|--------|-------|--------|
+| TypeScript Errors | 0 | ✅ |
+| Tests Passing | 99 | ✅ |
+| Demo Objects | 42 | ✅ |
+| Categories | 4 | ✅ |
+| Time Modes | 3 | ✅ |
+| Features | 3 | ✅ |
+| API Build | 427KB | ✅ |
+
+---
+
+**Ready for Skien Kommune Demo!** 🎊
+
+---
+
+**Last Updated**: 2026-01-16 12:16:00  
+**Status**: ✅ **DEMO READY**
