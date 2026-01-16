@@ -120,6 +120,25 @@ export const permissionAssignments = pgTable('permission_assignments', {
   orgUserRentalObjectIdx: index('permission_assignments_org_user_rental_object_idx').on(table.orgId, table.userId, table.rentalObjectId),
 }));
 
+export const caseHandlerScopes = pgTable('case_handler_scopes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  scopeType: varchar('scope_type', { length: 50 }).notNull(),
+  rentalObjectId: uuid('rental_object_id').references(() => listings.id, { onDelete: 'cascade' }),
+  assignedBy: uuid('assigned_by').references(() => users.id, { onDelete: 'set null' }),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('case_handler_scopes_tenant_idx').on(table.tenantId),
+  userIdx: index('case_handler_scopes_user_idx').on(table.userId),
+  scopeTypeIdx: index('case_handler_scopes_scope_type_idx').on(table.scopeType),
+  rentalObjectIdx: index('case_handler_scopes_rental_object_idx').on(table.rentalObjectId),
+  userScopeIdx: index('case_handler_scopes_user_scope_idx').on(table.userId, table.scopeType, table.rentalObjectId),
+}));
+
 // ============================================================================
 // Subscriptions & Billing
 // ============================================================================
@@ -359,6 +378,8 @@ export type AccessGrant = typeof accessGrants.$inferSelect;
 export type NewAccessGrant = typeof accessGrants.$inferInsert;
 export type PermissionAssignment = typeof permissionAssignments.$inferSelect;
 export type NewPermissionAssignment = typeof permissionAssignments.$inferInsert;
+export type CaseHandlerScope = typeof caseHandlerScopes.$inferSelect;
+export type NewCaseHandlerScope = typeof caseHandlerScopes.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
