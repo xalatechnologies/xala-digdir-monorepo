@@ -251,7 +251,7 @@ export {
   RentalObjectToolbar,
   RentalObjectMap,
   RentalObjectTableView,
-  RentalObjectsFilterBar,
+  // TODO: RentalObjectsFilterBar - component not yet implemented
   ImageGallery,
   ImageSlider,
   RentalObjectDetailHeader,
