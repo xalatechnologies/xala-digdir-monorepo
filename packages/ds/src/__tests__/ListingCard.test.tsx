@@ -82,7 +82,7 @@ describe('ListingCard', () => {
     });
 
     it('renders listing type badge when provided', () => {
-      render(<ListingCard {...defaultProps} listingType="SPACE" />);
+      render(<ListingCard {...defaultProps} variant="detailed" listingType="SPACE" />);
       expect(screen.getByText('Lokale')).toBeInTheDocument();
     });
   });

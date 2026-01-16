@@ -29,6 +29,7 @@ export default defineConfig({
       '**/dist/**',
       '**/.turbo/**',
       'apps/api/**',
+      'tests/e2e/**',
     ],
     coverage: {
       provider: 'v8',
