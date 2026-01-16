@@ -27,11 +27,27 @@ export const tenants = pgTable('tenants', {
   domain: varchar('domain', { length: 255 }),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  // Subscription & Plan references
+  subscriptionPlanId: uuid('subscription_plan_id'),
+  // License key (stored as hash only, never plaintext)
+  licenseKeyHash: text('license_key_hash'),
+  licenseKeyRotatedAt: timestamp('license_key_rotated_at'),
+  // Seat limits (overrides plan defaults when set)
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  // Branding reference (active branding version ID)
+  brandingVersionId: uuid('branding_version_id'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   slugIdx: index('tenants_slug_idx').on(table.slug),
   statusIdx: index('tenants_status_idx').on(table.status),
+  subscriptionPlanIdx: index('tenants_subscription_plan_idx').on(table.subscriptionPlanId),
 }));
 
 export const organizations = pgTable('organizations', {
