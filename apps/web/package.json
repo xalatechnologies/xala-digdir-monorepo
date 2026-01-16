@@ -17,6 +17,7 @@
     "@xala/ds-registry": "workspace:*",
     "@xala/ds-themes": "workspace:*",
     "@xala/i18n": "workspace:*",
+    "framer-motion": "^12.26.2",
     "mapbox-gl": "^3.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -22,16 +22,16 @@ import {
   Stack,
   Text,
   HeaderSearch,
-  Spinner,
-  Chip,
   Card,
+  CloseIcon,
+  XIcon, // Fallback if CloseIcon is not the one
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import {
   usePublicRentalObjectsList,
   usePublicCities,
-  type ListingCardProjectionDTO,
-  type PublicListingParams,
+  type ListingCardProjectionDTO, // Alias for RentalObjectCardProjectionDTO
+  type PublicRentalObjectParams,
 } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeRentalObject } from '../providers';
@@ -51,20 +51,17 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 // Category options using V3 4-category model
-// Note: Categories can be disabled per tenant via feature flags
 const CATEGORY_OPTIONS = [
-  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
-  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
-  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
-  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
+  { id: 'ALL', key: 'ALL', label: 'Alle typer' },
+  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
+  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
+  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
 ];
 
-// Feature flag check for disabled categories (Skien has KJORETOY_OG_TRANSPORT disabled)
-const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT']; // TODO: fetch from tenant feature flags
+const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT'];
 
-
-// Capacity filter options (i18n keys)
+// Capacity filter options
 const CAPACITY_OPTIONS = [
   { id: 'all', labelKey: 'listings.filter.capacity.all', min: 0, max: Infinity },
   { id: '1-5', labelKey: 'listings.filter.capacity.1-5', min: 1, max: 5 },
@@ -77,7 +74,6 @@ const CAPACITY_OPTIONS = [
 // Skeleton Loading Component
 const RentalObjectSkeleton = () => (
   <Card style={{ height: '100%', overflow: 'hidden' }}>
-    {/* Image Skeleton */}
     <div style={{
       width: '100%',
       height: '260px',
@@ -90,35 +86,14 @@ const RentalObjectSkeleton = () => (
         animation: 'shimmer 1.5s infinite'
       }} />
     </div>
-
-    {/* Content Skeleton */}
     <div style={{ padding: 'var(--ds-spacing-4)' }}>
-      {/* Title */}
-      <div style={{
-        height: '24px',
-        width: '70%',
-        backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-        borderRadius: '4px',
-        marginBottom: 'var(--ds-spacing-2)'
-      }} />
-      
-      {/* Subtitle/Location */}
-      <div style={{
-        height: '16px',
-        width: '50%',
-        backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-        borderRadius: '4px',
-        marginBottom: 'var(--ds-spacing-4)'
-      }} />
-
-      {/* Facilities row */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: 'var(--ds-spacing-4)' }}>
+      <div style={{ height: '24px', width: '70%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px', marginBottom: '8px' }} />
+      <div style={{ height: '16px', width: '50%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px', marginBottom: '16px' }} />
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
         <div style={{ height: '24px', width: '60px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
         <div style={{ height: '24px', width: '80px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
       </div>
-
-      {/* Footer row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-2)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
          <div style={{ height: '20px', width: '40px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
          <div style={{ height: '20px', width: '60px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
       </div>
@@ -132,14 +107,48 @@ const RentalObjectSkeleton = () => (
   </Card>
 );
 
-// Filter helpers using projection DTO directly (no transformation needed)
+// Custom Filter Chip Component since Chip is not exported from @xala/ds
+const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
+  <motion.button
+    type="button"
+    onClick={onRemove}
+    initial={{ scale: 0.9, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    exit={{ scale: 0.9, opacity: 0 }}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 'var(--ds-spacing-1)',
+      padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+      borderRadius: '999px',
+      backgroundColor: 'var(--ds-color-neutral-background-default)',
+      border: '1px solid var(--ds-color-neutral-border-default)',
+      fontSize: 'var(--ds-font-size-sm)',
+      lineHeight: '1.5',
+      color: 'var(--ds-color-neutral-text-default)',
+      cursor: 'pointer',
+      boxShadow: 'var(--ds-shadow-sm)',
+    }}
+  >
+    {label}
+    <div style={{ display: 'flex', alignItems: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
+      {/* Use SVG directly or Icon component if valid */}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </div>
+  </motion.button>
+);
 
-// Get rental object category counts for filter badges (uses V3 category_key field)
+// Filter helpers
 const getCategoryCounts = (listings: ListingCardProjectionDTO[]) => {
   const counts: Record<string, number> = { ALL: listings.length };
   listings.forEach(l => {
-    // Use category field which maps to category_key from DB
-    const category = (l as any).category || (l as any).categoryKey;
+    // Correctly handle category mapping from API projection
+    const category = l.category; 
     if (category) {
       counts[category] = (counts[category] || 0) + 1;
     }
@@ -147,14 +156,12 @@ const getCategoryCounts = (listings: ListingCardProjectionDTO[]) => {
   return counts;
 };
 
-// Get all unique amenities for filter options
 const getAllAmenities = (listings: ListingCardProjectionDTO[]) => {
   const amenitySet = new Set<string>();
   listings.forEach(l => l.amenities?.forEach((a: string) => amenitySet.add(a)));
   return Array.from(amenitySet).sort();
 };
 
-// Get unique cities for location filter
 const getUniqueCities = (listings: ListingCardProjectionDTO[]) => {
   const citySet = new Set<string>();
   listings.forEach(l => {
@@ -172,27 +179,23 @@ export function RentalObjectsPage(): React.ReactElement {
   const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
 
-  // API query params - load all listings at once for client-side filtering
-  const [queryParams] = React.useState<PublicListingParams>({ limit: 100 });
+  // API query params
+  const [queryParams] = React.useState<PublicRentalObjectParams>({ limit: 100 });
 
-  // Fetch listings from real API - returns ListingCardProjectionDTO[] directly
   const { data: listingsResponse, isLoading, error } = usePublicRentalObjectsList(queryParams);
-
-  // Fetch cities for location filter
   const { data: citiesResponse } = usePublicCities();
 
-  // Realtime updates - refetch when listings are created/updated/published
   const queryClient = useQueryClient();
   const handleRentalObjectEvent = React.useCallback((_event: { type: string; data?: unknown }) => {
-    // Invalidate all public listings queries to refetch
     queryClient.invalidateQueries({ queryKey: ['public'] });
   }, [queryClient]);
   useRealtimeRentalObject(handleRentalObjectEvent);
 
-  // Listings from API - already in screen-ready projection DTO format
+  // CASTING: Treat API response as ListingCardProjectionDTO[] 
+  // because SDK types might interpret it as RentalObject[] but API returns projection.
   const listings = React.useMemo(() => {
     if (!listingsResponse?.data) return [] as ListingCardProjectionDTO[];
-    return listingsResponse.data;
+    return listingsResponse.data as unknown as ListingCardProjectionDTO[];
   }, [listingsResponse]);
 
 
@@ -211,7 +214,6 @@ export function RentalObjectsPage(): React.ReactElement {
   const [showMoreFacilities, setShowMoreFacilities] = React.useState(false);
   const MAX_VISIBLE_ITEMS = 4;
 
-  // Derived filter options (using projection DTO fields)
   const typeCounts = React.useMemo(() => getCategoryCounts(listings), [listings]);
   const allFacilities = React.useMemo(() => getAllAmenities(listings), [listings]);
 
@@ -232,25 +234,20 @@ export function RentalObjectsPage(): React.ReactElement {
     return areas;
   }, [citiesResponse, listings]);
 
-  // Filter listings using projection DTO fields
   const filteredListings = React.useMemo(() => {
     return listings.filter(l => {
-      // Filter by category using DTO's category field
       if (listingType !== 'ALL' && l.category !== listingType) return false;
 
-      // Filter by area using DTO's city field
       if (selectedArea !== 'all') {
         const cityLower = l.city.toLowerCase().replace(/\s+/g, '-');
         if (cityLower !== selectedArea) return false;
       }
 
-      // Filter by capacity
       if (selectedCapacity !== 'all') {
         const capacityOption = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);
         if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
       }
 
-      // Filter by amenities (renamed from facilities)
       if (selectedFacilities.length > 0) {
         const listingAmenities = l.amenities || [];
         if (!selectedFacilities.every(f => listingAmenities.includes(f))) return false;
@@ -260,7 +257,6 @@ export function RentalObjectsPage(): React.ReactElement {
     });
   }, [listings, listingType, selectedArea, selectedCapacity, selectedFacilities]);
 
-  // Pagination
   const ITEMS_PER_PAGE = 6;
   const [visibleCount, setVisibleCount] = React.useState(ITEMS_PER_PAGE);
   const visibleListings = filteredListings.slice(0, visibleCount);
@@ -270,15 +266,12 @@ export function RentalObjectsPage(): React.ReactElement {
     setVisibleCount(ITEMS_PER_PAGE);
   }, [listingType, selectedArea, selectedCapacity, selectedFacilities]);
 
-  // Search handler
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-
     if (!value.trim()) {
       setSearchResults([]);
       return;
     }
-
     setIsSearching(true);
     const query = value.toLowerCase();
     const matchingListings = listings.filter(listing =>
@@ -286,7 +279,6 @@ export function RentalObjectsPage(): React.ReactElement {
       listing.locationFormatted.toLowerCase().includes(query) ||
       listing.city.toLowerCase().includes(query)
     );
-
     const results: SearchResultGroup[] = matchingListings.length > 0
       ? [{
           id: 'listings',
@@ -299,16 +291,13 @@ export function RentalObjectsPage(): React.ReactElement {
           })),
         }]
       : [];
-
     setSearchResults(results);
     setIsSearching(false);
   };
 
   const handleResultSelect = (result: SearchResultItem) => {
     const listing = listings.find(l => l.id === result.id);
-    if (listing) {
-      navigate(`/listing/${listing.slug || listing.id}`);
-    }
+    if (listing) navigate(`/listing/${listing.slug || listing.id}`);
     setSearchQuery('');
     setSearchResults([]);
   };
@@ -361,7 +350,6 @@ export function RentalObjectsPage(): React.ReactElement {
 
   return (
     <>
-      {/* Filter Drawer */}
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
@@ -382,17 +370,18 @@ export function RentalObjectsPage(): React.ReactElement {
           </Stack>
         }
       >
+        {/* Type Filter */}
         <DrawerSection title={t('type')} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreType ? CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)) : CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).slice(0, MAX_VISIBLE_ITEMS)).map((cat) => (
               <DrawerItem
                 key={cat.id}
-                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={t(cat.labelKey)} />}
+                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={cat.label} />}
                 right={<Text size="sm">({typeCounts[cat.id] || 0})</Text>}
                 onClick={() => setRentalObjectType(cat.id)}
                 selected={listingType === cat.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cat.labelKey)}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{cat.label}</Text>
               </DrawerItem>
             ))}
             {CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length > MAX_VISIBLE_ITEMS && (
@@ -402,7 +391,7 @@ export function RentalObjectsPage(): React.ReactElement {
             )}
           </Stack>
         </DrawerSection>
-
+        {/* Area Filter */}
         <DrawerSection title={t('område')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreArea ? locationAreas : locationAreas.slice(0, MAX_VISIBLE_ITEMS)).map((area) => (
@@ -422,7 +411,7 @@ export function RentalObjectsPage(): React.ReactElement {
             )}
           </Stack>
         </DrawerSection>
-
+        {/* Capacity Filter */}
         <DrawerSection title={t('kapasitet')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreCapacity ? CAPACITY_OPTIONS : CAPACITY_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((cap) => (
@@ -442,7 +431,7 @@ export function RentalObjectsPage(): React.ReactElement {
             )}
           </Stack>
         </DrawerSection>
-
+        {/* Facilities Filter */}
         <DrawerSection title={t('fasiliteter')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreFacilities ? allFacilities : allFacilities.slice(0, MAX_VISIBLE_ITEMS)).map((facility) => (
@@ -564,18 +553,16 @@ export function RentalObjectsPage(): React.ReactElement {
                     style={{ marginBottom: 'var(--ds-spacing-4)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}
                   >
                     {chips.map(chip => (
-                      <Chip
+                      <FilterChip
                         key={chip.id}
-                        removable
-                        onClick={() => removeFilter(chip)}
-                      >
-                        {chip.label}
-                      </Chip>
+                        label={chip.label}
+                        onRemove={() => removeFilter(chip)}
+                      />
                     ))}
                     {chips.length > 0 && (
                        <Button 
                         variant="tertiary" 
-                        size="sm" 
+                        size="small"
                         onClick={() => {
                           setRentalObjectType('ALL');
                           setSelectedArea('all');
@@ -608,7 +595,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
-                          description={listing.descriptionExcerpt || ''}
+                          description={listing.descriptionExcerpt}
                           image={listing.primaryImageUrl}
                           facilities={listing.amenities?.map((key: string) => t(key) || key)}
                           moreFacilities={listing.moreAmenitiesCount}
@@ -626,8 +613,8 @@ export function RentalObjectsPage(): React.ReactElement {
                           showRating={false}
                           showPrice={true}
                           onClick={(id) => handleListingClick(id, listing.slug)}
-                          onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
-                          onShare={(_id) => { /* TODO: Implement share */ }}
+                          onFavorite={(_id) => { /* TODO */ }}
+                          onShare={(_id) => { /* TODO */ }}
                         />
                       </motion.div>
                     ))}
@@ -651,7 +638,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
-                          description={listing.descriptionExcerpt || ''}
+                          description={listing.descriptionExcerpt}
                           image={listing.primaryImageUrl}
                           facilities={listing.amenities?.map((key: string) => t(key) || key)}
                           moreFacilities={listing.moreAmenitiesCount}
@@ -665,7 +652,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           showMap={true}
                           showPrice={true}
                           onClick={(id) => handleListingClick(id, listing.slug)}
-                          onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                          onFavorite={(_id) => { /* TODO */ }}
                           onShare={(_id) => { 
                             navigator.share?.({ 
                               title: listing.name, 
@@ -691,7 +678,7 @@ export function RentalObjectsPage(): React.ReactElement {
                       longitude: l.longitude!,
                       type: l.type,
                       listingType: l.type,
-                      description: l.descriptionExcerpt || '',
+                      description: l.descriptionExcerpt,
                       capacity: l.capacity,
                       price: l.priceAmount,
                       priceUnit: l.priceUnit,
@@ -701,14 +688,6 @@ export function RentalObjectsPage(): React.ReactElement {
                   mapboxToken={MAPBOX_TOKEN || ''}
                   height="calc(100vh - 250px)"
                   onRentalObjectClick={handleListingClick}
-                  onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
-                  onShare={(id, slug) => {
-                    const listing = filteredListings.find(l => l.id === id);
-                    navigator.share?.({
-                      title: listing?.name || 'Digilist',
-                      url: `${window.location.origin}/listings/${slug || id}`
-                    }).catch(() => {});
-                  }}
                 />
               ) : (
                 <RentalObjectTableView

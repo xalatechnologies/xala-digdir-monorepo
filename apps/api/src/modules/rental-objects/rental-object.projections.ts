@@ -164,7 +164,7 @@ interface DbRentalObject {
   name: string; // EXPAND: Keep for backward compatibility
   title?: string; // EXPAND: New field (v1.1.0)
   slug: string;
-  category: string;
+  categoryKey: string;  // Maps to category_key column in DB
   subcategory?: string | null;
   timeMode: string;
   status: string;
@@ -279,10 +279,16 @@ function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string;
 function getAmenities(obj: DbRentalObject, maxCount: number = 3): { visible: string[]; moreCount: number } {
   const meta = obj.metadata || {};
   const all = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
+  
+  // Ensure amenity keys have the 'amenity.' prefix for i18n translation
+  const prefixedAmenities = all.map(a => {
+    // If already has prefix, keep it; otherwise add amenity. prefix
+    return a.startsWith('amenity.') ? a : `amenity.${a}`;
+  });
 
   return {
-    visible: all.slice(0, maxCount),
-    moreCount: Math.max(0, all.length - maxCount),
+    visible: prefixedAmenities.slice(0, maxCount),
+    moreCount: Math.max(0, prefixedAmenities.length - maxCount),
   };
 }
 
@@ -345,8 +351,8 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
     name: obj.name, // EXPAND: Keep for backward compatibility (deprecated in v1.1.0)
     title: obj.title || obj.name, // EXPAND: Prefer title, fallback to name
     tenantId: obj.tenantId,
-    category: obj.category,
-    categoryLabel: getCategoryLabelKey(obj.category),
+    category: obj.categoryKey,
+    categoryLabel: getCategoryLabelKey(obj.categoryKey),
     subcategory: obj.subcategory || '',
     subcategoryLabel: obj.subcategory || '',
     timeMode: obj.timeMode,

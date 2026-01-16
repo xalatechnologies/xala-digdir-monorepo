@@ -91,6 +91,10 @@ export interface MetadataFilter {
  * Metadata service class
  */
 export class MetadataService extends BaseService {
+  constructor() {
+    super('');
+  }
+
   /**
    * Get all rental object categories
    */
@@ -108,14 +112,14 @@ export class MetadataService extends BaseService {
     const query = params.toString();
     const url = query ? `/api/metadata/categories?${query}` : '/api/metadata/categories';
 
-    return this.get<MetadataResponse<CategoryMetadata>>(url);
+    return this.client.get<MetadataResponse<CategoryMetadata>>(url);
   }
 
   /**
    * Get single category by key
    */
   async getCategoryByKey(key: string): Promise<CategoryMetadata> {
-    return this.get<CategoryMetadata>(`/api/metadata/categories/${key}`);
+    return this.client.get<CategoryMetadata>(`/api/metadata/categories/${key}`);
   }
 
   /**
@@ -131,14 +135,14 @@ export class MetadataService extends BaseService {
     const query = params.toString();
     const url = query ? `/api/metadata/time-modes?${query}` : '/api/metadata/time-modes';
 
-    return this.get<MetadataResponse<TimeModeMetadata>>(url);
+    return this.client.get<MetadataResponse<TimeModeMetadata>>(url);
   }
 
   /**
    * Get single time mode by key
    */
   async getTimeModeByKey(key: string): Promise<TimeModeMetadata> {
-    return this.get<TimeModeMetadata>(`/api/metadata/time-modes/${key}`);
+    return this.client.get<TimeModeMetadata>(`/api/metadata/time-modes/${key}`);
   }
 
   /**
@@ -154,14 +158,14 @@ export class MetadataService extends BaseService {
     const query = params.toString();
     const url = query ? `/api/metadata/pricing-units?${query}` : '/api/metadata/pricing-units';
 
-    return this.get<MetadataResponse<PricingUnitMetadata>>(url);
+    return this.client.get<MetadataResponse<PricingUnitMetadata>>(url);
   }
 
   /**
    * Get single pricing unit by key
    */
   async getPricingUnitByKey(key: string): Promise<PricingUnitMetadata> {
-    return this.get<PricingUnitMetadata>(`/api/metadata/pricing-units/${key}`);
+    return this.client.get<PricingUnitMetadata>(`/api/metadata/pricing-units/${key}`);
   }
 
   /**
@@ -181,14 +185,14 @@ export class MetadataService extends BaseService {
     const query = params.toString();
     const url = query ? `/api/metadata/statuses?${query}` : '/api/metadata/statuses';
 
-    return this.get<MetadataResponse<StatusMetadata>>(url);
+    return this.client.get<MetadataResponse<StatusMetadata>>(url);
   }
 
   /**
    * Get single status by key and type
    */
   async getStatusByKey(key: string, statusType: string): Promise<StatusMetadata> {
-    return this.get<StatusMetadata>(`/api/metadata/statuses/${key}?statusType=${statusType}`);
+    return this.client.get<StatusMetadata>(`/api/metadata/statuses/${key}?statusType=${statusType}`);
   }
 
   /**

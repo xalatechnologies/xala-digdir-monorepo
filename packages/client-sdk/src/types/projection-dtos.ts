@@ -43,6 +43,8 @@ export interface RentalObjectCardProjectionDTO {
   // === TYPE (Display-Ready) ===
   type: string;
   typeLabel: string;
+  category: string;
+  categoryLabel: string;
 
   // === LOCATION (Display-Ready) ===
   locationFormatted: string;
