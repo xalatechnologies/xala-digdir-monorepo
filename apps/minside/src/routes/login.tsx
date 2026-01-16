@@ -4,7 +4,7 @@
  * Uses reusable login components from @xala/ds
  * Supports session-safe return-to-flow authentication with flow context preservation
  */
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LoginLayout,
@@ -16,6 +16,9 @@ import {
   AutomationIcon,
   ShieldCheckIcon,
   KeyIcon,
+  Dialog,
+  TextField,
+  Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
