@@ -229,7 +229,7 @@ export class AuthService extends BaseService {
       const session = await this.getSession();
       const params = new URLSearchParams(window.location.search);
       const returnUrl = params.get('returnUrl') || '/';
-      
+
       return {
         success: true,
         returnUrl,
@@ -240,6 +240,25 @@ export class AuthService extends BaseService {
         success: false,
       };
     }
+  }
+
+  /**
+   * Login with demo token
+   * Authenticate using a secure demo token for testing and demo purposes
+   *
+   * @param token - Secure demo token provided by admin
+   * @returns Promise with authenticated session data
+   *
+   * @example
+   * ```typescript
+   * const session = await authService.loginWithDemoToken('demo-token-123');
+   * if (session.data?.user) {
+   *   console.log('Logged in as:', session.data.user.email);
+   * }
+   * ```
+   */
+  async loginWithDemoToken(token: string): Promise<SingleResponse<AuthSession>> {
+    return this.client.post(this.buildPath('/demo-token'), { token });
   }
 }
 

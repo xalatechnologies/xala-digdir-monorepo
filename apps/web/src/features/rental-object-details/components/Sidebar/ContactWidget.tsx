@@ -87,7 +87,7 @@ export function ContactWidget({
           fontWeight: 'var(--ds-font-weight-medium)',
         }}
       >
-        Kontaktinformasjon
+        {t('listing.contactInfo')}
       </Paragraph>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
@@ -99,7 +99,7 @@ export function ContactWidget({
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Kontaktperson
+                {t('listing.contactPerson')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {contact.name}
@@ -116,7 +116,7 @@ export function ContactWidget({
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                E-post
+                {t('listing.email')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {contact.email}
@@ -133,7 +133,7 @@ export function ContactWidget({
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Telefon
+                {t('listing.phone')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {contact.phone}

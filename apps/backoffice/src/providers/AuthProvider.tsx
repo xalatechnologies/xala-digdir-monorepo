@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext, type AuthContextType, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
 import { authService } from '@digilist/client-sdk/services';
@@ -35,8 +35,8 @@ const ROLE_STORAGE_KEYS = {
  */
 const MOCK_ADMIN_USER: BackofficeUser = {
   id: 'mock-admin-001',
-  name: 'Kari Nordmann',
-  email: 'kari.nordmann@kommune.no',
+  name: 'Test Admin User',
+  email: 'admin@test.kommune.no',
   role: 'admin',
   grantedRoles: ['admin'],
 };
@@ -49,8 +49,8 @@ const MOCK_ADMIN_USER: BackofficeUser = {
  */
 const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
   id: 'mock-saksbehandler-001',
-  name: 'Ola Hansen',
-  email: 'ola.hansen@kommune.no',
+  name: 'Test Case Handler',
+  email: 'casehandler@test.kommune.no',
   role: 'saksbehandler',
   grantedRoles: ['case_handler'],
 };
@@ -63,14 +63,15 @@ const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
  */
 const MOCK_DUAL_ROLE_USER: BackofficeUser = {
   id: 'mock-dual-001',
-  name: 'Per Eriksen',
-  email: 'per.eriksen@kommune.no',
+  name: 'Test Dual Role User',
+  email: 'dualrole@test.kommune.no',
   role: 'admin', // Legacy field - kept for backward compatibility
   grantedRoles: ['admin', 'case_handler'],
 };
 
-// Use real auth - fetches session from API
-const USE_MOCK_AUTH = false;
+// Use mock auth for local development (cross-origin cookies don't work with api.digilist.no)
+// Set VITE_USE_MOCK_AUTH=true in .env.local for local development
+const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)
@@ -131,9 +132,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Use auth guards to prevent redirect loops
-  useAuthRedirectGuard(!!user, isLoading);
-  useSessionRestoration();
+  // ✅ Session restoration and redirect guards are handled by ProtectedRoute component
+  // This prevents Router context errors during AuthProvider initialization
+  // The auth hooks from SDK are not used here to avoid useNavigate() timing issues
 
   // Subscribe to storage changes for cross-tab synchronization of flow context
   const hasStoredContext = useSyncExternalStore(

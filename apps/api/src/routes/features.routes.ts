@@ -4,7 +4,9 @@
  */
 
 import { FastifyPluginAsync } from 'fastify';
-import { featureFlagsService } from '../services/feature-flags.service';
+import { FeatureFlagsService } from '../services/feature-flags.service';
+
+const featureFlagsService = new FeatureFlagsService();
 
 export const featuresRoutes: FastifyPluginAsync = async (fastify) => {
   /**

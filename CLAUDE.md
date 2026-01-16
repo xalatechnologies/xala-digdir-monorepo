@@ -88,8 +88,16 @@ xala-digdir-monorepo/
 
 ### Packages (packages/)
 
-- **@digilist/client-sdk** - Enterprise-grade SDK with 24+ services, WebSocket
-  realtime, React Query hooks
+- **@xala/sdk-core** - Generic SDK primitives (HTTP client, RFC7807 errors, retry, query keys)
+  - Schema-agnostic, domain-independent utilities
+  - [CLAUDE.md](./packages/sdk-core/CLAUDE.md) | [AGENTS.md](./packages/sdk-core/AGENTS.md)
+
+- **@xala/contracts** - API contracts (Zod schemas, projections, TypeScript types)
+  - Single source of truth for API contracts
+  - [CLAUDE.md](./packages/contracts/CLAUDE.md) | [AGENTS.md](./packages/contracts/AGENTS.md)
+
+- **@digilist/client-sdk** - Domain SDK with 30+ services, WebSocket realtime, React Query hooks
+  - Depends on @xala/sdk-core and @xala/contracts
   - [CLAUDE.md](./packages/client-sdk/CLAUDE.md) | [AGENTS.md](./packages/client-sdk/AGENTS.md)
 
 - **@xala/ds** - UI facade (ONLY allowed import for Designsystemet components)

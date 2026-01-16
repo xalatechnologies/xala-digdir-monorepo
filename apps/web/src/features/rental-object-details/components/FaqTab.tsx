@@ -74,7 +74,7 @@ export function FaqTab({
       }}
     >
       <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-        Ofte stilte spørsmål
+        {t('listing.faq')}
       </Heading>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>

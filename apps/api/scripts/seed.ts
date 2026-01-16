@@ -667,7 +667,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_1,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(1, 10),
@@ -680,7 +680,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_2,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(4, 14),
@@ -693,7 +693,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_3,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(7, 18),
@@ -706,7 +706,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_4,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(10, 9),
@@ -719,7 +719,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_5,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(14, 14),
@@ -732,7 +732,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_6,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-7, 10),
@@ -745,7 +745,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_7,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-3, 16),
@@ -758,7 +758,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_8,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'cancelled',
       startTime: getTime(-1, 18),
@@ -788,7 +788,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i, 'b00c'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      rentalObjectId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'completed',
       startTime: start,
@@ -809,7 +809,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i + 10, 'b00d'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      rentalObjectId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'confirmed',
       startTime: start,
@@ -1020,7 +1020,7 @@ function generateAllocations(bookings: any[]) {
     .map((booking, index) => ({
       id: generateUUID(index, 'a00b'),
       tenantId: booking.tenantId,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       bookingId: booking.id,
       userId: booking.userId,
       title: `Booking - ${booking.userId === USER_OLA_HANSEN ? 'Ola Hansen' : 'Bruker'}`,

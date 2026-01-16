@@ -13,7 +13,6 @@ import {
   type RealtimeEventHandler,
 } from '@digilist/client-sdk';
 import type { RealtimeEventType } from '../types';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Re-export SDK types
@@ -58,8 +57,8 @@ class SdkRealtimeClient implements RealtimeClient {
       debug: import.meta.env.DEV,
     });
 
-    // Subscribe to listing events and route to appropriate handlers
-    this.unsubscribeAll = sdkRealtimeClient.onListing((event: RealtimeEvent) => {
+    // Subscribe to rental object events and route to appropriate handlers
+    this.unsubscribeAll = sdkRealtimeClient.onRentalObject((event: RealtimeEvent) => {
       const rentalObjectId = (event.data as { rentalObjectId?: string })?.rentalObjectId;
       if (rentalObjectId) {
         const handlers = this.listingHandlers.get(rentalObjectId);
@@ -105,7 +104,6 @@ class SdkRealtimeClient implements RealtimeClient {
 let realtimeClientInstance: RealtimeClient | null = null;
 
 export function getRealtimeClient(): RealtimeClient {
-  const t = useT();
   if (!realtimeClientInstance) {
     realtimeClientInstance = new SdkRealtimeClient();
   }

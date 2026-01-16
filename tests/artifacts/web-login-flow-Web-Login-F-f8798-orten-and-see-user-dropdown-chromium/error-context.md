@@ -1,0 +1,191 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - link "Hopp til hovedinnhold" [ref=e5] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e6]:
+    - generic [ref=e8]:
+      - link "DIGILIST ENKEL BOOKING" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]:
+          - generic [ref=e13]: DIGILIST
+          - generic [ref=e14]: ENKEL BOOKING
+      - generic [ref=e19]:
+        - img [ref=e20]
+        - combobox "Søk" [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]: ⌘
+          - generic [ref=e26]: K
+      - generic [ref=e28]:
+        - button "Bytt til mørkt tema" [ref=e29] [cursor=pointer]:
+          - img [ref=e31]
+        - button "Varsler (0 uleste)" [ref=e33] [cursor=pointer]:
+          - img [ref=e34]
+        - button "Test User" [ref=e38] [cursor=pointer]:
+          - img [ref=e39]
+          - generic [ref=e42]: Test User
+          - img [ref=e43]
+  - main [ref=e46]:
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - button "Filtrer" [ref=e49] [cursor=pointer]:
+          - img [ref=e50]
+          - text: Filtrer
+        - generic [ref=e52]: 53 resultater
+      - radiogroup [ref=e55]:
+        - radio "Rutenett" [checked] [ref=e56] [cursor=pointer]:
+          - img [ref=e57]
+        - radio "Liste" [ref=e62] [cursor=pointer]:
+          - img [ref=e63]
+        - radio "Kart" [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+        - radio "Tabell" [ref=e67] [cursor=pointer]:
+          - img [ref=e68]
+    - generic [ref=e70]:
+      - generic [ref=e72] [cursor=pointer]:
+        - generic [ref=e73]:
+          - img "Bursdagsfest Pakke" [ref=e74]
+          - generic [ref=e77]: PAKKER
+          - generic [ref=e78]:
+            - button "Legg til favoritter" [ref=e79]:
+              - img [ref=e80]
+            - button "Del" [ref=e82]:
+              - img [ref=e83]
+        - generic [ref=e89]:
+          - heading "Bursdagsfest Pakke" [level=3] [ref=e90]
+          - paragraph [ref=e91]:
+            - img [ref=e92]
+            - text: Idrettsveien 10, 3729, Skien
+          - paragraph [ref=e95]: Rom + dekorasjoner + aktivitetsutstyr
+          - generic [ref=e96]:
+            - generic [ref=e97]: all_inclusive
+            - generic [ref=e98]: customizable
+            - generic [ref=e99]: dedicated_support
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - img [ref=e102]
+              - text: 30 personer
+            - generic [ref=e105]: fra 1500 NOK/package
+      - generic [ref=e107] [cursor=pointer]:
+        - generic [ref=e108]:
+          - img "Konsert Pakke" [ref=e109]
+          - generic [ref=e112]: PAKKER
+          - generic [ref=e113]:
+            - button "Legg til favoritter" [ref=e114]:
+              - img [ref=e115]
+            - button "Del" [ref=e117]:
+              - img [ref=e118]
+        - generic [ref=e124]:
+          - heading "Konsert Pakke" [level=3] [ref=e125]
+          - paragraph [ref=e126]:
+            - img [ref=e127]
+            - text: Idrettsveien 9, 3728, Skien
+          - paragraph [ref=e130]: Sal + lydanlegg + tekniker for konsert
+          - generic [ref=e131]:
+            - generic [ref=e132]: all_inclusive
+            - generic [ref=e133]: customizable
+            - generic [ref=e134]: dedicated_support
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - img [ref=e137]
+              - text: 300 personer
+            - generic [ref=e140]: fra 5000 NOK/package
+      - generic [ref=e142] [cursor=pointer]:
+        - generic [ref=e143]:
+          - img "Fotballkamp Pakke" [ref=e144]
+          - generic [ref=e147]: PAKKER
+          - generic [ref=e148]:
+            - button "Legg til favoritter" [ref=e149]:
+              - img [ref=e150]
+            - button "Del" [ref=e152]:
+              - img [ref=e153]
+        - generic [ref=e159]:
+          - heading "Fotballkamp Pakke" [level=3] [ref=e160]
+          - paragraph [ref=e161]:
+            - img [ref=e162]
+            - text: Idrettsveien 8, 3727, Skien
+          - paragraph [ref=e165]: Hall + utstyr + dommer for fotballkamp
+          - generic [ref=e166]:
+            - generic [ref=e167]: all_inclusive
+            - generic [ref=e168]: customizable
+            - generic [ref=e169]: dedicated_support
+          - generic [ref=e170]:
+            - generic [ref=e171]:
+              - img [ref=e172]
+              - text: 50 personer
+            - generic [ref=e175]: fra 2500 NOK/package
+      - generic [ref=e177] [cursor=pointer]:
+        - generic [ref=e178]:
+          - img "Vaktmestertjeneste" [ref=e179]
+          - generic [ref=e182]: TJENESTER
+          - generic [ref=e183]:
+            - button "Legg til favoritter" [ref=e184]:
+              - img [ref=e185]
+            - button "Del" [ref=e187]:
+              - img [ref=e188]
+        - generic [ref=e194]:
+          - heading "Vaktmestertjeneste" [level=3] [ref=e195]
+          - paragraph [ref=e196]:
+            - img [ref=e197]
+            - text: Idrettsveien 7, 3726, Skien
+          - paragraph [ref=e200]: Teknisk support og vaktmester under arrangement
+          - generic [ref=e201]:
+            - generic [ref=e202]: professional_staff
+            - generic [ref=e203]: flexible_hours
+            - generic [ref=e204]: quality_guarantee
+          - generic [ref=e205]:
+            - generic [ref=e206]:
+              - img [ref=e207]
+              - text: 1 personer
+            - generic [ref=e210]: fra 500 NOK/service
+      - generic [ref=e212] [cursor=pointer]:
+        - generic [ref=e213]:
+          - img "Catering Service" [ref=e214]
+          - generic [ref=e217]: TJENESTER
+          - generic [ref=e218]:
+            - button "Legg til favoritter" [ref=e219]:
+              - img [ref=e220]
+            - button "Del" [ref=e222]:
+              - img [ref=e223]
+        - generic [ref=e229]:
+          - heading "Catering Service" [level=3] [ref=e230]
+          - paragraph [ref=e231]:
+            - img [ref=e232]
+            - text: Idrettsveien 6, 3725, Skien
+          - paragraph [ref=e235]: Mattilbud for arrangementer (pr. person)
+          - generic [ref=e236]:
+            - generic [ref=e237]: professional_staff
+            - generic [ref=e238]: flexible_hours
+            - generic [ref=e239]: quality_guarantee
+          - generic [ref=e240]:
+            - generic [ref=e241]:
+              - img [ref=e242]
+              - text: 100 personer
+            - generic [ref=e245]: fra 250 NOK/service
+      - generic [ref=e247] [cursor=pointer]:
+        - generic [ref=e248]:
+          - img "Rengjøringstjeneste" [ref=e249]
+          - generic [ref=e252]: TJENESTER
+          - generic [ref=e253]:
+            - button "Legg til favoritter" [ref=e254]:
+              - img [ref=e255]
+            - button "Del" [ref=e257]:
+              - img [ref=e258]
+        - generic [ref=e264]:
+          - heading "Rengjøringstjeneste" [level=3] [ref=e265]
+          - paragraph [ref=e266]:
+            - img [ref=e267]
+            - text: Idrettsveien 5, 3724, Skien
+          - paragraph [ref=e270]: Profesjonell rengjøring etter arrangement
+          - generic [ref=e271]:
+            - generic [ref=e272]: professional_staff
+            - generic [ref=e273]: flexible_hours
+            - generic [ref=e274]: quality_guarantee
+          - generic [ref=e275]:
+            - generic [ref=e276]:
+              - img [ref=e277]
+              - text: 1 personer
+            - generic [ref=e280]: fra 1200 NOK/service
+    - button "Vis flere (47 gjenstår)" [ref=e282] [cursor=pointer]
+```

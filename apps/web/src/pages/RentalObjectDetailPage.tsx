@@ -74,17 +74,19 @@ function transformApiToListing(api: ApiListing): RentalObject {
   };
   const listingType: RentalObjectType = typeMap[dto.type] || 'OTHER';
 
-  // Map images directly from DTO (already has correct structure)
+  // Map images directly from DTO (handle nested url structure)
   const images = (dto.images || []).map((img: any, index: number) => ({
     id: img.id || `img-${index}`,
-    url: img.url || img.src || '',
-    alt: img.alt || dto.name || '',
+    // API returns img.url as object {url: string, alt: string} or as string
+    url: typeof img.url === 'string' ? img.url : (img.url?.url || img.src || ''),
+    alt: img.alt || dto.title || dto.name || '',
     isPrimary: img.isPrimary ?? index === 0,
     order: img.order ?? index,
   }));
 
-  // Map amenities from DTO
-  const amenities: Amenity[] = (dto.amenities || []).map((a: any, i: number) => ({
+  // Map amenities - check both flat dto.amenities and nested dto.metadata.amenities
+  const amenitiesSource = dto.allAmenities || dto.amenities || dto.metadata?.amenities || [];
+  const amenities: Amenity[] = amenitiesSource.map((a: any, i: number) => ({
     id: typeof a === 'string' ? a : a.id || `amenity-${i}`,
     name: typeof a === 'string' ? a : a.name || a,
     icon: typeof a === 'object' ? a.icon : undefined,
@@ -107,9 +109,39 @@ function transformApiToListing(api: ApiListing): RentalObject {
     category: 'general' as const,
   }));
 
-  // Map opening hours from DTO - API returns flat array, not object with regular property
+  // Map opening hours from DTO - check both flat and nested in metadata
+  const openingHoursData = dto.openingHours || dto.metadata?.openingHours;
+
+  // Convert opening hours to array format
+  let openingHoursArray: any[] = [];
+  if (Array.isArray(openingHoursData)) {
+    // Already in array format
+    openingHoursArray = openingHoursData;
+  } else if (openingHoursData && typeof openingHoursData === 'object') {
+    // Convert object format {monday: {open, close}, tuesday: {...}} to array
+    const dayNameMap: Record<string, { name: string; index: number }> = {
+      monday: { name: 'Mandag', index: 1 },
+      tuesday: { name: 'Tirsdag', index: 2 },
+      wednesday: { name: 'Onsdag', index: 3 },
+      thursday: { name: 'Torsdag', index: 4 },
+      friday: { name: 'Fredag', index: 5 },
+      saturday: { name: 'Lørdag', index: 6 },
+      sunday: { name: 'Søndag', index: 0 },
+    };
+
+    openingHoursArray = Object.entries(openingHoursData)
+      .filter(([key]) => dayNameMap[key])
+      .map(([key, hours]: [string, any]) => ({
+        day: dayNameMap[key]?.name || key,
+        dayIndex: dayNameMap[key]?.index ?? 0,
+        open: hours.open || '',
+        close: hours.close || '',
+        isClosed: !hours.open && !hours.close,
+      }));
+  }
+
   const openingHours: OpeningHours = {
-    regular: (Array.isArray(dto.openingHours) ? dto.openingHours : []).map((day: any) => ({
+    regular: openingHoursArray.map((day: any) => ({
       day: day.day || '',
       dayIndex: day.dayIndex ?? 0,
       open: day.open || day.openTime || '',
@@ -118,27 +150,38 @@ function transformApiToListing(api: ApiListing): RentalObject {
     })),
   };
 
-  // Build contact from flat DTO fields
-  const contact = (dto.contactName || dto.contactEmail || dto.contactPhone) ? {
-    ...(dto.contactName ? { name: dto.contactName } : {}),
-    ...(dto.contactEmail ? { email: dto.contactEmail } : {}),
-    ...(dto.contactPhone ? { phone: dto.contactPhone } : {}),
+  // Build contact from either flat fields or nested metadata
+  const contactData = dto.metadata?.contact || {};
+  const metadataContactName = dto.metadata?.contactName;
+  const metadataContactEmail = dto.metadata?.contactEmail;
+  const metadataContactPhone = dto.metadata?.contactPhone;
+
+  const contact = (dto.contactName || dto.contactEmail || dto.contactPhone || contactData.name || contactData.email || contactData.phone || metadataContactName || metadataContactEmail || metadataContactPhone) ? {
+    ...(dto.contactName || contactData.name || metadataContactName ? { name: dto.contactName || contactData.name || metadataContactName } : {}),
+    ...(dto.contactEmail || contactData.email || metadataContactEmail ? { email: dto.contactEmail || contactData.email || metadataContactEmail } : {}),
+    ...(dto.contactPhone || contactData.phone || metadataContactPhone ? { phone: dto.contactPhone || contactData.phone || metadataContactPhone } : {}),
   } : undefined;
 
-  // Build address from flat DTO fields
+  // Build address from either flat fields or nested metadata
+  const addressData = dto.metadata?.address || {};
+  const locationData = dto.metadata?.location || {};
   const address = {
     formatted: dto.locationFormatted || '',
-    street: dto.addressStreet || '',
-    postalCode: dto.addressPostalCode || '',
-    city: dto.addressCity || dto.city || '',
-    ...(dto.latitude && dto.longitude ? {
-      coordinates: { latitude: dto.latitude, longitude: dto.longitude }
+    street: dto.addressStreet || addressData.street || locationData.address || '',
+    postalCode: dto.addressPostalCode || addressData.postalCode || locationData.postalCode || '',
+    city: dto.addressCity || dto.city || addressData.city || locationData.city || '',
+    ...(dto.latitude || locationData.latitude ? {
+      coordinates: {
+        latitude: dto.latitude || locationData.latitude,
+        longitude: dto.longitude || locationData.longitude
+      }
     } : {}),
   };
 
   // Build metadata
   const metadata: RentalObjectMetadata = {
     description: dto.description || '',
+    shortDescription: dto.descriptionExcerpt || dto.description?.slice(0, 150) || '',
     amenities,
     includedFacilities: (dto.includedEquipment || []).map((f: any, i: number) => ({
       id: f.id || `facility-${i}`,
@@ -151,10 +194,26 @@ function transformApiToListing(api: ApiListing): RentalObject {
     highlights: dto.highlights || [],
   };
 
+  // Map booking mode from API timeMode
+  const bookingModeMap: Record<string, BookingMode> = {
+    SLOT: 'SINGLE_SLOT',
+    PERIOD: 'RECURRING',
+    ALL_DAY: 'SINGLE_SLOT',
+  };
+  const bookingMode = bookingModeMap[dto.timeMode] || 'SINGLE_SLOT';
+
   // Build key facts
   const keyFacts: KeyFacts = {
     ...(dto.capacity ? { capacity: dto.capacity } : {}),
-    bookingMode: 'SLOTS' as BookingMode,
+    bookingMode,
+  };
+
+  // Build activity data (empty for now - API doesn't provide it yet)
+  const activityData: ActivityData = {
+    type: listingType === 'FACILITY' ? 'events' : listingType === 'EQUIPMENT' ? 'rentals' : 'sessions',
+    events: [],
+    rentals: [],
+    totalCount: 0,
   };
 
   return {
@@ -171,7 +230,8 @@ function transformApiToListing(api: ApiListing): RentalObject {
     openingHours,
     keyFacts,
     metadata,
-    bookingConfig: { enabled: true, mode: 'SLOTS', approval: 'NONE', paymentRequired: false },
+    activityData,
+    bookingConfig: { enabled: true, mode: bookingMode, approval: 'NONE', paymentRequired: false },
     ...(dto.priceAmount ? {
       pricing: {
         basePrice: dto.priceAmount,

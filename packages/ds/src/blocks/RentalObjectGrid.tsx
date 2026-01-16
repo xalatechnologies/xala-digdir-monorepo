@@ -49,7 +49,7 @@ export function RentalObjectGrid({
         display: 'grid',
         gap: gapValue,
         gridTemplateColumns,
-        maxWidth: '1400px', // Limit grid width to prevent 4+ columns
+        width: '100%', // Full width to align with header content
       } as React.CSSProperties}
     >
       {children}

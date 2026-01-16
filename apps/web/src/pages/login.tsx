@@ -15,9 +15,10 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
+  KeyIcon,
 } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
-import { idportenService, vippsAuthService } from '@digilist/client-sdk';
+import { idportenService, vippsAuthService, authService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
@@ -161,6 +162,41 @@ export function LoginPage(): React.ReactElement {
     { href: 'https://digilist.no/#book-demo', label: t('auth.contactSupport') },
   ];
 
+  /**
+   * Handle Demo token authentication
+   * Supports 3 demo tokens:
+   * - admin-demo-2026: Admin/backoffice access
+   * - user-demo-2026: Regular user access
+   * - org-demo-2026: Organization user access
+   */
+  const handleDemoLogin = async () => {
+    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
+
+    if (!token || !token.trim()) {
+      return; // User cancelled or empty input
+    }
+
+    try {
+      // Call the auth service to validate the demo token
+      const response = await authService.loginWithDemoToken(token.trim());
+
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('web_user', JSON.stringify(response.data.user));
+
+        // Redirect to home
+        navigate('/', { replace: true });
+        // Reload to pick up the new auth state
+        window.location.reload();
+      } else {
+        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+      }
+    } catch (error) {
+      console.error('[DEMO LOGIN] Token validation failed:', error);
+      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+    }
+  };
+
   return (
     <LoginLayout
       brandName={t('brand.name')}
@@ -206,6 +242,12 @@ export function LoginPage(): React.ReactElement {
           // Microsoft login temporarily disabled
           console.warn('Microsoft login is temporarily disabled');
         }}
+      />
+      <LoginOption
+        icon={<KeyIcon />}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+        onClick={handleDemoLogin}
       />
     </LoginLayout>
   );

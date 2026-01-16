@@ -1,15 +1,65 @@
 /**
  * Schema Module Exports
- * 
- * NOTE: rental-object.schema.ts is the primary schema for rental objects.
- * listing.schema.ts contains legacy schemas for backwards compatibility.
+ *
+ * NOTE: Schemas are now sourced from @xala/contracts for schema-agnostic architecture.
+ * Local schemas are kept for API-specific validation and backwards compatibility.
+ *
+ * @xala/contracts provides:
+ * - Zod schemas for validation
+ * - TypeScript types derived from schemas
+ * - Projection schemas for UI-ready DTOs
  */
+
+// =============================================================================
+// Re-export from @xala/contracts (Schema-Agnostic Contracts)
+// =============================================================================
+
+// Common schemas
+export {
+  UUIDSchema,
+  SlugSchema,
+  PaginationSchema,
+  PaginatedResponseMetaSchema,
+  SortOrderSchema,
+  MetadataSchema,
+  CurrencyCodeSchema,
+  MoneySchema,
+  ProblemDetailsSchema,
+  FieldErrorSchema,
+  type Pagination,
+  type PaginatedResponseMeta,
+  type SortOrder,
+  type Metadata,
+  type CurrencyCode,
+  type Money,
+  type ProblemDetails,
+  type FieldError,
+} from '@xala/contracts/schemas';
+
+// Capabilities schemas
+export {
+  CapabilitySchema,
+  UIHintsSchema,
+  FeatureFlagsSchema,
+  CapabilitiesResponseSchema,
+  CAPABILITIES,
+  type Capability,
+  type UIHints,
+  type CapabilitiesResponse,
+  type CapabilityKey,
+} from '@xala/contracts/schemas';
+
+// =============================================================================
+// Local Schemas (API-specific, backwards compatible)
+// =============================================================================
+
 export * from './tenant.schema';
 export * from './user.schema';
 export * from './booking.schema';
 export * from './monitoring.schema';
 export * from './saas.schema';
-export * from './calendar.schema';
+// Note: calendar.schema exports are already included in booking.schema
+// export * from './calendar.schema';
 
 // Primary rental object schemas (new 4-category system)
 export {
@@ -63,32 +113,34 @@ export {
 } from './rental-object.schema';
 
 // Legacy listing schemas (for backwards compatibility)
+// NOTE: These are deprecated - use rental-object schemas instead
 export {
-  ListingTypeSchema,
-  ListingStatusSchema,
-  ListingSchema,
-  CreateListingSchema,
-  UpdateListingSchema,
-  ListingQuerySchema,
-  TimeSlotSchema,
-  ListingCategorySchema,
-  ListingBookingFeaturesSchema,
-  ListingBookingConfigSchema,
-  ListingRulesConfigSchema,
-  ListingQuerySchemaV2,
-  CreateListingSchemaV2,
-  UpdateListingSchemaV2,
-  LEGACY_LISTING_TYPES,
+  // Re-export from rental-object.schema for backwards compatibility
+  RentalObjectSchema as ListingSchema,
+  CreateRentalObjectSchema as CreateListingSchema,
+  UpdateRentalObjectSchema as UpdateListingSchema,
+  RentalObjectQuerySchema as ListingQuerySchema,
   
-  type ListingType,
-  type ListingStatus,
-  type Listing,
-  type CreateListingDTO,
-  type UpdateListingDTO,
-  type ListingQueryParams,
-  type TimeSlot,
-  type ListingCategory,
-  type ListingQueryParamsV2,
-  type CreateListingV2DTO,
-  type UpdateListingV2DTO,
-} from './listing.schema';
+  // Legacy types (mapped to new rental object types)
+  type RentalObject as Listing,
+  type CreateRentalObjectDTO as CreateListingDTO,
+  type UpdateRentalObjectDTO as UpdateListingDTO,
+  type RentalObjectQueryParams as ListingQueryParams,
+  
+  // Legacy enums
+  RentalObjectCategorySchema as ListingCategorySchema,
+  
+  // These are no longer needed - using rental object equivalents
+  // ListingTypeSchema,
+  // ListingStatusSchema,
+  // ListingQuerySchemaV2,
+  // CreateListingSchemaV2,
+  // UpdateListingSchemaV2,
+  // LEGACY_LISTING_TYPES,
+  
+  // type ListingType,
+  // type ListingStatus,
+  // type ListingQueryParamsV2,
+  // type CreateListingV2DTO,
+  // type UpdateListingV2DTO,
+} from './rental-object.schema';

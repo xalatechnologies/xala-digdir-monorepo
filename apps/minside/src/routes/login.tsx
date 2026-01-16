@@ -15,10 +15,11 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
+  KeyIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
-import { idportenService } from '@digilist/client-sdk';
+import { idportenService, authService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -125,6 +126,41 @@ export function LoginPage(): React.ReactElement {
     return <></>;
   }
 
+  /**
+   * Handle Demo token authentication
+   * Supports 3 demo tokens:
+   * - admin-demo-2026: Admin/backoffice access
+   * - user-demo-2026: Regular user access
+   * - org-demo-2026: Organization user access
+   */
+  const handleDemoLogin = async () => {
+    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
+
+    if (!token || !token.trim()) {
+      return; // User cancelled or empty input
+    }
+
+    try {
+      // Call the auth service to validate the demo token
+      const response = await authService.loginWithDemoToken(token.trim());
+
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('minside_user', JSON.stringify(response.data.user));
+
+        // Redirect to home
+        navigate('/', { replace: true });
+        // Reload to pick up the new auth state
+        window.location.reload();
+      } else {
+        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+      }
+    } catch (error) {
+      console.error('[DEMO LOGIN] Token validation failed:', error);
+      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+    }
+  };
+
   const features = [
     {
       icon: <PlatformIcon size={20} />,
@@ -153,12 +189,12 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="ENKEL BOOKING"
+      brandName={t('brand.name')}
+      brandTagline={t('brand.tagline')}
       logoHref="/"
       title={t('auth.login')}
       subtitle={t('auth.selectMethod')}
-      panelTitle="MIN SIDE"
+      panelTitle={t('minside.dashboard')}
       panelSubtitle={t('auth.holisticSolution')}
       panelDescription={t('auth.platformDesc')}
       features={features}
@@ -179,8 +215,8 @@ export function LoginPage(): React.ReactElement {
       />
       <LoginOption
         icon={<VippsIcon />}
-        title="Vipps"
-        description="Midlertidig deaktivert"
+        title={t('auth.vipps')}
+        description={t('auth.temporarilyDisabled')}
         disabled
         onClick={() => {
           // Vipps login temporarily disabled
@@ -196,6 +232,12 @@ export function LoginPage(): React.ReactElement {
           // Microsoft login temporarily disabled
           console.warn('Microsoft login is temporarily disabled');
         }}
+      />
+      <LoginOption
+        icon={<KeyIcon />}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+        onClick={handleDemoLogin}
       />
     </LoginLayout>
   );

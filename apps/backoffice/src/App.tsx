@@ -77,7 +77,7 @@ function AppWithTheme() {
   const { colorScheme } = useTheme();
   
   return (
-    <I18nProvider>
+    <I18nProvider initialLocale="nb">
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
       <ErrorBoundary>

@@ -195,7 +195,7 @@ export function CalendarSection({
 
       if (affectedSelection) {
         setWarningMessage(
-          'Din valgte tid kan ha blitt endret. Vennligst kontroller at valget ditt fortsatt er tilgjengelig.'
+          t('calendar.selection.changed')
         );
       }
     }
@@ -253,13 +253,13 @@ export function CalendarSection({
   // Error message
   const errorMessage = React.useMemo(() => {
     if (configError) {
-      return 'Kunne ikke laste kalenderinnstillinger. Vennligst prøv igjen.';
+      return t('calendar.error.config');
     }
     if (matrixError) {
-      return 'Kunne ikke laste tilgjengelighet. Vennligst prøv igjen.';
+      return t('calendar.error.availability');
     }
     return undefined;
-  }, [configError, matrixError]);
+  }, [configError, matrixError, t]);
 
   // Get legend from matrix or use default
   const legend = React.useMemo(() => {
@@ -294,7 +294,7 @@ export function CalendarSection({
         }}
       >
         <Paragraph data-size="sm" style={{ margin: 0, fontStyle: 'italic' }}>
-          Kalender er ikke tilgjengelig for dette lokalet.
+          {t('calendar.empty')}
         </Paragraph>
       </div>
     );
@@ -315,8 +315,8 @@ export function CalendarSection({
         endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
         slotSizeMinutes={config?.slotSizeMinutes ?? 60}
         showTips={true}
-        title={t('velg.tidspunkt')}
-        subtitle={calendarMode === 'TIME_SLOTS' ? 'Velg ledige tidspunkter' : calendarMode === 'ALL_DAY' ? 'Velg ledige dager' : 'Velg periode'}
+        title={t('calendar.selectTime')}
+        subtitle={calendarMode === 'TIME_SLOTS' ? t('calendar.selectAvailable.slots') : calendarMode === 'ALL_DAY' ? t('calendar.selectAvailable.days') : t('calendar.selectAvailable.period')}
         isLoading={isLoading}
         errorMessage={errorMessage}
         warningMessage={warningMessage}

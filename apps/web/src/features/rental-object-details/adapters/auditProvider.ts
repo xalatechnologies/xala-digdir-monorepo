@@ -8,7 +8,6 @@
 
 import { auditService } from '@digilist/client-sdk';
 import type { AuditEvent, AuditEventType } from '../types';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Adapter Interface
@@ -77,7 +76,6 @@ class SdkAuditProvider implements AuditProvider {
 let auditProviderInstance: AuditProvider | null = null;
 
 export function getAuditProvider(): AuditProvider {
-  const t = useT();
   if (!auditProviderInstance) {
     auditProviderInstance = new SdkAuditProvider();
   }

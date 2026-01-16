@@ -75,6 +75,34 @@ Robust retry mechanisms for integrations:
 - Idempotency support
 - Integration examples
 
+### [Schema-Agnostic SDK](./schema-agnostic-sdk.md)
+Contract-driven SDK architecture:
+- Database schema independence
+- Contract packages (@xala/sdk-core, @xala/contracts)
+- Type flow from Zod to UI
+- Import guidelines
+
+### [Production-Ready SDK](./production-ready-sdk.md)
+Complete implementation guide for the schema-agnostic SDK:
+- @xala/sdk-core: HTTP client, RFC 7807 errors, retry, query keys
+- @xala/contracts: Zod schemas, projections, TypeScript types
+- Integration patterns
+- Testing and CI enforcement
+
+### [Contract Evolution Guide](./contract-evolution.md)
+Safe schema change strategies:
+- Expand-Contract pattern
+- Breaking change detection
+- Versioning strategy
+- Migration checklist
+
+### [Projection Strategy](./projections.md)
+UI-ready data transfer objects:
+- Schema vs Projection comparison
+- Projection types (Card, Details, Search)
+- Server-side projection building
+- Zero UI business logic pattern
+
 ## Key Architectural Concepts
 
 ### Contract-First Design

@@ -18,7 +18,7 @@ import { validateReturnToUrl } from '../../core/validation/return-to';
 import { sessionStore } from './idporten-session-store';
 import { container } from '../../core/container';
 import { users } from '../../database/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 
 // =============================================================================
 // Configuration
@@ -521,7 +521,60 @@ export class IdPortenAuthController {
 
       console.log('[ID-PORTEN CALLBACK] Looking up user with NIN:', nin.substring(0, 6) + '***');
 
-      const userResult = await db.select().from(users).where(eq(users.nationalId, nin)).limit(1);
+      // Get tenant context from session or environment
+      const tenantId = session.tenantId || process.env.DEFAULT_TENANT_ID || process.env.VITE_TENANT_ID;
+      
+      if (!tenantId) {
+        throw new Error('No tenant ID available in session or environment');
+      }
+
+      // ============ DIAGNOSTICS ============
+      // Check WHERE we're connected and WHAT values we're using
+      const diag = await db.execute(sql`
+        SELECT
+          current_database() as db,
+          current_schema() as schema,
+          current_setting('search_path') as search_path
+      `);
+      
+      console.log('[AUTH DIAG] Database:', diag[0] || diag.rows?.[0]);
+      console.log('[AUTH DIAG] tenantId =', JSON.stringify(tenantId), 'type=', typeof tenantId);
+      console.log('[AUTH DIAG] nin      =', JSON.stringify(nin), 'len=', nin.length);
+      
+      // Check if user exists WITHOUT tenant filter
+      const userCheckNoTenant = await db.execute(sql`
+        SELECT id, tenant_id, national_id, email 
+        FROM users 
+        WHERE national_id = ${nin}
+      `);
+      console.log('[AUTH DIAG] Users with this NIN (any tenant):', userCheckNoTenant.length || userCheckNoTenant.rows?.length || 0);
+      if (userCheckNoTenant[0] || userCheckNoTenant.rows?.[0]) {
+        const found = userCheckNoTenant[0] || userCheckNoTenant.rows[0];
+        console.log('[AUTH DIAG] Found user tenant_id:', found.tenant_id);
+        console.log('[AUTH DIAG] Search tenant_id:   ', tenantId);
+        console.log('[AUTH DIAG] Tenant IDs match?   ', found.tenant_id === tenantId);
+      }
+      
+      // Check if tenant exists
+      const tenantCheck = await db.execute(sql`
+        SELECT id, name FROM tenants WHERE id = ${tenantId}
+      `);
+      console.log('[AUTH DIAG] Tenant exists?', (tenantCheck.length || tenantCheck.rows?.length || 0) > 0);
+      // ============ END DIAGNOSTICS ============
+      
+      console.log('[ID-PORTEN CALLBACK] Using tenantId:', tenantId);
+
+      // Use Drizzle query builder (proper way)
+      const userResult = await db
+        .select()
+        .from(users)
+        .where(
+          and(
+            eq(users.nationalId, nin),
+            eq(users.tenantId, tenantId)
+          )
+        )
+        .limit(1);
 
       console.log('[ID-PORTEN CALLBACK] Database query result:', userResult.length > 0 ? 'user found' : 'NO USER');
 

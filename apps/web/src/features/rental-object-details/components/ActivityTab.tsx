@@ -48,11 +48,12 @@ const eventStatusColors: Record<string, 'success' | 'warning' | 'info' | 'neutra
   cancelled: 'warning',
 };
 
-const eventStatusLabels: Record<string, string> = {
-  upcoming: 'Kommende',
-  ongoing: 'Pågår',
-  past: 'Avsluttet',
-  cancelled: 'Avlyst',
+// Event status label keys (now using i18n)
+const eventStatusLabelKeys: Record<string, string> = {
+  upcoming: 'activity.status.upcoming',
+  ongoing: 'activity.status.ongoing',
+  past: 'activity.status.past',
+  cancelled: 'activity.status.cancelled',
 };
 
 // =============================================================================
@@ -69,9 +70,10 @@ export interface ActivityTabProps {
 // Sub-components
 // =============================================================================
 
-function EventCard({ event }: { event: RentalObjectEvent }): React.ReactElement {
+function EventCard({ event, t }: { event: RentalObjectEvent; t: (key: string) => string }): React.ReactElement {
   const statusColor = eventStatusColors[event.status] || 'neutral';
-  const statusLabel = eventStatusLabels[event.status] || event.status;
+  const statusLabelKey = eventStatusLabelKeys[event.status];
+  const statusLabel = statusLabelKey ? t(statusLabelKey) : event.status;
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
@@ -118,14 +120,14 @@ function EventCard({ event }: { event: RentalObjectEvent }): React.ReactElement 
 
       {event.organizer && (
         <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Arrangør: {event.organizer}
+          {t('activity.organizer')}: {event.organizer}
         </Paragraph>
       )}
     </Card>
   );
 }
 
-function RentalHistoryCard({ rental }: { rental: RentalHistoryItem }): React.ReactElement {
+function RentalHistoryCard({ rental, t }: { rental: RentalHistoryItem; t: (key: string) => string }): React.ReactElement {
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('nb-NO', {
@@ -168,7 +170,7 @@ function RentalHistoryCard({ rental }: { rental: RentalHistoryItem }): React.Rea
         )}
       </div>
       <Tag color={rental.status === 'completed' ? 'success' : 'neutral'} data-size="sm">
-        {rental.status === 'completed' ? t("status.completed") : 'Kansellert'}
+        {rental.status === 'completed' ? t('status.completed') : t('status.cancelled')}
       </Tag>
     </div>
   );
@@ -218,11 +220,11 @@ export function ActivityTab({
       {activityData.type === 'events' && activityData.events && activityData.events.length > 0 && (
         <>
           <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-            Arrangementer
+            {t('activity.events')}
           </Heading>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
             {activityData.events.map((event: RentalObjectEvent) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} t={t} />
             ))}
           </div>
         </>
@@ -232,11 +234,11 @@ export function ActivityTab({
       {activityData.type === 'rentals' && activityData.rentals && activityData.rentals.length > 0 && (
         <>
           <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-            Utleiehistorikk
+            {t('activity.rentalHistory')}
           </Heading>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
             {activityData.rentals.map((rental: RentalHistoryItem) => (
-              <RentalHistoryCard key={rental.id} rental={rental} />
+              <RentalHistoryCard key={rental.id} rental={rental} t={t} />
             ))}
           </div>
         </>
@@ -245,7 +247,10 @@ export function ActivityTab({
       {/* Total count */}
       {activityData.totalCount && activityData.totalCount > (activityData.events?.length || activityData.rentals?.length || 0) && (
         <Paragraph data-size="sm" style={{ margin: 0, textAlign: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Viser {activityData.events?.length || activityData.rentals?.length} av {activityData.totalCount} totalt
+          {t('activity.showingCount', {
+            current: activityData.events?.length || activityData.rentals?.length,
+            total: activityData.totalCount,
+          })}
         </Paragraph>
       )}
     </div>

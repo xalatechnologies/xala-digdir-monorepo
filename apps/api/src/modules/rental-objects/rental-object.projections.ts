@@ -3,12 +3,24 @@
  *
  * These functions convert raw database entities to screen-ready projection DTOs.
  * The transformation happens ONCE in the API, ensuring consistent data for all frontends.
+ *
+ * NOTE: Types are now defined in @xala/contracts/projections for schema-agnostic architecture.
+ * Local types are kept for backward compatibility but will be removed in v3.0.
  */
 
+import type {
+  RentalObjectCardProjection as ContractCardProjection,
+  RentalObjectDetailsProjection as ContractDetailsProjection,
+} from '@xala/contracts/projections';
+
+// Re-export contract types for new code
+export type { ContractCardProjection, ContractDetailsProjection };
+
 // =============================================================================
-// TYPE DEFINITIONS
+// TYPE DEFINITIONS (Legacy - will be removed in v3.0)
 // =============================================================================
 
+/** @deprecated Use RentalObjectCardProjection from @xala/contracts instead */
 export interface RentalObjectCardProjectionDTO {
   id: string;
   slug: string;

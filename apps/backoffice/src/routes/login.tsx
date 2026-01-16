@@ -7,7 +7,7 @@
  * - Single-role users: auto-redirect to appropriate home
  * - Dual-role users: redirect to role selection page
  */
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
@@ -17,12 +17,13 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
+  KeyIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import type { FlowContext } from '@digilist/client-sdk';
-import { idportenService } from '@digilist/client-sdk';
+import { idportenService, authService } from '@digilist/client-sdk';
 
 
 /**
@@ -62,13 +63,13 @@ export function LoginPage(): React.ReactElement {
   // Get the intended destination from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
 
-  // Handle auth callback - redirect to dashboard after successful authentication
+  // Handle auth callback - redirect to root after successful authentication
   useEffect(() => {
     if (authSuccess && !authError) {
-      // Clear the URL params and redirect to dashboard directly
+      // Clear the URL params and redirect to root (/) which is the dashboard index route
       // Don't use getHomeRoute() as it may return /role-selection
-      // The dashboard's ProtectedRoute will handle role-selection if needed
-      navigate('/dashboard', { replace: true });
+      // The root's ProtectedRoute will handle role-selection if needed
+      navigate('/', { replace: true });
     }
   }, [authSuccess, authError, navigate]);
 
@@ -143,15 +144,24 @@ export function LoginPage(): React.ReactElement {
 
   // Handle post-login redirect based on role state
   useEffect(() => {
-    // Wait for both auth and role initialization to complete
-    if (authLoading || isInitializing) return;
+    // Wait for auth to complete first
+    if (authLoading) return;
     if (!isAuthenticated) return;
+
+    // For authenticated users, wait for role initialization
+    if (isInitializing) return;
 
     handlePostAuthNavigation();
   }, [isAuthenticated, authLoading, isInitializing, handlePostAuthNavigation]);
 
-  // Show nothing while loading auth or role state
-  if (authLoading || isInitializing) {
+  // Show nothing while loading auth state
+  // Only check role initialization if authenticated
+  if (authLoading) {
+    return <></>;
+  }
+
+  // If authenticated, wait for role initialization before redirecting
+  if (isAuthenticated && isInitializing) {
     return <></>;
   }
 
@@ -181,6 +191,41 @@ export function LoginPage(): React.ReactElement {
     { href: 'https://digilist.no/#book-demo', label: t('auth.contactSupport') },
   ];
 
+  /**
+   * Handle Admin Demo token authentication
+   * Supports 3 demo tokens:
+   * - admin-demo-2026: Admin/backoffice access
+   * - user-demo-2026: Regular user access
+   * - org-demo-2026: Organization user access
+   */
+  const handleDemoLogin = async () => {
+    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
+
+    if (!token || !token.trim()) {
+      return; // User cancelled or empty input
+    }
+
+    try {
+      // Call the auth service to validate the demo token
+      const response = await authService.loginWithDemoToken(token.trim());
+
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('backoffice_mock_user', JSON.stringify(response.data.user));
+
+        // Redirect to home
+        navigate('/', { replace: true });
+        // Reload to pick up the new auth state
+        window.location.reload();
+      } else {
+        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+      }
+    } catch (error) {
+      console.error('[DEMO LOGIN] Token validation failed:', error);
+      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+    }
+  };
+
   return (
     <LoginLayout
       brandName={t('brand.name')}
@@ -207,7 +252,7 @@ export function LoginPage(): React.ReactElement {
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: '4px' }}>
-            Ingen tilgang
+            {t('auth.noAccess')}
           </div>
           <div style={{ fontSize: '14px' }}>
             {accessDeniedError}
@@ -219,10 +264,10 @@ export function LoginPage(): React.ReactElement {
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
         onClick={() => {
-          // Pass dashboard URL as returnTo - after auth, user goes directly to dashboard
-          // The login page will detect auth_success and redirect, but passing dashboard
-          // ensures the session stores the correct final destination
-          const returnTo = `${window.location.origin}/dashboard`;
+          // Pass root URL (/) as returnTo - this is the dashboard index route
+          // The login page will detect auth_success and redirect to /
+          // ProtectedRoute will handle role selection if needed
+          const returnTo = `${window.location.origin}/`;
           idportenService.authorize(returnTo);
         }}
       />
@@ -235,6 +280,12 @@ export function LoginPage(): React.ReactElement {
           // Microsoft login temporarily disabled
           console.warn('Microsoft login is temporarily disabled');
         }}
+      />
+      <LoginOption
+        icon={<KeyIcon />}
+        title={t('auth.adminDemo')}
+        description={t('auth.adminDemoDescription')}
+        onClick={handleDemoLogin}
       />
     </LoginLayout>
   );
