@@ -5,6 +5,8 @@ import { I18nProvider } from '@xala/i18n';
 import type { ColorScheme } from '@xala/ds';
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { DocsLayout } from './layouts/DocsLayout';
+import { Checklist } from './components/docs/Checklist';
+import { CodeBlock } from './components/docs/CodeBlock';
 
 // =============================================================================
 // Theme Context (simplified version for docs app)
@@ -90,20 +92,71 @@ export function useTheme() {
 // =============================================================================
 
 function DocsHomePage() {
+  const exampleCode = `import { useListings } from '@digilist/client-sdk/hooks';
+
+function MyComponent() {
+  const { data, isLoading } = useListings();
+
+  if (isLoading) return <Loading />;
+
   return (
-    <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-      <Heading level={1} data-size="xl">
-        Xala/Digilist Platform Documentation
-      </Heading>
-      <Paragraph style={{ marginTop: 'var(--ds-spacing-4)' }}>
-        Welcome to the documentation site for the Xala/Digilist Platform -
-        a Norwegian municipal booking and resource management system.
-      </Paragraph>
-      <Paragraph style={{ marginTop: 'var(--ds-spacing-3)' }}>
-        This documentation covers roles, permissions, user journeys, integrations,
-        seeding processes, and platform features.
-      </Paragraph>
-    </Card>
+    <ul>
+      {data.map(listing => (
+        <li key={listing.id}>{listing.title}</li>
+      ))}
+    </ul>
+  );
+}`;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+      <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+        <Heading level={1} data-size="xl">
+          Xala/Digilist Platform Documentation
+        </Heading>
+        <Paragraph style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          Welcome to the documentation site for the Xala/Digilist Platform -
+          a Norwegian municipal booking and resource management system.
+        </Paragraph>
+        <Paragraph style={{ marginTop: 'var(--ds-spacing-3)' }}>
+          This documentation covers roles, permissions, user journeys, integrations,
+          seeding processes, and platform features.
+        </Paragraph>
+      </Card>
+
+      {/* Checklist Component Demo */}
+      <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+        <Heading level={2} data-size="lg">
+          Getting Started Checklist
+        </Heading>
+        <Checklist
+          items={[
+            { text: 'Read the platform overview', checked: true },
+            { text: 'Understand the role system', checked: true },
+            { text: 'Review API documentation', checked: true },
+            { text: 'Set up local development environment', checked: false },
+            { text: 'Run the test suite', checked: false },
+          ]}
+        />
+      </Card>
+
+      {/* CodeBlock Component Demo */}
+      <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+        <Heading level={2} data-size="lg">
+          Code Example
+        </Heading>
+        <Paragraph style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+          Here&apos;s an example of using the SDK to fetch listings:
+        </Paragraph>
+        <CodeBlock
+          code={exampleCode}
+          language="tsx"
+          title="ListingExample.tsx"
+          showLineNumbers
+          highlightLines={[4, 5]}
+        />
+      </Card>
+    </div>
   );
 }
 

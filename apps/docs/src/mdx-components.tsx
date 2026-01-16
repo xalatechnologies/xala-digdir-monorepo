@@ -12,6 +12,8 @@ import { Heading, Paragraph, Link } from '@xala/ds';
 import type { ReactNode } from 'react';
 import { Steps } from './components/docs/Steps';
 import { Callout } from './components/docs/Callout';
+import { Checklist } from './components/docs/Checklist';
+import { CodeBlock } from './components/docs/CodeBlock';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyProps = any;
@@ -206,4 +208,6 @@ export const mdxComponents = {
   // Custom documentation components
   Steps: (props: AnyProps) => <Steps {...props} />,
   Callout: (props: AnyProps) => <Callout {...props} />,
+  Checklist: (props: AnyProps) => <Checklist {...props} />,
+  CodeBlock: (props: AnyProps) => <CodeBlock {...props} />,
 };
