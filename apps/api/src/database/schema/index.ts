@@ -197,6 +197,29 @@ export const orgFeatureFlags = pgTable('org_feature_flags', {
 }));
 
 // ============================================================================
+// Category Entitlements (Rental Object Category Access Control)
+// ============================================================================
+
+export const categoryEntitlements = pgTable('category_entitlements', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'cascade' }),
+  category: varchar('category', { length: 100 }).notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  restrictions: jsonb('restrictions').default({}),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('category_entitlements_tenant_idx').on(table.tenantId),
+  orgIdx: index('category_entitlements_org_idx').on(table.organizationId),
+  categoryIdx: index('category_entitlements_category_idx').on(table.category),
+  tenantCategoryUnique: unique('category_entitlements_tenant_unique').on(table.tenantId, table.category),
+  orgCategoryUnique: unique('category_entitlements_org_unique').on(table.organizationId, table.category),
+}));
+
+// ============================================================================
 // Listings
 // ============================================================================
 
@@ -439,4 +462,6 @@ export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
 export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
 export type OrgFeatureFlag = typeof orgFeatureFlags.$inferSelect;
 export type NewOrgFeatureFlag = typeof orgFeatureFlags.$inferInsert;
+export type CategoryEntitlement = typeof categoryEntitlements.$inferSelect;
+export type NewCategoryEntitlement = typeof categoryEntitlements.$inferInsert;
 
