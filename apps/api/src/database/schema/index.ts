@@ -423,6 +423,53 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// Branding & White-Label
+// ============================================================================
+
+export const brandingTokens = pgTable('branding_tokens', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  name: varchar('name', { length: 255 }),
+  logoUrl: text('logo_url'),
+  faviconUrl: text('favicon_url'),
+  primaryColor: varchar('primary_color', { length: 50 }),
+  secondaryColor: varchar('secondary_color', { length: 50 }),
+  accentColor: varchar('accent_color', { length: 50 }),
+  tokens: jsonb('tokens').default({}),
+  typography: jsonb('typography').default({}),
+  activeVersionId: uuid('active_version_id'),
+  previewVersionId: uuid('preview_version_id'),
+  previewMode: boolean('preview_mode').notNull().default(false),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_tokens_tenant_idx').on(table.tenantId),
+}));
+
+export const brandingVersions = pgTable('branding_versions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  brandingTokensId: uuid('branding_tokens_id').notNull().references(() => brandingTokens.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  name: varchar('name', { length: 255 }),
+  description: text('description'),
+  snapshot: jsonb('snapshot').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  publishedAt: timestamp('published_at'),
+  publishedBy: uuid('published_by').references(() => users.id, { onDelete: 'set null' }),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_versions_tenant_idx').on(table.tenantId),
+  brandingTokensIdx: index('branding_versions_tokens_idx').on(table.brandingTokensId),
+  versionIdx: index('branding_versions_version_idx').on(table.brandingTokensId, table.version),
+  statusIdx: index('branding_versions_status_idx').on(table.status),
+  tenantVersionUnique: unique('branding_versions_tenant_version_unique').on(table.tenantId, table.version),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -464,4 +511,7 @@ export type OrgFeatureFlag = typeof orgFeatureFlags.$inferSelect;
 export type NewOrgFeatureFlag = typeof orgFeatureFlags.$inferInsert;
 export type CategoryEntitlement = typeof categoryEntitlements.$inferSelect;
 export type NewCategoryEntitlement = typeof categoryEntitlements.$inferInsert;
-
+export type BrandingToken = typeof brandingTokens.$inferSelect;
+export type NewBrandingToken = typeof brandingTokens.$inferInsert;
+export type BrandingVersion = typeof brandingVersions.$inferSelect;
+export type NewBrandingVersion = typeof brandingVersions.$inferInsert;
