@@ -726,6 +726,14 @@ export const PlayIcon = (props: React.ComponentProps<typeof Icon>) => (
   </Icon>
 );
 
+// Pause Icon
+export const PauseIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="6" y="4" width="4" height="16" />
+    <rect x="14" y="4" width="4" height="16" />
+  </Icon>
+);
+
 // Lock Icon
 export const LockIcon = (props: React.ComponentProps<typeof Icon>) => (
   <Icon {...props}>
@@ -776,6 +784,47 @@ export const TableIcon = (props: React.ComponentProps<typeof Icon>) => (
     <line x1="3" y1="15" x2="21" y2="15" />
     <line x1="9" y1="3" x2="9" y2="21" />
     <line x1="15" y1="3" x2="15" y2="21" />
+  </Icon>
+);
+
+// Key Icon - for API keys, licenses
+export const KeyIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+  </Icon>
+);
+
+// RefreshCw Icon - for refresh with clockwise indicator
+export const RefreshCwIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <polyline points="23 4 23 10 17 10" />
+    <polyline points="1 20 1 14 7 14" />
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+  </Icon>
+);
+
+// Database Icon - for data storage
+export const DatabaseIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+  </Icon>
+);
+
+// ToggleLeft Icon - for feature flags/toggles
+export const ToggleLeftIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
+    <circle cx="8" cy="12" r="3" />
+  </Icon>
+);
+
+// CreditCard Icon - for billing/payments
+export const CreditCardIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+    <line x1="1" y1="10" x2="23" y2="10" />
   </Icon>
 );
 

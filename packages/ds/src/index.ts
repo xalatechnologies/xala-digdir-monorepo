@@ -220,11 +220,18 @@ export {
   FileTextIcon,
   ClipboardListIcon,
   PlayIcon,
+  PauseIcon,
   LockIcon,
   UnlockIcon,
   UploadIcon,
   CameraIcon,
   ImageIcon,
+  TableIcon,
+  KeyIcon,
+  RefreshCwIcon,
+  DatabaseIcon,
+  ToggleLeftIcon,
+  CreditCardIcon,
   FormField,
 } from './primitives';
 export type {

@@ -100,12 +100,18 @@ export {
   FileTextIcon,
   ClipboardListIcon,
   PlayIcon,
+  PauseIcon,
   LockIcon,
   UnlockIcon,
   UploadIcon,
   CameraIcon,
   ImageIcon,
   TableIcon,
+  KeyIcon,
+  RefreshCwIcon,
+  DatabaseIcon,
+  ToggleLeftIcon,
+  CreditCardIcon,
 } from './icons';
 
 // Re-export from layout-grid for backward compatibility
