@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary, Heading, Paragraph, Card } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
@@ -7,6 +7,8 @@ import { useState, useEffect, createContext, useContext, type ReactNode } from '
 import { DocsLayout } from './layouts/DocsLayout';
 import { Checklist } from './components/docs/Checklist';
 import { CodeBlock } from './components/docs/CodeBlock';
+import { DocRoutePage, NotFoundPage } from './pages';
+import { getAllNavItems } from './navigation/docsNav';
 
 // =============================================================================
 // Theme Context (simplified version for docs app)
@@ -189,31 +191,22 @@ function AppWithTheme() {
               <Routes>
                 {/* All routes wrapped in DocsLayout */}
                 <Route element={<DocsLayout />}>
-                  {/* Main documentation routes */}
+                  {/* Home page with custom content */}
                   <Route path="/" element={<DocsHomePage />} />
 
-                  {/* Role documentation routes */}
-                  <Route path="/roles" element={<DocsHomePage />} />
-                  <Route path="/roles/*" element={<DocsHomePage />} />
+                  {/* Dynamic routes from docsNav registry */}
+                  {getAllNavItems()
+                    .filter((item) => item.href !== '/')
+                    .map((item) => (
+                      <Route
+                        key={item.href}
+                        path={item.href}
+                        element={<DocRoutePage />}
+                      />
+                    ))}
 
-                  {/* Journey documentation routes */}
-                  <Route path="/journeys" element={<DocsHomePage />} />
-                  <Route path="/journeys/*" element={<DocsHomePage />} />
-
-                  {/* Seeding documentation routes */}
-                  <Route path="/seeding" element={<DocsHomePage />} />
-                  <Route path="/seeding/*" element={<DocsHomePage />} />
-
-                  {/* Integration documentation routes */}
-                  <Route path="/integrations" element={<DocsHomePage />} />
-                  <Route path="/integrations/*" element={<DocsHomePage />} />
-
-                  {/* Platform documentation routes */}
-                  <Route path="/platform" element={<DocsHomePage />} />
-                  <Route path="/platform/*" element={<DocsHomePage />} />
-
-                  {/* Catch-all redirect to home */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
+                  {/* 404 Not Found page for invalid routes */}
+                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>
