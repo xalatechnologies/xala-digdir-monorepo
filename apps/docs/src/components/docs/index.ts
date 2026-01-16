@@ -18,7 +18,7 @@ export { DocPage } from './DocPage';
 export type { DocPageProps } from './DocPage';
 
 export { MediaPlaceholder } from './MediaPlaceholder';
-export type { MediaPlaceholderProps } from './MediaPlaceholder';
+export type { MediaPlaceholderProps, MediaType } from './MediaPlaceholder';
 
 export { RoleMatrix } from './RoleMatrix';
 export type { RoleMatrixProps, RoleDefinition, PermissionRow } from './RoleMatrix';
