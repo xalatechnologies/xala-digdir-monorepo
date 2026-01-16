@@ -3,14 +3,13 @@ import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds'
 import { I18nProvider } from '@xala/i18n';
 import { useState, useCallback, createContext, useContext } from 'react';
 
-import { AuthProvider } from '@xala/auth';
+import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
-import { useOAuthCallback } from './hooks/useOAuthCallback';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
 import { CalendarPage } from './routes/calendar';
