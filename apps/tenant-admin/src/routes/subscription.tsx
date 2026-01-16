@@ -88,16 +88,16 @@ function getStatusColor(status: string): 'success' | 'warning' | 'danger' | 'neu
 }
 
 /**
- * Format status for display
+ * Format status for display using i18n
  */
-function formatStatus(status: string): string {
+function formatStatus(status: string, t: (key: string, options?: { defaultValue?: string }) => string): string {
   const statusMap: Record<string, string> = {
-    active: 'Aktiv',
-    trialing: 'Prøveperiode',
-    past_due: 'Forfalt',
-    cancelled: 'Kansellert',
-    suspended: 'Suspendert',
-    pending: 'Venter',
+    active: t('tenantAdmin.subscription.statusActive', { defaultValue: 'Active' }),
+    trialing: t('tenantAdmin.subscription.statusTrialing', { defaultValue: 'Trial' }),
+    past_due: t('tenantAdmin.subscription.statusPastDue', { defaultValue: 'Past Due' }),
+    cancelled: t('tenantAdmin.subscription.statusCancelled', { defaultValue: 'Cancelled' }),
+    suspended: t('tenantAdmin.subscription.statusSuspended', { defaultValue: 'Suspended' }),
+    pending: t('tenantAdmin.subscription.statusPending', { defaultValue: 'Pending' }),
   };
   return statusMap[status] ?? status;
 }
@@ -212,7 +212,7 @@ export function SubscriptionPage(): React.ReactElement {
             </Heading>
           </div>
           <Badge data-color={getStatusColor(subscription.status)}>
-            {formatStatus(subscription.status)}
+            {formatStatus(subscription.status, t)}
           </Badge>
         </div>
 

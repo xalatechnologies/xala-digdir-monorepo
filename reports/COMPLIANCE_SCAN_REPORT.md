@@ -10,7 +10,7 @@
 
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
-| Hardcoded Colors | 99 | high | ❌ Needs Fix |
+| Hardcoded Colors | 108 | high | ❌ Needs Fix |
 | Hardcoded Font Family | 1 | medium | ⚠️ Minor |
 | Hardcoded Letter Spacing | 0 | low | ✅ Clean |
 | Hardcoded Line Height | 0 | low | ✅ Clean |
@@ -18,22 +18,22 @@
 | Hardcoded Z-Index | 0 | low | ✅ Clean |
 | Hardcoded Transition Duration | 12 | low | ❌ Needs Fix |
 | Hardcoded Opacity | 1 | low | ⚠️ Minor |
-| Hardcoded Spacing | 32 | high | ❌ Needs Fix |
-| Hardcoded Typography | 29 | medium | ❌ Needs Fix |
-| Hardcoded Border Radius | 2 | medium | ⚠️ Minor |
-| Raw HTML Layouts in Apps | 66 | medium | ❌ Needs Fix |
-| Hardcoded Dimensions | 280 | low | ❌ Needs Fix |
+| Hardcoded Spacing | 42 | high | ❌ Needs Fix |
+| Hardcoded Typography | 33 | medium | ❌ Needs Fix |
+| Hardcoded Border Radius | 11 | medium | ❌ Needs Fix |
+| Raw HTML Layouts in Apps | 73 | medium | ❌ Needs Fix |
+| Hardcoded Dimensions | 320 | low | ❌ Needs Fix |
 | Hardcoded Breakpoints | 0 | low | ✅ Clean |
 | SVG Hardcoded Colors | 9 | low | ❌ Needs Fix |
 | Touch Target Size | 2 | medium | ⚠️ Minor |
 | Missing Button Type | 0 | medium | ✅ Clean |
 | Inline !important | 0 | low | ✅ Clean |
-| Hardcoded Gap | 9 | high | ❌ Needs Fix |
-| Inconsistent Icon Size | 11 | low | ❌ Needs Fix |
+| Hardcoded Gap | 15 | high | ❌ Needs Fix |
+| Inconsistent Icon Size | 14 | low | ❌ Needs Fix |
 | Raw Div with Click Handler | 0 | medium | ✅ Clean |
 
-**Total Issues:** 566
-**High Severity:** 140
+**Total Issues:** 654
+**High Severity:** 165
 
 ---
 
@@ -41,7 +41,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use design tokens: var(--ds-color-*)
-**Issues Found:** 99
+**Issues Found:** 108
 
 ### Findings by File
 
@@ -171,59 +171,78 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 84 | Hex color | `<p style={{ marginBottom: '1.5rem', color: '#666' ...` |
-| 124 | Hex color | `backgroundColor: '#f5f5f5',...` |
-| 137 | Hex color | `<p style={{ marginTop: '0.5rem', color: '#666' }}>...` |
+| 85 | Hex color | `<p style={{ marginBottom: '1.5rem', color: '#666' ...` |
+| 125 | Hex color | `backgroundColor: '#f5f5f5',...` |
+| 138 | Hex color | `<p style={{ marginTop: '0.5rem', color: '#666' }}>...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 283 | RGB/RGBA color | `backgroundColor: 'rgba(15, 23, 42, 0.6)',...` |
-| 305 | RGB/RGBA color | `boxShadow: isVisible ? '-8px 0 40px rgba(0, 0, 0, ...` |
-| 348 | Named color | `color: 'white',...` |
-| 349 | RGB/RGBA color | `boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',...` |
-| 379 | RGB/RGBA color | `boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',...` |
-| 628 | Named color | `color: 'white',...` |
-| 676 | RGB/RGBA color | `boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',...` |
-| 684 | Named color | `backgroundColor: 'white',...` |
-| 689 | RGB/RGBA color | `boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',...` |
+| 285 | RGB/RGBA color | `backgroundColor: 'rgba(15, 23, 42, 0.6)',...` |
+| 307 | RGB/RGBA color | `boxShadow: isVisible ? '-8px 0 40px rgba(0, 0, 0, ...` |
+| 350 | Named color | `color: 'white',...` |
+| 351 | RGB/RGBA color | `boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',...` |
+| 381 | RGB/RGBA color | `boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',...` |
+| 630 | Named color | `color: 'white',...` |
+| 678 | RGB/RGBA color | `boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',...` |
+| 686 | Named color | `backgroundColor: 'white',...` |
+| 691 | RGB/RGBA color | `boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',...` |
 | 891 | RGB/RGBA color | `box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.2) !import...` |
 
-#### `apps/web/src/features/listing-details/components/ListingDetailsLayout.tsx`
+#### `apps/web/src/features/rental-object-details/components/PaymentSection.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 83 | Hex color | `backgroundColor: isActive ? '#1E3A5F' : 'transpare...` |
-| 84 | Hex color | `color: isActive ? 'white' : '#64748B',...` |
-| 86 | RGB/RGBA color | `boxShadow: isActive ? '0 1px 3px rgba(0, 0, 0, 0.1...` |
+| 29 | Hex color | `<path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-...` |
 
-#### `apps/web/src/features/listing-details/components/PaymentSection.tsx`
+#### `apps/web/src/features/rental-object-details/components/RentalObjectDetailsLayout.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 28 | Hex color | `<path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-...` |
+| 84 | Hex color | `backgroundColor: isActive ? '#1E3A5F' : 'transpare...` |
+| 85 | Hex color | `color: isActive ? 'white' : '#64748B',...` |
+| 87 | RGB/RGBA color | `boxShadow: isActive ? '0 1px 3px rgba(0, 0, 0, 0.1...` |
 
-#### `apps/web/src/features/listing-details/components/RulesTab.tsx`
+#### `apps/web/src/features/rental-object-details/components/RulesTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 106 | Hex color | `bgColor: '#FEE2E2',...` |
-| 107 | Hex color | `iconColor: '#DC2626',...` |
-| 112 | Hex color | `bgColor: '#DBEAFE',...` |
-| 113 | Hex color | `iconColor: '#2563EB',...` |
-| 118 | Hex color | `bgColor: '#FEF3C7',...` |
-| 119 | Hex color | `iconColor: '#D97706',...` |
-| 124 | Hex color | `bgColor: '#F3E8FF',...` |
-| 125 | Hex color | `iconColor: '#9333EA',...` |
-| 130 | Hex color | `bgColor: '#DBEAFE',...` |
-| 131 | Hex color | `iconColor: '#2563EB',...` |
-| 136 | Hex color | `bgColor: '#D1FAE5',...` |
-| 137 | Hex color | `iconColor: '#059669',...` |
-| 142 | Hex color | `bgColor: '#F3F4F6',...` |
-| 143 | Hex color | `iconColor: '#6B7280',...` |
-| 148 | Hex color | `bgColor: '#F3F4F6',...` |
+| 107 | Hex color | `bgColor: '#FEE2E2',...` |
+| 108 | Hex color | `iconColor: '#DC2626',...` |
+| 113 | Hex color | `bgColor: '#DBEAFE',...` |
+| 114 | Hex color | `iconColor: '#2563EB',...` |
+| 119 | Hex color | `bgColor: '#FEF3C7',...` |
+| 120 | Hex color | `iconColor: '#D97706',...` |
+| 125 | Hex color | `bgColor: '#F3E8FF',...` |
+| 126 | Hex color | `iconColor: '#9333EA',...` |
+| 131 | Hex color | `bgColor: '#DBEAFE',...` |
+| 132 | Hex color | `iconColor: '#2563EB',...` |
+| 137 | Hex color | `bgColor: '#D1FAE5',...` |
+| 138 | Hex color | `iconColor: '#059669',...` |
+| 143 | Hex color | `bgColor: '#F3F4F6',...` |
+| 144 | Hex color | `iconColor: '#6B7280',...` |
+| 149 | Hex color | `bgColor: '#F3F4F6',...` |
 | ... | +3 more | ... |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 85 | RGB/RGBA color | `background: 'linear-gradient(90deg, transparent, r...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 305 | Hex color | `backgroundColor: '#fef2f2',...` |
+| 306 | Hex color | `border: '1px solid #fecaca',...` |
+| 308 | Hex color | `color: '#991b1b',...` |
+| 323 | Hex color | `border: '1px solid #e5e7eb',...` |
+| 332 | Hex color | `<Paragraph size="sm" style={{ margin: 0, color: '#...` |
+| 338 | Hex color | `backgroundColor: '#eff6ff',...` |
+| 342 | Hex color | `color: '#1e40af',...` |
+| 348 | Hex color | `<Paragraph size="sm" style={{ margin: 0, color: '#...` |
 
 ---
 
@@ -294,14 +313,14 @@
 |------|-------|--------|
 | 174 | Hardcoded box shadow | `boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 349 | Hardcoded box shadow | `boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',...` |
-| 379 | Hardcoded box shadow | `boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',...` |
-| 676 | Hardcoded box shadow | `boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',...` |
-| 689 | Hardcoded box shadow | `boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',...` |
+| 351 | Hardcoded box shadow | `boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',...` |
+| 381 | Hardcoded box shadow | `boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',...` |
+| 678 | Hardcoded box shadow | `boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',...` |
+| 691 | Hardcoded box shadow | `boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',...` |
 | 891 | CSS box-shadow | `box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.2) !import...` |
 
 ---
@@ -330,21 +349,21 @@
 |------|-------|--------|
 | 195 | Transition with duration | `transition: 'transform 0.4s cubic-bezier(0.4, 0, 0...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 287 | Transition with duration | `transition: 'opacity 350ms ease, backdrop-filter 3...` |
-| 311 | Transition with duration | `transition: 'transform 350ms cubic-bezier(0.32, 0....` |
-| 334 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 402 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 596 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 643 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 696 | Transition with duration | `<div style={{ maxHeight: formData.isRecurring ? '2...` |
-| 752 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 786 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 803 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
-| 829 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 289 | Transition with duration | `transition: 'opacity 350ms ease, backdrop-filter 3...` |
+| 313 | Transition with duration | `transition: 'transform 350ms cubic-bezier(0.32, 0....` |
+| 336 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 404 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 598 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 645 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 698 | Transition with duration | `<div style={{ maxHeight: formData.isRecurring ? '2...` |
+| 754 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 788 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 805 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
+| 831 | Transition with duration | `transition: 'all 400ms cubic-bezier(0.32, 0.72, 0,...` |
 
 ---
 
@@ -356,11 +375,11 @@
 
 ### Findings by File
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 287 | Hardcoded opacity | `<div style={{ marginBottom: 'var(--ds-spacing-2)',...` |
+| 288 | Hardcoded opacity | `<div style={{ marginBottom: 'var(--ds-spacing-2)',...` |
 
 ---
 
@@ -368,7 +387,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 32
+**Issues Found:** 42
 
 ### Findings by File
 
@@ -378,6 +397,13 @@
 |------|-------|--------|
 | 786 | Pixel spacing | `top: 2px;...` |
 | 787 | Pixel spacing | `right: 2px;...` |
+
+#### `packages/ds/src/blocks/RentalObjectAvailabilityCalendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 1207 | Pixel spacing | `gap: '1px',...` |
+| 1569 | Pixel spacing | `gap: '1px',...` |
 
 #### `packages/ds/src/blocks/booking-engine/styles.ts`
 
@@ -403,51 +429,74 @@
 | 214 | Pixel spacing | `right: '2px',...` |
 | 475 | Pixel spacing | `gap: '4px',...` |
 
+#### `apps/web/src/components/ConsentSettings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 57 | Pixel spacing | `<Stack direction="column" gap="24px" style={{ alig...` |
+
 #### `apps/web/src/components/SentryTestComponent.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 82 | Rem/Em spacing | `<Card style={{ padding: '2rem', margin: '2rem', ma...` |
-| 88 | Rem/Em spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 91 | Rem/Em spacing | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
-| 106 | Rem/Em spacing | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
-| 123 | Rem/Em spacing | `padding: '1rem',...` |
+| 83 | Rem/Em spacing | `<Card style={{ padding: '2rem', margin: '2rem', ma...` |
+| 89 | Rem/Em spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 92 | Rem/Em spacing | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
+| 107 | Rem/Em spacing | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
+| 124 | Rem/Em spacing | `padding: '1rem',...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 686 | Pixel spacing | `top: '2px',...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/BookingWidgetPlacement.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 677 | Pixel spacing | `gap: '1px',...` |
+| 688 | Pixel spacing | `top: '2px',...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingPricingStep.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 198 | Pixel spacing | `top: '4px',...` |
-| 199 | Pixel spacing | `right: '4px',...` |
+| 744 | Pixel spacing | `gap: '1px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 199 | Pixel spacing | `top: '4px',...` |
+| 200 | Pixel spacing | `right: '4px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewCard.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 65 | Pixel spacing | `gap: '4px',...` |
-| 161 | Pixel spacing | `gap: '8px',...` |
-| 218 | Pixel spacing | `gap: '12px',...` |
-| 244 | Pixel spacing | `padding: '6px 12px',...` |
-| 272 | Pixel spacing | `padding: '12px',...` |
+| 66 | Pixel spacing | `gap: '4px',...` |
+| 163 | Pixel spacing | `gap: '8px',...` |
+| 220 | Pixel spacing | `gap: '12px',...` |
+| 246 | Pixel spacing | `padding: '6px 12px',...` |
+| 274 | Pixel spacing | `padding: '12px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewForm.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 52 | Pixel spacing | `gap: '8px',...` |
-| 74 | Pixel spacing | `padding: '4px',...` |
+| 53 | Pixel spacing | `gap: '8px',...` |
+| 75 | Pixel spacing | `padding: '4px',...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Pixel spacing | `<div style={{ display: 'flex', gap: '8px', marginB...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 300 | Pixel spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 304 | Pixel spacing | `padding: '12px',...` |
+| 320 | Pixel spacing | `padding: '16px',...` |
+| 328 | Pixel spacing | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 337 | Pixel spacing | `padding: '4px 8px',...` |
+| 355 | Pixel spacing | `<div style={{ display: 'flex', gap: '8px', justify...` |
 
 ---
 
@@ -455,7 +504,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use typography tokens: var(--ds-font-size-*), var(--ds-font-weight-*)
-**Issues Found:** 29
+**Issues Found:** 33
 
 ### Findings by File
 
@@ -498,35 +547,49 @@
 |------|-------|--------|
 | 189 | Font size in px | `fontSize: '10px',...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 666 | Numeric font weight | `<Paragraph data-size="md" style={{ margin: 0, font...` |
-| 714 | Numeric font weight | `fontWeight: 600,...` |
+| 668 | Numeric font weight | `<Paragraph data-size="md" style={{ margin: 0, font...` |
+| 716 | Numeric font weight | `fontWeight: 600,...` |
 
 #### `apps/web/src/features/reviews/components/ReviewCard.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 85 | Font size in px | `fontSize: '14px',...` |
-| 86 | Numeric font weight | `fontWeight: 600,...` |
-| 245 | Font size in px | `fontSize: '14px',...` |
-| 246 | Numeric font weight | `fontWeight: 500,...` |
-| 281 | Numeric font weight | `fontWeight: 600,...` |
+| 86 | Font size in px | `fontSize: '14px',...` |
+| 87 | Numeric font weight | `fontWeight: 600,...` |
+| 247 | Font size in px | `fontSize: '14px',...` |
+| 248 | Numeric font weight | `fontWeight: 500,...` |
+| 283 | Numeric font weight | `fontWeight: 600,...` |
 
 #### `apps/web/src/features/reviews/components/ReviewForm.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 91 | Font size in px | `fontSize: '16px',...` |
-| 92 | Numeric font weight | `fontWeight: 600,...` |
-| 226 | Font size in px | `fontSize: '14px',...` |
-| 227 | Numeric font weight | `fontWeight: 600,...` |
-| 244 | Font size in px | `fontSize: '14px',...` |
-| 262 | Font size in px | `fontSize: '14px',...` |
-| 263 | Numeric font weight | `fontWeight: 600,...` |
-| 280 | Font size in px | `fontSize: '14px',...` |
+| 92 | Font size in px | `fontSize: '16px',...` |
+| 93 | Numeric font weight | `fontWeight: 600,...` |
+| 228 | Font size in px | `fontSize: '14px',...` |
+| 229 | Numeric font weight | `fontWeight: 600,...` |
+| 246 | Font size in px | `fontSize: '14px',...` |
+| 264 | Font size in px | `fontSize: '14px',...` |
+| 265 | Numeric font weight | `fontWeight: 600,...` |
+| 282 | Font size in px | `fontSize: '14px',...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 571 | Font size in px | `fontSize: '11px',...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 309 | Font size in px | `fontSize: '14px',...` |
+| 340 | Font size in px | `fontSize: '12px',...` |
+| 341 | Numeric font weight | `fontWeight: 600,...` |
 
 ---
 
@@ -534,7 +597,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use border radius tokens: var(--ds-border-radius-*)
-**Issues Found:** 2
+**Issues Found:** 11
 
 ### Findings by File
 
@@ -542,13 +605,32 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 125 | Border radius in px | `borderRadius: '4px',...` |
+| 126 | Border radius in px | `borderRadius: '4px',...` |
 
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 672 | Border radius in px | `borderRadius: '14px',...` |
+| 674 | Border radius in px | `borderRadius: '14px',...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 90 | Border radius in px | `<div style={{ height: '24px', width: '70%', backgr...` |
+| 91 | Border radius in px | `<div style={{ height: '16px', width: '50%', backgr...` |
+| 93 | Border radius in px | `<div style={{ height: '24px', width: '60px', borde...` |
+| 94 | Border radius in px | `<div style={{ height: '24px', width: '80px', borde...` |
+| 97 | Border radius in px | `<div style={{ height: '20px', width: '40px', backg...` |
+| 98 | Border radius in px | `<div style={{ height: '20px', width: '60px', backg...` |
+| 133 | Border radius in px | `borderRadius: '999px',...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 307 | Border radius in px | `borderRadius: '8px',...` |
+| 339 | Border radius in px | `borderRadius: '4px',...` |
 
 ---
 
@@ -556,7 +638,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use layout primitives: <Stack>, <Grid>, <Flex>
-**Issues Found:** 66
+**Issues Found:** 73
 
 ### Findings by File
 
@@ -564,142 +646,154 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 88 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 91 | Div with inline flex | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
-| 106 | Div with inline flex | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
+| 89 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 92 | Div with inline flex | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
+| 107 | Div with inline flex | `<div style={{ display: 'flex', gap: '0.5rem', flex...` |
 
-#### `apps/web/src/features/listing-details/components/ActivityTab.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 86 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 95 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 104 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 221 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 235 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/ActivityTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 338 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 543 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 697 | Div with inline flex | `<div style={{ paddingTop: 'var(--ds-spacing-4)', d...` |
-| 700 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 857 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 89 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 98 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 107 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 225 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 239 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
 
-#### `apps/web/src/features/listing-details/components/FaqTab.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 78 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-
-#### `apps/web/src/features/listing-details/components/OverviewTab.tsx`
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 348 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
-| 378 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 493 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
+| 340 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 545 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 699 | Div with inline flex | `<div style={{ paddingTop: 'var(--ds-spacing-4)', d...` |
+| 702 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 859 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
 
-#### `apps/web/src/features/listing-details/components/PaymentSection.tsx`
+#### `apps/web/src/features/rental-object-details/components/FaqTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 125 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 80 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/web/src/features/rental-object-details/components/OverviewTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 350 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
+| 380 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 495 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
+
+#### `apps/web/src/features/rental-object-details/components/PaymentSection.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 127 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
 | 143 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
 | 156 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
 | 167 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
 
-#### `apps/web/src/features/listing-details/components/RulesTab.tsx`
+#### `apps/web/src/features/rental-object-details/components/RulesTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 228 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 272 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 230 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 274 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/BookingWidgetPlacement.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 655 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 656 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 660 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 664 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 773 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
-| 797 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/ContactWidget.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 91 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 94 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 111 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 128 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 722 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 723 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 727 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 731 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 840 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 864 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/OpeningHoursWidget.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 182 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingCartSidebar.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/ContactWidget.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 219 | Div with inline flex | `<div style={{ flex: 1, overflow: 'auto', display: ...` |
-| 256 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-3)', disp...` |
-| 287 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 289 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 295 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 307 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 347 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 388 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 398 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 400 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 411 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 422 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 433 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingConfirmationStep.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 140 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 208 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 259 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 383 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 425 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 559 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingPricingStep.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 97 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-6)', disp...` |
-| 230 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
-| 232 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', flexDirect...` |
-| 260 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 303 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
-| 342 | Div with inline flex | `<div style={{ marginTop: 'var(--ds-spacing-3)', di...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 81 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
-| 129 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 93 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 96 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 113 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
 | 130 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
-| 181 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-4)', disp...` |
-| 188 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
-| 227 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
 
-#### `apps/web/src/pages/ListingsPage.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/OpeningHoursWidget.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 570 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 189 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingCartSidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 272 | Div with inline flex | `<div style={{ flex: 1, overflow: 'auto', display: ...` |
+| 309 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-3)', disp...` |
+| 340 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 342 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 348 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 360 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 400 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 441 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 451 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 453 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 464 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 475 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 486 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 290 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 358 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 409 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 533 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 575 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 707 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 98 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-6)', disp...` |
+| 231 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 233 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', flexDirect...` |
+| 261 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 304 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 343 | Div with inline flex | `<div style={{ marginTop: 'var(--ds-spacing-3)', di...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 82 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 130 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 131 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 182 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-4)', disp...` |
+| 189 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 228 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Div with inline flex | `<div style={{ display: 'flex', gap: '8px', marginB...` |
+| 96 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 147 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 557 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 825 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 300 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 328 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 355 | Div with inline flex | `<div style={{ display: 'flex', gap: '8px', justify...` |
 
 ---
 
@@ -707,7 +801,7 @@
 
 **Severity:** LOW
 **Recommendation:** Consider using tokens or calc() with tokens
-**Issues Found:** 280
+**Issues Found:** 320
 
 ### Findings by File
 
@@ -839,34 +933,6 @@
 | 479 | Dimension in px | `height: '48px',...` |
 | 505 | Dimension in px | `maxWidth: '1400px',...` |
 
-#### `packages/ds/src/blocks/ListingDetailHeader.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 200 | Dimension in px | `width: '40px',...` |
-| 201 | Dimension in px | `height: '40px',...` |
-
-#### `packages/ds/src/blocks/ListingListItem.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 189 | Dimension in px | `minHeight: '250px',...` |
-
-#### `packages/ds/src/blocks/ListingTableView.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 375 | Dimension in px | `@media (max-width: 991px) {...` |
-| 405 | Dimension in px | `outline-width: 4px;...` |
-
-#### `packages/ds/src/blocks/ListingTabs.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 212 | Dimension in px | `width: '48px',...` |
-| 213 | Dimension in px | `height: '48px',...` |
-| 240 | Dimension in px | `maxWidth: '400px',...` |
-
 #### `packages/ds/src/blocks/LoginComponents.tsx`
 
 | Line | Issue | Content |
@@ -911,6 +977,45 @@
 | 103 | Dimension in px | `height: '32px',...` |
 | 128 | Dimension in px | `width: '64px',...` |
 | 129 | Dimension in px | `height: '64px',...` |
+
+#### `packages/ds/src/blocks/RentalObjectAvailabilityCalendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 430 | Dimension in px | `minHeight: '40px',...` |
+| 531 | Dimension in px | `minHeight: '56px',...` |
+| 679 | Dimension in px | `minHeight: '56px',...` |
+| 1044 | Dimension in px | `minHeight: '44px',...` |
+| 1073 | Dimension in px | `minHeight: '44px',...` |
+| 1715 | Dimension in px | `minHeight: '300px',...` |
+
+#### `packages/ds/src/blocks/RentalObjectDetailHeader.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 200 | Dimension in px | `width: '40px',...` |
+| 201 | Dimension in px | `height: '40px',...` |
+
+#### `packages/ds/src/blocks/RentalObjectListItem.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 189 | Dimension in px | `minHeight: '250px',...` |
+
+#### `packages/ds/src/blocks/RentalObjectTableView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 379 | Dimension in px | `@media (max-width: 991px) {...` |
+| 409 | Dimension in px | `outline-width: 4px;...` |
+
+#### `packages/ds/src/blocks/RentalObjectTabs.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 212 | Dimension in px | `width: '48px',...` |
+| 213 | Dimension in px | `height: '48px',...` |
+| 240 | Dimension in px | `maxWidth: '400px',...` |
 
 #### `packages/ds/src/blocks/RequireAuthModal.tsx`
 
@@ -1028,75 +1133,83 @@
 | 317 | Dimension in px | `width: '24px',...` |
 | 318 | Dimension in px | `height: '24px',...` |
 
+#### `apps/web/src/components/ConsentPopup.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 127 | Dimension in px | `maxWidth: '600px',...` |
+
+#### `apps/web/src/components/LazyRentalObjectMap.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 41 | Dimension in px | `minHeight: '400px',...` |
+
 #### `apps/web/src/components/RealtimeToast.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 176 | Dimension in px | `maxWidth: '380px',...` |
+| 240 | Dimension in px | `maxWidth: '380px',...` |
 
 #### `apps/web/src/components/SentryTestComponent.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 82 | Dimension in px | `<Card style={{ padding: '2rem', margin: '2rem', ma...` |
+| 83 | Dimension in px | `<Card style={{ padding: '2rem', margin: '2rem', ma...` |
 
 #### `apps/web/src/components/SkipLinks.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 85 | Dimension in px | `outline-width: 4px;...` |
+| 87 | Dimension in px | `outline-width: 4px;...` |
 
-#### `apps/web/src/features/listing-details/components/ActivityTab.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 150 | Dimension in px | `width: '8px',...` |
-| 151 | Dimension in px | `height: '8px',...` |
-
-#### `apps/web/src/features/listing-details/components/BookingDialog.tsx`
+#### `apps/web/src/components/UserMenu.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 302 | Dimension in px | `maxWidth: '560px',...` |
-| 341 | Dimension in px | `width: '48px',...` |
-| 342 | Dimension in px | `height: '48px',...` |
-| 371 | Dimension in px | `width: '44px',...` |
-| 372 | Dimension in px | `height: '44px',...` |
-| 461 | Dimension in px | `width: '48px',...` |
-| 462 | Dimension in px | `height: '48px',...` |
-| 486 | Dimension in px | `minWidth: '140px',...` |
-| 515 | Dimension in px | `width: '48px',...` |
-| 516 | Dimension in px | `height: '48px',...` |
-| 619 | Dimension in px | `width: '22px',...` |
-| 620 | Dimension in px | `height: '22px',...` |
-| 670 | Dimension in px | `width: '52px',...` |
-| 671 | Dimension in px | `height: '28px',...` |
-| 681 | Dimension in px | `width: '24px',...` |
+| 89 | Dimension in px | `width: '20px',...` |
+| 90 | Dimension in px | `height: '20px',...` |
+| 108 | Dimension in px | `minWidth: '200px',...` |
+| 154 | Dimension in px | `height: '1px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/ActivityTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 153 | Dimension in px | `width: '8px',...` |
+| 154 | Dimension in px | `height: '8px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/BookingDialog.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 304 | Dimension in px | `maxWidth: '560px',...` |
+| 343 | Dimension in px | `width: '48px',...` |
+| 344 | Dimension in px | `height: '48px',...` |
+| 373 | Dimension in px | `width: '44px',...` |
+| 374 | Dimension in px | `height: '44px',...` |
+| 463 | Dimension in px | `width: '48px',...` |
+| 464 | Dimension in px | `height: '48px',...` |
+| 488 | Dimension in px | `minWidth: '140px',...` |
+| 517 | Dimension in px | `width: '48px',...` |
+| 518 | Dimension in px | `height: '48px',...` |
+| 621 | Dimension in px | `width: '22px',...` |
+| 622 | Dimension in px | `height: '22px',...` |
+| 672 | Dimension in px | `width: '52px',...` |
+| 673 | Dimension in px | `height: '28px',...` |
+| 683 | Dimension in px | `width: '24px',...` |
 | ... | +4 more | ... |
 
-#### `apps/web/src/features/listing-details/components/ListingDetailsLayout.tsx`
+#### `apps/web/src/features/rental-object-details/components/OverviewTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 75 | Dimension in px | `minWidth: '80px',...` |
-| 362 | Dimension in px | `@media (max-width: 991px) {...` |
+| 324 | Dimension in px | `width: '48px',...` |
+| 325 | Dimension in px | `height: '48px',...` |
+| 412 | Dimension in px | `width: '24px',...` |
+| 413 | Dimension in px | `height: '24px',...` |
 
-#### `apps/web/src/features/listing-details/components/ListingHeader.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 96 | Dimension in px | `minWidth: '280px',...` |
-
-#### `apps/web/src/features/listing-details/components/OverviewTab.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 322 | Dimension in px | `width: '48px',...` |
-| 323 | Dimension in px | `height: '48px',...` |
-| 410 | Dimension in px | `width: '24px',...` |
-| 411 | Dimension in px | `height: '24px',...` |
-
-#### `apps/web/src/features/listing-details/components/PaymentSection.tsx`
+#### `apps/web/src/features/rental-object-details/components/PaymentSection.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
@@ -1104,117 +1217,178 @@
 | 196 | Dimension in px | `width: '16px',...` |
 | 197 | Dimension in px | `height: '16px',...` |
 
-#### `apps/web/src/features/listing-details/components/RulesTab.tsx`
+#### `apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 259 | Dimension in px | `width: '44px',...` |
-| 260 | Dimension in px | `height: '44px',...` |
+| 365 | Dimension in px | `width: '32px',...` |
+| 366 | Dimension in px | `height: '32px',...` |
+| 460 | Dimension in px | `minWidth: '48px',...` |
+| 461 | Dimension in px | `height: '40px',...` |
+| 672 | Dimension in px | `<div style={{ maxWidth: '120px' }}>...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/BookingWidgetPlacement.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 598 | Dimension in px | `minHeight: '48px',...` |
-| 617 | Dimension in px | `width: '32px',...` |
-| 618 | Dimension in px | `height: '32px',...` |
-| 641 | Dimension in px | `width: '32px',...` |
-| 642 | Dimension in px | `height: '32px',...` |
-| 758 | Dimension in px | `minHeight: '32px',...` |
-| 868 | Dimension in px | `width: '80px',...` |
-| 869 | Dimension in px | `height: '80px',...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx`
+#### `apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 107 | Dimension in px | `maxWidth: '500px',...` |
-| 136 | Dimension in px | `width: '32px',...` |
-| 137 | Dimension in px | `height: '32px',...` |
-| 200 | Dimension in px | `width: '20px',...` |
-| 201 | Dimension in px | `height: '20px',...` |
+| 361 | Dimension in px | `width: '28px',...` |
+| 362 | Dimension in px | `height: '28px',...` |
+| 589 | Dimension in px | `width: '8px',...` |
+| 590 | Dimension in px | `height: '8px',...` |
+| 634 | Dimension in px | `width: '8px',...` |
+| 635 | Dimension in px | `height: '8px',...` |
+| 680 | Dimension in px | `width: '8px',...` |
+| 681 | Dimension in px | `height: '8px',...` |
+| 726 | Dimension in px | `width: '8px',...` |
+| 727 | Dimension in px | `height: '8px',...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingCartSidebar.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 194 | Dimension in px | `minHeight: '48px',...` |
-| 328 | Dimension in px | `width: '24px',...` |
-| 329 | Dimension in px | `height: '24px',...` |
-
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingConfirmationStep.tsx`
+#### `apps/web/src/features/rental-object-details/components/RecurringResultSummary.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 105 | Dimension in px | `maxWidth: '400px',...` |
-| 143 | Dimension in px | `width: '16px',...` |
-| 144 | Dimension in px | `height: '16px',...` |
-| 211 | Dimension in px | `width: '40px',...` |
-| 212 | Dimension in px | `height: '40px',...` |
-| 262 | Dimension in px | `width: '40px',...` |
-| 263 | Dimension in px | `height: '40px',...` |
-| 315 | Dimension in px | `maxHeight: '300px',...` |
-| 386 | Dimension in px | `width: '48px',...` |
-| 387 | Dimension in px | `height: '48px',...` |
-| 432 | Dimension in px | `style={{ minWidth: '120px' }}...` |
-| 440 | Dimension in px | `style={{ minWidth: '120px' }}...` |
+| 477 | Dimension in px | `width: '80px',...` |
+| 478 | Dimension in px | `height: '80px',...` |
+| 581 | Dimension in px | `width: '8px',...` |
+| 582 | Dimension in px | `height: '8px',...` |
+| 627 | Dimension in px | `width: '8px',...` |
+| 628 | Dimension in px | `height: '8px',...` |
+| 713 | Dimension in px | `width: '28px',...` |
+| 714 | Dimension in px | `height: '28px',...` |
+| 819 | Dimension in px | `width: '28px',...` |
+| 820 | Dimension in px | `height: '28px',...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingPricingStep.tsx`
+#### `apps/web/src/features/rental-object-details/components/RentalObjectDetailsLayout.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 127 | Dimension in px | `minWidth: '140px',...` |
-| 200 | Dimension in px | `width: '20px',...` |
-| 201 | Dimension in px | `height: '20px',...` |
-| 295 | Dimension in px | `width: '20px',...` |
-| 296 | Dimension in px | `height: '20px',...` |
-| 384 | Dimension in px | `width: '20px',...` |
-| 385 | Dimension in px | `height: '20px',...` |
+| 76 | Dimension in px | `minWidth: '80px',...` |
+| 367 | Dimension in px | `@media (max-width: 991px) {...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
+#### `apps/web/src/features/rental-object-details/components/RentalObjectHeader.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 157 | Dimension in px | `width: '24px',...` |
-| 158 | Dimension in px | `height: '24px',...` |
+| 98 | Dimension in px | `minWidth: '280px',...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingStepperHeader.tsx`
+#### `apps/web/src/features/rental-object-details/components/RulesTab.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 127 | Dimension in px | `width: '40px',...` |
-| 128 | Dimension in px | `height: '40px',...` |
-| 160 | Dimension in px | `maxWidth: '100px',...` |
-| 170 | Dimension in px | `height: '2px',...` |
+| 261 | Dimension in px | `width: '44px',...` |
+| 262 | Dimension in px | `height: '44px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 665 | Dimension in px | `minHeight: '48px',...` |
+| 684 | Dimension in px | `width: '32px',...` |
+| 685 | Dimension in px | `height: '32px',...` |
+| 708 | Dimension in px | `width: '32px',...` |
+| 709 | Dimension in px | `height: '32px',...` |
+| 825 | Dimension in px | `minHeight: '32px',...` |
+| 939 | Dimension in px | `width: '80px',...` |
+| 940 | Dimension in px | `height: '80px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 159 | Dimension in px | `maxWidth: '500px',...` |
+| 188 | Dimension in px | `width: '32px',...` |
+| 189 | Dimension in px | `height: '32px',...` |
+| 252 | Dimension in px | `width: '20px',...` |
+| 253 | Dimension in px | `height: '20px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingCartSidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 229 | Dimension in px | `minHeight: '32px',...` |
+| 381 | Dimension in px | `width: '24px',...` |
+| 382 | Dimension in px | `height: '24px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 255 | Dimension in px | `maxWidth: '400px',...` |
+| 293 | Dimension in px | `width: '16px',...` |
+| 294 | Dimension in px | `height: '16px',...` |
+| 361 | Dimension in px | `width: '40px',...` |
+| 362 | Dimension in px | `height: '40px',...` |
+| 412 | Dimension in px | `width: '40px',...` |
+| 413 | Dimension in px | `height: '40px',...` |
+| 465 | Dimension in px | `maxHeight: '300px',...` |
+| 536 | Dimension in px | `width: '48px',...` |
+| 537 | Dimension in px | `height: '48px',...` |
+| 582 | Dimension in px | `style={{ minWidth: '120px' }}...` |
+| 590 | Dimension in px | `style={{ minWidth: '120px' }}...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 128 | Dimension in px | `minWidth: '140px',...` |
+| 201 | Dimension in px | `width: '20px',...` |
+| 202 | Dimension in px | `height: '20px',...` |
+| 296 | Dimension in px | `width: '20px',...` |
+| 297 | Dimension in px | `height: '20px',...` |
+| 385 | Dimension in px | `width: '20px',...` |
+| 386 | Dimension in px | `height: '20px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 158 | Dimension in px | `width: '24px',...` |
+| 159 | Dimension in px | `height: '24px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingStepperHeader.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 129 | Dimension in px | `width: '40px',...` |
+| 130 | Dimension in px | `height: '40px',...` |
+| 162 | Dimension in px | `maxWidth: '100px',...` |
+| 172 | Dimension in px | `height: '2px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewForm.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 84 | Dimension in px | `<StarIcon style={{ width: '32px', height: '32px' }...` |
-
-#### `apps/web/src/pages/ListingDetailPage.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 417 | Dimension in px | `@media (max-width: 991px) {...` |
+| 85 | Dimension in px | `<StarIcon style={{ width: '32px', height: '32px' }...` |
 
 #### `apps/web/src/pages/PaymentCallbackPage.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 41 | Dimension in px | `<Stack gap="24px" align="center" style={{ textAlig...` |
-| 68 | Dimension in px | `<Stack gap="24px" align="center" style={{ textAlig...` |
-| 95 | Dimension in px | `maxWidth: '600px',...` |
-| 103 | Dimension in px | `width: '64px',...` |
-| 104 | Dimension in px | `height: '64px',...` |
-| 163 | Dimension in px | `maxWidth: '600px',...` |
-| 171 | Dimension in px | `width: '64px',...` |
-| 172 | Dimension in px | `height: '64px',...` |
-| 217 | Dimension in px | `maxWidth: '600px',...` |
-| 256 | Dimension in px | `maxWidth: '600px',...` |
-| 264 | Dimension in px | `width: '64px',...` |
-| 265 | Dimension in px | `height: '64px',...` |
+| 43 | Dimension in px | `<Stack gap="24px" align="center" style={{ textAlig...` |
+| 70 | Dimension in px | `<Stack gap="24px" align="center" style={{ textAlig...` |
+| 97 | Dimension in px | `maxWidth: '600px',...` |
+| 105 | Dimension in px | `width: '64px',...` |
+| 106 | Dimension in px | `height: '64px',...` |
+| 165 | Dimension in px | `maxWidth: '600px',...` |
+| 173 | Dimension in px | `width: '64px',...` |
+| 174 | Dimension in px | `height: '64px',...` |
+| 219 | Dimension in px | `maxWidth: '600px',...` |
+| 258 | Dimension in px | `maxWidth: '600px',...` |
+| 266 | Dimension in px | `width: '64px',...` |
+| 267 | Dimension in px | `height: '64px',...` |
+
+#### `apps/web/src/pages/RentalObjectDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 475 | Dimension in px | `@media (max-width: 991px) {...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 79 | Dimension in px | `height: '260px',...` |
+| 566 | Dimension in px | `width: '20px',...` |
+| 567 | Dimension in px | `height: '20px',...` |
 
 ---
 
@@ -1249,11 +1423,11 @@
 | 645 | SVG fill="white" | `<path d="M28 14h-4v14h4c2.2 0 4-3.1 4-7s-1.8-7-4-7...` |
 | 663 | SVG stroke="white" | `stroke="white"...` |
 
-#### `apps/web/src/features/listing-details/components/PaymentSection.tsx`
+#### `apps/web/src/features/rental-object-details/components/PaymentSection.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 29 | SVG stroke="white" | `<path d="M9 12l2 2 4-4" stroke="white" strokeWidth...` |
+| 30 | SVG stroke="white" | `<path d="M9 12l2 2 4-4" stroke="white" strokeWidth...` |
 
 ---
 
@@ -1298,9 +1472,16 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 9
+**Issues Found:** 15
 
 ### Findings by File
+
+#### `packages/ds/src/blocks/RentalObjectAvailabilityCalendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 1207 | Gap in px | `gap: '1px',...` |
+| 1569 | Gap in px | `gap: '1px',...` |
 
 #### `packages/ds/src/blocks/booking-engine/styles.ts`
 
@@ -1316,25 +1497,39 @@
 |------|-------|--------|
 | 475 | Gap in px | `gap: '4px',...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/BookingWidgetPlacement.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 677 | Gap in px | `gap: '1px',...` |
+| 744 | Gap in px | `gap: '1px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewCard.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 65 | Gap in px | `gap: '4px',...` |
-| 161 | Gap in px | `gap: '8px',...` |
-| 218 | Gap in px | `gap: '12px',...` |
+| 66 | Gap in px | `gap: '4px',...` |
+| 163 | Gap in px | `gap: '8px',...` |
+| 220 | Gap in px | `gap: '12px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewForm.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 52 | Gap in px | `gap: '8px',...` |
+| 53 | Gap in px | `gap: '8px',...` |
+
+#### `apps/web/src/pages/RentalObjectsPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Gap in px | `<div style={{ display: 'flex', gap: '8px', marginB...` |
+
+#### `apps/web/src/pages/login.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 300 | Gap in px | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 328 | Gap in px | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 355 | Gap in px | `<div style={{ display: 'flex', gap: '8px', justify...` |
 
 ---
 
@@ -1342,7 +1537,7 @@
 
 **Severity:** LOW
 **Recommendation:** Use standard icon sizes: 12, 14, 16, 18, 20, 22, 24, 32
-**Issues Found:** 11
+**Issues Found:** 14
 
 ### Findings by File
 
@@ -1395,17 +1590,25 @@
 |------|-------|--------|
 | 199 | Non-standard icon size | `<CalendarIcon size={40} />...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/BookingWidgetPlacement.tsx`
+#### `apps/web/src/features/rental-object-details/components/RecurringResultSummary.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 878 | Non-standard icon size | `<CheckCircleIcon size={40} />...` |
+| 246 | Non-standard icon size | `icon: <CheckCircleIcon size={40} />,...` |
+| 255 | Non-standard icon size | `icon: <AlertTriangleIcon size={40} />,...` |
+| 264 | Non-standard icon size | `icon: <XCircleIcon size={40} />,...` |
 
-#### `apps/web/src/features/listing-details/components/Sidebar/components/BookingConfirmationStep.tsx`
+#### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 154 | Non-standard icon size | `<CheckCircleIcon size={10} />...` |
+| 949 | Non-standard icon size | `<CheckCircleIcon size={40} />...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 304 | Non-standard icon size | `<CheckCircleIcon size={10} />...` |
 
 ---
 
@@ -1422,24 +1625,24 @@
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 99 hardcoded colors issues
-- [ ] Fix 32 hardcoded spacing issues
-- [ ] Fix 9 hardcoded gap issues
+- [ ] Fix 108 hardcoded colors issues
+- [ ] Fix 42 hardcoded spacing issues
+- [ ] Fix 15 hardcoded gap issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 1 hardcoded font family issues
 - [ ] Fix 13 hardcoded box shadow issues
-- [ ] Fix 29 hardcoded typography issues
-- [ ] Fix 2 hardcoded border radius issues
-- [ ] Fix 66 raw html layouts in apps issues
+- [ ] Fix 33 hardcoded typography issues
+- [ ] Fix 11 hardcoded border radius issues
+- [ ] Fix 73 raw html layouts in apps issues
 - [ ] Fix 2 touch target size issues
 
 ### Priority 3 (Low Severity / Acceptable)
 - [ ] Review 12 hardcoded transition duration issues
 - [ ] Review 1 hardcoded opacity issues
-- [ ] Review 280 hardcoded dimensions issues
+- [ ] Review 320 hardcoded dimensions issues
 - [ ] Review 9 svg hardcoded colors issues
-- [ ] Review 11 inconsistent icon size issues
+- [ ] Review 14 inconsistent icon size issues
 
 ---
 

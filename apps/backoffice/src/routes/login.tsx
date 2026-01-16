@@ -19,10 +19,10 @@ import {
   ShieldCheckIcon,
   KeyIcon,
   Dialog,
-  Card,
-  Heading,
-  Paragraph,
+  Textfield,
   Button,
+  Alert,
+  Stack,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
@@ -61,35 +61,15 @@ export function LoginPage(): React.ReactElement {
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
-  // Demo account selector state
+  // Demo login form state
   const [showDemoDialog, setShowDemoDialog] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-
-  // Demo accounts configuration
-  const demoAccounts = [
-    {
-      token: 'admin-demo-2026',
-      name: t('auth.demoAccount.adminName'),
-      email: t('auth.demoAccount.adminEmail'),
-      role: t('auth.demoAccount.adminRole'),
-      description: t('auth.demoAccount.adminDesc'),
-    },
-    {
-      token: 'user-demo-2026',
-      name: t('auth.demoAccount.userName'),
-      email: t('auth.demoAccount.userEmail'),
-      role: t('auth.demoAccount.userRole'),
-      description: t('auth.demoAccount.userDesc'),
-    },
-    {
-      token: 'org-demo-2026',
-      name: t('auth.demoAccount.orgName'),
-      email: t('auth.demoAccount.orgEmail'),
-      role: t('auth.demoAccount.orgRole'),
-      description: t('auth.demoAccount.orgDesc'),
-    },
-  ];
+  const [demoForm, setDemoForm] = useState({
+    name: '',
+    email: '',
+    token: '',
+  });
 
   // Check for auth callback params (returned from ID-porten/BankID)
   const authSuccess = searchParams.get('auth_success') === 'true';
@@ -227,23 +207,32 @@ export function LoginPage(): React.ReactElement {
   ];
 
   /**
-   * Open demo account selector dialog
+   * Open demo login form dialog
    */
   const handleDemoLogin = () => {
     setShowDemoDialog(true);
     setLoginError(null);
+    setDemoForm({ name: '', email: '', token: '' });
   };
 
   /**
-   * Handle demo account selection and login
+   * Handle demo form submission
    */
-  const handleSelectDemoAccount = async (token: string) => {
+  const handleDemoFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all fields
+    if (!demoForm.name.trim() || !demoForm.email.trim() || !demoForm.token.trim()) {
+      setLoginError(t('auth.demoForm.allFieldsRequired'));
+      return;
+    }
+
     setIsLoggingIn(true);
     setLoginError(null);
 
     try {
       // Call the auth service to validate the demo token
-      const response = await authService.loginWithDemoToken(token);
+      const response = await authService.loginWithDemoToken(demoForm.token.trim());
 
       if (response.data?.user) {
         // Token is valid - store user session
@@ -282,23 +271,14 @@ export function LoginPage(): React.ReactElement {
       copyright={t('auth.copyright')}
     >
       {accessDeniedError && (
-        <div
-          style={{
-            padding: '16px',
-            marginBottom: '24px',
-            backgroundColor: '#fef2f2',
-            border: '1px solid #fecaca',
-            borderRadius: '8px',
-            color: '#991b1b',
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+        <Alert variant="error" style={{ marginBottom: 24 }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>
             {t('auth.noAccess')}
           </div>
-          <div style={{ fontSize: '14px' }}>
+          <div>
             {accessDeniedError}
           </div>
-        </div>
+        </Alert>
       )}
       <LoginOption
         icon={<IdPortenIcon />}
@@ -332,74 +312,64 @@ export function LoginPage(): React.ReactElement {
       <Dialog
         open={showDemoDialog}
         onClose={() => setShowDemoDialog(false)}
-        title={t('auth.demoAccount.selectTitle')}
-        description={t('auth.demoAccount.selectDescription')}
+        title={t('auth.demoForm.title')}
+        description={t('auth.demoForm.description')}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {loginError && (
-            <div
-              style={{
-                padding: '12px',
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
-                borderRadius: '8px',
-                color: '#991b1b',
-                fontSize: '14px',
-              }}
-            >
-              {loginError}
-            </div>
-          )}
+        <form onSubmit={handleDemoFormSubmit}>
+          <Stack direction="column" gap={16}>
+            {loginError && (
+              <Alert variant="error">
+                {loginError}
+              </Alert>
+            )}
 
-          {demoAccounts.map((account) => (
-            <Card
-              key={account.token}
-              style={{
-                padding: '16px',
-                cursor: isLoggingIn ? 'not-allowed' : 'pointer',
-                opacity: isLoggingIn ? 0.6 : 1,
-                border: '1px solid #e5e7eb',
-                transition: 'all 0.2s',
-              }}
-              onClick={() => !isLoggingIn && handleSelectDemoAccount(account.token)}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <Heading level={3} size="xs" style={{ margin: 0 }}>
-                  {account.name}
-                </Heading>
-                <Paragraph size="sm" style={{ margin: 0, color: '#6b7280' }}>
-                  {account.email}
-                </Paragraph>
-                <div
-                  style={{
-                    padding: '4px 8px',
-                    backgroundColor: '#eff6ff',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: '#1e40af',
-                    width: 'fit-content',
-                  }}
-                >
-                  {account.role}
-                </div>
-                <Paragraph size="sm" style={{ margin: 0, color: '#6b7280' }}>
-                  {account.description}
-                </Paragraph>
-              </div>
-            </Card>
-          ))}
-
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px' }}>
-            <Button
-              variant="secondary"
-              onClick={() => setShowDemoDialog(false)}
+            <Textfield
+              label={t('auth.demoForm.name')}
+              value={demoForm.name}
+              onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
+              placeholder={t('auth.demoForm.namePlaceholder')}
               disabled={isLoggingIn}
-            >
-              {t('common.cancel')}
-            </Button>
-          </div>
-        </div>
+              required
+            />
+
+            <Textfield
+              label={t('auth.demoForm.email')}
+              type="email"
+              value={demoForm.email}
+              onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
+              placeholder={t('auth.demoForm.emailPlaceholder')}
+              disabled={isLoggingIn}
+              required
+            />
+
+            <Textfield
+              label={t('auth.demoForm.token')}
+              value={demoForm.token}
+              onChange={(e) => setDemoForm({ ...demoForm, token: e.target.value })}
+              placeholder={t('auth.demoForm.tokenPlaceholder')}
+              disabled={isLoggingIn}
+              required
+            />
+
+            <Stack direction="horizontal" gap={8} justify="end" style={{ marginTop: 8 }}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setShowDemoDialog(false)}
+                disabled={isLoggingIn}
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? t('common.loading') : t('auth.login')}
+              </Button>
+            </Stack>
+          </Stack>
+        </form>
       </Dialog>
     </LoginLayout>
   );

@@ -18,6 +18,8 @@ import {
   ShieldIcon,
 } from '@xala/ds';
 import { useAuth, type TenantAdminRole } from '../../hooks/useAuth';
+import { useT } from '@xala/i18n';
+import styles from './Sidebar.module.css';
 
 interface NavItem {
   name: string;
@@ -49,102 +51,24 @@ function SidebarNavItem({ item }: { item: NavItem }) {
     <NavLink
       to={item.href}
       end={item.href === '/'}
-      className="sidebar-nav-item"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--ds-spacing-4)',
-        padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
-        borderRadius: 'var(--ds-border-radius-lg)',
-        textDecoration: 'none',
-        position: 'relative',
-        backgroundColor: isActive ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
-        borderLeft: isActive
-          ? '3px solid var(--ds-color-accent-base-default)'
-          : '3px solid transparent',
-        transition: 'all 0.15s ease',
-      }}
+      className={`${styles.sidebarNavItem} ${isActive ? styles.active : ''}`}
     >
-      {/* Icon with background */}
-      <div
-        className="sidebar-nav-icon"
-        style={{
-          width: '48px',
-          height: '48px',
-          borderRadius: 'var(--ds-border-radius-md)',
-          backgroundColor: isActive
-            ? 'var(--ds-color-accent-surface-default)'
-            : 'var(--ds-color-neutral-surface-hover)',
-          color: isActive
-            ? 'var(--ds-color-accent-text-default)'
-            : 'var(--ds-color-neutral-text-default)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          transition: 'all 0.15s ease',
-        }}
-      >
-        {item.icon}
-      </div>
+      <div className={styles.sidebarNavIcon}>{item.icon}</div>
 
-      {/* Text content */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <Paragraph
-          data-size="sm"
-          style={{
-            margin: 0,
-            fontWeight: isActive
-              ? 'var(--ds-font-weight-semibold)'
-              : 'var(--ds-font-weight-medium)',
-            color: isActive
-              ? 'var(--ds-color-accent-text-default)'
-              : 'var(--ds-color-neutral-text-default)',
-          }}
-        >
+      <div className={styles.sidebarNavTextContent}>
+        <Paragraph data-size="sm" className={styles.sidebarNavName}>
           {item.name}
         </Paragraph>
-        <Paragraph
-          data-size="xs"
-          style={{
-            margin: 0,
-            marginTop: '2px',
-            color: 'var(--ds-color-neutral-text-subtle)',
-          }}
-        >
+        <Paragraph data-size="xs" className={styles.sidebarNavDescription}>
           {item.description}
         </Paragraph>
       </div>
 
-      {/* Badge or Arrow */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+      <div className={styles.sidebarNavBadgeArrow}>
         {item.badge && item.badge > 0 && (
-          <div
-            style={{
-              minWidth: '32px',
-              height: '32px',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-              color: 'var(--ds-color-neutral-text-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 'var(--ds-font-size-sm)',
-              fontWeight: 'var(--ds-font-weight-medium)',
-              padding: '0 var(--ds-spacing-3)',
-            }}
-          >
-            {item.badge}
-          </div>
+          <div className={styles.sidebarNavBadge}>{item.badge}</div>
         )}
-        <div
-          style={{
-            color: isActive
-              ? 'var(--ds-color-accent-text-default)'
-              : 'var(--ds-color-neutral-text-subtle)',
-            opacity: isActive ? 1 : 0.5,
-          }}
-        >
+        <div className={styles.sidebarNavArrow}>
           <ArrowRightIcon />
         </div>
       </div>
@@ -154,31 +78,32 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 
 export function Sidebar() {
   const { user, isTenantAdmin } = useAuth();
+  const t = useT();
 
   const navSections: NavSection[] = [
     {
       items: [
         {
-          name: 'Dashboard',
-          description: 'Tenant oversikt',
+          name: t('tenantAdmin.nav.dashboard'),
+          description: t('tenantAdmin.nav.dashboardDesc'),
           href: '/',
           icon: <HomeIcon />,
         },
       ],
     },
     {
-      title: 'Administrasjon',
+      title: t('tenantAdmin.nav.administration'),
       items: [
         {
-          name: 'Brukere',
-          description: 'Administrer brukere',
+          name: t('tenantAdmin.nav.users'),
+          description: t('tenantAdmin.nav.usersDesc'),
           href: '/users',
           icon: <UsersIcon />,
           roles: ['TENANT_ADMIN'],
         },
         {
-          name: 'Feature Flags',
-          description: 'Organisasjonsfunksjoner',
+          name: t('tenantAdmin.nav.featureFlags'),
+          description: t('tenantAdmin.nav.featureFlagsDesc'),
           href: '/feature-flags',
           icon: <ShieldIcon />,
           roles: ['TENANT_ADMIN', 'TENANT_TECH_ADMIN'],
@@ -186,11 +111,11 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Utseende',
+      title: t('tenantAdmin.nav.appearance'),
       items: [
         {
-          name: 'Branding',
-          description: 'Logo og farger',
+          name: t('tenantAdmin.nav.branding'),
+          description: t('tenantAdmin.nav.brandingDesc'),
           href: '/branding',
           icon: <SparklesIcon />,
           roles: ['TENANT_ADMIN', 'TENANT_TECH_ADMIN'],
@@ -198,11 +123,11 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Abonnement',
+      title: t('tenantAdmin.nav.subscriptionSection'),
       items: [
         {
-          name: 'Plan & Fakturering',
-          description: 'Abonnementsdetaljer',
+          name: t('tenantAdmin.nav.planAndBilling'),
+          description: t('tenantAdmin.nav.planAndBillingDesc'),
           href: '/subscription',
           icon: <ChartIcon />,
           roles: ['TENANT_ADMIN', 'TENANT_BILLING_ADMIN'],
@@ -210,18 +135,18 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'System',
+      title: t('tenantAdmin.nav.system'),
       items: [
         {
-          name: 'Audit Log',
-          description: 'Aktivitetslogg',
+          name: t('tenantAdmin.nav.auditLog'),
+          description: t('tenantAdmin.nav.auditLogDesc'),
           href: '/audit',
           icon: <ClockIcon />,
           roles: ['TENANT_ADMIN'],
         },
         {
-          name: 'Innstillinger',
-          description: 'Tenant-konfigurasjon',
+          name: t('tenantAdmin.nav.settings'),
+          description: t('tenantAdmin.nav.settingsDesc'),
           href: '/settings',
           icon: <SettingsIcon />,
           roles: ['TENANT_ADMIN'],
@@ -255,103 +180,39 @@ export function Sidebar() {
   const getRoleDisplayName = (role: string | undefined): string => {
     switch (role) {
       case 'TENANT_ADMIN':
-        return 'Tenant Admin';
+        return t('tenantAdmin.roles.tenantAdmin');
       case 'TENANT_BILLING_ADMIN':
-        return 'Billing Admin';
+        return t('tenantAdmin.roles.billingAdmin');
       case 'TENANT_TECH_ADMIN':
-        return 'Tech Admin';
+        return t('tenantAdmin.roles.techAdmin');
       default:
-        return 'Admin';
+        return t('tenantAdmin.roles.admin');
     }
   };
 
   return (
-    <aside
-      style={{
-        width: '360px',
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
+    <aside className={styles.sidebar}>
       {/* Logo Section */}
-      <div
-        style={{
-          height: '72px',
-          padding: '0 var(--ds-spacing-6)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-          <img
-            src="/logo.svg"
-            alt="Digilist"
-            style={{
-              height: '40px',
-              width: 'auto',
-            }}
-          />
+      <div className={styles.logoSection}>
+        <div className={styles.brandContainer}>
+          <img src="/logo.svg" alt="Digilist" className={styles.logoImage} />
           <div>
-            <div
-              style={{
-                fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 'var(--ds-font-weight-bold)',
-                color: 'var(--ds-color-accent-text-default)',
-                lineHeight: 'var(--ds-font-line-height-sm)',
-                letterSpacing: 'var(--ds-font-letter-spacing-sm)',
-              }}
-            >
-              {user?.tenantName || 'DIGILIST'}
-            </div>
-            <div
-              style={{
-                fontSize: 'var(--ds-font-size-2xs)',
-                color: 'var(--ds-color-neutral-text-subtle)',
-                letterSpacing: 'var(--ds-font-letter-spacing-md)',
-                marginTop: '2px',
-                textTransform: 'uppercase',
-              }}
-            >
-              Tenant Admin
-            </div>
+            <div className={styles.brandName}>{user?.tenantName || 'DIGILIST'}</div>
+            <div className={styles.brandTagline}>Tenant Admin</div>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>
+      <nav className={styles.navigation}>
         {filteredSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} style={{ marginBottom: 'var(--ds-spacing-6)' }}>
+          <div key={sectionIndex} className={styles.navSection}>
             {section.title && (
-              <Paragraph
-                data-size="xs"
-                style={{
-                  margin: 0,
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 'var(--ds-font-letter-spacing-md)',
-                  padding: 'var(--ds-spacing-2) var(--ds-spacing-5)',
-                  marginBottom: 'var(--ds-spacing-2)',
-                }}
-              >
+              <Paragraph data-size="xs" className={styles.navSectionTitle}>
                 {section.title}
               </Paragraph>
             )}
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--ds-spacing-2)',
-              }}
-            >
+            <ul className={styles.navList}>
               {section.items.map((item) => (
                 <li key={item.href}>
                   <SidebarNavItem item={item} />
@@ -364,69 +225,20 @@ export function Sidebar() {
 
       {/* User Info Section */}
       {user && (
-        <div
-          style={{
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
-            borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-            backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
-            <div
-              style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: 'var(--ds-border-radius-full)',
-                backgroundColor: 'var(--ds-color-accent-surface-default)',
-                color: 'var(--ds-color-accent-text-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 'var(--ds-font-weight-semibold)',
-                flexShrink: 0,
-              }}
-            >
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <Paragraph
-                data-size="sm"
-                style={{
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  margin: 0,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+        <div className={styles.userInfoSection}>
+          <div className={styles.userAvatarContainer}>
+            <div className={styles.userAvatar}>{user.name.charAt(0).toUpperCase()}</div>
+            <div className={styles.userDetails}>
+              <Paragraph data-size="sm" className={styles.userName}>
                 {user.name}
               </Paragraph>
-              <Paragraph
-                data-size="xs"
-                style={{
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  margin: 0,
-                  marginTop: '2px',
-                }}
-              >
+              <Paragraph data-size="xs" className={styles.userRole}>
                 {getRoleDisplayName(user.role)}
               </Paragraph>
             </div>
           </div>
         </div>
       )}
-
-      {/* CSS for hover states */}
-      <style>{`
-        .sidebar-nav-item:hover {
-          background-color: var(--ds-color-neutral-surface-hover) !important;
-        }
-        .sidebar-nav-item:hover .sidebar-nav-icon {
-          background-color: var(--ds-color-accent-surface-default) !important;
-          color: var(--ds-color-accent-text-default) !important;
-        }
-      `}</style>
     </aside>
   );
 }

@@ -7,7 +7,7 @@
  * - Internal SSO for Digilist employees
  * - Dev login providers for testing different roles
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LoginLayout,
@@ -17,13 +17,30 @@ import {
   ShieldCheckIcon,
   BuildingIcon,
   SettingsIcon,
+  KeyIcon,
+  Dialog,
+  Textfield,
+  Button,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
+import { authService } from '@digilist/client-sdk';
 
 export function LoginPage(): React.ReactElement {
   const { isAuthenticated, isLoading, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const t = useT();
+
+  // Demo login form state
+  const [showDemoDialog, setShowDemoDialog] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [demoForm, setDemoForm] = useState({
+    name: '',
+    email: '',
+    token: '',
+  });
 
   // Get the intended destination from location state
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
@@ -47,6 +64,56 @@ export function LoginPage(): React.ReactElement {
   if (isAuthenticated) {
     return <></>;
   }
+
+  /**
+   * Open demo login form dialog
+   */
+  const handleDemoLogin = () => {
+    setShowDemoDialog(true);
+    setLoginError(null);
+    setDemoForm({ name: '', email: '', token: '' });
+  };
+
+  /**
+   * Handle demo form submission
+   */
+  const handleDemoFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all fields
+    if (!demoForm.name.trim() || !demoForm.email.trim() || !demoForm.token.trim()) {
+      setLoginError(t('auth.demoForm.allFieldsRequired'));
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setLoginError(null);
+
+    try {
+      // Call the auth service to validate the demo token
+      const response = await authService.loginWithDemoToken(demoForm.token.trim());
+
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('saas_admin_user', JSON.stringify(response.data.user));
+
+        // Close dialog
+        setShowDemoDialog(false);
+
+        // Redirect to home
+        navigate('/', { replace: true });
+        // Reload to pick up the new auth state
+        window.location.reload();
+      } else {
+        setLoginError(t('auth.invalidToken'));
+      }
+    } catch (error) {
+      console.error('[DEMO LOGIN] Token validation failed:', error);
+      setLoginError(t('auth.loginFailed'));
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   const features = [
     {
@@ -100,6 +167,82 @@ export function LoginPage(): React.ReactElement {
         description="For Digilist-ansatte med Microsoft-konto"
         onClick={() => login('internal')}
       />
+      <LoginOption
+        icon={<KeyIcon />}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+        onClick={handleDemoLogin}
+      />
+
+      <Dialog
+        open={showDemoDialog}
+        onClose={() => setShowDemoDialog(false)}
+        title={t('auth.demoForm.title')}
+        description={t('auth.demoForm.description')}
+      >
+        <form onSubmit={handleDemoFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {loginError && (
+            <div
+              style={{
+                padding: '12px',
+                backgroundColor: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                color: '#991b1b',
+                fontSize: '14px',
+              }}
+            >
+              {loginError}
+            </div>
+          )}
+
+          <Textfield
+            label={t('auth.demoForm.name')}
+            value={demoForm.name}
+            onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
+            placeholder={t('auth.demoForm.namePlaceholder')}
+            disabled={isLoggingIn}
+            required
+          />
+
+          <Textfield
+            label={t('auth.demoForm.email')}
+            type="email"
+            value={demoForm.email}
+            onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
+            placeholder={t('auth.demoForm.emailPlaceholder')}
+            disabled={isLoggingIn}
+            required
+          />
+
+          <Textfield
+            label={t('auth.demoForm.token')}
+            value={demoForm.token}
+            onChange={(e) => setDemoForm({ ...demoForm, token: e.target.value })}
+            placeholder={t('auth.demoForm.tokenPlaceholder')}
+            disabled={isLoggingIn}
+            required
+          />
+
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px' }}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowDemoDialog(false)}
+              disabled={isLoggingIn}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? t('common.loading') : t('auth.login')}
+            </Button>
+          </div>
+        </form>
+      </Dialog>
     </LoginLayout>
   );
 }

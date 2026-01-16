@@ -27,10 +27,10 @@ import { useAuth } from '../../hooks/useAuth';
 const MOBILE_BREAKPOINT = 768;
 
 const COLOR_PRESETS = [
-  { name: 'Blå', primary: '#2563eb', accent: '#3b82f6' },
-  { name: 'Grønn', primary: '#16a34a', accent: '#22c55e' },
-  { name: 'Lilla', primary: '#7c3aed', accent: '#8b5cf6' },
-  { name: 'Oransje', primary: '#ea580c', accent: '#f97316' },
+  { key: 'blue', primary: '#2563eb', accent: '#3b82f6' },
+  { key: 'green', primary: '#16a34a', accent: '#22c55e' },
+  { key: 'purple', primary: '#7c3aed', accent: '#8b5cf6' },
+  { key: 'orange', primary: '#ea580c', accent: '#f97316' },
 ];
 
 export function BrandingSettingsPage(): React.ReactElement {
@@ -176,7 +176,7 @@ export function BrandingSettingsPage(): React.ReactElement {
         >
           {COLOR_PRESETS.map(preset => (
             <button
-              key={preset.name}
+              key={preset.key}
               type="button"
               onClick={() => applyPreset(preset)}
               style={{
@@ -201,7 +201,7 @@ export function BrandingSettingsPage(): React.ReactElement {
                   backgroundColor: preset.primary,
                 }}
               />
-              {preset.name}
+              {t(`tenantAdmin.branding.color.${preset.key}`, { defaultValue: preset.key })}
             </button>
           ))}
         </div>

@@ -30,12 +30,7 @@ import {
 } from '@digilist/client-sdk/hooks';
 import type { Plan, PlanStatus, BillingPeriod } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
-
-const statusLabels: Record<PlanStatus, string> = {
-  active: 'Aktiv',
-  inactive: 'Inaktiv',
-  deprecated: 'Utgått',
-};
+import styles from './PlansListPage.module.css';
 
 const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {
   active: 'success',
@@ -43,15 +38,21 @@ const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {
   deprecated: 'danger',
 };
 
-const billingPeriodLabels: Record<BillingPeriod, string> = {
-  monthly: 'Månedlig',
-  yearly: 'Årlig',
-  lifetime: 'Livstid',
-};
-
 export function PlansListPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const t = useT();
+
+  // Localized labels using i18n
+  const statusLabels: Record<PlanStatus, string> = {
+    active: t('saasAdmin.tenants.statusActive'),
+    inactive: t('status.inactive'),
+    deprecated: t('saasAdmin.plans.deprecated'),
+  };
+
+  const billingPeriodLabels: Record<BillingPeriod, string> = {
+    monthly: t('saasAdmin.plans.monthly'),
+    yearly: t('saasAdmin.plans.yearly'),
+    lifetime: t('saasAdmin.plans.lifetime'),
+  };
   const navigate = useNavigate();
 
   // State
@@ -82,7 +83,7 @@ export function PlansListPage() {
   // Handlers
   const handleStatusChange = async (plan: Plan, newStatus: PlanStatus) => {
     if (newStatus === 'deprecated') {
-      if (!confirm(`Er du sikker på at du vil merke ${plan.name} som utgått? Dette kan ikke reverseres.`)) {
+      if (!confirm(t('saasAdmin.plans.confirmDeprecate'))) {
         return;
       }
     }
@@ -113,34 +114,31 @@ export function PlansListPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+    <div className={styles.page}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className={styles.header}>
         <div>
           <Heading level={2} data-size="md">
-            Abonnementsplaner
+            {t('saasAdmin.plans.title')}
           </Heading>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
-          >
-            Administrer abonnementsplaner, priser og rettigheter
+          <Paragraph data-size="sm" className={styles.subtitle}>
+            {t('saasAdmin.plans.subtitle')}
           </Paragraph>
         </div>
         <Link to="/plans/new">
           <Button type="button">
             <PlusIcon />
-            Ny plan
+            {t('saasAdmin.plans.createPlan')}
           </Button>
         </Link>
       </div>
 
       {/* Filters */}
       <Card>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
+        <div className={styles.filters}>
+          <div className={styles.searchWrapper}>
             <HeaderSearch
-              placeholder="Søk etter plan..."
+              placeholder={t('saasAdmin.plans.searchPlaceholder')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -149,21 +147,21 @@ export function PlansListPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
+              {t('common.status')}: {statusFilter === 'all' ? t('common.all') : statusLabels[statusFilter]}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('common.all')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('saasAdmin.tenants.statusActive')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('status.inactive')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>Utgått</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>{t('saasAdmin.plans.deprecated')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -174,31 +172,25 @@ export function PlansListPage() {
       {/* Results */}
       <Card>
         {isLoading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+          <div className={styles.loadingContainer}>
+            <Spinner data-size="lg" aria-label={t('common.loading')} />
           </div>
         ) : filteredPlans.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <ChartIcon
-              style={{
-                fontSize: 'var(--ds-font-size-heading-lg)',
-                color: 'var(--ds-color-neutral-text-subtle)',
-                marginBottom: 'var(--ds-spacing-3)',
-              }}
-            />
-            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Ingen planer funnet
+          <div className={styles.emptyState}>
+            <ChartIcon className={styles.emptyIcon} />
+            <Heading level={3} data-size="sm" className={styles.emptyTitle}>
+              {t('saasAdmin.plans.noPlans')}
             </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph data-size="sm" className={styles.emptyDescription}>
               {searchQuery || statusFilter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
-                : 'Opprett din første abonnementsplan for å komme i gang'}
+                ? t('common.tryDifferentSearch')
+                : t('saasAdmin.plans.createFirstPlan')}
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && (
               <Link to="/plans/new">
-                <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
+                <Button data-size="sm" className={styles.emptyAction} type="button">
                   <PlusIcon />
-                  Ny plan
+                  {t('saasAdmin.plans.createPlan')}
                 </Button>
               </Link>
             )}
@@ -207,43 +199,35 @@ export function PlansListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Pris</Table.HeaderCell>
-                <Table.HeaderCell>Fakturering</Table.HeaderCell>
-                <Table.HeaderCell>Prøveperiode</Table.HeaderCell>
-                <Table.HeaderCell>Seter</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Synlighet</Table.HeaderCell>
-                <Table.HeaderCell>Opprettet</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.plans.price')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.plans.interval')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.plans.trialPeriod')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.plans.limits')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.plans.visibility')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
+                <Table.HeaderCell className={styles.actionsCell}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
               {filteredPlans.map((plan) => (
                 <Table.Row
                   key={plan.id}
-                  style={{ cursor: 'pointer' }}
+                  className={styles.tableRow}
                   onClick={() => handleViewDetail(plan)}
                 >
                   <Table.Cell>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                      <ChartIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
+                    <div className={styles.planCell}>
+                      <ChartIcon className={styles.planIcon} />
                       <div>
-                        <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{plan.name}</div>
-                        <div
-                          style={{
-                            fontFamily: 'var(--ds-font-family-monospace)',
-                            fontSize: 'var(--ds-font-size-xs)',
-                            color: 'var(--ds-color-neutral-text-subtle)',
-                          }}
-                        >
-                          {plan.slug}
-                        </div>
+                        <div className={styles.planName}>{plan.name}</div>
+                        <div className={styles.planSlug}>{plan.slug}</div>
                       </div>
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    <div className={styles.priceCell}>
                       {formatPrice(plan.basePrice, plan.currency)}
                     </div>
                   </Table.Cell>
@@ -252,16 +236,16 @@ export function PlansListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     {plan.trialDays > 0 ? (
-                      <span>{plan.trialDays} dager</span>
+                      <span>{plan.trialDays} {t('saasAdmin.plans.days')}</span>
                     ) : (
-                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>—</span>
+                      <span className={styles.seatsSubtle}>—</span>
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                      <div>Brukere: {plan.seatLimits.maxUsers}</div>
-                      <div style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Org: {plan.seatLimits.maxOrganizations}
+                    <div className={styles.seatsCell}>
+                      <div>{t('saasAdmin.plans.users')}: {plan.seatLimits.maxUsers}</div>
+                      <div className={styles.seatsSubtle}>
+                        {t('saasAdmin.plans.orgs')}: {plan.seatLimits.maxOrganizations}
                       </div>
                     </div>
                   </Table.Cell>
@@ -270,13 +254,13 @@ export function PlansListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     {plan.isPublic ? (
-                      <Badge color="success">Offentlig</Badge>
+                      <Badge color="success">{t('saasAdmin.plans.public')}</Badge>
                     ) : (
-                      <Badge color="neutral">Intern</Badge>
+                      <Badge color="neutral">{t('saasAdmin.plans.internal')}</Badge>
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDate(plan.createdAt)}</div>
+                    <div className={styles.dateCell}>{formatDate(plan.createdAt)}</div>
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown.TriggerContext>
@@ -288,13 +272,13 @@ export function PlansListPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleViewDetail(plan)}>
                               <EyeIcon />
-                              Vis detaljer
+                              {t('saasAdmin.tenants.viewDetails')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/plans/${plan.id}/edit`)}>
                               <EditIcon />
-                              Rediger
+                              {t('common.edit')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           {plan.status === 'active' && (
@@ -304,7 +288,7 @@ export function PlansListPage() {
                                 data-color="warning"
                               >
                                 <XCircleIcon />
-                                Deaktiver
+                                {t('saasAdmin.plans.deactivate')}
                               </Dropdown.Button>
                             </Dropdown.Item>
                           )}
@@ -313,7 +297,7 @@ export function PlansListPage() {
                               <Dropdown.Item>
                                 <Dropdown.Button onClick={() => handleStatusChange(plan, 'active')}>
                                   <PlayIcon />
-                                  Aktiver
+                                  {t('saasAdmin.tenants.activateTenant')}
                                 </Dropdown.Button>
                               </Dropdown.Item>
                               <Dropdown.Item>
@@ -322,7 +306,7 @@ export function PlansListPage() {
                                   data-color="danger"
                                 >
                                   <XCircleIcon />
-                                  Merk som utgått
+                                  {t('saasAdmin.plans.markDeprecated')}
                                 </Dropdown.Button>
                               </Dropdown.Item>
                             </>
@@ -340,20 +324,12 @@ export function PlansListPage() {
 
       {/* Pagination info */}
       {plansData?.meta && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            color: 'var(--ds-color-neutral-text-subtle)',
-            fontSize: 'var(--ds-font-size-sm)',
-          }}
-        >
+        <div className={styles.pagination}>
           <span>
-            Viser {filteredPlans.length} av {plansData.meta.total} planer
+            {t('common.showing')} {filteredPlans.length} {t('common.of')} {plansData.meta.total} {t('saasAdmin.nav.plans').toLowerCase()}
           </span>
           <span>
-            Side {plansData.meta.page} av {plansData.meta.totalPages}
+            {t('common.page')} {plansData.meta.page} {t('common.of')} {plansData.meta.totalPages}
           </span>
         </div>
       )}
