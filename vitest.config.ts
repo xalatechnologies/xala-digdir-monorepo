@@ -9,6 +9,7 @@ export default defineConfig({
       '@xala/auth': path.resolve(__dirname, 'packages/auth/src'),
       '@xala/ds': path.resolve(__dirname, 'packages/ds/src'),
       '@xala/i18n': path.resolve(__dirname, 'packages/i18n/src'),
+      '@digilist/client-sdk': path.resolve(__dirname, 'packages/client-sdk/src'),
     },
   },
   test: {
