@@ -1,280 +1,440 @@
 /**
  * GDPR Service
- * Business logic for GDPR consent management and data subject rights
+ * Business logic for GDPR data subject rights management
  */
+import { Injectable, Inject } from '../../core/decorators';
+import { GdprRepository } from './gdpr.repository';
+import { UserRepository } from '../user/user.repository';
+import { validate } from '../../core/validation/zod-pipe';
+import { NotFoundError, ConflictError, BadRequestError } from '../../core/errors/problem-details';
+import { getAuditService } from '../../core/audit/audit.service';
+import {
+  CreateGdprRequestSchema,
+  UpdateGdprRequestStatusSchema,
+  GdprRequestQuerySchema,
+  type CreateGdprRequestDTO,
+  type UpdateGdprRequestStatusDTO,
+  type GdprRequestQueryParams,
+  type GdprRequest,
+} from '../../schemas/gdpr.schema';
+import type { PaginatedResult } from '../../database/base.repository';
 
-import type { GdprRepository } from './gdpr.repository';
-import type {
-  ConsentType,
-  UserConsent,
-  ConsentAuditLogEntry,
-  DataSubjectRequest,
-} from '../../database/schema';
-
-// =============================================================================
-// DTOs
-// =============================================================================
-
-export interface ConsentTypeDTO {
-  id: string;
-  code: string;
-  name: string;
-  description: string | null;
-  content: Record<string, { title: string; content: string }>;
-  version: string;
-  isRequired: boolean;
-  externalUrl: string | null;
-}
-
-export interface UserConsentStatusDTO {
-  consentTypeId: string;
-  consentTypeCode: string;
-  name: string;
-  isRequired: boolean;
-  granted: boolean;
-  version: string;
-  grantedAt: string | null;
-  currentVersion: string;
-  needsUpdate: boolean;
-}
-
-export interface GrantConsentDTO {
-  consentTypeId: string;
-  granted: boolean;
-  source: 'web' | 'minside' | 'backoffice' | 'app';
-  ipAddress?: string;
-  userAgent?: string;
-}
-
-export interface ConsentSummaryDTO {
-  hasAllRequired: boolean;
-  pendingRequired: ConsentTypeDTO[];
-  consents: UserConsentStatusDTO[];
-}
-
-export interface DataSubjectRequestDTO {
-  requestType: 'access' | 'erasure' | 'portability' | 'rectification' | 'restriction' | 'objection';
-  description?: string;
-}
-
-// =============================================================================
-// Service
-// =============================================================================
-
+@Injectable()
 export class GdprService {
-  constructor(private readonly repository: GdprRepository) {}
+  constructor(
+    @Inject('GdprRepository') private readonly repository: GdprRepository,
+    @Inject('UserRepository') private readonly userRepository: UserRepository,
+    @Inject('Adapters') private readonly adapters: any
+  ) {}
 
-  // ==========================================================================
-  // Consent Types
-  // ==========================================================================
-
-  async getConsentTypes(tenantId: string, locale = 'nb'): Promise<ConsentTypeDTO[]> {
-    const types = await this.repository.getConsentTypes(tenantId);
-    return types.map((type) => this.mapConsentTypeToDTO(type, locale));
-  }
-
-  async getRequiredConsentTypes(tenantId: string, locale = 'nb'): Promise<ConsentTypeDTO[]> {
-    const types = await this.repository.getConsentTypes(tenantId);
-    return types
-      .filter((type) => type.isRequired)
-      .map((type) => this.mapConsentTypeToDTO(type, locale));
-  }
-
-  private mapConsentTypeToDTO(type: ConsentType, locale: string): ConsentTypeDTO {
-    const content = (type.content ?? {}) as Record<string, { title: string; content: string }>;
-    return {
-      id: type.id,
-      code: type.code,
-      name: type.name,
-      description: type.description,
-      content,
-      version: type.version,
-      isRequired: type.isRequired,
-      externalUrl: type.externalUrl,
-    };
-  }
-
-  // ==========================================================================
-  // User Consent Management
-  // ==========================================================================
-
-  async getUserConsentSummary(
+  /**
+   * Create a data export request
+   */
+  async createExportRequest(
     tenantId: string,
     userId: string,
-    locale = 'nb'
-  ): Promise<ConsentSummaryDTO> {
-    const types = await this.repository.getConsentTypes(tenantId);
-    const consentStatus = await this.repository.getUserConsentStatus(tenantId, userId);
+    data: CreateGdprRequestDTO
+  ): Promise<GdprRequest> {
+    const validated = validate(CreateGdprRequestSchema, { ...data, requestType: 'export' });
 
-    const consents: UserConsentStatusDTO[] = types.map((type) => {
-      const status = consentStatus.get(type.id);
-      const granted = status?.granted ?? false;
-      const version = status?.version ?? '';
-      const needsUpdate = granted && version !== type.version;
-
-      return {
-        consentTypeId: type.id,
-        consentTypeCode: type.code,
-        name: type.name,
-        isRequired: type.isRequired,
-        granted,
-        version,
-        grantedAt: status?.grantedAt?.toISOString() ?? null,
-        currentVersion: type.version,
-        needsUpdate,
-      };
-    });
-
-    const pendingRequired = types
-      .filter((type) => {
-        if (!type.isRequired) return false;
-        const status = consentStatus.get(type.id);
-        return !status?.granted;
-      })
-      .map((type) => this.mapConsentTypeToDTO(type, locale));
-
-    return {
-      hasAllRequired: pendingRequired.length === 0,
-      pendingRequired,
-      consents,
-    };
-  }
-
-  async grantConsent(
-    tenantId: string,
-    userId: string,
-    dto: GrantConsentDTO
-  ): Promise<UserConsentStatusDTO> {
-    // Get consent type
-    const consentType = await this.repository.getConsentTypeById(dto.consentTypeId);
-    if (!consentType) {
-      throw new Error('Consent type not found');
+    // Check if user exists
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundError(`User with id ${userId} not found`);
     }
 
-    // Get current consent status
-    const currentConsent = await this.repository.getCurrentUserConsent(
-      tenantId,
-      userId,
-      dto.consentTypeId
+    // Check if there's already a pending export request
+    const existingRequests = await this.repository.findByUserId(userId, tenantId);
+    const pendingExport = existingRequests.find(
+      (req: any) => req.requestType === 'export' && req.status === 'pending'
     );
 
-    const previousState = currentConsent?.granted ?? null;
-
-    // Create new consent record (we always create a new record for audit trail)
-    const newConsent = await this.repository.createUserConsent({
-      tenantId,
-      userId,
-      consentTypeId: dto.consentTypeId,
-      granted: dto.granted,
-      consentVersion: consentType.version,
-      source: dto.source,
-      ipAddress: dto.ipAddress ?? null,
-      userAgent: dto.userAgent ?? null,
-      grantedAt: dto.granted ? new Date() : null,
-      revokedAt: !dto.granted ? new Date() : null,
-    });
-
-    // Create audit log entry
-    await this.repository.createAuditLogEntry({
-      tenantId,
-      userId,
-      consentTypeId: dto.consentTypeId,
-      action: dto.granted ? 'granted' : 'revoked',
-      previousState: previousState ?? undefined,
-      newState: dto.granted,
-      consentVersion: consentType.version,
-      source: dto.source,
-      ipAddress: dto.ipAddress ?? null,
-      userAgent: dto.userAgent ?? null,
-    });
-
-    return {
-      consentTypeId: consentType.id,
-      consentTypeCode: consentType.code,
-      name: consentType.name,
-      isRequired: consentType.isRequired,
-      granted: newConsent.granted,
-      version: newConsent.consentVersion,
-      grantedAt: newConsent.grantedAt?.toISOString() ?? null,
-      currentVersion: consentType.version,
-      needsUpdate: false,
-    };
-  }
-
-  async grantMultipleConsents(
-    tenantId: string,
-    userId: string,
-    consents: GrantConsentDTO[]
-  ): Promise<UserConsentStatusDTO[]> {
-    const results: UserConsentStatusDTO[] = [];
-    for (const consent of consents) {
-      const result = await this.grantConsent(tenantId, userId, consent);
-      results.push(result);
+    if (pendingExport) {
+      throw new ConflictError('A pending export request already exists for this user');
     }
-    return results;
-  }
 
-  async hasRequiredConsents(tenantId: string, userId: string): Promise<boolean> {
-    return this.repository.hasRequiredConsents(tenantId, userId);
-  }
+    // Calculate expiry date (30 days from now for GDPR compliance)
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30);
 
-  // ==========================================================================
-  // Consent Audit Log
-  // ==========================================================================
-
-  async getConsentAuditLog(
-    tenantId: string,
-    userId: string,
-    limit = 50
-  ): Promise<ConsentAuditLogEntry[]> {
-    return this.repository.getConsentAuditLog(tenantId, userId, limit);
-  }
-
-  // ==========================================================================
-  // Data Subject Requests
-  // ==========================================================================
-
-  async createDataSubjectRequest(
-    tenantId: string,
-    userId: string,
-    dto: DataSubjectRequestDTO
-  ): Promise<DataSubjectRequest> {
-    // Calculate due date (30 days per GDPR)
-    const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 30);
-
-    return this.repository.createDataSubjectRequest({
+    const request = await this.repository.create({
       tenantId,
       userId,
-      requestType: dto.requestType,
-      description: dto.description ?? null,
+      requestType: validated.requestType,
       status: 'pending',
-      dueDate,
+      expiresAt,
+      metadata: validated.metadata || {},
     });
+
+    this.adapters?.log?.info('GDPR export request created', {
+      id: request.id,
+      tenantId,
+      userId,
+    });
+
+    getAuditService().log({
+      tenantId,
+      userId,
+      action: 'create',
+      resource: 'gdpr_request',
+      resourceId: request.id,
+      metadata: { requestType: 'export' },
+    });
+
+    return request as unknown as GdprRequest;
   }
 
-  async getUserDataSubjectRequests(
+  /**
+   * Create a data deletion request
+   */
+  async createDeletionRequest(
     tenantId: string,
-    userId: string
-  ): Promise<DataSubjectRequest[]> {
-    return this.repository.getDataSubjectRequests(tenantId, userId);
-  }
+    userId: string,
+    data: CreateGdprRequestDTO
+  ): Promise<GdprRequest> {
+    const validated = validate(CreateGdprRequestSchema, { ...data, requestType: 'deletion' });
 
-  async getPendingDataSubjectRequests(tenantId: string): Promise<DataSubjectRequest[]> {
-    return this.repository.getPendingDataSubjectRequests(tenantId);
-  }
+    // Check if user exists
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundError(`User with id ${userId} not found`);
+    }
 
-  async updateDataSubjectRequestStatus(
-    id: string,
-    status: 'processing' | 'completed' | 'rejected',
-    processedBy: string,
-    responseNotes?: string
-  ): Promise<DataSubjectRequest | null> {
-    return this.repository.updateDataSubjectRequest(id, {
-      status,
-      processedBy,
-      responseNotes,
-      completedAt: status === 'completed' ? new Date() : undefined,
+    // Check if there's already a pending deletion request
+    const existingRequests = await this.repository.findByUserId(userId, tenantId);
+    const pendingDeletion = existingRequests.find(
+      (req: any) => req.requestType === 'deletion' && req.status === 'pending'
+    );
+
+    if (pendingDeletion) {
+      throw new ConflictError('A pending deletion request already exists for this user');
+    }
+
+    // Calculate expiry date (30 days from now for GDPR compliance)
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30);
+
+    const request = await this.repository.create({
+      tenantId,
+      userId,
+      requestType: validated.requestType,
+      status: 'pending',
+      expiresAt,
+      metadata: validated.metadata || {},
     });
+
+    this.adapters?.log?.info('GDPR deletion request created', {
+      id: request.id,
+      tenantId,
+      userId,
+    });
+
+    getAuditService().log({
+      tenantId,
+      userId,
+      action: 'create',
+      resource: 'gdpr_request',
+      resourceId: request.id,
+      metadata: { requestType: 'deletion' },
+    });
+
+    return request as unknown as GdprRequest;
+  }
+
+  /**
+   * Process a data export request
+   * Generates JSON export of user data
+   */
+  async processExportRequest(
+    requestId: string,
+    processedBy: string
+  ): Promise<GdprRequest> {
+    const request = await this.findByIdOrFail(requestId);
+
+    if (request.requestType !== 'export') {
+      throw new BadRequestError('Request is not an export request');
+    }
+
+    if (request.status !== 'pending') {
+      throw new BadRequestError(`Request is already ${request.status}`);
+    }
+
+    // Get user data
+    const user = await this.userRepository.findById(request.userId);
+    if (!user) {
+      throw new NotFoundError(`User with id ${request.userId} not found`);
+    }
+
+    // Generate export data (JSON format)
+    const exportData = {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        status: user.status,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        metadata: user.metadata,
+      },
+      exportedAt: new Date().toISOString(),
+      tenantId: request.tenantId,
+    };
+
+    // Update request with export data and mark as completed
+    const updatedRequest = await this.repository.update(requestId, {
+      status: 'completed',
+      processedAt: new Date(),
+      processedBy,
+      metadata: {
+        ...request.metadata,
+        exportData,
+      },
+    });
+
+    this.adapters?.log?.info('GDPR export request processed', {
+      id: requestId,
+      tenantId: request.tenantId,
+      processedBy,
+    });
+
+    getAuditService().log({
+      tenantId: request.tenantId,
+      userId: processedBy,
+      action: 'approve',
+      resource: 'gdpr_request',
+      resourceId: requestId,
+      metadata: { requestType: 'export', status: 'completed' },
+    });
+
+    return updatedRequest as unknown as GdprRequest;
+  }
+
+  /**
+   * Process a data deletion request
+   * Soft deletes the user account
+   */
+  async processDeletionRequest(
+    requestId: string,
+    processedBy: string
+  ): Promise<GdprRequest> {
+    const request = await this.findByIdOrFail(requestId);
+
+    if (request.requestType !== 'deletion') {
+      throw new BadRequestError('Request is not a deletion request');
+    }
+
+    if (request.status !== 'pending') {
+      throw new BadRequestError(`Request is already ${request.status}`);
+    }
+
+    // Soft delete the user
+    const user = await this.userRepository.findById(request.userId);
+    if (!user) {
+      throw new NotFoundError(`User with id ${request.userId} not found`);
+    }
+
+    // Deactivate user account (soft delete)
+    await this.userRepository.deactivate(request.userId);
+
+    // Update request and mark as completed
+    const updatedRequest = await this.repository.update(requestId, {
+      status: 'completed',
+      processedAt: new Date(),
+      processedBy,
+      metadata: {
+        ...request.metadata,
+        deletedAt: new Date().toISOString(),
+      },
+    });
+
+    this.adapters?.log?.info('GDPR deletion request processed', {
+      id: requestId,
+      tenantId: request.tenantId,
+      userId: request.userId,
+      processedBy,
+    });
+
+    getAuditService().log({
+      tenantId: request.tenantId,
+      userId: processedBy,
+      action: 'approve',
+      resource: 'gdpr_request',
+      resourceId: requestId,
+      metadata: { requestType: 'deletion', status: 'completed' },
+    });
+
+    // Audit log the user deletion
+    getAuditService().log({
+      tenantId: request.tenantId,
+      userId: processedBy,
+      action: 'delete',
+      resource: 'user',
+      resourceId: request.userId,
+      metadata: { reason: 'gdpr_deletion_request', requestId },
+      severity: 'warning',
+    });
+
+    return updatedRequest as unknown as GdprRequest;
+  }
+
+  /**
+   * Update request status (approve/reject)
+   */
+  async updateRequestStatus(
+    requestId: string,
+    data: UpdateGdprRequestStatusDTO,
+    processedBy: string
+  ): Promise<GdprRequest> {
+    const validated = validate(UpdateGdprRequestStatusSchema, data);
+    const request = await this.findByIdOrFail(requestId);
+
+    if (request.status !== 'pending') {
+      throw new BadRequestError(`Request is already ${request.status}`);
+    }
+
+    // If approving, use the appropriate processing method
+    if (validated.status === 'completed') {
+      if (request.requestType === 'export') {
+        return this.processExportRequest(requestId, processedBy);
+      } else if (request.requestType === 'deletion') {
+        return this.processDeletionRequest(requestId, processedBy);
+      }
+    }
+
+    // Handle rejection or other status updates
+    const updatedRequest = await this.repository.updateStatus(
+      requestId,
+      validated.status,
+      processedBy
+    );
+
+    // Store rejection reason in metadata if provided
+    if (validated.status === 'rejected' && validated.rejectionReason) {
+      await this.repository.update(requestId, {
+        metadata: {
+          ...request.metadata,
+          rejectionReason: validated.rejectionReason,
+          rejectedAt: new Date().toISOString(),
+        },
+      });
+    }
+
+    this.adapters?.log?.info('GDPR request status updated', {
+      id: requestId,
+      tenantId: request.tenantId,
+      status: validated.status,
+      processedBy,
+    });
+
+    getAuditService().log({
+      tenantId: request.tenantId,
+      userId: processedBy,
+      action: validated.status === 'rejected' ? 'reject' : 'update',
+      resource: 'gdpr_request',
+      resourceId: requestId,
+      metadata: {
+        previousStatus: request.status,
+        newStatus: validated.status,
+        rejectionReason: validated.rejectionReason,
+      },
+    });
+
+    return updatedRequest as unknown as GdprRequest;
+  }
+
+  /**
+   * Get request by ID
+   */
+  async findById(id: string): Promise<GdprRequest | null> {
+    return this.repository.findById(id) as unknown as Promise<GdprRequest | null>;
+  }
+
+  /**
+   * Get request by ID or throw
+   */
+  async findByIdOrFail(id: string): Promise<GdprRequest> {
+    const request = await this.repository.findById(id);
+    if (!request) {
+      throw new NotFoundError(`GDPR request with id ${id} not found`);
+    }
+    return request as unknown as GdprRequest;
+  }
+
+  /**
+   * Get requests by user ID
+   */
+  async findByUserId(userId: string, tenantId: string): Promise<GdprRequest[]> {
+    return this.repository.findByUserId(userId, tenantId) as unknown as Promise<GdprRequest[]>;
+  }
+
+  /**
+   * List requests for a tenant with filters
+   */
+  async findAll(
+    tenantId: string,
+    params: GdprRequestQueryParams
+  ): Promise<PaginatedResult<GdprRequest>> {
+    const validated = validate(GdprRequestQuerySchema, params);
+    return this.repository.findByTenant(tenantId, {
+      ...validated,
+      page: validated.page ?? 1,
+      limit: validated.limit ?? 20,
+    }) as unknown as Promise<PaginatedResult<GdprRequest>>;
+  }
+
+  /**
+   * Get pending requests for a tenant
+   */
+  async findPendingRequests(
+    tenantId: string,
+    params: { page?: number; limit?: number }
+  ): Promise<PaginatedResult<GdprRequest>> {
+    return this.repository.findPendingRequests(tenantId, {
+      page: params.page ?? 1,
+      limit: params.limit ?? 20,
+    }) as unknown as Promise<PaginatedResult<GdprRequest>>;
+  }
+
+  /**
+   * Cancel a request (only if pending)
+   */
+  async cancelRequest(requestId: string, userId: string): Promise<GdprRequest> {
+    const request = await this.findByIdOrFail(requestId);
+
+    // Only the request owner can cancel
+    if (request.userId !== userId) {
+      throw new BadRequestError('You can only cancel your own requests');
+    }
+
+    if (request.status !== 'pending') {
+      throw new BadRequestError(`Cannot cancel request with status ${request.status}`);
+    }
+
+    const updatedRequest = await this.repository.update(requestId, {
+      status: 'rejected',
+      metadata: {
+        ...request.metadata,
+        cancelledAt: new Date().toISOString(),
+        cancelledBy: userId,
+      },
+    });
+
+    this.adapters?.log?.info('GDPR request cancelled', {
+      id: requestId,
+      tenantId: request.tenantId,
+      userId,
+    });
+
+    getAuditService().log({
+      tenantId: request.tenantId,
+      userId,
+      action: 'cancel',
+      resource: 'gdpr_request',
+      resourceId: requestId,
+      metadata: { requestType: request.requestType },
+    });
+
+    return updatedRequest as unknown as GdprRequest;
   }
 }

@@ -1,15 +1,16 @@
 /**
  * GDPR Module
- * Exports for GDPR consent management and data subject rights
  */
+import { Module } from '../../core/decorators';
+import { GdprController } from './gdpr.controller';
+import { GdprService } from './gdpr.service';
+import { GdprRepository } from './gdpr.repository';
 
-export { GdprRepository } from './gdpr.repository';
-export { GdprService } from './gdpr.service';
-export type {
-  ConsentTypeDTO,
-  UserConsentStatusDTO,
-  GrantConsentDTO,
-  ConsentSummaryDTO,
-  DataSubjectRequestDTO,
-} from './gdpr.service';
-export { GdprController } from './gdpr.controller';
+@Module({
+  controllers: [GdprController],
+  providers: [GdprService, GdprRepository],
+  exports: ['GdprService', 'GdprRepository'],
+})
+export class GdprModule {}
+
+export { GdprController, GdprService, GdprRepository };

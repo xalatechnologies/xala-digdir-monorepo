@@ -168,6 +168,17 @@ export {
   type AuditStats
 } from './use-audit';
 
+// GDPR hooks
+export {
+  useMyGdprRequests,
+  useGdprRequest,
+  usePendingGdprRequests,
+  useGdprDataExport,
+  useCreateGdprRequest,
+  useCancelGdprRequest,
+  useUpdateGdprRequestStatus,
+} from './use-gdpr';
+
 // Conversation hooks
 export {
   conversationKeys,
@@ -362,13 +373,3 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
-
-// Security Dashboard hooks
-export {
-  useSecurityMetrics,
-  useGdprStatus,
-  useFailedLogins,
-  useDataExports,
-  useFailedLoginsByUser,
-  useDataExportsByUser,
-} from './use-security-dashboard';

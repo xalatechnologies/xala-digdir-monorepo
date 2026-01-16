@@ -5,7 +5,7 @@ export * from './tenant';
 export * from './listing';
 export * from './booking';
 export * from './user';
+export * from './gdpr';
 export * from './monitoring';
 export * from './billing/billing.controller';
 export * from './reviews/reviews.controller';
-export * from './security/security.controller';

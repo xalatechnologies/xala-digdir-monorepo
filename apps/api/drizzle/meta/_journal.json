@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768521233649,
-      "tag": "0000_melodic_hulk",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1768521335065,
-      "tag": "0001_sparkling_wiccan",
+      "when": 1768521260488,
+      "tag": "0000_wise_shiver_man",
       "breakpoints": true
     }
   ]

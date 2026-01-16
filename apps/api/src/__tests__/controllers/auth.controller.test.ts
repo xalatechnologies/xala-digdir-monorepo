@@ -32,6 +32,20 @@ describe('AuthController', () => {
       expect(data.data.user.email).toBe('admin@test.no');
     });
 
+    it('should reject login for inactive user', async () => {
+      const response = await ctx.app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        payload: { email: 'inactive@test.no' },
+      });
+
+      expect(response.statusCode).toBe(403);
+      const data = response.json();
+      expect(data.type).toBe('https://problems.digilist.no/account-inactive');
+      expect(data.title).toBe('Account Inactive');
+      expect(data.detail).toContain('deactivated');
+    });
+
     it('should return validation error for missing email', async () => {
       const response = await ctx.app.inject({
         method: 'POST',

@@ -13,6 +13,7 @@ import {
   UserQuerySchema,
   InviteUserSchema,
   AssignRoleSchema,
+  UpdateConsentsSchema,
 } from '../../schemas/user.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -61,21 +62,28 @@ export class UserController {
    */
   @Get('/me/consents')
   async getConsents(request: TenantRequest, reply: FastifyReply) {
-    // Mock consents data - in production would fetch from consent management system
-    return {
-      data: {
-        marketing: false,
-        analytics: true,
-        necessary: true,
-        preferences: {
-          emailNotifications: true,
-          smsNotifications: false,
-          pushNotifications: true,
-        },
-        updatedAt: new Date().toISOString(),
-        version: '1.0',
-      },
-    };
+    const userId = (request as any).userId || request.headers['x-user-id'];
+    if (!userId) {
+      reply.code(401);
+      return { error: 'Not authenticated' };
+    }
+    const consents = await this.service.getConsents(userId as string);
+    return { data: consents };
+  }
+
+  /**
+   * PUT /api/users/me/consents - Update current user's consents
+   */
+  @Put('/me/consents')
+  async updateConsents(request: TenantRequest, reply: FastifyReply) {
+    const userId = (request as any).userId || request.headers['x-user-id'];
+    if (!userId) {
+      reply.code(401);
+      return { error: 'Not authenticated' };
+    }
+    const data = validate(UpdateConsentsSchema, request.body);
+    const consents = await this.service.updateConsents(userId as string, data);
+    return { data: consents };
   }
 
   /**

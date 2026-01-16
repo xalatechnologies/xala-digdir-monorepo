@@ -1,149 +1,86 @@
 /**
- * GDPR Consent Types
- * Type definitions for GDPR consent management
+ * GDPR Types
+ * Single Responsibility: GDPR data subject rights and request tracking
  */
 
-// =============================================================================
-// Consent Types
-// =============================================================================
-
-export interface ConsentTypeContent {
-  title: string;
-  content: string;
-}
-
-export interface ConsentType {
-  id: string;
-  code: string;
-  name: string;
-  description: string | null;
-  content: Record<string, ConsentTypeContent>; // { nb: { title, content }, en: { ... } }
-  version: string;
-  isRequired: boolean;
-  externalUrl: string | null;
-}
-
-export interface UserConsentStatus {
-  consentTypeId: string;
-  consentTypeCode: string;
-  name: string;
-  isRequired: boolean;
-  granted: boolean;
-  version: string;
-  grantedAt: string | null;
-  currentVersion: string;
-  needsUpdate: boolean;
-}
-
-export interface ConsentSummary {
-  hasAllRequired: boolean;
-  pendingRequired: ConsentType[];
-  consents: UserConsentStatus[];
-}
+import type { TenantEntity, BaseQueryParams } from './enums';
+import type { User, Organization } from './organization';
 
 // =============================================================================
-// Consent Actions
+// GDPR Request Enums
 // =============================================================================
 
-export type ConsentSource = 'web' | 'minside' | 'backoffice' | 'app';
-
-export interface GrantConsentDTO {
-  consentTypeId: string;
-  granted: boolean;
-  source?: ConsentSource;
-}
-
-export interface GrantMultipleConsentsDTO {
-  consents: GrantConsentDTO[];
-}
+export type GdprRequestType = 'export' | 'deletion';
+export type GdprRequestStatus = 'pending' | 'processing' | 'completed' | 'rejected';
 
 // =============================================================================
-// Data Subject Requests
+// GDPR Request Entity
 // =============================================================================
 
-export type DataSubjectRequestType = 
-  | 'access'
-  | 'erasure'
-  | 'portability'
-  | 'rectification'
-  | 'restriction'
-  | 'objection';
-
-export type DataSubjectRequestStatus = 'pending' | 'processing' | 'completed' | 'rejected';
-
-export interface CreateDataSubjectRequestDTO {
-  requestType: DataSubjectRequestType;
-  description?: string;
-}
-
-export interface DataSubjectRequest {
-  id: string;
-  tenantId: string;
+export interface GdprRequest extends TenantEntity {
   userId: string;
-  requestType: DataSubjectRequestType;
-  status: DataSubjectRequestStatus;
-  description: string | null;
-  assignedTo: string | null;
-  processedBy: string | null;
-  responseNotes: string | null;
+  requestType: GdprRequestType;
+  status: GdprRequestStatus;
   requestedAt: string;
-  dueDate: string;
-  completedAt: string | null;
-  identityVerified: boolean;
-  verifiedAt: string | null;
-  createdAt: string;
+  processedAt?: string | null;
+  processedBy?: string | null;
+  expiresAt: string;
+  metadata?: Record<string, unknown>;
+}
+
+// =============================================================================
+// GDPR Request DTOs
+// =============================================================================
+
+export interface CreateGdprRequestDTO {
+  requestType: GdprRequestType;
+  metadata?: Record<string, unknown>;
+}
+
+export interface UpdateGdprRequestDTO {
+  status?: GdprRequestStatus;
+  processedBy?: string | null;
+  processedAt?: string | null;
+  metadata?: Record<string, unknown>;
+}
+
+export interface UpdateGdprRequestStatusDTO {
+  status: GdprRequestStatus;
+  rejectionReason?: string;
+}
+
+export interface GdprRequestQueryParams extends BaseQueryParams {
+  userId?: string;
+  requestType?: GdprRequestType;
+  status?: GdprRequestStatus;
+}
+
+// =============================================================================
+// GDPR Data Export
+// =============================================================================
+
+export interface GdprDataExport {
+  user: User;
+  bookings: unknown[];
+  conversations: unknown[];
+  organizations: Organization[];
+  auditEvents: unknown[];
+  exportedAt: string;
+}
+
+// =============================================================================
+// Consent Management
+// =============================================================================
+
+export interface ConsentSettings {
+  marketing: boolean;
+  analytics: boolean;
+  thirdPartySharing: boolean;
   updatedAt: string;
 }
 
-// =============================================================================
-// Audit Log
-// =============================================================================
-
-export type ConsentAction = 'granted' | 'revoked' | 'expired' | 'updated';
-
-export interface ConsentAuditLogEntry {
-  id: string;
-  tenantId: string;
-  userId: string;
-  consentTypeId: string;
-  action: ConsentAction;
-  previousState: boolean | null;
-  newState: boolean;
-  consentVersion: string;
-  source: ConsentSource;
-  ipAddress: string | null;
-  userAgent: string | null;
-  createdAt: string;
-}
-
-// =============================================================================
-// API Response Types
-// =============================================================================
-
-export interface ConsentTypesResponse {
-  data: ConsentType[];
-}
-
-export interface ConsentSummaryResponse {
-  data: ConsentSummary;
-}
-
-export interface ConsentStatusResponse {
-  data: UserConsentStatus;
-}
-
-export interface ConsentStatusCheckResponse {
-  data: { hasAllRequired: boolean };
-}
-
-export interface ConsentAuditLogResponse {
-  data: ConsentAuditLogEntry[];
-}
-
-export interface DataSubjectRequestResponse {
-  data: DataSubjectRequest;
-}
-
-export interface DataSubjectRequestsResponse {
-  data: DataSubjectRequest[];
+export interface UpdateConsentDTO {
+  marketing?: boolean;
+  analytics?: boolean;
+  thirdPartySharing?: boolean;
 }

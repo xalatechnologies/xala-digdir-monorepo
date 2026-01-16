@@ -19,31 +19,13 @@ export * from './projection-dtos';
 export * from './listing';
 export * from './booking';
 export * from './organization';
+export * from './gdpr';
 export * from './auth';
 export * from './review';
 export * from './settings';
 export * from './upload';
 export * from './search';
 export * from './economy';
-
-// Notification types (selective exports to avoid conflicts)
-export type {
-  PushPermissionState,
-  BookingNotificationType,
-  PushSubscription,
-  // NotificationPreferences is already exported from organization.ts
-  RegisterPushSubscriptionDTO,
-  UpdateNotificationPreferencesDTO,
-  PushNotificationPayload,
-  PushNotificationData,
-  PushNotificationAction,
-  NotificationEvent,
-  NotificationDeliveryStatusType,
-  DeliveryAttempt,
-  NotificationDeliveryStatus,
-  DeliveryReport,
-  DeliveryReportQueryParams,
-} from './push-notification';
 
 // Additional types that don't fit a single domain
 export type {

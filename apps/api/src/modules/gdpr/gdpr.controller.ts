@@ -1,293 +1,198 @@
 /**
  * GDPR Controller
- * REST endpoints for GDPR consent management and data subject rights
+ * REST API endpoints for GDPR data subject rights management
  */
+import { Controller, Get, Post, Put } from '../../core/decorators';
+import { Inject } from '../../core/decorators';
+import { GdprService } from './gdpr.service';
+import { validate } from '../../core/validation/zod-pipe';
+import { getTenantId, getUserId, TenantRequest } from '../../core/validation/tenant';
+import {
+  CreateGdprRequestSchema,
+  UpdateGdprRequestStatusSchema,
+  GdprRequestQuerySchema,
+} from '../../schemas/gdpr.schema';
+import type { FastifyRequest, FastifyReply } from 'fastify';
+import { ForbiddenError } from '../../core/errors/problem-details';
+import { getAuditService } from '../../core/audit/audit.service';
 
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import type { GdprService, GrantConsentDTO, DataSubjectRequestDTO } from './gdpr.service';
-import { z } from 'zod';
-
-// =============================================================================
-// Request Schemas
-// =============================================================================
-
-const grantConsentSchema = z.object({
-  consentTypeId: z.string().uuid(),
-  granted: z.boolean(),
-  source: z.enum(['web', 'minside', 'backoffice', 'app']).default('web'),
-});
-
-const grantMultipleConsentsSchema = z.object({
-  consents: z.array(grantConsentSchema),
-});
-
-const dataSubjectRequestSchema = z.object({
-  requestType: z.enum(['access', 'erasure', 'portability', 'rectification', 'restriction', 'objection']),
-  description: z.string().optional(),
-});
-
-const updateRequestStatusSchema = z.object({
-  status: z.enum(['processing', 'completed', 'rejected']),
-  responseNotes: z.string().optional(),
-});
-
-// =============================================================================
-// Controller
-// =============================================================================
-
+@Controller('/api/gdpr')
 export class GdprController {
-  constructor(private readonly service: GdprService) {}
+  constructor(
+    @Inject('GdprService') private readonly service: GdprService
+  ) {}
 
   /**
-   * Register all GDPR routes
+   * POST /api/gdpr/requests - Create new GDPR request
    */
-  async register(app: FastifyInstance): Promise<void> {
-    // =======================================================================
-    // Public routes (for consent popup before auth)
-    // =======================================================================
-    
-    app.get('/api/gdpr/consent-types', this.getConsentTypes.bind(this));
+  @Post('/requests')
+  async createRequest(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getUserId(request);
+    const data = validate(CreateGdprRequestSchema, request.body);
 
-    // =======================================================================
-    // Authenticated user routes
-    // =======================================================================
-
-    app.get('/api/gdpr/my-consents', this.getMyConsents.bind(this));
-    app.post('/api/gdpr/consent', this.grantConsent.bind(this));
-    app.post('/api/gdpr/consents', this.grantMultipleConsents.bind(this));
-    app.get('/api/gdpr/consent-status', this.checkConsentStatus.bind(this));
-    app.get('/api/gdpr/audit-log', this.getAuditLog.bind(this));
-
-    // =======================================================================
-    // Data Subject Rights
-    // =======================================================================
-
-    app.post('/api/gdpr/data-request', this.createDataSubjectRequest.bind(this));
-    app.get('/api/gdpr/my-data-requests', this.getMyDataRequests.bind(this));
-
-    // =======================================================================
-    // Admin routes (for backoffice)
-    // =======================================================================
-
-    app.get('/api/gdpr/admin/pending-requests', this.getPendingRequests.bind(this));
-    app.patch('/api/gdpr/admin/requests/:id/status', this.updateRequestStatus.bind(this));
-  }
-
-  // ==========================================================================
-  // Route Handlers
-  // ==========================================================================
-
-  private async getConsentTypes(
-    request: FastifyRequest<{ Querystring: { locale?: string } }>,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId ?? 'default';
-    const locale = request.query.locale ?? 'nb';
-
-    const types = await this.service.getConsentTypes(tenantId, locale);
-    reply.send({ data: types });
-  }
-
-  private async getMyConsents(
-    request: FastifyRequest<{ Querystring: { locale?: string } }>,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
-
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
+    // Route to appropriate service method based on request type
+    let gdprRequest;
+    if (data.requestType === 'export') {
+      gdprRequest = await this.service.createExportRequest(tenantId, userId, data);
+    } else if (data.requestType === 'deletion') {
+      gdprRequest = await this.service.createDeletionRequest(tenantId, userId, data);
+    } else {
+      reply.code(400);
+      return {
+        type: 'https://tools.ietf.org/html/rfc7807',
+        title: 'Bad Request',
+        status: 400,
+        detail: 'Invalid request type. Must be "export" or "deletion".',
+      };
     }
 
-    const locale = request.query.locale ?? 'nb';
-    const summary = await this.service.getUserConsentSummary(tenantId, userId, locale);
-    reply.send({ data: summary });
+    return reply.status(201).send({ data: gdprRequest });
   }
 
-  private async grantConsent(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
+  /**
+   * GET /api/gdpr/requests - List user's GDPR requests
+   */
+  @Get('/requests')
+  async listRequests(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const userId = getUserId(request);
+    const params = validate(GdprRequestQuerySchema, request.query);
 
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
+    // Filter to only show current user's requests
+    const result = await this.service.findAll(tenantId, {
+      ...params,
+      userId, // Force filter by current user
+      page: params.page ?? 1,
+      limit: params.limit ?? 20,
+    });
 
-    const parsed = grantConsentSchema.safeParse(request.body);
-    if (!parsed.success) {
-      reply.status(400).send({ error: 'Invalid request body', details: parsed.error.issues });
-      return;
-    }
-
-    const dto: GrantConsentDTO = {
-      consentTypeId: parsed.data.consentTypeId,
-      granted: parsed.data.granted,
-      source: parsed.data.source ?? 'web',
-      ipAddress: request.ip,
-      userAgent: request.headers['user-agent'] ?? undefined,
+    return {
+      data: result.data,
+      meta: {
+        total: result.pagination.total,
+        page: result.pagination.page,
+        limit: result.pagination.limit,
+        totalPages: result.pagination.totalPages,
+      },
     };
-
-    const result = await this.service.grantConsent(tenantId, userId, dto);
-    reply.send({ data: result });
   }
 
-  private async grantMultipleConsents(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
+  /**
+   * GET /api/gdpr/requests/pending - List pending GDPR requests (admin)
+   */
+  @Get('/requests/pending')
+  async listPendingRequests(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const params = validate(GdprRequestQuerySchema, request.query);
 
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
+    const result = await this.service.findPendingRequests(tenantId, {
+      page: params.page ?? 1,
+      limit: params.limit ?? 20,
+    });
 
-    const parsed = grantMultipleConsentsSchema.safeParse(request.body);
-    if (!parsed.success) {
-      reply.status(400).send({ error: 'Invalid request body', details: parsed.error.issues });
-      return;
-    }
-
-    const consents: GrantConsentDTO[] = parsed.data.consents.map((c) => ({
-      consentTypeId: c.consentTypeId,
-      granted: c.granted,
-      source: c.source ?? 'web',
-      ipAddress: request.ip,
-      userAgent: request.headers['user-agent'] ?? undefined,
-    }));
-
-    const results = await this.service.grantMultipleConsents(tenantId, userId, consents);
-    reply.send({ data: results });
-  }
-
-  private async checkConsentStatus(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
-
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
-
-    const hasAllRequired = await this.service.hasRequiredConsents(tenantId, userId);
-    reply.send({ data: { hasAllRequired } });
-  }
-
-  private async getAuditLog(
-    request: FastifyRequest<{ Querystring: { limit?: number } }>,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
-
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
-
-    const limit = request.query.limit ?? 50;
-    const auditLog = await this.service.getConsentAuditLog(tenantId, userId, limit);
-    reply.send({ data: auditLog });
-  }
-
-  private async createDataSubjectRequest(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
-
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
-
-    const parsed = dataSubjectRequestSchema.safeParse(request.body);
-    if (!parsed.success) {
-      reply.status(400).send({ error: 'Invalid request body', details: parsed.error.issues });
-      return;
-    }
-
-    const dto: DataSubjectRequestDTO = {
-      requestType: parsed.data.requestType,
-      description: parsed.data.description,
+    return {
+      data: result.data,
+      meta: {
+        total: result.pagination.total,
+        page: result.pagination.page,
+        limit: result.pagination.limit,
+        totalPages: result.pagination.totalPages,
+      },
     };
-
-    const result = await this.service.createDataSubjectRequest(tenantId, userId, dto);
-    reply.status(201).send({ data: result });
   }
 
-  private async getMyDataRequests(
-    request: FastifyRequest,
+  /**
+   * GET /api/gdpr/requests/:id - Get single GDPR request
+   */
+  @Get('/requests/:id')
+  async getRequest(
+    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
     reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
+  ) {
+    const tenantId = getTenantId(request);
+    const userId = getUserId(request);
 
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
+    const gdprRequest = await this.service.findByIdOrFail(request.params.id);
+
+    // Verify tenant isolation
+    if (gdprRequest.tenantId !== tenantId) {
+      // Audit failed access attempt
+      getAuditService().log({
+        tenantId,
+        userId,
+        action: 'access_denied',
+        resource: 'gdpr_request',
+        resourceId: request.params.id,
+        severity: 'warning',
+        metadata: {
+          reason: 'cross_tenant_access_attempt',
+          requestedTenantId: gdprRequest.tenantId,
+        },
+      });
+
+      throw new ForbiddenError('You do not have permission to access this request');
     }
 
-    const requests = await this.service.getUserDataSubjectRequests(tenantId, userId);
-    reply.send({ data: requests });
+    // Verify ownership or admin role
+    // Note: request.user should be set by auth middleware
+    const user = (request as any).user;
+    const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
+    const isOwner = gdprRequest.userId === userId;
+
+    if (!isAdmin && !isOwner) {
+      // Audit failed access attempt
+      getAuditService().log({
+        tenantId,
+        userId,
+        action: 'access_denied',
+        resource: 'gdpr_request',
+        resourceId: request.params.id,
+        severity: 'warning',
+        metadata: {
+          reason: 'insufficient_permissions',
+          isAdmin,
+          isOwner,
+          requestUserId: gdprRequest.userId,
+        },
+      });
+
+      throw new ForbiddenError('You do not have permission to access this request');
+    }
+
+    return { data: gdprRequest };
   }
 
-  private async getPendingRequests(
-    request: FastifyRequest,
+  /**
+   * PUT /api/gdpr/requests/:id/status - Update request status (admin)
+   */
+  @Put('/requests/:id/status')
+  async updateStatus(
+    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
     reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
+  ) {
+    const userId = getUserId(request);
+    const data = validate(UpdateGdprRequestStatusSchema, request.body);
 
-    if (!tenantId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
-
-    // TODO: Add admin role check
-    const requests = await this.service.getPendingDataSubjectRequests(tenantId);
-    reply.send({ data: requests });
-  }
-
-  private async updateRequestStatus(
-    request: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply
-  ): Promise<void> {
-    const tenantId = (request as unknown as { tenantId?: string }).tenantId;
-    const userId = (request as unknown as { user?: { id: string } }).user?.id;
-
-    if (!tenantId || !userId) {
-      reply.status(401).send({ error: 'Unauthorized' });
-      return;
-    }
-
-    const parsed = updateRequestStatusSchema.safeParse(request.body);
-    if (!parsed.success) {
-      reply.status(400).send({ error: 'Invalid request body', details: parsed.error.issues });
-      return;
-    }
-
-    // TODO: Add admin role check
-    const result = await this.service.updateDataSubjectRequestStatus(
+    const gdprRequest = await this.service.updateRequestStatus(
       request.params.id,
-      parsed.data.status,
-      userId,
-      parsed.data.responseNotes
+      data,
+      userId
     );
 
-    if (!result) {
-      reply.status(404).send({ error: 'Request not found' });
-      return;
-    }
+    return { data: gdprRequest };
+  }
 
-    reply.send({ data: result });
+  /**
+   * PUT /api/gdpr/requests/:id/cancel - Cancel request (user)
+   */
+  @Put('/requests/:id/cancel')
+  async cancelRequest(
+    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
+    reply: FastifyReply
+  ) {
+    const userId = getUserId(request);
+    const gdprRequest = await this.service.cancelRequest(request.params.id, userId);
+    return { data: gdprRequest };
   }
 }

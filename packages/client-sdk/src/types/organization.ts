@@ -118,34 +118,16 @@ export interface UserQueryParams extends BaseQueryParams {
 }
 
 // =============================================================================
-// GDPR Types
+// GDPR Types (Re-exported from gdpr.ts for backward compatibility)
 // =============================================================================
 
-export interface GdprDataExport {
-  user: User;
-  bookings: unknown[];
-  conversations: unknown[];
-  organizations: Organization[];
-  auditEvents: unknown[];
-  exportedAt: string;
-}
-
-export interface ConsentSettings {
-  marketing: boolean;
-  analytics: boolean;
-  thirdPartySharing: boolean;
-  updatedAt: string;
-}
+export type { GdprDataExport, ConsentSettings } from './gdpr';
 
 // =============================================================================
-// Notification Preferences (Legacy - kept for backward compatibility)
-// For new implementations, use NotificationPreferences from push-notification.ts
+// Notification Preferences
 // =============================================================================
 
-/**
- * @deprecated Use NotificationPreferences from push-notification.ts instead
- */
-export interface LegacyNotificationPreferences {
+export interface NotificationPreferences {
   email: {
     bookingConfirmation: boolean;
     bookingReminder: boolean;

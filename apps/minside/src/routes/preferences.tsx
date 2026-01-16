@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -62,17 +63,17 @@ export function UserPreferencesPage() {
   };
 
   const notificationSettings = [
-    { key: 'emailBooking', label: t('preferences.emailBooking'), description: t('preferences.emailBookingDesc') },
-    { key: 'emailReminder', label: t('preferences.emailReminder'), description: t('preferences.emailReminderDesc') },
-    { key: 'emailNewsletter', label: t('preferences.emailNewsletter'), description: t('preferences.emailNewsletterDesc') },
-    { key: 'smsReminder', label: t('preferences.smsReminder'), description: t('preferences.smsReminderDesc') },
-    { key: 'pushNotifications', label: t('preferences.pushNotifications'), description: t('preferences.pushNotificationsDesc') },
+    { key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' },
+    { key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' },
+    { key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },
+    { key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },
+    { key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },
   ];
 
   const privacySettings = [
-    { key: 'showProfile', label: t('preferences.showProfile'), description: t('preferences.showProfileDesc') },
-    { key: 'shareActivity', label: t('preferences.shareActivity'), description: t('preferences.shareActivityDesc') },
-    { key: 'allowAnalytics', label: t('preferences.allowAnalytics'), description: t('preferences.allowAnalyticsDesc') },
+    { key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },
+    { key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjonen' },
+    { key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },
   ];
 
   return (
@@ -93,10 +94,10 @@ export function UserPreferencesPage() {
             {t('settings.preferencesDesc')}
           </Paragraph>
         </div>
-        <Button
-          type="button"
-          variant="primary"
-          data-size="md"
+        <Button 
+          type="button" 
+          variant="primary" 
+          data-size="md" 
           onClick={handleSave}
           disabled={isSaving}
           style={{ minHeight: '44px' }}
@@ -108,7 +109,7 @@ export function UserPreferencesPage() {
       {/* Notifications */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('preferences.notifications')}
+          Varsler
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {notificationSettings.map(item => (
@@ -139,7 +140,7 @@ export function UserPreferencesPage() {
       {/* Privacy */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('preferences.privacy')}
+          Personvern
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {privacySettings.map(item => (
@@ -165,35 +166,45 @@ export function UserPreferencesPage() {
             </div>
           ))}
         </div>
+        <div style={{ marginTop: 'var(--ds-spacing-4)', paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+          <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            For mer detaljert personvernstyring, inkludert GDPR-rettigheter som dataeksport og sletting av konto, besøk vår personvernsportal.
+          </Paragraph>
+          <Link to="/privacy">
+            <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
+              Åpne personvernsportal
+            </Button>
+          </Link>
+        </div>
       </Card>
 
       {/* Display */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('preferences.display')}
+          Visning
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('preferences.theme')}</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tema</label>
             <Select
               value={prefs.theme}
               onChange={(e) => updatePref('theme', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="system">{t('preferences.themeSystem')}</option>
-              <option value="light">{t('preferences.themeLight')}</option>
-              <option value="dark">{t('preferences.themeDark')}</option>
+              <option value="system">Følg system</option>
+              <option value="light">Lyst</option>
+              <option value="dark">Mørkt</option>
             </Select>
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('preferences.language')}</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</label>
             <Select
               value={prefs.language}
               onChange={(e) => updatePref('language', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="no">{t('preferences.languageNo')}</option>
-              <option value="en">{t('preferences.languageEn')}</option>
+              <option value="no">Norsk</option>
+              <option value="en">English</option>
             </Select>
           </div>
         </div>
@@ -202,17 +213,17 @@ export function UserPreferencesPage() {
       {/* Danger Zone */}
       <Card style={{ padding: 'var(--ds-spacing-5)', border: '1px solid var(--ds-color-danger-border-default)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text-default)' }}>
-          {t('preferences.dangerZone')}
+          Faresone
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('preferences.dangerZoneDesc')}
+          Disse handlingene kan ikke angres.
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
           <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
-            {t('preferences.exportData')}
+            Eksporter data
           </Button>
           <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px', color: 'var(--ds-color-danger-text-default)' }}>
-            {t('preferences.deleteAccount')}
+            Slett konto
           </Button>
         </div>
       </Card>

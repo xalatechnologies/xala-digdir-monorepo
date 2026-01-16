@@ -18,6 +18,7 @@ import {
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
+import { usePendingGdprRequests } from '@digilist/client-sdk/hooks';
 
 interface NavItem {
   name: string;
@@ -156,6 +157,10 @@ export function Sidebar() {
   const { user } = useAuth();
   const { effectiveRole } = useBackofficeRole();
 
+  // Get pending GDPR requests count for badge
+  const { data: pendingGdprData } = usePendingGdprRequests({ limit: 1 });
+  const pendingGdprCount = pendingGdprData?.meta?.total ?? pendingGdprData?.data?.length ?? 0;
+
   const navSections: NavSection[] = [
     {
       items: [
@@ -220,7 +225,7 @@ export function Sidebar() {
     {
       title: 'System',
       items: [
-        { name: 'Sikkerhet', description: 'Sikkerhetsovervåking', href: '/security', icon: <ShieldIcon />, roles: ['admin'] },
+        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', roles: ['admin'] },
         { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
         { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
         { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },

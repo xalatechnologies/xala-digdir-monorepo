@@ -68,6 +68,15 @@ async function registerTestRoutes(app: FastifyInstance) {
       reply.code(404);
       return { error: { code: 'NOT_FOUND', message: 'User not found' } };
     }
+    if (body.email === 'inactive@test.no') {
+      reply.code(403);
+      return {
+        type: 'https://problems.digilist.no/account-inactive',
+        title: 'Account Inactive',
+        status: 403,
+        detail: 'This account has been deactivated. Please contact support if you believe this is an error.',
+      };
+    }
     return {
       data: {
         token: 'test-jwt-token',

@@ -13,7 +13,6 @@ import { LoginPage } from './routes/login';
 import { RoleSelectionPage } from './routes/role-selection';
 import { DashboardPage } from './routes/dashboard';
 import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
-import { RentalObjectsPage, RentalObjectEditPage, RentalObjectDetailPage } from './routes/rental-objects';
 import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
@@ -40,6 +39,8 @@ import { AdminReportsPage } from './routes/admin-reports';
 import { TenantSettingsPage } from './routes/tenant/settings';
 import { TenantBrandingPage } from './routes/tenant/branding';
 import { TenantAuditLogPage } from './routes/tenant/audit-log';
+// GDPR pages
+import { GdprRequestsPage } from './routes/gdpr-requests';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -90,10 +91,6 @@ function AppWithTheme() {
               <Route path="listings/new" element={<ListingEditPage />} />
               <Route path="listings/:slug" element={<ListingEditPage />} />
               <Route path="listings/:slug/view" element={<ListingDetailPage />} />
-              <Route path="rental-objects" element={<RentalObjectsPage />} />
-              <Route path="rental-objects/new" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} />
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
@@ -116,6 +113,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AuditPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="gdpr-requests"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <GdprRequestsPage />
                   </ProtectedRoute>
                 }
               />

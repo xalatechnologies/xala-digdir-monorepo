@@ -192,46 +192,6 @@ export const incidents = pgTable('incidents', {
 }));
 
 // ============================================================================
-// Notifications
-// ============================================================================
-
-export const notifications = pgTable('notifications', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  type: varchar('type', { length: 20 }).notNull(),
-  recipient: varchar('recipient', { length: 255 }).notNull(),
-  subject: varchar('subject', { length: 500 }),
-  body: text('body').notNull(),
-  contentHash: varchar('content_hash', { length: 64 }).notNull(),
-  status: varchar('status', { length: 50 }).notNull().default('pending'),
-  sentAt: timestamp('sent_at'),
-  deliveredAt: timestamp('delivered_at'),
-  failedAt: timestamp('failed_at'),
-  metadata: jsonb('metadata').default({}),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-  tenantIdx: index('notifications_tenant_idx').on(table.tenantId),
-  userIdx: index('notifications_user_idx').on(table.userId),
-  contentHashCreatedIdx: index('notifications_hash_created_idx').on(table.contentHash, table.createdAt),
-  statusIdx: index('notifications_status_idx').on(table.status),
-}));
-
-export const deliveryAttempts = pgTable('delivery_attempts', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  notificationId: uuid('notification_id').notNull().references(() => notifications.id, { onDelete: 'cascade' }),
-  attemptNumber: integer('attempt_number').notNull(),
-  status: varchar('status', { length: 50 }).notNull(),
-  error: text('error'),
-  retriedAt: timestamp('retried_at').notNull().defaultNow(),
-  nextRetryAt: timestamp('next_retry_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => ({
-  notificationAttemptIdx: index('delivery_attempts_notification_attempt_idx').on(table.notificationId, table.attemptNumber),
-}));
-
-// ============================================================================
 // Usage Tracking
 // ============================================================================
 
@@ -332,6 +292,12 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// GDPR Requests
+// ============================================================================
+
+export { gdprRequests } from './gdpr-requests';
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -363,8 +329,5 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
-export type Notification = typeof notifications.$inferSelect;
-export type NewNotification = typeof notifications.$inferInsert;
-export type DeliveryAttempt = typeof deliveryAttempts.$inferSelect;
-export type NewDeliveryAttempt = typeof deliveryAttempts.$inferInsert;
+export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 

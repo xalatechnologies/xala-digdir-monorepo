@@ -1,154 +1,85 @@
 /**
  * GDPR Service
- * Client SDK service for GDPR consent management
+ * Single Responsibility: Handle GDPR data subject rights requests
  */
 
 import { BaseService } from './base.service';
 import type {
-  ConsentType,
-  ConsentSummary,
-  UserConsentStatus,
-  GrantConsentDTO,
-  GrantMultipleConsentsDTO,
-  ConsentAuditLogEntry,
-  DataSubjectRequest,
-  CreateDataSubjectRequestDTO,
-  ConsentTypesResponse,
-  ConsentSummaryResponse,
-  ConsentStatusResponse,
-  ConsentStatusCheckResponse,
-  ConsentAuditLogResponse,
-  DataSubjectRequestResponse,
-  DataSubjectRequestsResponse,
+  GdprRequest,
+  CreateGdprRequestDTO,
+  GdprRequestQueryParams,
+  GdprDataExport,
+  ConsentSettings,
+  UpdateConsentDTO,
 } from '../types/gdpr';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 
 export class GdprService extends BaseService {
   constructor() {
     super('/api/gdpr');
   }
 
-  // ==========================================================================
-  // Consent Types
-  // ==========================================================================
-
   /**
-   * Get all active consent types
+   * Create a new GDPR request (export or deletion)
    */
-  async getConsentTypes(locale = 'nb'): Promise<ConsentType[]> {
-    const response = await this.client.get<ConsentTypesResponse>(
-      this.buildPath(`/consent-types?locale=${locale}`)
-    );
-    return response.data;
-  }
-
-  // ==========================================================================
-  // User Consents
-  // ==========================================================================
-
-  /**
-   * Get current user's consent summary
-   */
-  async getMyConsents(locale = 'nb'): Promise<ConsentSummary> {
-    const response = await this.client.get<ConsentSummaryResponse>(
-      this.buildPath(`/my-consents?locale=${locale}`)
-    );
-    return response.data;
+  async createRequest(data: CreateGdprRequestDTO): Promise<SingleResponse<GdprRequest>> {
+    return this.client.post(this.buildPath('/requests'), data);
   }
 
   /**
-   * Grant or revoke a single consent
+   * Get current user's GDPR requests
    */
-  async grantConsent(dto: GrantConsentDTO): Promise<UserConsentStatus> {
-    const response = await this.client.post<ConsentStatusResponse>(
-      this.buildPath('/consent'),
-      dto
-    );
-    return response.data;
+  async getMyRequests(params?: GdprRequestQueryParams): Promise<PaginatedResponse<GdprRequest>> {
+    return this.client.get(this.buildPath('/requests'), { params: params as Record<string, string | number | boolean> });
   }
 
   /**
-   * Grant or revoke multiple consents at once
+   * Get single GDPR request by ID
    */
-  async grantMultipleConsents(dto: GrantMultipleConsentsDTO): Promise<UserConsentStatus[]> {
-    const response = await this.client.post<{ data: UserConsentStatus[] }>(
-      this.buildPath('/consents'),
-      dto
-    );
-    return response.data;
+  async getById(id: string): Promise<SingleResponse<GdprRequest>> {
+    return this.client.get(this.buildPath(`/requests/${id}`));
   }
 
   /**
-   * Check if user has granted all required consents
+   * Cancel a pending GDPR request
    */
-  async checkConsentStatus(): Promise<boolean> {
-    const response = await this.client.get<ConsentStatusCheckResponse>(
-      this.buildPath('/consent-status')
-    );
-    return response.data.hasAllRequired;
+  async cancelRequest(id: string): Promise<SuccessResponse> {
+    return this.client.put(this.buildPath(`/requests/${id}/cancel`));
   }
 
   /**
-   * Get consent audit log for current user
+   * Get pending GDPR requests (admin only)
    */
-  async getAuditLog(limit = 50): Promise<ConsentAuditLogEntry[]> {
-    const response = await this.client.get<ConsentAuditLogResponse>(
-      this.buildPath(`/audit-log?limit=${limit}`)
-    );
-    return response.data;
-  }
-
-  // ==========================================================================
-  // Data Subject Requests
-  // ==========================================================================
-
-  /**
-   * Submit a data subject request (access, erasure, etc.)
-   */
-  async createDataSubjectRequest(dto: CreateDataSubjectRequestDTO): Promise<DataSubjectRequest> {
-    const response = await this.client.post<DataSubjectRequestResponse>(
-      this.buildPath('/data-request'),
-      dto
-    );
-    return response.data;
+  async getPendingRequests(params?: GdprRequestQueryParams): Promise<PaginatedResponse<GdprRequest>> {
+    return this.client.get(this.buildPath('/requests/pending'), { params: params as Record<string, string | number | boolean> });
   }
 
   /**
-   * Get all data subject requests for current user
+   * Update GDPR request status (admin only)
    */
-  async getMyDataRequests(): Promise<DataSubjectRequest[]> {
-    const response = await this.client.get<DataSubjectRequestsResponse>(
-      this.buildPath('/my-data-requests')
-    );
-    return response.data;
-  }
-
-  // ==========================================================================
-  // Admin methods
-  // ==========================================================================
-
-  /**
-   * Get all pending data subject requests (admin only)
-   */
-  async getPendingRequests(): Promise<DataSubjectRequest[]> {
-    const response = await this.client.get<DataSubjectRequestsResponse>(
-      this.buildPath('/admin/pending-requests')
-    );
-    return response.data;
+  async updateRequestStatus(id: string, status: 'processing' | 'completed' | 'rejected', rejectionReason?: string): Promise<SuccessResponse> {
+    return this.client.put(this.buildPath(`/requests/${id}/status`), { status, rejectionReason });
   }
 
   /**
-   * Update data subject request status (admin only)
+   * Export user data (GDPR data export)
    */
-  async updateRequestStatus(
-    id: string,
-    status: 'processing' | 'completed' | 'rejected',
-    responseNotes?: string
-  ): Promise<DataSubjectRequest> {
-    const response = await this.client.patch<DataSubjectRequestResponse>(
-      this.buildPath(`/admin/requests/${id}/status`),
-      { status, responseNotes }
-    );
-    return response.data;
+  async exportData(): Promise<SingleResponse<GdprDataExport>> {
+    return this.client.get(this.buildPath('/export'));
+  }
+
+  /**
+   * Get consent settings
+   */
+  async getConsents(): Promise<SingleResponse<ConsentSettings>> {
+    return this.client.get(this.buildPath('/consents'));
+  }
+
+  /**
+   * Update consent settings
+   */
+  async updateConsents(data: UpdateConsentDTO): Promise<SingleResponse<ConsentSettings>> {
+    return this.client.put(this.buildPath('/consents'), data);
   }
 }
 

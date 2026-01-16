@@ -17,6 +17,7 @@ import { TenantModule, TenantController, TenantService, TenantRepository } from 
 import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
+import { GdprModule, GdprController, GdprService, GdprRepository } from './modules/gdpr';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
 import { CalendarController } from './modules/calendar/calendar.controller';
@@ -32,7 +33,6 @@ import { AuthController } from './modules/auth/auth.controller';
 import { AuthzController } from './modules/authz/authz.controller';
 import { PublicController } from './modules/public/public.controller';
 import { AuditController } from './modules/audit/audit.controller';
-import { SecurityController } from './modules/security/security.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
@@ -118,6 +118,7 @@ async function bootstrap() {
   container.registerFactory('ListingRepository', () => new ListingRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
+  container.registerFactory('GdprRepository', () => new GdprRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
   container.registerFactory('AlertRepository', () => new AlertRepository(db));
   container.registerFactory('IncidentRepository', () => new IncidentRepository(db));
@@ -132,8 +133,15 @@ async function bootstrap() {
   container.registerFactory('BookingService', () => 
     new BookingService(container.resolve('BookingRepository'), adapters)
   );
-  container.registerFactory('UserService', () => 
+  container.registerFactory('UserService', () =>
     new UserService(container.resolve('UserRepository'), adapters)
+  );
+  container.registerFactory('GdprService', () =>
+    new GdprService(
+      container.resolve('GdprRepository'),
+      container.resolve('UserRepository'),
+      adapters
+    )
   );
   container.registerFactory('MonitoringService', () => 
     new MonitoringService(
@@ -156,8 +164,11 @@ async function bootstrap() {
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
   );
-  container.registerFactory('UserController', () => 
+  container.registerFactory('UserController', () =>
     new UserController(container.resolve('UserService'))
+  );
+  container.registerFactory('GdprController', () =>
+    new GdprController(container.resolve('GdprService'))
   );
   container.registerFactory('MonitoringController', () => 
     new MonitoringController(container.resolve('MonitoringService'))
@@ -167,12 +178,8 @@ async function bootstrap() {
     new SignicatAuthController()
   );
   // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () =>
+  container.registerFactory('NotificationsController', () => 
     new NotificationsController()
-  );
-  // Security controller (no dependencies)
-  container.registerFactory('SecurityController', () =>
-    new SecurityController()
   );
   console.log('✓ Controllers registered');
 
@@ -181,6 +188,7 @@ async function bootstrap() {
   await moduleLoader.load(ListingModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
+  await moduleLoader.load(GdprModule);
   await moduleLoader.load(MonitoringModule);
   console.log('✓ Modules loaded');
 
@@ -189,7 +197,8 @@ async function bootstrap() {
     TenantController, 
     ListingController, 
     BookingController, 
-    UserController, 
+    UserController,
+    GdprController,
     MonitoringController,
     // Backoffice modules
     DashboardController,
@@ -206,7 +215,6 @@ async function bootstrap() {
     AuthzController,
     PublicController,
     AuditController,
-    SecurityController,
     SettingsController,
     HelpController,
     DiscountCodesController,

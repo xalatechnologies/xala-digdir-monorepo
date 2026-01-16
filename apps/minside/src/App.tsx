@@ -6,9 +6,9 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider } from './providers/AuthProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
-import { AccountContextProvider } from './providers/AccountContextProvider';
+import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { ConsentPopup } from './components';
+import { AccountSelectionModal } from './components/AccountSelectionModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
@@ -18,12 +18,11 @@ import { BillingPage } from './routes/billing';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
 // Organization pages
-import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage, OrganizationNotificationsPage } from './routes/org';
+import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage } from './routes/org';
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
 import { PrivacyPage } from './routes/privacy';
-import { SeasonsPage } from './routes/seasons';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -62,11 +61,29 @@ function NotificationCenterProvider({ children }: { children: React.ReactNode })
 
 /**
  * Account Selection Wrapper
- * Account context is automatically loaded from user preferences in the database.
- * Users can switch context using the AccountSwitcher component in the UI.
+ * Displays the AccountSelectionModal when user hasn't selected an account yet
+ * and hasn't chosen to remember their choice.
+ *
+ * Edge case handling:
+ * - If rememberChoice is true (from localStorage), the modal is skipped
+ * - The persisted context (personal/organization) is automatically restored
+ *   by AccountContextProvider when rememberChoice is true
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  const { hasSelectedAccount, rememberChoice } = useAccountContext();
+
+  // Show modal only if:
+  // 1. User hasn't selected an account yet (hasSelectedAccount = false)
+  // 2. User hasn't chosen to remember their choice (rememberChoice = false)
+  // If rememberChoice is true, skip modal and use persisted context
+  const showModal = !hasSelectedAccount && !rememberChoice;
+
+  return (
+    <>
+      <AccountSelectionModal open={showModal} />
+      {children}
+    </>
+  );
 }
 
 export function App() {
@@ -99,7 +116,6 @@ function AppWithTheme() {
               wsUrl={import.meta.env.VITE_WS_URL}
               tenantId={import.meta.env.VITE_TENANT_ID}
             >
-            <ConsentPopup />
             <Routes>
             <Route path="/login" element={<LoginPage />} />
 
@@ -117,7 +133,6 @@ function AppWithTheme() {
               <Route path="billing" element={<ProtectedRoute requiredContext="personal"><BillingPage /></ProtectedRoute>} />
               <Route path="calendar" element={<ProtectedRoute requiredContext="personal"><CalendarPage /></ProtectedRoute>} />
               <Route path="messages" element={<ProtectedRoute requiredContext="personal"><MessagesPage /></ProtectedRoute>} />
-              <Route path="seasons" element={<ProtectedRoute requiredContext="personal"><SeasonsPage /></ProtectedRoute>} />
 
               {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />
@@ -134,7 +149,6 @@ function AppWithTheme() {
               <Route path="org/season-rental" element={<ProtectedRoute requiredContext="organization"><SeasonRentalPage /></ProtectedRoute>} />
               <Route path="org/settings" element={<ProtectedRoute requiredContext="organization"><OrganizationSettingsPage /></ProtectedRoute>} />
               <Route path="org/activity" element={<ProtectedRoute requiredContext="organization"><OrganizationActivityPage /></ProtectedRoute>} />
-              <Route path="org/notifications" element={<ProtectedRoute requiredContext="organization"><OrganizationNotificationsPage /></ProtectedRoute>} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
