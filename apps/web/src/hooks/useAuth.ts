@@ -200,9 +200,10 @@ export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Use auth guards to prevent redirect loops
-  useAuthRedirectGuard(!!user, isLoading);
-  useSessionRestoration();
+  // NOTE: Auth guard hooks temporarily disabled to avoid Router context issues
+  // TODO: Re-enable once properly integrated with Router provider
+  // useAuthRedirectGuard(!!user, isLoading);
+  // useSessionRestoration();
 
   // Subscribe to storage changes for cross-tab synchronization
   const hasStoredContext = useSyncExternalStore(
