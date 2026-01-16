@@ -52,6 +52,12 @@ export function LoginPage(): React.ReactElement {
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
+  // Token dialog state
+  const [showTokenDialog, setShowTokenDialog] = useState(false);
+  const [tokenInput, setTokenInput] = useState('');
+  const [tokenError, setTokenError] = useState<string | null>(null);
+  const [isSubmittingToken, setIsSubmittingToken] = useState(false);
+
   // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
   // Default to dashboard - user context will be loaded from database automatically
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
@@ -131,36 +137,53 @@ export function LoginPage(): React.ReactElement {
 
   /**
    * Handle Demo token authentication
+   * Opens the token dialog
+   */
+  const handleDemoLogin = () => {
+    setShowTokenDialog(true);
+    setTokenError(null);
+    setTokenInput('');
+  };
+
+  /**
+   * Handle token submission
    * Supports 3 demo tokens:
    * - admin-demo-2026: Admin/backoffice access
    * - user-demo-2026: Regular user access
    * - org-demo-2026: Organization user access
    */
-  const handleDemoLogin = async () => {
-    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
-
-    if (!token || !token.trim()) {
-      return; // User cancelled or empty input
+  const handleTokenSubmit = async () => {
+    if (!tokenInput || !tokenInput.trim()) {
+      setTokenError(t('auth.tokenRequired'));
+      return;
     }
+
+    setIsSubmittingToken(true);
+    setTokenError(null);
 
     try {
       // Call the auth service to validate the demo token
-      const response = await authService.loginWithDemoToken(token.trim());
+      const response = await authService.loginWithDemoToken(tokenInput.trim());
 
       if (response.data?.user) {
         // Token is valid - store user session
         localStorage.setItem('minside_user', JSON.stringify(response.data.user));
+
+        // Close dialog
+        setShowTokenDialog(false);
 
         // Redirect to home
         navigate('/', { replace: true });
         // Reload to pick up the new auth state
         window.location.reload();
       } else {
-        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+        setTokenError(t('auth.invalidToken'));
       }
     } catch (error) {
       console.error('[DEMO LOGIN] Token validation failed:', error);
-      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+      setTokenError(t('auth.invalidToken'));
+    } finally {
+      setIsSubmittingToken(false);
     }
   };
 
@@ -242,6 +265,54 @@ export function LoginPage(): React.ReactElement {
         description={t('auth.demoLoginDescription')}
         onClick={handleDemoLogin}
       />
+
+      <Dialog
+        open={showTokenDialog}
+        onClose={() => {
+          setShowTokenDialog(false);
+          setTokenInput('');
+          setTokenError(null);
+        }}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <TextField
+            label={t('auth.demoToken')}
+            value={tokenInput}
+            onChange={(e) => setTokenInput(e.target.value)}
+            placeholder={t('auth.demoTokenPlaceholder')}
+            error={tokenError || undefined}
+            disabled={isSubmittingToken}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isSubmittingToken) {
+                handleTokenSubmit();
+              }
+            }}
+            autoFocus
+          />
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowTokenDialog(false);
+                setTokenInput('');
+                setTokenError(null);
+              }}
+              disabled={isSubmittingToken}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleTokenSubmit}
+              disabled={isSubmittingToken || !tokenInput.trim()}
+            >
+              {isSubmittingToken ? t('common.loading') : t('auth.login')}
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </LoginLayout>
   );
 }
