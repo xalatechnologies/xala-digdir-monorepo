@@ -14,11 +14,11 @@ import {
   DrawerSection,
   DrawerItem,
   ContentLayout,
-  ListingCard,
-  ListingListItem,
-  ListingGrid,
-  ListingToolbar,
-  ListingTableView,
+  RentalObjectCard,
+  RentalObjectListItem,
+  RentalObjectGrid,
+  RentalObjectToolbar,
+  RentalObjectTableView,
   Stack,
   Text,
   HeaderSearch,
@@ -434,7 +434,7 @@ export function RentalObjectsPage(): React.ReactElement {
           {/* Content */}
           {!isLoading && !error && listings.length > 0 && (
             <>
-              <ListingToolbar
+              <RentalObjectToolbar
                 count={filteredListings.length}
                 countLabel="resultater"
                 activeFilterCount={activeFilterCount}
@@ -447,9 +447,9 @@ export function RentalObjectsPage(): React.ReactElement {
 
 
               {viewMode === 'grid' ? (
-                <ListingGrid minCardWidth={300}>
+                <RentalObjectGrid minCardWidth={300}>
                   {visibleListings.map((listing) => (
-                    <ListingCard
+                    <RentalObjectCard
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
@@ -479,11 +479,11 @@ export function RentalObjectsPage(): React.ReactElement {
                       onShare={(_id) => { /* TODO: Implement share */ }}
                     />
                   ))}
-                </ListingGrid>
+                </RentalObjectGrid>
               ) : viewMode === 'list' ? (
                 <Stack spacing="var(--ds-spacing-4)">
                   {visibleListings.map((listing) => (
-                    <ListingListItem
+                    <RentalObjectListItem
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
@@ -549,7 +549,7 @@ export function RentalObjectsPage(): React.ReactElement {
                   }}
                 />
               ) : (
-                <ListingTableView
+                <RentalObjectTableView
                   listings={filteredListings.map(l => ({
                     id: l.id,
                     name: l.name,

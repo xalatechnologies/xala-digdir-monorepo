@@ -15,8 +15,8 @@ import { useState, useCallback } from 'react';
 import type { MapRentalObject } from './RentalObjectMap';
 
 export interface RentalObjectTableViewProps {
-  listings: MapRentalObject[];
-  onListingClick?: (id: string, slug?: string) => void;
+  rentalObjects: MapRentalObject[];
+  onRentalObjectClick?: (id: string, slug?: string) => void;
   height?: string | number;
   className?: string;
 }
@@ -25,8 +25,8 @@ type SortColumn = 'name' | 'location' | 'type' | 'capacity' | 'price';
 type SortDirection = 'asc' | 'desc';
 
 export function RentalObjectTableView({
-  listings,
-  onListingClick,
+  rentalObjects,
+  onRentalObjectClick,
   height = '600px',
   className,
 }: RentalObjectTableViewProps): React.ReactElement {
@@ -34,8 +34,8 @@ export function RentalObjectTableView({
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [focusedRow, setFocusedRow] = useState<number>(-1);
 
-  // Sort listings
-  const sortedListings = React.useMemo(() => {
+  // Sort rental objects
+  const sortedRentalObjects = React.useMemo(() => {
     const sorted = [...listings].sort((a, b) => {
       let aVal: string | number = '';
       let bVal: string | number = '';
@@ -75,7 +75,7 @@ export function RentalObjectTableView({
     });
 
     return sorted;
-  }, [listings, sortColumn, sortDirection]);
+  }, [rentalObjects, sortColumn, sortDirection]);
 
   // Handle column header click for sorting
   const handleSort = useCallback((column: SortColumn) => {
@@ -86,21 +86,21 @@ export function RentalObjectTableView({
   }, [sortColumn]);
 
   // Handle row click
-  const handleRowClick = useCallback((listing: MapRentalObject) => {
-    onListingClick?.(listing.id, listing.slug);
-  }, [onListingClick]);
+  const handleRowClick = useCallback((rentalObject: MapRentalObject) => {
+    onRentalObjectClick?.(rentalObject.id, rentalObject.slug);
+  }, [onRentalObjectClick]);
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, listing: MapRentalObject) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, rentalObject: MapRentalObject) => {
     switch (e.key) {
       case 'Enter':
       case ' ':
         e.preventDefault();
-        handleRowClick(listing);
+        handleRowClick(rentalObject);
         break;
       case 'ArrowDown':
         e.preventDefault();
-        if (index < sortedListings.length - 1) {
+        if (index < sortedRentalObjects.length - 1) {
           setFocusedRow(index + 1);
           // Focus next row
           const nextRow = document.querySelector(`[data-row-index="${index + 1}"]`) as HTMLElement;
@@ -117,12 +117,12 @@ export function RentalObjectTableView({
         }
         break;
     }
-  }, [handleRowClick, sortedListings.length]);
+  }, [handleRowClick, sortedRentalObjects.length]);
 
   // Format price
-  const formatPrice = (listing: MapRentalObject) => {
-    if (!listing.price) return '–';
-    return `kr ${listing.price}${listing.priceUnit ? `/${listing.priceUnit}` : ''}`;
+  const formatPrice = (rentalObject: MapRentalObject) => {
+    if (!rentalObject.price) return '–';
+    return `kr ${rentalObject.price}${rentalObject.priceUnit ? `/${rentalObject.priceUnit}` : ''}`;
   };
 
   return (
@@ -278,15 +278,15 @@ export function RentalObjectTableView({
             </tr>
           </thead>
           <tbody>
-            {sortedListings.map((listing, index) => (
+            {sortedRentalObjects.map((rentalObject, index) => (
               <tr
-                key={listing.id}
+                key={rentalObject.id}
                 data-row-index={index}
                 tabIndex={0}
                 role="button"
-                aria-label={`Vis detaljer for ${listing.name}`}
-                onClick={() => handleRowClick(listing)}
-                onKeyDown={(e) => handleKeyDown(e, index, listing)}
+                aria-label={`Vis detaljer for ${rentalObject.name}`}
+                onClick={() => handleRowClick(rentalObject)}
+                onKeyDown={(e) => handleKeyDown(e, index, rentalObject)}
                 style={{
                   borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
                   cursor: 'pointer',
@@ -313,7 +313,7 @@ export function RentalObjectTableView({
                     fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
                   }}
                 >
-                  {listing.name}
+                  {rentalObject.name}
                 </td>
                 <td
                   style={{
@@ -321,7 +321,7 @@ export function RentalObjectTableView({
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  {listing.location}
+                  {rentalObject.location}
                 </td>
                 <td
                   style={{
@@ -329,7 +329,7 @@ export function RentalObjectTableView({
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  {listing.type || '–'}
+                  {rentalObject.type || '–'}
                 </td>
                 <td
                   style={{
@@ -338,7 +338,7 @@ export function RentalObjectTableView({
                     textAlign: 'right',
                   }}
                 >
-                  {listing.capacity ? `${listing.capacity} personer` : '–'}
+                  {rentalObject.capacity ? `${rentalObject.capacity} personer` : '–'}
                 </td>
                 <td
                   style={{
@@ -367,7 +367,7 @@ export function RentalObjectTableView({
           textAlign: 'center',
         }}
       >
-        Viser {sortedListings.length} {sortedListings.length === 1 ? 'lokale' : 'lokaler'}
+        Viser {sortedRentalObjects.length} {sortedRentalObjects.length === 1 ? 'lokale' : 'lokaler'}
       </div>
 
       <style>{`

@@ -54,6 +54,9 @@ export type { OpeningHoursCardProps } from './OpeningHoursCard';
 export { AvailabilityCalendar } from './AvailabilityCalendar';
 export type { AvailabilityCalendarProps } from './AvailabilityCalendar';
 
+export { RentalObjectAvailabilityCalendar } from './RentalObjectAvailabilityCalendar';
+export type { RentalObjectAvailabilityCalendarProps } from './RentalObjectAvailabilityCalendar';
+
 export { GuidelinesTab } from './GuidelinesTab';
 export type { GuidelinesTabProps } from './GuidelinesTab';
 
@@ -141,7 +144,7 @@ export {
   StatusTag,
   BookingStatusBadge,
   PaymentStatusBadge,
-  ListingStatusBadge,
+  RentalObjectStatusBadge,
   RequestStatusBadge,
   SeasonalLeaseStatusBadge,
   OrganizationStatusBadge,
@@ -157,8 +160,8 @@ export type {
   BookingStatusBadgeProps,
   PaymentStatusType,
   PaymentStatusBadgeProps,
-  ListingStatusType,
-  ListingStatusBadgeProps,
+  RentalObjectStatusType,
+  RentalObjectStatusBadgeProps,
   RequestStatusType,
   RequestStatusBadgeProps,
   SeasonalLeaseStatusType,

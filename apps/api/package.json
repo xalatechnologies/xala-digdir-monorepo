@@ -25,7 +25,9 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:seed:demo": "tsx src/database/seeds/demo-seed.ts",
+    "db:seed:v3": "tsx src/database/seeds/demo-seed-v3.ts",
     "db:reset": "pnpm db:push && pnpm db:seed",
+    "test:rental-objects": "vitest run src/modules/rental-objects",
     "deploy": "bash scripts/deploy.sh production",
     "deploy:staging": "bash scripts/deploy.sh staging"
   },

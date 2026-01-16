@@ -5,7 +5,7 @@
  */
 
 import type { ChangeEvent } from 'react';
-import { Paragraph, Spinner, ListingCard, ListingGrid as DSListingGrid, ListingStatusBadge } from '@xala/ds';
+import { Paragraph, Spinner, RentalObjectCard, RentalObjectGrid as DSRentalObjectGrid, RentalObjectStatusBadge } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import { RentalObjectRowActions } from './RentalObjectRowActions';
 import type { Listing, ListingStatus } from '@digilist/client-sdk';
@@ -68,7 +68,7 @@ export function RentalObjectsGrid({
   }
 
   return (
-    <DSListingGrid minCardWidth={320} gap="var(--ds-spacing-4)">
+    <DSRentalObjectGrid minCardWidth={320} gap="var(--ds-spacing-4)">
       {listings.map((listing) => {
         // Transform raw Listing to UiListing for consistent data display
         const listing = listing;
@@ -135,7 +135,7 @@ export function RentalObjectsGrid({
             </div>
 
             {/* Reusable ListingCard from DS - using transformed UiListing */}
-            <ListingCard
+            <RentalObjectCard
               id={listing.id}
               name={listing.name}
               type={listing.type}
@@ -166,6 +166,6 @@ export function RentalObjectsGrid({
           </div>
         );
       })}
-    </DSListingGrid>
+    </DSRentalObjectGrid>
   );
 }

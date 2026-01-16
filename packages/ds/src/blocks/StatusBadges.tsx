@@ -154,25 +154,25 @@ export function PaymentStatusBadge({ status, size = 'sm' }: PaymentStatusBadgePr
 }
 
 // =============================================================================
-// Listing Status Badge
+// Rental Object Status Badge
 // =============================================================================
 
-export type ListingStatusType = 'published' | 'draft' | 'archived' | 'maintenance';
+export type RentalObjectStatusType = 'published' | 'draft' | 'archived' | 'maintenance';
 
-const listingStatusConfig: Record<ListingStatusType, StatusBadgeConfig> = {
+const rentalObjectStatusConfig: Record<RentalObjectStatusType, StatusBadgeConfig> = {
   published: { color: 'success', label: 'Publisert' },
   draft: { color: 'warning', label: 'Utkast' },
   archived: { color: 'neutral', label: 'Arkivert' },
   maintenance: { color: 'info', label: 'Vedlikehold' },
 };
 
-export interface ListingStatusBadgeProps {
-  status: ListingStatusType;
+export interface RentalObjectStatusBadgeProps {
+  status: RentalObjectStatusType;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function ListingStatusBadge({ status, size = 'sm' }: ListingStatusBadgeProps): React.ReactElement {
-  const config = listingStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+export function RentalObjectStatusBadge({ status, size = 'sm' }: RentalObjectStatusBadgeProps): React.ReactElement {
+  const config = rentalObjectStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
   return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
 }
 
@@ -292,7 +292,7 @@ export function GenericStatusBadge({ status, config, size = 'sm' }: GenericStatu
 export const statusConfigs = {
   booking: bookingStatusConfig,
   payment: paymentStatusConfig,
-  listing: listingStatusConfig,
+  rentalObject: rentalObjectStatusConfig,
   request: requestStatusConfig,
   seasonalLease: seasonalLeaseStatusConfig,
   organization: organizationStatusConfig,

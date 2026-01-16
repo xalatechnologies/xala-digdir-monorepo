@@ -23,8 +23,8 @@ import {
   Text,
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
-import { useListings } from '@digilist/client-sdk';
-import type { ListingStatus } from '@digilist/client-sdk';
+import { useRentalObjects } from '@digilist/client-sdk';
+import type { RentalObjectStatus } from '@digilist/client-sdk';
 import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../hooks/useRentalObjectFilters';
@@ -77,7 +77,7 @@ export function RentalObjectsListView() {
   if (filters.sortBy) queryParams.sortBy = filters.sortBy;
   if (filters.sortOrder) queryParams.sortOrder = filters.sortOrder;
 
-  const { data, isLoading, refetch } = useListings(queryParams);
+  const { data, isLoading, refetch } = useRentalObjects(queryParams);
 
   const rentalObjects = data?.data || [];
   const pagination = data?.meta;
@@ -97,7 +97,7 @@ export function RentalObjectsListView() {
   // Apply filters from drawer
   const applyFilters = useCallback(() => {
     // Apply status
-    setFilter('status', selectedStatus === 'all' ? undefined : selectedStatus as ListingStatus);
+    setFilter('status', selectedStatus === 'all' ? undefined : selectedStatus as RentalObjectStatus);
 
     // Apply capacity
     const capacityOption = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);

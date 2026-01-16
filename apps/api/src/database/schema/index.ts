@@ -94,29 +94,46 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
-// Rental Objects
+// Rental Objects (V3 Model)
 // ============================================================================
 
 export const rentalObjects = pgTable('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+  
+  // Core
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull(),
-  category: varchar('category', { length: 50 }).notNull().default('LOCALE'), // LOCALE, ARRANGEMENT, UTSTYR, OPPLEVELSER
-  status: varchar('status', { length: 50 }).notNull().default('draft'),
   description: text('description'),
+  
+  // V3 Model: Category + Time Mode + Features
+  categoryKey: varchar('category_key', { length: 50 }).notNull().default('LOKALER_OG_BANER'),
+  timeMode: varchar('time_mode', { length: 20 }).notNull().default('PERIOD'),
+  features: jsonb('features').notNull().default([]),
+  ruleSetKey: varchar('rule_set_key', { length: 50 }),
+  
+  // Status & workflow
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  requiresApproval: boolean('requires_approval').notNull().default(false),
+  
+  // Capacity & inventory
+  capacity: integer('capacity'),
+  inventoryTotal: integer('inventory_total'),
+  
+  // Content
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
-  capacity: integer('capacity'),
-  requiresApproval: boolean('requires_approval').notNull().default(false),
   metadata: jsonb('metadata').default({}),
+  
+  // Timestamps
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
+  categoryIdx: index('rental_objects_category_key_idx').on(table.categoryKey),
+  timeModeIdx: index('rental_objects_time_mode_idx').on(table.timeMode),
   statusIdx: index('rental_objects_status_idx').on(table.status),
-  categoryIdx: index('rental_objects_category_idx').on(table.category),
   slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
 }));
 

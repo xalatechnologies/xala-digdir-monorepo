@@ -37,5 +37,5 @@
 // =============================================================================
 // Map Components - Lazy loadable map functionality
 // =============================================================================
-export { RentalObjectMap } from './blocks/ListingMap';
-export type { RentalObjectMapProps, MapRentalObject } from './blocks/ListingMap';
+export { RentalObjectMap } from './blocks/RentalObjectMap';
+export type { RentalObjectMapProps, MapRentalObject } from './blocks/RentalObjectMap';

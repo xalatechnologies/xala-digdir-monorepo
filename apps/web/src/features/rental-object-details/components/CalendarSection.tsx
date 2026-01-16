@@ -10,7 +10,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Heading, ListingAvailabilityCalendar } from '@xala/ds';
+import { Paragraph, Heading, RentalObjectAvailabilityCalendar } from '@xala/ds';
 import {
   useRentalObjectCalendarConfig,
   useAvailabilityMatrix,
@@ -302,7 +302,7 @@ export function CalendarSection({
 
   return (
     <div className={className}>
-      <ListingAvailabilityCalendar
+      <RentalObjectAvailabilityCalendar
         mode={calendarMode}
         cells={cells}
         selection={selection}
