@@ -2,24 +2,6 @@
  * Unified API - Main Entry Point
  * Enterprise-grade modular API with repository pattern, Zod validation, and GraphQL
  */
-
-// Load environment variables from monorepo root .env file
-import { config } from 'dotenv';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
-
-// ES module compatibility: get __dirname equivalent
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Try to load .env from current directory first (production), then from monorepo root (development)
-const envPathProduction = resolve(__dirname, '.env');
-const envPathDevelopment = resolve(__dirname, '../../../.env');
-const envPath = existsSync(envPathProduction) ? envPathProduction : envPathDevelopment;
-
-config({ path: envPath });
-
 import 'reflect-metadata';
 import mercurius from 'mercurius';
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -32,12 +14,12 @@ import * as schema from './database/schema/index';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
-import { RentalObjectModule, RentalObjectController, RentalObjectService, RentalObjectRepository } from './modules/rental-objects';
+import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
-import { CalendarModule, CalendarController, RentalObjectCalendarConfigController, AvailabilityMatrixController, CalendarService } from './modules/calendar';
+import { CalendarController } from './modules/calendar/calendar.controller';
 import { SeasonalLeaseController } from './modules/seasonal-lease/seasonal-lease.controller';
 import { MessagesController } from './modules/messages/messages.controller';
 import { ReportsController } from './modules/reports/reports.controller';
@@ -50,51 +32,31 @@ import { AuthController } from './modules/auth/auth.controller';
 import { AuthzController } from './modules/authz/authz.controller';
 import { PublicController } from './modules/public/public.controller';
 import { AuditController } from './modules/audit/audit.controller';
+import { SecurityController } from './modules/security/security.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
-import { 
-  CategoriesController, 
-  TimeModesController,
-  PricingUnitsController,
-  StatusesController,
-  SystemConfigController,
-  SchemaController,
-  IntegrationsConfigController,
-} from './modules/configuration/configuration.controller';
-import { ConfigurationRepository } from './modules/configuration/configuration.repository';
-import { ConfigurationService } from './modules/configuration/configuration.service';
+import { CategoriesController } from './modules/listing/listing.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
-import { IdPortenAuthController } from './modules/auth/idporten.controller';
-import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
-import { PushNotificationsController, PushNotificationsService, PushNotificationsRepository } from './modules/push-notifications';
-import {
-  NotificationSystemController,
-  NotificationService,
-  NotificationRepository,
-} from './modules/notification-system';
-import { registerWebSocketRoutes, getNotificationBroadcastFunction } from './modules/websocket/websocket.controller';
+import { SignicatAuthController } from './modules/auth/signicat.controller';
+import { NotificationsController } from './modules/notifications/notifications.controller';
+import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
 import { UserGroupController } from './modules/user-groups/user-group.controller';
-import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeRentalObjectsController } from './modules/backoffice/backoffice.controller';
+import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
-import { SeasonsController, PriorityRulesController } from './modules/seasons/seasons.controller';
+import { SeasonsController } from './modules/seasons/seasons.controller';
 import { BlocksController } from './modules/blocks/blocks.controller';
-import { SeasonApplicationsController } from './modules/season-applications/season-applications.controller';
 // Phase 6: Profile
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
-// Phase 8: Vipps Webhooks
-import { VippsWebhookController } from './modules/webhooks/vipps-webhook.controller';
-// Phase 9: GDPR Consent
-import { GdprController, GdprService, GdprRepository } from './modules/gdpr';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -153,7 +115,7 @@ async function bootstrap() {
 
   // Register repositories
   container.registerFactory('TenantRepository', () => new TenantRepository(db));
-  container.registerFactory('RentalObjectRepository', () => new RentalObjectRepository(db));
+  container.registerFactory('ListingRepository', () => new ListingRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
@@ -164,31 +126,22 @@ async function bootstrap() {
   container.registerFactory('TenantService', () => 
     new TenantService(container.resolve('TenantRepository'), adapters)
   );
-  container.registerFactory('RentalObjectService', () => 
-    new RentalObjectService(container.resolve('RentalObjectRepository'), adapters)
+  container.registerFactory('ListingService', () => 
+    new ListingService(container.resolve('ListingRepository'), adapters)
   );
-  container.registerFactory('BookingService', () =>
-    new BookingService(container.resolve('BookingRepository'), container.resolve('RentalObjectRepository'), adapters)
+  container.registerFactory('BookingService', () => 
+    new BookingService(container.resolve('BookingRepository'), adapters)
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () =>
+  container.registerFactory('MonitoringService', () => 
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
       container.resolve('IncidentRepository'),
       adapters
     )
-  );
-  container.registerFactory('CalendarService', () =>
-    new CalendarService(adapters)
-  );
-  
-  // Configuration module (schema-driven settings)
-  container.registerFactory('ConfigurationRepository', () => new ConfigurationRepository(db));
-  container.registerFactory('ConfigurationService', () =>
-    new ConfigurationService(container.resolve('ConfigurationRepository'))
   );
 
   console.log('✓ Services registered');
@@ -197,8 +150,8 @@ async function bootstrap() {
   container.registerFactory('TenantController', () => 
     new TenantController(container.resolve('TenantService'))
   );
-  container.registerFactory('RentalObjectController', () => 
-    new RentalObjectController(container.resolve('RentalObjectService'))
+  container.registerFactory('ListingController', () => 
+    new ListingController(container.resolve('ListingService'))
   );
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
@@ -206,79 +159,41 @@ async function bootstrap() {
   container.registerFactory('UserController', () => 
     new UserController(container.resolve('UserService'))
   );
-  container.registerFactory('MonitoringController', () =>
+  container.registerFactory('MonitoringController', () => 
     new MonitoringController(container.resolve('MonitoringService'))
   );
-  // Public controller (uses ConfigurationService for categories)
-  container.registerFactory('PublicController', () =>
-    new PublicController(container.resolve('ConfigurationService'))
+  // Signicat auth controller (no dependencies)
+  container.registerFactory('SignicatAuthController', () => 
+    new SignicatAuthController()
   );
-  // ID-porten auth controllers via Signicat (no dependencies)
-  container.registerFactory('IdPortenAuthController', () =>
-    new IdPortenAuthController()
+  // Notifications controller (no dependencies)
+  container.registerFactory('NotificationsController', () =>
+    new NotificationsController()
   );
-  container.registerFactory('IdPortenOIDCAuthController', () =>
-    new IdPortenOIDCAuthController()
-  );
-
-  // Push Notifications (preferences, subscriptions)
-  container.registerFactory('PushNotificationsRepository', () =>
-    new PushNotificationsRepository(db)
-  );
-  container.registerFactory('PushNotificationsService', () =>
-    new PushNotificationsService(container.resolve('PushNotificationsRepository'))
-  );
-  container.registerFactory('PushNotificationsController', () =>
-    new PushNotificationsController(container.resolve('PushNotificationsService'))
-  );
-  
-  // Notification System (full notification system with templates, channels, delivery)
-  container.registerFactory('NotificationRepository', () =>
-    new NotificationRepository(db)
-  );
-  container.registerFactory('NotificationService', () =>
-    new NotificationService(
-      container.resolve('NotificationRepository'),
-      container.resolve('PushNotificationsRepository')
-    )
-  );
-  container.registerFactory('NotificationSystemController', () =>
-    new NotificationSystemController(container.resolve('NotificationService'))
-  );
-  
-  // GDPR Consent (consent management, data subject requests)
-  container.registerFactory('GdprRepository', () =>
-    new GdprRepository(db)
-  );
-  container.registerFactory('GdprService', () =>
-    new GdprService(container.resolve('GdprRepository'))
-  );
-  container.registerFactory('GdprController', () =>
-    new GdprController(container.resolve('GdprService'))
+  // Security controller (no dependencies)
+  container.registerFactory('SecurityController', () =>
+    new SecurityController()
   );
   console.log('✓ Controllers registered');
 
   // Load modules
   await moduleLoader.load(TenantModule);
-  await moduleLoader.load(RentalObjectModule);
+  await moduleLoader.load(ListingModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
-  await moduleLoader.load(CalendarModule);
   console.log('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
   const controllers = [
     TenantController, 
-    RentalObjectController, 
+    ListingController, 
     BookingController, 
     UserController, 
     MonitoringController,
     // Backoffice modules
     DashboardController,
     CalendarController,
-    RentalObjectCalendarConfigController,
-    // Note: AvailabilityMatrixController removed - functionality covered by AvailabilityController
     SeasonalLeaseController,
     MessagesController,
     ReportsController,
@@ -291,71 +206,43 @@ async function bootstrap() {
     AuthzController,
     PublicController,
     AuditController,
+    SecurityController,
     SettingsController,
     HelpController,
     DiscountCodesController,
     HealthController,
-    // Configuration module (schema-driven categories, time modes, pricing units, etc.)
     CategoriesController,
-    TimeModesController,
-    PricingUnitsController,
-    StatusesController,
-    SystemConfigController,
-    SchemaController,
-    IntegrationsConfigController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,
     ShareController,
-    // ID-porten (BankID) via Signicat authentication
-    IdPortenAuthController,
-    IdPortenOIDCAuthController,
-    // Notifications (NotificationsController removed - replaced by NotificationSystemController)
-    PushNotificationsController,
+    // Signicat eID Hub authentication
+    SignicatAuthController,
+    // Notifications
+    NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
     UserGroupController,
     BackofficeUserGroupsController,
     BackofficePriceRulesController,
-    BackofficeRentalObjectsController,
+    BackofficeListingsController,
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,
-    PriorityRulesController,
     BlocksController,
-    SeasonApplicationsController,
     // Phase 6: Profile
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
-    // Phase 8: Vipps Webhooks
-    VippsWebhookController,
-    // Phase 9: GDPR Consent
-    GdprController,
   ];
 
   // Create Fastify app with controllers
   const app = await createFastifyApp(controllers, { adapters });
   console.log('✓ REST routes registered');
 
-  // Register Notification System routes (custom registration)
-  const notificationSystemController = container.resolve('NotificationSystemController') as NotificationSystemController;
-  notificationSystemController.registerRoutes(app);
-  console.log('✓ Notification system routes registered');
-
-  // Register GDPR routes (custom registration)
-  const gdprController = container.resolve('GdprController') as GdprController;
-  await gdprController.register(app);
-  console.log('✓ GDPR routes registered');
-
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);
   console.log('✓ WebSocket routes registered');
-
-  // Wire up WebSocket broadcast to notification service for real-time delivery
-  const notificationService = container.resolve('NotificationService') as NotificationService;
-  notificationService.setWebSocketBroadcast(getNotificationBroadcastFunction());
-  console.log('✓ Notification WebSocket broadcast connected');
 
   // Register GraphQL (Mercurius)
   await app.register(mercurius, {

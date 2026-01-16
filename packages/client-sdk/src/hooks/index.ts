@@ -6,9 +6,6 @@
 // Query keys factory
 export { queryKeys } from './query-keys';
 
-// Utility hooks
-export { useDebounced } from './useDebounced';
-
 // Auth hooks
 export {
   useSession,
@@ -16,66 +13,36 @@ export {
   useLogin,
   useEmailLogin,
   useLogout,
-  useRefreshToken,
-  useVippsLogin,
-  useVippsCallback,
+  useRefreshToken
 } from './use-auth';
 
-// Flow Context hooks (Session-Safe Return-to-Flow)
+// Listing hooks
 export {
-  useFlowContext,
-  useHasFlowContext,
-  useFlowContextReturnTo,
-  useRentalObjectFlowContext,
-  useListingFlowContext, // Deprecated alias
-  type SaveFlowContextOptions,
-  type SaveFlowContextResult,
-  type RestoreFlowContextOptions,
-  type RestoreFlowContextResult,
-  type UseFlowContextReturn,
-} from './use-flow-context';
-
-// Rental Object hooks (Utleieobjekter) - Primary hooks for rental object operations
-export {
-  rentalObjectKeys,
-  // List hooks
-  useRentalObjects,
-  useRentalObjectsByCategory,
-  useRentalObjectsList,
-  // Detail hooks
-  useRentalObject,
-  useRentalObjectBySlug,
-  // Category hooks
-  useRentalObjectCategories,
-  useRentalObjectSubcategories,
-  useBookingTimeModes,
-  // Mutation hooks
-  useCreateRentalObject,
-  useUpdateRentalObject,
-  useDeleteRentalObject,
-  usePublishRentalObject,
-  useArchiveRentalObject,
-  useUnpublishRentalObject,
-  useRestoreRentalObject,
-  useDuplicateRentalObject,
-  // Availability & Stats hooks
-  useRentalObjectAvailability,
-  useRentalObjectStats,
-  useRentalObjectCalendarConfig,
-  // Public hooks (no auth)
-  usePublicRentalObjects,
-  usePublicRentalObjectsList,
-  usePublicRentalObject,
-  usePublicRentalObjectBySlug,
-  usePublicRentalObjectAvailability,
-  usePublicRentalObjectCategories,
+  useListings,
+  useListing,
+  useListingBySlug,
+  useListingAvailability,
+  useListingStats,
+  useCreateListing,
+  useUpdateListing,
+  useDeleteListing,
+  usePublishListing,
+  useUnpublishListing,
+  useArchiveListing,
+  useRestoreListing,
+  useDuplicateListing,
+  usePublicListings,
+  usePublicUiListings,
+  usePublicListing,
+  usePublicUiListing,
+  usePublicAvailability,
+  usePublicCategories,
   usePublicCities,
   usePublicMunicipalities,
-  useFeaturedRentalObjects,
-  // Media hooks
-  useUploadRentalObjectMedia,
-  useDeleteRentalObjectMedia,
-} from './use-rental-objects';
+  useFeaturedListings,
+  useUploadListingMedia,
+  useDeleteListingMedia
+} from './use-listings';
 
 // Booking hooks
 export {
@@ -98,14 +65,6 @@ export {
   usePaymentHistory,
   usePaymentReconciliation,
 } from './use-bookings';
-
-// Calendar hooks (config and availability matrix)
-// Note: useRentalObjectCalendarConfig is exported from use-rental-objects
-export {
-  useListingCalendarConfig, // @deprecated - use useRentalObjectCalendarConfig from use-rental-objects
-  useAvailabilityMatrix,
-  useCalendarRealtime,
-} from './use-calendar';
 
 // Organization & User hooks
 export {
@@ -157,20 +116,13 @@ export {
   useRefundPayment,
   useCalendarSyncStatus,
   useSyncCalendar,
-  // Integration Configuration hooks
-  useIntegrationConfigs,
-  useIntegrationConfig,
-  useUpdateIntegrationConfig,
-  useTestIntegrationConfig,
 } from './use-integrations';
 
 // Realtime hooks (WebSocket)
 export {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeBookingConflicts,
-  useRealtimeRentalObjects,
-  useRealtimeListings, // Deprecated alias
+  useRealtimeListings,
   useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
@@ -201,10 +153,7 @@ export {
   useDeletePushSubscription,
   useUpdateNotificationPreferences,
   useTestPushNotification,
-  usePushSubscriptionFlow,
-  // Organization notification preferences
-  useOrganizationNotificationPreferences,
-  useUpdateOrganizationNotificationPreferences,
+  usePushSubscriptionFlow
 } from './use-push-notifications';
 
 // Audit hooks
@@ -218,19 +167,6 @@ export {
   type AuditQueryParams,
   type AuditStats
 } from './use-audit';
-
-// Discount Code hooks
-export {
-  useDiscountCodes,
-  useDiscountCode,
-  useCreateDiscountCode,
-  useUpdateDiscountCode,
-  useDeleteDiscountCode,
-  useValidateDiscountCode,
-  useToggleDiscountCode,
-  type DiscountCodeQueryParams,
-  type ValidateCodeResult
-} from './use-discount-codes';
 
 // Conversation hooks
 export {
@@ -276,8 +212,7 @@ export {
 export {
   useReviews,
   useReview,
-  useRentalObjectReviews,
-  useListingReviews, // Deprecated alias
+  useListingReviews,
   useReviewStats,
   useReviewSummary,
   useMyReviews,
@@ -409,7 +344,6 @@ export {
   useSeasons,
   useSeason,
   useSeasonStats,
-  useSeasonVenues,
   useCreateSeason,
   useUpdateSeason,
   useOpenSeason,
@@ -418,8 +352,6 @@ export {
   useCompleteSeason,
   useCancelSeason,
   useDeleteSeason,
-  useAddVenueToSeason,
-  useRemoveVenueFromSeason,
 } from './use-seasons';
 
 // Help & Support hooks
@@ -431,99 +363,12 @@ export {
   useSubmitContact,
 } from './useHelp';
 
-// Integration Credentials hooks (super admin only)
+// Security Dashboard hooks
 export {
-  CREDENTIAL_KEYS,
-  useIntegrationCredentials,
-  useIntegrationCredential,
-  useCredentialValue,
-  useCreateCredential,
-  useUpdateCredential,
-  useDeleteCredential,
-  useRotateCredential,
-  useCredentialTypes,
-  useIntegrationProviders,
-  type CredentialInfo,
-  type CreateCredentialInput,
-  type UpdateCredentialInput,
-} from './use-integration-credentials';
-
-// GDPR Consent hooks
-export {
-  gdprKeys,
-  useConsentTypes,
-  useMyConsents,
-  useConsentStatus,
-  useConsentAuditLog,
-  useMyDataRequests,
-  usePendingDataRequests,
-  useGrantConsent,
-  useGrantMultipleConsents,
-  useCreateDataSubjectRequest,
-  useUpdateDataRequestStatus,
-  useShowConsentPopup,
-  usePendingRequiredConsents,
-} from './use-gdpr';
-
-// Notification System hooks (complete notification system)
-export {
-  notificationSystemKeys,
-  // User notifications
-  useNotifications as useNotificationSystemNotifications,
-  useNotification as useNotificationSystemNotification,
-  useUnreadNotificationCount,
-  useNotificationStats,
-  useMarkNotificationAsRead,
-  useMarkAllNotificationsAsRead,
-  useDismissNotification,
-  useDeleteNotification as useDeleteNotificationSystem,
-  // Admin - send notifications
-  useSendNotification,
-  useBroadcastNotification,
-  // Templates
-  useNotificationTemplates as useNotificationSystemTemplates,
-  useNotificationTemplate,
-  useCreateNotificationTemplate,
-  useUpdateNotificationTemplate,
-  useDeleteNotificationTemplate,
-  usePreviewNotificationTemplate,
-  // Channel configuration
-  useAvailableNotificationChannels,
-  useNotificationRateLimits,
-} from './use-notification-system';
-
-// Booking Quote hooks (XALA-compliant projection-only)
-export {
-  bookingQuoteKeys,
-  useBookingQuote,
-  useRecurringPreview,
-  useCreateBookingFromQuote,
-} from './use-booking-quote';
-
-// Rental Object Calendar hooks (XALA-compliant)
-export {
-  calendarKeys,
-  useCalendarConfig,
-  useCalendarAvailability,
-  useRentalObjectCalendar,
-  useCalendarRealtime as useRentalObjectCalendarRealtime,
-} from './use-rental-object-calendar';
-
-// Authorization (RBAC) hooks
-export {
-  authzKeys,
-  usePermissions,
-  useCheckPermission,
-  useCan,
-  useRole,
-  useHasAnyPermission,
-  useHasAllPermissions,
-  useInvalidatePermissions,
-} from './use-authz';
-
-// Profile hooks
-export {
-  profileKeys,
-  useProfile,
-  useUpdateProfile,
-} from './use-profile';
+  useSecurityMetrics,
+  useGdprStatus,
+  useFailedLogins,
+  useDataExports,
+  useFailedLoginsByUser,
+  useDataExportsByUser,
+} from './use-security-dashboard';

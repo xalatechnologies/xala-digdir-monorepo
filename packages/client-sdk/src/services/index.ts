@@ -9,44 +9,21 @@ export { BaseService } from './base.service';
 
 // Auth
 export { AuthService, authService } from './auth.service';
-export type {
-  RequireAuthOptions,
-  RequireAuthResult,
-  InitiateAuthWithContextOptions,
-  ResumeFlowResult,
-} from './auth.service';
 
-// Rental Objects (Utleieobjekter) - Primary services
-export {
-  RentalObjectService,
-  PublicRentalObjectService,
-  rentalObjectService,
-  publicRentalObjectService,
-  type CategoryInfo,
-  type SubcategoryInfo,
-  type TimeModeInfo,
-} from './rental-object.service';
+// Listings
+export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
 // Bookings
-export {
-  BookingService,
-  CalendarService,
-  AllocationService,
+export { 
+  BookingService, 
+  CalendarService, 
+  AllocationService, 
   AvailabilityService,
   bookingService,
   calendarService,
   allocationService,
   availabilityService
 } from './booking.service';
-
-// Calendar (Rental Object calendar config & availability matrix)
-export {
-  RentalObjectCalendarService,
-  AvailabilityMatrixService,
-  rentalObjectCalendarService,
-  availabilityMatrixService,
-  type CalendarConfigQueryParams,
-} from './calendar.service';
 
 // Organizations & Users
 export { 
@@ -125,6 +102,9 @@ export { widgetService } from './widget.service';
 // Monitoring
 export { monitoringService } from './monitoring.service';
 
+// Security
+export { securityService } from './security.service';
+
 // Reviews
 export { ReviewService, reviewService } from './review.service';
 
@@ -141,44 +121,3 @@ export type {
   InvoiceQueryParams 
 } from './billing.service';
 
-// ID-porten (BankID/eID Hub)
-export { idportenService } from './idporten.service';
-
-// Vipps Login (OIDC Authentication)
-export { vippsAuthService } from './vipps.service';
-export type {
-  IdPortenConfig,
-  IdPortenUser,
-  IdPortenTokens,
-  IdPortenAuthResult,
-  IdPortenLogoutResult,
-} from './idporten.service';
-
-// Integrations Configuration (ID-porten, Vipps, Visma, RCO, ACOS)
-export { IntegrationsService, integrationsService } from './integrations.service';
-export type {
-  Integration,
-  IntegrationUpdate,
-  IntegrationTestResult,
-} from './integrations.service';
-
-// Profile & Preferences
-export { ProfileService, profileService } from './profile.service';
-
-// Authorization (RBAC)
-export {
-  AuthzService,
-  authzService,
-  type AuthzUserRole,
-  type AuthzResource,
-  type AuthzAction,
-  type UserPermissionsDTO,
-  type PermissionCheckResultDTO,
-  type PermissionCheckParams,
-} from './authz.service';
-
-// GDPR Consent
-export { GdprService, gdprService } from './gdpr.service';
-
-// Notification System (complete notification system)
-export { notificationSystemService } from './notification-system.service';

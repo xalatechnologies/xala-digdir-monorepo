@@ -225,9 +225,6 @@ export const queryKeys = {
     my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
       [...queryKeys.notifications.all, 'my', params] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
-    deliveryStatus: (id: string) => [...queryKeys.notifications.all, 'deliveryStatus', id] as const,
-    deliveryReports: (params?: { type?: string; status?: string; search?: string; page?: number; limit?: number }) =>
-      [...queryKeys.notifications.all, 'deliveryReports', params] as const,
   },
 
   // =========================================================================
@@ -300,6 +297,31 @@ export const queryKeys = {
     },
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
+    },
+  },
+
+  // =========================================================================
+  // Security Keys
+  // =========================================================================
+  security: {
+    all: ['security'] as const,
+    metrics: () => [...queryKeys.security.all, 'metrics'] as const,
+    gdprStatus: () => [...queryKeys.security.all, 'gdprStatus'] as const,
+    failedLogins: {
+      all: () => [...queryKeys.security.all, 'failedLogins'] as const,
+      lists: () => [...queryKeys.security.failedLogins.all(), 'list'] as const,
+      list: (params?: { userId?: string; startDate?: string; endDate?: string; page?: number; limit?: number }) =>
+        [...queryKeys.security.failedLogins.lists(), params] as const,
+      byUser: (userId: string, params?: { startDate?: string; endDate?: string; page?: number; limit?: number }) =>
+        [...queryKeys.security.failedLogins.all(), 'byUser', userId, params] as const,
+    },
+    dataExports: {
+      all: () => [...queryKeys.security.all, 'dataExports'] as const,
+      lists: () => [...queryKeys.security.dataExports.all(), 'list'] as const,
+      list: (params?: { userId?: string; startDate?: string; endDate?: string; page?: number; limit?: number }) =>
+        [...queryKeys.security.dataExports.lists(), params] as const,
+      byUser: (userId: string, params?: { startDate?: string; endDate?: string; page?: number; limit?: number }) =>
+        [...queryKeys.security.dataExports.all(), 'byUser', userId, params] as const,
     },
   },
 } as const;

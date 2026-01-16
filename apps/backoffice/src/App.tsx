@@ -35,11 +35,11 @@ import { ListingWizardPage } from './routes/listing-wizard';
 import { PricingRulesPage } from './routes/pricing-rules';
 import { UsersManagementPage } from './routes/users-management';
 import { AdminReportsPage } from './routes/admin-reports';
-import { NotificationDeliveryPage } from './routes/notification-delivery';
 // New TenantAdmin pages
 import { TenantSettingsPage } from './routes/tenant/settings';
 import { TenantBrandingPage } from './routes/tenant/branding';
 import { TenantAuditLogPage } from './routes/tenant/audit-log';
+import { SecurityPage } from './routes/security';
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -247,15 +247,7 @@ function AppWithTheme() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="notifications/delivery-reports"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <NotificationDeliveryPage />
-                  </ProtectedRoute>
-                }
-              />
-
+              
               {/* TenantAdmin routes */}
               <Route
                 path="tenant/settings"
@@ -278,6 +270,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <TenantAuditLogPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="security"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <SecurityPage />
                   </ProtectedRoute>
                 }
               />
