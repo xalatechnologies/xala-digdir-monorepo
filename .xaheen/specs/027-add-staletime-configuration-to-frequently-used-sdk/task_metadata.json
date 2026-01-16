@@ -1,9 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "performance_optimizations",
-  "ideaId": "perf-003",
-  "rationale": "Hooks like useBookings, useRentalObjects, useOrganizations, and useDashboardStats refetch on every component mount (staleTime defaults to 0). Only useBookingModeConfig (60s) and useRecurringPreview (30s) have explicit staleTime. This causes redundant network requests when navigating between tabs or returning to previously-viewed pages.",
-  "category": "performance",
-  "performanceCategory": "network",
-  "impact": "medium"
-}

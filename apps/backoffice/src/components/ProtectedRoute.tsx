@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
 import { useNeedsRoleSelection, useBackofficeRole } from '../hooks/useBackofficeRole';
+import { useCapabilities, type Capability } from '../hooks/useCapabilities';
 import { useToast } from '../providers/ToastProvider';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
 import {
@@ -21,8 +22,24 @@ interface ProtectedRouteProps {
   /**
    * Required role for accessing this route.
    * Uses EffectiveBackofficeRole ('admin' | 'case_handler').
+   * @deprecated Use requiredCapability or requiredCapabilities instead for finer-grained control
    */
   requiredRole?: EffectiveBackofficeRole;
+  /**
+   * Single capability required to access this route.
+   * Use this for simple permission checks.
+   */
+  requiredCapability?: Capability;
+  /**
+   * Multiple capabilities where ALL are required to access this route.
+   * Use this for routes that need multiple permissions.
+   */
+  requiredCapabilities?: Capability[];
+  /**
+   * Multiple capabilities where ANY ONE is sufficient to access this route.
+   * Use this for routes accessible by multiple different permission sets.
+   */
+  anyCapability?: Capability[];
   /** Tenant ID for flow context (optional, defaults to env or 'backoffice') */
   tenantId?: string;
 }
@@ -83,11 +100,15 @@ function extractFormDataFromState(state: unknown): Record<string, unknown> | und
 export function ProtectedRoute({
   children,
   requiredRole,
+  requiredCapability,
+  requiredCapabilities,
+  anyCapability,
   tenantId,
 }: ProtectedRouteProps) {
   const t = useT();
   const { isLoading, isAuthenticated } = useAuth();
   const { effectiveRole, getHomeRoute } = useBackofficeRole();
+  const { hasCapability, hasAllCapabilities, hasAnyCapability } = useCapabilities();
   const location = useLocation();
   const { error } = useToast();
   const hasShownToast = useRef(false);
@@ -95,19 +116,58 @@ export function ProtectedRoute({
   // Check if dual-role user needs to select a role
   const needsRoleSelection = useNeedsRoleSelection();
 
-  // Check role against effectiveRole from BackofficeRoleProvider
+  // Check role against effectiveRole from BackofficeRoleProvider (legacy support)
   const hasRequiredRole = !requiredRole || effectiveRole === requiredRole;
 
-  // Show toast when user lacks required role (only once per route)
+  // Check capability-based access control
+  const hasRequiredCapabilities = useMemo(() => {
+    // If no capability requirements, pass
+    if (!requiredCapability && !requiredCapabilities && !anyCapability) {
+      return true;
+    }
+
+    // Check single required capability
+    if (requiredCapability && !hasCapability(requiredCapability)) {
+      return false;
+    }
+
+    // Check all required capabilities (AND logic)
+    if (requiredCapabilities && requiredCapabilities.length > 0) {
+      if (!hasAllCapabilities(requiredCapabilities)) {
+        return false;
+      }
+    }
+
+    // Check any required capability (OR logic)
+    if (anyCapability && anyCapability.length > 0) {
+      if (!hasAnyCapability(anyCapability)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [
+    requiredCapability,
+    requiredCapabilities,
+    anyCapability,
+    hasCapability,
+    hasAllCapabilities,
+    hasAnyCapability,
+  ]);
+
+  // Combined access check: both role (legacy) and capability checks must pass
+  const hasAccess = hasRequiredRole && hasRequiredCapabilities;
+
+  // Show toast when user lacks access (only once per route)
   useEffect(() => {
-    if (!isLoading && isAuthenticated && !hasRequiredRole && !hasShownToast.current) {
+    if (!isLoading && isAuthenticated && !hasAccess && !hasShownToast.current) {
       hasShownToast.current = true;
       error(
         'Ingen tilgang',
         'Du har ikke tilgang til denne siden. Kontakt administrator hvis du mener dette er feil.'
       );
     }
-  }, [isLoading, isAuthenticated, hasRequiredRole, error]);
+  }, [isLoading, isAuthenticated, hasAccess, error]);
 
   // Reset toast flag when location changes
   useEffect(() => {
@@ -205,7 +265,7 @@ export function ProtectedRoute({
     return <Navigate to="/role-selection" state={{ from: location }} replace />;
   }
 
-  if (!hasRequiredRole) {
+  if (!hasAccess) {
     return <Navigate to={getHomeRoute()} replace />;
   }
 

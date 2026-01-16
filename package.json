@@ -33,6 +33,8 @@
     "deploy:web": "./scripts/deploy.sh web",
     "deploy:backoffice": "./scripts/deploy.sh backoffice",
     "deploy:minside": "./scripts/deploy.sh minside",
+    "deploy:tenant-admin": "./scripts/deploy.sh tenant-admin",
+    "deploy:saas-admin": "./scripts/deploy.sh saas-admin",
     "deploy:all": "./scripts/deploy.sh all",
     "deploy:ssl": "./scripts/setup-ssl.sh",
     "prepare": "husky"

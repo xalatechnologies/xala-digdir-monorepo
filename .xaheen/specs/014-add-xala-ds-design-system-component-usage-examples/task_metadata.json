@@ -1,8 +1,0 @@
-{
-  "sourceType": "ideation",
-  "ideationType": "documentation_gaps",
-  "ideaId": "doc-005",
-  "rationale": "The design system facade (@xala/ds) is the ONLY allowed way to import UI components. Without usage examples, developers spend time reverse-engineering component APIs. The packages/ds-registry exists but doesn't provide searchable component documentation.",
-  "category": "documentation",
-  "priority": "medium"
-}

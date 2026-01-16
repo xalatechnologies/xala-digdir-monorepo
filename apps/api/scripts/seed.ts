@@ -1,10 +1,17 @@
 /**
  * Database Seed Script
  * Norwegian demo data for production-ready demo
+ *
+ * Includes:
+ * - Demo tenants, organizations, users
+ * - Sample listings and bookings
+ * - Conversations and messages
+ * - Feature flags catalog
  */
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
+import { seedFeatureFlags } from '../src/database/seeds/feature-flags.seed';
 import { logger } from '../src/core/logger';
 
 // ============================================================================
@@ -660,7 +667,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_1,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(1, 10),
@@ -673,7 +680,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_2,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(4, 14),
@@ -686,7 +693,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_3,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(7, 18),
@@ -699,7 +706,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_4,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(10, 9),
@@ -712,7 +719,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_5,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(14, 14),
@@ -725,7 +732,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_6,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-7, 10),
@@ -738,7 +745,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_7,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-3, 16),
@@ -751,7 +758,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_8,
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_HALL_A,
+      rentalObjectId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'cancelled',
       startTime: getTime(-1, 18),
@@ -781,7 +788,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i, 'b00c'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      rentalObjectId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'completed',
       startTime: start,
@@ -802,7 +809,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i + 10, 'b00d'),
       tenantId: TENANT_SKIEN,
-      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
+      rentalObjectId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'confirmed',
       startTime: start,
@@ -1013,7 +1020,7 @@ function generateAllocations(bookings: any[]) {
     .map((booking, index) => ({
       id: generateUUID(index, 'a00b'),
       tenantId: booking.tenantId,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       bookingId: booking.id,
       userId: booking.userId,
       title: `Booking - ${booking.userId === USER_OLA_HANSEN ? 'Ola Hansen' : 'Bruker'}`,
@@ -1101,6 +1108,21 @@ async function seed() {
     // Count Ola's specific data
     const olaBookings = bookings.filter((b: any) => b.userId === USER_OLA_HANSEN);
 
+    // Seed feature flags catalog (idempotent - safe to run multiple times)
+    console.log('🚩 Seeding feature flags...');
+    const flagsResult = await seedFeatureFlags(databaseUrl);
+
+    console.log('\n✅ Seed completed successfully!');
+    console.log(`   - ${TENANTS.length} tenants`);
+    console.log(`   - ${ORGANIZATIONS.length} organizations`);
+    console.log(`   - ${USERS.length} users`);
+    console.log(`   - ${SUBSCRIPTIONS.length} subscriptions`);
+    console.log(`   - ${LISTINGS.length} listings`);
+    console.log(`   - ${bookings.length} bookings (${olaBookings.length} for Ola Hansen)`);
+    console.log(`   - ${conversations.length} conversations`);
+    console.log(`   - ${messages.length} messages`);
+    console.log(`   - ${allocations.length} allocations`);
+    console.log(`   - ${flagsResult.total} feature flags (${flagsResult.inserted} new, ${flagsResult.updated} updated)`);
     logger.info('\n✅ Seed completed successfully!');
     logger.info(`   - ${TENANTS.length} tenants`);
     logger.info(`   - ${ORGANIZATIONS.length} organizations`);

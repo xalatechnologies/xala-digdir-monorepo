@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "012-extract-duplicated-listingsfilterbar-component-int",
-  "state": "complete",
+  "spec": "039-back-office-users-and-roles",
+  "state": "building",
   "subtasks": {
-    "completed": 15,
-    "total": 15,
+    "completed": 40,
+    "total": 40,
     "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Final Cleanup and Verification",
+    "current": "Integration & End-to-End Verification",
     "id": null,
-    "total": 3
+    "total": 4
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 222,
-    "started_at": "2026-01-16T00:40:06.910521"
+    "number": 12,
+    "started_at": "2026-01-16T13:45:00.000000"
   },
-  "last_update": "2026-01-16T02:04:14.333599"
+  "last_update": "2026-01-16T13:45:00.000000"
 }

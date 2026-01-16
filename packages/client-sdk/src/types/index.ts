@@ -112,12 +112,16 @@ export * from './booking';
 export * from './organization';
 export * from './gdpr';
 export * from './auth';
+export * from './rbac';
 export * from './review';
 export * from './settings';
 export * from './upload';
 export * from './search';
 export * from './economy';
 
+// SaaS and Tenant Admin types
+export * from './saas';
+export * from './tenant-admin';
 // Notification types
 export * from './notification-system';
 

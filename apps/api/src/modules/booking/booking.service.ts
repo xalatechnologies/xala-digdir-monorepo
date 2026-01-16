@@ -8,17 +8,24 @@ import { RentalObjectRepository } from '../rental-objects/rental-object.reposito
 import { validate } from '../../core/validation/zod-pipe';
 import { ForbiddenError } from '../../core/errors/problem-details';
 import { getAuditService, broadcastBookingEvent } from '../../core/audit/audit.service';
+import { container } from '../../core/container';
+import { eq, and, or } from 'drizzle-orm';
+import { caseHandlerScopes, users } from '../../database/schema/index';
 import {
   CreateBookingSchema,
   UpdateBookingSchema,
   BookingQuerySchema,
   CancelBookingSchema,
+  ApproveBookingSchema,
+  DenyBookingSchema,
   RecurringPreviewRequestSchema,
   RecurringCreateSchema,
   type CreateBookingDTO,
   type UpdateBookingDTO,
   type BookingQueryParams,
   type CancelBookingDTO,
+  type ApproveBookingDTO,
+  type DenyBookingDTO,
   type Booking,
   type CalendarEvent,
   type BookingSelection,
@@ -230,7 +237,7 @@ export class BookingService {
   /**
    * Complete booking with optimistic locking
    */
-  async complete(id: string, version?: number): Promise<Booking> {
+async complete(id: string, version?: number): Promise<Booking> {
     const booking = version !== undefined
       ? await this.repository.updateWithVersion(id, version, { status: 'completed' })
       : await this.repository.update(id, { status: 'completed' });
@@ -255,6 +262,146 @@ export class BookingService {
       endTime: booking.endTime,
       userId: booking.userId,
       version: booking.version,
+    });
+
+    return booking as unknown as Booking;
+  }
+
+  /**
+   * Check if a case handler has scope for the given rental object
+   * Case handlers (saksbehandler role) must have an active case_handler_scopes entry
+   * to approve/deny bookings for a specific rental object.
+   *
+   * Scope types:
+   * - 'all': Handler has access to all rental objects in tenant (commune-wide)
+   * - 'specific': Handler has access to specific rental objects
+   */
+  async hasCaseHandlerScope(userId: string, rentalObjectId: string, tenantId: string): Promise<boolean> {
+    try {
+      const db = container.resolve<any>('Database');
+
+      // First check user's role - admins bypass scope checks
+      const userResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
+
+      if (userResult.length === 0) {
+        return false;
+      }
+
+      const user = userResult[0];
+
+      // Admins and super_admins bypass scope checks
+      if (user.role === 'super_admin' || user.role === 'admin') {
+        return true;
+      }
+
+      // For case handlers (saksbehandler), check case_handler_scopes
+      if (user.role === 'saksbehandler') {
+        const scopes = await db
+          .select()
+          .from(caseHandlerScopes)
+          .where(
+            and(
+              eq(caseHandlerScopes.userId, userId),
+              eq(caseHandlerScopes.tenantId, tenantId),
+              eq(caseHandlerScopes.status, 'active'),
+              or(
+                // Either scope type is 'all' (tenant-wide access)
+                eq(caseHandlerScopes.scopeType, 'all'),
+                // Or specific rental object match
+                and(
+                  eq(caseHandlerScopes.scopeType, 'specific'),
+                  eq(caseHandlerScopes.rentalObjectId, rentalObjectId)
+                )
+              )
+            )
+          )
+          .limit(1);
+
+        return scopes.length > 0;
+      }
+
+      // For regular users without case handler role, deny
+      return false;
+    } catch (error) {
+      this.adapters?.log?.error('Error checking case handler scope', { error, userId, rentalObjectId });
+      return false;
+    }
+  }
+
+  /**
+   * Deny booking (case handler action)
+   *
+   * Scope enforcement:
+   * - super_admin/admin: Can deny any booking
+   * - saksbehandler: Must have case_handler_scopes entry for the booking's rental object
+   *
+   * Note: Per PERMISSION_MATRIX, ORG_CASE_HANDLER role cannot deny (approve only)
+   */
+  async deny(id: string, userId: string, data: DenyBookingDTO = {}): Promise<Booking> {
+    const validated = validate(DenyBookingSchema, data);
+    const existing = await this.findByIdOrFail(id);
+
+    // Enforce case handler scope
+    const hasScope = await this.hasCaseHandlerScope(userId, existing.rentalObjectId, existing.tenantId);
+    if (!hasScope) {
+      throw new ForbiddenError(
+        'You do not have scope to deny bookings for this rental object. ' +
+        'Case handlers must be assigned scope for specific rental objects.'
+      );
+    }
+
+    const updateData: Record<string, unknown> = {
+      status: 'denied',
+    };
+
+    // Preserve existing notes or append denial reason
+    if (validated.reason) {
+      updateData.notes = existing.notes
+        ? `${existing.notes}\n[Denied] ${validated.reason}`
+        : `[Denied] ${validated.reason}`;
+    }
+
+    // Store denial metadata
+    updateData.metadata = {
+      ...(existing.metadata || {}),
+      deniedBy: userId,
+      deniedAt: new Date().toISOString(),
+      denialReason: validated.reason,
+    };
+
+    const booking = await this.repository.update(id, updateData);
+    this.adapters?.log?.warn('Booking denied', { id, deniedBy: userId, reason: validated.reason });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'deny',
+      resource: 'booking',
+      resourceId: id,
+      severity: 'warning',
+      metadata: {
+        previousStatus: existing.status,
+        newStatus: 'denied',
+        reason: validated.reason,
+        scopeVerified: true,
+      },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'denied',
+      bookingId: booking.id,
+      rentalObjectId: booking.rentalObjectId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: booking.version,
+      metadata: { deniedBy: userId, reason: validated.reason },
     });
 
     return booking as unknown as Booking;

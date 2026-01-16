@@ -5,6 +5,7 @@ import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
+import { CapabilityProvider } from './providers/CapabilityProvider';
 import { ToastProvider } from './providers/ToastProvider';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
@@ -31,6 +32,12 @@ const MessagesPage = React.lazy(() => import('./routes/messages').then(m => ({ d
 const OrganizationsListPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationsListPage })));
 const OrganizationDetailPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationDetailPage })));
 const OrganizationFormPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationFormPage })));
+// RBAC Organization pages
+const OrganizationMembersPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationMembersPage })));
+const PermissionAssignmentPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.PermissionAssignmentPage })));
+// RBAC Access Grants pages
+const AccessGrantsPage = React.lazy(() => import('./routes/access-grants').then(m => ({ default: m.AccessGrantsPage })));
+const NewAccessGrantPage = React.lazy(() => import('./routes/access-grants').then(m => ({ default: m.NewAccessGrantPage })));
 const UsersPage = React.lazy(() => import('./routes/users').then(m => ({ default: m.UsersPage })));
 const ReportsPage = React.lazy(() => import('./routes/reports').then(m => ({ default: m.ReportsPage })));
 const AuditPage = React.lazy(() => import('./routes/audit').then(m => ({ default: m.AuditPage })));
@@ -83,6 +90,7 @@ function AppWithTheme() {
       >
         <AuthProvider>
           <BackofficeRoleProvider>
+          <CapabilityProvider>
           <RealtimeProvider
             wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
@@ -164,6 +172,38 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <OrganizationFormPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/members"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationMembersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/permissions"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <PermissionAssignmentPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="access-grants"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AccessGrantsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="access-grants/new"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <NewAccessGrantPage />
                   </ProtectedRoute>
                 }
               />
@@ -301,6 +341,7 @@ function AppWithTheme() {
           </Routes>
           </Suspense>
           </RealtimeProvider>
+          </CapabilityProvider>
           </BackofficeRoleProvider>
         </AuthProvider>
       </BrowserRouter>
