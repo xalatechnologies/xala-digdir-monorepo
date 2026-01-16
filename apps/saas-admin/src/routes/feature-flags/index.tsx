@@ -256,12 +256,12 @@ export function FeatureFlagsCatalogPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Nøkkel</Table.HeaderCell>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
                 <Table.HeaderCell>Kategori</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.type')}</Table.HeaderCell>
                 <Table.HeaderCell>Standardverdi</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Beskrivelse</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.description')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

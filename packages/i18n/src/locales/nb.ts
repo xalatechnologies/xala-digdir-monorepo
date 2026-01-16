@@ -36,6 +36,8 @@ export const nb: Record<string, string> = {
   'common.publish': 'Publiser',
   'common.unpublish': 'Avpubliser',
   'common.name': 'Navn',
+  'common.type': 'Type',
+  'common.description': 'Beskrivelse',
   'common.price': 'Pris',
   'common.status': 'Status',
   'common.lastModified': 'Sist endret',

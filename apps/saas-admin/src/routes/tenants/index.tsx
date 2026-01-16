@@ -204,11 +204,11 @@ export function TenantsListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
                 <Table.HeaderCell>Slug</Table.HeaderCell>
                 <Table.HeaderCell>Domene</Table.HeaderCell>
                 <Table.HeaderCell>Plan</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
                 <Table.HeaderCell>Opprettet</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
               </Table.Row>

@@ -598,7 +598,7 @@ export function TenantDetailPage() {
                         <Table.Row>
                           <Table.HeaderCell>{t('saasAdmin.tenantDetail.invoiceNumber')}</Table.HeaderCell>
                           <Table.HeaderCell>{t('saasAdmin.tenantDetail.amount')}</Table.HeaderCell>
-                          <Table.HeaderCell>Status</Table.HeaderCell>
+                          <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
                           <Table.HeaderCell>{t('saasAdmin.tenantDetail.dueDate')}</Table.HeaderCell>
                         </Table.Row>
                       </Table.Head>
@@ -664,7 +664,7 @@ export function TenantDetailPage() {
                   <Table.Row>
                     <Table.HeaderCell>{t('saasAdmin.tenantDetail.provider')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('saasAdmin.tenantDetail.key')}</Table.HeaderCell>
-                    <Table.HeaderCell>Status</Table.HeaderCell>
+                    <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('saasAdmin.tenantDetail.fingerprint')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('saasAdmin.tenantDetail.lastRotated')}</Table.HeaderCell>
                   </Table.Row>

@@ -35,6 +35,8 @@ export const en: Record<string, string> = {
   'common.publish': 'Publish',
   'common.unpublish': 'Unpublish',
   'common.name': 'Name',
+  'common.type': 'Type',
+  'common.description': 'Description',
   'common.price': 'Price',
   'common.status': 'Status',
   'common.lastModified': 'Last modified',
