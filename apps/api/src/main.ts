@@ -64,11 +64,10 @@ import { BlocksController } from './modules/blocks/blocks.controller';
 // Phase 6: Profile
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
-import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+import { ReviewsController } from './modules/reviews/reviews.controller';
 // Phase 8: SaaS Admin & Tenant Admin
 import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
-import { ReviewsController, RentalObjectReviewsController } from './modules/reviews/reviews.controller';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
 

@@ -44,6 +44,11 @@ export const nb: Record<string, string> = {
   'common.details': 'Detaljer',
   'common.change': 'Endre',
   'common.moreOptions': 'Flere valg',
+  'common.showing': 'Viser',
+  'common.of': 'av',
+  'common.page': 'Side',
+  'common.tryDifferentSearch': 'Prøv å endre søkekriteriene',
+  'common.notifications': 'Varsler',
 
   // Navigation
   'nav.home': 'Hjem',
@@ -662,13 +667,38 @@ export const nb: Record<string, string> = {
 
   // SaaS Admin Navigation
   'saasAdmin.nav.dashboard': 'Dashboard',
+  'saasAdmin.nav.dashboardDesc': 'Plattformoversikt',
   'saasAdmin.nav.tenants': 'Leietakere',
+  'saasAdmin.nav.tenantsDesc': 'Administrer leietakere',
   'saasAdmin.nav.plans': 'Planer',
+  'saasAdmin.nav.plansDesc': 'Abonnementsplaner',
   'saasAdmin.nav.featureFlags': 'Funksjonsflagg',
+  'saasAdmin.nav.featureFlagsDesc': 'Funksjonsbrytere',
   'saasAdmin.nav.billing': 'Fakturering',
+  'saasAdmin.nav.billingDesc': 'Oversikt og fakturaer',
+  'saasAdmin.nav.users': 'Brukere',
+  'saasAdmin.nav.usersDesc': 'Plattformbrukere',
   'saasAdmin.nav.secrets': 'Hemmeligheter',
+  'saasAdmin.nav.secretsDesc': 'API-nøkler og hemmeligheter',
   'saasAdmin.nav.settings': 'Innstillinger',
+  'saasAdmin.nav.settingsDesc': 'Plattformkonfigurasjon',
   'saasAdmin.nav.auditLog': 'Revisjonslogg',
+  'saasAdmin.nav.auditLogDesc': 'Systemhendelser',
+
+  // SaaS Admin Navigation Sections
+  'saasAdmin.nav.sections.administration': 'Administrasjon',
+  'saasAdmin.nav.sections.finance': 'Finans',
+  'saasAdmin.nav.sections.support': 'Support',
+  'saasAdmin.nav.sections.system': 'System',
+
+  // SaaS Admin Brand
+  'saasAdmin.brand.tagline': 'SaaS Admin',
+
+  // SaaS Admin Roles
+  'saasAdmin.roles.superAdmin': 'Super Admin',
+  'saasAdmin.roles.billingAdmin': 'Billing Admin',
+  'saasAdmin.roles.supportAgent': 'Support Agent',
+  'saasAdmin.roles.admin': 'Admin',
 
   // SaaS Admin Dashboard
   'saasAdmin.dashboard.title': 'Plattformoversikt',
@@ -704,6 +734,9 @@ export const nb: Record<string, string> = {
   'saasAdmin.tenants.statusActive': 'Aktiv',
   'saasAdmin.tenants.statusSuspended': 'Suspendert',
   'saasAdmin.tenants.statusPending': 'Venter',
+  'saasAdmin.tenants.domain': 'Domene',
+  'saasAdmin.tenants.noPlan': 'Ingen plan',
+  'saasAdmin.tenants.createFirstTenant': 'Opprett din første tenant for å komme i gang',
 
   // SaaS Admin Tenant Detail
   'saasAdmin.tenantDetail.title': 'Leietakerdetaljer',
@@ -715,6 +748,7 @@ export const nb: Record<string, string> = {
   'saasAdmin.tenantDetail.branding': 'Merkevare',
   'saasAdmin.tenantDetail.auditLog': 'Revisjonslogg',
   'saasAdmin.tenantDetail.licenseKey': 'Lisensnøkkel',
+  'saasAdmin.tenantDetail.createLicense': 'Opprett lisensnøkkel',
   'saasAdmin.tenantDetail.rotateLicense': 'Roter lisensnøkkel',
   'saasAdmin.tenantDetail.confirmRotateLicense': 'Er du sikker på at du vil rotere lisensnøkkelen? Den gamle nøkkelen vil bli ugyldig.',
   'saasAdmin.tenantDetail.licenseRotated': 'Lisensnøkkel rotert',

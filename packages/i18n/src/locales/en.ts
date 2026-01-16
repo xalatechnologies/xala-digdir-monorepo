@@ -43,6 +43,11 @@ export const en: Record<string, string> = {
   'common.details': 'Details',
   'common.change': 'Change',
   'common.moreOptions': 'More options',
+  'common.showing': 'Showing',
+  'common.of': 'of',
+  'common.page': 'Page',
+  'common.tryDifferentSearch': 'Try different search criteria',
+  'common.notifications': 'Notifications',
 
   // Navigation
   'nav.home': 'Home',
@@ -590,13 +595,38 @@ export const en: Record<string, string> = {
 
   // SaaS Admin - Navigation
   'saasAdmin.nav.dashboard': 'Dashboard',
+  'saasAdmin.nav.dashboardDesc': 'Platform overview',
   'saasAdmin.nav.tenants': 'Tenants',
+  'saasAdmin.nav.tenantsDesc': 'Manage tenants',
   'saasAdmin.nav.plans': 'Plans',
+  'saasAdmin.nav.plansDesc': 'Subscription plans',
   'saasAdmin.nav.featureFlags': 'Feature Flags',
+  'saasAdmin.nav.featureFlagsDesc': 'Feature toggles',
   'saasAdmin.nav.billing': 'Billing',
+  'saasAdmin.nav.billingDesc': 'Overview and invoices',
+  'saasAdmin.nav.users': 'Users',
+  'saasAdmin.nav.usersDesc': 'Platform users',
   'saasAdmin.nav.secrets': 'Secrets',
+  'saasAdmin.nav.secretsDesc': 'API keys and secrets',
   'saasAdmin.nav.settings': 'Settings',
+  'saasAdmin.nav.settingsDesc': 'Platform configuration',
   'saasAdmin.nav.auditLog': 'Audit Log',
+  'saasAdmin.nav.auditLogDesc': 'System events',
+
+  // SaaS Admin - Navigation Sections
+  'saasAdmin.nav.sections.administration': 'Administration',
+  'saasAdmin.nav.sections.finance': 'Finance',
+  'saasAdmin.nav.sections.support': 'Support',
+  'saasAdmin.nav.sections.system': 'System',
+
+  // SaaS Admin - Brand
+  'saasAdmin.brand.tagline': 'SaaS Admin',
+
+  // SaaS Admin - Roles
+  'saasAdmin.roles.superAdmin': 'Super Admin',
+  'saasAdmin.roles.billingAdmin': 'Billing Admin',
+  'saasAdmin.roles.supportAgent': 'Support Agent',
+  'saasAdmin.roles.admin': 'Admin',
 
   // SaaS Admin - Dashboard
   'saasAdmin.dashboard.title': 'Platform Overview',
@@ -632,6 +662,9 @@ export const en: Record<string, string> = {
   'saasAdmin.tenants.statusActive': 'Active',
   'saasAdmin.tenants.statusSuspended': 'Suspended',
   'saasAdmin.tenants.statusPending': 'Pending',
+  'saasAdmin.tenants.domain': 'Domain',
+  'saasAdmin.tenants.noPlan': 'No plan',
+  'saasAdmin.tenants.createFirstTenant': 'Create your first tenant to get started',
 
   // SaaS Admin - Tenant Detail
   'saasAdmin.tenantDetail.title': 'Tenant Details',
@@ -643,6 +676,7 @@ export const en: Record<string, string> = {
   'saasAdmin.tenantDetail.branding': 'Branding',
   'saasAdmin.tenantDetail.auditLog': 'Audit Log',
   'saasAdmin.tenantDetail.licenseKey': 'License Key',
+  'saasAdmin.tenantDetail.createLicense': 'Create license key',
   'saasAdmin.tenantDetail.rotateLicense': 'Rotate license key',
   'saasAdmin.tenantDetail.confirmRotateLicense': 'Are you sure you want to rotate the license key? The old key will be invalidated.',
   'saasAdmin.tenantDetail.licenseRotated': 'License key rotated successfully.',

@@ -298,10 +298,10 @@ export class BookingController {
   }
 
   /**
-   * PATCH /api/bookings/:id/approve - Approve booking (caseworker/admin only)
+   * PUT /api/bookings/:id/approve - Approve booking (caseworker/admin only)
    */
   @Put('/:id/approve')
-  async approve(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async approveWithPut(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { reason } = request.body as { reason?: string };
     const user = request.user as any;
     

@@ -237,7 +237,6 @@ export {
   ToggleLeftIcon,
   CreditCardIcon,
   StorageIcon,
-  KeyIcon,
   FormField,
   Progress,
 } from './primitives';

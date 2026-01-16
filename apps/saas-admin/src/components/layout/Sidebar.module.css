@@ -1,0 +1,221 @@
+/**
+ * Sidebar styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.sidebar {
+  width: var(--ds-size-sidebar, 360px);
+  background-color: var(--ds-color-neutral-surface-default);
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logoSection {
+  height: var(--ds-size-header, 72px);
+  padding: 0 var(--ds-spacing-6);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  align-items: center;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+}
+
+.logoImage {
+  height: var(--ds-size-10, 40px);
+  width: auto;
+}
+
+.brandName {
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-bold);
+  color: var(--ds-color-accent-text-default);
+  line-height: var(--ds-font-line-height-sm);
+  letter-spacing: var(--ds-font-letter-spacing-sm);
+}
+
+.brandTagline {
+  font-size: var(--ds-font-size-2xs);
+  color: var(--ds-color-neutral-text-subtle);
+  letter-spacing: var(--ds-font-letter-spacing-md);
+  margin-top: var(--ds-spacing-1);
+  text-transform: uppercase;
+}
+
+.nav {
+  flex: 1;
+  padding: var(--ds-spacing-4) var(--ds-spacing-3);
+  overflow-y: auto;
+}
+
+.navSection {
+  margin-bottom: var(--ds-spacing-6);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-neutral-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: var(--ds-font-letter-spacing-md);
+  padding: var(--ds-spacing-2) var(--ds-spacing-5);
+  margin-bottom: var(--ds-spacing-2);
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-2);
+}
+
+/* Nav Item Styles */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-4);
+  padding: var(--ds-spacing-4) var(--ds-spacing-5);
+  border-radius: var(--ds-border-radius-lg);
+  text-decoration: none;
+  position: relative;
+  background-color: transparent;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.navItem:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.navItem:hover .navIcon {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.navItemActive {
+  background-color: var(--ds-color-neutral-surface-hover);
+  border-left-color: var(--ds-color-accent-base-default);
+}
+
+.navIcon {
+  width: var(--ds-size-12, 48px);
+  height: var(--ds-size-12, 48px);
+  border-radius: var(--ds-border-radius-md);
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.navIconActive {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.navContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.navName {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.navNameActive {
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-accent-text-default);
+}
+
+.navDescription {
+  margin: 0;
+  margin-top: var(--ds-spacing-1);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+}
+
+.navBadge {
+  min-width: var(--ds-size-8, 32px);
+  height: var(--ds-size-8, 32px);
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-neutral-surface-hover);
+  color: var(--ds-color-neutral-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  padding: 0 var(--ds-spacing-3);
+}
+
+.navArrow {
+  color: var(--ds-color-neutral-text-subtle);
+  opacity: 0.5;
+}
+
+.navArrowActive {
+  color: var(--ds-color-accent-text-default);
+  opacity: 1;
+}
+
+/* User Info Section */
+.userSection {
+  padding: var(--ds-spacing-5) var(--ds-spacing-6);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.userWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-4);
+}
+
+.userAvatar {
+  width: var(--ds-size-11, 44px);
+  height: var(--ds-size-11, 44px);
+  border-radius: var(--ds-border-radius-full);
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-weight: var(--ds-font-weight-semibold);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+  margin-top: var(--ds-spacing-1);
+}

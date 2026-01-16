@@ -14,8 +14,10 @@ import {
   SettingsIcon,
   LogOutIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
+import styles from './Header.module.css';
 
 interface HeaderProps {
   title?: string;
@@ -25,77 +27,49 @@ export function Header({ title: _title }: HeaderProps) {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const t = useT();
 
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        boxShadow: 'var(--ds-shadow-xs)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '72px',
-          padding: '0 var(--ds-spacing-6)',
-        }}
-      >
+    <header className={styles.header}>
+      <div className={styles.headerContent}>
         {/* Left spacer for balance */}
-        <div style={{ flex: '1 1 0', minWidth: 0 }} />
+        <div className={styles.spacer} />
 
         {/* Center - could add search or title here in the future */}
-        <div
-          style={{
-            flex: '0 1 600px',
-            maxWidth: '600px',
-            width: '100%',
-          }}
-        >
+        <div className={styles.center}>
           {/* Placeholder for future search functionality */}
         </div>
 
         {/* Right side - Actions */}
-        <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
+        <div className={styles.actions}>
           <HeaderActions spacing="var(--ds-spacing-3)">
             <HeaderThemeToggle isDark={isDark} onToggle={toggleTheme} />
             <HeaderIconButton
               icon={<BellIcon size={22} />}
               size="md"
-              aria-label="Varsler"
-              title="Varsler"
+              aria-label={t('common.notifications')}
+              title={t('common.notifications')}
               onClick={() => navigate('/notifications')}
             />
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
               size="md"
-              aria-label="Innstillinger"
-              title="Innstillinger"
+              aria-label={t('saasAdmin.nav.settings')}
+              title={t('saasAdmin.nav.settings')}
               onClick={() => navigate('/settings')}
             />
-            <div
-              style={{
-                width: '1px',
-                height: '28px',
-                backgroundColor: 'var(--ds-color-neutral-border-subtle)',
-                margin: '0 var(--ds-spacing-2)',
-              }}
-            />
+            <div className={styles.divider} />
             {user && (
               <Button
                 type="button"
                 variant="tertiary"
                 data-size="md"
                 onClick={logout}
-                aria-label="Logg ut"
-                style={{ whiteSpace: 'nowrap' }}
+                aria-label={t('auth.logout')}
+                className={styles.logoutButton}
               >
                 <LogOutIcon size={20} />
-                Logg ut
+                {t('auth.logout')}
               </Button>
             )}
           </HeaderActions>

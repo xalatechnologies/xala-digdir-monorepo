@@ -1,0 +1,27 @@
+/**
+ * AppLayout styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.layout {
+  display: flex;
+  height: 100vh;
+  background-color: var(--ds-color-neutral-background-default);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--ds-spacing-8);
+}
+
+.contentContainer {
+  max-width: var(--ds-size-container-xl, 1400px);
+}

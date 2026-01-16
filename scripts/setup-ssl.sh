@@ -52,14 +52,24 @@ fi
 WEB_DOMAIN="${WEB_SUBDOMAIN:-web-test}.${DOMAIN_BASE:-digilist.no}"
 BACKOFFICE_DOMAIN="${BACKOFFICE_SUBDOMAIN:-backoffice-test}.${DOMAIN_BASE:-digilist.no}"
 MINSIDE_DOMAIN="${MINSIDE_SUBDOMAIN:-minside-test}.${DOMAIN_BASE:-digilist.no}"
+SAAS_ADMIN_DOMAIN="${SAAS_ADMIN_SUBDOMAIN:-saas-admin}.${DOMAIN_BASE:-digilist.no}"
+TENANT_ADMIN_DOMAIN="${TENANT_ADMIN_SUBDOMAIN:-tenant-admin}.${DOMAIN_BASE:-digilist.no}"
 
 echo "Setting up SSL for:"
 echo "  - $WEB_DOMAIN"
 echo "  - $BACKOFFICE_DOMAIN"
 echo "  - $MINSIDE_DOMAIN"
+echo "  - $SAAS_ADMIN_DOMAIN"
+echo "  - $TENANT_ADMIN_DOMAIN"
 
-# Request certificates
-sudo certbot --nginx -d "$WEB_DOMAIN" -d "$BACKOFFICE_DOMAIN" -d "$MINSIDE_DOMAIN" \
+# Request certificates for all domains
+sudo certbot --nginx \
+    -d "$WEB_DOMAIN" \
+    -d "$BACKOFFICE_DOMAIN" \
+    -d "$MINSIDE_DOMAIN" \
+    -d "$SAAS_ADMIN_DOMAIN" \
+    -d "$TENANT_ADMIN_DOMAIN" \
+    --expand \
     --non-interactive \
     --agree-tos \
     --email admin@digilist.no \
@@ -74,6 +84,8 @@ REMOTE_SCRIPT
     echo "  - https://${WEB_SUBDOMAIN}.${DOMAIN_BASE}"
     echo "  - https://${BACKOFFICE_SUBDOMAIN}.${DOMAIN_BASE}"
     echo "  - https://${MINSIDE_SUBDOMAIN}.${DOMAIN_BASE}"
+    echo "  - https://${SAAS_ADMIN_SUBDOMAIN}.${DOMAIN_BASE}"
+    echo "  - https://${TENANT_ADMIN_SUBDOMAIN}.${DOMAIN_BASE}"
 }
 
 # Main

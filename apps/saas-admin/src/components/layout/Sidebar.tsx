@@ -17,7 +17,9 @@ import {
   ClockIcon,
   UsersIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '../../hooks/useAuth';
+import styles from './Sidebar.module.css';
 
 interface NavItem {
   name: string;
@@ -49,102 +51,32 @@ function SidebarNavItem({ item }: { item: NavItem }) {
     <NavLink
       to={item.href}
       end={item.href === '/'}
-      className="sidebar-nav-item"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--ds-spacing-4)',
-        padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
-        borderRadius: 'var(--ds-border-radius-lg)',
-        textDecoration: 'none',
-        position: 'relative',
-        backgroundColor: isActive ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
-        borderLeft: isActive
-          ? '3px solid var(--ds-color-accent-base-default)'
-          : '3px solid transparent',
-        transition: 'all 0.15s ease',
-      }}
+      className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
     >
       {/* Icon with background */}
-      <div
-        className="sidebar-nav-icon"
-        style={{
-          width: '48px',
-          height: '48px',
-          borderRadius: 'var(--ds-border-radius-md)',
-          backgroundColor: isActive
-            ? 'var(--ds-color-accent-surface-default)'
-            : 'var(--ds-color-neutral-surface-hover)',
-          color: isActive
-            ? 'var(--ds-color-accent-text-default)'
-            : 'var(--ds-color-neutral-text-default)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          transition: 'all 0.15s ease',
-        }}
-      >
+      <div className={`${styles.navIcon} ${isActive ? styles.navIconActive : ''}`}>
         {item.icon}
       </div>
 
       {/* Text content */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className={styles.navContent}>
         <Paragraph
           data-size="sm"
-          style={{
-            margin: 0,
-            fontWeight: isActive
-              ? 'var(--ds-font-weight-semibold)'
-              : 'var(--ds-font-weight-medium)',
-            color: isActive
-              ? 'var(--ds-color-accent-text-default)'
-              : 'var(--ds-color-neutral-text-default)',
-          }}
+          className={`${styles.navName} ${isActive ? styles.navNameActive : ''}`}
         >
           {item.name}
         </Paragraph>
-        <Paragraph
-          data-size="xs"
-          style={{
-            margin: 0,
-            marginTop: '2px',
-            color: 'var(--ds-color-neutral-text-subtle)',
-          }}
-        >
+        <Paragraph data-size="xs" className={styles.navDescription}>
           {item.description}
         </Paragraph>
       </div>
 
       {/* Badge or Arrow */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+      <div className={styles.navActions}>
         {item.badge && item.badge > 0 && (
-          <div
-            style={{
-              minWidth: '32px',
-              height: '32px',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-              color: 'var(--ds-color-neutral-text-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 'var(--ds-font-size-sm)',
-              fontWeight: 'var(--ds-font-weight-medium)',
-              padding: '0 var(--ds-spacing-3)',
-            }}
-          >
-            {item.badge}
-          </div>
+          <div className={styles.navBadge}>{item.badge}</div>
         )}
-        <div
-          style={{
-            color: isActive
-              ? 'var(--ds-color-accent-text-default)'
-              : 'var(--ds-color-neutral-text-subtle)',
-            opacity: isActive ? 1 : 0.5,
-          }}
-        >
+        <div className={`${styles.navArrow} ${isActive ? styles.navArrowActive : ''}`}>
           <ArrowRightIcon />
         </div>
       </div>
@@ -154,37 +86,38 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 
 export function Sidebar() {
   const { user, isSuperAdmin } = useAuth();
+  const t = useT();
 
   const navSections: NavSection[] = [
     {
       items: [
         {
-          name: 'Dashboard',
-          description: 'Plattformoversikt',
+          name: t('saasAdmin.nav.dashboard'),
+          description: t('saasAdmin.nav.dashboardDesc'),
           href: '/',
           icon: <HomeIcon />,
         },
       ],
     },
     {
-      title: 'Administrasjon',
+      title: t('saasAdmin.nav.sections.administration'),
       items: [
         {
-          name: 'Tenants',
-          description: 'Administrer leietakere',
+          name: t('saasAdmin.nav.tenants'),
+          description: t('saasAdmin.nav.tenantsDesc'),
           href: '/tenants',
           icon: <BuildingIcon />,
         },
         {
-          name: 'Planer',
-          description: 'Abonnementsplaner',
+          name: t('saasAdmin.nav.plans'),
+          description: t('saasAdmin.nav.plansDesc'),
           href: '/plans',
           icon: <ChartIcon />,
           roles: ['SAAS_SUPER_ADMIN', 'SAAS_BILLING_ADMIN'],
         },
         {
-          name: 'Feature Flags',
-          description: 'Funksjonsbrytere',
+          name: t('saasAdmin.nav.featureFlags'),
+          description: t('saasAdmin.nav.featureFlagsDesc'),
           href: '/feature-flags',
           icon: <ShieldIcon />,
           roles: ['SAAS_SUPER_ADMIN'],
@@ -192,11 +125,11 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Finans',
+      title: t('saasAdmin.nav.sections.finance'),
       items: [
         {
-          name: 'Fakturering',
-          description: 'Oversikt og fakturaer',
+          name: t('saasAdmin.nav.billing'),
+          description: t('saasAdmin.nav.billingDesc'),
           href: '/billing',
           icon: <ChartIcon />,
           roles: ['SAAS_SUPER_ADMIN', 'SAAS_BILLING_ADMIN'],
@@ -204,29 +137,29 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Support',
+      title: t('saasAdmin.nav.sections.support'),
       items: [
         {
-          name: 'Brukere',
-          description: 'Plattformbrukere',
+          name: t('saasAdmin.nav.users'),
+          description: t('saasAdmin.nav.usersDesc'),
           href: '/users',
           icon: <UsersIcon />,
         },
       ],
     },
     {
-      title: 'System',
+      title: t('saasAdmin.nav.sections.system'),
       items: [
         {
-          name: 'Audit Log',
-          description: 'Systemhendelser',
+          name: t('saasAdmin.nav.auditLog'),
+          description: t('saasAdmin.nav.auditLogDesc'),
           href: '/audit',
           icon: <ClockIcon />,
           roles: ['SAAS_SUPER_ADMIN'],
         },
         {
-          name: 'Innstillinger',
-          description: 'Plattformkonfigurasjon',
+          name: t('saasAdmin.nav.settings'),
+          description: t('saasAdmin.nav.settingsDesc'),
           href: '/settings',
           icon: <SettingsIcon />,
           roles: ['SAAS_SUPER_ADMIN'],
@@ -256,107 +189,49 @@ export function Sidebar() {
     }))
     .filter((section) => section.items.length > 0);
 
-  // Role display name mapping
+  // Role display name mapping using i18n
   const getRoleDisplayName = (role: string | undefined): string => {
     switch (role) {
       case 'SAAS_SUPER_ADMIN':
-        return 'Super Admin';
+        return t('saasAdmin.roles.superAdmin');
       case 'SAAS_BILLING_ADMIN':
-        return 'Billing Admin';
+        return t('saasAdmin.roles.billingAdmin');
       case 'SAAS_SUPPORT_AGENT':
-        return 'Support Agent';
+        return t('saasAdmin.roles.supportAgent');
       default:
-        return 'Admin';
+        return t('saasAdmin.roles.admin');
     }
   };
 
   return (
-    <aside
-      style={{
-        width: '360px',
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
+    <aside className={styles.sidebar}>
       {/* Logo Section */}
-      <div
-        style={{
-          height: '72px',
-          padding: '0 var(--ds-spacing-6)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+      <div className={styles.logoSection}>
+        <div className={styles.logoWrapper}>
           <img
             src="/logo.svg"
             alt="Digilist"
-            style={{
-              height: '40px',
-              width: 'auto',
-            }}
+            className={styles.logoImage}
           />
           <div>
-            <div
-              style={{
-                fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 'var(--ds-font-weight-bold)',
-                color: 'var(--ds-color-accent-text-default)',
-                lineHeight: 'var(--ds-font-line-height-sm)',
-                letterSpacing: 'var(--ds-font-letter-spacing-sm)',
-              }}
-            >
-              DIGILIST
-            </div>
-            <div
-              style={{
-                fontSize: 'var(--ds-font-size-2xs)',
-                color: 'var(--ds-color-neutral-text-subtle)',
-                letterSpacing: 'var(--ds-font-letter-spacing-md)',
-                marginTop: '2px',
-                textTransform: 'uppercase',
-              }}
-            >
-              SaaS Admin
+            <div className={styles.brandName}>DIGILIST</div>
+            <div className={styles.brandTagline}>
+              {t('saasAdmin.brand.tagline')}
             </div>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>
+      <nav className={styles.nav}>
         {filteredSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} style={{ marginBottom: 'var(--ds-spacing-6)' }}>
+          <div key={sectionIndex} className={styles.navSection}>
             {section.title && (
-              <Paragraph
-                data-size="xs"
-                style={{
-                  margin: 0,
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 'var(--ds-font-letter-spacing-md)',
-                  padding: 'var(--ds-spacing-2) var(--ds-spacing-5)',
-                  marginBottom: 'var(--ds-spacing-2)',
-                }}
-              >
+              <Paragraph data-size="xs" className={styles.sectionTitle}>
                 {section.title}
               </Paragraph>
             )}
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--ds-spacing-2)',
-              }}
-            >
+            <ul className={styles.navList}>
               {section.items.map((item) => (
                 <li key={item.href}>
                   <SidebarNavItem item={item} />
@@ -369,69 +244,22 @@ export function Sidebar() {
 
       {/* User Info Section */}
       {user && (
-        <div
-          style={{
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
-            borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-            backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
-            <div
-              style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: 'var(--ds-border-radius-full)',
-                backgroundColor: 'var(--ds-color-accent-surface-default)',
-                color: 'var(--ds-color-accent-text-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 'var(--ds-font-size-md)',
-                fontWeight: 'var(--ds-font-weight-semibold)',
-                flexShrink: 0,
-              }}
-            >
+        <div className={styles.userSection}>
+          <div className={styles.userWrapper}>
+            <div className={styles.userAvatar}>
               {user.name.charAt(0).toUpperCase()}
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <Paragraph
-                data-size="sm"
-                style={{
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  margin: 0,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+            <div className={styles.userInfo}>
+              <Paragraph data-size="sm" className={styles.userName}>
                 {user.name}
               </Paragraph>
-              <Paragraph
-                data-size="xs"
-                style={{
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  margin: 0,
-                  marginTop: '2px',
-                }}
-              >
+              <Paragraph data-size="xs" className={styles.userRole}>
                 {getRoleDisplayName(user.role)}
               </Paragraph>
             </div>
           </div>
         </div>
       )}
-
-      {/* CSS for hover states */}
-      <style>{`
-        .sidebar-nav-item:hover {
-          background-color: var(--ds-color-neutral-surface-hover) !important;
-        }
-        .sidebar-nav-item:hover .sidebar-nav-icon {
-          background-color: var(--ds-color-accent-surface-default) !important;
-          color: var(--ds-color-accent-text-default) !important;
-        }
-      `}</style>
     </aside>
   );
 }

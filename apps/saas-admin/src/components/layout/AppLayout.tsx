@@ -6,52 +6,39 @@
  */
 
 import { Outlet, useLocation } from 'react-router-dom';
+import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-
-const pageTitles: Record<string, string> = {
-  '/': 'Dashboard',
-  '/tenants': 'Tenants',
-  '/plans': 'Planer',
-  '/feature-flags': 'Feature Flags',
-  '/billing': 'Fakturering',
-  '/users': 'Brukere',
-  '/audit': 'Audit Log',
-  '/settings': 'Innstillinger',
-};
+import styles from './AppLayout.module.css';
 
 export function AppLayout() {
   const location = useLocation();
-  const title = pageTitles[location.pathname] ?? '';
+  const t = useT();
+
+  // Page title lookup using i18n keys
+  const pageTitleKeys: Record<string, string> = {
+    '/': 'saasAdmin.nav.dashboard',
+    '/tenants': 'saasAdmin.nav.tenants',
+    '/plans': 'saasAdmin.nav.plans',
+    '/feature-flags': 'saasAdmin.nav.featureFlags',
+    '/billing': 'saasAdmin.nav.billing',
+    '/users': 'saasAdmin.nav.users',
+    '/audit': 'saasAdmin.nav.auditLog',
+    '/settings': 'saasAdmin.nav.settings',
+  };
+
+  const titleKey = pageTitleKeys[location.pathname];
+  const title = titleKey ? t(titleKey) : '';
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        backgroundColor: 'var(--ds-color-neutral-background-default)',
-      }}
-    >
+    <div className={styles.layout}>
       <Sidebar />
 
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
+      <div className={styles.main}>
         <Header title={title} />
 
-        <main
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: 'var(--ds-spacing-8)',
-          }}
-        >
-          <div style={{ maxWidth: '1400px' }}>
+        <main className={styles.content}>
+          <div className={styles.contentContainer}>
             <Outlet />
           </div>
         </main>

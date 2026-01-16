@@ -1,0 +1,49 @@
+/**
+ * Header styles using design tokens
+ * All values use CSS custom properties from the design system
+ */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--ds-color-neutral-surface-default);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  box-shadow: var(--ds-shadow-xs);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  height: var(--ds-size-header, 72px);
+  padding: 0 var(--ds-spacing-6);
+}
+
+.spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.center {
+  flex: 0 1 var(--ds-size-container-sm, 600px);
+  max-width: var(--ds-size-container-sm, 600px);
+  width: 100%;
+}
+
+.actions {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.divider {
+  width: 1px;
+  height: var(--ds-size-7, 28px);
+  background-color: var(--ds-color-neutral-border-subtle);
+  margin: 0 var(--ds-spacing-2);
+}
+
+.logoutButton {
+  white-space: nowrap;
+}

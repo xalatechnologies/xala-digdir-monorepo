@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Deployment Script for Xala Apps to Hostinger VPS (Test Environment)
-# Usage: ./scripts/deploy.sh [web|backoffice|minside|all]
+# Usage: ./scripts/deploy.sh [web|backoffice|minside|saas-admin|tenant-admin|all]
 #
 # Directory Structure on Server:
 # /var/www/
@@ -9,11 +9,13 @@
 #   │   ├── main/           → https://digilist.no (landing page)
 #   │   ├── web/            → https://web-test.digilist.no
 #   │   ├── backoffice/     → https://backoffice-test.digilist.no
-#   │   └── minside/        → https://minside-test.digilist.no
+#   │   ├── minside/        → https://minside-test.digilist.no
+#   │   ├── saas-admin/     → https://saas-admin.digilist.no
+#   │   └── tenant-admin/   → https://tenant-admin.digilist.no
 #   └── digilist-api/       → https://api.digilist.no
 #
-# IMPORTANT: Test apps deploy to /var/www/digilist/{web,backoffice,minside}
-#            NOT to /var/www/{web-test,backoffice-test,minside-test}
+# IMPORTANT: Apps deploy to /var/www/digilist/{web,backoffice,minside,saas-admin,tenant-admin}
+#            NOT to /var/www/{web-test,backoffice-test,minside-test,saas-admin-test,tenant-admin-test}
 # =============================================================================
 
 set -e  # Exit on error
@@ -63,7 +65,7 @@ print_error() {
 check_duplicate_configs() {
     print_status "Checking for duplicate Vite configs..."
     
-    for app in web backoffice minside; do
+    for app in web backoffice minside saas-admin tenant-admin; do
         local js_config="$PROJECT_ROOT/apps/$app/vite.config.js"
         local ts_config="$PROJECT_ROOT/apps/$app/vite.config.ts"
         
@@ -82,7 +84,7 @@ ensure_theme_files() {
     
     local theme_src="$PROJECT_ROOT/packages/ds-themes"
     
-    for app in web backoffice minside; do
+    for app in web backoffice minside saas-admin tenant-admin; do
         local theme_dir="$PROJECT_ROOT/apps/$app/public/themes"
         mkdir -p "$theme_dir"
         
@@ -112,7 +114,7 @@ clear_caches() {
     rm -rf "$PROJECT_ROOT/.turbo"
     rm -rf "$PROJECT_ROOT/node_modules/.cache"
     
-    for app in web backoffice minside; do
+    for app in web backoffice minside saas-admin tenant-admin; do
         rm -rf "$PROJECT_ROOT/apps/$app/.turbo"
         rm -rf "$PROJECT_ROOT/apps/$app/node_modules/.vite"
         rm -rf "$PROJECT_ROOT/apps/$app/dist"
@@ -222,15 +224,29 @@ deploy_minside() {
     deploy_app "minside" "$MINSIDE_DIST" "$MINSIDE_REMOTE_PATH" "$MINSIDE_SUBDOMAIN"
 }
 
+# Function to deploy saas-admin app
+deploy_saas_admin() {
+    build_app "saas-admin"
+    deploy_app "saas-admin" "$SAAS_ADMIN_DIST" "$SAAS_ADMIN_REMOTE_PATH" "$SAAS_ADMIN_SUBDOMAIN"
+}
+
+# Function to deploy tenant-admin app
+deploy_tenant_admin() {
+    build_app "tenant-admin"
+    deploy_app "tenant-admin" "$TENANT_ADMIN_DIST" "$TENANT_ADMIN_REMOTE_PATH" "$TENANT_ADMIN_SUBDOMAIN"
+}
+
 # Function to show usage
 show_usage() {
-    echo "Usage: $0 [web|backoffice|minside|all]"
+    echo "Usage: $0 [web|backoffice|minside|saas-admin|tenant-admin|all]"
     echo ""
     echo "Commands:"
-    echo "  web         Build and deploy web app"
-    echo "  backoffice  Build and deploy backoffice app"
-    echo "  minside     Build and deploy minside app"
-    echo "  all         Build and deploy all apps"
+    echo "  web           Build and deploy web app (web-test.digilist.no)"
+    echo "  backoffice    Build and deploy backoffice app (backoffice-test.digilist.no)"
+    echo "  minside       Build and deploy minside app (minside-test.digilist.no)"
+    echo "  saas-admin    Build and deploy saas-admin app (saas-admin.digilist.no)"
+    echo "  tenant-admin  Build and deploy tenant-admin app (tenant-admin.digilist.no)"
+    echo "  all           Build and deploy all apps"
     echo ""
     echo "Prerequisites:"
     echo "  1. Edit scripts/deploy-config.sh with your Hostinger details"
@@ -268,10 +284,18 @@ main() {
         minside)
             deploy_minside
             ;;
+        saas-admin)
+            deploy_saas_admin
+            ;;
+        tenant-admin)
+            deploy_tenant_admin
+            ;;
         all)
             deploy_web
             deploy_backoffice
             deploy_minside
+            deploy_saas_admin
+            deploy_tenant_admin
             ;;
         *)
             print_error "Unknown target: $target"
@@ -294,6 +318,8 @@ main() {
     echo "     - https://$WEB_SUBDOMAIN.$DOMAIN_BASE"
     echo "     - https://$BACKOFFICE_SUBDOMAIN.$DOMAIN_BASE"
     echo "     - https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE"
+    echo "     - https://$SAAS_ADMIN_SUBDOMAIN.$DOMAIN_BASE"
+    echo "     - https://$TENANT_ADMIN_SUBDOMAIN.$DOMAIN_BASE"
     echo ""
     echo "  2. If SSL not configured, run: ./scripts/setup-ssl.sh"
 }
@@ -313,10 +339,18 @@ verify_deployments() {
         minside)
             check_url "https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE" "Minside Test" || ((failed++))
             ;;
+        saas-admin)
+            check_url "https://$SAAS_ADMIN_SUBDOMAIN.$DOMAIN_BASE" "SaaS Admin" || ((failed++))
+            ;;
+        tenant-admin)
+            check_url "https://$TENANT_ADMIN_SUBDOMAIN.$DOMAIN_BASE" "Tenant Admin" || ((failed++))
+            ;;
         all)
             check_url "https://$WEB_SUBDOMAIN.$DOMAIN_BASE" "Web Test" || ((failed++))
             check_url "https://$BACKOFFICE_SUBDOMAIN.$DOMAIN_BASE" "Backoffice Test" || ((failed++))
             check_url "https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE" "Minside Test" || ((failed++))
+            check_url "https://$SAAS_ADMIN_SUBDOMAIN.$DOMAIN_BASE" "SaaS Admin" || ((failed++))
+            check_url "https://$TENANT_ADMIN_SUBDOMAIN.$DOMAIN_BASE" "Tenant Admin" || ((failed++))
             ;;
     esac
 
