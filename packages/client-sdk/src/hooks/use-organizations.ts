@@ -155,6 +155,38 @@ export function useUploadOrganizationLogo() {
 }
 
 // ============================================================================
+// Organization Branding Hooks
+// ============================================================================
+
+/**
+ * Get organization branding settings
+ */
+export function useOrganizationBranding(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.organizations.branding(id),
+    queryFn: () => organizationService.getBranding(id),
+    enabled: !!id && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Update organization branding mutation
+ */
+export function useUpdateOrganizationBranding() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<import('../services/organization.service').BrandingSettings> }) =>
+      organizationService.updateBranding(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.branding(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.lists() });
+    },
+  });
+}
+
+// ============================================================================
 // User Hooks
 // ============================================================================
 

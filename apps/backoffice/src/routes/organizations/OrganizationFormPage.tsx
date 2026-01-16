@@ -16,9 +16,11 @@ import {
   useOrganization,
   useCreateOrganization,
   useUpdateOrganization,
+  useUpdateOrganizationBranding,
   type CreateOrganizationDTO,
 } from '@digilist/client-sdk';
 import { OrganizationForm } from '../../components/organizations/OrganizationForm';
+import { OrganizationWizard, type OrganizationWizardData } from '../../components/organizations/OrganizationWizard';
 
 export function OrganizationFormPage() {
   const { id } = useParams<{ id?: string }>();
@@ -34,6 +36,7 @@ export function OrganizationFormPage() {
   // Mutations
   const createOrgMutation = useCreateOrganization();
   const updateOrgMutation = useUpdateOrganization();
+  const updateBrandingMutation = useUpdateOrganizationBranding();
 
   // Handlers
   const handleSubmit = async (data: CreateOrganizationDTO) => {
@@ -52,6 +55,43 @@ export function OrganizationFormPage() {
     } else {
       navigate('/organizations');
     }
+  };
+
+  const handleWizardComplete = async (data: OrganizationWizardData) => {
+    // Extract basic organization fields for creation
+    const createData: CreateOrganizationDTO = {
+      name: data.name,
+      actorType: data.actorType || 'municipality',
+      organizationNumber: data.organizationNumber,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,
+    };
+
+    // Create the organization
+    const result = await createOrgMutation.mutateAsync(createData);
+    const newOrgId = result.data.id;
+
+    // Update branding if provided
+    if (data.branding) {
+      const { logo, primaryColor, secondaryColor, favicon } = data.branding;
+      if (logo || primaryColor || secondaryColor || favicon) {
+        await updateBrandingMutation.mutateAsync({
+          id: newOrgId,
+          data: {
+            logo,
+            primaryColor,
+            secondaryColor,
+            favicon,
+          },
+        });
+      }
+    }
+
+    // Navigate to the new organization
+    navigate(`/organizations/${newOrgId}`);
   };
 
   if (isEditing && isLoading) {
@@ -79,27 +119,49 @@ export function OrganizationFormPage() {
     );
   }
 
+  // Render wizard for creation, form for editing
+  if (!isEditing) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)', maxWidth: '1000px', margin: '0 auto', padding: 'var(--ds-spacing-4)' }}>
+        {/* Back button */}
+        <div>
+          <Link to="/organizations">
+            <Button variant="tertiary" data-size="sm" type="button">
+              <ArrowLeftIcon />
+              Tilbake til oversikt
+            </Button>
+          </Link>
+        </div>
+
+        {/* Wizard */}
+        <OrganizationWizard
+          onComplete={handleWizardComplete}
+          onCancel={handleCancel}
+        />
+      </div>
+    );
+  }
+
+  // Edit mode - show traditional form
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)', maxWidth: '800px', margin: '0 auto' }}>
       {/* Header */}
       <div>
-        <Link to={isEditing && id ? `/organizations/${id}` : '/organizations'}>
+        <Link to={`/organizations/${id}`}>
           <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
-            {isEditing ? 'Tilbake til organisasjon' : 'Tilbake til oversikt'}
+            Tilbake til organisasjon
           </Button>
         </Link>
 
         <Heading level={2} data-size="lg">
-          {isEditing ? 'Rediger organisasjon' : 'Ny organisasjon'}
+          Rediger organisasjon
         </Heading>
         <Paragraph
           data-size="sm"
           style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
         >
-          {isEditing
-            ? 'Oppdater informasjon om organisasjonen'
-            : 'Legg til en ny organisasjon i systemet'}
+          Oppdater informasjon om organisasjonen
         </Paragraph>
       </div>
 
