@@ -267,8 +267,8 @@ export function useAuth(): UseAuthReturn {
     const baseUrl = import.meta.env.VITE_API_URL || 'https://api.digilist.no';
     // Use current path as return URL so user comes back to the same page
     const currentPath = returnTo || window.location.pathname + window.location.search;
-    const returnUrl = encodeURIComponent(window.location.origin + currentPath);
-    window.location.href = `${baseUrl}/auth/${provider}?returnUrl=${returnUrl}`;
+    const returnToUrl = encodeURIComponent(window.location.origin + currentPath);
+    window.location.href = `${baseUrl}/auth/${provider}/authorize?returnTo=${returnToUrl}`;
   }, []);
 
   /**
