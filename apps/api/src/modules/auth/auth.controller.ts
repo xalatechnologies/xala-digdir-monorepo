@@ -29,6 +29,11 @@ export class AuthController {
    */
   @Post('/login')
   async login(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const body = request.body as any;
     const db = container.resolve<any>('Database');
     const jwtService = container.resolve<JwtService>('JwtService');
@@ -102,6 +107,11 @@ export class AuthController {
    */
   @Post('/callback')
   async callback(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const body = request.body as any;
     const db = container.resolve<any>('Database');
     const { sessionService } = await import('./session.service');
@@ -208,18 +218,42 @@ export class AuthController {
 
   /**
    * GET /api/auth/session - Get current session
+   * Self-verifying: Validates JWT directly without relying on middleware
    */
   @Get('/session')
   async getSession(request: AuthRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const userId = (request as any).userId;
-    const tenantId = request.tenantId;
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
 
-    if (!userId) {
+    const db = container.resolve<any>('Database');
+    const jwtService = container.resolve<JwtService>('JwtService');
+
+    // Get access token from cookie
+    const accessToken = request.cookies[COOKIE_CONFIG.ACCESS.name];
+
+    if (!accessToken) {
       reply.code(401);
       return createErrorResponse(request, 'UNAUTHORIZED', 'auth.no_session');
     }
 
+    // Verify token directly (don't rely on middleware)
+    let decoded;
+    try {
+      decoded = jwtService.verifyToken(accessToken, {
+        validateTenant: true,
+        validateSubscription: true,
+      });
+    } catch (error) {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.invalid_token');
+    }
+
+    const userId = decoded.userId;
+    const tenantId = decoded.tenantId;
+
+    // Fetch user from database
     const userResult = await db.select().from(users).where(eq(users.id, userId as string)).limit(1);
 
     if (!userResult.length) {
@@ -228,6 +262,13 @@ export class AuthController {
     }
 
     const user = userResult[0];
+
+    // Check if user is still active
+    if (user.status !== 'active') {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
+    }
+
     const permissions = getPermissionsForRole(user.role);
 
     return {
@@ -239,7 +280,7 @@ export class AuthController {
           role: user.role,
           tenantId: user.tenantId,
         },
-        expiresAt: new Date(Date.now() + 86400000).toISOString(),
+        expiresAt: decoded.exp ? new Date(decoded.exp * 1000).toISOString() : new Date(Date.now() + 86400000).toISOString(),
         permissions,
       },
     };
@@ -251,6 +292,11 @@ export class AuthController {
    */
   @Post('/logout')
   async logout(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const userId = (request as any).userId;
     const tenantId = request.tenantId;
     const { sessionService } = await import('./session.service');
@@ -295,6 +341,11 @@ export class AuthController {
    */
   @Post('/refresh')
   async refresh(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const { sessionService } = await import('./session.service');
     const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
 
@@ -362,6 +413,11 @@ export class AuthController {
    */
   @Post('/demo-token')
   async demoTokenLogin(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const body = request.body as any;
     const db = container.resolve<any>('Database');
     const { sessionService } = await import('./session.service');
@@ -464,6 +520,11 @@ export class AuthController {
    */
   @Post('/email')
   async emailLogin(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     // Same as login for demo
     return this.login(request, reply);
   }

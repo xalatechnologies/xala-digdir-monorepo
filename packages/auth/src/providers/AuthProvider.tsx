@@ -29,7 +29,7 @@
  * - web: all authenticated users
  */
 
-import { useState, useEffect, useCallback, useMemo, useSyncExternalStore, createContext } from 'react';
+import { useState, useEffect, useCallback, useMemo, useSyncExternalStore, createContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '@digilist/client-sdk/services';
 import {
@@ -144,6 +144,8 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
+  const [tokenExpiresAt, setTokenExpiresAt] = useState<Date | null>(null);
+  const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
   const hasStoredContext = useSyncExternalStore(
@@ -187,10 +189,69 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   }, [allowedRoles, config.appType]);
 
   /**
+   * Schedule token refresh before expiry
+   */
+  const scheduleTokenRefresh = useCallback((expiresAt: string) => {
+    // Clear any existing timer
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+    }
+
+    const expiryTime = new Date(expiresAt).getTime();
+    const now = Date.now();
+    const timeUntilExpiry = expiryTime - now;
+
+    // Refresh 2 minutes before expiry (120,000ms)
+    const refreshDelay = Math.max(0, timeUntilExpiry - 120000);
+
+    debug(`Scheduling token refresh in ${Math.round(refreshDelay / 1000)}s`);
+
+    refreshTimerRef.current = setTimeout(async () => {
+      debug('Auto-refreshing token...');
+      try {
+        const response = await authService.refreshToken();
+        if (response.data?.expiresAt) {
+          setTokenExpiresAt(new Date(response.data.expiresAt));
+          scheduleTokenRefresh(response.data.expiresAt);
+          debug('Token refreshed successfully');
+        }
+      } catch (error) {
+        debug('Token refresh failed:', error);
+        // Let 401 interceptor handle logout
+      }
+    }, refreshDelay);
+  }, [debug]);
+
+  /**
+   * Clear refresh timer
+   */
+  const clearRefreshTimer = useCallback(() => {
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = null;
+      debug('Token refresh timer cleared');
+    }
+  }, [debug]);
+
+  /**
    * Initialize authentication - check for existing session
    */
   useEffect(() => {
     const checkAuth = async () => {
+      // Add auth:expired event listener
+      const handleAuthExpired = () => {
+        debug('Auth expired event received');
+        setUser(null);
+        setTokenExpiresAt(null);
+        clearRefreshTimer();
+        navigate(config.loginPath || '/login', { replace: true });
+      };
+
+      if (typeof window !== 'undefined') {
+        window.addEventListener('auth:expired', handleAuthExpired);
+      }
+
       // 🚀 DEVELOPMENT MODE: Auto-login with mock user
       // This ONLY runs when:
       // - Running on Vite dev server (npm run dev)
@@ -198,23 +259,18 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
       // - MODE is explicitly 'development'
       // - VITE_ENABLE_DEV_MODE is set to 'true'
       if (isDevMode) {
-        debug('🔧 DEV MODE ACTIVE - Auto-logging in with developer user');
-        debug('⚠️  This would NEVER run in production builds');
-        const devUser: User = {
-          id: 'dev-user-00000000-0000-0000-0000-000000000000',
-          name: 'Developer User',
-          email: 'dev@localhost',
-          role: 'super_admin', // Full access in dev mode
-          tenantId: env?.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-          grantedRoles: ['super_admin', 'admin', 'case_handler'],
-        };
-        
-        setUser(devUser);
+        // REMOVED: Dev mode mock authentication
+        // Use real authentication flow with /api/auth/demo-token instead
+        debug('⚠️  Dev mode enabled but mock auth removed - use demo token login');
         setIsLoading(false);
-        debug('✅ DEV MODE - Logged in as:', devUser.name, '(role:', devUser.role, ')');
+
+        // Cleanup event listener
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('auth:expired', handleAuthExpired);
+        }
         return;
       }
-      
+
       debug('Checking authentication status...');
 
       // Check URL for OAuth callback with authorization code
@@ -263,7 +319,18 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
             }
 
             setIsLoading(false);
+
+            // Cleanup event listener
+            if (typeof window !== 'undefined') {
+              window.removeEventListener('auth:expired', handleAuthExpired);
+            }
             return;
+          }
+
+          // Parse token expiry and schedule refresh
+          if (session.expiresAt) {
+            setTokenExpiresAt(new Date(session.expiresAt));
+            scheduleTokenRefresh(session.expiresAt);
           }
 
           // Store user data in localStorage for quick access (NOT for auth)
@@ -273,12 +340,22 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           // Clean URL to remove authorization code
           window.history.replaceState({}, document.title, window.location.pathname);
           setIsLoading(false);
+
+          // Cleanup event listener
+          if (typeof window !== 'undefined') {
+            window.removeEventListener('auth:expired', handleAuthExpired);
+          }
           return;
         } catch (error) {
           debug('OAuth callback failed:', error);
           window.history.replaceState({}, document.title, window.location.pathname);
           setUser(null);
           setIsLoading(false);
+
+          // Cleanup event listener
+          if (typeof window !== 'undefined') {
+            window.removeEventListener('auth:expired', handleAuthExpired);
+          }
           return;
         }
       }
@@ -314,7 +391,18 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           }
 
           setIsLoading(false);
+
+          // Cleanup event listener
+          if (typeof window !== 'undefined') {
+            window.removeEventListener('auth:expired', handleAuthExpired);
+          }
           return;
+        }
+
+        // Parse token expiry and schedule refresh
+        if (session.expiresAt) {
+          setTokenExpiresAt(new Date(session.expiresAt));
+          scheduleTokenRefresh(session.expiresAt);
         }
 
         // Store user data in localStorage for quick access (NOT for auth)
@@ -325,18 +413,59 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         // ✅ SECURITY FIX: Session validation failed - clear ALL user data
         // HTTP-only session cookie is the ONLY source of authentication truth
         debug('Session validation failed - clearing user state');
-        
+
         setUser(null);
         localStorage.removeItem(`${config.appType}_user`);
         localStorage.removeItem('backoffice_mock_user'); // Clean up legacy
         localStorage.removeItem('minside_user'); // Clean up legacy
       } finally {
         setIsLoading(false);
+
+        // Cleanup event listener
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('auth:expired', handleAuthExpired);
+        }
       }
     };
 
     checkAuth();
-  }, [config.appType, hasRequiredRole, accessDeniedMessage, debug]);
+
+    // Cleanup on unmount
+    return () => {
+      clearRefreshTimer();
+    };
+  }, [config.appType, hasRequiredRole, accessDeniedMessage, debug, clearRefreshTimer, navigate, scheduleTokenRefresh]);
+
+  /**
+   * Re-check session on visibility change
+   * When tab becomes visible, validate session is still active
+   */
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible' && user && !isDevMode) {
+        debug('Tab became visible - checking session...');
+        try {
+          const response = await authService.getSession();
+          // Session still valid, update expiry if needed
+          if (response.data?.expiresAt) {
+            setTokenExpiresAt(new Date(response.data.expiresAt));
+            scheduleTokenRefresh(response.data.expiresAt);
+            debug('Session validated on visibility change');
+          }
+        } catch (error) {
+          debug('Session check failed on visibility change:', error);
+          // Let 401 interceptor handle logout
+        }
+      }
+    };
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
+    }
+  }, [user, debug, scheduleTokenRefresh, isDevMode]);
 
   /**
    * Initiate OAuth login

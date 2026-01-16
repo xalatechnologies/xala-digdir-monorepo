@@ -34,17 +34,16 @@ export function useAuthProviders() {
 
 /**
  * Login mutation
+ * Cookie-based auth - tokens are automatically set via Set-Cookie headers
  */
 export function useLogin() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
     onSuccess: (response) => {
-      // Update auth token
-      if (response.data.token) {
-        setAuthToken(response.data.token);
-      }
+      // Cookie-based auth - no token storage needed
+      // Cookies are automatically set by Set-Cookie headers
       // Update session cache
       queryClient.setQueryData(queryKeys.auth.session(), response);
     },
@@ -53,16 +52,16 @@ export function useLogin() {
 
 /**
  * Email login mutation
+ * Cookie-based auth - tokens are automatically set via Set-Cookie headers
  */
 export function useEmailLogin() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (credentials: EmailLoginCredentials) => authService.loginWithEmail(credentials),
     onSuccess: (response) => {
-      if (response.data.token) {
-        setAuthToken(response.data.token);
-      }
+      // Cookie-based auth - no token storage needed
+      // Cookies are automatically set by Set-Cookie headers
       queryClient.setQueryData(queryKeys.auth.session(), response);
     },
   });
@@ -87,16 +86,16 @@ export function useLogout() {
 
 /**
  * Refresh token mutation
+ * Cookie-based auth - tokens are automatically rotated via Set-Cookie headers
  */
 export function useRefreshToken() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: () => authService.refreshToken(),
     onSuccess: (response) => {
-      if (response.data.token) {
-        setAuthToken(response.data.token);
-      }
+      // Cookie-based auth - tokens are automatically rotated
+      // Refresh endpoint returns new cookies via Set-Cookie headers
       queryClient.setQueryData(queryKeys.auth.session(), response);
     },
   });
@@ -146,12 +145,13 @@ export function useVippsLogin() {
 
 /**
  * Handle Vipps OAuth callback
- * 
+ *
  * Exchanges authorization code for session
+ * Cookie-based auth - tokens are automatically set via Set-Cookie headers
  */
 export function useVippsCallback() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({
       code,
@@ -168,19 +168,19 @@ export function useVippsCallback() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, state, nonce, redirectUri }),
+        credentials: 'include', // Ensure cookies are sent/received
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error?.message || 'Vipps authentication failed');
       }
-      
+
       return response.json();
     },
     onSuccess: (response) => {
-      if (response.data?.token) {
-        setAuthToken(response.data.token);
-      }
+      // Cookie-based auth - no token storage needed
+      // Cookies are automatically set by Set-Cookie headers
       queryClient.setQueryData(queryKeys.auth.session(), response);
     },
   });

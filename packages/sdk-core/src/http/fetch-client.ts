@@ -75,7 +75,7 @@ export class FetchHttpClient implements IHttpClient {
   private async request<T>(
     method: string,
     path: string,
-    options?: RequestOptions & { body?: RequestBody }
+    options?: RequestOptions & { body?: RequestBody; _isRetry?: boolean }
   ): Promise<T> {
     const url = this.buildUrl(path, options?.params);
 
@@ -105,8 +105,33 @@ export class FetchHttpClient implements IHttpClient {
 
       if (timeoutId) clearTimeout(timeoutId);
 
-      // Handle 401 Unauthorized
-      if (response.status === 401) {
+      // Handle 401 Unauthorized with single retry
+      if (response.status === 401 && !options?._isRetry) {
+        // Try to refresh token once
+        try {
+          await this.refreshToken();
+
+          // Retry original request once
+          return this.request<T>(method, path, {
+            ...options,
+            _isRetry: true, // Prevent infinite retry
+          });
+        } catch {
+          // Refresh failed - emit auth expired event and throw
+          this.emitAuthExpiredEvent();
+          this.config.onUnauthorized?.();
+          throw new ApiError({
+            type: '/errors/unauthorized',
+            title: 'Unauthorized',
+            status: 401,
+            detail: 'Authentication is required',
+          });
+        }
+      }
+
+      // Handle 401 after retry attempt (no more retries)
+      if (response.status === 401 && options?._isRetry) {
+        this.emitAuthExpiredEvent();
         this.config.onUnauthorized?.();
         throw new ApiError({
           type: '/errors/unauthorized',
@@ -177,5 +202,37 @@ export class FetchHttpClient implements IHttpClient {
 
   async delete<T>(path: string, options?: RequestOptions): Promise<T> {
     return this.request<T>('DELETE', path, options);
+  }
+
+  /**
+   * Attempt to refresh access token using refresh token cookie
+   * @private
+   */
+  private async refreshToken(): Promise<void> {
+    const refreshUrl = `${this.config.baseUrl}/api/auth/refresh`;
+
+    const response = await fetch(refreshUrl, {
+      method: 'POST',
+      credentials: 'include', // Send cookies
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Token refresh failed');
+    }
+
+    // New tokens are automatically set via Set-Cookie headers
+  }
+
+  /**
+   * Emit custom event for auth expiration
+   * @private
+   */
+  private emitAuthExpiredEvent(): void {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:expired'));
+    }
   }
 }
