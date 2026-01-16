@@ -17,9 +17,9 @@ import {
   ShieldCheckIcon,
   KeyIcon,
   Dialog,
+  TextField,
   Button,
 } from '@xala/ds';
-import { Textfield } from '@digdir/designsystemet-react';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { idportenService, authService } from '@digilist/client-sdk';
@@ -277,7 +277,7 @@ export function LoginPage(): React.ReactElement {
         description={t('auth.demoLoginDescription')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <Textfield
+          <TextField
             label={t('auth.demoToken')}
             value={tokenInput}
             onChange={(e) => setTokenInput(e.target.value)}
