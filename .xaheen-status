@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "038-saas-admin",
+  "spec": "042-you-ve-hit-your-limit-resets-jan-19-at-9pm-europe-",
   "state": "building",
   "subtasks": {
-    "completed": 40,
-    "total": 61,
+    "completed": 11,
+    "total": 30,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "SaaS Admin UI Application",
+    "current": "Unit Test Suite",
     "id": null,
-    "total": 8
+    "total": 10
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 29,
-    "started_at": "2026-01-16T10:54:28.340296"
+    "number": 12,
+    "started_at": "2026-01-16T21:03:23.360259"
   },
-  "last_update": "2026-01-16T11:52:59.029491"
+  "last_update": "2026-01-16T21:59:09.195851"
 }
