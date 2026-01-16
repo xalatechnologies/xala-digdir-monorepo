@@ -33,12 +33,19 @@ interface TenantRequest extends FastifyRequest {
 
 /**
  * Request body for creating an access grant
+ * Supports both SDK naming (organizationId, expiresAt) and legacy naming (orgId, validUntil)
  */
 interface CreateAccessGrantBody {
-  orgId: string;
+  // Organization ID - accepts both SDK and legacy naming
+  organizationId?: string;
+  orgId?: string;
   rentalObjectId: string;
+  // Dates - accepts both SDK (expiresAt) and legacy naming (validFrom/validUntil)
   validFrom?: string;
   validUntil?: string;
+  expiresAt?: string;
+  // Additional data
+  notes?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -141,23 +148,35 @@ export class AccessGrantController {
 
     const body = request.body as CreateAccessGrantBody;
 
+    // Support both SDK naming (organizationId) and legacy naming (orgId)
+    const organizationId = body.organizationId || body.orgId;
+
     // Validate required fields
-    if (!body.orgId) {
-      throw new BadRequestError('orgId is required');
+    if (!organizationId) {
+      throw new BadRequestError('organizationId or orgId is required');
     }
 
     if (!body.rentalObjectId) {
       throw new BadRequestError('rentalObjectId is required');
     }
 
+    // Support both SDK naming (expiresAt) and legacy naming (validUntil)
+    const expiresAt = body.expiresAt || body.validUntil;
+
+    // Build metadata with notes if provided
+    const metadata = body.metadata || {};
+    if (body.notes) {
+      metadata.notes = body.notes;
+    }
+
     const input: CreateAccessGrantInput = {
       tenantId,
-      orgId: body.orgId,
+      orgId: organizationId,
       rentalObjectId: body.rentalObjectId,
       grantedBy: userId,
       validFrom: body.validFrom ? new Date(body.validFrom) : undefined,
-      validUntil: body.validUntil ? new Date(body.validUntil) : undefined,
-      metadata: body.metadata,
+      validUntil: expiresAt ? new Date(expiresAt) : undefined,
+      metadata,
     };
 
     const grant = await service.create(input);

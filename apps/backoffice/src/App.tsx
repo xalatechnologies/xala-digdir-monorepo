@@ -19,7 +19,7 @@ import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
 import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage, OrganizationMembersPage, PermissionAssignmentPage } from './routes/organizations';
-import { AccessGrantsPage } from './routes/access-grants';
+import { AccessGrantsPage, NewAccessGrantPage } from './routes/access-grants';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
 import { AuditPage } from './routes/audit';
@@ -170,6 +170,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AccessGrantsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="access-grants/new"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <NewAccessGrantPage />
                   </ProtectedRoute>
                 }
               />

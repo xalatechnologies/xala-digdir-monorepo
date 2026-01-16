@@ -4,3 +4,4 @@
  */
 
 export { AccessGrantsPage } from './AccessGrantsPage';
+export { NewAccessGrantPage } from './NewAccessGrantPage';
