@@ -128,23 +128,23 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
     style={{
       display: 'inline-flex',
       alignItems: 'center',
-      gap: 'var(--ds-spacing-2)', // Increased gap
-      padding: 'var(--ds-spacing-2) var(--ds-spacing-4)', // Increased padding
+      gap: 'var(--ds-spacing-2)',
+      padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
       borderRadius: '999px',
-      backgroundColor: 'var(--ds-color-neutral-background-subtle)', // Added background
+      backgroundColor: 'var(--ds-color-neutral-background-subtle)',
       border: '1px solid var(--ds-color-neutral-border-default)',
       fontSize: 'var(--ds-font-size-sm)',
       lineHeight: '1.5',
       color: 'var(--ds-color-neutral-text-default)',
       cursor: 'pointer',
       boxShadow: 'var(--ds-shadow-sm)',
-      whiteSpace: 'nowrap', // Prevent wrapping
-      height: '32px', // Consistent height
+      whiteSpace: 'nowrap',
+      height: '40px', // Match button height
+      minHeight: '40px', // Ensure consistent height
     }}
   >
     {label}
     <div style={{ display: 'flex', alignItems: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
-      {/* Use SVG directly or Icon component if valid */}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -546,12 +546,11 @@ export function RentalObjectsPage(): React.ReactElement {
                 className="listing-toolbar"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'auto 1fr auto',
+                  gridTemplateColumns: 'minmax(auto, max-content) 1fr minmax(auto, max-content)',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-4)',
                   marginBottom: 'var(--ds-spacing-6)',
                   width: '100%',
-                  minHeight: '44px',
                 }}
               >
                 {/* Left: Filter Button & Count */}
@@ -597,18 +596,16 @@ export function RentalObjectsPage(): React.ReactElement {
                         flex-direction: column;
                         align-items: stretch !important;
                         gap: var(--ds-spacing-4);
-                        height: auto !important;
                       }
-                      .listing-toolbar > div:nth-child(1) { /* Filter btn */
+                      .listing-toolbar > div:nth-child(1) {
                         justify-content: space-between;
                       }
-                      .listing-toolbar > div:nth-child(2) { /* Chips */
+                      .listing-toolbar > div:nth-child(2) {
                         order: 3;
                         justify-content: flex-start !important;
                         overflow-x: auto;
-                        padding-bottom: 4px;
                       }
-                       .listing-toolbar > div:nth-child(3) { /* View toggles */
+                       .listing-toolbar > div:nth-child(3) {
                          display: flex !important;
                          justify-content: flex-end;
                        }
@@ -617,14 +614,27 @@ export function RentalObjectsPage(): React.ReactElement {
                 </div>
 
                 {/* Center: Filter Chips */}
-                <div style={{ display: 'flex', justifyContent: 'center', minWidth: 0, width: '100%' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  minWidth: 0,
+                  overflow: 'hidden'
+                }}>
                   <AnimatePresence>
                     {chips.length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}
+                        style={{ 
+                          display: 'flex', 
+                          gap: 'var(--ds-spacing-2)', 
+                          flexWrap: 'wrap', 
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '100%'
+                        }}
                       >
                         {chips.map(chip => (
                           <FilterChip
@@ -643,8 +653,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           }}
                           style={{ 
                             fontSize: 'var(--ds-font-size-sm)', 
-                            padding: '0 var(--ds-spacing-3)',
-                            height: '32px',
+                            padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                             whiteSpace: 'nowrap' 
                           }}
                         >
@@ -656,7 +665,13 @@ export function RentalObjectsPage(): React.ReactElement {
                 </div>
 
                 {/* Right: View Toggles */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: 'max-content' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'flex-end', 
+                  alignItems: 'center',
+                  minWidth: 'fit-content',
+                  flexShrink: 0
+                }}>
                   <RentalObjectToolbar
                     count={0} 
                     countLabel=""
@@ -668,7 +683,7 @@ export function RentalObjectsPage(): React.ReactElement {
                     className="view-toggles-only"
                   />
                   <style>{`
-                    .view-toggles-only > div:first-child { display: none !important; } /* Hide count text only */
+                    .view-toggles-only > div:first-child { display: none !important; }
                     .view-toggles-only { margin-bottom: 0 !important; width: auto !important; }
                   `}</style>
                 </div>
