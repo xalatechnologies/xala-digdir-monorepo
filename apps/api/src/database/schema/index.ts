@@ -41,11 +41,16 @@ export const organizations = pgTable('organizations', {
   type: varchar('type', { length: 50 }).notNull().default('other'),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  // Brønnøysund sync fields
+  externalOrgId: varchar('external_org_id', { length: 50 }),
+  source: varchar('source', { length: 50 }).default('manual'),
+  lastSyncedAt: timestamp('last_synced_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('orgs_tenant_idx').on(table.tenantId),
   slugIdx: index('orgs_slug_idx').on(table.tenantId, table.slug),
+  externalOrgIdx: index('orgs_external_org_idx').on(table.externalOrgId),
 }));
 
 // ============================================================================
