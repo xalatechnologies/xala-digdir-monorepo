@@ -36,6 +36,10 @@ import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
 import { CategoriesController } from './modules/listing/listing.controller';
+// RBAC Controllers (Access Grants, Permissions, Case Handler Scopes)
+import { AccessGrantController } from './modules/access-grant/access-grant.controller';
+import { PermissionAssignmentController } from './modules/permission-assignment/permission-assignment.controller';
+import { CaseHandlerScopeController } from './modules/case-handler-scope/case-handler-scope.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
@@ -207,6 +211,10 @@ async function bootstrap() {
     DiscountCodesController,
     HealthController,
     CategoriesController,
+    // RBAC Controllers
+    AccessGrantController,
+    PermissionAssignmentController,
+    CaseHandlerScopeController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,

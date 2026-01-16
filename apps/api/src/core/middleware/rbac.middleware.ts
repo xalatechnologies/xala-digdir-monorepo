@@ -12,6 +12,17 @@ import { container } from '../container';
 import { ForbiddenError, UnauthorizedError } from '../errors/problem-details';
 import { eq, and } from 'drizzle-orm';
 import { users, orgMemberships } from '../../database/schema/index';
+import {
+  PERMISSION_MATRIX,
+  roleHasPermission,
+  getPermissionsForRole as getPermissionsForRoleUtil,
+  hasPermission as hasPermissionUtil,
+  type SystemRole,
+  type OrgRole,
+} from '../rbac/permission-matrix';
+
+// Re-export types for backward compatibility
+export type { SystemRole, OrgRole } from '../rbac/permission-matrix';
 
 /**
  * Request type extended with user context
@@ -28,67 +39,6 @@ interface RBACRequest extends FastifyRequest {
     organizationId?: string | null;
   };
 }
-
-/**
- * System-level roles
- */
-export type SystemRole = 'super_admin' | 'admin' | 'saksbehandler' | 'user';
-
-/**
- * Organization-level roles
- */
-export type OrgRole = 'org_admin' | 'org_case_handler' | 'member';
-
-/**
- * Permission matrix mapping roles to resource:action permissions
- */
-const PERMISSION_MATRIX: Record<string, Record<string, string[]>> = {
-  super_admin: {
-    '*': ['*'],
-  },
-  admin: {
-    dashboard: ['read', 'write'],
-    listings: ['create', 'read', 'update', 'delete', 'publish', 'archive'],
-    bookings: ['create', 'read', 'update', 'delete', 'confirm', 'cancel', 'approve', 'deny'],
-    users: ['create', 'read', 'update', 'delete', 'deactivate', 'reactivate'],
-    organizations: ['create', 'read', 'update', 'delete', 'verify'],
-    reports: ['read', 'export'],
-    settings: ['read', 'write'],
-    calendar: ['read', 'write', 'block'],
-    messages: ['read', 'write', 'resolve'],
-    'seasonal-leases': ['create', 'read', 'update', 'delete', 'terminate'],
-    'access-grants': ['create', 'read', 'update', 'delete'],
-    audit: ['read'],
-  },
-  saksbehandler: {
-    dashboard: ['read'],
-    listings: ['create', 'read', 'update', 'publish', 'archive'],
-    bookings: ['create', 'read', 'update', 'confirm', 'cancel', 'approve'],
-    users: [],
-    organizations: ['read'],
-    reports: ['read'],
-    settings: [],
-    calendar: ['read', 'write', 'block'],
-    messages: ['read', 'write', 'resolve'],
-    'seasonal-leases': ['create', 'read', 'update'],
-    'access-grants': ['read'],
-    audit: [],
-  },
-  user: {
-    dashboard: [],
-    listings: ['read'],
-    bookings: ['create', 'read'],
-    users: [],
-    organizations: [],
-    reports: [],
-    settings: [],
-    calendar: ['read'],
-    messages: ['read', 'write'],
-    'seasonal-leases': [],
-    'access-grants': [],
-    audit: [],
-  },
-};
 
 /**
  * Get user ID from request (supports both request.user and headers)
@@ -142,29 +92,6 @@ async function fetchOrgMembership(userId: string, orgId: string): Promise<any | 
     .limit(1);
 
   return result.length > 0 ? result[0] : null;
-}
-
-/**
- * Check if role has permission for resource:action
- */
-function roleHasPermission(role: string, resource: string, action: string): boolean {
-  const rolePermissions = PERMISSION_MATRIX[role];
-
-  if (!rolePermissions) {
-    return false;
-  }
-
-  // Check for wildcard (super_admin)
-  if (rolePermissions['*']?.includes('*')) {
-    return true;
-  }
-
-  const resourceActions = rolePermissions[resource];
-  if (!resourceActions) {
-    return false;
-  }
-
-  return resourceActions.includes(action) || resourceActions.includes('*');
 }
 
 /**
@@ -377,27 +304,10 @@ export const requireTenantContext: preHandlerHookHandler = async function (
 };
 
 /**
- * Utility: Get permissions for a given role
+ * Utility exports - re-exported from shared permission-matrix module
  */
-export function getPermissionsForRole(role: string): string[] {
-  const rolePermissions = PERMISSION_MATRIX[role] || PERMISSION_MATRIX.user;
-  const permissions: string[] = [];
-
-  for (const [resource, actions] of Object.entries(rolePermissions)) {
-    for (const action of actions) {
-      permissions.push(`${resource}:${action}`);
-    }
-  }
-
-  return permissions;
-}
-
-/**
- * Utility: Check if a role has a specific permission
- */
-export function hasPermission(role: string, resource: string, action: string): boolean {
-  return roleHasPermission(role, resource, action);
-}
+export const getPermissionsForRole = getPermissionsForRoleUtil;
+export const hasPermission = hasPermissionUtil;
 
 // Export permission matrix for use in other modules
 export { PERMISSION_MATRIX };
