@@ -293,7 +293,7 @@ describe('RentalObjectTableView', () => {
 
   describe('Empty State', () => {
     it('should handle empty listings array', () => {
-      render(<RentalObjectTableView listings={[]} />);
+      render(<RentalObjectTableView rentalObjects={[]} />);
 
       const footer = screen.getByText(/Viser 0 lokaler/i);
       expect(footer).toBeInTheDocument();
@@ -331,7 +331,7 @@ describe('RentalObjectTableView', () => {
         },
       ];
 
-      render(<RentalObjectTableView listings={listingsWithoutPrice} />);
+      render(<RentalObjectTableView rentalObjects={rentalObjectsWithoutPrice} />);
 
       // Should show dashes for missing data (type, capacity, price)
       const dashes = screen.getAllByText('–');

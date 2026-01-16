@@ -36,7 +36,7 @@ export function RentalObjectTableView({
 
   // Sort rental objects
   const sortedRentalObjects = React.useMemo(() => {
-    const sorted = [...listings].sort((a, b) => {
+    const sorted = [...rentalObjects].sort((a, b) => {
       let aVal: string | number = '';
       let bVal: string | number = '';
 
@@ -348,7 +348,7 @@ export function RentalObjectTableView({
                     fontWeight: 'var(--ds-font-weight-medium)' as unknown as number,
                   }}
                 >
-                  {formatPrice(listing)}
+                  {formatPrice(rentalObject)}
                 </td>
               </tr>
             ))}
