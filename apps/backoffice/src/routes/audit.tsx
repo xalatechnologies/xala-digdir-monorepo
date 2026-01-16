@@ -26,10 +26,10 @@ import {
 import {
   useAuditLog,
   useUsers,
-  useListings,
+  useRentalObjects,
 } from '@digilist/client-sdk';
 import type { AuditLogEntry, AuditQueryParams } from '@digilist/client-sdk';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 
 // Helper to format date
 function formatDate(timestamp: string, locale: string): string {
@@ -56,7 +56,7 @@ const RESOURCE_OPTIONS = [
   { id: 'user', label: 'Brukere' },
   { id: 'organization', label: 'Organisasjoner' },
   { id: 'allocation', label: 'Allokeringer' },
-  { id: 'settings', label: 'Innstillinger' },
+  { id: 'settings', label: t("ui.settings") },
 ];
 
 // Action type options
@@ -114,13 +114,14 @@ function getResourceLabel(resource: string): string {
     case 'allocation':
       return 'Allokering';
     case 'settings':
-      return 'Innstillinger';
+      return t("ui.settings");
     default:
       return resource;
   }
 }
 
 export function AuditPage() {
+  const t = useT();
   const { locale } = useLocale();
   const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
 
@@ -153,7 +154,7 @@ export function AuditPage() {
   // Data fetching
   const { data: auditData, isLoading, error } = useAuditLog(queryParams);
   const { data: usersData } = useUsers({ limit: 100 });
-  const { data: listingsData } = useListings({ limit: 100 });
+  const { data: listingsData } = useRentalObjects({ limit: 100 });
 
   // Create lookup maps
   const userNameMap = useMemo(() => {
@@ -366,7 +367,7 @@ export function AuditPage() {
       >
         {selectedEvent && (
           <>
-            <DrawerSection title="Oversikt">
+            <DrawerSection title={t("ui.overview")}>
               <Stack spacing="var(--ds-spacing-3)">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -665,7 +666,7 @@ export function AuditPage() {
                 padding: 'var(--ds-spacing-10)',
               }}
             >
-              <Spinner aria-label="Laster..." />
+              <Spinner aria-label={t("ui.loading")} />
             </div>
           ) : error ? (
             <div
@@ -785,9 +786,7 @@ export function AuditPage() {
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
                   >
-                    <ChevronLeftIcon />
-                    Forrige
-                  </Button>
+                    <ChevronLeftIcon />{t("ui.previous")}</Button>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
                     Side {page} av {totalPages}
                   </Paragraph>

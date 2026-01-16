@@ -7,12 +7,13 @@ export {
   RealtimeProvider,
   useRealtimeContext,
   useRealtimeBooking,
-  useRealtimeListing,
+  useRealtimeRentalObject,
   useRealtimeAudit,
   useRealtimeNotification,
   useRealtimeMessage,
   useRealtimeAll,
   useRealtimeStatus,
+  useRealtimeSlotAvailability,
 } from './RealtimeProvider';
 
 export type {

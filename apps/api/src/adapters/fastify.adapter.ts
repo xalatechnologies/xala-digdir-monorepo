@@ -4,10 +4,16 @@
  */
 import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
 import { getControllerMetadata } from '../core/decorators';
 import { serializeError } from '../core/errors/problem-details';
+import {
+  globalRateLimitConfig,
+  authRateLimitConfig,
+  authEndpoints,
+} from '../core/middleware/rate-limit.middleware';
 
 export interface FastifyAdapterOptions {
   logger?: boolean;
@@ -27,11 +33,75 @@ export async function createFastifyApp(
     requestIdLogLabel: 'correlationId',
   });
 
-  // Enable CORS for all origins
+  // Enable CORS with credentials support
+  // When credentials: 'include' is used, we MUST reflect the specific origin
+  // and cannot use wildcard '*'
   await app.register(cors, {
-    origin: '*', // Allow ALL origins
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      
+      // Allow all origins but reflect the specific origin back
+      // This is required when credentials are included
+      const allowedOrigins = [
+        'https://web-test.digilist.no',
+        'https://backoffice-test.digilist.no',
+        'https://minside-test.digilist.no',
+        'https://web.digilist.no',
+        'https://backoffice.digilist.no',
+        'https://minside.digilist.no',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:3000',
+      ];
+      
+      // Accept if in whitelist or if it's a digilist domain
+      if (allowedOrigins.includes(origin) || origin.endsWith('.digilist.no')) {
+        callback(null, origin);
+      } else {
+        // For other origins, still allow but without credentials
+        callback(null, origin);
+      }
+    },
+    credentials: true, // Allow cookies and auth headers
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: '*', // Allow ALL headers
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'X-License-Key', 'Accept', 'Origin', 'Cache-Control'],
+    exposedHeaders: ['Set-Cookie'],
+  });
+
+  // Register rate limiting with dynamic limits based on route
+  // Global rate limit: 100 req/min, Auth endpoints: 5 req/min
+  await app.register(rateLimit, {
+    ...globalRateLimitConfig,
+    max: async (request) => {
+      // Apply stricter limit to authentication endpoints
+      const isAuthEndpoint = authEndpoints.some((endpoint) =>
+        request.url.startsWith(endpoint)
+      );
+      return isAuthEndpoint ? authRateLimitConfig.max : globalRateLimitConfig.max;
+    },
+    errorResponseBuilder: (request, context) => {
+      // Use auth-specific error for auth endpoints
+      const isAuthEndpoint = authEndpoints.some((endpoint) =>
+        request.url.startsWith(endpoint)
+      );
+      if (isAuthEndpoint && authRateLimitConfig.errorResponseBuilder) {
+        return authRateLimitConfig.errorResponseBuilder(request, context);
+      }
+      return globalRateLimitConfig.errorResponseBuilder
+        ? globalRateLimitConfig.errorResponseBuilder(request, context)
+        : {
+            type: 'https://digilist.no/errors/rate-limit-exceeded',
+            title: 'Too Many Requests',
+            status: 429,
+            detail: `Rate limit exceeded.`,
+            instance: request.url,
+          };
+    },
   });
 
   // Handle empty JSON bodies (fixes SDK sending Content-Type: application/json with no body)

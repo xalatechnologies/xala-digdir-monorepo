@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# i18n Pre-commit Hook
+# Validates translation key parity before allowing commits
+
+echo "🌐 Running i18n pre-commit checks..."
+
+# Check if translation files were modified
+if git diff --cached --name-only | grep -q "packages/i18n/src/locales/"; then
+  echo "📝 Translation files modified - checking key parity..."
+  pnpm i18n:check
+  if [ $? -ne 0 ]; then
+    echo "❌ i18n check failed. Please fix the translation issues before committing."
+    exit 1
+  fi
+  echo "✅ Translation keys are in sync!"
+fi
+
+# Run lint-staged for other checks
+npx lint-staged

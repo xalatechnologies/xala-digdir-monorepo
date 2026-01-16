@@ -32,6 +32,7 @@ import {
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 const roleLabels: Record<UserRole, string> = {
   super_admin: 'Superadmin',
@@ -54,6 +55,7 @@ const statusColors: Record<UserStatus, 'success' | 'warning' | 'danger'> = {
 };
 
 export function UserDetailPage() {
+  const t = useT();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -89,14 +91,14 @@ export function UserDetailPage() {
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      // Failed to copy to clipboard
     }
   };
 
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -147,9 +149,7 @@ export function UserDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button">
-              <EditIcon />
-              Rediger
-            </Button>
+              <EditIcon />{t("ui.edit")}</Button>
             {user.status === 'active' ? (
               <Button variant="secondary" data-size="sm" onClick={handleDeactivate} type="button">
                 <XCircleIcon />
@@ -169,17 +169,13 @@ export function UserDetailPage() {
       <Tabs defaultValue="info">
         <Tabs.List>
           <Tabs.Tab value="info">
-            <UserIcon />
-            Informasjon
-          </Tabs.Tab>
+            <UserIcon />{t("ui.info")}</Tabs.Tab>
           <Tabs.Tab value="activity">
             <ClockIcon />
             Aktivitet
           </Tabs.Tab>
           <Tabs.Tab value="security">
-            <ShieldCheckIcon />
-            Sikkerhet
-          </Tabs.Tab>
+            <ShieldCheckIcon />{t("rule.safety")}</Tabs.Tab>
         </Tabs.List>
 
         {/* Information Tab */}

@@ -6,6 +6,7 @@
 
 import { Paragraph } from '@xala/ds';
 import type { ReactNode } from 'react';
+import { useT } from '@xala/i18n';
 
 export type InfoBoxVariant = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -44,6 +45,7 @@ const variantStyles: Record<InfoBoxVariant, { bg: string; border: string; text: 
 };
 
 export function InfoBox({ variant = 'info', children, title }: InfoBoxProps) {
+  const t = useT();
   const styles = variantStyles[variant];
 
   return (

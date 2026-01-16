@@ -71,7 +71,7 @@ export interface IntegrationSettings {
 export interface RcoAccessCode {
   code: string;
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   validFrom: string;
   validUntil: string;
   type: 'PIN' | 'RFID' | 'QR';
@@ -87,7 +87,7 @@ export interface RcoLock {
 
 export interface CreateAccessCodeDTO {
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   validFrom: string;
   validUntil: string;
 }

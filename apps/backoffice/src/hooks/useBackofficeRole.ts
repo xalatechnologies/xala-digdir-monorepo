@@ -18,6 +18,7 @@
  */
 
 import { useBackofficeRoleContext } from '../providers/BackofficeRoleProvider';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Re-exports for convenience
@@ -92,6 +93,7 @@ export type {
  * ```
  */
 export function useBackofficeRole() {
+  const t = useT();
   return useBackofficeRoleContext();
 }
 

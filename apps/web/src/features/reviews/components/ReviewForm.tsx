@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Button, Stack, Heading, Paragraph, StarIcon } from '@xala/ds';
 import { useCreateReview, auditService } from '@digilist/client-sdk';
 import type { CreateReviewDTO } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -17,7 +18,7 @@ import type { CreateReviewDTO } from '@digilist/client-sdk/types';
 
 export interface ReviewFormProps {
   /** Listing ID to review */
-  listingId: string;
+  rentalObjectId: string;
   /** Booking ID associated with the review */
   bookingId: string;
   /** Callback when review is successfully submitted */
@@ -46,7 +47,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
   return (
     <div
       role="radiogroup"
-      aria-label="Velg vurdering"
+      aria-label={t('reviews.selectRating')}
       style={{
         display: 'flex',
         gap: '8px',
@@ -109,20 +110,21 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
  * @example
  * ```tsx
  * <ReviewForm
- *   listingId="listing-123"
+ *   rentalObjectId="listing-123"
  *   bookingId="booking-456"
- *   onSuccess={() => console.log('Review submitted')}
- *   onCancel={() => console.log('Form cancelled')}
+ *   onSuccess={handleSuccess}
+ *   onCancel={handleCancel}
  * />
  * ```
  */
 export function ReviewForm({
-  listingId,
+  rentalObjectId,
   bookingId,
   onSuccess,
   onCancel,
   className,
 }: ReviewFormProps): React.ReactElement {
+  const t = useT();
   // Form state
   const [rating, setRating] = React.useState<number>(0);
   const [comment, setComment] = React.useState<string>('');
@@ -150,7 +152,7 @@ export function ReviewForm({
 
     // Prepare DTO
     const reviewData: CreateReviewDTO = {
-      listingId,
+      rentalObjectId,
       bookingId,
       rating,
       comment: comment.trim() || undefined,
@@ -166,7 +168,7 @@ export function ReviewForm({
       onSuccess?.();
     } catch (error) {
       // Error is handled by mutation error state
-      auditService.logError('review_submission_failed', 'review', error instanceof Error ? error : String(error), { listingId, bookingId, rating });
+      auditService.logError('review_submission_failed', 'review', error instanceof Error ? error : String(error), { rentalObjectId, bookingId, rating });
     }
   };
 
@@ -270,7 +272,7 @@ export function ReviewForm({
             id="review-comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Del dine tanker om dette lokalet..."
+            placeholder={t('reviews.placeholder')}
             disabled={isSubmitting}
             rows={5}
             maxLength={1000}
@@ -337,9 +339,7 @@ export function ReviewForm({
               variant="tertiary"
               onClick={handleCancel}
               disabled={isSubmitting}
-            >
-              Avbryt
-            </Button>
+            >{t("ui.cancel")}</Button>
           )}
           <Button
             type="submit"

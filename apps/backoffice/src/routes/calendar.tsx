@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
-import { useCalendarEvents, useListings, type CalendarEvent, type Listing, formatWeekRange } from '@digilist/client-sdk';
+import { useCalendarEvents, useRentalObjects, type CalendarEvent, type RentalObject, formatWeekRange } from '@digilist/client-sdk';
 import {
   CreateBlockModal,
   EventDrawer,
@@ -15,6 +15,7 @@ import {
   useRealtimeCalendar
 } from '../features/calendar';
 import { useToast } from '../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 type ViewType = 'day' | 'week' | 'month' | 'timeline';
 
@@ -56,6 +57,7 @@ function getDaysInMonth(date: Date): number {
 }
 
 export function CalendarPage() {
+  const t = useT();
   const [view, setView] = useState<ViewType>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedListing, setSelectedListing] = useState<string | undefined>(undefined);
@@ -110,7 +112,7 @@ export function CalendarPage() {
   const monthStart = useMemo(() => getMonthStart(currentDate), [currentDate]);
 
   // Fetch listings for filter dropdown
-  const { data: listingsData } = useListings({ status: 'published' });
+  const { data: listingsData } = useRentalObjects({ status: 'published' });
   const listings = listingsData?.data ?? [];
 
   // Build calendar query params based on view
@@ -674,10 +676,10 @@ export function CalendarPage() {
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--ds-spacing-3)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('prev')} aria-label="Forrige">
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('prev')} aria-label={t("ui.previous")}>
               <ChevronLeftIcon />
             </Button>
-            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('next')} aria-label="Neste">
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('next')} aria-label={t("ui.next")}>
               <ChevronRightIcon />
             </Button>
             <Heading level={2} data-size="sm" style={{ margin: 0, minWidth: '200px' }}>
@@ -700,7 +702,6 @@ export function CalendarPage() {
                   borderRadius: 'var(--ds-border-radius-sm)',
                   border: '1px solid var(--ds-color-success-border-default)',
                 }}
-                title={`Sist oppdatert: ${lastUpdate.toLocaleTimeString('nb-NO')}`}
               >
                 <div
                   style={{
@@ -711,7 +712,7 @@ export function CalendarPage() {
                     animation: 'pulse 2s ease-in-out infinite',
                   }}
                 />
-                <span>Live</span>
+                <span>Sist oppdatert: {lastUpdate.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
               </div>
             )}
           </div>
@@ -758,11 +759,11 @@ export function CalendarPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-success-surface-default)', border: '1px solid var(--ds-color-success-border-default)' }} />
-              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>Bekreftet</span>
+              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{t("status.confirmed")}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-warning-surface-default)', border: '1px solid var(--ds-color-warning-border-default)' }} />
-              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>Venter</span>
+              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{t("status.pending")}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-neutral-surface-hover)', border: '1px solid var(--ds-color-neutral-border-default)' }} />

@@ -11,6 +11,3 @@ export type { FormActionsProps } from './FormActions';
 
 export { InfoBox } from './InfoBox';
 export type { InfoBoxProps, InfoBoxVariant } from './InfoBox';
-
-export { StatusBadge } from './StatusBadge';
-export type { StatusBadgeProps, StatusVariant } from './StatusBadge';

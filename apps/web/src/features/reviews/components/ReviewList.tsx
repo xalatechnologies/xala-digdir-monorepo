@@ -9,12 +9,13 @@ import { Button, Stack, Text, Spinner } from '@xala/ds';
 import { useListingReviews } from '@digilist/client-sdk';
 import { ReviewCard } from './ReviewCard';
 import type { ReviewQueryParams } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 export interface ReviewListProps {
   /** Listing ID to fetch reviews for */
-  listingId: string;
+  rentalObjectId: string;
   /** Additional query parameters (e.g., status filter) */
-  queryParams?: Omit<ReviewQueryParams, 'listingId'>;
+  queryParams?: Omit<ReviewQueryParams, 'rentalObjectId'>;
   /** Show helpful count on cards */
   showHelpfulCount?: boolean;
   /** Show moderation status badges */
@@ -30,7 +31,7 @@ export interface ReviewListProps {
 }
 
 export function ReviewList({
-  listingId,
+  rentalObjectId,
   queryParams,
   showHelpfulCount = true,
   showStatus = false,
@@ -39,18 +40,19 @@ export function ReviewList({
   reviewsPerPage = 5,
   variant = 'default',
 }: ReviewListProps): React.ReactElement {
+  const t = useT();
   // Pagination state
   const [visibleCount, setVisibleCount] = React.useState(reviewsPerPage);
 
   // Fetch reviews from SDK
   const { data: reviewsResponse, isLoading, error } = useListingReviews(
-    listingId,
+    rentalObjectId,
     {
       ...queryParams,
       status: queryParams?.status || 'approved', // Default to approved reviews
       limit: 100, // Fetch a reasonable batch for client-side pagination
     },
-    { enabled: !!listingId }
+    { enabled: !!rentalObjectId }
   );
 
   // Extract reviews from response
@@ -84,7 +86,7 @@ export function ReviewList({
           padding: 'var(--ds-spacing-8)',
         }}
       >
-        <Spinner aria-label="Laster anmeldelser..." />
+        <Spinner aria-label={t('reviews.loading')} />
       </div>
     );
   }

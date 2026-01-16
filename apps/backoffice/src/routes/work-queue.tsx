@@ -117,7 +117,7 @@ export function WorkQueuePage() {
       variant: 'default',
     });
     if (confirmed) {
-      console.log('Approved:', id);
+      // Request approved
     }
   };
 
@@ -130,7 +130,7 @@ export function WorkQueuePage() {
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Rejected:', id);
+      // Request rejected
     }
   };
 

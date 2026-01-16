@@ -5,43 +5,38 @@
  */
 
 import type { SeasonStatus } from '@digilist/client-sdk/types';
+import type { StatusBadgeConfig } from '@xala/ds';
 
 // =============================================================================
 // Season Status Configuration
 // =============================================================================
 
-export const SEASON_STATUS_CONFIG = {
+export const SEASON_STATUS_CONFIG: Record<SeasonStatus, StatusBadgeConfig> = {
   draft: {
     label: 'Utkast',
-    color: 'var(--ds-color-neutral-text-subtle)',
-    bgColor: 'var(--ds-color-neutral-surface-default)',
+    color: 'neutral',
   },
   open: {
     label: 'Åpen for søknader',
-    color: 'var(--ds-color-success-text-default)',
-    bgColor: 'var(--ds-color-success-surface-default)',
+    color: 'success',
   },
   closed: {
     label: 'Stengt',
-    color: 'var(--ds-color-neutral-text-subtle)',
-    bgColor: 'var(--ds-color-neutral-surface-default)',
+    color: 'neutral',
   },
   active: {
     label: 'Aktiv',
-    color: 'var(--ds-color-accent-text-default)',
-    bgColor: 'var(--ds-color-accent-surface-default)',
+    color: 'info',
   },
   completed: {
     label: 'Avsluttet',
-    color: 'var(--ds-color-neutral-text-subtle)',
-    bgColor: 'var(--ds-color-neutral-surface-default)',
+    color: 'neutral',
   },
   cancelled: {
     label: 'Kansellert',
-    color: 'var(--ds-color-danger-text-default)',
-    bgColor: 'var(--ds-color-danger-surface-default)',
+    color: 'danger',
   },
-} as const;
+};
 
 // =============================================================================
 // Application Status Configuration

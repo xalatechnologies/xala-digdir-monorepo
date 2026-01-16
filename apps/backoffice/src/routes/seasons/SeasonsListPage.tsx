@@ -22,43 +22,45 @@ import {
   EyeIcon,
   HeaderSearch,
 } from '@xala/ds';
-import {
-  useSeasonalLeases,
-  useDeleteSeasonalLease,
-  // type SeasonalLease,
-  type SeasonalLeaseStatus,
-} from '@digilist/client-sdk';
+import { useSeasons, useDeleteSeason } from '@digilist/client-sdk/hooks';
+import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';
+import { useT } from '@xala/i18n';
 
-const statusLabels: Record<SeasonalLeaseStatus, string> = {
+const statusLabels: Record<SeasonStatus, string> = {
   draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
-  assigned: 'Tildelt',
+  active: 'Aktiv',
+  completed: 'Fullført',
+  cancelled: 'Kansellert',
 };
 
-const statusVariants: Record<SeasonalLeaseStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
   closed: 'warning',
-  assigned: 'success',
+  active: 'success',
+  completed: 'neutral',
+  cancelled: 'neutral',
 };
 
 export function SeasonsListPage() {
+  const t = useT();
   const navigate = useNavigate();
 
   // State
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<SeasonalLeaseStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
 
   // Queries
-  const { data: seasonsData, isLoading } = useSeasonalLeases({
-    status: statusFilter === 'all' ? undefined : statusFilter,
-  });
+  const { data: seasonsData, isLoading } = useSeasons(
+    statusFilter !== 'all' ? { status: statusFilter } : undefined
+  );
   const seasons = seasonsData?.data ?? [];
 
   // Mutations
-  const deleteSeasonMutation = useDeleteSeasonalLease();
+  const deleteSeasonMutation = useDeleteSeason();
 
   // Filtered seasons
   const filteredSeasons = seasons.filter(season => {
@@ -134,7 +136,13 @@ export function SeasonsListPage() {
                   <Dropdown.Button onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('completed')}>Fullført</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('cancelled')}>Kansellert</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -146,7 +154,7 @@ export function SeasonsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t("ui.loading")} />
           </div>
         ) : filteredSeasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -173,7 +181,7 @@ export function SeasonsListPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Periode</Table.HeaderCell>
+                <Table.HeaderCell>{t("timeMode.period")}</Table.HeaderCell>
                 <Table.HeaderCell>Søknadsfrist</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>Lokaler</Table.HeaderCell>
@@ -227,16 +235,12 @@ export function SeasonsListPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}/edit`)}>
-                              <EditIcon />
-                              Rediger
-                            </Dropdown.Button>
+                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {season.status === 'draft' && (
                             <Dropdown.Item>
                               <Dropdown.Button onClick={() => handleDelete(season.id)} data-color="danger">
-                                <TrashIcon />
-                                Slett
-                              </Dropdown.Button>
+                                <TrashIcon />{t("ui.delete")}</Dropdown.Button>
                             </Dropdown.Item>
                           )}
                         </Dropdown.List>

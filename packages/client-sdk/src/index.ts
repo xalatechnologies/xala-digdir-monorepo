@@ -48,6 +48,7 @@ export type {
   RequestOptions,
   HttpResponse,
   HttpMethod,
+  ProblemDetails,
 } from './core/http-client.interface';
 
 export { ApiError } from './core/http-client.interface';
@@ -56,8 +57,25 @@ export { FetchHttpClient } from './core/fetch-client';
 // Types - All type definitions
 export * from './types';
 
+// Constants - Listing type labels and options
+export { LISTING_TYPE_LABELS, LISTING_TYPE_OPTIONS, CAPACITY_OPTIONS } from './types/rental-object';
+
+// Constants - Notification preferences
+export {
+  NOTIFICATION_TYPES_REGISTRY,
+  DEFAULT_NOTIFICATION_PREFERENCES,
+  getDefaultChannelSettings,
+  isChannelEnabled,
+  updateChannelSetting,
+} from './types/notification-preferences';
+
 // Services - Domain services (24 services)
 export * from './services';
+
+// Re-export specific service instances that apps import directly
+export { organizationService } from './services/organization.service';
+export { idportenService } from './services/idporten.service';
+export { vippsAuthService } from './services/vipps.service';
 
 // Hooks - React Query hooks (requires React and @tanstack/react-query)
 export * from './hooks';
@@ -108,6 +126,22 @@ export {
   formatProgress,
   // Upload progress tracking
   UploadProgressTracker,
+  // Flow context utilities (session-safe return-to-flow)
+  FLOW_CONTEXT_KEY,
+  MAX_FLOW_CONTEXT_SIZE,
+  FLOW_CONTEXT_EXPIRY_MS,
+  serializeFlowContext,
+  deserializeFlowContext,
+  isValidFlowContext,
+  isFlowContextExpired,
+  getFlowContextTTL,
+  validateReturnToUrl,
+  sanitizeReturnToUrl,
+  saveFlowContextToStorage,
+  loadFlowContextFromStorage,
+  clearFlowContextFromStorage,
+  hasStoredFlowContext,
+  createFlowContext,
 } from './utils';
 
 export type {
@@ -115,5 +149,12 @@ export type {
   GeocodeConfig,
 } from './utils';
 
-// Transforms - Data transformation utilities
-export * from './transforms';
+// DAL - Data Access Layer (cache management, query keys)
+export * from './dal';
+
+// Providers - React context providers
+export { RealtimeProvider, useRealtimeStatus } from './providers';
+export type { RealtimeProviderProps, RealtimeContextValue } from './providers';
+
+// Localization - Translation key constants for i18n
+export * from './localization';

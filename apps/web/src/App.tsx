@@ -3,28 +3,25 @@ import { BrowserRouter, Routes, Route, useNavigate, Outlet, useOutletContext } f
 import {
   AppHeader,
   HeaderLogo,
-  HeaderSearch,
   HeaderActions,
   HeaderThemeToggle,
   HeaderLoginButton,
   NotificationBell,
-  CalendarIcon,
-  UserIcon,
-  SettingsIcon,
-  MapPinIcon,
   DialogProvider,
+  ErrorBoundary,
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
 import { I18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
-import { ListingsPage } from './pages/ListingsPage';
-import { ListingDetailPage } from './pages/ListingDetailPage';
+import { RentalObjectsPage } from './pages/RentalObjectsPage';
+import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
+import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast } from './components';
+import { RealtimeToast, GlobalSearch, ProtectedRoute, /* ConsentPopup, */ UserMenu } from './components';
+import { useAuth } from './hooks/useAuth';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -44,11 +41,7 @@ function MainLayout() {
   const t = useT();
   const navigate = useNavigate();
   const { setColorScheme, effectiveScheme } = useThemeContext();
-
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchResults, setSearchResults] = React.useState<SearchResultGroup[]>([]);
-  const [isSearching, setIsSearching] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
 
   // Get real unread notification count (only for logged in users)
   const { data: unreadData } = useNotificationUnreadCount();
@@ -59,102 +52,12 @@ function MainLayout() {
     setColorScheme(effectiveScheme === 'dark' ? 'light' : 'dark');
   };
 
-  // Check for logged in user on mount
-  React.useEffect(() => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  // Demo search data with translations
-  const demoSearchResults: SearchResultGroup[] = [
-    {
-      id: 'actions',
-      label: t('listings.quickActions'),
-      items: [
-        { id: 'new-booking', label: t('listings.newBooking'), description: t('listings.newBooking'), icon: <CalendarIcon size={18} />, shortcut: '⌘N' },
-        { id: 'settings', label: t('nav.settings'), description: t('listings.openSettings'), icon: <SettingsIcon size={18} />, shortcut: '⌘,' },
-      ]
-    },
-    {
-      id: 'locations',
-      label: t('listings.locations'),
-      items: [
-        { id: 'oslo', label: 'Oslo', description: t('listings.headquarters'), icon: <MapPinIcon size={18} />, meta: `12 ${t('listings.bookings')}` },
-        { id: 'bergen', label: 'Bergen', description: 'Vestlandskontor', icon: <MapPinIcon size={18} />, meta: `8 ${t('listings.bookings')}` },
-        { id: 'trondheim', label: 'Trondheim', description: 'Midtbykontor', icon: <MapPinIcon size={18} />, meta: `5 ${t('listings.bookings')}` },
-      ]
-    },
-    {
-      id: 'users',
-      label: t('listings.users'),
-      items: [
-        { id: 'user-1', label: 'Ola Nordmann', description: 'ola@example.com', icon: <UserIcon size={18} /> },
-        { id: 'user-2', label: 'Kari Hansen', description: 'kari@example.com', icon: <UserIcon size={18} /> },
-      ]
-    }
-  ];
-
-  // Simulated search function
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-
-    if (!value.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-
-    // Simulate API delay
-    setTimeout(() => {
-      const query = value.toLowerCase();
-      const filtered = demoSearchResults
-        .map(group => ({
-          ...group,
-          items: group.items.filter(item =>
-            item.label.toLowerCase().includes(query) ||
-            item.description?.toLowerCase().includes(query)
-          )
-        }))
-        .filter(group => group.items.length > 0);
-
-      setSearchResults(filtered);
-      setIsSearching(false);
-    }, 200);
-  };
-
-  const handleSearch = (_value: string) => {
-    // Search action handled
-  };
-
-  const handleResultSelect = (_result: SearchResultItem) => {
-    setSearchQuery('');
-    setSearchResults([]);
-  };
-
   const handleLogin = () => {
     navigate('/login');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('web_user');
-    setIsLoggedIn(false);
-  };
-
-  // Get logged in user name
-  const getUserName = () => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        return user.name;
-      } catch {
-        return undefined;
-      }
-    }
-    return undefined;
+    logout();
   };
 
   return (
@@ -203,8 +106,8 @@ function MainLayout() {
         logo={
           <HeaderLogo
             src="/logo.svg"
-            title="DIGILIST"
-            subtitle="ENKEL BOOKING"
+            title={t('brand.name')}
+            subtitle={t('brand.tagline')}
             href="/"
             height="40px"
             hideTextOnMobile={true}
@@ -212,14 +115,8 @@ function MainLayout() {
         }
         search={
           <div className="header-search-desktop">
-            <HeaderSearch
+            <GlobalSearch
               placeholder={t('common.search')}
-              value={searchQuery}
-              onSearchChange={handleSearchChange}
-              onSearch={handleSearch}
-              results={searchResults}
-              onResultSelect={handleResultSelect}
-              isLoading={isSearching}
               showShortcut={true}
               enableGlobalShortcut={true}
             />
@@ -231,7 +128,7 @@ function MainLayout() {
               isDark={effectiveScheme === 'dark'}
               onToggle={handleThemeToggle}
             />
-            {isLoggedIn && (
+            {isAuthenticated && (
               <NotificationBell
                 count={unreadCount}
                 onClick={() => {
@@ -240,13 +137,18 @@ function MainLayout() {
                 aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
               />
             )}
-            <HeaderLoginButton
-              isLoggedIn={isLoggedIn}
-              userName={getUserName()}
-              onLogin={handleLogin}
-              onLogout={handleLogout}
-              color="accent"
-            />
+            {isAuthenticated && user ? (
+              <UserMenu
+                userName={user.name}
+                onLogout={handleLogout}
+              />
+            ) : (
+              <HeaderLoginButton
+                isLoggedIn={false}
+                onLogin={handleLogin}
+                color="accent"
+              />
+            )}
           </HeaderActions>
         }
       />
@@ -310,27 +212,37 @@ function AppContent() {
   return (
     <DesignsystemetProvider theme={theme} colorScheme={colorScheme} size="auto">
       <DialogProvider>
-        <RealtimeProvider autoConnect={true} enableInDev={true}>
-          <RealtimeToast />
-          <style>{`
-            *, *::before, *::after {
-              transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
-            }
-          `}</style>
-          <Routes>
-            {/* Login page - no header */}
-            <Route path="/login" element={<LoginPage />} />
+        <ErrorBoundary>
+          <RealtimeProvider autoConnect={true} enableInDev={true}>
+            <RealtimeToast />
+            {/* <ConsentPopup /> */}
+            <style>{`
+              *, *::before, *::after {
+                transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+              }
+            `}</style>
+            <Routes>
+              {/* Login page - no header */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Main pages with header - wrapped to provide theme context */}
-            <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<ListingsPage />} />
-                <Route path="/listing/:id" element={<ListingDetailPage />} />
-                <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+              {/* Main pages with header - wrapped to provide theme context */}
+              <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
+                <Route element={<MainLayout />}>
+                  {/* PUBLIC ROUTES - No authentication required */}
+                  <Route path="/" element={<RentalObjectsPage />} />
+                  <Route path="/rental-objects" element={<RentalObjectsPage />} />
+                  <Route path="/rental-object/:id" element={<RentalObjectDetailPage />} />
+                  {/* Backward compatibility - redirect old /listing/:id to /rental-object/:id */}
+                  <Route path="/listing/:id" element={<RentalObjectDetailPage />} />
+
+                  {/* PROTECTED ROUTES - Authentication required */}
+                  <Route path="/payment/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
+                  <Route path="/privacy" element={<ProtectedRoute><PrivacySettingsPage /></ProtectedRoute>} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </RealtimeProvider>
+            </Routes>
+          </RealtimeProvider>
+        </ErrorBoundary>
       </DialogProvider>
     </DesignsystemetProvider>
   );

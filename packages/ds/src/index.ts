@@ -51,6 +51,10 @@ export * from '@digdir/designsystemet-react';
 // =============================================================================
 export * from './provider';
 
+// Theme management
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
+
 // =============================================================================
 // Component Layers - Import from specific layers
 // =============================================================================
@@ -251,15 +255,16 @@ export type {
 
 // Blocks - Business logic components
 export {
-  ListingCard,
-  ListingListItem,
-  ListingGrid,
-  ListingToolbar,
-  ListingMap,
-  ListingTableView,
+  RentalObjectCard,
+  RentalObjectListItem,
+  RentalObjectGrid,
+  RentalObjectToolbar,
+  RentalObjectMap,
+  RentalObjectTableView,
+  // TODO: RentalObjectsFilterBar - component not yet implemented
   ImageGallery,
   ImageSlider,
-  ListingDetailHeader,
+  RentalObjectDetailHeader,
   CapacityCard,
   FacilityChips,
   AdditionalServicesList,
@@ -267,6 +272,7 @@ export {
   LocationCard,
   OpeningHoursCard,
   AvailabilityCalendar,
+  RentalObjectAvailabilityCalendar,
   GuidelinesTab,
   FAQTab,
   PriceSummaryCard,
@@ -274,13 +280,13 @@ export {
   BookingConfirmation,
   BookingSuccess,
   BookingSection,
-  UnifiedBookingEngine,
+  // TODO: UnifiedBookingEngine - component not yet implemented
   // New listing detail components
   KeyFactsRow,
   FavoriteButton,
   ShareButton,
   ShareSheet,
-  ListingTabs,
+  RentalObjectTabs,
   TabContent,
   TabEmptyState,
   RequireAuthModal,
@@ -299,7 +305,7 @@ export {
   StatusTag,
   BookingStatusBadge,
   PaymentStatusBadge,
-  ListingStatusBadge,
+  RentalObjectStatusBadge,
   RequestStatusBadge,
   SeasonalLeaseStatusBadge,
   OrganizationStatusBadge,
@@ -328,18 +334,19 @@ export {
   useGlobalError,
 } from './blocks';
 export type {
-  ListingCardProps,
-  ListingCardVariant,
-  ListingListItemProps,
-  ListingGridProps,
-  ListingToolbarProps,
-  ListingMapProps,
-  MapListing,
-  ListingTableViewProps,
+  RentalObjectCardProps,
+  RentalObjectCardVariant,
+  RentalObjectListItemProps,
+  RentalObjectGridProps,
+  RentalObjectToolbarProps,
+  RentalObjectMapProps,
+  MapRentalObject,
+  RentalObjectTableViewProps,
+  // TODO: RentalObjectsFilterBarProps - type not yet implemented
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
-  ListingDetailHeaderProps,
+  RentalObjectDetailHeaderProps,
   CapacityCardProps,
   FacilityChipsProps,
   AdditionalServicesListProps,
@@ -347,6 +354,7 @@ export type {
   LocationCardProps,
   OpeningHoursCardProps,
   AvailabilityCalendarProps,
+  RentalObjectAvailabilityCalendarProps,
   GuidelinesTabProps,
   FAQTabProps,
   PriceSummaryCardProps,
@@ -355,7 +363,7 @@ export type {
   BookingConfirmationProps,
   BookingSuccessProps,
   BookingSectionProps,
-  UnifiedBookingEngineProps,
+  // TODO: UnifiedBookingEngineProps - type not yet implemented
   // New listing detail types
   KeyFactsRowProps,
   KeyFact,
@@ -365,7 +373,7 @@ export type {
   ShareSheetProps,
   ShareData,
   SharePlatform,
-  ListingTabsProps,
+  RentalObjectTabsProps,
   TabConfig,
   TabContentProps,
   TabEmptyStateProps,
@@ -388,8 +396,8 @@ export type {
   BookingStatusBadgeProps,
   PaymentStatusType,
   PaymentStatusBadgeProps,
-  ListingStatusType,
-  ListingStatusBadgeProps,
+  RentalObjectStatusType,
+  RentalObjectStatusBadgeProps,
   RequestStatusType,
   RequestStatusBadgeProps,
   SeasonalLeaseStatusType,
@@ -469,6 +477,25 @@ export {
   formatPrice,
   formatPriceUnit
 } from './types/booking';
+
+// Rental Object Management Types
+export type {
+  RentalObjectQueryFilters,
+  ViewMode,
+  RentalObjectFilterState,
+  ListingStatus,
+  ListingType,
+  RentalObjectStatus,
+  RentalObjectType
+} from './types/rental-objects';
+
+// Rental Object Management Constants
+export {
+  TYPE_TABS,
+  STATUS_OPTIONS,
+  SORT_OPTIONS,
+  CAPACITY_OPTIONS
+} from './constants/rental-objects';
 
 // =============================================================================
 // Design System Utilities & Tokens

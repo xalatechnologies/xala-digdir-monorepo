@@ -11,8 +11,10 @@ import {
   Button,
   PlusIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 export function EconomyPage() {
+  const t = useT();
   const [activeTab, setActiveTab] = useState('invoice-basis');
 
   return (

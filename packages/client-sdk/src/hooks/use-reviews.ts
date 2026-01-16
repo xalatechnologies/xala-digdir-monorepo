@@ -39,39 +39,44 @@ export function useReview(id: string, options?: { enabled?: boolean }) {
 }
 
 /**
- * Get reviews for a specific listing
+ * Get reviews for a specific rental object
  */
-export function useListingReviews(
-  listingId: string,
-  params?: Omit<ReviewQueryParams, 'listingId'>,
+export function useRentalObjectReviews(
+  rentalObjectId: string,
+  params?: Omit<ReviewQueryParams, 'rentalObjectId'>,
   options?: { enabled?: boolean }
 ) {
   return useQuery({
-    queryKey: queryKeys.reviews.byListing(listingId, params),
-    queryFn: () => reviewService.getByListingId(listingId, params),
-    enabled: !!listingId && (options?.enabled ?? true),
+    queryKey: queryKeys.reviews.byRentalObject(rentalObjectId, params),
+    queryFn: () => reviewService.getByRentalObjectId(rentalObjectId, params),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
   });
 }
 
 /**
- * Get review statistics for a listing
+ * @deprecated Use useRentalObjectReviews instead
  */
-export function useReviewStats(listingId: string, options?: { enabled?: boolean }) {
+export const useListingReviews = useRentalObjectReviews;
+
+/**
+ * Get review statistics for a rental object
+ */
+export function useReviewStats(rentalObjectId: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: queryKeys.reviews.stats(listingId),
-    queryFn: () => reviewService.getStats(listingId),
-    enabled: !!listingId && (options?.enabled ?? true),
+    queryKey: queryKeys.reviews.stats(rentalObjectId),
+    queryFn: () => reviewService.getStats(rentalObjectId),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
   });
 }
 
 /**
- * Get review summary for a listing (stats + recent reviews)
+ * Get review summary for a rental object (stats + recent reviews)
  */
-export function useReviewSummary(listingId: string, options?: { enabled?: boolean }) {
+export function useReviewSummary(rentalObjectId: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: [...queryKeys.reviews.all, 'summary', listingId] as const,
-    queryFn: () => reviewService.getSummary(listingId),
-    enabled: !!listingId && (options?.enabled ?? true),
+    queryKey: [...queryKeys.reviews.all, 'summary', rentalObjectId] as const,
+    queryFn: () => reviewService.getSummary(rentalObjectId),
+    enabled: !!rentalObjectId && (options?.enabled ?? true),
   });
 }
 
@@ -102,16 +107,16 @@ export function useCreateReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
       // Invalidate my reviews
       queryClient.invalidateQueries({ queryKey: [...queryKeys.reviews.all, 'my'] });
-      // Invalidate specific listing's reviews and stats
-      if (variables.listingId) {
+      // Invalidate specific rental object's reviews and stats
+      if (variables.rentalObjectId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', variables.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', variables.rentalObjectId],
         });
         queryClient.invalidateQueries({
-          queryKey: queryKeys.reviews.stats(variables.listingId),
+          queryKey: queryKeys.reviews.stats(variables.rentalObjectId),
         });
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'summary', variables.listingId],
+          queryKey: [...queryKeys.reviews.all, 'summary', variables.rentalObjectId],
         });
       }
     },
@@ -134,16 +139,16 @@ export function useUpdateReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
       // Invalidate my reviews
       queryClient.invalidateQueries({ queryKey: [...queryKeys.reviews.all, 'my'] });
-      // Invalidate listing reviews and stats if we have the listingId
-      if (response.data?.listingId) {
+      // Invalidate rental object reviews and stats if we have the rentalObjectId
+      if (response.data?.rentalObjectId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.rentalObjectId],
         });
         queryClient.invalidateQueries({
-          queryKey: queryKeys.reviews.stats(response.data.listingId),
+          queryKey: queryKeys.reviews.stats(response.data.rentalObjectId),
         });
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'summary', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'summary', response.data.rentalObjectId],
         });
       }
     },
@@ -179,16 +184,16 @@ export function useModerateReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.detail(id) });
       // Invalidate all review lists
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
-      // Invalidate listing reviews and stats if we have the listingId
-      if (response.data?.listingId) {
+      // Invalidate rental object reviews and stats if we have the rentalObjectId
+      if (response.data?.rentalObjectId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.rentalObjectId],
         });
         queryClient.invalidateQueries({
-          queryKey: queryKeys.reviews.stats(response.data.listingId),
+          queryKey: queryKeys.reviews.stats(response.data.rentalObjectId),
         });
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'summary', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'summary', response.data.rentalObjectId],
         });
       }
     },
@@ -209,16 +214,16 @@ export function useApproveReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.detail(id) });
       // Invalidate all review lists
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
-      // Invalidate listing reviews and stats if we have the listingId
-      if (response.data?.listingId) {
+      // Invalidate rental object reviews and stats if we have the rentalObjectId
+      if (response.data?.rentalObjectId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.rentalObjectId],
         });
         queryClient.invalidateQueries({
-          queryKey: queryKeys.reviews.stats(response.data.listingId),
+          queryKey: queryKeys.reviews.stats(response.data.rentalObjectId),
         });
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'summary', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'summary', response.data.rentalObjectId],
         });
       }
     },
@@ -239,16 +244,16 @@ export function useRejectReview() {
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.detail(id) });
       // Invalidate all review lists
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.lists() });
-      // Invalidate listing reviews and stats if we have the listingId
-      if (response.data?.listingId) {
+      // Invalidate rental object reviews and stats if we have the rentalObjectId
+      if (response.data?.rentalObjectId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.rentalObjectId],
         });
         queryClient.invalidateQueries({
-          queryKey: queryKeys.reviews.stats(response.data.listingId),
+          queryKey: queryKeys.reviews.stats(response.data.rentalObjectId),
         });
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'summary', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'summary', response.data.rentalObjectId],
         });
       }
     },

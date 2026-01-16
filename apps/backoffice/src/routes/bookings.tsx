@@ -35,7 +35,7 @@ import {
   useBookings,
   useConfirmBooking,
   useCancelBooking,
-  useListings,
+  useRentalObjects,
   useUsers,
   type BookingStatus,
   type Booking,
@@ -116,7 +116,7 @@ export function BookingsPage() {
   ].filter(Boolean).length;
 
   // Fetch listings to create name lookup map
-  const { data: listingsData } = useListings({ limit: 100 });
+  const { data: listingsData } = useRentalObjects({ limit: 100 });
   const listingNameMap = useMemo(() => {
     const map = new Map<string, string>();
     listingsData?.data?.forEach(listing => {
@@ -396,7 +396,7 @@ export function BookingsPage() {
         }
       >
         {/* Payment Section */}
-        <DrawerSection title="Betaling" collapsible>
+        <DrawerSection title={t("rule.payment")} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {PAYMENT_OPTIONS.map((payment) => (
               <DrawerItem
@@ -633,8 +633,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedIds([])}
                 style={{ marginLeft: 'auto' }}
               >
-                <CloseIcon /> Avbryt
-              </Button>
+                <CloseIcon />{t("ui.cancel")}</Button>
             </div>
           )}
 
@@ -677,7 +676,7 @@ export function BookingsPage() {
               alignItems: 'center',
               padding: 'var(--ds-spacing-10)',
             }}>
-              <Spinner aria-label="Laster..." />
+              <Spinner aria-label={t("ui.loading")} />
             </div>
           ) : bookings.length === 0 ? (
             <div style={{
@@ -733,7 +732,7 @@ export function BookingsPage() {
                   <Table.Row>
                     <Table.HeaderCell style={{ width: '48px' }}>
                       <Checkbox
-                        aria-label="Velg alle"
+                        aria-label={t("ui.selectAll")}
                         checked={allSelected}
                         onChange={(e) => handleSelectAll(e.target.checked)}
                       />
@@ -743,7 +742,7 @@ export function BookingsPage() {
                     <Table.HeaderCell>Bruker</Table.HeaderCell>
                     <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '100px' }}>Status</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '100px' }}>Betaling</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '100px' }}>{t("rule.payment")}</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '100px', textAlign: 'right' }}>Pris</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '60px' }} />
                   </Table.Row>

@@ -31,3 +31,36 @@ export interface I18nContextValue {
   setLocale: (locale: SupportedLocale) => void;
   t: TranslationFunction;
 }
+
+/**
+ * Options for formatRelativeTime function
+ */
+export interface FormatRelativeTimeOptions {
+  style?: 'long' | 'short' | 'narrow';
+  locale?: string;
+}
+
+/**
+ * Options for formatDuration function
+ */
+export interface FormatDurationOptions {
+  style?: 'compact' | 'long';
+  unit?: 'milliseconds' | 'seconds';
+  locale?: string;
+}
+
+/**
+ * Format relative time function signature
+ */
+export type FormatRelativeTimeFunction = (
+  date: string | Date,
+  locale?: string
+) => string;
+
+/**
+ * Format duration function signature
+ */
+export type FormatDurationFunction = (
+  value: number,
+  options?: FormatDurationOptions
+) => string;

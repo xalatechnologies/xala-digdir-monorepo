@@ -11,9 +11,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'test-results/e2e-results.json' }],
+    ['html', { outputFolder: '../../tests/reports/e2e' }],
+    ['json', { outputFile: '../../tests/reports/e2e/results.json' }],
   ],
+  outputDir: '../../tests/artifacts',
   use: {
     baseURL: 'http://localhost:4000',
     extraHTTPHeaders: {
@@ -21,6 +22,10 @@ export default defineConfig({
       'x-tenant-id': 'test-tenant',
     },
     trace: 'on-first-retry',
+    screenshot: {
+      mode: 'only-on-failure',
+      fullPage: true,
+    },
   },
   projects: [
     {

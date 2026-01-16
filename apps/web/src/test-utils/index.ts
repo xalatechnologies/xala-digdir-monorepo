@@ -5,3 +5,4 @@
  */
 
 export * from './accessibility';
+import { useT } from '@xala/i18n';

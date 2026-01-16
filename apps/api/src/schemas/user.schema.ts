@@ -95,3 +95,41 @@ export const UserQuerySchema = z.object({
 });
 
 export type UserQueryParams = z.infer<typeof UserQuerySchema>;
+
+/**
+ * Consent Preferences Schema
+ */
+export const ConsentPreferencesSchema = z.object({
+  emailNotifications: z.boolean().optional(),
+  smsNotifications: z.boolean().optional(),
+  pushNotifications: z.boolean().optional(),
+});
+
+export type ConsentPreferences = z.infer<typeof ConsentPreferencesSchema>;
+
+/**
+ * User Consents Schema
+ */
+export const UserConsentsSchema = z.object({
+  marketing: z.boolean().optional(),
+  analytics: z.boolean().optional(),
+  necessary: z.boolean().optional(),
+  preferences: ConsentPreferencesSchema.optional(),
+});
+
+export type UserConsents = z.infer<typeof UserConsentsSchema>;
+
+/**
+ * Update Consents DTO
+ */
+export const UpdateConsentsSchema = z.object({
+  marketing: z.boolean().optional(),
+  analytics: z.boolean().optional(),
+  necessary: z.boolean().optional(),
+  preferences: ConsentPreferencesSchema.optional(),
+}).refine(
+  (data) => Object.keys(data).length > 0,
+  { message: 'At least one consent field must be provided' }
+);
+
+export type UpdateConsentsDTO = z.infer<typeof UpdateConsentsSchema>;

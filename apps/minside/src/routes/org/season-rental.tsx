@@ -19,7 +19,7 @@ import {
   Select,
   Badge,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -37,15 +37,7 @@ const resources = [
   { id: 'res-004', name: 'Fotballbane 2', category: 'Utendørs' },
 ];
 
-const DAYS = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
 type WizardStep = 'season' | 'slots' | 'details' | 'review';
-
-const STEPS: { id: WizardStep; label: string }[] = [
-  { id: 'season', label: 'Sesong' },
-  { id: 'slots', label: 'Ønsket tid' },
-  { id: 'details', label: 'Detaljer' },
-  { id: 'review', label: 'Send' },
-];
 
 interface TimeSlot {
   day: string;
@@ -56,6 +48,7 @@ interface TimeSlot {
 
 export function SeasonRentalPage() {
   const { locale } = useLocale();
+  const t = useT();
   const [currentStep, setCurrentStep] = useState<WizardStep>('season');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -75,6 +68,24 @@ export function SeasonRentalPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Translation-aware arrays
+  const DAYS = [
+    t('common.monday'),
+    t('common.tuesday'),
+    t('common.wednesday'),
+    t('common.thursday'),
+    t('common.friday'),
+    t('common.saturday'),
+    t('common.sunday'),
+  ];
+
+  const STEPS: { id: WizardStep; label: string }[] = [
+    { id: 'season', label: t('org.seasonRental.steps.season') },
+    { id: 'slots', label: t('org.seasonRental.steps.slots') },
+    { id: 'details', label: t('org.seasonRental.steps.details') },
+    { id: 'review', label: t('org.seasonRental.steps.review') },
+  ];
+
   const currentStepIndex = STEPS.findIndex(s => s.id === currentStep);
   const selectedSeasonData = mockSeasons.find(s => s.id === selectedSeason);
 
@@ -93,7 +104,7 @@ export function SeasonRentalPage() {
   };
 
   const addSlot = () => {
-    setSlots([...slots, { day: 'Mandag', startTime: '18:00', endTime: '20:00', resourceId: resources[0].id }]);
+    setSlots([...slots, { day: DAYS[0], startTime: '18:00', endTime: '20:00', resourceId: resources[0].id }]);
   };
 
   const updateSlot = (index: number, field: keyof TimeSlot, value: string) => {
@@ -116,7 +127,7 @@ export function SeasonRentalPage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     // Would redirect to success page
-    alert('Søknad sendt!');
+    alert(t('org.seasonRental.applicationSent'));
   };
 
   const formatDate = (dateStr: string) => {
@@ -128,10 +139,10 @@ export function SeasonRentalPage() {
       {/* Header */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          Søk om sesongleie
+          {t('org.seasonRental.apply')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          Søk om faste tider for din organisasjon
+          {t('org.seasonRental.applyDesc')}
         </Paragraph>
       </div>
 
@@ -192,7 +203,7 @@ export function SeasonRentalPage() {
       <Card style={{ padding: 'var(--ds-spacing-6)' }}>
         {currentStep === 'season' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>Velg sesong</Heading>
+            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.selectSeason')}</Heading>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
               {mockSeasons.map(season => (
@@ -230,7 +241,7 @@ export function SeasonRentalPage() {
                     backgroundColor: season.status === 'open' ? 'var(--ds-color-success-surface-default)' : 'var(--ds-color-neutral-surface-default)',
                     color: season.status === 'open' ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-default)',
                   }}>
-                    {season.status === 'open' ? 'Åpen' : 'Kommer'}
+                    {season.status === 'open' ? t('org.seasonRental.open') : t('org.seasonRental.upcoming')}
                   </Badge>
                 </button>
               ))}
@@ -241,16 +252,16 @@ export function SeasonRentalPage() {
         {currentStep === 'slots' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Heading level={2} data-size="sm" style={{ margin: 0 }}>Ønskede tider</Heading>
+              <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.desiredTimes')}</Heading>
               <Button type="button" variant="secondary" data-size="sm" onClick={addSlot}>
-                + Legg til tid
+                {t('org.seasonRental.addTime')}
               </Button>
             </div>
-            
+
             {slots.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-md)' }}>
                 <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Klikk "Legg til tid" for å legge til ønskede tidsluker
+                  {t('org.seasonRental.addTimeHint')}
                 </Paragraph>
               </div>
             ) : (
@@ -266,27 +277,27 @@ export function SeasonRentalPage() {
                     alignItems: 'end',
                   }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Dag</label>
+                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.day')}</label>
                       <Select value={slot.day} onChange={(e) => updateSlot(index, 'day', e.target.value)} style={{ width: '100%' }}>
                         {DAYS.map(day => <option key={day} value={day}>{day}</option>)}
                       </Select>
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Fra</label>
+                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.from')}</label>
                       <Input type="time" value={slot.startTime} onChange={(e) => updateSlot(index, 'startTime', e.target.value)} style={{ width: '100%' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Til</label>
+                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.to')}</label>
                       <Input type="time" value={slot.endTime} onChange={(e) => updateSlot(index, 'endTime', e.target.value)} style={{ width: '100%' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Lokale</label>
+                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.venue')}</label>
                       <Select value={slot.resourceId} onChange={(e) => updateSlot(index, 'resourceId', e.target.value)} style={{ width: '100%' }}>
                         {resources.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                       </Select>
                     </div>
                     <Button type="button" variant="tertiary" data-size="sm" onClick={() => removeSlot(index)} style={{ minHeight: '44px' }}>
-                      Fjern
+                      {t('common.remove')}
                     </Button>
                   </div>
                 ))}
@@ -297,35 +308,35 @@ export function SeasonRentalPage() {
 
         {currentStep === 'details' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>Kontaktinformasjon</Heading>
-            
+            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.contactInfo')}</Heading>
+
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Kontaktperson</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.contactPerson')}</label>
                 <Input
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  placeholder="Ola Nordmann"
+                  placeholder={t('org.seasonRental.contactPersonPlaceholder')}
                   style={{ width: '100%' }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Telefon</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.phone')}</label>
                 <Input
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
-                  placeholder="12345678"
+                  placeholder={t('org.seasonRental.phonePlaceholder')}
                   style={{ width: '100%' }}
                 />
               </div>
             </div>
-            
+
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Merknad til søknaden</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.applicationNote')}</label>
               <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Beskriv behovet deres..."
+                placeholder={t('org.seasonRental.applicationNotePlaceholder')}
                 rows={4}
                 style={{ width: '100%' }}
               />
@@ -335,21 +346,21 @@ export function SeasonRentalPage() {
 
         {currentStep === 'review' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>Oppsummering</Heading>
-            
+            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.summary')}</Heading>
+
             <Card style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                <div><strong>Sesong:</strong> {selectedSeasonData?.name || '-'}</div>
-                <div><strong>Antall tider:</strong> {slots.length}</div>
-                <div><strong>Kontakt:</strong> {contactName} ({contactPhone})</div>
-                {notes && <div><strong>Merknad:</strong> {notes}</div>}
+                <div><strong>{t('org.seasonRental.season')}:</strong> {selectedSeasonData?.name || '-'}</div>
+                <div><strong>{t('org.seasonRental.numberOfTimes')}:</strong> {slots.length}</div>
+                <div><strong>{t('org.seasonRental.contact')}:</strong> {contactName} ({contactPhone})</div>
+                {notes && <div><strong>{t('org.seasonRental.note')}:</strong> {notes}</div>}
               </div>
             </Card>
-            
+
             {slots.length > 0 && (
               <Card style={{ padding: 'var(--ds-spacing-4)' }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
-                  Ønskede tider
+                  {t('org.seasonRental.desiredTimes')}
                 </Paragraph>
                 {slots.map((slot, i) => (
                   <div key={i} style={{ padding: 'var(--ds-spacing-2)', borderBottom: i < slots.length - 1 ? '1px solid var(--ds-color-neutral-border-subtle)' : undefined }}>
@@ -372,7 +383,7 @@ export function SeasonRentalPage() {
           disabled={currentStepIndex === 0}
           style={{ minHeight: '44px' }}
         >
-          Tilbake
+          {t('common.back')}
         </Button>
         {currentStep === 'review' ? (
           <Button
@@ -383,7 +394,7 @@ export function SeasonRentalPage() {
             disabled={isSubmitting || slots.length === 0}
             style={{ minHeight: '44px' }}
           >
-            {isSubmitting ? 'Sender...' : 'Send søknad'}
+            {isSubmitting ? t('org.seasonRental.sending') : t('org.seasonRental.sendApplication')}
           </Button>
         ) : (
           <Button
@@ -394,7 +405,7 @@ export function SeasonRentalPage() {
             disabled={currentStep === 'season' && !selectedSeason}
             style={{ minHeight: '44px' }}
           >
-            Neste
+            {t('common.next')}
           </Button>
         )}
       </div>

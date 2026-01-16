@@ -149,15 +149,17 @@ export class BackofficeListingsService extends BaseService {
   /**
    * List all listings (any status)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async list(params?: BackofficeListingParams): Promise<PaginatedResponse<any>> {
-    return this.client.get(this.buildPath(), { 
-      params: params as Record<string, string | number | boolean> 
+    return this.client.get(this.buildPath(), {
+      params: params as Record<string, string | number | boolean>
     });
   }
 
   /**
    * Create a new listing
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async create(data: any): Promise<SingleResponse<any>> {
     return this.client.post(this.buildPath(), data);
   }
@@ -165,6 +167,7 @@ export class BackofficeListingsService extends BaseService {
   /**
    * Update a listing
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async update(id: string, data: any): Promise<SingleResponse<any>> {
     return this.client.patch(this.buildPath(`/${id}`), data);
   }

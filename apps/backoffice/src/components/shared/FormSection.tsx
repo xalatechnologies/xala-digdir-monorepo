@@ -6,6 +6,7 @@
 
 import { Paragraph } from '@xala/ds';
 import type { ReactNode } from 'react';
+import { useT } from '@xala/i18n';
 
 export interface FormSectionProps {
   title: string;
@@ -14,6 +15,7 @@ export interface FormSectionProps {
 }
 
 export function FormSection({ title, children, description }: FormSectionProps) {
+  const t = useT();
   return (
     <div>
       <Paragraph

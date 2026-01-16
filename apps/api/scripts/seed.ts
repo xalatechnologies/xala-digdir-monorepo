@@ -12,6 +12,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
 import { seedFeatureFlags } from '../src/database/seeds/feature-flags.seed';
+import { logger } from '../src/core/logger';
 
 // ============================================================================
 // UUID Constants (valid UUIDs for all entities)
@@ -1038,18 +1039,18 @@ async function seed() {
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
-    console.error('❌ DATABASE_URL environment variable is required');
+    logger.error('❌ DATABASE_URL environment variable is required');
     process.exit(1);
   }
 
-  console.log('🌱 Starting database seed...\n');
+  logger.info('🌱 Starting database seed...\n');
 
   const sql = postgres(databaseUrl, { max: 1 });
   const db = drizzle(sql, { schema });
 
   try {
     // Clear existing data (in reverse order of dependencies)
-    console.log('🧹 Clearing existing data...');
+    logger.info('🧹 Clearing existing data...');
     await db.delete(schema.messages);
     await db.delete(schema.conversations);
     await db.delete(schema.allocations);
@@ -1065,42 +1066,42 @@ async function seed() {
     await db.delete(schema.tenants);
 
     // Insert tenants
-    console.log('📦 Inserting tenants...');
+    logger.info('📦 Inserting tenants...');
     await db.insert(schema.tenants).values(TENANTS);
 
     // Insert organizations
-    console.log('🏢 Inserting organizations...');
+    logger.info('🏢 Inserting organizations...');
     await db.insert(schema.organizations).values(ORGANIZATIONS);
 
     // Insert users
-    console.log('👥 Inserting users...');
+    logger.info('👥 Inserting users...');
     await db.insert(schema.users).values(USERS);
 
     // Insert subscriptions
-    console.log('💳 Inserting subscriptions...');
+    logger.info('💳 Inserting subscriptions...');
     await db.insert(schema.subscriptions).values(SUBSCRIPTIONS);
 
     // Insert listings
-    console.log('📋 Inserting listings...');
+    logger.info('📋 Inserting listings...');
     await db.insert(schema.listings).values(LISTINGS);
 
     // Insert bookings
-    console.log('📅 Inserting bookings...');
+    logger.info('📅 Inserting bookings...');
     const bookings = generateBookings();
     await db.insert(schema.bookings).values(bookings);
 
     // Insert conversations for Minside testing
-    console.log('💬 Inserting conversations...');
+    logger.info('💬 Inserting conversations...');
     const conversations = generateConversations();
     await db.insert(schema.conversations).values(conversations);
 
     // Insert messages for Minside testing
-    console.log('✉️ Inserting messages...');
+    logger.info('✉️ Inserting messages...');
     const messages = generateMessages();
     await db.insert(schema.messages).values(messages);
 
     // Insert allocations for calendar blocking
-    console.log('📆 Inserting allocations...');
+    logger.info('📆 Inserting allocations...');
     const allocations = generateAllocations(bookings);
     await db.insert(schema.allocations).values(allocations);
 
@@ -1122,8 +1123,18 @@ async function seed() {
     console.log(`   - ${messages.length} messages`);
     console.log(`   - ${allocations.length} allocations`);
     console.log(`   - ${flagsResult.total} feature flags (${flagsResult.inserted} new, ${flagsResult.updated} updated)`);
+    logger.info('\n✅ Seed completed successfully!');
+    logger.info(`   - ${TENANTS.length} tenants`);
+    logger.info(`   - ${ORGANIZATIONS.length} organizations`);
+    logger.info(`   - ${USERS.length} users`);
+    logger.info(`   - ${SUBSCRIPTIONS.length} subscriptions`);
+    logger.info(`   - ${LISTINGS.length} listings`);
+    logger.info(`   - ${bookings.length} bookings (${olaBookings.length} for Ola Hansen)`);
+    logger.info(`   - ${conversations.length} conversations`);
+    logger.info(`   - ${messages.length} messages`);
+    logger.info(`   - ${allocations.length} allocations`);
   } catch (error) {
-    console.error('❌ Seed failed:', error);
+    logger.error({ error }, '❌ Seed failed');
     process.exit(1);
   } finally {
     await sql.end();

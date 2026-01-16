@@ -54,15 +54,15 @@ export class BackofficeUserGroupsController {
 // =============================================================================
 // Price Rules Controller
 // =============================================================================
-@Controller('/backoffice/listings')
+@Controller('/backoffice/rental-objects')
 export class BackofficePriceRulesController {
   /**
-   * GET /backoffice/listings/:id/price-rules
+   * GET /backoffice/rental-objects/:id/price-rules
    */
   @Get('/:id/price-rules')
   async getPriceRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { id } = request.params;
-    const rules = await mockDb.query('SELECT * FROM price_rules WHERE listing_id = $1 ORDER BY priority DESC', [id]);
+    const rules = await mockDb.query('SELECT * FROM price_rules WHERE rental_object_id = $1 ORDER BY priority DESC', [id]);
     return reply.send({
       data: rules || [],
       meta: { total: rules?.length || 0 },
@@ -70,8 +70,8 @@ export class BackofficePriceRulesController {
   }
 
   /**
-   * PUT /backoffice/listings/:id/price-rules
-   * Replace all price rules for a listing
+   * PUT /backoffice/rental-objects/:id/price-rules
+   * Replace all price rules for a rental object
    */
   @Put('/:id/price-rules')
   async replacePriceRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
@@ -84,17 +84,17 @@ export class BackofficePriceRulesController {
         title: 'Validation Error',
         status: 400,
         detail: 'Request body must contain a "rules" array',
-        instance: `/backoffice/listings/${id}/price-rules`,
+        instance: `/backoffice/rental-objects/${id}/price-rules`,
       }));
     }
     
     // Validate each rule
     const validatedRules = body.rules.map(rule => 
-      validate(CreatePriceRuleSchema, { ...rule, listingId: id })
+      validate(CreatePriceRuleSchema, { ...rule, rentalObjectId: id })
     );
     
     // Delete existing rules and insert new ones
-    await mockDb.query('DELETE FROM price_rules WHERE listing_id = $1', [id]);
+    await mockDb.query('DELETE FROM price_rules WHERE rental_object_id = $1', [id]);
     
     const inserted = [];
     for (const rule of validatedRules) {
@@ -109,36 +109,36 @@ export class BackofficePriceRulesController {
   }
 
   /**
-   * GET /backoffice/listings/:id/rules
+   * GET /backoffice/rental-objects/:id/rules
    */
   @Get('/:id/rules')
-  async getListingRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async getRentalObjectRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { id } = request.params;
-    const rules = await mockDb.query('SELECT * FROM listing_rules WHERE listing_id = $1', [id]);
+    const rules = await mockDb.query('SELECT * FROM rental_object_rules WHERE rental_object_id = $1', [id]);
     return reply.send({ data: rules || null });
   }
 
   /**
-   * PUT /backoffice/listings/:id/rules
-   * Upsert listing rules
+   * PUT /backoffice/rental-objects/:id/rules
+   * Upsert rental object rules
    */
   @Put('/:id/rules')
-  async upsertListingRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async upsertRentalObjectRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { id } = request.params;
     const data = validate(UpsertListingRulesSchema, request.body);
     
     // Check if rules exist
-    const existing = await mockDb.query('SELECT id FROM listing_rules WHERE listing_id = $1', [id]);
+    const existing = await mockDb.query('SELECT id FROM rental_object_rules WHERE rental_object_id = $1', [id]);
     
     let result;
     if (existing) {
       result = await mockDb.query(
-        'UPDATE listing_rules SET approval_required = $1, min_age = $2, cancellation_deadline_days = $3, cancellation_fee_percent = $4, notes = $5, updated_at = NOW() WHERE listing_id = $6 RETURNING *',
+        'UPDATE rental_object_rules SET approval_required = $1, min_age = $2, cancellation_deadline_days = $3, cancellation_fee_percent = $4, notes = $5, updated_at = NOW() WHERE rental_object_id = $6 RETURNING *',
         [data.approvalRequired, data.minAge, data.cancellationDeadlineDays, data.cancellationFeePercent, data.notes, id]
       );
     } else {
-      result = await mockDb.insert('listing_rules', {
-        listing_id: id,
+      result = await mockDb.insert('rental_object_rules', {
+        rental_object_id: id,
         ...data,
       });
     }
@@ -148,19 +148,19 @@ export class BackofficePriceRulesController {
 }
 
 // =============================================================================
-// Backoffice Listings Controller (extended)
+// Backoffice Rental Objects Controller (extended)
 // =============================================================================
-@Controller('/backoffice/listings')
-export class BackofficeListingsController {
+@Controller('/backoffice/rental-objects')
+export class BackofficeRentalObjectsController {
   /**
-   * GET /backoffice/listings
-   * List all listings (any status)
+   * GET /backoffice/rental-objects
+   * List all rental objects (any status)
    */
   @Get()
   async list(request: FastifyRequest, reply: FastifyReply) {
     const query = request.query as { status?: string; category?: string; search?: string; page?: string; limit?: string };
     
-    let sql = 'SELECT * FROM listings WHERE 1=1';
+    let sql = 'SELECT * FROM rental_objects WHERE 1=1';
     const params: any[] = [];
     let paramIndex = 1;
     
@@ -180,12 +180,12 @@ export class BackofficeListingsController {
     
     sql += ' ORDER BY created_at DESC';
     
-    const listings = await mockDb.query(sql, params);
+    const rentalObjects = await mockDb.query(sql, params);
     
     return reply.send({
-      data: listings || [],
+      data: rentalObjects || [],
       meta: {
-        total: listings?.length || 0,
+        total: rentalObjects?.length || 0,
         page: parseInt(query.page || '1'),
         limit: parseInt(query.limit || '20'),
       },
@@ -193,38 +193,38 @@ export class BackofficeListingsController {
   }
 
   /**
-   * POST /backoffice/listings
+   * POST /backoffice/rental-objects
    */
   @Post()
   async create(request: FastifyRequest, reply: FastifyReply) {
     const body = request.body as any;
-    const listing = await mockDb.insert('listings', {
+    const rentalObject = await mockDb.insert('rental_objects', {
       ...body,
       status: 'draft',
     });
-    return reply.status(201).send({ data: listing });
+    return reply.status(201).send({ data: rentalObject });
   }
 
   /**
-   * PATCH /backoffice/listings/:id
+   * PATCH /backoffice/rental-objects/:id
    */
   @Patch('/:id')
   async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { id } = request.params;
     const body = request.body as any;
     
-    const listing = await mockDb.query('SELECT * FROM listings WHERE id = $1', [id]);
-    if (!listing) {
+    const rentalObject = await mockDb.query('SELECT * FROM rental_objects WHERE id = $1', [id]);
+    if (!rentalObject) {
       return reply.status(404).send(createProblemDetails({
         type: 'not-found',
         title: 'Not Found',
         status: 404,
-        detail: `Listing ${id} not found`,
-        instance: `/backoffice/listings/${id}`,
+        detail: `Rental object ${id} not found`,
+        instance: `/backoffice/rental-objects/${id}`,
       }));
     }
     
-    const updated = await mockDb.update('listings', id, body);
+    const updated = await mockDb.update('rental_objects', id, body);
     return reply.send({ data: updated });
   }
 }

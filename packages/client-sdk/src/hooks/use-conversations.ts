@@ -35,6 +35,7 @@ export function useConversations(params?: { status?: string; limit?: number }) {
   return useQuery({
     queryKey: conversationKeys.list(params),
     queryFn: () => conversationService.getAll(params),
+    staleTime: 60 * 1000, // 1 minute - conversations are active communication
     refetchInterval: 30000, // Poll every 30 seconds
     refetchIntervalInBackground: false,
   });
@@ -47,6 +48,7 @@ export function useConversation(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: conversationKeys.detail(id),
     queryFn: () => conversationService.getById(id),
+    staleTime: 60 * 1000, // 1 minute - single conversation
     enabled: !!id && (options?.enabled ?? true),
   });
 }
@@ -58,6 +60,7 @@ export function useMessages(conversationId: string, options?: { enabled?: boolea
   return useQuery({
     queryKey: conversationKeys.messages(conversationId),
     queryFn: () => conversationService.getMessages(conversationId),
+    staleTime: 30 * 1000, // 30 seconds - messages need to be fresh
     enabled: !!conversationId && (options?.enabled ?? true),
     refetchInterval: 10000, // Poll every 10 seconds when viewing
     refetchIntervalInBackground: false,
@@ -71,6 +74,7 @@ export function useUnreadCount() {
   return useQuery({
     queryKey: conversationKeys.unreadCount(),
     queryFn: () => conversationService.getUnreadCount(),
+    staleTime: 30 * 1000, // 30 seconds - unread count is important for UX
     refetchInterval: 60000, // Poll every minute
     refetchIntervalInBackground: true,
   });

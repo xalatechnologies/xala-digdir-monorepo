@@ -58,6 +58,17 @@ async function runDrizzleMigrations(databaseUrl: string): Promise<boolean> {
     console.log('  💡 Run "pnpm db:generate" to create Drizzle migrations');
     return false;
   }
+import { logger } from '../src/core/logger';
+
+async function runMigration() {
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    logger.error('❌ DATABASE_URL environment variable is required');
+    process.exit(1);
+  }
+
+  logger.info('🔄 Starting database migration...\n');
 
   const sql = postgres(databaseUrl, { max: 1 });
   const db = drizzle(sql, { schema });
@@ -250,6 +261,11 @@ async function runMigration() {
   } catch (error) {
     console.error('');
     console.error('❌ Migration failed:', error);
+    // Run migrations from drizzle folder
+    await migrate(db, { migrationsFolder: './drizzle' });
+    logger.info('✅ Migrations completed successfully');
+  } catch (error) {
+    logger.error({ error }, '❌ Migration failed');
     process.exit(1);
   } finally {
     await sql.end();

@@ -67,11 +67,11 @@ export function useRecurringBookings() {
 /**
  * Calculate booking pricing
  */
-export function useBookingPricing(listingId: string, startTime: string, endTime: string) {
+export function useBookingPricing(rentalObjectId: string, startTime: string, endTime: string) {
   return useQuery({
-    queryKey: queryKeys.bookings.pricing(listingId, startTime, endTime),
-    queryFn: () => bookingService.calculatePricing(listingId, startTime, endTime),
-    enabled: !!listingId && !!startTime && !!endTime,
+    queryKey: queryKeys.bookings.pricing(rentalObjectId, startTime, endTime),
+    queryFn: () => bookingService.calculatePricing(rentalObjectId, startTime, endTime),
+    enabled: !!rentalObjectId && !!startTime && !!endTime,
   });
 }
 
@@ -176,21 +176,21 @@ export function useDeleteBooking() {
 /**
  * Get calendar events
  */
-export function useCalendarEvents(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+export function useCalendarEvents(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.calendar.events(params),
-    queryFn: () => calendarService.getEvents(params),
+    queryFn: () => calendarService.getEvents({ rentalObjectId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
 /**
  * Get available time slots
  */
-export function useAvailabilitySlots(params: { listingId: string; date: string; duration?: number }) {
+export function useAvailabilitySlots(params: { rentalObjectId: string; date: string; duration?: number }) {
   return useQuery({
     queryKey: queryKeys.calendar.slots(params),
-    queryFn: () => availabilityService.getSlots(params),
-    enabled: !!params.listingId && !!params.date,
+    queryFn: () => availabilityService.getSlots({ rentalObjectId: params.rentalObjectId, date: params.date, duration: params.duration }),
+    enabled: !!params.rentalObjectId && !!params.date,
   });
 }
 
@@ -201,10 +201,10 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
 /**
  * Get allocations
  */
-export function useAllocations(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+export function useAllocations(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.allocations.list(params),
-    queryFn: () => allocationService.getAll(params),
+    queryFn: () => allocationService.getAll({ rentalObjectId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
@@ -265,5 +265,53 @@ export function usePaymentHistory(bookingId: string) {
     queryKey: queryKeys.bookings.paymentHistory(bookingId),
     queryFn: () => bookingService.getPaymentHistory(bookingId),
     enabled: !!bookingId,
+  });
+}
+
+// ============================================================================
+// Caseworker/Admin Hooks
+// ============================================================================
+
+/**
+ * Approve booking (caseworker/admin only)
+ */
+export function useApproveBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
+      const response = await bookingService.approve(id, reason);
+      return response;
+    },
+    onSuccess: (response) => {
+      // Invalidate all booking queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      // Invalidate specific booking
+      if (response?.data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(response.data.id) });
+      }
+    },
+  });
+}
+
+/**
+ * Reject booking (caseworker/admin only)
+ */
+export function useRejectBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
+      const response = await bookingService.reject(id, reason);
+      return response;
+    },
+    onSuccess: (response) => {
+      // Invalidate all booking queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      // Invalidate specific booking
+      if (response?.data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(response.data.id) });
+      }
+    },
   });
 }

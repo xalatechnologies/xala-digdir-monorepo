@@ -13,8 +13,6 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
 
   // WebSocket route for real-time audit events
   app.get('/ws/audit', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
-    console.log('[WS] Client connected to /ws/audit');
-    
     // Register this socket for audit broadcasts
     registerWebSocket(socket);
     
@@ -38,15 +36,14 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     });
     
     socket.on('close', () => {
-      console.log('[WS] Client disconnected from /ws/audit');
+      // Client disconnected - cleanup handled by registerWebSocket
     });
   });
 
   // WebSocket route for tenant-specific events
   app.get('/ws/events/:tenantId', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
     const { tenantId } = req.params as { tenantId: string };
-    console.log(`[WS] Client connected to /ws/events/${tenantId}`);
-    
+
     registerWebSocket(socket);
     
     socket.send(JSON.stringify({
@@ -57,9 +54,7 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     }));
     
     socket.on('close', () => {
-      console.log(`[WS] Client disconnected from /ws/events/${tenantId}`);
+      // Client disconnected - cleanup handled by registerWebSocket
     });
   });
-
-  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId');
 }

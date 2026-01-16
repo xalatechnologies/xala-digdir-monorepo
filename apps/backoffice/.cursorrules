@@ -1,0 +1,142 @@
+# Cursor AI Rules for apps/backoffice
+
+> **Extends:** [Root .cursorrules](../../.cursorrules)
+
+## App Context
+
+This is the **administrative portal** for Xala/Digilist Platform.
+
+**Critical:** ALL routes require authentication and RBAC checks.
+
+## Backoffice-Specific Rules
+
+### 1. Authentication Required Pattern
+```tsx
+// ✅ CORRECT - Protected route
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@digilist/client-sdk/hooks';
+
+function ProtectedRoute({ children }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (!user) return <Navigate to="/login" replace />;
+
+  return <>{children}</>;
+}
+```
+
+### 2. RBAC Guard Pattern
+```tsx
+// ✅ CORRECT - Capability-based check
+import { useAuth } from '@digilist/client-sdk/hooks';
+
+function AdminFeature() {
+  const { user } = useAuth();
+
+  if (!user?.permissions.includes('admin:write')) {
+    return <AccessDenied />;
+  }
+
+  return <AdminContent />;
+}
+
+// ❌ WRONG - Hardcoded role check
+if (user.role === 'admin') { /* ... */ }
+```
+
+### 3. Real-Time Updates Pattern
+```tsx
+// ✅ CORRECT - Subscribe to WebSocket events
+import { realtimeClient } from '@digilist/client-sdk';
+import { useQueryClient } from '@tanstack/react-query';
+
+function BookingsTable() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    realtimeClient.onBooking((event) => {
+      queryClient.invalidateQueries(['bookings']);
+    });
+  }, [queryClient]);
+}
+```
+
+### 4. Audit Trail Display
+```tsx
+// ✅ REQUIRED for admin actions
+import { useAuditLog } from '@digilist/client-sdk/hooks';
+
+function ResourceDetails({ resourceId }) {
+  const { data: auditLogs } = useAuditLog({ resourceId });
+
+  return (
+    <>
+      {/* Resource content */}
+      <AuditTrail logs={auditLogs} />
+    </>
+  );
+}
+```
+
+## File Organization
+
+```
+src/
+├── features/
+│   ├── listings/         # Listing CRUD
+│   ├── bookings/         # Booking management
+│   ├── rental-objects/   # Rental object wizard
+│   ├── users/            # User management
+│   ├── reports/          # Analytics
+│   └── settings/         # Configuration
+├── routes/               # Protected routes
+├── components/           # Shared components
+└── main.tsx              # Entry with RealtimeProvider
+```
+
+## Testing
+
+- E2E tests: `../../tests/e2e/backoffice-*.spec.ts`
+- Rental objects: `../../tests/e2e/rental-objects*.spec.ts`
+- Unit tests: Co-located `*.test.tsx`
+
+## Common Mistakes to Avoid
+
+❌ Allowing unauthenticated access to any route
+❌ Hardcoding role checks (use capability-based)
+❌ Not subscribing to WebSocket events for live data
+❌ Missing audit logging (SDK handles it automatically)
+❌ Cross-tenant data access (SDK enforces tenant scope)
+❌ Hardcoding strings (use i18n)
+❌ Direct API calls (use SDK)
+❌ Importing from `@digdir/*` (use `@xala/ds`)
+
+## SDK Services
+
+Primary hooks used in this app:
+- `useAuth()` - Authentication
+- `useListings()` - Listing CRUD
+- `useBookings()` - Booking management
+- `useUsers()` - User management
+- `useOrganization()` - Kommune settings
+- `useReports()` - Analytics
+- `useIntegrations()` - Integrations
+- `useAuditLog()` - Audit trail
+- `realtimeClient` - WebSocket events
+
+## Real-Time Events
+
+Subscribe to these events:
+- `onBooking()` - Booking changes
+- `onListing()` - Listing changes
+- `onRentalObject()` - Rental object changes
+- `onAudit()` - Audit events
+- `onUser()` - User changes
+
+## See Also
+
+- [CLAUDE.md](./CLAUDE.md) - Full context
+- [AGENTS.md](./AGENTS.md) - Commands
+- [Root CLAUDE.md](../../CLAUDE.md) - Architecture rules
+- [Rental Objects README](./src/features/rental-objects/README.md) - Wizard implementation

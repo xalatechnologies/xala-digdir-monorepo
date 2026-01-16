@@ -190,7 +190,7 @@ export class DiscountCodesController {
    */
   @Post('/validate')
   async validate(request: DiscountRequest, reply: FastifyReply) {
-    const { code, listingId, bookingValue } = request.body as any;
+    const { code, rentalObjectId, bookingValue } = request.body as any;
 
     if (!code) {
       reply.code(400);

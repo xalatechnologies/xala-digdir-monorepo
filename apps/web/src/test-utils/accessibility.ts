@@ -8,6 +8,7 @@
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { axe, toHaveNoViolations, JestAxeConfigureOptions } from 'jest-axe';
+import { useT } from '@xala/i18n';
 
 // Extend Vitest expect with jest-axe matchers
 expect.extend(toHaveNoViolations);
@@ -160,11 +161,12 @@ export async function testKeyboardNavigation(ui: ReactElement, options?: RenderO
  *   const { findLiveRegion } = testScreenReaderAnnouncements(container);
  *
  *   const liveRegion = findLiveRegion('polite');
- *   expect(liveRegion).toHaveTextContent('Laster...');
+ *   expect(liveRegion).toHaveTextContent(t("ui.loading"));
  * });
  * ```
  */
 export function testScreenReaderAnnouncements(container: HTMLElement) {
+  const t = useT();
   return {
     /**
      * Find aria-live region by politeness level

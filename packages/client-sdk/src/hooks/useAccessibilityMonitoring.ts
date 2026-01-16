@@ -4,8 +4,7 @@
  * React hook for monitoring accessibility metrics in production
  */
 
-import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
-import { getClient } from '../core/client-factory';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import {
   AccessibilityMonitoringService,
   detectScreenReader,

@@ -20,18 +20,12 @@ import {
   CheckIcon,
 } from '@xala/ds';
 import {
-  useListings,
-  // TODO: Implement season venue management hooks
-  // useSeasonVenues,
-  // useAddVenueToSeason,
-  // useRemoveVenueFromSeason,
-  // type Listing,
+  useRentalObjects,
+  useSeasonVenues,
+  useAddVenueToSeason,
+  useRemoveVenueFromSeason,
 } from '@digilist/client-sdk';
-
-// Temporary placeholder hooks until implemented in SDK
-const useSeasonVenues = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
-const useAddVenueToSeason = () => ({ mutateAsync: async () => {}, isLoading: false });
-const useRemoveVenueFromSeason = () => ({ mutateAsync: async () => {}, isLoading: false });
+import { useT } from '@xala/i18n';
 
 interface SeasonVenueManagementProps {
   seasonId: string;
@@ -39,10 +33,11 @@ interface SeasonVenueManagementProps {
 }
 
 export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManagementProps) {
+  const t = useT();
   const [isAddingVenue, setIsAddingVenue] = useState(false);
 
   // Queries
-  const { data: allListingsData, isLoading: isLoadingAll } = useListings({
+  const { data: allListingsData, isLoading: isLoadingAll } = useRentalObjects({
     status: 'published',
     limit: 100,
   });
@@ -57,7 +52,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
 
   // Available venues (not already added)
   const availableVenues = allVenues.filter(
-    venue => !seasonVenues.some(sv => sv.id === venue.id)
+    venue => !seasonVenues.some(sv => sv.listingId === venue.id)
   );
 
   // Handlers
@@ -75,7 +70,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   if (isLoadingAll || isLoadingSeasonVenues) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -189,10 +184,10 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
             {seasonVenues.map(venue => (
               <Table.Row key={venue.id}>
                 <Table.Cell>
-                  <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{venue.name}</div>
+                  <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{venue.listingName}</div>
                 </Table.Cell>
                 <Table.Cell>
-                  <Badge color="info">{venue.type}</Badge>
+                  <Badge color="info">{venue.category || '—'}</Badge>
                 </Table.Cell>
                 <Table.Cell>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
@@ -201,7 +196,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
                 </Table.Cell>
                 <Table.Cell>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {venue.address || '—'}
+                    —
                   </div>
                 </Table.Cell>
                 {canEdit && (
@@ -213,7 +208,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
                         </Button>
                       </Dropdown.Trigger>
                       <Dropdown.Content>
-                        <Dropdown.Item onClick={() => handleRemoveVenue(venue.id)} color="danger">
+                        <Dropdown.Item onClick={() => handleRemoveVenue(venue.listingId)} color="danger">
                           <TrashIcon />
                           Fjern
                         </Dropdown.Item>

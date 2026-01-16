@@ -74,7 +74,7 @@ export class ProfileController {
    */
   @Get()
   async getProfile(request: FastifyRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'] || 'demo-user';
+    const userId = (request as any).userId || 'demo-user';
     
     let profile = mockProfiles.get(userId as string);
     
@@ -104,7 +104,7 @@ export class ProfileController {
    */
   @Put()
   async updateProfile(request: FastifyRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'] || 'demo-user';
+    const userId = (request as any).userId || 'demo-user';
     const body = request.body as Partial<UserProfile>;
     
     let profile = mockProfiles.get(userId as string);
@@ -141,7 +141,7 @@ export class ProfileController {
    */
   @Get('/preferences')
   async getPreferences(request: FastifyRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'] || 'demo-user';
+    const userId = (request as any).userId || 'demo-user';
     const profile = mockProfiles.get(userId as string);
     
     const preferences = profile?.preferences || {
@@ -159,7 +159,7 @@ export class ProfileController {
    */
   @Put('/preferences')
   async updatePreferences(request: FastifyRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'] || 'demo-user';
+    const userId = (request as any).userId || 'demo-user';
     const body = request.body as UserProfile['preferences'];
     
     let profile = mockProfiles.get(userId as string);

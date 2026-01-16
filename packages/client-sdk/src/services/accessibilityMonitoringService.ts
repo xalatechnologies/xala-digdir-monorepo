@@ -151,6 +151,13 @@ export class AccessibilityMonitoringService {
 
   /**
    * Track a keyboard navigation event
+   * @param action - Type of keyboard action (tab, enter, escape, etc.)
+   * @param element - Element type being interacted with (button, link, input)
+   * @param page - Current page identifier
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.trackKeyboardNavigation('tab', 'button', '/dashboard');
+   * ```
    */
   trackKeyboardNavigation(action: KeyboardNavigationMetric['action'], element: string, page: string): void {
     if (!this.shouldTrack()) return;
@@ -163,6 +170,12 @@ export class AccessibilityMonitoringService {
 
   /**
    * Track skip link usage
+   * @param target - Skip link target (main-content, navigation, etc.)
+   * @param page - Current page identifier
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.trackSkipLinkUsage('main-content', '/listing/123');
+   * ```
    */
   trackSkipLinkUsage(target: string, page: string): void {
     if (!this.shouldTrack()) return;
@@ -175,6 +188,14 @@ export class AccessibilityMonitoringService {
 
   /**
    * Detect and track screen reader usage
+   * @param detected - Whether a screen reader was detected
+   * @param userAgent - Browser user agent string
+   * @param screenReader - Screen reader type (NVDA, JAWS, VoiceOver, etc.)
+   * @example
+   * ```ts
+   * const { detected, type } = detectScreenReader();
+   * accessibilityMonitoringService.trackScreenReaderDetection(detected, navigator.userAgent, type);
+   * ```
    */
   trackScreenReaderDetection(detected: boolean, userAgent: string, screenReader?: string): void {
     if (!this.shouldTrack()) return;
@@ -187,6 +208,13 @@ export class AccessibilityMonitoringService {
 
   /**
    * Track focus management issues
+   * @param event - Focus event type (focus-lost, focus-trapped, focus-restored)
+   * @param element - Element identifier where issue occurred
+   * @param page - Current page identifier
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.trackFocusManagement('focus-lost', 'modal-close-btn', '/bookings');
+   * ```
    */
   trackFocusManagement(event: FocusManagementMetric['event'], element: string | undefined, page: string): void {
     if (!this.shouldTrack()) return;
@@ -199,6 +227,13 @@ export class AccessibilityMonitoringService {
 
   /**
    * Track ARIA announcement events
+   * @param type - Announcement priority (polite or assertive)
+   * @param message - Announcement message content
+   * @param success - Whether the announcement was successful
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.trackAriaAnnouncement('polite', 'Booking saved', true);
+   * ```
    */
   trackAriaAnnouncement(type: AriaAnnouncementMetric['type'], message: string, success: boolean): void {
     if (!this.shouldTrack()) return;
@@ -211,6 +246,14 @@ export class AccessibilityMonitoringService {
 
   /**
    * Track page load time (for accessibility performance)
+   * @param page - Page identifier
+   * @param loadTime - Page load time in milliseconds
+   * @example
+   * ```ts
+   * const startTime = performance.now();
+   * // ... page load ...
+   * accessibilityMonitoringService.trackPageLoadTime('/listings', performance.now() - startTime);
+   * ```
    */
   trackPageLoadTime(page: string, loadTime: number): void {
     if (!this.shouldTrack()) return;
@@ -223,6 +266,17 @@ export class AccessibilityMonitoringService {
 
   /**
    * Get accessibility report for a time period
+   * @param startDate - Report period start date
+   * @param endDate - Report period end date
+   * @returns Promise with accessibility metrics and compliance score
+   * @example
+   * ```ts
+   * const report = await accessibilityMonitoringService.getReport(
+   *   new Date('2024-01-01'),
+   *   new Date('2024-01-31')
+   * );
+   * console.log(`Compliance score: ${report.complianceScore}%`);
+   * ```
    */
   async getReport(startDate: Date, endDate: Date): Promise<AccessibilityReport> {
     return await this.client.get<AccessibilityReport>('/api/accessibility/report', {
@@ -234,7 +288,15 @@ export class AccessibilityMonitoringService {
   }
 
   /**
-   * Flush metrics immediately
+   * Flush metrics immediately (send buffered metrics to server)
+   * @returns Promise that resolves when metrics are sent
+   * @example
+   * ```ts
+   * // Force send metrics before page unload
+   * window.addEventListener('beforeunload', () => {
+   *   accessibilityMonitoringService.flush();
+   * });
+   * ```
    */
   async flush(): Promise<void> {
     if (this.metricsBuffer.length === 0) return;
@@ -254,7 +316,11 @@ export class AccessibilityMonitoringService {
   }
 
   /**
-   * Enable monitoring
+   * Enable accessibility monitoring
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.enable();
+   * ```
    */
   enable(): void {
     this.config.enabled = true;
@@ -262,7 +328,11 @@ export class AccessibilityMonitoringService {
   }
 
   /**
-   * Disable monitoring
+   * Disable accessibility monitoring
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.disable();
+   * ```
    */
   disable(): void {
     this.config.enabled = false;
@@ -271,6 +341,14 @@ export class AccessibilityMonitoringService {
 
   /**
    * Update configuration
+   * @param config - Partial configuration object to merge with existing config
+   * @example
+   * ```ts
+   * accessibilityMonitoringService.configure({
+   *   sampleRate: 0.5, // Track 50% of events
+   *   batchSize: 100
+   * });
+   * ```
    */
   configure(config: Partial<AccessibilityMonitoringConfig>): void {
     this.config = { ...this.config, ...config };
@@ -328,8 +406,15 @@ export class AccessibilityMonitoringService {
 
 /**
  * Detect if a screen reader is likely being used
- *
  * Note: This is heuristic-based and not 100% accurate
+ * @returns Object with detection status and screen reader type
+ * @example
+ * ```ts
+ * const { detected, type } = detectScreenReader();
+ * if (detected) {
+ *   console.log(`Screen reader detected: ${type}`);
+ * }
+ * ```
  */
 export function detectScreenReader(): { detected: boolean; type?: string } {
   if (typeof window === 'undefined') {
@@ -372,6 +457,14 @@ export function detectScreenReader(): { detected: boolean; type?: string } {
 
 /**
  * Detect if user is navigating with keyboard
+ * @returns True if keyboard navigation is detected
+ * @example
+ * ```ts
+ * if (detectKeyboardNavigation()) {
+ *   // Show focus indicators
+ *   document.body.classList.add('keyboard-navigation');
+ * }
+ * ```
  */
 export function detectKeyboardNavigation(): boolean {
   if (typeof window === 'undefined') return false;

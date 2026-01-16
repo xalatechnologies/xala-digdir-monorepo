@@ -3,7 +3,7 @@
  * Comprehensive tabbed settings for end users
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -33,6 +33,7 @@ import {
 import {
   useCurrentUser,
   useUpdateCurrentUser,
+  useUploadUserAvatar,
   useExportData,
   useDeleteAccount,
   useConsents,
@@ -47,8 +48,11 @@ export function SettingsPage() {
   const { logout } = useAuth();
   const { locale, setLocale } = useLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tabsListRef = useRef<HTMLDivElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('profile');
+  const [showLeftIndicator, setShowLeftIndicator] = useState(false);
+  const [showRightIndicator, setShowRightIndicator] = useState(false);
 
   // Queries
   const { data: currentUserData, isLoading: isLoadingUser } = useCurrentUser();
@@ -213,6 +217,40 @@ export function SettingsPage() {
     }
   };
 
+  // Update scroll indicators based on scroll position
+  const updateScrollIndicators = () => {
+    const container = tabsListRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const hasOverflow = scrollWidth > clientWidth;
+
+    if (!hasOverflow) {
+      setShowLeftIndicator(false);
+      setShowRightIndicator(false);
+      return;
+    }
+
+    setShowLeftIndicator(scrollLeft > 5);
+    setShowRightIndicator(scrollLeft < scrollWidth - clientWidth - 5);
+  };
+
+  // Set up scroll listener and initial check
+  useEffect(() => {
+    const container = tabsListRef.current;
+    if (!container) return;
+
+    updateScrollIndicators();
+
+    container.addEventListener('scroll', updateScrollIndicators);
+    window.addEventListener('resize', updateScrollIndicators);
+
+    return () => {
+      container.removeEventListener('scroll', updateScrollIndicators);
+      window.removeEventListener('resize', updateScrollIndicators);
+    };
+  }, []);
+
   if (isLoadingUser) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -254,38 +292,98 @@ export function SettingsPage() {
         boxShadow: 'var(--ds-shadow-xsmall)',
       }}>
         <Tabs value={activeTab} onChange={setActiveTab}>
-          <Tabs.List style={{ marginBottom: 'var(--ds-spacing-6)' }}>
-            <Tabs.Tab value="profile">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <UserIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Min profil
-              </div>
-            </Tabs.Tab>
-            <Tabs.Tab value="addresses">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <HomeIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Adresser
-              </div>
-            </Tabs.Tab>
-            <Tabs.Tab value="privacy">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <ShieldIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Personvern
-              </div>
-            </Tabs.Tab>
-            <Tabs.Tab value="notifications">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <BellIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Varsler
-              </div>
-            </Tabs.Tab>
-            <Tabs.Tab value="preferences">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                <SettingsIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
-                Preferanser
-              </div>
-            </Tabs.Tab>
-          </Tabs.List>
+          {/* Tabs container with scroll indicators */}
+          <div style={{ position: 'relative', marginBottom: 'var(--ds-spacing-6)' }}>
+            {/* Left gradient indicator */}
+            {showLeftIndicator && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '40px',
+                  height: '100%',
+                  background: 'linear-gradient(to right, var(--ds-color-neutral-background-default), transparent)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                  transition: 'opacity 0.3s ease',
+                }}
+                aria-hidden="true"
+              />
+            )}
+
+            {/* Right gradient indicator */}
+            {showRightIndicator && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '40px',
+                  height: '100%',
+                  background: 'linear-gradient(to left, var(--ds-color-neutral-background-default), transparent)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                  transition: 'opacity 0.3s ease',
+                }}
+                aria-hidden="true"
+              />
+            )}
+
+            {/* eslint-disable-next-line digdir/prefer-ds-components -- Using div wrapper for ref on Tabs.List */}
+            <div
+              ref={tabsListRef}
+              style={{
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch',
+              }}
+            >
+              <Tabs.List style={{ marginBottom: 0 }}>
+                <Tabs.Tab value="profile">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <UserIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Min profil
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="addresses">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <HomeIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Adresser
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="privacy">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <ShieldIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Personvern
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="notifications">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <BellIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Varsler
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="preferences">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <SettingsIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Preferanser
+                  </div>
+                </Tabs.Tab>
+              </Tabs.List>
+            </div>
+
+            <style>{`
+              [ref="${tabsListRef}"] {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              [ref="${tabsListRef}"]::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+          </div>
 
           {/* Profile Tab */}
           <Tabs.Panel value="profile">

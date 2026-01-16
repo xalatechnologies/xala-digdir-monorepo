@@ -5,6 +5,7 @@
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { Alert } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';
 

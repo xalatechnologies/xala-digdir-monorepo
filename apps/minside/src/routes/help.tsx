@@ -21,34 +21,55 @@ import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
-// Mock FAQ data
-const faqSections = [
-  {
-    title: 'Booking og reservasjon',
-    items: [
-      { question: 'Hvordan booker jeg et lokale?', answer: 'Gå til listeoversikten, velg ønsket lokale og dato, og klikk "Book nå". Du vil motta bekreftelse på e-post.' },
-      { question: 'Kan jeg endre eller kansellere en booking?', answer: 'Ja, du kan endre eller kansellere bookinger inntil 24 timer før. Gå til "Mine bookinger" og velg booking.' },
-      { question: 'Hvordan betaler jeg?', answer: 'Betaling skjer vanligvis via faktura. For enkelte lokaler kan direkte betaling være tilgjengelig.' },
-    ],
-  },
-  {
-    title: 'Konto og profil',
-    items: [
-      { question: 'Hvordan oppretter jeg konto?', answer: 'Klikk "Registrer" og fyll ut skjemaet med navn, e-post og passord.' },
-      { question: 'Hvordan endrer jeg passordet mitt?', answer: 'Gå til Innstillinger > Sikkerhet og klikk "Endre passord".' },
-    ],
-  },
-  {
-    title: 'Organisasjoner',
-    items: [
-      { question: 'Hvordan oppretter jeg en organisasjon?', answer: 'Gå til Organisasjon > Ny organisasjon og fyll ut informasjon om organisasjonen.' },
-      { question: 'Hvordan inviterer jeg medlemmer?', answer: 'Under Organisasjon > Medlemmer kan du invitere nye medlemmer via e-post.' },
-    ],
-  },
-];
-
 export function HelpPage() {
   const t = useT();
+
+  // FAQ data using i18n
+  const faqSections = [
+    {
+      title: t('help.faq.bookingTitle'),
+      items: [
+        {
+          question: t('help.faq.booking.howToBook.question'),
+          answer: t('help.faq.booking.howToBook.answer')
+        },
+        {
+          question: t('help.faq.booking.changeOrCancel.question'),
+          answer: t('help.faq.booking.changeOrCancel.answer')
+        },
+        {
+          question: t('help.faq.booking.payment.question'),
+          answer: t('help.faq.booking.payment.answer')
+        },
+      ],
+    },
+    {
+      title: t('help.faq.accountTitle'),
+      items: [
+        {
+          question: t('help.faq.account.create.question'),
+          answer: t('help.faq.account.create.answer')
+        },
+        {
+          question: t('help.faq.account.changePassword.question'),
+          answer: t('help.faq.account.changePassword.answer')
+        },
+      ],
+    },
+    {
+      title: t('help.faq.organizationTitle'),
+      items: [
+        {
+          question: t('help.faq.organization.create.question'),
+          answer: t('help.faq.organization.create.answer')
+        },
+        {
+          question: t('help.faq.organization.invite.question'),
+          answer: t('help.faq.organization.invite.answer')
+        },
+      ],
+    },
+  ];
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
   const [contactForm, setContactForm] = useState({ subject: '', message: '' });
@@ -78,7 +99,7 @@ export function HelpPage() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsSubmitting(false);
     setContactForm({ subject: '', message: '' });
-    alert('Henvendelse sendt!');
+    alert(t('help.contact.success'));
   };
 
   const toggleFaq = (id: string) => {
@@ -115,19 +136,19 @@ export function HelpPage() {
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
           <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>📅</Paragraph>
-          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>Booking</Paragraph>
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.booking')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
           <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>💳</Paragraph>
-          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>Betaling</Paragraph>
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.payment')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
           <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>👥</Paragraph>
-          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>Konto</Paragraph>
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.account')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
           <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>🏢</Paragraph>
-          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>Organisasjon</Paragraph>
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.organization')}</Paragraph>
         </Card>
       </div>
 
@@ -181,24 +202,24 @@ export function HelpPage() {
       {/* Contact Form */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Kontakt oss
+          {t('help.contact.title')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Emne</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('help.contact.subject')}</label>
             <Input
               value={contactForm.subject}
               onChange={(e) => setContactForm(prev => ({ ...prev, subject: e.target.value }))}
-              placeholder="Hva gjelder henvendelsen?"
+              placeholder={t('help.contact.subjectPlaceholder')}
               style={{ width: '100%' }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Melding</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('help.contact.message')}</label>
             <Textarea
               value={contactForm.message}
               onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
-              placeholder="Beskriv problemet eller spørsmålet ditt..."
+              placeholder={t('help.contact.messagePlaceholder')}
               rows={4}
               style={{ width: '100%' }}
             />
@@ -211,7 +232,7 @@ export function HelpPage() {
             disabled={isSubmitting || !contactForm.subject || !contactForm.message}
             style={{ alignSelf: 'flex-start', minHeight: '44px' }}
           >
-            {isSubmitting ? 'Sender...' : 'Send henvendelse'}
+            {isSubmitting ? t('help.contact.submitting') : t('help.contact.submit')}
           </Button>
         </div>
       </Card>

@@ -64,18 +64,18 @@ export function useRealtimeBookings(handler?: RealtimeEventHandler) {
 }
 
 /**
- * Hook to subscribe to listing events
- * Auto-invalidates listing queries when events arrive
+ * Hook to subscribe to rental object events
+ * Auto-invalidates rental object queries when events arrive
  */
-export function useRealtimeListings(handler?: RealtimeEventHandler) {
+export function useRealtimeRentalObjects(handler?: RealtimeEventHandler) {
   const queryClient = useQueryClient();
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
 
   useEffect(() => {
-    const unsubscribe = realtimeClient.onListing((event) => {
+    const unsubscribe = realtimeClient.onRentalObject((event) => {
       // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      queryClient.invalidateQueries({ queryKey: ['rentalObjects'] });
 
       // Call custom handler if provided
       handlerRef.current?.(event);
@@ -164,6 +164,22 @@ export function useRealtimeAudit(handler?: RealtimeEventHandler) {
 
   useEffect(() => {
     const unsubscribe = realtimeClient.onAudit((event) => {
+      handlerRef.current?.(event);
+    });
+
+    return unsubscribe;
+  }, []);
+}
+
+/**
+ * Hook to subscribe to monitoring events (admin only)
+ */
+export function useRealtimeMonitoring(handler?: RealtimeEventHandler) {
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    const unsubscribe = realtimeClient.onMonitoring((event) => {
       handlerRef.current?.(event);
     });
 

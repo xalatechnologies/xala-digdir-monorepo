@@ -14,9 +14,14 @@ import {
   ArrowRightIcon,
   ClockIcon,
   CheckCircleIcon,
+  ShieldIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
+import { useCapabilityContext } from '../../providers/CapabilityProvider';
+import type { Capability } from '../../lib/capabilities';
+import { usePendingGdprRequests } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 interface NavItem {
   name: string;
@@ -28,8 +33,20 @@ interface NavItem {
   /**
    * Roles that can view this nav item.
    * Empty array or undefined = visible to all authenticated users.
+   * @deprecated Use `capability` or `capabilities` instead for fine-grained access control.
    */
   roles?: EffectiveBackofficeRole[];
+  /**
+   * Single capability required to view this nav item.
+   * If specified, the user must have this capability to see the item.
+   */
+  capability?: Capability;
+  /**
+   * Multiple capabilities for nav item visibility.
+   * If specified, the user must have at least one of these capabilities (OR logic).
+   * For AND logic, use a single capability that encompasses the required permissions.
+   */
+  capabilities?: Capability[];
 }
 
 interface NavSection {
@@ -151,9 +168,44 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   );
 }
 
+/**
+ * Helper function to check if a nav item should be visible based on capability checks.
+ * Supports both single capability and multiple capabilities (OR logic).
+ */
+function hasPermission(
+  item: NavItem,
+  hasCapability: (cap: Capability) => boolean,
+  hasAnyCapability: (caps: Capability[]) => boolean,
+  effectiveRole: EffectiveBackofficeRole | null
+): boolean {
+  // If capability is specified, check it
+  if (item.capability) {
+    return hasCapability(item.capability);
+  }
+
+  // If capabilities array is specified, check any (OR logic)
+  if (item.capabilities && item.capabilities.length > 0) {
+    return hasAnyCapability(item.capabilities);
+  }
+
+  // If roles are specified (legacy), check role membership
+  if (item.roles && item.roles.length > 0) {
+    return effectiveRole ? item.roles.includes(effectiveRole) : false;
+  }
+
+  // No restrictions - visible to all authenticated users
+  return true;
+}
+
 export function Sidebar() {
+  const t = useT();
   const { user } = useAuth();
   const { effectiveRole } = useBackofficeRole();
+  const { hasCapability, hasAnyCapability } = useCapabilityContext();
+
+  // Get pending GDPR requests count for badge
+  const { data: pendingGdprData } = usePendingGdprRequests({ limit: 1 });
+  const pendingGdprCount = pendingGdprData?.meta?.total ?? pendingGdprData?.data?.length ?? 0;
 
   const navSections: NavSection[] = [
     {
@@ -164,7 +216,7 @@ export function Sidebar() {
     {
       title: 'Administrasjon',
       items: [
-        { name: 'Listings', description: 'Administrer utleieobjekter', href: '/listings', icon: <BuildingIcon /> },
+        { name: 'Utleieobjekter', description: 'Administrer utleieobjekter', href: '/rental-objects', icon: <BuildingIcon /> },
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
@@ -179,8 +231,8 @@ export function Sidebar() {
     {
       title: 'Brukere & Org',
       items: [
-        { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, roles: ['admin'] },
-        { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, roles: ['admin'] },
+        { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, capability: 'CAP_ORG_ADMIN' },
+        { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
       ],
     },
     {
@@ -192,17 +244,17 @@ export function Sidebar() {
     {
       title: 'Saksbehandler',
       items: [
-        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />, roles: ['case_handler'] },
-        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon />, roles: ['case_handler'] },
-        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon />, roles: ['case_handler'] },
-        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon />, roles: ['case_handler'] },
-        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon />, roles: ['case_handler'] },
+        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon />, capability: 'CAP_BOOKING_MANAGE' },
+        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
       ],
     },
     {
       title: 'Admin',
       items: [
-        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, roles: ['admin'] },
+        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, roles: ['admin'] },
         { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, roles: ['admin'] },
         { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, roles: ['admin'] },
         { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, roles: ['admin'] },
@@ -219,27 +271,23 @@ export function Sidebar() {
     {
       title: 'System',
       items: [
+        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', roles: ['admin'] },
         { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
         { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
-        { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
       ],
     },
   ];
 
-  // Filter items based on effective role
-  // Items with no roles array or empty roles array are visible to all authenticated users
-  // Items with roles array are only visible if the current effectiveRole is in that array
+  // Filter items based on capability checks
+  // Priority: capability > capabilities > roles (legacy)
+  // Items with no restrictions are visible to all authenticated users
   const filteredSections = navSections
     .map((section) => ({
       ...section,
-      items: section.items.filter((item) => {
-        // If no roles specified or empty array, visible to all
-        if (!item.roles || item.roles.length === 0) {
-          return true;
-        }
-        // Otherwise, check if current effective role is in the allowed roles
-        return effectiveRole ? item.roles.includes(effectiveRole) : false;
-      }),
+      items: section.items.filter((item) =>
+        hasPermission(item, hasCapability, hasAnyCapability, effectiveRole)
+      ),
     }))
     .filter((section) => section.items.length > 0);
 

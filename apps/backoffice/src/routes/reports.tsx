@@ -15,6 +15,7 @@ import {
   formatCurrency,
   formatPercent,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 const periodLabels: Record<ReportPeriod, string> = {
   day: 'Dag',
@@ -48,6 +49,7 @@ const BOOKING_TYPE_OPTIONS = [
 ];
 
 export function ReportsPage() {
+  const t = useT();
   const [period, setPeriod] = useState<ReportPeriod>('month');
   const [dateRange, setDateRange] = useState(() => {
     const end = new Date();
@@ -706,9 +708,7 @@ export function ReportsPage() {
                             padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                             fontWeight: 'var(--ds-font-weight-medium)',
                             color: 'var(--ds-color-neutral-text-subtle)',
-                          }}>
-                            Periode
-                          </th>
+                          }}>{t("timeMode.period")}</th>
                           <th style={{
                             textAlign: 'right',
                             padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -804,17 +804,13 @@ export function ReportsPage() {
                 </Heading>
               </div>
               <div>
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                  Bekreftet
-                </Paragraph>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("status.confirmed")}</Paragraph>
                 <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
                   {bookingStats?.confirmedBookings ?? 0}
                 </Heading>
               </div>
               <div>
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                  Venter
-                </Paragraph>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("status.pending")}</Paragraph>
                 <Heading level={4} data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-warning-text-default)' }}>
                   {bookingStats?.pendingBookings ?? 0}
                 </Heading>

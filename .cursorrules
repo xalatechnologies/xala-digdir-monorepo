@@ -1,59 +1,63 @@
-# Xala AI Governance Rules for Cursor
+# Cursor AI Rules for Xala/Digilist Platform
 
-## SYSTEM CONTEXT
-You are operating inside the Xala / Digilist Platform.
+## CRITICAL: i18n Localization-First Rule
 
-System is:
-- Multi-tenant (municipal booking platform)
-- Audit-first (all mutations logged)
-- SDK-driven (@digilist/client-sdk)
-- RFC 7807 compliant (Problem Details)
-- RBAC enforced (role-based access)
-- Production live
+**NEVER use hardcoded strings in UI components. ALL user-facing text MUST use the i18n system.**
 
-## NON-NEGOTIABLE RULES
+### Mandatory Pattern
+```tsx
+// ❌ FORBIDDEN - Hardcoded strings
+<Heading>Settings</Heading>
+<Button>Save Changes</Button>
+<Input placeholder="Enter your name" />
 
-### 1. SDK-FIRST RULE
-- NEVER generate direct API calls (fetch, axios, graphql)
-- ONLY use `@digilist/client-sdk`
-- If SDK lacks a method → report gap, do NOT bypass
+// ✅ REQUIRED - Use t() for all text
+import { useT } from '@xala/i18n';
 
-### 2. NO BUSINESS LOGIC IN UI
-- React components = orchestration + rendering only
-- All logic lives in: API, SDK services, typed hooks
-
-### 3. RFC 7807 COMPLIANCE
-- All errors MUST conform to Problem Details: `{ type, title, status, detail }`
-- Never invent error shapes
-
-### 4. AUDIT-FIRST PRINCIPLE
-- Any state mutation MUST be auditable
-- If action is not logged → block implementation
-
-### 5. RBAC IS SOURCE OF TRUTH
-- Feature access derives from role matrix
-- No role checks hardcoded in UI
-- Use capability-based guards
-
-## UI RULES
-- No raw HTML (use @xala/ds components)
-- No inline styles (use design tokens)
-- No API calls in components
-- No magic strings
-
-## FAILURE MODES
-STOP and ask for clarification if:
-- SDK method does not exist
-- Role matrix is ambiguous
-- Audit event type is undefined
-- Tenant context is missing
-- Error contract is unclear
-
-## ARCHITECTURE LAYERS
-```
-[Frontend] → orchestration only, uses SDK hooks
-[SDK] → @digilist/client-sdk, typed services & hooks
-[API] → business logic, persistence, audit
+function Component() {
+  const t = useT();
+  return (
+    <>
+      <Heading>{t('settings.title')}</Heading>
+      <Button>{t('common.saveChanges')}</Button>
+      <Input placeholder={t('profile.namePlaceholder')} />
+    </>
+  );
+}
 ```
 
-Cross-layer imports are FORBIDDEN.
+### When Adding New UI Text
+
+1. Add translations to BOTH:
+   - packages/i18n/src/locales/nb.ts (Norwegian)
+   - packages/i18n/src/locales/en.ts (English)
+
+2. Rebuild i18n: pnpm -F @xala/i18n build
+
+3. Run scanner before committing: node scripts/scan-i18n.js apps/minside/src
+
+### Key Naming Convention
+- common.* - Shared strings
+- auth.* - Authentication
+- nav.* - Navigation
+- [page].* - Page-specific
+- [component].* - Component-specific
+
+## Test Organization (REQUIRED)
+
+All tests MUST be organized under `tests/`:
+- tests/unit/ - Vitest unit tests
+- tests/e2e/ - Playwright E2E tests
+- tests/integration/ - Integration tests
+- tests/reports/ - All test output (gitignored)
+
+**NEVER create test folders at root level** (test-results/, playwright-report/, reports/)
+
+## Other Critical Rules
+
+### SDK-First: ONLY use @digilist/client-sdk (never fetch/axios)
+### Design System: ONLY import from @xala/ds (never @digdir/*)
+### No Transformers: Use SDK Projection DTOs directly
+### No Hardcoded Values: Use design tokens
+
+See CLAUDE.md for complete guidelines.

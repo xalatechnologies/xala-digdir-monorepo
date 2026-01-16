@@ -23,10 +23,12 @@ export class WidgetsController {
         id: listings.id,
         name: listings.name,
         slug: listings.slug,
-        type: listings.type,
+        category: listings.category,
+        subcategory: listings.subcategory,
         description: listings.description,
         pricing: listings.pricing,
         images: listings.images,
+        timeMode: listings.timeMode,
       })
       .from(listings)
       .where(eq(listings.status, 'published'))
@@ -41,12 +43,12 @@ export class WidgetsController {
    */
   @Get('/calendar')
   async getCalendarWidget(request: FastifyRequest, reply: FastifyReply) {
-    const { listingId, month } = request.query as any;
+    const { rentalObjectId, month } = request.query as any;
 
     // Return mock calendar data
     return {
       data: {
-        listingId,
+        rentalObjectId,
         month: month || new Date().toISOString().slice(0, 7),
         availableDays: [1, 2, 3, 5, 6, 8, 9, 10, 12, 13, 15, 16, 17, 19, 20],
         blockedDays: [4, 7, 11, 14, 18],

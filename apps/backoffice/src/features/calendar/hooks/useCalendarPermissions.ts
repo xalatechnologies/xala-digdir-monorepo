@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 export interface CalendarPermissions {
   // View permissions

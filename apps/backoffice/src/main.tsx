@@ -6,6 +6,7 @@ import { initializeClient } from '@digilist/client-sdk';
 import '@xala/ds/styles';
 import './root.css';
 import { App } from './App';
+import { useT } from '@xala/i18n';
 
 // Initialize SDK with configuration
 initializeClient({

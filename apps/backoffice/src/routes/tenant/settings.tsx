@@ -20,10 +20,12 @@ import {
   Select,
   Switch,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
 export function TenantSettingsPage() {
+  const t = useT();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -202,7 +204,7 @@ export function TenantSettingsPage() {
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {[
-            { key: 'paymentEnabled', label: 'Betaling', description: 'Aktiver online betaling' },
+            { key: 'paymentEnabled', label: t("rule.payment"), description: 'Aktiver online betaling' },
             { key: 'vippsIntegration', label: 'Vipps', description: 'Integrasjon med Vipps for betaling' },
             { key: 'emailNotifications', label: 'E-postvarsler', description: 'Send varsler via e-post' },
             { key: 'smsNotifications', label: 'SMS-varsler', description: 'Send varsler via SMS' },

@@ -20,7 +20,7 @@ import {
   useDialog,
   Drawer,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -72,7 +72,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
     waitlist: { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' },
   };
   const labels: Record<ApplicationStatus, string> = {
-    pending: 'Venter',
+    pending: t("status.pending"),
     under_review: 'Under behandling',
     approved: 'Godkjent',
     rejected: 'Avslått',
@@ -83,6 +83,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
 }
 
 export function SeasonApplicationsReviewPage() {
+  const t = useT();
   const { locale } = useLocale();
   const { confirm } = useDialog();
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | undefined>(undefined);
@@ -111,11 +112,11 @@ export function SeasonApplicationsReviewPage() {
       title: 'Godkjenn søknad',
       description: 'Er du sikker på at du vil godkjenne denne sesongsøknaden?',
       confirmText: 'Godkjenn',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: 'success',
     });
     if (confirmed) {
-      console.log('Approved:', id);
+      // Application approved
       setSelectedApp(null);
     }
   };
@@ -125,11 +126,11 @@ export function SeasonApplicationsReviewPage() {
       title: 'Avslå søknad',
       description: 'Er du sikker på at du vil avslå denne sesongsøknaden?',
       confirmText: 'Avslå',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Rejected:', id);
+      // Application rejected
       setSelectedApp(null);
     }
   };
@@ -200,7 +201,7 @@ export function SeasonApplicationsReviewPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : applications.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

@@ -241,7 +241,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
     const org = organizations.find(o => o.id === organizationId);
 
     if (!org) {
-      console.error(`Organization ${organizationId} not found`);
+      // Organization not found
       return;
     }
 

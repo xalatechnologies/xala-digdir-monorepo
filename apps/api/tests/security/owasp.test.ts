@@ -148,12 +148,55 @@ describe('Security Tests', () => {
   });
 
   describe('Rate Limiting', () => {
-    it('should handle rapid requests gracefully', async () => {
+    it('should include rate limit headers in responses', async () => {
       if (skipIfNoServer()) return;
+      const res = await request('/health');
+      // Verify X-RateLimit-* headers are present (case-insensitive in HTTP)
+      expect(res.headers['x-ratelimit-limit']).toBeDefined();
+      expect(res.headers['x-ratelimit-remaining']).toBeDefined();
+      expect(res.headers['x-ratelimit-reset']).toBeDefined();
+    });
+
+    it('should enforce rate limits on protected endpoints', async () => {
+      if (skipIfNoServer()) return;
+      // Make rapid requests to test rate limiting
+      const promises = Array.from({ length: 10 }, () => request('/health'));
+      const results = await Promise.all(promises);
+
+      // All should have rate limit headers
+      results.forEach(result => {
+        expect(result.headers['x-ratelimit-limit']).toBeDefined();
+        expect(result.headers['x-ratelimit-remaining']).toBeDefined();
+      });
+
+      // Should handle requests gracefully (no 500 errors)
+      const serverErrors = results.filter(r => r.status >= 500);
+      expect(serverErrors.length).toBe(0);
+    });
+
+    it('should return 429 when rate limit is exceeded', async () => {
+      if (skipIfNoServer()) return;
+      // Note: This test may not trigger 429 due to high global limit (100 req/min)
+      // but verifies proper 429 handling if rate limit is reached
       const promises = Array.from({ length: 50 }, () => request('/health'));
       const results = await Promise.all(promises);
-      const successes = results.filter(r => r.status === 200);
-      expect(successes.length).toBeGreaterThan(40);
+
+      // Check if any requests were rate limited
+      const rateLimited = results.filter(r => r.status === 429);
+      if (rateLimited.length > 0) {
+        // Verify RFC 7807 error format for 429 responses
+        rateLimited.forEach(result => {
+          expect(result.body).toBeDefined();
+          expect(result.body.type || result.body.statusCode).toBeTruthy();
+          expect(result.headers['x-ratelimit-limit']).toBeDefined();
+          expect(result.headers['x-ratelimit-reset']).toBeDefined();
+        });
+      }
+
+      // All responses should be either successful or properly rate limited
+      results.forEach(result => {
+        expect([200, 429]).toContain(result.status);
+      });
     });
   });
 

@@ -17,6 +17,7 @@ import {
   Spinner,
   Select,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -40,6 +41,7 @@ const mockAllocations: Record<string, Record<string, { org: string; color: strin
 const resources = ['Idrettshall A', 'Idrettshall B', 'Fotballbane 1', 'Fotballbane 2'];
 
 export function AllocationPlannerPage() {
+  const t = useT();
   const [selectedResource, setSelectedResource] = useState(resources[0]);
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -136,7 +138,7 @@ export function AllocationPlannerPage() {
       <Card style={{ padding: 0, overflow: 'auto' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : (
           <div style={{ minWidth: '800px' }}>

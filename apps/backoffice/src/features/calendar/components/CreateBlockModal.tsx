@@ -16,12 +16,12 @@ import {
   Alert,
 } from '@xala/ds';
 import {
-  useListings,
+  useRentalObjects,
   useCreateBlock,
   useCheckConflicts,
   type BlockType,
   type CreateBlockDTO,
-  type Listing,
+  type RentalObject,
 } from '@digilist/client-sdk';
 import {
   type BlockFormData,
@@ -32,6 +32,7 @@ import {
   WEEKDAY_LABELS,
 } from '../types';
 import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
+import { useT } from '@xala/i18n';
 
 interface CreateBlockModalProps {
   isOpen: boolean;
@@ -52,6 +53,7 @@ export function CreateBlockModal({
   initialEndTime,
   onSuccess,
 }: CreateBlockModalProps) {
+  const t = useT();
   const permissions = useCalendarPermissions();
   const createBlock = useCreateBlock();
 
@@ -69,9 +71,9 @@ export function CreateBlockModal({
   const [showRecurrence, setShowRecurrence] = useState(false);
   const [recurrence, setRecurrence] = useState<RecurrenceFormData>(DEFAULT_RECURRENCE_FORM);
 
-  // Fetch listings for dropdown
-  const { data: listingsData, isLoading: isLoadingListings } = useListings({ status: 'published' });
-  const listings = listingsData?.data ?? [];
+  // Fetch rental objects for dropdown
+  const { data: rentalObjectsData, isLoading: isLoadingRentalObjects } = useRentalObjects({ status: 'published' });
+  const rentalObjects = rentalObjectsData?.data ?? [];
 
   // Conflict check params
   const conflictParams = useMemo(() => {
@@ -209,7 +211,7 @@ export function CreateBlockModal({
               id="listing-select"
               value={formData.listingId}
               onChange={(e) => updateField('listingId', e.target.value)}
-              disabled={isLoadingListings}
+              disabled={isLoadingRentalObjects}
               style={{
                 width: '100%',
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -219,9 +221,9 @@ export function CreateBlockModal({
               }}
             >
               <option value="">Velg lokale...</option>
-              {listings.map((listing: Listing) => (
-                <option key={listing.id} value={listing.id}>
-                  {listing.name}
+              {rentalObjects.map((rentalObject: RentalObject) => (
+                <option key={rentalObject.id} value={rentalObject.id}>
+                  {rentalObject.name}
                 </option>
               ))}
             </select>
@@ -370,9 +372,9 @@ export function CreateBlockModal({
             <Checkbox
               checked={formData.allDay}
               onChange={(e) => updateField('allDay', e.target.checked)}
-              aria-label="Hele dagen"
+              aria-label={t("timeMode.allDay")}
             />
-            <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>Hele dagen</span>
+            <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>{t("timeMode.allDay")}</span>
           </div>
 
           {/* Time range (if not all day) */}
@@ -642,16 +644,14 @@ export function CreateBlockModal({
 
       <Dialog.Block>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Avbryt
-          </Button>
+          <Button type="button" variant="secondary" onClick={onClose}>{t("ui.cancel")}</Button>
           <Button
             type="button"
             variant="primary"
             onClick={handleSubmit}
             disabled={!canSubmit || createBlock.isPending}
           >
-            {createBlock.isPending ? 'Oppretter...' : 'Opprett'}
+            {createBlock.isPending ? 'Oppretter...' : t("ui.create")}
           </Button>
         </div>
       </Dialog.Block>

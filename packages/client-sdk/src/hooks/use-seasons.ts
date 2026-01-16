@@ -28,6 +28,7 @@ export function useSeasons(params?: SeasonQueryParams) {
   return useQuery({
     queryKey: seasonKeys.list(params),
     queryFn: () => seasonService.getAll(params),
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -39,6 +40,7 @@ export function useSeason(id: string, options?: Omit<UseQueryOptions<{ data: Sea
     queryKey: seasonKeys.detail(id),
     queryFn: () => seasonService.getById(id),
     enabled: !!id,
+    staleTime: 60 * 1000, // 1 minute
     ...options,
   });
 }
@@ -51,6 +53,7 @@ export function useSeasonStats(id: string) {
     queryKey: seasonKeys.stats(id),
     queryFn: () => seasonService.getStats(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -170,6 +173,58 @@ export function useDeleteSeason() {
     mutationFn: (id: string) => seasonService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: seasonKeys.all });
+    },
+  });
+}
+
+// ============================================================================
+// Season Venue Management Hooks (TODO: Implement backend service)
+// ============================================================================
+
+/**
+ * Get venues (rental objects) linked to a season
+ * @todo Implement backend service method seasonService.getVenues(seasonId)
+ */
+export function useSeasonVenues(seasonId: string) {
+  return useQuery({
+    queryKey: [...seasonKeys.detail(seasonId), 'venues'],
+    queryFn: () => {
+      throw new Error('useSeasonVenues: Backend service not yet implemented. Please implement seasonService.getVenues(seasonId)');
+    },
+    enabled: false, // Disabled until backend is implemented
+  });
+}
+
+/**
+ * Add a rental object (venue) to a season
+ * @todo Implement backend service method seasonService.addVenue(seasonId, rentalObjectId)
+ */
+export function useAddVenueToSeason() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
+      throw new Error('useAddVenueToSeason: Backend service not yet implemented. Please implement seasonService.addVenue(seasonId, rentalObjectId)');
+    },
+    onSuccess: (_, { seasonId }) => {
+      queryClient.invalidateQueries({ queryKey: [...seasonKeys.detail(seasonId), 'venues'] });
+    },
+  });
+}
+
+/**
+ * Remove a rental object (venue) from a season
+ * @todo Implement backend service method seasonService.removeVenue(seasonId, rentalObjectId)
+ */
+export function useRemoveVenueFromSeason() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
+      throw new Error('useRemoveVenueFromSeason: Backend service not yet implemented. Please implement seasonService.removeVenue(seasonId, rentalObjectId)');
+    },
+    onSuccess: (_, { seasonId }) => {
+      queryClient.invalidateQueries({ queryKey: [...seasonKeys.detail(seasonId), 'venues'] });
     },
   });
 }

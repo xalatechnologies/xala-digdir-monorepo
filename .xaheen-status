@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "038-saas-admin",
+  "spec": "039-back-office-users-and-roles",
   "state": "building",
   "subtasks": {
     "completed": 40,
-    "total": 61,
-    "in_progress": 1,
+    "total": 40,
+    "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "SaaS Admin UI Application",
+    "current": "Integration & End-to-End Verification",
     "id": null,
-    "total": 8
+    "total": 4
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 29,
-    "started_at": "2026-01-16T10:54:28.340296"
+    "number": 12,
+    "started_at": "2026-01-16T13:45:00.000000"
   },
-  "last_update": "2026-01-16T11:52:59.029491"
+  "last_update": "2026-01-16T13:45:00.000000"
 }

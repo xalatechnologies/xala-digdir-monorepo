@@ -81,8 +81,8 @@ export function ApplicationCard({ application, showActions = true }: Application
   };
 
   const handleViewListing = () => {
-    // TODO: Navigate to listing detail page when available
-    navigate(`/listings/${application.listingId}`);
+    // TODO: Navigate to rental object detail page when available
+    navigate(`/rental-objects/${application.listingId}`);
   };
 
   const statusConfig = APPLICATION_STATUS_CONFIG[application.status as keyof typeof APPLICATION_STATUS_CONFIG] || APPLICATION_STATUS_CONFIG.pending;
@@ -161,7 +161,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               Lokale
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {application.listing?.name || 'Ukjent lokale'}
+              {application.listingName || 'Ukjent lokale'}
             </Paragraph>
           </div>
         </div>

@@ -1,5 +1,7 @@
 import { createContext, useContext } from 'react';
+import type { FlowContext } from '@digilist/client-sdk';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
+import { useT } from '@xala/i18n';
 
 /**
  * Re-export EffectiveBackofficeRole for convenience
@@ -10,7 +12,7 @@ export type { EffectiveBackofficeRole } from '../lib/capabilities';
  * Legacy role type for backward compatibility.
  * Use EffectiveBackofficeRole for new implementations.
  */
-export type BackofficeRole = 'admin' | 'saksbehandler';
+export type BackofficeRole = 'super_admin' | 'admin' | 'saksbehandler';
 
 /**
  * Backoffice-specific user type.
@@ -33,6 +35,22 @@ export interface BackofficeUser {
   grantedRoles?: EffectiveBackofficeRole[];
 }
 
+/**
+ * Result from restoring flow context after authentication
+ */
+export interface RestoreFlowContextResult {
+  /** Whether there was a flow context to restore */
+  hasContext: boolean;
+  /** The restored flow context */
+  flowContext?: FlowContext;
+  /** Time remaining before context expires (ms) */
+  ttl?: number;
+  /** Whether the context was expired */
+  wasExpired?: boolean;
+  /** Whether the context was invalid */
+  wasInvalid?: boolean;
+}
+
 export interface AuthContextType {
   user: BackofficeUser | null;
   isLoading: boolean;
@@ -42,6 +60,14 @@ export interface AuthContextType {
   login: (provider?: 'idporten' | 'microsoft' | 'dev-admin' | 'dev-dual') => void;
   logout: () => Promise<void>;
   checkRole: (role: BackofficeRole) => boolean;
+  /** Whether there is a stored flow context */
+  hasStoredContext: boolean;
+  /** Restore flow context after authentication */
+  restoreFlowContext: (clearAfterLoad?: boolean) => RestoreFlowContextResult;
+  /** Clear any stored flow context */
+  clearFlowContext: () => void;
+  /** Access denied error message (when user role is not allowed) */
+  accessDeniedError: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);

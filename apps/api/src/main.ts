@@ -12,9 +12,12 @@ import { createFastifyApp } from './adapters/fastify.adapter';
 import { typeDefs, createResolvers, createGraphQLContext } from './graphql/schema';
 import * as schema from './database/schema/index';
 
+// Import JWT service
+import { JwtService } from './core/auth/jwt.service';
+
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
-import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
+import { RentalObjectModule, RentalObjectController, RentalObjectService, RentalObjectRepository } from './modules/rental-objects';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
@@ -29,25 +32,31 @@ import { AllocationsController } from './modules/allocations/allocations.control
 import { AvailabilityController } from './modules/availability/availability.controller';
 // Phase 2: Auth, RBAC, Public, Audit, Settings
 import { AuthController } from './modules/auth/auth.controller';
-import { AuthzController } from './modules/authz/authz.controller';
+import { AuthzController, MeController } from './modules/authz/authz.controller';
 import { PublicController } from './modules/public/public.controller';
 import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
-import { CategoriesController } from './modules/listing/listing.controller';
+import { CategoriesController } from './modules/rental-objects/rental-object.controller';
+// RBAC Controllers (Access Grants, Permissions, Case Handler Scopes)
+import { AccessGrantController } from './modules/access-grant/access-grant.controller';
+import { PermissionAssignmentController } from './modules/permission-assignment/permission-assignment.controller';
+import { CaseHandlerScopeController } from './modules/case-handler-scope/case-handler-scope.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
 import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
 import { SignicatAuthController } from './modules/auth/signicat.controller';
+import { IdPortenAuthController } from './modules/auth/idporten.controller';
+import { IdPortenOIDCAuthController } from './modules/auth/idporten-oidc.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
 import { UserGroupController } from './modules/user-groups/user-group.controller';
-import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
+import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeRentalObjectsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
 import { SeasonsController } from './modules/seasons/seasons.controller';
@@ -59,6 +68,9 @@ import { ReviewsController, ListingReviewsController } from './modules/reviews/r
 // Phase 8: SaaS Admin & Tenant Admin
 import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
+import { ReviewsController, RentalObjectReviewsController } from './modules/reviews/reviews.controller';
+// Feature Flags
+import { featuresRoutes } from './routes/features.routes';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -115,9 +127,21 @@ async function bootstrap() {
   console.log('✓ PostgreSQL database connected');
   container.registerValue('Database', db);
 
+  // Validate JWT secret (required for authentication)
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    console.error('❌ JWT_SECRET environment variable is required');
+    console.error('   Set JWT_SECRET to a secure random string (at least 32 characters)');
+    process.exit(1);
+  }
+
+  // Register JWT service
+  container.registerFactory('JwtService', () => new JwtService(jwtSecret));
+  console.log('✓ JWT service registered');
+
   // Register repositories
   container.registerFactory('TenantRepository', () => new TenantRepository(db));
-  container.registerFactory('ListingRepository', () => new ListingRepository(db));
+  container.registerFactory('RentalObjectRepository', () => new RentalObjectRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
@@ -128,16 +152,20 @@ async function bootstrap() {
   container.registerFactory('TenantService', () => 
     new TenantService(container.resolve('TenantRepository'), adapters)
   );
-  container.registerFactory('ListingService', () => 
-    new ListingService(container.resolve('ListingRepository'), adapters)
+  container.registerFactory('RentalObjectService', () => 
+    new RentalObjectService(container.resolve('RentalObjectRepository'), adapters)
   );
-  container.registerFactory('BookingService', () => 
-    new BookingService(container.resolve('BookingRepository'), adapters)
+  container.registerFactory('BookingService', () =>
+    new BookingService(
+      container.resolve('BookingRepository'),
+      container.resolve('RentalObjectRepository'),
+      adapters
+    )
   );
   container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
   );
-  container.registerFactory('MonitoringService', () => 
+  container.registerFactory('MonitoringService', () =>
     new MonitoringService(
       container.resolve('AuditLogRepository'),
       container.resolve('AlertRepository'),
@@ -146,14 +174,32 @@ async function bootstrap() {
     )
   );
 
+  // TODO: Notification service (requires notifications and deliveryAttempts tables in schema)
+  // const { NotificationService } = await import('./modules/notifications/notification.service');
+  // const { NotificationRepository } = await import('./modules/notifications/notification.repository');
+  // const { DeduplicationService } = await import('./modules/notifications/deduplication.service');
+  // const { DeliveryService } = await import('./modules/notifications/delivery.service');
+
+  // container.registerFactory('NotificationRepository', () => new NotificationRepository(db));
+  // container.registerFactory('DeduplicationService', () => new DeduplicationService(container.resolve('NotificationRepository'), adapters));
+  // container.registerFactory('DeliveryService', () => new DeliveryService(container.resolve('NotificationRepository'), adapters));
+  // container.registerFactory('NotificationService', () =>
+  //   new NotificationService(
+  //     container.resolve('NotificationRepository'),
+  //     container.resolve('DeduplicationService'),
+  //     container.resolve('DeliveryService'),
+  //     adapters
+  //   )
+  // );
+
   console.log('✓ Services registered');
 
   // Register controllers with their dependencies
   container.registerFactory('TenantController', () => 
     new TenantController(container.resolve('TenantService'))
   );
-  container.registerFactory('ListingController', () => 
-    new ListingController(container.resolve('ListingService'))
+  container.registerFactory('RentalObjectController', () => 
+    new RentalObjectController(container.resolve('RentalObjectService'))
   );
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
@@ -168,15 +214,15 @@ async function bootstrap() {
   container.registerFactory('SignicatAuthController', () => 
     new SignicatAuthController()
   );
-  // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
-    new NotificationsController()
-  );
+  // TODO: Notifications controller (disabled until NotificationService is ready)
+  // container.registerFactory('NotificationsController', () =>
+  //   new NotificationsController(container.resolve('NotificationService'))
+  // );
   console.log('✓ Controllers registered');
 
   // Load modules
   await moduleLoader.load(TenantModule);
-  await moduleLoader.load(ListingModule);
+  await moduleLoader.load(RentalObjectModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
@@ -185,7 +231,7 @@ async function bootstrap() {
   // Get controllers (core + backoffice modules)
   const controllers = [
     TenantController, 
-    ListingController, 
+    RentalObjectController, 
     BookingController, 
     UserController, 
     MonitoringController,
@@ -202,6 +248,7 @@ async function bootstrap() {
     // Phase 2: Auth, RBAC, Public, Audit, Settings
     AuthController,
     AuthzController,
+    MeController,
     PublicController,
     AuditController,
     SettingsController,
@@ -209,20 +256,27 @@ async function bootstrap() {
     DiscountCodesController,
     HealthController,
     CategoriesController,
+    // RBAC Controllers
+    AccessGrantController,
+    PermissionAssignmentController,
+    CaseHandlerScopeController,
     // Phase 3: Integrations, Widgets, Share
     IntegrationsController,
     WidgetsController,
     ShareController,
     // Signicat eID Hub authentication
     SignicatAuthController,
-    // Notifications
-    NotificationsController,
+    // IDporten authentication
+    IdPortenAuthController,
+    IdPortenOIDCAuthController,
+    // TODO: Notifications (disabled until schema tables are added)
+    // NotificationsController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
     UserGroupController,
     BackofficeUserGroupsController,
     BackofficePriceRulesController,
-    BackofficeListingsController,
+    BackofficeRentalObjectsController,
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,
@@ -277,7 +331,7 @@ async function bootstrap() {
   console.log(`  Health:   GET  http://localhost:${port}/health`);
   console.log(`  GraphQL:  POST http://localhost:${port}/graphql`);
   console.log(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
-  console.log(`  Listings: GET  http://localhost:${port}/api/listings`);
+  console.log(`  Rental Objects: GET  http://localhost:${port}/api/rental-objects`);
   console.log(`  Bookings: GET  http://localhost:${port}/api/bookings`);
   console.log(`  Audit:    GET  http://localhost:${port}/api/audit`);
   console.log(`  WebSocket:     ws://localhost:${port}/ws/audit`);

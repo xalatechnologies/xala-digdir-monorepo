@@ -28,8 +28,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-
     // Report to Sentry with component stack context
     Sentry.captureException(error, {
       contexts: {

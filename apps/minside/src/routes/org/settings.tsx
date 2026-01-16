@@ -96,12 +96,12 @@ export function OrganizationSettingsPage() {
       {/* Organization Profile */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Organisasjonsprofil
+          {t('org.organizationProfile')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Navn</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.name')}</label>
               <Input
                 value={settings.orgName}
                 onChange={(e) => updateSetting('orgName', e.target.value)}
@@ -109,7 +109,7 @@ export function OrganizationSettingsPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Org.nr</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.orgNumber')}</label>
               <Input
                 value={settings.orgNumber}
                 onChange={(e) => updateSetting('orgNumber', e.target.value)}
@@ -119,7 +119,7 @@ export function OrganizationSettingsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>E-post</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.email')}</label>
               <Input
                 type="email"
                 value={settings.email}
@@ -128,7 +128,7 @@ export function OrganizationSettingsPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Telefon</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.phone')}</label>
               <Input
                 value={settings.phone}
                 onChange={(e) => updateSetting('phone', e.target.value)}
@@ -137,7 +137,7 @@ export function OrganizationSettingsPage() {
             </div>
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Adresse</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.address')}</label>
             <Input
               value={settings.address}
               onChange={(e) => updateSetting('address', e.target.value)}
@@ -146,7 +146,7 @@ export function OrganizationSettingsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Postnr</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.postalCode')}</label>
               <Input
                 value={settings.postalCode}
                 onChange={(e) => updateSetting('postalCode', e.target.value)}
@@ -154,7 +154,7 @@ export function OrganizationSettingsPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Sted</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.city')}</label>
               <Input
                 value={settings.city}
                 onChange={(e) => updateSetting('city', e.target.value)}
@@ -168,14 +168,14 @@ export function OrganizationSettingsPage() {
       {/* Notifications */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Varsler
+          {t('org.notifications')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {[
-            { key: 'emailBookingConfirm', label: 'Bookingbekreftelser', description: 'Motta bekreftelse ved nye bookinger' },
-            { key: 'emailBookingReminder', label: 'Påminnelser', description: 'Motta påminnelse før bookinger' },
-            { key: 'emailInvoice', label: 'Fakturaer', description: 'Motta fakturaer på e-post' },
-            { key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelser via SMS' },
+            { key: 'emailBookingConfirm', label: t('org.notificationSettings.bookingConfirmations'), description: t('org.notificationSettings.bookingConfirmationsDesc') },
+            { key: 'emailBookingReminder', label: t('org.notificationSettings.reminders'), description: t('org.notificationSettings.remindersDesc') },
+            { key: 'emailInvoice', label: t('org.notificationSettings.invoices'), description: t('org.notificationSettings.invoicesDesc') },
+            { key: 'smsReminder', label: t('org.notificationSettings.smsReminders'), description: t('org.notificationSettings.smsRemindersDesc') },
           ].map(item => (
             <div key={item.key} style={{
               display: 'flex',
@@ -204,11 +204,11 @@ export function OrganizationSettingsPage() {
       {/* Billing */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          Fakturering
+          {t('org.billing')}
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Faktura e-post</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.invoiceEmail')}</label>
             <Input
               type="email"
               value={settings.invoiceEmail}
@@ -217,7 +217,7 @@ export function OrganizationSettingsPage() {
             />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Betalingsfrist (dager)</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.paymentTerms')}</label>
             <Input
               type="number"
               value={settings.paymentTerms}

@@ -10,6 +10,9 @@
     },
     "./styles": {
       "default": "./src/styles.ts"
+    },
+    "./maps": {
+      "default": "./src/maps.ts"
     }
   },
   "scripts": {

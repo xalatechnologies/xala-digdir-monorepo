@@ -148,16 +148,32 @@ export const digdirScanner = [
   ...componentSuggestions,
 ];
 
+// API-specific ACL enforcement rules
+export const apiAclRules = [
+  {
+    files: ['apps/api/src/**/*.controller.{ts,tsx}', 'apps/api/src/modules/**/*.{ts,tsx}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/no-direct-schema-import': 'error',
+    },
+  },
+];
+
 // App-specific rules (includes guardrails + scanner + TypeScript)
 export const apps = [
   ...base,
   ...typescript,
   ...guardrails,
   ...digdirScanner,
+  ...apiAclRules,
   {
     files: ['apps/**/*.{ts,tsx,js,jsx}'],
     ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
     rules: {
+      'no-console': ['error', { allow: ['error'] }],
       'no-restricted-imports': [
         'error',
         {

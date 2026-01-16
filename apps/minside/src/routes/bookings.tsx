@@ -11,7 +11,7 @@
  * - Follows DIGILIST design patterns
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Card,
   Heading,
@@ -49,6 +49,11 @@ export function BookingsPage() {
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
 
+  // Scroll indicator state for filter buttons
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const filterContainerRef = useRef<HTMLDivElement>(null);
+
   // Track viewport size for mobile/desktop detection
   useEffect(() => {
     const handleResize = () => {
@@ -58,6 +63,30 @@ export function BookingsPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Update scroll indicators based on scroll position
+  const updateScrollIndicators = useCallback(() => {
+    const container = filterContainerRef.current;
+    if (!container || !isMobile) {
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const scrollRight = scrollWidth - clientWidth - scrollLeft;
+
+    setCanScrollLeft(scrollLeft > 5); // 5px threshold to avoid flicker
+    setCanScrollRight(scrollRight > 5);
+  }, [isMobile]);
+
+  // Check scroll indicators on mount and when mobile state changes
+  useEffect(() => {
+    updateScrollIndicators();
+    // Also check after a short delay to ensure content is rendered
+    const timer = setTimeout(updateScrollIndicators, 100);
+    return () => clearTimeout(timer);
+  }, [updateScrollIndicators, isMobile, stats]);
 
   // Fetch user's own bookings with offline support
   const { data: bookingsData, isLoading, isOffline, isCached } = useOfflineBookings(
@@ -186,68 +215,115 @@ export function BookingsPage() {
         </Card>
       </div>
 
-      {/* Filters - Responsive: horizontal scroll on mobile */}
+      {/* Filters - Responsive: horizontal scroll on mobile with scroll indicators */}
       <div style={{
-        display: 'flex',
-        gap: 'var(--ds-spacing-2)',
-        overflowX: isMobile ? 'auto' : 'visible',
-        WebkitOverflowScrolling: 'touch', // Smooth scroll on iOS
-        paddingBottom: isMobile ? 'var(--ds-spacing-2)' : '0',
+        position: 'relative',
         margin: isMobile ? '0 calc(var(--ds-spacing-4) * -1)' : '0', // Bleed to edges on mobile
-        padding: isMobile ? '0 var(--ds-spacing-4)' : '0',
       }}>
-        <Button
-          type="button"
-          variant={statusFilter === undefined ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setStatusFilter(undefined)}
+        {/* Left scroll indicator gradient */}
+        {isMobile && canScrollLeft && (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: '40px',
+              background: 'linear-gradient(to right, var(--ds-color-neutral-background-default), transparent)',
+              pointerEvents: 'none',
+              zIndex: 1,
+              transition: 'opacity 0.3s ease',
+            }}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Right scroll indicator gradient */}
+        {isMobile && canScrollRight && (
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: '40px',
+              background: 'linear-gradient(to left, var(--ds-color-neutral-background-default), transparent)',
+              pointerEvents: 'none',
+              zIndex: 1,
+              transition: 'opacity 0.3s ease',
+            }}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Scrollable filter container */}
+        <div
+          ref={filterContainerRef}
+          onScroll={updateScrollIndicators}
           style={{
-            minHeight: '44px', // WCAG AA touch target
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
+            display: 'flex',
+            gap: 'var(--ds-spacing-2)',
+            overflowX: isMobile ? 'auto' : 'visible',
+            WebkitOverflowScrolling: 'touch', // Smooth scroll on iOS
+            paddingBottom: isMobile ? 'var(--ds-spacing-2)' : '0',
+            padding: isMobile ? '0 var(--ds-spacing-4)' : '0',
+            scrollbarWidth: 'none', // Hide scrollbar on Firefox
+            msOverflowStyle: 'none', // Hide scrollbar on IE/Edge
           }}
         >
-          {t('bookings.all')} ({stats.total})
-        </Button>
-        <Button
-          type="button"
-          variant={statusFilter === 'confirmed' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setStatusFilter('confirmed')}
-          style={{
-            minHeight: '44px', // WCAG AA touch target
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
-          {t('booking.confirmed')} ({stats.confirmed})
-        </Button>
-        <Button
-          type="button"
-          variant={statusFilter === 'pending' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setStatusFilter('pending')}
-          style={{
-            minHeight: '44px', // WCAG AA touch target
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
-          {t('requests.pending')} ({stats.pending})
-        </Button>
-        <Button
-          type="button"
-          variant={statusFilter === 'cancelled' ? 'primary' : 'tertiary'}
-          data-size="sm"
-          onClick={() => setStatusFilter('cancelled')}
-          style={{
-            minHeight: '44px', // WCAG AA touch target
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
-          {t('booking.cancelled')}
-        </Button>
+          <Button
+            type="button"
+            variant={statusFilter === undefined ? 'primary' : 'tertiary'}
+            data-size="sm"
+            onClick={() => setStatusFilter(undefined)}
+            style={{
+              minHeight: '44px', // WCAG AA touch target
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            {t('bookings.all')} ({stats.total})
+          </Button>
+          <Button
+            type="button"
+            variant={statusFilter === 'confirmed' ? 'primary' : 'tertiary'}
+            data-size="sm"
+            onClick={() => setStatusFilter('confirmed')}
+            style={{
+              minHeight: '44px', // WCAG AA touch target
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            {t('booking.confirmed')} ({stats.confirmed})
+          </Button>
+          <Button
+            type="button"
+            variant={statusFilter === 'pending' ? 'primary' : 'tertiary'}
+            data-size="sm"
+            onClick={() => setStatusFilter('pending')}
+            style={{
+              minHeight: '44px', // WCAG AA touch target
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            {t('requests.pending')} ({stats.pending})
+          </Button>
+          <Button
+            type="button"
+            variant={statusFilter === 'cancelled' ? 'primary' : 'tertiary'}
+            data-size="sm"
+            onClick={() => setStatusFilter('cancelled')}
+            style={{
+              minHeight: '44px', // WCAG AA touch target
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            {t('booking.cancelled')}
+          </Button>
+        </div>
       </div>
 
       {/* Bookings List - Responsive: cards on mobile, table on desktop */}

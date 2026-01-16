@@ -23,6 +23,7 @@ export function useFaq(category?: string) {
   return useQuery({
     queryKey: helpKeys.faq(category),
     queryFn: () => helpService.getFaq(category),
+    staleTime: 15 * 60 * 1000, // 15 minutes - FAQs are relatively static
   });
 }
 
@@ -34,6 +35,7 @@ export function useGuides(role = 'user') {
   return useQuery({
     queryKey: helpKeys.guides(role),
     queryFn: () => helpService.getGuides(role),
+    staleTime: 15 * 60 * 1000, // 15 minutes - guides rarely change
   });
 }
 
@@ -44,6 +46,7 @@ export function useTraining() {
   return useQuery({
     queryKey: helpKeys.training(),
     queryFn: () => helpService.getTraining(),
+    staleTime: 15 * 60 * 1000, // 15 minutes - training content is stable
   });
 }
 

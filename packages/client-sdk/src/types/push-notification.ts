@@ -146,7 +146,7 @@ export interface PushNotificationPayload {
 export interface PushNotificationData {
   type: BookingNotificationType;
   bookingId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   userId?: string;
   url?: string;
   timestamp: string;
@@ -181,4 +181,77 @@ export interface NotificationEvent extends BaseEntity {
   relatedListingId?: string;
   metadata?: Record<string, unknown>;
   readAt?: string | null;
+}
+
+// =============================================================================
+// Notification Delivery Status Types
+// =============================================================================
+
+/**
+ * Delivery status states for notifications
+ * Tracks the lifecycle of notification delivery
+ */
+export type NotificationDeliveryStatusType = 'pending' | 'sent' | 'delivered' | 'failed';
+
+/**
+ * Delivery attempt tracking record
+ * Records each retry attempt for failed notifications
+ */
+export interface DeliveryAttempt extends BaseEntity {
+  notificationId: string;
+  attemptNumber: number;
+  status: NotificationDeliveryStatusType;
+  error?: string | null;
+  retriedAt?: string | null;
+  nextRetryAt?: string | null;
+}
+
+/**
+ * Complete delivery status for a notification
+ * Includes the notification and all delivery attempts
+ */
+export interface NotificationDeliveryStatus {
+  notification: {
+    id: string;
+    type: 'email' | 'push' | 'in_app' | 'sms';
+    recipient: string;
+    subject?: string;
+    status: NotificationDeliveryStatusType;
+    sentAt?: string | null;
+    deliveredAt?: string | null;
+    failedAt?: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  attempts: DeliveryAttempt[];
+  totalAttempts: number;
+  lastAttemptAt?: string | null;
+}
+
+/**
+ * Delivery report summary for admin dashboard
+ * Aggregated view of notification delivery status
+ */
+export interface DeliveryReport extends BaseEntity {
+  type: 'email' | 'push' | 'in_app' | 'sms';
+  recipient: string;
+  subject?: string | null;
+  status: NotificationDeliveryStatusType;
+  attemptCount: number;
+  lastAttemptAt?: string | null;
+  sentAt?: string | null;
+  deliveredAt?: string | null;
+  failedAt?: string | null;
+}
+
+/**
+ * Query parameters for filtering delivery reports
+ * Used in admin dashboard for report filtering
+ */
+export interface DeliveryReportQueryParams {
+  type?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
 }

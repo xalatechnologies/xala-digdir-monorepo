@@ -1,0 +1,147 @@
+# Cursor AI Rules for apps/minside
+
+> **Extends:** [Root .cursorrules](../../.cursorrules)
+
+## App Context
+
+This is the **user portal** for Xala/Digilist Platform.
+
+**Critical:** ALL routes require authentication. Design mobile-first.
+
+## Minside-Specific Rules
+
+### 1. Authentication Required Pattern
+```tsx
+// ✅ CORRECT - Protected route
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@digilist/client-sdk/hooks';
+
+function ProtectedRoute({ children }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (!user) return <Navigate to="/login" replace />;
+
+  return <>{children}</>;
+}
+```
+
+### 2. Mobile Navigation Pattern
+```tsx
+// ✅ CORRECT - Responsive navigation
+import { Drawer, Sidebar } from '@xala/ds';
+import { useMediaQuery } from '@xala/ds/hooks';
+
+function AppLayout() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  return isMobile ? <MobileDrawer /> : <DesktopSidebar />;
+}
+```
+
+### 3. Notification Pattern
+```tsx
+// ✅ CORRECT - Real-time notifications
+import { realtimeClient } from '@digilist/client-sdk';
+import { useQueryClient } from '@tanstack/react-query';
+
+function NotificationCenter() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    realtimeClient.onNotification((notification) => {
+      showToast(notification.message);
+      queryClient.invalidateQueries(['notifications']);
+    });
+  }, []);
+}
+```
+
+### 4. GDPR Data Export Pattern
+```tsx
+// ✅ REQUIRED - GDPR compliance
+import { useGDPR } from '@digilist/client-sdk/hooks';
+
+function PrivacySettings() {
+  const { exportData, requestDeletion } = useGDPR();
+
+  return (
+    <>
+      <Button onClick={() => exportData()}>Export My Data</Button>
+      <Button variant="danger" onClick={() => requestDeletion()}>
+        Delete My Account
+      </Button>
+    </>
+  );
+}
+```
+
+## File Organization
+
+```
+src/
+├── features/
+│   ├── dashboard/        # User dashboard
+│   ├── bookings/         # My bookings
+│   ├── profile/          # User profile
+│   ├── notifications/    # Notification center
+│   ├── favorites/        # Saved listings
+│   ├── payments/         # Payment methods
+│   └── settings/         # User settings
+├── components/layout/    # Sidebar, Header
+├── routes/               # Protected routes
+└── main.tsx              # Entry point
+```
+
+## Testing
+
+- E2E tests: `../../tests/e2e/minside-*.spec.ts`
+- Mobile tests: `../../tests/e2e/minside-mobile.spec.ts`
+- Offline tests: `../../tests/e2e/minside-offline.spec.ts`
+- Unit tests: Co-located `*.test.tsx`
+
+## Common Mistakes to Avoid
+
+❌ Allowing unauthenticated access
+❌ Desktop-first design (should be mobile-first)
+❌ Not handling offline scenarios
+❌ Missing notification subscriptions
+❌ Not implementing GDPR features (export/delete)
+❌ Hardcoding strings (use i18n)
+❌ Direct API calls (use SDK)
+❌ Importing from `@digdir/*` (use `@xala/ds`)
+
+## SDK Services
+
+Primary hooks used in this app:
+- `useAuth()` - Authentication
+- `useUser()` - User profile
+- `useBookings()` - User bookings
+- `useNotifications()` - Notifications
+- `useFavorites()` - Saved listings
+- `usePaymentMethods()` - Payment methods
+- `useGDPR()` - GDPR operations
+- `realtimeClient` - WebSocket notifications
+
+## Mobile Optimization
+
+- Minimum tap target: 44x44px
+- Bottom navigation on mobile
+- Drawer for sidebar on mobile
+- Touch-friendly interactions
+- Responsive images (srcset)
+- Offline capability (service worker)
+
+## GDPR Features Required
+
+- ✅ Data export (JSON/CSV)
+- ✅ Data deletion request
+- ✅ Consent management
+- ✅ Privacy settings
+- ✅ Activity log
+
+## See Also
+
+- [CLAUDE.md](./CLAUDE.md) - Full context
+- [AGENTS.md](./AGENTS.md) - Commands
+- [Root CLAUDE.md](../../CLAUDE.md) - Architecture rules

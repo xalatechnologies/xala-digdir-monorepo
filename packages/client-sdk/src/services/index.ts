@@ -10,8 +10,22 @@ export { BaseService } from './base.service';
 // Auth
 export { AuthService, authService } from './auth.service';
 
+// Authorization / RBAC
+export { AuthzService, authzService } from './authz.service';
+export { AccessGrantService, accessGrantService } from './access-grant.service';
+export { PermissionAssignmentService, permissionAssignmentService } from './permission-assignment.service';
+
+// Rental Objects (primary)
+export {
+  RentalObjectService,
+  PublicRentalObjectService,
+  rentalObjectService,
+  publicRentalObjectService
+} from './rental-object.service';
+
 // Listings
-export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
+// TODO: Create listing.service.ts file
+// export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
 // Bookings
 export { 
@@ -90,8 +104,26 @@ export {
   type PendingItems,
 } from './dashboard.service';
 
+// Metadata
+export {
+  MetadataService,
+  metadataService,
+  type CategoryMetadata,
+  type TimeModeMetadata,
+  type PricingUnitMetadata,
+  type StatusMetadata,
+  type MetadataResponse,
+  type MetadataFilter,
+} from './metadata.service';
+
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';
+
+// Seasons
+export { seasonService } from './season.service';
+
+// Season Applications
+export { seasonApplicationService } from './season-application.service';
 
 // Discount Codes
 export { discountCodeService } from './discount-code.service';
@@ -104,6 +136,16 @@ export { monitoringService } from './monitoring.service';
 
 // Reviews
 export { ReviewService, reviewService } from './review.service';
+
+// Integrations (simple service)
+export { integrationsService } from './integrations.service';
+export type { Integration, IntegrationUpdate, IntegrationTestResult } from './integrations.service';
+
+// ID-porten
+export { idportenService } from './idporten.service';
+
+// Vipps
+export { vippsAuthService } from './vipps.service';
 
 // Billing (User + Org)
 export { 

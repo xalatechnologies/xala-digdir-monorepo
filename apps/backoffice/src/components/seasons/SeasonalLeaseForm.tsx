@@ -20,6 +20,7 @@ import {
   type CreateSeasonalLeaseDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions } from '../shared';
+import { useT } from '@xala/i18n';
 
 interface SeasonalLeaseFormProps {
   lease?: SeasonalLease | null;
@@ -38,6 +39,7 @@ const weekdayOptions = [
 ];
 
 export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFormProps) {
+  const t = useT();
   const [formData, setFormData] = useState<CreateSeasonalLeaseDTO>({
     listingId: '',
     organizationId: '',
@@ -143,7 +145,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
       await onSubmit(cleanData);
     } catch (error) {
-      console.error('Failed to save seasonal lease:', error);
+      // Failed to save seasonal lease
     } finally {
       setIsSubmitting(false);
     }

@@ -19,10 +19,9 @@ import React, { useState } from 'react';
 import {
   Button,
   Checkbox,
-  Heading,
-  Paragraph,
 } from '@xala/ds';
 import { ShieldCheckIcon, ClipboardListIcon } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 
@@ -126,6 +125,7 @@ export function RoleSelector({
 }: RoleSelectorProps): React.ReactElement {
   const { setEffectiveRole, grantedRoles } = useBackofficeRole();
   const [rememberChoice, setRememberChoice] = useState(false);
+  const t = useT();
 
   const handleRoleSelect = (role: EffectiveBackofficeRole): void => {
     // Only allow selection of roles the user has been granted
@@ -149,23 +149,6 @@ export function RoleSelector({
         maxWidth: '400px',
       }}
     >
-      <Heading
-        level={2}
-        data-size="lg"
-        style={{ marginBottom: 'var(--ds-spacing-2)' }}
-      >
-        Velg rolle
-      </Heading>
-      <Paragraph
-        data-size="md"
-        style={{
-          color: 'var(--ds-color-neutral-text-subtle)',
-          marginBottom: 'var(--ds-spacing-6)',
-        }}
-      >
-        Du har tilgang til flere roller. Velg hvordan du vil fortsette.
-      </Paragraph>
-
       {/* Role Options */}
       <div
         style={{
@@ -177,15 +160,15 @@ export function RoleSelector({
       >
         <RoleOption
           icon={<ShieldCheckIcon size={24} />}
-          title="Administrator"
-          description="Full tilgang til alle funksjoner og innstillinger"
+          title={t('backoffice.roleSelection.adminTitle') || 'Administrator'}
+          description={t('backoffice.roleSelection.adminDescription') || 'Full tilgang til alle funksjoner og innstillinger'}
           onClick={() => handleRoleSelect('admin')}
           disabled={!isRoleAvailable('admin')}
         />
         <RoleOption
           icon={<ClipboardListIcon size={24} />}
-          title="Saksbehandler"
-          description="Behandle bookinger, søknader og henvendelser"
+          title={t('backoffice.roleSelection.caseHandlerTitle') || 'Saksbehandler'}
+          description={t('backoffice.roleSelection.caseHandlerDescription') || 'Behandle bookinger, søknader og henvendelser'}
           onClick={() => handleRoleSelect('case_handler')}
           disabled={!isRoleAvailable('case_handler')}
         />
@@ -204,9 +187,8 @@ export function RoleSelector({
             checked={rememberChoice}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRememberChoice(e.target.checked)}
             value="remember"
-          >
-            Husk mitt valg
-          </Checkbox>
+            label={t('backoffice.roleSelection.rememberChoice') || 'Husk mitt valg'}
+          />
         </div>
       )}
     </div>

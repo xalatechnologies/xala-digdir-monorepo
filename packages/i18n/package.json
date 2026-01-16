@@ -15,13 +15,27 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "check:keys": "node ../../scripts/check-i18n-keys.js",
+    "check:unused": "node ../../scripts/check-unused-keys.js"
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
   },
   "peerDependencies": {
     "react": "^18.0.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.18",
-    "typescript": "~5.6.0"
+    "@xala/eslint-config": "workspace:*",
+    "eslint": "^9.10.0",
+    "jsdom": "^24.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.8"
   }
 }

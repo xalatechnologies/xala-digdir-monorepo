@@ -86,8 +86,8 @@ export interface TransformedSeasonApplication {
   id: string;
   tenantId: string;
   seasonId: string;
-  listingId: string;
-  listingName?: string;
+  rentalObjectId: string;
+  rentalObjectName?: string;
   organizationId: string;
   organizationName?: string;
 
@@ -430,8 +430,8 @@ export function transformSeasonApplication(application: SeasonApplication): Tran
     id: application.id,
     tenantId: application.tenantId,
     seasonId: application.seasonId,
-    listingId: application.listingId,
-    listingName: application.listingName,
+    rentalObjectId: application.rentalObjectId,
+    rentalObjectName: application.rentalObjectName,
     organizationId: application.organizationId,
     organizationName: application.organizationName,
 

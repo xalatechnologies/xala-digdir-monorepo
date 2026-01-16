@@ -136,7 +136,7 @@ export function PaymentReconciliationPage() {
           onClick={() => setIsFilterOpen(!isFilterOpen)}
         >
           <FilterIcon />
-          {t('common.filters', 'Filtre')}
+          {t('common.filters', t("ui.filters"))}
           {activeFilterCount > 0 && ` (${activeFilterCount})`}
         </Button>
       </div>
@@ -209,7 +209,7 @@ export function PaymentReconciliationPage() {
 
       {/* Filter Drawer */}
       <Drawer open={isFilterOpen} onOpenChange={setIsFilterOpen} position="right">
-        <DrawerSection title={t('common.filters', 'Filtre')}>
+        <DrawerSection title={t('common.filters', t("ui.filters"))}>
           <Stack direction="column" gap="var(--ds-spacing-4)">
             {/* Payment Status Filter */}
             <div>
@@ -281,7 +281,7 @@ export function PaymentReconciliationPage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading', 'Laster...')} data-size="lg" />
+            <Spinner aria-label={t('common.loading', t("ui.loading"))} data-size="lg" />
           </div>
         ) : !reconciliationData?.data || reconciliationData.data.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -392,7 +392,7 @@ export function PaymentReconciliationPage() {
                     <Stack direction="column" gap="var(--ds-spacing-2)">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {transaction.transactionType === 'payment' ? 'Betaling' : transaction.transactionType === 'refund' ? 'Refundering' : transaction.transactionType === 'capture' ? 'Trekking' : 'Annet'}
+                          {transaction.transactionType === 'payment' ? t("rule.payment") : transaction.transactionType === 'refund' ? 'Refundering' : transaction.transactionType === 'capture' ? 'Trekking' : 'Annet'}
                         </Text>
                         <Text style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                           {formatCurrency(transaction.amount, transaction.currency, formatLocale)}

@@ -6,6 +6,7 @@
  */
 
 import * as Sentry from '@sentry/react';
+import { useT } from '@xala/i18n';
 
 /**
  * Initialize Sentry error tracking and performance monitoring
@@ -18,9 +19,7 @@ export function initSentry(): void {
 
   // Don't initialize Sentry if DSN is not configured
   if (!dsn) {
-    if (import.meta.env.DEV) {
-      console.info('[Sentry] Skipping initialization - no DSN configured');
-    }
+    // Skipping initialization - no DSN configured
     return;
   }
 
@@ -76,7 +75,7 @@ export function initSentry(): void {
     beforeSend(event, hint) {
       // Don't send events in development unless explicitly enabled
       if (import.meta.env.DEV && !import.meta.env.VITE_SENTRY_SEND_IN_DEV) {
-        console.error('[Sentry] Would send error:', event, hint);
+        // Would send error to Sentry in production
         return null;
       }
 
@@ -84,12 +83,7 @@ export function initSentry(): void {
     },
   });
 
-  if (import.meta.env.DEV) {
-    console.info('[Sentry] Initialized successfully', {
-      environment,
-      release: release || 'undefined',
-    });
-  }
+  // Sentry initialized successfully
 }
 
 /**

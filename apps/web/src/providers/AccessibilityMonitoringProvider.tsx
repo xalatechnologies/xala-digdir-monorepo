@@ -7,6 +7,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { useAccessibilityMonitoring, type AccessibilityMonitoringAPI } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 const AccessibilityMonitoringContext = createContext<AccessibilityMonitoringAPI | null>(null);
 
@@ -50,7 +51,7 @@ export function AccessibilityMonitoringProvider({
  *     trackSkipLinkUsage('main-content');
  *   };
  *
- *   return <a href="#main-content" onClick={handleSkipLinkClick}>Skip to content</a>;
+ *   return <a href="#main-content" onClick={handleSkipLinkClick}>{t('accessibility.skipToContent')}</a>;
  * }
  * ```
  */

@@ -8,6 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { RealtimeToast } from './RealtimeToast';
 import { testAccessibility, testScreenReaderAnnouncements } from '../test-utils/accessibility';
+import { useT } from '@xala/i18n';
 
 // Mock the realtime providers
 vi.mock('../providers', () => ({
@@ -22,6 +23,9 @@ vi.mock('../providers', () => ({
     isConnected: true,
     status: 'connected',
   }),
+  useRealtimeSlotAvailability: (callback: Function) => {
+    (global as any).__realtimeSlotAvailabilityCallback = callback;
+  },
 }));
 
 describe('RealtimeToast', () => {
@@ -86,7 +90,7 @@ describe('RealtimeToast', () => {
       if (callback) {
         callback({
           type: 'notification',
-          data: { type: 'error', title: 'Feil', body: 'En feil oppstod' },
+          data: { type: 'error', title: t("ui.error"), body: 'En feil oppstod' },
         });
       }
 
@@ -105,7 +109,7 @@ describe('RealtimeToast', () => {
       if (callback) {
         callback({
           type: 'notification',
-          data: { type: 'success', title: 'Suksess', body: 'Operasjon fullført' },
+          data: { type: 'success', title: t("ui.success"), body: 'Operasjon fullført' },
         });
       }
 
@@ -222,12 +226,12 @@ describe('RealtimeToast', () => {
       if (callback) {
         callback({
           type: 'notification',
-          data: { type: 'error', title: 'Feil', body: 'Noe gikk galt' },
+          data: { type: 'error', title: t("ui.error"), body: 'Noe gikk galt' },
         });
       }
 
       await waitFor(() => {
-        expect(screen.getByText('Feil')).toBeInTheDocument();
+        expect(screen.getByText(t("ui.error"))).toBeInTheDocument();
         expect(screen.getByText('Noe gikk galt')).toBeInTheDocument();
       });
     });

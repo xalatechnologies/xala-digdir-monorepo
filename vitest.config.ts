@@ -8,7 +8,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: [
+      'tests/unit/**/*.{test,spec}.{ts,tsx}',
+      'tests/integration/**/*.{test,spec}.{ts,tsx}',
+      'tests/security/**/*.{test,spec}.{ts,tsx}',
+      'tests/performance/**/*.{test,spec}.{ts,tsx}',
       'packages/ds/src/**/*.{test,spec}.{ts,tsx}',
+      'packages/i18n/src/**/*.{test,spec}.{ts,tsx}',
       'apps/web/src/**/*.{test,spec}.{ts,tsx}',
       'apps/backoffice/src/**/*.{test,spec}.{ts,tsx}',
     ],
@@ -21,7 +26,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['packages/ds/src/**/*.{ts,tsx}', 'apps/web/src/**/*.{ts,tsx}', 'apps/backoffice/src/**/*.{ts,tsx}'],
+      include: ['packages/ds/src/**/*.{ts,tsx}', 'packages/i18n/src/**/*.{ts,tsx}', 'apps/web/src/**/*.{ts,tsx}', 'apps/backoffice/src/**/*.{ts,tsx}'],
       exclude: ['**/*.{test,spec}.{ts,tsx}', '**/*.d.ts', '**/node_modules/**'],
     },
   },

@@ -43,13 +43,17 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
-    "react": "^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-router-dom": "^6.0.0 || ^7.0.0"
   },
   "peerDependenciesMeta": {
     "@tanstack/react-query": {
       "optional": true
     },
     "react": {
+      "optional": true
+    },
+    "react-router-dom": {
       "optional": true
     }
   },
@@ -62,6 +66,7 @@
     "@types/react": "^19.0.7",
     "@vitest/coverage-v8": "^3.0.4",
     "react": "^19.0.0",
+    "react-router-dom": "^7.1.1",
     "tsup": "^8.5.1",
     "typescript": "^5.7.3",
     "vitest": "^3.0.4"

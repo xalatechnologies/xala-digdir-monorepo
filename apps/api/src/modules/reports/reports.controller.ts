@@ -6,7 +6,7 @@ import { Controller, Get } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, sql, and, gte, lte, count, sum } from 'drizzle-orm';
-import { listings, bookings, organizations, users, seasonalLeases } from '../../database/schema/index';
+import { rentalObjects, bookings, organizations, users, seasonalLeases } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -18,26 +18,26 @@ export class ReportsController {
   @Get('/usage')
   async getUsageReport(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { startDate, endDate, listingId } = request.query as any;
+    const { startDate, endDate, rentalObjectId } = request.query as any;
 
     // Get usage by listing
     const result = await db
       .select({
-        listingId: listings.id,
-        listingName: listings.name,
+        rentalObjectId: rentalObjects.id,
+        listingName: rentalObjects.name,
         totalBookings: sql<number>`COALESCE(COUNT(${bookings.id}), 0)`,
         totalHours: sql<number>`COALESCE(SUM(EXTRACT(EPOCH FROM (${bookings.endTime} - ${bookings.startTime})) / 3600), 0)`,
         revenue: sql<number>`COALESCE(SUM(${bookings.totalPrice}), 0)`,
       })
-      .from(listings)
-      .leftJoin(bookings, eq(listings.id, bookings.listingId))
-      .where(eq(listings.status, 'published'))
-      .groupBy(listings.id, listings.name)
+      .from(rentalObjects)
+      .leftJoin(bookings, eq(rentalObjects.id, bookings.rentalObjectId))
+      .where(eq(rentalObjects.status, 'published'))
+      .groupBy(rentalObjects.id, rentalObjects.name)
       .orderBy(sql`COUNT(${bookings.id}) DESC`);
 
     return {
       data: result.map((row: any) => ({
-        listingId: row.listingId,
+        rentalObjectId: row.rentalObjectId,
         listingName: row.listingName,
         totalBookings: Number(row.totalBookings),
         totalHours: Math.round(Number(row.totalHours) * 10) / 10,
@@ -54,14 +54,14 @@ export class ReportsController {
     // Revenue by listing
     const byListing = await db
       .select({
-        listingId: listings.id,
-        listingName: listings.name,
+        rentalObjectId: rentalObjects.id,
+        listingName: rentalObjects.name,
         revenue: sql<number>`COALESCE(SUM(${bookings.totalPrice}), 0)`,
         bookingCount: count(bookings.id),
       })
-      .from(listings)
-      .leftJoin(bookings, eq(listings.id, bookings.listingId))
-      .groupBy(listings.id, listings.name)
+      .from(rentalObjects)
+      .leftJoin(bookings, eq(rentalObjects.id, bookings.rentalObjectId))
+      .groupBy(rentalObjects.id, rentalObjects.name)
       .orderBy(sql`SUM(${bookings.totalPrice}) DESC`)
       .limit(10);
 
@@ -81,7 +81,7 @@ export class ReportsController {
       bookingCount,
       averageBookingValue: bookingCount > 0 ? Math.round(totalRevenue / bookingCount) : 0,
       byListing: byListing.map((row: any) => ({
-        listingId: row.listingId,
+        rentalObjectId: row.rentalObjectId,
         listingName: row.listingName,
         revenue: Number(row.revenue),
         percentage: totalRevenue > 0 ? Math.round((Number(row.revenue) / totalRevenue) * 100) : 0,

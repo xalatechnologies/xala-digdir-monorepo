@@ -1,0 +1,409 @@
+/**
+ * RentalObjectCalendar Styles
+ * 
+ * XALA Architecture Compliance:
+ * - Uses design tokens from Designsystemet
+ * - Supports light and dark themes
+ * - Slot states visually distinct
+ */
+
+/* =============================================================================
+   Base Container
+   ============================================================================= */
+
+.rental-object-calendar {
+  --calendar-bg: var(--ds-color-neutral-background-default);
+  --calendar-border: var(--ds-color-neutral-border-subtle);
+  --calendar-text: var(--ds-color-neutral-text-default);
+  --calendar-text-subtle: var(--ds-color-neutral-text-subtle);
+  
+  background: var(--calendar-bg);
+  border: 1px solid var(--calendar-border);
+  border-radius: var(--ds-border-radius-md);
+  overflow: hidden;
+  font-family: var(--ds-font-family);
+}
+
+/* =============================================================================
+   Header
+   ============================================================================= */
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-spacing-4) var(--ds-spacing-5);
+  border-bottom: 1px solid var(--calendar-border);
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--calendar-text);
+}
+
+/* Mode Switcher */
+.mode-switcher {
+  display: flex;
+  gap: var(--ds-spacing-2);
+}
+
+.mode-button {
+  padding: var(--ds-spacing-2) var(--ds-spacing-3);
+  border: 1px solid var(--calendar-border);
+  border-radius: var(--ds-border-radius-sm);
+  background: var(--calendar-bg);
+  color: var(--calendar-text-subtle);
+  font-size: var(--ds-font-size-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mode-button:hover {
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.mode-button.active {
+  background: var(--ds-color-accent-background-default);
+  border-color: var(--ds-color-accent-border-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+/* =============================================================================
+   Calendar Body
+   ============================================================================= */
+
+.calendar-body {
+  padding: var(--ds-spacing-4);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.calendar-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--calendar-text-subtle);
+  font-size: var(--ds-font-size-md);
+}
+
+/* =============================================================================
+   Day Sections
+   ============================================================================= */
+
+.calendar-day {
+  margin-bottom: var(--ds-spacing-4);
+}
+
+.calendar-day:last-child {
+  margin-bottom: 0;
+}
+
+.day-header {
+  margin-bottom: var(--ds-spacing-3);
+}
+
+.day-date {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--calendar-text);
+  text-transform: capitalize;
+}
+
+.day-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--ds-spacing-2);
+}
+
+/* =============================================================================
+   Slot States
+   ============================================================================= */
+
+.calendar-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-spacing-3);
+  border: 1px solid var(--calendar-border);
+  border-radius: var(--ds-border-radius-sm);
+  background: var(--calendar-bg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 60px;
+}
+
+.calendar-slot:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.slot-time {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--calendar-text);
+}
+
+.slot-price {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-success-text-default);
+  margin-top: var(--ds-spacing-1);
+}
+
+.slot-reason {
+  font-size: var(--ds-font-size-xs);
+  color: var(--calendar-text-subtle);
+  margin-top: var(--ds-spacing-1);
+  text-align: center;
+}
+
+/* AVAILABLE - Green tint */
+.slot-available {
+  background: var(--ds-color-success-background-subtle);
+  border-color: var(--ds-color-success-border-subtle);
+}
+
+.slot-available:hover:not(:disabled) {
+  background: var(--ds-color-success-background-default);
+  border-color: var(--ds-color-success-border-default);
+}
+
+.slot-available .slot-time {
+  color: var(--ds-color-success-text-default);
+}
+
+/* RESERVED - Yellow/warning tint */
+.slot-reserved {
+  background: var(--ds-color-warning-background-subtle);
+  border-color: var(--ds-color-warning-border-subtle);
+}
+
+.slot-reserved .slot-time {
+  color: var(--ds-color-warning-text-default);
+}
+
+/* BOOKED - Blue/info tint */
+.slot-booked {
+  background: var(--ds-color-info-background-subtle);
+  border-color: var(--ds-color-info-border-subtle);
+}
+
+.slot-booked .slot-time {
+  color: var(--ds-color-info-text-default);
+}
+
+/* BLOCKED - Red/danger tint */
+.slot-blocked {
+  background: var(--ds-color-danger-background-subtle);
+  border-color: var(--ds-color-danger-border-subtle);
+}
+
+.slot-blocked .slot-time {
+  color: var(--ds-color-danger-text-default);
+}
+
+/* BLACKOUT - Dark/neutral */
+.slot-blackout {
+  background: var(--ds-color-neutral-background-subtle);
+  border-color: var(--ds-color-neutral-border-default);
+}
+
+.slot-blackout .slot-time {
+  color: var(--calendar-text-subtle);
+  text-decoration: line-through;
+}
+
+/* Selected state */
+.slot-selected {
+  outline: 2px solid var(--ds-color-accent-border-strong);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   Footer / Actions
+   ============================================================================= */
+
+.calendar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ds-spacing-4) var(--ds-spacing-5);
+  border-top: 1px solid var(--calendar-border);
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.selection-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-1);
+}
+
+.selection-time {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--calendar-text);
+}
+
+.calendar-actions {
+  display: flex;
+  gap: var(--ds-spacing-2);
+}
+
+/* Action Buttons */
+.action-book,
+.action-request,
+.action-waitlist,
+.action-modify {
+  padding: var(--ds-spacing-2) var(--ds-spacing-4);
+  border-radius: var(--ds-border-radius-sm);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-book {
+  background: var(--ds-color-accent-background-default);
+  border: 1px solid var(--ds-color-accent-border-default);
+  color: var(--ds-color-accent-contrast-default);
+}
+
+.action-book:hover:not(:disabled) {
+  background: var(--ds-color-accent-background-strong);
+}
+
+.action-request {
+  background: var(--ds-color-info-background-default);
+  border: 1px solid var(--ds-color-info-border-default);
+  color: var(--ds-color-info-contrast-default);
+}
+
+.action-request:hover:not(:disabled) {
+  background: var(--ds-color-info-background-strong);
+}
+
+.action-waitlist {
+  background: var(--ds-color-warning-background-default);
+  border: 1px solid var(--ds-color-warning-border-default);
+  color: var(--ds-color-warning-contrast-default);
+}
+
+.action-waitlist:hover:not(:disabled) {
+  background: var(--ds-color-warning-background-strong);
+}
+
+.action-modify {
+  background: var(--calendar-bg);
+  border: 1px solid var(--calendar-border);
+  color: var(--calendar-text);
+}
+
+.action-modify:hover:not(:disabled) {
+  background: var(--ds-color-neutral-background-subtle);
+}
+
+.action-book:disabled,
+.action-request:disabled,
+.action-waitlist:disabled,
+.action-modify:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =============================================================================
+   Loading & Error States
+   ============================================================================= */
+
+.calendar-loading,
+.calendar-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: var(--ds-spacing-6);
+}
+
+.calendar-loading span {
+  color: var(--calendar-text-subtle);
+  font-size: var(--ds-font-size-md);
+}
+
+.calendar-error span {
+  color: var(--ds-color-danger-text-default);
+  font-size: var(--ds-font-size-md);
+}
+
+/* =============================================================================
+   Mode Variants
+   ============================================================================= */
+
+/* TIME mode - default grid */
+.mode-time .day-slots {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+/* ALL_DAY mode - single column */
+.mode-all_day .day-slots {
+  grid-template-columns: 1fr;
+}
+
+.mode-all_day .calendar-slot {
+  flex-direction: row;
+  justify-content: space-between;
+  padding: var(--ds-spacing-4);
+}
+
+/* RECURRING mode - weekly view */
+.mode-recurring .day-slots {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .calendar-header {
+    flex-direction: column;
+    gap: var(--ds-spacing-3);
+    align-items: flex-start;
+  }
+
+  .mode-switcher {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .mode-button {
+    flex: 1;
+    text-align: center;
+  }
+
+  .day-slots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calendar-footer {
+    flex-direction: column;
+    gap: var(--ds-spacing-3);
+    align-items: stretch;
+  }
+
+  .calendar-actions {
+    justify-content: stretch;
+  }
+
+  .calendar-actions button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .day-slots {
+    grid-template-columns: 1fr;
+  }
+}

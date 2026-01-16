@@ -1,0 +1,100 @@
+# Cursor AI Rules for apps/web
+
+> **Extends:** [Root .cursorrules](../../.cursorrules)
+
+## App Context
+
+This is the **public-facing web application** for Xala/Digilist Platform.
+
+**Critical:** Most pages are PUBLIC (no authentication required).
+
+## Web-Specific Rules
+
+### 1. Public Access Pattern
+```tsx
+// ✅ CORRECT - Optional authentication
+import { useAuth } from '@digilist/client-sdk/hooks';
+
+function PublicPage() {
+  const { user } = useAuth(); // user may be null
+
+  return (
+    <div>
+      {user ? <AuthenticatedView /> : <PublicView />}
+    </div>
+  );
+}
+```
+
+### 2. Performance First
+- Code split routes with `React.lazy()`
+- Lazy load heavy components (maps, calendars)
+- Use `loading="lazy"` for images
+- Optimize bundle size (<300KB main chunk)
+
+### 3. Mobile-First Design
+- All tap targets minimum 44x44px
+- Test on mobile viewport first
+- Use responsive images (srcset)
+- Touch-friendly interactions
+
+### 4. SEO Requirements
+```tsx
+// ✅ REQUIRED for public pages
+import { Helmet } from 'react-helmet-async';
+
+function ListingPage({ listing }) {
+  return (
+    <>
+      <Helmet>
+        <title>{listing.title} | Xala</title>
+        <meta name="description" content={listing.description} />
+        <meta property="og:title" content={listing.title} />
+        <meta property="og:image" content={listing.imageUrl} />
+      </Helmet>
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+## File Organization
+
+```
+src/
+├── features/
+│   ├── listings/     # Listing discovery
+│   ├── booking/      # Booking flows
+│   └── search/       # Search & filters
+├── routes/           # Page components
+├── components/       # Shared components
+└── main.tsx          # Entry point
+```
+
+## Testing
+
+- E2E tests: `../../tests/e2e/web-*.spec.ts`
+- Unit tests: Co-located `*.test.tsx`
+
+## Common Mistakes to Avoid
+
+❌ Requiring auth on public pages
+❌ Hardcoding strings (use i18n)
+❌ Direct API calls (use SDK)
+❌ Importing from `@digdir/*` (use `@xala/ds`)
+❌ Large bundle sizes (split code)
+
+## SDK Services
+
+Primary hooks used in this app:
+- `useListings()` - Listing search
+- `useListingDetails()` - Single listing
+- `useAvailability()` - Check dates
+- `useBooking()` - Create booking
+- `useCategories()` - Category list
+
+## See Also
+
+- [CLAUDE.md](./CLAUDE.md) - Full context
+- [AGENTS.md](./AGENTS.md) - Commands
+- [Root CLAUDE.md](../../CLAUDE.md) - Architecture rules

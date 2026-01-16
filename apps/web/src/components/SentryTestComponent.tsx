@@ -14,6 +14,7 @@
 import { useState } from 'react';
 import { Button, Card } from '@xala/ds';
 import { setTenantContext, setUserContext, addBreadcrumb, captureException } from '../lib/sentry';
+import { useT } from '@xala/i18n';
 
 export function SentryTestComponent() {
   const [counter, setCounter] = useState(0);
@@ -80,14 +81,14 @@ export function SentryTestComponent() {
 
   return (
     <Card style={{ padding: '2rem', margin: '2rem', maxWidth: '800px' }}>
-      <h2 style={{ marginBottom: '1rem' }}>🧪 Sentry Error Tracking Test Panel - Web App</h2>
+      <h2 style={{ marginBottom: '1rem' }}>{t('.sentry.error.tracking.test.panel.web.app')}</h2>
       <p style={{ marginBottom: '1.5rem', color: '#666' }}>
-        ⚠️ <strong>For testing only!</strong> Remove this component before production.
+        ⚠️ <strong>{t('for.testing.only')}</strong> Remove this component before production.
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
-          <h3 style={{ marginBottom: '0.5rem' }}>Context Setup</h3>
+          <h3 style={{ marginBottom: '0.5rem' }}>{t('context.setup')}</h3>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <Button onClick={handleSetTenantContext} variant="secondary" type="button">
               Set Tenant Context
@@ -102,7 +103,7 @@ export function SentryTestComponent() {
         </div>
 
         <div>
-          <h3 style={{ marginBottom: '0.5rem' }}>Error Tests</h3>
+          <h3 style={{ marginBottom: '0.5rem' }}>{t('error.tests')}</h3>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <Button onClick={handleSyncError} variant="danger" type="button">
               Throw Sync Error
@@ -125,17 +126,17 @@ export function SentryTestComponent() {
           borderRadius: '4px',
           fontSize: '0.875rem'
         }}>
-          <h4 style={{ marginBottom: '0.5rem' }}>Testing Instructions:</h4>
+          <h4 style={{ marginBottom: '0.5rem' }}>{t('testing.instructions')}</h4>
           <ol style={{ marginLeft: '1.5rem', lineHeight: '1.6' }}>
-            <li>First, set tenant and user context (optional but recommended)</li>
-            <li>Add some breadcrumbs to test breadcrumb tracking</li>
-            <li>Click any error button to trigger a test error</li>
-            <li>Check the browser console for error logs</li>
-            <li>Check your Sentry dashboard for the error report</li>
-            <li>Verify context (tenant, user) and breadcrumbs appear in Sentry</li>
+            <li>{t('first.set.tenant.and.user.context.optional.but.rec')}</li>
+            <li>{t('add.some.breadcrumbs.to.test.breadcrumb.tracking')}</li>
+            <li>{t('click.any.error.button.to.trigger.a.test.error')}</li>
+            <li>{t('check.the.browser.console.for.error.logs')}</li>
+            <li>{t('check.your.sentry.dashboard.for.the.error.report')}</li>
+            <li>{t('verify.context.tenant.user.and.breadcrumbs.appear.')}</li>
           </ol>
           <p style={{ marginTop: '0.5rem', color: '#666' }}>
-            <strong>Note:</strong> Sync errors will show the ErrorBoundary screen.
+            <strong>{t('note')}</strong> Sync errors will show the ErrorBoundary screen.
             Async errors are caught and reported but won't trigger ErrorBoundary.
           </p>
         </div>

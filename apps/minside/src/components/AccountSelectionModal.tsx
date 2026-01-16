@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Heading, Paragraph, Card, Spinner, Checkbox } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import type { Organization } from '@digilist/client-sdk/types';
 
@@ -78,6 +79,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
   } = useAccountContext();
 
   const navigate = useNavigate();
+  const t = useT();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
@@ -160,12 +162,12 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         }}
       >
         <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          {step === 'account-type' ? 'Hvordan vil du fortsette?' : 'Velg organisasjon'}
+          {step === 'account-type' ? t('components.accountModal.title') : t('components.accountModal.selectOrganization')}
         </Heading>
         <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
           {step === 'account-type'
-            ? 'Velg om du vil bruke tjenesten som privatperson eller på vegne av en organisasjon'
-            : 'Velg hvilken organisasjon du representerer'}
+            ? t('components.accountModal.subtitle')
+            : t('components.accountModal.selectOrganizationSubtitle')}
         </Paragraph>
       </div>
 
@@ -231,10 +233,10 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                   <UserIcon />
                 </div>
                 <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                  Som privatperson
+                  {t('components.accountModal.personalAccount')}
                 </Heading>
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Book og administrer egne aktiviteter
+                  {t('components.accountModal.personalAccountDesc')}
                 </Paragraph>
               </Card>
             </Button>
@@ -297,10 +299,10 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                   {isLoadingOrganizations ? <Spinner aria-hidden="true" /> : <BuildingIcon />}
                 </div>
                 <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                  På vegne av organisasjon
+                  {t('components.accountModal.organizationAccount')}
                 </Heading>
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Representér en organisasjon du er tilknyttet
+                  {t('components.accountModal.organizationAccountDesc')}
                 </Paragraph>
               </Card>
             </Button>
@@ -312,7 +314,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
             {organizations.length === 0 ? (
               <Card style={{ padding: 'var(--ds-spacing-5)', textAlign: 'center' }}>
                 <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Du er ikke tilknyttet noen organisasjoner ennå.
+                  {t('components.accountModal.noOrganizations')}
                 </Paragraph>
               </Card>
             ) : (
@@ -364,7 +366,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
                       </Heading>
                       {org.organizationNumber && (
                         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          Org.nr: {org.organizationNumber}
+                          {t('components.accountModal.orgNumber')}: {org.organizationNumber}
                         </Paragraph>
                       )}
                     </div>
@@ -414,7 +416,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         >
           <Checkbox
             id="remember-choice"
-            aria-label="Husk mitt valg"
+            aria-label={t('components.accountModal.rememberChoice')}
             checked={rememberChoice}
             onChange={(e) => setRememberChoice(e.target.checked)}
           />
@@ -430,7 +432,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         >
           {step === 'organization' && (
             <Button type="button" variant="secondary" onClick={handleBack}>
-              Tilbake
+              {t('components.accountModal.back')}
             </Button>
           )}
           {step === 'organization' && (
@@ -440,7 +442,7 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
               onClick={handleOrganizationConfirm}
               disabled={!selectedOrgId}
             >
-              Fortsett
+              {t('components.accountModal.continue')}
             </Button>
           )}
         </div>

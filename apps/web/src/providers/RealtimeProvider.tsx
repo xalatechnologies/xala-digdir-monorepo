@@ -13,6 +13,7 @@ import {
   type RealtimeEventHandler,
   type RealtimeEventType,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -64,6 +65,7 @@ export function RealtimeProvider({
   autoConnect = true,
   enableInDev = true,
 }: RealtimeProviderProps): React.ReactElement {
+  const t = useT();
   const [isConnected, setIsConnected] = useState(false);
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
   const [error, setError] = useState<string | null>(null);
@@ -207,7 +209,7 @@ export function useRealtimeBooking(handler: RealtimeEventHandler): void {
 /**
  * Subscribe to listing events
  */
-export function useRealtimeListing(handler: RealtimeEventHandler): void {
+export function useRealtimeRentalObject(handler: RealtimeEventHandler): void {
   const { subscribe } = useRealtimeContext();
 
   useEffect(() => {
@@ -274,6 +276,46 @@ export function useRealtimeStatus(): {
 } {
   const { isConnected, status, error } = useRealtimeContext();
   return { isConnected, status, error };
+}
+
+/**
+ * Subscribe to slot availability changes
+ * Useful for showing visual feedback when slots become unavailable
+ *
+ * @param rentalObjectId - Optional listing ID to filter events
+ * @param onSlotUnavailable - Callback when a slot becomes unavailable
+ */
+export function useRealtimeSlotAvailability(
+  rentalObjectId?: string,
+  onSlotUnavailable?: (event: RealtimeEvent) => void
+): void {
+  const { subscribe } = useRealtimeContext();
+
+  useEffect(() => {
+    const handler = (event: RealtimeEvent) => {
+      const data = event.data as {
+        action?: string;
+        rentalObjectId?: string;
+        listingName?: string;
+        startTime?: string;
+        endTime?: string;
+        date?: string;
+      } | undefined;
+
+      // Filter by listing ID if provided
+      if (rentalObjectId && data?.rentalObjectId !== rentalObjectId) {
+        return;
+      }
+
+      // Detect slot unavailability events (created or confirmed bookings)
+      if (data?.action === 'created' || data?.action === 'confirmed') {
+        onSlotUnavailable?.(event);
+      }
+    };
+
+    const unsubscribe = subscribe('booking', handler);
+    return unsubscribe;
+  }, [subscribe, rentalObjectId, onSlotUnavailable]);
 }
 
 export default RealtimeProvider;

@@ -16,33 +16,61 @@ export {
   useRefreshToken
 } from './use-auth';
 
-// Listing hooks
+// Auth guard hooks
 export {
-  useListings,
-  useListing,
-  useListingBySlug,
-  useListingAvailability,
-  useListingStats,
-  useCreateListing,
-  useUpdateListing,
-  useDeleteListing,
-  usePublishListing,
-  useUnpublishListing,
-  useArchiveListing,
-  useRestoreListing,
-  useDuplicateListing,
-  usePublicListings,
-  usePublicUiListings,
-  usePublicListing,
-  usePublicUiListing,
-  usePublicAvailability,
-  usePublicCategories,
+  useAuthRedirectGuard,
+  useSessionRestoration,
+  useSessionExpirationCheck
+} from './use-auth-guards';
+
+// Feature flags hooks
+export {
+  useTenantFeatures,
+  useFeature,
+  useCategory,
+  useEnabledCategories,
+  useFeatureFlags,
+  useFeaturesLoading,
+  useAnyFeature,
+  useAllFeatures,
+} from './use-features';
+
+// Rental Object hooks (primary - single source of truth)
+export {
+  rentalObjectKeys,
+  useRentalObjects,
+  useRentalObject,
+  useRentalObjectBySlug,
+  useRentalObjectsByCategory,
+  useRentalObjectAvailability,
+  useRentalObjectStats,
+  useRentalObjectCategories,
+  useRentalObjectSubcategories,
+  useRentalObjectCalendarConfig,
+  useBookingTimeModes,
+  useCreateRentalObject,
+  useUpdateRentalObject,
+  useDeleteRentalObject,
+  usePublishRentalObject,
+  useUnpublishRentalObject,
+  useArchiveRentalObject,
+  useRestoreRentalObject,
+  useDuplicateRentalObject,
+  usePublicRentalObjects,
+  usePublicRentalObject,
+  usePublicRentalObjectBySlug,
+  usePublicRentalObjectAvailability,
+  usePublicRentalObjectCategories,
+  usePublicRentalObjectsList,
   usePublicCities,
   usePublicMunicipalities,
-  useFeaturedListings,
-  useUploadListingMedia,
-  useDeleteListingMedia
-} from './use-listings';
+  useFeaturedRentalObjects,
+  useRentalObjectsList,
+  useUploadRentalObjectMedia,
+  useDeleteRentalObjectMedia,
+} from './use-rental-objects';
+
+// Legacy listing hooks removed - use rental object hooks above
 
 // Booking hooks
 export {
@@ -66,6 +94,17 @@ export {
   usePaymentReconciliation,
 } from './use-bookings';
 
+// Discount Code hooks
+export {
+  useDiscountCodes,
+  useDiscountCode,
+  useValidateCode,
+  useCreateDiscountCode,
+  useUpdateDiscountCode,
+  useDeleteDiscountCode,
+  useToggleActive,
+} from './use-discount-codes';
+
 // Organization & User hooks
 export {
   useOrganizations,
@@ -76,6 +115,10 @@ export {
   useDeleteOrganization,
   useVerifyOrganization,
   useUploadOrganizationLogo,
+  // Organization settings & branding (TODO: implement backend)
+  useOrganizationSettings,
+  useUpdateOrganizationSettings,
+  useUpdateOrganizationBranding,
   useUsers,
   useUser,
   useCurrentUser,
@@ -122,15 +165,18 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeListings,
+  useRealtimeRentalObjects,
   useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
   useRealtimeAudit,
+  useRealtimeMonitoring,
   useRealtimeEvents,
   useNotificationBadge,
   useRealtimeSend
 } from './use-realtime';
+
+// Legacy alias removed - use useRealtimeRentalObjects directly
 
 // Notification hooks
 export {
@@ -154,6 +200,9 @@ export {
   useUpdateNotificationPreferences,
   useTestPushNotification,
   usePushSubscriptionFlow
+  // TODO: Add organization hooks when backend service methods are implemented
+  // useOrganizationNotificationPreferences,
+  // useUpdateOrganizationNotificationPreferences
 } from './use-push-notifications';
 
 // Audit hooks
@@ -352,6 +401,10 @@ export {
   useCompleteSeason,
   useCancelSeason,
   useDeleteSeason,
+  // Season venue management (TODO: implement backend)
+  useSeasonVenues,
+  useAddVenueToSeason,
+  useRemoveVenueFromSeason,
 } from './use-seasons';
 
 // Help & Support hooks
@@ -400,3 +453,132 @@ export {
   useTenantIntegrations,
   useUpdateTenantIntegration,
 } from './use-tenant-admin';
+// RBAC hooks (Role-Based Access Control)
+export {
+  // Capabilities
+  useCapabilities,
+  usePermissions,
+  useCheckPermission,
+  useHasPermission,
+  useEffectiveRole,
+  // Access Grants
+  useAccessGrants,
+  useAccessGrant,
+  useAccessGrantsByOrganization,
+  useAccessGrantsByRentalObject,
+  useAccessibleRentalObjects,
+  useGrantedOrganizations,
+  useCheckAccess,
+  useGrantAccess,
+  useBulkGrantAccess,
+  useUpdateAccessGrant,
+  useRevokeAccess,
+  useDeleteAccessGrant,
+  // Permission Assignments
+  usePermissionAssignments,
+  usePermissionAssignment,
+  usePermissionAssignmentsByOrganization,
+  usePermissionAssignmentsByUser,
+  usePermissionAssignmentsByRentalObject,
+  useMemberPermissions,
+  useUserPermissionsSummary,
+  useAvailablePermissions,
+  useAssignPermissions,
+  useUpdatePermissionAssignment,
+  useRevokePermissions,
+  useDeletePermissionAssignment,
+  useCheckRentalObjectPermission,
+  useBulkAssignPermissions,
+  useCopyPermissions,
+  // Utility hooks
+  useBackofficeRole,
+  useMyOrgMemberships,
+  useMyAccessibleRentalObjects,
+} from './use-rbac';
+
+// GDPR hooks
+export {
+  useMyGdprRequests,
+  useGdprRequest,
+  usePendingGdprRequests,
+  useGdprDataExport,
+  useCreateGdprRequest,
+  useCancelGdprRequest,
+  useUpdateGdprRequestStatus,
+} from './use-gdpr';
+
+// Integration Credentials hooks
+export {
+  useIntegrationCredentials,
+  useIntegrationCredential,
+  useCredentialValue,
+  useCreateCredential,
+  useUpdateCredential,
+  useDeleteCredential,
+  useRotateCredential,
+  useCredentialTypes,
+  useIntegrationProviders,
+} from './use-integration-credentials';
+
+// Security Dashboard hooks
+export {
+  useSecurityMetrics,
+  useGdprStatus,
+  useFailedLogins,
+  useDataExports,
+  useFailedLoginsByUser,
+  useDataExportsByUser,
+} from './use-security-dashboard';
+
+// Calendar hooks
+export {
+  useAvailabilityMatrix,
+  useCalendarRealtime,
+} from './use-calendar';
+
+// Rental Object Calendar hooks
+export {
+  calendarKeys,
+  useCalendarConfig,
+  useCalendarAvailability,
+  useRentalObjectCalendar,
+} from './use-rental-object-calendar';
+
+// Notification Delivery hooks
+export {
+  useDeliveryStatus,
+  useDeliveryReports,
+  useRetryFailed,
+} from './use-notification-delivery';
+
+// App-specific Capabilities hooks
+export {
+  useWebCapabilities,
+  useMinsideCapabilities,
+  useBackofficeCapabilities,
+  useHasCapability,
+  useHasAllCapabilities,
+  useHasAnyCapability,
+  useFeatureFlag,
+  capabilitiesKeys,
+  type AppCapabilities,
+  type CapabilitiesApiResponse,
+} from './use-capabilities';
+
+// Metadata hooks
+export {
+  metadataKeys,
+  useCategoriesMetadata,
+  useCategoryMetadata,
+  useTimeModesMetadata,
+  useTimeModeMetadata,
+  usePricingUnitsMetadata,
+  usePricingUnitMetadata,
+  useStatusesMetadata,
+  useStatusMetadata,
+  useRentalObjectStatuses,
+  useBookingStatuses,
+} from './use-metadata';
+
+// Utility hooks
+export { useDebounced } from './useDebounced';

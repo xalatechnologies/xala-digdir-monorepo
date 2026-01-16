@@ -9,10 +9,11 @@ import type { CalendarEvent, Listing } from '@digilist/client-sdk';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useConflictDetection } from '../hooks/useConflictDetection';
 import { ConflictIndicator, getConflictColors } from './ConflictIndicator';
+import { useT } from '@xala/i18n';
 
 interface TimelineViewProps {
   events: CalendarEvent[];
-  listings: Listing[];
+  listings: RentalObject[];
   dateRange: { start: Date; end: Date };
   currentTime?: Date;
   isLoading?: boolean;
@@ -215,7 +216,7 @@ export function TimelineView({
   if (isLoading) {
     return (
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Spinner aria-label="Laster tidslinje..." />
+        <Spinner aria-label={t('timeline.loading')} />
       </div>
     );
   }

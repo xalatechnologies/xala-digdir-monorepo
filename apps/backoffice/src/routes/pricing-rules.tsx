@@ -19,6 +19,7 @@ import {
   Spinner,
   useDialog,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -63,6 +64,7 @@ const mockRules = [
 ];
 
 export function PricingRulesPage() {
+  const t = useT();
   const { confirm } = useDialog();
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -79,12 +81,12 @@ export function PricingRulesPage() {
     const confirmed = await confirm({
       title: 'Slett prisregel',
       description: `Er du sikker på at du vil slette "${name}"?`,
-      confirmText: 'Slett',
-      cancelText: 'Avbryt',
+      confirmText: t("ui.delete"),
+      cancelText: t("ui.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Deleted:', id);
+      // Rule deleted
     }
   };
 
@@ -152,7 +154,7 @@ export function PricingRulesPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>
@@ -198,7 +200,7 @@ export function PricingRulesPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                      <Button type="button" variant="tertiary" data-size="sm">Rediger</Button>
+                      <Button type="button" variant="tertiary" data-size="sm">{t("ui.edit")}</Button>
                       <Button type="button" variant="secondary" data-size="sm" onClick={() => handleDelete(rule.id, rule.name)}>Slett</Button>
                     </div>
                   </Table.Cell>
