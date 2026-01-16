@@ -7,23 +7,31 @@ import { createContext, useContext, type ReactNode } from 'react';
 import {
   useRealtimeConnection,
   useRealtimeBookings,
-  // useRealtimeListings, // TODO: SDK doesn't export this yet
+  useRealtimeRentalObjects,
   useRealtimeMessages,
-} from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+  useRealtimeNotifications,
+} from '../hooks';
 
-interface RealtimeContextValue {
+export interface RealtimeContextValue {
   isConnected: boolean;
 }
 
 const RealtimeContext = createContext<RealtimeContextValue>({ isConnected: false });
 
-interface RealtimeProviderProps {
+export interface RealtimeProviderProps {
   children: ReactNode;
   /** WebSocket URL - if not provided, realtime is disabled */
   wsUrl?: string;
   /** Tenant ID for multi-tenant filtering */
   tenantId?: string;
+  /** Subscribe to booking events (default: true) */
+  subscribeBookings?: boolean;
+  /** Subscribe to rental object events (default: true) */
+  subscribeRentalObjects?: boolean;
+  /** Subscribe to message events (default: true) */
+  subscribeMessages?: boolean;
+  /** Subscribe to notification events (default: true) */
+  subscribeNotifications?: boolean;
 }
 
 /**
@@ -36,8 +44,15 @@ interface RealtimeProviderProps {
  * </RealtimeProvider>
  * ```
  */
-export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
-  const t = useT();
+export function RealtimeProvider({ 
+  children, 
+  wsUrl, 
+  tenantId,
+  subscribeBookings = true,
+  subscribeRentalObjects = true,
+  subscribeMessages = true,
+  subscribeNotifications = true,
+}: RealtimeProviderProps): React.ReactElement {
   // Build full WebSocket URL with tenant ID suffix
   // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
   const fullWsUrl = wsUrl && tenantId 
@@ -54,9 +69,18 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
   } : undefined);
 
   // Subscribe to domain events - auto-invalidates queries
-  useRealtimeBookings();
-  // useRealtimeListings(); // TODO: SDK doesn't export this yet
-  useRealtimeMessages();
+  if (subscribeBookings) {
+    useRealtimeBookings();
+  }
+  if (subscribeRentalObjects) {
+    useRealtimeRentalObjects();
+  }
+  if (subscribeMessages) {
+    useRealtimeMessages();
+  }
+  if (subscribeNotifications) {
+    useRealtimeNotifications();
+  }
 
   return (
     <RealtimeContext.Provider value={{ isConnected }}>
@@ -68,6 +92,6 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
 /**
  * Hook to check realtime connection status
  */
-export function useRealtimeStatus() {
+export function useRealtimeStatus(): RealtimeContextValue {
   return useContext(RealtimeContext);
 }

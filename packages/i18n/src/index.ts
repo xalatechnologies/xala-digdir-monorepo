@@ -2,6 +2,20 @@
 export { I18nProvider, I18nContext } from './context';
 export type { I18nProviderProps } from './context';
 
+// Lazy Loading Provider (for reduced bundle size)
+export { LazyI18nProvider, useLazyI18n, useLazyT, useLazyLocale } from './LazyI18nProvider';
+
+// Lazy Loading Utilities
+export {
+  loadLocale,
+  preloadLocale,
+  isLocaleLoaded,
+  getLoadedLocales,
+  getCachedTranslations,
+  clearLocaleCache,
+  CORE_TRANSLATIONS,
+} from './lazy-loader';
+
 // Hooks
 export { useI18n, useT, useLocale, useFormatRelativeTime, useFormatDuration } from './hooks';
 

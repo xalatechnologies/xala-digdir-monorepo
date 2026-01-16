@@ -15,7 +15,7 @@ import {
   validateReturnToUrl,
 } from '@digilist/client-sdk';
 import type { FlowContext, FlowBookingMode, FlowSelectedSlot, FlowRecurringRules } from '@digilist/client-sdk';
-import { useAuthRedirectGuard, useSessionRestoration } from './useAuthGuards';
+import { useAuthRedirectGuard, useSessionRestoration } from '@digilist/client-sdk/hooks';
 
 // =============================================================================
 // Types

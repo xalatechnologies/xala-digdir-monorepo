@@ -197,7 +197,17 @@ export interface RentalObject {
   organizationId: string | null;
 
   // === CORE ATTRIBUTES ===
+  /**
+   * @deprecated Use title instead. Will be removed in v2.0.0
+   */
   name: string;
+
+  /**
+   * Display title for the rental object (preferred over name)
+   * @since v1.1.0
+   */
+  title: string;
+
   slug: string;
   description: string;
 

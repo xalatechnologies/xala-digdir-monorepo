@@ -16,6 +16,13 @@ export {
   useRefreshToken
 } from './use-auth';
 
+// Auth guard hooks
+export {
+  useAuthRedirectGuard,
+  useSessionRestoration,
+  useSessionExpirationCheck
+} from './use-auth-guards';
+
 // Feature flags hooks
 export {
   useTenantFeatures,
@@ -477,6 +484,21 @@ export {
   type AppCapabilities,
   type CapabilitiesApiResponse,
 } from './use-capabilities';
+
+// Metadata hooks
+export {
+  metadataKeys,
+  useCategoriesMetadata,
+  useCategoryMetadata,
+  useTimeModesMetadata,
+  useTimeModeMetadata,
+  usePricingUnitsMetadata,
+  usePricingUnitMetadata,
+  useStatusesMetadata,
+  useStatusMetadata,
+  useRentalObjectStatuses,
+  useBookingStatuses,
+} from './use-metadata';
 
 // Utility hooks
 export { useDebounced } from './useDebounced';

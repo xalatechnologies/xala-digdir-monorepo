@@ -1,136 +1,103 @@
 /**
  * Organizations Controller
  * Full CRUD + member management
+ * 
+ * Uses repository pattern and ACL mapper for clean separation:
+ * - Repository handles data access (no direct schema imports)
+ * - Mapper transforms DB entities to projection DTOs
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
-import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { eq, and, sql, count, like, desc } from 'drizzle-orm';
-import { organizations, users } from '../../database/schema/index';
+import { getOrganizationRepository } from './organization.repository';
 import { getOrganizationSetupService } from './organization-setup.service';
 import { getAuditService } from '../../core/audit/audit.service';
+import {
+  toOrganizationCardProjection,
+  toOrganizationDetailsProjection,
+  toMemberProjections,
+  toBrandingProjection,
+} from './organization.mapper';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
+  user?: { role?: string };
 }
 
 @Controller('/api/organizations')
 export class OrganizationsController {
+  private readonly repository = getOrganizationRepository();
+  private readonly auditService = getAuditService();
+
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const tenantId = request.tenantId;
+    const tenantId = request.tenantId || undefined;
     const { search, status, page = 1, limit = 20 } = request.query as any;
+    const userRole = request.user?.role || 'member';
 
-    const conditions = [];
-    if (tenantId) conditions.push(eq(organizations.tenantId, tenantId));
-    if (status) conditions.push(eq(organizations.status, status));
-    if (search) conditions.push(like(organizations.name, `%${search}%`));
+    const result = await this.repository.findAll({
+      tenantId,
+      search,
+      status,
+      page: Number(page),
+      limit: Number(limit),
+    });
 
-    const result = await db
-      .select({
-        id: organizations.id,
-        tenantId: organizations.tenantId,
-        name: organizations.name,
-        slug: organizations.slug,
-        type: organizations.type,
-        status: organizations.status,
-        settings: organizations.settings,
-        createdAt: organizations.createdAt,
-        updatedAt: organizations.updatedAt,
-      })
-      .from(organizations)
-      .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(organizations.createdAt))
-      .limit(Number(limit))
-      .offset((Number(page) - 1) * Number(limit));
-
-    // Get member counts per org
-    const orgsWithMembers = await Promise.all(
-      result.map(async (org: any) => {
-        const memberCount = await db
-          .select({ count: count() })
-          .from(users)
-          .where(eq(users.organizationId, org.id));
-        return {
-          ...org,
-          memberCount: Number(memberCount[0]?.count || 0),
-        };
-      })
+    // Transform to projections
+    const projections = result.data.map(org => 
+      toOrganizationCardProjection(org, { userRole })
     );
 
-    const countResult = await db
-      .select({ count: count() })
-      .from(organizations)
-      .where(conditions.length > 0 ? and(...conditions) : undefined);
-
     return {
-      data: orgsWithMembers,
-      meta: {
-        total: Number(countResult[0]?.count || 0),
-        page: Number(page),
-        limit: Number(limit),
-        totalPages: Math.ceil(Number(countResult[0]?.count || 0) / Number(limit)),
-      },
+      data: projections,
+      meta: result.meta,
     };
   }
 
   @Get('/:id')
   async findOne(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { id } = request.params as any;
+    const userRole = request.user?.role || 'member';
 
-    const result = await db
-      .select()
-      .from(organizations)
-      .where(eq(organizations.id, id));
+    const org = await this.repository.findById(id);
 
-    if (!result.length) {
+    if (!org) {
       reply.code(404);
-      return { error: 'Organization not found' };
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Organization not found',
+      };
     }
 
-    // Get member count
-    const memberCount = await db
-      .select({ count: count() })
-      .from(users)
-      .where(eq(users.organizationId, id));
+    // Get members for detail view
+    const members = await this.repository.getMembers(id);
+    const orgWithMembers = { ...org, members };
 
-    return {
-      data: {
-        ...result[0],
-        memberCount: Number(memberCount[0]?.count || 0),
-      },
-    };
+    const projection = toOrganizationDetailsProjection(orgWithMembers, { userRole });
+
+    return { data: projection };
   }
 
   @Post()
   async create(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const setupService = getOrganizationSetupService();
-    const auditService = getAuditService();
     const tenantId = request.tenantId || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
     const userId = request.userId;
     const body = request.body as any;
 
-    // Create organization
-    const result = await db
-      .insert(organizations)
-      .values({
-        tenantId,
-        name: body.name,
-        slug: body.slug || body.name.toLowerCase().replace(/\s+/g, '-'),
-        type: body.type || 'organization',
-        status: 'active',
-        settings: body.settings || {},
-      })
-      .returning();
-
-    const organization = result[0];
+    // Create organization via repository
+    const organization = await this.repository.create({
+      tenantId,
+      name: body.name,
+      slug: body.slug,
+      type: body.type,
+      settings: body.settings,
+    });
 
     // Log organization creation
-    await auditService.logCreate('organization', organization.id, {
+    await this.auditService.logCreate('organization', organization.id, {
       tenantId,
       userId: userId ?? undefined,
       metadata: {
@@ -150,189 +117,226 @@ export class OrganizationsController {
       branding: body.branding,
     });
 
+    // Return projection
+    const projection = toOrganizationCardProjection({
+      ...organization,
+      memberCount: 0,
+    });
+
     reply.code(201);
-    return { data: organization };
+    return { data: projection };
   }
 
   @Put('/:id')
   async update(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const { id } = request.params as any;
-    const body = request.body as any;
-
-    const result = await db
-      .update(organizations)
-      .set({
-        name: body.name,
-        slug: body.slug,
-        type: body.type,
-        status: body.status,
-        settings: body.settings,
-        updatedAt: new Date(),
-      })
-      .where(eq(organizations.id, id))
-      .returning();
-
-    if (!result.length) {
-      reply.code(404);
-      return { error: 'Organization not found' };
-    }
-
-    return { data: result[0] };
-  }
-
-  @Get('/:id/branding')
-  async getBranding(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const { id } = request.params as any;
-
-    const result = await db
-      .select({
-        settings: organizations.settings,
-      })
-      .from(organizations)
-      .where(eq(organizations.id, id));
-
-    if (!result.length) {
-      reply.code(404);
-      return { error: 'Organization not found' };
-    }
-
-    const branding = (result[0].settings as any)?.branding || {
-      logo: undefined,
-      primaryColor: undefined,
-      secondaryColor: undefined,
-      favicon: undefined,
-    };
-
-    return { data: branding };
-  }
-
-  @Put('/:id/branding')
-  async updateBranding(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const auditService = getAuditService();
     const { id } = request.params as any;
     const body = request.body as any;
     const tenantId = request.tenantId;
     const userId = request.userId;
 
-    // First, get the current organization
-    const orgResult = await db
-      .select()
-      .from(organizations)
-      .where(eq(organizations.id, id));
+    const updated = await this.repository.update(id, {
+      name: body.name,
+      slug: body.slug,
+      type: body.type,
+      status: body.status,
+      settings: body.settings,
+    });
 
-    if (!orgResult.length) {
+    if (!updated) {
       reply.code(404);
-      return { error: 'Organization not found' };
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Organization not found',
+      };
     }
 
-    const currentSettings = orgResult[0].settings || {};
-    const updatedBranding = {
-      ...((currentSettings as any).branding || {}),
-      ...body,
-    };
+    // Log update
+    await this.auditService.logUpdate('organization', id, {
+      tenantId: tenantId ?? undefined,
+      userId: userId ?? undefined,
+      metadata: { changes: body },
+      ipAddress: (request as any).ip,
+      userAgent: (request as any).headers?.['user-agent'],
+    });
 
-    // Update organization settings with new branding
-    const result = await db
-      .update(organizations)
-      .set({
-        settings: {
-          ...(currentSettings as any),
-          branding: updatedBranding,
-        },
-        updatedAt: new Date(),
-      })
-      .where(eq(organizations.id, id))
-      .returning();
+    const projection = toOrganizationCardProjection({
+      ...updated,
+      memberCount: 0, // Would need to fetch if needed
+    });
+
+    return { data: projection };
+  }
+
+  @Get('/:id/branding')
+  async getBranding(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+
+    const org = await this.repository.findById(id);
+
+    if (!org) {
+      reply.code(404);
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Organization not found',
+      };
+    }
+
+    const projection = toBrandingProjection(org);
+
+    return { data: projection };
+  }
+
+  @Put('/:id/branding')
+  async updateBranding(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const body = request.body as any;
+    const tenantId = request.tenantId;
+    const userId = request.userId;
+
+    // Get current org for audit logging
+    const currentOrg = await this.repository.findById(id);
+
+    if (!currentOrg) {
+      reply.code(404);
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Organization not found',
+      };
+    }
+
+    const currentBranding = (currentOrg.settings as any)?.branding || {};
+
+    // Update branding via repository
+    const updated = await this.repository.updateBranding(id, body);
+
+    if (!updated) {
+      reply.code(500);
+      return { 
+        type: 'https://api.digilist.no/errors/internal-error',
+        title: 'Internal Error',
+        status: 500,
+        detail: 'Failed to update branding',
+      };
+    }
 
     // Log branding update
-    await auditService.logUpdate('organization', id, {
+    await this.auditService.logUpdate('organization', id, {
       tenantId: tenantId ?? undefined,
       userId: userId ?? undefined,
       metadata: {
         field: 'branding',
-        organizationName: orgResult[0].name,
-        before: (currentSettings as any).branding,
-        after: updatedBranding,
+        organizationName: currentOrg.name,
+        before: currentBranding,
+        after: body,
       },
       ipAddress: (request as any).ip,
       userAgent: (request as any).headers?.['user-agent'],
     });
 
-    return { data: updatedBranding };
+    const projection = toBrandingProjection(updated);
+
+    return { data: projection };
   }
 
   @Get('/:id/members')
   async getMembers(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { id } = request.params as any;
 
-    const result = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        status: users.status,
-        createdAt: users.createdAt,
-      })
-      .from(users)
-      .where(eq(users.organizationId, id));
+    // Verify org exists
+    const org = await this.repository.findById(id);
+    if (!org) {
+      reply.code(404);
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Organization not found',
+      };
+    }
 
-    return { data: result };
+    const members = await this.repository.getMembers(id);
+    const projections = toMemberProjections(members);
+
+    return { data: projections };
   }
 
   @Post('/:id/members')
   async addMember(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { id } = request.params as any;
     const body = request.body as any;
+    const tenantId = request.tenantId;
+    const userId = request.userId;
 
-    // Get org's tenant
-    const org = await db
-      .select({ tenantId: organizations.tenantId })
-      .from(organizations)
-      .where(eq(organizations.id, id));
-
-    if (!org.length) {
-      reply.code(404);
-      return { error: 'Organization not found' };
-    }
-
-    const result = await db
-      .insert(users)
-      .values({
-        tenantId: org[0].tenantId,
-        organizationId: id,
+    try {
+      const member = await this.repository.addMember(id, {
         name: body.name,
         email: body.email,
-        role: body.role || 'member',
-        status: 'active',
-      })
-      .returning();
+        role: body.role,
+      });
 
-    reply.code(201);
-    return { data: result[0] };
+      // Log member addition
+      await this.auditService.logCreate('organization_member', member.id, {
+        tenantId: tenantId ?? undefined,
+        userId: userId ?? undefined,
+        metadata: {
+          organizationId: id,
+          memberEmail: body.email,
+          memberRole: body.role || 'member',
+        },
+        ipAddress: (request as any).ip,
+        userAgent: (request as any).headers?.['user-agent'],
+      });
+
+      const projections = toMemberProjections([member]);
+
+      reply.code(201);
+      return { data: projections[0] };
+    } catch (error) {
+      if ((error as Error).message.includes('not found')) {
+        reply.code(404);
+        return { 
+          type: 'https://api.digilist.no/errors/not-found',
+          title: 'Not Found',
+          status: 404,
+          detail: 'Organization not found',
+        };
+      }
+      throw error;
+    }
   }
 
   @Delete('/:id/members/:memberId')
   async removeMember(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { id, memberId } = request.params as any;
+    const tenantId = request.tenantId;
+    const userId = request.userId;
 
-    // Remove org association (don't delete user)
-    const result = await db
-      .update(users)
-      .set({ organizationId: null, updatedAt: new Date() })
-      .where(and(eq(users.id, memberId), eq(users.organizationId, id)))
-      .returning();
+    const removed = await this.repository.removeMember(id, memberId);
 
-    if (!result.length) {
+    if (!removed) {
       reply.code(404);
-      return { error: 'Member not found' };
+      return { 
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Not Found',
+        status: 404,
+        detail: 'Member not found',
+      };
     }
+
+    // Log member removal
+    await this.auditService.logDelete('organization_member', memberId, {
+      tenantId: tenantId ?? undefined,
+      userId: userId ?? undefined,
+      metadata: { organizationId: id },
+      ipAddress: (request as any).ip,
+      userAgent: (request as any).headers?.['user-agent'],
+    });
 
     return { success: true };
   }

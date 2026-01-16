@@ -417,10 +417,11 @@ function generateReport() {
 function main() {
   const args = process.argv.slice(2);
   const scanPath = args[0] || 'apps/minside/src';
-  const fullPath = path.join(process.cwd(), scanPath);
+  // Handle both absolute and relative paths (lint-staged passes absolute paths)
+  const fullPath = path.isAbsolute(scanPath) ? scanPath : path.join(process.cwd(), scanPath);
 
   console.log('\n🔍 Starting i18n localization scan...');
-  console.log(`📂 Scanning: ${scanPath}\n`);
+  console.log(`📂 Scanning: ${fullPath}\n`);
 
   if (!fs.existsSync(fullPath)) {
     console.error(`❌ Error: Path does not exist: ${fullPath}`);

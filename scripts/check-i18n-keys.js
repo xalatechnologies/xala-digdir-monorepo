@@ -41,12 +41,19 @@ async function loadTranslations(locale) {
   const filePath = path.join(LOCALES_PATH, `${locale}.ts`);
   const content = fs.readFileSync(filePath, 'utf8');
 
-  // Extract the exported object using regex (simple parser)
+  // Extract the exported object using regex (handles both quote styles)
   const translations = {};
-  const keyValuePattern = /'([^']+)':\s*'([^']*)'/g;
+  
+  // Pattern 1: 'key': 'value' (single quotes)
+  const singleQuotePattern = /'([^']+)':\s*'([^']*)'/g;
   let match;
-
-  while ((match = keyValuePattern.exec(content)) !== null) {
+  while ((match = singleQuotePattern.exec(content)) !== null) {
+    translations[match[1]] = match[2];
+  }
+  
+  // Pattern 2: 'key': "value" (key in single, value in double - for apostrophes)
+  const mixedQuotePattern = /'([^']+)':\s*"([^"]*)"/g;
+  while ((match = mixedQuotePattern.exec(content)) !== null) {
     translations[match[1]] = match[2];
   }
 

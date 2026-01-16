@@ -99,6 +99,18 @@ export {
   type PendingItems,
 } from './dashboard.service';
 
+// Metadata
+export {
+  MetadataService,
+  metadataService,
+  type CategoryMetadata,
+  type TimeModeMetadata,
+  type PricingUnitMetadata,
+  type StatusMetadata,
+  type MetadataResponse,
+  type MetadataFilter,
+} from './metadata.service';
+
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';
 

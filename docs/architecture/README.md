@@ -45,6 +45,36 @@ Comprehensive security design and implementation:
 - Audit trails
 - Compliance measures
 
+### [Architecture Boundaries](./boundaries.md)
+Layer definitions and import rules:
+- Persistence, Domain, Contracts, UI layers
+- Anti-Corruption Layer (ACL)
+- Import restrictions
+- Controller patterns
+- CI enforcement
+
+### [ACL Mapping Guide](./acl-mapping.md)
+Anti-Corruption Layer implementation:
+- Mapper interface (toDomain, toProjection, etc.)
+- Implemented mappers (Rental Objects, Bookings, Organizations, Users)
+- Usage in controllers
+- Testing strategies
+- Expand/Contract support
+
+### [Capabilities System](./capabilities.md)
+Server-driven UI permissions:
+- Capabilities endpoints
+- SDK hooks
+- Capability-driven UI patterns
+- Feature flags integration
+
+### [Retry Infrastructure](./retry-infrastructure.md)
+Robust retry mechanisms for integrations:
+- Exponential backoff with jitter
+- Dead Letter Queue (DLQ)
+- Idempotency support
+- Integration examples
+
 ## Key Architectural Concepts
 
 ### Contract-First Design

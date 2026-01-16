@@ -152,5 +152,9 @@ export type {
 // DAL - Data Access Layer (cache management, query keys)
 export * from './dal';
 
+// Providers - React context providers
+export { RealtimeProvider, useRealtimeStatus } from './providers';
+export type { RealtimeProviderProps, RealtimeContextValue } from './providers';
+
 // Localization - Translation key constants for i18n
 export * from './localization';

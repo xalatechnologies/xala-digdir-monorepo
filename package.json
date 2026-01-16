@@ -26,13 +26,24 @@
     "i18n:check:strict": "node scripts/check-i18n-keys.js --strict",
     "i18n:unused": "node scripts/check-unused-keys.js",
     "i18n:scan": "node scripts/scan-i18n.js",
+    "i18n:migrate": "node scripts/migrate-i18n-keys.js",
+    "i18n:migrate:report": "node scripts/migrate-i18n-keys.js --report",
     "tokens:create": "npx @digdir/designsystemet tokens create --config designsystemet.config.json",
     "tokens:build": "npx @digdir/designsystemet tokens build --tokens ./packages/ds-themes/generated --out-dir ./packages/ds-themes/generated",
     "deploy:web": "./scripts/deploy.sh web",
     "deploy:backoffice": "./scripts/deploy.sh backoffice",
     "deploy:minside": "./scripts/deploy.sh minside",
     "deploy:all": "./scripts/deploy.sh all",
-    "deploy:ssl": "./scripts/setup-ssl.sh"
+    "deploy:ssl": "./scripts/setup-ssl.sh",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "packages/i18n/src/locales/*.ts": [
+      "node scripts/check-i18n-keys.js"
+    ],
+    "apps/*/src/**/*.{ts,tsx}": [
+      "node scripts/scan-i18n.js"
+    ]
   },
   "devDependencies": {
     "@digdir/designsystemet-css": "1.9.0",
@@ -48,8 +59,10 @@
     "@vitest/ui": "^4.0.17",
     "axe-core": "^4.11.1",
     "eslint": "^9.10.0",
+    "husky": "^9.1.7",
     "jest-axe": "^10.0.0",
     "jsdom": "^27.4.0",
+    "lint-staged": "^15.5.2",
     "prettier": "^3.3.3",
     "puppeteer": "^24.35.0",
     "react": "^18.3.1",

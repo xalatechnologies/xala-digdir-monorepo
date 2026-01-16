@@ -8,8 +8,7 @@ import {
   clearFlowContextFromStorage,
   getFlowContextTTL,
 } from '@digilist/client-sdk';
-import { ROLE_STORAGE_KEYS } from '../hooks/useBackofficeRole';
-import { useAuthRedirectGuard, useSessionRestoration } from '../hooks/useAuthGuards';
+import { useAuthRedirectGuard, useSessionRestoration } from '@digilist/client-sdk/hooks';
 
 // =============================================================================
 // Local Storage Keys

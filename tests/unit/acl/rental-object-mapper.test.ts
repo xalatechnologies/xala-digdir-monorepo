@@ -2,15 +2,16 @@
  * Rental Object ACL Mapper - Unit Tests
  *
  * Target: 100% code coverage
- * Tests: 50+ covering all transformation paths
+ * Tests: 58+ covering all transformation paths
  *
  * Test Categories:
  * 1. Transformation Correctness (15 tests)
  * 2. Edge Cases & Null Handling (10 tests)
  * 3. Data Integrity (8 tests)
- * 4. i18n Key Generation (5 tests)
- * 5. Format Helpers (8 tests)
+ * 4. Projection DTOs - Card & Details (10 tests)
+ * 5. i18n Key Generation (5 tests)
  * 6. Business Rules (4 tests)
+ * 7. EXPAND Phase - Dual-Field Support (8 tests) ⭐ NEW
  */
 
 import { describe, it, expect } from 'vitest';
@@ -729,6 +730,108 @@ describe('ACL Mapper - Business Rules Integration', () => {
 });
 
 // =============================================================================
+// CATEGORY 7: EXPAND PHASE - DUAL-FIELD SUPPORT (name + title) (8 tests)
+// =============================================================================
+
+describe('ACL Mapper - EXPAND Phase: Dual-Field Support', () => {
+  describe('toDomain() - Field Preference', () => {
+    it('should use title when both name and title are present', () => {
+      const dbWithTitle: DbRentalObject = {
+        ...mockDbRentalObject,
+        name: 'Old Name',
+        title: 'New Title',
+      };
+      const domain = toDomain(dbWithTitle);
+
+      expect(domain.name).toBe('Old Name'); // Name still populated
+      expect(domain.title).toBe('New Title'); // Title preferred
+    });
+
+    it('should fallback to name when title is missing', () => {
+      const dbWithoutTitle: DbRentalObject = {
+        ...mockDbRentalObject,
+        name: 'Fallback Name',
+        title: undefined,
+      };
+      const domain = toDomain(dbWithoutTitle);
+
+      expect(domain.name).toBe('Fallback Name');
+      expect(domain.title).toBe('Fallback Name'); // Falls back to name
+    });
+
+    it('should handle empty title string by falling back to name', () => {
+      const dbWithEmptyTitle: DbRentalObject = {
+        ...mockDbRentalObject,
+        name: 'Name Value',
+        title: '',
+      };
+      const domain = toDomain(dbWithEmptyTitle);
+
+      expect(domain.name).toBe('Name Value');
+      expect(domain.title).toBe('Name Value'); // Falls back when title is empty
+    });
+  });
+
+  describe('toPersistence() - Dual Write', () => {
+    it('should write both name and title fields', () => {
+      const domain = toDomain(mockDbRentalObject);
+      const persistence = toPersistence(domain);
+
+      expect(persistence.name).toBe(domain.name);
+      expect(persistence.title).toBe(domain.title);
+    });
+
+    it('should maintain separate values for name and title', () => {
+      const customDomain: RentalObject = {
+        ...toDomain(mockDbRentalObject),
+        name: 'Legacy Name',
+        title: 'Modern Title',
+      };
+      const persistence = toPersistence(customDomain);
+
+      expect(persistence.name).toBe('Legacy Name');
+      expect(persistence.title).toBe('Modern Title');
+    });
+  });
+
+  describe('toCardProjection() - Dual Return', () => {
+    it('should return both name and title in projection', () => {
+      const domain = toDomain(mockDbRentalObject);
+      const card = toCardProjection(domain);
+
+      expect(card.name).toBeDefined();
+      expect(card.title).toBeDefined();
+      expect(card.name).toBe(domain.name);
+      expect(card.title).toBe(domain.title);
+    });
+
+    it('should use title for display in projection when available', () => {
+      const customDomain: RentalObject = {
+        ...toDomain(mockDbRentalObject),
+        name: 'Old Display',
+        title: 'New Display',
+      };
+      const card = toCardProjection(customDomain);
+
+      expect(card.title).toBe('New Display'); // Title is the preferred field
+      expect(card.name).toBe('Old Display'); // Name kept for backward compatibility
+    });
+  });
+
+  describe('toDetailsProjection() - Dual Inheritance', () => {
+    it('should inherit both name and title from card projection', () => {
+      const domain = toDomain(mockDbRentalObject);
+      const details = toDetailsProjection(domain);
+
+      expect(details.name).toBeDefined();
+      expect(details.title).toBeDefined();
+      expect(details.name).toBe(domain.name);
+      expect(details.title).toBe(domain.title);
+    });
+  });
+});
+
+// =============================================================================
 // FINAL TEST SUMMARY
 // =============================================================================
 
@@ -742,10 +845,11 @@ describe('ACL Mapper - Test Coverage Summary', () => {
       'Projection DTOs': 10,
       'i18n Key Generation': 5,
       'Business Rules': 4,
+      'EXPAND Phase - Dual-Field Support': 8,
     };
 
     const totalTests = Object.values(testCategories).reduce((sum, count) => sum + count, 0);
 
-    expect(totalTests).toBeGreaterThanOrEqual(50);
+    expect(totalTests).toBeGreaterThanOrEqual(58);
   });
 });

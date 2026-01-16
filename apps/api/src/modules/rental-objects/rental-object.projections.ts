@@ -12,7 +12,8 @@
 export interface RentalObjectCardProjectionDTO {
   id: string;
   slug: string;
-  name: string;
+  name: string; // EXPAND: Deprecated in v1.1.0, use title instead
+  title: string; // EXPAND: Preferred field (v1.1.0)
   tenantId: string;
   category: string;
   categoryLabel: string;
@@ -160,7 +161,8 @@ interface DbRentalObject {
   id: string;
   tenantId: string;
   organizationId?: string | null;
-  name: string;
+  name: string; // EXPAND: Keep for backward compatibility
+  title?: string; // EXPAND: New field (v1.1.0)
   slug: string;
   category: string;
   subcategory?: string | null;
@@ -242,9 +244,31 @@ function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number 
 }
 
 function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string; alt: string } {
-  const images = safeArray<string>(obj.images);
-  const primaryUrl = images[0] || '';
+  const rawImages = obj.images || [];
+  const images = Array.isArray(rawImages) ? rawImages : [];
+  
+  if (images.length === 0) {
+    return {
+      url: '',
+      thumbnail: '',
+      alt: 'sdk.placeholder.noImage',
+    };
+  }
 
+  const first = images[0];
+  
+  // Handle object format: {url: string, alt: string}
+  if (typeof first === 'object' && first !== null && 'url' in first) {
+    const imgObj = first as { url: string; alt?: string };
+    return {
+      url: imgObj.url || '',
+      thumbnail: imgObj.url || '',
+      alt: imgObj.alt || obj.name,
+    };
+  }
+  
+  // Handle string format (plain URL)
+  const primaryUrl = typeof first === 'string' ? first : '';
   return {
     url: primaryUrl,
     thumbnail: primaryUrl,
@@ -318,7 +342,8 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
   return {
     id: obj.id,
     slug: obj.slug,
-    name: obj.name,
+    name: obj.name, // EXPAND: Keep for backward compatibility (deprecated in v1.1.0)
+    title: obj.title || obj.name, // EXPAND: Prefer title, fallback to name
     tenantId: obj.tenantId,
     category: obj.category,
     categoryLabel: getCategoryLabelKey(obj.category),

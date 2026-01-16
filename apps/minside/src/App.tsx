@@ -4,8 +4,8 @@ import { I18nProvider } from '@xala/i18n';
 import { useState, useCallback, createContext, useContext } from 'react';
 
 import { AuthProvider } from './providers/AuthProvider';
-import { RealtimeProvider } from './providers/RealtimeProvider';
-import { ThemeProvider, useTheme } from './providers/ThemeProvider';
+import { RealtimeProvider } from '@digilist/client-sdk';
+import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';

@@ -298,6 +298,53 @@ jobs:
           retention-days: 7
 
   # ============================================================================
+  # i18n COMPLIANCE
+  # ============================================================================
+  i18n-compliance:
+    name: i18n Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build i18n package
+        run: pnpm -F @xala/i18n build
+
+      - name: Check translation key parity
+        run: pnpm i18n:check
+
+      - name: Run i18n unit tests
+        run: pnpm -F @xala/i18n test
+
+      - name: Scan for hardcoded strings in minside
+        run: node scripts/scan-i18n.js apps/minside/src
+        continue-on-error: true
+
+      - name: Scan for hardcoded strings in backoffice
+        run: node scripts/scan-i18n.js apps/backoffice/src
+        continue-on-error: true
+
+      - name: Scan for hardcoded strings in web
+        run: node scripts/scan-i18n.js apps/web/src
+        continue-on-error: true
+
+      - name: Report unused keys (informational)
+        run: pnpm i18n:unused || true
+
+  # ============================================================================
   # LINT AND TYPE CHECK
   # ============================================================================
   lint-and-typecheck:
@@ -381,6 +428,7 @@ jobs:
       - accessibility-tests
       - security-tests
       - performance-tests
+      - i18n-compliance
       - lint-and-typecheck
       - build-verification
     if: always()
@@ -398,6 +446,7 @@ jobs:
           echo "| Accessibility | ${{ needs.accessibility-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security | ${{ needs.security-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Performance | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| i18n Compliance | ${{ needs.i18n-compliance.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Lint & Types | ${{ needs.lint-and-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build | ${{ needs.build-verification.result }} |" >> $GITHUB_STEP_SUMMARY
 
@@ -405,6 +454,7 @@ jobs:
         run: |
           if [ "${{ needs.unit-tests.result }}" == "failure" ] || \
              [ "${{ needs.contract-tests.result }}" == "failure" ] || \
+             [ "${{ needs.i18n-compliance.result }}" == "failure" ] || \
              [ "${{ needs.build-verification.result }}" == "failure" ]; then
             echo "Critical tests failed!"
             exit 1

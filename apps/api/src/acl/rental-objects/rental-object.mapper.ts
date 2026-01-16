@@ -49,7 +49,8 @@ export interface DbRentalObject {
   id: string;
   tenantId: string;
   organizationId: string | null;
-  name: string;
+  name: string; // EXPAND: Keep for backward compatibility
+  title?: string; // EXPAND: New field (v1.1.0)
   slug: string;
   description: string | null;
   categoryKey: string;
@@ -89,7 +90,9 @@ export function toDomain(db: DbRentalObject): RentalObject {
     organizationId: db.organizationId,
 
     // Core attributes
+    // EXPAND: Prefer title, fallback to name for backward compatibility
     name: db.name,
+    title: db.title || db.name, // Use title if available, otherwise fallback to name
     slug: db.slug,
     description: db.description || '',
 
@@ -168,7 +171,8 @@ export function toPersistence(domain: RentalObject): Omit<DbRentalObject, 'creat
     id: domain.id,
     tenantId: domain.tenantId,
     organizationId: domain.organizationId,
-    name: domain.name,
+    name: domain.name, // EXPAND: Keep for backward compatibility
+    title: domain.title, // EXPAND: Write new field (v1.1.0)
     slug: domain.slug,
     description: domain.description || null,
     categoryKey: domain.category.key,
@@ -212,7 +216,8 @@ export function toCardProjection(domain: RentalObject): RentalObjectCardProjecti
     // Identity
     id: domain.id,
     slug: domain.slug,
-    name: domain.name,
+    name: domain.name, // EXPAND: Keep for backward compatibility (deprecated in v1.1.0)
+    title: domain.title, // EXPAND: Preferred field (v1.1.0)
     tenantId: domain.tenantId,
 
     // Type (display-ready)

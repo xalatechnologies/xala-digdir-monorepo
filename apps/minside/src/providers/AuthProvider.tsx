@@ -81,7 +81,7 @@ import {
   clearFlowContextFromStorage,
   getFlowContextTTL,
 } from '@digilist/client-sdk';
-import { useAuthRedirectGuard, useSessionRestoration } from '../hooks/useAuthGuards';
+import { useAuthRedirectGuard, useSessionRestoration } from '@digilist/client-sdk/hooks';
 
 /**
  * Mock Authentication Users
@@ -280,8 +280,7 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
         // Authentication is handled by HTTP-only cookie which cannot be accessed by JS.
         localStorage.setItem('minside_user', JSON.stringify(userData));
         setUser(userData);
-      } catch (error) {
-        // No valid session cookie - either expired, invalid, or user not logged in
+      } catch {
         // Clear any stale user data from localStorage
         const savedUser = localStorage.getItem('minside_user');
 
@@ -322,7 +321,7 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
       const response = await authService.initiateOAuth(provider, callbackUrl);
       // Redirect to OAuth provider's authorization page
       window.location.href = response.data.redirectUrl;
-    } catch (error) {
+    } catch {
       // Handle OAuth initiation error
     }
   }, [navigate]);

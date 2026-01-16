@@ -17,6 +17,10 @@ Welcome to the comprehensive documentation for the Xala Diglist Platform, a unif
 - [Applications](./architecture/03-applications.md) - Application architecture patterns
 - [Design System](./architecture/04-design-system.md) - UI/UX architecture
 - [Security](./architecture/05-security.md) - Security and compliance
+- [Architecture Boundaries](./architecture/boundaries.md) - Layer definitions and import rules
+- [ACL Mapping Guide](./architecture/acl-mapping.md) - Anti-Corruption Layer patterns
+- [Capabilities System](./architecture/capabilities.md) - Server-driven UI permissions
+- [Retry Infrastructure](./architecture/retry-infrastructure.md) - DLQ and retry patterns
 
 ### 📦 Packages
 - [Client SDK](./packages/01-client-sdk.md) - API client and hooks
@@ -43,6 +47,12 @@ Welcome to the comprehensive documentation for the Xala Diglist Platform, a unif
 - [Deployment](./guides/03-deployment.md) - Deployment procedures
 - [Performance](./guides/04-performance.md) - Performance optimization
 - [Accessibility](./guides/05-accessibility.md) - A11y compliance
+- [Rename Concept Safely](./guides/rename-concept-safely.md) - Schema/terminology migration guide
+
+### 📊 Status & Progress
+- [Architecture Refactoring Progress](./ARCHITECTURE_REFACTORING_PROGRESS.md) - Current refactoring status
+- [Feature Flags Status](./FEATURE_FLAGS_STATUS.md) - Feature flag implementation
+- [Migration Summary](./MIGRATION_SUMMARY.md) - Overall migration progress
 
 ### 📖 Reference
 - [Glossary](./reference/01-glossary.md) - Terminology and concepts

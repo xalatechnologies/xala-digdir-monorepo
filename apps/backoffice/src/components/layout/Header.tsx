@@ -10,7 +10,7 @@ import {
 } from '@xala/ds';
 import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../providers/ThemeProvider';
+import { useTheme } from '@xala/ds';
 import { GlobalSearch } from '../GlobalSearch';
 import { useT } from '@xala/i18n';
 

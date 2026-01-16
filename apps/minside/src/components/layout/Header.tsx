@@ -16,7 +16,7 @@ import {
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../providers/ThemeProvider';
+import { useTheme } from '@xala/ds';
 import { useNotificationCenter } from '../../App';
 import { AccountSwitcher } from '../AccountSwitcher';
 

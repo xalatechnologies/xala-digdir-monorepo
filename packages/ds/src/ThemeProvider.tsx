@@ -5,9 +5,9 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
-type ColorScheme = 'light' | 'dark' | 'auto';
+export type ColorScheme = 'light' | 'dark' | 'auto';
 
-interface ThemeContextValue {
+export interface ThemeContextValue {
   colorScheme: ColorScheme;
   toggleTheme: () => void;
   setColorScheme: (scheme: ColorScheme) => void;
@@ -24,7 +24,7 @@ const ThemeContext = createContext<ThemeContextValue>({
   resetToAuto: () => {},
 });
 
-interface ThemeProviderProps {
+export interface ThemeProviderProps {
   children: ReactNode;
   /** Storage key for persisting theme preference */
   storageKey?: string;
@@ -42,7 +42,7 @@ interface ThemeProviderProps {
  * </ThemeProvider>
  * ```
  */
-export function ThemeProvider({ children, storageKey = 'theme-preference' }: ThemeProviderProps) {
+export function ThemeProvider({ children, storageKey = 'theme-preference' }: ThemeProviderProps): React.ReactElement {
   const [colorScheme, setColorSchemeState] = useState<ColorScheme>(() => {
     // Check localStorage first - only use stored if explicitly set
     if (typeof window !== 'undefined') {
@@ -114,6 +114,6 @@ export function ThemeProvider({ children, storageKey = 'theme-preference' }: The
 /**
  * Hook to access theme context
  */
-export function useTheme() {
+export function useTheme(): ThemeContextValue {
   return useContext(ThemeContext);
 }

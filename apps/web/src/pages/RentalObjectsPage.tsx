@@ -447,7 +447,7 @@ export function RentalObjectsPage(): React.ReactElement {
 
 
               {viewMode === 'grid' ? (
-                <RentalObjectGrid minCardWidth={300}>
+                <RentalObjectGrid minCardWidth={380} maxColumns={3}>
                   {visibleListings.map((listing) => (
                     <RentalObjectCard
                       key={listing.id}
@@ -472,7 +472,7 @@ export function RentalObjectsPage(): React.ReactElement {
                       showFacilities={true}
                       showCapacity={true}
                       showRentalObjectType={false}
-                      showRating={true}
+                      showRating={false}
                       showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
                       onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}

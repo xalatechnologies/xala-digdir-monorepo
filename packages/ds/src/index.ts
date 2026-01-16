@@ -51,6 +51,10 @@ export * from '@digdir/designsystemet-react';
 // =============================================================================
 export * from './provider';
 
+// Theme management
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
+
 // =============================================================================
 // Component Layers - Import from specific layers
 // =============================================================================

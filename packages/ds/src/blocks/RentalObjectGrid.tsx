@@ -31,9 +31,12 @@ export function RentalObjectGrid({
     ? (typeof gap === 'number' ? `${gap}px` : gap)
     : 'var(--ds-spacing-6, 24px)';
 
-  // Responsive columns: max 3 on desktop, max 2 on tablet, 1 on mobile
-  // Uses auto-fill with minmax but capped at maxColumns
-  const gridTemplateColumns = `repeat(auto-fill, minmax(min(${minCardWidth}px, 100%), 1fr))`;
+  // Use repeat(maxColumns, 1fr) on large screens to enforce strict column limit
+  // Fall back to auto-fill for responsive behavior on smaller screens
+  // The minmax ensures cards don't get too small
+  const gridTemplateColumns = maxColumns === 3
+    ? `repeat(auto-fill, minmax(min(max(${minCardWidth}px, calc((100% - ${maxColumns - 1} * ${gapValue}) / ${maxColumns})), 100%), 1fr))`
+    : `repeat(${maxColumns}, 1fr)`;
 
   return (
     <div
@@ -46,6 +49,7 @@ export function RentalObjectGrid({
         display: 'grid',
         gap: gapValue,
         gridTemplateColumns,
+        maxWidth: '1400px', // Limit grid width to prevent 4+ columns
       } as React.CSSProperties}
     >
       {children}

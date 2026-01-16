@@ -1,18 +1,19 @@
 /**
  * Calendar Controllers
  * REST API endpoints for calendar configuration, availability, events, and allocations
+ * 
+ * Uses repository pattern for clean separation:
+ * - Repository handles data access (no direct schema imports)
  */
 import { Controller, Get, Post, Put, Delete, Inject } from '../../core/decorators';
-import { container } from '../../core/container';
 import { validate } from '../../core/validation/zod-pipe';
 import {
   CalendarConfigQuerySchema,
   AvailabilityMatrixQuerySchema,
 } from '../../schemas/calendar.schema';
 import { CalendarService } from './calendar.service';
+import { getCalendarRepository } from './calendar.repository';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { eq, and, gte, lte, sql } from 'drizzle-orm';
-import { allocations, rentalObjects, users, bookings } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -92,42 +93,20 @@ export class AvailabilityMatrixController {
 
 @Controller('/api/calendar')
 export class CalendarController {
+  private readonly repository = getCalendarRepository();
+
   @Get()
   async getEvents(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { rentalObjectId, startDate, endDate, status } = request.query as any;
 
-    // Build query conditions
-    const conditions = [];
-    if (rentalObjectId) conditions.push(eq(allocations.rentalObjectId, rentalObjectId));
-    if (startDate) conditions.push(gte(allocations.startTime, new Date(startDate)));
-    if (endDate) conditions.push(lte(allocations.endTime, new Date(endDate)));
-    if (status) conditions.push(eq(allocations.status, status));
+    const events = await this.repository.findEvents({
+      rentalObjectId,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
+      status,
+    });
 
-    const result = await db
-      .select({
-        id: allocations.id,
-        rentalObjectId: allocations.rentalObjectId,
-        listingName: rentalObjects.name,
-        title: allocations.title,
-        startTime: allocations.startTime,
-        endTime: allocations.endTime,
-        status: allocations.status,
-        bookingId: allocations.bookingId,
-        userId: allocations.userId,
-        userName: users.name,
-        notes: allocations.notes,
-        metadata: allocations.metadata,
-      })
-      .from(allocations)
-      .leftJoin(rentalObjects, eq(allocations.rentalObjectId, rentalObjects.id))
-      .leftJoin(users, eq(allocations.userId, users.id))
-      .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(allocations.startTime);
-
-    return {
-      data: result,
-    };
+    return { data: events };
   }
 
   @Get('/events')
@@ -138,79 +117,42 @@ export class CalendarController {
 
   @Post()
   async createAllocation(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const tenantId = request.tenantId || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
     const body = request.body as any;
 
-    const result = await db
-      .insert(allocations)
-      .values({
-        tenantId,
-        rentalObjectId: body.rentalObjectId,
-        title: body.title,
-        startTime: new Date(body.startTime),
-        endTime: new Date(body.endTime),
-        status: body.status || 'blocked',
-        notes: body.notes || null,
-        metadata: body.metadata || {},
-      })
-      .returning();
+    const allocation = await this.repository.create({
+      tenantId,
+      rentalObjectId: body.rentalObjectId,
+      title: body.title,
+      startTime: new Date(body.startTime),
+      endTime: new Date(body.endTime),
+      status: body.status,
+      notes: body.notes,
+      metadata: body.metadata,
+    });
 
     reply.code(201);
-    return { data: result[0] };
+    return { data: allocation };
   }
 
   @Get('/availability')
   async getAvailability(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
     const { rentalObjectId, startDate, endDate } = request.query as any;
 
     if (!rentalObjectId || !startDate || !endDate) {
       reply.code(400);
-      return { error: 'rentalObjectId, startDate, and endDate are required' };
+      return {
+        type: 'https://api.digilist.no/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'rentalObjectId, startDate, and endDate are required',
+      };
     }
 
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Get all allocations for the rental object in the date range
-    const allocationResults = await db
-      .select({
-        startTime: allocations.startTime,
-        endTime: allocations.endTime,
-        status: allocations.status,
-      })
-      .from(allocations)
-      .where(
-        and(
-          eq(allocations.rentalObjectId, rentalObjectId),
-          gte(allocations.startTime, start),
-          lte(allocations.endTime, end)
-        )
-      );
-
-    // Get all bookings for the rental object in the date range
-    const bookingResults = await db
-      .select({
-        startTime: bookings.startTime,
-        endTime: bookings.endTime,
-        status: bookings.status,
-      })
-      .from(bookings)
-      .where(
-        and(
-          eq(bookings.rentalObjectId, rentalObjectId),
-          gte(bookings.startTime, start),
-          lte(bookings.endTime, end)
-        )
-      );
-
-    // Combine blocked times
-    const blockedSlots = [...allocationResults, ...bookingResults].map((slot: any) => ({
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      status: slot.status,
-    }));
+    const blockedSlots = await this.repository.getAvailability(rentalObjectId, start, end);
 
     return {
       rentalObjectId,
