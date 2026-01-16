@@ -51,7 +51,7 @@ vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => key,
 }));
 
-vi.mock('../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => ({
     canCreateListing: () => true,
     canEditListing: () => true,
@@ -77,7 +77,7 @@ vi.mock('../../../hooks/useAuth', () => ({
   }),
 }));
 
-vi.mock('../../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => ({
     canEditListing: () => true,
     canPublishListing: () => true,
@@ -94,11 +94,11 @@ vi.mock('../../../listings/hooks/useListingPermissions', () => ({
   }),
 }));
 
-vi.mock('../../../listings/components/detail/DetailHeader', () => ({
+vi.mock('../../../rental-objects/components/detail/DetailHeader', () => ({
   DetailHeader: ({ listing }: any) => <div data-testid="detail-header">{listing?.name}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/OverviewTab', () => ({
+vi.mock('../../../rental-objects/components/detail/OverviewTab', () => ({
   OverviewTab: () => <div data-testid="overview-tab">Overview</div>,
 }));
 
@@ -230,7 +230,7 @@ describe('Rental Objects Penetration Tests', () => {
   describe('Authorization & Access Control', () => {
     it('should prevent unauthorized access to create button', () => {
       // Mock user without create permission for this test
-      const { useListingPermissions } = require('../../listings/hooks/useListingPermissions');
+      const { useListingPermissions } = require('../../rental-objects/hooks/useListingPermissions');
       vi.mocked(useListingPermissions).mockReturnValueOnce({
         canCreateListing: () => false,
         permissions: {
@@ -250,7 +250,7 @@ describe('Rental Objects Penetration Tests', () => {
 
     it('should prevent unauthorized editing', () => {
       // Mock user without edit permission for this test
-      const { useListingPermissions } = require('../../../listings/hooks/useListingPermissions');
+      const { useListingPermissions } = require('../../../rental-objects/hooks/useListingPermissions');
       vi.mocked(useListingPermissions).mockReturnValueOnce({
         canEditListing: () => false,
         permissions: {

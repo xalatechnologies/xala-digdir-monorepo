@@ -24,6 +24,7 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
+    "db:seed:demo": "tsx src/database/seeds/demo-seed.ts",
     "db:reset": "pnpm db:push && pnpm db:seed",
     "deploy": "bash scripts/deploy.sh production",
     "deploy:staging": "bash scripts/deploy.sh staging"

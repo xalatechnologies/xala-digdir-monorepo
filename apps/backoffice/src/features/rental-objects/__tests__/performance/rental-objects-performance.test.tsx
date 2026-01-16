@@ -52,7 +52,7 @@ vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => key,
 }));
 
-vi.mock('../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => ({
     canCreateListing: () => true,
     canEditListing: () => true,
@@ -78,7 +78,7 @@ vi.mock('../../../hooks/useAuth', () => ({
   }),
 }));
 
-vi.mock('../../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => ({
     canEditListing: () => true,
     canPublishListing: () => true,
@@ -95,23 +95,23 @@ vi.mock('../../../listings/hooks/useListingPermissions', () => ({
   }),
 }));
 
-vi.mock('../../../listings/components/detail/DetailHeader', () => ({
+vi.mock('../../../rental-objects/components/detail/DetailHeader', () => ({
   DetailHeader: ({ listing }: any) => <div data-testid="detail-header">{listing?.name}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/OverviewTab', () => ({
+vi.mock('../../../rental-objects/components/detail/OverviewTab', () => ({
   OverviewTab: () => <div data-testid="overview-tab">Overview</div>,
 }));
 
-vi.mock('../../../listings/components/detail/BookingsTab', () => ({
+vi.mock('../../../rental-objects/components/detail/BookingsTab', () => ({
   BookingsTab: () => <div data-testid="bookings-tab">Bookings</div>,
 }));
 
-vi.mock('../../../listings/components/detail/AvailabilityTab', () => ({
+vi.mock('../../../rental-objects/components/detail/AvailabilityTab', () => ({
   AvailabilityTab: () => <div data-testid="availability-tab">Availability</div>,
 }));
 
-vi.mock('../../../listings/components/detail/AuditTab', () => ({
+vi.mock('../../../rental-objects/components/detail/AuditTab', () => ({
   AuditTab: () => <div data-testid="audit-tab">Audit</div>,
 }));
 

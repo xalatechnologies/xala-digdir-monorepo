@@ -4,10 +4,10 @@
  */
 
 import { createContext, useContext, type ReactNode } from 'react';
-import { 
+import {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeListings,
+  // useRealtimeListings, // TODO: SDK doesn't export this yet
   useRealtimeMessages,
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
@@ -55,7 +55,7 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
 
   // Subscribe to domain events - auto-invalidates queries
   useRealtimeBookings();
-  useRealtimeListings();
+  // useRealtimeListings(); // TODO: SDK doesn't export this yet
   useRealtimeMessages();
 
   return (

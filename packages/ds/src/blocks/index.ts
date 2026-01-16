@@ -4,23 +4,23 @@
  * Business-logic components composed from primitives and composed components
  */
 
-export { ListingCard } from './ListingCard';
-export type { ListingCardProps, ListingCardVariant } from './ListingCard';
+export { RentalObjectCard } from './RentalObjectCard';
+export type { RentalObjectCardProps, RentalObjectCardVariant } from './RentalObjectCard';
 
-export { ListingListItem } from './ListingListItem';
-export type { ListingListItemProps } from './ListingListItem';
+export { RentalObjectListItem } from './RentalObjectListItem';
+export type { RentalObjectListItemProps } from './RentalObjectListItem';
 
-export { ListingGrid } from './ListingGrid';
-export type { ListingGridProps } from './ListingGrid';
+export { RentalObjectGrid } from './RentalObjectGrid';
+export type { RentalObjectGridProps } from './RentalObjectGrid';
 
-export { ListingToolbar } from './ListingToolbar';
-export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
+export { RentalObjectToolbar } from './RentalObjectToolbar';
+export type { RentalObjectToolbarProps, ViewMode } from './RentalObjectToolbar';
 
-export { ListingMap } from './ListingMap';
-export type { ListingMapProps, MapListing } from './ListingMap';
+export { RentalObjectMap } from './RentalObjectMap';
+export type { RentalObjectMapProps, MapRentalObject } from './RentalObjectMap';
 
-export { ListingTableView } from './ListingTableView';
-export type { ListingTableViewProps } from './ListingTableView';
+export { RentalObjectTableView } from './RentalObjectTableView';
+export type { RentalObjectTableViewProps } from './RentalObjectTableView';
 
 // TODO: Create RentalObjectsFilterBar component or remove export
 // export { RentalObjectsFilterBar } from './RentalObjectsFilterBar';
@@ -30,8 +30,8 @@ export type { ListingTableViewProps } from './ListingTableView';
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';
 
-export { ListingDetailHeader } from './ListingDetailHeader';
-export type { ListingDetailHeaderProps } from './ListingDetailHeader';
+export { RentalObjectDetailHeader } from './RentalObjectDetailHeader';
+export type { RentalObjectDetailHeaderProps } from './RentalObjectDetailHeader';
 
 export { CapacityCard } from './CapacityCard';
 export type { CapacityCardProps } from './CapacityCard';
@@ -95,9 +95,9 @@ export type { FavoriteButtonProps } from './FavoriteButton';
 export { ShareButton, ShareSheet } from './ShareButton';
 export type { ShareButtonProps, ShareSheetProps, ShareData, SharePlatform } from './ShareButton';
 
-// Tabbed Navigation for Listing Details
-export { ListingTabs, TabContent, TabEmptyState } from './ListingTabs';
-export type { ListingTabsProps, TabConfig, TabContentProps, TabEmptyStateProps } from './ListingTabs';
+// Tabbed Navigation for Rental Object Details
+export { RentalObjectTabs, TabContent, TabEmptyState } from './RentalObjectTabs';
+export type { RentalObjectTabsProps, TabConfig, TabContentProps, TabEmptyStateProps } from './RentalObjectTabs';
 
 // Auth Gating Modal
 export { RequireAuthModal } from './RequireAuthModal';

@@ -1,7 +1,7 @@
 /**
- * ListingToolbar
+ * RentalObjectToolbar
  *
- * A toolbar component for listing pages with filter button, count, and view toggles.
+ * A toolbar component for rental object pages with filter button, count, and view toggles.
  * Uses Digdir ToggleGroup for view mode selection and standard Button patterns.
  */
 import * as React from 'react';
@@ -11,10 +11,10 @@ import { FilterIcon, GridIcon, ListIcon, MapIcon, TableIcon } from '../primitive
 
 export type ViewMode = 'grid' | 'list' | 'map' | 'table';
 
-export interface ListingToolbarProps {
-  /** Total count of listings */
+export interface RentalObjectToolbarProps {
+  /** Total count of rental objects */
   count: number;
-  /** Label for the count (e.g., "listings", "venues") */
+  /** Label for the count (e.g., "rental objects", "venues") */
   countLabel?: string;
   /** Number of active filters */
   activeFilterCount?: number;
@@ -32,7 +32,7 @@ export interface ListingToolbarProps {
   className?: string;
 }
 
-export function ListingToolbar({
+export function RentalObjectToolbar({
   count,
   countLabel = 'listings',
   activeFilterCount = 0,
@@ -42,7 +42,7 @@ export function ListingToolbar({
   showViewToggle = true,
   availableViews = ['grid', 'list', 'map', 'table'],
   className,
-}: ListingToolbarProps): React.ReactElement {
+}: RentalObjectToolbarProps): React.ReactElement {
   const viewIcons: Record<ViewMode, React.ReactNode> = {
     grid: <GridIcon size={20} aria-hidden />,
     list: <ListIcon size={20} aria-hidden />,
@@ -65,7 +65,7 @@ export function ListingToolbar({
 
   return (
     <div
-      className={cn('listing-toolbar', className)}
+      className={cn('rental-object-toolbar', className)}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -112,4 +112,4 @@ export function ListingToolbar({
   );
 }
 
-export default ListingToolbar;
+export default RentalObjectToolbar;

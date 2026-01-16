@@ -71,8 +71,7 @@ function getStatusBadge(status: CalendarSend['status']): React.ReactElement {
   }
 }
 
-export function CalendarIntegrationPage():
-  const t = useT(); React.ReactElement {
+export function CalendarIntegrationPage(): React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [icsEnabled, setIcsEnabled] = useState(true);
   const [resourceCalendarEnabled, setResourceCalendarEnabled] = useState(false);

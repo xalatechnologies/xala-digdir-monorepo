@@ -1,7 +1,7 @@
 /**
- * ListingTableView - Accessible table alternative to map view
+ * RentalObjectTableView - Accessible table alternative to map view
  *
- * Provides keyboard-accessible alternative to ListingMap for WCAG 2.1.1 Level A compliance.
+ * Provides keyboard-accessible alternative to RentalObjectMap for WCAG 2.1.1 Level A compliance.
  * Features:
  * - Full keyboard navigation (Tab, Arrow keys, Enter)
  * - Screen reader support with ARIA labels
@@ -12,10 +12,10 @@
 
 import * as React from 'react';
 import { useState, useCallback } from 'react';
-import type { MapListing } from './ListingMap';
+import type { MapRentalObject } from './RentalObjectMap';
 
-export interface ListingTableViewProps {
-  listings: MapListing[];
+export interface RentalObjectTableViewProps {
+  listings: MapRentalObject[];
   onListingClick?: (id: string, slug?: string) => void;
   height?: string | number;
   className?: string;
@@ -24,12 +24,12 @@ export interface ListingTableViewProps {
 type SortColumn = 'name' | 'location' | 'type' | 'capacity' | 'price';
 type SortDirection = 'asc' | 'desc';
 
-export function ListingTableView({
+export function RentalObjectTableView({
   listings,
   onListingClick,
   height = '600px',
   className,
-}: ListingTableViewProps): React.ReactElement {
+}: RentalObjectTableViewProps): React.ReactElement {
   const [sortColumn, setSortColumn] = useState<SortColumn>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [focusedRow, setFocusedRow] = useState<number>(-1);
@@ -86,12 +86,12 @@ export function ListingTableView({
   }, [sortColumn]);
 
   // Handle row click
-  const handleRowClick = useCallback((listing: MapListing) => {
+  const handleRowClick = useCallback((listing: MapRentalObject) => {
     onListingClick?.(listing.id, listing.slug);
   }, [onListingClick]);
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, listing: MapListing) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number, listing: MapRentalObject) => {
     switch (e.key) {
       case 'Enter':
       case ' ':
@@ -120,7 +120,7 @@ export function ListingTableView({
   }, [handleRowClick, sortedListings.length]);
 
   // Format price
-  const formatPrice = (listing: MapListing) => {
+  const formatPrice = (listing: MapRentalObject) => {
     if (!listing.price) return '–';
     return `kr ${listing.price}${listing.priceUnit ? `/${listing.priceUnit}` : ''}`;
   };
@@ -410,4 +410,4 @@ export function ListingTableView({
   );
 }
 
-export default ListingTableView;
+export default RentalObjectTableView;

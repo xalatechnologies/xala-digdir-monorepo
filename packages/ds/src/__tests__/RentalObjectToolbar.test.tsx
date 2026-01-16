@@ -1,21 +1,21 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ListingToolbar } from '../blocks/ListingToolbar';
+import { RentalObjectToolbar } from '../blocks/RentalObjectToolbar';
 
-describe('ListingToolbar', () => {
+describe('RentalObjectToolbar', () => {
   it('renders the count with default label', () => {
-    render(<ListingToolbar count={42} />);
+    render(<RentalObjectToolbar count={42} />);
     expect(screen.getByText('42 listings')).toBeInTheDocument();
   });
 
   it('renders the count with custom label', () => {
-    render(<ListingToolbar count={10} countLabel="venues" />);
+    render(<RentalObjectToolbar count={10} countLabel="venues" />);
     expect(screen.getByText('10 venues')).toBeInTheDocument();
   });
 
   it('renders filter button when onFilterClick is provided', () => {
     const handleFilterClick = vi.fn();
-    render(<ListingToolbar count={5} onFilterClick={handleFilterClick} />);
+    render(<RentalObjectToolbar count={5} onFilterClick={handleFilterClick} />);
 
     const filterButton = screen.getByText('Filtre');
     expect(filterButton).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('ListingToolbar', () => {
 
   it('calls onFilterClick when filter button is clicked', () => {
     const handleFilterClick = vi.fn();
-    render(<ListingToolbar count={5} onFilterClick={handleFilterClick} />);
+    render(<RentalObjectToolbar count={5} onFilterClick={handleFilterClick} />);
 
     const filterButton = screen.getByText('Filtre');
     fireEvent.click(filterButton);
@@ -34,7 +34,7 @@ describe('ListingToolbar', () => {
   it('shows active filter badge when there are active filters', () => {
     const handleFilterClick = vi.fn();
     render(
-      <ListingToolbar
+      <RentalObjectToolbar
         count={5}
         onFilterClick={handleFilterClick}
         activeFilterCount={3}
@@ -47,7 +47,7 @@ describe('ListingToolbar', () => {
   });
 
   it('renders view toggle buttons by default', () => {
-    render(<ListingToolbar count={5} />);
+    render(<RentalObjectToolbar count={5} />);
 
     // The toggle group items should exist
     const toggleItems = document.querySelectorAll('[role="radio"], [data-state]');
@@ -55,7 +55,7 @@ describe('ListingToolbar', () => {
   });
 
   it('hides view toggle when showViewToggle is false', () => {
-    render(<ListingToolbar count={5} showViewToggle={false} />);
+    render(<RentalObjectToolbar count={5} showViewToggle={false} />);
 
     // No toggle group should be rendered
     const toggleGroup = document.querySelector('.listing-toolbar [role="radiogroup"]');
@@ -65,7 +65,7 @@ describe('ListingToolbar', () => {
   it('calls onViewModeChange when view mode is changed', () => {
     const handleViewModeChange = vi.fn();
     render(
-      <ListingToolbar
+      <RentalObjectToolbar
         count={5}
         viewMode="grid"
         onViewModeChange={handleViewModeChange}
@@ -78,7 +78,7 @@ describe('ListingToolbar', () => {
   });
 
   it('applies custom className', () => {
-    render(<ListingToolbar count={5} className="custom-toolbar" />);
+    render(<RentalObjectToolbar count={5} className="custom-toolbar" />);
 
     const toolbar = document.querySelector('.custom-toolbar');
     expect(toolbar).toBeInTheDocument();

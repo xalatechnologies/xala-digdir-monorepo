@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ListingCard } from '../blocks/ListingCard';
+import { RentalObjectCard } from '../blocks/RentalObjectCard';
 
 const defaultProps = {
   id: 'test-1',
@@ -11,25 +11,25 @@ const defaultProps = {
   image: 'https://example.com/image.jpg',
 };
 
-describe('ListingCard', () => {
+describe('RentalObjectCard', () => {
   describe('Grid variant (default)', () => {
     it('renders the listing name', () => {
-      render(<ListingCard {...defaultProps} />);
+      render(<RentalObjectCard {...defaultProps} />);
       expect(screen.getByText('Test Venue')).toBeInTheDocument();
     });
 
     it('renders the location', () => {
-      render(<ListingCard {...defaultProps} />);
+      render(<RentalObjectCard {...defaultProps} />);
       expect(screen.getByText('Oslo, Norway')).toBeInTheDocument();
     });
 
     it('renders the description', () => {
-      render(<ListingCard {...defaultProps} />);
+      render(<RentalObjectCard {...defaultProps} />);
       expect(screen.getByText('A beautiful conference room for meetings.')).toBeInTheDocument();
     });
 
     it('renders the image with correct alt text', () => {
-      render(<ListingCard {...defaultProps} />);
+      render(<RentalObjectCard {...defaultProps} />);
       const image = screen.getByAltText('Test Venue');
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
@@ -37,7 +37,7 @@ describe('ListingCard', () => {
 
     it('calls onClick handler when clicked', () => {
       const handleClick = vi.fn();
-      render(<ListingCard {...defaultProps} onClick={handleClick} />);
+      render(<RentalObjectCard {...defaultProps} onClick={handleClick} />);
 
       const card = screen.getByText('Test Venue').closest('.listing-card');
       if (card) fireEvent.click(card);
@@ -47,7 +47,7 @@ describe('ListingCard', () => {
 
     it('renders favorite button when onFavorite is provided', () => {
       const handleFavorite = vi.fn();
-      render(<ListingCard {...defaultProps} onFavorite={handleFavorite} />);
+      render(<RentalObjectCard {...defaultProps} onFavorite={handleFavorite} />);
 
       const favoriteButton = screen.getByTitle('Legg til favoritter');
       expect(favoriteButton).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('ListingCard', () => {
 
     it('calls onFavorite handler when favorite button is clicked', () => {
       const handleFavorite = vi.fn();
-      render(<ListingCard {...defaultProps} onFavorite={handleFavorite} />);
+      render(<RentalObjectCard {...defaultProps} onFavorite={handleFavorite} />);
 
       const favoriteButton = screen.getByTitle('Legg til favoritter');
       fireEvent.click(favoriteButton);
@@ -64,13 +64,13 @@ describe('ListingCard', () => {
     });
 
     it('renders capacity when provided', () => {
-      render(<ListingCard {...defaultProps} capacity={20} />);
+      render(<RentalObjectCard {...defaultProps} capacity={20} />);
       expect(screen.getByText('20 personer')).toBeInTheDocument();
     });
 
     it('renders facilities tags', () => {
       render(
-        <ListingCard
+        <RentalObjectCard
           {...defaultProps}
           facilities={['WiFi', 'Parking', 'Kitchen']}
         />
@@ -82,21 +82,21 @@ describe('ListingCard', () => {
     });
 
     it('renders listing type badge when provided', () => {
-      render(<ListingCard {...defaultProps} listingType="SPACE" />);
+      render(<RentalObjectCard {...defaultProps} listingType="SPACE" />);
       expect(screen.getByText('Lokale')).toBeInTheDocument();
     });
   });
 
   describe('Detailed variant', () => {
     it('renders in detailed variant', () => {
-      render(<ListingCard {...defaultProps} variant="detailed" />);
+      render(<RentalObjectCard {...defaultProps} variant="detailed" />);
       expect(screen.getByText('Test Venue')).toBeInTheDocument();
       expect(screen.getByText('Se detaljer →')).toBeInTheDocument();
     });
 
     it('renders close button when onClose is provided', () => {
       const handleClose = vi.fn();
-      render(<ListingCard {...defaultProps} variant="detailed" onClose={handleClose} />);
+      render(<RentalObjectCard {...defaultProps} variant="detailed" onClose={handleClose} />);
 
       const closeButton = screen.getByLabelText('Lukk');
       expect(closeButton).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('ListingCard', () => {
 
     it('calls onClose when close button is clicked', () => {
       const handleClose = vi.fn();
-      render(<ListingCard {...defaultProps} variant="detailed" onClose={handleClose} />);
+      render(<RentalObjectCard {...defaultProps} variant="detailed" onClose={handleClose} />);
 
       const closeButton = screen.getByLabelText('Lukk');
       fireEvent.click(closeButton);
@@ -113,29 +113,29 @@ describe('ListingCard', () => {
     });
 
     it('renders availability status', () => {
-      render(<ListingCard {...defaultProps} variant="detailed" available={true} />);
+      render(<RentalObjectCard {...defaultProps} variant="detailed" available={true} />);
       expect(screen.getByText('Ledig')).toBeInTheDocument();
     });
 
     it('renders unavailable status', () => {
-      render(<ListingCard {...defaultProps} variant="detailed" available={false} />);
+      render(<RentalObjectCard {...defaultProps} variant="detailed" available={false} />);
       expect(screen.getByText('Opptatt')).toBeInTheDocument();
     });
   });
 
   describe('Visibility toggles', () => {
     it('hides location when showLocation is false', () => {
-      render(<ListingCard {...defaultProps} showLocation={false} />);
+      render(<RentalObjectCard {...defaultProps} showLocation={false} />);
       expect(screen.queryByText('Oslo, Norway')).not.toBeInTheDocument();
     });
 
     it('hides description when showDescription is false', () => {
-      render(<ListingCard {...defaultProps} showDescription={false} />);
+      render(<RentalObjectCard {...defaultProps} showDescription={false} />);
       expect(screen.queryByText('A beautiful conference room for meetings.')).not.toBeInTheDocument();
     });
 
     it('hides capacity when showCapacity is false', () => {
-      render(<ListingCard {...defaultProps} capacity={20} showCapacity={false} />);
+      render(<RentalObjectCard {...defaultProps} capacity={20} showCapacity={false} />);
       expect(screen.queryByText('20 personer')).not.toBeInTheDocument();
     });
   });

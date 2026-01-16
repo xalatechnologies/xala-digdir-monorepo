@@ -6,8 +6,8 @@
  * Internally, rental objects are stored as listings with type=RESOURCE.
  */
 
-import { ListingWizard } from '../../../listings/components/wizard/ListingWizard';
 import { useT } from '@xala/i18n';
+import { Heading, Paragraph } from '@xala/ds';
 
 export interface RentalObjectWizardProps {
   /** Rental object slug for edit mode */
@@ -19,12 +19,16 @@ export interface RentalObjectWizardProps {
  * Multi-step wizard for creating and editing rental objects
  * Rental objects are equipment and resources that can be booked by citizens
  *
- * NOTE: Delegates to ListingWizard internally (rental objects are RESOURCE type listings)
+ * TODO: Implement full wizard with steps (basics, location, media, pricing, etc.)
  */
 export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
   const t = useT();
-  // Forces type to RESOURCE for rental objects
-  // In edit mode: loads existing rental object data
-  // In create mode: creates new rental object with RESOURCE type
-  return <ListingWizard slug={slug} initialType="RESOURCE" />;
+
+  return (
+    <div>
+      <Heading level={1}>{slug ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}</Heading>
+      <Paragraph>{t('rentalObjects.wizardDescription')}</Paragraph>
+      {/* TODO: Implement wizard steps */}
+    </div>
+  );
 }

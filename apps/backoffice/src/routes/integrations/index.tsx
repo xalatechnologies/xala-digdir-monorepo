@@ -203,8 +203,7 @@ function IntegrationCard({ integration }: { integration: IntegrationStatus }): R
   );
 }
 
-export function IntegrationsOverviewPage():
-  const t = useT(); React.ReactElement {
+export function IntegrationsOverviewPage(): React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { data: rcoData } = useRcoStatus();
   const { data: vismaData } = useVismaStatus();

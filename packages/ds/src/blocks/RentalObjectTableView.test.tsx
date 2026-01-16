@@ -1,5 +1,5 @@
 /**
- * ListingTableView Accessibility Tests
+ * RentalObjectTableView Accessibility Tests
  *
  * Tests for WCAG 2.1.1 Keyboard (Level A) compliance
  * Tests keyboard navigation, screen reader support, and design token compliance
@@ -7,8 +7,8 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ListingTableView } from './ListingTableView';
-import type { MapListing } from './ListingMap';
+import { RentalObjectTableView } from './RentalObjectTableView';
+import type { MapListing } from './RentalObjectMap';
 
 // Mock test data
 const mockListings: MapListing[] = [
@@ -47,10 +47,10 @@ const mockListings: MapListing[] = [
   },
 ];
 
-describe('ListingTableView', () => {
+describe('RentalObjectTableView', () => {
   describe('Accessibility Compliance', () => {
     it('should render a semantic table with proper structure', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       // Should have table element
       const table = screen.getByRole('table', { hidden: true });
@@ -66,7 +66,7 @@ describe('ListingTableView', () => {
     });
 
     it('should have proper ARIA labels for screen readers', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       // Region should have aria-label
       const region = screen.getByRole('region', { name: 'Tabellvisning av lokaler' });
@@ -78,7 +78,7 @@ describe('ListingTableView', () => {
     });
 
     it('should have sortable column headers with aria-sort', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const nameHeader = screen.getByText(/Navn/);
       expect(nameHeader).toHaveAttribute('aria-sort');
@@ -86,7 +86,7 @@ describe('ListingTableView', () => {
     });
 
     it('should display all required columns', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       // Check for column headers
       expect(screen.getByText(/Navn/)).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('ListingTableView', () => {
 
   describe('Keyboard Navigation', () => {
     it('should be keyboard focusable', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const rows = screen.getAllByRole('button');
       rows.forEach(row => {
@@ -110,7 +110,7 @@ describe('ListingTableView', () => {
     it('should support keyboard activation with Enter and Space', () => {
       const onListingClick = vi.fn();
       const { container } = render(
-        <ListingTableView listings={mockListings} onListingClick={onListingClick} />
+        <RentalObjectTableView listings={mockListings} onListingClick={onListingClick} />
       );
 
       const firstRow = screen.getByRole('button', { name: /Vis detaljer for Konferanserom A/i });
@@ -129,7 +129,7 @@ describe('ListingTableView', () => {
     });
 
     it('should support arrow key navigation between rows', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
 
       const rows = screen.getAllByRole('button');
       const firstRow = rows[0];
@@ -150,7 +150,7 @@ describe('ListingTableView', () => {
     });
 
     it('should support sorting with keyboard', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const nameHeader = screen.getByText(/Navn/);
 
@@ -168,7 +168,7 @@ describe('ListingTableView', () => {
 
   describe('Sorting Functionality', () => {
     it('should sort by name alphabetically', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const nameHeader = screen.getByText(/Navn/);
       nameHeader.click();
@@ -179,7 +179,7 @@ describe('ListingTableView', () => {
     });
 
     it('should toggle sort direction on repeated clicks', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const nameHeader = screen.getByText(/Navn/);
 
@@ -195,7 +195,7 @@ describe('ListingTableView', () => {
     });
 
     it('should sort numerical columns correctly', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const capacityHeader = screen.getByText(/Kapasitet/);
       const priceHeader = screen.getByText(/Pris/);
@@ -214,7 +214,7 @@ describe('ListingTableView', () => {
 
   describe('Design Token Compliance', () => {
     it('should use design tokens for all styling', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
 
       // Check for design token usage in inline styles
       const table = container.querySelector('table');
@@ -227,7 +227,7 @@ describe('ListingTableView', () => {
     });
 
     it('should not have hardcoded colors', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const html = container.innerHTML;
 
       // Should not contain hex colors or rgb values (except in var() calls)
@@ -238,14 +238,14 @@ describe('ListingTableView', () => {
 
   describe('Responsive Design', () => {
     it('should have responsive CSS for mobile devices', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const style = container.querySelector('style');
 
       expect(style?.textContent).toContain('@media (max-width: 991px)');
     });
 
     it('should support horizontal scrolling', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const tableContainer = screen.getByRole('region');
 
       expect(tableContainer).toHaveStyle({ overflow: 'auto' });
@@ -254,7 +254,7 @@ describe('ListingTableView', () => {
 
   describe('Reduced Motion Support', () => {
     it('should have reduced motion CSS', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const style = container.querySelector('style');
 
       expect(style?.textContent).toContain('@media (prefers-reduced-motion: reduce)');
@@ -263,7 +263,7 @@ describe('ListingTableView', () => {
 
   describe('High Contrast Mode Support', () => {
     it('should have high contrast mode CSS', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const style = container.querySelector('style');
 
       expect(style?.textContent).toContain('@media (prefers-contrast: high)');
@@ -272,7 +272,7 @@ describe('ListingTableView', () => {
 
   describe('Focus Management', () => {
     it('should have visible focus indicators', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const style = container.querySelector('style');
 
       // Should have focus styles
@@ -281,7 +281,7 @@ describe('ListingTableView', () => {
     });
 
     it('should track focused row', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       const firstRow = screen.getAllByRole('button')[0];
       firstRow?.focus();
@@ -293,7 +293,7 @@ describe('ListingTableView', () => {
 
   describe('Empty State', () => {
     it('should handle empty listings array', () => {
-      render(<ListingTableView listings={[]} />);
+      render(<RentalObjectTableView listings={[]} />);
 
       const footer = screen.getByText(/Viser 0 lokaler/i);
       expect(footer).toBeInTheDocument();
@@ -302,7 +302,7 @@ describe('ListingTableView', () => {
 
   describe('Norwegian Language', () => {
     it('should use Norwegian labels', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       expect(screen.getByText(/Navn/)).toBeInTheDocument();
       expect(screen.getByText(/Plassering/)).toBeInTheDocument();
@@ -313,7 +313,7 @@ describe('ListingTableView', () => {
 
   describe('Price Formatting', () => {
     it('should format prices correctly', () => {
-      render(<ListingTableView listings={mockListings} />);
+      render(<RentalObjectTableView listings={mockListings} />);
 
       expect(screen.getByText(/kr 500\/time/)).toBeInTheDocument();
       expect(screen.getByText(/kr 2000\/dag/)).toBeInTheDocument();
@@ -331,7 +331,7 @@ describe('ListingTableView', () => {
         },
       ];
 
-      render(<ListingTableView listings={listingsWithoutPrice} />);
+      render(<RentalObjectTableView listings={listingsWithoutPrice} />);
 
       // Should show dashes for missing data (type, capacity, price)
       const dashes = screen.getAllByText('–');
@@ -342,7 +342,7 @@ describe('ListingTableView', () => {
   describe('Click Handlers', () => {
     it('should call onListingClick with correct arguments', () => {
       const onListingClick = vi.fn();
-      render(<ListingTableView listings={mockListings} onListingClick={onListingClick} />);
+      render(<RentalObjectTableView listings={mockListings} onListingClick={onListingClick} />);
 
       const firstRow = screen.getByRole('button', { name: /Vis detaljer for Konferanserom A/i });
       firstRow.click();
@@ -359,7 +359,7 @@ describe('ListingTableView', () => {
         },
       ];
 
-      render(<ListingTableView listings={listingsWithSlug} onListingClick={onListingClick} />);
+      render(<RentalObjectTableView listings={listingsWithSlug} onListingClick={onListingClick} />);
 
       const row = screen.getByRole('button');
       row.click();
@@ -370,14 +370,14 @@ describe('ListingTableView', () => {
 
   describe('Custom Height', () => {
     it('should accept custom height prop', () => {
-      const { container } = render(<ListingTableView listings={mockListings} height="500px" />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} height="500px" />);
       const wrapper = container.firstChild as HTMLElement;
 
       expect(wrapper).toHaveStyle({ height: '500px' });
     });
 
     it('should use default height when not specified', () => {
-      const { container } = render(<ListingTableView listings={mockListings} />);
+      const { container } = render(<RentalObjectTableView listings={mockListings} />);
       const wrapper = container.firstChild as HTMLElement;
 
       expect(wrapper).toHaveStyle({ height: '600px' });

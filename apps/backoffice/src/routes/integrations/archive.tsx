@@ -70,8 +70,7 @@ function getStatusBadge(status: ArchiveEvent['status']): React.ReactElement {
   }
 }
 
-export function ArchivePage():
-  const t = useT(); React.ReactElement {
+export function ArchivePage(): React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');

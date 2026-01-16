@@ -20,7 +20,7 @@ import {
   useDialog,
   Drawer,
 } from '@xala/ds';
-import { useT { useLocale useT } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 

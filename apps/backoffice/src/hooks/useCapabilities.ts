@@ -140,8 +140,7 @@ export interface UseCapabilitiesReturn {
  * }
  * ```
  */
-export function useCapabilities():
-  const t = useT(); UseCapabilitiesReturn {
+export function useCapabilities(): UseCapabilitiesReturn {
   const { effectiveRole } = useBackofficeRole();
 
   // Memoize capabilities array to avoid unnecessary recalculations

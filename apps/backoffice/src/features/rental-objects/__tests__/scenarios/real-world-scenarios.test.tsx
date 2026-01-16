@@ -73,7 +73,7 @@ const mockUseListingPermissions = vi.fn(() => ({
   },
 }));
 
-vi.mock('../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => mockUseListingPermissions(),
 }));
 
@@ -87,19 +87,19 @@ vi.mock('../../../hooks/useAuth', () => ({
 
 // Remove duplicate mock - already mocked above
 
-vi.mock('../../../listings/components/detail/DetailHeader', () => ({
+vi.mock('../../../rental-objects/components/detail/DetailHeader', () => ({
   DetailHeader: ({ listing }: any) => <div data-testid="detail-header">{listing?.name}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/OverviewTab', () => ({
+vi.mock('../../../rental-objects/components/detail/OverviewTab', () => ({
   OverviewTab: () => <div data-testid="overview-tab">Overview</div>,
 }));
 
-vi.mock('../../../listings/components/detail/BookingsTab', () => ({
+vi.mock('../../../rental-objects/components/detail/BookingsTab', () => ({
   BookingsTab: () => <div data-testid="bookings-tab">Bookings</div>,
 }));
 
-vi.mock('../../../listings/components/detail/AvailabilityTab', () => ({
+vi.mock('../../../rental-objects/components/detail/AvailabilityTab', () => ({
   AvailabilityTab: () => <div data-testid="availability-tab">Availability</div>,
 }));
 

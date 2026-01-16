@@ -27,8 +27,8 @@ import { useListings } from '@digilist/client-sdk';
 import type { ListingStatus } from '@digilist/client-sdk';
 import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
-import { useListingFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../../listings/hooks/useListingFilters';
-import { useListingPermissions } from '../../listings/hooks/useListingPermissions';
+import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../hooks/useRentalObjectFilters';
+import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
 import { useT } from '@xala/i18n';
 
 // Capacity filter options for rental objects
@@ -44,7 +44,7 @@ const CAPACITY_OPTIONS = [
 export function RentalObjectsListView() {
   const t = useT();
   const navigate = useNavigate();
-  const { permissions } = useListingPermissions();
+  const { permissions } = useRentalObjectPermissions();
 
   const {
     filters,
@@ -53,7 +53,7 @@ export function RentalObjectsListView() {
     setViewMode,
     resetFilters,
     activeFilterCount,
-  } = useListingFilters();
+  } = useRentalObjectFilters();
 
   // Right drawer state
   const [isFilterOpen, setIsFilterOpen] = useState(false);

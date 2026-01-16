@@ -1,5 +1,5 @@
 /**
- * ListingDetailHeader
+ * RentalObjectDetailHeader
  *
  * Header section for listing detail page showing category, title,
  * key facts, location, and action buttons (favorite, share).
@@ -15,7 +15,7 @@ import { KeyFactsRow, type KeyFact } from './KeyFactsRow';
 import { FavoriteButton } from './FavoriteButton';
 import { ShareButton, type ShareData, type SharePlatform } from './ShareButton';
 
-export interface ListingDetailHeaderProps {
+export interface RentalObjectDetailHeaderProps {
   /** Category label (e.g., "Rom", "Møterom") */
   category: string;
   /** Listing type for styling (e.g., "SPACE", "EQUIPMENT") */
@@ -54,12 +54,12 @@ export interface ListingDetailHeaderProps {
 }
 
 /**
- * ListingDetailHeader component
+ * RentalObjectDetailHeader component
  *
  * @example
  * ```tsx
  * // Simple usage with capacity
- * <ListingDetailHeader
+ * <RentalObjectDetailHeader
  *   category="Rom"
  *   title="Møterom 101"
  *   location="Storgata 1, 0155 Oslo"
@@ -68,7 +68,7 @@ export interface ListingDetailHeaderProps {
  * />
  *
  * // Advanced usage with key facts
- * <ListingDetailHeader
+ * <RentalObjectDetailHeader
  *   category="Rom"
  *   listingType="SPACE"
  *   title="Møterom 101"
@@ -85,7 +85,7 @@ export interface ListingDetailHeaderProps {
  * />
  * ```
  */
-export function ListingDetailHeader({
+export function RentalObjectDetailHeader({
   category,
   listingType,
   title,
@@ -101,7 +101,7 @@ export function ListingDetailHeader({
   shareData,
   shareUtmParams,
   className,
-}: ListingDetailHeaderProps): React.ReactElement {
+}: RentalObjectDetailHeaderProps): React.ReactElement {
   // Build key facts from capacity if not provided
   const effectiveKeyFacts = React.useMemo((): KeyFact[] => {
     if (keyFacts && keyFacts.length > 0) {
@@ -137,7 +137,7 @@ export function ListingDetailHeader({
 
   return (
     <div
-      className={cn('listing-detail-header', className)}
+      className={cn('rental-object-detail-header', className)}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -248,4 +248,4 @@ export function ListingDetailHeader({
   );
 }
 
-export default ListingDetailHeader;
+export default RentalObjectDetailHeader;

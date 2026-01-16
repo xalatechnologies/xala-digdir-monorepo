@@ -11,6 +11,7 @@ import { bookingService, auditService, type CreateBookingDTO, useOrganizations }
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { useAuth } from '../../../../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
@@ -1017,7 +1018,6 @@ export function BookingWidgetPlacement({
             onClick={() => {
               if (currentStep === 2 && isAuthenticated) {
                 handleSubmitBooking();
-import { useT } from '@xala/i18n';
               } else if (currentStep === 0) {
                 // Check availability before proceeding from calendar step
                 handleCheckAvailabilityAndProceed();

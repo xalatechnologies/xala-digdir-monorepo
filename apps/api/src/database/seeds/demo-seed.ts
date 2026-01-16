@@ -4,13 +4,18 @@
  * 
  * Usage:
  *   pnpm db:seed:demo
- *   NODE_ENV=demo tsx apps/api/src/database/seeds/demo-seed.ts
+ *   DATABASE_URL=xxx tsx apps/api/src/database/seeds/demo-seed.ts
  */
 
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
-import * as schema from '../schema';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import { eq } from 'drizzle-orm';
+import {
+  tenants,
+  users,
+  rentalObjects,
+  bookings,
+} from '../schema/index';
 
 // ============================================================================
 // Configuration
@@ -18,10 +23,11 @@ import { eq } from 'drizzle-orm';
 
 const DEMO_TENANT = {
   id: 'd0000000-0000-0000-0000-000000000001',
-  name: 'Cheyenne Kommune',
-  slug: 'cheyenne',
-  domain: 'cheyenne.digilist.no',
+  name: 'Skien Kommune',
+  slug: 'skien',
+  domain: 'skien.digilist.no',
   status: 'active',
+  settings: {},
   featureFlags: {
     'backoffice.orgManagement': true,
     'backoffice.reporting': true,
@@ -37,7 +43,7 @@ const DEMO_TENANT = {
     'rentalObject.autoApproval': false,
     'rentalObject.guestBooking': false,
   },
-  enabledRentalObjectCategories: ['LOCALE', 'ARRANGEMENT'],
+  enabledRentalObjectCategories: ['LOCALE', 'ARRANGEMENT', 'UTSTYR'],
 };
 
 const DEMO_USERS = [
@@ -73,48 +79,48 @@ const DEMO_USERS = [
 
 const LOCALE_OBJECTS = [
   // Large venues
-  { name: 'Kulturhuset - Storsalen', capacity: 500, pricePerHour: 2500, requiresApproval: true, ageRestriction: null },
-  { name: 'Kulturhuset - Lillsalen', capacity: 150, pricePerHour: 1200, requiresApproval: true, ageRestriction: null },
-  { name: 'Rådhussalen', capacity: 300, pricePerHour: 2000, requiresApproval: true, ageRestriction: null },
-  { name: 'Festiviteten - Hovedsal', capacity: 400, pricePerHour: 3000, requiresApproval: true, ageRestriction: null },
-  { name: 'Festiviteten - Kabaret', capacity: 100, pricePerHour: 1000, requiresApproval: false, ageRestriction: null },
+  { name: 'Kulturhuset - Storsalen', capacity: 500, pricePerHour: 2500 },
+  { name: 'Kulturhuset - Lillsalen', capacity: 150, pricePerHour: 1200 },
+  { name: 'Rådhussalen', capacity: 300, pricePerHour: 2000 },
+  { name: 'Festiviteten - Hovedsal', capacity: 400, pricePerHour: 3000 },
+  { name: 'Festiviteten - Kabaret', capacity: 100, pricePerHour: 1000 },
   
   // Medium venues
-  { name: 'Samfunnshuset - Storstue', capacity: 80, pricePerHour: 800, requiresApproval: false, ageRestriction: null },
-  { name: 'Samfunnshuset - Festsal', capacity: 120, pricePerHour: 1000, requiresApproval: true, ageRestriction: null },
-  { name: 'Biblioteket - Auditorium', capacity: 60, pricePerHour: 600, requiresApproval: false, ageRestriction: null },
-  { name: 'Biblioteket - Møterom A', capacity: 20, pricePerHour: 300, requiresApproval: false, ageRestriction: null },
-  { name: 'Biblioteket - Møterom B', capacity: 15, pricePerHour: 250, requiresApproval: false, ageRestriction: null },
+  { name: 'Samfunnshuset - Storstue', capacity: 80, pricePerHour: 800 },
+  { name: 'Samfunnshuset - Festsal', capacity: 120, pricePerHour: 1000 },
+  { name: 'Biblioteket - Auditorium', capacity: 60, pricePerHour: 600 },
+  { name: 'Biblioteket - Møterom A', capacity: 20, pricePerHour: 300 },
+  { name: 'Biblioteket - Møterom B', capacity: 15, pricePerHour: 250 },
   
   // Community centers
-  { name: 'Grendehuset Vest', capacity: 50, pricePerHour: 500, requiresApproval: false, ageRestriction: null },
-  { name: 'Grendehuset Øst', capacity: 45, pricePerHour: 450, requiresApproval: false, ageRestriction: null },
-  { name: 'Grendehuset Nord', capacity: 60, pricePerHour: 550, requiresApproval: false, ageRestriction: null },
-  { name: 'Grendehuset Sør', capacity: 55, pricePerHour: 500, requiresApproval: false, ageRestriction: null },
-  { name: 'Ungdomshuset', capacity: 100, pricePerHour: 0, requiresApproval: true, ageRestriction: 25 },
+  { name: 'Grendehuset Vest', capacity: 50, pricePerHour: 500 },
+  { name: 'Grendehuset Øst', capacity: 45, pricePerHour: 450 },
+  { name: 'Grendehuset Nord', capacity: 60, pricePerHour: 550 },
+  { name: 'Grendehuset Sør', capacity: 55, pricePerHour: 500 },
+  { name: 'Ungdomshuset', capacity: 100, pricePerHour: 0 },
   
   // Sports facilities
-  { name: 'Idrettshallen - Hovedhall', capacity: 200, pricePerHour: 1500, requiresApproval: true, ageRestriction: null },
-  { name: 'Idrettshallen - Treningsrom', capacity: 30, pricePerHour: 400, requiresApproval: false, ageRestriction: null },
-  { name: 'Svømmehallen - Hovedbasseng', capacity: 50, pricePerHour: 1200, requiresApproval: true, ageRestriction: null },
-  { name: 'Svømmehallen - Barnebasseng', capacity: 20, pricePerHour: 600, requiresApproval: false, ageRestriction: null },
-  { name: 'Tennishallen', capacity: 20, pricePerHour: 800, requiresApproval: false, ageRestriction: null },
+  { name: 'Idrettshallen - Hovedhall', capacity: 200, pricePerHour: 1500 },
+  { name: 'Idrettshallen - Treningsrom', capacity: 30, pricePerHour: 400 },
+  { name: 'Svømmehallen - Hovedbasseng', capacity: 50, pricePerHour: 1200 },
+  { name: 'Svømmehallen - Barnebasseng', capacity: 20, pricePerHour: 600 },
+  { name: 'Tennishallen', capacity: 20, pricePerHour: 800 },
   
   // Meeting rooms
-  { name: 'Kommunehuset - Styrerom', capacity: 12, pricePerHour: 400, requiresApproval: true, ageRestriction: null },
-  { name: 'Kommunehuset - Møterom 1', capacity: 8, pricePerHour: 200, requiresApproval: false, ageRestriction: null },
-  { name: 'Kommunehuset - Møterom 2', capacity: 10, pricePerHour: 250, requiresApproval: false, ageRestriction: null },
-  { name: 'Næringshuset - Konferanserom', capacity: 40, pricePerHour: 600, requiresApproval: false, ageRestriction: null },
-  { name: 'Næringshuset - Møterom', capacity: 16, pricePerHour: 300, requiresApproval: false, ageRestriction: null },
+  { name: 'Kommunehuset - Styrerom', capacity: 12, pricePerHour: 400 },
+  { name: 'Kommunehuset - Møterom 1', capacity: 8, pricePerHour: 200 },
+  { name: 'Kommunehuset - Møterom 2', capacity: 10, pricePerHour: 250 },
+  { name: 'Næringshuset - Konferanserom', capacity: 40, pricePerHour: 600 },
+  { name: 'Næringshuset - Møterom', capacity: 16, pricePerHour: 300 },
   
   // Schools
-  { name: 'Skolen - Gymsal', capacity: 150, pricePerHour: 500, requiresApproval: true, ageRestriction: null },
-  { name: 'Skolen - Aula', capacity: 200, pricePerHour: 700, requiresApproval: true, ageRestriction: null },
-  { name: 'Skolen - Klasserom', capacity: 30, pricePerHour: 200, requiresApproval: true, ageRestriction: null },
+  { name: 'Skolen - Gymsal', capacity: 150, pricePerHour: 500 },
+  { name: 'Skolen - Aula', capacity: 200, pricePerHour: 700 },
+  { name: 'Skolen - Klasserom', capacity: 30, pricePerHour: 200 },
   
   // Outdoor
-  { name: 'Byparken - Paviljong', capacity: 80, pricePerHour: 300, requiresApproval: false, ageRestriction: null },
-  { name: 'Strandpromenaden - Scene', capacity: 500, pricePerHour: 1000, requiresApproval: true, ageRestriction: null },
+  { name: 'Byparken - Paviljong', capacity: 80, pricePerHour: 300 },
+  { name: 'Strandpromenaden - Scene', capacity: 500, pricePerHour: 1000 },
 ];
 
 // ============================================================================
@@ -122,18 +128,18 @@ const LOCALE_OBJECTS = [
 // ============================================================================
 
 const ARRANGEMENT_OBJECTS = [
-  { name: 'Bryllupspakke - Komplett', capacity: 150, pricePerHour: 5000, requiresApproval: true, ageRestriction: null },
-  { name: 'Konferansepakke - Halvdag', capacity: 50, pricePerHour: 2000, requiresApproval: false, ageRestriction: null },
-  { name: 'Konferansepakke - Heldag', capacity: 50, pricePerHour: 3500, requiresApproval: false, ageRestriction: null },
-  { name: 'Julebordarrangement', capacity: 100, pricePerHour: 4000, requiresApproval: true, ageRestriction: 18 },
-  { name: 'Bursdagsfeiring - Barn', capacity: 20, pricePerHour: 800, requiresApproval: false, ageRestriction: null },
-  { name: 'Bursdagsfeiring - Voksen', capacity: 30, pricePerHour: 1200, requiresApproval: false, ageRestriction: 18 },
-  { name: 'Firmafest - Standard', capacity: 80, pricePerHour: 3000, requiresApproval: true, ageRestriction: null },
-  { name: 'Seminar - Halv dag', capacity: 40, pricePerHour: 1500, requiresApproval: false, ageRestriction: null },
-  { name: 'Workshop - Kreativ', capacity: 20, pricePerHour: 1000, requiresApproval: false, ageRestriction: null },
-  { name: 'Utstilling - Kunstgalleri', capacity: 100, pricePerHour: 2500, requiresApproval: true, ageRestriction: null },
-  { name: 'Konsertarrangement', capacity: 300, pricePerHour: 6000, requiresApproval: true, ageRestriction: null },
-  { name: 'Teaterforestilling', capacity: 150, pricePerHour: 4000, requiresApproval: true, ageRestriction: null },
+  { name: 'Bryllupspakke - Komplett', capacity: 150, pricePerHour: 5000 },
+  { name: 'Konferansepakke - Halvdag', capacity: 50, pricePerHour: 2000 },
+  { name: 'Konferansepakke - Heldag', capacity: 50, pricePerHour: 3500 },
+  { name: 'Julebordarrangement', capacity: 100, pricePerHour: 4000 },
+  { name: 'Bursdagsfeiring - Barn', capacity: 20, pricePerHour: 800 },
+  { name: 'Bursdagsfeiring - Voksen', capacity: 30, pricePerHour: 1200 },
+  { name: 'Firmafest - Standard', capacity: 80, pricePerHour: 3000 },
+  { name: 'Seminar - Halv dag', capacity: 40, pricePerHour: 1500 },
+  { name: 'Workshop - Kreativ', capacity: 20, pricePerHour: 1000 },
+  { name: 'Utstilling - Kunstgalleri', capacity: 100, pricePerHour: 2500 },
+  { name: 'Konsertarrangement', capacity: 300, pricePerHour: 6000 },
+  { name: 'Teaterforestilling', capacity: 150, pricePerHour: 4000 },
 ];
 
 // ============================================================================
@@ -148,7 +154,7 @@ const SAMPLE_BOOKINGS = [
     endTime: new Date('2026-02-15T14:00:00Z'),
     userId: 'u0000000-0000-0000-0000-000000000001',
     rentalObjectIndex: 0,
-    totalPrice: 10000,
+    totalPrice: '10000.00',
     notes: 'Konfirmasjonsfest',
   },
   // Approved
@@ -158,7 +164,7 @@ const SAMPLE_BOOKINGS = [
     endTime: new Date('2026-02-20T23:00:00Z'),
     userId: 'u0000000-0000-0000-0000-000000000001',
     rentalObjectIndex: 5,
-    totalPrice: 4000,
+    totalPrice: '4000.00',
     notes: 'Bursdag',
     metadata: {
       approvedBy: 'u0000000-0000-0000-0000-000000000002',
@@ -173,7 +179,7 @@ const SAMPLE_BOOKINGS = [
     endTime: new Date('2026-02-22T16:00:00Z'),
     userId: 'u0000000-0000-0000-0000-000000000001',
     rentalObjectIndex: 0,
-    totalPrice: 15000,
+    totalPrice: '15000.00',
     notes: 'Politisk arrangement',
     metadata: {
       rejectedBy: 'u0000000-0000-0000-0000-000000000002',
@@ -188,7 +194,7 @@ const SAMPLE_BOOKINGS = [
     endTime: new Date('2026-03-01T17:00:00Z'),
     userId: 'u0000000-0000-0000-0000-000000000001',
     rentalObjectIndex: 23,
-    totalPrice: 4800,
+    totalPrice: '4800.00',
     notes: 'Firmamøte',
   },
   // Completed
@@ -198,38 +204,24 @@ const SAMPLE_BOOKINGS = [
     endTime: new Date('2026-01-10T15:00:00Z'),
     userId: 'u0000000-0000-0000-0000-000000000001',
     rentalObjectIndex: 10,
-    totalPrice: 2500,
+    totalPrice: '2500.00',
     notes: 'Årsmøte',
   },
 ];
 
 // ============================================================================
-// Sample Blocks (Maintenance/Blackout)
+// Helper to generate slug
 // ============================================================================
 
-const SAMPLE_BLOCKS = [
-  {
-    type: 'MAINTENANCE',
-    rentalObjectIndex: 0,
-    startTime: new Date('2026-02-22T00:00:00Z'),
-    endTime: new Date('2026-02-23T23:59:59Z'),
-    reason: 'Planlagt vedlikehold av ventilasjonsanlegg',
-  },
-  {
-    type: 'BLACKOUT',
-    rentalObjectIndex: 15,
-    startTime: new Date('2026-03-17T00:00:00Z'),
-    endTime: new Date('2026-03-17T23:59:59Z'),
-    reason: 'St. Patricks Day - Intern arrangement',
-  },
-  {
-    type: 'MAINTENANCE',
-    rentalObjectIndex: 17,
-    startTime: new Date('2026-04-01T08:00:00Z'),
-    endTime: new Date('2026-04-05T18:00:00Z'),
-    reason: 'Oppussing av garderober',
-  },
-];
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/æ/g, 'ae')
+    .replace(/ø/g, 'o')
+    .replace(/å/g, 'a')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 // ============================================================================
 // Seed Functions
@@ -239,13 +231,11 @@ async function seedTenant(db: ReturnType<typeof drizzle>) {
   console.log('🏢 Seeding demo tenant...');
   
   // Check if tenant exists
-  const existing = await db.query.tenants.findFirst({
-    where: eq(schema.tenants.id, DEMO_TENANT.id),
-  });
+  const existing = await db.select().from(tenants).where(eq(tenants.id, DEMO_TENANT.id)).limit(1);
 
-  if (existing) {
+  if (existing.length > 0) {
     console.log('  ⚠️  Demo tenant already exists, updating...');
-    await db.update(schema.tenants)
+    await db.update(tenants)
       .set({
         name: DEMO_TENANT.name,
         slug: DEMO_TENANT.slug,
@@ -254,13 +244,14 @@ async function seedTenant(db: ReturnType<typeof drizzle>) {
         enabledRentalObjectCategories: DEMO_TENANT.enabledRentalObjectCategories,
         status: DEMO_TENANT.status,
       })
-      .where(eq(schema.tenants.id, DEMO_TENANT.id));
+      .where(eq(tenants.id, DEMO_TENANT.id));
   } else {
-    await db.insert(schema.tenants).values({
+    await db.insert(tenants).values({
       id: DEMO_TENANT.id,
       name: DEMO_TENANT.name,
       slug: DEMO_TENANT.slug,
       domain: DEMO_TENANT.domain,
+      settings: DEMO_TENANT.settings,
       featureFlags: DEMO_TENANT.featureFlags,
       enabledRentalObjectCategories: DEMO_TENANT.enabledRentalObjectCategories,
       status: DEMO_TENANT.status,
@@ -275,16 +266,14 @@ async function seedUsers(db: ReturnType<typeof drizzle>, tenantId: string) {
   console.log('👥 Seeding demo users...');
   
   for (const user of DEMO_USERS) {
-    const existing = await db.query.users.findFirst({
-      where: eq(schema.users.id, user.id),
-    });
+    const existing = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
 
-    if (existing) {
+    if (existing.length > 0) {
       console.log(`  ⚠️  User ${user.email} already exists, skipping...`);
       continue;
     }
 
-    await db.insert(schema.users).values({
+    await db.insert(users).values({
       id: user.id,
       tenantId,
       email: user.email,
@@ -297,7 +286,7 @@ async function seedUsers(db: ReturnType<typeof drizzle>, tenantId: string) {
     console.log(`  ✅ Created user: ${user.email} (${user.role})`);
   }
   
-  console.log(`  ✅ ${DEMO_USERS.length} demo users seeded`);
+  console.log(`  ✅ ${DEMO_USERS.length} demo users processed`);
 }
 
 async function seedRentalObjects(db: ReturnType<typeof drizzle>, tenantId: string) {
@@ -305,37 +294,39 @@ async function seedRentalObjects(db: ReturnType<typeof drizzle>, tenantId: strin
   
   const rentalObjectIds: string[] = [];
   let index = 0;
+  let created = 0;
 
   // Seed LOCALE objects
   for (const obj of LOCALE_OBJECTS) {
     const id = `r${String(index).padStart(7, '0')}-0000-0000-0000-000000000001`;
+    const slug = slugify(obj.name);
     
-    const existing = await db.query.rentalObjects.findFirst({
-      where: eq(schema.rentalObjects.id, id),
-    });
+    const existing = await db.select().from(rentalObjects).where(eq(rentalObjects.id, id)).limit(1);
 
-    if (!existing) {
-      await db.insert(schema.rentalObjects).values({
+    if (existing.length === 0) {
+      await db.insert(rentalObjects).values({
         id,
         tenantId,
         name: obj.name,
+        slug,
         description: `${obj.name} - Et flott lokale for ditt arrangement. Kapasitet: ${obj.capacity} personer.`,
         category: 'LOCALE',
-        bookingMode: 'PERIOD',
         status: 'published',
         capacity: obj.capacity,
-        basePrice: String(obj.pricePerHour),
-        currency: 'NOK',
-        requiresApproval: obj.requiresApproval,
+        requiresApproval: obj.capacity > 100,
+        pricing: {
+          basePrice: obj.pricePerHour,
+          currency: 'NOK',
+          unit: 'hour',
+        },
         metadata: {
-          pricePerHour: obj.pricePerHour,
-          ageRestriction: obj.ageRestriction,
           amenities: ['WiFi', 'Projector', 'Whiteboard'],
           parkingSpaces: Math.floor(obj.capacity / 5),
           accessibleEntry: true,
         },
       });
       console.log(`  ✅ Created LOCALE: ${obj.name}`);
+      created++;
     }
     
     rentalObjectIds.push(id);
@@ -345,39 +336,40 @@ async function seedRentalObjects(db: ReturnType<typeof drizzle>, tenantId: strin
   // Seed ARRANGEMENT objects
   for (const obj of ARRANGEMENT_OBJECTS) {
     const id = `r${String(index).padStart(7, '0')}-0000-0000-0000-000000000001`;
+    const slug = slugify(obj.name);
     
-    const existing = await db.query.rentalObjects.findFirst({
-      where: eq(schema.rentalObjects.id, id),
-    });
+    const existing = await db.select().from(rentalObjects).where(eq(rentalObjects.id, id)).limit(1);
 
-    if (!existing) {
-      await db.insert(schema.rentalObjects).values({
+    if (existing.length === 0) {
+      await db.insert(rentalObjects).values({
         id,
         tenantId,
         name: obj.name,
+        slug,
         description: `${obj.name} - En komplett pakke for ditt arrangement. Maks ${obj.capacity} gjester.`,
         category: 'ARRANGEMENT',
-        bookingMode: 'PERIOD',
         status: 'published',
         capacity: obj.capacity,
-        basePrice: String(obj.pricePerHour),
-        currency: 'NOK',
-        requiresApproval: obj.requiresApproval,
+        requiresApproval: true,
+        pricing: {
+          basePrice: obj.pricePerHour,
+          currency: 'NOK',
+          unit: 'event',
+        },
         metadata: {
-          pricePerHour: obj.pricePerHour,
-          ageRestriction: obj.ageRestriction,
           includesSetup: true,
           includesCatering: obj.name.includes('pakke'),
         },
       });
       console.log(`  ✅ Created ARRANGEMENT: ${obj.name}`);
+      created++;
     }
     
     rentalObjectIds.push(id);
     index++;
   }
   
-  console.log(`  ✅ ${LOCALE_OBJECTS.length + ARRANGEMENT_OBJECTS.length} rental objects seeded`);
+  console.log(`  ✅ ${created} new rental objects created (${rentalObjectIds.length} total)`);
   return rentalObjectIds;
 }
 
@@ -386,16 +378,15 @@ async function seedBookings(db: ReturnType<typeof drizzle>, tenantId: string, re
   
   let created = 0;
   
-  for (const booking of SAMPLE_BOOKINGS) {
+  for (let i = 0; i < SAMPLE_BOOKINGS.length; i++) {
+    const booking = SAMPLE_BOOKINGS[i];
     const rentalObjectId = rentalObjectIds[booking.rentalObjectIndex];
-    const id = `b${String(created).padStart(7, '0')}-0000-0000-0000-000000000001`;
+    const id = `b${String(i).padStart(7, '0')}-0000-0000-0000-000000000001`;
     
-    const existing = await db.query.bookings.findFirst({
-      where: eq(schema.bookings.id, id),
-    });
+    const existing = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
 
-    if (!existing) {
-      await db.insert(schema.bookings).values({
+    if (existing.length === 0) {
+      await db.insert(bookings).values({
         id,
         tenantId,
         rentalObjectId,
@@ -403,7 +394,7 @@ async function seedBookings(db: ReturnType<typeof drizzle>, tenantId: string, re
         status: booking.status,
         startTime: booking.startTime,
         endTime: booking.endTime,
-        totalPrice: String(booking.totalPrice),
+        totalPrice: booking.totalPrice,
         currency: 'NOK',
         notes: booking.notes,
         metadata: booking.metadata || {},
@@ -414,37 +405,7 @@ async function seedBookings(db: ReturnType<typeof drizzle>, tenantId: string, re
     }
   }
   
-  console.log(`  ✅ ${created} sample bookings seeded`);
-}
-
-async function seedBlocks(db: ReturnType<typeof drizzle>, tenantId: string, rentalObjectIds: string[]) {
-  console.log('🚫 Seeding blocked periods...');
-  
-  // Note: This requires a blocks table. If it doesn't exist, we'll skip.
-  try {
-    let created = 0;
-    
-    for (const block of SAMPLE_BLOCKS) {
-      const rentalObjectId = rentalObjectIds[block.rentalObjectIndex];
-      
-      // Insert block (schema may vary)
-      // await db.insert(schema.blocks).values({
-      //   tenantId,
-      //   rentalObjectId,
-      //   type: block.type,
-      //   startTime: block.startTime,
-      //   endTime: block.endTime,
-      //   reason: block.reason,
-      // });
-      
-      console.log(`  ⚠️  Block: ${block.type} - ${block.reason} (blocks table may not exist)`);
-      created++;
-    }
-    
-    console.log(`  ✅ ${created} blocked periods defined (implementation pending)`);
-  } catch (error) {
-    console.log('  ⚠️  Blocks table not found, skipping...');
-  }
+  console.log(`  ✅ ${created} new sample bookings created`);
 }
 
 // ============================================================================
@@ -454,7 +415,7 @@ async function seedBlocks(db: ReturnType<typeof drizzle>, tenantId: string, rent
 async function seed() {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║          🌱 DEMO SEED - Cheyenne Kommune 🌱                  ║');
+  console.log('║          🌱 DEMO SEED - Skien Kommune 🌱                     ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 
@@ -465,8 +426,8 @@ async function seed() {
     process.exit(1);
   }
 
-  const pool = new Pool({ connectionString });
-  const db = drizzle(pool, { schema });
+  const sql = postgres(connectionString, { max: 10 });
+  const db = drizzle(sql);
 
   try {
     // Seed in order
@@ -474,7 +435,6 @@ async function seed() {
     await seedUsers(db, tenantId);
     const rentalObjectIds = await seedRentalObjects(db, tenantId);
     await seedBookings(db, tenantId, rentalObjectIds);
-    await seedBlocks(db, tenantId, rentalObjectIds);
 
     console.log('');
     console.log('╔══════════════════════════════════════════════════════════════╗');
@@ -482,21 +442,18 @@ async function seed() {
     console.log('╠══════════════════════════════════════════════════════════════╣');
     console.log('║                                                              ║');
     console.log('║  📊 Summary:                                                 ║');
-    console.log(`║    • Tenant: ${DEMO_TENANT.name.padEnd(40)}║`);
+    console.log(`║    • Tenant: Skien Kommune                                  ║`);
     console.log(`║    • Users: ${DEMO_USERS.length} demo accounts                                 ║`);
     console.log(`║    • Rental Objects: ${LOCALE_OBJECTS.length + ARRANGEMENT_OBJECTS.length} (${LOCALE_OBJECTS.length} LOCALE, ${ARRANGEMENT_OBJECTS.length} ARRANGEMENT)       ║`);
     console.log(`║    • Sample Bookings: ${SAMPLE_BOOKINGS.length}                                   ║`);
-    console.log(`║    • Blocked Periods: ${SAMPLE_BLOCKS.length}                                     ║`);
     console.log('║                                                              ║');
     console.log('╠══════════════════════════════════════════════════════════════╣');
     console.log('║                                                              ║');
-    console.log('║  🔐 Demo Credentials:                                        ║');
+    console.log('║  🔐 Demo Credentials (BankID Login):                         ║');
     console.log('║    • citizen@demo.no      (CITIZEN)                          ║');
     console.log('║    • caseworker@demo.no   (CASEWORKER)                       ║');
     console.log('║    • admin@demo.no        (ADMIN)                            ║');
     console.log('║    • saas@demo.no         (SAAS_ADMIN)                       ║');
-    console.log('║                                                              ║');
-    console.log('║  🔑 All accounts use BankID login                            ║');
     console.log('║                                                              ║');
     console.log('╚══════════════════════════════════════════════════════════════╝');
     console.log('');
@@ -505,7 +462,7 @@ async function seed() {
     console.error('❌ Seed failed:', error);
     process.exit(1);
   } finally {
-    await pool.end();
+    await sql.end();
   }
 }
 

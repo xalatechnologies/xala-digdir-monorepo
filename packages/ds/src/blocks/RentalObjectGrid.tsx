@@ -1,32 +1,32 @@
 /**
- * ListingGrid
+ * RentalObjectGrid
  *
- * A responsive grid component for displaying listing cards.
+ * A responsive grid component for displaying rental object cards.
  * Strict responsive rules: 3 columns (large), 2 columns (tablet), 1 column (mobile)
  */
 import * as React from 'react';
 import { cn } from '../utils';
 
-export interface ListingGridProps {
+export interface RentalObjectGridProps {
   /** Gap between cards - number (px) or CSS value (default: uses size mode token) */
   gap?: number | string;
   /** Minimum card width for auto-fill grid (default: 280) */
   minCardWidth?: number;
   /** Maximum columns (default: 3) - enforces 3/2/1 responsive pattern */
   maxColumns?: 1 | 2 | 3;
-  /** Grid children (ListingCard components) */
+  /** Grid children (RentalObjectCard components) */
   children: React.ReactNode;
   /** Custom class name */
   className?: string;
 }
 
-export function ListingGrid({
+export function RentalObjectGrid({
   gap,
   minCardWidth = 280,
   maxColumns = 3,
   children,
   className,
-}: ListingGridProps): React.ReactElement {
+}: RentalObjectGridProps): React.ReactElement {
   const gapValue = gap !== undefined
     ? (typeof gap === 'number' ? `${gap}px` : gap)
     : 'var(--ds-spacing-6, 24px)';
@@ -37,12 +37,12 @@ export function ListingGrid({
 
   return (
     <div
-      className={cn('listing-grid', className)}
+      className={cn('rental-object-grid', className)}
       data-max-columns={maxColumns}
       style={{
-        '--listing-grid-gap': gapValue,
-        '--listing-grid-min-card-width': `${minCardWidth}px`,
-        '--listing-grid-max-columns': maxColumns,
+        '--rental-object-grid-gap': gapValue,
+        '--rental-object-grid-min-card-width': `${minCardWidth}px`,
+        '--rental-object-grid-max-columns': maxColumns,
         display: 'grid',
         gap: gapValue,
         gridTemplateColumns,
@@ -53,4 +53,4 @@ export function ListingGrid({
   );
 }
 
-export default ListingGrid;
+export default RentalObjectGrid;

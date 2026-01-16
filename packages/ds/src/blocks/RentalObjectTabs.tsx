@@ -1,5 +1,5 @@
 /**
- * ListingTabs
+ * RentalObjectTabs
  *
  * Tabbed navigation component for listing detail pages.
  * Supports dynamic tabs based on listing type and available content.
@@ -27,7 +27,7 @@ export interface TabConfig {
   content: React.ReactNode;
 }
 
-export interface ListingTabsProps {
+export interface RentalObjectTabsProps {
   /** Tab configurations */
   tabs: TabConfig[];
   /** Currently active tab id */
@@ -46,14 +46,14 @@ export interface ListingTabsProps {
 // Component
 // =============================================================================
 
-export function ListingTabs({
+export function RentalObjectTabs({
   tabs,
   activeTab,
   onTabChange,
   defaultTab,
   variant = 'default',
   className,
-}: ListingTabsProps): React.ReactElement {
+}: RentalObjectTabsProps): React.ReactElement {
   // Filter visible tabs
   const visibleTabs = tabs.filter((tab) => tab.visible !== false);
 
@@ -79,7 +79,7 @@ export function ListingTabs({
   };
 
   return (
-    <div className={cn('listing-tabs', className)}>
+    <div className={cn('rental-object-tabs', className)}>
       <Tabs
         value={effectiveActiveTab}
         onChange={onTabChange || (() => {})}
@@ -250,4 +250,4 @@ export function TabEmptyState({
   );
 }
 
-export default ListingTabs;
+export default RentalObjectTabs;

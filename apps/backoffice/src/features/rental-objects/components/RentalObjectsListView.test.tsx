@@ -9,8 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RentalObjectsListView } from './RentalObjectsListView';
 import { useRentalObjects } from '@digilist/client-sdk';
-import { useListingPermissions } from '../../listings/hooks/useListingPermissions';
-import { useListingFilters } from '../../listings/hooks/useListingFilters';
+import { useListingPermissions } from '../../rental-objects/hooks/useListingPermissions';
+import { useListingFilters } from '../../rental-objects/hooks/useListingFilters';
 
 // Mock dependencies
 vi.mock('@digilist/client-sdk', async () => {
@@ -39,11 +39,11 @@ const mockUseListingPermissions = vi.fn(() => ({
   },
 }));
 
-vi.mock('../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => mockUseListingPermissions(),
 }));
 
-vi.mock('../../listings/hooks/useListingFilters', () => ({
+vi.mock('../../rental-objects/hooks/useListingFilters', () => ({
   useListingFilters: vi.fn(),
   STATUS_OPTIONS: [
     { id: 'all', label: 'Alle' },
@@ -89,7 +89,7 @@ vi.mock('@xala/i18n', () => ({
 }));
 
 // Mock complex components to avoid Dialog/design system issues
-vi.mock('../../listings/components/list/ListingsGrid', () => ({
+vi.mock('../../rental-objects/components/list/ListingsGrid', () => ({
   ListingsGrid: ({ listings, isLoading }: any) => {
     if (isLoading) return <div data-testid="listings-grid">Loading...</div>;
     if (!listings || listings.length === 0) {
@@ -103,7 +103,7 @@ vi.mock('../../listings/components/list/ListingsGrid', () => ({
   },
 }));
 
-vi.mock('../../listings/components/list/ListingsTable', () => ({
+vi.mock('../../rental-objects/components/list/ListingsTable', () => ({
   ListingsTable: ({ listings, isLoading }: any) => (
     <div data-testid="listings-table">
       {isLoading ? 'Loading...' : (listings || []).map((l: any) => <div key={l.id}>{l.name}</div>)}

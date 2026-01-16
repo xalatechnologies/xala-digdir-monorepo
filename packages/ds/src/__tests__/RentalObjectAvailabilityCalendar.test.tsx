@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ListingAvailabilityCalendar } from '../blocks/ListingAvailabilityCalendar';
+import { RentalObjectAvailabilityCalendar } from '../blocks/RentalObjectAvailabilityCalendar';
 import type {
   CalendarCell,
   CalendarSelection,
@@ -117,7 +117,7 @@ function generateMonthCells(
 // Tests
 // =============================================================================
 
-describe('ListingAvailabilityCalendar', () => {
+describe('RentalObjectAvailabilityCalendar', () => {
   const defaultProps = {
     currentDate: new Date(2026, 0, 15), // January 15, 2026 (Wednesday)
   };
@@ -139,7 +139,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             {...defaultProps}
@@ -156,7 +156,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart, 8, 10);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             startHour={8}
@@ -176,7 +176,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart, 9, 11);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             startHour={9}
@@ -197,7 +197,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             onDateChange={onDateChange}
@@ -218,7 +218,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             onDateChange={onDateChange}
@@ -239,7 +239,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="ALL_DAY"
             cells={cells}
             {...defaultProps}
@@ -255,7 +255,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="ALL_DAY"
             cells={cells}
             {...defaultProps}
@@ -273,7 +273,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="ALL_DAY"
             cells={cells}
             onDateChange={onDateChange}
@@ -293,7 +293,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="ALL_DAY"
             cells={cells}
             onDateChange={onDateChange}
@@ -314,7 +314,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="MULTI_DAY"
             cells={cells}
             {...defaultProps}
@@ -329,7 +329,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="MULTI_DAY"
             cells={cells}
             {...defaultProps}
@@ -344,7 +344,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="MULTI_DAY"
             cells={cells}
             showTips={true}
@@ -374,7 +374,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateWeekCells(weekStart, 10, 10, status);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="TIME_SLOTS"
             cells={cells}
             startHour={10}
@@ -395,7 +395,7 @@ describe('ListingAvailabilityCalendar', () => {
         const cells = generateMonthCells(2026, 0, status);
 
         render(
-          <ListingAvailabilityCalendar
+          <RentalObjectAvailabilityCalendar
             mode="ALL_DAY"
             cells={cells}
             {...defaultProps}
@@ -413,7 +413,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           {...defaultProps}
@@ -436,7 +436,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -456,7 +456,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart, 10, 10, 'BOOKED');
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -482,7 +482,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -511,7 +511,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -535,7 +535,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -558,7 +558,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -588,7 +588,7 @@ describe('ListingAvailabilityCalendar', () => {
       };
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           selection={selection}
@@ -614,7 +614,7 @@ describe('ListingAvailabilityCalendar', () => {
       };
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           selection={selection}
@@ -640,7 +640,7 @@ describe('ListingAvailabilityCalendar', () => {
       };
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           selection={selection}
@@ -658,7 +658,7 @@ describe('ListingAvailabilityCalendar', () => {
   describe('Loading State', () => {
     it('displays loading message when isLoading is true', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           isLoading={true}
@@ -671,7 +671,7 @@ describe('ListingAvailabilityCalendar', () => {
 
     it('disables navigation buttons when loading', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           isLoading={true}
@@ -685,7 +685,7 @@ describe('ListingAvailabilityCalendar', () => {
 
     it('hides tips panel when loading', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           isLoading={true}
@@ -702,7 +702,7 @@ describe('ListingAvailabilityCalendar', () => {
   describe('Error State', () => {
     it('displays error message when errorMessage is provided', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           errorMessage="Kunne ikke laste tilgjengelighet"
@@ -715,7 +715,7 @@ describe('ListingAvailabilityCalendar', () => {
 
     it('displays error with proper visual indication', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           errorMessage="Error occurred"
@@ -729,7 +729,7 @@ describe('ListingAvailabilityCalendar', () => {
 
     it('hides tips panel when error occurs', () => {
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[]}
           errorMessage="Error occurred"
@@ -748,7 +748,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           warningMessage="Valgt tidspunkt er ikke lenger tilgjengelig"
@@ -767,7 +767,7 @@ describe('ListingAvailabilityCalendar', () => {
       const onCellClick = vi.fn();
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -796,7 +796,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           readOnly={true}
@@ -816,7 +816,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           title="Book møterom"
@@ -832,7 +832,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           {...defaultProps}
@@ -847,7 +847,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           subtitle="Velg et ledig tidspunkt for å booke"
@@ -865,7 +865,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           showTips={true}
@@ -881,7 +881,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           showTips={false}
@@ -897,7 +897,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           showTips={true}
@@ -914,7 +914,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateMonthCells(2026, 0);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="ALL_DAY"
           cells={cells}
           showTips={true}
@@ -931,7 +931,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateMonthCells(2026, 0);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="MULTI_DAY"
           cells={cells}
           showTips={true}
@@ -951,7 +951,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart, 10, 10, 'AVAILABLE');
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -972,7 +972,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart, 10, 10, 'AVAILABLE');
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -993,7 +993,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           {...defaultProps}
@@ -1011,7 +1011,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart, 10, 10, 'AVAILABLE');
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -1032,7 +1032,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart, 10, 10, 'BOOKED');
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           startHour={10}
@@ -1058,7 +1058,7 @@ describe('ListingAvailabilityCalendar', () => {
       });
 
       render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={[cell]}
           startHour={10}
@@ -1078,7 +1078,7 @@ describe('ListingAvailabilityCalendar', () => {
       const cells = generateWeekCells(weekStart);
 
       const { container } = render(
-        <ListingAvailabilityCalendar
+        <RentalObjectAvailabilityCalendar
           mode="TIME_SLOTS"
           cells={cells}
           className="my-custom-calendar"

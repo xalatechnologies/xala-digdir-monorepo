@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { useT { I18nProvider useT } from '@xala/i18n';
+import { I18nProvider, useT } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';

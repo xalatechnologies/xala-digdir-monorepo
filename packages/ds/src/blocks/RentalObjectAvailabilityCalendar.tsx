@@ -1,8 +1,8 @@
 /**
- * ListingAvailabilityCalendar
+ * RentalObjectAvailabilityCalendar
  *
  * Dynamic availability calendar with mode switching (TIME_SLOTS, ALL_DAY, MULTI_DAY).
- * Consumes ListingCalendarConfigProjectionDTO and ListingAvailabilityMatrixProjectionDTO
+ * Consumes RentalObjectCalendarConfigProjectionDTO and RentalObjectAvailabilityMatrixProjectionDTO
  * from the API without any frontend transformation.
  *
  * This component implements:
@@ -83,7 +83,7 @@ const SLOT_STATUS_CONFIG: Record<CalendarSlotStatus, SlotStatusConfig> = {
   },
 };
 
-export interface ListingAvailabilityCalendarProps {
+export interface RentalObjectAvailabilityCalendarProps {
   /** Calendar mode from config projection (TIME_SLOTS, ALL_DAY, MULTI_DAY) */
   mode: CalendarMode;
   /** Cells from availability matrix projection */
@@ -751,12 +751,12 @@ function MultiDayCell({
 // =============================================================================
 
 /**
- * ListingAvailabilityCalendar component
+ * RentalObjectAvailabilityCalendar component
  *
  * @example
  * ```tsx
  * // TIME_SLOTS mode
- * <ListingAvailabilityCalendar
+ * <RentalObjectAvailabilityCalendar
  *   mode="TIME_SLOTS"
  *   cells={availabilityMatrix.cells}
  *   currentDate={new Date()}
@@ -765,7 +765,7 @@ function MultiDayCell({
  * />
  * ```
  */
-export function ListingAvailabilityCalendar({
+export function RentalObjectAvailabilityCalendar({
   mode,
   cells,
   selection,
@@ -787,7 +787,7 @@ export function ListingAvailabilityCalendar({
   warningMessage,
   readOnly = false,
   className,
-}: ListingAvailabilityCalendarProps): React.ReactElement {
+}: RentalObjectAvailabilityCalendarProps): React.ReactElement {
   // Generate hours array for TIME_SLOTS mode
   const hours = React.useMemo(() => {
     const result: number[] = [];
@@ -1954,4 +1954,4 @@ export function ListingAvailabilityCalendar({
   );
 }
 
-export default ListingAvailabilityCalendar;
+export default RentalObjectAvailabilityCalendar;

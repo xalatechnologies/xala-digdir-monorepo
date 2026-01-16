@@ -1,7 +1,7 @@
 /**
- * ListingCard
+ * RentalObjectCard
  *
- * A reusable card component for displaying listing/venue information.
+ * A reusable card component for displaying rental object/venue information.
  * Supports images, ratings, pricing, facilities, and action buttons.
  */
 import * as React from 'react';
@@ -9,9 +9,9 @@ import { Tag, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 
 /** Card variant for different display contexts */
-export type ListingCardVariant = 'grid' | 'detailed';
+export type RentalObjectCardVariant = 'grid' | 'detailed';
 
-export interface ListingCardProps {
+export interface RentalObjectCardProps {
   /** Unique identifier */
   id: string;
   /** Listing name/title */
@@ -59,7 +59,7 @@ export interface ListingCardProps {
   /** Image height in pixels */
   imageHeight?: number;
   /** Card variant: 'grid' for compact grid view, 'detailed' for popup/modal view */
-  variant?: ListingCardVariant;
+  variant?: RentalObjectCardVariant;
   /** Show/hide different elements */
   showRating?: boolean;
   showPrice?: boolean;
@@ -149,7 +149,7 @@ const listingTypeColors: Record<string, string> = {
   OTHER: 'neutral',
 };
 
-export function ListingCard({
+export function RentalObjectCard({
   id,
   name,
   type,
@@ -187,7 +187,7 @@ export function ListingCard({
   showShareButton = true,
   showListingType = true,
   maxFacilities = 3,
-}: ListingCardProps): React.ReactElement {
+}: RentalObjectCardProps): React.ReactElement {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const handleClick = () => {
@@ -213,7 +213,7 @@ export function ListingCard({
   if (variant === 'detailed') {
     return (
       <div
-        className={cn('listing-card listing-card--detailed', className)}
+        className={cn('rental-object-card rental-object-card--detailed', className)}
         style={{
           position: 'relative',
           width: 'var(--ds-size-card-detailed, 520px)',
@@ -429,7 +429,7 @@ export function ListingCard({
   // Grid variant (default) - compact card style
   return (
     <div
-      className={cn('listing-card', className)}
+      className={cn('rental-object-card', className)}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -676,4 +676,4 @@ export function ListingCard({
   );
 }
 
-export default ListingCard;
+export default RentalObjectCard;

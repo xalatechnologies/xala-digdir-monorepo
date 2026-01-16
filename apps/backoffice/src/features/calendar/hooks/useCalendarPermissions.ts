@@ -38,8 +38,7 @@ export interface CalendarPermissions {
   isSaksbehandler: boolean;
 }
 
-export function useCalendarPermissions():
-  const t = useT(); CalendarPermissions {
+export function useCalendarPermissions(): CalendarPermissions {
   const { user, isAdmin } = useAuth();
 
   const permissions = useMemo<CalendarPermissions>(() => {

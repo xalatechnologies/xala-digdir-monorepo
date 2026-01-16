@@ -264,8 +264,7 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
  * }
  * ```
  */
-export function useBackofficeRoleContext():
-  const t = useT(); BackofficeRoleContextValue {
+export function useBackofficeRoleContext(): BackofficeRoleContextValue {
   const context = useContext(BackofficeRoleContext);
   if (context === undefined) {
     throw new Error('useBackofficeRoleContext must be used within a BackofficeRoleProvider');

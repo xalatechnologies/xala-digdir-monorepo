@@ -32,7 +32,7 @@ vi.mock('../../../hooks/useAuth', () => ({
 }));
 
 // Mock useListingPermissions BEFORE DetailHeader import
-vi.mock('../../../listings/hooks/useListingPermissions', () => ({
+vi.mock('../../../rental-objects/hooks/useListingPermissions', () => ({
   useListingPermissions: () => ({
     canEditListing: () => true,
     canPublishListing: () => true,
@@ -63,7 +63,7 @@ vi.mock('@xala/i18n', () => ({
 }));
 
 // Mock DetailHeader before importing - it uses hooks that need providers
-vi.mock('../../../listings/components/detail/DetailHeader', () => ({
+vi.mock('../../../rental-objects/components/detail/DetailHeader', () => ({
   DetailHeader: ({ listing, backPath, onEditSuccess }: any) => {
     // Simple mock that doesn't use any hooks
     return (
@@ -76,19 +76,19 @@ vi.mock('../../../listings/components/detail/DetailHeader', () => ({
 }));
 
 
-vi.mock('../../../listings/components/detail/OverviewTab', () => ({
+vi.mock('../../../rental-objects/components/detail/OverviewTab', () => ({
   OverviewTab: ({ listing }: any) => <div data-testid="overview-tab">{listing?.name || 'Loading...'}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/BookingsTab', () => ({
+vi.mock('../../../rental-objects/components/detail/BookingsTab', () => ({
   BookingsTab: ({ listingId }: any) => <div data-testid="bookings-tab">{listingId}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/AvailabilityTab', () => ({
+vi.mock('../../../rental-objects/components/detail/AvailabilityTab', () => ({
   AvailabilityTab: ({ listingId }: any) => <div data-testid="availability-tab">{listingId}</div>,
 }));
 
-vi.mock('../../../listings/components/detail/AuditTab', () => ({
+vi.mock('../../../rental-objects/components/detail/AuditTab', () => ({
   AuditTab: ({ listingId }: any) => <div data-testid="audit-tab">{listingId}</div>,
 }));
 

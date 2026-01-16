@@ -1,14 +1,14 @@
 /**
- * ListingListItem
+ * RentalObjectListItem
  *
- * A horizontal list item component for displaying listing/venue information.
+ * A horizontal list item component for displaying rental object/venue information.
  * Used in list view mode. Supports images, location map, facilities, and capacity.
  */
 import * as React from 'react';
 import { Tag } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 
-export interface ListingListItemProps {
+export interface RentalObjectListItemProps {
   /** Unique identifier */
   id: string;
   /** Listing name/title */
@@ -120,7 +120,7 @@ const listingTypeColors: Record<string, string> = {
   OTHER: 'neutral',
 };
 
-export function ListingListItem({
+export function RentalObjectListItem({
   id,
   name,
   type,
@@ -155,7 +155,7 @@ export function ListingListItem({
   latitude,
   longitude,
   mapboxToken,
-}: ListingListItemProps): React.ReactElement {
+}: RentalObjectListItemProps): React.ReactElement {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const handleClick = () => {
@@ -179,7 +179,7 @@ export function ListingListItem({
 
   return (
     <div
-      className={cn('listing-list-item', className)}
+      className={cn('rental-object-list-item', className)}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -479,4 +479,4 @@ export function ListingListItem({
   );
 }
 
-export default ListingListItem;
+export default RentalObjectListItem;

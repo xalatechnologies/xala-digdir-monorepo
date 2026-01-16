@@ -103,19 +103,20 @@ export const rentalObjects = pgTable('rental_objects', {
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull(),
-  type: varchar('type', { length: 50 }).notNull().default('SPACE'),
+  category: varchar('category', { length: 50 }).notNull().default('LOCALE'), // LOCALE, ARRANGEMENT, UTSTYR, OPPLEVELSER
   status: varchar('status', { length: 50 }).notNull().default('draft'),
   description: text('description'),
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
   capacity: integer('capacity'),
+  requiresApproval: boolean('requires_approval').notNull().default(false),
   metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
   statusIdx: index('rental_objects_status_idx').on(table.status),
-  typeIdx: index('rental_objects_type_idx').on(table.type),
+  categoryIdx: index('rental_objects_category_idx').on(table.category),
   slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
 }));
 

@@ -55,6 +55,8 @@ export {
   usePublicRentalObjectAvailability,
   usePublicRentalObjectCategories,
   usePublicRentalObjectsList,
+  usePublicCities,
+  usePublicMunicipalities,
   useFeaturedRentalObjects,
   useRentalObjectsList,
   useUploadRentalObjectMedia,

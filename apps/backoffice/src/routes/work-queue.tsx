@@ -19,7 +19,7 @@ import {
   Table,
   useDialog,
 } from '@xala/ds';
-import { useT { useT, useLocale useT } from '@xala/i18n';
+import { useT, useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 

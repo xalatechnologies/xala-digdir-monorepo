@@ -23,7 +23,7 @@ import {
   Textfield,
 } from '@xala/ds';
 import { usePaymentReconciliation, formatDate, formatCurrency } from '@digilist/client-sdk';
-import { useT { useT, useLocale useT } from '@xala/i18n';
+import { useT, useLocale } from '@xala/i18n';
 
 // Payment status filter options
 const PAYMENT_STATUS_OPTIONS = [

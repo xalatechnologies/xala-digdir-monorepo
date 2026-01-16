@@ -10,7 +10,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { ListingCard } from './ListingCard';
+import { RentalObjectCard } from './RentalObjectCard';
 
 // Mapbox style URLs
 const MAP_STYLES = {
@@ -345,7 +345,7 @@ export function RentalObjectMap({
               zIndex: 9999,
             }}
           >
-            <ListingCard
+            <RentalObjectCard
               id={selectedRentalObject.id}
               name={selectedRentalObject.name}
               type={selectedRentalObject.type || ''}
