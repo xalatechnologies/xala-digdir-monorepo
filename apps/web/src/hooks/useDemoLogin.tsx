@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '@xala/i18n';
-import { authService } from '@digilist/client-sdk';
+import { authService, setAuthToken } from '@digilist/client-sdk';
 import type { DemoLoginFormData } from '@xala/ds';
 
 export function useDemoLogin() {
@@ -37,24 +37,27 @@ export function useDemoLogin() {
       const response = await authService.loginWithDemoToken(data.token.trim());
 
       if (response.data?.token && response.data?.user) {
-        // Token is valid - store JWT token for API auth
+        // Token is valid - update SDK client with JWT token for authenticated API calls
+        setAuthToken(response.data.token);
+        
+        // Store token and user in localStorage for persistence
         localStorage.setItem('digilist_token', response.data.token);
         localStorage.setItem('web_user', JSON.stringify(response.data.user));
 
-        // Close dialog
-        setShowDialog(false);
-
-        // Verify session is established
+        // Verify session is now established with the token
         const sessionCheck = await authService.getSession();
         console.log('[DEMO LOGIN] Session verified:', sessionCheck.data);
+
+        // Close dialog
+        setShowDialog(false);
 
         // Determine redirect based on user role (web-specific)
         const user = response.data.user;
         let redirectPath = '/';
 
         // For web app, most users go to listings
-        if (user.role === 'user' || user.role === 'organization') {
-         redirectPath = '/listings';
+        if (user.role === 'user') {
+          redirectPath = '/listings';
         }
 
         // Navigate and reload to pick up auth state
