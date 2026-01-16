@@ -4,7 +4,7 @@
  *
  * Public routes (no auth required):
  * - / (listings)
- * - /listing/:id (listing details)
+ * - /listing/:id (rental object details)
  *
  * Protected routes (auth required):
  * - /payment/callback
@@ -98,8 +98,8 @@ export function ProtectedRoute({
   children,
   redirectTo = '/login',
   tenantId,
-}: ProtectedRouteProps):
-  const t = useT(); React.ReactElement {
+}: ProtectedRouteProps): React.ReactElement {
+  const t = useT();
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 

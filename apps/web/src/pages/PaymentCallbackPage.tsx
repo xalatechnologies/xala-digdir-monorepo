@@ -19,8 +19,8 @@ import {
 import { useVippsPayment } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
-export function PaymentCallbackPage():
-  const t = useT(); React.ReactElement {
+export function PaymentCallbackPage(): React.ReactElement {
+  const t = useT();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get('orderId');

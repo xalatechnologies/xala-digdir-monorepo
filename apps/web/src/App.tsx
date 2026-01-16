@@ -12,9 +12,9 @@ import {
 } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
-import { useT { I18nProvider, useT useT } from '@xala/i18n';
+import { I18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
-import { ListingsPage } from './pages/ListingsPage';
+import { RentalObjectsPage } from './pages/RentalObjectsPage';
 import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
 import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
@@ -229,8 +229,8 @@ function AppContent() {
               <Route element={<MainLayoutWithContext colorScheme={colorScheme} setColorScheme={setColorScheme} effectiveScheme={effectiveScheme} />}>
                 <Route element={<MainLayout />}>
                   {/* PUBLIC ROUTES - No authentication required */}
-                  <Route path="/" element={<ListingsPage />} />
-                  <Route path="/rental-objects" element={<ListingsPage />} />
+                  <Route path="/" element={<RentalObjectsPage />} />
+                  <Route path="/rental-objects" element={<RentalObjectsPage />} />
                   <Route path="/rental-object/:id" element={<RentalObjectDetailPage />} />
                   {/* Backward compatibility - redirect old /listing/:id to /rental-object/:id */}
                   <Route path="/listing/:id" element={<RentalObjectDetailPage />} />

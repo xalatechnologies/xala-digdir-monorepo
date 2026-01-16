@@ -17,7 +17,7 @@ import { JwtService } from './core/auth/jwt.service';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
-import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
+import { RentalObjectModule, RentalObjectController, RentalObjectService, RentalObjectRepository } from './modules/rental-objects';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
@@ -38,7 +38,7 @@ import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
 import { DiscountCodesController } from './modules/discount-codes/discount-codes.controller';
 import { HealthController } from './modules/health/health.controller';
-import { CategoriesController } from './modules/listing/listing.controller';
+import { CategoriesController } from './modules/rental-objects/rental-objects.controller';
 // Phase 3: Integrations, Widgets, Share
 import { IntegrationsController } from './modules/integrations/integrations.controller';
 import { WidgetsController } from './modules/widgets/widgets.controller';
@@ -50,7 +50,7 @@ import { registerWebSocketRoutes } from './modules/websocket/websocket.controlle
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
 import { UserGroupController } from './modules/user-groups/user-group.controller';
-import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeListingsController } from './modules/backoffice/backoffice.controller';
+import { BackofficeUserGroupsController, BackofficePriceRulesController, BackofficeRentalObjectsController } from './modules/backoffice/backoffice.controller';
 // Phase 5: Search, Seasons, Blocks
 import { SearchController } from './modules/search/search.controller';
 import { SeasonsController } from './modules/seasons/seasons.controller';
@@ -58,7 +58,9 @@ import { BlocksController } from './modules/blocks/blocks.controller';
 // Phase 6: Profile
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
-import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+import { ReviewsController, RentalObjectReviewsController } from './modules/reviews/reviews.controller';
+// Feature Flags
+import { featuresRoutes } from './routes/features.routes';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -129,7 +131,7 @@ async function bootstrap() {
 
   // Register repositories
   container.registerFactory('TenantRepository', () => new TenantRepository(db));
-  container.registerFactory('ListingRepository', () => new ListingRepository(db));
+  container.registerFactory('RentalObjectRepository', () => new RentalObjectRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
@@ -140,8 +142,8 @@ async function bootstrap() {
   container.registerFactory('TenantService', () => 
     new TenantService(container.resolve('TenantRepository'), adapters)
   );
-  container.registerFactory('ListingService', () => 
-    new ListingService(container.resolve('ListingRepository'), adapters)
+  container.registerFactory('RentalObjectService', () => 
+    new RentalObjectService(container.resolve('RentalObjectRepository'), adapters)
   );
   container.registerFactory('BookingService', () => 
     new BookingService(container.resolve('BookingRepository'), adapters)
@@ -164,8 +166,8 @@ async function bootstrap() {
   container.registerFactory('TenantController', () => 
     new TenantController(container.resolve('TenantService'))
   );
-  container.registerFactory('ListingController', () => 
-    new ListingController(container.resolve('ListingService'))
+  container.registerFactory('RentalObjectController', () => 
+    new RentalObjectController(container.resolve('RentalObjectService'))
   );
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
@@ -188,7 +190,7 @@ async function bootstrap() {
 
   // Load modules
   await moduleLoader.load(TenantModule);
-  await moduleLoader.load(ListingModule);
+  await moduleLoader.load(RentalObjectModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
@@ -197,7 +199,7 @@ async function bootstrap() {
   // Get controllers (core + backoffice modules)
   const controllers = [
     TenantController, 
-    ListingController, 
+    RentalObjectController, 
     BookingController, 
     UserController, 
     MonitoringController,
@@ -234,7 +236,7 @@ async function bootstrap() {
     UserGroupController,
     BackofficeUserGroupsController,
     BackofficePriceRulesController,
-    BackofficeListingsController,
+    BackofficeRentalObjectsController,
     // Phase 5: Search, Seasons, Blocks
     SearchController,
     SeasonsController,

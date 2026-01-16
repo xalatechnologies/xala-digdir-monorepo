@@ -133,8 +133,8 @@ export function ReviewCard({
   onMarkHelpful,
   className,
   variant = 'default',
-}: ReviewCardProps):
-  const t = useT(); React.ReactElement {
+}: ReviewCardProps): React.ReactElement {
+  const t = useT();
   const handleHelpful = () => {
     onMarkHelpful?.(review.id);
   };

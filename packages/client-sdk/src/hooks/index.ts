@@ -61,28 +61,7 @@ export {
   useDeleteRentalObjectMedia,
 } from './use-rental-objects';
 
-// Legacy listing hooks - DEPRECATED, use rental object hooks above
-// These are backward compatibility aliases that will be removed in next major version
-export {
-  // Public query hooks
-  usePublicListings,
-  usePublicListing,
-  usePublicCities,
-  usePublicMunicipalities,
-  // Private query hooks (backoffice)
-  useListing,
-  useListingBySlug,
-  useListingCalendarConfig,
-  // Mutation hooks (backoffice backward compatibility)
-  useCreateListing,
-  useUpdateListing,
-  usePublishListing,
-  useArchiveListing,
-  useDeleteListing,
-  useDuplicateListing,
-  useUploadListingMedia,
-  useDeleteListingMedia,
-} from './use-listings';
+// Legacy listing hooks removed - use rental object hooks above
 
 // Booking hooks
 export {
@@ -188,8 +167,7 @@ export {
   useRealtimeSend
 } from './use-realtime';
 
-// Legacy alias for backward compatibility - DEPRECATED, use useRealtimeRentalObjects
-export { useRealtimeRentalObjects as useRealtimeListings } from './use-realtime';
+// Legacy alias removed - use useRealtimeRentalObjects directly
 
 // Notification hooks
 export {

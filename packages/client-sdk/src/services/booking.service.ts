@@ -467,8 +467,30 @@ export class AvailabilityService extends BaseService {
   }
 }
 
+/**
+ * Extended BookingService with caseworker/admin methods
+ */
+class ExtendedBookingService extends BookingService {
+  /**
+   * Approve booking (caseworker/admin only)
+   */
+  async approve(id: string, reason?: string): Promise<SingleResponse<Booking>> {
+    return this.client.patch(this.buildPath(`/${id}/approve`), { reason });
+  }
+
+  /**
+   * Reject booking (caseworker/admin only)
+   */
+  async reject(id: string, reason: string): Promise<SingleResponse<Booking>> {
+    return this.client.patch(this.buildPath(`/${id}/reject`), { reason });
+  }
+}
+
+
+
 // Singleton instances
-export const bookingService = new BookingService();
+export const bookingService = new ExtendedBookingService();
 export const calendarService = new CalendarService();
 export const allocationService = new AllocationService();
 export const availabilityService = new AvailabilityService();
+

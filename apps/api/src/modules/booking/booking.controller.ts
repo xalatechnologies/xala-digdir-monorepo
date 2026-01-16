@@ -216,5 +216,76 @@ export class BookingController {
     
     return { data: receipt };
   }
+
+  /**
+   * PATCH /api/bookings/:id/approve - Approve booking (caseworker/admin only)
+   */
+  @Put('/:id/approve')
+  async approve(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const { reason } = request.body as { reason?: string };
+    const user = request.user as any;
+    
+    if (!user || !user.userId) {
+      return reply.status(401).send({
+        type: 'https://api.digilist.no/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Authentication required',
+      });
+    }
+    
+    // Check role (caseworker or admin)
+    if (user.role !== 'CASEWORKER' && user.role !== 'ADMIN' && user.role !== 'SAAS_ADMIN') {
+      return reply.status(403).send({
+        type: 'https://api.digilist.no/errors/forbidden',
+        title: 'Forbidden',
+        status: 403,
+        detail: 'This action requires CASEWORKER or ADMIN role',
+      });
+    }
+    
+    const booking = await this.service.approve(request.params.id, user.userId, reason);
+    return { data: booking };
+  }
+
+  /**
+   * PATCH /api/bookings/:id/reject - Reject booking (caseworker/admin only)
+   */
+  @Put('/:id/reject')
+  async reject(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const { reason } = request.body as { reason: string };
+    const user = request.user as any;
+    
+    if (!user || !user.userId) {
+      return reply.status(401).send({
+        type: 'https://api.digilist.no/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Authentication required',
+      });
+    }
+    
+    // Check role (caseworker or admin)
+    if (user.role !== 'CASEWORKER' && user.role !== 'ADMIN' && user.role !== 'SAAS_ADMIN') {
+      return reply.status(403).send({
+        type: 'https://api.digilist.no/errors/forbidden',
+        title: 'Forbidden',
+        status: 403,
+        detail: 'This action requires CASEWORKER or ADMIN role',
+      });
+    }
+    
+    if (!reason || reason.trim().length === 0) {
+      return reply.status(400).send({
+        type: 'https://api.digilist.no/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'Rejection reason is required',
+      });
+    }
+    
+    const booking = await this.service.reject(request.params.id, user.userId, reason);
+    return { data: booking };
+  }
 }
 

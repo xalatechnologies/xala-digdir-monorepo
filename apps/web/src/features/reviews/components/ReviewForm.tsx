@@ -18,7 +18,7 @@ import { useT } from '@xala/i18n';
 
 export interface ReviewFormProps {
   /** Listing ID to review */
-  listingId: string;
+  rentalObjectId: string;
   /** Booking ID associated with the review */
   bookingId: string;
   /** Callback when review is successfully submitted */
@@ -110,7 +110,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
  * @example
  * ```tsx
  * <ReviewForm
- *   listingId="listing-123"
+ *   rentalObjectId="listing-123"
  *   bookingId="booking-456"
  *   onSuccess={handleSuccess}
  *   onCancel={handleCancel}
@@ -118,13 +118,13 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
  * ```
  */
 export function ReviewForm({
-  listingId,
+  rentalObjectId,
   bookingId,
   onSuccess,
   onCancel,
   className,
-}: ReviewFormProps):
-  const t = useT(); React.ReactElement {
+}: ReviewFormProps): React.ReactElement {
+  const t = useT();
   // Form state
   const [rating, setRating] = React.useState<number>(0);
   const [comment, setComment] = React.useState<string>('');
@@ -152,7 +152,7 @@ export function ReviewForm({
 
     // Prepare DTO
     const reviewData: CreateReviewDTO = {
-      listingId,
+      rentalObjectId,
       bookingId,
       rating,
       comment: comment.trim() || undefined,
@@ -168,7 +168,7 @@ export function ReviewForm({
       onSuccess?.();
     } catch (error) {
       // Error is handled by mutation error state
-      auditService.logError('review_submission_failed', 'review', error instanceof Error ? error : String(error), { listingId, bookingId, rating });
+      auditService.logError('review_submission_failed', 'review', error instanceof Error ? error : String(error), { rentalObjectId, bookingId, rating });
     }
   };
 

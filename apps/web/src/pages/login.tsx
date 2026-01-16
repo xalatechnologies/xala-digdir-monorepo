@@ -39,8 +39,8 @@ export interface FlowContextExpiredState {
   flowContextExpired: true;
 }
 
-export function LoginPage():
-  const t = useT(); React.ReactElement {
+export function LoginPage(): React.ReactElement {
+  const t = useT();
   const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

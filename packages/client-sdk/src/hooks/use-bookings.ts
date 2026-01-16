@@ -267,3 +267,51 @@ export function usePaymentHistory(bookingId: string) {
     enabled: !!bookingId,
   });
 }
+
+// ============================================================================
+// Caseworker/Admin Hooks
+// ============================================================================
+
+/**
+ * Approve booking (caseworker/admin only)
+ */
+export function useApproveBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
+      const response = await bookingService.approve(id, reason);
+      return response;
+    },
+    onSuccess: (data) => {
+      // Invalidate all booking queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      // Invalidate specific booking
+      if (data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(data.id) });
+      }
+    },
+  });
+}
+
+/**
+ * Reject booking (caseworker/admin only)
+ */
+export function useRejectBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
+      const response = await bookingService.reject(id, reason);
+      return response;
+    },
+    onSuccess: (data) => {
+      // Invalidate all booking queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      // Invalidate specific booking
+      if (data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(data.id) });
+      }
+    },
+  });
+}

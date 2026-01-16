@@ -149,14 +149,14 @@ describe('useAuth', () => {
         result.current.loginWithFlowContext({
           provider: 'idporten',
           tenantId: 'test-tenant',
-          listingId: 'listing-123',
+          rentalObjectId: 'listing-123',
         });
       });
 
       expect(authService.requireAuth).toHaveBeenCalledWith(
         expect.objectContaining({
           tenantId: 'test-tenant',
-          listingId: 'listing-123',
+          rentalObjectId: 'listing-123',
         })
       );
     });

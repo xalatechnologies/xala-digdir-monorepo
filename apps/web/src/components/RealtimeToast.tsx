@@ -19,8 +19,8 @@ interface Toast {
   timestamp: Date;
 }
 
-export function RealtimeToast():
-  const t = useT(); React.ReactElement {
+export function RealtimeToast(): React.ReactElement {
+  const t = useT();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { isConnected, status } = useRealtimeStatus();
 

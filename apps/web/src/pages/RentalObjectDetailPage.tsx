@@ -2,7 +2,7 @@
  * RentalObjectDetailPage
  *
  * Rental object detail page using feature-based architecture.
- * Structure: Breadcrumb -> ImageSlider -> ListingDetailsLayout
+ * Structure: Breadcrumb -> ImageSlider -> RentalObjectDetailsLayout
  */
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -18,21 +18,21 @@ import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
 import {
   useRentalObject,
   useRentalObjectBySlug,
-  type Listing as ApiListing,
+  type RentalObject as ApiListing,
 } from '@digilist/client-sdk';
 import {
-  ListingDetailsLayout,
-  type Listing,
-  type ListingType,
+  RentalObjectDetailsLayout,
+  type RentalObject,
+  type RentalObjectType,
   type BookingMode,
   type OpeningHours,
   type KeyFacts,
-  type ListingMetadata,
+  type RentalObjectMetadata,
   type Rule,
   type FAQItem,
   type Amenity,
   logAuditEvent,
-} from '../features/listing-details';
+} from '../features/rental-object-details';
 import { useAuth } from '../hooks/useAuth';
 import { useT } from '@xala/i18n';
 
@@ -63,16 +63,16 @@ interface FlowContextExpiredState {
  * The API now returns pre-formatted DTOs via toDetailsProjection,
  * so we just need to map field names - no complex transformation needed.
  */
-function transformApiToListing(api: ApiListing): Listing {
+function transformApiToListing(api: ApiListing): RentalObject {
   // API DTO is already well-structured, just map to feature types
   const dto = api as any; // API returns flat DTO with all fields
 
-  // Map listing type - RESOURCE and SPACE are venues so map to FACILITY
-  const typeMap: Record<string, ListingType> = {
+  // Map rental object type - RESOURCE and SPACE are venues so map to FACILITY
+  const typeMap: Record<string, RentalObjectType> = {
     EQUIPMENT: 'EQUIPMENT', EVENT: 'EVENT', FACILITY: 'FACILITY',
     SPACE: 'FACILITY', RESOURCE: 'FACILITY',
   };
-  const listingType: ListingType = typeMap[dto.type] || 'OTHER';
+  const listingType: RentalObjectType = typeMap[dto.type] || 'OTHER';
 
   // Map images directly from DTO (already has correct structure)
   const images = (dto.images || []).map((img: any, index: number) => ({
@@ -137,7 +137,7 @@ function transformApiToListing(api: ApiListing): Listing {
   };
 
   // Build metadata
-  const metadata: ListingMetadata = {
+  const metadata: RentalObjectMetadata = {
     description: dto.description || '',
     amenities,
     includedFacilities: (dto.includedEquipment || []).map((f: any, i: number) => ({
@@ -185,8 +185,8 @@ function transformApiToListing(api: ApiListing): Listing {
 }
 
 
-export function RentalObjectDetailPage():
-  const t = useT(); React.ReactElement {
+export function RentalObjectDetailPage(): React.ReactElement {
+  const t = useT();
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -227,7 +227,7 @@ export function RentalObjectDetailPage():
     if (isFlowRestoration && flowContext && !flowRestorationProcessed.current) {
       flowRestorationProcessed.current = true;
       console.info('[ListingDetailPage] Restoring booking flow context:', {
-        listingId: flowContext.listingId,
+        rentalObjectId: flowContext.rentalObjectId,
         bookingMode: flowContext.bookingMode,
         selectedSlots: flowContext.selectedSlots?.length || 0,
         hasFormData: !!flowContext.formData,
@@ -238,7 +238,7 @@ export function RentalObjectDetailPage():
   }, [isFlowRestoration, flowContext, navigate, location.pathname]);
 
   // Transform API data
-  const listing = React.useMemo((): Listing | null => {
+  const listing = React.useMemo((): RentalObject | null => {
     if (apiResponse?.data) return transformApiToListing(apiResponse.data);
     return null;
   }, [apiResponse]);
@@ -271,7 +271,7 @@ export function RentalObjectDetailPage():
   // Log page view
   React.useEffect(() => {
     if (listing) {
-      logAuditEvent('LISTING_VIEWED', listing.tenantId, listing.id);
+      logAuditEvent('RENTAL_OBJECT_VIEWED', listing.tenantId, listing.id);
     }
   }, [listing]);
 
@@ -352,7 +352,7 @@ export function RentalObjectDetailPage():
 
         {/* New feature-based layout */}
         <div style={{ paddingLeft: 'var(--ds-spacing-1)', paddingRight: 'var(--ds-spacing-1)' }}>
-          <ListingDetailsLayout
+          <RentalObjectDetailsLayout
             listing={listing}
             isAuthenticated={isAuthenticated}
             isFavorited={isFavorited}

@@ -19,9 +19,9 @@ import { RoleSelectionPage } from './routes/role-selection';
 
 // Lazy-loaded page components
 const DashboardPage = React.lazy(() => import('./routes/dashboard').then(m => ({ default: m.DashboardPage })));
-const ListingsPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingsPage })));
-const ListingEditPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingEditPage })));
-const ListingDetailPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingDetailPage })));
+const RentalObjectsPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectsPage })));
+const RentalObjectEditPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectEditPage })));
+const RentalObjectDetailPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectDetailPage })));
 const CalendarPage = React.lazy(() => import('./routes/calendar').then(m => ({ default: m.CalendarPage })));
 const BookingsPage = React.lazy(() => import('./routes/bookings').then(m => ({ default: m.BookingsPage })));
 const SeasonsListPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonsListPage })));
@@ -45,7 +45,7 @@ const DecisionFormsPage = React.lazy(() => import('./routes/decision-forms').the
 const AuditTimelinePage = React.lazy(() => import('./routes/audit-timeline').then(m => ({ default: m.AuditTimelinePage })));
 
 // Admin pages
-const ListingWizardPage = React.lazy(() => import('./routes/listing-wizard').then(m => ({ default: m.ListingWizardPage })));
+const RentalObjectWizardPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectEditPage })));
 const PricingRulesPage = React.lazy(() => import('./routes/pricing-rules').then(m => ({ default: m.PricingRulesPage })));
 const UsersManagementPage = React.lazy(() => import('./routes/users-management').then(m => ({ default: m.UsersManagementPage })));
 const AdminReportsPage = React.lazy(() => import('./routes/admin-reports').then(m => ({ default: m.AdminReportsPage })));
@@ -103,10 +103,10 @@ function AppWithTheme() {
             >
               <Route index element={<DashboardPage />} />
               {/* Rental Objects routes */}
-              <Route path="rental-objects" element={<ListingsPage />} />
-              <Route path="rental-objects/new" element={<ListingEditPage />} />
-              <Route path="rental-objects/:slug" element={<ListingEditPage />} />
-              <Route path="rental-objects/:slug/view" element={<ListingDetailPage />} />
+              <Route path="rental-objects" element={<RentalObjectsPage />} />
+              <Route path="rental-objects/new" element={<RentalObjectEditPage />} />
+              <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} />
+              <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} />
               {/* Legacy redirects for backwards compatibility */}
               <Route path="listings" element={<Navigate to="/rental-objects" replace />} />
               <Route path="listings/new" element={<Navigate to="/rental-objects/new" replace />} />

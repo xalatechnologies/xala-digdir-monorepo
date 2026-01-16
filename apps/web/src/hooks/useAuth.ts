@@ -38,7 +38,7 @@ export interface LoginWithFlowContextOptions {
   /** Tenant ID (required for flow context) */
   tenantId: string;
   /** Listing ID for booking flow */
-  listingId?: string;
+  rentalObjectId?: string;
   /** Current booking mode */
   bookingMode?: FlowBookingMode;
   /** Selected dates (ISO date strings) */
@@ -154,7 +154,7 @@ function notifySubscribers(): void {
  *
  * @example
  * ```typescript
- * function BookingPage({ listingId }) {
+ * function BookingPage({ rentalObjectId }) {
  *   const { isAuthenticated, loginWithFlowContext } = useAuth();
  *
  *   const handleReserve = () => {
@@ -162,7 +162,7 @@ function notifySubscribers(): void {
  *       loginWithFlowContext({
  *         provider: 'idporten',
  *         tenantId: 'kommune-123',
- *         listingId,
+ *         rentalObjectId,
  *         bookingMode: 'SLOTS',
  *         selectedSlots: [{ date: '2024-01-15', startTime: '10:00', endTime: '11:00' }],
  *       });
@@ -196,8 +196,8 @@ function notifySubscribers(): void {
  * }
  * ```
  */
-export function useAuth():
-  const t = useT(); UseAuthReturn {
+export function useAuth(): UseAuthReturn {
+  const t = useT();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -276,7 +276,7 @@ export function useAuth():
     const result = authService.requireAuth({
       returnTo: options.returnTo || window.location.pathname + window.location.search,
       tenantId: options.tenantId,
-      listingId: options.listingId,
+      rentalObjectId: options.rentalObjectId,
       bookingMode: options.bookingMode,
       selectedDates: options.selectedDates,
       selectedSlots: options.selectedSlots,

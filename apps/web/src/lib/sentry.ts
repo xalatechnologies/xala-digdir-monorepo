@@ -14,8 +14,8 @@ import { useT } from '@xala/i18n';
  * Only initializes if VITE_SENTRY_DSN is configured.
  * Includes BrowserTracing for performance monitoring and Replay for session replay.
  */
-export function initSentry():
-  const t = useT(); void {
+export function initSentry(): void {
+  const t = useT();
   const dsn = import.meta.env.VITE_SENTRY_DSN;
 
   // Don't initialize Sentry if DSN is not configured

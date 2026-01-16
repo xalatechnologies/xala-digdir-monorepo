@@ -64,8 +64,8 @@ export function RealtimeProvider({
   tenantId = import.meta.env.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
   autoConnect = true,
   enableInDev = true,
-}: RealtimeProviderProps):
-  const t = useT(); React.ReactElement {
+}: RealtimeProviderProps): React.ReactElement {
+  const t = useT();
   const [isConnected, setIsConnected] = useState(false);
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
   const [error, setError] = useState<string | null>(null);
@@ -209,7 +209,7 @@ export function useRealtimeBooking(handler: RealtimeEventHandler): void {
 /**
  * Subscribe to listing events
  */
-export function useRealtimeListing(handler: RealtimeEventHandler): void {
+export function useRealtimeRentalObject(handler: RealtimeEventHandler): void {
   const { subscribe } = useRealtimeContext();
 
   useEffect(() => {
@@ -282,11 +282,11 @@ export function useRealtimeStatus(): {
  * Subscribe to slot availability changes
  * Useful for showing visual feedback when slots become unavailable
  *
- * @param listingId - Optional listing ID to filter events
+ * @param rentalObjectId - Optional listing ID to filter events
  * @param onSlotUnavailable - Callback when a slot becomes unavailable
  */
 export function useRealtimeSlotAvailability(
-  listingId?: string,
+  rentalObjectId?: string,
   onSlotUnavailable?: (event: RealtimeEvent) => void
 ): void {
   const { subscribe } = useRealtimeContext();
@@ -295,7 +295,7 @@ export function useRealtimeSlotAvailability(
     const handler = (event: RealtimeEvent) => {
       const data = event.data as {
         action?: string;
-        listingId?: string;
+        rentalObjectId?: string;
         listingName?: string;
         startTime?: string;
         endTime?: string;
@@ -303,7 +303,7 @@ export function useRealtimeSlotAvailability(
       } | undefined;
 
       // Filter by listing ID if provided
-      if (listingId && data?.listingId !== listingId) {
+      if (rentalObjectId && data?.rentalObjectId !== rentalObjectId) {
         return;
       }
 
@@ -315,7 +315,7 @@ export function useRealtimeSlotAvailability(
 
     const unsubscribe = subscribe('booking', handler);
     return unsubscribe;
-  }, [subscribe, listingId, onSlotUnavailable]);
+  }, [subscribe, rentalObjectId, onSlotUnavailable]);
 }
 
 export default RealtimeProvider;

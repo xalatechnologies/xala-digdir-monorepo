@@ -7,7 +7,7 @@ export {
   RealtimeProvider,
   useRealtimeContext,
   useRealtimeBooking,
-  useRealtimeListing,
+  useRealtimeRentalObject,
   useRealtimeAudit,
   useRealtimeNotification,
   useRealtimeMessage,

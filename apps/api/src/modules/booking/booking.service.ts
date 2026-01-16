@@ -982,5 +982,102 @@ export class BookingService {
 
     return quote;
   }
+
+  /**
+   * Approve booking (caseworker/admin only)
+   * Updates status to 'approved' and logs approval metadata
+   */
+  async approve(id: string, userId: string, reason?: string): Promise<Booking> {
+    const booking = await this.repository.findByIdOrFail(id);
+    
+    // Update status to approved
+    const updated = await this.repository.update(id, {
+      status: 'approved',
+      metadata: {
+        ...(booking.metadata as any),
+        approvedBy: userId,
+        approvedAt: new Date().toISOString(),
+        approvalReason: reason,
+      },
+    });
+
+    this.adapters?.log?.info('Booking approved', { id, userId, reason });
+
+    // Audit log
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'approve',
+      resource: 'booking',
+      resourceId: id,
+      metadata: { reason, previousStatus: booking.status },
+    });
+
+    // Broadcast event
+    broadcastBookingEvent({
+      type: 'approved',
+      bookingId: id,
+      rentalObjectId: booking.rentalObjectId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId,
+      version: updated.version,
+      metadata: { approvedBy: userId, reason },
+    });
+
+    return updated as unknown as Booking;
+  }
+
+  /**
+   * Reject booking (caseworker/admin only)
+   * Updates status to 'rejected' and requires rejection reason
+   */
+  async reject(id: string, userId: string, reason: string): Promise<Booking> {
+    const booking = await this.repository.findByIdOrFail(id);
+    
+    if (!reason || reason.trim().length === 0) {
+      throw new ForbiddenError('Rejection reason is required');
+    }
+    
+    // Update status to rejected
+    const updated = await this.repository.update(id, {
+      status: 'rejected',
+      metadata: {
+        ...(booking.metadata as any),
+        rejectedBy: userId,
+        rejectedAt: new Date().toISOString(),
+        rejectionReason: reason,
+      },
+    });
+
+    this.adapters?.log?.warn('Booking rejected', { id, userId, reason });
+
+    // Audit log
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'reject',
+      resource: 'booking',
+      resourceId: id,
+      severity: 'warning',
+      metadata: { reason, previousStatus: booking.status },
+    });
+
+    // Broadcast event
+    broadcastBookingEvent({
+      type: 'rejected',
+      bookingId: id,
+      rentalObjectId: booking.rentalObjectId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId,
+      version: updated.version,
+      metadata: { rejectedBy: userId, reason },
+    });
+
+    return updated as unknown as Booking;
+  }
 }
 
