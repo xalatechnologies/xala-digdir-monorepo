@@ -53,6 +53,23 @@ All tests MUST be organized under `tests/`:
 
 **NEVER create test folders at root level** (test-results/, playwright-report/, reports/)
 
+## Documentation Organization (REQUIRED)
+
+All documentation MUST be organized under `docs/`:
+- docs/architecture/ - Architecture docs and proposals
+- docs/guides/ - Development guides
+- docs/operations/deployments/ - Deployment reports
+- docs/operations/migrations/ - Migration reports
+- docs/operations/archive/ - Historical artifacts
+
+**CRITICAL RULES:**
+- **NEVER create documentation files in the repository root**
+- **NEVER create documentation in reports/ folder**
+- All new documentation MUST go in appropriate docs/ subdirectories
+
+**Exceptions (ONLY these files allowed in root):**
+- README.md, AGENTS.md, CLAUDE.md, AI_RULES.md
+
 ## Other Critical Rules
 
 ### SDK-First: ONLY use @digilist/client-sdk (never fetch/axios)

@@ -21,6 +21,7 @@ Welcome to the comprehensive documentation for the Xala Diglist Platform, a unif
 - [ACL Mapping Guide](./architecture/acl-mapping.md) - Anti-Corruption Layer patterns
 - [Capabilities System](./architecture/capabilities.md) - Server-driven UI permissions
 - [Retry Infrastructure](./architecture/retry-infrastructure.md) - DLQ and retry patterns
+- [SSO Architecture Proposal](./architecture/SSO_ARCHITECTURE_PROPOSAL.md) - Single Sign-On architecture
 
 ### 📦 Packages
 - [Client SDK](./packages/01-client-sdk.md) - API client and hooks
@@ -48,6 +49,13 @@ Welcome to the comprehensive documentation for the Xala Diglist Platform, a unif
 - [Performance](./guides/04-performance.md) - Performance optimization
 - [Accessibility](./guides/05-accessibility.md) - A11y compliance
 - [Rename Concept Safely](./guides/rename-concept-safely.md) - Schema/terminology migration guide
+- [Dev Mode Guide](./guides/DEV_MODE_GUIDE.md) - Development mode configuration
+- [Dev Mode Implementation](./guides/DEV_MODE_IMPLEMENTATION.md) - Development mode technical details
+
+### 🔧 Operations
+- [Deployments](./operations/deployments/README.md) - Historical deployment reports and auth implementations
+- [Migrations](./operations/migrations/README.md) - Database migration reports and seed data
+- [Archive](./operations/archive/README.md) - Archived test results and build outputs
 
 ### 📊 Status & Progress
 - [Architecture Refactoring Progress](./ARCHITECTURE_REFACTORING_PROGRESS.md) - Current refactoring status

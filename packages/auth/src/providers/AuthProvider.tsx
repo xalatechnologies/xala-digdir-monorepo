@@ -8,10 +8,17 @@
  * SECURITY ARCHITECTURE: HTTP-Only Cookie-Based Authentication
  * -----------------------------------------------------------
  * - NO tokens in URLs or localStorage
- * - NO mock authentication (enforced at package level)
+ * - NO mock authentication in PRODUCTION (enforced at package level)
  * - HTTP-only cookies set by api.digilist.no
  * - Domain: .digilist.no (works across all subdomains = SSO!)
  * - OAuth 2.0 Authorization Code flow (RFC 8252 compliant)
+ * 
+ * DEVELOPMENT MODE (VITE_ENABLE_DEV_MODE=true)
+ * -------------------------------------------
+ * - Auto-login with mock developer user (bypasses all auth)
+ * - Skips API calls for session validation
+ * - NEVER enabled in production builds
+ * - Speeds up development by removing login friction
  * 
  * ROLE-BASED ACCESS CONTROL
  * -------------------------
@@ -122,6 +129,18 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children, config }: AuthProviderProps) {
+  // 🛡️ STRICT DEVELOPMENT MODE CHECK
+  // Triple safeguard to ensure dev mode is NEVER active in production:
+  // 1. Must be in Vite dev mode (env.DEV === true)
+  // 2. Must NOT be in production mode (env.PROD !== true) 
+  // 3. Must have explicit opt-in (VITE_ENABLE_DEV_MODE === 'true')
+  const env = (import.meta as any).env;
+  const isDevMode = 
+    env?.DEV === true &&           // Vite dev server running
+    env?.PROD !== true &&          // NOT a production build
+    env?.MODE === 'development' && // Explicit development mode
+    env?.VITE_ENABLE_DEV_MODE === 'true'; // Explicit opt-in required
+  
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
@@ -172,6 +191,30 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    */
   useEffect(() => {
     const checkAuth = async () => {
+      // 🚀 DEVELOPMENT MODE: Auto-login with mock user
+      // This ONLY runs when:
+      // - Running on Vite dev server (npm run dev)
+      // - NOT in a production build
+      // - MODE is explicitly 'development'
+      // - VITE_ENABLE_DEV_MODE is set to 'true'
+      if (isDevMode) {
+        debug('🔧 DEV MODE ACTIVE - Auto-logging in with developer user');
+        debug('⚠️  This would NEVER run in production builds');
+        const devUser: User = {
+          id: 'dev-user-00000000-0000-0000-0000-000000000000',
+          name: 'Developer User',
+          email: 'dev@localhost',
+          role: 'super_admin', // Full access in dev mode
+          tenantId: env?.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+          grantedRoles: ['super_admin', 'admin', 'case_handler'],
+        };
+        
+        setUser(devUser);
+        setIsLoading(false);
+        debug('✅ DEV MODE - Logged in as:', devUser.name, '(role:', devUser.role, ')');
+        return;
+      }
+      
       debug('Checking authentication status...');
 
       // Check URL for OAuth callback with authorization code

@@ -76,9 +76,6 @@ export function App() {
 function AppWithTheme() {
   const { colorScheme } = useTheme();
   
-  // Handle OAuth/BankID redirects automatically
-  useOAuthCallback();
-  
   return (
     <I18nProvider initialLocale="nb">
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
@@ -92,7 +89,23 @@ function AppWithTheme() {
         }}
       >
         <AuthProvider config={{ appType: 'backoffice', debug: import.meta.env.DEV }}>
-          <BackofficeRoleProvider>
+          <AppContent />
+        </AuthProvider>
+      </BrowserRouter>
+      </ToastProvider>
+      </ErrorBoundary>
+      </DialogProvider>
+      </DesignsystemetProvider>
+    </I18nProvider>
+  );
+}
+
+function AppContent() {
+  // Handle OAuth/BankID redirects automatically (needs router context)
+  useOAuthCallback();
+  
+  return (
+    <BackofficeRoleProvider>
           <CapabilityProvider>
           <RealtimeProvider
             wsUrl={import.meta.env.VITE_WS_URL}
@@ -346,12 +359,5 @@ function AppWithTheme() {
           </RealtimeProvider>
           </CapabilityProvider>
           </BackofficeRoleProvider>
-        </AuthProvider>
-      </BrowserRouter>
-      </ToastProvider>
-      </ErrorBoundary>
-      </DialogProvider>
-      </DesignsystemetProvider>
-    </I18nProvider>
   );
 }

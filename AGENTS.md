@@ -74,6 +74,39 @@ tests/
 
 **CRITICAL:** Never create test folders at root level (e.g., `test-results/`, `playwright-report/`, `reports/`)
 
+### Documentation Organization (REQUIRED)
+
+All documentation MUST be organized under the `docs/` directory:
+
+```
+docs/
+├── architecture/   # Architecture docs and proposals
+├── guides/         # Development guides
+├── operations/     # Operational docs
+│   ├── deployments/    # Deployment reports
+│   ├── migrations/     # Migration reports
+│   └── archive/        # Historical artifacts
+├── apps/           # App-specific docs
+├── packages/       # Package-specific docs
+└── reference/      # Reference materials
+```
+
+**CRITICAL RULES:**
+- **NEVER create documentation files in the repository root**
+- **NEVER create documentation in `reports/` folder** (reserved for technical reports)
+- All new documentation MUST go in appropriate `docs/` subdirectories
+- Deployment reports → `docs/operations/deployments/`
+- Migration reports → `docs/operations/migrations/`
+- Architecture proposals → `docs/architecture/`
+- Development guides → `docs/guides/`
+- Historical/archived docs → `docs/operations/archive/`
+
+**Exceptions (ONLY these files allowed in root):**
+- `README.md` - Main repository README
+- `AGENTS.md` - AI agent guidance
+- `CLAUDE.md` - Claude-specific guidance  
+- `AI_RULES.md` - AI coding rules
+
 ### Unit Tests (Vitest)
 
 - All tests (watch): `pnpm test`

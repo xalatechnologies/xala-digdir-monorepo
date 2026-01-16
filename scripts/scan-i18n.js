@@ -25,7 +25,7 @@ const CONFIG = {
   extensions: ['.tsx', '.ts', '.jsx', '.js'],
 
   // Directories to skip
-  skipDirs: ['node_modules', 'dist', 'build', '.git', 'coverage'],
+  skipDirs: ['node_modules', 'dist', 'build', '.git', 'coverage', 'api'],
 
   // Files to skip
   skipFiles: ['.test.', '.spec.', '.stories.'],
@@ -299,6 +299,12 @@ function extractStrings(content, filePath) {
  */
 function scanFile(filePath) {
   results.totalFiles++;
+
+  // Skip API files - they use RFC 7807 Problem Details, not i18n
+  if (filePath.includes('/apps/api/') || filePath.includes('\\apps\\api\\')) {
+    results.skippedFiles++;
+    return;
+  }
 
   // Check if file should be skipped
   for (const skip of CONFIG.skipFiles) {

@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@xala/contracts": "workspace:*",
+    "@fastify/cookie": "^10.0.1",
     "@fastify/cors": "^11.2.0",
     "@fastify/rate-limit": "^10.0.0",
     "@fastify/websocket": "^11.2.0",

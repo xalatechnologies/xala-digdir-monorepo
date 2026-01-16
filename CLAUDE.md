@@ -55,8 +55,18 @@ xala-digdir-monorepo/
 │   ├── screenshots/                # E2E screenshots (gitignored)
 │   └── artifacts/                  # Test artifacts (gitignored)
 │
+├── docs/                           # Documentation ⭐
+│   ├── architecture/               # Architecture docs and proposals
+│   ├── guides/                     # Development guides
+│   ├── operations/                 # Operational docs
+│   │   ├── deployments/            # Deployment reports
+│   │   ├── migrations/             # Migration reports
+│   │   └── archive/                # Historical artifacts
+│   ├── apps/                       # App-specific docs
+│   ├── packages/                   # Package-specific docs
+│   └── reference/                  # Reference materials
+│
 ├── scripts/                        # Build & deployment scripts
-├── docs/                           # Documentation
 └── (root config files)
 ```
 
@@ -790,6 +800,39 @@ tests/
 - All test output (reports, screenshots, artifacts) MUST go in `tests/reports/`, `tests/screenshots/`, or `tests/artifacts/`
 - NEVER create test folders at the root level (e.g., `test-results/`, `playwright-report/`, `reports/`)
 - Legacy scattered folders are deprecated and will be removed
+
+### Documentation Organization (REQUIRED STRUCTURE)
+
+All documentation MUST be organized under the `docs/` directory:
+
+```
+docs/
+├── architecture/      # Architecture docs and proposals
+├── guides/           # Development guides
+├── operations/       # Operational docs
+│   ├── deployments/  # Deployment reports
+│   ├── migrations/   # Migration reports
+│   └── archive/      # Historical artifacts
+├── apps/             # App-specific docs
+├── packages/         # Package-specific docs
+└── reference/        # Reference materials
+```
+
+**⚠️ CRITICAL RULES:**
+- **NEVER create documentation files in the repository root**
+- **NEVER create documentation in `reports/` folder** (reserved for technical reports)
+- All new documentation MUST go in appropriate `docs/` subdirectories
+- Deployment reports → `docs/operations/deployments/`
+- Migration reports → `docs/operations/migrations/`
+- Architecture proposals → `docs/architecture/`
+- Development guides → `docs/guides/`
+- Historical/archived docs → `docs/operations/archive/`
+
+**Exceptions (ONLY these files allowed in root):**
+- `README.md` - Main repository README
+- `AGENTS.md` - AI agent guidance
+- `CLAUDE.md` - Claude-specific guidance
+- `AI_RULES.md` - AI coding rules
 
 ### Unit Tests (Vitest)
 

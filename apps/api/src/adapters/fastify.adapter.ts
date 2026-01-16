@@ -4,6 +4,7 @@
  */
 import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
@@ -72,6 +73,18 @@ export async function createFastifyApp(
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'X-License-Key', 'Accept', 'Origin', 'Cache-Control'],
     exposedHeaders: ['Set-Cookie'],
   });
+
+  // Register cookie plugin for HTTP-only cookie support
+  await app.register(cookie, {
+    secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
+    hook: 'onRequest',
+    parseOptions: {}
+  });
+
+  // Register auth cookie middleware to extract JWT from cookies
+  // This sets request.userId and request.tenantId from the dl_at cookie
+  const { authCookieMiddleware } = await import('../middleware/auth-cookie.middleware');
+  app.addHook('onRequest', authCookieMiddleware);
 
   // Register rate limiting with dynamic limits based on route
   // Global rate limit: 100 req/min, Auth endpoints: 5 req/min
