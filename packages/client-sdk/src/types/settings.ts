@@ -184,6 +184,7 @@ export interface CreateRcoScheduleDTO {
 
 /** Query parameters for access logs */
 export interface RcoAccessLogQueryParams {
+  [key: string]: string | number | boolean | undefined;
   lockId?: string;
   userId?: string;
   bookingId?: string;
@@ -381,6 +382,7 @@ export interface SendInvoiceReminderDTO {
 
 /** Query parameters for invoices */
 export interface VismaInvoiceQueryParams {
+  [key: string]: string | number | boolean | undefined;
   status?: VismaInvoice['status'];
   customerId?: string;
   fromDate?: string;

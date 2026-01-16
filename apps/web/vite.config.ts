@@ -121,6 +121,7 @@ export default defineConfig({
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
+      '@xala/i18n': path.resolve(__dirname, '../../packages/i18n/dist'),
     },
   },
   optimizeDeps: {
@@ -128,7 +129,6 @@ export default defineConfig({
     include: [
       'mapbox-gl',
       'react-map-gl',
-      'react-map-gl/mapbox',
     ],
     force: true,
     esbuildOptions: {
