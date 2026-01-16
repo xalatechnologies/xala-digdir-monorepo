@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "014-add-xala-ds-design-system-component-usage-examples",
+  "spec": "013-add-unit-test-coverage-to-apps-minside-currently-0",
   "state": "building",
   "subtasks": {
-    "completed": 18,
-    "total": 22,
+    "completed": 15,
+    "total": 16,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Validation & Testing",
+    "current": "Integration Tests",
     "id": null,
-    "total": 5
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 269,
-    "started_at": "2026-01-16T00:40:33.248771"
+    "number": 224,
+    "started_at": "2026-01-16T00:40:01.047122"
   },
-  "last_update": "2026-01-16T02:20:04.149086"
+  "last_update": "2026-01-16T02:25:09.546693"
 }
