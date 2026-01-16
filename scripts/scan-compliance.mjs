@@ -27,6 +27,7 @@ const CONFIG = {
   scanDirs: [
     'packages/ds/src',
     'apps/web/src',
+    'apps/backoffice/src',
   ],
   extensions: ['.ts', '.tsx', '.js', '.jsx'],
   excludePatterns: [

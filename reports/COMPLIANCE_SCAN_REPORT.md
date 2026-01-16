@@ -2,7 +2,7 @@
 
 **Scan Date:** 2026-01-16
 **Repository:** xala-digdir-monorepo
-**Scanned Directories:** packages/ds/src, apps/web/src
+**Scanned Directories:** packages/ds/src, apps/web/src, apps/backoffice/src
 
 ---
 
@@ -10,30 +10,30 @@
 
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
-| Hardcoded Colors | 99 | high | ❌ Needs Fix |
+| Hardcoded Colors | 123 | high | ❌ Needs Fix |
 | Hardcoded Font Family | 1 | medium | ⚠️ Minor |
 | Hardcoded Letter Spacing | 0 | low | ✅ Clean |
 | Hardcoded Line Height | 0 | low | ✅ Clean |
-| Hardcoded Box Shadow | 13 | medium | ❌ Needs Fix |
-| Hardcoded Z-Index | 0 | low | ✅ Clean |
+| Hardcoded Box Shadow | 15 | medium | ❌ Needs Fix |
+| Hardcoded Z-Index | 1 | low | ⚠️ Minor |
 | Hardcoded Transition Duration | 12 | low | ❌ Needs Fix |
 | Hardcoded Opacity | 1 | low | ⚠️ Minor |
-| Hardcoded Spacing | 32 | high | ❌ Needs Fix |
-| Hardcoded Typography | 29 | medium | ❌ Needs Fix |
+| Hardcoded Spacing | 42 | high | ❌ Needs Fix |
+| Hardcoded Typography | 54 | medium | ❌ Needs Fix |
 | Hardcoded Border Radius | 2 | medium | ⚠️ Minor |
-| Raw HTML Layouts in Apps | 66 | medium | ❌ Needs Fix |
-| Hardcoded Dimensions | 280 | low | ❌ Needs Fix |
+| Raw HTML Layouts in Apps | 511 | medium | ❌ Needs Fix |
+| Hardcoded Dimensions | 565 | low | ❌ Needs Fix |
 | Hardcoded Breakpoints | 0 | low | ✅ Clean |
 | SVG Hardcoded Colors | 9 | low | ❌ Needs Fix |
 | Touch Target Size | 2 | medium | ⚠️ Minor |
 | Missing Button Type | 0 | medium | ✅ Clean |
 | Inline !important | 0 | low | ✅ Clean |
-| Hardcoded Gap | 9 | high | ❌ Needs Fix |
-| Inconsistent Icon Size | 11 | low | ❌ Needs Fix |
-| Raw Div with Click Handler | 0 | medium | ✅ Clean |
+| Hardcoded Gap | 13 | high | ❌ Needs Fix |
+| Inconsistent Icon Size | 19 | low | ❌ Needs Fix |
+| Raw Div with Click Handler | 1 | medium | ⚠️ Minor |
 
-**Total Issues:** 566
-**High Severity:** 140
+**Total Issues:** 1371
+**High Severity:** 178
 
 ---
 
@@ -41,7 +41,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use design tokens: var(--ds-color-*)
-**Issues Found:** 99
+**Issues Found:** 123
 
 ### Findings by File
 
@@ -98,6 +98,8 @@
 | 184 | RGB/RGBA color | `? 'rgba(255, 255, 255, 0.15)'...` |
 | 497 | RGB/RGBA color | `color: 'rgba(255, 255, 255, 0.7)',...` |
 | 558 | RGB/RGBA color | `color: 'rgba(255, 255, 255, 0.6)',...` |
+| 748 | RGB/RGBA color | `backgroundColor: 'rgba(0, 0, 0, 0.5)',...` |
+| 773 | RGB/RGBA color | `boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',...` |
 
 #### `packages/ds/src/blocks/ShareButton.tsx`
 
@@ -225,6 +227,53 @@
 | 148 | Hex color | `bgColor: '#F3F4F6',...` |
 | ... | +3 more | ... |
 
+#### `apps/backoffice/src/routes/allocation-planner.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 31 | Hex color | `'Mandag-18:00': { 'Idrettshall A': { org: 'Skien I...` |
+| 32 | Hex color | `'Mandag-19:00': { 'Idrettshall A': { org: 'Skien I...` |
+| 33 | Hex color | `'Tirsdag-16:00': { 'Fotballbane 1': { org: 'Telema...` |
+| 34 | Hex color | `'Tirsdag-17:00': { 'Fotballbane 1': { org: 'Telema...` |
+| 35 | Hex color | `'Onsdag-18:00': { 'Idrettshall A': { org: 'Skien I...` |
+| 36 | Hex color | `'Onsdag-19:00': { 'Idrettshall A': { org: 'Skien I...` |
+| 207 | Named color | `color: 'white',...` |
+
+#### `apps/backoffice/src/routes/listing-wizard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 172 | RGB/RGBA color | `backgroundColor: 'rgba(255,255,255,0.3)',...` |
+
+#### `apps/backoffice/src/routes/reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 538 | RGB/RGBA color | `? 'rgba(59, 130, 246, ${Math.max(0.1, intensity)})...` |
+| 586 | RGB/RGBA color | `backgroundColor: 'rgba(59, 130, 246, ${intensity})...` |
+
+#### `apps/backoffice/src/routes/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 90 | Hex color | `primaryColor: '#1A56DB',...` |
+| 91 | Hex color | `secondaryColor: '#6B7280',...` |
+| 1233 | Hex color | `value={formData.branding.primaryColor \|\| '#1A56D...` |
+| 1246 | Hex color | `value={formData.branding.secondaryColor \|\| '#6B7...` |
+
+#### `apps/backoffice/src/routes/tenant/branding.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 25 | Hex color | `{ name: 'Blå', primary: '#2563eb', accent: '#3b82f...` |
+| 26 | Hex color | `{ name: 'Grønn', primary: '#16a34a', accent: '#22c...` |
+| 27 | Hex color | `{ name: 'Lilla', primary: '#7c3aed', accent: '#8b5...` |
+| 28 | Hex color | `{ name: 'Oransje', primary: '#ea580c', accent: '#f...` |
+| 39 | Hex color | `primaryColor: '#2563eb',...` |
+| 40 | Hex color | `accentColor: '#3b82f6',...` |
+| 266 | Named color | `color: 'white',...` |
+| 294 | Named color | `color: 'white',...` |
+
 ---
 
 ## Hardcoded Font Family
@@ -267,7 +316,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use shadow token: var(--ds-shadow-*)
-**Issues Found:** 13
+**Issues Found:** 15
 
 ### Findings by File
 
@@ -278,6 +327,12 @@
 | 459 | CSS box-shadow | `box-shadow: var(--booking-shadow);...` |
 | 549 | CSS box-shadow | `box-shadow: 0 0 0 4px var(--ds-color-accent-surfac...` |
 | 750 | CSS box-shadow | `box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);...` |
+
+#### `packages/ds/src/blocks/LoginComponents.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 773 | Hardcoded box shadow | `boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',...` |
 
 #### `packages/ds/src/blocks/UnifiedBookingEngine.tsx`
 
@@ -304,15 +359,27 @@
 | 689 | Hardcoded box shadow | `boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',...` |
 | 891 | CSS box-shadow | `box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.2) !import...` |
 
+#### `apps/backoffice/src/features/calendar/components/ConflictIndicator.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 115 | Hardcoded box shadow | `boxShadow: '0 0 0 1px var(--ds-color-danger-border...` |
+
 ---
 
 ## Hardcoded Z-Index
 
 **Severity:** LOW
 **Recommendation:** Consider using z-index tokens for consistent layering
-**Issues Found:** 0
+**Issues Found:** 1
 
-✅ No issues found.
+### Findings by File
+
+#### `apps/backoffice/src/features/listings/components/detail/AvailabilityTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 787 | Hardcoded z-index | `zIndex: 30,...` |
 
 ---
 
@@ -368,7 +435,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 32
+**Issues Found:** 42
 
 ### Findings by File
 
@@ -449,13 +516,43 @@
 | 52 | Pixel spacing | `gap: '8px',...` |
 | 74 | Pixel spacing | `padding: '4px',...` |
 
+#### `apps/backoffice/src/features/listings/components/detail/AvailabilityTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 291 | Pixel spacing | `left: '2px',...` |
+| 292 | Pixel spacing | `right: '2px',...` |
+
+#### `apps/backoffice/src/routes/bookings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 787 | Pixel spacing | `style={{ padding: '2px' }}...` |
+
+#### `apps/backoffice/src/routes/messages.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 395 | Pixel spacing | `bottom: '2px',...` |
+| 396 | Pixel spacing | `right: '2px',...` |
+| 490 | Pixel spacing | `bottom: '2px',...` |
+| 491 | Pixel spacing | `right: '2px',...` |
+| 693 | Pixel spacing | `padding: '2px',...` |
+
+#### `apps/backoffice/src/routes/reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 481 | Pixel spacing | `<div style={{ display: 'inline-flex', flexDirectio...` |
+| 502 | Pixel spacing | `<div key={hour} style={{ display: 'flex', gap: '2p...` |
+
 ---
 
 ## Hardcoded Typography
 
 **Severity:** MEDIUM
 **Recommendation:** Use typography tokens: var(--ds-font-size-*), var(--ds-font-weight-*)
-**Issues Found:** 29
+**Issues Found:** 54
 
 ### Findings by File
 
@@ -528,6 +625,66 @@
 | 263 | Numeric font weight | `fontWeight: 600,...` |
 | 280 | Font size in px | `fontSize: '14px',...` |
 
+#### `apps/backoffice/src/routes/admin-reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 196 | Numeric font weight | `<Table.Cell><span style={{ fontWeight: 600 }}>{lis...` |
+
+#### `apps/backoffice/src/routes/audit-timeline.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 238 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, font...` |
+
+#### `apps/backoffice/src/routes/decision-forms.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 180 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, font...` |
+| 212 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 226 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 238 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+
+#### `apps/backoffice/src/routes/tenant/audit-log.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 238 | Numeric font weight | `<Table.Cell><span style={{ fontWeight: 600 }}>{eve...` |
+
+#### `apps/backoffice/src/routes/tenant/branding.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 108 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, marg...` |
+| 144 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 160 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 185 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, marg...` |
+| 204 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, marg...` |
+| 232 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 240 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 273 | Numeric font weight | `<span style={{ fontWeight: 600 }}>{branding.header...` |
+
+#### `apps/backoffice/src/routes/tenant/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 106 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 114 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 124 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 136 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 147 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 184 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, font...` |
+| 219 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, font...` |
+| 240 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+| 251 | Numeric font weight | `<label style={{ display: 'block', marginBottom: 'v...` |
+
+#### `apps/backoffice/src/routes/users-management.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 242 | Numeric font weight | `<Paragraph data-size="sm" style={{ margin: 0, font...` |
+
 ---
 
 ## Hardcoded Border Radius
@@ -556,7 +713,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use layout primitives: <Stack>, <Grid>, <Flex>
-**Issues Found:** 66
+**Issues Found:** 511
 
 ### Findings by File
 
@@ -701,13 +858,755 @@
 |------|-------|--------|
 | 570 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
 
+#### `apps/backoffice/src/components/PaymentDetailsDrawer.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 167 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 173 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 179 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 185 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/components/RefundDialog.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 301 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 320 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/components/SavedFilters.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 354 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 442 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/components/bookings/EditBookingForm.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 185 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/components/layout/Header.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 67 | Div with inline flex | `<div style={{ flex: '1 1 0', minWidth: 0, display:...` |
+
+#### `apps/backoffice/src/components/layout/Sidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 119 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 267 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 343 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/components/organizations/MemberManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 141 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 201 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/components/organizations/OrganizationForm.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 229 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 127 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 134 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 147 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 176 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 208 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 140 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 147 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 149 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 185 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 77 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 84 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 86 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 152 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'fl...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 250 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 282 | Div with inline flex | `<div style={{ marginBottom: 'var(--ds-spacing-3)',...` |
+| 294 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 315 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 194 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 242 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 312 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 369 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 380 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 439 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 457 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 535 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 597 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 608 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 644 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/calendar/components/EventDrawer.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 97 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 106 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 185 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/calendar/components/TimelineView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 217 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', alignItems...` |
+| 225 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', alignItems...` |
+| 234 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 236 | Div with inline flex | `<div style={{ display: 'flex', borderBottom: '2px ...` |
+| 256 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', overflow: ...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/AuditTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 598 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 606 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 614 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 622 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 636 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 647 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 657 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 776 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 785 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 794 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/AvailabilityTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 342 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 344 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 366 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 506 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 639 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 729 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/BookingsTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 246 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 567 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 680 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 745 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/DetailHeader.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 77 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 98 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/EditModal.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 217 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 221 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 250 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 322 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 354 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 433 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 462 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 501 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 107 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 110 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 112 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 120 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 144 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 149 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 164 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 223 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 238 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 250 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/OverviewTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 433 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 452 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 463 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingRowActions.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 204 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 235 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsFilterBar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 510 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 622 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 659 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsListView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 194 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 402 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', justifyCon...` |
+| 409 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 411 | Div with inline flex | `<div style={{ display: 'flex', gap: '2px', backgro...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsTable.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 166 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/ListingWizard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 209 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 216 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/BasicsStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 180 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 217 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 271 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 308 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/BookingConfigStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 182 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 225 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 286 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 331 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 374 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 439 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 453 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 487 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 549 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 585 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/CapacityStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 90 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 124 | Div with inline flex | `<div style={{ flex: 1, display: 'flex', alignItems...` |
+| 158 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
+| 257 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/ContentStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 255 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 287 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 336 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 353 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 417 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 437 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 483 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 504 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 521 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 524 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 535 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 550 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 587 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 626 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 648 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| ... | +6 more | ... |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/LocationStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 84 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 209 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 259 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/MediaStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 409 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 445 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 446 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 512 | Div with inline flex | `<div style={{ marginTop: 'var(--ds-spacing-4)', di...` |
+| 524 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 525 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 589 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 709 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 710 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 794 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 805 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/OpeningHoursStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 222 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 242 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 296 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/ReviewStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 137 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 167 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 217 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 328 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 330 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 460 | Div with inline flex | `<div style={{ display: 'flex', flexWrap: 'wrap', g...` |
+| 486 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 510 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 511 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+| 538 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+
+#### `apps/backoffice/src/features/reviews/ReviewModerationPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 91 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 93 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 157 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 397 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/pages/PaymentReconciliationPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 115 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 117 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 283 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 393 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 401 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/routes/admin-reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 82 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 99 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 180 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 200 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/routes/allocation-planner.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 61 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 78 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 121 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 122 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 127 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 138 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 229 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/audit-timeline.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 116 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 186 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 196 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 209 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 236 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 245 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/routes/audit.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 371 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 379 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 387 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 395 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 408 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 417 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 427 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 467 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 476 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 485 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/routes/bookings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 374 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 500 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 572 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 770 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 842 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/calendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 312 | Div with inline flex | `<div style={{ display: 'flex', flex: 1, overflow: ...` |
+| 334 | Div with inline grid | `<div style={{ flex: 1, display: 'grid', gridTempla...` |
+| 471 | Div with inline flex | `<div style={{ display: 'flex', flex: 1, overflow: ...` |
+| 474 | Div with inline flex | `<div style={{ height: '48px', borderBottom: '1px s...` |
+| 568 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 570 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 589 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 647 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 649 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 658 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 675 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 676 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 719 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 741 | Div with inline flex | `<div style={{ display: 'flex', gap: '2px', backgro...` |
+| 758 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| ... | +4 more | ... |
+
+#### `apps/backoffice/src/routes/dashboard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 66 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 68 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 97 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 151 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 159 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 167 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 172 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 210 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/routes/decision-forms.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 118 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 166 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 199 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 250 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 273 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/backoffice/src/routes/economy.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 19 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 41 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 42 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 70 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 93 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 94 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 119 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/backoffice/src/routes/listing-wizard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 114 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 121 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 192 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 244 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 257 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 291 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 294 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 320 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 323 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 344 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 377 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 398 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 402 | Div with inline grid | `<div style={{ display: 'grid', gap: 'var(--ds-spac...` |
+| 415 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 426 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/messages.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 223 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 225 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 227 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 250 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 263 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 297 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 332 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-8)', disp...` |
+| 378 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 409 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 431 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 474 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 510 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 528 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 560 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 583 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| ... | +6 more | ... |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 138 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 162 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 172 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 173 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 196 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 236 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 327 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 364 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 467 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 551 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 571 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 583 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 624 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 634 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationFormPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 59 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 83 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationsListPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 106 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 108 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 130 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 199 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+
+#### `apps/backoffice/src/routes/pricing-rules.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 99 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 154 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 200 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 229 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 231 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 240 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 266 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 267 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 268 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 296 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 314 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 315 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 319 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 358 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 363 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'baseli...` |
+| 374 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'baseli...` |
+| 388 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'baseli...` |
+| 399 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'baseli...` |
+| ... | +14 more | ... |
+
+#### `apps/backoffice/src/routes/requests.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 184 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 186 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 201 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 210 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 246 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 282 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 313 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 332 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 406 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 417 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/season-applications.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 146 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 184 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 202 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 257 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 282 | Div with inline flex | `<div style={{ padding: 'var(--ds-spacing-6)', disp...` |
+| 296 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 325 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/seasons/SeasonDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 116 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 140 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 150 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 155 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 165 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 223 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 239 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 255 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 294 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/routes/seasons/SeasonFormPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 151 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 175 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 244 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/routes/seasons/SeasonsListPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 85 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 87 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 109 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 148 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+
+#### `apps/backoffice/src/routes/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 221 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 228 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 230 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 244 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 279 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 367 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 437 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 481 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 511 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 555 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 571 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'fl...` |
+| 646 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 988 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 993 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 1006 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| ... | +13 more | ... |
+
+#### `apps/backoffice/src/routes/tenant/audit-log.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 126 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 216 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+
+#### `apps/backoffice/src/routes/tenant/branding.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 72 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 111 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 142 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 145 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 161 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 183 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 230 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 274 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 284 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
+#### `apps/backoffice/src/routes/tenant/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 69 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 103 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 104 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 122 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 167 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 203 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 238 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+
+#### `apps/backoffice/src/routes/users/UserDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 98 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 122 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 133 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 138 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 148 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 187 | Div with inline grid | `<div style={{ display: 'grid', gridTemplateColumns...` |
+| 194 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 200 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 217 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 223 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 292 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+| 355 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'flex-s...` |
+
+#### `apps/backoffice/src/routes/users-management.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 103 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 209 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 227 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/routes/users.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 100 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 102 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'sp...` |
+| 122 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 179 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 211 | Div with inline flex | `<div style={{ display: 'flex', alignItems: 'center...` |
+
+#### `apps/backoffice/src/routes/work-queue.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 146 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 198 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+| 216 | Div with inline flex | `<div style={{ display: 'flex', justifyContent: 'ce...` |
+| 266 | Div with inline flex | `<div style={{ display: 'flex', gap: 'var(--ds-spac...` |
+
 ---
 
 ## Hardcoded Dimensions
 
 **Severity:** LOW
 **Recommendation:** Consider using tokens or calc() with tokens
-**Issues Found:** 280
+**Issues Found:** 565
 
 ### Findings by File
 
@@ -877,6 +1776,7 @@
 | 357 | Dimension in px | `height: '80px',...` |
 | 393 | Dimension in px | `height: '80px',...` |
 | 491 | Dimension in px | `<div style={{ maxWidth: '480px', margin: '0 auto',...` |
+| 770 | Dimension in px | `maxWidth: '400px',...` |
 
 #### `packages/ds/src/blocks/NotificationCenter.tsx`
 
@@ -1204,6 +2104,557 @@
 | 264 | Dimension in px | `width: '64px',...` |
 | 265 | Dimension in px | `height: '64px',...` |
 
+#### `apps/backoffice/src/components/RefundDialog.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 111 | Dimension in px | `maxWidth: '480px',...` |
+| 247 | Dimension in px | `width: '44px',...` |
+| 248 | Dimension in px | `height: '44px',...` |
+
+#### `apps/backoffice/src/components/RoleSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 76 | Dimension in px | `minHeight: '88px',...` |
+| 82 | Dimension in px | `width: '48px',...` |
+| 83 | Dimension in px | `height: '48px',...` |
+| 149 | Dimension in px | `maxWidth: '400px',...` |
+
+#### `apps/backoffice/src/components/layout/AppLayout.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 44 | Dimension in px | `<div style={{ maxWidth: '1400px' }}>...` |
+
+#### `apps/backoffice/src/components/layout/Header.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 44 | Dimension in px | `height: '72px',...` |
+| 55 | Dimension in px | `maxWidth: '600px',...` |
+| 90 | Dimension in px | `width: '1px',...` |
+| 91 | Dimension in px | `height: '28px',...` |
+
+#### `apps/backoffice/src/components/layout/Sidebar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 73 | Dimension in px | `width: '48px',...` |
+| 74 | Dimension in px | `height: '48px',...` |
+| 123 | Dimension in px | `minWidth: '32px',...` |
+| 124 | Dimension in px | `height: '32px',...` |
+| 249 | Dimension in px | `width: '360px',...` |
+| 260 | Dimension in px | `height: '72px',...` |
+| 272 | Dimension in px | `height: '40px',...` |
+| 346 | Dimension in px | `width: '44px',...` |
+| 347 | Dimension in px | `height: '44px',...` |
+
+#### `apps/backoffice/src/components/organizations/MemberManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 194 | Dimension in px | `<Table.HeaderCell style={{ width: '80px' }}>Handli...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 227 | Dimension in px | `<Table.HeaderCell style={{ width: '120px' }}>Handl...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 242 | Dimension in px | `{canProcess && <Table.HeaderCell style={{ width: '...` |
+
+#### `apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 185 | Dimension in px | `{canEdit && <Table.HeaderCell style={{ width: '80p...` |
+
+#### `apps/backoffice/src/features/calendar/components/ConflictIndicator.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 80 | Dimension in px | `width: '20px',...` |
+| 81 | Dimension in px | `height: '20px',...` |
+| 92 | Dimension in px | `width: '14px',...` |
+| 93 | Dimension in px | `height: '14px',...` |
+
+#### `apps/backoffice/src/features/calendar/components/TimelineView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 240 | Dimension in px | `width: '120px',...` |
+| 261 | Dimension in px | `width: '80px',...` |
+| 289 | Dimension in px | `minHeight: '80px',...` |
+| 296 | Dimension in px | `width: '120px',...` |
+| 348 | Dimension in px | `width: '80px',...` |
+| 398 | Dimension in px | `width: '2px',...` |
+| 409 | Dimension in px | `width: '10px',...` |
+| 410 | Dimension in px | `height: '10px',...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/AuditTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 215 | Dimension in px | `minHeight: '300px',...` |
+| 271 | Dimension in px | `minWidth: '20px',...` |
+| 272 | Dimension in px | `height: '20px',...` |
+| 691 | Dimension in px | `maxHeight: '200px',...` |
+| 724 | Dimension in px | `maxHeight: '200px',...` |
+| 755 | Dimension in px | `maxHeight: '300px',...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/AvailabilityTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 333 | Dimension in px | `minHeight: '400px',...` |
+| 535 | Dimension in px | `style={{ width: '120px' }}...` |
+| 550 | Dimension in px | `style={{ width: '120px' }}...` |
+| 676 | Dimension in px | `width: '16px',...` |
+| 677 | Dimension in px | `height: '16px',...` |
+| 693 | Dimension in px | `<div style={{ minWidth: '800px' }}>...` |
+| 736 | Dimension in px | `height: '60px',...` |
+| 771 | Dimension in px | `height: '60px',...` |
+| 785 | Dimension in px | `height: '2px',...` |
+| 796 | Dimension in px | `width: '8px',...` |
+| 797 | Dimension in px | `height: '8px',...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/BookingsTab.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 340 | Dimension in px | `minWidth: '20px',...` |
+| 341 | Dimension in px | `height: '20px',...` |
+| 379 | Dimension in px | `minWidth: '100px',...` |
+| 393 | Dimension in px | `minWidth: '20px',...` |
+| 394 | Dimension in px | `height: '20px',...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/DetailTabs.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 207 | Dimension in px | `maxWidth: '400px',...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/EditModal.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 224 | Dimension in px | `width: '40px',...` |
+| 225 | Dimension in px | `height: '40px',...` |
+| 325 | Dimension in px | `width: '40px',...` |
+| 326 | Dimension in px | `height: '40px',...` |
+| 436 | Dimension in px | `width: '40px',...` |
+| 437 | Dimension in px | `height: '40px',...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsFilterBar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 293 | Dimension in px | `<div style={{ position: 'relative', width: '280px'...` |
+| 337 | Dimension in px | `width: '24px',...` |
+| 338 | Dimension in px | `height: '24px',...` |
+| 368 | Dimension in px | `minWidth: '150px',...` |
+| 399 | Dimension in px | `minWidth: '150px',...` |
+| 481 | Dimension in px | `height: '32px',...` |
+| 499 | Dimension in px | `height: '32px',...` |
+| 522 | Dimension in px | `width: '36px',...` |
+| 523 | Dimension in px | `height: '36px',...` |
+| 578 | Dimension in px | `width: '18px',...` |
+| 579 | Dimension in px | `height: '18px',...` |
+| 647 | Dimension in px | `width: '18px',...` |
+| 648 | Dimension in px | `height: '18px',...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsGrid.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 100 | Dimension in px | `width: '18px',...` |
+| 101 | Dimension in px | `height: '18px',...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsListView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 232 | Dimension in px | `width: '18px',...` |
+| 233 | Dimension in px | `height: '18px',...` |
+| 263 | Dimension in px | `width: '18px',...` |
+| 264 | Dimension in px | `height: '18px',...` |
+| 293 | Dimension in px | `width: '18px',...` |
+| 294 | Dimension in px | `height: '18px',...` |
+| 323 | Dimension in px | `width: '18px',...` |
+| 324 | Dimension in px | `height: '18px',...` |
+| 454 | Dimension in px | `minWidth: '18px',...` |
+| 455 | Dimension in px | `height: '18px',...` |
+
+#### `apps/backoffice/src/features/listings/components/list/ListingsTable.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 126 | Dimension in px | `<Table.HeaderCell style={{ width: '48px' }}>...` |
+| 148 | Dimension in px | `<Table.HeaderCell style={{ width: '60px' }} />...` |
+| 170 | Dimension in px | `width: '48px',...` |
+| 171 | Dimension in px | `height: '48px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/WizardStepper.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 154 | Dimension in px | `minWidth: '80px',...` |
+| 162 | Dimension in px | `width: '48px',...` |
+| 163 | Dimension in px | `height: '48px',...` |
+| 219 | Dimension in px | `maxWidth: '90px',...` |
+| 224 | Dimension in px | `height: '3px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/BasicsStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 143 | Dimension in px | `minHeight: '140px',...` |
+| 319 | Dimension in px | `minHeight: '100px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/BookingConfigStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 178 | Dimension in px | `minHeight: '120px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/CapacityStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 74 | Dimension in px | `width: '56px',...` |
+| 75 | Dimension in px | `height: '56px',...` |
+| 126 | Dimension in px | `<div style={{ minWidth: '200px' }}>...` |
+| 133 | Dimension in px | `<div style={{ maxWidth: '140px' }}>...` |
+| 228 | Dimension in px | `<div style={{ maxWidth: '200px' }}>...` |
+| 260 | Dimension in px | `<div style={{ ...iconContainerStyle, width: '48px'...` |
+| 289 | Dimension in px | `<div style={{ ...iconContainerStyle, width: '48px'...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/ContentStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 290 | Dimension in px | `width: '40px',...` |
+| 291 | Dimension in px | `height: '40px',...` |
+| 339 | Dimension in px | `width: '40px',...` |
+| 340 | Dimension in px | `height: '40px',...` |
+| 457 | Dimension in px | `minHeight: '60px',...` |
+| 486 | Dimension in px | `width: '40px',...` |
+| 487 | Dimension in px | `height: '40px',...` |
+| 629 | Dimension in px | `width: '40px',...` |
+| 630 | Dimension in px | `height: '40px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/MediaStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 567 | Dimension in px | `height: '8px',...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/OpeningHoursStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 243 | Dimension in px | `<div style={{ minWidth: '100px' }}>...` |
+| 263 | Dimension in px | `<div style={{ minWidth: '100px' }}>...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/ReviewStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 170 | Dimension in px | `width: '48px',...` |
+| 171 | Dimension in px | `height: '48px',...` |
+| 200 | Dimension in px | `height: '8px',...` |
+| 235 | Dimension in px | `width: '28px',...` |
+| 236 | Dimension in px | `height: '28px',...` |
+| 284 | Dimension in px | `<div style={{ height: '200px', overflow: 'hidden',...` |
+| 312 | Dimension in px | `height: '120px',...` |
+| 489 | Dimension in px | `width: '40px',...` |
+| 490 | Dimension in px | `height: '40px',...` |
+| 514 | Dimension in px | `width: '24px',...` |
+| 515 | Dimension in px | `height: '24px',...` |
+| 541 | Dimension in px | `width: '24px',...` |
+| 542 | Dimension in px | `height: '24px',...` |
+
+#### `apps/backoffice/src/features/reviews/ReviewModerationPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 158 | Dimension in px | `<div style={{ flex: '1 1 300px', minWidth: '200px'...` |
+
+#### `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 370 | Dimension in px | `<Table.HeaderCell style={{ width: '48px' }}>...` |
+| 383 | Dimension in px | `<Table.HeaderCell style={{ width: '60px' }} />...` |
+| 402 | Dimension in px | `width: '16px',...` |
+| 403 | Dimension in px | `height: '16px',...` |
+| 428 | Dimension in px | `maxWidth: '300px',...` |
+
+#### `apps/backoffice/src/providers/ToastProvider.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Dimension in px | `maxWidth: '400px',...` |
+
+#### `apps/backoffice/src/routes/admin-reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 100 | Dimension in px | `<Button type="button" variant="secondary" data-siz...` |
+| 103 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+| 138 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+| 202 | Dimension in px | `width: '60px',...` |
+| 203 | Dimension in px | `height: '6px',...` |
+
+#### `apps/backoffice/src/routes/allocation-planner.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 82 | Dimension in px | `style={{ minWidth: '200px' }}...` |
+| 88 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+| 142 | Dimension in px | `<div style={{ minWidth: '800px' }}>...` |
+| 195 | Dimension in px | `minHeight: '40px',...` |
+| 230 | Dimension in px | `<Button type="button" variant="secondary" data-siz...` |
+| 233 | Dimension in px | `<Button type="button" variant="secondary" data-siz...` |
+| 236 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+
+#### `apps/backoffice/src/routes/audit-timeline.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 133 | Dimension in px | `<Button type="button" variant="secondary" data-siz...` |
+| 177 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+| 209 | Dimension in px | `<div style={{ display: 'flex', flexDirection: 'col...` |
+| 211 | Dimension in px | `width: '12px',...` |
+| 212 | Dimension in px | `height: '12px',...` |
+| 221 | Dimension in px | `width: '2px',...` |
+
+#### `apps/backoffice/src/routes/audit.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 447 | Dimension in px | `maxHeight: '300px',...` |
+| 540 | Dimension in px | `<div style={{ flex: 1, minWidth: '200px', maxWidth...` |
+| 563 | Dimension in px | `width: '8px',...` |
+| 564 | Dimension in px | `height: '8px',...` |
+| 602 | Dimension in px | `<CloseIcon style={{ width: '12px', height: '12px' ...` |
+| 621 | Dimension in px | `<CloseIcon style={{ width: '12px', height: '12px' ...` |
+| 643 | Dimension in px | `<CloseIcon style={{ width: '12px', height: '12px' ...` |
+
+#### `apps/backoffice/src/routes/bookings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 411 | Dimension in px | `width: '18px',...` |
+| 412 | Dimension in px | `height: '18px',...` |
+| 481 | Dimension in px | `width: '18px',...` |
+| 482 | Dimension in px | `height: '18px',...` |
+| 546 | Dimension in px | `minWidth: '20px',...` |
+| 547 | Dimension in px | `height: '20px',...` |
+| 654 | Dimension in px | `minWidth: '16px',...` |
+| 655 | Dimension in px | `height: '16px',...` |
+| 734 | Dimension in px | `<Table.HeaderCell style={{ width: '48px' }}>...` |
+| 741 | Dimension in px | `<Table.HeaderCell style={{ width: '110px' }}>Booki...` |
+| 745 | Dimension in px | `<Table.HeaderCell style={{ width: '100px' }}>Statu...` |
+| 746 | Dimension in px | `<Table.HeaderCell style={{ width: '100px' }}>Betal...` |
+| 747 | Dimension in px | `<Table.HeaderCell style={{ width: '100px', textAli...` |
+| 748 | Dimension in px | `<Table.HeaderCell style={{ width: '60px' }} />...` |
+| 790 | Dimension in px | `width: '12px',...` |
+| ... | +1 more | ... |
+
+#### `apps/backoffice/src/routes/calendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 320 | Dimension in px | `height: '60px',...` |
+| 351 | Dimension in px | `height: '48px',...` |
+| 385 | Dimension in px | `height: '60px',...` |
+| 434 | Dimension in px | `height: '2px',...` |
+| 444 | Dimension in px | `width: '10px',...` |
+| 445 | Dimension in px | `height: '10px',...` |
+| 481 | Dimension in px | `height: '60px',...` |
+| 499 | Dimension in px | `height: '48px',...` |
+| 519 | Dimension in px | `height: '60px',...` |
+| 534 | Dimension in px | `height: '2px',...` |
+| 544 | Dimension in px | `width: '10px',...` |
+| 545 | Dimension in px | `height: '10px',...` |
+| 602 | Dimension in px | `minHeight: '100px',...` |
+| 683 | Dimension in px | `<Heading level={2} data-size="sm" style={{ margin:...` |
+| 707 | Dimension in px | `width: '6px',...` |
+| ... | +2 more | ... |
+
+#### `apps/backoffice/src/routes/dashboard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 213 | Dimension in px | `width: '10px',...` |
+| 214 | Dimension in px | `height: '10px',...` |
+
+#### `apps/backoffice/src/routes/decision-forms.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 257 | Dimension in px | `style={{ flex: 1, minHeight: '44px' }}...` |
+| 266 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+
+#### `apps/backoffice/src/routes/listing-wizard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 169 | Dimension in px | `width: '24px',...` |
+| 170 | Dimension in px | `height: '24px',...` |
+| 237 | Dimension in px | `style={{ width: '200px' }}...` |
+| 422 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 434 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 444 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+
+#### `apps/backoffice/src/routes/messages.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 229 | Dimension in px | `width: '40px',...` |
+| 230 | Dimension in px | `height: '40px',...` |
+| 265 | Dimension in px | `<Card style={{ width: '380px', padding: 0, overflo...` |
+| 338 | Dimension in px | `width: '56px',...` |
+| 339 | Dimension in px | `height: '56px',...` |
+| 382 | Dimension in px | `width: '44px',...` |
+| 383 | Dimension in px | `height: '44px',...` |
+| 397 | Dimension in px | `width: '10px',...` |
+| 398 | Dimension in px | `height: '10px',...` |
+| 477 | Dimension in px | `width: '44px',...` |
+| 478 | Dimension in px | `height: '44px',...` |
+| 492 | Dimension in px | `width: '10px',...` |
+| 493 | Dimension in px | `height: '10px',...` |
+| 541 | Dimension in px | `width: '64px',...` |
+| 542 | Dimension in px | `height: '64px',...` |
+| ... | +8 more | ... |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 177 | Dimension in px | `width: '80px',...` |
+| 178 | Dimension in px | `height: '80px',...` |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationsListPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 131 | Dimension in px | `<div style={{ flex: '1 1 300px', minWidth: '200px'...` |
+| 232 | Dimension in px | `<Table.HeaderCell style={{ width: '80px' }}>Handli...` |
+
+#### `apps/backoffice/src/routes/pricing-rules.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 116 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+| 166 | Dimension in px | `<Table.HeaderCell style={{ width: '140px' }}>Handl...` |
+
+#### `apps/backoffice/src/routes/reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 488 | Dimension in px | `width: '60px',...` |
+| 526 | Dimension in px | `width: '60px',...` |
+| 527 | Dimension in px | `height: '32px',...` |
+| 545 | Dimension in px | `width: '60px',...` |
+| 546 | Dimension in px | `height: '32px',...` |
+| 584 | Dimension in px | `width: '24px',...` |
+| 585 | Dimension in px | `height: '16px',...` |
+| 864 | Dimension in px | `width: '28px',...` |
+| 865 | Dimension in px | `height: '28px',...` |
+
+#### `apps/backoffice/src/routes/requests.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 213 | Dimension in px | `width: '48px',...` |
+| 214 | Dimension in px | `height: '48px',...` |
+| 249 | Dimension in px | `width: '48px',...` |
+| 250 | Dimension in px | `height: '48px',...` |
+| 285 | Dimension in px | `width: '48px',...` |
+| 286 | Dimension in px | `height: '48px',...` |
+| 314 | Dimension in px | `<div style={{ flex: '1 1 300px', minWidth: '200px'...` |
+| 351 | Dimension in px | `<Table.HeaderCell style={{ width: '80px' }}>Priori...` |
+| 357 | Dimension in px | `<Table.HeaderCell style={{ width: '160px' }}>Handl...` |
+
+#### `apps/backoffice/src/routes/season-applications.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 192 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 221 | Dimension in px | `<Table.HeaderCell style={{ width: '180px' }}>Handl...` |
+| 234 | Dimension in px | `width: '40px',...` |
+| 235 | Dimension in px | `height: '40px',...` |
+| 326 | Dimension in px | `<Button type="button" variant="primary" onClick={(...` |
+| 329 | Dimension in px | `<Button type="button" variant="secondary" onClick=...` |
+
+#### `apps/backoffice/src/routes/seasons/SeasonsListPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 110 | Dimension in px | `<div style={{ flex: '1 1 300px', minWidth: '200px'...` |
+| 181 | Dimension in px | `<Table.HeaderCell style={{ width: '80px' }}>Handli...` |
+
+#### `apps/backoffice/src/routes/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 243 | Dimension in px | `<Alert style={{ maxWidth: '400px' }}>...` |
+| 282 | Dimension in px | `width: '120px',...` |
+| 283 | Dimension in px | `height: '120px',...` |
+
+#### `apps/backoffice/src/routes/tenant/audit-log.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 143 | Dimension in px | `<Button type="button" variant="secondary" data-siz...` |
+| 207 | Dimension in px | `<Button type="button" variant="primary" data-size=...` |
+
+#### `apps/backoffice/src/routes/tenant/branding.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 95 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 131 | Dimension in px | `width: '20px',...` |
+| 132 | Dimension in px | `height: '20px',...` |
+
+#### `apps/backoffice/src/routes/tenant/settings.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 92 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+
+#### `apps/backoffice/src/routes/users-management.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 125 | Dimension in px | `style={{ minHeight: '44px', width: isMobile ? '100...` |
+| 174 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 220 | Dimension in px | `<Table.HeaderCell style={{ width: '160px' }}>Handl...` |
+| 229 | Dimension in px | `width: '36px',...` |
+| 230 | Dimension in px | `height: '36px',...` |
+| 251 | Dimension in px | `style={{ minWidth: '140px' }}...` |
+
+#### `apps/backoffice/src/routes/users.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 123 | Dimension in px | `<div style={{ flex: '1 1 300px', minWidth: '200px'...` |
+| 204 | Dimension in px | `<Table.HeaderCell style={{ width: '80px' }}>Handli...` |
+
+#### `apps/backoffice/src/routes/work-queue.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 206 | Dimension in px | `style={{ minHeight: '44px' }}...` |
+| 234 | Dimension in px | `<Table.HeaderCell style={{ width: '180px' }}>{t('c...` |
+
 ---
 
 ## Hardcoded Breakpoints
@@ -1286,7 +2737,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 9
+**Issues Found:** 13
 
 ### Findings by File
 
@@ -1324,13 +2775,32 @@
 |------|-------|--------|
 | 52 | Gap in px | `gap: '8px',...` |
 
+#### `apps/backoffice/src/features/listings/components/list/ListingsListView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 411 | Gap in px | `<div style={{ display: 'flex', gap: '2px', backgro...` |
+
+#### `apps/backoffice/src/routes/calendar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 741 | Gap in px | `<div style={{ display: 'flex', gap: '2px', backgro...` |
+
+#### `apps/backoffice/src/routes/reports.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 481 | Gap in px | `<div style={{ display: 'inline-flex', flexDirectio...` |
+| 502 | Gap in px | `<div key={hour} style={{ display: 'flex', gap: '2p...` |
+
 ---
 
 ## Inconsistent Icon Size
 
 **Severity:** LOW
 **Recommendation:** Use standard icon sizes: 12, 14, 16, 18, 20, 22, 24, 32
-**Issues Found:** 11
+**Issues Found:** 19
 
 ### Findings by File
 
@@ -1370,39 +2840,80 @@
 |------|-------|--------|
 | 154 | Non-standard icon size | `<CheckCircleIcon size={10} />...` |
 
+#### `apps/backoffice/src/components/SavedFilters.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 331 | Non-standard icon size | `<HeartIcon size={48} style={{ color: 'var(--ds-col...` |
+
+#### `apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 225 | Non-standard icon size | `size={48}...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/BasicsStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 329 | Non-standard icon size | `<IconComponent size={28} />...` |
+
+#### `apps/backoffice/src/features/listings/components/wizard/steps/CapacityStep.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 122 | Non-standard icon size | `<PeopleIcon size={28} />...` |
+| 219 | Non-standard icon size | `<QuantityIcon size={28} />...` |
+
+#### `apps/backoffice/src/routes/organizations/OrganizationDetailPage.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 472 | Non-standard icon size | `<CalendarIcon size={48} style={{ color: 'var(--ds-...` |
+| 556 | Non-standard icon size | `<CalendarIcon size={48} style={{ color: 'var(--ds-...` |
+| 609 | Non-standard icon size | `<ClockIcon size={48} style={{ color: 'var(--ds-col...` |
+
 ---
 
 ## Raw Div with Click Handler
 
 **Severity:** MEDIUM
 **Recommendation:** Use <button> or add role="button" and tabIndex for accessibility
-**Issues Found:** 0
+**Issues Found:** 1
 
-✅ No issues found.
+### Findings by File
+
+#### `apps/backoffice/src/components/RefundDialog.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 117 | Div with onClick (accessibility issue) | `<div onClick={(e) => e.stopPropagation()}>...` |
 
 ---
 
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 99 hardcoded colors issues
-- [ ] Fix 32 hardcoded spacing issues
-- [ ] Fix 9 hardcoded gap issues
+- [ ] Fix 123 hardcoded colors issues
+- [ ] Fix 42 hardcoded spacing issues
+- [ ] Fix 13 hardcoded gap issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 1 hardcoded font family issues
-- [ ] Fix 13 hardcoded box shadow issues
-- [ ] Fix 29 hardcoded typography issues
+- [ ] Fix 15 hardcoded box shadow issues
+- [ ] Fix 54 hardcoded typography issues
 - [ ] Fix 2 hardcoded border radius issues
-- [ ] Fix 66 raw html layouts in apps issues
+- [ ] Fix 511 raw html layouts in apps issues
 - [ ] Fix 2 touch target size issues
+- [ ] Fix 1 raw div with click handler issues
 
 ### Priority 3 (Low Severity / Acceptable)
+- [ ] Review 1 hardcoded z-index issues
 - [ ] Review 12 hardcoded transition duration issues
 - [ ] Review 1 hardcoded opacity issues
-- [ ] Review 280 hardcoded dimensions issues
+- [ ] Review 565 hardcoded dimensions issues
 - [ ] Review 9 svg hardcoded colors issues
-- [ ] Review 11 inconsistent icon size issues
+- [ ] Review 19 inconsistent icon size issues
 
 ---
 
