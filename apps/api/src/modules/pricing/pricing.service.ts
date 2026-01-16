@@ -1,222 +1,484 @@
 /**
- * Pricing Service
- * Server-side pricing calculation logic
- * All pricing logic MUST live here, not in UI
+ * PRICING SERVICE
+ * 
+ * Business logic for pricing management and quote calculation.
+ * 
+ * Features:
+ * - Pricing groups (for different user segments)
+ * - Rental object pricing (base prices per group)
+ * - Quote calculator (booking price estimation)
+ * - Discount/markup rules
+ * - Tax calculation (25% MVA)
+ * - Deposit calculation
  */
 
-import { mockDb } from '../../adapters/db.adapter';
-import type { PricingQuoteRequest, PricingQuoteResponse, QuoteLineItem } from '../../schemas/pricing.schema';
-
-interface PriceRule {
-  id: string;
-  rental_object_id: string;
-  user_group_id: string | null;
-  rule_type: 'HOURLY' | 'DAILY' | 'PACKAGE';
-  unit: 'HOUR' | 'DAY' | 'PACKAGE';
-  amount: number; // in øre
-  currency: string;
-  applies_weekdays: boolean;
-  applies_weekends: boolean;
-  package_name: string | null;
-  window_start: string | null;
-  window_end: string | null;
-  description: string | null;
-  priority: number;
-}
+import { eq, and } from 'drizzle-orm';
+import { db } from '../../database/connection';
+import {
+  pricingGroups,
+  rentalObjectPricing,
+  addons,
+  rentalObjectAddons,
+  userPricingGroups,
+  organizationPricingGroups,
+} from '../../database/schema';
+import type {
+  PricingGroupDTO,
+  RentalObjectPricingDTO,
+  BookingQuoteDTO,
+  MoneyDTO,
+  AddOnLineItemDTO,
+  DiscountLineItemDTO,
+  TaxLineItemDTO,
+  PriceBreakdownDTO,
+} from '../../types/dtos';
+import { AuditService } from '../../core/audit.service';
+import { AddOnsService } from '../addons/addons.service';
 
 export class PricingService {
-  /**
-   * Calculate price quote for a booking
-   * This is the ONLY place pricing logic lives (SDK-first principle)
-   */
-  async calculateQuote(request: PricingQuoteRequest): Promise<PricingQuoteResponse> {
-    const { rentalObjectId, start, end, userGroupId } = request;
+  constructor(
+    private readonly auditService: AuditService,
+    private readonly addonsService: AddOnsService
+  ) {}
 
-    const startDate = new Date(start);
-    const endDate = new Date(end);
+  // =====================================================================
+  // PRICING GROUPS
+  // =====================================================================
 
-    // Determine if weekend
-    const isWeekend = this.isWeekendBooking(startDate, endDate);
+  async listPricingGroups(tenantId: string): Promise<PricingGroupDTO[]> {
+    const results = await db
+      .select()
+      .from(pricingGroups)
+      .where(and(eq(pricingGroups.tenantId, tenantId), eq(pricingGroups.isActive, true)))
+      .orderBy(pricingGroups.name);
 
-    // Get applicable price rules for this rental object
-    const rules = await this.getPriceRules(rentalObjectId, userGroupId, isWeekend);
+    return results.map(this.toPricingGroupDTO);
+  }
 
-    if (rules.length === 0) {
-      // Fallback to rental object base price
-      const rentalObject = await this.getRentalObject(rentalObjectId);
-      return this.createFallbackQuote(rentalObject, startDate, endDate, isWeekend, userGroupId);
+  async getPricingGroup(id: string, tenantId: string): Promise<PricingGroupDTO | null> {
+    const [result] = await db
+      .select()
+      .from(pricingGroups)
+      .where(and(eq(pricingGroups.id, id), eq(pricingGroups.tenantId, tenantId)))
+      .limit(1);
+
+    return result ? this.toPricingGroupDTO(result) : null;
+  }
+
+  async createPricingGroup(
+    data: { code: string; name: string; description?: string },
+    tenantId: string,
+    userId: string
+  ): Promise<PricingGroupDTO> {
+    const [created] = await db
+      .insert(pricingGroups)
+      .values({ tenantId, ...data, isActive: true })
+      .returning();
+
+    await this.auditService.log({
+      tenantId,
+      userId,
+      action: 'pricing_group.created',
+      entityType: 'pricing_group',
+      entityId: created.id,
+      newValue: created,
+    });
+
+    return this.toPricingGroupDTO(created);
+  }
+
+  async updatePricingGroup(
+    id: string,
+    data: { name?: string; description?: string; isActive?: boolean },
+    tenantId: string,
+    userId: string
+  ): Promise<PricingGroupDTO> {
+    const [existing] = await db
+      .select()
+      .from(pricingGroups)
+      .where(and(eq(pricingGroups.id, id), eq(pricingGroups.tenantId, tenantId)));
+
+    if (!existing) throw new Error('Pricing group not found');
+
+    const [updated] = await db
+      .update(pricingGroups)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(pricingGroups.id, id))
+      .returning();
+
+    await this.auditService.log({
+      tenantId,
+      userId,
+      action: 'pricing_group.updated',
+      entityType: 'pricing_group',
+      entityId: id,
+      oldValue: existing,
+      newValue: updated,
+    });
+
+    return this.toPricingGroupDTO(updated);
+  }
+
+  // =====================================================================
+  // RENTAL OBJECT PRICING
+  // =====================================================================
+
+  async getRentalObjectPricing(
+    rentalObjectId: string,
+    tenantId: string
+  ): Promise<RentalObjectPricingDTO[]> {
+    const results = await db
+      .select({
+        pricing: rentalObjectPricing,
+        group: pricingGroups,
+      })
+      .from(rentalObjectPricing)
+      .leftJoin(pricingGroups, eq(rentalObjectPricing.pricingGroupId, pricingGroups.id))
+      .where(
+        and(
+          eq(rentalObjectPricing.rentalObjectId, rentalObjectId),
+          eq(rentalObjectPricing.tenantId, tenantId)
+        )
+      );
+
+    return results.map(r => this.toRentalObjectPricingDTO(r.pricing, r.group));
+  }
+
+  async setRentalObjectPricing(
+    rentalObjectId: string,
+    pricingData: Array<{
+      pricingGroupId?: string;
+      basePriceCents: number;
+      discountPercentage?: number;
+      requiresDeposit?: boolean;
+      depositCents?: number;
+    }>,
+    tenantId: string,
+    userId: string
+  ): Promise<void> {
+    // Remove existing
+    await db
+      .delete(rentalObjectPricing)
+      .where(
+        and(
+          eq(rentalObjectPricing.rentalObjectId, rentalObjectId),
+          eq(rentalObjectPricing.tenantId, tenantId)
+        )
+      );
+
+    // Insert new
+    if (pricingData.length > 0) {
+      await db.insert(rentalObjectPricing).values(
+        pricingData.map(p => ({
+          tenantId,
+          rentalObjectId,
+          pricingGroupId: p.pricingGroupId || null,
+          basePriceCents: p.basePriceCents,
+          discountPercentage: p.discountPercentage || null,
+          requiresDeposit: p.requiresDeposit ?? false,
+          depositCents: p.depositCents || null,
+        }))
+      );
     }
-    
-    // Find best matching rule (highest priority)
-    const bestRule = this.selectBestRule(rules, userGroupId, isWeekend);
-    
-    // Calculate based on rule type
-    const lineItems = this.calculateLineItems(bestRule, startDate, endDate);
-    const totalAmount = lineItems.reduce((sum, item) => sum + item.subtotal, 0);
-    
-    return {
-      lineItems,
-      totalAmount,
-      currency: bestRule.currency,
-      ruleApplied: {
-        id: bestRule.id,
-        description: bestRule.description || undefined,
-        ruleType: bestRule.rule_type,
+
+    await this.auditService.log({
+      tenantId,
+      userId,
+      action: 'rental_object.pricing_updated',
+      entityType: 'rental_object',
+      entityId: rentalObjectId,
+      newValue: { pricingData },
+    });
+  }
+
+  // =====================================================================
+  // QUOTE CALCULATOR
+  // =====================================================================
+
+  /**
+   * Calculate booking quote with full pricing breakdown
+   */
+  async calculateQuote(
+    data: {
+      rentalObjectId: string;
+      userId: string;
+      organizationId?: string;
+      startTime: Date;
+      endTime: Date;
+      addonSelections?: Array<{ addonId: string; quantity: number }>;
+    },
+    tenantId: string
+  ): Promise<BookingQuoteDTO> {
+    // 1. Calculate duration
+    const durationMinutes = Math.ceil(
+      (data.endTime.getTime() - data.startTime.getTime()) / (1000 * 60)
+    );
+
+    // 2. Resolve pricing group for user/org
+    const pricingGroup = await this.resolvePricingGroup(
+      data.userId,
+      data.organizationId,
+      tenantId
+    );
+
+    // 3. Get base price
+    const basePriceCents = await this.getBasePriceForPricingGroup(
+      data.rentalObjectId,
+      pricingGroup?.id || null,
+      tenantId
+    );
+
+    // 4. Calculate add-ons
+    const addonLineItems = data.addonSelections
+      ? await this.addonsService.calculateAddOnLineItems(
+          data.addonSelections,
+          durationMinutes,
+          tenantId
+        )
+      : [];
+
+    // 5. Calculate discounts
+    const discounts = await this.calculateDiscounts(
+      data.rentalObjectId,
+      pricingGroup?.id || null,
+      basePriceCents,
+      durationMinutes,
+      tenantId
+    );
+
+    // 6. Calculate subtotal
+    const addonTotal = addonLineItems.reduce((sum, item) => sum + item.totalPrice.amount, 0);
+    const discountTotal = discounts.reduce((sum, d) => sum + d.amount.amount, 0);
+    const subtotalCents = basePriceCents + addonTotal - discountTotal;
+
+    // 7. Calculate taxes (25% MVA)
+    const taxRate = 0.25;
+    const taxCents = Math.round(subtotalCents * taxRate);
+    const taxes: TaxLineItemDTO[] = [
+      {
+        name: 'MVA 25%',
+        rate: taxRate,
+        amount: this.formatMoney(taxCents),
       },
-      isWeekend,
-      userGroupId: userGroupId || null,
+    ];
+
+    // 8. Calculate deposit
+    const deposit = await this.calculateDeposit(
+      data.rentalObjectId,
+      pricingGroup?.id || null,
+      subtotalCents,
+      tenantId
+    );
+
+    // 9. Calculate total
+    const totalCents = subtotalCents + taxCents;
+
+    // 10. Build breakdown
+    const breakdown: PriceBreakdownDTO[] = [
+      {
+        label: 'Grunnpris',
+        amount: this.formatMoney(basePriceCents),
+        isDiscount: false,
+      },
+      ...addonLineItems.map(addon => ({
+        label: addon.addOnName,
+        amount: addon.totalPrice,
+        isDiscount: false,
+      })),
+      ...discounts.map(d => ({
+        label: d.name,
+        amount: d.amount,
+        isDiscount: true,
+      })),
+      {
+        label: 'MVA 25%',
+        amount: this.formatMoney(taxCents),
+        isDiscount: false,
+      },
+    ];
+
+    return {
+      rentalObjectId: data.rentalObjectId,
+      userId: data.userId,
+      startTime: data.startTime.toISOString(),
+      endTime: data.endTime.toISOString(),
+      durationMinutes,
+      pricingGroup: pricingGroup || undefined,
+      basePrice: this.formatMoney(basePriceCents),
+      addons: addonLineItems,
+      discounts,
+      taxes,
+      deposit: deposit || undefined,
+      subtotal: this.formatMoney(subtotalCents),
+      total: this.formatMoney(totalCents),
+      breakdown,
+      currency: 'NOK',
     };
   }
 
-  /**
-   * Check if booking spans weekend days
-   */
-  private isWeekendBooking(start: Date, end: Date): boolean {
-    const day = start.getDay();
-    // Saturday = 6, Sunday = 0
-    return day === 0 || day === 6;
+  // =====================================================================
+  // PRIVATE HELPERS
+  // =====================================================================
+
+  private async resolvePricingGroup(
+    userId: string,
+    organizationId: string | undefined,
+    tenantId: string
+  ): Promise<PricingGroupDTO | null> {
+    // Check org pricing group first
+    if (organizationId) {
+      const [orgPricing] = await db
+        .select({ group: pricingGroups })
+        .from(organizationPricingGroups)
+        .innerJoin(pricingGroups, eq(organizationPricingGroups.pricingGroupId, pricingGroups.id))
+        .where(
+          and(
+            eq(organizationPricingGroups.organizationId, organizationId),
+            eq(organizationPricingGroups.tenantId, tenantId)
+          )
+        )
+        .limit(1);
+
+      if (orgPricing) return this.toPricingGroupDTO(orgPricing.group);
+    }
+
+    // Check user pricing group
+    const [userPricing] = await db
+      .select({ group: pricingGroups })
+      .from(userPricingGroups)
+      .innerJoin(pricingGroups, eq(userPricingGroups.pricingGroupId, pricingGroups.id))
+      .where(and(eq(userPricingGroups.userId, userId), eq(userPricingGroups.tenantId, tenantId)))
+      .limit(1);
+
+    return userPricing ? this.toPricingGroupDTO(userPricing.group) : null;
   }
 
-  /**
-   * Get price rules for a rental object, optionally filtered by user group
-   */
-  private async getPriceRules(
+  private async getBasePriceForPricingGroup(
     rentalObjectId: string,
-    userGroupId: string | null | undefined,
-    isWeekend: boolean
-  ): Promise<PriceRule[]> {
-    // In real implementation, this would query the database
-    // For now, return mock data matching our seed
-    const allRules = await mockDb.query<PriceRule[]>(`
-      SELECT * FROM price_rules
-      WHERE rental_object_id = $1
-      AND (
-        (applies_weekends = $2 AND $2 = true) OR
-        (applies_weekdays = $3 AND $3 = true)
+    pricingGroupId: string | null,
+    tenantId: string
+  ): Promise<number> {
+    const [pricing] = await db
+      .select()
+      .from(rentalObjectPricing)
+      .where(
+        and(
+          eq(rentalObjectPricing.rentalObjectId, rentalObjectId),
+          eq(rentalObjectPricing.tenantId, tenantId),
+          pricingGroupId
+            ? eq(rentalObjectPricing.pricingGroupId, pricingGroupId)
+            : eq(rentalObjectPricing.pricingGroupId, null) // Default pricing
+        )
       )
-      ORDER BY priority DESC
-    `, [rentalObjectId, isWeekend, !isWeekend]);
-    
-    // Handle null or return as array
-    const rulesArray: PriceRule[] = Array.isArray(allRules) 
-      ? (allRules as PriceRule[]) 
-      : allRules ? [allRules as PriceRule] : [];
-    
-    // Filter to rules applicable for this user group (or general rules)
-    return rulesArray.filter((rule: PriceRule) => 
-      rule.user_group_id === null || 
-      rule.user_group_id === userGroupId
-    );
+      .limit(1);
+
+    return pricing?.basePriceCents || 0;
   }
 
-  /**
-   * Select the best matching rule (highest priority, most specific)
-   */
-  private selectBestRule(rules: PriceRule[], userGroupId: string | null | undefined, isWeekend: boolean): PriceRule {
-    // Prefer user-group-specific rules over general rules
-    const specificRules = rules.filter(r => r.user_group_id === userGroupId);
-    if (specificRules.length > 0) {
-      return specificRules.sort((a, b) => b.priority - a.priority)[0];
+  private async calculateDiscounts(
+    rentalObjectId: string,
+    pricingGroupId: string | null,
+    basePriceCents: number,
+    durationMinutes: number,
+    tenantId: string
+  ): Promise<DiscountLineItemDTO[]> {
+    const discounts: DiscountLineItemDTO[] = [];
+
+    // Get pricing with discount percentage
+    const [pricing] = await db
+      .select()
+      .from(rentalObjectPricing)
+      .where(
+        and(
+          eq(rentalObjectPricing.rentalObjectId, rentalObjectId),
+          eq(rentalObjectPricing.tenantId, tenantId),
+          pricingGroupId
+            ? eq(rentalObjectPricing.pricingGroupId, pricingGroupId)
+            : eq(rentalObjectPricing.pricingGroupId, null)
+        )
+      )
+      .limit(1);
+
+    if (pricing?.discountPercentage) {
+      const discountCents = Math.round(basePriceCents * (pricing.discountPercentage / 100));
+      discounts.push({
+        name: `Rabatt ${pricing.discountPercentage}%`,
+        percentage: pricing.discountPercentage,
+        amount: this.formatMoney(discountCents),
+      });
     }
-    
-    // Fall back to general rules (user_group_id = null)
-    const generalRules = rules.filter(r => r.user_group_id === null);
-    if (generalRules.length > 0) {
-      return generalRules.sort((a, b) => b.priority - a.priority)[0];
+
+    // TODO: Add time-based discounts, multi-day discounts, etc.
+
+    return discounts;
+  }
+
+  private async calculateDeposit(
+    rentalObjectId: string,
+    pricingGroupId: string | null,
+    subtotalCents: number,
+    tenantId: string
+  ): Promise<MoneyDTO | null> {
+    const [pricing] = await db
+      .select()
+      .from(rentalObjectPricing)
+      .where(
+        and(
+          eq(rentalObjectPricing.rentalObjectId, rentalObjectId),
+          eq(rentalObjectPricing.tenantId, tenantId),
+          pricingGroupId
+            ? eq(rentalObjectPricing.pricingGroupId, pricingGroupId)
+            : eq(rentalObjectPricing.pricingGroupId, null)
+        )
+      )
+      .limit(1);
+
+    if (pricing?.requiresDeposit && pricing.depositCents) {
+      return this.formatMoney(pricing.depositCents);
     }
-    
-    // Return first available rule
-    return rules[0];
+
+    return null;
   }
 
-  /**
-   * Calculate line items based on rule type
-   */
-  private calculateLineItems(rule: PriceRule, start: Date, end: Date): QuoteLineItem[] {
-    switch (rule.rule_type) {
-      case 'HOURLY':
-        return this.calculateHourlyLineItems(rule, start, end);
-      case 'DAILY':
-        return this.calculateDailyLineItems(rule, start, end);
-      case 'PACKAGE':
-        return this.calculatePackageLineItems(rule, start, end);
-      default:
-        throw new Error(`Unknown rule type: ${rule.rule_type}`);
-    }
-  }
+  // =====================================================================
+  // DTO MAP PERS
+  // =====================================================================
 
-  private calculateHourlyLineItems(rule: PriceRule, start: Date, end: Date): QuoteLineItem[] {
-    const hours = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60));
-    
-    return [{
-      description: rule.description || 'Timeleie',
-      quantity: hours,
-      unitPrice: rule.amount,
-      unit: 'HOUR',
-      subtotal: hours * rule.amount,
-      ruleId: rule.id,
-    }];
-  }
-
-  private calculateDailyLineItems(rule: PriceRule, start: Date, end: Date): QuoteLineItem[] {
-    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    
-    return [{
-      description: rule.description || 'Dagsleie',
-      quantity: days,
-      unitPrice: rule.amount,
-      unit: 'DAY',
-      subtotal: days * rule.amount,
-      ruleId: rule.id,
-    }];
-  }
-
-  private calculatePackageLineItems(rule: PriceRule, _start: Date, _end: Date): QuoteLineItem[] {
-    return [{
-      description: rule.description || rule.package_name || 'Pakke',
-      quantity: 1,
-      unitPrice: rule.amount,
-      unit: 'PACKAGE',
-      subtotal: rule.amount,
-      ruleId: rule.id,
-    }];
-  }
-
-  /**
-   * Get rental object for fallback pricing
-   */
-  private async getRentalObject(rentalObjectId: string): Promise<{ pricing: { basePrice: number; unit: string } }> {
-    const rentalObject = await mockDb.query<any>('SELECT * FROM rental_objects WHERE id = $1', [rentalObjectId]);
-    return rentalObject || { pricing: { basePrice: 0, unit: 'hour' } };
-  }
-
-  /**
-   * Create fallback quote when no rules match
-   */
-  private createFallbackQuote(
-    rentalObject: any,
-    start: Date,
-    end: Date,
-    isWeekend: boolean,
-    userGroupId: string | null | undefined
-  ): PricingQuoteResponse {
-    const basePrice = rentalObject?.pricing?.basePrice || 0;
-    const unit = rentalObject?.pricing?.unit || 'hour';
-    const hours = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60));
-    
+  private toPricingGroupDTO(group: any): PricingGroupDTO {
     return {
-      lineItems: [{
-        description: 'Standardpris',
-        quantity: hours,
-        unitPrice: basePrice * 100, // convert to øre
-        unit: unit.toUpperCase() as 'HOUR' | 'DAY' | 'PACKAGE',
-        subtotal: hours * basePrice * 100,
-      }],
-      totalAmount: hours * basePrice * 100,
+      id: group.id,
+      tenantId: group.tenantId,
+      code: group.code,
+      name: group.name,
+      description: group.description,
+      memberCount: group.memberCount,
+      isActive: group.isActive,
+    };
+  }
+
+  private toRentalObjectPricingDTO(pricing: any, group: any): RentalObjectPricingDTO {
+    return {
+      rentalObjectId: pricing.rentalObjectId,
+      pricingGroupId: pricing.pricingGroupId,
+      pricingGroupName: group?.name,
+      basePriceCents: pricing.basePriceCents,
+      basePrice: this.formatMoney(pricing.basePriceCents),
+      discountPercentage: pricing.discountPercentage,
+      requiresDeposit: pricing.requiresDeposit,
+      depositAmount: pricing.depositCents ? this.formatMoney(pricing.depositCents) : undefined,
+      taxRate: 0.25, // 25% MVA
+    };
+  }
+
+  private formatMoney(cents: number): MoneyDTO {
+    const amount = cents / 100;
+    return {
+      amount: cents,
       currency: 'NOK',
-      ruleApplied: null,
-      isWeekend,
-      userGroupId: userGroupId || null,
+      formatted: new Intl.NumberFormat('nb-NO', {
+        style: 'currency',
+        currency: 'NOK',
+      }).format(amount),
     };
   }
 }
