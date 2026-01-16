@@ -1,0 +1,2281 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-01-16T16:52:49.261Z",
+  "description": "10 objects from UTSTYR, TJENESTER, PAKKER categories",
+  "objects": [
+    {
+      "id": "e0000001-0000-0001-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Fotballutstyr Pakke",
+      "slug": "fotballutstyr-pakke-0",
+      "type": "SPACE",
+      "categoryKey": "UTSTYR",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Komplett pakke med baller, vester, kjegler og mål",
+      "capacity": 25,
+      "pricing": {
+        "basePrice": 300,
+        "currency": "NOK",
+        "unit": "day",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 300,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 180,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 300,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 1500,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
+        "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&q=80",
+        "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 1",
+          "postalCode": "3720",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 10 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "storage",
+          "maintenance",
+          "insurance"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 150,
+              "within24h": 300
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 25,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Komplett pakke med baller, vester, kjegler og mål. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "condition": "excellent",
+          "maintenanceDate": "2026-01-01",
+          "serialNumber": "EQ-0000"
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0002-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Lydanlegg Profesjonell",
+      "slug": "lydanlegg-profesjonell-1",
+      "type": "SPACE",
+      "categoryKey": "UTSTYR",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Profesjonelt PA-system med mikrofoner og mixer",
+      "capacity": 500,
+      "pricing": {
+        "basePrice": 800,
+        "currency": "NOK",
+        "unit": "day",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 800,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 480,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 800,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 4000,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1200&q=80",
+        "https://images.unsplash.com/photo-1519508232229-2c6af21a6c8d?w=1200&q=80",
+        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 2",
+          "postalCode": "3721",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 11 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "storage",
+          "maintenance",
+          "insurance"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 400,
+              "within24h": 800
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 500,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Profesjonelt PA-system med mikrofoner og mixer. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "condition": "excellent",
+          "maintenanceDate": "2026-01-01",
+          "serialNumber": "EQ-0001"
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0003-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Projektor HD",
+      "slug": "projektor-hd-2",
+      "type": "SPACE",
+      "categoryKey": "UTSTYR",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Full HD projektor med lerret og HDMI-tilkobling",
+      "capacity": 200,
+      "pricing": {
+        "basePrice": 400,
+        "currency": "NOK",
+        "unit": "day",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 400,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 240,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 400,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 2000,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&q=80",
+        "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&q=80",
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 3",
+          "postalCode": "3722",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 12 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "storage",
+          "maintenance",
+          "insurance"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 200,
+              "within24h": 400
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 200,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Full HD projektor med lerret og HDMI-tilkobling. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "condition": "excellent",
+          "maintenanceDate": "2026-01-01",
+          "serialNumber": "EQ-0002"
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0004-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Stoler og Bord Sett",
+      "slug": "stoler-og-bord-sett-3",
+      "type": "SPACE",
+      "categoryKey": "UTSTYR",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "50 stoler og 10 bord for arrangementer",
+      "capacity": 50,
+      "pricing": {
+        "basePrice": 200,
+        "currency": "NOK",
+        "unit": "day",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 200,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 120,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 200,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 1000,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200&q=80",
+        "https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=1200&q=80",
+        "https://images.unsplash.com/photo-1552581234-26160f608093?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 4",
+          "postalCode": "3723",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 13 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "storage",
+          "maintenance",
+          "insurance"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 100,
+              "within24h": 200
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 50,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "50 stoler og 10 bord for arrangementer. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "condition": "excellent",
+          "maintenanceDate": "2026-01-01",
+          "serialNumber": "EQ-0003"
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0005-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Rengjøringstjeneste",
+      "slug": "rengjoringstjeneste-4",
+      "type": "SPACE",
+      "categoryKey": "TJENESTER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Profesjonell rengjøring etter arrangement",
+      "capacity": 1,
+      "pricing": {
+        "basePrice": 1200,
+        "currency": "NOK",
+        "unit": "service",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 1200,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 720,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 1200,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 6000,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&q=80",
+        "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?w=1200&q=80",
+        "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 5",
+          "postalCode": "3724",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 14 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "professional_staff",
+          "flexible_hours",
+          "quality_guarantee"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 600,
+              "within24h": 1200
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 1,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 2,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Profesjonell rengjøring etter arrangement. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "staffRequired": true,
+          "minimumNotice": 48,
+          "qualifications": [
+            "Certified",
+            "Insured",
+            "Experienced"
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0006-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Catering Service",
+      "slug": "catering-service-5",
+      "type": "SPACE",
+      "categoryKey": "TJENESTER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Mattilbud for arrangementer (pr. person)",
+      "capacity": 100,
+      "pricing": {
+        "basePrice": 250,
+        "currency": "NOK",
+        "unit": "service",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 250,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 150,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 250,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 1250,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1555244162-803834f70033?w=1200&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80",
+        "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 6",
+          "postalCode": "3725",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 15 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "professional_staff",
+          "flexible_hours",
+          "quality_guarantee"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 125,
+              "within24h": 250
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 100,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 2,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Mattilbud for arrangementer (pr. person). Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "staffRequired": true,
+          "minimumNotice": 48,
+          "qualifications": [
+            "Certified",
+            "Insured",
+            "Experienced"
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0007-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Vaktmestertjeneste",
+      "slug": "vaktmestertjeneste-6",
+      "type": "SPACE",
+      "categoryKey": "TJENESTER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Teknisk support og vaktmester under arrangement",
+      "capacity": 1,
+      "pricing": {
+        "basePrice": 500,
+        "currency": "NOK",
+        "unit": "service",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 500,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 300,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 500,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 2500,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&q=80",
+        "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1200&q=80",
+        "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 7",
+          "postalCode": "3726",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 16 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "professional_staff",
+          "flexible_hours",
+          "quality_guarantee"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 250,
+              "within24h": 500
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 1,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 2,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": false,
+            "autoApprove": true,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Teknisk support og vaktmester under arrangement. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "staffRequired": true,
+          "minimumNotice": 48,
+          "qualifications": [
+            "Certified",
+            "Insured",
+            "Experienced"
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0008-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Fotballkamp Pakke",
+      "slug": "fotballkamp-pakke-7",
+      "type": "SPACE",
+      "categoryKey": "PAKKER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Hall + utstyr + dommer for fotballkamp",
+      "capacity": 50,
+      "pricing": {
+        "basePrice": 2500,
+        "currency": "NOK",
+        "unit": "package",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 2500,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 1500,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 2500,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 12500,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&q=80",
+        "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&q=80",
+        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 8",
+          "postalCode": "3727",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 17 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "all_inclusive",
+          "customizable",
+          "dedicated_support"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 1250,
+              "within24h": 2500
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 50,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": true,
+            "autoApprove": false,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Hall + utstyr + dommer for fotballkamp. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "includedItems": [
+            "Hall",
+            "utstyr",
+            "dommer for fotballkamp"
+          ],
+          "customizable": true,
+          "setupTime": 2
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0009-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Konsert Pakke",
+      "slug": "konsert-pakke-8",
+      "type": "SPACE",
+      "categoryKey": "PAKKER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Sal + lydanlegg + tekniker for konsert",
+      "capacity": 300,
+      "pricing": {
+        "basePrice": 5000,
+        "currency": "NOK",
+        "unit": "package",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 5000,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 3000,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 5000,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 25000,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1200&q=80",
+        "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&q=80",
+        "https://images.unsplash.com/photo-1501612780327-45045538702b?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 9",
+          "postalCode": "3728",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 18 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "all_inclusive",
+          "customizable",
+          "dedicated_support"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 2500,
+              "within24h": 5000
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 300,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": true,
+            "autoApprove": false,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Sal + lydanlegg + tekniker for konsert. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "includedItems": [
+            "Sal",
+            "lydanlegg",
+            "tekniker for konsert"
+          ],
+          "customizable": true,
+          "setupTime": 2
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-000a-0000-000000000000",
+      "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "organizationId": "11111111-1111-1111-1111-111111111111",
+      "name": "Bursdagsfest Pakke",
+      "slug": "bursdagsfest-pakke-9",
+      "type": "SPACE",
+      "categoryKey": "PAKKER",
+      "timeMode": "PERIOD",
+      "status": "published",
+      "description": "Rom + dekorasjoner + aktivitetsutstyr",
+      "capacity": 30,
+      "pricing": {
+        "basePrice": 1500,
+        "currency": "NOK",
+        "unit": "package",
+        "tiers": [
+          {
+            "type": "base",
+            "price": 1500,
+            "label": "Grunnpris"
+          },
+          {
+            "type": "half_day",
+            "price": 900,
+            "duration": 4,
+            "label": "Halvdag"
+          },
+          {
+            "type": "full_day",
+            "price": 1500,
+            "duration": 8,
+            "label": "Heldag"
+          },
+          {
+            "type": "weekly",
+            "price": 7500,
+            "duration": 168,
+            "label": "Uke (7 dager)"
+          }
+        ],
+        "discounts": [
+          {
+            "type": "member",
+            "percentage": 10,
+            "label": "Medlemsrabatt"
+          },
+          {
+            "type": "student",
+            "percentage": 15,
+            "label": "Studentrabatt"
+          },
+          {
+            "type": "nonprofit",
+            "percentage": 20,
+            "label": "Frivillig organisasjon"
+          }
+        ]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1200&q=80",
+        "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=1200&q=80",
+        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1200&q=80"
+      ],
+      "metadata": {
+        "location": {
+          "address": "Idrettsveien 10",
+          "postalCode": "3729",
+          "city": "Skien",
+          "country": "Norway"
+        },
+        "contactName": "Booking Avdeling",
+        "contactEmail": "booking@skien.kommune.no",
+        "contactPhone": "+47 35 50 19 00",
+        "openingHours": {
+          "monday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "tuesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "wednesday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "thursday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "friday": {
+            "open": "07:00",
+            "close": "22:00"
+          },
+          "saturday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "sunday": {
+            "open": "09:00",
+            "close": "20:00"
+          },
+          "holidays": {
+            "open": "10:00",
+            "close": "18:00"
+          }
+        },
+        "amenities": [
+          "all_inclusive",
+          "customizable",
+          "dedicated_support"
+        ],
+        "regulations": {
+          "age": {
+            "minimum": 18,
+            "supervision": "Ansvarlig voksen påkrevd"
+          },
+          "insurance": {
+            "required": true,
+            "minCoverage": 2000000,
+            "provider": "Inkludert i leieprisen"
+          },
+          "cancellation": {
+            "policy": "Gratis avbestilling inntil 48 timer før",
+            "fee": {
+              "within48h": 750,
+              "within24h": 1500
+            }
+          },
+          "liability": {
+            "userResponsible": true,
+            "deposit": 1000,
+            "cleaningFee": 500
+          },
+          "capacity": {
+            "maximum": 30,
+            "fireCode": "I henhold til TEK17"
+          },
+          "accessibility": {
+            "wheelchairAccess": true,
+            "hearingLoop": false,
+            "parking": "Tilgjengelig"
+          }
+        },
+        "bookingRules": {
+          "advance": {
+            "min": 48,
+            "max": 180,
+            "unit": "hours/days"
+          },
+          "duration": {
+            "min": 4,
+            "max": 24,
+            "unit": "hours"
+          },
+          "recurring": {
+            "allowed": true,
+            "maxWeeks": 26
+          },
+          "approval": {
+            "required": true,
+            "autoApprove": false,
+            "approvalTime": 8
+          }
+        },
+        "faq": [
+          {
+            "question": "Hva er inkludert?",
+            "answer": "Rom + dekorasjoner + aktivitetsutstyr. Alt utstyr og tjenester er inkludert i prisen."
+          },
+          {
+            "question": "Kan jeg avbestille?",
+            "answer": "Gratis avbestilling inntil 48 timer før."
+          },
+          {
+            "question": "Er det noen ekstra kostnader?",
+            "answer": "Depositum på 1000 NOK returneres etter godkjent bruk."
+          },
+          {
+            "question": "Hvordan bestiller jeg?",
+            "answer": "Book via nettsiden eller ring oss direkte."
+          },
+          {
+            "question": "Er forsikring inkludert?",
+            "answer": "Ja, grunnforsikring er inkludert på alt utstyr og tjenester."
+          },
+          {
+            "question": "Tilbyr dere rabatter?",
+            "answer": "Ja! 10-20% rabatt for medlemmer, studenter og frivillige organisasjoner."
+          }
+        ],
+        "rules": [
+          {
+            "icon": "check",
+            "text": "Behandle utstyret forsiktig"
+          },
+          {
+            "icon": "clock",
+            "text": "Lever tilbake i god tid"
+          },
+          {
+            "icon": "clean",
+            "text": "Rengjør utstyret etter bruk"
+          },
+          {
+            "icon": "report",
+            "text": "Rapporter skader umiddelbart"
+          },
+          {
+            "icon": "respect",
+            "text": "Følg bruksanvisningen"
+          },
+          {
+            "icon": "insurance",
+            "text": "Forsikring dekker kun normal bruk"
+          }
+        ],
+        "categorySpecific": {
+          "includedItems": [
+            "Rom",
+            "dekorasjoner",
+            "aktivitetsutstyr"
+          ],
+          "customizable": true,
+          "setupTime": 2
+        }
+      }
+    }
+  ]
+}

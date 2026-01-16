@@ -92,16 +92,16 @@ import { useAuthRedirectGuard, useSessionRestoration } from '@digilist/client-sd
  * Mock users match the seeded database for consistent testing.
  */
 const MOCK_ADMIN_USER: BackofficeUser = {
-  id: 'kari-nordmann-001',
-  name: 'Kari Nordmann',
-  email: 'admin@skien.kommune.no',
+  id: 'test-admin-001',
+  name: 'Test Admin User',
+  email: 'admin@test.kommune.no',
   role: 'admin',
 };
 
 const MOCK_USER: BackofficeUser = {
   id: '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c',
-  name: 'Ola Hansen',
-  email: 'ola.hansen@kommune.no',
+  name: 'Test User',
+  email: 'user@test.kommune.no',
   role: 'saksbehandler',
 };
 
@@ -179,11 +179,9 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Use auth guards to prevent redirect loops
-  // NOTE: Auth redirect guard temporarily disabled to avoid Router context issues
-  // TODO: Re-enable once properly integrated with Router provider
-  // useAuthRedirectGuard(!!user, isLoading);
-  useSessionRestoration();
+  // ✅ Session restoration and redirect guards are handled by ProtectedRoute component
+  // This prevents Router context errors during AuthProvider initialization
+  // The auth hooks from SDK are not used here to avoid useNavigate() timing issues
 
   // Subscribe to storage changes for cross-tab synchronization of flow context
   const _hasStoredContext = useSyncExternalStore(

@@ -74,6 +74,10 @@ const CONFIG = {
     /new RegExp/,
     // Import/export statements
     /^(import|export|from)\s/,
+    // Mock/test data patterns
+    /MOCK_[A-Z_]+/,
+    /^Test\s/,
+    /@test\./,
   ],
 
   // Common Norwegian/English words that indicate user-facing text
