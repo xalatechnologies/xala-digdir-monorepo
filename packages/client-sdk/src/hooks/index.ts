@@ -362,3 +362,30 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// SaaS Admin hooks (Platform-wide administration)
+export {
+  useSaasMe,
+  useSaasTenants,
+  useSaasTenant,
+  useCreateSaasTenant,
+  useUpdateSaasTenant,
+  useSuspendSaasTenant,
+  useReactivateSaasTenant,
+  useUpdateSaasSeatLimits,
+  useSaasFeatureFlagsCatalog,
+  useSaasTenantFlags,
+  useUpdateSaasTenantFlags,
+  useRotateSaasLicenseKey,
+  useValidateSaasLicenseKey,
+  useSaasTenantBilling,
+  useSaasBillingOverview,
+  useSaasTenantSecrets,
+  useUpdateSaasTenantSecret,
+  useSaasPlans,
+  useSaasPlan,
+  useCreateSaasPlan,
+  useUpdateSaasPlan,
+  useSaasTenantCategories,
+  useUpdateSaasTenantCategories,
+} from './use-saas';
