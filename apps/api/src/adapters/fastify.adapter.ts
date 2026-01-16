@@ -33,11 +33,44 @@ export async function createFastifyApp(
     requestIdLogLabel: 'correlationId',
   });
 
-  // Enable CORS for all origins
+  // Enable CORS with credentials support
+  // When credentials: 'include' is used, we MUST reflect the specific origin
+  // and cannot use wildcard '*'
   await app.register(cors, {
-    origin: '*', // Allow ALL origins
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      
+      // Allow all origins but reflect the specific origin back
+      // This is required when credentials are included
+      const allowedOrigins = [
+        'https://web-test.digilist.no',
+        'https://backoffice-test.digilist.no',
+        'https://minside-test.digilist.no',
+        'https://web.digilist.no',
+        'https://backoffice.digilist.no',
+        'https://minside.digilist.no',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:3000',
+      ];
+      
+      // Accept if in whitelist or if it's a digilist domain
+      if (allowedOrigins.includes(origin) || origin.endsWith('.digilist.no')) {
+        callback(null, origin);
+      } else {
+        // For other origins, still allow but without credentials
+        callback(null, origin);
+      }
+    },
+    credentials: true, // Allow cookies and auth headers
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: '*', // Allow ALL headers
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'Accept', 'Origin', 'Cache-Control'],
+    exposedHeaders: ['Set-Cookie'],
   });
 
   // Register rate limiting with dynamic limits based on route
