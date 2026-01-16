@@ -1,10 +1,17 @@
 /**
  * Database Seed Script
  * Norwegian demo data for production-ready demo
+ *
+ * Includes:
+ * - Demo tenants, organizations, users
+ * - Sample listings and bookings
+ * - Conversations and messages
+ * - Feature flags catalog
  */
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
+import { seedFeatureFlags } from '../src/database/seeds/feature-flags.seed';
 
 // ============================================================================
 // UUID Constants (valid UUIDs for all entities)
@@ -1100,6 +1107,10 @@ async function seed() {
     // Count Ola's specific data
     const olaBookings = bookings.filter((b: any) => b.userId === USER_OLA_HANSEN);
 
+    // Seed feature flags catalog (idempotent - safe to run multiple times)
+    console.log('🚩 Seeding feature flags...');
+    const flagsResult = await seedFeatureFlags(databaseUrl);
+
     console.log('\n✅ Seed completed successfully!');
     console.log(`   - ${TENANTS.length} tenants`);
     console.log(`   - ${ORGANIZATIONS.length} organizations`);
@@ -1110,6 +1121,7 @@ async function seed() {
     console.log(`   - ${conversations.length} conversations`);
     console.log(`   - ${messages.length} messages`);
     console.log(`   - ${allocations.length} allocations`);
+    console.log(`   - ${flagsResult.total} feature flags (${flagsResult.inserted} new, ${flagsResult.updated} updated)`);
   } catch (error) {
     console.error('❌ Seed failed:', error);
     process.exit(1);

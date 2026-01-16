@@ -299,4 +299,65 @@ export const queryKeys = {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
   },
+
+  // =========================================================================
+  // SaaS Admin Keys (Platform-wide administration)
+  // =========================================================================
+  saas: {
+    all: ['saas:'] as const,
+    me: () => [...queryKeys.saas.all, 'me'] as const,
+
+    // Tenant management
+    tenants: {
+      all: () => [...queryKeys.saas.all, 'tenants'] as const,
+      lists: () => [...queryKeys.saas.tenants.all(), 'list'] as const,
+      list: (params?: { page?: number; limit?: number; search?: string; status?: string; planId?: string }) =>
+        [...queryKeys.saas.tenants.lists(), params] as const,
+      details: () => [...queryKeys.saas.tenants.all(), 'detail'] as const,
+      detail: (tenantId: string) => [...queryKeys.saas.tenants.details(), tenantId] as const,
+      flags: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'flags'] as const,
+      billing: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'billing'] as const,
+      secrets: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'secrets'] as const,
+      categories: (tenantId: string) => [...queryKeys.saas.tenants.detail(tenantId), 'categories'] as const,
+    },
+
+    // Plans management
+    plans: {
+      all: () => [...queryKeys.saas.all, 'plans'] as const,
+      lists: () => [...queryKeys.saas.plans.all(), 'list'] as const,
+      list: (params?: { page?: number; limit?: number; status?: string; isPublic?: boolean }) =>
+        [...queryKeys.saas.plans.lists(), params] as const,
+      details: () => [...queryKeys.saas.plans.all(), 'detail'] as const,
+      detail: (planId: string) => [...queryKeys.saas.plans.details(), planId] as const,
+    },
+
+    // Feature flags catalog
+    featureFlags: {
+      all: () => [...queryKeys.saas.all, 'featureFlags'] as const,
+      catalog: (params?: { category?: string; status?: string }) =>
+        [...queryKeys.saas.featureFlags.all(), 'catalog', params] as const,
+    },
+
+    // Platform-wide billing
+    billing: {
+      all: () => [...queryKeys.saas.all, 'billing'] as const,
+      overview: () => [...queryKeys.saas.billing.all(), 'overview'] as const,
+    },
+  },
+
+  // =========================================================================
+  // Tenant Admin Keys (Tenant-scoped administration)
+  // =========================================================================
+  tenantAdmin: {
+    all: ['tenantAdmin:'] as const,
+    capabilities: () => [...queryKeys.tenantAdmin.all, 'capabilities'] as const,
+    subscription: () => [...queryKeys.tenantAdmin.all, 'subscription'] as const,
+    flags: () => [...queryKeys.tenantAdmin.all, 'flags'] as const,
+    branding: () => [...queryKeys.tenantAdmin.all, 'branding'] as const,
+    integrations: {
+      all: () => [...queryKeys.tenantAdmin.all, 'integrations'] as const,
+      list: () => [...queryKeys.tenantAdmin.integrations.all(), 'list'] as const,
+      provider: (provider: string) => [...queryKeys.tenantAdmin.integrations.all(), provider] as const,
+    },
+  },
 } as const;

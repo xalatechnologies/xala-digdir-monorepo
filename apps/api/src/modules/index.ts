@@ -8,3 +8,5 @@ export * from './user';
 export * from './monitoring';
 export * from './billing/billing.controller';
 export * from './reviews/reviews.controller';
+export * from './saas';
+export * from './tenant-admin';

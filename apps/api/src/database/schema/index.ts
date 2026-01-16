@@ -13,6 +13,7 @@ import {
   integer,
   decimal,
   index,
+  unique,
 } from 'drizzle-orm/pg-core';
 
 // ============================================================================
@@ -26,11 +27,27 @@ export const tenants = pgTable('tenants', {
   domain: varchar('domain', { length: 255 }),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  // Subscription & Plan references
+  subscriptionPlanId: uuid('subscription_plan_id'),
+  // License key (stored as hash only, never plaintext)
+  licenseKeyHash: text('license_key_hash'),
+  licenseKeyRotatedAt: timestamp('license_key_rotated_at'),
+  // Seat limits (overrides plan defaults when set)
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  // Branding reference (active branding version ID)
+  brandingVersionId: uuid('branding_version_id'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   slugIdx: index('tenants_slug_idx').on(table.slug),
   statusIdx: index('tenants_status_idx').on(table.status),
+  subscriptionPlanIdx: index('tenants_subscription_plan_idx').on(table.subscriptionPlanId),
 }));
 
 export const organizations = pgTable('organizations', {
@@ -69,12 +86,64 @@ export const users = pgTable('users', {
 }));
 
 // ============================================================================
-// Subscriptions & Billing
+// Plans & Subscriptions
 // ============================================================================
+
+export const plans = pgTable('plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 100 }).notNull(),
+  slug: varchar('slug', { length: 50 }).notNull().unique(),
+  description: text('description'),
+  displayOrder: integer('display_order').notNull().default(0),
+  basePrice: decimal('base_price', { precision: 10, scale: 2 }).notNull().default('0'),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+  billingPeriod: varchar('billing_period', { length: 20 }).notNull().default('monthly'),
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  entitlements: jsonb('entitlements').default({
+    modules: {
+      rating: false,
+      recommendations: false,
+      feedback: true,
+      favorites: true,
+      share: true,
+      recurringBookings: false,
+    },
+    integrations: {
+      visma: false,
+      rco: false,
+      acos: false,
+      outlook: false,
+      vipps: false,
+    },
+    features: {
+      customBranding: false,
+      advancedReporting: false,
+      apiAccess: false,
+      prioritySupport: false,
+    },
+  }),
+  trialDays: integer('trial_days').default(0),
+  isPublic: boolean('is_public').notNull().default(true),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index('plans_slug_idx').on(table.slug),
+  statusIdx: index('plans_status_idx').on(table.status),
+  displayOrderIdx: index('plans_display_order_idx').on(table.displayOrder),
+}));
 
 export const subscriptions = pgTable('subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  planId: uuid('plan_id').references(() => plans.id, { onDelete: 'set null' }),
   stripeCustomerId: varchar('stripe_customer_id', { length: 255 }),
   stripeSubscriptionId: varchar('stripe_subscription_id', { length: 255 }),
   plan: varchar('plan', { length: 50 }).notNull().default('free'),
@@ -86,6 +155,84 @@ export const subscriptions = pgTable('subscriptions', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('subscriptions_tenant_idx').on(table.tenantId),
+  planIdx: index('subscriptions_plan_idx').on(table.planId),
+}));
+
+// ============================================================================
+// Feature Flags
+// ============================================================================
+
+export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: varchar('key', { length: 100 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  type: varchar('type', { length: 50 }).notNull().default('boolean'),
+  defaultValue: jsonb('default_value').notNull().default(false),
+  category: varchar('category', { length: 50 }).notNull().default('module'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  keyIdx: index('feature_flags_catalog_key_idx').on(table.key),
+  categoryIdx: index('feature_flags_catalog_category_idx').on(table.category),
+  statusIdx: index('feature_flags_catalog_status_idx').on(table.status),
+}));
+
+export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('tenant_feature_flags_tenant_idx').on(table.tenantId),
+  featureFlagIdx: index('tenant_feature_flags_flag_idx').on(table.featureFlagId),
+  tenantFlagUnique: unique('tenant_feature_flags_unique').on(table.tenantId, table.featureFlagId),
+}));
+
+export const orgFeatureFlags = pgTable('org_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  orgIdx: index('org_feature_flags_org_idx').on(table.organizationId),
+  featureFlagIdx: index('org_feature_flags_flag_idx').on(table.featureFlagId),
+  orgFlagUnique: unique('org_feature_flags_unique').on(table.organizationId, table.featureFlagId),
+}));
+
+// ============================================================================
+// Category Entitlements (Rental Object Category Access Control)
+// ============================================================================
+
+export const categoryEntitlements = pgTable('category_entitlements', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'cascade' }),
+  category: varchar('category', { length: 100 }).notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  restrictions: jsonb('restrictions').default({}),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('category_entitlements_tenant_idx').on(table.tenantId),
+  orgIdx: index('category_entitlements_org_idx').on(table.organizationId),
+  categoryIdx: index('category_entitlements_category_idx').on(table.category),
+  tenantCategoryUnique: unique('category_entitlements_tenant_unique').on(table.tenantId, table.category),
+  orgCategoryUnique: unique('category_entitlements_org_unique').on(table.organizationId, table.category),
 }));
 
 // ============================================================================
@@ -292,6 +439,53 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// Branding & White-Label
+// ============================================================================
+
+export const brandingTokens = pgTable('branding_tokens', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  name: varchar('name', { length: 255 }),
+  logoUrl: text('logo_url'),
+  faviconUrl: text('favicon_url'),
+  primaryColor: varchar('primary_color', { length: 50 }),
+  secondaryColor: varchar('secondary_color', { length: 50 }),
+  accentColor: varchar('accent_color', { length: 50 }),
+  tokens: jsonb('tokens').default({}),
+  typography: jsonb('typography').default({}),
+  activeVersionId: uuid('active_version_id'),
+  previewVersionId: uuid('preview_version_id'),
+  previewMode: boolean('preview_mode').notNull().default(false),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_tokens_tenant_idx').on(table.tenantId),
+}));
+
+export const brandingVersions = pgTable('branding_versions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  brandingTokensId: uuid('branding_tokens_id').notNull().references(() => brandingTokens.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  name: varchar('name', { length: 255 }),
+  description: text('description'),
+  snapshot: jsonb('snapshot').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  publishedAt: timestamp('published_at'),
+  publishedBy: uuid('published_by').references(() => users.id, { onDelete: 'set null' }),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('branding_versions_tenant_idx').on(table.tenantId),
+  brandingTokensIdx: index('branding_versions_tokens_idx').on(table.brandingTokensId),
+  versionIdx: index('branding_versions_version_idx').on(table.brandingTokensId, table.version),
+  statusIdx: index('branding_versions_status_idx').on(table.status),
+  tenantVersionUnique: unique('branding_versions_tenant_version_unique').on(table.tenantId, table.version),
+}));
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -301,6 +495,8 @@ export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type Plan = typeof plans.$inferSelect;
+export type NewPlan = typeof plans.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
@@ -323,4 +519,15 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
-
+export type FeatureFlagCatalog = typeof featureFlagsCatalog.$inferSelect;
+export type NewFeatureFlagCatalog = typeof featureFlagsCatalog.$inferInsert;
+export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
+export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
+export type OrgFeatureFlag = typeof orgFeatureFlags.$inferSelect;
+export type NewOrgFeatureFlag = typeof orgFeatureFlags.$inferInsert;
+export type CategoryEntitlement = typeof categoryEntitlements.$inferSelect;
+export type NewCategoryEntitlement = typeof categoryEntitlements.$inferInsert;
+export type BrandingToken = typeof brandingTokens.$inferSelect;
+export type NewBrandingToken = typeof brandingTokens.$inferInsert;
+export type BrandingVersion = typeof brandingVersions.$inferSelect;
+export type NewBrandingVersion = typeof brandingVersions.$inferInsert;

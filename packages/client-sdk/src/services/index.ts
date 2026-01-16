@@ -112,9 +112,15 @@ export {
 } from './billing.service';
 
 // Re-export billing types for convenience
-export type { 
-  BillingSummary, 
+export type {
+  BillingSummary,
   Invoice,
-  InvoiceQueryParams 
+  InvoiceQueryParams
 } from './billing.service';
+
+// SaaS Admin - Service only (types from ./types)
+export { saasService } from './saas.service';
+
+// Tenant Admin - Service only (types from ./types)
+export { tenantAdminService } from './tenant-admin.service';
 

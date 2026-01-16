@@ -26,6 +26,10 @@ export * from './upload';
 export * from './search';
 export * from './economy';
 
+// SaaS and Tenant Admin types
+export * from './saas';
+export * from './tenant-admin';
+
 // Additional types that don't fit a single domain
 export type {
   // Seasonal Lease types

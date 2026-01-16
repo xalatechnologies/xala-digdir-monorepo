@@ -10,12 +10,10 @@
  * 3. Projection DTOs are frontend-ready
  * 4. RFC7807 errors flow correctly
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // Import from our SDK
 import {
-  ListingActionCode,
-  BookingActionCode,
   PolicyReasonKey,
   isActionEnabled,
   getActionReasonKey,

@@ -5,7 +5,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   geocodeAddress,
-  getCachedGeocode,
   buildAddressString,
   type GeocodedLocation,
   type GeocodeConfig,
@@ -190,7 +189,7 @@ export function useGeocodeListings<T extends { id: string }>(
   // Count statistics
   const { geocodedCount, failedCount } = useMemo(() => {
     let geocoded = 0;
-    let failed = 0;
+    const failed = 0;
 
     items.forEach(item => {
       if (hasCoordinates(item)) {

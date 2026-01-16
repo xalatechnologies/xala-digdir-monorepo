@@ -8,6 +8,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users, tenants } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
+import { getPermissionsForRole, getCapabilityProjection, isValidRole } from './rbac';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -210,39 +211,5 @@ export class AuthController {
   }
 }
 
-// Helper: Get permissions based on role
-function getPermissionsForRole(role: string): string[] {
-  const permissions: Record<string, string[]> = {
-    admin: [
-      'dashboard:*',
-      'listings:*',
-      'bookings:*',
-      'users:*',
-      'organizations:*',
-      'reports:*',
-      'settings:*',
-      'calendar:*',
-      'messages:*',
-      'seasonal-leases:*',
-    ],
-    saksbehandler: [
-      'dashboard:read',
-      'listings:*',
-      'bookings:*',
-      'organizations:read',
-      'reports:read',
-      'calendar:*',
-      'messages:*',
-      'seasonal-leases:*',
-    ],
-    user: [
-      'listings:read',
-      'bookings:read',
-      'bookings:create',
-      'messages:read',
-      'messages:create',
-    ],
-  };
-
-  return permissions[role] || permissions.user;
-}
+// Note: getPermissionsForRole is now imported from './rbac'
+// This provides comprehensive RBAC with SaaS, Tenant, Commune, and Org level roles

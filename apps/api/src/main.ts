@@ -56,6 +56,9 @@ import { BlocksController } from './modules/blocks/blocks.controller';
 import { ProfileController } from './modules/profile/profile.controller';
 // Phase 7: Reviews
 import { ReviewsController, ListingReviewsController } from './modules/reviews/reviews.controller';
+// Phase 8: SaaS Admin & Tenant Admin
+import { SaasController } from './modules/saas';
+import { TenantAdminController } from './modules/tenant-admin';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -228,6 +231,9 @@ async function bootstrap() {
     ProfileController,
     // Phase 7: Reviews
     ReviewsController,
+    // Phase 8: SaaS Admin & Tenant Admin
+    SaasController,
+    TenantAdminController,
   ];
 
   // Create Fastify app with controllers
