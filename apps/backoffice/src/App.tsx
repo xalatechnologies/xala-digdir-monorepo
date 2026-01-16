@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 
-import { AuthProvider } from '@xala/auth';
+import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
 import { CapabilityProvider } from './providers/CapabilityProvider';
 import { ToastProvider } from './providers/ToastProvider';
@@ -75,6 +75,9 @@ export function App() {
 
 function AppWithTheme() {
   const { colorScheme } = useTheme();
+  
+  // Handle OAuth/BankID redirects automatically
+  useOAuthCallback();
   
   return (
     <I18nProvider initialLocale="nb">
