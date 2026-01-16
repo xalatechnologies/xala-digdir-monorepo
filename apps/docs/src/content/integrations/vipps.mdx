@@ -1,0 +1,460 @@
+{/*
+ * Vipps Integration Documentation
+ *
+ * Documentation for the Vipps payment integration in the Xala/Digilist platform.
+ * Describes configuration, payment flows, webhooks, and troubleshooting.
+ */}
+
+import { Callout, Steps, Checklist, MediaPlaceholder, RoleMatrix, CodeBlock } from '../../components/docs';
+
+# Vipps Integration
+
+The Xala/Digilist platform integrates with Vipps MobilePay for seamless payment processing.
+This integration enables Norwegian citizens to pay for bookings using their preferred mobile
+payment method, providing a familiar and secure checkout experience.
+
+## Integration Overview
+
+<Callout variant="info" title="Norwegian Payment Standard">
+Vipps is the preferred payment method in Norway, used by over 4 million Norwegians. Integration
+with Vipps provides the most familiar checkout experience for municipal services.
+</Callout>
+
+<Checklist
+  title="Vipps Integration Features"
+  items={[
+    { text: 'Booking payment via Vipps MobilePay', checked: true },
+    { text: 'Express checkout for logged-in users', checked: true },
+    { text: 'Automatic payment confirmation', checked: true },
+    { text: 'Refund processing via Vipps', checked: true },
+    { text: 'Recurring payments for subscriptions', checked: true },
+    { text: 'Payment reconciliation and reporting', checked: true },
+    { text: 'Webhook-based status updates', checked: true },
+    { text: 'Audit logging of all transactions', checked: true },
+  ]}
+/>
+
+## Architecture
+
+<MediaPlaceholder
+  type="diagram"
+  label="Vipps Payment Flow Architecture"
+  notes="Diagram showing the flow from booking checkout through Vipps API to payment confirmation"
+  aspectRatio="16/9"
+/>
+
+## Payment Flow
+
+<Steps
+  title="Vipps Payment Process"
+  items={[
+    {
+      title: 'Initiate Payment',
+      description: 'User selects Vipps as payment method during booking checkout. The platform creates a Vipps payment request.',
+    },
+    {
+      title: 'Redirect to Vipps',
+      description: 'User is redirected to Vipps app or web checkout. They confirm the payment with their Vipps PIN or biometrics.',
+    },
+    {
+      title: 'Payment Authorization',
+      description: 'Vipps authorizes the payment and sends a webhook to the platform with the authorization status.',
+    },
+    {
+      title: 'Capture Payment',
+      description: 'Platform captures the authorized payment. For bookings, this typically happens immediately.',
+    },
+    {
+      title: 'Confirmation',
+      description: 'User receives booking confirmation with payment receipt. The booking status changes to CONFIRMED.',
+    },
+    {
+      title: 'Audit Logging',
+      description: 'All payment events are logged to the audit system for compliance and reporting.',
+    },
+  ]}
+/>
+
+## Configuration
+
+<CodeBlock
+  title="Vipps Environment Variables"
+  language="bash"
+  code={`# Vipps API Configuration
+VIPPS_CLIENT_ID=your-client-id
+VIPPS_CLIENT_SECRET=your-client-secret
+VIPPS_SUBSCRIPTION_KEY=your-subscription-key
+VIPPS_MERCHANT_SERIAL_NUMBER=your-msn
+
+# Vipps Environment (test or production)
+VIPPS_ENVIRONMENT=test
+
+# Webhook Configuration
+VIPPS_WEBHOOK_SECRET=your-webhook-secret
+
+# Payment Configuration
+VIPPS_CALLBACK_PREFIX=https://api.digilist.no/webhooks/vipps
+VIPPS_FALLBACK_URL=https://app.digilist.no/booking/complete`}
+  showLineNumbers
+/>
+
+<Callout variant="warning" title="Security Note">
+Never commit Vipps credentials to version control. Use environment variables or a secrets
+manager for all sensitive configuration values.
+</Callout>
+
+## SDK Usage
+
+<CodeBlock
+  title="Initiating Vipps Payment"
+  language="tsx"
+  code={`import { useVippsPayment } from '@digilist/client-sdk/hooks';
+
+function BookingCheckout({ booking }) {
+  const { initiatePayment, isLoading, error } = useVippsPayment();
+
+  const handlePayment = async () => {
+    const result = await initiatePayment({
+      bookingId: booking.id,
+      amount: booking.totalPrice,
+      description: \`Booking: \${booking.listing.name}\`,
+      phoneNumber: booking.user.phone, // Optional for express checkout
+    });
+
+    if (result.redirectUrl) {
+      window.location.href = result.redirectUrl;
+    }
+  };
+
+  return (
+    <Button onClick={handlePayment} loading={isLoading}>
+      Pay with Vipps
+    </Button>
+  );
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Handling Payment Callbacks"
+  language="tsx"
+  code={`import { useVippsCallback } from '@digilist/client-sdk/hooks';
+
+function PaymentCompletePage() {
+  const { status, booking, error, isLoading } = useVippsCallback();
+
+  if (isLoading) {
+    return <Spinner label="Verifying payment..." />;
+  }
+
+  if (error) {
+    return <PaymentErrorView error={error} />;
+  }
+
+  if (status === 'AUTHORIZED' || status === 'CAPTURED') {
+    return <BookingConfirmation booking={booking} />;
+  }
+
+  if (status === 'CANCELLED') {
+    return <PaymentCancelledView bookingId={booking.id} />;
+  }
+
+  return <PaymentPendingView />;
+}`}
+  showLineNumbers
+/>
+
+<CodeBlock
+  title="Processing Refunds"
+  language="typescript"
+  code={`import { vippsService } from '@digilist/client-sdk';
+
+async function processRefund(
+  bookingId: string,
+  amount: number,
+  reason: string
+) {
+  const refund = await vippsService.refund({
+    bookingId,
+    amount,
+    reason,
+  });
+
+  // Audit log is created automatically
+  console.log('Refund processed:', refund.transactionId);
+
+  return refund;
+}`}
+  showLineNumbers
+/>
+
+## Webhook Events
+
+<CodeBlock
+  title="Vipps Webhook Events"
+  language="typescript"
+  code={`// Webhook events received from Vipps
+type VippsWebhookEvent =
+  | 'AUTHORIZED'    // Payment authorized, ready to capture
+  | 'CAPTURED'      // Payment captured successfully
+  | 'CANCELLED'     // Payment cancelled by user
+  | 'REFUNDED'      // Refund processed
+  | 'EXPIRED'       // Payment session expired
+  | 'FAILED';       // Payment failed
+
+// Webhook handler (server-side)
+app.post('/webhooks/vipps', async (req, res) => {
+  const { event, orderId, transactionInfo } = req.body;
+
+  // Verify webhook signature
+  const isValid = vippsService.verifyWebhook(req);
+  if (!isValid) {
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+
+  // Process webhook event
+  switch (event) {
+    case 'AUTHORIZED':
+      await capturePayment(orderId);
+      break;
+    case 'CAPTURED':
+      await confirmBooking(orderId);
+      break;
+    case 'CANCELLED':
+      await cancelBooking(orderId);
+      break;
+    case 'REFUNDED':
+      await processRefundComplete(orderId);
+      break;
+  }
+
+  res.status(200).json({ received: true });
+});`}
+  showLineNumbers
+/>
+
+## Key Screens
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Vipps Checkout Page"
+  notes="Booking checkout page with Vipps payment button and order summary"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Vipps Mobile App"
+  notes="Vipps app showing payment confirmation screen with booking details"
+  aspectRatio="9/16"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Payment Confirmation"
+  notes="Booking confirmation page after successful Vipps payment"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Payment Admin View"
+  notes="Admin view showing Vipps transaction history and reconciliation"
+  aspectRatio="16/9"
+/>
+
+## Permissions
+
+<RoleMatrix
+  title="Vipps Payment Permissions"
+  roles={[
+    { id: 'tenant-admin', name: 'Tenant Admin', description: 'Full access' },
+    { id: 'admin', name: 'Admin', description: 'Management' },
+    { id: 'caseworker', name: 'Caseworker', description: 'Operations' },
+    { id: 'org-member', name: 'Org Member', description: 'Limited' },
+    { id: 'citizen', name: 'Citizen', description: 'End user' },
+  ]}
+  permissions={[
+    {
+      permission: 'Configure Vipps integration',
+      category: 'Configuration',
+      description: 'Set up Vipps credentials and settings',
+      roles: { 'tenant-admin': true, 'admin': false, 'caseworker': false, 'org-member': false, 'citizen': false },
+    },
+    {
+      permission: 'View all transactions',
+      category: 'Payments',
+      description: 'See all Vipps transactions across tenant',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': 'partial', 'org-member': false, 'citizen': false },
+    },
+    {
+      permission: 'Process refunds',
+      category: 'Payments',
+      description: 'Initiate refunds for bookings',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': true, 'org-member': false, 'citizen': false },
+    },
+    {
+      permission: 'View org transactions',
+      category: 'Payments',
+      description: 'See transactions for own organization',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': true, 'org-member': true, 'citizen': false },
+    },
+    {
+      permission: 'Make payment',
+      category: 'Payments',
+      description: 'Pay for bookings via Vipps',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': true, 'org-member': true, 'citizen': true },
+    },
+    {
+      permission: 'View own payments',
+      category: 'Payments',
+      description: 'See own payment history',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': true, 'org-member': true, 'citizen': true },
+    },
+    {
+      permission: 'Generate payment reports',
+      category: 'Reporting',
+      description: 'Create payment reconciliation reports',
+      roles: { 'tenant-admin': true, 'admin': true, 'caseworker': false, 'org-member': false, 'citizen': false },
+    },
+  ]}
+  showLegend
+/>
+
+## Common Errors
+
+<Callout variant="danger" title="vipps/authentication-failed">
+**Error Code:** `vipps/authentication-failed`
+
+**Cause:** Invalid Vipps API credentials or expired access token.
+
+**Solution:** Verify VIPPS_CLIENT_ID and VIPPS_CLIENT_SECRET in environment variables. Regenerate credentials in Vipps Merchant Portal if needed.
+</Callout>
+
+<Callout variant="danger" title="vipps/payment-cancelled">
+**Error Code:** `vipps/payment-cancelled`
+
+**Cause:** User cancelled the payment in the Vipps app.
+
+**Solution:** No action needed. User can retry payment from the booking page.
+</Callout>
+
+<Callout variant="warning" title="vipps/capture-failed">
+**Error Code:** `vipps/capture-failed`
+
+**Cause:** Payment authorization has expired or insufficient funds at capture time.
+
+**Solution:** Contact user to retry payment. Check if the authorization window (7 days) has expired.
+</Callout>
+
+<Callout variant="danger" title="vipps/refund-failed">
+**Error Code:** `vipps/refund-failed`
+
+**Cause:** Refund amount exceeds captured amount or refund window has passed.
+
+**Solution:** Verify refund amount. For older transactions, process refund manually through Vipps Merchant Portal.
+</Callout>
+
+<Callout variant="warning" title="vipps/webhook-verification-failed">
+**Error Code:** `vipps/webhook-verification-failed`
+
+**Cause:** Webhook signature does not match. Possible tampering or misconfiguration.
+
+**Solution:** Verify VIPPS_WEBHOOK_SECRET matches the value in Vipps Developer Portal.
+</Callout>
+
+## Testing
+
+<Callout variant="info" title="Test Environment">
+Vipps provides a test environment (MT - Merchant Test) for development and testing.
+Use the Vipps test app to simulate payments without real money.
+</Callout>
+
+<CodeBlock
+  title="Test Phone Numbers"
+  language="typescript"
+  code={`// Vipps test phone numbers (MT environment only)
+const testPhones = {
+  // Successful payment
+  success: '+4740000001',
+
+  // Payment cancelled by user
+  cancelled: '+4740000002',
+
+  // Payment failed (insufficient funds)
+  failed: '+4740000003',
+
+  // Express checkout user
+  expressCheckout: '+4740000004',
+};`}
+  showLineNumbers
+/>
+
+<Steps
+  title="Testing Vipps Integration"
+  items={[
+    {
+      title: 'Enable Test Mode',
+      description: 'Set VIPPS_ENVIRONMENT=test in your .env file.',
+    },
+    {
+      title: 'Install Vipps MT App',
+      description: 'Download Vipps MT (test) app from App Store or Google Play.',
+    },
+    {
+      title: 'Create Test Booking',
+      description: 'Create a booking and proceed to checkout.',
+    },
+    {
+      title: 'Pay with Test Phone',
+      description: 'Use test phone number +4740000001 for successful payment.',
+    },
+    {
+      title: 'Verify Webhook',
+      description: 'Check server logs for webhook receipt and booking confirmation.',
+    },
+    {
+      title: 'Test Refund',
+      description: 'Process a refund through admin interface and verify in Vipps.',
+    },
+  ]}
+/>
+
+## Reporting
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Payment Dashboard"
+  notes="Overview dashboard showing Vipps payment statistics, successful transactions, and refunds"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Reconciliation Report"
+  notes="Monthly reconciliation report comparing Vipps settlements with booking records"
+  aspectRatio="4/3"
+/>
+
+## Best Practices
+
+<Checklist
+  title="Vipps Integration Best Practices"
+  items={[
+    { text: 'Always verify webhook signatures before processing', checked: true },
+    { text: 'Implement idempotency for webhook handlers', checked: true },
+    { text: 'Log all payment events to audit system', checked: true },
+    { text: 'Handle payment timeouts gracefully (default: 5 minutes)', checked: true },
+    { text: 'Test all payment scenarios in MT environment first', checked: true },
+    { text: 'Monitor failed payment rates and investigate anomalies', checked: true },
+    { text: 'Keep refund window requirements in mind (typically 365 days)', checked: true },
+    { text: 'Display clear error messages to users on payment failure', checked: true },
+  ]}
+/>
+
+## Related Documentation
+
+- [Booking Flow](/journeys/booking) - Complete booking journey with payment
+- [Audit Logging](/platform/audit-logging) - Payment audit requirements
+- [Caseworker Role](/roles/caseworker) - Processing refunds and payment issues
+- [Feature Flags](/platform/feature-flags) - Enabling/disabling Vipps integration

@@ -1,0 +1,352 @@
+{/*
+ * Demo Seeding Documentation
+ *
+ * Documentation for seeding demo data in the Xala/Digilist platform.
+ * Describes available seed commands, data sets, and best practices for demo environments.
+ */}
+
+import { Callout, Steps, Checklist, MediaPlaceholder, RoleMatrix, CodeBlock } from '../../components/docs';
+
+# Demo Seeding
+
+The Xala/Digilist platform provides comprehensive demo seeding capabilities to quickly
+populate development and staging environments with realistic test data. This enables
+evaluators, developers, and testers to explore the full functionality of the platform.
+
+## Why Use Demo Seeds?
+
+<Callout variant="info" title="For Evaluators">
+Demo seeding creates a fully functional environment with pre-configured users, organizations,
+listings, bookings, and all related data. This allows you to immediately explore the platform
+without manually creating test data.
+</Callout>
+
+<Checklist
+  title="Demo Seeding Benefits"
+  items={[
+    { text: 'Quick setup of realistic test environments', checked: true },
+    { text: 'Pre-configured users for all roles (citizen, caseworker, admin)', checked: true },
+    { text: 'Sample listings with availability schedules', checked: true },
+    { text: 'Example bookings in various states', checked: true },
+    { text: 'Organization hierarchies for multi-tenant testing', checked: true },
+    { text: 'Audit log entries for compliance testing', checked: true },
+    { text: 'Feature flag configurations for feature testing', checked: true },
+    { text: 'Notification templates and sample notifications', checked: true },
+  ]}
+/>
+
+## Available Seed Commands
+
+<CodeBlock
+  title="Seed Commands"
+  language="bash"
+  code={`# Seed demo data for development
+pnpm seed:demo
+
+# Seed minimal data set
+pnpm seed:minimal
+
+# Seed full data set with all features
+pnpm seed:full
+
+# Reset database and seed fresh data
+pnpm seed:reset
+
+# Seed specific tenant
+pnpm seed:demo --tenant=oslo-kommune
+
+# Seed with custom configuration
+pnpm seed:demo --config=./seeds/custom-config.json`}
+  showLineNumbers
+/>
+
+## Step-by-Step Seeding
+
+<Steps
+  title="How to Seed Demo Data"
+  items={[
+    {
+      title: 'Ensure Database Connection',
+      description: 'Verify that your database is running and accessible. Check DATABASE_URL in your .env file.',
+    },
+    {
+      title: 'Run Migrations',
+      description: 'Execute `pnpm db:migrate` to ensure all database tables are up to date.',
+    },
+    {
+      title: 'Execute Seed Command',
+      description: 'Run `pnpm seed:demo` from the project root. This typically takes 30-60 seconds.',
+    },
+    {
+      title: 'Verify Seeding',
+      description: 'Check the console output for success messages. Any errors will be displayed with details.',
+    },
+    {
+      title: 'Login with Test Account',
+      description: 'Use one of the pre-configured test accounts to access the platform.',
+    },
+  ]}
+/>
+
+## Test Accounts
+
+<Callout variant="info" title="Demo Credentials">
+All demo accounts use the password: `demo123`
+</Callout>
+
+<CodeBlock
+  title="Pre-configured Test Accounts"
+  language="typescript"
+  code={`// Available test accounts after seeding
+const testAccounts = {
+  // Administrator with full access
+  admin: {
+    email: 'admin@example.com',
+    password: 'demo123',
+    role: 'TENANT_ADMIN',
+  },
+
+  // Caseworker with booking management access
+  caseworker: {
+    email: 'caseworker@example.com',
+    password: 'demo123',
+    role: 'CASEWORKER',
+  },
+
+  // Organization member with org-level access
+  orgMember: {
+    email: 'org-member@example.com',
+    password: 'demo123',
+    role: 'ORG_MEMBER',
+    organization: 'Idrettslaget Ørn',
+  },
+
+  // Regular citizen user
+  citizen: {
+    email: 'citizen@example.com',
+    password: 'demo123',
+    role: 'CITIZEN',
+  },
+};`}
+  showLineNumbers
+/>
+
+## Seeded Data Overview
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Seeded Listings View"
+  notes="Sample listings created by the demo seed, showing various resource types and availability"
+  aspectRatio="16/9"
+/>
+
+<MediaPlaceholder
+  type="screenshot"
+  label="Seeded Bookings View"
+  notes="Sample bookings in various states: pending, confirmed, cancelled, completed"
+  aspectRatio="16/9"
+/>
+
+### Data Sets
+
+<Steps
+  title="What Gets Seeded"
+  items={[
+    {
+      title: 'Organizations (5)',
+      description: 'Sample organizations representing sports clubs, cultural venues, and community centers.',
+    },
+    {
+      title: 'Listings (25)',
+      description: 'Various facility types including sports halls, meeting rooms, outdoor courts, and swimming pools.',
+    },
+    {
+      title: 'Bookings (100)',
+      description: 'Bookings in all states: pending approval, confirmed, completed, and cancelled.',
+    },
+    {
+      title: 'Users (20)',
+      description: 'Users across all roles with different permission levels.',
+    },
+    {
+      title: 'Audit Events (500)',
+      description: 'Sample audit log entries for testing audit functionality.',
+    },
+    {
+      title: 'Notifications (50)',
+      description: 'Sample notifications including booking confirmations and reminders.',
+    },
+  ]}
+/>
+
+## Role Permissions for Seeding
+
+<RoleMatrix
+  title="Seed Command Permissions"
+  roles={[
+    { id: 'developer', name: 'Developer', description: 'Local dev' },
+    { id: 'devops', name: 'DevOps', description: 'Staging/CI' },
+    { id: 'tester', name: 'Tester', description: 'QA team' },
+    { id: 'admin', name: 'Admin', description: 'Production' },
+  ]}
+  permissions={[
+    {
+      permission: 'Run seed:demo',
+      category: 'Seeding',
+      description: 'Execute demo seeding command',
+      roles: { 'developer': true, 'devops': true, 'tester': true, 'admin': false },
+    },
+    {
+      permission: 'Run seed:reset',
+      category: 'Seeding',
+      description: 'Reset and reseed database',
+      roles: { 'developer': true, 'devops': true, 'tester': false, 'admin': false },
+    },
+    {
+      permission: 'Run seed:full',
+      category: 'Seeding',
+      description: 'Execute full data seeding',
+      roles: { 'developer': true, 'devops': true, 'tester': false, 'admin': false },
+    },
+    {
+      permission: 'Seed production',
+      category: 'Seeding',
+      description: 'Run seeds in production',
+      roles: { 'developer': false, 'devops': false, 'tester': false, 'admin': false },
+    },
+  ]}
+  showLegend
+/>
+
+## Configuration Options
+
+<CodeBlock
+  title="Seed Configuration File"
+  language="typescript"
+  code={`// seeds/demo-config.ts
+export const demoSeedConfig = {
+  // Number of each entity to create
+  counts: {
+    organizations: 5,
+    listings: 25,
+    bookings: 100,
+    users: 20,
+    auditEvents: 500,
+  },
+
+  // Date range for bookings
+  bookingDateRange: {
+    start: new Date('2024-01-01'),
+    end: new Date('2024-12-31'),
+  },
+
+  // Feature flags to enable
+  features: {
+    realTimeUpdates: true,
+    advancedReporting: true,
+    vippsIntegration: false,
+  },
+
+  // Tenant configuration
+  tenant: {
+    id: 'oslo-kommune',
+    name: 'Oslo Kommune',
+    theme: 'digdir',
+  },
+};`}
+  showLineNumbers
+/>
+
+## Troubleshooting
+
+<Callout variant="danger" title="seed/connection-failed">
+**Error Code:** `seed/connection-failed`
+
+**Cause:** Cannot connect to the database. The DATABASE_URL may be incorrect or the database server is not running.
+
+**Solution:** Verify your `.env` file contains the correct DATABASE_URL and that your database server is running.
+</Callout>
+
+<Callout variant="danger" title="seed/migration-required">
+**Error Code:** `seed/migration-required`
+
+**Cause:** Database schema is out of date. Migrations need to be applied before seeding.
+
+**Solution:** Run `pnpm db:migrate` before attempting to seed.
+</Callout>
+
+<Callout variant="warning" title="seed/duplicate-data">
+**Error Code:** `seed/duplicate-data`
+
+**Cause:** Seed data already exists. Running seeds multiple times can cause conflicts.
+
+**Solution:** Use `pnpm seed:reset` to clear existing data before reseeding, or use `--force` flag to overwrite.
+</Callout>
+
+<Callout variant="danger" title="seed/permission-denied">
+**Error Code:** `seed/permission-denied`
+
+**Cause:** Current environment does not allow seeding. Production environments block seed commands by default.
+
+**Solution:** Seeding is not allowed in production. Use staging or development environment.
+</Callout>
+
+## Best Practices
+
+<Checklist
+  title="Seeding Best Practices"
+  items={[
+    { text: 'Never run seeds in production environments', checked: true },
+    { text: 'Always run migrations before seeding', checked: true },
+    { text: 'Use seed:reset for clean slate testing', checked: true },
+    { text: 'Document custom seed configurations', checked: true },
+    { text: 'Include realistic data for meaningful tests', checked: true },
+    { text: 'Test all roles with seeded accounts', checked: true },
+    { text: 'Verify audit logs after seeding', checked: true },
+    { text: 'Check notification queue for seeded notifications', checked: true },
+  ]}
+/>
+
+## SDK Usage for Custom Seeds
+
+<CodeBlock
+  title="Creating Custom Seeds"
+  language="typescript"
+  code={`import { seedService } from '@digilist/client-sdk';
+
+async function customSeed() {
+  // Create organization
+  const org = await seedService.createOrganization({
+    name: 'Custom Sports Club',
+    type: 'SPORTS',
+  });
+
+  // Create listing under organization
+  const listing = await seedService.createListing({
+    organizationId: org.id,
+    name: 'Tennis Court 1',
+    type: 'OUTDOOR',
+    capacity: 4,
+  });
+
+  // Create bookings
+  await seedService.createBookings({
+    listingId: listing.id,
+    count: 10,
+    dateRange: {
+      start: new Date(),
+      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  console.log('Custom seed completed!');
+}`}
+  showLineNumbers
+/>
+
+## Related Documentation
+
+- [Audit Logging](/platform/audit-logging) - Seeded audit events
+- [Feature Flags](/platform/feature-flags) - Feature configuration in seeds
+- [Caseworker Role](/roles/caseworker) - Testing caseworker with demo data
+- [Citizen Role](/roles/citizen) - Testing citizen flows with demo data
