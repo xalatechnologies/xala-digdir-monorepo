@@ -532,50 +532,103 @@ export function RentalObjectsPage(): React.ReactElement {
           {/* Content */}
           {!isLoading && !error && listings.length > 0 && (
             <>
-              <RentalObjectToolbar
-                count={filteredListings.length}
-                countLabel="resultater"
-                activeFilterCount={activeFilterCount}
-                onFilterClick={() => setIsFilterOpen(true)}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-                showViewToggle={true}
+              <div
                 className="listing-toolbar"
-              />
-
-              {/* Filter Chips */}
-              <AnimatePresence>
-                {chips.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    style={{ marginBottom: 'var(--ds-spacing-4)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}
-                  >
-                    {chips.map(chip => (
-                      <FilterChip
-                        key={chip.id}
-                        label={chip.label}
-                        onRemove={() => removeFilter(chip)}
-                      />
-                    ))}
-                    {chips.length > 0 && (
-                       <Button 
-                        variant="tertiary" 
-                        size="small"
-                        onClick={() => {
-                          setRentalObjectType('ALL');
-                          setSelectedArea('all');
-                          setSelectedCapacity('all');
-                          setSelectedFacilities([]);
-                        }}
-                       >
-                         {t('common.clearAll')}
-                       </Button>
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: 'var(--ds-spacing-6)',
+                  flexWrap: 'wrap',
+                  gap: 'var(--ds-spacing-4)'
+                }}
+              >
+                {/* Left: Filter Button & Count */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                  <Button variant="secondary" type="button" onClick={() => setIsFilterOpen(true)}>
+                    <FilterIcon size={18} aria-hidden />
+                    {t('filtrer')}
+                    {activeFilterCount > 0 && (
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--ds-color-accent-base-default)',
+                        color: 'var(--ds-color-neutral-text-inverted)',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        marginLeft: '8px'
+                      }}>
+                        {activeFilterCount}
+                      </div>
                     )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </Button>
+                  <span
+                    style={{
+                      fontSize: 'var(--ds-font-size-md)',
+                      fontWeight: '600',
+                      color: 'var(--ds-color-neutral-text-default)',
+                    }}
+                  >
+                    {filteredListings.length} resultater
+                  </span>
+                </div>
+
+                {/* Center: Filter Chips */}
+                <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                  <AnimatePresence>
+                    {chips.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', justifyContent: 'center' }}
+                      >
+                        {chips.map(chip => (
+                          <FilterChip
+                            key={chip.id}
+                            label={chip.label}
+                            onRemove={() => removeFilter(chip)}
+                          />
+                        ))}
+                        <Button 
+                          variant="tertiary" 
+                          onClick={() => {
+                            setRentalObjectType('ALL');
+                            setSelectedArea('all');
+                            setSelectedCapacity('all');
+                            setSelectedFacilities([]);
+                          }}
+                          style={{ fontSize: 'var(--ds-font-size-sm)', padding: '0 var(--ds-spacing-2)' }} // Added minimal padding to simulate small size
+                        >
+                          Fjern alle
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Right: View Toggles */}
+                <RentalObjectToolbar
+                  count={0} // Hidden in this partial usage or custom
+                  countLabel=""
+                  activeFilterCount={0}
+                  onFilterClick={undefined} // Hide filter btn
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
+                  showViewToggle={true}
+                  className="view-toggles-only"
+                />
+                <style>{`
+                  /* Hide left part of the original toolbar if we reuse it, or just reimplement toggles */
+                  .view-toggles-only .ds-button { display: none; } /* Hacky, better to use ToggleGroup directly? */
+                  .view-toggles-only > div:first-child { display: none !important; }
+                  .view-toggles-only { margin-bottom: 0 !important; }
+                `}</style>
+              </div>
 
               {viewMode === 'grid' ? (
                 <RentalObjectGrid minCardWidth={380} maxColumns={3}>
