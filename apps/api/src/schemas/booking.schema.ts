@@ -7,7 +7,7 @@ import { z } from 'zod';
 /**
  * Booking Status Enum
  */
-export const BookingStatusSchema = z.enum(['pending', 'confirmed', 'cancelled', 'completed']);
+export const BookingStatusSchema = z.enum(['pending', 'confirmed', 'cancelled', 'completed', 'approved', 'denied']);
 export type BookingStatus = z.infer<typeof BookingStatusSchema>;
 
 /**
@@ -72,6 +72,24 @@ export const CancelBookingSchema = z.object({
 });
 
 export type CancelBookingDTO = z.infer<typeof CancelBookingSchema>;
+
+/**
+ * Approve Booking DTO
+ */
+export const ApproveBookingSchema = z.object({
+  notes: z.string().max(1000).optional(),
+});
+
+export type ApproveBookingDTO = z.infer<typeof ApproveBookingSchema>;
+
+/**
+ * Deny Booking DTO
+ */
+export const DenyBookingSchema = z.object({
+  reason: z.string().max(1000).optional(),
+});
+
+export type DenyBookingDTO = z.infer<typeof DenyBookingSchema>;
 
 /**
  * Booking Query Params

@@ -12,10 +12,14 @@ import {
   UpdateBookingSchema,
   BookingQuerySchema,
   CancelBookingSchema,
+  ApproveBookingSchema,
+  DenyBookingSchema,
   type CreateBookingDTO,
   type UpdateBookingDTO,
   type BookingQueryParams,
   type CancelBookingDTO,
+  type ApproveBookingDTO,
+  type DenyBookingDTO,
   type Booking,
   type CalendarEvent,
 } from '../../schemas/booking.schema';
@@ -148,7 +152,7 @@ export class BookingService {
   async complete(id: string): Promise<Booking> {
     const booking = await this.repository.update(id, { status: 'completed' });
     this.adapters?.log?.info('Booking completed', { id });
-    
+
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'complete',
@@ -156,7 +160,97 @@ export class BookingService {
       resourceId: id,
       metadata: { newStatus: 'completed' },
     });
-    
+
+    return booking as unknown as Booking;
+  }
+
+  /**
+   * Approve booking (case handler action)
+   */
+  async approve(id: string, userId: string, data: ApproveBookingDTO = {}): Promise<Booking> {
+    const validated = validate(ApproveBookingSchema, data);
+    const existing = await this.findByIdOrFail(id);
+
+    const updateData: Record<string, unknown> = {
+      status: 'approved',
+    };
+
+    // Preserve existing notes or append approval notes
+    if (validated.notes) {
+      updateData.notes = existing.notes
+        ? `${existing.notes}\n[Approved] ${validated.notes}`
+        : `[Approved] ${validated.notes}`;
+    }
+
+    // Store approval metadata
+    updateData.metadata = {
+      ...(existing.metadata || {}),
+      approvedBy: userId,
+      approvedAt: new Date().toISOString(),
+    };
+
+    const booking = await this.repository.update(id, updateData);
+    this.adapters?.log?.info('Booking approved', { id, approvedBy: userId });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'approve',
+      resource: 'booking',
+      resourceId: id,
+      metadata: {
+        previousStatus: existing.status,
+        newStatus: 'approved',
+        notes: validated.notes,
+      },
+    });
+
+    return booking as unknown as Booking;
+  }
+
+  /**
+   * Deny booking (case handler action)
+   */
+  async deny(id: string, userId: string, data: DenyBookingDTO = {}): Promise<Booking> {
+    const validated = validate(DenyBookingSchema, data);
+    const existing = await this.findByIdOrFail(id);
+
+    const updateData: Record<string, unknown> = {
+      status: 'denied',
+    };
+
+    // Preserve existing notes or append denial reason
+    if (validated.reason) {
+      updateData.notes = existing.notes
+        ? `${existing.notes}\n[Denied] ${validated.reason}`
+        : `[Denied] ${validated.reason}`;
+    }
+
+    // Store denial metadata
+    updateData.metadata = {
+      ...(existing.metadata || {}),
+      deniedBy: userId,
+      deniedAt: new Date().toISOString(),
+      denialReason: validated.reason,
+    };
+
+    const booking = await this.repository.update(id, updateData);
+    this.adapters?.log?.warn('Booking denied', { id, deniedBy: userId, reason: validated.reason });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'deny',
+      resource: 'booking',
+      resourceId: id,
+      severity: 'warning',
+      metadata: {
+        previousStatus: existing.status,
+        newStatus: 'denied',
+        reason: validated.reason,
+      },
+    });
+
     return booking as unknown as Booking;
   }
 
