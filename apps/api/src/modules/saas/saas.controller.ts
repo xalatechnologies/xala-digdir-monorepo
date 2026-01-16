@@ -19,6 +19,7 @@ import {
   UpdateSaasTenantSchema,
   UpdateSeatLimitsSchema,
   UpdateFeatureFlagsSchema,
+  CreatePlanSchema,
 } from './saas.types';
 import { isSaasRole, hasPermission } from '../auth/rbac';
 import type { FastifyRequest, FastifyReply } from 'fastify';
@@ -292,6 +293,19 @@ export class SaasController {
 
     const result = await this.service.listPlans();
     return result;
+  }
+
+  /**
+   * POST /api/saas/plans - Create a new subscription plan
+   */
+  @Post('/plans')
+  async createPlan(request: FastifyRequest, reply: FastifyReply) {
+    const user = verifyPermission(request, 'saas:plans:create');
+
+    const data = validate(CreatePlanSchema, request.body);
+    const result = await this.service.createPlan(data, user.id);
+
+    return reply.status(201).send(result);
   }
 
   /**

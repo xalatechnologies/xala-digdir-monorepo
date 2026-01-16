@@ -138,6 +138,19 @@ export const UpdateFeatureFlagsSchema = z.object({
 
 export type UpdateFeatureFlagsDTO = z.infer<typeof UpdateFeatureFlagsSchema>;
 
+export const CreatePlanSchema = z.object({
+  name: z.string().min(1).max(255),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens').max(100).optional(),
+  description: z.string().max(1000).optional(),
+  priceMonthly: z.number().nonnegative(),
+  priceYearly: z.number().nonnegative().optional(),
+  seatLimits: SeatLimitsSchema,
+  entitlements: EntitlementsSchema.optional(),
+  isActive: z.boolean().default(true),
+});
+
+export type CreatePlanDTO = z.infer<typeof CreatePlanSchema>;
+
 // =============================================================================
 // Response DTOs
 // =============================================================================
@@ -215,6 +228,7 @@ export const SaasAuditActions = {
   TENANT_SUSPENDED: 'saas.tenant.suspended',
   TENANT_ACTIVATED: 'saas.tenant.activated',
   TENANT_DELETED: 'saas.tenant.deleted',
+  PLAN_CREATED: 'saas.plan.created',
   PLAN_ASSIGNED: 'saas.tenant.plan_assigned',
   SEAT_LIMITS_UPDATED: 'saas.tenant.seat_limits_updated',
   FEATURE_FLAGS_UPDATED: 'saas.tenant.feature_flags_updated',

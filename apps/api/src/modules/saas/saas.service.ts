@@ -15,12 +15,14 @@ import {
   UpdateSaasTenantSchema,
   UpdateSeatLimitsSchema,
   UpdateFeatureFlagsSchema,
+  CreatePlanSchema,
   SaasAuditActions,
   type SaasTenantQueryParams,
   type CreateSaasTenantDTO,
   type UpdateSaasTenantDTO,
   type UpdateSeatLimitsDTO,
   type UpdateFeatureFlagsDTO,
+  type CreatePlanDTO,
   type TenantDetailResponse,
   type TenantListResponse,
   type PlanListResponse,
@@ -463,6 +465,60 @@ export class SaasService {
   }
 
   /**
+   * Create a new subscription plan
+   */
+  async createPlan(data: CreatePlanDTO, actorId: string): Promise<Plan> {
+    const validated = validate(CreatePlanSchema, data);
+
+    // Generate slug from name if not provided
+    const slug = validated.slug || this.generateSlugFromName(validated.name);
+
+    // Check slug availability
+    const slugAvailable = await this.isPlanSlugAvailable(slug);
+    if (!slugAvailable) {
+      throw new ConflictError(`Plan slug '${slug}' is already taken`);
+    }
+
+    // Create plan (this would use a repository in a real implementation)
+    const plan: Plan = {
+      id: crypto.randomUUID(),
+      name: validated.name,
+      slug,
+      description: validated.description || null,
+      priceMonthly: validated.priceMonthly,
+      priceYearly: validated.priceYearly || validated.priceMonthly * 10, // Default yearly = 10 months
+      seatLimits: validated.seatLimits,
+      entitlements: validated.entitlements || {},
+      isActive: validated.isActive ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    // Log audit event
+    await this.logAuditEvent(
+      SaasAuditActions.PLAN_CREATED,
+      'plan',
+      plan.id,
+      actorId,
+      { name: plan.name, slug: plan.slug, priceMonthly: plan.priceMonthly }
+    );
+
+    this.adapters?.log?.info('SaaS: Plan created', {
+      planId: plan.id,
+      slug: plan.slug,
+      actorId,
+    });
+
+    // Track analytics
+    await this.adapters?.analytics?.track('saas_plan_created', {
+      planId: plan.id,
+      priceMonthly: plan.priceMonthly,
+    });
+
+    return plan;
+  }
+
+  /**
    * Assign plan to tenant
    */
   async assignPlan(
@@ -517,6 +573,25 @@ export class SaasService {
   private async isTenantSlugAvailable(slug: string): Promise<boolean> {
     // This would use a repository in a real implementation
     return true;
+  }
+
+  /**
+   * Check if plan slug is available
+   */
+  private async isPlanSlugAvailable(slug: string): Promise<boolean> {
+    // This would use a repository in a real implementation
+    return true;
+  }
+
+  /**
+   * Generate slug from name
+   */
+  private generateSlugFromName(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .substring(0, 100);
   }
 
   /**
