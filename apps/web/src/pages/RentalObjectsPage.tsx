@@ -107,6 +107,14 @@ const RentalObjectSkeleton = () => (
   </Card>
 );
 
+const PRICE_UNIT_LABELS: Record<string, string> = {
+  'day': 'dag',
+  'hour': 'time',
+  'week': 'uke',
+  'month': 'måned',
+  'year': 'år',
+};
+
 // Custom Filter Chip Component since Chip is not exported from @xala/ds
 const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
   <motion.button
@@ -115,21 +123,23 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
     initial={{ scale: 0.9, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
     exit={{ scale: 0.9, opacity: 0 }}
-    whileHover={{ scale: 1.05 }}
+    whileHover={{ scale: 1.05, backgroundColor: 'var(--ds-color-neutral-background-hover)' }}
     whileTap={{ scale: 0.95 }}
     style={{
       display: 'inline-flex',
       alignItems: 'center',
-      gap: 'var(--ds-spacing-1)',
-      padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+      gap: 'var(--ds-spacing-2)', // Increased gap
+      padding: 'var(--ds-spacing-2) var(--ds-spacing-4)', // Increased padding
       borderRadius: '999px',
-      backgroundColor: 'var(--ds-color-neutral-background-default)',
+      backgroundColor: 'var(--ds-color-neutral-background-subtle)', // Added background
       border: '1px solid var(--ds-color-neutral-border-default)',
       fontSize: 'var(--ds-font-size-sm)',
       lineHeight: '1.5',
       color: 'var(--ds-color-neutral-text-default)',
       cursor: 'pointer',
       boxShadow: 'var(--ds-shadow-sm)',
+      whiteSpace: 'nowrap', // Prevent wrapping
+      height: '32px', // Consistent height
     }}
   >
     {label}
@@ -535,16 +545,17 @@ export function RentalObjectsPage(): React.ReactElement {
               <div
                 className="listing-toolbar"
                 style={{
-                  display: 'flex',
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  gap: 'var(--ds-spacing-4)',
                   marginBottom: 'var(--ds-spacing-6)',
-                  flexWrap: 'wrap',
-                  gap: 'var(--ds-spacing-4)'
+                  width: '100%',
+                  minHeight: '44px',
                 }}
               >
                 {/* Left: Filter Button & Count */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)', whiteSpace: 'nowrap' }}>
                   <Button variant="secondary" type="button" onClick={() => setIsFilterOpen(true)}>
                     <FilterIcon size={18} aria-hidden />
                     {t('filtrer')}
@@ -571,21 +582,49 @@ export function RentalObjectsPage(): React.ReactElement {
                       fontSize: 'var(--ds-font-size-md)',
                       fontWeight: '600',
                       color: 'var(--ds-color-neutral-text-default)',
+                      whiteSpace: 'nowrap'
                     }}
+                    className="desktop-only-count"
                   >
                     {filteredListings.length} resultater
                   </span>
+                  <style>{`
+                    .desktop-only-count { display: none; }
+                    @media (min-width: 640px) { .desktop-only-count { display: inline; } }
+                    @media (max-width: 1024px) { 
+                      .listing-toolbar { 
+                        display: flex !important;
+                        flex-direction: column;
+                        align-items: stretch !important;
+                        gap: var(--ds-spacing-4);
+                        height: auto !important;
+                      }
+                      .listing-toolbar > div:nth-child(1) { /* Filter btn */
+                        justify-content: space-between;
+                      }
+                      .listing-toolbar > div:nth-child(2) { /* Chips */
+                        order: 3;
+                        justify-content: flex-start !important;
+                        overflow-x: auto;
+                        padding-bottom: 4px;
+                      }
+                       .listing-toolbar > div:nth-child(3) { /* View toggles */
+                         display: flex !important;
+                         justify-content: flex-end;
+                       }
+                    }
+                  `}</style>
                 </div>
 
                 {/* Center: Filter Chips */}
-                <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', minWidth: 0, width: '100%' }}>
                   <AnimatePresence>
                     {chips.length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', justifyContent: 'center' }}
+                        style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}
                       >
                         {chips.map(chip => (
                           <FilterChip
@@ -602,7 +641,12 @@ export function RentalObjectsPage(): React.ReactElement {
                             setSelectedCapacity('all');
                             setSelectedFacilities([]);
                           }}
-                          style={{ fontSize: 'var(--ds-font-size-sm)', padding: '0 var(--ds-spacing-2)' }} // Added minimal padding to simulate small size
+                          style={{ 
+                            fontSize: 'var(--ds-font-size-sm)', 
+                            padding: '0 var(--ds-spacing-3)',
+                            height: '32px',
+                            whiteSpace: 'nowrap' 
+                          }}
                         >
                           Fjern alle
                         </Button>
@@ -612,22 +656,22 @@ export function RentalObjectsPage(): React.ReactElement {
                 </div>
 
                 {/* Right: View Toggles */}
-                <RentalObjectToolbar
-                  count={0} // Hidden in this partial usage or custom
-                  countLabel=""
-                  activeFilterCount={0}
-                  onFilterClick={undefined} // Hide filter btn
-                  viewMode={viewMode}
-                  onViewModeChange={setViewMode}
-                  showViewToggle={true}
-                  className="view-toggles-only"
-                />
-                <style>{`
-                  /* Hide left part of the original toolbar if we reuse it, or just reimplement toggles */
-                  .view-toggles-only .ds-button { display: none; } /* Hacky, better to use ToggleGroup directly? */
-                  .view-toggles-only > div:first-child { display: none !important; }
-                  .view-toggles-only { margin-bottom: 0 !important; }
-                `}</style>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: 'max-content' }}>
+                  <RentalObjectToolbar
+                    count={0} 
+                    countLabel=""
+                    activeFilterCount={0}
+                    onFilterClick={undefined}
+                    viewMode={viewMode}
+                    onViewModeChange={setViewMode}
+                    showViewToggle={true}
+                    className="view-toggles-only"
+                  />
+                  <style>{`
+                    .view-toggles-only > div:first-child { display: none !important; } /* Hide count text only */
+                    .view-toggles-only { margin-bottom: 0 !important; width: auto !important; }
+                  `}</style>
+                </div>
               </div>
 
               {viewMode === 'grid' ? (
@@ -654,7 +698,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           moreFacilities={listing.moreAmenitiesCount}
                           capacity={listing.capacity}
                           price={listing.priceAmount}
-                          priceUnit={listing.priceUnit}
+                          priceUnit={PRICE_UNIT_LABELS[listing.priceUnit] || listing.priceUnit}
                           currency={listing.priceCurrency}
                           rating={listing.averageRating}
                           reviewCount={listing.reviewCount}
@@ -697,7 +741,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           moreFacilities={listing.moreAmenitiesCount}
                           capacity={listing.capacity}
                           price={listing.priceAmount}
-                          priceUnit={listing.priceUnit}
+                          priceUnit={PRICE_UNIT_LABELS[listing.priceUnit] || listing.priceUnit}
                           currency={listing.priceCurrency}
                           {...(listing.latitude != null && { latitude: listing.latitude })}
                           {...(listing.longitude != null && { longitude: listing.longitude })}
