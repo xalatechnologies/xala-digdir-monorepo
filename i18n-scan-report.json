@@ -1,34 +1,14 @@
 {
-  "timestamp": "2026-01-16T10:07:32.050Z",
+  "timestamp": "2026-01-16T13:14:15.736Z",
   "summary": {
-    "filesScanned": 69,
-    "filesSkipped": 4,
-    "totalFiles": 73,
-    "totalIssues": 1,
-    "hardcodedStrings": 1,
+    "filesScanned": 1,
+    "filesSkipped": 0,
+    "totalFiles": 1,
+    "totalIssues": 0,
+    "hardcodedStrings": 0,
     "missingT": 0,
     "suspiciousPatterns": 0
   },
-  "issuesByFile": {
-    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/listing-details/adapters/favoritesProvider.ts": [
-      {
-        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/listing-details/adapters/favoritesProvider.ts",
-        "line": 148,
-        "type": "hardcoded_jsx_text",
-        "string": "Promise",
-        "context": "toggle: () => Promise<void>;",
-        "severity": "high"
-      }
-    ]
-  },
-  "allIssues": [
-    {
-      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/listing-details/adapters/favoritesProvider.ts",
-      "line": 148,
-      "type": "hardcoded_jsx_text",
-      "string": "Promise",
-      "context": "toggle: () => Promise<void>;",
-      "severity": "high"
-    }
-  ]
+  "issuesByFile": {},
+  "allIssues": []
 }

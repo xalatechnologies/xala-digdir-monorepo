@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
-import { ThemeProvider, useTheme } from '@xala/ds';
+import { ThemeProvider, useTheme } from '../../../../packages/ds/src/ThemeProvider';
 
 // Test component that uses the theme context
 function ThemeConsumer(): React.ReactElement {

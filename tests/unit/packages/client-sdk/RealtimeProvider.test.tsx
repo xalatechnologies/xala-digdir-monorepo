@@ -2,20 +2,16 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { RealtimeProvider, useRealtimeStatus } from '@digilist/client-sdk';
+import { RealtimeProvider, useRealtimeStatus } from '../../../../packages/client-sdk/src/providers/RealtimeProvider';
 
 // Mock the SDK hooks
-vi.mock('@digilist/client-sdk', async () => {
-  const actual = await vi.importActual('@digilist/client-sdk');
-  return {
-    ...actual,
-    useRealtimeConnection: vi.fn(() => false),
-    useRealtimeBookings: vi.fn(),
-    useRealtimeRentalObjects: vi.fn(),
-    useRealtimeMessages: vi.fn(),
-    useRealtimeNotifications: vi.fn(),
-  };
-});
+vi.mock('../../../../packages/client-sdk/src/hooks', () => ({
+  useRealtimeConnection: vi.fn(() => false),
+  useRealtimeBookings: vi.fn(),
+  useRealtimeRentalObjects: vi.fn(),
+  useRealtimeMessages: vi.fn(),
+  useRealtimeNotifications: vi.fn(),
+}));
 
 // Import mocked hooks
 import {
@@ -24,7 +20,7 @@ import {
   useRealtimeRentalObjects,
   useRealtimeMessages,
   useRealtimeNotifications,
-} from '@digilist/client-sdk';
+} from '../../../../packages/client-sdk/src/hooks';
 
 // Test component that displays connection status
 function StatusConsumer(): React.ReactElement {
