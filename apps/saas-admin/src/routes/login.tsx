@@ -18,9 +18,11 @@ import {
   BuildingIcon,
   SettingsIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 
 export function LoginPage(): React.ReactElement {
+  const t = useT();
   const { isAuthenticated, isLoading, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,53 +53,58 @@ export function LoginPage(): React.ReactElement {
   const features = [
     {
       icon: <BuildingIcon size={20} />,
-      title: 'Tenant-administrasjon',
-      description: 'Full kontroll over alle kommuner og organisasjoner på plattformen.',
+      title: t('saasAdmin.login.feature.tenantAdmin.title'),
+      description: t('saasAdmin.login.feature.tenantAdmin.description'),
     },
     {
       icon: <SettingsIcon size={20} />,
-      title: 'Plattformkonfigurasjon',
-      description: 'Administrer planer, fakturering og globale innstillinger.',
+      title: t('saasAdmin.login.feature.platformConfig.title'),
+      description: t('saasAdmin.login.feature.platformConfig.description'),
     },
     {
       icon: <ShieldCheckIcon size={20} />,
-      title: 'Sikkerhet og compliance',
-      description: 'Audit-logger, tilgangskontroll og GDPR-verktøy.',
+      title: t('saasAdmin.login.feature.security.title'),
+      description: t('saasAdmin.login.feature.security.description'),
     },
   ];
 
-  const integrations = ['Multi-tenant', 'RBAC', 'Audit Trail', 'ISO 27001'];
+  const integrations = [
+    t('saasAdmin.login.integration.multiTenant'),
+    t('saasAdmin.login.integration.rbac'),
+    t('saasAdmin.login.integration.auditTrail'),
+    t('saasAdmin.login.integration.iso27001'),
+  ];
 
   const footerLinks = [
-    { href: 'https://digilist.no/personvern', label: 'Personvern' },
-    { href: 'https://digilist.no/vilkar', label: 'Vilkår' },
-    { href: 'https://digilist.no/support', label: 'Support' },
+    { href: 'https://digilist.no/personvern', label: t('saasAdmin.login.footer.privacy') },
+    { href: 'https://digilist.no/vilkar', label: t('saasAdmin.login.footer.terms') },
+    { href: 'https://digilist.no/support', label: t('saasAdmin.login.footer.support') },
   ];
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="SAAS ADMIN"
-      title="Plattform-administrasjon"
-      subtitle="Velg innloggingsmetode for å fortsette."
-      panelTitle="SaaS Admin Portal"
-      panelSubtitle="Administrer hele Digilist-plattformen"
-      panelDescription="Full tilgang til tenant-administrasjon, plankonfigurasjon, fakturering og plattform-overvåking."
+      brandName={t('saasAdmin.login.brandName')}
+      brandTagline={t('saasAdmin.login.brandTagline')}
+      title={t('saasAdmin.login.title')}
+      subtitle={t('saasAdmin.login.subtitle')}
+      panelTitle={t('saasAdmin.login.panelTitle')}
+      panelSubtitle={t('saasAdmin.login.panelSubtitle')}
+      panelDescription={t('saasAdmin.login.panelDescription')}
       features={features}
       integrations={integrations}
       footerLinks={footerLinks}
-      copyright={`© ${new Date().getFullYear()} Digilist AS. Kun for autorisert personell.`}
+      copyright={t('saasAdmin.login.copyright', { year: new Date().getFullYear().toString() })}
     >
       <LoginOption
         icon={<IdPortenIcon />}
-        title="ID-porten"
-        description="For eksterne plattformadministratorer"
+        title={t('saasAdmin.login.option.idporten.title')}
+        description={t('saasAdmin.login.option.idporten.description')}
         onClick={() => login('idporten')}
       />
       <LoginOption
         icon={<MicrosoftIcon />}
-        title="Intern pålogging"
-        description="For Digilist-ansatte med Microsoft-konto"
+        title={t('saasAdmin.login.option.internal.title')}
+        description={t('saasAdmin.login.option.internal.description')}
         onClick={() => login('internal')}
       />
     </LoginLayout>
