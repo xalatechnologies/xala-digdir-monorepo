@@ -18,9 +18,6 @@ import {
   AutomationIcon,
   ShieldCheckIcon,
   KeyIcon,
-  Dialog,
-  TextField,
-  Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
@@ -58,12 +55,6 @@ export function LoginPage(): React.ReactElement {
 
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
-
-  // Admin Demo token dialog state
-  const [showTokenDialog, setShowTokenDialog] = useState(false);
-  const [tokenInput, setTokenInput] = useState('');
-  const [tokenError, setTokenError] = useState<string | null>(null);
-  const [isSubmittingToken, setIsSubmittingToken] = useState(false);
 
   // Check for auth callback params (returned from ID-porten/BankID)
   const authSuccess = searchParams.get('auth_success') === 'true';
@@ -202,36 +193,36 @@ export function LoginPage(): React.ReactElement {
 
   /**
    * Handle Admin Demo token authentication
+   * Supports 3 demo tokens:
+   * - admin-demo-2026: Admin/backoffice access
+   * - user-demo-2026: Regular user access
+   * - org-demo-2026: Organization user access
    */
-  const handleTokenSubmit = async () => {
-    if (!tokenInput.trim()) {
-      setTokenError('Vennligst skriv inn et token');
-      return;
-    }
+  const handleDemoLogin = async () => {
+    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
 
-    setIsSubmittingToken(true);
-    setTokenError(null);
+    if (!token || !token.trim()) {
+      return; // User cancelled or empty input
+    }
 
     try {
       // Call the auth service to validate the demo token
-      const response = await authService.loginWithDemoToken(tokenInput.trim());
+      const response = await authService.loginWithDemoToken(token.trim());
 
       if (response.data?.user) {
         // Token is valid - store user session
         localStorage.setItem('backoffice_mock_user', JSON.stringify(response.data.user));
 
-        // Close dialog and redirect to dashboard
-        setShowTokenDialog(false);
-        setTokenInput('');
+        // Redirect to home
         navigate('/', { replace: true });
+        // Reload to pick up the new auth state
+        window.location.reload();
       } else {
-        setTokenError('Ugyldig token. Vennligst prøv igjen.');
+        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
       }
     } catch (error) {
-      console.error('[ADMIN DEMO] Token validation failed:', error);
-      setTokenError('Ugyldig token. Vennligst prøv igjen.');
-    } finally {
-      setIsSubmittingToken(false);
+      console.error('[DEMO LOGIN] Token validation failed:', error);
+      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
     }
   };
 
@@ -294,62 +285,8 @@ export function LoginPage(): React.ReactElement {
         icon={<KeyIcon />}
         title={t('auth.adminDemo')}
         description={t('auth.adminDemoDescription')}
-        onClick={() => {
-          setShowTokenDialog(true);
-          setTokenError(null);
-          setTokenInput('');
-        }}
+        onClick={handleDemoLogin}
       />
-
-      {/* Admin Demo Token Dialog */}
-      <Dialog
-        open={showTokenDialog}
-        onClose={() => {
-          setShowTokenDialog(false);
-          setTokenInput('');
-          setTokenError(null);
-        }}
-        title={t('auth.adminDemoLogin')}
-        description={t('auth.adminDemoDialogDescription')}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <TextField
-            label={t('auth.demoToken')}
-            value={tokenInput}
-            onChange={(e) => setTokenInput(e.target.value)}
-            placeholder={t('auth.demoTokenPlaceholder')}
-            error={tokenError || undefined}
-            disabled={isSubmittingToken}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !isSubmittingToken) {
-                handleTokenSubmit();
-              }
-            }}
-            autoFocus
-          />
-
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setShowTokenDialog(false);
-                setTokenInput('');
-                setTokenError(null);
-              }}
-              disabled={isSubmittingToken}
-            >
-              Avbryt
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleTokenSubmit}
-              disabled={isSubmittingToken || !tokenInput.trim()}
-            >
-              {isSubmittingToken ? 'Verifiserer...' : 'Logg inn'}
-            </Button>
-          </div>
-        </div>
-      </Dialog>
     </LoginLayout>
   );
 }
