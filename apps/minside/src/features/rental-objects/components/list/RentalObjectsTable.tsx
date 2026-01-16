@@ -67,7 +67,7 @@ export function RentalObjectsTable({
   const allSelected = listings.length > 0 && selectedIds.length === listings.length;
 
   const handleRowClick = (id: string) => {
-    navigate(`/listings/${id}`);
+    navigate(`/rental-objects/${id}`);
   };
 
   const getSortIndicator = (field: RentalObjectQueryFilters['sortBy']) => {

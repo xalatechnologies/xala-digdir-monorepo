@@ -86,8 +86,8 @@ export class BookingController {
   @Get('/calendar')
   async getCalendar(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
-    const { listingId } = request.query as any;
-    const events = await this.service.getCalendarEvents(tenantId, listingId);
+    const { rentalObjectId } = request.query as any;
+    const events = await this.service.getCalendarEvents(tenantId, rentalObjectId);
     return { events };
   }
 
@@ -188,7 +188,7 @@ export class BookingController {
       
       // WHAT (Hva)
       service: {
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
         description: booking.notes || 'Leie av lokale',
         duration: `${new Date(booking.startTime).toISOString()} - ${new Date(booking.endTime).toISOString()}`,
       },
@@ -196,7 +196,7 @@ export class BookingController {
       // WHERE (Hvor)
       location: {
         tenantId: booking.tenantId,
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
       },
       
       // WHEN (Når)

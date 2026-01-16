@@ -172,7 +172,7 @@ export function Sidebar() {
     {
       title: 'Administrasjon',
       items: [
-        { name: 'Listings', description: 'Administrer utleieobjekter', href: '/listings', icon: <BuildingIcon /> },
+        { name: 'Utleieobjekter', description: 'Administrer utleieobjekter', href: '/rental-objects', icon: <BuildingIcon /> },
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
@@ -210,7 +210,7 @@ export function Sidebar() {
     {
       title: 'Admin',
       items: [
-        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, roles: ['admin'] },
+        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, roles: ['admin'] },
         { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, roles: ['admin'] },
         { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, roles: ['admin'] },
         { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, roles: ['admin'] },

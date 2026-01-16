@@ -119,7 +119,7 @@ export function SearchResults({
           navigate(`/bookings/${result.entity.id}`);
           break;
         case 'listing':
-          navigate(`/listings/${result.entity.id}`);
+          navigate(`/rental-objects/${result.entity.id}`);
           break;
         case 'organization':
           navigate(`/organizations/${result.entity.id}`);

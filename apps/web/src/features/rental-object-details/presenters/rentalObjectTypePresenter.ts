@@ -355,8 +355,8 @@ const configMap: Record<RentalObjectType, RentalObjectTypeConfig> = {
 export class RentalObjectTypePresenter {
   private config: RentalObjectTypeConfig;
 
-  constructor(listingType: RentalObjectType) {
-    this.config = configMap[listingType] || configMap.OTHER;
+  constructor(rentalObjectType: RentalObjectType) {
+    this.config = configMap[rentalObjectType] || configMap.OTHER;
   }
 
   get type(): RentalObjectType {
@@ -437,9 +437,9 @@ export class RentalObjectTypePresenter {
 // Factory Function
 // =============================================================================
 
-export function createPresenter(listingType: RentalObjectType): RentalObjectTypePresenter {
+export function createPresenter(rentalObjectType: RentalObjectType): RentalObjectTypePresenter {
   const t = useT();
-  return new RentalObjectTypePresenter(listingType);
+  return new RentalObjectTypePresenter(rentalObjectType);
 }
 
 // =============================================================================
@@ -493,7 +493,7 @@ export function isCurrentlyOpen(
     return { isOpen: false, statusText: 'Stengt i dag' };
   }
 
-  const isOpen = currentTime >{t('.todayhoursopen.currenttime')} < todayHours.close;
+  const isOpen = currentTime >= todayHours.open && currentTime < todayHours.close;
 
   if (isOpen) {
     return {

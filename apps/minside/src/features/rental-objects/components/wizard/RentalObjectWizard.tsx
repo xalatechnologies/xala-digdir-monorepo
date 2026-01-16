@@ -1,6 +1,6 @@
 /**
  * Listing Wizard
- * Multi-step form for creating and editing listings
+ * Multi-step form for creating and editing rental objects
  */
 
 import { Button, Heading, Paragraph, Spinner } from '@xala/ds';

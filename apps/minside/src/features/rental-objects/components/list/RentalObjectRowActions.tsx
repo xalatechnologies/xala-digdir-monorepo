@@ -47,11 +47,11 @@ export function RentalObjectRowActions({
   const duplicateMutation = useDuplicateListing();
 
   const handleView = () => {
-    navigate(`/listings/${listingId}/view`);
+    navigate(`/rental-objects/${listingId}/view`);
   };
 
   const handleEdit = () => {
-    navigate(`/listings/${listingId}`);
+    navigate(`/rental-objects/${listingId}`);
   };
 
   const handlePublish = async () => {

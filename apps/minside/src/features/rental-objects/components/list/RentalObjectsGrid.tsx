@@ -28,7 +28,7 @@ export function RentalObjectsGrid({
   const navigate = useNavigate();
 
   const handleCardClick = (id: string) => {
-    navigate(`/listings/${id}`);
+    navigate(`/rental-objects/${id}`);
   };
 
   if (isLoading) {

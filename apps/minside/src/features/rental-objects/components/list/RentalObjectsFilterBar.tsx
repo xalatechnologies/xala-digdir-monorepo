@@ -257,7 +257,7 @@ export function RentalObjectsFilterBar({
           <Button
             type="button"
             variant="primary"
-            onClick={() => navigate('/listings/new')}
+            onClick={() => navigate('/rental-objects/new')}
           >
             <PlusIcon />
             Nytt objekt

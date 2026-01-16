@@ -39,7 +39,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
     const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
     if (files.length === 0) return;
 
-    // For new listings (no ID yet), store as local URLs
+    // For new rental objects (no ID yet), store as local URLs
     if (!listingId) {
       const newUrls = await Promise.all(
         files.map(file => {
@@ -52,7 +52,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
       );
       onChange({ images: [...images, ...newUrls] });
     } else {
-      // For existing listings, upload via API
+      // For existing rental objects, upload via API
       try {
         await uploadMutation.mutateAsync({ id: listingId, files });
       } catch (error) {

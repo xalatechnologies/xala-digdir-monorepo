@@ -401,7 +401,7 @@ describe('useRentalObjectWizard', () => {
       );
 
       expect(mockNavigate).toHaveBeenCalledWith(
-        '/listings/new-listing-123',
+        '/rental-objects/new-listing-123',
         { replace: true }
       );
 
@@ -496,7 +496,7 @@ describe('useRentalObjectWizard', () => {
           name: 'Published Listing',
         })
       );
-      expect(mockNavigate).toHaveBeenCalledWith('/listings');
+      expect(mockNavigate).toHaveBeenCalledWith('/rental-objects');
     });
   });
 
@@ -510,7 +510,7 @@ describe('useRentalObjectWizard', () => {
       });
 
       expect(confirmSpy).not.toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith('/listings');
+      expect(mockNavigate).toHaveBeenCalledWith('/rental-objects');
       expect(localStorage.getItem('listing-wizard-draft')).toBeNull();
     });
 
@@ -545,7 +545,7 @@ describe('useRentalObjectWizard', () => {
       });
 
       expect(confirmSpy).toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith('/listings');
+      expect(mockNavigate).toHaveBeenCalledWith('/rental-objects');
       expect(localStorage.getItem('listing-wizard-draft')).toBeNull();
 
       confirmSpy.mockRestore();

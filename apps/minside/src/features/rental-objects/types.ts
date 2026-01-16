@@ -1,7 +1,7 @@
 /**
- * Listings Feature Types
+ * Rental Objects Feature Types
  *
- * Type definitions for the Listings module in Backoffice
+ * Type definitions for the Rental Objects module in Backoffice
  */
 
 import type { Listing, ListingStatus, ListingType, BookingModel, PricingUnit } from '@digilist/client-sdk';
@@ -10,7 +10,7 @@ import type { Listing, ListingStatus, ListingType, BookingModel, PricingUnit } f
 export type { ListingType };
 
 // =============================================================================
-// Listing Types Extended for Backoffice
+// Rental Object Types Extended for Backoffice
 // =============================================================================
 
 // Use SDK's ListingType directly - no custom types needed

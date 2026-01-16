@@ -1,9 +1,9 @@
 /**
- * Listing constants
+ * Rental Object constants
  */
 import type { ListingType } from '@digilist/client-sdk';
 
-// Listing type options for filtering and selection
+// Rental object type options for filtering and selection
 export const LISTING_TYPE_OPTIONS: Array<{ id: ListingType | 'ALL'; label: string }> = [
   { id: 'ALL', label: 'Alle typer' },
   { id: 'SPACE', label: 'Lokaler' },

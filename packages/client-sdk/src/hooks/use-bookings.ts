@@ -283,12 +283,12 @@ export function useApproveBooking() {
       const response = await bookingService.approve(id, reason);
       return response;
     },
-    onSuccess: (data) => {
+    onSuccess: (response) => {
       // Invalidate all booking queries
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
       // Invalidate specific booking
-      if (data?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(data.id) });
+      if (response?.data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(response.data.id) });
       }
     },
   });
@@ -305,12 +305,12 @@ export function useRejectBooking() {
       const response = await bookingService.reject(id, reason);
       return response;
     },
-    onSuccess: (data) => {
+    onSuccess: (response) => {
       // Invalidate all booking queries
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
       // Invalidate specific booking
-      if (data?.id) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(data.id) });
+      if (response?.data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(response.data.id) });
       }
     },
   });

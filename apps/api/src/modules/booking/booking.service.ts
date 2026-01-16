@@ -48,7 +48,7 @@ export class BookingService {
     const validated = validate(CreateBookingSchema, data);
 
     // Fetch rental object to get buffer time configuration
-    const rentalObject = await this.rentalObjectRepository.findById(validated.listingId);
+    const rentalObject = await this.rentalObjectRepository.findById(validated.rentalObjectId);
     if (!rentalObject) {
       throw new ForbiddenError('Rental object not found');
     }
@@ -263,7 +263,7 @@ export class BookingService {
   /**
    * Get calendar events for a tenant
    */
-  async getCalendarEvents(tenantId: string, listingId?: string): Promise<CalendarEvent[]> {
+  async getCalendarEvents(tenantId: string, rentalObjectId?: string): Promise<CalendarEvent[]> {
     const result = await this.findAll(tenantId, { rentalObjectId, limit: 100, page: 1 });
     
     return result.data.map((booking) => ({
@@ -836,7 +836,7 @@ export class BookingService {
     selection: BookingSelection
   ): Promise<BookingQuoteProjection> {
     // Fetch the rental object to get configuration
-    const rentalObject = await this.rentalObjectRepository.findById(selection.listingId);
+    const rentalObject = await this.rentalObjectRepository.findById(selection.rentalObjectId);
     if (!rentalObject) {
       throw new ForbiddenError('Rental object not found');
     }

@@ -232,7 +232,7 @@ function AppWithTheme() {
                 path="rental-objects/wizard"
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <ListingWizardPage />
+                    <RentalObjectWizardPage />
                   </ProtectedRoute>
                 }
               />
@@ -240,7 +240,7 @@ function AppWithTheme() {
                 path="rental-objects/wizard/:id"
                 element={
                   <ProtectedRoute requiredRole="admin">
-                    <ListingWizardPage />
+                    <RentalObjectWizardPage />
                   </ProtectedRoute>
                 }
               />

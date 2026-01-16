@@ -1,5 +1,5 @@
 /**
- * Listings List View
+ * Rental Objects List View
  * Main container for the listings list with right drawer filters
  * Styled similar to web app ListingsPage but for admin use
  */
@@ -378,7 +378,7 @@ export function RentalObjectsListView() {
             <Button
               type="button"
               variant="primary"
-              onClick={() => navigate('/listings/new')}
+              onClick={() => navigate('/rental-objects/new')}
             >
               <PlusIcon />
               Nytt objekt

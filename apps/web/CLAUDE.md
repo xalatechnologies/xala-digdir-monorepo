@@ -15,7 +15,7 @@ The **web** app is the public-facing Vite + React application for the Xala/Digil
 ## Key Characteristics
 
 - **Public-facing** - No authentication required for browsing
-- **Discovery-focused** - Search and filter listings
+- **Discovery-focused** - Search and filter rental objects
 - **Booking initiation** - Users can start booking flows
 - **Responsive design** - Mobile-first, optimized for all devices
 - **SEO-optimized** - Server-side rendering considerations for public pages
@@ -29,7 +29,7 @@ The **web** app is the public-facing Vite + React application for the Xala/Digil
 apps/web/
 ├── src/
 │   ├── features/           # Feature-based modules
-│   │   ├── listings/       # Listing discovery and details
+│   │   ├── rental objects/       # Rental object discovery and details
 │   │   ├── booking/        # Booking initiation flows
 │   │   └── search/         # Search and filters
 │   ├── routes/             # React Router routes
@@ -73,21 +73,21 @@ pnpm preview                       # Preview build
 
 ### 2. Discovery UX
 - Prominent search and filter UI
-- Map-based browsing for location-based listings
+- Map-based browsing for location-based rental objects
 - Category navigation
-- Featured listings and promotions
+- Featured rental objects and promotions
 
 ### 3. Performance Critical
 - Code splitting by route
 - Lazy loading for heavy components (maps, calendars)
-- Image optimization for listing galleries
+- Image optimization for rental object galleries
 - Fast initial page load (<2s)
 
 ### 4. SEO Requirements
 - Semantic HTML structure
-- Meta tags for listing pages
+- Meta tags for rental object pages
 - Open Graph tags for social sharing
-- Structured data (JSON-LD) for listings
+- Structured data (JSON-LD) for rental objects
 
 ### 5. Mobile-First Design
 - Touch-friendly UI (minimum 44px tap targets)
@@ -100,7 +100,7 @@ pnpm preview                       # Preview build
 ## Key Features
 
 ### Listing Discovery
-- **Location:** `src/features/listings/`
+- **Location:** `src/features/rental objects/`
 - Search by location, category, date
 - Map view with clustered markers
 - List view with filters
@@ -127,7 +127,7 @@ pnpm preview                       # Preview build
 ### SDK Services Used
 ```tsx
 import {
-  useListings,        // Fetch and search listings
+  useRental objects,        // Fetch and search rental objects
   useListingDetails,  // Get single listing
   useAvailability,    // Check booking availability
   useBooking,         // Create booking
@@ -154,10 +154,10 @@ import {
 ## Routing Structure
 
 ```
-/                           # Homepage (featured listings)
-/listings                   # Listing search/browse
-/listings/:id               # Listing details
-/listings/:id/book          # Booking flow
+/                           # Homepage (featured rental objects)
+/rental objects                   # Listing search/browse
+/rental objects/:id               # Listing details
+/rental objects/:id/book          # Booking flow
 /categories/:slug           # Category page
 /search                     # Search results
 /about                      # About page
@@ -217,8 +217,8 @@ export function ListingCard({ listing }: ListingCardProps) {
       <img src={listing.imageUrl} alt={listing.title} />
       <Heading level={3}>{listing.title}</Heading>
       <Paragraph>{listing.description}</Paragraph>
-      <Button href={`/listings/${listing.id}`}>
-        {t('listings.viewDetails')}
+      <Button href={`/rental objects/${listing.id}`}>
+        {t('rental objects.viewDetails')}
       </Button>
     </Card>
   );
@@ -267,10 +267,10 @@ pnpm preview
 - Verify API key has Maps JavaScript API enabled
 - Check browser console for API errors
 
-### 2. Listings Not Appearing
+### 2. Rental objects Not Appearing
 - Verify API URL is correct
 - Check tenant ID matches backend
-- Confirm listings exist for the tenant
+- Confirm rental objects exist for the tenant
 
 ### 3. Search Performance
 - Implement debouncing for search input (300ms)

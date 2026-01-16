@@ -237,7 +237,7 @@ export function useRentalObjectWizard(options: UseRentalObjectWizardOptions = {}
         localStorage.removeItem(STORAGE_KEY);
         // Navigate to edit mode with new ID
         if (result.data?.id) {
-          navigate(`/listings/${result.data.id}`, { replace: true });
+          navigate(`/rental-objects/${result.data.id}`, { replace: true });
         }
       }
       setIsDirty(false);
@@ -253,7 +253,7 @@ export function useRentalObjectWizard(options: UseRentalObjectWizardOptions = {}
       await saveDraft();
       // Then navigate back to list (publish is handled separately)
       onComplete?.(formData as BackofficeListing);
-      navigate('/listings');
+      navigate('/rental-objects');
     } catch (error) {
       throw error;
     }
@@ -267,7 +267,7 @@ export function useRentalObjectWizard(options: UseRentalObjectWizardOptions = {}
     }
     // Clear draft from localStorage
     localStorage.removeItem(STORAGE_KEY);
-    navigate('/listings');
+    navigate('/rental-objects');
   }, [isDirty, navigate]);
 
   return {
