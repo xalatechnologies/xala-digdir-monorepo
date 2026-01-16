@@ -2,7 +2,7 @@ import {
   Card,
   Heading,
   Paragraph,
-  Spinner,
+  Skeleton,
   Button,
   StatCard,
   ActivityItem,
@@ -62,6 +62,99 @@ export function DashboardPage(): React.ReactElement {
     status: mapActivityTypeToStatus(activity.type),
   }));
 
+  // Loading state - Skeleton screen
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Welcome Section Skeleton */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            <Skeleton width="50%" height={40} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+            <Skeleton width="70%" height={20} />
+          </div>
+          <Skeleton width={180} height={40} />
+        </div>
+
+        {/* Stats Grid Skeleton */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 'var(--ds-spacing-4)',
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <Skeleton width="60%" height={20} />
+                  <Skeleton width={40} height={40} style={{ borderRadius: 'var(--ds-border-radius-md)' }} />
+                </div>
+                <Skeleton width={80} height={48} />
+                <Skeleton width="80%" height={16} />
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Two Column Layout Skeleton */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+            gap: 'var(--ds-spacing-6)',
+          }}
+        >
+          {/* Recent Activity Skeleton */}
+          <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+              <Skeleton width="40%" height={28} />
+              <Skeleton width={100} height={36} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: 'var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-neutral-border-default)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <Skeleton width="70%" height={20} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                    <Skeleton width="50%" height={16} />
+                  </div>
+                  <Skeleton width={80} height={24} style={{ borderRadius: 'var(--ds-border-radius-full)' }} />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Quick Actions and System Status Skeleton */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Skeleton width="50%" height={28} style={{ marginBottom: 'var(--ds-spacing-4)' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} width="100%" height={40} />
+                ))}
+              </div>
+            </Card>
+
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <Skeleton width="70%" height={20} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+              <Skeleton width="50%" height={16} />
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Welcome section */}
@@ -93,50 +186,44 @@ export function DashboardPage(): React.ReactElement {
       </div>
 
       {/* Stats grid */}
-      {isLoading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('dashboard.loadingStats')} data-data-size="lg" />
-        </div>
-      ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 'var(--ds-spacing-4)',
-          }}
-        >
-          <StatCard
-            title={t('dashboard.pendingBookings')}
-            value={pendingCount}
-            description={t('dashboard.requiresAction')}
-            color="var(--ds-color-warning-text-default)"
-            icon={<ClockIcon />}
-            {...(pendingCount > 0 && { trend: { value: 12, isPositive: false as boolean } })}
-          />
-          <StatCard
-            title={t('dashboard.approved')}
-            value={confirmedCount}
-            description={t('dashboard.thisMonth')}
-            color="var(--ds-color-success-text-default)"
-            icon={<CheckCircleIcon />}
-            trend={{ value: 8, isPositive: true }}
-          />
-          <StatCard
-            title={t('dashboard.rejected')}
-            value={cancelledCount}
-            description={t('dashboard.thisMonth')}
-            color="var(--ds-color-danger-text-default)"
-            icon={<XCircleIcon />}
-          />
-          <StatCard
-            title={t('dashboard.total')}
-            value={totalCount}
-            description={t('dashboard.allBookings')}
-            icon={<CalendarIcon />}
-            trend={{ value: 15, isPositive: true }}
-          />
-        </div>
-      )}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: 'var(--ds-spacing-4)',
+        }}
+      >
+        <StatCard
+          title={t('dashboard.pendingBookings')}
+          value={pendingCount}
+          description={t('dashboard.requiresAction')}
+          color="var(--ds-color-warning-text-default)"
+          icon={<ClockIcon />}
+          {...(pendingCount > 0 && { trend: { value: 12, isPositive: false as boolean } })}
+        />
+        <StatCard
+          title={t('dashboard.approved')}
+          value={confirmedCount}
+          description={t('dashboard.thisMonth')}
+          color="var(--ds-color-success-text-default)"
+          icon={<CheckCircleIcon />}
+          trend={{ value: 8, isPositive: true }}
+        />
+        <StatCard
+          title={t('dashboard.rejected')}
+          value={cancelledCount}
+          description={t('dashboard.thisMonth')}
+          color="var(--ds-color-danger-text-default)"
+          icon={<XCircleIcon />}
+        />
+        <StatCard
+          title={t('dashboard.total')}
+          value={totalCount}
+          description={t('dashboard.allBookings')}
+          icon={<CalendarIcon />}
+          trend={{ value: 15, isPositive: true }}
+        />
+      </div>
 
       {/* Two column layout */}
       <div

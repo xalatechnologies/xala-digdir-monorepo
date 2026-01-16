@@ -6,6 +6,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useRealtimeCalendar as useSDKRealtimeCalendar } from '@digilist/client-sdk';
 import type { RealtimeEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface RealtimeCalendarOptions {
   /** Whether to enable realtime updates */
@@ -21,6 +22,7 @@ export interface RealtimeCalendarOptions {
  * Wraps the SDK's useRealtimeCalendar hook and provides additional tracking
  */
 export function useRealtimeCalendar(options: RealtimeCalendarOptions = {}) {
+  const t = useT();
   const { enabled = true, onBookingEvent, trackUpdates = true } = options;
 
   // Track last update timestamp

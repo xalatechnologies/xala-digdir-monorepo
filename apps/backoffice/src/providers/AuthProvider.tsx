@@ -1,6 +1,15 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole } from '../hooks/useAuth';
+import { AuthContext, type AuthContextType, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { authService } from '@digilist/client-sdk/services';
+import {
+  FLOW_CONTEXT_KEY,
+  hasStoredFlowContext as checkStoredFlowContext,
+  clearFlowContextFromStorage,
+  getFlowContextTTL,
+} from '@digilist/client-sdk';
+import { ROLE_STORAGE_KEYS } from '../hooks/useBackofficeRole';
+import { useAuthRedirectGuard, useSessionRestoration } from '../hooks/useAuthGuards';
 
 // =============================================================================
 // Local Storage Keys
@@ -61,8 +70,57 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
   grantedRoles: ['admin', 'case_handler'],
 };
 
-// Simulated login - will be replaced with real OAuth when API is ready
-const USE_MOCK_AUTH = true;
+// Use real auth - fetches session from API
+const USE_MOCK_AUTH = false;
+
+// =============================================================================
+// Storage Event Subscription (for cross-tab sync of flow context)
+// =============================================================================
+
+/** Subscribers for storage changes */
+const subscribers = new Set<() => void>();
+
+/** Subscribe to storage changes */
+function subscribe(callback: () => void): () => void {
+  subscribers.add(callback);
+
+  // Listen for storage events from other tabs
+  const handleStorageChange = (event: StorageEvent) => {
+    if (event.key === FLOW_CONTEXT_KEY || event.key === null) {
+      callback();
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', handleStorageChange);
+  }
+
+  return () => {
+    subscribers.delete(callback);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('storage', handleStorageChange);
+    }
+  };
+}
+
+/** Get current snapshot of whether context exists */
+function getSnapshot(): boolean {
+  return checkStoredFlowContext();
+}
+
+/** Server snapshot (always false since no sessionStorage) */
+function getServerSnapshot(): boolean {
+  return false;
+}
+
+/** Notify all subscribers of changes */
+function notifySubscribers(): void {
+  subscribers.forEach((callback) => callback());
+}
+
+// =============================================================================
+// Provider Component
+// =============================================================================
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -71,7 +129,19 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Use auth guards to prevent redirect loops
+  useAuthRedirectGuard(!!user, isLoading);
+  useSessionRestoration();
+
+  // Subscribe to storage changes for cross-tab synchronization of flow context
+  const hasStoredContext = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
 
   // Check for existing session on mount
   useEffect(() => {
@@ -86,16 +156,80 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      // Real auth flow - uncomment when API is ready
-      // try {
-      //   const response = await getMe();
-      //   setUser(response.data);
-      // } catch {
-      //   setUser(null);
-      // } finally {
-      //   setIsLoading(false);
-      // }
-      setIsLoading(false);
+      // Real auth flow - fetch session from API
+      try {
+        const response = await authService.getSession();
+        if (response.data?.user) {
+          const apiUser = response.data.user;
+
+          console.log('========================================');
+          console.log('[BACKOFFICE AUTH] User session check:');
+          console.log('  Email:', apiUser.email);
+          console.log('  Name:', apiUser.name);
+          console.log('  API Role:', apiUser.role);
+          console.log('========================================');
+
+          // ✅ SECURITY: Role-Based Access Control
+          // Only allow admin, saksbehandler, and super_admin to access backoffice
+          const allowedRoles = ['admin', 'saksbehandler', 'super_admin'];
+
+          if (!allowedRoles.includes(apiUser.role)) {
+            console.error('[BACKOFFICE AUTH] Access denied - invalid role:', apiUser.role);
+            console.log('[BACKOFFICE AUTH] Allowed roles:', allowedRoles.join(', '));
+
+            setAccessDeniedError(
+              'Du har ikke tilgang til administrasjonspanelet. Kun administratorer og saksbehandlere har tilgang.'
+            );
+            setUser(null);
+
+            // Call logout to clear session cookie
+            try {
+              await authService.logout();
+            } catch (error) {
+              console.error('[BACKOFFICE AUTH] Logout after access denied failed:', error);
+            }
+
+            setIsLoading(false);
+            return;
+          }
+
+          // Map API role to BackofficeRole (legacy) and EffectiveBackofficeRole
+          // API uses: 'admin', 'saksbehandler', etc.
+          // BackofficeRole (legacy): 'admin' | 'saksbehandler'
+          // EffectiveBackofficeRole: 'admin' | 'case_handler'
+          const legacyRole: BackofficeRole = apiUser.role === 'super_admin' ? 'super_admin' :
+                                            apiUser.role === 'admin' ? 'admin' : 'saksbehandler';
+          const effectiveRole: import('../lib/capabilities').EffectiveBackofficeRole =
+            apiUser.role === 'super_admin' ? 'super_admin' :
+            apiUser.role === 'admin' ? 'admin' : 'case_handler';
+
+          // Map API user to BackofficeUser format
+          const backofficeUser: BackofficeUser = {
+            id: apiUser.id,
+            name: apiUser.name || apiUser.email,
+            email: apiUser.email,
+            role: legacyRole,
+            grantedRoles: [effectiveRole], // Single role from DB
+          };
+
+          console.log('[BACKOFFICE AUTH] Access granted:');
+          console.log('  Legacy Role:', backofficeUser.role);
+          console.log('  Granted Roles:', backofficeUser.grantedRoles);
+          console.log('  Effective Role:', effectiveRole);
+          console.log('========================================');
+
+          // Clear any previous access denied error
+          setAccessDeniedError(null);
+          setUser(backofficeUser);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        // No session or error - user not authenticated
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();
@@ -139,6 +273,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const logout = useCallback(async () => {
+    console.log('========================================');
+    console.log('[BACKOFFICE AUTH] Logging out...');
+    console.log('========================================');
+
     if (USE_MOCK_AUTH) {
       // Clear user session
       localStorage.removeItem('backoffice_mock_user');
@@ -148,21 +286,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
       localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
 
+      console.log('[BACKOFFICE AUTH] Mock auth cleared');
       setUser(null);
       navigate('/login');
       return;
     }
 
-    // Real logout - uncomment when API is ready
-    // try {
-    //   await apiLogout();
-    //   // Also clear role storage on real logout
-    //   localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
-    //   localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
-    // } finally {
-    //   setUser(null);
-    //   navigate('/login');
-    // }
+    // Real logout - call API to clear session cookie
+    try {
+      await authService.logout();
+      console.log('[BACKOFFICE AUTH] API logout successful');
+
+      // Clear role storage on logout
+      localStorage.removeItem(ROLE_STORAGE_KEYS.EFFECTIVE_ROLE);
+      localStorage.removeItem(ROLE_STORAGE_KEYS.REMEMBER_CHOICE);
+      console.log('[BACKOFFICE AUTH] Role storage cleared');
+    } catch (error) {
+      console.error('[BACKOFFICE AUTH] Logout failed:', error);
+      // Continue with logout even if API call fails
+    } finally {
+      setUser(null);
+      console.log('[BACKOFFICE AUTH] User cleared, redirecting to login...');
+      console.log('========================================');
+      navigate('/login');
+    }
   }, [navigate]);
 
   const checkRole = useCallback(
@@ -176,6 +323,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [user]
   );
 
+  /**
+   * Restore flow context after authentication
+   * Uses authService.resumeFlow internally
+   */
+  const restoreFlowContext = useCallback((clearAfterLoad: boolean = true): RestoreFlowContextResult => {
+    const result = authService.resumeFlow(clearAfterLoad);
+
+    // If we cleared context, notify subscribers
+    if (clearAfterLoad && result.hasContext) {
+      notifySubscribers();
+    }
+
+    // Calculate TTL if we have context
+    const ttl = result.flowContext
+      ? getFlowContextTTL(result.flowContext)
+      : undefined;
+
+    return {
+      hasContext: result.hasContext,
+      flowContext: result.flowContext,
+      ttl,
+      wasExpired: result.wasExpired,
+      wasInvalid: result.wasInvalid,
+    };
+  }, []);
+
+  /**
+   * Clear any stored flow context
+   * Call this after flow completion or on explicit logout
+   */
+  const clearFlowContext = useCallback((): void => {
+    clearFlowContextFromStorage();
+    notifySubscribers();
+  }, []);
+
   const value = useMemo<AuthContextType>(
     () => ({
       user,
@@ -187,8 +369,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       login,
       logout,
       checkRole,
+      hasStoredContext,
+      restoreFlowContext,
+      clearFlowContext,
+      accessDeniedError,
     }),
-    [user, isLoading, login, logout, checkRole]
+    [user, isLoading, login, logout, checkRole, hasStoredContext, restoreFlowContext, clearFlowContext, accessDeniedError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

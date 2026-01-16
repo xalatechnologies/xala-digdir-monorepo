@@ -5,6 +5,9 @@
 import { Controller, Get, Post, Put } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
+import { isVippsConfigured, getVippsConfig } from '../../config/vipps.config';
+import { getVippsCheckoutService } from '../../integrations/vipps/vipps-checkout.service';
+import { getAuditService } from '../../core/audit/audit.service';
 
 interface IntegrationRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -37,7 +40,7 @@ export class IntegrationsController {
    */
   @Post('/rco/access-code')
   async generateAccessCode(request: IntegrationRequest, reply: FastifyReply) {
-    const { bookingId, listingId, validFrom, validUntil } = request.body as any;
+    const { bookingId, rentalObjectId, validFrom, validUntil } = request.body as any;
 
     // Mock access code generation
     const accessCode = Math.random().toString().slice(2, 8);
@@ -46,7 +49,7 @@ export class IntegrationsController {
       data: {
         code: accessCode,
         bookingId,
-        listingId,
+        rentalObjectId,
         validFrom,
         validUntil,
         type: 'PIN',
@@ -240,12 +243,26 @@ export class IntegrationsController {
    */
   @Get('/vipps/status')
   async getVippsStatus(request: IntegrationRequest, reply: FastifyReply) {
+    const isConfigured = isVippsConfigured();
+    
+    if (!isConfigured) {
+      return {
+        data: {
+          connected: false,
+          provider: 'Vipps',
+          message: 'Vipps integration not configured',
+        },
+      };
+    }
+    
+    const config = getVippsConfig();
+    
     return {
       data: {
         connected: true,
         provider: 'Vipps',
-        merchantId: 'merchant-xxx',
-        environment: 'production',
+        merchantId: config.merchantSerialNumber,
+        environment: config.environment,
       },
     };
   }
@@ -255,22 +272,86 @@ export class IntegrationsController {
    */
   @Post('/vipps/initiate')
   async initiatePayment(request: IntegrationRequest, reply: FastifyReply) {
-    const { bookingId, amount, description, returnUrl } = request.body as any;
+    const { bookingId, amount, description, returnUrl, customerPhone, customerEmail } = request.body as {
+      bookingId: string;
+      amount: number;
+      description?: string;
+      returnUrl: string;
+      customerPhone?: string;
+      customerEmail?: string;
+    };
 
-    // Mock payment initiation
-    const orderId = `order-${Date.now()}`;
+    // Validate required fields
+    if (!bookingId || !amount || !returnUrl) {
+      reply.code(400);
+      return {
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Missing required fields: bookingId, amount, returnUrl',
+        },
+      };
+    }
 
-    return {
-      data: {
-        orderId,
+    // Check if Vipps is configured
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps payment is not configured',
+        },
+      };
+    }
+
+    try {
+      const checkoutService = getVippsCheckoutService();
+      
+      const session = await checkoutService.createCheckoutSession({
         bookingId,
         amount,
-        currency: 'NOK',
-        status: 'initiated',
-        redirectUrl: `https://api.vipps.no/checkout/${orderId}`,
+        description: description || `Booking ${bookingId}`,
         returnUrl,
-      },
-    };
+        customer: (customerPhone || customerEmail) ? {
+          phoneNumber: customerPhone,
+          email: customerEmail,
+        } : undefined,
+        tenantId: request.tenantId || undefined,
+        userId: request.userId || undefined,
+      });
+
+      return {
+        data: {
+          orderId: session.reference,
+          bookingId,
+          amount,
+          currency: 'NOK',
+          status: 'initiated',
+          redirectUrl: session.redirectUrl,
+          url: session.redirectUrl, // Alias for frontend compatibility
+          returnUrl,
+        },
+      };
+    } catch (error) {
+      getAuditService().log({
+        tenantId: request.tenantId || 'unknown',
+        userId: request.userId || 'anonymous',
+        action: 'vipps_payment_initiate_failed',
+        resource: 'payment',
+        resourceId: bookingId,
+        metadata: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          amount,
+        },
+      });
+
+      reply.code(500);
+      return {
+        error: {
+          code: 'PAYMENT_INITIATION_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to initiate payment',
+        },
+      };
+    }
   }
 
   /**
@@ -280,15 +361,169 @@ export class IntegrationsController {
   async getPaymentStatus(request: FastifyRequest<{ Params: { orderId: string } }>, reply: FastifyReply) {
     const { orderId } = request.params;
 
-    return {
-      data: {
-        orderId,
-        status: 'completed',
-        amount: 1500,
-        currency: 'NOK',
-        paidAt: new Date().toISOString(),
-      },
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps payment is not configured',
+        },
+      };
+    }
+
+    try {
+      const checkoutService = getVippsCheckoutService();
+      const status = await checkoutService.getPaymentStatus(orderId);
+
+      return {
+        data: {
+          orderId: status.reference,
+          status: status.status.toLowerCase(),
+          amount: status.amount,
+          currency: status.currency,
+          bookingId: status.bookingId,
+          capturedAmount: status.capturedAmount,
+          refundedAmount: status.refundedAmount,
+          modifiedAt: status.modifiedAt,
+        },
+      };
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('not found')) {
+        reply.code(404);
+        return {
+          error: {
+            code: 'NOT_FOUND',
+            message: `Payment ${orderId} not found`,
+          },
+        };
+      }
+
+      reply.code(500);
+      return {
+        error: {
+          code: 'PAYMENT_STATUS_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to get payment status',
+        },
+      };
+    }
+  }
+
+  /**
+   * POST /api/integrations/vipps/capture - Capture authorized payment
+   */
+  @Post('/vipps/capture')
+  async capturePayment(request: IntegrationRequest, reply: FastifyReply) {
+    const { orderId, amount } = request.body as { orderId: string; amount?: number };
+
+    if (!orderId) {
+      reply.code(400);
+      return {
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'orderId is required',
+        },
+      };
+    }
+
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps payment is not configured',
+        },
+      };
+    }
+
+    try {
+      const checkoutService = getVippsCheckoutService();
+      const status = await checkoutService.capturePayment({
+        reference: orderId,
+        amount,
+      });
+
+      return {
+        data: {
+          orderId: status.reference,
+          status: status.status.toLowerCase(),
+          capturedAmount: status.capturedAmount,
+        },
+      };
+    } catch (error) {
+      reply.code(500);
+      return {
+        error: {
+          code: 'CAPTURE_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to capture payment',
+        },
+      };
+    }
+  }
+
+  /**
+   * POST /api/integrations/vipps/refund - Refund payment
+   */
+  @Post('/vipps/refund')
+  async refundPayment(request: IntegrationRequest, reply: FastifyReply) {
+    const { orderId, amount, reason } = request.body as { 
+      orderId: string; 
+      amount?: number; 
+      reason?: string;
     };
+
+    if (!orderId) {
+      reply.code(400);
+      return {
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'orderId is required',
+        },
+      };
+    }
+
+    if (!isVippsConfigured()) {
+      reply.code(503);
+      return {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Vipps payment is not configured',
+        },
+      };
+    }
+
+    try {
+      const checkoutService = getVippsCheckoutService();
+      const status = await checkoutService.refundPayment({
+        reference: orderId,
+        amount,
+        reason,
+      });
+
+      getAuditService().log({
+        tenantId: request.tenantId || 'unknown',
+        userId: request.userId || 'anonymous',
+        action: 'vipps_payment_refunded',
+        resource: 'payment',
+        resourceId: orderId,
+        metadata: { amount, reason },
+      });
+
+      return {
+        data: {
+          orderId: status.reference,
+          status: status.status.toLowerCase(),
+          refundedAmount: status.refundedAmount,
+        },
+      };
+    } catch (error) {
+      reply.code(500);
+      return {
+        error: {
+          code: 'REFUND_FAILED',
+          message: error instanceof Error ? error.message : 'Failed to refund payment',
+        },
+      };
+    }
   }
 
   // ============================================================

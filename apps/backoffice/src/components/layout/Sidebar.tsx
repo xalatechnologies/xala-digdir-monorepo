@@ -14,11 +14,14 @@ import {
   ArrowRightIcon,
   ClockIcon,
   CheckCircleIcon,
+  ShieldIcon,
 } from '@xala/ds';
 import { useAuth } from '../../hooks/useAuth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 import type { Capability } from '../../lib/capabilities';
+import { usePendingGdprRequests } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 interface NavItem {
   name: string;
@@ -195,9 +198,14 @@ function hasPermission(
 }
 
 export function Sidebar() {
+  const t = useT();
   const { user } = useAuth();
   const { effectiveRole } = useBackofficeRole();
   const { hasCapability, hasAnyCapability } = useCapabilityContext();
+
+  // Get pending GDPR requests count for badge
+  const { data: pendingGdprData } = usePendingGdprRequests({ limit: 1 });
+  const pendingGdprCount = pendingGdprData?.meta?.total ?? pendingGdprData?.data?.length ?? 0;
 
   const navSections: NavSection[] = [
     {
@@ -208,7 +216,7 @@ export function Sidebar() {
     {
       title: 'Administrasjon',
       items: [
-        { name: 'Listings', description: 'Administrer utleieobjekter', href: '/listings', icon: <BuildingIcon /> },
+        { name: 'Utleieobjekter', description: 'Administrer utleieobjekter', href: '/rental-objects', icon: <BuildingIcon /> },
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
@@ -246,7 +254,7 @@ export function Sidebar() {
     {
       title: 'Admin',
       items: [
-        { name: 'Ny listing', description: 'Opprett lokale', href: '/listings/wizard', icon: <BuildingIcon />, roles: ['admin'] },
+        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, roles: ['admin'] },
         { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, roles: ['admin'] },
         { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, roles: ['admin'] },
         { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, roles: ['admin'] },
@@ -263,9 +271,10 @@ export function Sidebar() {
     {
       title: 'System',
       items: [
+        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', roles: ['admin'] },
         { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
         { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
-        { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
       ],
     },
   ];

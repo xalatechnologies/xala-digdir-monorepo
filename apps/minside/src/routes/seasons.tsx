@@ -5,6 +5,7 @@ import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { SeasonCard } from '../features/seasons/components/SeasonCard';
 import { SEASON_FILTER_OPTIONS } from '../features/seasons/constants';
+import { useT } from '@xala/i18n';
 
 /**
  * Seasons List Page
@@ -50,6 +51,7 @@ function ClockIcon() {
 }
 
 export function SeasonsPage() {
+  const t = useT();
   const { accountType, selectedOrganization } = useAccountContext();
   const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
 
@@ -103,10 +105,10 @@ export function SeasonsPage() {
             </div>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                Du søker på vegne av: {selectedOrganization.name}
+                {t('seasons.applyingAs')}: {selectedOrganization.name}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Søknader sendes inn som organisasjon
+                {t('seasons.applicationsSubmittedAsOrg')}
               </Paragraph>
             </div>
           </div>
@@ -116,11 +118,10 @@ export function SeasonsPage() {
       {/* Page Header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          Sesongbooking
+          {t('seasons.seasonBooking')}
         </Heading>
         <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '800px' }}>
-          Søk om faste tider for hele sesongen. Perfekt for lag, foreninger og organisasjoner som trenger
-          regelmessig tilgang til lokaler og fasiliteter.
+          {t('seasons.seasonBookingDesc')}
         </Paragraph>
       </div>
 
@@ -162,7 +163,7 @@ export function SeasonsPage() {
                 data-size="xs"
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}
               >
-                Aktive sesonger
+                {t('seasons.activeSeasons')}
               </Paragraph>
               <Heading level={3} data-size="lg" style={{ margin: 0 }}>
                 {stats.activeSeasons}
@@ -200,7 +201,7 @@ export function SeasonsPage() {
                 data-size="xs"
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}
               >
-                Åpne for søknader
+                {t('seasons.openForApplications')}
               </Paragraph>
               <Heading level={3} data-size="lg" style={{ margin: 0 }}>
                 {stats.openSeasons}
@@ -238,7 +239,7 @@ export function SeasonsPage() {
                 data-size="xs"
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}
               >
-                Kommende sesonger
+                {t('seasons.upcomingSeasons')}
               </Paragraph>
               <Heading level={3} data-size="lg" style={{ margin: 0 }}>
                 {stats.upcomingSeasons}
@@ -258,38 +259,46 @@ export function SeasonsPage() {
           paddingBottom: 'var(--ds-spacing-2)',
         }}
       >
-        {SEASON_FILTER_OPTIONS.map((option) => (
-          <Button
-            key={option.value}
-            type="button"
-            variant={statusFilter === option.value ? 'primary' : 'secondary'}
-            data-size="sm"
-            onClick={() => setStatusFilter(option.value)}
-            style={{ whiteSpace: 'nowrap' }}
-          >
-            {option.label}
-          </Button>
-        ))}
+        {SEASON_FILTER_OPTIONS.map((option) => {
+          const filterLabels = {
+            all: t('seasons.allSeasons'),
+            open: t('seasons.filterOpen'),
+            active: t('seasons.filterActive'),
+            draft: t('seasons.filterUpcoming'),
+          };
+          return (
+            <Button
+              key={option.value}
+              type="button"
+              variant={statusFilter === option.value ? 'primary' : 'secondary'}
+              data-size="sm"
+              onClick={() => setStatusFilter(option.value)}
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              {filterLabels[option.value] || option.label}
+            </Button>
+          );
+        })}
       </div>
 
       {/* Season List */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner aria-label="Laster sesonger..." />
+          <Spinner aria-label={t('seasons.loadingSeasons')} />
         </div>
       ) : error ? (
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
           <Paragraph style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
-            Kunne ikke laste sesonger. Vennligst prøv igjen senere.
+            {t('seasons.couldNotLoadSeasons')}
           </Paragraph>
         </Card>
       ) : seasons.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            Ingen sesonger funnet
+            {t('seasons.noSeasonsFound')}
           </Heading>
           <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Det er ingen sesonger tilgjengelig for øyeblikket.
+            {t('seasons.noSeasonsAvailable')}
           </Paragraph>
         </Card>
       ) : (

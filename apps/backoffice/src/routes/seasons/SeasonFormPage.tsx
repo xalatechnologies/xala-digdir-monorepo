@@ -24,8 +24,10 @@ import {
   type CreateSeasonDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions } from '../../components/shared';
+import { useT } from '@xala/i18n';
 
 export function SeasonFormPage() {
+  const t = useT();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const isEditing = !!id;
@@ -120,7 +122,7 @@ export function SeasonFormPage() {
         navigate(`/seasons/${result.data.id}`);
       }
     } catch (error) {
-      console.error('Failed to save season:', error);
+      // Failed to save season
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +151,7 @@ export function SeasonFormPage() {
   if (isEditing && isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -198,7 +200,7 @@ export function SeasonFormPage() {
       {/* Info Alert */}
       {!isEditing && (
         <Alert>
-          Sesongen opprettes som <strong>Utkast</strong>. Du må legge til lokaler før du kan åpne den for søknader.
+          Sesongen opprettes som <strong>{t("status.draft")}</strong>. Du må legge til lokaler før du kan åpne den for søknader.
         </Alert>
       )}
 

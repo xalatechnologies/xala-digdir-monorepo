@@ -27,52 +27,58 @@ import {
   UnlockIcon,
 } from '@xala/ds';
 import {
-  useSeasonalLease,
-  useDeleteSeasonalLease,
-  type SeasonalLeaseStatus,
+  useSeason,
+  useSeasonApplications,
+  useSeasonStats,
+  useOpenSeason,
+  useCloseSeason,
+  useDeleteSeason,
+  type SeasonStatus,
 } from '@digilist/client-sdk';
 import { FormSection } from '../../components/shared';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
+import { useT } from '@xala/i18n';
 
-// Temporary placeholder hooks until implemented in SDK
-const useSeasonVenues = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
-const useSeasonApplications = (_seasonId: string) => ({ data: { data: [] }, isLoading: false });
-const useUpdateSeasonalLeaseStatus = () => ({ mutateAsync: async () => {}, isLoading: false });
-
-const statusLabels: Record<SeasonalLeaseStatus, string> = {
+const statusLabels: Record<SeasonStatus, string> = {
   draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
-  assigned: 'Tildelt',
+  active: 'Aktiv',
+  completed: 'Fullført',
+  cancelled: 'Kansellert',
 };
 
-const statusVariants: Record<SeasonalLeaseStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
   closed: 'warning',
-  assigned: 'success',
+  active: 'success',
+  completed: 'success',
+  cancelled: 'neutral',
 };
 
 export function SeasonDetailPage() {
+  const t = useT();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('info');
 
   // Queries
-  const { data: seasonData, isLoading } = useSeasonalLease(id!);
+  const { data: seasonData, isLoading } = useSeason(id!);
   const season = seasonData?.data;
 
-  const { data: venuesData } = useSeasonVenues(id!);
-  const venues = venuesData?.data ?? [];
+  const { data: statsData } = useSeasonStats(id!);
+  const venues = statsData?.data?.applicationsByVenue ?? [];
 
   const { data: applicationsData } = useSeasonApplications(id!);
   const applications = applicationsData?.data ?? [];
 
   // Mutations
-  const deleteSeasonMutation = useDeleteSeasonalLease();
-  const updateStatusMutation = useUpdateSeasonalLeaseStatus();
+  const deleteSeasonMutation = useDeleteSeason();
+  const openSeasonMutation = useOpenSeason();
+  const closeSeasonMutation = useCloseSeason();
 
   // Handlers
   const handleDelete = async () => {
@@ -88,13 +94,13 @@ export function SeasonDetailPage() {
       return;
     }
     if (confirm('Er du sikker på at du vil åpne sesongen for søknader?')) {
-      await updateStatusMutation.mutateAsync({ id: id!, status: 'open' });
+      await openSeasonMutation.mutateAsync(id!);
     }
   };
 
   const handleCloseSeason = async () => {
     if (confirm('Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert.')) {
-      await updateStatusMutation.mutateAsync({ id: id!, status: 'closed' });
+      await closeSeasonMutation.mutateAsync(id!);
       setActiveTab('applications');
     }
   };
@@ -114,7 +120,7 @@ export function SeasonDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -168,18 +174,14 @@ export function SeasonDetailPage() {
               <>
                 <Link to={`/seasons/${id}/edit`}>
                   <Button variant="secondary" data-size="sm" type="button">
-                    <EditIcon />
-                    Rediger
-                  </Button>
+                    <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
                 <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
-                  <TrashIcon />
-                  Slett
-                </Button>
+                  <TrashIcon />{t("ui.delete")}</Button>
               </>
             )}
 
@@ -187,9 +189,7 @@ export function SeasonDetailPage() {
               <>
                 <Link to={`/seasons/${id}/edit`}>
                   <Button variant="secondary" data-size="sm" type="button">
-                    <EditIcon />
-                    Rediger
-                  </Button>
+                    <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">
                   <LockIcon />
@@ -205,7 +205,7 @@ export function SeasonDetailPage() {
               </Button>
             )}
 
-            {season.status === 'assigned' && (
+            {(season.status === 'active' || season.status === 'completed') && (
               <Link to={`/seasons/${id}/edit`}>
                 <Button variant="secondary" data-size="sm" type="button">
                   <EditIcon />
@@ -250,13 +250,13 @@ export function SeasonDetailPage() {
         </Card>
       )}
 
-      {season.status === 'assigned' && (
+      {(season.status === 'active' || season.status === 'completed') && (
         <Card style={{ backgroundColor: 'var(--ds-color-success-surface-subtle)', border: '1px solid var(--ds-color-success-border-default)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-success-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                Sesongen er tildelt
+                {season.status === 'active' ? 'Sesongen er aktiv' : 'Sesongen er fullført'}
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
                 Alle søknader er behandlet og bookinger er opprettet
@@ -270,9 +270,7 @@ export function SeasonDetailPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <Tabs.List>
           <Tabs.Trigger value="info">
-            <FileTextIcon />
-            Informasjon
-          </Tabs.Trigger>
+            <FileTextIcon />{t("ui.info")}</Tabs.Trigger>
           <Tabs.Trigger value="venues">
             <BuildingIcon />
             Lokaler ({venues.length})
@@ -281,7 +279,7 @@ export function SeasonDetailPage() {
             <ClipboardListIcon />
             Søknader ({applications.length})
           </Tabs.Trigger>
-          {(season.status === 'closed' || season.status === 'assigned') && (
+          {(season.status === 'closed' || season.status === 'active' || season.status === 'completed') && (
             <Tabs.Trigger value="allocation">
               <CalendarIcon />
               Tildeling
@@ -303,9 +301,7 @@ export function SeasonDetailPage() {
                   </div>
 
                   <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Periode
-                    </div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>{t("timeMode.period")}</div>
                     <div>{formatDate(season.startDate)} – {formatDate(season.endDate)}</div>
                   </div>
 
@@ -365,7 +361,7 @@ export function SeasonDetailPage() {
         </Tabs.Panel>
 
         {/* Allocation Tab */}
-        {(season.status === 'closed' || season.status === 'assigned') && (
+        {(season.status === 'closed' || season.status === 'active' || season.status === 'completed') && (
           <Tabs.Panel value="allocation">
             <Card>
               <SeasonAllocationManagement

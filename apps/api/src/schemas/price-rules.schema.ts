@@ -41,7 +41,7 @@ export type PriceUnit = z.infer<typeof PriceUnitSchema>;
  */
 export const PriceRuleSchema = z.object({
   id: z.string().uuid(),
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   userGroupId: z.string().uuid().optional().nullable(),
   ruleType: PriceRuleTypeSchema,
   unit: PriceUnitSchema,
@@ -64,7 +64,7 @@ export type PriceRule = z.infer<typeof PriceRuleSchema>;
  * Create Price Rule DTO
  */
 export const CreatePriceRuleSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   userGroupId: z.string().uuid().optional().nullable(),
   ruleType: PriceRuleTypeSchema,
   unit: PriceUnitSchema,
@@ -86,7 +86,7 @@ export type CreatePriceRuleDTO = z.infer<typeof CreatePriceRuleSchema>;
  */
 export const ListingRulesSchema = z.object({
   id: z.string().uuid(),
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   approvalRequired: z.boolean().default(false),
   minAge: z.number().int().positive().optional().nullable(),
   maxBookingDays: z.number().int().positive().optional().nullable(),

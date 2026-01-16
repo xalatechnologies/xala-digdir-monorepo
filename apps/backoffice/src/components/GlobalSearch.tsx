@@ -19,6 +19,7 @@ import {
   useRecentSearches,
   type SearchEntityType,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface GlobalSearchProps {
   /** Placeholder text */
@@ -63,6 +64,7 @@ export function GlobalSearch({
   className,
   style,
 }: GlobalSearchProps) {
+  const t = useT();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -143,7 +145,7 @@ export function GlobalSearch({
     return [
       {
         id: 'recent-searches',
-        label: 'Nylige søk',
+        label: t('search.recentSearches'),
         items,
       },
     ];

@@ -43,7 +43,7 @@ export interface PaymentDetailsDrawerProps {
  */
 function getTransactionTypeLabel(type: PaymentTransaction['transactionType']): string {
   const labels: Record<PaymentTransaction['transactionType'], string> = {
-    payment: 'Betaling',
+    payment: t("rule.payment"),
     refund: 'Refundering',
     capture: 'Trekking',
     reserve: 'Reservering',
@@ -57,8 +57,8 @@ function getTransactionTypeLabel(type: PaymentTransaction['transactionType']): s
 function getTransactionStatusLabel(status: PaymentTransaction['status']): string {
   const labels: Record<PaymentTransaction['status'], string> = {
     initiated: 'Initiert',
-    pending: 'Venter',
-    completed: 'Fullført',
+    pending: t("status.pending"),
+    completed: t("status.completed"),
     failed: 'Feilet',
     cancelled: 'Avbrutt',
   };
@@ -143,7 +143,7 @@ export function PaymentDetailsDrawer({
           }}
         >
           <Spinner
-            aria-label={t('common.loading', 'Laster...')}
+            aria-label={t('common.loading', t("ui.loading"))}
             data-size="lg"
           />
         </div>
@@ -151,7 +151,7 @@ export function PaymentDetailsDrawer({
 
       {/* Error State */}
       {error && !isLoading && (
-        <DrawerSection title={t('common.error', 'Feil')}>
+        <DrawerSection title={t('common.error', t("ui.error"))}>
           <Text style={{ color: 'var(--ds-color-danger-text-default)' }}>
             {t('payments.details.errorLoading', 'Kunne ikke laste betalingshistorikk')}
           </Text>
@@ -324,7 +324,7 @@ export function PaymentDetailsDrawer({
                               marginBottom: 'var(--ds-spacing-1)',
                             }}
                           >
-                            {t('payments.details.completedAt', 'Fullført')}
+                            {t('payments.details.completedAt', t("status.completed"))}
                           </Text>
                           <Text>
                             {formatDate(transaction.completedAt)}

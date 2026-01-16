@@ -901,6 +901,471 @@ export function Example() {
     component: 'dataTable',
     tags: ['table', 'pagination', 'search', 'actions'],
   },
+
+  // ContentLayout Examples (Composed)
+  {
+    id: 'content-layout-basic',
+    title: 'Basic ContentLayout',
+    description: 'Simple content layout with centered container and default settings.',
+    code: `import { ContentLayout, Heading, Paragraph } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentLayout>
+      <Heading size="lg">Welcome to our platform</Heading>
+      <Paragraph>
+        This content is automatically centered and has appropriate padding.
+      </Paragraph>
+    </ContentLayout>
+  );
+}`,
+    component: 'contentLayout',
+    tags: ['composed', 'layout', 'basic'],
+  },
+  {
+    id: 'content-layout-grid',
+    title: 'ContentLayout with Grid',
+    description: 'Content layout with integrated grid system for card layouts.',
+    code: `import { ContentLayout, Card, Heading, Paragraph } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentLayout
+      grid={{
+        columns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '24px'
+      }}
+    >
+      <Card>
+        <Heading size="sm">Card 1</Heading>
+        <Paragraph>Grid item content</Paragraph>
+      </Card>
+      <Card>
+        <Heading size="sm">Card 2</Heading>
+        <Paragraph>Grid item content</Paragraph>
+      </Card>
+      <Card>
+        <Heading size="sm">Card 3</Heading>
+        <Paragraph>Grid item content</Paragraph>
+      </Card>
+    </ContentLayout>
+  );
+}`,
+    component: 'contentLayout',
+    tags: ['composed', 'layout', 'grid'],
+  },
+  {
+    id: 'content-layout-fluid',
+    title: 'Fluid ContentLayout',
+    description: 'Full-width layout without max-width constraint.',
+    code: `import { ContentLayout, Card, Heading, Paragraph } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentLayout fluid padding="16px">
+      <Card>
+        <Heading size="md">Full-width layout</Heading>
+        <Paragraph>
+          This content stretches to fill the available width, useful for
+          dashboards or data-heavy interfaces.
+        </Paragraph>
+      </Card>
+    </ContentLayout>
+  );
+}`,
+    component: 'contentLayout',
+    tags: ['composed', 'layout', 'fluid'],
+  },
+
+  // ContentSection Examples (Composed)
+  {
+    id: 'content-section-basic',
+    title: 'Basic ContentSection',
+    description: 'Section component for grouping related content with a title.',
+    code: `import { ContentSection, Field, Input } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentSection title="Personal Information">
+      <Field>
+        <Field.Label>Full Name</Field.Label>
+        <Field.Input type="text" placeholder="Enter your name" />
+      </Field>
+      <Field>
+        <Field.Label>Email</Field.Label>
+        <Field.Input type="email" placeholder="name@example.com" />
+      </Field>
+    </ContentSection>
+  );
+}`,
+    component: 'contentSection',
+    tags: ['composed', 'section', 'form'],
+  },
+  {
+    id: 'content-section-subtitle',
+    title: 'ContentSection with Subtitle',
+    description: 'Section with title and descriptive subtitle for additional context.',
+    code: `import { ContentSection, Field, Input } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentSection
+      title="Account Settings"
+      subtitle="Update your account information and preferences"
+    >
+      <Field>
+        <Field.Label>Username</Field.Label>
+        <Field.Input type="text" placeholder="username" />
+        <Field.Description>
+          Choose a unique username for your account
+        </Field.Description>
+      </Field>
+    </ContentSection>
+  );
+}`,
+    component: 'contentSection',
+    tags: ['composed', 'section', 'subtitle'],
+  },
+  {
+    id: 'content-section-horizontal',
+    title: 'Horizontal ContentSection',
+    description: 'Horizontal layout with title on the left and content on the right.',
+    code: `import { ContentSection, Field, Input, Button } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ContentSection
+      title="Profile Photo"
+      subtitle="Update your profile picture"
+      horizontal
+    >
+      <Field>
+        <Field.Input type="file" accept="image/*" />
+        <Field.Description>
+          Upload a square image at least 400x400 pixels
+        </Field.Description>
+      </Field>
+      <Button variant="primary">Upload Photo</Button>
+    </ContentSection>
+  );
+}`,
+    component: 'contentSection',
+    tags: ['composed', 'section', 'horizontal'],
+  },
+
+  // PageHeader Examples (Composed)
+  {
+    id: 'page-header-basic',
+    title: 'Basic PageHeader',
+    description: 'Simple page header with just a title.',
+    code: `import { PageHeader } from '@xala/ds';
+
+export function Example() {
+  return <PageHeader title="Dashboard" />;
+}`,
+    component: 'pageHeader',
+    tags: ['composed', 'header', 'basic'],
+  },
+  {
+    id: 'page-header-actions',
+    title: 'PageHeader with Actions',
+    description: 'Page header with action buttons in the top-right.',
+    code: `import { PageHeader, Button } from '@xala/ds';
+
+export function Example() {
+  return (
+    <PageHeader
+      title="Listings"
+      subtitle="Manage your venue listings"
+      actions={
+        <>
+          <Button variant="secondary">Export</Button>
+          <Button variant="primary">Create Rental Object</Button>
+        </>
+      }
+    />
+  );
+}`,
+    component: 'pageHeader',
+    tags: ['composed', 'header', 'actions'],
+  },
+  {
+    id: 'page-header-breadcrumb',
+    title: 'PageHeader with Breadcrumb',
+    description: 'Page header with breadcrumb navigation for hierarchical pages.',
+    code: `import { PageHeader } from '@xala/ds';
+
+export function Example() {
+  return (
+    <PageHeader
+      title="Edit Rental Object"
+      breadcrumb={[
+        { label: 'Home', href: '/' },
+        { label: 'Rental Objects', href: '/rental-objects' },
+        { label: 'Edit' }
+      ]}
+    />
+  );
+}`,
+    component: 'pageHeader',
+    tags: ['composed', 'header', 'breadcrumb'],
+  },
+
+  // ListingCard Examples (Blocks) - NOTE: ListingCard is a legacy name for displaying rental objects
+  {
+    id: 'listing-card-basic',
+    title: 'Basic ListingCard',
+    description: 'Simple rental object card with essential information.',
+    code: `import { ListingCard } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ListingCard
+      id="rental-object-1"
+      name="Storsal A"
+      type="Møterom"
+      location="Oslo sentrum"
+      description="Et romslig møterom perfekt for mindre møter og workshops."
+      image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800"
+    />
+  );
+}`,
+    component: 'listingCard',
+    tags: ['blocks', 'card', 'rental-object'],
+  },
+  {
+    id: 'listing-card-facilities',
+    title: 'ListingCard with Facilities',
+    description: 'Rental object card showing facilities and capacity information.',
+    code: `import { ListingCard } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ListingCard
+      id="rental-object-2"
+      name="Konferanserom Bergen"
+      type="Konferansesal"
+      listingType="SPACE"
+      location="Bergen, Vestland"
+      description="Moderne konferanserom med alle fasiliteter du trenger."
+      image="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800"
+      facilities={['WiFi', 'Projektor', 'Whiteboard', 'Videokonferanse']}
+      capacity={20}
+      showFacilities={true}
+      showCapacity={true}
+      showListingType={true}
+    />
+  );
+}`,
+    component: 'listingCard',
+    tags: ['blocks', 'card', 'facilities'],
+  },
+  {
+    id: 'listing-card-pricing',
+    title: 'ListingCard with Pricing',
+    description: 'Rental object card displaying price and currency information.',
+    code: `import { ListingCard } from '@xala/ds';
+
+export function Example() {
+  return (
+    <ListingCard
+      id="rental-object-3"
+      name="Studio Lydopptak"
+      type="Lydstudio"
+      listingType="RESOURCE"
+      location="Trondheim"
+      description="Profesjonelt lydstudio med førsteklasses utstyr."
+      image="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800"
+      price={500}
+      priceUnit="time"
+      currency="kr"
+      facilities={['Mikrofoner', 'Miksebord', 'Lydisolert']}
+      capacity={4}
+      showPrice={true}
+      showFacilities={true}
+      showCapacity={true}
+    />
+  );
+}`,
+    component: 'listingCard',
+    tags: ['blocks', 'card', 'pricing'],
+  },
+
+  // BookingFormModal Examples (Blocks)
+  {
+    id: 'booking-form-modal-basic',
+    title: 'Basic BookingFormModal',
+    description: 'Simple booking form modal with date and time selection.',
+    code: `import { BookingFormModal } from '@xala/ds';
+import { useState } from 'react';
+
+export function Example() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Book Now</button>
+      <BookingFormModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        listingName="Konferanserom A"
+        onSubmit={(data) => {
+          console.log('Booking submitted:', data);
+          setIsOpen(false);
+        }}
+      />
+    </>
+  );
+}`,
+    component: 'bookingFormModal',
+    tags: ['blocks', 'modal', 'booking'],
+  },
+  {
+    id: 'booking-form-modal-pricing',
+    title: 'BookingFormModal with Pricing',
+    description: 'Booking form modal showing pricing calculation.',
+    code: `import { BookingFormModal } from '@xala/ds';
+import { useState } from 'react';
+
+export function Example() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Book with Pricing</button>
+      <BookingFormModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        listingName="Studio B"
+        price={500}
+        priceUnit="time"
+        currency="kr"
+        showPricing={true}
+        onSubmit={(data) => {
+          console.log('Booking submitted:', data);
+          setIsOpen(false);
+        }}
+      />
+    </>
+  );
+}`,
+    component: 'bookingFormModal',
+    tags: ['blocks', 'modal', 'pricing'],
+  },
+  {
+    id: 'booking-form-modal-services',
+    title: 'BookingFormModal with Additional Services',
+    description: 'Booking form with optional additional services selection.',
+    code: `import { BookingFormModal } from '@xala/ds';
+import { useState } from 'react';
+
+export function Example() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const additionalServices = [
+    { id: 'catering', name: 'Catering', price: 200 },
+    { id: 'av-equipment', name: 'AV Equipment', price: 150 },
+    { id: 'cleaning', name: 'Extra Cleaning', price: 100 },
+  ];
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Book with Services</button>
+      <BookingFormModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        listingName="Event Hall"
+        price={1500}
+        priceUnit="day"
+        currency="kr"
+        additionalServices={additionalServices}
+        showPricing={true}
+        onSubmit={(data) => {
+          console.log('Booking submitted:', data);
+          setIsOpen(false);
+        }}
+      />
+    </>
+  );
+}`,
+    component: 'bookingFormModal',
+    tags: ['blocks', 'modal', 'services'],
+  },
+
+  // AppShell Examples (Shells)
+  {
+    id: 'app-shell-basic',
+    title: 'Basic AppShell',
+    description: 'Simple application shell with just content area.',
+    code: `import { AppShell, Heading, Paragraph } from '@xala/ds';
+
+export function Example() {
+  return (
+    <AppShell>
+      <Heading size="lg">Welcome</Heading>
+      <Paragraph>This is your main content area.</Paragraph>
+    </AppShell>
+  );
+}`,
+    component: 'appShell',
+    tags: ['shells', 'layout', 'basic'],
+  },
+  {
+    id: 'app-shell-header',
+    title: 'AppShell with Header',
+    description: 'Application shell with header component.',
+    code: `import { AppShell, AppHeader, ContentLayout, Heading } from '@xala/ds';
+
+export function Example() {
+  return (
+    <AppShell
+      header={
+        <AppHeader
+          logo={<img src="/logo.svg" alt="Logo" />}
+          title="My Application"
+        />
+      }
+    >
+      <ContentLayout>
+        <Heading size="lg">Dashboard</Heading>
+      </ContentLayout>
+    </AppShell>
+  );
+}`,
+    component: 'appShell',
+    tags: ['shells', 'layout', 'header'],
+  },
+  {
+    id: 'app-shell-complete',
+    title: 'Complete AppShell',
+    description: 'Full application shell with header, footer, and content.',
+    code: `import { AppShell, AppHeader, ContentLayout, PageHeader, Heading, Paragraph } from '@xala/ds';
+
+export function Example() {
+  return (
+    <AppShell
+      header={
+        <AppHeader
+          logo={<img src="/logo.svg" alt="Logo" />}
+          title="My Application"
+        />
+      }
+      footer={
+        <footer style={{ padding: '24px', textAlign: 'center' }}>
+          <Paragraph size="sm">© 2024 My Company</Paragraph>
+        </footer>
+      }
+    >
+      <ContentLayout>
+        <PageHeader title="Dashboard" subtitle="Welcome back!" />
+        <Heading size="md">Your Content</Heading>
+      </ContentLayout>
+    </AppShell>
+  );
+}`,
+    component: 'appShell',
+    tags: ['shells', 'layout', 'complete'],
+  },
 ];
 
 export function getAllExamples(): CodeExample[] {

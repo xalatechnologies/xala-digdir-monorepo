@@ -19,6 +19,7 @@ export function useNotifications(params?: NotificationQueryParams) {
   return useQuery({
     queryKey: queryKeys.notifications.list(params),
     queryFn: () => notificationService.getAll(params),
+    staleTime: 60 * 1000, // 1 minute
   });
 }
 
@@ -30,6 +31,7 @@ export function useMyNotifications(params?: Omit<NotificationQueryParams, 'userI
   return useQuery({
     queryKey: queryKeys.notifications.my(params),
     queryFn: () => notificationService.getMyNotifications(params),
+    staleTime: 60 * 1000, // 1 minute
   });
 }
 
@@ -41,6 +43,7 @@ export function useNotificationUnreadCount() {
   return useQuery({
     queryKey: queryKeys.notifications.unreadCount(),
     queryFn: () => notificationService.getUnreadCount(),
+    staleTime: 60 * 1000, // 1 minute
   });
 }
 
@@ -51,6 +54,7 @@ export function useNotificationTemplates() {
   return useQuery({
     queryKey: [...queryKeys.notifications.all, 'templates'] as const,
     queryFn: () => notificationService.getTemplates(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

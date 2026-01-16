@@ -22,7 +22,7 @@ export type InvoiceGenerationSource = 'manual' | 'booking' | 'batch';
 export interface InvoiceLineItem {
   id: string;
   bookingId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   listingName?: string;
   description: string;
   quantity: number;
@@ -72,7 +72,7 @@ export interface GenerateInvoicesFromBookingsDTO {
   startDate?: string;
   endDate?: string;
   organizationIds?: string[];
-  listingIds?: string[];
+  rentalObjectIds?: string[];
   groupByOrganization?: boolean;
 }
 

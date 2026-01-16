@@ -1,17 +1,20 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-
-const pageTitles: Record<string, string> = {
-  '/': 'Dashboard',
-  '/bookings': 'Bookinger',
-  '/reports': 'Rapporter',
-  '/users': 'Brukere',
-  '/settings': 'Innstillinger',
-};
+import { useT } from '@xala/i18n';
 
 export function AppLayout() {
+  const t = useT();
   const location = useLocation();
+  
+  const pageTitles: Record<string, string> = {
+    '/': 'Dashboard',
+    '/bookings': 'Bookinger',
+    '/reports': 'Rapporter',
+    '/users': 'Brukere',
+    '/settings': t('ui.settings') || 'Innstillinger',
+  };
+  
   const title = pageTitles[location.pathname] ?? '';
 
   return (

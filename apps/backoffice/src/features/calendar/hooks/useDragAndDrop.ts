@@ -4,6 +4,7 @@
  */
 
 import { useState, useCallback, useMemo, useRef } from 'react';
+import { useT } from '@xala/i18n';
 
 interface DragPosition {
   x: number;
@@ -56,6 +57,7 @@ interface DragPreview {
 }
 
 export function useDragAndDrop(options: DragAndDropOptions = {}) {
+  const t = useT();
   const {
     startHour = 7,
     endHour = 21,

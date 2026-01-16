@@ -47,7 +47,7 @@ export class UserController {
    */
   @Get('/me')
   async getCurrentUser(request: TenantRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'];
+    const userId = (request as any).userId;
     if (!userId) {
       reply.code(401);
       return { error: 'Not authenticated' };

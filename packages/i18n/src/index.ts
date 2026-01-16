@@ -3,7 +3,19 @@ export { I18nProvider, I18nContext } from './context';
 export type { I18nProviderProps } from './context';
 
 // Hooks
-export { useI18n, useT, useLocale } from './hooks';
+export { useI18n, useT, useLocale, useFormatRelativeTime, useFormatDuration } from './hooks';
+
+// Formatters (Intl-based, locale-aware)
+export {
+  formatDate,
+  formatTime,
+  formatDateTime,
+  formatNumber,
+  formatCurrency,
+  formatPercent,
+  formatRelativeTime,
+  formatDuration,
+} from './formatters';
 
 // Types
 export type {
@@ -13,7 +25,22 @@ export type {
   TranslationFunction,
   TranslationsRegistry,
   I18nContextValue,
+  FormatRelativeTimeOptions,
+  FormatDurationOptions,
+  FormatRelativeTimeFunction,
+  FormatDurationFunction,
 } from './types';
+
+// Key Registry (for type-safe access and validation)
+export {
+  isValidKey,
+  getKeysForNamespace,
+  getAllNamespaces,
+  getTranslationStats,
+  ALL_TRANSLATION_KEYS,
+  TRANSLATION_KEY_SET,
+} from './keys';
+export type { TranslationKeyPath, TranslationStats } from './keys';
 
 // Translations (for extension/override)
 export { translations, nb, en } from './locales';

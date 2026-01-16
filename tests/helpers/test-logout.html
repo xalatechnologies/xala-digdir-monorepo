@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Logout - Session Cookie Clearing</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #0052a3;
+    }
+    button.secondary {
+      background: #666;
+    }
+    button.secondary:hover {
+      background: #444;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+    }
+    .success {
+      background: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+    }
+    .info {
+      background: #d1ecf1;
+      border-color: #bee5eb;
+      color: #0c5460;
+    }
+    h1 {
+      margin-top: 0;
+      color: #333;
+    }
+    .step {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-left: 4px solid #0066cc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Session Logout Test</h1>
+    <p>This page tests if the logout endpoint properly clears the HTTP-only session cookie.</p>
+
+    <div class="step">
+      <h3>Step 1: Check Current Session</h3>
+      <button onclick="checkSession()">Check Session</button>
+      <div id="session-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="step">
+      <h3>Step 2: Logout (Clear Cookie)</h3>
+      <button onclick="performLogout()">Logout</button>
+      <div id="logout-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="step">
+      <h3>Step 3: Verify Session Cleared</h3>
+      <button onclick="verifyCleared()">Verify Session Cleared</button>
+      <div id="verify-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="step">
+      <h3>All Cookies (visible to JavaScript)</h3>
+      <button onclick="showCookies()" class="secondary">Show Cookies</button>
+      <div id="cookies-result" class="result" style="display: none;"></div>
+      <p style="margin-top: 10px; font-size: 14px; color: #666;">
+        Note: HTTP-only cookies (like session cookies) are NOT visible here for security.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://api.digilist.no';
+
+    async function checkSession() {
+      const resultDiv = document.getElementById('session-result');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Checking session...';
+      resultDiv.className = 'result info';
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/session`, {
+          method: 'GET',
+          credentials: 'include', // Important: Send cookies
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = `✅ Session Active\n\nStatus: ${response.status}\nUser: ${data.data?.user?.name || 'Unknown'}\nEmail: ${data.data?.user?.email || 'Unknown'}\nRole: ${data.data?.user?.role || 'Unknown'}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = `❌ No Active Session\n\nStatus: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `❌ Error: ${error.message}\n\nMake sure you're running this from the same domain or CORS is configured.`;
+      }
+    }
+
+    async function performLogout() {
+      const resultDiv = document.getElementById('logout-result');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Logging out...';
+      resultDiv.className = 'result info';
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/logout`, {
+          method: 'POST',
+          credentials: 'include', // Important: Send cookies
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = `✅ Logout Successful\n\nStatus: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}\n\nSession cookie should now be cleared by the server.`;
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = `❌ Logout Failed\n\nStatus: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+      }
+    }
+
+    async function verifyCleared() {
+      const resultDiv = document.getElementById('verify-result');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Verifying session is cleared...';
+      resultDiv.className = 'result info';
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/session`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = `✅ Session Successfully Cleared!\n\nStatus: ${response.status} (Unauthorized)\nThe session cookie has been properly cleared.\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        } else if (response.ok) {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = `❌ Session Still Active!\n\nStatus: ${response.status}\nThe logout did NOT clear the session cookie properly.\n\nUser: ${data.data?.user?.name || 'Unknown'}\nEmail: ${data.data?.user?.email || 'Unknown'}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultDiv.className = 'result';
+          resultDiv.textContent = `Status: ${response.status}\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+      }
+    }
+
+    function showCookies() {
+      const resultDiv = document.getElementById('cookies-result');
+      resultDiv.style.display = 'block';
+
+      const cookies = document.cookie;
+
+      if (cookies) {
+        const cookieList = cookies.split(';').map(c => c.trim()).join('\n');
+        resultDiv.className = 'result';
+        resultDiv.textContent = `Cookies visible to JavaScript:\n\n${cookieList}\n\n⚠️ Note: Session cookies are HTTP-only and will NOT appear here.`;
+      } else {
+        resultDiv.className = 'result info';
+        resultDiv.textContent = 'No cookies visible to JavaScript.\n\n⚠️ Session cookies are HTTP-only and will NOT appear here for security reasons.';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -6,9 +6,10 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon } from '@xala/ds';
-import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus } from '../providers';
+import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon, AlertTriangleIcon } from '@xala/ds';
+import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus, useRealtimeSlotAvailability } from '../providers';
 import type { RealtimeEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface Toast {
   id: string;
@@ -19,6 +20,7 @@ interface Toast {
 }
 
 export function RealtimeToast(): React.ReactElement {
+  const t = useT();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { isConnected, status } = useRealtimeStatus();
 
@@ -56,35 +58,35 @@ export function RealtimeToast(): React.ReactElement {
       case 'created':
         addToast({
           type: 'success',
-          title: 'Ny booking',
+          title: t('ny.booking'),
           message: data.listingName ? `Booking opprettet for ${data.listingName}` : 'En ny booking ble opprettet',
         });
         break;
       case 'confirmed':
         addToast({
           type: 'success',
-          title: 'Booking bekreftet',
-          message: data.listingName ? `Booking for ${data.listingName} er bekreftet` : 'Booking bekreftet',
+          title: t('booking.bekreftet'),
+          message: data.listingName ? `Booking for ${data.listingName} er bekreftet` : t('booking.bekreftet'),
         });
         break;
       case 'cancelled':
         addToast({
           type: 'warning',
-          title: 'Booking kansellert',
-          message: data.listingName ? `Booking for ${data.listingName} er kansellert` : 'Booking kansellert',
+          title: t('booking.kansellert'),
+          message: data.listingName ? `Booking for ${data.listingName} er kansellert` : t('booking.kansellert'),
         });
         break;
       case 'updated':
         addToast({
           type: 'info',
-          title: 'Booking oppdatert',
-          message: data.listingName ? `Booking for ${data.listingName} er oppdatert` : 'Booking oppdatert',
+          title: t('booking.oppdatert'),
+          message: data.listingName ? `Booking for ${data.listingName} er oppdatert` : t('booking.oppdatert'),
         });
         break;
       default:
         addToast({
           type: 'info',
-          title: 'Booking-hendelse',
+          title: t('bookinghendelse'),
           message: event.message || 'En booking-hendelse har skjedd',
         });
     }
@@ -102,16 +104,76 @@ export function RealtimeToast(): React.ReactElement {
     });
   }, [addToast]);
 
+  // Handle slot unavailability events
+  const handleSlotUnavailable = useCallback((event: RealtimeEvent) => {
+    const data = event.data as {
+      action?: string;
+      listingName?: string;
+      startTime?: string;
+      endTime?: string;
+      date?: string;
+    } | undefined;
+
+    // Format time and date for better user experience
+    const formatTime = (time?: string) => {
+      if (!time) return '';
+      return time.substring(0, 5); // HH:MM format
+    };
+
+    const formatDate = (dateStr?: string) => {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const targetDate = new Date(date);
+      targetDate.setHours(0, 0, 0, 0);
+
+      if (targetDate.getTime() === today.getTime()) {
+        return 'i dag';
+      }
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      if (targetDate.getTime() === tomorrow.getTime()) {
+        return 'i morgen';
+      }
+
+      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+      return date.toLocaleDateString('nb-NO', options);
+    };
+
+    const timeSlot =
+      data?.startTime && data?.endTime
+        ? `${formatTime(data.startTime)}-${formatTime(data.endTime)}`
+        : '';
+    const dateInfo = formatDate(data?.date);
+    const listingName = data?.listingName || 'et lokale';
+
+    let message = `${listingName}`;
+    if (dateInfo && timeSlot) {
+      message += ` (${dateInfo}, ${timeSlot})`;
+    } else if (timeSlot) {
+      message += ` (${timeSlot})`;
+    }
+
+    addToast({
+      type: 'warning',
+      title: t('status.available'),
+      message: message,
+    });
+  }, [addToast]);
+
   // Subscribe to realtime events
   useRealtimeBooking(handleBookingEvent);
   useRealtimeNotification(handleNotificationEvent);
+  useRealtimeSlotAvailability(undefined, handleSlotUnavailable);
 
   // Show connection status toast on disconnect
   useEffect(() => {
     if (status === 'error') {
       addToast({
         type: 'error',
-        title: 'Tilkobling tapt',
+        title: t('tilkobling.tapt'),
         message: 'Sanntidsoppdateringer er utilgjengelig',
       });
     }
@@ -123,6 +185,8 @@ export function RealtimeToast(): React.ReactElement {
         return <CheckCircleIcon size={20} />;
       case 'error':
         return <XCircleIcon size={20} />;
+      case 'warning':
+        return <AlertTriangleIcon size={20} />;
       default:
         return <InfoIcon size={20} />;
     }
@@ -162,7 +226,7 @@ export function RealtimeToast(): React.ReactElement {
   return (
     <div
       role="region"
-      aria-label="Varsler"
+      aria-label={t('varsler')}
       aria-live="polite"
       aria-atomic="false"
       style={{
@@ -234,7 +298,7 @@ export function RealtimeToast(): React.ReactElement {
                 color: 'var(--ds-color-neutral-text-subtle)',
                 flexShrink: 0,
               }}
-              aria-label="Lukk varsel"
+              aria-label={t('lukk.varsel')}
             >
               <CloseIcon size={16} />
             </button>

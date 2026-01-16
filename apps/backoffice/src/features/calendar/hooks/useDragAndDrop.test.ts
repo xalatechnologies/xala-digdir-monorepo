@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { useDragAndDrop } from './useDragAndDrop';
+import { useT } from '@xala/i18n';
 
 describe('useDragAndDrop', () => {
   it('should initialize with correct default state', () => {

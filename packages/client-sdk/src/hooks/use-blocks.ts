@@ -17,7 +17,7 @@ import type {
 export const blockKeys = {
   all: ['blocks'] as const,
   lists: () => [...blockKeys.all, 'list'] as const,
-  list: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
+  list: (params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) =>
     [...blockKeys.lists(), params] as const,
   details: () => [...blockKeys.all, 'detail'] as const,
   detail: (id: string) => [...blockKeys.details(), id] as const,
@@ -26,9 +26,9 @@ export const blockKeys = {
 
 // Placeholder service (to be replaced with actual block service)
 const blockService = {
-  async getAll(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+  async getAll(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
     const queryParams = new URLSearchParams();
-    if (params?.listingId) queryParams.set('listingId', params.listingId);
+    if (params?.rentalObjectId) queryParams.set('rentalObjectId', params.rentalObjectId);
     if (params?.startDate) queryParams.set('startDate', params.startDate);
     if (params?.endDate) queryParams.set('endDate', params.endDate);
 
@@ -54,7 +54,7 @@ const blockService = {
 
   async checkConflicts(params: ConflictCheckParams) {
     const queryParams = new URLSearchParams({
-      listingId: params.listingId,
+      rentalObjectId: params.rentalObjectId,
       startTime: params.startTime,
       endTime: params.endTime,
     });
@@ -75,7 +75,7 @@ const blockService = {
 /**
  * Fetch blocks with optional filtering
  */
-export function useBlocks(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+export function useBlocks(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: blockKeys.list(params),
     queryFn: () => blockService.getAll(params),
@@ -148,7 +148,7 @@ export function useCheckConflicts(
   params: ConflictCheckParams,
   options?: { enabled?: boolean }
 ) {
-  const isEnabled = options?.enabled ?? (!!params?.listingId && !!params?.startTime && !!params?.endTime);
+  const isEnabled = options?.enabled ?? (!!params?.rentalObjectId && !!params?.startTime && !!params?.endTime);
 
   return useQuery({
     queryKey: blockKeys.conflicts(params),

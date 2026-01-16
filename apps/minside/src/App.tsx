@@ -22,6 +22,7 @@ import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoic
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
+import { PrivacyPage } from './routes/privacy';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -137,6 +138,7 @@ function AppWithTheme() {
               <Route path="settings" element={<SettingsPage />} />
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
               <Route path="help" element={<HelpPage />} />
 
               {/* Organization portal routes */}

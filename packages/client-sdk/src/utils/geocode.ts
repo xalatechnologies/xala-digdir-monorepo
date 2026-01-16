@@ -1,20 +1,20 @@
 /**
  * Mapbox Forward Geocoding Utility
  *
- * Converts listing addresses to latitude/longitude coordinates using Mapbox Geocoding API.
+ * Converts rental object addresses to latitude/longitude coordinates using Mapbox Geocoding API.
  * Framework-agnostic, pure TypeScript utility with no UI dependencies.
  *
  * @example
  * ```typescript
- * const result = await geocodeListingAddress({
+ * const result = await geocodeAddress({
  *   street: 'Storgata 1',
  *   postalCode: '0155',
  *   city: 'Oslo'
  * });
  *
  * if ('latitude' in result) {
- *   listing.latitude = result.latitude;
- *   listing.longitude = result.longitude;
+ *   rentalObject.latitude = result.latitude;
+ *   rentalObject.longitude = result.longitude;
  * }
  * ```
  */
@@ -26,13 +26,16 @@
 /**
  * Address input for geocoding
  */
-export interface ListingAddress {
+export interface RentalObjectAddress {
   street?: string;
   postalCode?: string;
   city?: string;
   municipality?: string;
   country?: string; // default: "Norway"
 }
+
+/** @deprecated Use RentalObjectAddress instead */
+export type ListingAddress = RentalObjectAddress;
 
 /**
  * Successful geocoding result
@@ -126,9 +129,50 @@ export function clearGeocodeCache(): void {
 /**
  * Get a cached geocode result without making an API call
  */
-export function getCachedGeocode(address: ListingAddress): GeocodeResult | null {
+export function getCachedGeocode(address: RentalObjectAddress): GeocodeResult | null {
   const key = buildCacheKey(address);
   return getCached(key);
+}
+
+/**
+ * Get a cached geocode result from a string address without making an API call
+ *
+ * This adapter function allows looking up cached results using a plain string address
+ * instead of a structured RentalObjectAddress object. Useful for hooks that work with
+ * string addresses.
+ *
+ * @param addressString - The address string (e.g., "Storgata 1, 0155 Oslo")
+ * @param country - Optional country name (defaults to "Norway")
+ * @returns Cached GeocodeResult if found, null if not in cache or cache expired
+ *
+ * @example
+ * ```typescript
+ * const cached = getCachedGeocodeFromString("Storgata 1, 0155 Oslo", "Norway");
+ * if (cached) {
+ *   console.log("Using cached coordinates:", cached.latitude, cached.longitude);
+ * }
+ * ```
+ */
+export function getCachedGeocodeFromString(
+  addressString: string,
+  country?: string
+): GeocodeResult | null {
+  if (!addressString?.trim()) return null;
+
+  // Normalize the address string
+  const normalizedAddress = addressString.trim();
+
+  // Add country if not already present in the address string
+  const countryName = country || 'Norway';
+  const addressWithCountry = normalizedAddress.toLowerCase().includes(countryName.toLowerCase())
+    ? normalizedAddress
+    : `${normalizedAddress}, ${countryName}`;
+
+  // Convert to lowercase to match buildCacheKey behavior
+  const cacheKey = addressWithCountry.toLowerCase();
+
+  // Look up in cache using the existing getCached function
+  return getCached(cacheKey);
 }
 
 // =============================================================================
@@ -139,7 +183,7 @@ export function getCachedGeocode(address: ListingAddress): GeocodeResult | null 
  * Build a normalized address string for geocoding
  * Skips empty/undefined fields and joins with commas
  */
-export function buildAddressString(address: ListingAddress): string {
+export function buildAddressString(address: RentalObjectAddress): string {
   const parts: string[] = [];
 
   // Street address
@@ -174,7 +218,7 @@ export function buildAddressString(address: ListingAddress): string {
 /**
  * Build cache key from address
  */
-function buildCacheKey(address: ListingAddress): string {
+function buildCacheKey(address: RentalObjectAddress): string {
   return buildAddressString(address).toLowerCase();
 }
 
@@ -249,14 +293,14 @@ interface MapboxResponse {
 }
 
 /**
- * Geocode a listing address using Mapbox Forward Geocoding API
+ * Geocode a rental object address using Mapbox Forward Geocoding API
  *
  * @param address - The address to geocode
  * @param config - Geocoding configuration
  * @returns Promise resolving to GeocodeResult or GeocodeError
  */
-export async function geocodeListingAddress(
-  address: ListingAddress,
+export async function geocodeRentalObjectAddress(
+  address: RentalObjectAddress,
   config: GeocodeConfig
 ): Promise<GeocodeResult | GeocodeError> {
   // Validate config
@@ -379,7 +423,7 @@ export async function geocodeListingAddress(
  * Result for batch geocoding operations
  */
 export interface BatchGeocodeResult {
-  address: ListingAddress;
+  address: RentalObjectAddress;
   result: GeocodeResult | GeocodeError;
 }
 
@@ -392,7 +436,7 @@ export interface BatchGeocodeResult {
  * @returns Array of results in same order as input
  */
 export async function geocodeAddresses(
-  addresses: ListingAddress[],
+  addresses: RentalObjectAddress[],
   config: GeocodeConfig,
   options: {
     /** Concurrent requests (default: 3) */
@@ -411,7 +455,7 @@ export async function geocodeAddresses(
     const batchResults = await Promise.all(
       batch.map(async (address) => ({
         address,
-        result: await geocodeListingAddress(address, config),
+        result: await geocodeRentalObjectAddress(address, config),
       }))
     );
 
@@ -425,6 +469,9 @@ export async function geocodeAddresses(
 
   return results;
 }
+
+/** @deprecated Use geocodeRentalObjectAddress instead */
+export const geocodeListingAddress = geocodeRentalObjectAddress;
 
 // =============================================================================
 // Type Guards
@@ -452,7 +499,7 @@ export function isGeocodeError(result: GeocodeResult | GeocodeError): result is 
 export type GeocodedLocation = GeocodeResult;
 
 /**
- * @deprecated Use geocodeListingAddress instead
+ * @deprecated Use geocodeRentalObjectAddress instead
  * Legacy function that accepts a string address for backwards compatibility
  */
 export async function geocodeAddress(
@@ -465,7 +512,7 @@ export async function geocodeAddress(
   // Parse string into address components (best effort)
   const parts = addressString.split(',').map(p => p.trim());
 
-  const address: ListingAddress = {};
+  const address: RentalObjectAddress = {};
   if (parts.length >= 1) address.street = parts[0];
   if (parts.length >= 2) {
     // Try to split postal code and city
@@ -480,7 +527,7 @@ export async function geocodeAddress(
   }
   if (parts.length >= 3) address.municipality = parts[2];
 
-  const result = await geocodeListingAddress(address, {
+  const result = await geocodeRentalObjectAddress(address, {
     mapboxToken: config.mapboxToken,
     country: config.country || 'no',
     language: config.language || 'nb',

@@ -4,30 +4,34 @@
  * Business-logic components composed from primitives and composed components
  */
 
-export { ListingCard } from './ListingCard';
-export type { ListingCardProps, ListingCardVariant } from './ListingCard';
+export { RentalObjectCard } from './RentalObjectCard';
+export type { RentalObjectCardProps, RentalObjectCardVariant } from './RentalObjectCard';
 
-export { ListingListItem } from './ListingListItem';
-export type { ListingListItemProps } from './ListingListItem';
+export { RentalObjectListItem } from './RentalObjectListItem';
+export type { RentalObjectListItemProps } from './RentalObjectListItem';
 
-export { ListingGrid } from './ListingGrid';
-export type { ListingGridProps } from './ListingGrid';
+export { RentalObjectGrid } from './RentalObjectGrid';
+export type { RentalObjectGridProps } from './RentalObjectGrid';
 
-export { ListingToolbar } from './ListingToolbar';
-export type { ListingToolbarProps, ViewMode } from './ListingToolbar';
+export { RentalObjectToolbar } from './RentalObjectToolbar';
+export type { RentalObjectToolbarProps, ViewMode } from './RentalObjectToolbar';
 
-export { ListingMap } from './ListingMap';
-export type { ListingMapProps, MapListing } from './ListingMap';
+export { RentalObjectMap } from './RentalObjectMap';
+export type { RentalObjectMapProps, MapRentalObject } from './RentalObjectMap';
 
-export { ListingTableView } from './ListingTableView';
-export type { ListingTableViewProps } from './ListingTableView';
+export { RentalObjectTableView } from './RentalObjectTableView';
+export type { RentalObjectTableViewProps } from './RentalObjectTableView';
+
+// TODO: Create RentalObjectsFilterBar component or remove export
+// export { RentalObjectsFilterBar } from './RentalObjectsFilterBar';
+// export type { RentalObjectsFilterBarProps } from './RentalObjectsFilterBar';
 
 // Listing Detail Components
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';
 
-export { ListingDetailHeader } from './ListingDetailHeader';
-export type { ListingDetailHeaderProps } from './ListingDetailHeader';
+export { RentalObjectDetailHeader } from './RentalObjectDetailHeader';
+export type { RentalObjectDetailHeaderProps } from './RentalObjectDetailHeader';
 
 export { CapacityCard } from './CapacityCard';
 export type { CapacityCardProps } from './CapacityCard';
@@ -49,6 +53,9 @@ export type { OpeningHoursCardProps } from './OpeningHoursCard';
 
 export { AvailabilityCalendar } from './AvailabilityCalendar';
 export type { AvailabilityCalendarProps } from './AvailabilityCalendar';
+
+export { RentalObjectAvailabilityCalendar } from './RentalObjectAvailabilityCalendar';
+export type { RentalObjectAvailabilityCalendarProps } from './RentalObjectAvailabilityCalendar';
 
 export { GuidelinesTab } from './GuidelinesTab';
 export type { GuidelinesTabProps } from './GuidelinesTab';
@@ -76,8 +83,9 @@ export { BookingSection } from './BookingSection';
 export type { BookingSectionProps } from './BookingSection';
 
 // Unified Booking Engine - Dynamic booking system for all listing types
-export { UnifiedBookingEngine } from './UnifiedBookingEngine';
-export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
+// TODO: Create UnifiedBookingEngine component or remove export
+// export { UnifiedBookingEngine } from './UnifiedBookingEngine';
+// export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
 
 // Key Facts Row - Display key listing information
 export { KeyFactsRow } from './KeyFactsRow';
@@ -90,9 +98,9 @@ export type { FavoriteButtonProps } from './FavoriteButton';
 export { ShareButton, ShareSheet } from './ShareButton';
 export type { ShareButtonProps, ShareSheetProps, ShareData, SharePlatform } from './ShareButton';
 
-// Tabbed Navigation for Listing Details
-export { ListingTabs, TabContent, TabEmptyState } from './ListingTabs';
-export type { ListingTabsProps, TabConfig, TabContentProps, TabEmptyStateProps } from './ListingTabs';
+// Tabbed Navigation for Rental Object Details
+export { RentalObjectTabs, TabContent, TabEmptyState } from './RentalObjectTabs';
+export type { RentalObjectTabsProps, TabConfig, TabContentProps, TabEmptyStateProps } from './RentalObjectTabs';
 
 // Auth Gating Modal
 export { RequireAuthModal } from './RequireAuthModal';
@@ -136,13 +144,22 @@ export {
   StatusTag,
   BookingStatusBadge,
   PaymentStatusBadge,
-  ListingStatusBadge,
+  RentalObjectStatusBadge,
   RequestStatusBadge,
   SeasonalLeaseStatusBadge,
   OrganizationStatusBadge,
   UserStatusBadge,
   GenericStatusBadge,
   statusConfigs,
+  // V3 Model Badges
+  CategoryBadge,
+  TimeModeBadge,
+  FeatureBadge,
+  InventoryBadge,
+  CapacityBadge,
+  BlackoutIndicator,
+  RequiresApprovalBadge,
+  RuleSetBadge,
 } from './StatusBadges';
 export type {
   StatusTagProps,
@@ -152,8 +169,8 @@ export type {
   BookingStatusBadgeProps,
   PaymentStatusType,
   PaymentStatusBadgeProps,
-  ListingStatusType,
-  ListingStatusBadgeProps,
+  RentalObjectStatusType,
+  RentalObjectStatusBadgeProps,
   RequestStatusType,
   RequestStatusBadgeProps,
   SeasonalLeaseStatusType,
@@ -163,6 +180,18 @@ export type {
   UserStatusType,
   UserStatusBadgeProps,
   GenericStatusBadgeProps,
+  // V3 Model Badge Types
+  CategoryKey,
+  CategoryBadgeProps,
+  TimeMode,
+  TimeModeBadgeProps,
+  FeatureKey,
+  FeatureBadgeProps,
+  InventoryBadgeProps,
+  CapacityBadgeProps,
+  BlackoutIndicatorProps,
+  RequiresApprovalBadgeProps,
+  RuleSetBadgeProps,
 } from './StatusBadges';
 
 // Chart Components

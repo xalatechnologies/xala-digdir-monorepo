@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -164,6 +165,16 @@ export function UserPreferencesPage() {
               />
             </div>
           ))}
+        </div>
+        <div style={{ marginTop: 'var(--ds-spacing-4)', paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+          <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            For mer detaljert personvernstyring, inkludert GDPR-rettigheter som dataeksport og sletting av konto, besøk vår personvernsportal.
+          </Paragraph>
+          <Link to="/privacy">
+            <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
+              Åpne personvernsportal
+            </Button>
+          </Link>
         </div>
       </Card>
 

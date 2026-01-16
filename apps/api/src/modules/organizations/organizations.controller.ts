@@ -7,6 +7,8 @@ import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, sql, count, like, desc } from 'drizzle-orm';
 import { organizations, users } from '../../database/schema/index';
+import { getOrganizationSetupService } from './organization-setup.service';
+import { getAuditService } from '../../core/audit/audit.service';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -106,9 +108,13 @@ export class OrganizationsController {
   @Post()
   async create(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
+    const setupService = getOrganizationSetupService();
+    const auditService = getAuditService();
     const tenantId = request.tenantId || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+    const userId = request.userId;
     const body = request.body as any;
 
+    // Create organization
     const result = await db
       .insert(organizations)
       .values({
@@ -121,8 +127,31 @@ export class OrganizationsController {
       })
       .returning();
 
+    const organization = result[0];
+
+    // Log organization creation
+    await auditService.logCreate('organization', organization.id, {
+      tenantId,
+      userId: userId ?? undefined,
+      metadata: {
+        name: organization.name,
+        type: organization.type,
+        actorType: body.actorType || 'organization',
+      },
+      ipAddress: (request as any).ip,
+      userAgent: (request as any).headers?.['user-agent'],
+    });
+
+    // Initialize organization with default roles and settings
+    await setupService.initializeOrganization({
+      organizationId: organization.id,
+      tenantId,
+      actorType: body.actorType || 'organization',
+      branding: body.branding,
+    });
+
     reply.code(201);
-    return { data: result[0] };
+    return { data: organization };
   }
 
   @Put('/:id')
@@ -150,6 +179,89 @@ export class OrganizationsController {
     }
 
     return { data: result[0] };
+  }
+
+  @Get('/:id/branding')
+  async getBranding(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const { id } = request.params as any;
+
+    const result = await db
+      .select({
+        settings: organizations.settings,
+      })
+      .from(organizations)
+      .where(eq(organizations.id, id));
+
+    if (!result.length) {
+      reply.code(404);
+      return { error: 'Organization not found' };
+    }
+
+    const branding = (result[0].settings as any)?.branding || {
+      logo: undefined,
+      primaryColor: undefined,
+      secondaryColor: undefined,
+      favicon: undefined,
+    };
+
+    return { data: branding };
+  }
+
+  @Put('/:id/branding')
+  async updateBranding(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const auditService = getAuditService();
+    const { id } = request.params as any;
+    const body = request.body as any;
+    const tenantId = request.tenantId;
+    const userId = request.userId;
+
+    // First, get the current organization
+    const orgResult = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, id));
+
+    if (!orgResult.length) {
+      reply.code(404);
+      return { error: 'Organization not found' };
+    }
+
+    const currentSettings = orgResult[0].settings || {};
+    const updatedBranding = {
+      ...((currentSettings as any).branding || {}),
+      ...body,
+    };
+
+    // Update organization settings with new branding
+    const result = await db
+      .update(organizations)
+      .set({
+        settings: {
+          ...(currentSettings as any),
+          branding: updatedBranding,
+        },
+        updatedAt: new Date(),
+      })
+      .where(eq(organizations.id, id))
+      .returning();
+
+    // Log branding update
+    await auditService.logUpdate('organization', id, {
+      tenantId: tenantId ?? undefined,
+      userId: userId ?? undefined,
+      metadata: {
+        field: 'branding',
+        organizationName: orgResult[0].name,
+        before: (currentSettings as any).branding,
+        after: updatedBranding,
+      },
+      ipAddress: (request as any).ip,
+      userAgent: (request as any).headers?.['user-agent'],
+    });
+
+    return { data: updatedBranding };
   }
 
   @Get('/:id/members')

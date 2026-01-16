@@ -20,6 +20,7 @@ import {
 import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
 import { BLOCK_TYPE_CONFIG } from '../types';
 import type { BlockType } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface EventDrawerProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ function getStatusBadge(status: string) {
 
   switch (normalizedStatus) {
     case 'confirmed':
-      return { color: 'success', label: 'Bekreftet' };
+      return { color: 'success', label: t("status.confirmed") };
     case 'pending':
       return { color: 'warning', label: 'Venter godkjenning' };
     case 'blocked':
@@ -57,6 +58,7 @@ function getStatusBadge(status: string) {
 }
 
 export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps) {
+  const t = useT();
   const permissions = useCalendarPermissions();
   const confirmBooking = useConfirmBooking();
   const cancelBooking = useCancelBooking();
@@ -183,9 +185,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
 
       <Dialog.Block>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Lukk
-          </Button>
+          <Button type="button" variant="secondary" onClick={onClose}>{t("ui.close")}</Button>
 
           {/* Pending request actions */}
           {isPending && event.bookingId && permissions.canApproveRequests && (
@@ -229,7 +229,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 disabled={deleteBlock.isPending}
                 data-color="danger"
               >
-                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : 'Slett'}
+                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : t("ui.delete")}
               </Button>
             </>
           )}

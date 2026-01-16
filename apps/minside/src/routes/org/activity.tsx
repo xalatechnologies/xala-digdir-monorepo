@@ -18,7 +18,7 @@ import {
   Badge,
   Spinner,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -70,6 +70,7 @@ const mockActivities = [
 
 export function OrganizationActivityPage() {
   const { locale } = useLocale();
+  const t = useT();
   const [typeFilter, setTypeFilter] = useState<ActivityType | 'all'>('all');
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -93,18 +94,18 @@ export function OrganizationActivityPage() {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffHours < 1) return 'Akkurat nå';
-    if (diffHours < 24) return `${diffHours} timer siden`;
-    if (diffDays < 7) return `${diffDays} dager siden`;
+    if (diffHours < 1) return t('common.justNow');
+    if (diffHours < 24) return t('common.hoursAgo', { count: diffHours });
+    if (diffDays < 7) return t('common.daysAgo', { count: diffDays });
     return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
 
   const getTypeLabel = (type: ActivityType) => {
     switch (type) {
-      case 'booking': return 'Booking';
-      case 'member': return 'Medlem';
-      case 'invoice': return 'Faktura';
-      case 'season': return 'Sesong';
+      case 'booking': return t('org.activity.typeBooking');
+      case 'member': return t('org.activity.typeMember');
+      case 'invoice': return t('org.activity.typeInvoice');
+      case 'season': return t('org.activity.typeSeason');
     }
   };
 
@@ -129,10 +130,10 @@ export function OrganizationActivityPage() {
       }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Aktivitetslogg
+            {t('org.activity')}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            Oversikt over hendelser i organisasjonen
+            {t('org.activityDesc')}
           </Paragraph>
         </div>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
@@ -141,14 +142,14 @@ export function OrganizationActivityPage() {
             onChange={(e) => setTypeFilter(e.target.value as ActivityType | 'all')}
             style={{ minWidth: '150px' }}
           >
-            <option value="all">Alle typer</option>
-            <option value="booking">Bookinger</option>
-            <option value="member">Medlemmer</option>
-            <option value="invoice">Fakturaer</option>
-            <option value="season">Sesong</option>
+            <option value="all">{t('org.activity.allTypes')}</option>
+            <option value="booking">{t('org.activity.bookings')}</option>
+            <option value="member">{t('org.activity.members')}</option>
+            <option value="invoice">{t('org.activity.invoices')}</option>
+            <option value="season">{t('org.activity.season')}</option>
           </Select>
           <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
-            Eksporter
+            {t('common.export')}
           </Button>
         </div>
       </div>
@@ -160,19 +161,19 @@ export function OrganizationActivityPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>I dag</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.today')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>12</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Denne uken</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.thisWeek')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>47</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Bookinger</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.bookings')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>23</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Medlemmer</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.members')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>8</Heading>
         </Card>
       </div>
@@ -181,12 +182,12 @@ export function OrganizationActivityPage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t('common.loading')} data-size="lg" />
           </div>
         ) : filteredActivities.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-              Ingen aktivitet å vise
+              {t('org.activity.noActivity')}
             </Paragraph>
           </div>
         ) : (

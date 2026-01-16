@@ -296,12 +296,73 @@ export function useCalendarSyncStatus() {
  */
 export function useSyncCalendar() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (provider: 'google' | 'outlook') => calendarSyncService.sync(provider),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.integrations.calendar.status() });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
+  });
+}
+
+// ============================================================================
+// Integration Configuration Hooks
+// Manage integration credentials and settings (ID-porten, Vipps, Visma, RCO, ACOS)
+// ============================================================================
+
+import { integrationsService, type Integration, type IntegrationUpdate } from '../services';
+
+const INTEGRATION_CONFIG_KEYS = {
+  all: ['integration-configs'] as const,
+  lists: () => [...INTEGRATION_CONFIG_KEYS.all, 'list'] as const,
+  list: () => [...INTEGRATION_CONFIG_KEYS.lists()] as const,
+  details: () => [...INTEGRATION_CONFIG_KEYS.all, 'detail'] as const,
+  detail: (provider: string) => [...INTEGRATION_CONFIG_KEYS.details(), provider] as const,
+};
+
+/**
+ * List all integration configurations
+ */
+export function useIntegrationConfigs() {
+  return useQuery({
+    queryKey: INTEGRATION_CONFIG_KEYS.list(),
+    queryFn: () => integrationsService.listIntegrations(),
+  });
+}
+
+/**
+ * Get specific integration configuration by provider
+ */
+export function useIntegrationConfig(provider: string) {
+  return useQuery({
+    queryKey: INTEGRATION_CONFIG_KEYS.detail(provider),
+    queryFn: () => integrationsService.getIntegration(provider),
+    enabled: !!provider,
+  });
+}
+
+/**
+ * Update integration configuration
+ */
+export function useUpdateIntegrationConfig() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ provider, data }: { provider: string; data: IntegrationUpdate }) =>
+      integrationsService.updateIntegration(provider, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: INTEGRATION_CONFIG_KEYS.list() });
+      queryClient.invalidateQueries({ queryKey: INTEGRATION_CONFIG_KEYS.detail(variables.provider) });
+    },
+  });
+}
+
+/**
+ * Test integration connection
+ */
+export function useTestIntegrationConfig() {
+  return useMutation({
+    mutationFn: (provider: string) => integrationsService.testIntegration(provider),
   });
 }

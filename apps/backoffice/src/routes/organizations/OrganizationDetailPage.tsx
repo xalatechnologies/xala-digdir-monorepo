@@ -47,6 +47,7 @@ import {
 import { MemberManagement } from '../../components/organizations/MemberManagement';
 import { FormSection } from '../../components/shared';
 import { useMemo } from 'react';
+import { useT } from '@xala/i18n';
 
 const actorTypeLabels: Record<ActorType, string> = {
   private: 'Privatperson',
@@ -73,6 +74,7 @@ const statusColors: Record<OrganizationStatus, 'success' | 'warning' | 'danger'>
 };
 
 export function OrganizationDetailPage() {
+  const t = useT();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -136,7 +138,7 @@ export function OrganizationDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -236,9 +238,7 @@ export function OrganizationDetailPage() {
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
               <Button variant="secondary" data-size="sm" type="button">
-                <EditIcon />
-                Rediger
-              </Button>
+                <EditIcon />{t("ui.edit")}</Button>
             </Link>
             {!organization.verified && (
               <Button variant="secondary" data-size="sm" onClick={handleVerify} type="button">
@@ -247,9 +247,7 @@ export function OrganizationDetailPage() {
               </Button>
             )}
             <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
-              <TrashIcon />
-              Slett
-            </Button>
+              <TrashIcon />{t("ui.delete")}</Button>
           </div>
         </div>
       </div>
@@ -272,7 +270,7 @@ export function OrganizationDetailPage() {
         <StatCard
           title="Aktive bookinger"
           value={stats.activeBookings}
-          description="Bekreftet"
+          description={t("status.confirmed")}
           color="var(--ds-color-success-text-default)"
           icon={<CheckCircleIcon />}
         />
@@ -309,7 +307,7 @@ export function OrganizationDetailPage() {
       {/* Content */}
       <Tabs defaultValue="info">
         <Tabs.List>
-          <Tabs.Tab value="info">Informasjon</Tabs.Tab>
+          <Tabs.Tab value="info">{t("ui.info")}</Tabs.Tab>
           <Tabs.Tab value="members">
             <UsersIcon />
             Medlemmer ({members.length})
@@ -365,12 +363,12 @@ export function OrganizationDetailPage() {
                       {organization.verified ? (
                         <>
                           <CheckCircleIcon style={{ color: 'var(--ds-color-success-text-default)' }} />
-                          <span>Ja</span>
+                          <span>{t("ui.yes")}</span>
                         </>
                       ) : (
                         <>
                           <XCircleIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
-                          <span>Nei</span>
+                          <span>{t("ui.no")}</span>
                         </>
                       )}
                     </div>
@@ -492,7 +490,7 @@ export function OrganizationDetailPage() {
                         <Table.HeaderCell>Ressurs</Table.HeaderCell>
                         <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                         <Table.HeaderCell>Status</Table.HeaderCell>
-                        <Table.HeaderCell>Betaling</Table.HeaderCell>
+                        <Table.HeaderCell>{t("rule.payment")}</Table.HeaderCell>
                         <Table.HeaderCell style={{ textAlign: 'right' }}>Pris</Table.HeaderCell>
                       </Table.Row>
                     </Table.Head>

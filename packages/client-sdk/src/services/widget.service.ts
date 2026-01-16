@@ -8,8 +8,8 @@ export interface Widget {
   id: string;
   tenantId: string;
   name: string;
-  type: 'booking' | 'calendar' | 'availability' | 'listing';
-  listingId?: string;
+  type: 'booking' | 'calendar' | 'availability' | 'rental_object';
+  rentalObjectId?: string;
   settings: WidgetSettings;
   embedCode: string;
   isActive: boolean;
@@ -29,8 +29,8 @@ export interface WidgetSettings {
 
 export interface CreateWidgetDTO {
   name: string;
-  type: 'booking' | 'calendar' | 'availability' | 'listing';
-  listingId?: string;
+  type: 'booking' | 'calendar' | 'availability' | 'rental_object';
+  rentalObjectId?: string;
   settings?: Partial<WidgetSettings>;
 }
 

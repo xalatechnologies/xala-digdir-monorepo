@@ -17,6 +17,8 @@ municipal booking and resource management system.
 - SDK-driven (@digilist/client-sdk is THE integration layer)
 - RFC 7807 compliant (Problem Details for errors)
 - RBAC enforced (role-based access control)
+- GDPR compliant (consent management, data subject rights, Article 30 audit trails)
+- Multi-channel notifications (in-app, email, SMS, push with WebSocket realtime)
 - Production live
 
 ---
@@ -25,22 +27,181 @@ municipal booking and resource management system.
 
 This is a **Turborepo** using **pnpm workspaces**.
 
+```
+xala-digdir-monorepo/
+├── apps/                           # Applications
+│   ├── web/                        # Public web app (port 5173)
+│   ├── backoffice/                 # Admin portal (port 5175)
+│   ├── minside/                    # User portal (port 5174)
+│   └── api/                        # Fastify API server (port 4000)
+│
+├── packages/                       # Shared packages
+│   ├── client-sdk/                 # Enterprise SDK ⭐
+│   ├── ds/                         # Design System facade ⭐
+│   ├── ds-themes/                  # Theme CSS files
+│   ├── ds-registry/                # Component documentation
+│   ├── i18n/                       # Internationalization ⭐
+│   └── eslint-config/              # Shared ESLint rules
+│
+├── tests/                          # Consolidated test structure ⭐
+│   ├── e2e/                        # Playwright E2E tests
+│   ├── unit/                       # Vitest unit tests
+│   ├── integration/                # Integration tests
+│   ├── performance/                # Performance tests
+│   ├── security/                   # Security tests
+│   ├── fixtures/                   # Test data
+│   ├── helpers/                    # Test utilities
+│   ├── reports/                    # Test output (gitignored)
+│   ├── screenshots/                # E2E screenshots (gitignored)
+│   └── artifacts/                  # Test artifacts (gitignored)
+│
+├── scripts/                        # Build & deployment scripts
+├── docs/                           # Documentation
+└── (root config files)
+```
+
 ### Applications (apps/)
 
 - **apps/web** - Public-facing Vite + React app (port 5173)
-- **apps/backoffice** - Admin portal Vite + React app (port 5174)
-- **apps/minside** - User dashboard Vite + React app
+  - Public listing discovery and booking initiation
+  - SEO-optimized, mobile-first design
+  - [CLAUDE.md](./apps/web/CLAUDE.md) | [AGENTS.md](./apps/web/AGENTS.md)
+
+- **apps/backoffice** - Admin portal Vite + React app (port 5175)
+  - Protected admin application with RBAC
+  - Listing/booking management, reports, integrations
+  - Real-time updates via WebSocket
+  - [CLAUDE.md](./apps/backoffice/CLAUDE.md) | [AGENTS.md](./apps/backoffice/AGENTS.md)
+
+- **apps/minside** - User dashboard Vite + React app (port 5174)
+  - User portal for booking management
+  - Mobile-optimized, GDPR-compliant
+  - Notification center, profile management
+  - [CLAUDE.md](./apps/minside/CLAUDE.md) | [AGENTS.md](./apps/minside/AGENTS.md)
+
+- **apps/api** - Fastify API server (port 4000)
+  - Backend with 30+ feature modules
+  - PostgreSQL + Drizzle ORM
+  - Audit logging, multi-tenant isolation
+  - WebSocket server for real-time events
+  - [CLAUDE.md](./apps/api/CLAUDE.md) | [AGENTS.md](./apps/api/AGENTS.md)
 
 ### Packages (packages/)
 
 - **@digilist/client-sdk** - Enterprise-grade SDK with 24+ services, WebSocket
   realtime, React Query hooks
+  - [CLAUDE.md](./packages/client-sdk/CLAUDE.md) | [AGENTS.md](./packages/client-sdk/AGENTS.md)
+
 - **@xala/ds** - UI facade (ONLY allowed import for Designsystemet components)
+  - Re-exports @digdir/designsystemet-react
+  - Custom composed components, blocks, shells
+  - Single CSS import point
+  - [CLAUDE.md](./packages/ds/CLAUDE.md) | [AGENTS.md](./packages/ds/AGENTS.md)
+
 - **@xala/ds-themes** - Theme URL registry for runtime switching (digdir,
   altinn, uutilsynet, portal)
+
 - **@xala/ds-registry** - Documentation and examples
+
 - **@xala/i18n** - Internationalization utilities
+  - Norwegian (nb) and English (en) translations
+  - React hooks (useT)
+  - [CLAUDE.md](./packages/i18n/CLAUDE.md) | [AGENTS.md](./packages/i18n/AGENTS.md)
+
 - **@xala/eslint-config** - Shared ESLint with design system guardrails
+  - Custom rules for design tokens
+  - Component pattern enforcement
+  - Compliance scanner
+  - [CLAUDE.md](./packages/eslint-config/CLAUDE.md) | [AGENTS.md](./packages/eslint-config/AGENTS.md)
+
+### Dependency Graph
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        APPLICATIONS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  │ (port 5173) │  │ (port 5174)  │  │  (port 5175)   │         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │      @digilist/client-sdk ⭐          │              │
+│         │  (30+ services, React Query hooks)    │              │
+│         └────────────────┬───────────────────────┘              │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │          apps/api ⭐                   │              │
+│         │  (Fastify, PostgreSQL, WebSocket)     │              │
+│         │     https://api.digilist.no           │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                      UI COMPONENTS                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │            @xala/ds ⭐                 │              │
+│         │    (Design System Facade)             │              │
+│         │   - Primitives (re-exported)          │              │
+│         │   - Composed (custom)                 │              │
+│         │   - Blocks (business)                 │              │
+│         │   - Shells (layouts)                  │              │
+│         └────────────────┬───────────────────────┘              │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │  @digdir/designsystemet-react          │              │
+│         │  @digdir/designsystemet-css            │              │
+│         │  (Norwegian Design System)             │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                    INTERNATIONALIZATION                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
+│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
+│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
+│         │                │                   │                  │
+│         └────────────────┼───────────────────┘                  │
+│                          │                                      │
+│                          ▼                                      │
+│         ┌────────────────────────────────────────┐              │
+│         │          @xala/i18n ⭐                 │              │
+│         │  (Norwegian & English translations)    │              │
+│         │         useT() hook                    │              │
+│         └────────────────────────────────────────┘              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Import Rules (Critical)
+
+```typescript
+// ✅ CORRECT - Apps import from facades
+import { Button } from '@xala/ds';              // Design system
+import { useListings } from '@digilist/client-sdk/hooks';  // SDK hooks
+import { useT } from '@xala/i18n';              // Translations
+
+// ❌ WRONG - Direct imports forbidden
+import { Button } from '@digdir/designsystemet-react';  // ❌
+import axios from 'axios';                              // ❌
+```
+
+**See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) for complete directory trees.**
 
 ---
 
@@ -127,6 +288,26 @@ pnpm scan:compliance:json
 # Run all scans
 pnpm scan:all
 ```
+
+### i18n Localization Compliance
+
+```bash
+# Scan entire minside app for hardcoded strings
+node scripts/scan-i18n.js apps/minside/src
+
+# Scan specific directory
+node scripts/scan-i18n.js apps/minside/src/routes
+
+# Scan single file
+node scripts/scan-i18n.js apps/minside/src/components/MyComponent.tsx
+
+# View detailed JSON report
+cat i18n-scan-report.json
+```
+
+**Exit codes:**
+- 0: No localization issues found
+- 1: Hardcoded strings detected (MUST fix before committing)
 
 ### Theme Generation
 
@@ -272,6 +453,98 @@ function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
 }
 ```
 
+### 8. i18n LOCALIZATION-FIRST
+
+```
+❌ NEVER use hardcoded strings in UI components
+❌ NEVER show untranslated text to users (Norwegian or English)
+✅ ALWAYS use t() function from @xala/i18n
+✅ ALWAYS define translations in both nb.ts AND en.ts
+```
+
+All user-facing text MUST go through the i18n system:
+
+**Required Pattern:**
+
+```tsx
+// ❌ WRONG - Hardcoded strings
+<Heading>Velg rolle</Heading>
+<Button>Submit</Button>
+<Text>Loading...</Text>
+
+// ✅ CORRECT - Use t() function
+import { useT } from '@xala/i18n';
+
+function MyComponent() {
+  const t = useT();
+  return (
+    <>
+      <Heading>{t('auth.roleSelection.title')}</Heading>
+      <Button>{t('common.submit')}</Button>
+      <Text>{t('common.loading')}</Text>
+    </>
+  );
+}
+```
+
+**When adding new text:**
+
+1. Add key to `packages/i18n/src/locales/nb.ts` (Norwegian)
+2. Add key to `packages/i18n/src/locales/en.ts` (English)
+3. Use `t('namespace.key')` in component
+4. Rebuild i18n package: `pnpm -F @xala/i18n build`
+
+**Key naming convention:**
+
+- `common.*` - Shared strings (save, cancel, loading, error)
+- `auth.*` - Authentication pages
+- `nav.*` - Navigation items
+- `dashboard.*` - Dashboard page
+- `listings.*` - Listing management
+- `bookings.*` - Booking management
+- `backoffice.*` - Backoffice-specific UI
+- `gdpr.*` - GDPR consent and data subject requests
+- `notifications.*` - Notification system UI
+
+**If i18n key is missing → STOP and add it first.**
+
+### i18n Localization Scanner
+
+**Before committing code, ALWAYS run the i18n scanner to verify compliance:**
+
+```bash
+# Scan entire app
+node scripts/scan-i18n.js apps/minside/src
+
+# Scan specific directory
+node scripts/scan-i18n.js apps/minside/src/routes
+
+# Scan single file
+node scripts/scan-i18n.js apps/minside/src/routes/settings.tsx
+```
+
+**The scanner detects:**
+- ✅ Hardcoded text in JSX elements
+- ✅ String props (title, label, placeholder, description, etc.)
+- ✅ Alert/confirm messages
+- ✅ Missing `useT()` imports in files with user-facing text
+- ✅ Object values that should be localized
+
+**The scanner intelligently ignores:**
+- ✅ Already localized strings using `t()`
+- ✅ URLs, file paths, CSS classes, data attributes
+- ✅ Code identifiers (camelCase, types, constants)
+- ✅ Environment variables, technical strings
+
+**Scanner output:**
+- Console report with file-by-file breakdown
+- JSON report: `i18n-scan-report.json` (for CI/CD integration)
+- Exit code 1 if issues found (fails CI builds)
+
+**If scanner finds issues → FIX them before committing.**
+
+See `docs/I18N_SCAN_REPORT_2026-01-15.md` for detailed analysis.
+
 ## Architecture Layers
 
 ```
@@ -311,7 +584,7 @@ function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
 
 The `@digilist/client-sdk` package provides:
 
-### Services (24+)
+### Services (30+)
 
 Located in `packages/client-sdk/src/services/`:
 
@@ -322,10 +595,12 @@ Located in `packages/client-sdk/src/services/`:
 - `conversationService` - Messaging
 - `dashboardService` - Dashboard data
 - `discountCodeService` - Discount codes
+- `gdprService` - GDPR consent and data subject requests
 - `integrationService` - Third-party integrations
 - `listingService` - Listing management
 - `monitoringService` - System monitoring
-- `notificationService` - Push notifications
+- `notificationService` - Push notifications and preferences
+- `notificationSystemService` - Multi-channel notifications with templates
 - `organizationService` - Organization/Kommune management
 - `reportsService` - Analytics and reporting
 - And more...
@@ -469,23 +744,114 @@ Set on `<html>` element:
 
 ## Testing Strategy
 
+### Test Organization (REQUIRED STRUCTURE)
+
+All tests MUST be organized under the `tests/` directory:
+
+```
+tests/
+├── unit/              # Vitest unit tests
+│   ├── sdk/          # SDK service tests
+│   ├── components/   # React component tests
+│   ├── hooks/        # React hooks tests
+│   └── utils/        # Utility function tests
+├── e2e/              # Playwright E2E tests
+│   ├── auth/        # Authentication flows
+│   ├── booking/     # Booking journeys
+│   ├── scenarios/   # Real-world scenarios
+│   └── stories/     # User stories
+├── integration/      # Integration tests
+│   ├── api/         # API integration
+│   └── services/    # Service integration
+├── performance/      # Performance tests
+├── security/        # Security/penetration tests
+├── fixtures/        # Test data & fixtures
+├── helpers/         # Shared test utilities
+├── reports/         # All test output (gitignored)
+│   ├── unit/       # Vitest HTML reports
+│   ├── e2e/        # Playwright HTML reports
+│   ├── coverage/   # Coverage reports
+│   ├── compliance/ # Design system scans
+│   └── i18n/       # Localization scans
+├── screenshots/     # E2E failure screenshots (gitignored)
+└── artifacts/       # Other test artifacts (gitignored)
+```
+
+**⚠️ CRITICAL RULES:**
+- All test files MUST go in the appropriate `tests/` subdirectory
+- All test output (reports, screenshots, artifacts) MUST go in `tests/reports/`, `tests/screenshots/`, or `tests/artifacts/`
+- NEVER create test folders at the root level (e.g., `test-results/`, `playwright-report/`, `reports/`)
+- Legacy scattered folders are deprecated and will be removed
+
 ### Unit Tests (Vitest)
 
-Located in `**/*.{test,spec}.{ts,tsx}`:
+Located in `tests/unit/` AND co-located with source code:
 
-- Design system components: `packages/ds/src/**/*.test.tsx`
-- App components: `apps/*/src/**/*.test.tsx`
-- SDK services: `packages/client-sdk/src/**/*.test.ts`
+- **Co-located tests** (preferred for packages): `packages/*/src/**/*.{test,spec}.{ts,tsx}`
+- **Organized tests** (preferred for integration): `tests/unit/{sdk,components,hooks,utils}/`
 
 Configuration: `vitest.config.ts`
+
+**Commands:**
+```bash
+pnpm test              # Run all unit tests (watch mode)
+pnpm test:run          # Run once
+pnpm test:coverage     # With coverage report → tests/reports/coverage/
+```
 
 ### E2E Tests (Playwright)
 
 Located in `tests/e2e/`:
-
-Run with: `pnpm test:e2e`
+- `tests/e2e/auth/` - Authentication and RBAC flows
+- `tests/e2e/booking/` - Booking flows
+- `tests/e2e/scenarios/` - Real-world user scenarios
+- `tests/e2e/stories/` - User story tests
 
 Configuration: `playwright.config.ts`
+
+**Commands:**
+```bash
+pnpm test:e2e                    # Run all E2E tests
+pnpm test:e2e:auth               # Auth tests only
+pnpm test:e2e tests/e2e/auth/    # Specific folder
+```
+
+**Output:**
+- Reports: `tests/reports/e2e/`
+- Screenshots: `tests/screenshots/`
+- Videos: `tests/artifacts/videos/`
+
+### Integration Tests
+
+Located in `tests/integration/`:
+- `tests/integration/api/` - API endpoint integration
+- `tests/integration/services/` - Service-to-service integration
+
+### Performance Tests
+
+Located in `tests/performance/`:
+- Load testing
+- Response time benchmarks
+- Memory leak detection
+
+### Security Tests
+
+Located in `tests/security/`:
+- OWASP Top 10 coverage
+- Penetration testing
+- Vulnerability scans
+
+### Test Helpers & Fixtures
+
+**Helpers**: `tests/helpers/`
+- Shared test utilities
+- Custom matchers
+- Test setup functions
+
+**Fixtures**: `tests/fixtures/`
+- Mock data
+- Seed data
+- Test configurations
 
 ---
 

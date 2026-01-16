@@ -118,51 +118,73 @@ export function Header({ title: _title }: HeaderProps) {
   };
 
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        boxShadow: 'var(--ds-shadow-xs)',
-      }}
-    >
-      <div
+    <>
+      <style>{`
+        .minside-header-search-container {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
+
+        /* Tablet breakpoint (768px - 900px) */
+        @media (min-width: 768px) and (max-width: 900px) {
+          .minside-header-search-container {
+            max-width: 400px;
+          }
+        }
+
+        /* Small desktop (901px - 1100px) */
+        @media (min-width: 901px) and (max-width: 1100px) {
+          .minside-header-search-container {
+            max-width: 500px;
+          }
+        }
+
+        /* Desktop (1100px+) */
+        @media (min-width: 1101px) {
+          .minside-header-search-container {
+            max-width: 650px;
+          }
+        }
+      `}</style>
+      <header
         style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
-          alignItems: 'center',
-          height: '72px',
-          padding: '0 var(--ds-spacing-6)',
-          gap: 'var(--ds-spacing-4)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+          boxShadow: 'var(--ds-shadow-xs)',
         }}
       >
-        {/* Left zone - Account Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <AccountSwitcher />
-        </div>
-
-        {/* Center zone - Search */}
         <div
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            width: '650px',
-            maxWidth: '700px',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            alignItems: 'center',
+            height: '72px',
+            padding: '0 var(--ds-spacing-6)',
+            gap: 'var(--ds-spacing-4)',
           }}
         >
-          <HeaderSearch
-            placeholder="Søk i bookinger, brukere..."
-            value={searchQuery}
-            onSearchChange={handleSearchChange}
-            onResultSelect={handleResultSelect}
-            results={searchResults}
-            showShortcut
-            enableGlobalShortcut
-            noResultsText="Ingen resultater funnet"
-          />
-        </div>
+          {/* Left zone - Account Switcher */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            <AccountSwitcher />
+          </div>
+
+          {/* Center zone - Search */}
+          <div className="minside-header-search-container">
+            <HeaderSearch
+              placeholder="Søk i bookinger, brukere..."
+              value={searchQuery}
+              onSearchChange={handleSearchChange}
+              onResultSelect={handleResultSelect}
+              results={searchResults}
+              showShortcut
+              enableGlobalShortcut
+              noResultsText="Ingen resultater funnet"
+            />
+          </div>
 
 
         {/* Right zone - Actions */}
@@ -209,5 +231,6 @@ export function Header({ title: _title }: HeaderProps) {
         </div>
       </div>
     </header>
+    </>
   );
 }

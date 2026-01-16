@@ -41,11 +41,36 @@ The repository enforces:
 
 ## File Structure Rules
 
+### Application Structure
 - apps/web: Vite React app
 - apps/api: Fastify API server
+- apps/backoffice: Admin portal
+- apps/minside: User dashboard
+
+### Package Structure
 - packages/ds: UI facade with single CSS import point
 - packages/ds-registry: Examples and documentation
 - packages/eslint-config: Shared lint rules
+- packages/client-sdk: Enterprise SDK
+- packages/i18n: Internationalization
+
+### Test Structure (REQUIRED)
+All tests MUST be organized under `tests/`:
+```
+tests/
+├── unit/           # Vitest unit tests
+├── e2e/            # Playwright E2E tests
+├── integration/    # Integration tests
+├── performance/    # Performance tests
+├── security/       # Security tests
+├── fixtures/       # Test data
+├── helpers/        # Test utilities
+├── reports/        # Test output (gitignored)
+├── screenshots/    # E2E screenshots (gitignored)
+└── artifacts/      # Test artifacts (gitignored)
+```
+
+**NEVER create test folders at root level** (e.g., `test-results/`, `playwright-report/`, `reports/`)
 
 ## Development Commands
 

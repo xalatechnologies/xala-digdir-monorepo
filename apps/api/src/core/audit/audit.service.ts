@@ -5,6 +5,7 @@
 import { container } from '../../core/container';
 import { auditLogs } from '../../database/schema/index';
 import { eq, and, gte, lte, desc, count } from 'drizzle-orm';
+import { logger } from '../logger';
 
 export type AuditAction =
   | 'create' | 'read' | 'update' | 'delete'
@@ -106,8 +107,14 @@ export class AuditService {
     // Broadcast to WebSocket clients
     broadcastAuditEvent(result);
 
-    // Also log to console for debugging
-    console.log(`[AUDIT] ${entry.action} ${entry.resource}${entry.resourceId ? ':' + entry.resourceId : ''}`);
+    // Also log to structured logger for debugging
+    logger.info({
+      action: entry.action,
+      resource: entry.resource,
+      resourceId: entry.resourceId,
+      tenantId: entry.tenantId,
+      userId: entry.userId
+    }, `[AUDIT] ${entry.action} ${entry.resource}${entry.resourceId ? ':' + entry.resourceId : ''}`);
 
     return result;
   }
@@ -215,5 +222,56 @@ export function getAuditService(): AuditService {
 // Reset singleton for testing
 export function resetAuditService(): void {
   auditServiceInstance = null;
+}
+
+// ============================================================================
+// Booking Event Broadcasting
+// ============================================================================
+
+export interface BookingEvent {
+  type: 'created' | 'updated' | 'approved' | 'rejected' | 'cancelled' | 'completed' | 'confirmed';
+  bookingId: string;
+  rentalObjectId: string;
+  tenantId: string;
+  startTime?: Date;
+  endTime?: Date;
+  userId?: string;
+  version?: number;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Broadcast booking event to all connected WebSocket clients
+ * Used for real-time updates in the UI
+ */
+export function broadcastBookingEvent(event: BookingEvent): void {
+  const message = JSON.stringify({
+    type: 'booking',
+    event: event.type,
+    data: {
+      bookingId: event.bookingId,
+      rentalObjectId: event.rentalObjectId,
+      tenantId: event.tenantId,
+      startTime: event.startTime?.toISOString(),
+      endTime: event.endTime?.toISOString(),
+      userId: event.userId,
+      version: event.version,
+      metadata: event.metadata,
+      timestamp: new Date().toISOString(),
+    },
+  });
+
+  wsConnections.forEach((ws) => {
+    try {
+      if (ws.readyState === 1) { // OPEN
+        ws.send(message);
+      }
+    } catch (err) {
+      // Ignore send errors for disconnected clients
+    }
+  });
+
+  // Log for debugging
+  logger.debug({ event: event.type, bookingId: event.bookingId }, `[BOOKING_EVENT] ${event.type}`);
 }
 

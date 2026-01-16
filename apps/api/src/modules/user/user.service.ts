@@ -13,12 +13,15 @@ import {
   UserQuerySchema,
   InviteUserSchema,
   AssignRoleSchema,
+  UpdateConsentsSchema,
   type CreateUserDTO,
   type UpdateUserDTO,
   type UserQueryParams,
   type InviteUserDTO,
   type AssignRoleDTO,
   type User,
+  type UserConsents,
+  type UpdateConsentsDTO,
 } from '../../schemas/user.schema';
 import type { PaginatedResult } from '../../database/base.repository';
 
@@ -220,7 +223,7 @@ export class UserService {
     const existing = await this.findByIdOrFail(id);
     await this.repository.delete(id);
     this.adapters?.log?.warn('User deleted', { id });
-    
+
     getAuditService().log({
       tenantId: existing.tenantId,
       action: 'delete',
@@ -229,5 +232,73 @@ export class UserService {
       severity: 'warning',
       metadata: { email: existing.email },
     });
+  }
+
+  /**
+   * Get user consents
+   */
+  async getConsents(id: string): Promise<UserConsents> {
+    const user = await this.findByIdOrFail(id);
+
+    // Extract consents from user metadata
+    const metadata = user.metadata as any || {};
+    const consents: UserConsents = {
+      marketing: metadata.consents?.marketing ?? false,
+      analytics: metadata.consents?.analytics ?? true,
+      necessary: metadata.consents?.necessary ?? true,
+      preferences: {
+        emailNotifications: metadata.consents?.preferences?.emailNotifications ?? true,
+        smsNotifications: metadata.consents?.preferences?.smsNotifications ?? false,
+        pushNotifications: metadata.consents?.preferences?.pushNotifications ?? true,
+      },
+    };
+
+    return consents;
+  }
+
+  /**
+   * Update user consents
+   */
+  async updateConsents(id: string, data: UpdateConsentsDTO): Promise<UserConsents> {
+    const validated = validate(UpdateConsentsSchema, data);
+    const existing = await this.findByIdOrFail(id);
+
+    // Get current consents
+    const currentConsents = await this.getConsents(id);
+
+    // Merge with new consents
+    const updatedConsents: UserConsents = {
+      ...currentConsents,
+      ...validated,
+      preferences: {
+        ...currentConsents.preferences,
+        ...(validated.preferences || {}),
+      },
+    };
+
+    // Update user metadata with new consents
+    const metadata = (existing.metadata as any) || {};
+    metadata.consents = updatedConsents;
+    metadata.consentsUpdatedAt = new Date().toISOString();
+    metadata.consentsVersion = '1.0';
+
+    await this.repository.update(id, { metadata });
+
+    this.adapters?.log?.info('User consents updated', { id, changes: Object.keys(validated) });
+
+    // Audit log consent changes
+    getAuditService().log({
+      tenantId: existing.tenantId,
+      action: 'update',
+      resource: 'user_consents',
+      resourceId: id,
+      metadata: {
+        previousConsents: currentConsents,
+        updatedConsents: validated,
+        timestamp: new Date().toISOString(),
+      },
+    });
+
+    return updatedConsents;
   }
 }

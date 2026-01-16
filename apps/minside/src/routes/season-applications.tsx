@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
+import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
 
@@ -77,15 +78,14 @@ export function SeasonApplicationsPage() {
   const { accountType, selectedOrganization } = useAccountContext();
   const [statusFilter, setStatusFilter] = useState<SeasonApplicationStatus | 'all'>('all');
 
-  // TODO: Replace with useSeasonApplications() from SDK
-  // const { data: applicationsResponse, isLoading, error } = useSeasonApplications(
-  //   statusFilter !== 'all' ? { status: statusFilter } : undefined
-  // );
+  // Fetch season applications from SDK
+  const { data: applicationsResponse, isLoading, error } = useSeasonApplications(
+    undefined,
+    statusFilter !== 'all' ? { status: statusFilter } : undefined
+  );
 
-  // Mock data for now
-  const isLoading = false;
-  const error = null;
-  const applications: Array<{ status: string; [key: string]: unknown }> = []; // Empty for now
+  // Extract applications from paginated response
+  const applications = applicationsResponse?.data ?? [];
 
   // Calculate stats
   const stats = useMemo(() => {

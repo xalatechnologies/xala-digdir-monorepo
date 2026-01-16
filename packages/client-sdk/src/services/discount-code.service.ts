@@ -17,7 +17,7 @@ export interface DiscountCode {
   usageLimit?: number;
   usageCount: number;
   minBookingValue?: number;
-  applicableListings?: string[];
+  applicableRentalObjects?: string[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -39,7 +39,7 @@ export interface CreateDiscountCodeDTO {
   validUntil?: string;
   usageLimit?: number;
   minBookingValue?: number;
-  applicableListings?: string[];
+  applicableRentalObjects?: string[];
   isActive?: boolean;
 }
 
@@ -99,10 +99,10 @@ class DiscountCodeService {
   /**
    * Validate a discount code
    */
-  async validate(code: string, listingId?: string): Promise<ValidateCodeResult> {
+  async validate(code: string, rentalObjectId?: string): Promise<ValidateCodeResult> {
     const queryParams = new URLSearchParams({ code });
-    if (listingId) queryParams.set('listingId', listingId);
-    
+    if (rentalObjectId) queryParams.set('rentalObjectId', rentalObjectId);
+
     return getClient().get<ValidateCodeResult>(`${this.basePath}/validate?${queryParams.toString()}`);
   }
 

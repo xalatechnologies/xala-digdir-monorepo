@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, Label, Select, Textfield, Textarea } from '@xala/ds';
 import type { Season } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../../../providers/AccountContextProvider';
-import { WEEKDAY_LABELS } from '../constants';
+import { useT } from '@xala/i18n';
 
 /**
  * Season Application Drawer
@@ -53,8 +53,22 @@ export function SeasonApplicationDrawer({
   onSubmit,
 }: SeasonApplicationDrawerProps) {
   const { accountType, selectedOrganization } = useAccountContext();
+  const t = useT();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Get weekday labels
+  const getWeekdayLabels = () => {
+    return [
+      t('seasons.weekday.sunday'),
+      t('seasons.weekday.monday'),
+      t('seasons.weekday.tuesday'),
+      t('seasons.weekday.wednesday'),
+      t('seasons.weekday.thursday'),
+      t('seasons.weekday.friday'),
+      t('seasons.weekday.saturday'),
+    ];
+  };
 
   // Form state
   const [listingId, setListingId] = useState('');
@@ -94,15 +108,15 @@ export function SeasonApplicationDrawer({
 
     // Validation
     if (!listingId) {
-      setError('Vennligst velg et lokale');
+      setError(t('seasons.drawer.error.selectVenue'));
       return;
     }
     if (!startTime || !endTime) {
-      setError('Vennligst velg start- og sluttid');
+      setError(t('seasons.drawer.error.selectTime'));
       return;
     }
     if (startTime >= endTime) {
-      setError('Starttid må være før sluttid');
+      setError(t('seasons.drawer.error.invalidTime'));
       return;
     }
 
@@ -119,7 +133,7 @@ export function SeasonApplicationDrawer({
       });
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Noe gikk galt. Vennligst prøv igjen.');
+      setError(err instanceof Error ? err.message : t('seasons.drawer.error.generic'));
     } finally {
       setIsSubmitting(false);
     }
@@ -173,7 +187,7 @@ export function SeasonApplicationDrawer({
         >
           <div>
             <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-              Søk om sesongbooking
+              {t('seasons.drawer.title')}
             </Heading>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               {season.name}
@@ -183,7 +197,7 @@ export function SeasonApplicationDrawer({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            aria-label="Lukk søknadsskjema"
+            aria-label={t('seasons.drawer.closeLabel')}
             style={{
               all: 'unset',
               cursor: 'pointer',
@@ -235,10 +249,10 @@ export function SeasonApplicationDrawer({
             </div>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                Søker på vegne av: {selectedOrganization.name}
+                {t('seasons.drawer.applyingOnBehalfOf', { org: selectedOrganization.name })}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Søknaden sendes inn som organisasjon
+                {t('seasons.drawer.applicationAsOrganization')}
               </Paragraph>
             </div>
           </div>
@@ -271,7 +285,7 @@ export function SeasonApplicationDrawer({
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
-                Velg lokale *
+                {t('seasons.drawer.selectVenue')}
               </Label>
               <Select
                 id="listing"
@@ -288,7 +302,7 @@ export function SeasonApplicationDrawer({
                   backgroundColor: 'var(--ds-color-neutral-background-default)',
                 }}
               >
-                <option value="">Velg et lokale</option>
+                <option value="">{t('seasons.drawer.selectVenuePlaceholder')}</option>
                 {/* TODO: Replace with actual listings from season */}
                 <option value="listing-1">Idrettshall 1</option>
                 <option value="listing-2">Idrettshall 2</option>
@@ -296,7 +310,7 @@ export function SeasonApplicationDrawer({
                 <option value="listing-4">Kinosalen</option>
               </Select>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Velg hvilket lokale du ønsker å booke
+                {t('seasons.drawer.selectVenueHelp')}
               </Paragraph>
             </div>
 
@@ -309,7 +323,7 @@ export function SeasonApplicationDrawer({
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
-                Ukedag *
+                {t('seasons.drawer.selectWeekday')}
               </Label>
               <Select
                 id="weekday"
@@ -326,14 +340,14 @@ export function SeasonApplicationDrawer({
                   backgroundColor: 'var(--ds-color-neutral-background-default)',
                 }}
               >
-                {WEEKDAY_LABELS.map((label, index) => (
+                {getWeekdayLabels().map((label, index) => (
                   <option key={index} value={index}>
                     {label}
                   </option>
                 ))}
               </Select>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Hvilken ukedag ønsker du faste tider?
+                {t('seasons.drawer.selectWeekdayHelp')}
               </Paragraph>
             </div>
 
@@ -353,7 +367,7 @@ export function SeasonApplicationDrawer({
                     marginBottom: 'var(--ds-spacing-2)',
                   }}
                 >
-                  Fra kl. *
+                  {t('seasons.drawer.startTime')}
                 </Label>
                 <Textfield
                   type="time"
@@ -381,7 +395,7 @@ export function SeasonApplicationDrawer({
                     marginBottom: 'var(--ds-spacing-2)',
                   }}
                 >
-                  Til kl. *
+                  {t('seasons.drawer.endTime')}
                 </Label>
                 <Textfield
                   type="time"
@@ -411,7 +425,7 @@ export function SeasonApplicationDrawer({
                   marginBottom: 'var(--ds-spacing-2)',
                 }}
               >
-                Merknad (valgfritt)
+                {t('seasons.drawer.notes')}
               </Label>
               <Textarea
                 id="notes"
@@ -419,7 +433,7 @@ export function SeasonApplicationDrawer({
                 onChange={(e) => setNotes(e.target.value)}
                 disabled={isSubmitting}
                 rows={4}
-                placeholder="Legg til eventuelle merknader eller spesielle behov..."
+                placeholder={t('seasons.drawer.notesPlaceholder')}
                 style={{
                   width: '100%',
                   padding: 'var(--ds-spacing-3)',
@@ -432,7 +446,7 @@ export function SeasonApplicationDrawer({
                 }}
               />
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Del informasjon som kan være viktig for behandling av søknaden
+                {t('seasons.drawer.notesHelp')}
               </Paragraph>
             </div>
           </div>
@@ -454,7 +468,7 @@ export function SeasonApplicationDrawer({
               onClick={onClose}
               disabled={isSubmitting}
             >
-              Avbryt
+              {t('seasons.drawer.cancel')}
             </Button>
             <Button
               type="submit"
@@ -464,10 +478,10 @@ export function SeasonApplicationDrawer({
               {isSubmitting ? (
                 <>
                   <Spinner aria-hidden="true" />
-                  <span style={{ marginLeft: 'var(--ds-spacing-2)' }}>Sender...</span>
+                  <span style={{ marginLeft: 'var(--ds-spacing-2)' }}>{t('seasons.drawer.submitting')}</span>
                 </>
               ) : (
-                'Send søknad'
+                t('seasons.drawer.submit')
               )}
             </Button>
           </div>

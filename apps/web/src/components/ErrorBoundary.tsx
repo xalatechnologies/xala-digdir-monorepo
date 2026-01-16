@@ -7,6 +7,7 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from '@xala/ds';
 import * as Sentry from '@sentry/react';
 import { auditService } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -57,7 +58,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       return (
         <ErrorScreen
-          title="Noe gikk galt"
+          title={t('error.somethingWentWrong')}
           description={this.state.error?.message || 'En uventet feil har oppstått. Vennligst prøv igjen.'}
           showRetryButton
           retryButtonText="Last siden på nytt"

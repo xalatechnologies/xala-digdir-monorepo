@@ -12,11 +12,16 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  treeshake: true,
+  treeshake: {
+    // Keep realtime client methods from being tree-shaken
+    moduleSideEffects: ['./src/realtime/index.ts'],
+  },
   external: ['react', '@tanstack/react-query'],
   esbuildOptions(options) {
     options.banner = {
       js: '/* @digilist/client-sdk v1.1.0 - Xala Technologies */',
     };
+    // Preserve realtime client class methods
+    options.keepNames = true;
   },
 });

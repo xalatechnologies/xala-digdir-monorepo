@@ -62,7 +62,9 @@ cat > "${DEPLOY_DIR}/package.json" << 'EOF'
     "zod": "^3.23.0",
     "reflect-metadata": "^0.2.0",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0"
+    "pino-pretty": "^11.0.0",
+    "redis": "^4.7.0",
+    "dotenv": "^17.0.0"
   }
 }
 EOF

@@ -1,0 +1,9 @@
+
+> @digilist/api@1.0.0 dev /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/.xaheen/worktrees/tasks/002-mock-jwt-token-generation-used-in-authentication-f/apps/api
+> tsx watch src/main.ts
+
+🚀 Starting Unified API...
+
+✓ Adapters initialized
+❌ DATABASE_URL environment variable is required
+   Set DATABASE_URL to connect to your PostgreSQL database

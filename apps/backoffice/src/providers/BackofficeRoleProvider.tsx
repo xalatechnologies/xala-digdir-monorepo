@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
 import { useAuth } from '../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 /**
  * Backoffice Role Provider
@@ -36,7 +37,9 @@ export interface BackofficeRoleContextValue extends BackofficeRoleContextState {
   setEffectiveRole: (role: EffectiveBackofficeRole, remember?: boolean) => void;
   /** Clear the effective role (removes from localStorage) */
   clearEffectiveRole: () => void;
-  /** Check if current effective role is admin */
+  /** Check if current effective role is super_admin */
+  isSuperAdmin: boolean;
+  /** Check if current effective role is admin (or super_admin) */
   isAdmin: boolean;
   /** Check if current effective role is case_handler */
   isCaseHandler: boolean;
@@ -75,7 +78,7 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
   // State: Effective role (the currently active role)
   const [effectiveRole, setEffectiveRoleState] = useState<EffectiveBackofficeRole | null>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.EFFECTIVE_ROLE);
-    if (stored === 'admin' || stored === 'case_handler') {
+    if (stored === 'super_admin' || stored === 'admin' || stored === 'case_handler') {
       return stored;
     }
     return null;
@@ -97,6 +100,9 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
     }
 
     // Fallback: derive from legacy role field
+    if (user.role === 'super_admin') {
+      return ['super_admin'];
+    }
     if (user.role === 'admin') {
       return ['admin'];
     }
@@ -131,10 +137,13 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
 
     // Single-role user: auto-assign without prompting
     if (grantedRoles.length === 1) {
-      const autoRole = grantedRoles[0];
+      const autoRole = grantedRoles[0] as EffectiveBackofficeRole;
       setEffectiveRoleState(autoRole);
       setHasSelectedRole(true);
       localStorage.setItem(STORAGE_KEYS.EFFECTIVE_ROLE, autoRole);
+      // Clear any stale "remember choice" flag for single-role users
+      // (they don't need to remember, it's auto-assigned)
+      localStorage.removeItem(STORAGE_KEYS.REMEMBER_CHOICE);
       setIsInitializing(false);
       return;
     }
@@ -194,7 +203,8 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
   }, [effectiveRole]);
 
   // Derived: Role check helpers
-  const isAdmin = effectiveRole === 'admin';
+  const isSuperAdmin = effectiveRole === 'super_admin';
+  const isAdmin = effectiveRole === 'admin' || effectiveRole === 'super_admin';
   const isCaseHandler = effectiveRole === 'case_handler';
 
   // Memoized context value
@@ -207,6 +217,7 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
       isInitializing,
       setEffectiveRole,
       clearEffectiveRole,
+      isSuperAdmin,
       isAdmin,
       isCaseHandler,
       getHomeRoute,
@@ -219,6 +230,7 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
       isInitializing,
       setEffectiveRole,
       clearEffectiveRole,
+      isSuperAdmin,
       isAdmin,
       isCaseHandler,
       getHomeRoute,

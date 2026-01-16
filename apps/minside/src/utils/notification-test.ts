@@ -57,8 +57,6 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
     realtimeClient.emit('notification', notificationEvent);
     // @ts-expect-error - private method
     realtimeClient.emit('*', notificationEvent);
-  } else {
-    console.warn('[NotificationTest] Could not emit event - realtimeClient.emit is not available');
   }
 
   return notificationEvent;

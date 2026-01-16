@@ -1,5 +1,5 @@
 /**
- * Listing Projection DTOs - Screen-Ready Data Structures
+ * Rental Object Projection DTOs - Screen-Ready Data Structures
  *
  * These DTOs are returned directly by the API and are designed to be
  * immediately renderable by UI components WITHOUT any transformation.
@@ -12,27 +12,27 @@
  *
  * @example
  * // Frontend can render directly:
- * <ListingCard
- *   id={listing.id}
- *   name={listing.name}
- *   typeLabel={listing.typeLabel}
- *   locationFormatted={listing.locationFormatted}
- *   primaryImageUrl={listing.primaryImageUrl}
- *   priceDisplay={listing.priceDisplay}
+ * <RentalObjectCard
+ *   id={rentalObject.id}
+ *   name={rentalObject.name}
+ *   typeLabel={rentalObject.typeLabel}
+ *   locationFormatted={rentalObject.locationFormatted}
+ *   primaryImageUrl={rentalObject.primaryImageUrl}
+ *   priceDisplay={rentalObject.priceDisplay}
  * />
  */
 
 // =============================================================================
-// LISTING CARD PROJECTION - For grids, search results, maps
+// RENTAL OBJECT CARD PROJECTION - For grids, search results, maps
 // =============================================================================
 
 /**
- * ListingCardProjectionDTO
+ * RentalObjectCardProjectionDTO
  *
- * Minimal, flat structure for listing cards in grids/lists.
+ * Minimal, flat structure for rental object cards in grids/lists.
  * All fields are display-ready strings or primitives.
  */
-export interface ListingCardProjectionDTO {
+export interface RentalObjectCardProjectionDTO {
   // === IDENTITY ===
   id: string;
   slug: string;
@@ -86,7 +86,7 @@ export interface ListingCardProjectionDTO {
 // SUPPORTING TYPES (Flat, Display-Ready)
 // =============================================================================
 
-export interface ListingImageDTO {
+export interface RentalObjectImageDTO {
   id: string;
   url: string;
   thumbnailUrl: string;
@@ -95,21 +95,21 @@ export interface ListingImageDTO {
   order: number;
 }
 
-export interface ListingAmenityDTO {
+export interface RentalObjectAmenityDTO {
   id: string;
   name: string;
   icon: string;
   category: string;
 }
 
-export interface ListingEquipmentDTO {
+export interface RentalObjectEquipmentDTO {
   id: string;
   name: string;
   quantity: number;
   description: string;
 }
 
-export interface ListingOpeningHoursDTO {
+export interface RentalObjectOpeningHoursDTO {
   day: string;
   dayIndex: number;
   openTime: string;
@@ -118,19 +118,19 @@ export interface ListingOpeningHoursDTO {
   isClosed: boolean;
 }
 
-export interface ListingRuleDTO {
+export interface RentalObjectRuleDTO {
   id: string;
   title: string;
   content: string;
 }
 
-export interface ListingFaqDTO {
+export interface RentalObjectFaqDTO {
   id: string;
   question: string;
   answer: string;
 }
 
-export interface ListingAdditionalServiceDTO {
+export interface RentalObjectAdditionalServiceDTO {
   id: string;
   name: string;
   description: string;
@@ -140,7 +140,7 @@ export interface ListingAdditionalServiceDTO {
   isOptional: boolean;
 }
 
-export interface ListingEventDTO {
+export interface RentalObjectEventDTO {
   id: string;
   title: string;
   startDate: string;
@@ -148,23 +148,41 @@ export interface ListingEventDTO {
   description: string;
 }
 
+// Backward compatibility aliases (deprecated)
+/** @deprecated Use RentalObjectImageDTO instead */
+export type ListingImageDTO = RentalObjectImageDTO;
+/** @deprecated Use RentalObjectAmenityDTO instead */
+export type ListingAmenityDTO = RentalObjectAmenityDTO;
+/** @deprecated Use RentalObjectEquipmentDTO instead */
+export type ListingEquipmentDTO = RentalObjectEquipmentDTO;
+/** @deprecated Use RentalObjectOpeningHoursDTO instead */
+export type ListingOpeningHoursDTO = RentalObjectOpeningHoursDTO;
+/** @deprecated Use RentalObjectRuleDTO instead */
+export type ListingRuleDTO = RentalObjectRuleDTO;
+/** @deprecated Use RentalObjectFaqDTO instead */
+export type ListingFaqDTO = RentalObjectFaqDTO;
+/** @deprecated Use RentalObjectAdditionalServiceDTO instead */
+export type ListingAdditionalServiceDTO = RentalObjectAdditionalServiceDTO;
+/** @deprecated Use RentalObjectEventDTO instead */
+export type ListingEventDTO = RentalObjectEventDTO;
+
 // =============================================================================
-// LISTING DETAILS PROJECTION - For detail pages with all tabs
+// RENTAL OBJECT DETAILS PROJECTION - For detail pages with all tabs
 // =============================================================================
 
 /**
- * ListingDetailsProjectionDTO
+ * RentalObjectDetailsProjectionDTO
  *
- * Complete listing data for detail pages.
+ * Complete rental object data for detail pages.
  * Covers all tabs: Overview, Rules, FAQ, Events, Booking.
  */
-export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
+export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjectionDTO {
   // === DESCRIPTION ===
   description: string;
   descriptionExcerpt: string;
 
   // === ALL IMAGES (for gallery) ===
-  images: ListingImageDTO[];
+  images: RentalObjectImageDTO[];
 
   // === FULL LOCATION (for map tab) ===
   addressStreet: string;
@@ -180,30 +198,30 @@ export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
   contactWebsite: string;
 
   // === ALL AMENITIES ===
-  allAmenities: ListingAmenityDTO[];
+  allAmenities: RentalObjectAmenityDTO[];
 
   // === FACILITIES/EQUIPMENT ===
-  includedEquipment: ListingEquipmentDTO[];
+  includedEquipment: RentalObjectEquipmentDTO[];
 
   // === ADDITIONAL SERVICES (purchasable add-ons) ===
-  additionalServices: ListingAdditionalServiceDTO[];
+  additionalServices: RentalObjectAdditionalServiceDTO[];
 
   // === OPENING HOURS (Display-Ready) ===
-  openingHours: ListingOpeningHoursDTO[];
+  openingHours: RentalObjectOpeningHoursDTO[];
   isOpenNow: boolean;
   todayHoursDisplay: string;
 
   // === RULES & GUIDELINES (for Rules tab) ===
-  rules: ListingRuleDTO[];
+  rules: RentalObjectRuleDTO[];
 
   // === FAQ (for FAQ tab) ===
-  faq: ListingFaqDTO[];
+  faq: RentalObjectFaqDTO[];
 
   // === HIGHLIGHTS ===
   highlights: string[];
 
   // === EVENTS (for Events/Calendar tab) ===
-  upcomingEvents: ListingEventDTO[];
+  upcomingEvents: RentalObjectEventDTO[];
 
   // === BOOKING CONFIG (for booking widget) ===
   /** Calendar type: time_slots, day_booking, season_allocation, request_only */
@@ -229,6 +247,12 @@ export interface ListingDetailsProjectionDTO extends ListingCardProjectionDTO {
   updatedAt: string;
 }
 
+// Backward compatibility aliases (deprecated)
+/** @deprecated Use RentalObjectCardProjectionDTO instead */
+export type ListingCardProjectionDTO = RentalObjectCardProjectionDTO;
+/** @deprecated Use RentalObjectDetailsProjectionDTO instead */
+export type ListingDetailsProjectionDTO = RentalObjectDetailsProjectionDTO;
+
 // =============================================================================
 // BOOKING PROJECTIONS
 // =============================================================================
@@ -243,12 +267,23 @@ export interface BookingCardProjectionDTO {
   id: string;
   referenceNumber: string;
 
-  // === LISTING (Embedded, Flat) ===
-  listingId: string;
-  listingName: string;
-  listingSlug: string;
-  listingImageUrl: string;
-  listingLocation: string;
+  // === RENTAL OBJECT (Embedded, Flat) ===
+  rentalObjectId: string;
+  rentalObjectName: string;
+  rentalObjectSlug: string;
+  rentalObjectImageUrl: string;
+  rentalObjectLocation: string;
+  // Backward compatibility (deprecated)
+  /** @deprecated Use rentalObjectId instead */
+  listingId?: string;
+  /** @deprecated Use rentalObjectName instead */
+  listingName?: string;
+  /** @deprecated Use rentalObjectSlug instead */
+  listingSlug?: string;
+  /** @deprecated Use rentalObjectImageUrl instead */
+  listingImageUrl?: string;
+  /** @deprecated Use rentalObjectLocation instead */
+  listingLocation?: string;
 
   // === TIMING (Display-Ready) ===
   startDateTime: string;

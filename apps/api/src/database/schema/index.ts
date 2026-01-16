@@ -26,6 +26,11 @@ export const tenants = pgTable('tenants', {
   domain: varchar('domain', { length: 255 }),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  
+  // Feature flags and category controls
+  featureFlags: jsonb('feature_flags').notNull().default({}),
+  enabledRentalObjectCategories: text('enabled_rental_object_categories').array().notNull().default(['LOCALE', 'ARRANGEMENT']),
+  
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
@@ -63,6 +68,7 @@ export const users = pgTable('users', {
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
   email: varchar('email', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
+  nationalId: varchar('national_id', { length: 11 }), // Norwegian national identity number (fødselsnummer)
   role: varchar('role', { length: 50 }).notNull().default('member'),
   status: varchar('status', { length: 50 }).notNull().default('active'),
   metadata: jsonb('metadata').default({}),
@@ -71,6 +77,7 @@ export const users = pgTable('users', {
 }, (table) => ({
   tenantEmailIdx: index('users_tenant_email_idx').on(table.tenantId, table.email),
   tenantIdx: index('users_tenant_idx').on(table.tenantId),
+  nationalIdIdx: index('users_national_id_idx').on(table.nationalId),
 }));
 
 export const orgMemberships = pgTable('org_memberships', {
@@ -165,29 +172,47 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
-// Listings
+// Rental Objects (V3 Model)
 // ============================================================================
 
-export const listings = pgTable('listings', {
+export const rentalObjects = pgTable('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+  
+  // Core
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull(),
-  type: varchar('type', { length: 50 }).notNull().default('SPACE'),
-  status: varchar('status', { length: 50 }).notNull().default('draft'),
   description: text('description'),
+  
+  // V3 Model: Category + Time Mode + Features
+  categoryKey: varchar('category_key', { length: 50 }).notNull().default('LOKALER_OG_BANER'),
+  timeMode: varchar('time_mode', { length: 20 }).notNull().default('PERIOD'),
+  features: jsonb('features').notNull().default([]),
+  ruleSetKey: varchar('rule_set_key', { length: 50 }),
+  
+  // Status & workflow
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  requiresApproval: boolean('requires_approval').notNull().default(false),
+  
+  // Capacity & inventory
+  capacity: integer('capacity'),
+  inventoryTotal: integer('inventory_total'),
+  
+  // Content
   images: jsonb('images').default([]),
   pricing: jsonb('pricing').default({}),
-  capacity: integer('capacity'),
   metadata: jsonb('metadata').default({}),
+  
+  // Timestamps
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
-  tenantIdx: index('listings_tenant_idx').on(table.tenantId),
-  statusIdx: index('listings_status_idx').on(table.status),
-  typeIdx: index('listings_type_idx').on(table.type),
-  slugIdx: index('listings_slug_idx').on(table.tenantId, table.slug),
+  tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
+  categoryIdx: index('rental_objects_category_key_idx').on(table.categoryKey),
+  timeModeIdx: index('rental_objects_time_mode_idx').on(table.timeMode),
+  statusIdx: index('rental_objects_status_idx').on(table.status),
+  slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
 }));
 
 // ============================================================================
@@ -197,7 +222,7 @@ export const listings = pgTable('listings', {
 export const bookings = pgTable('bookings', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   status: varchar('status', { length: 50 }).notNull().default('pending'),
   startTime: timestamp('start_time').notNull(),
@@ -210,7 +235,7 @@ export const bookings = pgTable('bookings', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('bookings_tenant_idx').on(table.tenantId),
-  listingIdx: index('bookings_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('bookings_rental_object_idx').on(table.rentalObjectId),
   userIdx: index('bookings_user_idx').on(table.userId),
   statusIdx: index('bookings_status_idx').on(table.status),
 }));
@@ -289,7 +314,7 @@ export const usage = pgTable('usage', {
 export const allocations = pgTable('allocations', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 255 }).notNull(),
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
@@ -303,7 +328,7 @@ export const allocations = pgTable('allocations', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('allocations_tenant_idx').on(table.tenantId),
-  listingIdx: index('allocations_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('allocations_rental_object_idx').on(table.rentalObjectId),
   timeIdx: index('allocations_time_idx').on(table.startTime, table.endTime),
 }));
 
@@ -314,7 +339,7 @@ export const allocations = pgTable('allocations', {
 export const seasonalLeases = pgTable('seasonal_leases', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   startDate: timestamp('start_date').notNull(),
   endDate: timestamp('end_date').notNull(),
@@ -330,7 +355,7 @@ export const seasonalLeases = pgTable('seasonal_leases', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('seasonal_leases_tenant_idx').on(table.tenantId),
-  listingIdx: index('seasonal_leases_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('seasonal_leases_rental_object_idx').on(table.rentalObjectId),
   orgIdx: index('seasonal_leases_org_idx').on(table.organizationId),
 }));
 
@@ -368,6 +393,12 @@ export const messages = pgTable('messages', {
 }));
 
 // ============================================================================
+// GDPR Requests
+// ============================================================================
+
+export { gdprRequests } from './gdpr-requests';
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -387,8 +418,8 @@ export type CaseHandlerScope = typeof caseHandlerScopes.$inferSelect;
 export type NewCaseHandlerScope = typeof caseHandlerScopes.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
-export type Listing = typeof listings.$inferSelect;
-export type NewListing = typeof listings.$inferInsert;
+export type RentalObject = typeof rentalObjects.$inferSelect;
+export type NewRentalObject = typeof rentalObjects.$inferInsert;
 export type Booking = typeof bookings.$inferSelect;
 export type NewBooking = typeof bookings.$inferInsert;
 export type AuditLog = typeof auditLogs.$inferSelect;
@@ -407,4 +438,50 @@ export type Conversation = typeof conversations.$inferSelect;
 export type NewConversation = typeof conversations.$inferInsert;
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 
+// =============================================================================
+// LEGACY ALIASES (for backwards compatibility)
+// =============================================================================
+// These exports maintain compatibility with code still using "listing" terminology.
+// All new code should use "rentalObject" terminology.
+
+/** @deprecated Use rentalObjects instead */
+export const listings = rentalObjects;
+
+/** @deprecated Use RentalObject instead */
+export type Listing = RentalObject;
+
+/** @deprecated Use NewRentalObject instead */
+export type NewListing = NewRentalObject;
+
+// Stub exports for seasons module (pending implementation)
+export const seasons = pgTable('seasons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  startDate: timestamp('start_date').notNull(),
+  endDate: timestamp('end_date').notNull(),
+  status: varchar('status', { length: 50 }).notNull().default('draft'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const seasonApplications = pgTable('season_applications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const priorityRules = pgTable('priority_rules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  priority: integer('priority').notNull().default(0),
+  conditions: jsonb('conditions').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});

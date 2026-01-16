@@ -166,8 +166,8 @@ export class BookingController {
   @Get('/calendar')
   async getCalendar(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
-    const { listingId } = request.query as any;
-    const events = await this.service.getCalendarEvents(tenantId, listingId);
+    const { rentalObjectId } = request.query as any;
+    const events = await this.service.getCalendarEvents(tenantId, rentalObjectId);
     return { events };
   }
 
@@ -196,12 +196,12 @@ export class BookingController {
    */
   @Get('/pricing')
   async calculatePricing(request: TenantRequest, reply: FastifyReply) {
-    const { listingId, startTime, endTime } = request.query as any;
-    if (!listingId || !startTime || !endTime) {
+    const { rentalObjectId, startTime, endTime } = request.query as any;
+    if (!rentalObjectId || !startTime || !endTime) {
       reply.code(400);
-      return { error: { code: 'VALIDATION_ERROR', message: 'listingId, startTime, endTime required' } };
+      return { error: { code: 'VALIDATION_ERROR', message: 'rentalObjectId, startTime, endTime required' } };
     }
-    const pricing = await this.service.calculatePricing(listingId, startTime, endTime);
+    const pricing = await this.service.calculatePricing(rentalObjectId, startTime, endTime);
     return { data: pricing };
   }
 
@@ -210,7 +210,7 @@ export class BookingController {
    */
   @Get('/my')
   async getMyBookings(request: TenantRequest, reply: FastifyReply) {
-    const userId = request.userId || (request.headers['x-user-id'] as string);
+    const userId = request.userId;
     if (!userId) {
       reply.code(401);
       return { error: { code: 'UNAUTHORIZED', message: 'User not authenticated' } };
@@ -268,7 +268,7 @@ export class BookingController {
       
       // WHAT (Hva)
       service: {
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
         description: booking.notes || 'Leie av lokale',
         duration: `${new Date(booking.startTime).toISOString()} - ${new Date(booking.endTime).toISOString()}`,
       },
@@ -276,7 +276,7 @@ export class BookingController {
       // WHERE (Hvor)
       location: {
         tenantId: booking.tenantId,
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
       },
       
       // WHEN (Når)
@@ -295,6 +295,77 @@ export class BookingController {
     };
     
     return { data: receipt };
+  }
+
+  /**
+   * PATCH /api/bookings/:id/approve - Approve booking (caseworker/admin only)
+   */
+  @Put('/:id/approve')
+  async approve(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const { reason } = request.body as { reason?: string };
+    const user = request.user as any;
+    
+    if (!user || !user.userId) {
+      return reply.status(401).send({
+        type: 'https://api.digilist.no/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Authentication required',
+      });
+    }
+    
+    // Check role (caseworker or admin)
+    if (user.role !== 'CASEWORKER' && user.role !== 'ADMIN' && user.role !== 'SAAS_ADMIN') {
+      return reply.status(403).send({
+        type: 'https://api.digilist.no/errors/forbidden',
+        title: 'Forbidden',
+        status: 403,
+        detail: 'This action requires CASEWORKER or ADMIN role',
+      });
+    }
+    
+    const booking = await this.service.approve(request.params.id, user.userId, reason);
+    return { data: booking };
+  }
+
+  /**
+   * PATCH /api/bookings/:id/reject - Reject booking (caseworker/admin only)
+   */
+  @Put('/:id/reject')
+  async reject(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const { reason } = request.body as { reason: string };
+    const user = request.user as any;
+    
+    if (!user || !user.userId) {
+      return reply.status(401).send({
+        type: 'https://api.digilist.no/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Authentication required',
+      });
+    }
+    
+    // Check role (caseworker or admin)
+    if (user.role !== 'CASEWORKER' && user.role !== 'ADMIN' && user.role !== 'SAAS_ADMIN') {
+      return reply.status(403).send({
+        type: 'https://api.digilist.no/errors/forbidden',
+        title: 'Forbidden',
+        status: 403,
+        detail: 'This action requires CASEWORKER or ADMIN role',
+      });
+    }
+    
+    if (!reason || reason.trim().length === 0) {
+      return reply.status(400).send({
+        type: 'https://api.digilist.no/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'Rejection reason is required',
+      });
+    }
+    
+    const booking = await this.service.reject(request.params.id, user.userId, reason);
+    return { data: booking };
   }
 }
 

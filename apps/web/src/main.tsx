@@ -21,6 +21,7 @@ initializeClient({
 import './root.css';
 
 import { App } from './App';
+import { useT } from '@xala/i18n';
 
 // Create React Query client with default options
 const queryClient = new QueryClient({

@@ -1,0 +1,314 @@
+# Digilist/Xala SaaS Platform Roadmap
+# Machine-readable roadmap for progress tracking, Linear import, and compliance verification
+# Version: 1.0.0
+# Last Updated: 2026-01-15
+
+meta:
+  title: Digilist Platform Roadmap
+  description: Norwegian municipal booking and resource management system roadmap
+  version: "1.0.0"
+  status_values:
+    - DONE      # Fully implemented and verified
+    - PARTIAL   # Partially implemented, gaps remain
+    - MISSING   # Not implemented, required
+    - PLANNED   # Scheduled for future implementation
+
+phases:
+  - id: P0
+    name: Baseline & Verification
+    priority: MUST_HAVE
+    description: Foundational compliance with SDK-first architecture and RBAC enforcement
+    items:
+      - id: P0-01
+        title: SDK-first compliance
+        description: All frontend apps must use @digilist/client-sdk exclusively for API calls - no direct fetch/axios
+        verify:
+          - Scan imports for fetch/axios usage in apps/
+          - Verify all API calls use @digilist/client-sdk
+          - Check that no direct GraphQL queries exist
+          - Ensure @xala/ds facade is used for UI components
+        apps:
+          - public-web
+          - minside
+          - org-dashboard
+          - backoffice
+        roles:
+          - all
+        status: PARTIAL
+        risk: Architecture drift leading to unmaintainable code and security gaps
+        next_action: Run ESLint guardrail scan and replace remaining direct API calls
+        linear_labels:
+          - architecture
+          - compliance
+
+      - id: P0-02
+        title: RBAC as source of truth
+        description: Role-based access control enforced at API level with capability-based guards in UI
+        verify:
+          - Check API endpoints validate roles via middleware
+          - Verify UI components use capability guards not hardcoded checks
+          - Ensure role matrix is defined and enforced
+          - Confirm no role checks hardcoded in frontend
+        apps:
+          - api
+          - client-sdk
+          - backoffice
+        roles:
+          - admin
+          - case-handler
+          - viewer
+        status: PARTIAL
+        risk: Unauthorized access to sensitive municipal data, audit failure
+        next_action: Document role matrix and implement capability-based guards
+        linear_labels:
+          - security
+          - compliance
+          - ssa-l
+
+  - id: P1
+    name: Core Platform Stability
+    priority: MUST_HAVE
+    description: Session management and authentication stability across all apps
+    items:
+      - id: P1-01
+        title: Session continuity
+        description: Users maintain session state during login redirects and across app navigation
+        verify:
+          - Verify booking context preserved during auth redirect
+          - Check token refresh handles edge cases
+          - Test session recovery after browser close
+          - Validate multi-tab session synchronization
+        apps:
+          - public-web
+          - minside
+        roles:
+          - public-user
+          - authenticated-user
+        status: PARTIAL
+        risk: Lost bookings during checkout, poor user experience, support tickets
+        next_action: Implement session context storage before auth redirects
+        linear_labels:
+          - ux
+          - authentication
+          - ssa-l
+
+  - id: P2
+    name: Functional Completion
+    priority: MUST_HAVE
+    description: Core booking functionality and listing lifecycle management
+    items:
+      - id: P2-01
+        title: Listing lifecycle
+        description: Full CRUD operations for listings with proper state management
+        verify:
+          - Create listing via backoffice
+          - Edit listing details and availability
+          - Archive/publish listing
+          - Verify listing appears in public search
+        apps:
+          - api
+          - client-sdk
+          - backoffice
+        roles:
+          - admin
+          - case-handler
+        status: DONE
+        risk: N/A - Complete
+        next_action: None required
+        linear_labels:
+          - feature
+          - listings
+
+      - id: P2-02
+        title: Booking types
+        description: Support for single-slot, recurring, and multi-resource bookings
+        verify:
+          - Single slot booking flow works end-to-end
+          - Recurring booking creates correct calendar entries
+          - Multi-resource booking handles conflicts
+          - Calendar view shows all booking types correctly
+        apps:
+          - public-web
+          - api
+          - client-sdk
+        roles:
+          - public-user
+          - authenticated-user
+        status: PARTIAL
+        risk: Limited booking flexibility, customer complaints, competitor advantage loss
+        next_action: Implement recurring booking support with conflict detection
+        linear_labels:
+          - feature
+          - bookings
+
+  - id: P3
+    name: Role-Specific UX
+    priority: MUST_HAVE
+    description: Optimized user experiences for each role type
+    items:
+      - id: P3-01
+        title: Case handler dashboard
+        description: Dashboard for case handlers to review, approve, and manage booking requests
+        verify:
+          - Dashboard loads pending approvals list
+          - Approve/reject actions work correctly
+          - Audit trail recorded for decisions
+          - Notifications sent on status change
+        apps:
+          - backoffice
+        roles:
+          - case-handler
+        status: PARTIAL
+        risk: Delayed approval processing, municipal service disruption
+        next_action: Complete approval workflow with bulk actions support
+        linear_labels:
+          - ux
+          - backoffice
+          - workflow
+
+  - id: P4
+    name: SaaS & Enterprise
+    priority: SHOULD_HAVE
+    description: Multi-tenant capabilities and enterprise features
+    items:
+      - id: P4-01
+        title: Tenant theming
+        description: Runtime theme switching per municipality with @xala/ds-themes
+        verify:
+          - Theme URL registry returns correct CSS for tenant
+          - DesignsystemetProvider applies theme correctly
+          - Data attributes set on html element
+          - No hardcoded colors in components
+        apps:
+          - public-web
+          - minside
+          - backoffice
+        roles:
+          - all
+        status: MISSING
+        risk: Municipalities cannot customize branding, reduced adoption
+        next_action: Integrate @xala/ds-themes with tenant configuration
+        linear_labels:
+          - feature
+          - multi-tenant
+          - theming
+
+  - id: P5
+    name: Observability & Operations
+    priority: MUST_HAVE
+    description: Audit logging, monitoring, and operational visibility
+    items:
+      - id: P5-01
+        title: Audit trail
+        description: All mutations logged with who, what, when, tenantId, ip/ua fields
+        verify:
+          - Booking creation logged with full context
+          - Approval decisions logged with actor
+          - Listing changes tracked with diff
+          - Audit log queryable via SDK service
+        apps:
+          - api
+          - client-sdk
+          - backoffice
+        roles:
+          - admin
+          - auditor
+        status: PARTIAL
+        risk: Compliance failure, legal liability, tender rejection (SSA-L 2.1, 2.2)
+        next_action: Complete audit event coverage for all mutation endpoints
+        linear_labels:
+          - compliance
+          - ssa-l
+          - security
+
+  - id: P6
+    name: AI Enablement
+    priority: NICE_TO_HAVE
+    description: AI-powered features for gap detection and automation
+    items:
+      - id: P6-01
+        title: AI gap detection
+        description: AI agent scans codebase against roadmap to detect compliance gaps
+        verify:
+          - AI can parse roadmap.yml
+          - Gap detection generates actionable report
+          - Report links to specific roadmap items
+          - Integration with Linear for ticket creation
+        apps:
+          - tooling
+        roles:
+          - developer
+          - architect
+        status: PLANNED
+        risk: Manual gap detection remains time-consuming
+        next_action: Design AI agent spec for gap scanner
+        linear_labels:
+          - feature
+          - ai
+          - tooling
+
+# SSA-L Compliance Mapping
+# Maps Norwegian tender requirements to roadmap items
+ssa_l_mapping:
+  - clause: "1.3"
+    requirement: Role separation
+    roadmap_ref: P0-02
+    implementation: RBAC enforced at API layer
+    status: PARTIAL
+
+  - clause: "2.1"
+    requirement: Audit logging
+    roadmap_ref: P5-01
+    implementation: Audit service with structured events
+    status: PARTIAL
+
+  - clause: "2.2"
+    requirement: Traceability
+    roadmap_ref: P5-01
+    implementation: Full mutation logging with context
+    status: PARTIAL
+
+  - clause: "3.1"
+    requirement: Access control
+    roadmap_ref: P0-02
+    implementation: Capability-based guards
+    status: PARTIAL
+
+  - clause: "3.2"
+    requirement: Authentication
+    roadmap_ref: P1-01
+    implementation: Session management with token refresh
+    status: PARTIAL
+
+  - clause: "4.1"
+    requirement: Availability
+    roadmap_ref: P5-01
+    implementation: Monitoring and alerting
+    status: PLANNED
+
+  - clause: "5.1"
+    requirement: GDPR compliance
+    roadmap_ref:
+      - P0-02
+      - P5-01
+    implementation: Data access controls and audit logging
+    status: PARTIAL
+
+  - clause: "6.1"
+    requirement: Change management
+    roadmap_ref: P4-01
+    implementation: Tenant configuration management
+    status: PLANNED
+
+  - clause: "7.1"
+    requirement: Documentation
+    roadmap_ref: ALL
+    implementation: Comprehensive CLAUDE.md and roadmap
+    status: DONE
+
+# Service URLs for verification
+service_urls:
+  web: http://localhost:5173
+  backoffice: http://localhost:5174
+  minside: http://localhost:5175
+  api: http://localhost:4000

@@ -134,7 +134,6 @@ export function SeasonDetailPage() {
   const handleSubmitApplication = async (data: SeasonApplicationFormData) => {
     // TODO: Use SDK's useCreateSeasonApplication() hook
     // For now, just simulate a successful submission
-    console.log('Submitting season application:', data);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));

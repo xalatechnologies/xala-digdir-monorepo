@@ -1,25 +1,22 @@
 import { defineConfig } from 'vitest/config';
-import { resolve } from 'path';
+import path from 'path';
 
 export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],
+    include: ['src/__tests__/**/*.{test,spec}.{ts,js}'],
+    exclude: ['**/node_modules/**', '**/dist/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html'],
-      include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts', 'src/main.ts'],
+      reporter: ['text', 'json', 'html'],
+      include: ['src/**/*.{ts,js}'],
+      exclude: ['**/*.{test,spec}.{ts,js}', '**/*.d.ts', '**/node_modules/**', 'src/adapters/**'],
     },
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@/core': resolve(__dirname, './src/core'),
-      '@/modules': resolve(__dirname, './src/modules'),
-      '@/schemas': resolve(__dirname, './src/schemas'),
-      '@/database': resolve(__dirname, './src/database'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

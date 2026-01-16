@@ -2,6 +2,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { vi, beforeEach } from 'vitest';
 import { useRealtimeCalendar } from './useRealtimeCalendar';
 import * as clientSDK from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Mock the SDK hook
 vi.mock('@digilist/client-sdk', () => ({

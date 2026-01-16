@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useT } from '@xala/i18n';
 
 // Extend window to include google types
 declare global {
@@ -110,6 +111,7 @@ function parseAddressComponents(
 }
 
 export function useGooglePlaces(options: UseGooglePlacesOptions = {}) {
+  const t = useT();
   const {
     apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY as string,
     country = 'no',

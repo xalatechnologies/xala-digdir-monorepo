@@ -1,7 +1,19 @@
 #!/bin/bash
 # =============================================================================
-# Deployment Script for Xala Apps to Hostinger
+# Deployment Script for Xala Apps to Hostinger VPS (Test Environment)
 # Usage: ./scripts/deploy.sh [web|backoffice|minside|all]
+#
+# Directory Structure on Server:
+# /var/www/
+#   ├── digilist/
+#   │   ├── main/           → https://digilist.no (landing page)
+#   │   ├── web/            → https://web-test.digilist.no
+#   │   ├── backoffice/     → https://backoffice-test.digilist.no
+#   │   └── minside/        → https://minside-test.digilist.no
+#   └── digilist-api/       → https://api.digilist.no
+#
+# IMPORTANT: Test apps deploy to /var/www/digilist/{web,backoffice,minside}
+#            NOT to /var/www/{web-test,backoffice-test,minside-test}
 # =============================================================================
 
 set -e  # Exit on error
@@ -37,6 +49,10 @@ print_success() {
 
 print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
 # =============================================================================
@@ -267,13 +283,62 @@ main() {
     echo ""
     print_success "Deployment complete!"
     echo ""
+
+    # Verify deployments
+    print_status "Verifying deployments..."
+    verify_deployments "$target"
+
+    echo ""
     echo "Next steps:"
-    echo "  1. Verify sites are accessible:"
+    echo "  1. Check the sites in your browser:"
     echo "     - https://$WEB_SUBDOMAIN.$DOMAIN_BASE"
     echo "     - https://$BACKOFFICE_SUBDOMAIN.$DOMAIN_BASE"
     echo "     - https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE"
     echo ""
     echo "  2. If SSL not configured, run: ./scripts/setup-ssl.sh"
+}
+
+# Function to verify deployments
+verify_deployments() {
+    local target=$1
+    local failed=0
+
+    case "$target" in
+        web)
+            check_url "https://$WEB_SUBDOMAIN.$DOMAIN_BASE" "Web Test" || ((failed++))
+            ;;
+        backoffice)
+            check_url "https://$BACKOFFICE_SUBDOMAIN.$DOMAIN_BASE" "Backoffice Test" || ((failed++))
+            ;;
+        minside)
+            check_url "https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE" "Minside Test" || ((failed++))
+            ;;
+        all)
+            check_url "https://$WEB_SUBDOMAIN.$DOMAIN_BASE" "Web Test" || ((failed++))
+            check_url "https://$BACKOFFICE_SUBDOMAIN.$DOMAIN_BASE" "Backoffice Test" || ((failed++))
+            check_url "https://$MINSIDE_SUBDOMAIN.$DOMAIN_BASE" "Minside Test" || ((failed++))
+            ;;
+    esac
+
+    if [ $failed -eq 0 ]; then
+        print_success "All deployed sites are accessible!"
+    else
+        print_warning "$failed site(s) failed verification - check manually"
+    fi
+}
+
+# Function to check if URL is accessible
+check_url() {
+    local url=$1
+    local name=$2
+
+    if curl -s -f -I "$url" > /dev/null 2>&1; then
+        print_success "$name is accessible at $url"
+        return 0
+    else
+        print_error "$name is NOT accessible at $url"
+        return 1
+    fi
 }
 
 main "$@"

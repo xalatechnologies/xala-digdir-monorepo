@@ -6,7 +6,7 @@ import { Controller, Get } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, sql, and, gte, lte, count, sum, desc } from 'drizzle-orm';
-import { listings, bookings, auditLogs, users } from '../../database/schema/index';
+import { rentalObjects, bookings, auditLogs, users } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -27,11 +27,11 @@ export class DashboardController {
     const startOfWeek = new Date(startOfDay.getTime() - startOfDay.getDay() * 24 * 60 * 60 * 1000);
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // Count active listings using Drizzle
+    // Count active rentalObjects using Drizzle
     const activeListingsResult = await db
       .select({ count: count() })
-      .from(listings)
-      .where(eq(listings.status, 'published'));
+      .from(rentalObjects)
+      .where(eq(rentalObjects.status, 'published'));
     const activeListings = Number(activeListingsResult[0]?.count || 0);
 
     // Count pending requests
@@ -79,17 +79,17 @@ export class DashboardController {
       .where(eq(bookings.status, 'cancelled'));
     const cancelledBookings = Number(cancelledResult[0]?.count || 0);
 
-    // Top listings by bookings
+    // Top rentalObjects by bookings
     const topListingsResult = await db
       .select({
-        id: listings.id,
-        name: listings.name,
+        id: rentalObjects.id,
+        name: rentalObjects.name,
         bookingCount: sql<number>`COALESCE(COUNT(${bookings.id}), 0)`,
         revenue: sql<number>`COALESCE(SUM(${bookings.totalPrice}), 0)`,
       })
-      .from(listings)
-      .leftJoin(bookings, eq(listings.id, bookings.listingId))
-      .groupBy(listings.id, listings.name)
+      .from(rentalObjects)
+      .leftJoin(bookings, eq(rentalObjects.id, bookings.rentalObjectId))
+      .groupBy(rentalObjects.id, rentalObjects.name)
       .orderBy(sql`COUNT(${bookings.id}) DESC`)
       .limit(5);
 

@@ -111,3 +111,25 @@ export type {
   BottomNavigationProps,
   BottomNavigationItem
 } from './bottom-navigation';
+
+// Language Switcher
+export { LanguageSwitcher, ConnectedLanguageSwitcher } from './LanguageSwitcher';
+export type {
+  LanguageSwitcherProps,
+  LanguageSwitcherVariant,
+  LanguageSwitcherSize,
+  LocaleLabels,
+  ConnectedLanguageSwitcherProps
+} from './LanguageSwitcher';
+
+// RentalObjectCalendar (XALA-compliant shared calendar)
+export { RentalObjectCalendar } from './RentalObjectCalendar';
+export type {
+  RentalObjectCalendarProps,
+  CalendarSlot,
+  CalendarMode,
+  SlotStatus as CalendarSlotStatus,
+  CalendarAction,
+  CalendarConfig,
+  CalendarSelection,
+} from './RentalObjectCalendar';

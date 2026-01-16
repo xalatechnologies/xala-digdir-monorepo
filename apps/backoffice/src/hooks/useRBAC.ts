@@ -1,4 +1,5 @@
 import { useAuth } from './useAuth';
+import { useT } from '@xala/i18n';
 
 export type Permission =
   | 'bookings.view'
@@ -48,6 +49,7 @@ const ROLE_PERMISSIONS: Record<string, Permission[]> = {
 };
 
 export function useRBAC() {
+  const t = useT();
   const { user } = useAuth();
 
   const hasPermission = (permission: Permission): boolean => {

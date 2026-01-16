@@ -176,7 +176,7 @@ function SidebarNavItem({ item, onClick }: { item: NavItem; onClick?: () => void
 }
 
 // Shared sidebar content component
-function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSection[]; user: { name: string; email: string } | null; onItemClick?: () => void }) {
+function SidebarContent({ navSections, user, onItemClick, t }: { navSections: NavSection[]; user: { name: string; email: string } | null; onItemClick?: () => void; t: (key: string) => string }) {
   return (
     <>
       {/* Logo Section */}
@@ -208,7 +208,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 letterSpacing: 'var(--ds-font-letter-spacing-wide)',
               }}
             >
-              DIGILIST
+              {t('components.sidebar.appName')}
             </div>
             <div
               style={{
@@ -219,7 +219,7 @@ function SidebarContent({ navSections, user, onItemClick }: { navSections: NavSe
                 textTransform: 'uppercase',
               }}
             >
-              Min Side
+              {t('components.sidebar.appSubtitle')}
             </div>
           </div>
         </div>
@@ -323,10 +323,14 @@ export function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Dynamic dashboard href based on current context
+  const dashboardHref = accountType === 'organization' ? '/org' : '/';
+
   const navSections: NavSection[] = [
     {
       items: [
-        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: '/', icon: <HomeIcon />, contexts: ['personal', 'organization'] },
+        // Single dashboard item that changes destination based on context
+        { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: dashboardHref, icon: <HomeIcon /> },
       ],
     },
     {
@@ -334,30 +338,30 @@ export function Sidebar() {
       items: [
         { name: t('minside.myBookings'), description: t('minside.myBookingsDesc'), href: '/bookings', icon: <BookOpenIcon />, contexts: ['personal'] },
         { name: t('minside.myCalendar'), description: t('minside.myCalendarDesc'), href: '/calendar', icon: <CalendarIcon />, contexts: ['personal'] },
-        { name: 'Sesongbooking', description: 'Søk om faste tider for hele sesongen', href: '/seasons', icon: <RepeatIcon />, contexts: ['personal'] },
+        { name: t('minside.seasons'), description: t('minside.seasonsDesc'), href: '/seasons', icon: <RepeatIcon />, contexts: ['personal'] },
         { name: t('minside.messages'), description: t('minside.messagesDesc'), href: '/messages', icon: <MessageIcon />, contexts: ['personal', 'organization'] },
         { name: t('minside.billing'), description: t('minside.billingDesc'), href: '/billing', icon: <CreditCardIcon />, contexts: ['personal'] },
-        { name: 'Varsler', description: 'Se alle varsler og påminnelser', href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger', contexts: ['personal', 'organization'] },
+        { name: t('minside.notifications'), description: t('minside.notificationsDesc'), href: '/notifications', icon: <MessageIcon />, badge: 2, badgeColor: 'danger', contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('minside.account'),
       items: [
         { name: t('minside.settings'), description: t('minside.settingsDesc'), href: '/settings', icon: <SettingsIcon />, contexts: ['personal'] },
-        { name: 'Preferanser', description: 'Varsler, personvern og visning', href: '/preferences', icon: <SettingsIcon />, contexts: ['personal'] },
-        { name: 'Hjelp', description: 'Spørsmål og svar, kontakt oss', href: '/help', icon: <BookOpenIcon />, contexts: ['personal', 'organization'] },
+        { name: t('minside.preferences'), description: t('minside.preferencesDesc'), href: '/preferences', icon: <SettingsIcon />, contexts: ['personal'] },
+        { name: t('minside.help'), description: t('minside.helpDesc'), href: '/help', icon: <BookOpenIcon />, contexts: ['personal', 'organization'] },
       ],
     },
     {
       title: t('org.organization'),
       items: [
-        { name: t('org.dashboard'), description: t('org.dashboardDesc'), href: '/org', icon: <HomeIcon />, contexts: ['organization'] },
         { name: t('org.bookings'), description: t('org.bookingsDesc'), href: '/org/bookings', icon: <BookOpenIcon />, contexts: ['organization'] },
         { name: t('org.invoices'), description: t('org.invoicesDesc'), href: '/org/invoices', icon: <CreditCardIcon />, contexts: ['organization'] },
         { name: t('org.members'), description: t('org.membersDesc'), href: '/org/members', icon: <UsersIcon />, contexts: ['organization'] },
         { name: t('org.seasonRental'), description: t('org.seasonRentalDesc'), href: '/org/season-rental', icon: <RepeatIcon />, contexts: ['organization'] },
-        { name: 'Innstillinger', description: 'Organisasjonsprofil og fakturering', href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
-        { name: 'Aktivitetslogg', description: 'Hendelser i organisasjonen', href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
+        { name: t('org.notifications'), description: t('org.notificationsDesc'), href: '/org/notifications', icon: <MessageIcon />, contexts: ['organization'] },
+        { name: t('org.settings'), description: t('org.settingsDesc'), href: '/org/settings', icon: <SettingsIcon />, contexts: ['organization'] },
+        { name: t('org.activity'), description: t('org.activityDesc'), href: '/org/activity', icon: <CalendarIcon />, contexts: ['organization'] },
       ],
     },
   ];
@@ -403,7 +407,7 @@ export function Sidebar() {
         <Button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
+          aria-label={t('components.sidebar.openMenu')}
           style={{
             position: 'fixed',
             top: 'var(--ds-spacing-4)',
@@ -445,7 +449,7 @@ export function Sidebar() {
             height: '100%',
           }}
         >
-          <SidebarContent navSections={filteredNavSections} user={user} />
+          <SidebarContent navSections={filteredNavSections} user={user} t={t} />
         </aside>
       )}
 
@@ -473,6 +477,7 @@ export function Sidebar() {
               navSections={filteredNavSections}
               user={user}
               onItemClick={() => setIsMobileMenuOpen(false)}
+              t={t}
             />
           </div>
         </Drawer>

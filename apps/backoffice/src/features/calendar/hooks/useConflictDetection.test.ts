@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useConflictDetection } from './useConflictDetection';
 import type { CalendarEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 describe('useConflictDetection', () => {
   const mockEvents: CalendarEvent[] = [
@@ -184,5 +185,270 @@ describe('useConflictDetection', () => {
     // For event-1: 10:00 < 12:00 (true) && 11:00 > 11:00 (false) => no overlap
     expect(result.current.hasConflict('event-1')).toBe(false);
     expect(result.current.hasConflict('event-2')).toBe(false);
+  });
+
+  describe('Buffer Time Detection', () => {
+    it('should detect buffer conflicts for events that are close but not overlapping', () => {
+      const backToBackEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:00:00'),
+          endTime: new Date('2026-01-14T12:00:00'),
+          title: 'Event 2',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      // With 15 minutes buffer time, these should conflict
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events: backToBackEvents,
+          enabled: true,
+          bufferMinutes: 15,
+        })
+      );
+
+      expect(result.current.hasConflict('event-1')).toBe(true);
+      expect(result.current.hasConflict('event-2')).toBe(true);
+    });
+
+    it('should mark conflicts as buffer-only when there is no hard overlap', () => {
+      const backToBackEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:00:00'),
+          endTime: new Date('2026-01-14T12:00:00'),
+          title: 'Event 2',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events: backToBackEvents,
+          enabled: true,
+          bufferMinutes: 15,
+        })
+      );
+
+      const event1Conflicts = result.current.getConflicts('event-1');
+      expect(event1Conflicts?.isBufferOnly).toBe(true);
+      expect(event1Conflicts?.conflictingEvents[0]?.isBufferConflict).toBe(true);
+    });
+
+    it('should mark conflicts as hard overlap when events directly overlap', () => {
+      const overlappingEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:30:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:00:00'),
+          endTime: new Date('2026-01-14T12:00:00'),
+          title: 'Event 2',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events: overlappingEvents,
+          enabled: true,
+          bufferMinutes: 15,
+        })
+      );
+
+      const event1Conflicts = result.current.getConflicts('event-1');
+      expect(event1Conflicts?.isBufferOnly).toBe(false);
+      expect(event1Conflicts?.conflictingEvents[0]?.isBufferConflict).toBe(false);
+    });
+
+    it('should not detect conflicts when events are outside buffer range', () => {
+      const separatedEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:30:00'),
+          endTime: new Date('2026-01-14T12:30:00'),
+          title: 'Event 2',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      // 15 minute buffer - events are 30 minutes apart, so no conflict
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events: separatedEvents,
+          enabled: true,
+          bufferMinutes: 15,
+        })
+      );
+
+      expect(result.current.hasConflict('event-1')).toBe(false);
+      expect(result.current.hasConflict('event-2')).toBe(false);
+    });
+
+    it('should work correctly with zero buffer time (default behavior)', () => {
+      const backToBackEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:00:00'),
+          endTime: new Date('2026-01-14T12:00:00'),
+          title: 'Event 2',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      // No buffer time - back-to-back events should not conflict
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events: backToBackEvents,
+          enabled: true,
+          bufferMinutes: 0,
+        })
+      );
+
+      expect(result.current.hasConflict('event-1')).toBe(false);
+      expect(result.current.hasConflict('event-2')).toBe(false);
+    });
+
+    it('should apply buffer time before and after events', () => {
+      const events: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T09:50:00'),
+          endTime: new Date('2026-01-14T09:55:00'),
+          title: 'Event 2 - Before',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-3',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:05:00'),
+          endTime: new Date('2026-01-14T11:10:00'),
+          title: 'Event 3 - After',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      // 10 minute buffer - should conflict with both before and after events
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events,
+          enabled: true,
+          bufferMinutes: 10,
+        })
+      );
+
+      const event1Conflicts = result.current.getConflicts('event-1');
+      expect(event1Conflicts?.conflictingEvents).toHaveLength(2);
+      expect(event1Conflicts?.conflictingEvents).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ id: 'event-2', isBufferConflict: true }),
+          expect.objectContaining({ id: 'event-3', isBufferConflict: true }),
+        ])
+      );
+    });
+
+    it('should distinguish between buffer and hard overlaps in mixed scenarios', () => {
+      const events: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:00:00'),
+          endTime: new Date('2026-01-14T11:00:00'),
+          title: 'Event 1',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-2',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T10:30:00'),
+          endTime: new Date('2026-01-14T11:30:00'),
+          title: 'Event 2 - Hard overlap',
+          status: 'confirmed',
+        } as CalendarEvent,
+        {
+          id: 'event-3',
+          listingId: 'listing-1',
+          startTime: new Date('2026-01-14T11:05:00'),
+          endTime: new Date('2026-01-14T12:00:00'),
+          title: 'Event 3 - Buffer overlap',
+          status: 'confirmed',
+        } as CalendarEvent,
+      ];
+
+      const { result } = renderHook(() =>
+        useConflictDetection({
+          events,
+          enabled: true,
+          bufferMinutes: 10,
+        })
+      );
+
+      const event1Conflicts = result.current.getConflicts('event-1');
+
+      // Event 1 should have conflicts but isBufferOnly should be false
+      // because event-2 has a hard overlap
+      expect(event1Conflicts?.isBufferOnly).toBe(false);
+
+      // Event 2 should be marked as hard overlap (not buffer conflict)
+      const event2Conflict = event1Conflicts?.conflictingEvents.find(c => c.id === 'event-2');
+      expect(event2Conflict?.isBufferConflict).toBe(false);
+
+      // Event 3 should be marked as buffer conflict
+      const event3Conflict = event1Conflicts?.conflictingEvents.find(c => c.id === 'event-3');
+      expect(event3Conflict?.isBufferConflict).toBe(true);
+    });
   });
 });

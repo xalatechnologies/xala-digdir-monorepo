@@ -17,8 +17,8 @@ export interface GraphQLContext {
  */
 export function createGraphQLContext(request: any): GraphQLContext {
   return {
-    tenantId: request.tenantId || request.headers?.['x-tenant-id'] || 'default',
-    userId: request.userId || request.headers?.['x-user-id'],
+    tenantId: request.tenantId || 'default',
+    userId: request.userId,
     adapters: request.adapters,
   };
 }
@@ -42,8 +42,8 @@ export const typeDefs = `
     
     # Booking queries
     booking(id: ID!): Booking
-    bookings(tenantId: ID!, status: String, listingId: ID, page: Int, limit: Int): BookingConnection!
-    calendar(tenantId: ID!, listingId: ID): [CalendarEvent!]!
+    bookings(tenantId: ID!, status: String, rentalObjectId: ID, page: Int, limit: Int): BookingConnection!
+    calendar(tenantId: ID!, rentalObjectId: ID): [CalendarEvent!]!
   }
 
   type Mutation {
@@ -151,7 +151,7 @@ export const typeDefs = `
   type Booking {
     id: ID!
     tenantId: ID!
-    listingId: ID!
+    rentalObjectId: ID!
     userId: ID!
     status: String!
     startTime: DateTime!
@@ -169,7 +169,7 @@ export const typeDefs = `
   }
 
   input CreateBookingInput {
-    listingId: ID!
+    rentalObjectId: ID!
     userId: ID
     startTime: DateTime!
     endTime: DateTime!
@@ -183,7 +183,7 @@ export const typeDefs = `
 
   type CalendarEvent {
     id: ID!
-    listingId: ID!
+    rentalObjectId: ID!
     start: DateTime!
     end: DateTime!
     status: String!
@@ -239,9 +239,9 @@ export function createResolvers(container: any) {
         const service = container.resolve('BookingService');
         return service.findAll(tenantId || ctx.tenantId, args);
       },
-      calendar: async (_: any, { tenantId, listingId }: any, ctx: GraphQLContext) => {
+      calendar: async (_: any, { tenantId, rentalObjectId }: any, ctx: GraphQLContext) => {
         const service = container.resolve('BookingService');
-        return service.getCalendarEvents(tenantId || ctx.tenantId, listingId);
+        return service.getCalendarEvents(tenantId || ctx.tenantId, rentalObjectId);
       },
     },
 

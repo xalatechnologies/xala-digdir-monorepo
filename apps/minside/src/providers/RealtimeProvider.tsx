@@ -7,7 +7,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 import {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeListings,
+  useRealtimeRentalObjects,
   useRealtimeMessages,
   useRealtimeNotifications,
 } from '@digilist/client-sdk';
@@ -54,7 +54,7 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
 
   // Subscribe to domain events - auto-invalidates queries
   useRealtimeBookings();
-  useRealtimeListings();
+  useRealtimeRentalObjects();
   useRealtimeMessages();
   useRealtimeNotifications();
 

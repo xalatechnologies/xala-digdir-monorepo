@@ -28,10 +28,10 @@ export function isValidUUID(value: string): boolean {
  * Throws BadRequestError if missing or invalid
  */
 export function getTenantId(request: TenantRequest): string {
-  const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
-  
+  const tenantId = request.tenantId;
+
   if (!tenantId) {
-    throw new BadRequestError('X-Tenant-Id header is required');
+    throw new BadRequestError('Tenant ID is required (authenticated request expected)');
   }
   
   if (!isValidUUID(tenantId)) {
@@ -46,7 +46,7 @@ export function getTenantId(request: TenantRequest): string {
  * Returns null if not provided, throws BadRequestError if provided but invalid
  */
 export function getOptionalTenantId(request: TenantRequest): string | null {
-  const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+  const tenantId = request.tenantId;
   
   if (!tenantId) {
     return null;
@@ -63,10 +63,10 @@ export function getOptionalTenantId(request: TenantRequest): string | null {
  * Get and validate user ID from request (required)
  */
 export function getUserId(request: TenantRequest): string {
-  const userId = request.userId || (request.headers['x-user-id'] as string);
-  
+  const userId = request.userId;
+
   if (!userId) {
-    throw new BadRequestError('X-User-Id header is required');
+    throw new BadRequestError('User ID is required (authenticated request expected)');
   }
   
   if (!isValidUUID(userId)) {
@@ -80,7 +80,7 @@ export function getUserId(request: TenantRequest): string {
  * Get user ID from request (optional with fallback)
  */
 export function getOptionalUserId(request: TenantRequest, fallback: string = 'anonymous'): string {
-  const userId = request.userId || (request.headers['x-user-id'] as string);
+  const userId = request.userId;
   
   if (!userId) {
     return fallback;

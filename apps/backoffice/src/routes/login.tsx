@@ -2,12 +2,13 @@
  * Login Page - Backoffice App
  *
  * Uses reusable login components from @xala/ds.
+ * Supports session-safe return-to-flow authentication with flow context preservation.
  * After successful login, handles role detection:
  * - Single-role users: auto-redirect to appropriate home
  * - Dual-role users: redirect to role selection page
  */
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useCallback, useRef } from 'react';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
   LoginOption,
@@ -20,26 +21,70 @@ import {
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
+import type { FlowContext } from '@digilist/client-sdk';
+import { idportenService } from '@digilist/client-sdk';
+
+
+/**
+ * Navigation state passed when redirecting with flow context
+ */
+export interface FlowContextNavigationState {
+  /** The restored flow context containing booking state */
+  flowContext: FlowContext;
+  /** Whether this navigation is from a flow restoration */
+  isFlowRestoration: boolean;
+}
+
+/**
+ * Navigation state passed when flow context was expired
+ */
+export interface FlowContextExpiredState {
+  /** Indicates the booking session expired */
+  flowContextExpired: true;
+}
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading: authLoading, login } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, restoreFlowContext, hasStoredContext, accessDeniedError } = useAuth();
   const { isInitializing, getHomeRoute } = useBackofficeRole();
   const needsRoleSelection = useNeedsRoleSelection();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const t = useT();
 
-  // Get the intended destination from location state
+  // Track if we've already processed flow restoration to prevent double navigation
+  const flowRestorationProcessed = useRef(false);
+
+  // Check for auth callback params (returned from ID-porten/BankID)
+  const authSuccess = searchParams.get('auth_success') === 'true';
+  const authError = searchParams.get('auth_error');
+
+  // Get the intended destination from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
 
-  // Handle post-login redirect based on role state
+  // Handle auth callback - redirect to dashboard after successful authentication
   useEffect(() => {
-    // Wait for both auth and role initialization to complete
-    if (authLoading || isInitializing) return;
-    if (!isAuthenticated) return;
+    if (authSuccess && !authError) {
+      // Clear the URL params and redirect to dashboard directly
+      // Don't use getHomeRoute() as it may return /role-selection
+      // The dashboard's ProtectedRoute will handle role-selection if needed
+      navigate('/dashboard', { replace: true });
+    }
+  }, [authSuccess, authError, navigate]);
+
+  /**
+   * Handle navigation after authentication
+   * Prioritizes stored flow context over simple location state
+   */
+  const handlePostAuthNavigation = useCallback(() => {
+    // Prevent double processing
+    if (flowRestorationProcessed.current) {
+      return;
+    }
 
     // Dual-role user: redirect to role selection, preserving intended destination
     if (needsRoleSelection) {
+      flowRestorationProcessed.current = true;
       navigate('/role-selection', {
         replace: true,
         state: from ? { from: { pathname: from } } : undefined,
@@ -47,10 +92,63 @@ export function LoginPage(): React.ReactElement {
       return;
     }
 
-    // Single-role user or already selected: redirect to intended destination or role-appropriate home
+    // Check for stored flow context first (higher priority than location state)
+    if (hasStoredContext) {
+      const result = restoreFlowContext(true); // Clear after load
+
+      if (result.hasContext && result.flowContext) {
+        flowRestorationProcessed.current = true;
+
+        // Navigate to the returnTo URL with complete flow context
+        const navigationState: FlowContextNavigationState = {
+          flowContext: result.flowContext,
+          isFlowRestoration: true,
+        };
+
+        navigate(result.flowContext.returnTo, {
+          replace: true,
+          state: navigationState,
+        });
+        return;
+      }
+
+      // Handle expired flow context
+      if (result.wasExpired) {
+        flowRestorationProcessed.current = true;
+        // Navigate to home with notification that session expired
+        // The target page can show a toast about expired booking session
+        const expiredState: FlowContextExpiredState = {
+          flowContextExpired: true,
+        };
+        navigate(getHomeRoute(), {
+          replace: true,
+          state: expiredState,
+        });
+        return;
+      }
+
+      // Handle invalid/corrupted flow context - gracefully fall back
+      if (result.wasInvalid) {
+        flowRestorationProcessed.current = true;
+        navigate(from ?? getHomeRoute(), { replace: true });
+        return;
+      }
+    }
+
+    // No flow context - use simple location state fallback or role-appropriate home
+    flowRestorationProcessed.current = true;
     const destination = from ?? getHomeRoute();
     navigate(destination, { replace: true });
-  }, [isAuthenticated, authLoading, isInitializing, needsRoleSelection, navigate, from, getHomeRoute]);
+  }, [hasStoredContext, restoreFlowContext, navigate, from, needsRoleSelection, getHomeRoute]);
+
+  // Handle post-login redirect based on role state
+  useEffect(() => {
+    // Wait for both auth and role initialization to complete
+    if (authLoading || isInitializing) return;
+    if (!isAuthenticated) return;
+
+    handlePostAuthNavigation();
+  }, [isAuthenticated, authLoading, isInitializing, handlePostAuthNavigation]);
 
   // Show nothing while loading auth or role state
   if (authLoading || isInitializing) {
@@ -85,8 +183,8 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="ENKEL BOOKING"
+      brandName={t('brand.name')}
+      brandTagline={t('brand.tagline')}
       title={t('auth.login')}
       subtitle={t('auth.selectMethod')}
       panelTitle={t('auth.backoffice')}
@@ -97,17 +195,46 @@ export function LoginPage(): React.ReactElement {
       footerLinks={footerLinks}
       copyright={t('auth.copyright')}
     >
+      {accessDeniedError && (
+        <div
+          style={{
+            padding: '16px',
+            marginBottom: '24px',
+            backgroundColor: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '8px',
+            color: '#991b1b',
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+            Ingen tilgang
+          </div>
+          <div style={{ fontSize: '14px' }}>
+            {accessDeniedError}
+          </div>
+        </div>
+      )}
       <LoginOption
         icon={<IdPortenIcon />}
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
-        onClick={() => login('idporten')}
+        onClick={() => {
+          // Pass dashboard URL as returnTo - after auth, user goes directly to dashboard
+          // The login page will detect auth_success and redirect, but passing dashboard
+          // ensures the session stores the correct final destination
+          const returnTo = `${window.location.origin}/dashboard`;
+          idportenService.authorize(returnTo);
+        }}
       />
       <LoginOption
         icon={<MicrosoftIcon />}
         title={t('auth.microsoft')}
-        description={t('auth.microsoftDesc')}
-        onClick={() => login('microsoft')}
+        description={t('auth.microsoftComingSoon')}
+        disabled
+        onClick={() => {
+          // Microsoft login temporarily disabled
+          console.warn('Microsoft login is temporarily disabled');
+        }}
       />
     </LoginLayout>
   );

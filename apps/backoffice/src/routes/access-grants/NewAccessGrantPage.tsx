@@ -21,7 +21,7 @@ import {
 } from '@xala/ds';
 import {
   useOrganizations,
-  useListings,
+  useRentalObjects,
   useGrantAccess,
   type CreateAccessGrantDTO,
 } from '@digilist/client-sdk';
@@ -44,8 +44,8 @@ export function NewAccessGrantPage() {
   const { data: orgData, isLoading: orgsLoading } = useOrganizations({ limit: 100 });
   const organizations = orgData?.data ?? [];
 
-  const { data: listingsData, isLoading: listingsLoading } = useListings({ limit: 100 });
-  const listings = listingsData?.data ?? [];
+  const { data: rentalObjectsData, isLoading: rentalObjectsLoading } = useRentalObjects({ limit: 100 });
+  const rentalObjects = rentalObjectsData?.data ?? [];
 
   // Mutations
   const grantAccessMutation = useGrantAccess();
@@ -118,7 +118,7 @@ export function NewAccessGrantPage() {
     }
   };
 
-  const isLoading = orgsLoading || listingsLoading;
+  const isLoading = orgsLoading || rentalObjectsLoading;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)', maxWidth: '800px', margin: '0 auto' }}>
@@ -208,10 +208,10 @@ export function NewAccessGrantPage() {
                     aria-label="Velg utleieobjekt"
                   >
                     <option value="">Velg utleieobjekt...</option>
-                    {listings.map((listing) => (
-                      <option key={listing.id} value={listing.id}>
-                        {listing.name}
-                        {listing.type ? ` (${listing.type})` : ''}
+                    {rentalObjects.map((rentalObject) => (
+                      <option key={rentalObject.id} value={rentalObject.id}>
+                        {rentalObject.name}
+                        {rentalObject.category ? ` (${rentalObject.category})` : ''}
                       </option>
                     ))}
                   </Select>

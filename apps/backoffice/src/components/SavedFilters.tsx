@@ -33,6 +33,7 @@ import {
   type SearchFilters,
   type SearchEntityType,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface SavedFiltersProps {
   /** Current search filters to save (optional) */
@@ -73,6 +74,7 @@ export function SavedFilters({
   className,
   style,
 }: SavedFiltersProps) {
+  const t = useT();
   const { confirm } = useDialog();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -143,7 +145,7 @@ export function SavedFilters({
       setIsCreating(false);
       setNewFilterName('');
     } catch (error) {
-      console.error('Failed to create saved filter:', error);
+      // Failed to create saved filter
     }
   }, [newFilterName, currentFilters, currentQuery, currentEntityType, createSavedFilter]);
 
@@ -164,8 +166,8 @@ export function SavedFilters({
       const confirmed = await confirm({
         title: 'Slett lagret filter',
         description: `Er du sikker på at du vil slette "${filter.name}"?`,
-        confirmText: 'Slett',
-        cancelText: 'Avbryt',
+        confirmText: t("ui.delete"),
+        cancelText: t("ui.cancel"),
         variant: 'danger',
       });
 
@@ -173,7 +175,7 @@ export function SavedFilters({
         try {
           await deleteSavedFilter.mutateAsync(filter.id);
         } catch (error) {
-          console.error('Failed to delete saved filter:', error);
+          // Failed to delete saved filter
         }
       }
     },
@@ -311,7 +313,7 @@ export function SavedFilters({
             padding: 'var(--ds-spacing-8)',
           }}
         >
-          <Spinner aria-label="Laster..." />
+          <Spinner aria-label={t("ui.loading")} />
         </div>
       );
     }
@@ -447,7 +449,7 @@ export function SavedFilters({
                     disabled={!newFilterName.trim() || createSavedFilter.isPending}
                     style={{ flex: 1 }} type="button"
                   >
-                    {createSavedFilter.isPending ? 'Lagrer...' : 'Lagre'}
+                    {createSavedFilter.isPending ? 'Lagrer...' : t("ui.save")}
                   </Button>
                   <Button
                     variant="secondary"
@@ -455,9 +457,7 @@ export function SavedFilters({
                     onClick={handleCancelCreate}
                     disabled={createSavedFilter.isPending}
                     style={{ flex: 1 }} type="button"
-                  >
-                    Avbryt
-                  </Button>
+                  >{t("ui.cancel")}</Button>
                 </div>
               </Stack>
             </div>

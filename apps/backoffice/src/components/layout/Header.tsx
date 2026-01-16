@@ -12,12 +12,14 @@ import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { GlobalSearch } from '../GlobalSearch';
+import { useT } from '@xala/i18n';
 
 interface HeaderProps {
   title?: string;
 }
 
 export function Header({ title: _title }: HeaderProps) {
+  const t = useT();
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -27,41 +29,69 @@ export function Header({ title: _title }: HeaderProps) {
   const unreadCount = unreadData?.data?.count ?? 0;
 
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        boxShadow: 'var(--ds-shadow-xs)',
-      }}
-    >
-      <div
+    <>
+      <style>{`
+        .backoffice-header-search-container {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
+
+        /* Tablet breakpoint (768px - 900px) */
+        @media (min-width: 768px) and (max-width: 900px) {
+          .backoffice-header-search-container {
+            max-width: 400px;
+          }
+        }
+
+        /* Small desktop (901px - 1100px) */
+        @media (min-width: 901px) and (max-width: 1100px) {
+          .backoffice-header-search-container {
+            max-width: 500px;
+          }
+        }
+
+        /* Desktop (1100px+) */
+        @media (min-width: 1101px) {
+          .backoffice-header-search-container {
+            max-width: 650px;
+          }
+        }
+      `}</style>
+      <header
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '72px',
-          padding: '0 var(--ds-spacing-6)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+          boxShadow: 'var(--ds-shadow-xs)',
         }}
       >
-        {/* Left spacer for balance */}
-        <div style={{ flex: '1 1 0', minWidth: 0 }} />
-
-        {/* Search - centered */}
         <div
           style={{
-            flex: '0 1 600px',
-            maxWidth: '600px',
-            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            height: '72px',
+            padding: '0 var(--ds-spacing-6)',
           }}
         >
-          <GlobalSearch
-            placeholder="Søk i bookinger, lokaler, organisasjoner..."
-            showShortcut
-            enableGlobalShortcut
-          />
-        </div>
+          {/* Left spacer for balance */}
+          <div style={{ flex: '1 1 0', minWidth: 0 }} />
+
+          {/* Search - centered */}
+          <div
+            className="backoffice-header-search-container"
+            style={{
+              flex: '0 1 auto',
+            }}
+          >
+            <GlobalSearch
+              placeholder="Søk i bookinger, lokaler, organisasjoner..."
+              showShortcut
+              enableGlobalShortcut
+            />
+          </div>
 
         {/* Right side - Actions */}
         <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex', justifyContent: 'flex-end' }}>
@@ -81,8 +111,8 @@ export function Header({ title: _title }: HeaderProps) {
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
               size="md"
-              aria-label="Innstillinger"
-              title="Innstillinger"
+              aria-label={t("ui.settings")}
+              title={t("ui.settings")}
               onClick={() => navigate('/settings')}
             />
             <div
@@ -110,5 +140,6 @@ export function Header({ title: _title }: HeaderProps) {
         </div>
       </div>
     </header>
+    </>
   );
 }

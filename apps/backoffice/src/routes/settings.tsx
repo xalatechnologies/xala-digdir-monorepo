@@ -11,7 +11,7 @@ import {
   Heading,
   Paragraph,
   Button,
-  Spinner,
+  Skeleton,
   Tabs,
   Stack,
   FormField,
@@ -37,8 +37,10 @@ import {
   useUploadUserAvatar,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export function SettingsPage() {
+  const t = useT();
   const [activeTab, setActiveTab] = useState('profile');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -216,10 +218,90 @@ export function SettingsPage() {
     }));
   };
 
+  // Loading state - Skeleton screen
   if (isLoading || isLoadingUser) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+        {/* Header Skeleton */}
+        <div>
+          <Skeleton width="30%" height={32} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+          <Skeleton width="50%" height={20} />
+        </div>
+
+        {/* Tabs Skeleton */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--ds-spacing-2)',
+              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+              marginBottom: 'var(--ds-spacing-5)',
+            }}
+          >
+            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <Skeleton key={i} width={100} height={40} style={{ marginBottom: '-1px' }} />
+            ))}
+          </div>
+
+          {/* Tab Content Skeleton */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+            {/* Profile Card Skeleton */}
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                {/* Section Header */}
+                <div>
+                  <Skeleton width="30%" height={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                  <Skeleton width="60%" height={16} />
+                </div>
+
+                {/* Avatar Section */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                  <Skeleton width={120} height={120} style={{ borderRadius: 'var(--ds-border-radius-full)' }} />
+                  <div style={{ flex: 1 }}>
+                    <Skeleton width={150} height={36} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                    <Skeleton width="60%" height={16} />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Personal Information Card Skeleton */}
+            <Card style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                {/* Section Header */}
+                <div>
+                  <Skeleton width="40%" height={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                  <Skeleton width="50%" height={16} />
+                </div>
+
+                {/* Form Fields */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i}>
+                      <Skeleton width="25%" height={20} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                      <Skeleton width="100%" height={48} />
+                    </div>
+                  ))}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <div>
+                      <Skeleton width="50%" height={20} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                      <Skeleton width="100%" height={48} />
+                    </div>
+                    <div>
+                      <Skeleton width="50%" height={20} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                      <Skeleton width="100%" height={48} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+                  <Skeleton width={150} height={40} />
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -229,9 +311,7 @@ export function SettingsPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <Heading level={2} data-size="md">
-            Innstillinger
-          </Heading>
+          <Heading level={2} data-size="md">{t("ui.settings")}</Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
@@ -254,7 +334,7 @@ export function SettingsPage() {
         <Tabs.List>
           <Tabs.Tab value="profile">Min profil</Tabs.Tab>
           <Tabs.Tab value="addresses">Adresser</Tabs.Tab>
-          <Tabs.Tab value="general">Generelt</Tabs.Tab>
+          <Tabs.Tab value="general">{t("rule.general")}</Tabs.Tab>
           <Tabs.Tab value="booking">Booking</Tabs.Tab>
           <Tabs.Tab value="notifications">Varsler</Tabs.Tab>
           <Tabs.Tab value="integrations">Integrasjoner</Tabs.Tab>
@@ -1026,9 +1106,7 @@ export function SettingsPage() {
             <Card>
               <Stack spacing={4}>
                 <div>
-                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Betaling
-                  </Heading>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t("rule.payment")}</Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Betalingsløsninger
                   </Paragraph>

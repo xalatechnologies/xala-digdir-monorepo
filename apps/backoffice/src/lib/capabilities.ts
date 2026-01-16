@@ -8,10 +8,11 @@
 
 /**
  * Effective role type for backoffice users.
- * - admin: Full access to all features
+ * - super_admin: Full platform access including integrations and system config
+ * - admin: Full access to tenant features
  * - case_handler: Limited access to booking/approval workflows (saksbehandler)
  */
-export type EffectiveBackofficeRole = 'admin' | 'case_handler';
+export type EffectiveBackofficeRole = 'super_admin' | 'admin' | 'case_handler';
 
 /**
  * Capability definitions for feature-level access control.
@@ -33,13 +34,36 @@ export type Capability =
   | 'CAP_SETTINGS_ADMIN'
   | 'CAP_AUDIT_VIEW'
   | 'CAP_REPORTS_VIEW'
-  | 'CAP_REPORTS_EXPORT';
+  | 'CAP_REPORTS_EXPORT'
+  | 'CAP_INTEGRATIONS_VIEW'
+  | 'CAP_INTEGRATIONS_ADMIN'
+  | 'CAP_SYSTEM_CONFIG';
 
 /**
  * Role-to-capability mapping.
  * Defines which capabilities each effective role has access to.
  */
 export const ROLE_CAPABILITIES: Record<EffectiveBackofficeRole, Capability[]> = {
+  super_admin: [
+    'CAP_BOOKING_READ',
+    'CAP_BOOKING_APPROVE',
+    'CAP_BOOKING_MANAGE',
+    'CAP_LISTING_READ',
+    'CAP_LISTING_CREATE',
+    'CAP_LISTING_EDIT',
+    'CAP_USER_VIEW',
+    'CAP_USER_ADMIN',
+    'CAP_ORG_VIEW',
+    'CAP_ORG_ADMIN',
+    'CAP_SETTINGS_VIEW',
+    'CAP_SETTINGS_ADMIN',
+    'CAP_AUDIT_VIEW',
+    'CAP_REPORTS_VIEW',
+    'CAP_REPORTS_EXPORT',
+    'CAP_INTEGRATIONS_VIEW',
+    'CAP_INTEGRATIONS_ADMIN',
+    'CAP_SYSTEM_CONFIG',
+  ],
   admin: [
     'CAP_BOOKING_READ',
     'CAP_BOOKING_APPROVE',

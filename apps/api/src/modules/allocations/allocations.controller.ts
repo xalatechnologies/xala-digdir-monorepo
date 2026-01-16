@@ -6,7 +6,7 @@ import { Controller, Get, Post, Delete } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, gte, lte } from 'drizzle-orm';
-import { allocations, listings, users } from '../../database/schema/index';
+import { allocations, rentalObjects, users } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
 
 interface TenantRequest extends FastifyRequest {
@@ -19,10 +19,10 @@ export class AllocationsController {
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { listingId, startDate, endDate, status } = request.query as any;
+    const { rentalObjectId, startDate, endDate, status } = request.query as any;
 
     const conditions = [];
-    if (listingId) conditions.push(eq(allocations.listingId, listingId));
+    if (rentalObjectId) conditions.push(eq(allocations.rentalObjectId, rentalObjectId));
     if (startDate) conditions.push(gte(allocations.startTime, new Date(startDate)));
     if (endDate) conditions.push(lte(allocations.endTime, new Date(endDate)));
     if (status) conditions.push(eq(allocations.status, status));
@@ -31,8 +31,8 @@ export class AllocationsController {
       .select({
         id: allocations.id,
         tenantId: allocations.tenantId,
-        listingId: allocations.listingId,
-        listingName: listings.name,
+        rentalObjectId: allocations.rentalObjectId,
+        listingName: rentalObjects.name,
         title: allocations.title,
         startTime: allocations.startTime,
         endTime: allocations.endTime,
@@ -45,7 +45,7 @@ export class AllocationsController {
         createdAt: allocations.createdAt,
       })
       .from(allocations)
-      .leftJoin(listings, eq(allocations.listingId, listings.id))
+      .leftJoin(rentalObjects, eq(allocations.rentalObjectId, rentalObjects.id))
       .leftJoin(users, eq(allocations.userId, users.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(allocations.startTime);
@@ -63,7 +63,7 @@ export class AllocationsController {
       .insert(allocations)
       .values({
         tenantId,
-        listingId: body.listingId,
+        rentalObjectId: body.rentalObjectId,
         title: body.title,
         startTime: new Date(body.startTime),
         endTime: new Date(body.endTime),
@@ -81,7 +81,7 @@ export class AllocationsController {
       action: 'create',
       resource: 'allocation',
       resourceId: result[0].id,
-      metadata: { listingId: body.listingId, startTime: body.startTime, endTime: body.endTime },
+      metadata: { rentalObjectId: body.rentalObjectId, startTime: body.startTime, endTime: body.endTime },
     });
 
     reply.code(201);

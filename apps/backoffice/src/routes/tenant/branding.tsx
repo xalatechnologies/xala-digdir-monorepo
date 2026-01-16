@@ -18,6 +18,7 @@ import {
   Button,
   Input,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -29,6 +30,7 @@ const COLOR_PRESETS = [
 ];
 
 export function TenantBrandingPage() {
+  const t = useT();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false

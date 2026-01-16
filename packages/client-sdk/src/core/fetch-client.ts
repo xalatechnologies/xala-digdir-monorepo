@@ -99,6 +99,7 @@ export class FetchHttpClient implements IHttpClient {
         headers,
         body,
         signal: options?.signal ?? controller.signal,
+        credentials: 'include', // Send cookies with cross-origin requests
       });
 
       if (timeoutId) clearTimeout(timeoutId);
@@ -106,21 +107,46 @@ export class FetchHttpClient implements IHttpClient {
       // Handle 401 Unauthorized
       if (response.status === 401) {
         this.config.onUnauthorized?.();
-        throw new ApiError('Unauthorized', 'UNAUTHORIZED', 401);
+        throw new ApiError({
+          type: '/errors/unauthorized',
+          title: 'Unauthorized',
+          status: 401,
+          detail: 'Authentication is required',
+        });
       }
 
       // Handle error responses
       if (!response.ok) {
-        const errorBody = await response.json().catch(() => ({ 
-          error: { code: 'UNKNOWN_ERROR', message: 'Request failed' }
+        const contentType = response.headers.get('content-type') || '';
+        const isRFC7807 = contentType.includes('application/problem+json');
+        
+        const errorBody = await response.json().catch(() => ({
+          type: '/errors/unknown',
+          title: 'Request failed',
+          status: response.status,
         }));
         
-        const error = new ApiError(
-          errorBody.error?.message || 'Request failed',
-          errorBody.error?.code || 'UNKNOWN_ERROR',
-          response.status,
-          errorBody.error?.details
-        );
+        let error: ApiError;
+        
+        if (isRFC7807 || errorBody.type) {
+          error = new ApiError({
+            type: errorBody.type || '/errors/unknown',
+            title: errorBody.title || 'Request failed',
+            status: errorBody.status || response.status,
+            detail: errorBody.detail,
+            instance: errorBody.instance,
+            correlationId: errorBody.correlationId,
+            timestamp: errorBody.timestamp,
+            errors: errorBody.errors,
+          });
+        } else {
+          error = new ApiError(
+            errorBody.error?.message || errorBody.message || 'Request failed',
+            errorBody.error?.code || errorBody.code || 'UNKNOWN_ERROR',
+            response.status,
+            errorBody.error?.details || errorBody.details
+          );
+        }
         
         this.config.onError?.(error);
         throw error;

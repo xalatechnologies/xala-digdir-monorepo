@@ -27,9 +27,9 @@ export class PricingController {
   async calculateQuote(request: FastifyRequest, reply: FastifyReply) {
     try {
       const quoteRequest = validate(PricingQuoteRequestSchema, request.body);
-      
+
       const quote = await this.pricingService.calculateQuote({
-        listingId: quoteRequest.listingId,
+        rentalObjectId: quoteRequest.rentalObjectId,
         start: quoteRequest.start,
         end: quoteRequest.end,
         userGroupId: quoteRequest.userGroupId,
@@ -49,8 +49,7 @@ export class PricingController {
           instance: '/pricing/quote',
         }));
       }
-      
-      console.error('Quote calculation error:', error);
+
       return reply.status(500).send(createProblemDetails({
         type: 'internal-error',
         title: 'Internal Server Error',

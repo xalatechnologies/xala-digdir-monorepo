@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "tsc -b --watch",
+    "typecheck": "tsc --noEmit",
     "validate": "node -e \"console.log(JSON.parse(require('fs').readFileSync('registry.json', 'utf8')).metadata)\""
   },
   "devDependencies": {

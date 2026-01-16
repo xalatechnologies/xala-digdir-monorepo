@@ -156,7 +156,6 @@ export class SignicatAuthController {
       
       if (!response.ok) {
         const error = await response.text();
-        console.error('Session creation failed:', error);
         return reply.status(500).send({
           error: 'session_creation_failed',
           message: 'Failed to create authentication session',
@@ -177,7 +176,6 @@ export class SignicatAuthController {
       // Redirect to Signicat authentication URL
       return reply.redirect(session.url);
     } catch (error) {
-      console.error('Authorization error:', error);
       return reply.status(500).send({
         error: 'authorization_failed',
         message: error instanceof Error ? error.message : 'Unknown error',
@@ -269,7 +267,6 @@ export class SignicatAuthController {
         message: 'Authentication successful',
       });
     } catch (error) {
-      console.error('Callback error:', error);
       return reply.status(500).send({
         error: 'callback_failed',
         message: error instanceof Error ? error.message : 'Unknown error',

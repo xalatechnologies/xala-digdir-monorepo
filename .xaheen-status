@@ -3,9 +3,9 @@
   "spec": "039-back-office-users-and-roles",
   "state": "building",
   "subtasks": {
-    "completed": 37,
+    "completed": 40,
     "total": 40,
-    "in_progress": 1,
+    "in_progress": 0,
     "failed": 0
   },
   "phase": {
@@ -18,8 +18,8 @@
     "max": 1
   },
   "session": {
-    "number": 11,
-    "started_at": "2026-01-16T10:53:18.832742"
+    "number": 12,
+    "started_at": "2026-01-16T13:45:00.000000"
   },
-  "last_update": "2026-01-16T11:22:26.629559"
+  "last_update": "2026-01-16T13:45:00.000000"
 }

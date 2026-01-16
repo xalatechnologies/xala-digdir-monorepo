@@ -21,6 +21,17 @@ import type {
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
 import type { UploadOptions, MediaUploadResponse } from '../types/upload';
 
+// =============================================================================
+// Branding Types
+// =============================================================================
+
+export interface BrandingSettings {
+  logo?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  favicon?: string;
+}
+
 export class OrganizationService extends BaseService {
   constructor() {
     super('/api/organizations');
@@ -106,6 +117,20 @@ export class OrganizationService extends BaseService {
    */
   async uploadLogo(id: string, files: File[], options?: UploadOptions): Promise<MediaUploadResponse> {
     return super.uploadMedia(`/${id}/logo`, files, options);
+  }
+
+  /**
+   * Get organization branding settings
+   */
+  async getBranding(id: string): Promise<SingleResponse<BrandingSettings>> {
+    return this.client.get(this.buildPath(`/${id}/branding`));
+  }
+
+  /**
+   * Update organization branding settings
+   */
+  async updateBranding(id: string, data: Partial<BrandingSettings>): Promise<SingleResponse<BrandingSettings>> {
+    return this.client.put(this.buildPath(`/${id}/branding`), data);
   }
 }
 

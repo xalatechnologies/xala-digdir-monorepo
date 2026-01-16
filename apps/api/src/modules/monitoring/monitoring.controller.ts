@@ -27,7 +27,7 @@ export class MonitoringController {
    */
   @Get('/audit-logs')
   async getAuditLogs(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
     const result = await this.service.findAuditLogs({ 
       ...request.query as any,
       tenantId,
@@ -46,7 +46,7 @@ export class MonitoringController {
    */
   @Get('/alerts')
   async getActiveAlerts(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
     const alerts = await this.service.getActiveAlerts(tenantId);
     return { alerts };
   }
@@ -56,7 +56,7 @@ export class MonitoringController {
    */
   @Post('/alerts')
   async createAlert(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string) || 'default';
+    const tenantId = request.tenantId || 'default';
     const alert = await this.service.createAlert(tenantId, request.body);
     return reply.status(201).send({ alert });
   }
@@ -67,7 +67,7 @@ export class MonitoringController {
   @Put('/alerts/:id/acknowledge')
   async acknowledgeAlert(request: TenantRequest, reply: FastifyReply) {
     const id = (request.params as any).id;
-    const acknowledgedBy = request.userId || (request.headers['x-user-id'] as string) || 'system';
+    const acknowledgedBy = request.userId || 'system';
     const alert = await this.service.acknowledgeAlert(id, acknowledgedBy);
     return { alert };
   }
@@ -78,7 +78,7 @@ export class MonitoringController {
   @Put('/alerts/:id/resolve')
   async resolveAlert(request: TenantRequest, reply: FastifyReply) {
     const id = (request.params as any).id;
-    const resolvedBy = request.userId || (request.headers['x-user-id'] as string) || 'system';
+    const resolvedBy = request.userId || 'system';
     const alert = await this.service.resolveAlert(id, resolvedBy);
     return { alert };
   }
@@ -92,7 +92,7 @@ export class MonitoringController {
    */
   @Get('/incidents')
   async getOpenIncidents(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
     const incidents = await this.service.getOpenIncidents(tenantId);
     return { incidents };
   }
@@ -111,7 +111,7 @@ export class MonitoringController {
    */
   @Post('/incidents')
   async createIncident(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string) || 'default';
+    const tenantId = request.tenantId || 'default';
     const incident = await this.service.createIncident(tenantId, request.body);
     return reply.status(201).send({ incident });
   }
@@ -122,7 +122,7 @@ export class MonitoringController {
   @Put('/incidents/:id/status')
   async updateIncidentStatus(request: TenantRequest, reply: FastifyReply) {
     const id = (request.params as any).id;
-    const userId = request.userId || (request.headers['x-user-id'] as string) || 'system';
+    const userId = request.userId || 'system';
     const incident = await this.service.updateIncidentStatus(id, { 
       ...(request.body as any), 
       updatedBy: userId 

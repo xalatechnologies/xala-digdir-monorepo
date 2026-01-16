@@ -29,6 +29,7 @@ export function useOrganizations(params?: OrganizationQueryParams) {
   return useQuery({
     queryKey: queryKeys.organizations.list(params),
     queryFn: () => organizationService.getAll(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -40,6 +41,7 @@ export function useOrganization(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.organizations.detail(id),
     queryFn: () => organizationService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -51,6 +53,7 @@ export function useOrganizationMembers(id: string) {
     queryKey: queryKeys.organizations.members(id),
     queryFn: () => organizationService.getMembers(id),
     enabled: !!id,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -165,6 +168,7 @@ export function useUsers(params?: UserQueryParams) {
   return useQuery({
     queryKey: queryKeys.users.list(params),
     queryFn: () => userService.getAll(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -176,6 +180,7 @@ export function useUser(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.users.detail(id),
     queryFn: () => userService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -186,6 +191,7 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: queryKeys.users.me(),
     queryFn: () => userService.getCurrentUser(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -337,6 +343,7 @@ export function useConsents() {
   return useQuery({
     queryKey: queryKeys.users.consents(),
     queryFn: () => userService.getConsents(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -350,6 +357,58 @@ export function useUpdateConsents() {
     mutationFn: (consents: Partial<ConsentSettings>) => userService.updateConsents(consents),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.users.consents() });
+    },
+  });
+}
+
+// ============================================================================
+// Organization Settings & Branding Hooks (TODO: Implement backend service)
+// ============================================================================
+
+/**
+ * Get organization settings
+ * @todo Implement backend service method organizationService.getSettings(organizationId)
+ */
+export function useOrganizationSettings(organizationId: string) {
+  return useQuery({
+    queryKey: [...queryKeys.organizations.detail(organizationId), "settings"],
+    queryFn: () => {
+      throw new Error("useOrganizationSettings: Backend service not yet implemented. Please implement organizationService.getSettings(organizationId)");
+    },
+    enabled: false, // Disabled until backend is implemented
+  });
+}
+
+/**
+ * Update organization settings
+ * @todo Implement backend service method organizationService.updateSettings(organizationId, settings)
+ */
+export function useUpdateOrganizationSettings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ organizationId, settings }: { organizationId: string; settings: any }) => {
+      throw new Error("useUpdateOrganizationSettings: Backend service not yet implemented. Please implement organizationService.updateSettings(organizationId, settings)");
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.organizations.detail(organizationId), "settings"] });
+    },
+  });
+}
+
+/**
+ * Update organization branding (logo, colors, theme)
+ * @todo Implement backend service method organizationService.updateBranding(organizationId, branding)
+ */
+export function useUpdateOrganizationBranding() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ organizationId, branding }: { organizationId: string; branding: any }) => {
+      throw new Error("useUpdateOrganizationBranding: Backend service not yet implemented. Please implement organizationService.updateBranding(organizationId, branding)");
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(organizationId) });
     },
   });
 }

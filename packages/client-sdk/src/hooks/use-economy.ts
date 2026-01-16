@@ -30,6 +30,7 @@ export function useInvoiceBases(params?: EconomyQueryParams) {
   return useQuery({
     queryKey: queryKeys.economy.invoiceBases.list(params),
     queryFn: () => economyService.getInvoiceBases(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -41,6 +42,7 @@ export function useInvoiceBasis(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.economy.invoiceBases.detail(id),
     queryFn: () => economyService.getInvoiceBasis(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -150,6 +152,7 @@ export function useSalesDocuments(params?: EconomyQueryParams) {
   return useQuery({
     queryKey: queryKeys.economy.salesDocuments.list(params),
     queryFn: () => economyService.getSalesDocuments(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -161,6 +164,7 @@ export function useSalesDocument(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.economy.salesDocuments.detail(id),
     queryFn: () => economyService.getSalesDocument(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -233,6 +237,7 @@ export function useCreditNotes(params?: EconomyQueryParams) {
   return useQuery({
     queryKey: queryKeys.economy.creditNotes.list(params),
     queryFn: () => economyService.getCreditNotes(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -244,6 +249,7 @@ export function useCreditNote(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.economy.creditNotes.detail(id),
     queryFn: () => economyService.getCreditNote(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -331,6 +337,7 @@ export function useVismaInvoiceStatus(salesDocumentId: string, options?: { enabl
     queryKey: queryKeys.economy.salesDocuments.vismaStatus(salesDocumentId),
     queryFn: () => economyService.checkVismaStatus(salesDocumentId),
     enabled: !!salesDocumentId && (options?.enabled ?? true),
+    staleTime: 2 * 60 * 1000, // 2 minutes - Visma sync status
   });
 }
 
@@ -358,5 +365,6 @@ export function useEconomyStatistics(params?: { startDate?: string; endDate?: st
   return useQuery({
     queryKey: queryKeys.economy.statistics(params),
     queryFn: () => economyService.getStatistics(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes - economy statistics
   });
 }

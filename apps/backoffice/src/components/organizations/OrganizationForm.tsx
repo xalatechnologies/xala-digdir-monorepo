@@ -16,6 +16,7 @@ import type {
   ActorType,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions } from '../shared';
+import { useT } from '@xala/i18n';
 
 interface OrganizationFormProps {
   organization?: Organization | null;
@@ -33,6 +34,7 @@ const actorTypeOptions = [
 ];
 
 export function OrganizationForm({ organization, onSubmit, onCancel }: OrganizationFormProps) {
+  const t = useT();
   const [formData, setFormData] = useState<CreateOrganizationDTO>({
     name: '',
     actorType: 'business',
@@ -108,7 +110,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
       await onSubmit(cleanData);
     } catch (error) {
-      console.error('Failed to save organization:', error);
+      // Failed to save organization
     } finally {
       setIsSubmitting(false);
     }

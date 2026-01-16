@@ -4,12 +4,13 @@
  */
 
 import { createContext, useContext, type ReactNode } from 'react';
-import { 
+import {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeListings,
+  // useRealtimeListings, // TODO: SDK doesn't export this yet
   useRealtimeMessages,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface RealtimeContextValue {
   isConnected: boolean;
@@ -36,6 +37,7 @@ interface RealtimeProviderProps {
  * ```
  */
 export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
+  const t = useT();
   // Build full WebSocket URL with tenant ID suffix
   // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
   const fullWsUrl = wsUrl && tenantId 
@@ -53,7 +55,7 @@ export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProvider
 
   // Subscribe to domain events - auto-invalidates queries
   useRealtimeBookings();
-  useRealtimeListings();
+  // useRealtimeListings(); // TODO: SDK doesn't export this yet
   useRealtimeMessages();
 
   return (

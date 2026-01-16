@@ -40,3 +40,30 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock document.getAnimations (needed for design system animations)
 Document.prototype.getAnimations = vi.fn(() => []);
+
+// Mock HTMLDialogElement (needed for Dialog component)
+if (typeof HTMLDialogElement === 'undefined') {
+  global.HTMLDialogElement = class HTMLDialogElement extends HTMLElement {
+    open = false;
+    returnValue = '';
+    showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.open = true;
+    });
+    close = vi.fn(function (this: HTMLDialogElement) {
+      this.open = false;
+    });
+    show = vi.fn(function (this: HTMLDialogElement) {
+      this.open = true;
+    });
+  } as typeof HTMLDialogElement;
+} else {
+  HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+    this.open = true;
+  });
+  HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+    this.open = false;
+  });
+  HTMLDialogElement.prototype.show = vi.fn(function (this: HTMLDialogElement) {
+    this.open = true;
+  });
+}

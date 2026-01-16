@@ -229,7 +229,7 @@ export function CalendarPage() {
                               textOverflow: 'ellipsis',
                             }}
                           >
-                            {booking.listingName || 'Booking'}
+                            {booking.listingName || t('calendar.bookingLabel')}
                           </div>
                         </div>
                       );

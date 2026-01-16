@@ -70,7 +70,26 @@ class SeasonalLeaseService {
   private basePath = '/api/seasonal-leases';
 
   /**
-   * Get all seasonal leases
+   * Get all seasonal leases with optional filtering
+   * Retrieve paginated seasonal leases filtered by listing, organization, season, or status
+   *
+   * @param params - Query parameters for filtering seasonal leases
+   * @returns Paginated response containing seasonal leases and metadata
+   *
+   * @example
+   * ```typescript
+   * // Get all active seasonal leases
+   * const { data, meta } = await seasonalLeaseService.getAll({ status: 'active' });
+   *
+   * // Get seasonal leases for a specific listing
+   * const result = await seasonalLeaseService.getAll({
+   *   listingId: 'listing-123',
+   *   season: '2024-summer'
+   * });
+   *
+   * // Paginated query
+   * const page2 = await seasonalLeaseService.getAll({ page: 2, limit: 10 });
+   * ```
    */
   async getAll(params: SeasonalLeaseQueryParams = {}): Promise<PaginatedResponse<SeasonalLease>> {
     const queryParams = new URLSearchParams();
@@ -86,7 +105,16 @@ class SeasonalLeaseService {
   }
 
   /**
-   * Get seasonal lease by ID
+   * Get a single seasonal lease by its ID
+   *
+   * @param id - Unique identifier of the seasonal lease
+   * @returns Seasonal lease data
+   *
+   * @example
+   * ```typescript
+   * const { data } = await seasonalLeaseService.getById('lease-123');
+   * console.log(`Season: ${data.season}, Status: ${data.status}`);
+   * ```
    */
   async getById(id: string): Promise<{ data: SeasonalLease }> {
     return getClient().get<{ data: SeasonalLease }>(`${this.basePath}/${id}`);
@@ -94,34 +122,105 @@ class SeasonalLeaseService {
 
   /**
    * Create a new seasonal lease
+   * Creates a long-term seasonal contract with weekly recurring time slots
+   *
+   * @param data - Seasonal lease creation data including listing, organization, dates, and weekly slots
+   * @returns Newly created seasonal lease with status 'draft'
+   *
+   * @example
+   * ```typescript
+   * // Create summer season lease for football field
+   * const { data } = await seasonalLeaseService.create({
+   *   listingId: 'field-001',
+   *   organizationId: 'org-123',
+   *   season: '2024-summer',
+   *   startDate: '2024-06-01',
+   *   endDate: '2024-08-31',
+   *   weeklySlots: [
+   *     { dayOfWeek: 1, startTime: '18:00', endTime: '20:00' }, // Monday
+   *     { dayOfWeek: 3, startTime: '18:00', endTime: '20:00' }  // Wednesday
+   *   ],
+   *   totalPrice: 5000,
+   *   notes: 'Youth team training'
+   * });
+   * ```
    */
   async create(data: CreateSeasonalLeaseDTO): Promise<{ data: SeasonalLease }> {
     return getClient().post<{ data: SeasonalLease }>(this.basePath, data);
   }
 
   /**
-   * Update a seasonal lease
+   * Update an existing seasonal lease
+   * Modify lease details such as time slots, dates, or pricing
+   *
+   * @param id - Seasonal lease ID to update
+   * @param data - Partial update data (only fields to change)
+   * @returns Updated seasonal lease
+   *
+   * @example
+   * ```typescript
+   * // Update weekly slots
+   * const { data } = await seasonalLeaseService.update('lease-123', {
+   *   weeklySlots: [
+   *     { dayOfWeek: 2, startTime: '17:00', endTime: '19:00' }
+   *   ]
+   * });
+   *
+   * // Update pricing
+   * await seasonalLeaseService.update('lease-123', { totalPrice: 6000 });
+   * ```
    */
   async update(id: string, data: Partial<CreateSeasonalLeaseDTO>): Promise<{ data: SeasonalLease }> {
     return getClient().put<{ data: SeasonalLease }>(`${this.basePath}/${id}`, data);
   }
 
   /**
-   * Approve a seasonal lease
+   * Approve a pending seasonal lease
+   * Changes status from 'pending' to 'approved', making it ready for allocation generation
+   *
+   * @param id - Seasonal lease ID to approve
+   * @returns Approved seasonal lease with updated status
+   *
+   * @example
+   * ```typescript
+   * const { data } = await seasonalLeaseService.approve('lease-123');
+   * // Status is now 'approved', can generate allocations
+   * await seasonalLeaseService.generateAllocations(data.id);
+   * ```
    */
   async approve(id: string): Promise<{ data: SeasonalLease }> {
     return getClient().put<{ data: SeasonalLease }>(`${this.basePath}/${id}/approve`);
   }
 
   /**
-   * Reject a seasonal lease
+   * Reject a pending seasonal lease
+   * Declines the lease request with an optional reason
+   *
+   * @param id - Seasonal lease ID to reject
+   * @param reason - Optional explanation for rejection
+   * @returns Rejected seasonal lease
+   *
+   * @example
+   * ```typescript
+   * await seasonalLeaseService.reject('lease-123', 'Time slot conflicts with existing booking');
+   * ```
    */
   async reject(id: string, reason?: string): Promise<{ data: SeasonalLease }> {
     return getClient().put<{ data: SeasonalLease }>(`${this.basePath}/${id}/reject`, { reason });
   }
 
   /**
-   * Cancel a seasonal lease
+   * Cancel an active or approved seasonal lease
+   * Cancels the lease and optionally provides a reason
+   *
+   * @param id - Seasonal lease ID to cancel
+   * @param reason - Optional cancellation reason
+   * @returns Cancelled seasonal lease
+   *
+   * @example
+   * ```typescript
+   * await seasonalLeaseService.cancel('lease-123', 'Organization withdrew request');
+   * ```
    */
   async cancel(id: string, reason?: string): Promise<{ data: SeasonalLease }> {
     return getClient().put<{ data: SeasonalLease }>(`${this.basePath}/${id}/cancel`, { reason });
@@ -129,21 +228,59 @@ class SeasonalLeaseService {
 
   /**
    * Delete a seasonal lease (draft only)
+   * Permanently removes a draft seasonal lease. Only draft leases can be deleted.
+   *
+   * @param id - Seasonal lease ID to delete
+   * @returns Success status
+   *
+   * @example
+   * ```typescript
+   * await seasonalLeaseService.delete('lease-draft-123');
+   * ```
    */
   async delete(id: string): Promise<{ success: boolean }> {
     return getClient().delete<{ success: boolean }>(`${this.basePath}/${id}`);
   }
 
   /**
-   * Generate allocations from seasonal lease
+   * Generate calendar allocations from an approved seasonal lease
+   * Creates individual allocation entries for each recurring weekly slot across the season date range
+   *
+   * @param id - Approved seasonal lease ID
+   * @returns Number of allocations created
+   *
+   * @example
+   * ```typescript
+   * // After approving a lease, generate allocations
+   * const { data } = await seasonalLeaseService.generateAllocations('lease-123');
+   * console.log(`Created ${data.allocationsCreated} allocation entries`);
+   * // For a 12-week season with 2 weekly slots: allocationsCreated = 24
+   * ```
    */
   async generateAllocations(id: string): Promise<{ data: { allocationsCreated: number } }> {
     return getClient().post<{ data: { allocationsCreated: number } }>(`${this.basePath}/${id}/generate-allocations`);
   }
 
   /**
-   * Get allocation suggestions (KRAV-ADM-05)
-   * Returns rule-based suggestions for seasonal allocation
+   * Get rule-based allocation suggestions for seasonal leases (KRAV-ADM-05)
+   * Returns AI-generated suggestions based on historical usage, priority rules, and availability
+   *
+   * @param params - Optional filters for listing and season
+   * @returns Allocation suggestions with reasoning and historical data
+   *
+   * @example
+   * ```typescript
+   * // Get suggestions for a specific listing and season
+   * const { data } = await seasonalLeaseService.getSuggestions({
+   *   listingId: 'field-001',
+   *   season: '2024-summer'
+   * });
+   *
+   * data.suggestions.forEach(suggestion => {
+   *   console.log(`${suggestion.organizationName}: ${suggestion.reasoning}`);
+   *   console.log(`Suggested days: ${suggestion.suggestedWeekdays}`);
+   * });
+   * ```
    */
   async getSuggestions(params?: { listingId?: string; season?: string }): Promise<{ data: AllocationSuggestions }> {
     const queryParams = new URLSearchParams();

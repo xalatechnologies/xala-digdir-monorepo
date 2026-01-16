@@ -27,6 +27,7 @@ import { useAccountContext } from '../../providers/AccountContextProvider';
 interface LocationState {
   contextRedirectMessage?: string;
   from?: { pathname: string };
+  intentionalSwitch?: boolean;
 }
 
 const pageTitles: Record<string, string> = {
@@ -51,9 +52,10 @@ export function AppLayout() {
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
 
   // Handle context redirect message from navigation state
+  // Skip showing message if this was an intentional switch via AccountSwitcher
   useEffect(() => {
     const state = location.state as LocationState | null;
-    if (state?.contextRedirectMessage) {
+    if (state?.contextRedirectMessage && !state?.intentionalSwitch) {
       setRedirectMessage(state.contextRedirectMessage);
       // Clear the message from navigation state to prevent showing on refresh
       navigate(location.pathname, { replace: true, state: {} });
@@ -62,6 +64,9 @@ export function AppLayout() {
         setRedirectMessage(null);
       }, 5000);
       return () => clearTimeout(timer);
+    } else if (state?.intentionalSwitch) {
+      // Clear the intentionalSwitch flag from state
+      navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, location.pathname, navigate]);
 

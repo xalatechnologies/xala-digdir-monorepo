@@ -27,6 +27,7 @@ import {
   useFinalizeSeasonAllocations,
   type SeasonApplication,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface SeasonAllocationManagementProps {
   seasonId: string;
@@ -41,6 +42,7 @@ export function SeasonAllocationManagement({
   seasonEndDate,
   onAllocationComplete,
 }: SeasonAllocationManagementProps) {
+  const t = useT();
   const [allocating, setAllocating] = useState<Record<string, boolean>>({});
 
   // Queries
@@ -125,7 +127,7 @@ export function SeasonAllocationManagement({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -258,7 +260,7 @@ export function SeasonAllocationManagement({
                               <CheckIcon /> Tildelt
                             </Badge>
                           ) : (
-                            <Badge color="warning">Venter</Badge>
+                            <Badge color="warning">{t("status.pending")}</Badge>
                           )}
                         </Table.Cell>
                         <Table.Cell>
@@ -270,7 +272,7 @@ export function SeasonAllocationManagement({
                             >
                               {allocating[application.id] ? (
                                 <>
-                                  <Spinner data-size="sm" aria-label="Laster..." /> Tildeler...
+                                  <Spinner data-size="sm" aria-label={t("ui.loading")} /> Tildeler...
                                 </>
                               ) : (
                                 <>

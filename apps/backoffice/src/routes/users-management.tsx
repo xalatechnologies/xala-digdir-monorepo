@@ -23,6 +23,7 @@ import {
   useDialog,
   Input,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -61,6 +62,7 @@ const mockUsers = [
 ];
 
 export function UsersManagementPage() {
+  const t = useT();
   const { confirm } = useDialog();
   const [isLoading] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
@@ -81,16 +83,16 @@ export function UsersManagementPage() {
       title: 'Deaktiver bruker',
       description: `Er du sikker på at du vil deaktivere "${name}"?`,
       confirmText: 'Deaktiver',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Deactivated:', id);
+      // User deactivated
     }
   };
 
   const handleInvite = () => {
-    console.log('Invite:', inviteEmail, inviteRole);
+    // Invite user
     setInviteEmail('');
     setShowInvite(false);
   };
@@ -207,7 +209,7 @@ export function UsersManagementPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>

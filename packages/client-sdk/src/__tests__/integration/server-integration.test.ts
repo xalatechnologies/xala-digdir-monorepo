@@ -5,7 +5,7 @@
  * These tests require: pnpm --filter @digilist/api dev
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 // ==============================================================================
 // Test Configuration

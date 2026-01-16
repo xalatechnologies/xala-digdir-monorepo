@@ -10,7 +10,7 @@ import type { TenantEntity, SeasonalLeaseStatus, ConversationStatus, MessageSend
 // =============================================================================
 
 export interface SeasonalLease extends TenantEntity {
-  listingId: string;
+  rentalObjectId: string;
   organizationId: string;
   startDate: string;
   endDate: string;
@@ -24,7 +24,7 @@ export interface SeasonalLease extends TenantEntity {
 }
 
 export interface CreateSeasonalLeaseDTO {
-  listingId: string;
+  rentalObjectId: string;
   organizationId: string;
   startDate: string;
   endDate: string;
@@ -46,7 +46,7 @@ export interface UpdateSeasonalLeaseDTO {
 export interface SeasonalLeaseQueryParams extends BaseQueryParams {
   status?: SeasonalLeaseStatus;
   organizationId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
 }
 
 // =============================================================================
@@ -97,8 +97,8 @@ export interface SeasonQueryParams extends BaseQueryParams {
 
 export interface SeasonApplication extends TenantEntity {
   seasonId: string;
-  listingId: string;
-  listingName?: string;
+  rentalObjectId: string;
+  rentalObjectName?: string;
   organizationId: string;
   organizationName?: string;
   applicantName: string;
@@ -116,7 +116,7 @@ export interface SeasonApplication extends TenantEntity {
 
 export interface CreateSeasonApplicationDTO {
   seasonId: string;
-  listingId: string;
+  rentalObjectId: string;
   organizationId: string;
   applicantName: string;
   applicantEmail: string;
@@ -130,7 +130,7 @@ export interface CreateSeasonApplicationDTO {
 
 export interface SeasonApplicationQueryParams extends BaseQueryParams {
   seasonId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   organizationId?: string;
   status?: string;
 }
@@ -218,8 +218,8 @@ export interface DashboardKPIs {
 
 export interface UsageReport {
   period: string;
-  listingId: string;
-  listingName: string;
+  rentalObjectId: string;
+  rentalObjectName: string;
   totalBookings: number;
   bookingCount: number;
   totalHours: number;
@@ -253,7 +253,7 @@ export interface ReportQueryParams {
   period?: ReportPeriod;
   startDate?: string;
   endDate?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   organizationId?: string;
 }
 
@@ -348,7 +348,7 @@ export interface DiscountCode {
   usedCount: number;
   validFrom?: string;
   validUntil?: string;
-  listingIds?: string[];
+  rentalObjectIds?: string[];
   actorTypes?: string[];
   isActive: boolean;
   createdAt: string;
@@ -364,7 +364,7 @@ export interface CreateDiscountCodeDTO {
   maxUses?: number;
   validFrom?: string;
   validUntil?: string;
-  listingIds?: string[];
+  rentalObjectIds?: string[];
   actorTypes?: string[];
 }
 
@@ -384,7 +384,7 @@ export type BlockType = 'maintenance' | 'closed' | 'hold' | 'emergency' | 'inter
 export interface Block {
   id: string;
   tenantId: string;
-  listingId: string;
+  rentalObjectId: string;
   title: string;
   startTime: string;
   endTime: string;
@@ -406,7 +406,7 @@ export interface RecurrenceRule {
 }
 
 export interface CreateBlockDTO {
-  listingId: string;
+  rentalObjectId: string;
   title: string;
   startTime: string;
   endTime: string;
@@ -441,7 +441,7 @@ export interface ConflictsResponse {
 }
 
 export interface ConflictCheckParams {
-  listingId: string;
+  rentalObjectId: string;
   startTime: string;
   endTime: string;
   excludeBlockId?: string;

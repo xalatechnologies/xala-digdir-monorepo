@@ -56,7 +56,7 @@ export class SettingsController {
   @Get()
   async getSettings(request: SettingsRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
 
     if (!tenantId) {
       reply.code(400);
@@ -93,7 +93,7 @@ export class SettingsController {
   @Put()
   async updateSettings(request: SettingsRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
     const body = request.body as any;
 
     if (!tenantId) {
@@ -136,7 +136,7 @@ export class SettingsController {
   @Get('/integrations')
   async getIntegrations(request: SettingsRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = request.tenantId;
 
     if (!tenantId) {
       reply.code(400);
@@ -162,7 +162,7 @@ export class SettingsController {
   @Put('/integrations/:provider')
   async updateIntegration(request: FastifyRequest<{ Params: { provider: string } }>, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const tenantId = (request as any).tenantId || (request.headers['x-tenant-id'] as string);
+    const tenantId = (request as any).tenantId;
     const { provider } = request.params;
     const body = request.body as any;
 

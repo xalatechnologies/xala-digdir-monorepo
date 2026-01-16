@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConflictIndicator, getConflictStyles, getConflictColors } from './ConflictIndicator';
+import { useT } from '@xala/i18n';
 
 describe('ConflictIndicator', () => {
   const mockConflicts = [

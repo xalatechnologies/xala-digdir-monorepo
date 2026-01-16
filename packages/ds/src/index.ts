@@ -241,15 +241,16 @@ export type {
 
 // Blocks - Business logic components
 export {
-  ListingCard,
-  ListingListItem,
-  ListingGrid,
-  ListingToolbar,
-  ListingMap,
-  ListingTableView,
+  RentalObjectCard,
+  RentalObjectListItem,
+  RentalObjectGrid,
+  RentalObjectToolbar,
+  RentalObjectMap,
+  RentalObjectTableView,
+  RentalObjectsFilterBar,
   ImageGallery,
   ImageSlider,
-  ListingDetailHeader,
+  RentalObjectDetailHeader,
   CapacityCard,
   FacilityChips,
   AdditionalServicesList,
@@ -257,6 +258,7 @@ export {
   LocationCard,
   OpeningHoursCard,
   AvailabilityCalendar,
+  RentalObjectAvailabilityCalendar,
   GuidelinesTab,
   FAQTab,
   PriceSummaryCard,
@@ -270,7 +272,7 @@ export {
   FavoriteButton,
   ShareButton,
   ShareSheet,
-  ListingTabs,
+  RentalObjectTabs,
   TabContent,
   TabEmptyState,
   RequireAuthModal,
@@ -289,7 +291,7 @@ export {
   StatusTag,
   BookingStatusBadge,
   PaymentStatusBadge,
-  ListingStatusBadge,
+  RentalObjectStatusBadge,
   RequestStatusBadge,
   SeasonalLeaseStatusBadge,
   OrganizationStatusBadge,
@@ -318,18 +320,19 @@ export {
   useGlobalError,
 } from './blocks';
 export type {
-  ListingCardProps,
-  ListingCardVariant,
-  ListingListItemProps,
-  ListingGridProps,
-  ListingToolbarProps,
-  ListingMapProps,
-  MapListing,
-  ListingTableViewProps,
+  RentalObjectCardProps,
+  RentalObjectCardVariant,
+  RentalObjectListItemProps,
+  RentalObjectGridProps,
+  RentalObjectToolbarProps,
+  RentalObjectMapProps,
+  MapRentalObject,
+  RentalObjectTableViewProps,
+  RentalObjectsFilterBarProps,
   ViewMode,
   ImageGalleryProps,
   ImageSliderProps,
-  ListingDetailHeaderProps,
+  RentalObjectDetailHeaderProps,
   CapacityCardProps,
   FacilityChipsProps,
   AdditionalServicesListProps,
@@ -337,6 +340,7 @@ export type {
   LocationCardProps,
   OpeningHoursCardProps,
   AvailabilityCalendarProps,
+  RentalObjectAvailabilityCalendarProps,
   GuidelinesTabProps,
   FAQTabProps,
   PriceSummaryCardProps,
@@ -355,7 +359,7 @@ export type {
   ShareSheetProps,
   ShareData,
   SharePlatform,
-  ListingTabsProps,
+  RentalObjectTabsProps,
   TabConfig,
   TabContentProps,
   TabEmptyStateProps,
@@ -378,8 +382,8 @@ export type {
   BookingStatusBadgeProps,
   PaymentStatusType,
   PaymentStatusBadgeProps,
-  ListingStatusType,
-  ListingStatusBadgeProps,
+  RentalObjectStatusType,
+  RentalObjectStatusBadgeProps,
   RequestStatusType,
   RequestStatusBadgeProps,
   SeasonalLeaseStatusType,
@@ -459,6 +463,25 @@ export {
   formatPrice,
   formatPriceUnit
 } from './types/booking';
+
+// Rental Object Management Types
+export type {
+  RentalObjectQueryFilters,
+  ViewMode,
+  RentalObjectFilterState,
+  ListingStatus,
+  ListingType,
+  RentalObjectStatus,
+  RentalObjectType
+} from './types/rental-objects';
+
+// Rental Object Management Constants
+export {
+  TYPE_TABS,
+  STATUS_OPTIONS,
+  SORT_OPTIONS,
+  CAPACITY_OPTIONS
+} from './constants/rental-objects';
 
 // =============================================================================
 // Design System Utilities & Tokens
