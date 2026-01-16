@@ -23,6 +23,8 @@ import {
   Text,
   HeaderSearch,
   Spinner,
+  Chip,
+  Card,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import {
@@ -35,6 +37,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeRentalObject } from '../providers';
 import { LazyRentalObjectMap } from '../components/LazyRentalObjectMap';
 import { useT } from '@xala/i18n';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -50,11 +53,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 // Category options using V3 4-category model
 // Note: Categories can be disabled per tenant via feature flags
 const CATEGORY_OPTIONS = [
-  { id: 'ALL', key: 'ALL', label: 'Alle typer' },
-  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
-  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
-  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
+  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
+  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
+  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
+  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
 ];
 
 // Feature flag check for disabled categories (Skien has KJORETOY_OG_TRANSPORT disabled)
@@ -70,6 +73,64 @@ const CAPACITY_OPTIONS = [
   { id: '21-50', labelKey: 'listings.filter.capacity.21-50', min: 21, max: 50 },
   { id: '50+', labelKey: 'listings.filter.capacity.50+', min: 50, max: Infinity },
 ];
+
+// Skeleton Loading Component
+const RentalObjectSkeleton = () => (
+  <Card style={{ height: '100%', overflow: 'hidden' }}>
+    {/* Image Skeleton */}
+    <div style={{
+      width: '100%',
+      height: '260px',
+      backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+      position: 'relative'
+    }}>
+      <div className="skeleton-shimmer" style={{
+        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+        animation: 'shimmer 1.5s infinite'
+      }} />
+    </div>
+
+    {/* Content Skeleton */}
+    <div style={{ padding: 'var(--ds-spacing-4)' }}>
+      {/* Title */}
+      <div style={{
+        height: '24px',
+        width: '70%',
+        backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+        borderRadius: '4px',
+        marginBottom: 'var(--ds-spacing-2)'
+      }} />
+      
+      {/* Subtitle/Location */}
+      <div style={{
+        height: '16px',
+        width: '50%',
+        backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+        borderRadius: '4px',
+        marginBottom: 'var(--ds-spacing-4)'
+      }} />
+
+      {/* Facilities row */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: 'var(--ds-spacing-4)' }}>
+        <div style={{ height: '24px', width: '60px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
+        <div style={{ height: '24px', width: '80px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
+      </div>
+
+      {/* Footer row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-2)' }}>
+         <div style={{ height: '20px', width: '40px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
+         <div style={{ height: '20px', width: '60px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
+      </div>
+    </div>
+    <style>{`
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+    `}</style>
+  </Card>
+);
 
 // Filter helpers using projection DTO directly (no transformation needed)
 
@@ -174,8 +235,8 @@ export function RentalObjectsPage(): React.ReactElement {
   // Filter listings using projection DTO fields
   const filteredListings = React.useMemo(() => {
     return listings.filter(l => {
-      // Filter by type using DTO's type field directly
-      if (listingType !== 'ALL' && l.type !== listingType) return false;
+      // Filter by category using DTO's category field
+      if (listingType !== 'ALL' && l.category !== listingType) return false;
 
       // Filter by area using DTO's city field
       if (selectedArea !== 'all') {
@@ -262,6 +323,42 @@ export function RentalObjectsPage(): React.ReactElement {
     (selectedCapacity !== 'all' ? 1 : 0) +
     selectedFacilities.length;
 
+  const getFilterChips = () => {
+    const chips: { id: string, label: string, type: 'category' | 'area' | 'capacity' | 'facility', value: string }[] = [];
+
+    if (listingType !== 'ALL') {
+      const cat = CATEGORY_OPTIONS.find(c => c.id === listingType);
+      if (cat) chips.push({ id: 'cat', label: cat.label, type: 'category', value: listingType });
+    }
+
+    if (selectedArea !== 'all') {
+      const area = locationAreas.find(a => a.id === selectedArea);
+      if (area) chips.push({ id: 'area', label: area.label, type: 'area', value: area.id });
+    }
+
+    if (selectedCapacity !== 'all') {
+      const cap = CAPACITY_OPTIONS.find(c => c.id === selectedCapacity);
+      if (cap) chips.push({ id: 'cap', label: t(cap.labelKey), type: 'capacity', value: selectedCapacity });
+    }
+
+    selectedFacilities.forEach(f => {
+      chips.push({ id: `fac-${f}`, label: f, type: 'facility', value: f });
+    });
+
+    return chips;
+  };
+
+  const removeFilter = (chip: { type: string, value: string }) => {
+    switch (chip.type) {
+      case 'category': setRentalObjectType('ALL'); break;
+      case 'area': setSelectedArea('all'); break;
+      case 'capacity': setSelectedCapacity('all'); break;
+      case 'facility': setSelectedFacilities(prev => prev.filter(f => f !== chip.value)); break;
+    }
+  };
+
+  const chips = getFilterChips();
+
   return (
     <>
       {/* Filter Drawer */}
@@ -290,12 +387,12 @@ export function RentalObjectsPage(): React.ReactElement {
             {(showMoreType ? CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)) : CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).slice(0, MAX_VISIBLE_ITEMS)).map((cat) => (
               <DrawerItem
                 key={cat.id}
-                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={cat.label} />}
+                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={t(cat.labelKey)} />}
                 right={<Text size="sm">({typeCounts[cat.id] || 0})</Text>}
                 onClick={() => setRentalObjectType(cat.id)}
                 selected={listingType === cat.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{cat.label}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cat.labelKey)}</Text>
               </DrawerItem>
             ))}
             {CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length > MAX_VISIBLE_ITEMS && (
@@ -388,16 +485,13 @@ export function RentalObjectsPage(): React.ReactElement {
             />
           </div>
 
-          {/* Loading State */}
+          {/* Loading State - Skeletons */}
           {isLoading && (
-            <div
-              role="status"
-              aria-live="polite"
-              aria-busy="true"
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}
-            >
-              <Spinner aria-label={t('laster.lokaler')} />
-            </div>
+             <RentalObjectGrid minCardWidth={380} maxColumns={3}>
+               {Array.from({ length: 6 }).map((_, i) => (
+                 <RentalObjectSkeleton key={i} />
+               ))}
+             </RentalObjectGrid>
           )}
 
           {/* Error State */}
@@ -460,73 +554,128 @@ export function RentalObjectsPage(): React.ReactElement {
                 className="listing-toolbar"
               />
 
+              {/* Filter Chips */}
+              <AnimatePresence>
+                {chips.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    style={{ marginBottom: 'var(--ds-spacing-4)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}
+                  >
+                    {chips.map(chip => (
+                      <Chip
+                        key={chip.id}
+                        removable
+                        onClick={() => removeFilter(chip)}
+                      >
+                        {chip.label}
+                      </Chip>
+                    ))}
+                    {chips.length > 0 && (
+                       <Button 
+                        variant="tertiary" 
+                        size="sm" 
+                        onClick={() => {
+                          setRentalObjectType('ALL');
+                          setSelectedArea('all');
+                          setSelectedCapacity('all');
+                          setSelectedFacilities([]);
+                        }}
+                       >
+                         {t('common.clearAll')}
+                       </Button>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {viewMode === 'grid' ? (
                 <RentalObjectGrid minCardWidth={380} maxColumns={3}>
-                  {visibleListings.map((listing) => (
-                    <RentalObjectCard
-                      key={listing.id}
-                      id={listing.id}
-                      name={listing.name}
-                      type={CATEGORY_LABELS[listing.categoryKey] || listing.categoryKey || 'Lokale'}
-                      listingType={listing.categoryKey as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      location={listing.locationFormatted}
-                      description={listing.descriptionExcerpt || ''}
-                      image={listing.primaryImageUrl}
-                      facilities={listing.amenities?.map((key: string) => t(key) || key)}
-                      moreFacilities={listing.moreAmenitiesCount}
-                      capacity={listing.capacity}
-                      price={listing.priceAmount}
-                      priceUnit={listing.priceUnit}
-                      currency={listing.priceCurrency}
-                      rating={listing.averageRating}
-                      reviewCount={listing.reviewCount}
-                      imageHeight={260}
-                      showLocation={true}
-                      showDescription={true}
-                      showFacilities={true}
-                      showCapacity={true}
-                      showRating={false}
-                      showPrice={true}
-                      onClick={(id) => handleListingClick(id, listing.slug)}
-                      onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
-                      onShare={(_id) => { /* TODO: Implement share */ }}
-                    />
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {visibleListings.map((listing) => (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        key={listing.id}
+                      >
+                        <RentalObjectCard
+                          id={listing.id}
+                          name={listing.name}
+                          type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
+                          listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                          location={listing.locationFormatted}
+                          description={listing.descriptionExcerpt || ''}
+                          image={listing.primaryImageUrl}
+                          facilities={listing.amenities?.map((key: string) => t(key) || key)}
+                          moreFacilities={listing.moreAmenitiesCount}
+                          capacity={listing.capacity}
+                          price={listing.priceAmount}
+                          priceUnit={listing.priceUnit}
+                          currency={listing.priceCurrency}
+                          rating={listing.averageRating}
+                          reviewCount={listing.reviewCount}
+                          imageHeight={260}
+                          showLocation={true}
+                          showDescription={true}
+                          showFacilities={true}
+                          showCapacity={true}
+                          showRating={false}
+                          showPrice={true}
+                          onClick={(id) => handleListingClick(id, listing.slug)}
+                          onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                          onShare={(_id) => { /* TODO: Implement share */ }}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </RentalObjectGrid>
               ) : viewMode === 'list' ? (
                 <Stack spacing="var(--ds-spacing-4)">
-                  {visibleListings.map((listing) => (
-                    <RentalObjectListItem
-                      key={listing.id}
-                      id={listing.id}
-                      name={listing.name}
-                      type={CATEGORY_LABELS[listing.categoryKey] || listing.categoryKey || 'Lokale'}
-                      listingType={listing.categoryKey as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      location={listing.locationFormatted}
-                      description={listing.descriptionExcerpt || ''}
-                      image={listing.primaryImageUrl}
-                      facilities={listing.amenities?.map((key: string) => t(key) || key)}
-                      moreFacilities={listing.moreAmenitiesCount}
-                      capacity={listing.capacity}
-                      price={listing.priceAmount}
-                      priceUnit={listing.priceUnit}
-                      currency={listing.priceCurrency}
-                      {...(listing.latitude != null && { latitude: listing.latitude })}
-                      {...(listing.longitude != null && { longitude: listing.longitude })}
-                      mapboxToken={MAPBOX_TOKEN || ''}
-                      showMap={true}
-                      showPrice={true}
-                      onClick={(id) => handleListingClick(id, listing.slug)}
-                      onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
-                      onShare={(_id) => { 
-                        navigator.share?.({ 
-                          title: listing.name, 
-                          url: `${window.location.origin}/listings/${listing.slug}` 
-                        }).catch(() => {});
-                      }}
-                    />
-                  ))}
+                   <AnimatePresence mode="popLayout">
+                    {visibleListings.map((listing) => (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        key={listing.id}
+                      >
+                        <RentalObjectListItem
+                          id={listing.id}
+                          name={listing.name}
+                          type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
+                          listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                          location={listing.locationFormatted}
+                          description={listing.descriptionExcerpt || ''}
+                          image={listing.primaryImageUrl}
+                          facilities={listing.amenities?.map((key: string) => t(key) || key)}
+                          moreFacilities={listing.moreAmenitiesCount}
+                          capacity={listing.capacity}
+                          price={listing.priceAmount}
+                          priceUnit={listing.priceUnit}
+                          currency={listing.priceCurrency}
+                          {...(listing.latitude != null && { latitude: listing.latitude })}
+                          {...(listing.longitude != null && { longitude: listing.longitude })}
+                          mapboxToken={MAPBOX_TOKEN || ''}
+                          showMap={true}
+                          showPrice={true}
+                          onClick={(id) => handleListingClick(id, listing.slug)}
+                          onFavorite={(_id) => { /* TODO: Implement favorite toggle */ }}
+                          onShare={(_id) => { 
+                            navigator.share?.({ 
+                              title: listing.name, 
+                              url: `${window.location.origin}/listings/${listing.slug}` 
+                            }).catch(() => {});
+                          }}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </Stack>
               ) : viewMode === 'map' ? (
                 <LazyRentalObjectMap
