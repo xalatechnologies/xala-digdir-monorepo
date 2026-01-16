@@ -11,12 +11,14 @@ import {
   allocationService, 
   availabilityService 
 } from '../services/booking.service';
-import type { 
-  BookingQueryParams, 
-  CreateBookingDTO, 
+import type {
+  BookingQueryParams,
+  CreateBookingDTO,
   UpdateBookingDTO,
   CancelBookingDTO,
-  CreateAllocationDTO
+  CreateAllocationDTO,
+  BookingReceipt,
+  BookingDocument
 } from '../types/booking';
 
 // ============================================================================
@@ -159,13 +161,112 @@ export function useCompleteBooking() {
  */
 export function useDeleteBooking() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => bookingService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
+  });
+}
+
+/**
+ * Update booking status mutation
+ */
+export function useUpdateBookingStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      bookingService.updateStatus(id, status),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
+    },
+  });
+}
+
+/**
+ * Create recurring booking mutation
+ */
+export function useCreateRecurringBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateBookingDTO & {
+      frequency: string;
+      endDate: string;
+      weekdays?: number[];
+    }) => bookingService.createRecurring(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Get booking receipt (KRAV-ADM-07)
+ * Returns receipt with hvem/hva/hvor/når for bokføringskrav
+ */
+export function useBookingReceipt(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.bookings.receipt(id),
+    queryFn: () => bookingService.getReceipt(id),
+    enabled: !!id && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Change booking time mutation
+ * User-initiated reschedule, server enforces cancellation deadlines
+ */
+export function useChangeBookingTime() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, newTimeRange }: { id: string; newTimeRange: { startTime: string; endTime: string } }) =>
+      bookingService.changeTime(id, newTimeRange),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+/**
+ * Request booking change mutation
+ * Used for bookings that require approval for modifications
+ */
+export function useRequestBookingChange() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: {
+      id: string;
+      data: {
+        requestedStartTime?: string;
+        requestedEndTime?: string;
+        reason?: string;
+        notes?: string;
+      };
+    }) => bookingService.requestChange(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(id) });
+    },
+  });
+}
+
+/**
+ * Get booking documents (confirmations, receipts, decisions, terms)
+ */
+export function useBookingDocuments(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.bookings.documents(id),
+    queryFn: () => bookingService.getDocuments(id),
+    enabled: !!id && (options?.enabled ?? true),
   });
 }
 
@@ -191,6 +292,17 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
     queryKey: queryKeys.calendar.slots(params),
     queryFn: () => availabilityService.getSlots(params),
     enabled: !!params.listingId && !!params.date,
+  });
+}
+
+/**
+ * Check if time range is available
+ */
+export function useAvailabilityCheck(params: { listingId: string; startTime: string; endTime: string }, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.calendar.availabilityCheck(params),
+    queryFn: () => availabilityService.check(params),
+    enabled: !!params.listingId && !!params.startTime && !!params.endTime && (options?.enabled ?? true),
   });
 }
 

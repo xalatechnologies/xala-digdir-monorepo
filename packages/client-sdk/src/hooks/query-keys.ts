@@ -121,6 +121,8 @@ export const queryKeys = {
       [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
     paymentHistory: (bookingId: string) =>
       [...queryKeys.bookings.all, 'paymentHistory', bookingId] as const,
+    receipt: (id: string) => [...queryKeys.bookings.detail(id), 'receipt'] as const,
+    documents: (id: string) => [...queryKeys.bookings.detail(id), 'documents'] as const,
   },
 
   // =========================================================================
@@ -132,6 +134,8 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { listingId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
+    availabilityCheck: (params: { listingId: string; startTime: string; endTime: string }) =>
+      [...queryKeys.calendar.all, 'availabilityCheck', params] as const,
   },
 
   // =========================================================================
