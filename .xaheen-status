@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "041-build-documentation-app-using-backoffice-shell",
+  "state": "building",
+  "subtasks": {
+    "completed": 7,
+    "total": 25,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Documentation UI Components",
+    "id": null,
+    "total": 7
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 8,
+    "started_at": "2026-01-16T11:39:16.504665"
+  },
+  "last_update": "2026-01-16T12:03:00.452287"
+}
