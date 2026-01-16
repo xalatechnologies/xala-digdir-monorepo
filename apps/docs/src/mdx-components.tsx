@@ -14,6 +14,7 @@ import { Steps } from './components/docs/Steps';
 import { Callout } from './components/docs/Callout';
 import { Checklist } from './components/docs/Checklist';
 import { CodeBlock } from './components/docs/CodeBlock';
+import { RoleMatrix } from './components/docs/RoleMatrix';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyProps = any;
@@ -210,4 +211,5 @@ export const mdxComponents = {
   Callout: (props: AnyProps) => <Callout {...props} />,
   Checklist: (props: AnyProps) => <Checklist {...props} />,
   CodeBlock: (props: AnyProps) => <CodeBlock {...props} />,
+  RoleMatrix: (props: AnyProps) => <RoleMatrix {...props} />,
 };
