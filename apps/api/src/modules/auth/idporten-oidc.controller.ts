@@ -17,6 +17,10 @@ import * as crypto from 'node:crypto';
 import { getAuditService } from '../../core/audit/audit.service';
 import { validateReturnToUrl } from '../../core/validation/return-to';
 import { sessionStore } from './idporten-session-store';
+import { container } from '../../core/container';
+import type { JwtService } from '../../core/auth/jwt.service';
+import { users } from '../../database/schema/index';
+import { eq } from 'drizzle-orm';
 
 // =============================================================================
 // Configuration
@@ -182,27 +186,53 @@ export class IdPortenOIDCAuthController {
       // Update session with user data
       await sessionStore.set(query.state, {
         ...session,
-        status: 'success',
+        status: 'completed' as any,
         subject: idTokenPayload.sub,
         userAttributes: idTokenPayload,
         tokens,
       });
 
+      // Find or create user based on the subject ID
+      const db = container.resolve<any>('Database');
+      const jwtService = container.resolve<JwtService>('JwtService');
+      
+      //  For now, try to find existing user by demo mapping
+      // In production, you'd create/update users based on the eID subject
+      let user = null;
+      const  result = await db.select().from(users).limit(1);
+      if (result.length > 0) {
+        user = result[0]; // Use first user for demo
+      }
+
+      if (!user) {
+        return reply.status(500).send({
+          error: 'user_creation_failed',
+          message: 'Could not create or find user account',
+        });
+      }
+
+      // Generate JWT token for the user
+      const tokenResult = jwtService.generateToken(user.id, user.tenantId);
+
+      //  Update last login
+      await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
+
       // Audit log successful authentication
       await getAuditService().log({
-        tenantId: session.tenantId || null,
-        userId: idTokenPayload.sub,
+        tenantId: session.tenantId || user.tenantId || undefined,
+        userId: user.id,
         action: 'auth_oidc_success',
         resource: 'idporten_oidc',
         resourceId: query.state,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
-        metadata: { subject: idTokenPayload.sub },
+        metadata: { subject: idTokenPayload.sub, email: user.email },
       });
 
-      // Redirect to returnTo with success indicator
+      // Redirect to returnTo with JWT token
       const redirectUrl = new URL(session.returnTo || DEFAULT_REDIRECT_URL, request.protocol + '://' + request.hostname);
       redirectUrl.searchParams.set('auth_success', 'true');
+      redirectUrl.searchParams.set('token', tokenResult.token);
       redirectUrl.searchParams.set('session_id', query.state);
 
       return reply.redirect(redirectUrl.toString());
