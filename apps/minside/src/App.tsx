@@ -64,6 +64,15 @@ function NotificationCenterProvider({ children }: { children: React.ReactNode })
 }
 
 /**
+ * OAuth Callback Handler
+ * Handles OAuth/BankID redirects automatically - must be inside BrowserRouter
+ */
+function OAuthCallbackHandler() {
+  useOAuthCallback();
+  return null;
+}
+
+/**
  * Account Selection Wrapper
  * Displays the AccountSelectionModal when user hasn't selected an account yet
  * and hasn't chosen to remember their choice.
@@ -101,9 +110,6 @@ export function App() {
 function AppWithTheme() {
   const { colorScheme } = useTheme();
   
-  // Handle OAuth/BankID redirects automatically
-  useOAuthCallback();
-  
   return (
     <I18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
@@ -115,6 +121,7 @@ function AppWithTheme() {
           v7_relativeSplatPath: true,
         }}
       >
+        <OAuthCallbackHandler />
         <NotificationCenterProvider>
           <AuthProvider config={{ appType: 'minside', debug: import.meta.env.DEV }}>
             <AccountContextProvider>
