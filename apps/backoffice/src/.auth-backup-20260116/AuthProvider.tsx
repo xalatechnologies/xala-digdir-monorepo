@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, type AuthContextType, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { AuthContext, type AuthContextType, type UserRole, type RestoreFlowContextResult } from '@xala/auth';
 import { authService } from '@digilist/client-sdk/services';
 import {
   FLOW_CONTEXT_KEY,
@@ -33,7 +33,7 @@ const ROLE_STORAGE_KEYS = {
  *
  * Login provider: 'idporten' or 'dev-admin'
  */
-const MOCK_ADMIN_USER: BackofficeUser = {
+const MOCK_ADMIN_USER: User = {
   id: 'mock-admin-001',
   name: 'Test Admin User',
   email: 'admin@test.kommune.no',
@@ -47,7 +47,7 @@ const MOCK_ADMIN_USER: BackofficeUser = {
  *
  * Login provider: 'microsoft'
  */
-const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
+const MOCK_SAKSBEHANDLER_USER: User = {
   id: 'mock-saksbehandler-001',
   name: 'Test Case Handler',
   email: 'casehandler@test.kommune.no',
@@ -61,7 +61,7 @@ const MOCK_SAKSBEHANDLER_USER: BackofficeUser = {
  *
  * Login provider: 'dev-dual'
  */
-const MOCK_DUAL_ROLE_USER: BackofficeUser = {
+const MOCK_DUAL_ROLE_USER: User = {
   id: 'mock-dual-001',
   name: 'Test Dual Role User',
   email: 'dualrole@test.kommune.no',
@@ -71,7 +71,7 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
 
 // Use mock auth for local development (cross-origin cookies don't work with api.digilist.no)
 // Set VITE_USE_MOCK_AUTH=true in .env.local for local development
-const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+const USE_MOCK_AUTH = false; // SECURITY: Disabled for production
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)
@@ -197,14 +197,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // API uses: 'admin', 'saksbehandler', etc.
           // BackofficeRole (legacy): 'admin' | 'saksbehandler'
           // EffectiveBackofficeRole: 'admin' | 'case_handler'
-          const legacyRole: BackofficeRole = apiUser.role === 'super_admin' ? 'super_admin' :
+          const legacyRole: UserRole = apiUser.role === 'super_admin' ? 'super_admin' :
                                             apiUser.role === 'admin' ? 'admin' : 'saksbehandler';
           const effectiveRole: import('../lib/capabilities').EffectiveBackofficeRole =
             apiUser.role === 'super_admin' ? 'super_admin' :
             apiUser.role === 'admin' ? 'admin' : 'case_handler';
 
           // Map API user to BackofficeUser format
-          const backofficeUser: BackofficeUser = {
+          const backofficeUser: User = {
             id: apiUser.id,
             name: apiUser.name || apiUser.email,
             email: apiUser.email,
@@ -242,7 +242,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // - Microsoft: Case handler only (tests single-role auto-assignment)
       // - dev-admin: Admin-only user (same as ID-porten, for explicit testing)
       // - dev-dual: Dual-role user (tests role selection flow)
-      let mockUser: BackofficeUser;
+      let mockUser: User;
       switch (provider) {
         case 'idporten':
         case 'dev-admin':
@@ -313,7 +313,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   const checkRole = useCallback(
-    (role: BackofficeRole): boolean => {
+    (role: UserRole): boolean => {
       if (!user) return false;
       if (role === 'admin') return user.role === 'admin';
       if (role === 'saksbehandler')

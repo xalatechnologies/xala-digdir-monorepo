@@ -21,7 +21,7 @@ import {
   useDataExports,
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 // Map security event severity to activity status
 function mapSeverityToStatus(severity: string): ActivityStatus {

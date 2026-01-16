@@ -14,7 +14,7 @@ import {
   SettingsIcon,
   LogOutIcon,
 } from '@xala/ds';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { useT } from '@xala/i18n';
 import styles from './Header.module.css';

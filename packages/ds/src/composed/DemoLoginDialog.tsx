@@ -3,15 +3,15 @@
  * Reusable demo login dialog for all applications
  *
  * Features:
- * - Field-level validation
- * - Email format validation
+ * - Proper Designsystemet form layout
+ * - Field-level validation with native error display
  * - Real-time error clearing
  * - Loading states
  * - Accessible form controls
  */
 
 import React, { useState } from 'react';
-import { Textfield, Button, Alert } from '@digdir/designsystemet-react';
+import { Textfield, Button, Alert, Fieldset } from '@digdir/designsystemet-react';
 import { Dialog } from '@digdir/designsystemet-react';
 import { Stack } from '../primitives';
 
@@ -185,107 +185,65 @@ export function DemoLoginDialog({
       open={open}
       onClose={handleClose}
       title={title}
-      description={description}
     >
       <form onSubmit={handleSubmit}>
-        <Stack direction="column" gap={20}>
+        <Stack direction="vertical" spacing={24}>
           {loginError && (
-            <Alert variant="error">
+            <Alert color="danger">
               {loginError}
             </Alert>
           )}
 
-          {/* Name Field */}
-          <div style={{ width: '100%' }}>
-            <Textfield
-              label={labels.name}
-              value={formData.name}
-              onChange={(e) => handleFieldChange('name', e.target.value)}
-              onBlur={(e) => validateField('name', e.target.value)}
-              placeholder={placeholders.name}
-              disabled={isLoading}
-              required
-              error={!!fieldErrors.name}
-              style={{ width: '100%' }}
-            />
-            {fieldErrors.name && (
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: '#dc2626',
-                  marginTop: '4px',
-                  display: 'block'
-                }}
-              >
-                {fieldErrors.name}
-              </span>
-            )}
-          </div>
+          <Fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
+            <Stack direction="vertical" spacing={20}>
+              {/* Name Field */}
+              <Textfield
+                label={labels.name}
+                value={formData.name}
+                onChange={(e) => handleFieldChange('name', e.target.value)}
+                onBlur={(e) => validateField('name', e.target.value)}
+                placeholder={placeholders.name}
+                disabled={isLoading}
+                error={fieldErrors.name || undefined}
+                style={{ width: '100%' }}
+              />
 
-          {/* Email Field */}
-          <div style={{ width: '100%' }}>
-            <Textfield
-              label={labels.email}
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleFieldChange('email', e.target.value)}
-              onBlur={(e) => validateField('email', e.target.value)}
-              placeholder={placeholders.email}
-              disabled={isLoading}
-              required
-              error={!!fieldErrors.email}
-              style={{ width: '100%' }}
-            />
-            {fieldErrors.email && (
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: '#dc2626',
-                  marginTop: '4px',
-                  display: 'block'
-                }}
-              >
-                {fieldErrors.email}
-              </span>
-            )}
-          </div>
+              {/* Email Field */}
+              <Textfield
+                label={labels.email}
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleFieldChange('email', e.target.value)}
+                onBlur={(e) => validateField('email', e.target.value)}
+                placeholder={placeholders.email}
+                disabled={isLoading}
+                error={fieldErrors.email || undefined}
+                style={{ width: '100%' }}
+              />
 
-          {/* Token Field */}
-          <div style={{ width: '100%' }}>
-            <Textfield
-              label={labels.token}
-              value={formData.token}
-              onChange={(e) => handleFieldChange('token', e.target.value)}
-              onBlur={(e) => validateField('token', e.target.value)}
-              placeholder={placeholders.token}
-              disabled={isLoading}
-              required
-              error={!!fieldErrors.token}
-              style={{ width: '100%' }}
-            />
-            {fieldErrors.token && (
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: '#dc2626',
-                  marginTop: '4px',
-                  display: 'block'
-                }}
-              >
-                {fieldErrors.token}
-              </span>
-            )}
-          </div>
+              {/* Token Field */}
+              <Textfield
+                label={labels.token}
+                value={formData.token}
+                onChange={(e) => handleFieldChange('token', e.target.value)}
+                onBlur={(e) => validateField('token', e.target.value)}
+                placeholder={placeholders.token}
+                disabled={isLoading}
+                error={fieldErrors.token || undefined}
+                style={{ width: '100%' }}
+              />
+            </Stack>
+          </Fieldset>
 
           {/* Action Buttons */}
           <Stack
             direction="horizontal"
-            gap={12}
-            justify="end"
+            spacing={12}
             style={{
               marginTop: 'var(--ds-spacing-2)',
               paddingTop: 'var(--ds-spacing-4)',
-              borderTop: '1px solid var(--ds-color-neutral-border-subtle)'
+              borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+              justifyContent: 'flex-end'
             }}
           >
             <Button

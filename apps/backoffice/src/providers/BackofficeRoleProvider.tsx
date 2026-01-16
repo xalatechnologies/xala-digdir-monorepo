@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
 
 /**
@@ -264,7 +264,7 @@ export const BackofficeRoleProvider: React.FC<BackofficeRoleProviderProps> = ({
  * }
  * ```
  */
-export function useBackofficeRoleContext(): BackofficeRoleContextValue {
+export function useBackofficeRoleContext(): UserRoleContextValue {
   const context = useContext(BackofficeRoleContext);
   if (context === undefined) {
     throw new Error('useBackofficeRoleContext must be used within a BackofficeRoleProvider');

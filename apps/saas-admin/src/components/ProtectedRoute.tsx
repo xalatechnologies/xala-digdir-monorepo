@@ -8,7 +8,7 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
-import { useAuth, type SaasAdminRole } from '../hooks/useAuth';
+import { useAuth, type SaasAdminRole } from '@xala/auth';
 import { useToast } from '../providers/ToastProvider';
 import styles from './ProtectedRoute.module.css';
 

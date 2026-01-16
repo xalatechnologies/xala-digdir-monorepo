@@ -22,7 +22,7 @@ import {
   DemoLoginDialog,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import type { FlowContext } from '@digilist/client-sdk';

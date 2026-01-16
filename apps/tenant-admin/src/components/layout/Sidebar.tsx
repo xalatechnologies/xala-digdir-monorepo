@@ -17,7 +17,7 @@ import {
   SparklesIcon,
   ShieldIcon,
 } from '@xala/ds';
-import { useAuth, type TenantAdminRole } from '../../hooks/useAuth';
+import { useAuth, type TenantAdminRole } from '@xala/auth';
 import { useT } from '@xala/i18n';
 import styles from './Sidebar.module.css';
 

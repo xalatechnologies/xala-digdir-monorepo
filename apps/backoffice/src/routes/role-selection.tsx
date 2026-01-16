@@ -13,7 +13,7 @@ import {
   ClipboardListIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { RoleSelector } from '../components/RoleSelector';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';

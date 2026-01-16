@@ -16,7 +16,7 @@ import {
   CheckCircleIcon,
   ShieldIcon,
 } from '@xala/ds';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 import type { Capability } from '../../lib/capabilities';

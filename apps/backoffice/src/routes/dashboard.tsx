@@ -18,7 +18,7 @@ import {
 } from '@xala/ds';
 import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentActivity } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useNavigate } from 'react-router-dom';
 
 // Map activity type to activity status

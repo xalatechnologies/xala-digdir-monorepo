@@ -12,7 +12,7 @@ export type { EffectiveBackofficeRole } from '../lib/capabilities';
  * Legacy role type for backward compatibility.
  * Use EffectiveBackofficeRole for new implementations.
  */
-export type BackofficeRole = 'super_admin' | 'admin' | 'saksbehandler';
+export type UserRole = 'super_admin' | 'admin' | 'saksbehandler';
 
 /**
  * Backoffice-specific user type.
@@ -26,7 +26,7 @@ export interface BackofficeUser {
    * Legacy role field for backward compatibility.
    * @deprecated Use grantedRoles for new implementations.
    */
-  role: BackofficeRole;
+  role: UserRole;
   /**
    * Array of roles the user has been granted.
    * Dual-role users will have both 'admin' and 'case_handler'.
@@ -52,14 +52,14 @@ export interface RestoreFlowContextResult {
 }
 
 export interface AuthContextType {
-  user: BackofficeUser | null;
+  user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
   isSaksbehandler: boolean;
   login: (provider?: 'idporten' | 'microsoft' | 'dev-admin' | 'dev-dual') => void;
   logout: () => Promise<void>;
-  checkRole: (role: BackofficeRole) => boolean;
+  checkRole: (role: UserRole) => boolean;
   /** Whether there is a stored flow context */
   hasStoredContext: boolean;
   /** Restore flow context after authentication */

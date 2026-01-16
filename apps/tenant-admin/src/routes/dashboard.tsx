@@ -30,7 +30,7 @@ import {
 } from '@xala/ds';
 import { useTenantCapabilities, useTenantSubscription } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 /**
  * Calculate percentage of usage against limit

@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, type AuthContextType, type TenantAdminUser, type TenantAdminRole } from '../hooks/useAuth';
+import { AuthContext, type AuthContextType, type TenantAdminUser, type TenantAdminRole } from '@xala/auth';
 
 // =============================================================================
 // Local Storage Keys

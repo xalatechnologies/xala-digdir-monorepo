@@ -9,7 +9,7 @@ import {
   LogOutIcon,
 } from '@xala/ds';
 import { useUnreadCount } from '@digilist/client-sdk';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useTheme } from '@xala/ds';
 import { GlobalSearch } from '../GlobalSearch';
 import { useT } from '@xala/i18n';

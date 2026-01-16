@@ -18,7 +18,7 @@ import {
   UsersIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth, type SaasAdminRole } from '../../hooks/useAuth';
+import { useAuth, type SaasAdminRole } from '@xala/auth';
 import styles from './Sidebar.module.css';
 
 interface NavItem {

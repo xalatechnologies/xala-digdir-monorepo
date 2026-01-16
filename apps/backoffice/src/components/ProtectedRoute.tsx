@@ -1,7 +1,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useNeedsRoleSelection, useBackofficeRole } from '../hooks/useBackofficeRole';
 import { useCapabilities, type Capability } from '../hooks/useCapabilities';
 import { useToast } from '../providers/ToastProvider';

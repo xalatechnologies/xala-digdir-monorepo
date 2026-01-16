@@ -22,6 +22,7 @@ import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast, GlobalSearch, ProtectedRoute, /* ConsentPopup, */ UserMenu } from './components';
 import { useAuth } from './hooks/useAuth';
+import { useOAuthCallback } from './hooks/useOAuthCallback';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -167,6 +168,9 @@ const THEME_STORAGE_KEY = 'theme-preference';
 
 // App content with theme provider
 function AppContent() {
+  // Handle OAuth/BankID redirects automatically
+  useOAuthCallback();
+
   const [theme] = React.useState<ThemeId>(DEFAULT_THEME);
   const [colorScheme, setColorSchemeState] = React.useState<ColorScheme>(() => {
     if (typeof window !== 'undefined') {

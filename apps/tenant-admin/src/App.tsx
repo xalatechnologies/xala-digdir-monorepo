@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DesignsystemetProvider, ErrorBoundary } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
-import { AuthProvider, ToastProvider } from './providers';
+import { AuthProvider } from '@xala/auth';
+import { ToastProvider } from './providers';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import {
@@ -30,7 +31,7 @@ export function App() {
                 v7_relativeSplatPath: true,
               }}
             >
-              <AuthProvider>
+              <AuthProvider config={{ appType: 'tenant-admin', debug: import.meta.env.DEV }}>
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
                   <Route

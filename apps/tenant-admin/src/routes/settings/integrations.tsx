@@ -24,7 +24,7 @@ import {
   InfoIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import {
   useTenantIntegrations,
   useUpdateTenantIntegration,

@@ -4,7 +4,7 @@
  */
 
 import { useMemo } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
 
 export interface CalendarPermissions {

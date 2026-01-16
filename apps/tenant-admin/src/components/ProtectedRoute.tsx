@@ -8,7 +8,7 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
-import { useAuth, type TenantAdminRole } from '../hooks/useAuth';
+import { useAuth, type TenantAdminRole } from '@xala/auth';
 import { useToast } from '../providers/ToastProvider';
 
 interface ProtectedRouteProps {
