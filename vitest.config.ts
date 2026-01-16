@@ -1,8 +1,16 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@xala/auth': path.resolve(__dirname, 'packages/auth/src'),
+      '@xala/ds': path.resolve(__dirname, 'packages/ds/src'),
+      '@xala/i18n': path.resolve(__dirname, 'packages/i18n/src'),
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
