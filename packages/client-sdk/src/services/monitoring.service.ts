@@ -71,57 +71,107 @@ class MonitoringService {
 
   /**
    * Get system health status
+   * @returns Promise with health status including service states
+   * @example
+   * ```ts
+   * const health = await monitoringService.getHealth();
+   * console.log(health.status); // 'ok' | 'degraded' | 'down'
+   * ```
    */
   async getHealth(): Promise<HealthStatus> {
     return getClient().get<HealthStatus>(`${this.basePath}/health`);
   }
 
   /**
-   * Get system metrics
+   * Get system metrics (CPU, memory, disk, performance)
+   * @returns Promise with system performance metrics
+   * @example
+   * ```ts
+   * const { data } = await monitoringService.getMetrics();
+   * console.log(`CPU: ${data.cpu}%, Memory: ${data.memory}%`);
+   * ```
    */
   async getMetrics(): Promise<{ data: SystemMetrics }> {
     return getClient().get<{ data: SystemMetrics }>(`${this.basePath}/metrics`);
   }
 
   /**
-   * Get system logs
+   * Get system logs with filtering and pagination
+   * @param params - Query parameters for filtering logs
+   * @returns Promise with paginated log entries
+   * @example
+   * ```ts
+   * const logs = await monitoringService.getLogs({
+   *   level: 'error',
+   *   startDate: '2024-01-01',
+   *   page: 1,
+   *   limit: 50
+   * });
+   * ```
    */
   async getLogs(params: LogQueryParams = {}): Promise<PaginatedResponse<LogEntry>> {
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) queryParams.set(key, String(value));
     });
-    
-    const url = queryParams.toString() 
+
+    const url = queryParams.toString()
       ? `${this.basePath}/logs?${queryParams.toString()}`
       : `${this.basePath}/logs`;
-    
+
     return getClient().get<PaginatedResponse<LogEntry>>(url);
   }
 
   /**
    * Get active incidents
+   * @returns Promise with list of active system incidents
+   * @example
+   * ```ts
+   * const { data } = await monitoringService.getIncidents();
+   * const critical = data.filter(i => i.severity === 'critical');
+   * ```
    */
   async getIncidents(): Promise<{ data: Incident[] }> {
     return getClient().get<{ data: Incident[] }>(`${this.basePath}/incidents`);
   }
 
   /**
-   * Get database statistics
+   * Get database statistics (table sizes and row counts)
+   * @returns Promise with database table statistics
+   * @example
+   * ```ts
+   * const { data } = await monitoringService.getDatabaseStats();
+   * data.tables.forEach(t => console.log(`${t.name}: ${t.rowCount} rows, ${t.size}`));
+   * ```
    */
   async getDatabaseStats(): Promise<{ data: { tables: { name: string; rowCount: number; size: string }[] } }> {
     return getClient().get<{ data: { tables: { name: string; rowCount: number; size: string }[] } }>(`${this.basePath}/database`);
   }
 
   /**
-   * Get API usage statistics
+   * Get API usage statistics by endpoint
+   * @param period - Time period for statistics ('day' | 'week' | 'month')
+   * @returns Promise with API endpoint usage statistics
+   * @example
+   * ```ts
+   * const { data } = await monitoringService.getApiUsage('week');
+   * const topEndpoint = data.sort((a, b) => b.calls - a.calls)[0];
+   * ```
    */
   async getApiUsage(period: 'day' | 'week' | 'month' = 'day'): Promise<{ data: { endpoint: string; calls: number; avgResponseTime: number }[] }> {
     return getClient().get<{ data: { endpoint: string; calls: number; avgResponseTime: number }[] }>(`${this.basePath}/api-usage?period=${period}`);
   }
 
   /**
-   * Trigger health check
+   * Trigger manual health check
+   * @returns Promise with updated health status
+   * @example
+   * ```ts
+   * const health = await monitoringService.triggerHealthCheck();
+   * if (health.status !== 'ok') {
+   *   console.error('Health check failed:', health.services);
+   * }
+   * ```
    */
   async triggerHealthCheck(): Promise<HealthStatus> {
     return getClient().post<HealthStatus>(`${this.basePath}/health-check`);

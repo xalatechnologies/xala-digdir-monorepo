@@ -3,15 +3,9 @@
  * 
  * Provides utilities for running integration tests against a running API server
  * These tests require: pnpm --filter @digilist/api dev
- * 
- * @note These tests are skipped by default as they require a running server.
- * To run them, remove the .skip and start the API server.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-
-// Skip tests by default - they require a running API server
-const describeIntegration = describe.skip;
+import { describe, it, expect, beforeAll } from 'vitest';
 
 // ==============================================================================
 // Test Configuration
@@ -64,7 +58,7 @@ async function waitForServer(maxAttempts = 10): Promise<boolean> {
 // Integration Tests
 // ==============================================================================
 
-describeIntegration('API Integration Tests', () => {
+describe('API Integration Tests', () => {
   beforeAll(async () => {
     const serverReady = await waitForServer(3); // Quick check
     if (!serverReady) {

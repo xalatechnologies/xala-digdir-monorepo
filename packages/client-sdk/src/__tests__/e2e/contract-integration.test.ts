@@ -10,7 +10,7 @@
  * 3. RFC7807 Error Handling - proper error format
  * 4. Query Key & Cache Invalidation - TanStack Query patterns
  */
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // ==============================================================================
 // Mock API Server
@@ -398,8 +398,6 @@ describe('SDK Selectors - View Slices', () => {
 // ==============================================================================
 
 describe('RBAC Integration Tests', () => {
-  const roles = ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'] as const;
-
   describe('Listing permissions by role', () => {
     it('public: can view, can book (if enabled), cannot edit', () => {
       const publicPerms = { canView: true, canBook: true, canEdit: false, canDelete: false };

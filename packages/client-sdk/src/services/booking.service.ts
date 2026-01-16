@@ -17,28 +17,9 @@ import type {
   CalendarQueryParams,
   Allocation,
   CreateAllocationDTO,
-  PaymentTransaction,
-  BookingSelectionDTO,
-  RecurringPreviewProjectionDTO,
-  CreateRecurringBookingDTO,
-  RecurringBookingResultProjectionDTO,
-  BookingQuoteSelectionDTO,
-  BookingQuoteProjectionDTO,
+  PaymentTransaction
 } from '../types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
-
-// Type aliases to avoid >> parsing issues with esbuild
-type TimeSlot = {
-  startTime: string;
-  endTime: string;
-  available: boolean;
-  price?: number;
-};
-
-type AvailabilityCheck = {
-  available: boolean;
-  conflicts?: Array<{ startTime: string; endTime: string }>;
-};
 
 export class BookingService extends BaseService {
   constructor() {
@@ -47,6 +28,23 @@ export class BookingService extends BaseService {
 
   /**
    * Get paginated bookings
+   * Retrieves all bookings with optional filtering and pagination
+   *
+   * @param params - Optional query parameters for filtering and pagination
+   * @returns Promise with paginated list of bookings
+   *
+   * @example
+   * ```typescript
+   * // Get first page of bookings
+   * const bookings = await bookingService.getAll({ page: 1, limit: 20 });
+   *
+   * // Filter by status
+   * const activeBookings = await bookingService.getAll({
+   *   status: 'confirmed',
+   *   page: 1,
+   *   limit: 10
+   * });
+   * ```
    */
   async getAll(params?: BookingQueryParams): Promise<PaginatedResponse<Booking>> {
     return this.client.get(this.buildPath(), { params: params as Record<string, string | number | boolean> });
@@ -54,6 +52,17 @@ export class BookingService extends BaseService {
 
   /**
    * Get single booking by ID
+   * Retrieves detailed information for a specific booking
+   *
+   * @param id - Unique booking identifier
+   * @returns Promise with booking details
+   *
+   * @example
+   * ```typescript
+   * const booking = await bookingService.getById('booking-123');
+   * console.log('Booking status:', booking.data.status);
+   * console.log('Start time:', booking.data.startTime);
+   * ```
    */
   async getById(id: string): Promise<SingleResponse<Booking>> {
     return this.client.get(this.buildPath(`/${id}`));
@@ -61,6 +70,22 @@ export class BookingService extends BaseService {
 
   /**
    * Create new booking
+   * Creates a new booking for a listing with specified time range
+   *
+   * @param data - Booking creation data including listing ID, time range, and user details
+   * @returns Promise with created booking
+   *
+   * @example
+   * ```typescript
+   * const booking = await bookingService.create({
+   *   listingId: 'listing-456',
+   *   startTime: '2024-03-15T10:00:00Z',
+   *   endTime: '2024-03-15T12:00:00Z',
+   *   userId: 'user-789',
+   *   notes: 'Birthday party'
+   * });
+   * console.log('Booking created:', booking.data.id);
+   * ```
    */
   async create(data: CreateBookingDTO): Promise<SingleResponse<Booking>> {
     return this.client.post(this.buildPath(), data);
@@ -68,6 +93,18 @@ export class BookingService extends BaseService {
 
   /**
    * Update existing booking
+   * Updates booking details such as notes, participants, or other metadata
+   *
+   * @param id - Booking identifier
+   * @param data - Partial booking data to update
+   * @returns Promise with updated booking
+   *
+   * @example
+   * ```typescript
+   * const updated = await bookingService.update('booking-123', {
+   *   notes: 'Updated: Moved to larger room'
+   * });
+   * ```
    */
   async update(id: string, data: UpdateBookingDTO): Promise<SingleResponse<Booking>> {
     return this.client.put(this.buildPath(`/${id}`), data);
@@ -75,63 +112,97 @@ export class BookingService extends BaseService {
 
   /**
    * Update booking status
-   * @param version - Optional version for optimistic locking
    */
-  async updateStatus(id: string, status: string, version?: number): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/status`), { status, ...(version !== undefined && { version }) });
+  async updateStatus(id: string, status: string): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/status`), { status });
   }
 
   /**
    * Confirm pending booking
-   * @param version - Optional version for optimistic locking
    */
-  async confirm(id: string, version?: number): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/confirm`), version !== undefined ? { version } : undefined);
+  async confirm(id: string): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/confirm`));
   }
 
   /**
    * Cancel booking
-   * @param version - Optional version for optimistic locking
+   * Cancels an existing booking with optional reason and cancellation policy enforcement
+   *
+   * @param id - Booking identifier
+   * @param data - Optional cancellation data including reason and notes
+   * @returns Promise with cancelled booking
+   *
+   * @example
+   * ```typescript
+   * const cancelled = await bookingService.cancel('booking-123', {
+   *   reason: 'Change of plans',
+   *   notes: 'Will reschedule for next week'
+   * });
+   * console.log('Cancellation status:', cancelled.data.status);
+   * ```
    */
-  async cancel(id: string, data?: CancelBookingDTO, version?: number): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/cancel`), { ...data, ...(version !== undefined && { version }) });
+  async cancel(id: string, data?: CancelBookingDTO): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/cancel`), data);
   }
 
   /**
    * Complete booking
-   * @param version - Optional version for optimistic locking
    */
-  async complete(id: string, version?: number): Promise<SingleResponse<Booking>> {
-    return this.client.put(this.buildPath(`/${id}/complete`), version !== undefined ? { version } : undefined);
+  async complete(id: string): Promise<SingleResponse<Booking>> {
+    return this.client.put(this.buildPath(`/${id}/complete`));
   }
 
   /**
    * Delete booking
-   * @param version - Optional version for optimistic locking
    */
-  async delete(id: string, version?: number): Promise<SuccessResponse> {
-    return this.client.delete(this.buildPath(`/${id}`), {
-      body: version !== undefined ? { version } : undefined
-    });
+  async delete(id: string): Promise<SuccessResponse> {
+    return this.client.delete(this.buildPath(`/${id}`));
   }
 
   /**
    * Calculate booking pricing
+   * Calculates total cost including base price, duration, and applicable discounts
+   *
+   * @param listingId - Listing identifier
+   * @param startTime - Booking start time (ISO 8601)
+   * @param endTime - Booking end time (ISO 8601)
+   * @returns Promise with pricing breakdown including base price, discounts, and total
+   *
+   * @example
+   * ```typescript
+   * const pricing = await bookingService.calculatePricing(
+   *   'listing-456',
+   *   '2024-03-15T10:00:00Z',
+   *   '2024-03-15T12:00:00Z'
+   * );
+   * console.log('Total cost:', pricing.data.total);
+   * console.log('Currency:', pricing.data.currency);
+   * ```
    */
-  async calculatePricing(rentalObjectId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
-    return this.client.get(this.buildPath('/pricing'), { 
-      params: { rentalObjectId, startTime, endTime } 
+  async calculatePricing(listingId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
+    return this.client.get(this.buildPath('/pricing'), {
+      params: { listingId, startTime, endTime }
     });
-  }
-  /**
-   * @deprecated Use calculatePricing with rentalObjectId instead
-   */
-  async calculatePricingLegacy(listingId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
-    return this.calculatePricing(listingId, startTime, endTime);
   }
 
   /**
    * Get current user's bookings
+   * Retrieves all bookings for the authenticated user with optional filtering
+   *
+   * @param params - Optional query parameters for filtering
+   * @returns Promise with paginated list of user's bookings
+   *
+   * @example
+   * ```typescript
+   * // Get all my bookings
+   * const myBookings = await bookingService.getMyBookings();
+   *
+   * // Get upcoming bookings only
+   * const upcoming = await bookingService.getMyBookings({
+   *   status: 'confirmed',
+   *   startDate: new Date().toISOString()
+   * });
+   * ```
    */
   async getMyBookings(params?: BookingQueryParams): Promise<PaginatedResponse<Booking>> {
     return this.client.get(this.buildPath('/my'), { params: params as Record<string, string | number | boolean> });
@@ -146,30 +217,30 @@ export class BookingService extends BaseService {
 
   /**
    * Create recurring booking
+   * Creates multiple bookings based on a recurring schedule
+   *
+   * @param data - Booking data with recurrence pattern (frequency, end date, weekdays)
+   * @returns Promise with array of created recurring bookings
+   *
+   * @example
+   * ```typescript
+   * // Create weekly booking every Monday and Wednesday for 3 months
+   * const recurring = await bookingService.createRecurring({
+   *   listingId: 'listing-456',
+   *   startTime: '2024-03-15T10:00:00Z',
+   *   endTime: '2024-03-15T12:00:00Z',
+   *   frequency: 'weekly',
+   *   endDate: '2024-06-15T00:00:00Z',
+   *   weekdays: [1, 3] // Monday, Wednesday
+   * });
+   * console.log(`Created ${recurring.data.length} bookings`);
+   * ```
    */
   async createRecurring(data: CreateBookingDTO & {
     frequency: string;
     endDate: string;
     weekdays?: number[];
   }): Promise<SingleResponse<Booking[]>> {
-    return this.client.post(this.buildPath('/recurring'), data);
-  }
-
-  /**
-   * Get recurring booking preview
-   * Returns server-computed occurrence preview with conflict detection and availability status.
-   * Used to show the user what occurrences will be created before confirming.
-   */
-  async getRecurringPreview(selection: BookingSelectionDTO): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
-    return this.client.post(this.buildPath('/recurring/preview'), selection);
-  }
-
-  /**
-   * Create recurring booking with conflict policy
-   * Creates a series of recurring bookings with configurable conflict handling.
-   * Supports stopOnConflict (halt on first conflict) and allowPartial (create available only) policies.
-   */
-  async createRecurringBooking(data: CreateRecurringBookingDTO): Promise<SingleResponse<RecurringBookingResultProjectionDTO>> {
     return this.client.post(this.buildPath('/recurring'), data);
   }
 
@@ -183,6 +254,18 @@ export class BookingService extends BaseService {
 
   /**
    * Get payment transaction history for a booking
+   * Retrieves all payment transactions associated with a booking
+   *
+   * @param bookingId - Booking identifier
+   * @returns Promise with array of payment transactions
+   *
+   * @example
+   * ```typescript
+   * const payments = await bookingService.getPaymentHistory('booking-123');
+   * payments.data.forEach(payment => {
+   *   console.log(`${payment.amount} ${payment.currency} - ${payment.status}`);
+   * });
+   * ```
    */
   async getPaymentHistory(bookingId: string): Promise<SingleResponse<PaymentTransaction[]>> {
     return this.client.get(this.buildPath(`/${bookingId}/payments`));
@@ -214,24 +297,22 @@ export class BookingService extends BaseService {
   /**
    * Change booking time (user-initiated reschedule)
    * Server enforces cancellation deadlines and availability
-   * @param version - Optional version for optimistic locking
    */
-  async changeTime(id: string, newTimeRange: { startTime: string; endTime: string }, version?: number): Promise<SingleResponse<Booking>> {
-    return this.client.patch(this.buildPath(`/${id}/time`), { ...newTimeRange, ...(version !== undefined && { version }) });
+  async changeTime(id: string, newTimeRange: { startTime: string; endTime: string }): Promise<SingleResponse<Booking>> {
+    return this.client.patch(this.buildPath(`/${id}/time`), newTimeRange);
   }
 
   /**
    * Request a change to a booking (when direct changes are locked)
    * Used for bookings that require approval for modifications
-   * @param version - Optional version for optimistic locking
    */
-  async requestChange(id: string, data: {
-    requestedStartTime?: string;
-    requestedEndTime?: string;
+  async requestChange(id: string, data: { 
+    requestedStartTime?: string; 
+    requestedEndTime?: string; 
     reason?: string;
     notes?: string;
-  }, version?: number): Promise<SingleResponse<{ requestId: string; status: string }>> {
-    return this.client.post(this.buildPath(`/${id}/change-request`), { ...data, ...(version !== undefined && { version }) });
+  }): Promise<SingleResponse<{ requestId: string; status: string }>> {
+    return this.client.post(this.buildPath(`/${id}/change-request`), data);
   }
 
   /**
@@ -239,15 +320,6 @@ export class BookingService extends BaseService {
    */
   async getDocuments(id: string): Promise<SingleResponse<BookingDocument[]>> {
     return this.client.get(this.buildPath(`/${id}/documents`));
-  }
-
-  /**
-   * Get booking quote projection
-   * Returns rental-object-driven quote with pricing, availability, and available actions.
-   * All booking rules are enforced from rental_objects configuration.
-   */
-  async quote(selection: BookingQuoteSelectionDTO): Promise<SingleResponse<BookingQuoteProjectionDTO>> {
-    return this.client.post(this.buildPath('/quote'), selection);
   }
 }
 
@@ -262,10 +334,23 @@ export class CalendarService extends BaseService {
 
   /**
    * Get calendar events
+   * Retrieves calendar events for visualization and scheduling
+   *
+   * @param params - Optional query parameters for date range and filters
+   * @returns Promise with array of calendar events
+   *
+   * @example
+   * ```typescript
+   * const events = await calendarService.getEvents({
+   *   startDate: '2024-03-01',
+   *   endDate: '2024-03-31',
+   *   listingId: 'listing-456'
+   * });
+   * ```
    */
   async getEvents(params?: CalendarQueryParams): Promise<SingleResponse<CalendarEvent[]>> {
-    return this.client.get(this.buildPath('/events'), { 
-      params: params as Record<string, string | number | boolean> 
+    return this.client.get(this.buildPath('/events'), {
+      params: params as Record<string, string | number | boolean>
     });
   }
 }
@@ -282,17 +367,8 @@ export class AllocationService extends BaseService {
   /**
    * Get allocations
    */
-  async getAll(params?: { rentalObjectId?: string; listingId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
-    // Support both rentalObjectId (new) and listingId (backward compatibility)
-    const queryParams: Record<string, string> = {};
-    if (params?.rentalObjectId) {
-      queryParams.rentalObjectId = params.rentalObjectId;
-    } else if (params?.listingId) {
-      queryParams.rentalObjectId = params.listingId; // Map to new param name
-    }
-    if (params?.startDate) queryParams.startDate = params.startDate;
-    if (params?.endDate) queryParams.endDate = params.endDate;
-    return this.client.get(this.buildPath(), { params: queryParams });
+  async getAll(params?: { listingId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
+    return this.client.get(this.buildPath(), { params });
   }
 
   /**
@@ -321,40 +397,57 @@ export class AvailabilityService extends BaseService {
 
   /**
    * Get available time slots
+   * Retrieves available booking slots for a listing on a specific date
+   *
+   * @param params - Query parameters including listing ID, date, and optional duration
+   * @returns Promise with array of time slots indicating availability and pricing
+   *
+   * @example
+   * ```typescript
+   * const slots = await availabilityService.getSlots({
+   *   listingId: 'listing-456',
+   *   date: '2024-03-15',
+   *   duration: 120 // minutes
+   * });
+   * const available = slots.data.filter(slot => slot.available);
+   * console.log(`${available.length} slots available`);
+   * ```
    */
-  async getSlots(params: { rentalObjectId: string; listingId?: string; date: string; duration?: number }): Promise<SingleResponse<TimeSlot[]>> {
-    // Support both rentalObjectId (new) and listingId (backward compatibility)
-    const queryParams: Record<string, string | number> = {
-      rentalObjectId: params.rentalObjectId || params.listingId!,
-      date: params.date,
-    };
-    if (params.duration) queryParams.duration = params.duration;
-    return this.client.get(this.buildPath('/slots'), { params: queryParams });
-  }
-  /**
-   * @deprecated Use getSlots with rentalObjectId instead
-   */
-  async getSlotsLegacy(params: { listingId: string; date: string; duration?: number }): Promise<SingleResponse<TimeSlot[]>> {
-    return this.getSlots({ rentalObjectId: params.listingId, date: params.date, duration: params.duration });
+  async getSlots(params: { listingId: string; date: string; duration?: number }): Promise<SingleResponse<Array<{
+    startTime: string;
+    endTime: string;
+    available: boolean;
+    price?: number;
+  }>>> {
+    return this.client.get(this.buildPath('/slots'), { params });
   }
 
   /**
    * Check if time range is available
+   * Validates if a specific time range is available for booking
+   *
+   * @param params - Query parameters with listing ID and time range
+   * @returns Promise with availability status and any conflicting bookings
+   *
+   * @example
+   * ```typescript
+   * const availability = await availabilityService.check({
+   *   listingId: 'listing-456',
+   *   startTime: '2024-03-15T10:00:00Z',
+   *   endTime: '2024-03-15T12:00:00Z'
+   * });
+   * if (availability.data.available) {
+   *   console.log('Time slot is available');
+   * } else {
+   *   console.log('Conflicts:', availability.data.conflicts);
+   * }
+   * ```
    */
-  async check(params: { rentalObjectId: string; listingId?: string; startTime: string; endTime: string }): Promise<SingleResponse<AvailabilityCheck>> {
-    // Support both rentalObjectId (new) and listingId (backward compatibility)
-    const queryParams: Record<string, string> = {
-      rentalObjectId: params.rentalObjectId || params.listingId!,
-      startTime: params.startTime,
-      endTime: params.endTime,
-    };
-    return this.client.get(this.buildPath('/check'), { params: queryParams });
-  }
-  /**
-   * @deprecated Use check with rentalObjectId instead
-   */
-  async checkLegacy(params: { listingId: string; startTime: string; endTime: string }): Promise<SingleResponse<AvailabilityCheck>> {
-    return this.check({ rentalObjectId: params.listingId, startTime: params.startTime, endTime: params.endTime });
+  async check(params: { listingId: string; startTime: string; endTime: string }): Promise<SingleResponse<{
+    available: boolean;
+    conflicts?: Array<{ startTime: string; endTime: string }>;
+  }>> {
+    return this.client.get(this.buildPath('/check'), { params });
   }
 }
 

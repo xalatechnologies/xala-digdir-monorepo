@@ -4,8 +4,7 @@
  * React hook for monitoring accessibility metrics in production
  */
 
-import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
-import { getClient } from '../core/client-factory';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import {
   AccessibilityMonitoringService,
   detectScreenReader,
@@ -84,15 +83,6 @@ export function useAccessibilityMonitoring(
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
     };
-  }, []);
-
-  // Get client instance
-  const client = useMemo(() => {
-    try {
-      return getClient();
-    } catch {
-      return null;
-    }
   }, []);
 
   // Initialize service

@@ -145,21 +145,58 @@ console.log(example.code);
 
 ## Registry Statistics
 
+The registry now includes **60+ components** organized across multiple categories:
+
 ```bash
 # View registry metadata
 pnpm validate
 
 # Output:
 # {
-#   totalComponents: 18,
+#   totalComponents: 62,
 #   totalPatterns: 4,
 #   totalExamples: 4,
 #   totalGuidelines: 3,
-#   categories: { ... },
+#   categories: {
+#     components: [
+#       "feedback",      // Alert, ErrorSummary, ProgressBar, Skeleton
+#       "input",         // Button, Checkbox, Field, Input, Radio, Select, etc.
+#       "layout",        // Card, Divider, Table
+#       "media",         // Avatar
+#       "navigation",    // Link, Navigation, NavigationLink, Pagination, Tabs
+#       "utility",       // Badge, Dialog, Drawer, Spinner, Switch, Tooltip, etc.
+#       "composed",      // AppHeader, ContentLayout, FilterBar, Navigation, etc.
+#       "block",         // ListingCard, BookingSection, StatCard, ImageGallery, etc.
+#       "shell",         // AppShell, LoginLayout
+#       "typography"     // Heading, Paragraph, Label, List
+#     ],
+#     patterns: ["forms", "navigation", "themes", "utilities"],
+#     guidelines: ["architecture", "styling", "accessibility"]
+#   },
 #   themes: ["digdir", "altinn", "uutilsynet", "portal"],
-#   dataAttributes: { ... }
+#   dataAttributes: {
+#     colorScheme: ["auto", "light", "dark"],
+#     size: ["sm", "md", "lg"],
+#     typography: ["primary", "secondary"]
+#   }
 # }
 ```
+
+### Component Categories
+
+- **Primitives**: Basic building blocks (Button, Input, Card, etc.)
+- **Composed**: Mid-level components (AppHeader, ContentLayout, Navigation, etc.)
+- **Blocks**: Business-specific components (ListingCard, BookingSection, StatCard, etc.)
+- **Shells**: Application-level layouts (AppShell, LoginLayout)
+
+### Example Categories
+
+The registry includes copy-paste ready examples for:
+- **Basic usage**: Simple component implementations
+- **AsChild pattern**: Rendering components as different elements
+- **Form patterns**: Validation, field composition, error handling
+- **Theme switching**: Runtime theme and color scheme control
+- **Navigation**: Links, buttons, routing integration
 
 ## Available Themes
 
