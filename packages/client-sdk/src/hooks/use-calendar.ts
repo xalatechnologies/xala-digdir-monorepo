@@ -51,16 +51,6 @@ export function useRentalObjectCalendarConfig(
   });
 }
 
-// Backward compatibility alias (deprecated)
-/** @deprecated Use useRentalObjectCalendarConfig instead */
-export function useListingCalendarConfig(
-  listingId: string,
-  params?: CalendarConfigQueryParams,
-  options?: { enabled?: boolean }
-) {
-  return useRentalObjectCalendarConfig(listingId, params, options);
-}
-
 // ============================================================================
 // Availability Matrix Hooks
 // ============================================================================

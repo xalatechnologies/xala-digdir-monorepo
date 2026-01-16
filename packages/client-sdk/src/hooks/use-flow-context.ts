@@ -388,16 +388,10 @@ export function useRentalObjectFlowContext(rentalObjectId: string): FlowContext 
       return undefined;
     }
     const context = loadFlowContextFromStorage();
-    // Only return if listingId matches the provided rentalObjectId parameter
-    if (context?.listingId === rentalObjectId) {
+    // Only return if rentalObjectId matches the provided parameter
+    if (context?.rentalObjectId === rentalObjectId) {
       return context;
     }
     return undefined;
   }, [hasContext, rentalObjectId]);
-}
-
-// Backward compatibility alias (deprecated)
-/** @deprecated Use useRentalObjectFlowContext instead */
-export function useListingFlowContext(listingId: string): FlowContext | undefined {
-  return useRentalObjectFlowContext(listingId);
 }

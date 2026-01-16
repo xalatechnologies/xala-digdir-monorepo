@@ -62,7 +62,7 @@ export class BackofficePriceRulesController {
   @Get('/:id/price-rules')
   async getPriceRules(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const { id } = request.params;
-    const rules = await mockDb.query('SELECT * FROM price_rules WHERE listing_id = $1 ORDER BY priority DESC', [id]);
+    const rules = await mockDb.query('SELECT * FROM price_rules WHERE rental_object_id = $1 ORDER BY priority DESC', [id]);
     return reply.send({
       data: rules || [],
       meta: { total: rules?.length || 0 },
@@ -90,11 +90,11 @@ export class BackofficePriceRulesController {
     
     // Validate each rule
     const validatedRules = body.rules.map(rule => 
-      validate(CreatePriceRuleSchema, { ...rule, listingId: id })
+      validate(CreatePriceRuleSchema, { ...rule, rentalObjectId: id })
     );
     
     // Delete existing rules and insert new ones
-    await mockDb.query('DELETE FROM price_rules WHERE listing_id = $1', [id]);
+    await mockDb.query('DELETE FROM price_rules WHERE rental_object_id = $1', [id]);
     
     const inserted = [];
     for (const rule of validatedRules) {

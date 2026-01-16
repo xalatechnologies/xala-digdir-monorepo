@@ -208,15 +208,39 @@ export function useAuth(): UseAuthReturn {
 
   // Check for existing session on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('web_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem('web_user');
+    const checkSession = async () => {
+      // First check localStorage for cached user
+      const savedUser = localStorage.getItem('web_user');
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch {
+          localStorage.removeItem('web_user');
+        }
       }
-    }
-    setIsLoading(false);
+
+      // Always check for server session (HTTP-only cookie)
+      // This is critical for OAuth callback flow
+      try {
+        const response = await authService.getSession();
+        if (response.data) {
+          const userData = {
+            id: response.data.userId,
+            name: response.data.user?.name || response.data.user?.email || 'User',
+            email: response.data.user?.email || '',
+          };
+          localStorage.setItem('web_user', JSON.stringify(userData));
+          setUser(userData);
+        }
+      } catch (error) {
+        // No valid session cookie - user not logged in
+        console.log('[WEB AUTH] No valid session found');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkSession();
   }, []);
 
   /**

@@ -1,7 +1,7 @@
 {
   "feature": "Extract duplicated ListingsFilterBar component into shared @xala/ds package",
   "workflow_type": "refactor",
-  "workflow_rationale": "This is a code deduplication refactor. The ListingsFilterBar component is 90%+ identical in minside and backoffice apps (687 and 682 lines respectively). Extracting to a shared component eliminates maintenance burden and prevents divergence. This follows the standard refactor pattern: Add New \u2192 Migrate \u2192 Remove Old \u2192 Cleanup.",
+  "workflow_rationale": "This is a code deduplication refactor. The ListingsFilterBar component is 90%+ identical in minside and backoffice apps (687 and 682 lines respectively). Extracting to a shared component eliminates maintenance burden and prevents divergence. This follows the standard refactor pattern: Add New → Migrate → Remove Old → Cleanup.",
   "phases": [
     {
       "id": "phase-1-prepare-shared-types",
@@ -507,9 +507,9 @@
     "issues_found": 0,
     "acceptance_criteria_met": "6/6 applicable criteria passed"
   },
-  "status": "ai_review",
+  "status": "human_review",
   "planStatus": "review",
-  "updated_at": "2026-01-16T01:04:19.291Z",
+  "updated_at": "2026-01-16T08:47:27.997Z",
   "last_updated": "2026-01-16T01:03:15.471585+00:00",
   "qa_iteration_history": [
     {

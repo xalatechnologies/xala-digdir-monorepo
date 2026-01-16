@@ -155,7 +155,7 @@ export type PolicyDecision = z.infer<typeof PolicyDecisionSchema>;
  */
 export const ListingCalendarConfigProjectionSchema = z.object({
   // Identity
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
 
   // Calendar mode
   granularity: CalendarGranularitySchema,
@@ -234,10 +234,10 @@ export type SlotStatusLegend = z.infer<typeof SlotStatusLegendSchema>;
 
 /**
  * Listing Availability Matrix Projection Schema
- * Response schema for GET /api/availability/:listingId
+ * Response schema for GET /api/availability/:rentalObjectId
  */
 export const ListingAvailabilityMatrixProjectionSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format'),
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format'),
   granularity: CalendarGranularitySchema,
@@ -263,7 +263,7 @@ export type CalendarConfigQueryParams = z.infer<typeof CalendarConfigQuerySchema
 
 /**
  * Availability Matrix Query Params Schema
- * Query params for GET /api/availability/:listingId
+ * Query params for GET /api/availability/:rentalObjectId
  */
 export const AvailabilityMatrixQuerySchema = z.object({
   from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format'),
@@ -293,7 +293,7 @@ export type CalendarConfigRouteParams = z.infer<typeof CalendarConfigRouteParams
  * Availability Matrix Route Params Schema
  */
 export const AvailabilityMatrixRouteParamsSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
 });
 
 export type AvailabilityMatrixRouteParams = z.infer<typeof AvailabilityMatrixRouteParamsSchema>;

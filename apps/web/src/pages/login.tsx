@@ -5,7 +5,7 @@
  * Supports session-safe return-to-flow authentication with flow context preservation
  */
 import { useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
   LoginOption,
@@ -42,12 +42,27 @@ export function LoginPage(): React.ReactElement {
   const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
+  // Check for auth callback params (returned from ID-porten/OAuth)
+  const authSuccess = searchParams.get('auth_success') === 'true';
+  const authError = searchParams.get('auth_error');
+
   // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+
+  // Handle auth callback - redirect to home after successful authentication
+  useEffect(() => {
+    if (authSuccess && !authError) {
+      // Clear the URL params and redirect to home
+      // The useAuth hook will have already loaded the session via getSession()
+      // so isAuthenticated will be true and handlePostAuthNavigation will redirect
+      navigate('/', { replace: true });
+    }
+  }, [authSuccess, authError, navigate]);
 
   /**
    * Handle navigation after authentication

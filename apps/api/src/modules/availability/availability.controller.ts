@@ -148,12 +148,12 @@ export class AvailabilityController {
    */
   @Get('/:listingId')
   async getAvailabilityMatrix(
-    request: FastifyRequest<{ Params: { listingId: string } }>,
+    request: FastifyRequest<{ Params: { rentalObjectId: string } }>,
     reply: FastifyReply
   ): Promise<{ data: ListingAvailabilityMatrixProjection }> {
     const params = validate(AvailabilityMatrixQuerySchema, request.query);
     const matrix = await this.calendarService.getAvailabilityMatrix(
-      request.params.listingId,
+      request.params.rentalObjectId,
       params
     );
     return { data: matrix };
@@ -166,7 +166,7 @@ export class AvailabilityController {
   @Get('/slots')
   async getSlots(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { listingId, date, duration = 60 } = request.query as any;
+    const { rentalObjectId, date, duration = 60 } = request.query as any;
 
     if (!listingId || !date) {
       reply.code(400);
@@ -205,7 +205,7 @@ export class AvailabilityController {
       .from(allocations)
       .where(
         and(
-          eq(allocations.listingId, listingId),
+          eq(allocations.rentalObjectId, listingId),
           gte(allocations.endTime, dateStart),
           lte(allocations.startTime, dateEnd)
         )
@@ -223,7 +223,7 @@ export class AvailabilityController {
       .from(bookings)
       .where(
         and(
-          eq(bookings.listingId, listingId),
+          eq(bookings.rentalObjectId, listingId),
           gte(bookings.endTime, dateStart),
           lte(bookings.startTime, dateEnd),
           or(eq(bookings.status, 'confirmed'), eq(bookings.status, 'pending'))
@@ -309,7 +309,7 @@ export class AvailabilityController {
     }
 
     return {
-      listingId,
+      rentalObjectId,
       date,
       duration: slotDuration,
       slots: slots.filter((s) => s.available),

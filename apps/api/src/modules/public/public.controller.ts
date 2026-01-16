@@ -122,7 +122,7 @@ export class PublicController {
       .from(allocations)
       .where(
         and(
-          eq(allocations.listingId, id),
+          eq(allocations.rentalObjectId, id),
           gte(allocations.endTime, start),
           lte(allocations.startTime, end)
         )
@@ -137,7 +137,7 @@ export class PublicController {
       .from(bookings)
       .where(
         and(
-          eq(bookings.listingId, id),
+          eq(bookings.rentalObjectId, id),
           gte(bookings.endTime, start),
           lte(bookings.startTime, end),
           eq(bookings.status, 'confirmed')
@@ -146,7 +146,7 @@ export class PublicController {
 
     return {
       data: {
-        listingId: id,
+        rentalObjectId: id,
         startDate,
         endDate,
         blockedSlots: [...blocked, ...booked],

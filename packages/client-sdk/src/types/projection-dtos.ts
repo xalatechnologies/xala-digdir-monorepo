@@ -275,7 +275,7 @@ export interface BookingCardProjectionDTO {
   rentalObjectLocation: string;
   // Backward compatibility (deprecated)
   /** @deprecated Use rentalObjectId instead */
-  listingId?: string;
+  rentalObjectId?: string;
   /** @deprecated Use rentalObjectName instead */
   listingName?: string;
   /** @deprecated Use rentalObjectSlug instead */

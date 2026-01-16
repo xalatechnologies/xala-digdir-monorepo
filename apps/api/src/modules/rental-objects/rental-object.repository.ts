@@ -4,27 +4,25 @@
  */
 import { Injectable } from '../../core/decorators';
 import { BaseRepository, type PaginatedResult, type FilterCondition } from '../../database/base.repository';
-// Import schema types (listings is backward-compatible alias for rental_objects table)
-import { listings, type Listing, type NewListing } from '../../database/schema';
-// Note: Listing and NewListing types are backward-compatible aliases for RentalObject types
+import { rentalObjects, type RentalObject, type NewRentalObject } from '../../database/schema';
 import type { RentalObjectQueryParams } from '../../schemas/rental-object.schema';
 
 @Injectable()
 export class RentalObjectRepository extends BaseRepository<
-  typeof listings,
-  Listing,
-  NewListing,
-  Partial<NewListing>,
+  typeof rentalObjects,
+  RentalObject,
+  NewRentalObject,
+  Partial<NewRentalObject>,
   string
 > {
   constructor(db: any) {
-    super(db, listings, listings.id);
+    super(db, rentalObjects, rentalObjects.id);
   }
 
   /**
    * Find rental object by slug within a tenant
    */
-  async findBySlug(tenantId: string, slug: string): Promise<Listing | null> {
+  async findBySlug(tenantId: string, slug: string): Promise<RentalObject | null> {
     return this.findOne([
       { field: 'tenantId', operator: 'eq', value: tenantId },
       { field: 'slug', operator: 'eq', value: slug },
@@ -35,7 +33,7 @@ export class RentalObjectRepository extends BaseRepository<
    * Find rental objects with query params
    * If tenantId is null, fetch all published rental objects (public access)
    */
-  async findWithFilters(tenantId: string | null, params: RentalObjectQueryParams): Promise<PaginatedResult<Listing>> {
+  async findWithFilters(tenantId: string | null, params: RentalObjectQueryParams): Promise<PaginatedResult<RentalObject>> {
     const conditions: FilterCondition[] = [];
 
     // Only filter by tenant if tenantId is provided
@@ -143,14 +141,14 @@ export class RentalObjectRepository extends BaseRepository<
   /**
    * Find published rental objects
    */
-  async findPublished(tenantId: string, params: RentalObjectQueryParams): Promise<PaginatedResult<Listing>> {
+  async findPublished(tenantId: string, params: RentalObjectQueryParams): Promise<PaginatedResult<RentalObject>> {
     return this.findWithFilters(tenantId, { ...params, status: 'published' });
   }
 
   /**
    * Find by slug (single param version)
    */
-  async findBySlugOnly(slug: string): Promise<Listing | null> {
+  async findBySlugOnly(slug: string): Promise<RentalObject | null> {
     return this.findOne([{ field: 'slug', operator: 'eq', value: slug }]);
   }
 

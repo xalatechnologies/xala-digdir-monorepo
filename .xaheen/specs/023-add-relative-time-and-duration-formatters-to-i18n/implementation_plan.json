@@ -383,9 +383,9 @@
       "No breaking changes to existing i18n functionality"
     ]
   },
-  "status": "ai_review",
+  "status": "human_review",
   "planStatus": "review",
-  "updated_at": "2026-01-16T00:02:14.268Z",
+  "updated_at": "2026-01-16T08:37:37.279Z",
   "last_updated": "2026-01-16T00:01:54.073462+00:00",
   "qa_iteration_history": [
     {

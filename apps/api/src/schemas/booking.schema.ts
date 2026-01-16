@@ -16,7 +16,7 @@ export type BookingStatus = z.infer<typeof BookingStatusSchema>;
 export const BookingSchema = z.object({
   id: z.string().uuid(),
   tenantId: z.string().uuid(),
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   userId: z.string().uuid(),
   status: BookingStatusSchema.default('pending'),
   startTime: z.coerce.date(),
@@ -39,7 +39,7 @@ export type Booking = z.infer<typeof BookingSchema>;
  * Create Booking DTO
  */
 export const CreateBookingSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   userId: z.string().uuid().optional(), // Optional if taken from auth context
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
@@ -79,7 +79,7 @@ export type CancelBookingDTO = z.infer<typeof CancelBookingSchema>;
  * Booking Query Params
  */
 export const BookingQuerySchema = z.object({
-  listingId: z.string().uuid().optional(),
+  rentalObjectId: z.string().uuid().optional(),
   userId: z.string().uuid().optional(),
   status: BookingStatusSchema.optional(),
   from: z.coerce.date().optional(),
@@ -95,7 +95,7 @@ export type BookingQueryParams = z.infer<typeof BookingQuerySchema>;
  */
 export const CalendarEventSchema = z.object({
   id: z.string().uuid(),
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   start: z.string().datetime(),
   end: z.string().datetime(),
   status: BookingStatusSchema,
@@ -184,7 +184,7 @@ export type BookingMetadata = z.infer<typeof BookingMetadataSchema>;
  * Unified selection model across all booking modes (SINGLE_SLOT, IN_GAME, RECURRING)
  */
 export const BookingSelectionSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   mode: BookingModeSchema,
   startTime: z.string().datetime(),
   endTime: z.string().datetime(),
@@ -275,7 +275,7 @@ export type RecurringPreviewRequest = z.infer<typeof RecurringPreviewRequestSche
  * Server-computed recurring booking preview response
  */
 export const RecurringPreviewProjectionSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   selection: BookingSelectionSchema,
   occurrences: z.array(RecurringOccurrenceSchema),
   summary: RecurringSummarySchema,
@@ -305,7 +305,7 @@ export type ConflictPolicy = z.infer<typeof ConflictPolicySchema>;
  */
 export const RecurringCreateSchema = z.object({
   // Selection data (extends BookingSelectionSchema fields)
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   startTime: z.string().datetime(),
   endTime: z.string().datetime(),
   userId: z.string().uuid().optional(),

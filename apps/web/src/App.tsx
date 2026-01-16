@@ -20,7 +20,7 @@ import { PaymentCallbackPage } from './pages/PaymentCallbackPage';
 import { LoginPage } from './pages/login';
 import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
 import { RealtimeProvider } from './providers';
-import { RealtimeToast, GlobalSearch, ProtectedRoute, ConsentPopup } from './components';
+import { RealtimeToast, GlobalSearch, ProtectedRoute, ConsentPopup, UserMenu } from './components';
 import { useAuth } from './hooks/useAuth';
 
 // Theme context type
@@ -137,13 +137,18 @@ function MainLayout() {
                 aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
               />
             )}
-            <HeaderLoginButton
-              isLoggedIn={isAuthenticated}
-              userName={user?.name}
-              onLogin={handleLogin}
-              onLogout={handleLogout}
-              color="accent"
-            />
+            {isAuthenticated && user ? (
+              <UserMenu
+                userName={user.name}
+                onLogout={handleLogout}
+              />
+            ) : (
+              <HeaderLoginButton
+                isLoggedIn={false}
+                onLogin={handleLogin}
+                color="accent"
+              />
+            )}
           </HeaderActions>
         }
       />

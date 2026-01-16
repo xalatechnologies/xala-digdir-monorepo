@@ -9,7 +9,7 @@ import type { PricingQuoteRequest, PricingQuoteResponse, QuoteLineItem } from '.
 
 interface PriceRule {
   id: string;
-  listing_id: string;
+  rental_object_id: string;
   user_group_id: string | null;
   rule_type: 'HOURLY' | 'DAILY' | 'PACKAGE';
   unit: 'HOUR' | 'DAY' | 'PACKAGE';
@@ -30,7 +30,7 @@ export class PricingService {
    * This is the ONLY place pricing logic lives (SDK-first principle)
    */
   async calculateQuote(request: PricingQuoteRequest): Promise<PricingQuoteResponse> {
-    const { listingId, start, end, userGroupId } = request;
+    const { rentalObjectId, start, end, userGroupId } = request;
     
     const startDate = new Date(start);
     const endDate = new Date(end);
@@ -39,7 +39,7 @@ export class PricingService {
     const isWeekend = this.isWeekendBooking(startDate, endDate);
     
     // Get applicable price rules for this listing
-    const rules = await this.getPriceRules(listingId, userGroupId, isWeekend);
+    const rules = await this.getPriceRules(rentalObjectId, userGroupId, isWeekend);
     
     if (rules.length === 0) {
       // Fallback to listing base price
@@ -81,7 +81,7 @@ export class PricingService {
    * Get price rules for a listing, optionally filtered by user group
    */
   private async getPriceRules(
-    listingId: string,
+    rentalObjectId: string,
     userGroupId: string | null | undefined,
     isWeekend: boolean
   ): Promise<PriceRule[]> {
@@ -89,13 +89,13 @@ export class PricingService {
     // For now, return mock data matching our seed
     const allRules = await mockDb.query<PriceRule[]>(`
       SELECT * FROM price_rules 
-      WHERE listing_id = $1 
+      WHERE rental_object_id = $1 
       AND (
         (applies_weekends = $2 AND $2 = true) OR
         (applies_weekdays = $3 AND $3 = true)
       )
       ORDER BY priority DESC
-    `, [listingId, isWeekend, !isWeekend]);
+    `, [rentalObjectId, isWeekend, !isWeekend]);
     
     // Handle null or return as array
     const rulesArray: PriceRule[] = Array.isArray(allRules) 
@@ -185,7 +185,7 @@ export class PricingService {
   /**
    * Get listing for fallback pricing
    */
-  private async getListing(listingId: string): Promise<{ pricing: { basePrice: number; unit: string } }> {
+  private async getListing(rentalObjectId: string): Promise<{ pricing: { basePrice: number; unit: string } }> {
     const listing = await mockDb.query<any>('SELECT * FROM listings WHERE id = $1', [listingId]);
     return listing || { pricing: { basePrice: 0, unit: 'hour' } };
   }

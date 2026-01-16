@@ -63,7 +63,7 @@ export class BookingRepository extends BaseRepository<
    * Note: Parameter name 'listingId' kept for backward compatibility with database column
    */
   async findByListingAndDateRange(
-    listingId: string, // Rental object ID (parameter name kept for DB compatibility)
+    rentalObjectId: string, // Rental object ID (parameter name kept for DB compatibility)
     startDate: Date,
     endDate: Date
   ): Promise<Booking[]> {
@@ -100,7 +100,7 @@ export class BookingRepository extends BaseRepository<
       .select({
         id: bookings.id,
         tenantId: bookings.tenantId,
-        listingId: bookings.listingId,
+        rentalObjectId: bookings.rentalObjectId,
         userId: bookings.userId,
         status: bookings.status,
         startTime: bookings.startTime,
@@ -114,7 +114,7 @@ export class BookingRepository extends BaseRepository<
         listingName: listings.name,
       })
       .from(bookings)
-      .leftJoin(listings, eq(bookings.listingId, listings.id))
+      .leftJoin(listings, eq(bookings.rentalObjectId, listings.id))
       .where(eq(bookings.userId, userId))
       .orderBy(desc(bookings.startTime))
       .limit(limit)

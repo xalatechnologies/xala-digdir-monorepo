@@ -13,7 +13,7 @@ import { registerWebSocket } from '../../core/audit/audit.service';
 
 export interface AvailabilityUpdatedEvent {
   type: 'availability.updated';
-  listingId: string;
+  rentalObjectId: string;
   from: string;
   to: string;
   reason: 'booking' | 'block' | 'blackout' | 'opening_hours';
@@ -22,7 +22,7 @@ export interface AvailabilityUpdatedEvent {
 export interface BookingCreatedEvent {
   type: 'booking.created';
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -30,7 +30,7 @@ export interface BookingCreatedEvent {
 export interface BookingCancelledEvent {
   type: 'booking.cancelled';
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -38,7 +38,7 @@ export interface BookingCancelledEvent {
 export interface BookingConfirmedEvent {
   type: 'booking.confirmed';
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -46,7 +46,7 @@ export interface BookingConfirmedEvent {
 export interface BlockCreatedEvent {
   type: 'block.created';
   blockId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -54,7 +54,7 @@ export interface BlockCreatedEvent {
 export interface BlockUpdatedEvent {
   type: 'block.updated';
   blockId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -62,7 +62,7 @@ export interface BlockUpdatedEvent {
 export interface BlockDeletedEvent {
   type: 'block.deleted';
   blockId: string;
-  listingId: string;
+  rentalObjectId: string;
   start: string;
   end: string;
 }
@@ -241,12 +241,12 @@ const globalAvailabilityConnections = new Set<WebSocket>();
  * Register a WebSocket connection for availability updates on a specific rental object
  * @param listingId - Rental object ID (parameter name kept for backward compatibility)
  */
-export function registerAvailabilityWebSocket(socket: WebSocket, listingId: string): void {
+export function registerAvailabilityWebSocket(socket: WebSocket, rentalObjectId: string): void {
   if (listingId === '*') {
     globalAvailabilityConnections.add(socket);
   } else {
     if (!availabilityConnections.has(listingId)) {
-      availabilityConnections.set(listingId, new Set());
+      availabilityConnections.set(rentalObjectId, new Set());
     }
     availabilityConnections.get(listingId)!.add(socket);
   }
@@ -309,14 +309,14 @@ export function broadcastAvailabilityEvent(event: AvailabilityEvent): void {
  * Broadcast availability updated event
  */
 export function broadcastAvailabilityUpdated(
-  listingId: string,
+  rentalObjectId: string,
   from: string,
   to: string,
   reason: AvailabilityUpdatedEvent['reason']
 ): void {
   broadcastAvailabilityEvent({
     type: 'availability.updated',
-    listingId,
+    rentalObjectId,
     from,
     to,
     reason,
@@ -328,14 +328,14 @@ export function broadcastAvailabilityUpdated(
  */
 export function broadcastBookingCreated(
   bookingId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'booking.created',
     bookingId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -346,14 +346,14 @@ export function broadcastBookingCreated(
  */
 export function broadcastBookingCancelled(
   bookingId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'booking.cancelled',
     bookingId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -364,14 +364,14 @@ export function broadcastBookingCancelled(
  */
 export function broadcastBookingConfirmed(
   bookingId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'booking.confirmed',
     bookingId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -382,14 +382,14 @@ export function broadcastBookingConfirmed(
  */
 export function broadcastBlockCreated(
   blockId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'block.created',
     blockId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -400,14 +400,14 @@ export function broadcastBlockCreated(
  */
 export function broadcastBlockUpdated(
   blockId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'block.updated',
     blockId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -418,14 +418,14 @@ export function broadcastBlockUpdated(
  */
 export function broadcastBlockDeleted(
   blockId: string,
-  listingId: string,
+  rentalObjectId: string,
   start: string,
   end: string
 ): void {
   broadcastAvailabilityEvent({
     type: 'block.deleted',
     blockId,
-    listingId,
+    rentalObjectId,
     start,
     end,
   });
@@ -492,7 +492,7 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
   // WebSocket route for rental object-specific availability events
   // Note: Parameter name 'listingId' kept for backward compatibility
   app.get('/ws/availability/:listingId', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
-    const { listingId } = req.params as { listingId: string };
+    const { listingId } = req.params as { rentalObjectId: string };
     console.log(`[WS] Client connected to /ws/availability/${listingId}`);
 
     // Register for availability broadcasts for this rental object
@@ -503,7 +503,7 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
 
     socket.send(JSON.stringify({
       type: 'connected',
-      listingId, // Parameter name kept for backward compatibility
+      rentalObjectId, // Parameter name kept for backward compatibility
       message: `Connected to availability events for rental object ${listingId}`,
       timestamp: new Date().toISOString(),
     }));
@@ -590,5 +590,5 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     });
   });
 
-  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId, /ws/availability/:listingId, /ws/availability, /ws/notifications/:userId');
+  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId, /ws/availability/:rentalObjectId, /ws/availability, /ws/notifications/:userId');
 }

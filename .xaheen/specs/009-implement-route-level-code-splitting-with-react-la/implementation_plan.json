@@ -310,9 +310,9 @@
     ],
     "verified_by": "qa_agent"
   },
-  "status": "qa_approved",
-  "planStatus": "approved",
-  "updated_at": "2026-01-16T01:15:00.000Z",
+  "status": "human_review",
+  "planStatus": "review",
+  "updated_at": "2026-01-16T08:39:37.696Z",
   "last_updated": "2026-01-16T01:15:00.000000+00:00",
   "qa_iteration_history": [
     {

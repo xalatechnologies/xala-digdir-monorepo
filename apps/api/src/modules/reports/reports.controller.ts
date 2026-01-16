@@ -23,7 +23,7 @@ export class ReportsController {
     // Get usage by listing
     const result = await db
       .select({
-        listingId: listings.id,
+        rentalObjectId: listings.id,
         listingName: listings.name,
         totalBookings: sql<number>`COALESCE(COUNT(${bookings.id}), 0)`,
         totalHours: sql<number>`COALESCE(SUM(EXTRACT(EPOCH FROM (${bookings.endTime} - ${bookings.startTime})) / 3600), 0)`,
@@ -37,7 +37,7 @@ export class ReportsController {
 
     return {
       data: result.map((row: any) => ({
-        listingId: row.listingId,
+        rentalObjectId: row.rentalObjectId,
         listingName: row.listingName,
         totalBookings: Number(row.totalBookings),
         totalHours: Math.round(Number(row.totalHours) * 10) / 10,
@@ -54,7 +54,7 @@ export class ReportsController {
     // Revenue by listing
     const byListing = await db
       .select({
-        listingId: listings.id,
+        rentalObjectId: listings.id,
         listingName: listings.name,
         revenue: sql<number>`COALESCE(SUM(${bookings.totalPrice}), 0)`,
         bookingCount: count(bookings.id),
@@ -81,7 +81,7 @@ export class ReportsController {
       bookingCount,
       averageBookingValue: bookingCount > 0 ? Math.round(totalRevenue / bookingCount) : 0,
       byListing: byListing.map((row: any) => ({
-        listingId: row.listingId,
+        rentalObjectId: row.rentalObjectId,
         listingName: row.listingName,
         revenue: Number(row.revenue),
         percentage: totalRevenue > 0 ? Math.round((Number(row.revenue) / totalRevenue) * 100) : 0,

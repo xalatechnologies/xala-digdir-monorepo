@@ -127,12 +127,6 @@ export function useRealtimeRentalObjects(handler?: RealtimeEventHandler) {
   }, [queryClient]);
 }
 
-// Backward compatibility alias (deprecated)
-/** @deprecated Use useRealtimeRentalObjects instead */
-export function useRealtimeListings(handler?: RealtimeEventHandler) {
-  return useRealtimeRentalObjects(handler);
-}
-
 /**
  * Hook to subscribe to calendar events (bookings, blocks, allocations)
  * Auto-invalidates calendar-related queries when events arrive

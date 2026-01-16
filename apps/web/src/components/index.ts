@@ -12,3 +12,4 @@ export { ProtectedRoute } from './ProtectedRoute';
 export { ConsentPopup } from './ConsentPopup';
 export { ConsentSettings } from './ConsentSettings';
 export { DataSubjectRequestForm } from './DataSubjectRequestForm';
+export { UserMenu } from './UserMenu';

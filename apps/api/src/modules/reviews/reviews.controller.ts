@@ -22,7 +22,7 @@ interface TenantRequest extends FastifyRequest {
 const mockReviews = [
   {
     id: 'review-001',
-    listingId: '10000012-0000-0000-0000-000000000001',
+    rentalObjectId: '10000012-0000-0000-0000-000000000001',
     userId: 'user-001',
     userName: 'Erik Hansen',
     rating: 5,
@@ -34,7 +34,7 @@ const mockReviews = [
   },
   {
     id: 'review-002',
-    listingId: '10000012-0000-0000-0000-000000000001',
+    rentalObjectId: '10000012-0000-0000-0000-000000000001',
     userId: 'user-002',
     userName: 'Kari Olsen',
     rating: 4,
@@ -46,7 +46,7 @@ const mockReviews = [
   },
   {
     id: 'review-003',
-    listingId: '10000012-0000-0000-0000-000000000002',
+    rentalObjectId: '10000012-0000-0000-0000-000000000002',
     userId: 'user-003',
     userName: 'Per Nilsen',
     rating: 5,
@@ -58,7 +58,7 @@ const mockReviews = [
   },
   {
     id: 'review-004',
-    listingId: '10000012-0000-0000-0000-000000000003',
+    rentalObjectId: '10000012-0000-0000-0000-000000000003',
     userId: 'user-004',
     userName: 'Lisa Berg',
     rating: 4,
@@ -70,7 +70,7 @@ const mockReviews = [
   },
   {
     id: 'review-005',
-    listingId: '10000012-0000-0000-0000-000000000005',
+    rentalObjectId: '10000012-0000-0000-0000-000000000005',
     userId: 'user-005',
     userName: 'Morten Stein',
     rating: 5,
@@ -283,7 +283,7 @@ export class ReviewsController {
    */
   @Post('/')
   async createReview(request: TenantRequest, reply: FastifyReply) {
-    const { listingId, rating, title, comment } = request.body as any;
+    const { rentalObjectId, rating, title, comment } = request.body as any;
 
     if (!listingId || !rating || !title) {
       reply.code(400);
@@ -291,14 +291,14 @@ export class ReviewsController {
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'listingId, rating, and title are required',
+          message: 'rentalObjectId, rating, and title are required',
         },
       };
     }
 
     const newReview = {
       id: `review-${Date.now()}`,
-      listingId,
+      rentalObjectId,
       userId: request.userId || 'anonymous',
       userName: 'Anonym bruker',
       rating: Number(rating),

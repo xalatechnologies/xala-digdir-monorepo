@@ -19,10 +19,10 @@ export class AllocationsController {
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { listingId, startDate, endDate, status } = request.query as any;
+    const { rentalObjectId, startDate, endDate, status } = request.query as any;
 
     const conditions = [];
-    if (listingId) conditions.push(eq(allocations.listingId, listingId));
+    if (listingId) conditions.push(eq(allocations.rentalObjectId, listingId));
     if (startDate) conditions.push(gte(allocations.startTime, new Date(startDate)));
     if (endDate) conditions.push(lte(allocations.endTime, new Date(endDate)));
     if (status) conditions.push(eq(allocations.status, status));
@@ -31,7 +31,7 @@ export class AllocationsController {
       .select({
         id: allocations.id,
         tenantId: allocations.tenantId,
-        listingId: allocations.listingId,
+        rentalObjectId: allocations.rentalObjectId,
         listingName: listings.name,
         title: allocations.title,
         startTime: allocations.startTime,
@@ -45,7 +45,7 @@ export class AllocationsController {
         createdAt: allocations.createdAt,
       })
       .from(allocations)
-      .leftJoin(listings, eq(allocations.listingId, listings.id))
+      .leftJoin(listings, eq(allocations.rentalObjectId, listings.id))
       .leftJoin(users, eq(allocations.userId, users.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(allocations.startTime);
@@ -63,7 +63,7 @@ export class AllocationsController {
       .insert(allocations)
       .values({
         tenantId,
-        listingId: body.listingId,
+        rentalObjectId: body.rentalObjectId,
         title: body.title,
         startTime: new Date(body.startTime),
         endTime: new Date(body.endTime),
@@ -81,7 +81,7 @@ export class AllocationsController {
       action: 'create',
       resource: 'allocation',
       resourceId: result[0].id,
-      metadata: { listingId: body.listingId, startTime: body.startTime, endTime: body.endTime },
+      metadata: { rentalObjectId: body.rentalObjectId, startTime: body.startTime, endTime: body.endTime },
     });
 
     reply.code(201);

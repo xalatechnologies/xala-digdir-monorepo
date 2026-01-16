@@ -135,12 +135,12 @@ export class SeasonApplicationsController {
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const { seasonId, listingId, organizationId, status, page = 1, limit = 20 } = request.query as any;
+    const { seasonId, rentalObjectId, organizationId, status, page = 1, limit = 20 } = request.query as any;
 
     // Build conditions
     const conditions = [];
     if (seasonId) conditions.push(eq(seasonApplications.seasonId, seasonId));
-    if (listingId) conditions.push(eq(seasonApplications.listingId, listingId));
+    if (listingId) conditions.push(eq(seasonApplications.rentalObjectId, listingId));
     if (organizationId) conditions.push(eq(seasonApplications.organizationId, organizationId));
     if (status) conditions.push(eq(seasonApplications.status, status));
 
@@ -150,7 +150,7 @@ export class SeasonApplicationsController {
         tenantId: seasonApplications.tenantId,
         seasonId: seasonApplications.seasonId,
         seasonName: seasons.name,
-        listingId: seasonApplications.listingId,
+        rentalObjectId: seasonApplications.rentalObjectId,
         listingName: listings.name,
         organizationId: seasonApplications.organizationId,
         organizationName: organizations.name,
@@ -170,7 +170,7 @@ export class SeasonApplicationsController {
       })
       .from(seasonApplications)
       .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .leftJoin(organizations, eq(seasonApplications.organizationId, organizations.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(seasonApplications.createdAt)
@@ -207,7 +207,7 @@ export class SeasonApplicationsController {
         tenantId: seasonApplications.tenantId,
         seasonId: seasonApplications.seasonId,
         seasonName: seasons.name,
-        listingId: seasonApplications.listingId,
+        rentalObjectId: seasonApplications.rentalObjectId,
         listingName: listings.name,
         organizationId: seasonApplications.organizationId,
         organizationName: organizations.name,
@@ -227,7 +227,7 @@ export class SeasonApplicationsController {
       })
       .from(seasonApplications)
       .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .leftJoin(organizations, eq(seasonApplications.organizationId, organizations.id))
       .where(eq(seasonApplications.id, id));
 
@@ -250,7 +250,7 @@ export class SeasonApplicationsController {
       .values({
         tenantId,
         seasonId: body.seasonId,
-        listingId: body.listingId,
+        rentalObjectId: body.rentalObjectId,
         organizationId: body.organizationId,
         applicantName: body.applicantName,
         applicantEmail: body.applicantEmail,
@@ -336,7 +336,7 @@ export class SeasonApplicationsController {
       .select({
         id: seasonApplications.id,
         seasonId: seasonApplications.seasonId,
-        listingId: seasonApplications.listingId,
+        rentalObjectId: seasonApplications.rentalObjectId,
         applicantName: seasonApplications.applicantName,
         applicantEmail: seasonApplications.applicantEmail,
         weekday: seasonApplications.weekday,
@@ -347,7 +347,7 @@ export class SeasonApplicationsController {
       })
       .from(seasonApplications)
       .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .where(eq(seasonApplications.id, id))
       .limit(1);
 
@@ -402,7 +402,7 @@ export class SeasonApplicationsController {
       .select({
         id: seasonApplications.id,
         seasonId: seasonApplications.seasonId,
-        listingId: seasonApplications.listingId,
+        rentalObjectId: seasonApplications.rentalObjectId,
         applicantName: seasonApplications.applicantName,
         applicantEmail: seasonApplications.applicantEmail,
         weekday: seasonApplications.weekday,
@@ -413,7 +413,7 @@ export class SeasonApplicationsController {
       })
       .from(seasonApplications)
       .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .where(eq(seasonApplications.id, id))
       .limit(1);
 
@@ -473,7 +473,7 @@ export class SeasonApplicationsController {
         id: seasonApplications.id,
         tenantId: seasonApplications.tenantId,
         seasonId: seasonApplications.seasonId,
-        listingId: seasonApplications.listingId,
+        rentalObjectId: seasonApplications.rentalObjectId,
         organizationId: seasonApplications.organizationId,
         applicantName: seasonApplications.applicantName,
         applicantEmail: seasonApplications.applicantEmail,
@@ -486,7 +486,7 @@ export class SeasonApplicationsController {
       })
       .from(seasonApplications)
       .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .where(eq(seasonApplications.id, id))
       .limit(1);
 
@@ -540,7 +540,7 @@ export class SeasonApplicationsController {
         .insert(bookings)
         .values({
           tenantId,
-          listingId: app.listingId,
+          rentalObjectId: app.rentalObjectId,
           userId,
           status: 'confirmed',
           startTime,
@@ -576,7 +576,7 @@ export class SeasonApplicationsController {
       data: {
         applicationId: id,
         seasonId: app.seasonId,
-        listingId: app.listingId,
+        rentalObjectId: app.rentalObjectId,
         organizationId: app.organizationId,
         bookingsCreated: createdBookings.length,
         bookings: createdBookings,
@@ -637,7 +637,7 @@ export class SeasonApplicationsController {
       .where(
         and(
           eq(seasonApplications.seasonId, seasonId),
-          eq(seasonApplications.listingId, listingId),
+          eq(seasonApplications.rentalObjectId, listingId),
           eq(seasonApplications.status, 'pending')
         )
       );
@@ -681,7 +681,7 @@ export class SeasonApplicationsController {
     return {
       data: {
         seasonId,
-        listingId,
+        rentalObjectId,
         totalApplications: applications.length,
         conflicts,
       },

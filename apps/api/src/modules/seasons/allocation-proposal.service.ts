@@ -28,7 +28,7 @@ export interface AllocationSuggestion {
   applicationId: string;
   organizationId: string;
   organizationName: string;
-  listingId: string;
+  rentalObjectId: string;
   listingName: string;
   weekday: number;
   suggestedStartTime: string;
@@ -128,7 +128,7 @@ function generateTimeSlotAlternatives(
  */
 async function findAlternativeTimeSlot(
   seasonId: string,
-  listingId: string,
+  rentalObjectId: string,
   weekday: number,
   originalStartTime: string,
   originalEndTime: string,
@@ -141,7 +141,7 @@ async function findAlternativeTimeSlot(
   for (const alternative of alternatives) {
     const hasConflict = await checkTimeSlotConflict(
       seasonId,
-      listingId,
+      rentalObjectId,
       weekday,
       alternative.startTime,
       alternative.endTime,
@@ -255,7 +255,7 @@ export async function generateAllocationProposal(
         applicationId: app.id,
         organizationId: app.organizationId,
         organizationName: app.organizationName || 'Unknown',
-        listingId: app.listingId,
+        rentalObjectId: app.rentalObjectId,
         listingName: app.listingName || 'Unknown',
         weekday: app.weekday,
         suggestedStartTime: app.startTime,
@@ -278,7 +278,7 @@ export async function generateAllocationProposal(
         applicationId: app.id,
         organizationId: app.organizationId,
         organizationName: app.organizationName || 'Unknown',
-        listingId: app.listingId,
+        rentalObjectId: app.rentalObjectId,
         listingName: app.listingName || 'Unknown',
         weekday: app.weekday,
         suggestedStartTime: app.startTime,
@@ -299,7 +299,7 @@ export async function generateAllocationProposal(
       // Has conflicts with already-approved applications - try to find alternative time slot
       const alternative = await findAlternativeTimeSlot(
         seasonId,
-        app.listingId,
+        app.rentalObjectId,
         app.weekday,
         app.startTime,
         app.endTime,
@@ -313,7 +313,7 @@ export async function generateAllocationProposal(
           applicationId: app.id,
           organizationId: app.organizationId,
           organizationName: app.organizationName || 'Unknown',
-          listingId: app.listingId,
+          rentalObjectId: app.rentalObjectId,
           listingName: app.listingName || 'Unknown',
           weekday: app.weekday,
           suggestedStartTime: alternative.startTime,
@@ -335,7 +335,7 @@ export async function generateAllocationProposal(
           applicationId: app.id,
           organizationId: app.organizationId,
           organizationName: app.organizationName || 'Unknown',
-          listingId: app.listingId,
+          rentalObjectId: app.rentalObjectId,
           listingName: app.listingName || 'Unknown',
           weekday: app.weekday,
           suggestedStartTime: app.startTime,

@@ -15,7 +15,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 
 interface Block {
   id: string;
-  listingId: string;
+  rentalObjectId: string;
   title: string;
   reason?: string;
   startDate: string;
@@ -32,7 +32,7 @@ interface Block {
 const mockBlocks: Block[] = [
   {
     id: 'block-1',
-    listingId: '10000001-0000-0000-0000-000000000001',
+    rentalObjectId: '10000001-0000-0000-0000-000000000001',
     title: 'Vedlikehold',
     reason: 'Årlig vedlikehold og rengjøring',
     startDate: '2026-02-01T08:00:00Z',
@@ -44,7 +44,7 @@ const mockBlocks: Block[] = [
   },
   {
     id: 'block-2',
-    listingId: '10000001-0000-0000-0000-000000000001',
+    rentalObjectId: '10000001-0000-0000-0000-000000000001',
     title: 'Kommunal arrangement',
     reason: 'Reservert for kommunalt arrangement',
     startDate: '2026-01-20T09:00:00Z',
@@ -118,7 +118,7 @@ export class BlocksController {
     
     const newBlock: Block = {
       id: `block-${Date.now()}`,
-      listingId: body.listingId || '',
+      rentalObjectId: body.listingId || '',
       title: body.title || 'Blocked',
       reason: body.reason,
       startDate: body.startDate || new Date().toISOString(),

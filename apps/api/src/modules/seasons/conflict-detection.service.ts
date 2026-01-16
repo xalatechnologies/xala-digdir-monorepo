@@ -15,7 +15,7 @@ export interface ApplicationConflict {
   conflictingApplicationId: string;
   seasonId: string;
   seasonName: string;
-  listingId: string;
+  rentalObjectId: string;
   listingName: string;
   weekday: number;
   timeSlot: string;
@@ -133,7 +133,7 @@ export async function findConflictsForApplication(
       id: seasonApplications.id,
       seasonId: seasonApplications.seasonId,
       seasonName: seasons.name,
-      listingId: seasonApplications.listingId,
+      rentalObjectId: seasonApplications.rentalObjectId,
       listingName: listings.name,
       organizationId: seasonApplications.organizationId,
       organizationName: organizations.name,
@@ -145,13 +145,13 @@ export async function findConflictsForApplication(
     })
     .from(seasonApplications)
     .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-    .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+    .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
     .leftJoin(organizations, eq(seasonApplications.organizationId, organizations.id))
     .where(
       and(
         eq(seasonApplications.tenantId, tenantId),
         eq(seasonApplications.seasonId, app.seasonId),
-        eq(seasonApplications.listingId, app.listingId),
+        eq(seasonApplications.rentalObjectId, app.listingId),
         eq(seasonApplications.weekday, app.weekday),
         ne(seasonApplications.id, applicationId),
         or(
@@ -171,7 +171,7 @@ export async function findConflictsForApplication(
     })
     .from(seasonApplications)
     .leftJoin(seasons, eq(seasonApplications.seasonId, seasons.id))
-    .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+    .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
     .leftJoin(organizations, eq(seasonApplications.organizationId, organizations.id))
     .where(eq(seasonApplications.id, applicationId))
     .limit(1);
@@ -197,7 +197,7 @@ export async function findConflictsForApplication(
         conflictingApplicationId: conflict.id,
         seasonId: app.seasonId,
         seasonName: conflict.seasonName || '',
-        listingId: app.listingId,
+        rentalObjectId: app.rentalObjectId,
         listingName: conflict.listingName || '',
         weekday: app.weekday,
         timeSlot: `${app.startTime}-${app.endTime}`,
@@ -304,7 +304,7 @@ export async function getConflictSummary(
  */
 export async function checkTimeSlotConflict(
   seasonId: string,
-  listingId: string,
+  rentalObjectId: string,
   weekday: number,
   startTime: string,
   endTime: string,
@@ -316,7 +316,7 @@ export async function checkTimeSlotConflict(
   // Get all applications for the same season, listing, weekday
   const conditions = [
     eq(seasonApplications.seasonId, seasonId),
-    eq(seasonApplications.listingId, listingId),
+    eq(seasonApplications.rentalObjectId, listingId),
     eq(seasonApplications.weekday, weekday),
     eq(seasonApplications.tenantId, tenantId),
     or(

@@ -124,7 +124,7 @@ export interface FlowContext {
 
   // Booking state
   /** Listing ID if in booking flow */
-  listingId?: string;
+  rentalObjectId?: string;
   /** Current booking mode */
   bookingMode?: FlowBookingMode;
   /** Selected dates (ISO date strings) */

@@ -25,7 +25,7 @@ export interface ReviewMetadata {
 }
 
 export interface Review extends TenantEntity {
-  listingId: string;
+  rentalObjectId: string;
   bookingId: string;
   userId: string;
   rating: number; // 1-5 stars
@@ -43,7 +43,7 @@ export interface Review extends TenantEntity {
 // =============================================================================
 
 export interface CreateReviewDTO {
-  listingId: string;
+  rentalObjectId: string;
   bookingId: string;
   rating: number; // 1-5
   comment?: string;
@@ -61,7 +61,7 @@ export interface ModerateReviewDTO {
 
 export interface ReviewQueryParams extends BaseQueryParams {
   status?: ReviewStatus;
-  listingId?: string;
+  rentalObjectId?: string;
   userId?: string;
   bookingId?: string;
   minRating?: number;
@@ -88,7 +88,7 @@ export interface ReviewStats {
 }
 
 export interface ReviewSummary {
-  listingId: string;
+  rentalObjectId: string;
   listingName?: string;
   stats: ReviewStats;
   recentReviews?: Review[];

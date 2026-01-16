@@ -29,7 +29,7 @@ export class PricingController {
       const quoteRequest = validate(PricingQuoteRequestSchema, request.body);
       
       const quote = await this.pricingService.calculateQuote({
-        listingId: quoteRequest.listingId,
+        rentalObjectId: quoteRequest.rentalObjectId,
         start: quoteRequest.start,
         end: quoteRequest.end,
         userGroupId: quoteRequest.userGroupId,

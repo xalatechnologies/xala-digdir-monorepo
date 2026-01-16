@@ -77,7 +77,7 @@ export class CalendarService {
    * Returns complete calendar behavior configuration based on listing type
    */
   async getCalendarConfig(
-    listingId: string,
+    rentalObjectId: string,
     params: CalendarConfigQueryParams = {}
   ): Promise<ListingCalendarConfigProjection> {
     const validated = validate(CalendarConfigQuerySchema, params);
@@ -104,10 +104,10 @@ export class CalendarService {
     const permissions = this.determinePermissions(listing);
     const availableActions = this.determineAvailableActions(listing);
 
-    this.adapters?.log?.info('Calendar config generated', { listingId, granularity });
+    this.adapters?.log?.info('Calendar config generated', { rentalObjectId, granularity });
 
     return {
-      listingId,
+      rentalObjectId,
       granularity,
       timezone: 'Europe/Oslo',
       ...slotConfig,
@@ -125,7 +125,7 @@ export class CalendarService {
    * Returns cell-by-cell availability state for the calendar
    */
   async getAvailabilityMatrix(
-    listingId: string,
+    rentalObjectId: string,
     params: AvailabilityMatrixQueryParams
   ): Promise<ListingAvailabilityMatrixProjection> {
     const validated = validate(AvailabilityMatrixQuerySchema, params);
@@ -162,7 +162,7 @@ export class CalendarService {
       .from(allocations)
       .where(
         and(
-          eq(allocations.listingId, listingId),
+          eq(allocations.rentalObjectId, listingId),
           or(
             and(gte(allocations.startTime, fromDate), lte(allocations.startTime, toDate)),
             and(gte(allocations.endTime, fromDate), lte(allocations.endTime, toDate)),
@@ -182,7 +182,7 @@ export class CalendarService {
       .from(bookings)
       .where(
         and(
-          eq(bookings.listingId, listingId),
+          eq(bookings.rentalObjectId, listingId),
           or(
             and(gte(bookings.startTime, fromDate), lte(bookings.startTime, toDate)),
             and(gte(bookings.endTime, fromDate), lte(bookings.endTime, toDate)),
@@ -203,14 +203,14 @@ export class CalendarService {
     );
 
     this.adapters?.log?.info('Availability matrix generated', {
-      listingId,
+      rentalObjectId,
       from: validated.from,
       to: validated.to,
       cellCount: cells.length,
     });
 
     return {
-      listingId,
+      rentalObjectId,
       from: validated.from,
       to: validated.to,
       granularity,

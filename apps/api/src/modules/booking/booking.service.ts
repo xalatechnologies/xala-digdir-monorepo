@@ -59,7 +59,7 @@ export class BookingService {
 
     // Check availability with buffer time
     const conflicts = await this.repository.findByListingAndDateRange(
-      validated.listingId,
+      validated.rentalObjectId,
       validated.startTime,
       validated.endTime
     );
@@ -92,7 +92,7 @@ export class BookingService {
 
     const booking = await this.repository.create({
       tenantId,
-      listingId: validated.listingId,
+      rentalObjectId: validated.rentalObjectId,
       userId: effectiveUserId,
       status: 'pending',
       startTime: validated.startTime,
@@ -112,14 +112,14 @@ export class BookingService {
       action: 'create',
       resource: 'booking',
       resourceId: booking.id,
-      metadata: { listingId: booking.listingId, startTime: booking.startTime, endTime: booking.endTime },
+      metadata: { rentalObjectId: booking.rentalObjectId, startTime: booking.startTime, endTime: booking.endTime },
     });
 
     // Broadcast booking event for real-time updates
     broadcastBookingEvent({
       type: 'created',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -174,7 +174,7 @@ export class BookingService {
     broadcastBookingEvent({
       type: 'confirmed',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -215,7 +215,7 @@ export class BookingService {
     broadcastBookingEvent({
       type: 'cancelled',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -249,7 +249,7 @@ export class BookingService {
     broadcastBookingEvent({
       type: 'completed',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -264,11 +264,11 @@ export class BookingService {
    * Get calendar events for a tenant
    */
   async getCalendarEvents(tenantId: string, listingId?: string): Promise<CalendarEvent[]> {
-    const result = await this.findAll(tenantId, { listingId, limit: 100, page: 1 });
+    const result = await this.findAll(tenantId, { rentalObjectId, limit: 100, page: 1 });
     
     return result.data.map((booking) => ({
       id: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       start: new Date(booking.startTime).toISOString(),
       end: new Date(booking.endTime).toISOString(),
       status: booking.status,
@@ -303,7 +303,7 @@ export class BookingService {
     broadcastBookingEvent({
       type: 'updated',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -337,7 +337,7 @@ export class BookingService {
     broadcastBookingEvent({
       type: 'updated',
       bookingId: booking.id,
-      listingId: booking.listingId,
+      rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -352,14 +352,14 @@ export class BookingService {
   /**
    * Calculate pricing for a booking
    */
-  async calculatePricing(listingId: string, startTime: string, endTime: string): Promise<any> {
+  async calculatePricing(rentalObjectId: string, startTime: string, endTime: string): Promise<any> {
     // In production, would fetch rental object pricing and calculate
     const start = new Date(startTime);
     const end = new Date(endTime);
     const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
     
     return {
-      listingId,
+      rentalObjectId,
       startTime,
       endTime,
       durationHours: hours,
@@ -390,7 +390,7 @@ export class BookingService {
    * Create recurring booking (legacy method for backward compatibility)
    */
   async createRecurring(tenantId: string, userId: string, data: any): Promise<Booking[]> {
-    const { listingId, startTime, endTime, frequency, endDate, weekdays } = data;
+    const { rentalObjectId, startTime, endTime, frequency, endDate, weekdays } = data;
 
     // Generate recurring dates
     const bookings: Booking[] = [];
@@ -399,7 +399,7 @@ export class BookingService {
 
     // Create first booking
     const firstBooking = await this.create(tenantId, userId, {
-      listingId,
+      rentalObjectId,
       startTime,
       endTime,
       metadata: { recurring: true, frequency, weekdays },
@@ -428,7 +428,7 @@ export class BookingService {
 
     // Build a booking selection for occurrence generation
     const selection: BookingSelection = {
-      listingId: validated.listingId,
+      rentalObjectId: validated.rentalObjectId,
       mode: 'RECURRING',
       startTime: validated.startTime,
       endTime: validated.endTime,
@@ -454,7 +454,7 @@ export class BookingService {
 
     // Check for conflicts
     const occurrencesWithStatus = await this.checkOccurrenceConflicts(
-      validated.listingId,
+      validated.rentalObjectId,
       targetOccurrences
     );
 
@@ -491,7 +491,7 @@ export class BookingService {
       };
 
       this.adapters?.log?.warn('Recurring booking creation stopped due to conflicts', {
-        listingId: validated.listingId,
+        rentalObjectId: validated.rentalObjectId,
         conflictCount: conflictOccurrences.length,
       });
 
@@ -523,7 +523,7 @@ export class BookingService {
       try {
         const booking = await this.repository.create({
           tenantId,
-          listingId: validated.listingId,
+          rentalObjectId: validated.rentalObjectId,
           userId: effectiveUserId,
           status: 'pending',
           startTime: new Date(occurrence.startTime),
@@ -554,7 +554,7 @@ export class BookingService {
             type: 'recurring',
             seriesId,
             occurrenceIndex: occurrence.index,
-            listingId: validated.listingId,
+            rentalObjectId: validated.rentalObjectId,
           },
         });
       } catch (error: any) {
@@ -601,7 +601,7 @@ export class BookingService {
 
     this.adapters?.log?.info('Recurring booking series created', {
       seriesId,
-      listingId: validated.listingId,
+      rentalObjectId: validated.rentalObjectId,
       createdCount: createdBookings.length,
       failedCount: failed.length,
     });
@@ -637,7 +637,7 @@ export class BookingService {
     const occurrences = this.generateOccurrences(validated);
 
     // Check for conflicts with existing bookings
-    const occurrencesWithStatus = await this.checkOccurrenceConflicts(validated.listingId, occurrences);
+    const occurrencesWithStatus = await this.checkOccurrenceConflicts(validated.rentalObjectId, occurrences);
 
     // Calculate summary statistics
     const summary = this.calculateRecurringSummary(occurrencesWithStatus);
@@ -651,7 +651,7 @@ export class BookingService {
       : undefined;
 
     const preview: RecurringPreviewProjection = {
-      listingId: validated.listingId,
+      rentalObjectId: validated.rentalObjectId,
       selection: validated,
       occurrences: occurrencesWithStatus,
       summary,
@@ -667,7 +667,7 @@ export class BookingService {
     };
 
     this.adapters?.log?.info('Recurring preview generated', {
-      listingId: validated.listingId,
+      rentalObjectId: validated.rentalObjectId,
       totalOccurrences: summary.totalOccurrences,
       availableCount: summary.availableCount,
       conflictCount: summary.conflictCount,
@@ -746,7 +746,7 @@ export class BookingService {
    * Check occurrences for conflicts with existing bookings
    */
   private async checkOccurrenceConflicts(
-    listingId: string,
+    rentalObjectId: string,
     occurrences: RecurringOccurrence[]
   ): Promise<RecurringOccurrence[]> {
     const checkedOccurrences: RecurringOccurrence[] = [];
@@ -757,7 +757,7 @@ export class BookingService {
 
       // Check for existing bookings in this time slot
       const conflicts = await this.repository.findByListingAndDateRange(
-        listingId,
+        rentalObjectId,
         startTime,
         endTime
       );
@@ -857,7 +857,7 @@ export class BookingService {
 
     // Check availability
     const conflicts = await this.repository.findByListingAndDateRange(
-      selection.listingId,
+      selection.rentalObjectId,
       startTime,
       endTime
     );
@@ -946,7 +946,7 @@ export class BookingService {
 
     // Build the quote projection
     const quote: BookingQuoteProjection = {
-      rentalObjectId: selection.listingId,
+      rentalObjectId: selection.rentalObjectId,
       rentalObjectName: rentalObject.name,
       selection: {
         startTime: selection.startTime,

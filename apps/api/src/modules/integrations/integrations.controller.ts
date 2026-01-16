@@ -40,7 +40,7 @@ export class IntegrationsController {
    */
   @Post('/rco/access-code')
   async generateAccessCode(request: IntegrationRequest, reply: FastifyReply) {
-    const { bookingId, listingId, validFrom, validUntil } = request.body as any;
+    const { bookingId, rentalObjectId, validFrom, validUntil } = request.body as any;
 
     // Mock access code generation
     const accessCode = Math.random().toString().slice(2, 8);
@@ -49,7 +49,7 @@ export class IntegrationsController {
       data: {
         code: accessCode,
         bookingId,
-        listingId,
+        rentalObjectId,
         validFrom,
         validUntil,
         type: 'PIN',

@@ -489,7 +489,7 @@ export class SeasonsController {
         listingName: listings.name,
       })
       .from(seasonApplications)
-      .leftJoin(listings, eq(seasonApplications.listingId, listings.id))
+      .leftJoin(listings, eq(seasonApplications.rentalObjectId, listings.id))
       .where(
         and(
           eq(seasonApplications.seasonId, id),

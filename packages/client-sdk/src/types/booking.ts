@@ -81,7 +81,7 @@ export interface BookingMetadata {
 }
 
 export interface Booking extends TenantEntity {
-  listingId: string;
+  rentalObjectId: string;
   userId: string;
   organizationId?: string;
   status: BookingStatus;
@@ -108,7 +108,7 @@ export interface Booking extends TenantEntity {
 // =============================================================================
 
 export interface CreateBookingDTO {
-  listingId: string;
+  rentalObjectId: string;
   startTime: string | Date;
   endTime: string | Date;
   userId?: string;
@@ -131,7 +131,7 @@ export interface CancelBookingDTO {
 
 export interface BookingQueryParams extends BaseQueryParams {
   status?: BookingStatus;
-  listingId?: string;
+  rentalObjectId?: string;
   userId?: string;
   organizationId?: string;
   from?: string;
@@ -143,7 +143,7 @@ export interface BookingQueryParams extends BaseQueryParams {
 // =============================================================================
 
 export interface BookingPricing {
-  listingId: string;
+  rentalObjectId: string;
   startTime: string;
   endTime: string;
   durationHours: number;
@@ -155,7 +155,7 @@ export interface BookingPricing {
 
 export interface CalendarEvent {
   id: string;
-  listingId: string;
+  rentalObjectId: string;
   listingName?: string;
   title?: string;
   start: string;
@@ -171,7 +171,7 @@ export interface CalendarEvent {
 }
 
 export interface CalendarQueryParams {
-  listingId?: string;
+  rentalObjectId?: string;
   startDate?: string;
   endDate?: string;
 }
@@ -181,7 +181,7 @@ export interface CalendarQueryParams {
 // =============================================================================
 
 export interface Allocation extends TenantEntity {
-  listingId: string;
+  rentalObjectId: string;
   bookingId?: string;
   startTime: string;
   endTime: string;
@@ -193,7 +193,7 @@ export interface Allocation extends TenantEntity {
 }
 
 export interface CreateAllocationDTO {
-  listingId: string;
+  rentalObjectId: string;
   startTime: string | Date;
   endTime: string | Date;
   title?: string;
@@ -238,13 +238,13 @@ export interface BookingReceipt {
     tenantId: string;
   };
   service: {
-    listingId: string;
+    rentalObjectId: string;
     description: string;
     duration: string;
   };
   location: {
     tenantId: string;
-    listingId: string;
+    rentalObjectId: string;
   };
   timing: {
     bookingDate: string;
@@ -340,7 +340,7 @@ export interface RecurringOccurrenceDTO {
  */
 export interface BookingSelectionDTO {
   /** ID of the listing being booked */
-  listingId: string;
+  rentalObjectId: string;
   /** Booking mode for this selection */
   mode: BookingMode;
   /** Start time for SINGLE_SLOT/IN_GAME, or pattern start for RECURRING */
@@ -395,7 +395,7 @@ export interface RecurringSummary {
  */
 export interface RecurringPreviewProjectionDTO {
   /** ID of the listing */
-  listingId: string;
+  rentalObjectId: string;
   /** Original selection used to generate this preview */
   selection: BookingSelectionDTO;
   /** All generated occurrences with status */
@@ -460,7 +460,7 @@ export interface RecurringOccurrenceResultDTO {
  */
 export interface RecurringBookingResultProjectionDTO {
   /** ID of the listing */
-  listingId: string;
+  rentalObjectId: string;
   /** Successfully created occurrences */
   created: RecurringOccurrenceResultDTO[];
   /** Failed occurrences with reasons */
@@ -507,7 +507,7 @@ export type BookingAction = 'BOOK' | 'REQUEST' | 'WAITLIST' | 'MODIFY';
  */
 export interface BookingQuoteSelectionDTO {
   /** Rental object ID */
-  listingId: string;
+  rentalObjectId: string;
   /** Start time (ISO 8601) */
   startTime: string;
   /** End time (ISO 8601) */

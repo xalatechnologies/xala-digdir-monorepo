@@ -89,10 +89,10 @@ export const subscriptions = pgTable('subscriptions', {
 }));
 
 // ============================================================================
-// Listings
+// Rental Objects
 // ============================================================================
 
-export const listings = pgTable('listings', {
+export const rentalObjects = pgTable('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
@@ -108,10 +108,10 @@ export const listings = pgTable('listings', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
-  tenantIdx: index('listings_tenant_idx').on(table.tenantId),
-  statusIdx: index('listings_status_idx').on(table.status),
-  typeIdx: index('listings_type_idx').on(table.type),
-  slugIdx: index('listings_slug_idx').on(table.tenantId, table.slug),
+  tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
+  statusIdx: index('rental_objects_status_idx').on(table.status),
+  typeIdx: index('rental_objects_type_idx').on(table.type),
+  slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
 }));
 
 // ============================================================================
@@ -121,7 +121,7 @@ export const listings = pgTable('listings', {
 export const bookings = pgTable('bookings', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   status: varchar('status', { length: 50 }).notNull().default('pending'),
   startTime: timestamp('start_time').notNull(),
@@ -134,7 +134,7 @@ export const bookings = pgTable('bookings', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('bookings_tenant_idx').on(table.tenantId),
-  listingIdx: index('bookings_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('bookings_rental_object_idx').on(table.rentalObjectId),
   userIdx: index('bookings_user_idx').on(table.userId),
   statusIdx: index('bookings_status_idx').on(table.status),
 }));
@@ -213,7 +213,7 @@ export const usage = pgTable('usage', {
 export const allocations = pgTable('allocations', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 255 }).notNull(),
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
@@ -227,7 +227,7 @@ export const allocations = pgTable('allocations', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('allocations_tenant_idx').on(table.tenantId),
-  listingIdx: index('allocations_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('allocations_rental_object_idx').on(table.rentalObjectId),
   timeIdx: index('allocations_time_idx').on(table.startTime, table.endTime),
 }));
 
@@ -238,7 +238,7 @@ export const allocations = pgTable('allocations', {
 export const seasonalLeases = pgTable('seasonal_leases', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  listingId: uuid('listing_id').notNull().references(() => listings.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   startDate: timestamp('start_date').notNull(),
   endDate: timestamp('end_date').notNull(),
@@ -254,7 +254,7 @@ export const seasonalLeases = pgTable('seasonal_leases', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('seasonal_leases_tenant_idx').on(table.tenantId),
-  listingIdx: index('seasonal_leases_listing_idx').on(table.listingId),
+  rentalObjectIdx: index('seasonal_leases_rental_object_idx').on(table.rentalObjectId),
   orgIdx: index('seasonal_leases_org_idx').on(table.organizationId),
 }));
 
@@ -309,8 +309,8 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
-export type Listing = typeof listings.$inferSelect;
-export type NewListing = typeof listings.$inferInsert;
+export type RentalObject = typeof rentalObjects.$inferSelect;
+export type NewRentalObject = typeof rentalObjects.$inferInsert;
 export type Booking = typeof bookings.$inferSelect;
 export type NewBooking = typeof bookings.$inferInsert;
 export type AuditLog = typeof auditLogs.$inferSelect;

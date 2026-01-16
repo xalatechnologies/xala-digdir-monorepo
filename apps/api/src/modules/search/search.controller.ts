@@ -56,9 +56,9 @@ const mockOrganizations = [
 ];
 
 const mockBookings = [
-  { id: 'book-1', listingId: 'list-1', listingName: 'Gymsal Skien Nord', userName: 'Ole Hansen', startDate: '2024-02-15', status: 'confirmed' },
-  { id: 'book-2', listingId: 'list-5', listingName: 'Møterom Rådhuset', userName: 'Kari Nordmann', startDate: '2024-02-20', status: 'pending' },
-  { id: 'book-3', listingId: 'list-7', listingName: 'Idrettshall Skien', userName: 'Per Olsen', startDate: '2024-02-18', status: 'confirmed' },
+  { id: 'book-1', rentalObjectId: 'list-1', listingName: 'Gymsal Skien Nord', userName: 'Ole Hansen', startDate: '2024-02-15', status: 'confirmed' },
+  { id: 'book-2', rentalObjectId: 'list-5', listingName: 'Møterom Rådhuset', userName: 'Kari Nordmann', startDate: '2024-02-20', status: 'pending' },
+  { id: 'book-3', rentalObjectId: 'list-7', listingName: 'Idrettshall Skien', userName: 'Per Olsen', startDate: '2024-02-18', status: 'confirmed' },
 ];
 
 // Mock recent searches per session

@@ -184,7 +184,7 @@ export interface RentalObjectCalendarConfigProjectionDTO {
 /** @deprecated Use RentalObjectCalendarConfigProjectionDTO instead */
 export type ListingCalendarConfigProjectionDTO = RentalObjectCalendarConfigProjectionDTO & {
   /** @deprecated Use rentalObjectId instead */
-  listingId?: string;
+  rentalObjectId?: string;
 };
 
 // =============================================================================
@@ -257,7 +257,7 @@ export interface RentalObjectAvailabilityMatrixProjectionDTO {
 /** @deprecated Use RentalObjectAvailabilityMatrixProjectionDTO instead */
 export type ListingAvailabilityMatrixProjectionDTO = RentalObjectAvailabilityMatrixProjectionDTO & {
   /** @deprecated Use rentalObjectId instead */
-  listingId?: string;
+  rentalObjectId?: string;
 };
 
 // =============================================================================

@@ -118,12 +118,12 @@ export class BookingController {
    */
   @Get('/pricing')
   async calculatePricing(request: TenantRequest, reply: FastifyReply) {
-    const { listingId, startTime, endTime } = request.query as any;
+    const { rentalObjectId, startTime, endTime } = request.query as any;
     if (!listingId || !startTime || !endTime) {
       reply.code(400);
-      return { error: { code: 'VALIDATION_ERROR', message: 'listingId, startTime, endTime required' } };
+      return { error: { code: 'VALIDATION_ERROR', message: 'rentalObjectId, startTime, endTime required' } };
     }
-    const pricing = await this.service.calculatePricing(listingId, startTime, endTime);
+    const pricing = await this.service.calculatePricing(rentalObjectId, startTime, endTime);
     return { data: pricing };
   }
 
@@ -217,7 +217,7 @@ export class BookingController {
       
       // WHAT (Hva)
       service: {
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
         description: booking.notes || 'Leie av lokale',
         duration: `${new Date(booking.startTime).toISOString()} - ${new Date(booking.endTime).toISOString()}`,
       },
@@ -225,7 +225,7 @@ export class BookingController {
       // WHERE (Hvor)
       location: {
         tenantId: booking.tenantId,
-        listingId: booking.listingId,
+        rentalObjectId: booking.rentalObjectId,
       },
       
       // WHEN (Når)

@@ -62,33 +62,17 @@ describe('Terminology Compliance: No Listing/Facility', () => {
       expect(rentalObjectHooks).toContain('useDeleteRentalObject');
     });
 
-    it('listing hooks are deprecated aliases only', () => {
-      const listingHooks = hookExports.filter(name => 
+    it('no listing terminology in hook exports', () => {
+      const listingHooks = hookExports.filter(name =>
         name.includes('Listing') && name.startsWith('use')
       );
-      
-      // Known deprecated Listing hooks that have RentalObject equivalents
-      const knownDeprecatedHooks = [
-        'useListings',
-        'useListing',
-        'useCreateListing',
-        'useUpdateListing',
-        'useDeleteListing',
-        'usePublishListing',
-        'useArchiveListing',
-        'useListingCalendarConfig',
-      ];
-      
-      // Check that core Listing hooks have RentalObject equivalents
-      knownDeprecatedHooks.forEach(hookName => {
-        if (hookExports.includes(hookName)) {
-          const rentalObjectVersion = hookName.replace('Listing', 'RentalObject');
-          expect(hookExports).toContain(rentalObjectVersion);
-        }
-      });
-      
-      // Listing hooks should exist (for backward compatibility)
-      expect(listingHooks.length).toBeGreaterThan(0);
+
+      // All deprecated Listing hooks have been removed
+      // Only useGeocodeListings is allowed (it's a generic term for "list of items", not the domain object)
+      const allowedExceptions = ['useGeocodeListings'];
+      const forbiddenListingHooks = listingHooks.filter(hook => !allowedExceptions.includes(hook));
+
+      expect(forbiddenListingHooks).toHaveLength(0);
     });
 
     it('no facility terminology in hook exports', () => {
@@ -172,26 +156,6 @@ describe('Terminology Compliance: Query Keys', () => {
     expect(typeof keys.lists).toBe('function');
     expect(typeof keys.details).toBe('function');
   });
-});
-
-describe('Terminology Compliance: Deprecated Aliases', () => {
-  const deprecatedAliases = [
-    { deprecated: 'useListingCalendarConfig', replacement: 'useRentalObjectCalendarConfig' },
-    { deprecated: 'useListingReviews', replacement: 'useRentalObjectReviews' },
-    { deprecated: 'useListingFlowContext', replacement: 'useRentalObjectFlowContext' },
-    { deprecated: 'useRealtimeListings', replacement: 'useRealtimeRentalObjects' },
-  ];
-
-  it.each(deprecatedAliases)(
-    '$deprecated is exported as deprecated alias for $replacement',
-    ({ deprecated, replacement }) => {
-      const hookExports = Object.keys(hooks);
-      
-      // Both should exist
-      expect(hookExports).toContain(deprecated);
-      expect(hookExports).toContain(replacement);
-    }
-  );
 });
 
 describe('Terminology Compliance: Error Messages', () => {

@@ -146,7 +146,7 @@ export interface PushNotificationPayload {
 export interface PushNotificationData {
   type: BookingNotificationType;
   bookingId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   userId?: string;
   url?: string;
   timestamp: string;
