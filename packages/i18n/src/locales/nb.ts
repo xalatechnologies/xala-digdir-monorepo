@@ -90,6 +90,12 @@ export const nb: Record<string, string> = {
   'auth.terms': 'Vilkår for bruk',
   'auth.contactSupport': 'Kontakt support',
   'auth.copyright': '© 2026 Digilist. Alle rettigheter reservert.',
+  'auth.adminDemo': 'Admin Demo',
+  'auth.adminDemoDescription': 'Logg inn med demo token for testing',
+  'auth.adminDemoLogin': 'Admin Demo Innlogging',
+  'auth.adminDemoDialogDescription': 'Skriv inn demo token for å logge inn som administrator',
+  'auth.demoToken': 'Demo Token',
+  'auth.demoTokenPlaceholder': 'Skriv inn token her...',
 
   // General actions
   'favorite': 'favorittliste',

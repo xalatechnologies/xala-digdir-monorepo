@@ -7,7 +7,7 @@
  * - Single-role users: auto-redirect to appropriate home
  * - Dual-role users: redirect to role selection page
  */
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
@@ -17,12 +17,16 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
+  KeyIcon,
+  Dialog,
+  TextField,
+  Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import type { FlowContext } from '@digilist/client-sdk';
-import { idportenService } from '@digilist/client-sdk';
+import { idportenService, authService } from '@digilist/client-sdk';
 
 
 /**
@@ -55,6 +59,12 @@ export function LoginPage(): React.ReactElement {
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
 
+  // Admin Demo token dialog state
+  const [showTokenDialog, setShowTokenDialog] = useState(false);
+  const [tokenInput, setTokenInput] = useState('');
+  const [tokenError, setTokenError] = useState<string | null>(null);
+  const [isSubmittingToken, setIsSubmittingToken] = useState(false);
+
   // Check for auth callback params (returned from ID-porten/BankID)
   const authSuccess = searchParams.get('auth_success') === 'true';
   const authError = searchParams.get('auth_error');
@@ -62,13 +72,13 @@ export function LoginPage(): React.ReactElement {
   // Get the intended destination from location state (set by ProtectedRoute or direct navigation)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
 
-  // Handle auth callback - redirect to dashboard after successful authentication
+  // Handle auth callback - redirect to root after successful authentication
   useEffect(() => {
     if (authSuccess && !authError) {
-      // Clear the URL params and redirect to dashboard directly
+      // Clear the URL params and redirect to root (/) which is the dashboard index route
       // Don't use getHomeRoute() as it may return /role-selection
-      // The dashboard's ProtectedRoute will handle role-selection if needed
-      navigate('/dashboard', { replace: true });
+      // The root's ProtectedRoute will handle role-selection if needed
+      navigate('/', { replace: true });
     }
   }, [authSuccess, authError, navigate]);
 
@@ -143,15 +153,24 @@ export function LoginPage(): React.ReactElement {
 
   // Handle post-login redirect based on role state
   useEffect(() => {
-    // Wait for both auth and role initialization to complete
-    if (authLoading || isInitializing) return;
+    // Wait for auth to complete first
+    if (authLoading) return;
     if (!isAuthenticated) return;
+
+    // For authenticated users, wait for role initialization
+    if (isInitializing) return;
 
     handlePostAuthNavigation();
   }, [isAuthenticated, authLoading, isInitializing, handlePostAuthNavigation]);
 
-  // Show nothing while loading auth or role state
-  if (authLoading || isInitializing) {
+  // Show nothing while loading auth state
+  // Only check role initialization if authenticated
+  if (authLoading) {
+    return <></>;
+  }
+
+  // If authenticated, wait for role initialization before redirecting
+  if (isAuthenticated && isInitializing) {
     return <></>;
   }
 
@@ -180,6 +199,41 @@ export function LoginPage(): React.ReactElement {
     { href: 'https://digilist.no/cookies', label: t('auth.terms') },
     { href: 'https://digilist.no/#book-demo', label: t('auth.contactSupport') },
   ];
+
+  /**
+   * Handle Admin Demo token authentication
+   */
+  const handleTokenSubmit = async () => {
+    if (!tokenInput.trim()) {
+      setTokenError('Vennligst skriv inn et token');
+      return;
+    }
+
+    setIsSubmittingToken(true);
+    setTokenError(null);
+
+    try {
+      // Call the auth service to validate the demo token
+      const response = await authService.loginWithDemoToken(tokenInput.trim());
+
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('backoffice_mock_user', JSON.stringify(response.data.user));
+
+        // Close dialog and redirect to dashboard
+        setShowTokenDialog(false);
+        setTokenInput('');
+        navigate('/', { replace: true });
+      } else {
+        setTokenError('Ugyldig token. Vennligst prøv igjen.');
+      }
+    } catch (error) {
+      console.error('[ADMIN DEMO] Token validation failed:', error);
+      setTokenError('Ugyldig token. Vennligst prøv igjen.');
+    } finally {
+      setIsSubmittingToken(false);
+    }
+  };
 
   return (
     <LoginLayout
@@ -219,10 +273,10 @@ export function LoginPage(): React.ReactElement {
         title={t('auth.idporten')}
         description={t('auth.idportenDesc')}
         onClick={() => {
-          // Pass dashboard URL as returnTo - after auth, user goes directly to dashboard
-          // The login page will detect auth_success and redirect, but passing dashboard
-          // ensures the session stores the correct final destination
-          const returnTo = `${window.location.origin}/dashboard`;
+          // Pass root URL (/) as returnTo - this is the dashboard index route
+          // The login page will detect auth_success and redirect to /
+          // ProtectedRoute will handle role selection if needed
+          const returnTo = `${window.location.origin}/`;
           idportenService.authorize(returnTo);
         }}
       />
@@ -236,6 +290,66 @@ export function LoginPage(): React.ReactElement {
           console.warn('Microsoft login is temporarily disabled');
         }}
       />
+      <LoginOption
+        icon={<KeyIcon />}
+        title={t('auth.adminDemo')}
+        description={t('auth.adminDemoDescription')}
+        onClick={() => {
+          setShowTokenDialog(true);
+          setTokenError(null);
+          setTokenInput('');
+        }}
+      />
+
+      {/* Admin Demo Token Dialog */}
+      <Dialog
+        open={showTokenDialog}
+        onClose={() => {
+          setShowTokenDialog(false);
+          setTokenInput('');
+          setTokenError(null);
+        }}
+        title={t('auth.adminDemoLogin')}
+        description={t('auth.adminDemoDialogDescription')}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <TextField
+            label={t('auth.demoToken')}
+            value={tokenInput}
+            onChange={(e) => setTokenInput(e.target.value)}
+            placeholder={t('auth.demoTokenPlaceholder')}
+            error={tokenError || undefined}
+            disabled={isSubmittingToken}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isSubmittingToken) {
+                handleTokenSubmit();
+              }
+            }}
+            autoFocus
+          />
+
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowTokenDialog(false);
+                setTokenInput('');
+                setTokenError(null);
+              }}
+              disabled={isSubmittingToken}
+            >
+              Avbryt
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleTokenSubmit}
+              disabled={isSubmittingToken || !tokenInput.trim()}
+            >
+              {isSubmittingToken ? 'Verifiserer...' : 'Logg inn'}
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </LoginLayout>
   );
 }

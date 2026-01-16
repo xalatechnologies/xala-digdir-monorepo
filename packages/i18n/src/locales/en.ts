@@ -89,6 +89,12 @@ export const en: Record<string, string> = {
   'auth.terms': 'Terms of use',
   'auth.contactSupport': 'Contact support',
   'auth.copyright': '© 2026 Digilist. All rights reserved.',
+  'auth.adminDemo': 'Admin Demo',
+  'auth.adminDemoDescription': 'Log in with demo token for testing',
+  'auth.adminDemoLogin': 'Admin Demo Login',
+  'auth.adminDemoDialogDescription': 'Enter demo token to log in as administrator',
+  'auth.demoToken': 'Demo Token',
+  'auth.demoTokenPlaceholder': 'Enter token here...',
 
   // General actions
   'favorite': 'favorites',
