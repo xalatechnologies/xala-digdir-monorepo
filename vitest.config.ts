@@ -1,8 +1,18 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@xala/i18n': path.resolve(__dirname, 'packages/i18n/src'),
+      '@xala/ds': path.resolve(__dirname, 'packages/ds/src'),
+      '@digilist/client-sdk': path.resolve(__dirname, 'packages/client-sdk/src'),
+      '@digilist/client-sdk/hooks': path.resolve(__dirname, 'packages/client-sdk/src/hooks'),
+      '@digilist/client-sdk/types': path.resolve(__dirname, 'packages/client-sdk/src/types'),
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
@@ -12,6 +22,7 @@ export default defineConfig({
       'apps/web/src/**/*.{test,spec}.{ts,tsx}',
       'apps/backoffice/src/**/*.{test,spec}.{ts,tsx}',
       'apps/saas-admin/src/**/*.{test,spec}.{ts,tsx}',
+      'tests/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: [
       '**/node_modules/**',
