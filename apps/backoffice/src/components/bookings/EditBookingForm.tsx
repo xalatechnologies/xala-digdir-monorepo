@@ -17,6 +17,7 @@ import {
   type UpdateBookingDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions, InfoBox } from '../shared';
+import { useT } from '@xala/i18n';
 
 interface EditBookingFormProps {
   booking: Booking;
@@ -25,6 +26,7 @@ interface EditBookingFormProps {
 }
 
 export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingFormProps) {
+  const t = useT();
   const [formData, setFormData] = useState({
     listingId: booking.listingId,
     startTime: '',

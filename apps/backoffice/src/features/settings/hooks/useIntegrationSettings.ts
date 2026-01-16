@@ -8,6 +8,7 @@ import {
   useIntegrationSettings as useSDKIntegrationSettings,
   useUpdateIntegration,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export type IntegrationType =
   | 'bankid'
@@ -35,6 +36,7 @@ interface UseIntegrationSettingsOptions {
 }
 
 export function useIntegrationSettings(options: UseIntegrationSettingsOptions = {}) {
+  const t = useT();
   const { onToggleSuccess, onToggleError } = options;
 
   const [isToggling, setIsToggling] = useState<Record<string, boolean>>({});

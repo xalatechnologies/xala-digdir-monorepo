@@ -9,6 +9,7 @@ import {
   useUpdateCurrentUser,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface AddressFormData {
   invoiceAddress: Address;
@@ -21,6 +22,7 @@ interface UseAddressSettingsOptions {
 }
 
 export function useAddressSettings(options: UseAddressSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const [isSaving, setIsSaving] = useState(false);

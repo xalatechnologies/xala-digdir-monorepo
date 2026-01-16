@@ -5,6 +5,7 @@
  */
 
 import { Tooltip, XCircleIcon } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 export interface ConflictIndicatorProps {
   /** Conflicting events information */
@@ -35,6 +36,7 @@ export function ConflictIndicator({
   bufferTimeMinutes,
   isBufferConflict = false,
 }: ConflictIndicatorProps) {
+  const t = useT();
   if (!conflicts || conflicts.length === 0) {
     return null;
   }

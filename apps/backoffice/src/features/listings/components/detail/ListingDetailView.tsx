@@ -21,6 +21,7 @@ import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
 import { AvailabilityTab } from './AvailabilityTab';
 import { AuditTab } from './AuditTab';
+import { useT } from '@xala/i18n';
 
 /**
  * Error Boundary to catch JavaScript runtime errors
@@ -65,6 +66,7 @@ interface ListingDetailViewProps {
 }
 
 export function ListingDetailView({ slug }: ListingDetailViewProps) {
+  const t = useT();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -260,7 +262,7 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
             }}
           >
             {[
-              { id: 'overview', label: 'Oversikt' },
+              { id: 'overview', label: t("ui.overview") },
               { id: 'bookings', label: 'Bookinger' },
               { id: 'availability', label: 'Tilgjengelighet' },
               { id: 'audit', label: 'Endringslogg' },

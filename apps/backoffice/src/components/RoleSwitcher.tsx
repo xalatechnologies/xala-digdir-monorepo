@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Paragraph } from '@xala/ds';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
+import { useT } from '@xala/i18n';
 
 /**
  * Role Switcher Component
@@ -79,6 +80,7 @@ const ROLE_DISPLAY: Record<EffectiveBackofficeRole, { name: string; description:
 // =============================================================================
 
 export function RoleSwitcher() {
+  const t = useT();
   const {
     effectiveRole,
     grantedRoles,

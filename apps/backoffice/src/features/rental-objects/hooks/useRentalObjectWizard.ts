@@ -24,6 +24,7 @@ import {
   CATEGORY_CONFIGS,
 } from '../types';
 import { validateStep, validateAllSteps } from '../utils/wizard-validation';
+import { useT } from '@xala/i18n';
 
 export interface UseRentalObjectWizardOptions {
   /** Rental object slug for edit mode */
@@ -93,7 +94,8 @@ function getDefaultFormData(category?: RentalObjectCategory): Partial<RentalObje
 
 export function useRentalObjectWizard(
   options: UseRentalObjectWizardOptions = {}
-): UseRentalObjectWizardReturn {
+):
+  const t = useT(); UseRentalObjectWizardReturn {
   const { slug, initialCategory, onComplete } = options;
   const navigate = useNavigate();
   const isEditMode = !!slug;

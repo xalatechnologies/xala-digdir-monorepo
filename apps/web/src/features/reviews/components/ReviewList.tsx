@@ -9,6 +9,7 @@ import { Button, Stack, Text, Spinner } from '@xala/ds';
 import { useListingReviews } from '@digilist/client-sdk';
 import { ReviewCard } from './ReviewCard';
 import type { ReviewQueryParams } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 export interface ReviewListProps {
   /** Listing ID to fetch reviews for */
@@ -38,7 +39,8 @@ export function ReviewList({
   className,
   reviewsPerPage = 5,
   variant = 'default',
-}: ReviewListProps): React.ReactElement {
+}: ReviewListProps):
+  const t = useT(); React.ReactElement {
   // Pagination state
   const [visibleCount, setVisibleCount] = React.useState(reviewsPerPage);
 
@@ -84,7 +86,7 @@ export function ReviewList({
           padding: 'var(--ds-spacing-8)',
         }}
       >
-        <Spinner aria-label="Laster anmeldelser..." />
+        <Spinner aria-label={t('reviews.loading')} />
       </div>
     );
   }

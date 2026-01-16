@@ -9,6 +9,7 @@
 
 import type { Listing } from '@digilist/client-sdk';
 import { ListingsGrid } from '../../../listings/components/list/ListingsGrid';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectsGridProps {
   /** Array of rental objects to display */
@@ -34,6 +35,7 @@ export function RentalObjectsGrid({
   onSelectOne,
   onRefresh,
 }: RentalObjectsGridProps) {
+  const t = useT();
   // Delegate to listings grid component (rental objects are RESOURCE type listings)
   return (
     <ListingsGrid

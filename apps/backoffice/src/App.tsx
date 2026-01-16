@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
+import { useT { I18nProvider useT } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
@@ -59,6 +59,7 @@ const TenantAuditLogPage = React.lazy(() => import('./routes/tenant/audit-log').
 initSentry();
 
 export function App() {
+  const t = useT();
   return (
     <ThemeProvider>
       <AppWithTheme />

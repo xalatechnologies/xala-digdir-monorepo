@@ -28,6 +28,7 @@ import { ListingsTable } from './ListingsTable';
 import { useListingFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../../hooks/useListingFilters';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { LISTING_TYPE_OPTIONS } from '../../constants';
+import { useT } from '@xala/i18n';
 
 // Capacity filter options
 const CAPACITY_OPTIONS = [
@@ -40,6 +41,7 @@ const CAPACITY_OPTIONS = [
 ];
 
 export function ListingsListView() {
+  const t = useT();
   const navigate = useNavigate();
   const { permissions } = useListingPermissions();
 

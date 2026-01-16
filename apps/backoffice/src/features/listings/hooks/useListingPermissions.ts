@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import type { ListingPermissions } from '../types';
 import type { ListingStatus } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface UseListingPermissionsReturn {
   permissions: ListingPermissions;
@@ -17,7 +18,8 @@ export interface UseListingPermissionsReturn {
   canDeleteListing: (status: ListingStatus) => boolean;
 }
 
-export function useListingPermissions(): UseListingPermissionsReturn {
+export function useListingPermissions():
+  const t = useT(); UseListingPermissionsReturn {
   const { isAdmin, user } = useAuth();
 
   const permissions = useMemo<ListingPermissions>(() => ({

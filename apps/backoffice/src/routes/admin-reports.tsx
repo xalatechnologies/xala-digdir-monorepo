@@ -19,7 +19,7 @@ import {
   Spinner,
   Table,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useT { useLocale useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -42,12 +42,13 @@ const mockReports = {
   topListings: [
     { name: 'Idrettshall A', bookings: 312, revenue: 223000, utilization: 78 },
     { name: 'Fotballbane 1', bookings: 289, revenue: 145000, utilization: 65 },
-    { name: 'Svømmehall', bookings: 198, revenue: 178500, utilization: 82 },
+    { name: t("category.swimmingPool"), bookings: 198, revenue: 178500, utilization: 82 },
     { name: 'Idrettshall B', bookings: 176, revenue: 126000, utilization: 54 },
   ],
 };
 
 export function AdminReportsPage() {
+  const t = useT();
   const { locale } = useLocale();
   const [reportType, setReportType] = useState<'overview' | 'bookings' | 'revenue' | 'listings'>('overview');
   const [dateFrom, setDateFrom] = useState('2026-01-01');
@@ -121,7 +122,7 @@ export function AdminReportsPage() {
               onChange={(e) => setReportType(e.target.value as typeof reportType)}
               style={{ width: '100%' }}
             >
-              <option value="overview">Oversikt</option>
+              <option value="overview">{t("ui.overview")}</option>
               <option value="bookings">Bookinger</option>
               <option value="revenue">Inntekter</option>
               <option value="listings">Lokaler</option>
@@ -178,7 +179,7 @@ export function AdminReportsPage() {
         </div>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>

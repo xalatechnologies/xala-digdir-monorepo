@@ -47,8 +47,8 @@ vi.mock('../../listings/hooks/useListingFilters', () => ({
   useListingFilters: vi.fn(),
   STATUS_OPTIONS: [
     { id: 'all', label: 'Alle' },
-    { id: 'draft', label: 'Utkast' },
-    { id: 'published', label: 'Publisert' },
+    { id: 'draft', label: t("status.draft") },
+    { id: 'published', label: t("status.published") },
   ],
   SORT_OPTIONS: [
     { id: 'updated-desc', label: 'Sist oppdatert', field: 'updatedAt', order: 'desc' },
@@ -122,7 +122,7 @@ const mockRentalObjects = [
     capacity: 10,
     location: 'Oslo',
     image: 'https://example.com/image.jpg',
-    facilities: ['WiFi', 'Parking'],
+    facilities: [t("amenity.wifi"), 'Parking'],
     price: 1000,
     priceUnit: 'hour' as const,
     currency: 'NOK',
@@ -139,7 +139,7 @@ const mockRentalObjects = [
     capacity: 5,
     location: 'Bergen',
     image: 'https://example.com/image2.jpg',
-    facilities: ['WiFi'],
+    facilities: [t("amenity.wifi")],
     price: 500,
     priceUnit: 'day' as const,
     currency: 'NOK',
@@ -149,6 +149,7 @@ const mockRentalObjects = [
 ];
 
 import { ToastProvider } from '../../../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 const createTestWrapper = () => {
   const queryClient = new QueryClient({
@@ -424,7 +425,7 @@ describe('RentalObjectsListView', () => {
     const filterButtons = screen.getAllByRole('button');
     const filterButton = filterButtons.find((btn) => {
       const text = btn.textContent || '';
-      return text.includes('Filter') || btn.getAttribute('aria-label')?.includes('filter');
+      return text.includes(t("ui.filter")) || btn.getAttribute('aria-label')?.includes('filter');
     });
 
     if (filterButton) {

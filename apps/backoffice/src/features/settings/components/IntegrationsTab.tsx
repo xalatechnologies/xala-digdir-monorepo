@@ -4,6 +4,7 @@
  */
 
 import { Card, Heading, Paragraph, Switch, Badge, Stack } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 interface Integration {
   enabled?: boolean;
@@ -26,6 +27,7 @@ export interface IntegrationsTabProps {
 }
 
 export function IntegrationsTab({ integrations, onToggle }: IntegrationsTabProps) {
+  const t = useT();
   return (
     <Stack spacing={4}>
       <Card>
@@ -80,9 +82,7 @@ export function IntegrationsTab({ integrations, onToggle }: IntegrationsTabProps
       <Card>
         <Stack spacing={4}>
           <div>
-            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Betaling
-            </Heading>
+            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t("rule.payment")}</Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Betalingsløsninger
             </Paragraph>

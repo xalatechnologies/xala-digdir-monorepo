@@ -19,7 +19,7 @@ import {
   Spinner,
   Input,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useT { useLocale useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -70,6 +70,7 @@ const mockAuditEntries = [
 ];
 
 export function AuditTimelinePage() {
+  const t = useT();
   const { locale } = useLocale();
   const [outcomeFilter, setOutcomeFilter] = useState<DecisionOutcome | 'all'>('all');
   const [dateFrom, setDateFrom] = useState('');
@@ -184,7 +185,7 @@ export function AuditTimelinePage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : filteredEntries.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

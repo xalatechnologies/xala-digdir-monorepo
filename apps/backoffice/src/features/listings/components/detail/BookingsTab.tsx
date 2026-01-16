@@ -34,6 +34,7 @@ import {
   formatTime,
   formatCurrency,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface BookingsTabProps {
   listingId: string;
@@ -50,8 +51,8 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
 // Status tabs for filtering bookings
 const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
-  { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
-  { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
+  { id: 'confirmed', label: t("status.confirmed"), icon: '✓', color: 'success' },
+  { id: 'completed', label: t("status.completed"), icon: '✓', color: 'info' },
   { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
 ] as const;
@@ -67,6 +68,7 @@ function calculateDuration(startTime: string, endTime: string): string {
 }
 
 export function BookingsTab({ listingId }: BookingsTabProps) {
+  const t = useT();
   // State for active tab - default to 'all'
   const [activeTab, setActiveTab] = useState<string>('all');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -160,8 +162,8 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
     const confirmed = await confirm({
       title: 'Bekreft booking',
       message: `Er du sikker på at du vil bekrefte booking ${booking.id.slice(0, 8)}?`,
-      confirmText: 'Bekreft',
-      cancelText: 'Avbryt',
+      confirmText: t("ui.confirm"),
+      cancelText: t("ui.cancel"),
     });
 
     if (confirmed) {
@@ -179,7 +181,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
       title: 'Kanseller booking',
       message: `Er du sikker på at du vil kansellere booking ${booking.id.slice(0, 8)}? Dette kan ikke angres.`,
       confirmText: 'Kanseller',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
     });
 
     if (confirmed) {
@@ -460,7 +462,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
             <Table.HeaderCell>Dato & Tid</Table.HeaderCell>
             <Table.HeaderCell>Varighet</Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
-            <Table.HeaderCell>Betaling</Table.HeaderCell>
+            <Table.HeaderCell>{t("rule.payment")}</Table.HeaderCell>
             <Table.HeaderCell style={{ textAlign: 'right' }}>Pris</Table.HeaderCell>
           </Table.Row>
         </Table.Head>
@@ -630,7 +632,7 @@ export function BookingsTab({ listingId }: BookingsTabProps) {
           </DrawerSection>
 
           {/* Payment Information */}
-          <DrawerSection title="Betaling">
+          <DrawerSection title={t("rule.payment")}>
             <DrawerItem label="Totalpris">
               <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 {formatCurrency(parseFloat(selectedBooking.totalPrice), selectedBooking.currency)}

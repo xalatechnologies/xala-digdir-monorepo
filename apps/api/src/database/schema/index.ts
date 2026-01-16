@@ -26,6 +26,11 @@ export const tenants = pgTable('tenants', {
   domain: varchar('domain', { length: 255 }),
   settings: jsonb('settings').default({}),
   status: varchar('status', { length: 50 }).notNull().default('active'),
+  
+  // Feature flags and category controls
+  featureFlags: jsonb('feature_flags').notNull().default({}),
+  enabledRentalObjectCategories: text('enabled_rental_object_categories').array().notNull().default(['LOCALE', 'ARRANGEMENT']),
+  
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({

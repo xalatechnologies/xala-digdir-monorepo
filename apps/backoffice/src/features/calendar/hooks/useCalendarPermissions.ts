@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 export interface CalendarPermissions {
   // View permissions
@@ -37,7 +38,8 @@ export interface CalendarPermissions {
   isSaksbehandler: boolean;
 }
 
-export function useCalendarPermissions(): CalendarPermissions {
+export function useCalendarPermissions():
+  const t = useT(); CalendarPermissions {
   const { user, isAdmin } = useAuth();
 
   const permissions = useMemo<CalendarPermissions>(() => {

@@ -8,6 +8,7 @@ import * as React from 'react';
 import { Card, Stack, Heading, Paragraph, Badge, StarIcon } from '@xala/ds';
 import { cn } from '@xala/ds';
 import type { Review } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 export interface ReviewCardProps {
   /** Review data */
@@ -117,7 +118,7 @@ const getStatusLabel = (status: Review['status']): string => {
     case 'approved':
       return 'Godkjent';
     case 'pending':
-      return 'Venter';
+      return t("status.pending");
     case 'rejected':
       return 'Avvist';
     default:
@@ -132,7 +133,8 @@ export function ReviewCard({
   onMarkHelpful,
   className,
   variant = 'default',
-}: ReviewCardProps): React.ReactElement {
+}: ReviewCardProps):
+  const t = useT(); React.ReactElement {
   const handleHelpful = () => {
     onMarkHelpful?.(review.id);
   };

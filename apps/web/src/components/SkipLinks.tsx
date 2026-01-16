@@ -14,8 +14,10 @@
 
 import React from 'react';
 import { useAccessibilityMonitoringContext } from '../providers/AccessibilityMonitoringProvider';
+import { useT } from '@xala/i18n';
 
-export function SkipLinks(): React.ReactElement {
+export function SkipLinks():
+  const t = useT(); React.ReactElement {
   // Optional: Track skip link usage if monitoring is enabled
   const tracking = React.useMemo(() => {
     try {

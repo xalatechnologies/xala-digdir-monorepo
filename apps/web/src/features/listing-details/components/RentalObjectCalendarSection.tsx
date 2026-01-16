@@ -20,6 +20,7 @@ import {
 } from '@digilist/client-sdk';
 import type { CalendarSlot, CalendarConfig, CalendarSelection } from '@xala/ds';
 import { useTranslation } from 'react-i18next';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -132,7 +133,8 @@ export function RentalObjectCalendarSection({
   readOnly = false,
   onBookingRequest,
   className,
-}: RentalObjectCalendarSectionProps): React.ReactElement {
+}: RentalObjectCalendarSectionProps):
+  const t = useT(); React.ReactElement {
   const { t, i18n } = useTranslation();
   
   // Selection state

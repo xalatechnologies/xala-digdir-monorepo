@@ -29,8 +29,10 @@ import {
 } from '@digilist/client-sdk';
 import { SearchResults } from '../components/SearchResults';
 import { SavedFilters } from '../components/SavedFilters';
+import { useT } from '@xala/i18n';
 
 export function SearchPage() {
+  const t = useT();
   const [searchParams, setSearchParams] = useSearchParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
@@ -139,7 +141,7 @@ export function SearchPage() {
   if (!query) {
     return (
       <Stack spacing="lg" style={{ padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={1}>Søk</Heading>
+        <Heading level={1}>{t("ui.search")}</Heading>
         <Stack spacing="md" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
           <Text weight="medium">
             Ingen søk utført
@@ -209,9 +211,7 @@ export function SearchPage() {
               borderBottom: '1px solid var(--ds-color-neutral-200)',
             }}
           >
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-              Filtre
-            </Heading>
+            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t("ui.filters")}</Heading>
             {activeFilterCount > 0 && (
               <Button variant="tertiary" data-size="sm" onClick={handleClearFilters} type="button">
                 Nullstill alle
@@ -277,8 +277,8 @@ export function SearchPage() {
                 >
                   <option value="">Alle statuser</option>
                   <option value="pending">Ventende</option>
-                  <option value="confirmed">Bekreftet</option>
-                  <option value="completed">Fullført</option>
+                  <option value="confirmed">{t("status.confirmed")}</option>
+                  <option value="completed">{t("status.completed")}</option>
                   <option value="cancelled">Kansellert</option>
                 </select>
               </Stack>

@@ -10,6 +10,7 @@ import type { Listing, ListingStatus } from '@digilist/client-sdk';
 import type { ListingQueryFilters } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useT } from '@xala/i18n';
 
 interface ListingsTableProps {
   listings: RentalObject[];
@@ -66,6 +67,7 @@ export function ListingsTable({
   onRefresh,
   basePath = '/listings',
 }: ListingsTableProps) {
+  const t = useT();
   const navigate = useNavigate();
   const allSelected = listings.length > 0 && selectedIds.length === listings.length;
 
@@ -88,7 +90,7 @@ export function ListingsTable({
           padding: 'var(--ds-spacing-10)',
         }}
       >
-        <Spinner aria-label="Laster..." />
+        <Spinner aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -128,7 +130,7 @@ export function ListingsTable({
           <Table.Row>
             <Table.HeaderCell style={{ width: '48px' }}>
               <Checkbox
-                aria-label="Velg alle"
+                aria-label={t("ui.selectAll")}
                 checked={allSelected}
                 onChange={(e) => onSelectAll(e.target.checked)}
               />

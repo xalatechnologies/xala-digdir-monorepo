@@ -10,6 +10,7 @@ import {
   useRealtimeListings,
   useRealtimeMessages,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface RealtimeContextValue {
   isConnected: boolean;
@@ -36,6 +37,7 @@ interface RealtimeProviderProps {
  * ```
  */
 export function RealtimeProvider({ children, wsUrl, tenantId }: RealtimeProviderProps) {
+  const t = useT();
   // Build full WebSocket URL with tenant ID suffix
   // Expects wsUrl like "wss://api.digilist.no/ws/events" and appends /{tenantId}
   const fullWsUrl = wsUrl && tenantId 

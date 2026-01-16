@@ -23,6 +23,7 @@ import {
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
 import type { ListingStatus } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface PublishControlsProps {
   listingId: string;
@@ -37,6 +38,7 @@ export function PublishControls({
   status,
   onActionComplete,
 }: PublishControlsProps) {
+  const t = useT();
   const navigate = useNavigate();
   const toast = useToast();
   const { canPublishListing, canArchiveListing, canDeleteListing, permissions } = useListingPermissions();
@@ -147,7 +149,7 @@ export function PublishControls({
         {/* More Actions Dropdown */}
         <Dropdown.TriggerContext>
           <Dropdown.Trigger
-            aria-label="Flere handlinger"
+            aria-label={t('common.moreActions')}
             disabled={isLoading}
           >
             <MoreVerticalIcon />
@@ -227,9 +229,7 @@ export function PublishControls({
             variant="danger"
             onClick={handleDelete}
             disabled={isLoading} type="button"
-          >
-            Slett
-          </Button>
+          >{t("ui.delete")}</Button>
         </Dialog.Actions>
       </Dialog>
     </>

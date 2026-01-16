@@ -19,6 +19,7 @@ import {
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -171,7 +172,8 @@ export function CalendarSection({
   className,
   title,
   subtitle,
-}: CalendarSectionProps): React.ReactElement {
+}: CalendarSectionProps):
+  const t = useT(); React.ReactElement {
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 

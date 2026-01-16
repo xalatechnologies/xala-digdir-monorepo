@@ -8,6 +8,7 @@
  */
 
 import { AuditTab } from '../../../listings/components/detail/AuditTab';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectAuditTabProps {
   /** The rental object ID */
@@ -21,6 +22,7 @@ export interface RentalObjectAuditTabProps {
 export function RentalObjectAuditTab({
   rentalObjectId,
 }: RentalObjectAuditTabProps) {
+  const t = useT();
   // Delegate to listings audit tab (rental objects are RESOURCE type listings)
   return <AuditTab listingId={rentalObjectId} />;
 }

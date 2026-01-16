@@ -17,6 +17,7 @@ import {
 } from '@digilist/client-sdk';
 import type { UploadProgressEvent } from '@digilist/client-sdk';
 import type { BackofficeListing, ListingDocument } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface MediaStepProps {
   data: Partial<BackofficeListing>;
@@ -32,6 +33,7 @@ interface FileUploadProgress {
 }
 
 export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
+  const t = useT();
   const [isDraggingImages, setIsDraggingImages] = useState(false);
   const [isDraggingDocs, setIsDraggingDocs] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -554,7 +556,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
                   <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {fileProgress.status === 'compressing' && 'Komprimerer...'}
                     {fileProgress.status === 'uploading' && 'Laster opp...'}
-                    {fileProgress.status === 'complete' && 'Fullført'}
+                    {fileProgress.status === 'complete' && t("status.completed")}
                     {fileProgress.status === 'error' && fileProgress.error}
                   </Paragraph>
                 </div>

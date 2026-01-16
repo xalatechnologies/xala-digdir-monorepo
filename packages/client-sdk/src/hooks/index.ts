@@ -16,6 +16,18 @@ export {
   useRefreshToken
 } from './use-auth';
 
+// Feature flags hooks
+export {
+  useTenantFeatures,
+  useFeature,
+  useCategory,
+  useEnabledCategories,
+  useFeatureFlags,
+  useFeaturesLoading,
+  useAnyFeature,
+  useAllFeatures,
+} from './use-features';
+
 // Rental Object hooks (primary - single source of truth)
 export {
   rentalObjectKeys,

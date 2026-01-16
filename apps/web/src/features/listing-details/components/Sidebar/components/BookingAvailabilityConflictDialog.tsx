@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
 import { useRealtimeUpdates } from '../../../adapters/realtimeClient';
 import type { RealtimeEvent } from '../../../adapters/realtimeClient';
+import { useT } from '@xala/i18n';
 
 // Icons
 function WarningIcon({ size = 20 }: { size?: number }): React.ReactElement {
@@ -78,7 +79,8 @@ export function BookingAvailabilityConflictDialog({
   onBookAvailable,
   listingTitle: _listingTitle,
   listingId,
-}: BookingAvailabilityConflictDialogProps): React.ReactElement | null {
+}: BookingAvailabilityConflictDialogProps):
+  const t = useT(); React.ReactElement | null {
   // Local state for slots that can be updated in real-time
   const [localSlots, setLocalSlots] = React.useState<SlotAvailability[]>(slots);
 
@@ -178,7 +180,7 @@ export function BookingAvailabilityConflictDialog({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Lukk"
+            aria-label={t('common.close')}
             style={{
               display: 'flex',
               alignItems: 'center',

@@ -9,6 +9,7 @@ import * as React from 'react';
 import { Heading, Paragraph } from '@xala/ds';
 import type { ListingMetadata, Amenity, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -250,16 +251,17 @@ export function OverviewTab({
   capacity,
   additionalServices,
   className,
-}: OverviewTabProps): React.ReactElement {
+}: OverviewTabProps):
+  const t = useT(); React.ReactElement {
   const presenter = React.useMemo(() => createPresenter(listingType), [listingType]);
   const [selectedServices, setSelectedServices] = React.useState<string[]>([]);
 
   // Mock additional services if not provided
   const services: AdditionalService[] = additionalServices || [
-    { id: 'extra-time', name: 'Ekstra tid', description: 'Forleng bookingen med 30 minutter', price: 200, currency: 'NOK' },
-    { id: 'equipment', name: 'Utstyr', description: 'Inkluderer ballnett, musikanlegg og annet utstyr', price: 150, currency: 'NOK' },
-    { id: 'caretaker', name: 'Vaktmesterhjelp', description: 'Hjelp med oppsett og nedrigg av utstyr', price: 300, currency: 'NOK' },
-    { id: 'security', name: 'Sikkerhet', description: 'Vaktmester til stede under hele arrangementet', price: 500, currency: 'NOK' },
+    { id: 'extra-time', name: t('ekstra.tid'), description: t('forleng.bookingen.med.30.minutter'), price: 200, currency: 'NOK' },
+    { id: 'equipment', name: t('utstyr'), description: t('inkluderer.ballnett.musikanlegg.og.annet.utstyr'), price: 150, currency: 'NOK' },
+    { id: 'caretaker', name: t('vaktmesterhjelp'), description: t('hjelp.med.oppsett.og.nedrigg.av.utstyr'), price: 300, currency: 'NOK' },
+    { id: 'security', name: t('sikkerhet'), description: t('vaktmester.til.stede.under.hele.arrangementet'), price: 500, currency: 'NOK' },
   ];
 
   const toggleService = (serviceId: string) => {

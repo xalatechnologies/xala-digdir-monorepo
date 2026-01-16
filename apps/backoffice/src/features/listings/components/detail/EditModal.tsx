@@ -18,6 +18,7 @@ import {
 } from '@xala/ds';
 import { useUpdateRentalObject, type Listing } from '@digilist/client-sdk';
 import { useToast } from '../../../../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 export interface EditModalProps {
   /** Whether the modal is open */
@@ -61,6 +62,7 @@ const VISIBILITY_LABELS: Record<string, string> = {
  * ```
  */
 export function EditModal({ isOpen, onClose, listing, onSuccess }: EditModalProps) {
+  const t = useT();
   const updateMutation = useUpdateRentalObject();
   const toast = useToast();
 
@@ -499,9 +501,7 @@ export function EditModal({ isOpen, onClose, listing, onSuccess }: EditModalProp
 
       <Dialog.Block>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-          <Button type="button" variant="secondary" onClick={onClose} disabled={updateMutation.isPending}>
-            Avbryt
-          </Button>
+          <Button type="button" variant="secondary" onClick={onClose} disabled={updateMutation.isPending}>{t("ui.cancel")}</Button>
           <Button
             type="button"
             variant="primary"

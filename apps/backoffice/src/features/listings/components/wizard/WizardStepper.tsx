@@ -6,6 +6,7 @@
 
 import { Heading, Paragraph, CheckIcon } from '@xala/ds';
 import type { WizardStep } from '../../types';
+import { useT } from '@xala/i18n';
 
 export interface WizardStepperProps {
   steps: WizardStep[];
@@ -242,6 +243,7 @@ export function WizardStepper({
   showStepCounter = true,
   errors = {},
 }: WizardStepperProps) {
+  const t = useT();
   const getStepState = (index: number, stepId: string): 'completed' | 'active' | 'future' | 'error' => {
     if (errors[stepId]?.length) return 'error';
     if (index < currentStep) return 'completed';

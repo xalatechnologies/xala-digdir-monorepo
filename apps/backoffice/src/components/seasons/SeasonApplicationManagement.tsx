@@ -27,6 +27,7 @@ import {
   useRejectSeasonApplication,
   type SeasonApplication,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'allocated';
 
@@ -36,7 +37,7 @@ interface SeasonApplicationManagementProps {
 }
 
 const statusLabels: Record<ApplicationStatus, string> = {
-  pending: 'Venter',
+  pending: t("status.pending"),
   approved: 'Godkjent',
   rejected: 'Avslått',
   allocated: 'Tildelt',
@@ -50,6 +51,7 @@ const statusVariants: Record<ApplicationStatus, 'warning' | 'success' | 'danger'
 };
 
 export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonApplicationManagementProps) {
+  const t = useT();
   const [filterStatus, setFilterStatus] = useState<ApplicationStatus | 'all'>('all');
   const [filterVenue, setFilterVenue] = useState<string | 'all'>('all');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,7 +121,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -137,9 +139,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
           </div>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-3)' }}>
-          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Venter
-          </div>
+          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>{t("status.pending")}</div>
           <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-warning-text-default)' }}>
             {applications.filter(a => a.status === 'pending').length}
           </div>

@@ -9,6 +9,7 @@ import * as React from 'react';
 import { Heading, Paragraph } from '@xala/ds';
 import type { Rule, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -105,49 +106,49 @@ const categoryConfigs: Record<string, CategoryConfig> = {
     icon: LockIcon,
     bgColor: '#FEE2E2',
     iconColor: '#DC2626',
-    label: 'Sikkerhet',
+    label: t('sikkerhet'),
   },
   cleaning: {
     icon: SparklesIcon,
     bgColor: '#DBEAFE',
     iconColor: '#2563EB',
-    label: 'Renhold',
+    label: t('renhold'),
   },
   food: {
     icon: UtensilsIcon,
     bgColor: '#FEF3C7',
     iconColor: '#D97706',
-    label: 'Mat og drikke',
+    label: t('mat.og.drikke'),
   },
   noise: {
     icon: VolumeOffIcon,
     bgColor: '#F3E8FF',
     iconColor: '#9333EA',
-    label: 'Støy',
+    label: t('støy'),
   },
   cancellation: {
     icon: CalendarIcon,
     bgColor: '#DBEAFE',
     iconColor: '#2563EB',
-    label: 'Booking',
+    label: t('booking'),
   },
   equipment: {
     icon: WrenchIcon,
     bgColor: '#D1FAE5',
     iconColor: '#059669',
-    label: 'Utstyr og inventar',
+    label: t('utstyr.og.inventar'),
   },
   general: {
     icon: AlertCircleIcon,
     bgColor: '#F3F4F6',
     iconColor: '#6B7280',
-    label: 'Generelt',
+    label: t('generelt'),
   },
   other: {
     icon: ShieldIcon,
     bgColor: '#F3F4F6',
     iconColor: '#6B7280',
-    label: 'Annet',
+    label: t('annet'),
   },
 };
 
@@ -191,7 +192,8 @@ export function RulesTab({
   rules,
   listingType,
   className,
-}: RulesTabProps): React.ReactElement {
+}: RulesTabProps):
+  const t = useT(); React.ReactElement {
   const presenter = React.useMemo(() => createPresenter(listingType), [listingType]);
 
   if (rules.length === 0) {
@@ -232,7 +234,7 @@ export function RulesTab({
             icon: AlertCircleIcon,
             bgColor: '#F3F4F6',
             iconColor: '#6B7280',
-            label: 'Generelt',
+            label: t('generelt'),
           };
           const IconComponent = config.icon;
           const required = isRequired(rule);

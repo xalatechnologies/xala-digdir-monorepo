@@ -38,6 +38,7 @@ import {
   useVippsStatus,
   useCalendarSyncStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface IntegrationStatus {
   provider: string;
@@ -76,9 +77,9 @@ const VENDOR_CONTACTS: Record<string, VendorContact> = {
 function getStatusBadge(status: IntegrationStatus['status']): React.ReactElement {
   switch (status) {
     case 'ok':
-      return <Badge color="success">OK</Badge>;
+      return <Badge color="success">{t("ui.ok")}</Badge>;
     case 'error':
-      return <Badge color="danger">Feil</Badge>;
+      return <Badge color="danger">{t("ui.error")}</Badge>;
     case 'warning':
       return <Badge color="warning">Avvik</Badge>;
     case 'disabled':
@@ -202,7 +203,8 @@ function IntegrationCard({ integration }: { integration: IntegrationStatus }): R
   );
 }
 
-export function IntegrationsOverviewPage(): React.ReactElement {
+export function IntegrationsOverviewPage():
+  const t = useT(); React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { data: rcoData } = useRcoStatus();
   const { data: vismaData } = useVismaStatus();
@@ -307,9 +309,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
             </Button>
             <Link to="/settings?tab=integrations">
               <Button variant="tertiary" type="button">
-                <SettingsIcon />
-                Innstillinger
-              </Button>
+                <SettingsIcon />{t("ui.settings")}</Button>
             </Link>
           </div>
         </div>
@@ -325,7 +325,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
           </Card>
           <Card style={{ textAlign: 'center', padding: 'var(--ds-spacing-4)' }}>
             <Heading level={2} data-size="xl" style={{ margin: 0, color: hasErrors ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>
-              {hasErrors ? 'Feil' : 'OK'}
+              {hasErrors ? t("ui.error") : t("ui.ok")}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               Driftstatus
@@ -387,7 +387,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
                         <td>{integration.name}</td>
                         <td>
                           <Badge color={deviation.type === 'error' ? 'danger' : 'warning'}>
-                            {deviation.type === 'error' ? 'Feil' : 'Advarsel'}
+                            {deviation.type === 'error' ? t("ui.error") : t("ui.warning")}
                           </Badge>
                         </td>
                         <td>{deviation.message}</td>

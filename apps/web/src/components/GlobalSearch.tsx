@@ -19,6 +19,7 @@ import {
   useRecentSearches,
   type SearchEntityType,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface GlobalSearchProps {
   /** Placeholder text */
@@ -42,6 +43,7 @@ const ENTITY_ICONS: Record<SearchEntityType, JSX.Element> = {
   booking: <CalendarIcon size={18} />,
   listing: <BuildingIcon size={18} />,
   organization: <PeopleIcon size={18} />,
+  'rental-object': <BuildingIcon size={18} />,
   all: <SearchIcon size={18} />,
 };
 
@@ -50,6 +52,7 @@ const ENTITY_LABELS: Record<SearchEntityType, string> = {
   booking: 'Bookinger',
   listing: 'Lokaler',
   organization: 'Organisasjoner',
+  'rental-object': 'Utleieobjekter',
   all: 'Alle',
 };
 
@@ -57,12 +60,13 @@ const ENTITY_LABELS: Record<SearchEntityType, string> = {
  * GlobalSearch component with SDK-powered typeahead and recent searches
  */
 export function GlobalSearch({
-  placeholder = 'Søk i lokaler, arrangementer, organisasjoner...',
+  placeholder,
   showShortcut = true,
   enableGlobalShortcut = true,
   className,
   style,
 }: GlobalSearchProps) {
+  const t = useT();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -143,7 +147,7 @@ export function GlobalSearch({
     return [
       {
         id: 'recent-searches',
-        label: 'Nylige søk',
+        label: t('search.recentSearches'),
         items,
       },
     ];
@@ -186,7 +190,7 @@ export function GlobalSearch({
 
   return (
     <HeaderSearch
-      placeholder={placeholder}
+      placeholder={placeholder || t('search.placeholderListings')}
       value={searchQuery}
       onSearchChange={handleSearchChange}
       onResultSelect={handleResultSelect}

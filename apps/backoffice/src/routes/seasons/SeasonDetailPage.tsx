@@ -39,13 +39,14 @@ import { FormSection } from '../../components/shared';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
+import { useT } from '@xala/i18n';
 
 const statusLabels: Record<SeasonStatus, string> = {
-  draft: 'Utkast',
+  draft: t("status.draft"),
   open: 'Åpen',
   closed: 'Lukket',
   active: 'Aktiv',
-  completed: 'Fullført',
+  completed: t("status.completed"),
   cancelled: 'Kansellert',
 };
 
@@ -59,6 +60,7 @@ const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'suc
 };
 
 export function SeasonDetailPage() {
+  const t = useT();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('info');
@@ -118,7 +120,7 @@ export function SeasonDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -172,18 +174,14 @@ export function SeasonDetailPage() {
               <>
                 <Link to={`/seasons/${id}/edit`}>
                   <Button variant="secondary" data-size="sm" type="button">
-                    <EditIcon />
-                    Rediger
-                  </Button>
+                    <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
                 <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
-                  <TrashIcon />
-                  Slett
-                </Button>
+                  <TrashIcon />{t("ui.delete")}</Button>
               </>
             )}
 
@@ -191,9 +189,7 @@ export function SeasonDetailPage() {
               <>
                 <Link to={`/seasons/${id}/edit`}>
                   <Button variant="secondary" data-size="sm" type="button">
-                    <EditIcon />
-                    Rediger
-                  </Button>
+                    <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">
                   <LockIcon />
@@ -274,9 +270,7 @@ export function SeasonDetailPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <Tabs.List>
           <Tabs.Trigger value="info">
-            <FileTextIcon />
-            Informasjon
-          </Tabs.Trigger>
+            <FileTextIcon />{t("ui.info")}</Tabs.Trigger>
           <Tabs.Trigger value="venues">
             <BuildingIcon />
             Lokaler ({venues.length})
@@ -307,9 +301,7 @@ export function SeasonDetailPage() {
                   </div>
 
                   <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Periode
-                    </div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>{t("timeMode.period")}</div>
                     <div>{formatDate(season.startDate)} – {formatDate(season.endDate)}</div>
                   </div>
 

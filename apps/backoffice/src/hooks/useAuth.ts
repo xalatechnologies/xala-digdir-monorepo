@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { FlowContext } from '@digilist/client-sdk';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
+import { useT } from '@xala/i18n';
 
 /**
  * Re-export EffectiveBackofficeRole for convenience
@@ -71,7 +72,8 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-export function useAuth(): AuthContextType {
+export function useAuth():
+  const t = useT(); AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

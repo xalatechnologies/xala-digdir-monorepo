@@ -13,6 +13,7 @@ import {
 } from '@xala/ds';
 import type { User, CreateUserDTO, UserRole } from '@digilist/client-sdk';
 import { FormSection, FormActions, InfoBox } from '../shared';
+import { useT } from '@xala/i18n';
 
 interface UserFormProps {
   user?: User | null;
@@ -26,6 +27,7 @@ const roleOptions = [
 ];
 
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
+  const t = useT();
   const [formData, setFormData] = useState<CreateUserDTO>({
     name: '',
     email: '',

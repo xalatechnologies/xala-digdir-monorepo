@@ -149,7 +149,8 @@ export function BookingModeSelector({
   className,
   size = 'md',
   variant = 'default',
-}: BookingModeSelectorProps): React.ReactElement | null {
+}: BookingModeSelectorProps):
+  const t = useT(); React.ReactElement | null {
   // Filter to only enabled modes
   const enabledModes = modes.filter((m) => m.enabled);
 
@@ -283,6 +284,7 @@ export function BookingModeSelector({
  * @example
  * ```tsx
  * import { createBookingModeOptions } from './BookingModeSelector';
+import { useT } from '@xala/i18n';
  *
  * const options = createBookingModeOptions(calendarConfig.bookingModes, t);
  * ```

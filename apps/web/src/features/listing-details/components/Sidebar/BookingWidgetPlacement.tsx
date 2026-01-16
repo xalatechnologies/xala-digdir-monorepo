@@ -94,21 +94,21 @@ export interface BookingWidgetPlacementProps {
 // =============================================================================
 
 const BOOKING_STEPS: BookingStep[] = [
-  { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
-  { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
-  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
-  { id: 'done', label: 'Sendt', icon: 'success' },
+  { id: 'calendar', label: t('velg.tidspunkter'), icon: 'calendar' },
+  { id: 'details', label: t('detaljer.og.vilkår'), icon: 'pricing' },
+  { id: 'confirm', label: t('bekreft'), icon: 'confirm' },
+  { id: 'done', label: t('sendt'), icon: 'success' },
 ];
 
 const DEFAULT_PRICE_GROUPS: PriceGroup[] = [
-  { id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle.' },
-  { id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer.' },
-  { id: 'youth', label: 'Ungdom (under 26)', pricePerHour: 250, description: 'Redusert pris for unge.' },
+  { id: 'standard', label: t('standard'), pricePerHour: 500, description: t('vanlig.pris.for.alle') },
+  { id: 'member', label: t('medlem'), pricePerHour: 350, description: t('rabattert.pris.for.medlemmer') },
+  { id: 'youth', label: t('ungdom.under.26'), pricePerHour: 250, description: t('redusert.pris.for.unge') },
 ];
 
 const DEFAULT_ADDITIONAL_SERVICES: AdditionalService[] = [
-  { id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500 },
-  { id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price: 300 },
+  { id: 'cleaning', label: t('rengjøring'), description: t('profesjonell.rengjøring.etter.bruk'), price: 500 },
+  { id: 'equipment', label: t('utstyrspakke'), description: t('inkluderer.bord.stoler.og.projektor'), price: 300 },
 ];
 
 const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
@@ -204,7 +204,8 @@ export function BookingWidgetPlacement({
   listingTitle,
   openingHours = DEFAULT_OPENING_HOURS,
   busySlots = [],
-}: BookingWidgetPlacementProps): React.ReactElement {
+}: BookingWidgetPlacementProps):
+  const t = useT(); React.ReactElement {
   const [isMobile, setIsMobile] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [weekStart, setWeekStart] = React.useState(() => getStartOfWeek(new Date()));
@@ -686,7 +687,7 @@ export function BookingWidgetPlacement({
                       backgroundColor: 'var(--ds-color-neutral-background-default)',
                       cursor: 'pointer',
                     }}
-                    aria-label="Forrige uke"
+                    aria-label={t('forrige.uke')}
                   >
                     <ChevronLeftIcon size={16} />
                   </button>
@@ -710,7 +711,7 @@ export function BookingWidgetPlacement({
                       backgroundColor: 'var(--ds-color-neutral-background-default)',
                       cursor: 'pointer',
                     }}
-                    aria-label="Neste uke"
+                    aria-label={t('neste.uke')}
                   >
                     <ChevronRightIcon size={16} />
                   </button>
@@ -720,15 +721,15 @@ export function BookingWidgetPlacement({
                 <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', fontSize: 'var(--ds-font-size-xs)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-success-surface-default)', border: '1px solid var(--ds-color-success-border-default)' }} />
-                    <span>Ledig</span>
+                    <span>{t('status.available')}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-danger-surface-default)', border: '1px solid var(--ds-color-danger-border-default)' }} />
-                    <span>Opptatt</span>
+                    <span>{t('opptatt')}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-accent-base-default)' }} />
-                    <span>Valgt</span>
+                    <span>{t('valgt')}</span>
                   </div>
                 </div>
               </div>
@@ -1016,6 +1017,7 @@ export function BookingWidgetPlacement({
             onClick={() => {
               if (currentStep === 2 && isAuthenticated) {
                 handleSubmitBooking();
+import { useT } from '@xala/i18n';
               } else if (currentStep === 0) {
                 // Check availability before proceeding from calendar step
                 handleCheckAvailabilityAndProceed();

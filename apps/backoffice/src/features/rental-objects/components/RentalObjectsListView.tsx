@@ -29,6 +29,7 @@ import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { useListingFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../../listings/hooks/useListingFilters';
 import { useListingPermissions } from '../../listings/hooks/useListingPermissions';
+import { useT } from '@xala/i18n';
 
 // Capacity filter options for rental objects
 const CAPACITY_OPTIONS = [
@@ -41,6 +42,7 @@ const CAPACITY_OPTIONS = [
 ];
 
 export function RentalObjectsListView() {
+  const t = useT();
   const navigate = useNavigate();
   const { permissions } = useListingPermissions();
 

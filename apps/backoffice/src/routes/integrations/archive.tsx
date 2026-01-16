@@ -28,6 +28,7 @@ import {
   Textfield,
   Select,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 interface ArchiveEvent {
   id: string;
@@ -65,11 +66,12 @@ function getStatusBadge(status: ArchiveEvent['status']): React.ReactElement {
       return <Badge color="danger">Feilet</Badge>;
     case 'pending':
     default:
-      return <Badge color="warning">Venter</Badge>;
+      return <Badge color="warning">{t("status.pending")}</Badge>;
   }
 }
 
-export function ArchivePage(): React.ReactElement {
+export function ArchivePage():
+  const t = useT(); React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -210,9 +212,7 @@ export function ArchivePage(): React.ReactElement {
             <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
               {stats.pending}
             </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-              Venter
-            </Paragraph>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("status.pending")}</Paragraph>
           </Card>
         </div>
 
@@ -223,7 +223,7 @@ export function ArchivePage(): React.ReactElement {
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: '200px' }}>
                 <Textfield
-                  aria-label="Søk"
+                  aria-label={t("ui.search")}
                   placeholder="Søk etter tittel eller saksnummer..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -250,7 +250,7 @@ export function ArchivePage(): React.ReactElement {
                 <option value="all">Alle statuser</option>
                 <option value="sent">Sendt</option>
                 <option value="failed">Feilet</option>
-                <option value="pending">Venter</option>
+                <option value="pending">{t("status.pending")}</option>
               </Select>
             </div>
 

@@ -183,8 +183,8 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="ENKEL BOOKING"
+      brandName={t('brand.name')}
+      brandTagline={t('brand.tagline')}
       title={t('auth.login')}
       subtitle={t('auth.selectMethod')}
       panelTitle={t('auth.backoffice')}

@@ -17,7 +17,7 @@ import {
   type ActivityStatus,
 } from '@xala/ds';
 import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentActivity } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT { useT, useLocale useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 

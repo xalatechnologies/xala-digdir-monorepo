@@ -9,6 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
+import { useT } from '@xala/i18n';
 
 // Mock useAuth hook
 const mockUseAuth = vi.fn();
@@ -336,7 +337,7 @@ describe('ProtectedRoute', () => {
         </ProtectedRoute>
       );
 
-      const spinner = screen.getByLabelText('Laster...');
+      const spinner = screen.getByLabelText(t("ui.loading"));
       expect(spinner).toBeInTheDocument();
     });
   });

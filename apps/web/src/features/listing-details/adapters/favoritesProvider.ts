@@ -122,7 +122,8 @@ class LocalStorageFavoritesProvider implements FavoritesProvider {
 
 let favoritesProviderInstance: FavoritesProvider | null = null;
 
-export function getFavoritesProvider(): FavoritesProvider {
+export function getFavoritesProvider():
+  const t = useT(); FavoritesProvider {
   if (!favoritesProviderInstance) {
     favoritesProviderInstance = new LocalStorageFavoritesProvider();
   }
@@ -138,6 +139,7 @@ export function setFavoritesProvider(provider: FavoritesProvider): void {
 // =============================================================================
 
 import { useState, useCallback } from 'react';
+import { useT } from '@xala/i18n';
 
 export interface UseFavoritesResult {
   isFavorited: boolean;

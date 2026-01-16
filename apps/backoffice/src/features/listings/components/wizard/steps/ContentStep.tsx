@@ -19,6 +19,7 @@ import {
   DetailsContent,
 } from '@xala/ds';
 import type { BackofficeListing, ListingFAQItem, ListingRule } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface ContentStepProps {
   data: Partial<BackofficeListing>;
@@ -90,30 +91,30 @@ function CheckIcon({ size = 16 }: { size?: number }) {
 
 // Common amenities suggestions with icons
 const COMMON_AMENITIES: { name: string; icon?: React.ComponentType<{ size?: number }>; category: string }[] = [
-  { name: 'WiFi', icon: WifiIcon, category: 'technology' },
-  { name: 'Projektor', icon: ProjectorIcon, category: 'technology' },
-  { name: 'Whiteboard', category: 'equipment' },
-  { name: 'Kaffemaskin', icon: CoffeeIcon, category: 'comfort' },
-  { name: 'Kjøkken', category: 'comfort' },
-  { name: 'Toalett', category: 'facilities' },
-  { name: 'Parkering', icon: ParkingIcon, category: 'access' },
-  { name: 'Rullestoltilgang', icon: AccessibilityIcon, category: 'access' },
-  { name: 'Heis', category: 'access' },
-  { name: 'Aircondition', category: 'comfort' },
-  { name: 'Lydanlegg', category: 'technology' },
-  { name: 'Videokonferanse', category: 'technology' },
-  { name: 'Printeskriver', category: 'equipment' },
-  { name: 'Møbler', category: 'equipment' },
-  { name: 'Garderobeskap', category: 'facilities' },
+  { name: t("amenity.wifi"), icon: WifiIcon, category: 'technology' },
+  { name: t("amenity.projector"), icon: ProjectorIcon, category: 'technology' },
+  { name: t("amenity.whiteboard"), category: 'equipment' },
+  { name: t("amenity.coffeeMachine"), icon: CoffeeIcon, category: 'comfort' },
+  { name: t("amenity.kitchen"), category: 'comfort' },
+  { name: t("amenity.toilet"), category: 'facilities' },
+  { name: t("amenity.parking"), icon: ParkingIcon, category: 'access' },
+  { name: t("amenity.wheelchairAccess"), icon: AccessibilityIcon, category: 'access' },
+  { name: t("amenity.elevator"), category: 'access' },
+  { name: t("amenity.airCondition"), category: 'comfort' },
+  { name: t("amenity.soundSystem"), category: 'technology' },
+  { name: t("amenity.videoConference"), category: 'technology' },
+  { name: t("amenity.printer"), category: 'equipment' },
+  { name: t("amenity.furniture"), category: 'equipment' },
+  { name: t("amenity.locker"), category: 'facilities' },
 ];
 
 // Rule types with Norwegian labels
 const RULE_TYPES = [
-  { value: 'general', label: 'Generelt' },
+  { value: 'general', label: t("rule.general") },
   { value: 'booking', label: 'Booking' },
-  { value: 'cancellation', label: 'Avbestilling' },
+  { value: 'cancellation', label: t("rule.cancellation") },
   { value: 'access', label: 'Tilgang' },
-  { value: 'safety', label: 'Sikkerhet' },
+  { value: 'safety', label: t("rule.safety") },
   { value: 'other', label: 'Annet' },
 ] as const;
 
@@ -123,6 +124,7 @@ function generateId(): string {
 }
 
 export function ContentStep({ data, onChange, errors = [] }: ContentStepProps) {
+  const t = useT();
   const [newAmenity, setNewAmenity] = useState('');
   const [newFAQ, setNewFAQ] = useState({ question: '', answer: '' });
   const [newRule, setNewRule] = useState({ title: '', description: '', type: 'general' as ListingRule['type'] });

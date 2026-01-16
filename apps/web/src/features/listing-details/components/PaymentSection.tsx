@@ -17,6 +17,7 @@ import {
 import { useInitiatePayment } from '@digilist/client-sdk/hooks';
 import { auditService } from '@digilist/client-sdk';
 import type { InitiatePaymentDTO } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -65,11 +66,12 @@ export interface PaymentSectionProps {
 export function PaymentSection({
   amount,
   currency = 'NOK',
-  description = 'Booking betaling',
+  description,
   bookingId,
   onPaymentInitiated,
   disabled = false,
 }: PaymentSectionProps): React.ReactElement {
+  const t = useT();
   const initiatePayment = useInitiatePayment();
 
   const handlePayment = async () => {
@@ -80,14 +82,14 @@ export function PaymentSection({
       const paymentData: InitiatePaymentDTO = {
         bookingId: bookingId ?? 'temp-booking-id',
         amount,
-        description,
+        description: description || t('payment.description'),
         returnUrl,
       };
 
       const response = await initiatePayment.mutateAsync(paymentData);
 
       // Extract payment URL and order ID from response
-      const paymentUrl = response.data?.url ?? '';
+      const paymentUrl = response.data?.redirectUrl ?? '';
       const orderId = response.data?.orderId ?? '';
 
       if (paymentUrl && onPaymentInitiated) {
@@ -124,9 +126,7 @@ export function PaymentSection({
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
         <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.wallet}</span>
-        <Heading data-size="xs" style={{ margin: 0 }}>
-          Betaling
-        </Heading>
+        <Heading data-size="xs" style={{ margin: 0 }}>{t("rule.payment")}</Heading>
       </div>
 
       {/* Pricing Breakdown */}
@@ -141,7 +141,7 @@ export function PaymentSection({
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Label style={{ margin: 0 }}>Bookinggebyr</Label>
+          <Label style={{ margin: 0 }}>{t('bookinggebyr')}</Label>
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
             {formattedAmount}
           </Paragraph>
@@ -165,7 +165,7 @@ export function PaymentSection({
 
       {/* Payment Method */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-        <Label style={{ margin: 0 }}>Betalingsmetode</Label>
+        <Label style={{ margin: 0 }}>{t('betalingsmetode')}</Label>
 
         {/* Vipps Button */}
         <Button
@@ -200,12 +200,12 @@ export function PaymentSection({
                 borderRadius: '50%',
                 animation: 'spin 0.6s linear infinite',
               }} />
-              <span>Behandler...</span>
+              <span>{t('behandler')}</span>
             </>
           ) : (
             <>
               {Icons.vipps}
-              <span>Betal med Vipps</span>
+              <span>{t('betal.med.vipps')}</span>
             </>
           )}
         </Button>

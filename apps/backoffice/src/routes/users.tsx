@@ -32,6 +32,7 @@ import {
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 const roleLabels: Record<UserRole, string> = {
   super_admin: 'Superadmin',
@@ -54,6 +55,7 @@ const statusColors: Record<UserStatus, 'success' | 'warning' | 'danger'> = {
 };
 
 export function UsersPage() {
+  const t = useT();
   const navigate = useNavigate();
 
   // State
@@ -177,7 +179,7 @@ export function UsersPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t("ui.loading")} />
           </div>
         ) : users.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -257,9 +259,7 @@ export function UsersPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleEdit(user)}>
-                              <EditIcon />
-                              Rediger
-                            </Dropdown.Button>
+                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {user.status === 'active' ? (
                             <Dropdown.Item>

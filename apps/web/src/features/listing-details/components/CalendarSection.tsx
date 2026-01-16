@@ -17,6 +17,7 @@ import {
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
 import type { CalendarSelection, CalendarCell, CalendarMode } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -116,7 +117,8 @@ export function CalendarSection({
   onSelectionChange,
   readOnly = false,
   className,
-}: CalendarSectionProps): React.ReactElement {
+}: CalendarSectionProps):
+  const t = useT(); React.ReactElement {
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
@@ -263,12 +265,12 @@ export function CalendarSection({
   const legend = React.useMemo(() => {
     if (!matrixResponse?.data?.legend) {
       return [
-        { status: 'AVAILABLE' as const, label: 'Ledig' },
-        { status: 'RESERVED' as const, label: 'Reservert' },
-        { status: 'BOOKED' as const, label: 'Booket' },
-        { status: 'BLOCKED' as const, label: 'Blokkert' },
-        { status: 'BLACKOUT' as const, label: 'Utilgjengelig' },
-        { status: 'CLOSED' as const, label: 'Stengt' },
+        { status: 'AVAILABLE' as const, label: t('status.available') },
+        { status: 'RESERVED' as const, label: t('status.reserved') },
+        { status: 'BOOKED' as const, label: t('status.booked') },
+        { status: 'BLOCKED' as const, label: t('status.blocked') },
+        { status: 'BLACKOUT' as const, label: t('status.unavailable') },
+        { status: 'CLOSED' as const, label: t('status.closed') },
       ];
     }
     return matrixResponse.data.legend.map((item) => ({
@@ -313,7 +315,7 @@ export function CalendarSection({
         endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
         slotSizeMinutes={config?.slotSizeMinutes ?? 60}
         showTips={true}
-        title="Velg tidspunkt"
+        title={t('velg.tidspunkt')}
         subtitle={calendarMode === 'TIME_SLOTS' ? 'Velg ledige tidspunkter' : calendarMode === 'ALL_DAY' ? 'Velg ledige dager' : 'Velg periode'}
         isLoading={isLoading}
         errorMessage={errorMessage}

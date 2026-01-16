@@ -6,6 +6,7 @@
  */
 
 import { logAuditEvent } from './auditProvider';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -30,7 +31,8 @@ export interface ShareResult {
 // UTM Tag Builder
 // =============================================================================
 
-export function buildShareUrl(baseUrl: string, medium: ShareMedium): string {
+export function buildShareUrl(baseUrl: string, medium: ShareMedium):
+  const t = useT(); string {
   const url = new URL(baseUrl);
   url.searchParams.set('utm_source', 'share');
   url.searchParams.set('utm_medium', medium);

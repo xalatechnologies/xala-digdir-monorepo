@@ -8,6 +8,7 @@
 import * as React from 'react';
 import { Paragraph } from '@xala/ds';
 import type { ContactInfo } from '../../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -57,7 +58,8 @@ function UserIcon({ size = 18 }: { size?: number }): React.ReactElement {
 export function ContactWidget({
   contact,
   className,
-}: ContactWidgetProps): React.ReactElement {
+}: ContactWidgetProps):
+  const t = useT(); React.ReactElement {
   const hasAnyContact = contact.email || contact.phone || contact.name;
 
   if (!hasAnyContact) {

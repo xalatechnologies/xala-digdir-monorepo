@@ -13,6 +13,7 @@ import type {
   RecurringSummary,
   OccurrenceStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -167,42 +168,42 @@ const MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'se
  */
 const STATUS_CONFIG: Record<OccurrenceStatus, StatusConfig> = {
   AVAILABLE: {
-    label: 'Ledig',
+    label: t('status.available'),
     color: 'var(--ds-color-success-text-default)',
     backgroundColor: 'var(--ds-color-success-surface-default)',
     borderColor: 'var(--ds-color-success-border-default)',
     icon: <CheckCircleIcon size={14} />,
   },
   CONFLICT: {
-    label: 'Konflikt',
+    label: t('konflikt'),
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   RESERVED: {
-    label: 'Reservert',
+    label: t('status.reserved'),
     color: 'var(--ds-color-warning-text-default)',
     backgroundColor: 'var(--ds-color-warning-surface-default)',
     borderColor: 'var(--ds-color-warning-border-default)',
     icon: <ClockIcon size={14} />,
   },
   BLOCKED: {
-    label: 'Blokkert',
+    label: t('status.blocked'),
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   BLACKOUT: {
-    label: 'Stengt periode',
+    label: t('status.closed'),
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',
     icon: <AlertCircleIcon size={14} />,
   },
   CLOSED: {
-    label: 'Stengt',
+    label: t('status.closed'),
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',
@@ -270,7 +271,8 @@ export function RecurringPreviewTable({
   size = 'md',
   showSummary = true,
   maxVisibleRows = 8,
-}: RecurringPreviewTableProps): React.ReactElement {
+}: RecurringPreviewTableProps):
+  const t = useT(); React.ReactElement {
   // Track selected indices for selectable mode
   const selectedSet = React.useMemo(() => new Set(selectedIndices), [selectedIndices]);
 
@@ -389,7 +391,7 @@ export function RecurringPreviewTable({
             <Checkbox
               checked={allAvailableSelected || someSelected}
               onChange={(e) => handleSelectAll(e.target.checked)}
-              aria-label="Velg alle tilgjengelige"
+              aria-label={t('status.available')}
             />
             <Paragraph
               data-size="sm"
@@ -421,9 +423,9 @@ export function RecurringPreviewTable({
         }}
       >
         {selectable && <div />}
-        <div>Dato</div>
-        <div>Tidspunkt</div>
-        <div>Status</div>
+        <div>{t('dato')}</div>
+        <div>{t('tidspunkt')}</div>
+        <div>{t('status')}</div>
       </div>
 
       {/* Occurrence List */}

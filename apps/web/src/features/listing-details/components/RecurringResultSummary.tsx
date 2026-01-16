@@ -11,6 +11,7 @@ import type {
   RecurringBookingResultProjectionDTO,
   RecurringOccurrenceResultDTO,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -240,8 +241,8 @@ function getResultConfig(resultType: ResultType): {
   switch (resultType) {
     case 'success':
       return {
-        title: 'Booking opprettet',
-        description: 'Alle datoer ble booket.',
+        title: t('booking.opprettet'),
+        description: t('status.booked'),
         icon: <CheckCircleIcon size={40} />,
         color: 'var(--ds-color-success-text-default)',
         backgroundColor: 'var(--ds-color-success-surface-default)',
@@ -249,8 +250,8 @@ function getResultConfig(resultType: ResultType): {
       };
     case 'partial':
       return {
-        title: 'Delvis opprettet',
-        description: 'Noen datoer kunne ikke bookes.',
+        title: t('delvis.opprettet'),
+        description: t('noen.datoer.kunne.ikke.bookes'),
         icon: <AlertTriangleIcon size={40} />,
         color: 'var(--ds-color-warning-text-default)',
         backgroundColor: 'var(--ds-color-warning-surface-default)',
@@ -258,8 +259,8 @@ function getResultConfig(resultType: ResultType): {
       };
     case 'failure':
       return {
-        title: 'Booking mislyktes',
-        description: 'Ingen datoer kunne bookes.',
+        title: t('booking.mislyktes'),
+        description: t('ingen.datoer.kunne.bookes'),
         icon: <XCircleIcon size={40} />,
         color: 'var(--ds-color-danger-text-default)',
         backgroundColor: 'var(--ds-color-danger-surface-default)',
@@ -426,7 +427,8 @@ export function RecurringResultSummary({
   size = 'md',
   showDetails = true,
   maxVisibleRows = 6,
-}: RecurringResultSummaryProps): React.ReactElement {
+}: RecurringResultSummaryProps):
+  const t = useT(); React.ReactElement {
   const [showCreated, setShowCreated] = React.useState(true);
   const [showFailed, setShowFailed] = React.useState(true);
 
@@ -766,9 +768,9 @@ export function RecurringResultSummary({
                     }}
                   >
                     <div />
-                    <div>Dato</div>
-                    <div>Tidspunkt</div>
-                    <div>Status</div>
+                    <div>{t('dato')}</div>
+                    <div>{t('tidspunkt')}</div>
+                    <div>{t('status')}</div>
                   </div>
                   {created.map((occurrence: RecurringOccurrenceResultDTO) => (
                     <OccurrenceRow
@@ -872,9 +874,9 @@ export function RecurringResultSummary({
                     }}
                   >
                     <div />
-                    <div>Dato</div>
-                    <div>Tidspunkt</div>
-                    <div>Årsak</div>
+                    <div>{t('dato')}</div>
+                    <div>{t('tidspunkt')}</div>
+                    <div>{t('årsak')}</div>
                   </div>
                   {failed.map((occurrence: RecurringOccurrenceResultDTO) => (
                     <OccurrenceRow

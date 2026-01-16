@@ -14,8 +14,10 @@ import {
   SaveIcon,
 } from '@xala/ds';
 import { useBrandingSettings } from '../hooks/useBrandingSettings';
+import { useT } from '@xala/i18n';
 
 export function BrandingTab() {
+  const t = useT();
   const {
     brandingData,
     updateField,

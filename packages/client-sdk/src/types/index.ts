@@ -6,6 +6,9 @@
 // Core types
 export * from './enums';
 
+// Feature flags & tenant controls
+export * from './feature-flags';
+
 // Authorization types (ActionCode enums + helpers)
 export * from './actions';
 

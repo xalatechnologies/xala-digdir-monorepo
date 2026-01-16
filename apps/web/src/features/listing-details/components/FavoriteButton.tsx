@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import { Button, Spinner } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -55,7 +56,8 @@ export function FavoriteButton({
   size = 'md',
   showLabel = true,
   className,
-}: FavoriteButtonProps): React.ReactElement {
+}: FavoriteButtonProps):
+  const t = useT(); React.ReactElement {
   const handleClick = React.useCallback(() => {
     if (!isAuthenticated) {
       onAuthRequired();

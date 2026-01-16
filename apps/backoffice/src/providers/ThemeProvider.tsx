@@ -4,6 +4,7 @@
  */
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { useT } from '@xala/i18n';
 
 type ColorScheme = 'light' | 'dark' | 'auto';
 
@@ -43,6 +44,7 @@ interface ThemeProviderProps {
  * ```
  */
 export function ThemeProvider({ children, storageKey = 'theme-preference' }: ThemeProviderProps) {
+  const t = useT();
   const [colorScheme, setColorSchemeState] = useState<ColorScheme>(() => {
     // Check localStorage first - only use stored if explicitly set
     if (typeof window !== 'undefined') {

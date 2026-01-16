@@ -5,6 +5,7 @@
 
 import { Stack, FormField, Textfield, Select, Paragraph, Heading } from '@xala/ds';
 import type { ActorType } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface BasicData {
   name: string;
@@ -24,6 +25,7 @@ export interface BasicStepProps {
 }
 
 export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
+  const t = useT();
   const handleChange = (field: keyof BasicData, value: string) => {
     onChange({ ...data, [field]: value });
   };

@@ -17,8 +17,10 @@ import {
   Stack,
 } from '@xala/ds';
 import { useVippsPayment } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
-export function PaymentCallbackPage(): React.ReactElement {
+export function PaymentCallbackPage():
+  const t = useT(); React.ReactElement {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get('orderId');
@@ -66,7 +68,7 @@ export function PaymentCallbackPage(): React.ReactElement {
         <ContentLayout>
           <ContentSection>
             <Stack gap="24px" align="center" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-              <Spinner size="lg" title="Sjekker betalingsstatus..." />
+              <Spinner size="lg" title={t('payment.checkingStatus')} />
               <Heading size="md" level={1}>
                 Sjekker betalingsstatus
               </Heading>
@@ -221,7 +223,7 @@ export function PaymentCallbackPage(): React.ReactElement {
               }}
             >
               <Stack gap="24px" align="center" style={{ textAlign: 'center' }}>
-                <Spinner size="lg" title="Behandler betaling..." />
+                <Spinner size="lg" title={t('payment.processingPayment')} />
                 <Heading size="lg" level={1}>
                   Betaling behandles
                 </Heading>

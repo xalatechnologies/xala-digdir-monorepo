@@ -7,11 +7,13 @@ import { useParams } from 'react-router-dom';
 import { ListingsListView } from '../features/listings/components/list/ListingsListView';
 import { ListingWizard } from '../features/listings/components/wizard';
 import { ListingDetailView } from '../features/listings/components/detail';
+import { useT } from '@xala/i18n';
 
 /**
  * Listings Page - Main list view with filtering and search
  */
 export function ListingsPage() {
+  const t = useT();
   return <ListingsListView />;
 }
 

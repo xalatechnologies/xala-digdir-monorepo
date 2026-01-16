@@ -8,6 +8,7 @@ import {
   useTenantSettings,
   useUpdateTenantSettings,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface BookingSettingsData {
   autoConfirm: boolean;
@@ -25,6 +26,7 @@ interface UseBookingSettingsOptions {
 }
 
 export function useBookingSettings(options: UseBookingSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const [isSaving, setIsSaving] = useState(false);

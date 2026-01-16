@@ -20,7 +20,7 @@ import {
   Table,
   Spinner,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useT { useLocale useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -77,6 +77,7 @@ const mockAuditEvents = [
 ];
 
 export function TenantAuditLogPage() {
+  const t = useT();
   const { locale } = useLocale();
   const [typeFilter, setTypeFilter] = useState<EventType | 'all'>('all');
   const [severityFilter, setSeverityFilter] = useState<EventSeverity | 'all'>('all');
@@ -110,7 +111,7 @@ export function TenantAuditLogPage() {
       case 'user': return 'Bruker';
       case 'booking': return 'Booking';
       case 'system': return 'System';
-      case 'security': return 'Sikkerhet';
+      case 'security': return t("rule.safety");
     }
   };
 
@@ -160,11 +161,11 @@ export function TenantAuditLogPage() {
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>12</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Feil</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("ui.error")}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>3</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Sikkerhet</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("rule.safety")}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-info-text-default)' }}>8</Heading>
         </Card>
       </div>
@@ -184,7 +185,7 @@ export function TenantAuditLogPage() {
               <option value="user">Bruker</option>
               <option value="booking">Booking</option>
               <option value="system">System</option>
-              <option value="security">Sikkerhet</option>
+              <option value="security">{t("rule.safety")}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
@@ -192,8 +193,8 @@ export function TenantAuditLogPage() {
             <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value as EventSeverity | 'all')} style={{ width: '100%' }}>
               <option value="all">Alle</option>
               <option value="info">Info</option>
-              <option value="warning">Advarsel</option>
-              <option value="error">Feil</option>
+              <option value="warning">{t("ui.warning")}</option>
+              <option value="error">{t("ui.error")}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
@@ -214,7 +215,7 @@ export function TenantAuditLogPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label="Laster..." data-size="lg" />
+            <Spinner aria-label={t("ui.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>
@@ -223,7 +224,7 @@ export function TenantAuditLogPage() {
                 <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                 <Table.HeaderCell>Type</Table.HeaderCell>
                 <Table.HeaderCell>Handling</Table.HeaderCell>
-                <Table.HeaderCell>Detaljer</Table.HeaderCell>
+                <Table.HeaderCell>{t("ui.details")}</Table.HeaderCell>
                 <Table.HeaderCell>IP</Table.HeaderCell>
                 <Table.HeaderCell>Alvorlighet</Table.HeaderCell>
               </Table.Row>
@@ -240,7 +241,7 @@ export function TenantAuditLogPage() {
                     <Table.Cell><code style={{ fontSize: 'var(--ds-font-size-xs)' }}>{event.ip}</code></Table.Cell>
                     <Table.Cell>
                       <Badge style={{ backgroundColor: color.bg, color: color.text }}>
-                        {event.severity === 'info' ? 'Info' : event.severity === 'warning' ? 'Advarsel' : 'Feil'}
+                        {event.severity === 'info' ? 'Info' : event.severity === 'warning' ? t("ui.warning") : t("ui.error")}
                       </Badge>
                     </Table.Cell>
                   </Table.Row>

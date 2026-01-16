@@ -72,6 +72,7 @@ import {
   // type SeasonApplication,
   // type AppealStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Temporary type definitions and placeholder hooks until implemented in SDK
 type AppealStatus = 'no_appeal' | 'appeal_pending' | 'appeal_approved' | 'appeal_rejected';
@@ -126,6 +127,7 @@ const appealStatusVariants: Record<AppealStatus, 'neutral' | 'warning' | 'succes
 const weekdayLabels = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
 
 export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
+  const t = useT();
   const [filterAppealStatus, setFilterAppealStatus] = useState<AppealStatus | 'all'>('all');
   const [selectedApplication, setSelectedApplication] = useState<SeasonApplication | null>(null);
   const [showAppealModal, setShowAppealModal] = useState(false);
@@ -226,7 +228,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -495,7 +497,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
               <button
                 type="button"
                 onClick={() => setShowAppealModal(false)}
-                aria-label="Lukk"
+                aria-label={t("ui.close")}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
               >
                 <XIcon />

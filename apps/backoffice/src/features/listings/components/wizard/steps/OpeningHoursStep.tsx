@@ -5,6 +5,7 @@
 
 import { Paragraph, Heading, Checkbox, Button, Select } from '@xala/ds';
 import type { BackofficeListing, ListingOpeningHours } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface OpeningHoursStepProps {
   data: Partial<BackofficeListing>;
@@ -33,6 +34,7 @@ const TIME_OPTIONS = [
 ];
 
 export function OpeningHoursStep({ data, onChange, errors = [] }: OpeningHoursStepProps) {
+  const t = useT();
   const openingHours: ListingOpeningHours = data.openingHours || {};
 
   const handleDayToggle = (day: DayKey, isOpen: boolean) => {

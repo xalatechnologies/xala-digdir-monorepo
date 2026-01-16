@@ -8,6 +8,7 @@
  */
 
 import { BookingsTab } from '../../../listings/components/detail/BookingsTab';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectBookingsTabProps {
   /** The rental object ID */
@@ -21,6 +22,7 @@ export interface RentalObjectBookingsTabProps {
 export function RentalObjectBookingsTab({
   rentalObjectId,
 }: RentalObjectBookingsTabProps) {
+  const t = useT();
   // Delegate to listings bookings tab (rental objects are RESOURCE type listings)
   return <BookingsTab listingId={rentalObjectId} />;
 }

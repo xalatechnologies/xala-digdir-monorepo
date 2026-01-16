@@ -22,6 +22,7 @@ import {
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
 import type { ListingStatus } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ListingRowActionsProps {
   listingId: string;
@@ -38,6 +39,7 @@ export function ListingRowActions({
   status,
   onActionComplete,
 }: ListingRowActionsProps) {
+  const t = useT();
   const navigate = useNavigate();
   const toast = useToast();
   const { canEditListing, canPublishListing, canArchiveListing, canDeleteListing, permissions } =
@@ -124,7 +126,7 @@ export function ListingRowActions({
     <>
       <Dropdown.TriggerContext>
         <Dropdown.Trigger
-          aria-label="Handlinger"
+          aria-label={t('common.actions')}
           disabled={isLoading}
         >
           <MoreVerticalIcon />
@@ -143,9 +145,7 @@ export function ListingRowActions({
             {/* Edit - Based on status */}
             {canEditListing(status) && (
               <Dropdown.Item>
-                <Dropdown.Button onClick={handleEdit}>
-                  Rediger
-                </Dropdown.Button>
+                <Dropdown.Button onClick={handleEdit}>{t("ui.edit")}</Dropdown.Button>
               </Dropdown.Item>
             )}
 
@@ -247,9 +247,7 @@ export function ListingRowActions({
               data-color="danger"
               onClick={handleDelete}
               loading={deleteMutation.isPending}
-            >
-              Slett
-            </Button>
+            >{t("ui.delete")}</Button>
           </div>
         </Dialog.Block>
       </Dialog>

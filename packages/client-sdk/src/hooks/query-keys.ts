@@ -381,4 +381,12 @@ export const queryKeys = {
     dataExport: (userId: string) => [...queryKeys.gdpr.all, 'dataExport', userId] as const,
     deletionRequests: () => [...queryKeys.gdpr.all, 'deletionRequests'] as const,
   },
+
+  // =========================================================================
+  // Feature Flags Keys
+  // =========================================================================
+  features: {
+    all: ['features'] as const,
+    tenant: () => [...queryKeys.features.all, 'tenant'] as const,
+  },
 } as const;

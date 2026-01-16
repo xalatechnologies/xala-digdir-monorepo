@@ -37,8 +37,10 @@ import {
   useUploadUserAvatar,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export function SettingsPage() {
+  const t = useT();
   const [activeTab, setActiveTab] = useState('profile');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -309,9 +311,7 @@ export function SettingsPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <Heading level={2} data-size="md">
-            Innstillinger
-          </Heading>
+          <Heading level={2} data-size="md">{t("ui.settings")}</Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
@@ -334,7 +334,7 @@ export function SettingsPage() {
         <Tabs.List>
           <Tabs.Tab value="profile">Min profil</Tabs.Tab>
           <Tabs.Tab value="addresses">Adresser</Tabs.Tab>
-          <Tabs.Tab value="general">Generelt</Tabs.Tab>
+          <Tabs.Tab value="general">{t("rule.general")}</Tabs.Tab>
           <Tabs.Tab value="booking">Booking</Tabs.Tab>
           <Tabs.Tab value="notifications">Varsler</Tabs.Tab>
           <Tabs.Tab value="integrations">Integrasjoner</Tabs.Tab>
@@ -1106,9 +1106,7 @@ export function SettingsPage() {
             <Card>
               <Stack spacing={4}>
                 <div>
-                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Betaling
-                  </Heading>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t("rule.payment")}</Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Betalingsløsninger
                   </Paragraph>

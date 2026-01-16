@@ -30,6 +30,7 @@ import {
   getCapabilitiesForRole,
   roleHasCapability,
 } from '../lib/capabilities';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Re-exports for convenience
@@ -139,7 +140,8 @@ export interface UseCapabilitiesReturn {
  * }
  * ```
  */
-export function useCapabilities(): UseCapabilitiesReturn {
+export function useCapabilities():
+  const t = useT(); UseCapabilitiesReturn {
   const { effectiveRole } = useBackofficeRole();
 
   // Memoize capabilities array to avoid unnecessary recalculations

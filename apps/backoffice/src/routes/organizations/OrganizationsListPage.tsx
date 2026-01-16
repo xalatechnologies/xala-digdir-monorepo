@@ -197,7 +197,7 @@ export function OrganizationsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t("ui.loading")} />
           </div>
         ) : filteredOrgs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -285,9 +285,7 @@ export function OrganizationsListPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/organizations/${org.id}/edit`)}>
-                              <EditIcon />
-                              Rediger
-                            </Dropdown.Button>
+                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {!org.verified && (
                             <Dropdown.Item>
@@ -299,9 +297,7 @@ export function OrganizationsListPage() {
                           )}
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleDelete(org.id)} data-color="danger">
-                              <TrashIcon />
-                              Slett
-                            </Dropdown.Button>
+                              <TrashIcon />{t("ui.delete")}</Dropdown.Button>
                           </Dropdown.Item>
                         </Dropdown.List>
                       </Dropdown>

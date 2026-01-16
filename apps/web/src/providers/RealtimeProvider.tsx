@@ -13,6 +13,7 @@ import {
   type RealtimeEventHandler,
   type RealtimeEventType,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -63,7 +64,8 @@ export function RealtimeProvider({
   tenantId = import.meta.env.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
   autoConnect = true,
   enableInDev = true,
-}: RealtimeProviderProps): React.ReactElement {
+}: RealtimeProviderProps):
+  const t = useT(); React.ReactElement {
   const [isConnected, setIsConnected] = useState(false);
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
   const [error, setError] = useState<string | null>(null);

@@ -16,6 +16,7 @@ import { BookingConfigStep } from './steps/BookingConfigStep';
 import { MediaStep } from './steps/MediaStep';
 import { ReviewStep } from './steps/ReviewStep';
 import type { ListingType } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface ListingWizardProps {
   /** Listing slug for edit mode */
@@ -25,6 +26,7 @@ export interface ListingWizardProps {
 }
 
 export function ListingWizard({ slug, initialType }: ListingWizardProps) {
+  const t = useT();
   // All hooks must be called before any early returns
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -65,7 +67,7 @@ export function ListingWizard({ slug, initialType }: ListingWizardProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner aria-label="Laster..." />
+        <Spinner aria-label={t("ui.loading")} />
         <Paragraph>Laster utleieobjekt...</Paragraph>
       </div>
     );
@@ -201,9 +203,7 @@ export function ListingWizard({ slug, initialType }: ListingWizardProps) {
         }}
       >
         {/* Left side - Cancel */}
-        <Button type="button" variant="tertiary" onClick={cancel} disabled={isSaving}>
-          Avbryt
-        </Button>
+        <Button type="button" variant="tertiary" onClick={cancel} disabled={isSaving}>{t("ui.cancel")}</Button>
 
         {/* Center - Save draft */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>

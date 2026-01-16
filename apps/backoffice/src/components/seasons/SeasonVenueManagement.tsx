@@ -25,6 +25,7 @@ import {
   useAddVenueToSeason,
   useRemoveVenueFromSeason,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface SeasonVenueManagementProps {
   seasonId: string;
@@ -32,6 +33,7 @@ interface SeasonVenueManagementProps {
 }
 
 export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManagementProps) {
+  const t = useT();
   const [isAddingVenue, setIsAddingVenue] = useState(false);
 
   // Queries
@@ -68,7 +70,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   if (isLoadingAll || isLoadingSeasonVenues) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }

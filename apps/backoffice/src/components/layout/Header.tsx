@@ -12,12 +12,14 @@ import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../providers/ThemeProvider';
 import { GlobalSearch } from '../GlobalSearch';
+import { useT } from '@xala/i18n';
 
 interface HeaderProps {
   title?: string;
 }
 
 export function Header({ title: _title }: HeaderProps) {
+  const t = useT();
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -109,8 +111,8 @@ export function Header({ title: _title }: HeaderProps) {
             <HeaderIconButton
               icon={<SettingsIcon size={22} />}
               size="md"
-              aria-label="Innstillinger"
-              title="Innstillinger"
+              aria-label={t("ui.settings")}
+              title={t("ui.settings")}
               onClick={() => navigate('/settings')}
             />
             <div

@@ -28,6 +28,7 @@ import {
   sanitizeReturnToUrl,
 } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 /**
  * Props for ProtectedRoute component
@@ -97,7 +98,8 @@ export function ProtectedRoute({
   children,
   redirectTo = '/login',
   tenantId,
-}: ProtectedRouteProps): React.ReactElement {
+}: ProtectedRouteProps):
+  const t = useT(); React.ReactElement {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
@@ -155,7 +157,7 @@ export function ProtectedRoute({
           minHeight: '50vh',
         }}
       >
-        <Spinner aria-label="Laster..." />
+        <Spinner aria-label={t('common.loading')} />
       </div>
     );
   }

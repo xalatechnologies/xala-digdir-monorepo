@@ -14,6 +14,7 @@ import {
   useCreateRentalObject,
   useUpdateRentalObject,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Mock validation utilities
 const mockValidateStep = vi.fn((stepId, data, category) => {
@@ -98,7 +99,7 @@ vi.mock('../types', async () => {
       { id: 'basics', label: 'Grunnleggende', order: 0 },
       { id: 'location', label: 'Lokasjon', order: 1 },
       { id: 'capacity', label: 'Kapasitet', order: 2 },
-      { id: 'review', label: 'Gjennomgang', order: 10 },
+      { id: 'review', label: t("ui.review"), order: 10 },
     ],
     WIZARD_STEPS_BY_CATEGORY: {
       LOKALER_OG_BANER: ['basics', 'location', 'capacity', 'review'],

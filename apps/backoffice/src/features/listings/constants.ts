@@ -2,6 +2,7 @@
  * Listing constants
  */
 import type { ListingType } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Listing type options for filtering and selection
 export const LISTING_TYPE_OPTIONS: Array<{ id: ListingType | 'ALL'; label: string }> = [

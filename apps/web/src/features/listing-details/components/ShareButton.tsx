@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import { Button } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -64,7 +65,7 @@ export function ShareButton({
       }}
     >
       <ShareIcon />
-      {showLabel && <span>Del</span>}
+      {showLabel && <span>{t('common.share')}</span>}
     </Button>
   );
 }

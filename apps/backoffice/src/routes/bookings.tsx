@@ -42,7 +42,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT { useT, useLocale useT } from '@xala/i18n';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (
@@ -55,8 +55,8 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
 // Status tabs for main navigation
 const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
-  { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
-  { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
+  { id: 'confirmed', label: t("status.confirmed"), icon: '✓', color: 'success' },
+  { id: 'completed', label: t("status.completed"), icon: '✓', color: 'info' },
   { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
 ] as const;
@@ -396,7 +396,7 @@ export function BookingsPage() {
         }
       >
         {/* Payment Section */}
-        <DrawerSection title="Betaling" collapsible>
+        <DrawerSection title={t("rule.payment")} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {PAYMENT_OPTIONS.map((payment) => (
               <DrawerItem
@@ -633,8 +633,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedIds([])}
                 style={{ marginLeft: 'auto' }}
               >
-                <CloseIcon /> Avbryt
-              </Button>
+                <CloseIcon />{t("ui.cancel")}</Button>
             </div>
           )}
 
@@ -677,7 +676,7 @@ export function BookingsPage() {
               alignItems: 'center',
               padding: 'var(--ds-spacing-10)',
             }}>
-              <Spinner aria-label="Laster..." />
+              <Spinner aria-label={t("ui.loading")} />
             </div>
           ) : bookings.length === 0 ? (
             <div style={{
@@ -733,7 +732,7 @@ export function BookingsPage() {
                   <Table.Row>
                     <Table.HeaderCell style={{ width: '48px' }}>
                       <Checkbox
-                        aria-label="Velg alle"
+                        aria-label={t("ui.selectAll")}
                         checked={allSelected}
                         onChange={(e) => handleSelectAll(e.target.checked)}
                       />
@@ -743,7 +742,7 @@ export function BookingsPage() {
                     <Table.HeaderCell>Bruker</Table.HeaderCell>
                     <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '100px' }}>Status</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '100px' }}>Betaling</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '100px' }}>{t("rule.payment")}</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '100px', textAlign: 'right' }}>Pris</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '60px' }} />
                   </Table.Row>

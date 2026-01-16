@@ -37,6 +37,7 @@ import {
   type Booking,
   // type BookingStatus,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 type RequestFilter = 'all' | 'pending' | 'needs_info' | 'urgent';
 type Priority = 'low' | 'normal' | 'high' | 'urgent';
@@ -84,6 +85,7 @@ function formatTimeAgo(date: string): string {
 }
 
 export function RequestsPage() {
+  const t = useT();
   const navigate = useNavigate();
 
   // State
@@ -159,7 +161,7 @@ export function RequestsPage() {
       title: 'Godkjenn forespørsel',
       description: 'Er du sikker på at du vil godkjenne denne forespørselen?',
       confirmText: 'Godkjenn',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: 'primary',
     });
     if (confirmed) {
@@ -172,7 +174,7 @@ export function RequestsPage() {
       title: 'Avslå forespørsel',
       description: 'Er du sikker på at du vil avslå denne forespørselen?',
       confirmText: 'Avslå',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
@@ -330,7 +332,7 @@ export function RequestsPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t("ui.loading")} />
           </div>
         ) : filteredRequests.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>

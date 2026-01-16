@@ -9,6 +9,7 @@ import type {
   StepValidationResult,
   ValidationError,
 } from '../types';
+import { useT } from '@xala/i18n';
 
 /**
  * Validates the Basics step
@@ -188,7 +189,8 @@ function validateReviewStep(data: Partial<BackofficeListing>): StepValidationRes
 /**
  * Validates a specific step
  */
-export function validateStep(stepId: WizardStepId, data: Partial<BackofficeListing>): StepValidationResult {
+export function validateStep(stepId: WizardStepId, data: Partial<BackofficeListing>):
+  const t = useT(); StepValidationResult {
   switch (stepId) {
     case 'basics':
       return validateBasicsStep(data);

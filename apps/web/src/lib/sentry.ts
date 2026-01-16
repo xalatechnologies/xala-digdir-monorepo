@@ -6,6 +6,7 @@
  */
 
 import * as Sentry from '@sentry/react';
+import { useT } from '@xala/i18n';
 
 /**
  * Initialize Sentry error tracking and performance monitoring
@@ -13,7 +14,8 @@ import * as Sentry from '@sentry/react';
  * Only initializes if VITE_SENTRY_DSN is configured.
  * Includes BrowserTracing for performance monitoring and Replay for session replay.
  */
-export function initSentry(): void {
+export function initSentry():
+  const t = useT(); void {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
 
   // Don't initialize Sentry if DSN is not configured

@@ -7,6 +7,7 @@
  */
 
 import type { ListingType, KeyFacts, BookingMode } from '../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Presenter Configuration Types
@@ -143,7 +144,7 @@ const facilityConfig: ListingTypeConfig = {
   amenityCategories: ['equipment', 'comfort', 'technology', 'accessibility'],
   defaultBookingMode: 'SLOTS',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig for dette lokalet.',
+    description: t('status.available'),
     amenities: 'Ingen fasiliteter er registrert for dette lokalet.',
     rules: 'Ingen regler er spesifisert for dette lokalet.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -209,7 +210,7 @@ const equipmentConfig: ListingTypeConfig = {
   amenityCategories: ['included', 'accessories'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig for dette utstyret.',
+    description: t('status.available'),
     amenities: 'Ingen tilleggsutstyr er registrert.',
     rules: 'Ingen regler er spesifisert for dette utstyret.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -268,7 +269,7 @@ const eventConfig: ListingTypeConfig = {
   amenityCategories: ['included', 'accessibility'],
   defaultBookingMode: 'TICKETS',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig for dette arrangementet.',
+    description: t('status.available'),
     amenities: 'Ingen fasiliteter er registrert.',
     rules: 'Ingen regler er spesifisert for dette arrangementet.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -328,7 +329,7 @@ const otherConfig: ListingTypeConfig = {
   amenityCategories: ['general'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig.',
+    description: t('status.available'),
     amenities: 'Ingen fasiliteter er registrert.',
     rules: 'Ingen regler er spesifisert.',
     faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
@@ -436,7 +437,8 @@ export class ListingTypePresenter {
 // Factory Function
 // =============================================================================
 
-export function createPresenter(listingType: ListingType): ListingTypePresenter {
+export function createPresenter(listingType: ListingType):
+  const t = useT(); ListingTypePresenter {
   return new ListingTypePresenter(listingType);
 }
 
@@ -491,7 +493,7 @@ export function isCurrentlyOpen(
     return { isOpen: false, statusText: 'Stengt i dag' };
   }
 
-  const isOpen = currentTime >= todayHours.open && currentTime < todayHours.close;
+  const isOpen = currentTime >{t('.todayhoursopen.currenttime')} < todayHours.close;
 
   if (isOpen) {
     return {

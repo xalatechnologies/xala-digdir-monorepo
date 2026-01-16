@@ -21,7 +21,7 @@ import {
   Spinner,
   useDialog,
 } from '@xala/ds';
-import { useLocale } from '@xala/i18n';
+import { useT { useLocale useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -50,6 +50,7 @@ const mockDecisions = [
 ];
 
 export function DecisionFormsPage() {
+  const t = useT();
   const { locale } = useLocale();
   const { confirm } = useDialog();
   const [selectedDecision, setSelectedDecision] = useState<typeof mockDecisions[0] | null>(null);
@@ -79,7 +80,7 @@ export function DecisionFormsPage() {
       title: outcome === 'approved' ? 'Bekreft godkjenning' : outcome === 'rejected' ? 'Bekreft avslag' : 'Bekreft retur',
       description: `Er du sikker på at du vil ${outcome === 'approved' ? 'godkjenne' : outcome === 'rejected' ? 'avslå' : 'returnere'} denne saken?`,
       confirmText: outcome === 'approved' ? 'Godkjenn' : outcome === 'rejected' ? 'Avslå' : 'Returner',
-      cancelText: 'Avbryt',
+      cancelText: t("ui.cancel"),
       variant: outcome === 'approved' ? 'success' : outcome === 'rejected' ? 'danger' : 'warning',
     });
     
@@ -100,7 +101,7 @@ export function DecisionFormsPage() {
       case 'approved': return 'Godkjent';
       case 'rejected': return 'Avslått';
       case 'returned': return 'Returnert';
-      case 'pending': return 'Venter';
+      case 'pending': return t("status.pending");
     }
   };
 
@@ -164,7 +165,7 @@ export function DecisionFormsPage() {
           </div>
           {isLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-              <Spinner aria-label="Laster..." data-size="lg" />
+              <Spinner aria-label={t("ui.loading")} data-size="lg" />
             </div>
           ) : (
             <Table>

@@ -5,6 +5,7 @@
 
 import { useCallback } from 'react';
 import { Stack, Paragraph, Heading, Card, Checkbox } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -101,6 +102,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
 // =============================================================================
 
 export function RolesStep({ actorType = 'municipality', selectedRoles = ['admin'], onChange, errors = [] }: RolesStepProps) {
+  const t = useT();
   // Get roles for the actor type (fallback to organization roles if actorType is not found)
   const availableRoles = DEFAULT_ROLES[actorType] || DEFAULT_ROLES.organization || [];
 

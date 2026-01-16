@@ -30,6 +30,7 @@ import {
   useCalendarPermissions,
 } from '../../../calendar';
 import type { ListingOpeningHours } from '../../types';
+import { useT } from '@xala/i18n';
 
 interface AvailabilityTabProps {
   listingId: string;
@@ -100,6 +101,7 @@ function getWeekStart(date: Date): Date {
 }
 
 export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps) {
+  const t = useT();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -586,9 +588,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
                     data-size="sm"
                     onClick={handleCancelEdit}
                     disabled={updateMutation.isPending}
-                  >
-                    Avbryt
-                  </Button>
+                  >{t("ui.cancel")}</Button>
                   <Button
                     type="button"
                     variant="primary"
@@ -666,7 +666,7 @@ export function AvailabilityTab({ listingId, listingName }: AvailabilityTabProps
         }}
       >
         {[
-          { label: 'Bekreftet', color: getEventColor('confirmed') },
+          { label: t("status.confirmed"), color: getEventColor('confirmed') },
           { label: 'Venter godkjenning', color: getEventColor('pending') },
           { label: 'Blokkert', color: getEventColor('blocked') },
         ].map((item) => (

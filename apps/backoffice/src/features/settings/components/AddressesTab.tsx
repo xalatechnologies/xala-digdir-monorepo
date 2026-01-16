@@ -22,6 +22,7 @@ import {
   useUpdateCurrentUser,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface AddressData {
   invoiceAddress: Address;
@@ -29,6 +30,7 @@ interface AddressData {
 }
 
 export function AddressesTab() {
+  const t = useT();
   const [isSaving, setIsSaving] = useState(false);
 
   // Queries

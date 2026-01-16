@@ -29,6 +29,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface SearchResultsProps {
   /** Search query string */
@@ -69,6 +70,7 @@ export function SearchResults({
   className,
   style,
 }: SearchResultsProps) {
+  const t = useT();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<SearchEntityType>(entityType);
 
@@ -131,7 +133,7 @@ export function SearchResults({
   if (isLoading) {
     return (
       <Stack spacing="lg" align="center" style={{ padding: 'var(--ds-spacing-12)', ...style }} className={className}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
         <Text color="secondary">Søker...</Text>
       </Stack>
     );

@@ -8,6 +8,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Details } from '@xala/ds';
 import type { FAQItem, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -41,7 +42,8 @@ export function FaqTab({
   faq,
   listingType,
   className,
-}: FaqTabProps): React.ReactElement {
+}: FaqTabProps):
+  const t = useT(); React.ReactElement {
   const presenter = React.useMemo(() => createPresenter(listingType), [listingType]);
 
   if (faq.length === 0) {

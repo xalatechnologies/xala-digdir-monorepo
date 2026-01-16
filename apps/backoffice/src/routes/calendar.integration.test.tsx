@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { CalendarPage } from './calendar';
 import * as clientSDK from '@digilist/client-sdk';
 import { ToastProvider } from '../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 // Mock SDK hooks
 vi.mock('@digilist/client-sdk', () => ({

@@ -15,6 +15,7 @@ import {
   validateReturnToUrl,
 } from '@digilist/client-sdk';
 import type { FlowContext, FlowBookingMode, FlowSelectedSlot, FlowRecurringRules } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -195,7 +196,8 @@ function notifySubscribers(): void {
  * }
  * ```
  */
-export function useAuth(): UseAuthReturn {
+export function useAuth():
+  const t = useT(); UseAuthReturn {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

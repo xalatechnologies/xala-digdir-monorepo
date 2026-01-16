@@ -25,6 +25,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Helper to calculate days remaining until 30-day GDPR deadline
 function calculateDaysRemaining(requestedAt: string): number {
@@ -60,9 +61,9 @@ function getStatusColor(status: GdprRequestStatus): 'success' | 'warning' | 'inf
 // Helper to get status label
 function getStatusLabel(status: GdprRequestStatus): string {
   const labelMap: Record<GdprRequestStatus, string> = {
-    pending: 'Venter',
+    pending: t("status.pending"),
     processing: 'Behandles',
-    completed: 'Fullført',
+    completed: t("status.completed"),
     rejected: 'Avslått',
   };
   return labelMap[status];
@@ -90,6 +91,7 @@ export function RequestDetailModal({
   requestId,
   onSuccess,
 }: RequestDetailModalProps) {
+  const t = useT();
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
@@ -190,7 +192,7 @@ export function RequestDetailModal({
               gap: 'var(--ds-spacing-3)',
             }}
           >
-            <Spinner aria-label="Laster forespørsel..." />
+            <Spinner aria-label={t('gdpr.loadingRequest')} />
             <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Laster forespørsel...
             </Text>
@@ -434,7 +436,7 @@ export function RequestDetailModal({
                 <textarea
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder="F.eks. Forespørselen kan ikke behandles på grunn av..."
+                  placeholder={t('gdpr.placeholder')}
                   rows={4}
                   style={{
                     width: '100%',
@@ -452,9 +454,7 @@ export function RequestDetailModal({
             {/* Warning for irreversible actions */}
             {canTakeActions && request.requestType === 'deletion' && !showRejectForm && (
               <Alert data-color="warning">
-                <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                  Advarsel
-                </Heading>
+                <Heading level={3} data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>{t("ui.warning")}</Heading>
                 <Paragraph data-size="sm" style={{ margin: 0 }}>
                   Godkjenning av en slettingsforespørsel vil permanent fjerne brukerens data. Denne handlingen kan ikke angres.
                 </Paragraph>
@@ -471,7 +471,7 @@ export function RequestDetailModal({
             {/* Cancel or Close button */}
             {!showRejectForm && (
               <Button type="button" variant="secondary" onClick={handleClose}>
-                {canTakeActions ? 'Avbryt' : 'Lukk'}
+                {canTakeActions ? t("ui.cancel") : t("ui.close")}
               </Button>
             )}
 

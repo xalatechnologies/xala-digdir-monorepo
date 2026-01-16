@@ -9,6 +9,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 // Icons
 function ShoppingCartIcon({ size = 20 }: { size?: number }): React.ReactElement {
@@ -115,7 +116,8 @@ export function BookingCartSidebar({
   onRemoveSlot,
   onChangeDuration,
   lastUpdated,
-}: BookingCartSidebarProps): React.ReactElement {
+}: BookingCartSidebarProps):
+  const t = useT(); React.ReactElement {
   const [expandedSections, setExpandedSections] = React.useState<Set<string>>(
     new Set(['slots', 'pricing'])
   );
@@ -371,7 +373,7 @@ export function BookingCartSidebar({
                         <button
                           type="button"
                           onClick={() => onRemoveSlot(slotKey)}
-                          aria-label="Fjern"
+                          aria-label={t('common.remove')}
                           style={{
                             display: 'flex',
                             alignItems: 'center',

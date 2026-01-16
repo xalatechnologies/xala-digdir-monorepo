@@ -12,6 +12,7 @@ import { ToastProvider } from '../../../../providers/ToastProvider';
 import { RentalObjectsListView } from '../../components/RentalObjectsListView';
 import { RentalObjectDetailView } from '../../components/detail/RentalObjectDetailView';
 import { RentalObjectWizard } from '../../components/wizard/RentalObjectWizard';
+import { useT } from '@xala/i18n';
 
 // Mock all dependencies
 vi.mock('@digilist/client-sdk', async () => {

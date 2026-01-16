@@ -6,6 +6,7 @@
 
 import { Textfield, Paragraph, Heading, Card } from '@xala/ds';
 import type { BackofficeListing } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface CapacityStepProps {
   data: Partial<BackofficeListing>;
@@ -83,6 +84,7 @@ const iconContainerStyle = {
 };
 
 export function CapacityStep({ data, onChange, errors = [] }: CapacityStepProps) {
+  const t = useT();
   const showQuantity = data.type === 'RESOURCE' || data.type === 'VEHICLE';
   const showAreaAndFloor = data.type === 'SPACE';
 

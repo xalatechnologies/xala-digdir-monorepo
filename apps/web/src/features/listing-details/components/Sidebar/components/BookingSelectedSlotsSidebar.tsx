@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 // Import icon from parent or create inline
 function CalendarIcon({ size = 20 }: { size?: number }): React.ReactElement {
@@ -149,7 +150,7 @@ export function BookingSelectedSlotsSidebar({
                       e.stopPropagation();
                       onRemoveSlot(slotKey);
                     }}
-                    aria-label="Fjern tidspunkt"
+                    aria-label={t('booking.removeTimeSlot')}
                     style={{
                       display: 'flex',
                       alignItems: 'center',

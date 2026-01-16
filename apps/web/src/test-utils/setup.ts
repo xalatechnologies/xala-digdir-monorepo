@@ -6,6 +6,7 @@
 
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
+import { useT } from '@xala/i18n';
 
 // Mock crypto.randomUUID
 if (!globalThis.crypto) {

@@ -12,6 +12,7 @@ import type {
   StepValidationResult,
   CATEGORY_CONFIGS,
 } from '../types';
+import { useT } from '@xala/i18n';
 
 /**
  * Validates a single wizard step
@@ -20,7 +21,8 @@ export function validateStep(
   stepId: WizardStepId,
   data: Partial<RentalObject>,
   category: RentalObjectCategory
-): StepValidationResult {
+):
+  const t = useT(); StepValidationResult {
   const errors: ValidationError[] = [];
 
   switch (stepId) {

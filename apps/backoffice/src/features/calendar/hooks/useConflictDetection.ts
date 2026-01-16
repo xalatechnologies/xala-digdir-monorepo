@@ -5,6 +5,7 @@
 
 import { useMemo } from 'react';
 import type { CalendarEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ConflictInfo {
   eventId: string;
@@ -33,6 +34,7 @@ export interface ConflictDetectionOptions {
  * Supports buffer time detection to prevent back-to-back bookings
  */
 export function useConflictDetection(options: ConflictDetectionOptions) {
+  const t = useT();
   const { events, enabled = true, bufferMinutes = 0 } = options;
 
   // Map of event IDs to their conflict info

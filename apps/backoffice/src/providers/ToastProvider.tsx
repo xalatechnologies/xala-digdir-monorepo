@@ -5,6 +5,7 @@
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { Alert } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';
 
@@ -25,7 +26,8 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
-export function useToast(): ToastContextType {
+export function useToast():
+  const t = useT(); ToastContextType {
   const context = useContext(ToastContext);
   if (!context) {
     throw new Error('useToast must be used within a ToastProvider');

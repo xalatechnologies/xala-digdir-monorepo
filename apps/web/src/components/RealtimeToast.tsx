@@ -9,6 +9,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon, AlertTriangleIcon } from '@xala/ds';
 import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus, useRealtimeSlotAvailability } from '../providers';
 import type { RealtimeEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface Toast {
   id: string;
@@ -18,7 +19,8 @@ interface Toast {
   timestamp: Date;
 }
 
-export function RealtimeToast(): React.ReactElement {
+export function RealtimeToast():
+  const t = useT(); React.ReactElement {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { isConnected, status } = useRealtimeStatus();
 
@@ -56,35 +58,35 @@ export function RealtimeToast(): React.ReactElement {
       case 'created':
         addToast({
           type: 'success',
-          title: 'Ny booking',
+          title: t('ny.booking'),
           message: data.listingName ? `Booking opprettet for ${data.listingName}` : 'En ny booking ble opprettet',
         });
         break;
       case 'confirmed':
         addToast({
           type: 'success',
-          title: 'Booking bekreftet',
-          message: data.listingName ? `Booking for ${data.listingName} er bekreftet` : 'Booking bekreftet',
+          title: t('booking.bekreftet'),
+          message: data.listingName ? `Booking for ${data.listingName} er bekreftet` : t('booking.bekreftet'),
         });
         break;
       case 'cancelled':
         addToast({
           type: 'warning',
-          title: 'Booking kansellert',
-          message: data.listingName ? `Booking for ${data.listingName} er kansellert` : 'Booking kansellert',
+          title: t('booking.kansellert'),
+          message: data.listingName ? `Booking for ${data.listingName} er kansellert` : t('booking.kansellert'),
         });
         break;
       case 'updated':
         addToast({
           type: 'info',
-          title: 'Booking oppdatert',
-          message: data.listingName ? `Booking for ${data.listingName} er oppdatert` : 'Booking oppdatert',
+          title: t('booking.oppdatert'),
+          message: data.listingName ? `Booking for ${data.listingName} er oppdatert` : t('booking.oppdatert'),
         });
         break;
       default:
         addToast({
           type: 'info',
-          title: 'Booking-hendelse',
+          title: t('bookinghendelse'),
           message: event.message || 'En booking-hendelse har skjedd',
         });
     }
@@ -156,7 +158,7 @@ export function RealtimeToast(): React.ReactElement {
 
     addToast({
       type: 'warning',
-      title: 'Tidspunkt ikke lenger tilgjengelig',
+      title: t('status.available'),
       message: message,
     });
   }, [addToast]);
@@ -171,7 +173,7 @@ export function RealtimeToast(): React.ReactElement {
     if (status === 'error') {
       addToast({
         type: 'error',
-        title: 'Tilkobling tapt',
+        title: t('tilkobling.tapt'),
         message: 'Sanntidsoppdateringer er utilgjengelig',
       });
     }
@@ -224,7 +226,7 @@ export function RealtimeToast(): React.ReactElement {
   return (
     <div
       role="region"
-      aria-label="Varsler"
+      aria-label={t('varsler')}
       aria-live="polite"
       aria-atomic="false"
       style={{
@@ -296,7 +298,7 @@ export function RealtimeToast(): React.ReactElement {
                 color: 'var(--ds-color-neutral-text-subtle)',
                 flexShrink: 0,
               }}
-              aria-label="Lukk varsel"
+              aria-label={t('lukk.varsel')}
             >
               <CloseIcon size={16} />
             </button>

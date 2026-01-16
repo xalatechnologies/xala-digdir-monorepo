@@ -11,6 +11,7 @@ import {
   sanitizeReturnToUrl,
 } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 /**
  * Props for ProtectedRoute component
@@ -84,6 +85,7 @@ export function ProtectedRoute({
   requiredRole,
   tenantId,
 }: ProtectedRouteProps) {
+  const t = useT();
   const { isLoading, isAuthenticated } = useAuth();
   const { effectiveRole, getHomeRoute } = useBackofficeRole();
   const location = useLocation();
@@ -167,7 +169,7 @@ export function ProtectedRoute({
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label="Laster..." data-data-size="lg" />
+        <Spinner aria-label={t("ui.loading")} data-data-size="lg" />
       </div>
     );
   }

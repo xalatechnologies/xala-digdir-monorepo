@@ -13,16 +13,18 @@ import {
 } from '@xala/ds';
 import { useReviews, type ReviewStatus, type Review } from '@digilist/client-sdk';
 import { ReviewModerationTable } from './components/ReviewModerationTable';
+import { useT } from '@xala/i18n';
 
 // Status filter options
 const STATUS_OPTIONS = [
   { id: 'all', label: 'Alle' },
-  { id: 'pending', label: 'Venter' },
+  { id: 'pending', label: t("status.pending") },
   { id: 'approved', label: 'Godkjent' },
   { id: 'rejected', label: 'Avslått' },
 ] as const;
 
 export function ReviewModerationPage() {
+  const t = useT();
   // State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ReviewStatus | 'all'>('pending');

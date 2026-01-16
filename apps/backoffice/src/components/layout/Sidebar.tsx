@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../../hooks/useAuth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 import { usePendingGdprRequests } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 interface NavItem {
   name: string;
@@ -154,6 +155,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 }
 
 export function Sidebar() {
+  const t = useT();
   const { user } = useAuth();
   const { effectiveRole } = useBackofficeRole();
 
@@ -228,7 +230,7 @@ export function Sidebar() {
         { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', roles: ['admin'] },
         { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
         { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
-        { name: 'Innstillinger', description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
       ],
     },
   ];

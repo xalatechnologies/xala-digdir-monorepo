@@ -8,6 +8,7 @@ import {
   useTenantSettings,
   useUpdateTenantSettings,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface NotificationSettingsData {
   emailEnabled: boolean;
@@ -24,6 +25,7 @@ interface UseNotificationSettingsOptions {
 }
 
 export function useNotificationSettings(options: UseNotificationSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const [isSaving, setIsSaving] = useState(false);

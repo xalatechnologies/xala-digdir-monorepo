@@ -22,6 +22,7 @@ import {
   Spinner,
 } from '@xala/ds';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -37,14 +38,15 @@ const STEPS: { id: WizardStep; label: string }[] = [
 ];
 
 const CATEGORIES = [
-  { id: 'sports-hall', label: 'Idrettshall' },
-  { id: 'football-field', label: 'Fotballbane' },
-  { id: 'meeting-room', label: 'Møterom' },
-  { id: 'swimming-pool', label: 'Svømmehall' },
-  { id: 'gymnasium', label: 'Gymsal' },
+  { id: 'sports-hall', label: t("category.sportsHall") },
+  { id: 'football-field', label: t("category.footballField") },
+  { id: 'meeting-room', label: t("category.meetingRoom") },
+  { id: 'swimming-pool', label: t("category.swimmingPool") },
+  { id: 'gymnasium', label: t("category.gymnasium") },
 ];
 
 export function ListingWizardPage() {
+  const t = useT();
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = !!id;
@@ -112,7 +114,7 @@ export function ListingWizardPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label={t("ui.loading")} data-size="lg" />
       </div>
     );
   }
@@ -420,9 +422,7 @@ export function ListingWizardPage() {
           onClick={handleBack}
           disabled={currentStepIndex === 0}
           style={{ minHeight: '44px' }}
-        >
-          Tilbake
-        </Button>
+        >{t("ui.back")}</Button>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
           {currentStep === 'review' ? (
             <Button
@@ -442,9 +442,7 @@ export function ListingWizardPage() {
               data-size="md"
               onClick={handleNext}
               style={{ minHeight: '44px' }}
-            >
-              Neste
-            </Button>
+            >{t("ui.next")}</Button>
           )}
         </div>
       </div>

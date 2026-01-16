@@ -7,6 +7,7 @@
 
 import { Textfield, Paragraph, Heading, Switch, Card } from '@xala/ds';
 import type { BackofficeListing, ListingBookingConfig } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface BookingConfigStepProps {
   data: Partial<BackofficeListing>;
@@ -131,6 +132,7 @@ const CANCELLATION_POLICIES = [
 ];
 
 export function BookingConfigStep({ data, onChange, errors = [] }: BookingConfigStepProps) {
+  const t = useT();
   const defaultConfig: ListingBookingConfig = {
     bookingModel: 'TIME_RANGE',
     slotDurationMinutes: 60,

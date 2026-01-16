@@ -9,6 +9,7 @@
 
 import type { Listing } from '@digilist/client-sdk';
 import { DetailHeader } from '../../../listings/components/detail/DetailHeader';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectHeaderProps {
   /** The rental object to display */
@@ -25,6 +26,7 @@ export function RentalObjectHeader({
   rentalObject,
   onEditSuccess,
 }: RentalObjectHeaderProps) {
+  const t = useT();
   // Delegate to listings detail header (rental objects are RESOURCE type listings)
   return (
     <DetailHeader

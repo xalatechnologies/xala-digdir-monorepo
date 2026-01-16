@@ -9,6 +9,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Textfield, Paragraph, Heading } from '@xala/ds';
 import { useGooglePlaces, type PlaceResult } from '../../../../../hooks/useGooglePlaces';
 import type { BackofficeListing } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface LocationStepProps {
   data: Partial<BackofficeListing>;
@@ -17,6 +18,7 @@ export interface LocationStepProps {
 }
 
 export function LocationStep({ data, onChange, errors = [] }: LocationStepProps) {
+  const t = useT();
   const location = data.location || {};
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(location.address || '');

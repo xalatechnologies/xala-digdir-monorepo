@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Button, Stack, Heading, Paragraph, StarIcon } from '@xala/ds';
 import { useCreateReview, auditService } from '@digilist/client-sdk';
 import type { CreateReviewDTO } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -46,7 +47,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
   return (
     <div
       role="radiogroup"
-      aria-label="Velg vurdering"
+      aria-label={t('reviews.selectRating')}
       style={{
         display: 'flex',
         gap: '8px',
@@ -122,7 +123,8 @@ export function ReviewForm({
   onSuccess,
   onCancel,
   className,
-}: ReviewFormProps): React.ReactElement {
+}: ReviewFormProps):
+  const t = useT(); React.ReactElement {
   // Form state
   const [rating, setRating] = React.useState<number>(0);
   const [comment, setComment] = React.useState<string>('');
@@ -270,7 +272,7 @@ export function ReviewForm({
             id="review-comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Del dine tanker om dette lokalet..."
+            placeholder={t('reviews.placeholder')}
             disabled={isSubmitting}
             rows={5}
             maxLength={1000}
@@ -337,9 +339,7 @@ export function ReviewForm({
               variant="tertiary"
               onClick={handleCancel}
               disabled={isSubmitting}
-            >
-              Avbryt
-            </Button>
+            >{t("ui.cancel")}</Button>
           )}
           <Button
             type="submit"

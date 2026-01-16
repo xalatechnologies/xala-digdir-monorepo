@@ -13,6 +13,7 @@ import {
   type RealtimeEventHandler,
 } from '@digilist/client-sdk';
 import type { RealtimeEventType } from '../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Re-export SDK types
@@ -103,7 +104,8 @@ class SdkRealtimeClient implements RealtimeClient {
 
 let realtimeClientInstance: RealtimeClient | null = null;
 
-export function getRealtimeClient(): RealtimeClient {
+export function getRealtimeClient():
+  const t = useT(); RealtimeClient {
   if (!realtimeClientInstance) {
     realtimeClientInstance = new SdkRealtimeClient();
   }

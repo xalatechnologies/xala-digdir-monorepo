@@ -11,6 +11,7 @@ import type { GalleryImage, KeyFact, Facility, OpeningHoursDay } from '@xala/ds'
 import { formatDateTime, useSeasonalLeases, formatWeekdays, formatPeriod, formatTimeSlot } from '@digilist/client-sdk';
 import { LISTING_TYPE_LABELS } from '../../constants';
 import { useNavigate } from 'react-router-dom';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -53,9 +54,9 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
  * Map listing status to Norwegian display labels
  */
 const STATUS_LABELS: Record<string, string> = {
-  published: 'Publisert',
-  draft: 'Utkast',
-  archived: 'Arkivert',
+  published: t("status.published"),
+  draft: t("status.draft"),
+  archived: t("status.archived"),
   maintenance: 'Vedlikehold',
 };
 
@@ -155,7 +156,8 @@ function transformOpeningHours(
 // Component
 // =============================================================================
 
-export function OverviewTab({ listing }: OverviewTabProps): React.ReactElement {
+export function OverviewTab({ listing }: OverviewTabProps):
+  const t = useT(); React.ReactElement {
   // State for copy feedback
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
 

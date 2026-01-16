@@ -20,6 +20,7 @@ import {
   CheckIcon,
   AlertTriangleIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 interface IntegrationConfigModalProps {
   provider: string;
@@ -86,6 +87,7 @@ export function IntegrationConfigModal({
   isTesting,
   testResult,
 }: IntegrationConfigModalProps) {
+  const t = useT();
   const fields = INTEGRATION_FIELDS[provider] || [];
 
   const getStatusBadge = () => {
@@ -93,7 +95,7 @@ export function IntegrationConfigModal({
       case 'active':
         return <Badge color="success">Aktiv</Badge>;
       case 'error':
-        return <Badge color="danger">Feil</Badge>;
+        return <Badge color="danger">{t("ui.error")}</Badge>;
       default:
         return <Badge color="neutral">Inaktiv</Badge>;
     }
@@ -155,7 +157,7 @@ export function IntegrationConfigModal({
               >
                 <option value="active">Aktiv</option>
                 <option value="inactive">Inaktiv</option>
-                <option value="error">Feil</option>
+                <option value="error">{t("ui.error")}</option>
               </Select>
             </FormField>
 
@@ -231,9 +233,7 @@ export function IntegrationConfigModal({
                 )}
               </Button>
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                <Button variant="secondary" onClick={onClose} disabled={isSaving} type="button">
-                  Avbryt
-                </Button>
+                <Button variant="secondary" onClick={onClose} disabled={isSaving} type="button">{t("ui.cancel")}</Button>
                 <Button variant="primary" onClick={onSave} disabled={isSaving} type="button">
                   {isSaving ? (
                     <>
@@ -242,9 +242,7 @@ export function IntegrationConfigModal({
                     </>
                   ) : (
                     <>
-                      <SaveIcon />
-                      Lagre
-                    </>
+                      <SaveIcon />{t("ui.save")}</>
                   )}
                 </Button>
               </div>

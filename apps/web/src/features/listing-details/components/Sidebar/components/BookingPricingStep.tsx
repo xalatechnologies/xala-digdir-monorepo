@@ -6,6 +6,7 @@
 import * as React from 'react';
 import { Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
 import { InfoIcon } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 export interface PriceGroup {
   id: string;
@@ -335,9 +336,9 @@ export function BookingPricingStep({
             Les viktige vilkår
           </Paragraph>
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <li>Avbestillingsregler og refusjonsvilkår</li>
-            <li>Ansvar for skader og utstyr</li>
-            <li>Ordensregler for lokalet</li>
+            <li>{t('avbestillingsregler.og.refusjonsvilkår')}</li>
+            <li>{t('ansvar.for.skader.og.utstyr')}</li>
+            <li>{t('ordensregler.for.lokalet')}</li>
           </ul>
           <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', gap: 'var(--ds-spacing-3)' }}>
             <a

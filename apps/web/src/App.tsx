@@ -12,7 +12,7 @@ import {
 } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
-import { I18nProvider, useT } from '@xala/i18n';
+import { useT { I18nProvider, useT useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { ListingsPage } from './pages/ListingsPage';
 import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
@@ -106,8 +106,8 @@ function MainLayout() {
         logo={
           <HeaderLogo
             src="/logo.svg"
-            title="DIGILIST"
-            subtitle="ENKEL BOOKING"
+            title={t('brand.name')}
+            subtitle={t('brand.tagline')}
             href="/"
             height="40px"
             hideTextOnMobile={true}

@@ -19,6 +19,7 @@ import {
   TrashIcon,
   SettingsIcon,
 } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // Local icons (not exported from @xala/ds)
 function ChevronUpIcon() {
@@ -121,6 +122,7 @@ const ruleTypeVariants: Record<RuleType, 'info' | 'success' | 'warning'> = {
 };
 
 export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigProps) {
+  const t = useT();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<PriorityRule | null>(null);
   const [formData, setFormData] = useState<{
@@ -420,10 +422,10 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                   {canEdit && (
                     <Table.Cell>
                       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                        <Button variant="tertiary" data-size="sm" type="button" aria-label="Rediger" onClick={() => handleOpenEditModal(rule)}>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("ui.edit")} onClick={() => handleOpenEditModal(rule)}>
                           <EditIcon />
                         </Button>
-                        <Button variant="tertiary" data-size="sm" type="button" aria-label="Slett" onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("ui.delete")} onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
                           <TrashIcon />
                         </Button>
                       </div>
@@ -471,7 +473,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
               <button
                 type="button"
                 onClick={handleCloseModal}
-                aria-label="Lukk"
+                aria-label={t("ui.close")}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
               >
                 <XIcon />
@@ -589,9 +591,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--ds-spacing-3)', marginTop: 'var(--ds-spacing-6)' }}>
-              <Button variant="secondary" onClick={handleCloseModal} type="button">
-                Avbryt
-              </Button>
+              <Button variant="secondary" onClick={handleCloseModal} type="button">{t("ui.cancel")}</Button>
               <Button
                 variant="primary"
                 onClick={handleSubmit}

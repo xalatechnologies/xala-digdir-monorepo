@@ -10,11 +10,13 @@ import { useParams } from 'react-router-dom';
 import { RentalObjectsListView } from '../features/rental-objects/components/RentalObjectsListView';
 import { RentalObjectWizard } from '../features/rental-objects/components/wizard/RentalObjectWizard';
 import { RentalObjectDetailView } from '../features/rental-objects/components/detail/RentalObjectDetailView';
+import { useT } from '@xala/i18n';
 
 /**
  * Rental Objects Page - Main list view with filtering and search
  */
 export function RentalObjectsPage() {
+  const t = useT();
   return <RentalObjectsListView />;
 }
 

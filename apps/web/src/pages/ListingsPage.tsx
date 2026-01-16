@@ -34,24 +34,25 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeListing } from '../providers';
 import { LazyRentalObjectMap } from '../components/LazyListingMap';
+import { useT } from '@xala/i18n';
 
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 // Listing type options (UI filter types)
 const LISTING_TYPE_OPTIONS = [
-  { id: 'ALL', label: 'Alle typer' },
-  { id: 'SPACE', label: 'Lokale' },
-  { id: 'RESOURCE', label: 'Utstyr' },
-  { id: 'SERVICE', label: 'Tjeneste' },
-  { id: 'VEHICLE', label: 'Kjøretøy' },
-  { id: 'EVENT', label: 'Arrangement' },
-  { id: 'OTHER', label: 'Annet' },
+  { id: 'ALL', label: t('alle.typer') },
+  { id: 'SPACE', label: t('lokale') },
+  { id: 'RESOURCE', label: t('utstyr') },
+  { id: 'SERVICE', label: t('tjeneste') },
+  { id: 'VEHICLE', label: t('kjøretøy') },
+  { id: 'EVENT', label: t('arrangement') },
+  { id: 'OTHER', label: t('annet') },
 ];
 
 // Capacity filter options
 const CAPACITY_OPTIONS = [
-  { id: 'all', label: 'Alle størrelser', min: 0, max: Infinity },
+  { id: 'all', label: t('alle.størrelser'), min: 0, max: Infinity },
   { id: '1-5', label: '1-5 personer', min: 1, max: 5 },
   { id: '6-10', label: '6-10 personer', min: 6, max: 10 },
   { id: '11-20', label: '11-20 personer', min: 11, max: 20 },
@@ -86,7 +87,8 @@ const getUniqueCities = (listings: ListingCardProjectionDTO[]) => {
   return Array.from(citySet).sort();
 };
 
-export function ListingsPage(): React.ReactElement {
+export function ListingsPage():
+  const t = useT(); React.ReactElement {
   const navigate = useNavigate();
 
   // Search state
@@ -138,7 +140,7 @@ export function ListingsPage(): React.ReactElement {
   const allFacilities = React.useMemo(() => getAllAmenities(listings), [listings]);
 
   const locationAreas = React.useMemo(() => {
-    const areas: { id: string; label: string }[] = [{ id: 'all', label: 'Alle områder' }];
+    const areas: { id: string; label: string }[] = [{ id: 'all', label: t('alle.områder') }];
 
     if (citiesResponse?.data && citiesResponse.data.length > 0) {
       citiesResponse.data.forEach((city: { slug: string; name: string }) => {
@@ -212,7 +214,7 @@ export function ListingsPage(): React.ReactElement {
     const results: SearchResultGroup[] = matchingListings.length > 0
       ? [{
           id: 'listings',
-          label: 'Lokaler',
+          label: t('lokaler'),
           items: matchingListings.slice(0, 5).map(listing => ({
             id: listing.id,
             label: listing.name,
@@ -251,7 +253,7 @@ export function ListingsPage(): React.ReactElement {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title="Filtrer"
+        title={t('filtrer')}
         icon={<FilterIcon size={20} />}
         position="left"
         size="sm"
@@ -268,7 +270,7 @@ export function ListingsPage(): React.ReactElement {
           </Stack>
         }
       >
-        <DrawerSection title="Type" collapsible>
+        <DrawerSection title={t('type')} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreType ? LISTING_TYPE_OPTIONS : LISTING_TYPE_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((type) => (
               <DrawerItem
@@ -289,7 +291,7 @@ export function ListingsPage(): React.ReactElement {
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Område" collapsible defaultCollapsed>
+        <DrawerSection title={t('område')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreArea ? locationAreas : locationAreas.slice(0, MAX_VISIBLE_ITEMS)).map((area) => (
               <DrawerItem
@@ -309,7 +311,7 @@ export function ListingsPage(): React.ReactElement {
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
+        <DrawerSection title={t('kapasitet')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreCapacity ? CAPACITY_OPTIONS : CAPACITY_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((cap) => (
               <DrawerItem
@@ -329,7 +331,7 @@ export function ListingsPage(): React.ReactElement {
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
+        <DrawerSection title={t('fasiliteter')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {(showMoreFacilities ? allFacilities : allFacilities.slice(0, MAX_VISIBLE_ITEMS)).map((facility) => (
               <DrawerItem
@@ -361,7 +363,7 @@ export function ListingsPage(): React.ReactElement {
           {/* Search */}
           <div className="mobile-search-wrapper" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             <HeaderSearch
-              placeholder="Søk etter lokaler..."
+              placeholder={t('søk.etter.lokaler')}
               value={searchQuery}
               onSearchChange={handleSearchChange}
               onSearch={() => {}}
@@ -379,7 +381,7 @@ export function ListingsPage(): React.ReactElement {
               aria-busy="true"
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 'var(--ds-spacing-8)' }}
             >
-              <Spinner aria-label="Laster lokaler..." />
+              <Spinner aria-label={t('laster.lokaler')} />
             </div>
           )}
 

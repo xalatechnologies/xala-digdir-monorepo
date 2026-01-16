@@ -5,6 +5,7 @@
  */
 
 import type { Listing, ListingStatus, ListingType, BookingModel, PricingUnit } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Re-export SDK ListingType for backoffice use
 export type { ListingType };
@@ -275,7 +276,7 @@ export const ALL_WIZARD_STEPS: WizardStep[] = [
   { id: 'openingHours', label: 'Opening Hours', labelNorwegian: 'Åpningstider', required: false },
   { id: 'bookingConfig', label: 'Booking', labelNorwegian: 'Booking', required: true },
   { id: 'media', label: 'Media', labelNorwegian: 'Media', required: true },
-  { id: 'review', label: 'Review', labelNorwegian: 'Gjennomgang', required: true },
+  { id: 'review', label: 'Review', labelNorwegian: t("ui.review"), required: true },
 ];
 
 // =============================================================================

@@ -463,7 +463,7 @@ export function RefundDialog({
           onClick={onClose}
           disabled={isPending}
         >
-          {t('common.cancel', 'Avbryt')}
+          {t('common.cancel', t("ui.cancel"))}
         </Button>
         <Button
           type="button"

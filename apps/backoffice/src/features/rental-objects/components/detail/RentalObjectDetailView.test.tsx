@@ -55,7 +55,7 @@ vi.mock('../../../listings/hooks/useListingPermissions', () => ({
 vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => {
     const translations: Record<string, string> = {
-      'common.back': 'Tilbake',
+      'common.back': t("ui.back"),
       'rentalObjects.error': 'Kunne ikke laste utleieobjekt',
     };
     return translations[key] || key;
@@ -102,7 +102,7 @@ const mockRentalObject = {
   capacity: 10,
   location: 'Oslo',
   image: 'https://example.com/image.jpg',
-  facilities: ['WiFi', 'Parking'],
+  facilities: [t("amenity.wifi"), 'Parking'],
   price: 1000,
   priceUnit: 'hour' as const,
   currency: 'NOK',
@@ -111,6 +111,7 @@ const mockRentalObject = {
 };
 
 import { ToastProvider } from '../../../../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 const createTestWrapper = () => {
   const queryClient = new QueryClient({

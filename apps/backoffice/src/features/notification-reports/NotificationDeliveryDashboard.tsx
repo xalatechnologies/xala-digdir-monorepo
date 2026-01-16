@@ -22,6 +22,7 @@ import {
   type DeliveryReport,
 } from '@digilist/client-sdk';
 import { useToast } from '../../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 // Status badge color mapping
 const STATUS_COLORS: Record<string, 'success' | 'warning' | 'danger' | 'neutral'> = {
@@ -40,6 +41,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export function NotificationDeliveryDashboard() {
+  const t = useT();
   const toast = useToast();
 
   // State
@@ -148,9 +150,7 @@ export function NotificationDeliveryDashboard() {
           borderRadius: 'var(--ds-border-radius-md)',
           border: '1px solid var(--ds-color-warning-border-subtle)',
         }}>
-          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
-            Venter
-          </Paragraph>
+          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>{t("status.pending")}</Paragraph>
           <Paragraph data-size="lg" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-warning-text-default)' }}>
             {stats.pending}
           </Paragraph>
@@ -204,7 +204,7 @@ export function NotificationDeliveryDashboard() {
             alignItems: 'center',
             padding: 'var(--ds-spacing-10)',
           }}>
-            <Spinner aria-label="Laster..." />
+            <Spinner aria-label={t("ui.loading")} />
           </div>
         ) : reports.length === 0 ? (
           <div style={{
@@ -265,7 +265,7 @@ export function NotificationDeliveryDashboard() {
                         <Badge color={statusColor}>
                           {report.status === 'sent' && 'Sendt'}
                           {report.status === 'delivered' && 'Levert'}
-                          {report.status === 'pending' && 'Venter'}
+                          {report.status === 'pending' && t("status.pending")}
                           {report.status === 'failed' && 'Feilet'}
                         </Badge>
                       </Table.Cell>

@@ -8,6 +8,7 @@ import {
   useOrganizationSettings,
   useUpdateOrganizationSettings,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export type Locale = 'nb' | 'nn' | 'en';
 export type Timezone = 'Europe/Oslo' | 'Europe/London' | 'America/New_York';
@@ -30,6 +31,7 @@ interface UseGeneralSettingsOptions {
 }
 
 export function useGeneralSettings(options: UseGeneralSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const [isSaving, setIsSaving] = useState(false);

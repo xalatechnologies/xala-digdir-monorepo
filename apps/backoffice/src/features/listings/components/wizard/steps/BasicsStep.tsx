@@ -8,6 +8,7 @@
 
 import { Textfield, Paragraph, Heading, Card, Textarea } from '@xala/ds';
 import type { BackofficeListing, BackofficeListingType } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface BasicsStepProps {
   data: Partial<BackofficeListing>;
@@ -144,6 +145,7 @@ const getSelectionCardStyle = (isSelected: boolean) => ({
 });
 
 export function BasicsStep({ data, onChange, errors = [] }: BasicsStepProps) {
+  const t = useT();
   const handleTypeChange = (type: BackofficeListingType) => {
     onChange({ type });
   };

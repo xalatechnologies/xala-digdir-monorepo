@@ -9,6 +9,7 @@ import { Paragraph, Spinner, ListingCard, ListingGrid as DSListingGrid, ListingS
 import { useNavigate } from 'react-router-dom';
 import { ListingRowActions } from './ListingRowActions';
 import type { Listing, ListingStatus } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ListingsGridProps {
   listings: RentalObject[];
@@ -28,6 +29,7 @@ export function ListingsGrid({
   onRefresh,
   basePath = '/listings',
 }: ListingsGridProps) {
+  const t = useT();
   const navigate = useNavigate();
 
   const handleCardClick = (id: string, slug?: string) => {
@@ -45,7 +47,7 @@ export function ListingsGrid({
           padding: 'var(--ds-spacing-10)',
         }}
       >
-        <Spinner aria-label="Laster..." />
+        <Spinner aria-label={t('common.loading')} />
       </div>
     );
   }

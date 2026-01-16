@@ -8,6 +8,7 @@
 import * as React from 'react';
 import { Paragraph } from '@xala/ds';
 import type { OpeningHours, DayHours } from '../../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -136,7 +137,8 @@ function formatGroup(days: DayHours[], hours: string): GroupedHours {
 export function OpeningHoursWidget({
   openingHours,
   className,
-}: OpeningHoursWidgetProps): React.ReactElement {
+}: OpeningHoursWidgetProps):
+  const t = useT(); React.ReactElement {
   const groupedHours = React.useMemo(
     () => groupConsecutiveDays(openingHours.regular),
     [openingHours.regular]

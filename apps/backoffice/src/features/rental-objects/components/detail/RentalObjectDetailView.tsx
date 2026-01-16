@@ -23,6 +23,7 @@ import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';
 import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';
 import { RentalObjectAvailabilityTab } from './RentalObjectAvailabilityTab';
 import { RentalObjectAuditTab } from './RentalObjectAuditTab';
+import { useT } from '@xala/i18n';
 
 /**
  * Error Boundary to catch JavaScript runtime errors
@@ -69,6 +70,7 @@ interface RentalObjectDetailViewProps {
 }
 
 export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
+  const t = useT();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -267,7 +269,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
             }}
           >
             {[
-              { id: 'overview', label: 'Oversikt' },
+              { id: 'overview', label: t("ui.overview") },
               { id: 'bookings', label: 'Bookinger' },
               { id: 'availability', label: 'Tilgjengelighet' },
               { id: 'audit', label: 'Endringslogg' },

@@ -6,6 +6,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { ListingType } from "../../../constants";
 import type { ListingQueryFilters, ViewMode } from '../types';
+import { useT } from '@xala/i18n';
 
 // Listing type options for filtering
 const LISTING_TYPE_OPTIONS: Array<{ id: ListingType | 'ALL'; label: string }> = [
@@ -38,7 +39,8 @@ const DEFAULT_FILTERS: ListingQueryFilters = {
 export function useListingFilters(
   initialFilters?: Partial<ListingQueryFilters>,
   initialViewMode: ViewMode = 'table'
-): UseListingFiltersReturn {
+):
+  const t = useT(); UseListingFiltersReturn {
   const [filters, setFiltersState] = useState<ListingQueryFilters>({
     ...DEFAULT_FILTERS,
     ...initialFilters,
@@ -106,9 +108,9 @@ export const TYPE_TABS: Array<{ id: ListingType | 'ALL'; label: string }> = LIST
  */
 export const STATUS_OPTIONS: Array<{ id: string; label: string }> = [
   { id: 'all', label: 'Alle statuser' },
-  { id: 'draft', label: 'Utkast' },
-  { id: 'published', label: 'Publisert' },
-  { id: 'archived', label: 'Arkivert' },
+  { id: 'draft', label: t("status.draft") },
+  { id: 'published', label: t("status.published") },
+  { id: 'archived', label: t("status.archived") },
 ];
 
 /**

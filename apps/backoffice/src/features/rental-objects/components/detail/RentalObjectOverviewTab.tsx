@@ -9,6 +9,7 @@
 
 import type { Listing } from '@digilist/client-sdk';
 import { OverviewTab } from '../../../listings/components/detail/OverviewTab';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectOverviewTabProps {
   /** The rental object to display */
@@ -22,6 +23,7 @@ export interface RentalObjectOverviewTabProps {
 export function RentalObjectOverviewTab({
   rentalObject,
 }: RentalObjectOverviewTabProps) {
+  const t = useT();
   // Delegate to listings overview tab (rental objects are RESOURCE type listings)
   return <OverviewTab listing={rentalObject} />;
 }

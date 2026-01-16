@@ -8,6 +8,7 @@
  */
 
 import { AvailabilityTab } from '../../../listings/components/detail/AvailabilityTab';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectAvailabilityTabProps {
   /** The rental object ID */
@@ -24,6 +25,7 @@ export function RentalObjectAvailabilityTab({
   rentalObjectId,
   rentalObjectName,
 }: RentalObjectAvailabilityTabProps) {
+  const t = useT();
   // Delegate to listings availability tab (rental objects are RESOURCE type listings)
   return (
     <AvailabilityTab

@@ -15,6 +15,7 @@ import {
 } from '@xala/ds';
 import type { KeyFacts, ListingType, BookingMode } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icon Mapping
@@ -83,7 +84,8 @@ export function KeyFactsRow({
   keyFacts,
   listingType,
   className,
-}: KeyFactsRowProps): React.ReactElement {
+}: KeyFactsRowProps):
+  const t = useT(); React.ReactElement {
   const presenter = React.useMemo(() => createPresenter(listingType), [listingType]);
   const visibleFacts: VisibleFact[] = presenter.getKeyFacts(keyFacts);
 

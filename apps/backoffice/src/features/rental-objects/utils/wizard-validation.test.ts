@@ -6,6 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { validateStep, validateAllSteps, canPublish } from './wizard-validation';
 import type { RentalObject, RentalObjectCategory } from '../types';
+import { useT } from '@xala/i18n';
 
 describe('wizard-validation', () => {
   describe('validateStep - basics', () => {

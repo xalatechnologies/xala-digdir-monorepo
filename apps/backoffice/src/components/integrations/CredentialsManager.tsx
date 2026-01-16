@@ -39,6 +39,7 @@ import {
   type CredentialInfo,
   type CreateCredentialInput,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface CredentialsManagerProps {
   integrationId: string;
@@ -62,7 +63,8 @@ export function CredentialsManager({
   integrationId,
   integrationName,
   onClose: _onClose,
-}: CredentialsManagerProps): React.ReactElement {
+}: CredentialsManagerProps):
+  const t = useT(); React.ReactElement {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRotateModal, setShowRotateModal] = useState<CredentialInfo | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<CredentialInfo | null>(null);
@@ -273,7 +275,7 @@ function CredentialCard({
             <div className="flex items-center gap-1">
               <span>Verdi:</span>
               {isLoadingValue ? (
-                <Spinner aria-label="Laster..." data-size="sm" />
+                <Spinner aria-label={t("ui.loading")} data-size="sm" />
               ) : isRevealed && revealedValue ? (
                 <code className="bg-gray-100 px-2 py-0.5 rounded font-mono text-xs">
                   {revealedValue}
@@ -355,7 +357,7 @@ function CredentialCard({
             data-size="sm"
             type="button"
             onClick={onDelete}
-            title="Slett"
+            title={t("ui.delete")}
           >
             <Trash2 className="w-4 h-4 text-red-500" />
           </Button>
@@ -446,9 +448,7 @@ function AddCredentialModal({
         )}
 
         <div className="flex justify-end gap-2 pt-4">
-          <Button data-variant="secondary" type="button" onClick={onClose}>
-            Avbryt
-          </Button>
+          <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
           <Button
             data-variant="primary"
             type="submit"
@@ -531,9 +531,7 @@ function RotateCredentialModal({
         )}
 
         <div className="flex justify-end gap-2 pt-4">
-          <Button data-variant="secondary" type="button" onClick={onClose}>
-            Avbryt
-          </Button>
+          <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
           <Button
             data-variant="primary"
             type="submit"
@@ -598,9 +596,7 @@ function DeleteConfirmModal({
       )}
 
       <div className="flex justify-end gap-2">
-        <Button data-variant="secondary" type="button" onClick={onClose}>
-          Avbryt
-        </Button>
+        <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
         <Button
           data-variant="primary"
           data-color="danger"
@@ -608,7 +604,7 @@ function DeleteConfirmModal({
           onClick={handleDelete}
           disabled={deleteCredential.isPending}
         >
-          {deleteCredential.isPending ? 'Sletter...' : 'Slett'}
+          {deleteCredential.isPending ? 'Sletter...' : t("ui.delete")}
         </Button>
       </div>
     </Modal>

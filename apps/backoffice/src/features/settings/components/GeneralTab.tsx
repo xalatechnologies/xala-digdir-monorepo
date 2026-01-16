@@ -15,8 +15,10 @@ import {
   SaveIcon,
 } from '@xala/ds';
 import { useGeneralSettings } from '../hooks/useGeneralSettings';
+import { useT } from '@xala/i18n';
 
 export function GeneralTab() {
+  const t = useT();
   const {
     generalData,
     updateField,

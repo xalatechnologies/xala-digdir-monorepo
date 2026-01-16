@@ -30,6 +30,7 @@ import {
   SendIcon,
 } from '@xala/ds';
 import { useCalendarSyncStatus, useSyncCalendar } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface CalendarSend {
   id: string;
@@ -66,11 +67,12 @@ function getStatusBadge(status: CalendarSend['status']): React.ReactElement {
       return <Badge color="danger">Feilet</Badge>;
     case 'pending':
     default:
-      return <Badge color="warning">Venter</Badge>;
+      return <Badge color="warning">{t("status.pending")}</Badge>;
   }
 }
 
-export function CalendarIntegrationPage(): React.ReactElement {
+export function CalendarIntegrationPage():
+  const t = useT(); React.ReactElement {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [icsEnabled, setIcsEnabled] = useState(true);
   const [resourceCalendarEnabled, setResourceCalendarEnabled] = useState(false);

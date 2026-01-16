@@ -21,8 +21,10 @@ import {
 } from '@digilist/client-sdk';
 import { OrganizationForm } from '../../components/organizations/OrganizationForm';
 import { OrganizationWizard, type OrganizationWizardData } from '../../components/organizations/OrganizationWizard';
+import { useT } from '@xala/i18n';
 
 export function OrganizationFormPage() {
+  const t = useT();
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const isEditing = !!id;
@@ -97,7 +99,7 @@ export function OrganizationFormPage() {
   if (isEditing && isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t("ui.loading")} />
       </div>
     );
   }

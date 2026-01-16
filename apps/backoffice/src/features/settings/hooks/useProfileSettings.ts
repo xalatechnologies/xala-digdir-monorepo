@@ -10,6 +10,7 @@ import {
   useUploadUserAvatar,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ProfileFormData {
   name: string;
@@ -27,6 +28,7 @@ interface UseProfileSettingsOptions {
 }
 
 export function useProfileSettings(options: UseProfileSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -34,6 +34,7 @@ import {
   logAuditEvent,
 } from '../features/listing-details';
 import { useAuth } from '../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;
@@ -184,7 +185,8 @@ function transformApiToListing(api: ApiListing): Listing {
 }
 
 
-export function RentalObjectDetailPage(): React.ReactElement {
+export function RentalObjectDetailPage():
+  const t = useT(); React.ReactElement {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -279,7 +281,7 @@ export function RentalObjectDetailPage(): React.ReactElement {
       <ContentLayout maxWidth="1440px">
         <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
           <div role="status" aria-live="polite" aria-busy="true" style={{ textAlign: 'center' }}>
-            <Spinner aria-label="Laster innhold..." />
+            <Spinner aria-label={t('laster.innhold')} />
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
               Laster lokale...
             </Paragraph>
@@ -323,8 +325,8 @@ export function RentalObjectDetailPage(): React.ReactElement {
   }
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Hjem', href: '/', onClick: () => navigate('/') },
-    { label: 'Utleieobjekter', href: '/', onClick: () => navigate('/') },
+    { label: t('hjem'), href: '/', onClick: () => navigate('/') },
+    { label: t('utleieobjekter'), href: '/', onClick: () => navigate('/') },
     { label: listing.name },
   ];
 

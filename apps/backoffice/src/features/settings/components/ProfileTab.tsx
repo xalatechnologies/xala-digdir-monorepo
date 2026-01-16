@@ -24,6 +24,7 @@ import {
   useUploadUserAvatar,
   type Address,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface ProfileData {
   name: string;
@@ -36,6 +37,7 @@ interface ProfileData {
 }
 
 export function ProfileTab() {
+  const t = useT();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);

@@ -4,6 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { RentalObjectDetailView } from './RentalObjectDetailView';
+import { useT } from '@xala/i18n';
 
 const meta: Meta<typeof RentalObjectDetailView> = {
   title: 'Features/RentalObjects/DetailView',
@@ -27,7 +28,7 @@ const mockRentalObject = {
   capacity: 50,
   location: 'Oslo',
   image: 'https://picsum.photos/800/600',
-  facilities: ['WiFi', 'Parking', 'Accessible'],
+  facilities: [t("amenity.wifi"), 'Parking', 'Accessible'],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };

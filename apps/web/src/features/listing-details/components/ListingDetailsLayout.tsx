@@ -32,6 +32,7 @@ import { ContactWidget } from './Sidebar/ContactWidget';
 import { MapWidget } from './Sidebar/MapWidget';
 import { OpeningHoursWidget } from './Sidebar/OpeningHoursWidget';
 import { BookingWidgetPlacement } from './Sidebar/BookingWidgetPlacement';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Props
@@ -106,7 +107,8 @@ export function ListingDetailsLayout({
   onBookingClick,
   mapboxToken,
   className,
-}: ListingDetailsLayoutProps): React.ReactElement {
+}: ListingDetailsLayoutProps):
+  const t = useT(); React.ReactElement {
   const [activeTab, setActiveTab] = React.useState('overview');
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [showShareSheet, setShowShareSheet] = React.useState(false);
@@ -160,10 +162,10 @@ export function ListingDetailsLayout({
 
   // Tab configuration
   const tabs = [
-    { id: 'overview', label: 'Oversikt' },
+    { id: 'overview', label: t('oversikt') },
     { id: 'activity', label: presenter.activityTabConfig.labelKey },
-    { id: 'rules', label: 'Retningslinjer' },
-    { id: 'faq', label: 'FAQ' },
+    { id: 'rules', label: t('retningslinjer') },
+    { id: 'faq', label: t('faq') },
   ];
 
   return (
@@ -194,7 +196,7 @@ export function ListingDetailsLayout({
       >
         <div
           role="tablist"
-          aria-label="Listing tabs"
+          aria-label={t('listing.tabs')}
           className="listing-tabs"
           style={{
             display: 'flex',
@@ -340,7 +342,7 @@ export function ListingDetailsLayout({
           setShowAuthModal(false);
           window.location.href = `/register?redirect=${encodeURIComponent(window.location.pathname)}`;
         }}
-        actionContext="favorite"
+        actionContext={t('favorite')}
       />
 
       {/* Share Sheet */}

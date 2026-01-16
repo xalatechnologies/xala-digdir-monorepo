@@ -27,6 +27,7 @@ import {
   type GdprRequestStatus,
   formatDate,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Helper to calculate days remaining until 30-day GDPR deadline
 function calculateDaysRemaining(requestedAt: string): number {
@@ -62,9 +63,9 @@ function getStatusColor(status: GdprRequestStatus): 'success' | 'warning' | 'inf
 // Helper to get status label
 function getStatusLabel(status: GdprRequestStatus): string {
   const labelMap: Record<GdprRequestStatus, string> = {
-    pending: 'Venter',
+    pending: t("status.pending"),
     processing: 'Behandles',
-    completed: 'Fullført',
+    completed: t("status.completed"),
     rejected: 'Avslått',
   };
   return labelMap[status];
@@ -100,6 +101,7 @@ interface GdprRequestQueueProps {
 }
 
 export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
+  const t = useT();
   // State
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');

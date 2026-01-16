@@ -6,6 +6,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { CalendarViewType, CalendarFilters } from '../types';
 import type { CalendarEvent } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 interface CalendarStateOptions {
   initialView?: CalendarViewType;
@@ -14,6 +15,7 @@ interface CalendarStateOptions {
 }
 
 export function useCalendarState(options: CalendarStateOptions = {}) {
+  const t = useT();
   const { initialView = 'week', initialDate = new Date(), initialListing } = options;
 
   // View state

@@ -12,6 +12,7 @@ import type { Listing } from '@digilist/client-sdk';
 import { EditModal } from './EditModal';
 import { PublishControls } from './PublishControls';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
+import { useT } from '@xala/i18n';
 
 export interface DetailHeaderProps {
   /** The full listing object */
@@ -38,6 +39,7 @@ export function DetailHeader({
   backPath = '/listings',
   onEditSuccess,
 }: DetailHeaderProps) {
+  const t = useT();
   const navigate = useNavigate();
   const { canEditListing } = useListingPermissions();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -79,7 +81,7 @@ export function DetailHeader({
             type="button"
             variant="tertiary"
             onClick={() => navigate(backPath)}
-            aria-label="Tilbake til liste"
+            aria-label={t('navigation.backToList')}
           >
             <ChevronLeftIcon size={20} />
           </Button>
@@ -102,9 +104,7 @@ export function DetailHeader({
             onClick={handleEditClick}
             disabled={isEditDisabled}
             title={isArchived ? 'Kan ikke redigere arkiverte objekter' : undefined}
-          >
-            Rediger
-          </Button>
+          >{t("ui.edit")}</Button>
           <PublishControls
             listingId={listing.id}
             listingName={listing.name}

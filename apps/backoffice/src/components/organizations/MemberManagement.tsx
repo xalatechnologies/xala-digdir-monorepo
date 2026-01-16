@@ -21,6 +21,7 @@ import {
 } from '@xala/ds';
 import { useUsers, type OrganizationMember, organizationService } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
+import { useT } from '@xala/i18n';
 
 interface MemberManagementProps {
   organizationId: string;
@@ -28,6 +29,7 @@ interface MemberManagementProps {
 }
 
 export function MemberManagement({ organizationId, members }: MemberManagementProps) {
+  const t = useT();
   const queryClient = useQueryClient();
   const [isAdding, setIsAdding] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState('');

@@ -8,6 +8,7 @@ import { Paragraph, Heading, Tag, ListingStatusBadge, Card } from '@xala/ds';
 import { LISTING_TYPE_LABELS } from '../../../constants';
 import type { BackofficeListing } from '../../../types';
 import { PUBLISH_REQUIREMENTS } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface ReviewStepProps {
   data: Partial<BackofficeListing>;
@@ -99,6 +100,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
 }
 
 export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
+  const t = useT();
   const listingType = data.type || 'SPACE';
   const requirements = PUBLISH_REQUIREMENTS[listingType];
 
@@ -136,9 +138,7 @@ export function ReviewStep({ data, errors = [] }: ReviewStepProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          Gjennomgang
-        </Heading>
+        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t("ui.review")}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
           Se over informasjonen før du lagrer eller publiserer
         </Paragraph>

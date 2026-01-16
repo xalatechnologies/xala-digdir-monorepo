@@ -17,6 +17,7 @@
 import React, { Suspense } from 'react';
 import { Stack, Spinner, Text } from '@xala/ds';
 import type { RentalObjectMapProps } from '@xala/ds/maps';
+import { useT } from '@xala/i18n';
 
 // Lazy load the map component - only loads when this component is rendered
 const RentalObjectMap = React.lazy(() =>
@@ -58,7 +59,8 @@ function MapLoadingFallback() {
  * The underlying map component and its dependencies (mapbox-gl) will be loaded
  * on first render, reducing the initial bundle size by ~150KB gzipped.
  */
-export function LazyRentalObjectMap(props: RentalObjectMapProps): React.ReactElement {
+export function LazyRentalObjectMap(props: RentalObjectMapProps):
+  const t = useT(); React.ReactElement {
   return (
     <Suspense fallback={<MapLoadingFallback />}>
       <RentalObjectMap {...props} />

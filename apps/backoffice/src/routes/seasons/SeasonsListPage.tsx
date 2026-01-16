@@ -25,13 +25,14 @@ import {
 import { useSeasons, useDeleteSeason } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';
+import { useT } from '@xala/i18n';
 
 const statusLabels: Record<SeasonStatus, string> = {
-  draft: 'Utkast',
+  draft: t("status.draft"),
   open: 'Åpen',
   closed: 'Lukket',
   active: 'Aktiv',
-  completed: 'Fullført',
+  completed: t("status.completed"),
   cancelled: 'Kansellert',
 };
 
@@ -45,6 +46,7 @@ const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'suc
 };
 
 export function SeasonsListPage() {
+  const t = useT();
   const navigate = useNavigate();
 
   // State
@@ -152,7 +154,7 @@ export function SeasonsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t("ui.loading")} />
           </div>
         ) : filteredSeasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -179,7 +181,7 @@ export function SeasonsListPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Periode</Table.HeaderCell>
+                <Table.HeaderCell>{t("timeMode.period")}</Table.HeaderCell>
                 <Table.HeaderCell>Søknadsfrist</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>Lokaler</Table.HeaderCell>
@@ -233,16 +235,12 @@ export function SeasonsListPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}/edit`)}>
-                              <EditIcon />
-                              Rediger
-                            </Dropdown.Button>
+                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {season.status === 'draft' && (
                             <Dropdown.Item>
                               <Dropdown.Button onClick={() => handleDelete(season.id)} data-color="danger">
-                                <TrashIcon />
-                                Slett
-                              </Dropdown.Button>
+                                <TrashIcon />{t("ui.delete")}</Dropdown.Button>
                             </Dropdown.Item>
                           )}
                         </Dropdown.List>

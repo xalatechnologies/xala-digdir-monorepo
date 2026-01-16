@@ -8,6 +8,7 @@ import {
   getFlowContextTTL,
 } from '@digilist/client-sdk';
 import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Local Storage Keys
@@ -125,6 +126,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const t = useT();
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);

@@ -11,6 +11,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Card, Tag } from '@xala/ds';
 import type { ActivityData, ListingEvent, RentalHistoryItem, ListingType } from '../types';
 import { createPresenter } from '../presenters/listingTypePresenter';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -167,7 +168,7 @@ function RentalHistoryCard({ rental }: { rental: RentalHistoryItem }): React.Rea
         )}
       </div>
       <Tag color={rental.status === 'completed' ? 'success' : 'neutral'} data-size="sm">
-        {rental.status === 'completed' ? 'Fullført' : 'Kansellert'}
+        {rental.status === 'completed' ? t("status.completed") : 'Kansellert'}
       </Tag>
     </div>
   );
@@ -181,7 +182,8 @@ export function ActivityTab({
   activityData,
   listingType,
   className,
-}: ActivityTabProps): React.ReactElement {
+}: ActivityTabProps):
+  const t = useT(); React.ReactElement {
   const presenter = React.useMemo(() => createPresenter(listingType), [listingType]);
 
   // Empty state

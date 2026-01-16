@@ -19,6 +19,7 @@ import type {
 } from '../types';
 import { ALL_WIZARD_STEPS, WIZARD_STEPS_BY_TYPE } from '../types';
 import { validateStep, validateAllSteps } from '../utils/wizard-validation';
+import { useT } from '@xala/i18n';
 
 export interface UseListingWizardOptions {
   /** Listing slug for edit mode */
@@ -79,7 +80,8 @@ function getDefaultFormData(type?: ListingType): Partial<BackofficeListing> {
   };
 }
 
-export function useListingWizard(options: UseListingWizardOptions = {}): UseListingWizardReturn {
+export function useListingWizard(options: UseListingWizardOptions = {}):
+  const t = useT(); UseListingWizardReturn {
   const { slug, initialType, onComplete } = options;
   const navigate = useNavigate();
   const isEditMode = !!slug;

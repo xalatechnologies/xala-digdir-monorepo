@@ -25,6 +25,7 @@ import {
 } from '@digilist/client-sdk';
 import { formatDistanceToNow } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -51,7 +52,7 @@ function getStatusBadgeConfig(status: ReviewStatus): {
   label: string;
 } {
   const configs: Record<ReviewStatus, { color: 'success' | 'warning' | 'danger' | 'info' | 'neutral'; label: string }> = {
-    pending: { color: 'warning', label: 'Venter' },
+    pending: { color: 'warning', label: t("status.pending") },
     approved: { color: 'success', label: 'Godkjent' },
     rejected: { color: 'danger', label: 'Avslått' },
   };
@@ -295,9 +296,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
               data-color="danger"
               onClick={handleDelete}
               loading={deleteMutation.isPending}
-            >
-              Slett
-            </Button>
+            >{t("ui.delete")}</Button>
           </div>
         </Dialog.Block>
       </Dialog>
@@ -317,6 +316,7 @@ export function ReviewModerationTable({
   onSelectOne,
   onRefresh,
 }: ReviewModerationTableProps) {
+  const t = useT();
   const allSelected = reviews.length > 0 && selectedIds.length === reviews.length;
 
   if (isLoading) {
@@ -329,7 +329,7 @@ export function ReviewModerationTable({
           padding: 'var(--ds-spacing-10)',
         }}
       >
-        <Spinner aria-label="Laster..." />
+        <Spinner aria-label={t("ui.loading")} />
       </div>
     );
   }
@@ -369,7 +369,7 @@ export function ReviewModerationTable({
           <Table.Row>
             <Table.HeaderCell style={{ width: '48px' }}>
               <Checkbox
-                aria-label="Velg alle"
+                aria-label={t("ui.selectAll")}
                 checked={allSelected}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSelectAll(e.target.checked)}
               />

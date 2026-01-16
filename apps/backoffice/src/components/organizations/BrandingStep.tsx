@@ -7,6 +7,7 @@
 
 import { useCallback, useState } from 'react';
 import { Stack, FormField, Paragraph, Heading, Card, Button } from '@xala/ds';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -30,6 +31,7 @@ export interface BrandingStepProps {
 // =============================================================================
 
 export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps) {
+  const t = useT();
   const [isDraggingLogo, setIsDraggingLogo] = useState(false);
   const [isDraggingFavicon, setIsDraggingFavicon] = useState(false);
 

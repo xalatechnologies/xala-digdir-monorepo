@@ -7,6 +7,7 @@
  */
 
 import { ListingWizard } from '../../../listings/components/wizard/ListingWizard';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectWizardProps {
   /** Rental object slug for edit mode */
@@ -21,6 +22,7 @@ export interface RentalObjectWizardProps {
  * NOTE: Delegates to ListingWizard internally (rental objects are RESOURCE type listings)
  */
 export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
+  const t = useT();
   // Forces type to RESOURCE for rental objects
   // In edit mode: loads existing rental object data
   // In create mode: creates new rental object with RESOURCE type

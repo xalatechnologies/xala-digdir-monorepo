@@ -10,6 +10,7 @@ import { Heading, Paragraph, Tag } from '@xala/ds';
 import type { Listing } from '../types';
 import { FavoriteButton } from './FavoriteButton';
 import { ShareButton } from './ShareButton';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -52,7 +53,8 @@ export function ListingHeader({
   onShare,
   onAuthRequired,
   className,
-}: ListingHeaderProps): React.ReactElement {
+}: ListingHeaderProps):
+  const t = useT(); React.ReactElement {
   return (
     <header
       className={className}

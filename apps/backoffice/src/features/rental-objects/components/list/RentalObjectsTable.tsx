@@ -9,6 +9,7 @@
 
 import type { Listing } from '@digilist/client-sdk';
 import { ListingsTable } from '../../../listings/components/list/ListingsTable';
+import { useT } from '@xala/i18n';
 
 export interface RentalObjectsTableProps {
   /** Array of rental objects to display */
@@ -46,6 +47,7 @@ export function RentalObjectsTable({
   sortOrder,
   onRefresh,
 }: RentalObjectsTableProps) {
+  const t = useT();
   // Delegate to listings table component (rental objects are RESOURCE type listings)
   return (
     <ListingsTable

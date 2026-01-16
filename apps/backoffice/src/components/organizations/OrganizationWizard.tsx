@@ -9,6 +9,7 @@ import type { ActorType } from '@digilist/client-sdk';
 import { BasicStep } from './BasicStep';
 import { BrandingStep } from './BrandingStep';
 import { RolesStep } from './RolesStep';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -73,6 +74,7 @@ export function OrganizationWizard({
   onComplete,
   onCancel,
 }: OrganizationWizardProps) {
+  const t = useT();
   // State management
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<OrganizationWizardData>({
@@ -464,10 +466,8 @@ export function OrganizationWizard({
             variant="secondary"
             onClick={handleCancel}
             disabled={isSaving}
-            aria-label="Avbryt"
-          >
-            Avbryt
-          </Button>
+            aria-label={t("ui.cancel")}
+          >{t("ui.cancel")}</Button>
           <Button
             type="button"
             variant="secondary"

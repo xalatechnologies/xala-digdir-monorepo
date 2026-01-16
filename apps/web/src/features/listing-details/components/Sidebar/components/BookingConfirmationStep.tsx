@@ -7,6 +7,7 @@
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   return (
@@ -125,7 +126,8 @@ export function BookingConfirmationStep({
   listingId,
   tenantId,
   bookingMode,
-}: BookingConfirmationStepProps): React.ReactElement {
+}: BookingConfirmationStepProps):
+  const t = useT(); React.ReactElement {
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
 
@@ -637,9 +639,7 @@ export function BookingConfirmationStep({
                       textDecoration: 'underline',
                       cursor: 'pointer',
                     }}
-                  >
-                    Lukk
-                  </button>
+                  >{t("ui.close")}</button>
                 )}
               </div>
             </div>

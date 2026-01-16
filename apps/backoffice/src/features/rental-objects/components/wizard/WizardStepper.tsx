@@ -23,7 +23,7 @@ export function WizardStepper({
   const t = useT();
 
   return (
-    <nav aria-label="Wizard progress">
+    <nav aria-label={t('wizard.ariaLabel')}>
       <ol
         style={{
           display: 'flex',
@@ -97,7 +97,7 @@ export function WizardStepper({
                         : '2px solid var(--ds-color-neutral-border-subtle)',
                   }}
                 >
-                  {isCompleted ? (hasError ? '!' : 'OK') : index + 1}
+                  {isCompleted ? (hasError ? '!' : t("ui.ok")) : index + 1}
                 </div>
 
                 {/* Step label */}

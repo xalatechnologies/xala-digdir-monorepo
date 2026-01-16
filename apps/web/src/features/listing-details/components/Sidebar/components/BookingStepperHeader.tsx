@@ -5,6 +5,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 // Step Icons
 function CalendarIcon({ size = 20 }: { size?: number }): React.ReactElement {
@@ -70,7 +71,8 @@ export function BookingStepperHeader({
   currentStep,
   listingTitle,
   isMobile = false,
-}: BookingStepperHeaderProps): React.ReactElement {
+}: BookingStepperHeaderProps):
+  const t = useT(); React.ReactElement {
   return (
     <div
       style={{

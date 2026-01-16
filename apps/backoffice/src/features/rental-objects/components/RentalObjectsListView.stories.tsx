@@ -8,6 +8,7 @@ import { RentalObjectsListView } from './RentalObjectsListView';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastProvider } from '../../../providers/ToastProvider';
+import { useT } from '@xala/i18n';
 
 // Note: This file requires Storybook to be configured in the project
 // Install: pnpm add -D @storybook/react @storybook/react-vite
@@ -56,7 +57,7 @@ const generateRentalObjects = (count: number) =>
     capacity: Math.floor(Math.random() * 100) + 1,
     location: `Location ${i + 1}`,
     image: `https://picsum.photos/400/300?random=${i}`,
-    facilities: ['WiFi', 'Parking', 'Accessible'],
+    facilities: [t("amenity.wifi"), 'Parking', 'Accessible'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }));

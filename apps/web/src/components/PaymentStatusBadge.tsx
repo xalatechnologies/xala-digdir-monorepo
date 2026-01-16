@@ -7,6 +7,7 @@
  * Usage:
  * ```tsx
  * import { PaymentStatusBadge } from './components/PaymentStatusBadge';
+import { useT } from '@xala/i18n';
  *
  * <PaymentStatusBadge status="paid" />
  * <PaymentStatusBadge status="unpaid" size="md" />

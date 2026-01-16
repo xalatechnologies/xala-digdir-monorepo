@@ -30,7 +30,7 @@ import {
   type AuditLogEntry,
   type AuditQueryParams,
 } from '@digilist/client-sdk';
-import { useLocale } from '@xala/i18n';
+import { useT { useLocale useT } from '@xala/i18n';
 
 // Helper to format date
 function formatDate(timestamp: string, locale: string): string {
@@ -95,6 +95,7 @@ interface AuditTabProps {
 }
 
 export function AuditTab({ listingId }: AuditTabProps) {
+  const t = useT();
   const { locale } = useLocale();
   const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
 
@@ -452,9 +453,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                 onClick={handlePreviousPage}
                 disabled={page === 1}
               >
-                <ChevronLeftIcon size={16} />
-                Forrige
-              </Button>
+                <ChevronLeftIcon size={16} />{t("ui.previous")}</Button>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
                 Side {page} av {totalPages}
               </Paragraph>
@@ -463,9 +462,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
                 variant="secondary"
                 onClick={handleNextPage}
                 disabled={page === totalPages}
-              >
-                Neste
-                <ChevronRightIcon size={16} />
+              >{t("ui.next")}<ChevronRightIcon size={16} />
               </Button>
             </div>
           )}
@@ -593,7 +590,7 @@ export function AuditTab({ listingId }: AuditTabProps) {
       >
         {selectedEvent && (
           <>
-            <DrawerSection title="Oversikt">
+            <DrawerSection title={t("ui.overview")}>
               <Stack spacing="var(--ds-spacing-3)">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>

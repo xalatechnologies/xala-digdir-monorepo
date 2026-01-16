@@ -8,6 +8,7 @@ import {
   useTenantSettings,
   useUpdateTenantSettings,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export interface BrandingSettingsData {
   logo: string;
@@ -22,6 +23,7 @@ interface UseBrandingSettingsOptions {
 }
 
 export function useBrandingSettings(options: UseBrandingSettingsOptions = {}) {
+  const t = useT();
   const { onSaveSuccess, onSaveError } = options;
 
   const [isSaving, setIsSaving] = useState(false);

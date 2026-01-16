@@ -20,6 +20,7 @@ import {
   // type ApplicationConflict,
   // type ConflictSummary,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Temporary type definitions and placeholder hooks until implemented in SDK
 type ApplicationConflict = {
@@ -78,6 +79,7 @@ const overlapTypeLabels: Record<ApplicationConflict['overlapType'], string> = {
 };
 
 export function ConflictViewer({ seasonId }: ConflictViewerProps) {
+  const t = useT();
   // Queries
   const { data: conflictsData, isLoading } = useSeasonConflicts(seasonId);
   const conflicts = conflictsData?.data?.conflicts ?? [];

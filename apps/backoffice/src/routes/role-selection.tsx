@@ -87,8 +87,8 @@ export function RoleSelectionPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="ENKEL BOOKING"
+      brandName={t('brand.name')}
+      brandTagline={t('brand.tagline')}
       title={t('auth.roleSelection.title', 'Velg rolle')}
       subtitle={t('auth.roleSelection.subtitle', 'Du har tilgang til flere roller. Velg hvordan du vil fortsette.')}
       panelTitle={t('auth.backoffice')}

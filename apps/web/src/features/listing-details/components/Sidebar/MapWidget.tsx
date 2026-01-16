@@ -8,6 +8,7 @@
 import * as React from 'react';
 import { Paragraph, Button } from '@xala/ds';
 import type { Address } from '../../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Icons
@@ -52,7 +53,8 @@ export function MapWidget({
   mapboxToken,
   height = 160,
   className,
-}: MapWidgetProps): React.ReactElement {
+}: MapWidgetProps):
+  const t = useT(); React.ReactElement {
   const [geocodedCoords, setGeocodedCoords] = React.useState<{ latitude: number; longitude: number } | null>(null);
   const [isGeocoding, setIsGeocoding] = React.useState(false);
 

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import { TimelineView } from './TimelineView';
 import type { CalendarEvent, Listing } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 const mockListings: RentalObject[] = [
   { id: 'listing-1', name: 'Møterom A', status: 'published' } as Listing,

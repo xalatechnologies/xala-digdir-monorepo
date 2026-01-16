@@ -36,6 +36,7 @@ function WarningIcon() {
 
 // TODO: Replace with actual SDK hooks when implemented
 // import { useAllocationProposal, useApplyAllocationProposal } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Placeholder types matching backend interfaces
 interface AllocationSuggestion {
@@ -112,6 +113,7 @@ function useApplyAllocationProposal() {
 }
 
 export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProposalProps) {
+  const t = useT();
   const [applyOptions, setApplyOptions] = useState({
     autoApproveNoConflicts: true,
     autoAdjustTimes: false,

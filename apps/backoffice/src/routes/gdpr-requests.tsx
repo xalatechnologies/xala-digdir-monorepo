@@ -27,17 +27,19 @@ import {
 
 import { GdprRequestQueue } from '../components/gdpr/GdprRequestQueue';
 import { RequestDetailModal } from '../components/gdpr/RequestDetailModal';
+import { useT } from '@xala/i18n';
 
 // Status tabs for main navigation
 const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
   { id: 'processing', label: 'Behandles', icon: '⚙️', color: 'info' },
-  { id: 'completed', label: 'Fullført', icon: '✓', color: 'success' },
+  { id: 'completed', label: t("status.completed"), icon: '✓', color: 'success' },
   { id: 'rejected', label: 'Avslått', icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
 ] as const;
 
 export function GdprRequestsPage() {
+  const t = useT();
   // State
   const [activeTab, setActiveTab] = useState<string>('pending');
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);

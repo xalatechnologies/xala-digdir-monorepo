@@ -33,6 +33,7 @@ import {
   type Conversation,
   type Message,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 // Time ago formatting  
 function formatTimeAgo(dateStr: string): string {
@@ -65,6 +66,7 @@ function formatMessageDate(dateStr: string): string {
 type FilterType = 'all' | 'unread' | 'active' | 'resolved';
 
 export function MessagesPage() {
+  const t = useT();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');

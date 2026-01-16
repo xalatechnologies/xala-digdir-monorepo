@@ -13,6 +13,7 @@ import {
   Alert,
 } from '@xala/ds';
 import type { BackofficeListing } from '../../../types';
+import { useT } from '@xala/i18n';
 
 export interface TypeSpecificStepProps {
   data: Partial<BackofficeListing>;
@@ -21,6 +22,7 @@ export interface TypeSpecificStepProps {
 }
 
 export function TypeSpecificStep({ data, onChange, errors: _errors = [] }: TypeSpecificStepProps) {
+  const t = useT();
   const listingType = data.type;
 
   const handleFieldChange = (field: string, value: any) => {

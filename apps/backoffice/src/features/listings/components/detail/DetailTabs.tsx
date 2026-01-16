@@ -6,6 +6,7 @@
  */
 import * as React from 'react';
 import { Tabs } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -49,7 +50,8 @@ export function DetailTabs({
   onTabChange,
   defaultTab = 'overview',
   className,
-}: DetailTabsProps): React.ReactElement {
+}: DetailTabsProps):
+  const t = useT(); React.ReactElement {
   // Filter visible tabs
   const visibleTabs = tabs.filter((tab) => tab.visible !== false);
 
