@@ -4,7 +4,7 @@
  * Uses reusable login components from @xala/ds
  * Supports session-safe return-to-flow authentication with flow context preservation
  */
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LoginLayout,
@@ -16,6 +16,11 @@ import {
   AutomationIcon,
   ShieldCheckIcon,
   KeyIcon,
+  Dialog,
+  Card,
+  Heading,
+  Paragraph,
+  Button,
 } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
 import { idportenService, vippsAuthService, authService } from '@digilist/client-sdk';
@@ -49,6 +54,36 @@ export function LoginPage(): React.ReactElement {
 
   // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
+
+  // Demo account selector state
+  const [showDemoDialog, setShowDemoDialog] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  // Demo accounts configuration
+  const demoAccounts = [
+    {
+      token: 'admin-demo-2026',
+      name: t('auth.demoAccount.adminName'),
+      email: t('auth.demoAccount.adminEmail'),
+      role: t('auth.demoAccount.adminRole'),
+      description: t('auth.demoAccount.adminDesc'),
+    },
+    {
+      token: 'user-demo-2026',
+      name: t('auth.demoAccount.userName'),
+      email: t('auth.demoAccount.userEmail'),
+      role: t('auth.demoAccount.userRole'),
+      description: t('auth.demoAccount.userDesc'),
+    },
+    {
+      token: 'org-demo-2026',
+      name: t('auth.demoAccount.orgName'),
+      email: t('auth.demoAccount.orgEmail'),
+      role: t('auth.demoAccount.orgRole'),
+      description: t('auth.demoAccount.orgDesc'),
+    },
+  ];
 
   // Check for auth callback params (returned from ID-porten/OAuth)
   const authSuccess = searchParams.get('auth_success') === 'true';
@@ -163,37 +198,43 @@ export function LoginPage(): React.ReactElement {
   ];
 
   /**
-   * Handle Demo token authentication
-   * Supports 3 demo tokens:
-   * - admin-demo-2026: Admin/backoffice access
-   * - user-demo-2026: Regular user access
-   * - org-demo-2026: Organization user access
+   * Open demo account selector dialog
    */
-  const handleDemoLogin = async () => {
-    const token = window.prompt('Enter demo token:\n\nAvailable tokens:\n• admin-demo-2026 (Admin)\n• user-demo-2026 (User)\n• org-demo-2026 (Organization)');
+  const handleDemoLogin = () => {
+    setShowDemoDialog(true);
+    setLoginError(null);
+  };
 
-    if (!token || !token.trim()) {
-      return; // User cancelled or empty input
-    }
+  /**
+   * Handle demo account selection and login
+   */
+  const handleSelectDemoAccount = async (token: string) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
 
     try {
       // Call the auth service to validate the demo token
-      const response = await authService.loginWithDemoToken(token.trim());
+      const response = await authService.loginWithDemoToken(token);
 
       if (response.data?.user) {
         // Token is valid - store user session
         localStorage.setItem('web_user', JSON.stringify(response.data.user));
+
+        // Close dialog
+        setShowDemoDialog(false);
 
         // Redirect to home
         navigate('/', { replace: true });
         // Reload to pick up the new auth state
         window.location.reload();
       } else {
-        alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+        setLoginError(t('auth.invalidToken'));
       }
     } catch (error) {
       console.error('[DEMO LOGIN] Token validation failed:', error);
-      alert('Invalid token. Please try again.\n\nAvailable tokens:\n• admin-demo-2026\n• user-demo-2026\n• org-demo-2026');
+      setLoginError(t('auth.loginFailed'));
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -249,6 +290,79 @@ export function LoginPage(): React.ReactElement {
         description={t('auth.demoLoginDescription')}
         onClick={handleDemoLogin}
       />
+
+      <Dialog
+        open={showDemoDialog}
+        onClose={() => setShowDemoDialog(false)}
+        title={t('auth.demoAccount.selectTitle')}
+        description={t('auth.demoAccount.selectDescription')}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {loginError && (
+            <div
+              style={{
+                padding: '12px',
+                backgroundColor: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                color: '#991b1b',
+                fontSize: '14px',
+              }}
+            >
+              {loginError}
+            </div>
+          )}
+
+          {demoAccounts.map((account) => (
+            <Card
+              key={account.token}
+              style={{
+                padding: '16px',
+                cursor: isLoggingIn ? 'not-allowed' : 'pointer',
+                opacity: isLoggingIn ? 0.6 : 1,
+                border: '1px solid #e5e7eb',
+                transition: 'all 0.2s',
+              }}
+              onClick={() => !isLoggingIn && handleSelectDemoAccount(account.token)}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Heading level={3} size="xs" style={{ margin: 0 }}>
+                  {account.name}
+                </Heading>
+                <Paragraph size="sm" style={{ margin: 0, color: '#6b7280' }}>
+                  {account.email}
+                </Paragraph>
+                <div
+                  style={{
+                    padding: '4px 8px',
+                    backgroundColor: '#eff6ff',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: '#1e40af',
+                    width: 'fit-content',
+                  }}
+                >
+                  {account.role}
+                </div>
+                <Paragraph size="sm" style={{ margin: 0, color: '#6b7280' }}>
+                  {account.description}
+                </Paragraph>
+              </div>
+            </Card>
+          ))}
+
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px' }}>
+            <Button
+              variant="secondary"
+              onClick={() => setShowDemoDialog(false)}
+              disabled={isLoggingIn}
+            >
+              {t('common.cancel')}
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </LoginLayout>
   );
 }
