@@ -22,26 +22,26 @@ import {
   EyeIcon,
   HeaderSearch,
 } from '@xala/ds';
-import {
-  useSeasonalLeases,
-  useDeleteSeasonalLease,
-  // type SeasonalLease,
-  type SeasonalLeaseStatus,
-} from '@digilist/client-sdk';
+import { useSeasons, useDeleteSeason } from '@digilist/client-sdk/hooks';
+import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';
 
-const statusLabels: Record<SeasonalLeaseStatus, string> = {
+const statusLabels: Record<SeasonStatus, string> = {
   draft: 'Utkast',
   open: 'Åpen',
   closed: 'Lukket',
-  assigned: 'Tildelt',
+  active: 'Aktiv',
+  completed: 'Fullført',
+  cancelled: 'Kansellert',
 };
 
-const statusVariants: Record<SeasonalLeaseStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
+const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
   closed: 'warning',
-  assigned: 'success',
+  active: 'success',
+  completed: 'neutral',
+  cancelled: 'neutral',
 };
 
 export function SeasonsListPage() {
@@ -49,16 +49,16 @@ export function SeasonsListPage() {
 
   // State
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<SeasonalLeaseStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
 
   // Queries
-  const { data: seasonsData, isLoading } = useSeasonalLeases({
-    status: statusFilter === 'all' ? undefined : statusFilter,
-  });
+  const { data: seasonsData, isLoading } = useSeasons(
+    statusFilter !== 'all' ? { status: statusFilter } : undefined
+  );
   const seasons = seasonsData?.data ?? [];
 
   // Mutations
-  const deleteSeasonMutation = useDeleteSeasonalLease();
+  const deleteSeasonMutation = useDeleteSeason();
 
   // Filtered seasons
   const filteredSeasons = seasons.filter(season => {
@@ -134,7 +134,13 @@ export function SeasonsListPage() {
                   <Dropdown.Button onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('assigned')}>Tildelt</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('completed')}>Fullført</Dropdown.Button>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Dropdown.Button onClick={() => setStatusFilter('cancelled')}>Kansellert</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>

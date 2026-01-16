@@ -93,6 +93,12 @@ export {
 // Seasonal Lease
 export { seasonalLeaseService } from './seasonal-lease.service';
 
+// Seasons
+export { seasonService } from './season.service';
+
+// Season Applications
+export { seasonApplicationService } from './season-application.service';
+
 // Discount Codes
 export { discountCodeService } from './discount-code.service';
 
@@ -112,12 +118,9 @@ export {
 } from './billing.service';
 
 // Re-export billing types for convenience
-export type {
-  BillingSummary,
+export type { 
+  BillingSummary, 
   Invoice,
-  InvoiceQueryParams
+  InvoiceQueryParams 
 } from './billing.service';
-
-// GDPR
-export { GdprService, gdprService } from './gdpr.service';
 

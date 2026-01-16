@@ -21,62 +21,27 @@ import {
   Drawer,
 } from '@xala/ds';
 import { useLocale } from '@xala/i18n';
+import {
+  useSeasonApplications,
+  useApproveSeasonApplication,
+  useRejectSeasonApplication,
+  type SeasonApplication,
+} from '@digilist/client-sdk/hooks';
 
-const MOBILE_BREAKPOINT = 768;
-
-type ApplicationStatus = 'pending' | 'under_review' | 'approved' | 'rejected' | 'waitlist';
-
-// Mock applications data
-const mockApplications = [
-  {
-    id: 'app-001',
-    seasonName: 'Vår 2026',
-    seasonId: 'season-001',
-    organization: 'Skien IL',
-    orgId: 'org-001',
-    requestedSlots: [
-      { day: 'Monday', time: '18:00-20:00', resource: 'Idrettshall A' },
-      { day: 'Wednesday', time: '18:00-20:00', resource: 'Idrettshall A' },
-    ],
-    totalHours: 48,
-    priorityScore: 85,
-    status: 'pending',
-    submittedAt: '2026-01-10T14:30:00Z',
-    notes: 'Vi trenger hallplass for ungdomsgruppen vår.',
-  },
-  {
-    id: 'app-002',
-    seasonName: 'Vår 2026',
-    seasonId: 'season-001',
-    organization: 'Telemark FK',
-    orgId: 'org-002',
-    requestedSlots: [
-      { day: 'Tuesday', time: '16:00-18:00', resource: 'Fotballbane 1' },
-      { day: 'Thursday', time: '16:00-18:00', resource: 'Fotballbane 1' },
-      { day: 'Saturday', time: '10:00-12:00', resource: 'Fotballbane 1' },
-    ],
-    totalHours: 72,
-    priorityScore: 92,
-    status: 'under_review',
-    submittedAt: '2026-01-08T09:00:00Z',
-    notes: 'Juniorlag trenger fast treningstid.',
-  },
-];
+type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'allocated';
 
 function StatusBadge({ status }: { status: ApplicationStatus }) {
   const colors: Record<ApplicationStatus, { bg: string; text: string }> = {
     pending: { bg: 'var(--ds-color-warning-surface-default)', text: 'var(--ds-color-warning-text-default)' },
-    under_review: { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' },
     approved: { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' },
     rejected: { bg: 'var(--ds-color-danger-surface-default)', text: 'var(--ds-color-danger-text-default)' },
-    waitlist: { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' },
+    allocated: { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' },
   };
   const labels: Record<ApplicationStatus, string> = {
     pending: 'Venter',
-    under_review: 'Under behandling',
     approved: 'Godkjent',
     rejected: 'Avslått',
-    waitlist: 'Venteliste',
+    allocated: 'Tildelt',
   };
   const color = colors[status] || colors.pending;
   return <Badge style={{ backgroundColor: color.bg, color: color.text }}>{labels[status]}</Badge>;
@@ -86,21 +51,27 @@ export function SeasonApplicationsReviewPage() {
   const { locale } = useLocale();
   const { confirm } = useDialog();
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | undefined>(undefined);
-  const [selectedApp, setSelectedApp] = useState<typeof mockApplications[0] | null>(null);
-  const [isLoading] = useState(false);
+  const [selectedApp, setSelectedApp] = useState<SeasonApplication | null>(null);
   const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
   );
 
+  // Fetch season applications
+  const { data: applicationsResponse, isLoading } = useSeasonApplications(undefined, {
+    status: statusFilter,
+  });
+
+  // Mutations
+  const approveMutation = useApproveSeasonApplication();
+  const rejectMutation = useRejectSeasonApplication();
+
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const applications = statusFilter 
-    ? mockApplications.filter(a => a.status === statusFilter)
-    : mockApplications;
+  const applications = applicationsResponse?.data || [];
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
@@ -115,7 +86,7 @@ export function SeasonApplicationsReviewPage() {
       variant: 'success',
     });
     if (confirmed) {
-      console.log('Approved:', id);
+      await approveMutation.mutateAsync(id);
       setSelectedApp(null);
     }
   };
@@ -129,17 +100,18 @@ export function SeasonApplicationsReviewPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Rejected:', id);
+      await rejectMutation.mutateAsync({ id });
       setSelectedApp(null);
     }
   };
 
   // Stats
+  const allApplications = applicationsResponse?.data || [];
   const stats = {
-    total: mockApplications.length,
-    pending: mockApplications.filter(a => a.status === 'pending').length,
-    underReview: mockApplications.filter(a => a.status === 'under_review').length,
-    approved: mockApplications.filter(a => a.status === 'approved').length,
+    total: allApplications.length,
+    pending: allApplications.filter(a => a.status === 'pending').length,
+    approved: allApplications.filter(a => a.status === 'approved').length,
+    allocated: allApplications.filter(a => a.status === 'allocated').length,
   };
 
   return (
@@ -171,18 +143,18 @@ export function SeasonApplicationsReviewPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Under behandling</Paragraph>
-          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.underReview}</Heading>
-        </Card>
-        <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Godkjent</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>{stats.approved}</Heading>
+        </Card>
+        <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Tildelt</Paragraph>
+          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.allocated}</Heading>
         </Card>
       </div>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-        {(['all', 'pending', 'under_review', 'approved', 'rejected'] as const).map((filter) => (
+        {(['all', 'pending', 'approved', 'allocated', 'rejected'] as const).map((filter) => (
           <Button
             key={filter}
             type="button"
@@ -191,7 +163,7 @@ export function SeasonApplicationsReviewPage() {
             onClick={() => setStatusFilter(filter === 'all' ? undefined : filter as ApplicationStatus)}
             style={{ minHeight: '44px' }}
           >
-            {filter === 'all' ? 'Alle' : filter === 'pending' ? 'Ventende' : filter === 'under_review' ? 'Under behandling' : filter === 'approved' ? 'Godkjent' : 'Avslått'}
+            {filter === 'all' ? 'Alle' : filter === 'pending' ? 'Ventende' : filter === 'approved' ? 'Godkjent' : filter === 'allocated' ? 'Tildelt' : 'Avslått'}
           </Button>
         ))}
       </div>
@@ -213,8 +185,8 @@ export function SeasonApplicationsReviewPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                <Table.HeaderCell>Sesong</Table.HeaderCell>
-                <Table.HeaderCell>Timer</Table.HeaderCell>
+                <Table.HeaderCell>Ressurs</Table.HeaderCell>
+                <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                 <Table.HeaderCell>Prioritet</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>Mottatt</Table.HeaderCell>
@@ -222,49 +194,61 @@ export function SeasonApplicationsReviewPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {applications.map((app) => (
-                <Table.Row key={app.id} style={{ cursor: 'pointer' }} onClick={() => setSelectedApp(app)}>
-                  <Table.Cell>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{app.organization}</span>
-                  </Table.Cell>
-                  <Table.Cell>{app.seasonName}</Table.Cell>
-                  <Table.Cell>{app.totalHours} t</Table.Cell>
-                  <Table.Cell>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: app.priorityScore >= 90 ? 'var(--ds-color-success-surface-default)' :
-                                       app.priorityScore >= 70 ? 'var(--ds-color-warning-surface-default)' :
-                                       'var(--ds-color-neutral-surface-default)',
-                      color: app.priorityScore >= 90 ? 'var(--ds-color-success-text-default)' :
-                             app.priorityScore >= 70 ? 'var(--ds-color-warning-text-default)' :
-                             'var(--ds-color-neutral-text-default)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 'var(--ds-font-weight-semibold)',
-                      fontSize: 'var(--ds-font-size-sm)',
-                    }}>
-                      {app.priorityScore}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <StatusBadge status={app.status as ApplicationStatus} />
-                  </Table.Cell>
-                  <Table.Cell>{formatDate(app.submittedAt)}</Table.Cell>
-                  <Table.Cell onClick={(e) => e.stopPropagation()}>
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                      <Button type="button" variant="primary" data-size="sm" onClick={() => handleApprove(app.id)}>
-                        Godkjenn
-                      </Button>
-                      <Button type="button" variant="secondary" data-size="sm" onClick={() => handleReject(app.id)}>
-                        Avslå
-                      </Button>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {applications.map((app) => {
+                const weekdays = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+                const dayName = weekdays[app.weekday];
+                const timeSlot = `${app.startTime}-${app.endTime}`;
+
+                return (
+                  <Table.Row key={app.id} style={{ cursor: 'pointer' }} onClick={() => setSelectedApp(app)}>
+                    <Table.Cell>
+                      <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {app.organizationName || app.applicantName}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>{app.rentalObjectName || app.rentalObjectId}</Table.Cell>
+                    <Table.Cell>{dayName} {timeSlot}</Table.Cell>
+                    <Table.Cell>
+                      {app.priority ? (
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: 'var(--ds-border-radius-full)',
+                          backgroundColor: app.priority >= 90 ? 'var(--ds-color-success-surface-default)' :
+                                           app.priority >= 70 ? 'var(--ds-color-warning-surface-default)' :
+                                           'var(--ds-color-neutral-surface-default)',
+                          color: app.priority >= 90 ? 'var(--ds-color-success-text-default)' :
+                                 app.priority >= 70 ? 'var(--ds-color-warning-text-default)' :
+                                 'var(--ds-color-neutral-text-default)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'var(--ds-font-weight-semibold)',
+                          fontSize: 'var(--ds-font-size-sm)',
+                        }}>
+                          {app.priority}
+                        </div>
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <StatusBadge status={app.status} />
+                    </Table.Cell>
+                    <Table.Cell>{formatDate(app.createdAt)}</Table.Cell>
+                    <Table.Cell onClick={(e) => e.stopPropagation()}>
+                      <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+                        <Button type="button" variant="primary" data-size="sm" onClick={() => handleApprove(app.id)}>
+                          Godkjenn
+                        </Button>
+                        <Button type="button" variant="secondary" data-size="sm" onClick={() => handleReject(app.id)}>
+                          Avslå
+                        </Button>
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
             </Table.Body>
           </Table>
         )}
@@ -278,60 +262,98 @@ export function SeasonApplicationsReviewPage() {
         size="lg"
         aria-label="Søknadsdetaljer"
       >
-        {selectedApp && (
-          <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <div>
-              <Heading level={2} data-size="md" style={{ margin: 0 }}>
-                {selectedApp.organization}
-              </Heading>
-              <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-                Søknad til {selectedApp.seasonName}
-              </Paragraph>
-            </div>
+        {selectedApp && (() => {
+          const weekdays = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+          const dayName = weekdays[selectedApp.weekday];
 
-            <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
-                Ønskede tider
-              </Paragraph>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                {selectedApp.requestedSlots.map((slot, i) => (
-                  <div key={i} style={{
-                    padding: 'var(--ds-spacing-3)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                  }}>
+          return (
+            <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+              <div>
+                <Heading level={2} data-size="md" style={{ margin: 0 }}>
+                  {selectedApp.organizationName || selectedApp.applicantName}
+                </Heading>
+                <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
+                  Søknad for {selectedApp.rentalObjectName || selectedApp.rentalObjectId}
+                </Paragraph>
+              </div>
+
+              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
+                  Kontaktinformasjon
+                </Paragraph>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                  <div>
+                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Navn</Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                      {slot.day} {slot.time}
-                    </Paragraph>
-                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {slot.resource}
+                      {selectedApp.applicantName}
                     </Paragraph>
                   </div>
-                ))}
-              </div>
-            </Card>
-
-            {selectedApp.notes && (
-              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
-                  Merknad fra søker
-                </Paragraph>
-                <Paragraph data-size="sm" style={{ margin: 0 }}>
-                  {selectedApp.notes}
-                </Paragraph>
+                  <div>
+                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>E-post</Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0 }}>{selectedApp.applicantEmail}</Paragraph>
+                  </div>
+                  {selectedApp.applicantPhone && (
+                    <div>
+                      <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Telefon</Paragraph>
+                      <Paragraph data-size="sm" style={{ margin: 0 }}>{selectedApp.applicantPhone}</Paragraph>
+                    </div>
+                  )}
+                </div>
               </Card>
-            )}
 
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', marginTop: 'auto' }}>
-              <Button type="button" variant="primary" onClick={() => handleApprove(selectedApp.id)} style={{ flex: 1, minHeight: '44px' }}>
-                Godkjenn søknad
-              </Button>
-              <Button type="button" variant="secondary" onClick={() => handleReject(selectedApp.id)} style={{ flex: 1, minHeight: '44px' }}>
-                Avslå søknad
-              </Button>
+              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
+                  Ønsket tid
+                </Paragraph>
+                <div style={{
+                  padding: 'var(--ds-spacing-3)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+                }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    {dayName} {selectedApp.startTime}-{selectedApp.endTime}
+                  </Paragraph>
+                  {selectedApp.priority && (
+                    <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}>
+                      Prioritet: {selectedApp.priority}
+                    </Paragraph>
+                  )}
+                </div>
+              </Card>
+
+              {selectedApp.notes && (
+                <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
+                    Merknad fra søker
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    {selectedApp.notes}
+                  </Paragraph>
+                </Card>
+              )}
+
+              {selectedApp.rejectionReason && (
+                <Card style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-danger-surface-subtle)' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-2)' }}>
+                    Avslåsgrunn
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    {selectedApp.rejectionReason}
+                  </Paragraph>
+                </Card>
+              )}
+
+              <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', marginTop: 'auto' }}>
+                <Button type="button" variant="primary" onClick={() => handleApprove(selectedApp.id)} style={{ flex: 1, minHeight: '44px' }}>
+                  Godkjenn søknad
+                </Button>
+                <Button type="button" variant="secondary" onClick={() => handleReject(selectedApp.id)} style={{ flex: 1, minHeight: '44px' }}>
+                  Avslå søknad
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </Drawer>
     </div>
   );
