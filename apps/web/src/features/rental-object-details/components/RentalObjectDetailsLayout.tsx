@@ -165,10 +165,10 @@ export function RentalObjectDetailsLayout({
 
   // Tab configuration
   const tabs = [
-    { id: 'overview', label: t('oversikt') },
+    { id: 'overview', label: t('listing.overview') },
     { id: 'activity', label: presenter.activityTabConfig.labelKey },
-    { id: 'rules', label: t('retningslinjer') },
-    { id: 'faq', label: t('faq') },
+    { id: 'rules', label: t('listing.rules') },
+    { id: 'faq', label: t('listing.faq') },
   ];
 
   return (

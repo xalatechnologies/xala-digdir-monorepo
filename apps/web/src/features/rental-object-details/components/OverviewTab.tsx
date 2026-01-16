@@ -284,7 +284,7 @@ export function OverviewTab({
       {/* Description */}
       <section>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-          Beskrivelse
+          {t('overview.description')}
         </Heading>
         {metadata.description ? (
           <Paragraph
@@ -331,10 +331,10 @@ export function OverviewTab({
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Maks tillatt
+                {t('overview.capacity.maxAllowed')}
               </Paragraph>
               <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {capacity} personer
+                {capacity} {t('overview.capacity.people')}
               </Paragraph>
             </div>
           </div>
