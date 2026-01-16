@@ -39,34 +39,41 @@ import { useT } from '@xala/i18n';
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-// Listing type options (UI filter types)
-const LISTING_TYPE_OPTIONS = [
-  { id: 'ALL', label: 'Alle typer' },
-  { id: 'SPACE', label: 'Lokale' },
-  { id: 'RESOURCE', label: 'Utstyr' },
-  { id: 'SERVICE', label: 'Tjeneste' },
-  { id: 'VEHICLE', label: 'Kjøretøy' },
-  { id: 'EVENT', label: 'Arrangement' },
-  { id: 'OTHER', label: 'Annet' },
+// Category options using V3 4-category model
+// Note: Categories can be disabled per tenant via feature flags
+// Labels are i18n keys to be translated at render time
+const CATEGORY_OPTIONS = [
+  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
+  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
+  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
+  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
 ];
 
-// Capacity filter options
+// Feature flag check for disabled categories (Skien has KJORETOY_OG_TRANSPORT disabled)
+const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT']; // TODO: fetch from tenant feature flags
+
+// Capacity filter options (i18n keys)
 const CAPACITY_OPTIONS = [
-  { id: 'all', label: 'Alle størrelser', min: 0, max: Infinity },
-  { id: '1-5', label: '1-5 personer', min: 1, max: 5 },
-  { id: '6-10', label: '6-10 personer', min: 6, max: 10 },
-  { id: '11-20', label: '11-20 personer', min: 11, max: 20 },
-  { id: '21-50', label: '21-50 personer', min: 21, max: 50 },
-  { id: '50+', label: '50+ personer', min: 50, max: Infinity },
+  { id: 'all', labelKey: 'listings.filter.capacity.all', min: 0, max: Infinity },
+  { id: '1-5', labelKey: 'listings.filter.capacity.1-5', min: 1, max: 5 },
+  { id: '6-10', labelKey: 'listings.filter.capacity.6-10', min: 6, max: 10 },
+  { id: '11-20', labelKey: 'listings.filter.capacity.11-20', min: 11, max: 20 },
+  { id: '21-50', labelKey: 'listings.filter.capacity.21-50', min: 21, max: 50 },
+  { id: '50+', labelKey: 'listings.filter.capacity.50+', min: 50, max: Infinity },
 ];
 
 // Filter helpers using projection DTO directly (no transformation needed)
 
-// Get rental object type counts for filter badges
-const getRentalObjectTypeCounts = (listings: ListingCardProjectionDTO[]) => {
+// Get rental object category counts for filter badges (uses V3 category_key field)
+const getCategoryCounts = (listings: ListingCardProjectionDTO[]) => {
   const counts: Record<string, number> = { ALL: listings.length };
   listings.forEach(l => {
-    counts[l.type] = (counts[l.type] || 0) + 1;
+    // Use category field which maps to category_key from DB
+    const category = (l as any).category || (l as any).categoryKey;
+    if (category) {
+      counts[category] = (counts[category] || 0) + 1;
+    }
   });
   return counts;
 };
@@ -136,7 +143,7 @@ export function RentalObjectsPage(): React.ReactElement {
   const MAX_VISIBLE_ITEMS = 4;
 
   // Derived filter options (using projection DTO fields)
-  const typeCounts = React.useMemo(() => getRentalObjectTypeCounts(listings), [listings]);
+  const typeCounts = React.useMemo(() => getCategoryCounts(listings), [listings]);
   const allFacilities = React.useMemo(() => getAllAmenities(listings), [listings]);
 
   const locationAreas = React.useMemo(() => {
@@ -272,20 +279,20 @@ export function RentalObjectsPage(): React.ReactElement {
       >
         <DrawerSection title={t('type')} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
-            {(showMoreType ? LISTING_TYPE_OPTIONS : LISTING_TYPE_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((type) => (
+            {(showMoreType ? CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)) : CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).slice(0, MAX_VISIBLE_ITEMS)).map((cat) => (
               <DrawerItem
-                key={type.id}
-                left={<Checkbox checked={listingType === type.id} onChange={() => setRentalObjectType(type.id)} aria-label={type.label} />}
-                right={<Text size="sm">({typeCounts[type.id] || 0})</Text>}
-                onClick={() => setRentalObjectType(type.id)}
-                selected={listingType === type.id}
+                key={cat.id}
+                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={t(cat.labelKey)} />}
+                right={<Text size="sm">({typeCounts[cat.id] || 0})</Text>}
+                onClick={() => setRentalObjectType(cat.id)}
+                selected={listingType === cat.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{type.label}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cat.labelKey)}</Text>
               </DrawerItem>
             ))}
-            {LISTING_TYPE_OPTIONS.length > MAX_VISIBLE_ITEMS && (
+            {CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length > MAX_VISIBLE_ITEMS && (
               <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreType(!showMoreType)}>
-                {showMoreType ? 'Vis mindre' : `Vis mer (${LISTING_TYPE_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
+                {showMoreType ? t('common.showLess') : `${t('common.showMore')} (${CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
@@ -305,7 +312,7 @@ export function RentalObjectsPage(): React.ReactElement {
             ))}
             {locationAreas.length > MAX_VISIBLE_ITEMS && (
               <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreArea(!showMoreArea)}>
-                {showMoreArea ? 'Vis mindre' : `Vis mer (${locationAreas.length - MAX_VISIBLE_ITEMS})`}
+                {showMoreArea ? t('common.showLess') : `${t('common.showMore')} (${locationAreas.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
@@ -316,16 +323,16 @@ export function RentalObjectsPage(): React.ReactElement {
             {(showMoreCapacity ? CAPACITY_OPTIONS : CAPACITY_OPTIONS.slice(0, MAX_VISIBLE_ITEMS)).map((cap) => (
               <DrawerItem
                 key={cap.id}
-                left={<Checkbox checked={selectedCapacity === cap.id} onChange={() => setSelectedCapacity(cap.id)} aria-label={cap.label} />}
+                left={<Checkbox checked={selectedCapacity === cap.id} onChange={() => setSelectedCapacity(cap.id)} aria-label={t(cap.labelKey)} />}
                 onClick={() => setSelectedCapacity(cap.id)}
                 selected={selectedCapacity === cap.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{cap.label}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cap.labelKey)}</Text>
               </DrawerItem>
             ))}
             {CAPACITY_OPTIONS.length > MAX_VISIBLE_ITEMS && (
               <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreCapacity(!showMoreCapacity)}>
-                {showMoreCapacity ? 'Vis mindre' : `Vis mer (${CAPACITY_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
+                {showMoreCapacity ? t('common.showLess') : `${t('common.showMore')} (${CAPACITY_OPTIONS.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
@@ -453,12 +460,12 @@ export function RentalObjectsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      type={t(listing.categoryLabel) || listing.category}
+                      listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                       location={listing.locationFormatted}
                       description={listing.descriptionExcerpt || ''}
                       image={listing.primaryImageUrl}
-                      facilities={listing.amenities}
+                      facilities={listing.amenities?.map((key: string) => t(key) || key)}
                       moreFacilities={listing.moreAmenitiesCount}
                       capacity={listing.capacity}
                       price={listing.priceAmount}
@@ -471,7 +478,6 @@ export function RentalObjectsPage(): React.ReactElement {
                       showDescription={true}
                       showFacilities={true}
                       showCapacity={true}
-                      showRentalObjectType={false}
                       showRating={false}
                       showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
@@ -487,12 +493,12 @@ export function RentalObjectsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
-                      listingType={listing.type as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      type={t(listing.categoryLabel) || listing.category}
+                      listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                       location={listing.locationFormatted}
                       description={listing.descriptionExcerpt || ''}
                       image={listing.primaryImageUrl}
-                      facilities={listing.amenities}
+                      facilities={listing.amenities?.map((key: string) => t(key) || key)}
                       moreFacilities={listing.moreAmenitiesCount}
                       capacity={listing.capacity}
                       price={listing.priceAmount}
@@ -501,7 +507,6 @@ export function RentalObjectsPage(): React.ReactElement {
                       {...(listing.latitude != null && { latitude: listing.latitude })}
                       {...(listing.longitude != null && { longitude: listing.longitude })}
                       mapboxToken={MAPBOX_TOKEN || ''}
-                      showRentalObjectType={true}
                       showMap={true}
                       showPrice={true}
                       onClick={(id) => handleListingClick(id, listing.slug)}
@@ -550,7 +555,7 @@ export function RentalObjectsPage(): React.ReactElement {
                 />
               ) : (
                 <RentalObjectTableView
-                  listings={filteredListings.map(l => ({
+                  rentalObjects={filteredListings.map(l => ({
                     id: l.id,
                     name: l.name,
                     ...(l.slug && { slug: l.slug }),
@@ -563,7 +568,7 @@ export function RentalObjectsPage(): React.ReactElement {
                     priceUnit: l.priceUnit,
                   }))}
                   height="calc(100vh - 250px)"
-                  onListingClick={handleListingClick}
+                  onRentalObjectClick={handleListingClick}
                 />
               )}
 
