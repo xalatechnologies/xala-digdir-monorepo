@@ -20,7 +20,7 @@ import type {
   FeatureFlagsQueryParams,
   UpdateCategoryEntitlementsRequest,
   UpdateSecretRequest,
-} from '../services/saas.service';
+} from '../types/saas';
 
 // ============================================================================
 // SaaS Admin Identity

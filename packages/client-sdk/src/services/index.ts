@@ -118,65 +118,9 @@ export type {
   InvoiceQueryParams
 } from './billing.service';
 
-// SaaS Admin
-export {
-  saasService,
-  type SaasTenantStatus,
-  type PlanStatus,
-  type BillingPeriod,
-  type FeatureFlagType,
-  type FeatureFlagCategory,
-  type BillingStatus,
-  type SeatLimits,
-  type ModuleEntitlements,
-  type IntegrationEntitlements,
-  type FeatureEntitlements,
-  type Entitlements,
-  type SaasTenant,
-  type SaasTenantWithStats,
-  type Plan,
-  type FeatureFlagCatalogItem,
-  type TenantFeatureFlag,
-  type CategoryEntitlement,
-  type TenantBillingSummary,
-  type TenantInvoice,
-  type MaskedSecret,
-  type SaasAdminCapabilities,
-  type LicenseKeyResponse,
-  type PaginatedResponse,
-  type SingleResponse,
-  type SaasTenantQueryParams,
-  type CreateSaasTenantRequest,
-  type UpdateSaasTenantRequest,
-  type SuspendTenantRequest,
-  type UpdateSeatLimitsRequest,
-  type UpdateFeatureFlagsRequest,
-  type PlanQueryParams,
-  type CreatePlanRequest,
-  type UpdatePlanRequest,
-  type FeatureFlagsQueryParams,
-  type UpdateCategoryEntitlementsRequest,
-  type UpdateSecretRequest,
-} from './saas.service';
+// SaaS Admin - Service only (types from ./types)
+export { saasService } from './saas.service';
 
-// Tenant Admin
-export {
-  tenantAdminService,
-  type TenantAdminSeatLimits,
-  type TenantUsageStats,
-  type TenantAdminAllowedActions,
-  type TenantAdminCapabilities,
-  type TenantSubscription,
-  type TenantFlags,
-  type TenantBranding,
-  type TenantIntegration,
-  type TenantIntegrationsResponse,
-  type UpdateBrandingRequest,
-  type UpdateIntegrationRequest,
-  type SingleResponse as TenantAdminSingleResponse,
-  type CapabilitiesResponse,
-  type SubscriptionResponse,
-  type BrandingResponse,
-  type IntegrationResponse,
-} from './tenant-admin.service';
+// Tenant Admin - Service only (types from ./types)
+export { tenantAdminService } from './tenant-admin.service';
 

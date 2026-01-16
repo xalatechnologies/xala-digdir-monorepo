@@ -5,7 +5,7 @@
  * Used by web, backoffice, and minside apps.
  */
 
-import type { Listing, ListingMetadata, ListingLocation, ListingType } from '../types';
+import type { Listing, ListingMetadata, ListingType } from '../types';
 
 // =============================================================================
 // UI Types for Transformed Listings

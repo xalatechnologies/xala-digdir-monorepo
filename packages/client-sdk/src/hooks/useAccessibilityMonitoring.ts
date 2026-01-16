@@ -86,8 +86,9 @@ export function useAccessibilityMonitoring(
     };
   }, []);
 
-  // Get client instance
-  const client = useMemo(() => {
+  // Get client instance - NOTE: Currently unused but kept for future server-side reporting
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _client = useMemo(() => {
     try {
       return getClient();
     } catch {

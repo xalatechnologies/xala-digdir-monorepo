@@ -3,6 +3,7 @@
  * Single Responsibility: Platform-wide SaaS administration types for tenant management,
  * subscription plans, feature flags, billing, and secrets
  */
+import type { PaginatedResponse, SingleResponse } from './enums';
 
 // =============================================================================
 // Enums & Status Types
@@ -381,24 +382,11 @@ export interface UpdateSecretRequest {
 }
 
 // =============================================================================
-// Response Wrappers
+// Response Wrappers (re-export from enums for convenience)
 // =============================================================================
 
-/** Paginated response wrapper */
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-/** Single response wrapper */
-export interface SingleResponse<T> {
-  data: T;
-}
+// PaginatedResponse and SingleResponse are imported from ./enums
+export type { PaginatedResponse, SingleResponse };
 
 // =============================================================================
 // Response Type Aliases (for SDK convenience)

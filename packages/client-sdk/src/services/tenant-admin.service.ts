@@ -4,147 +4,16 @@
  * Required roles: TENANT_ADMIN, TENANT_BILLING_ADMIN, TENANT_TECH_ADMIN
  */
 import { getClient } from '../core/client-factory';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-/** Seat limits configuration */
-export interface TenantAdminSeatLimits {
-  maxUsers: number;
-  maxOrganizations: number;
-  maxListings: number;
-  maxBookingsPerMonth: number;
-  maxStorageMb: number;
-}
-
-/** Usage statistics */
-export interface TenantUsageStats {
-  currentUsers: number;
-  currentOrganizations: number;
-  currentListings: number;
-  bookingsThisMonth: number;
-  storageMb: number;
-}
-
-/** Allowed actions for tenant admin */
-export interface TenantAdminAllowedActions {
-  canViewSubscription: boolean;
-  canManageBranding: boolean;
-  canManageIntegrations: boolean;
-  canViewFlags: boolean;
-  canManageSeeds: boolean;
-}
-
-/** Tenant admin capabilities projection */
-export interface TenantAdminCapabilities {
-  role: string;
-  level: string;
-  tenantId: string;
-  permissions: string[];
-  allowedActions: TenantAdminAllowedActions;
-  featureFlags: Record<string, boolean>;
-  seatLimits: TenantAdminSeatLimits;
-  usage: TenantUsageStats;
-}
-
-/** Tenant subscription details */
-export interface TenantSubscription {
-  tenantId: string;
-  planId: string | null;
-  planName: string | null;
-  status: string;
-  currentPeriodStart: string | null;
-  currentPeriodEnd: string | null;
-  seatLimits: TenantAdminSeatLimits;
-  usage: TenantUsageStats;
-}
-
-/** Tenant feature flags (read-only) */
-export interface TenantFlags {
-  tenantId: string;
-  flags: Record<string, boolean>;
-  lastUpdated: string | null;
-}
-
-/** Tenant branding configuration */
-export interface TenantBranding {
-  tenantId: string;
-  logoUrl: string | null;
-  primaryColor: string | null;
-  secondaryColor: string | null;
-  name: string;
-  description: string | null;
-  faviconUrl: string | null;
-  version: number;
-  updatedAt: string;
-}
-
-/** Tenant integration status */
-export interface TenantIntegration {
-  provider: string;
-  enabled: boolean;
-  configured: boolean;
-  lastSync: string | null;
-  maskedApiKey: string | null;
-}
-
-/** Integrations list response */
-export interface TenantIntegrationsResponse {
-  data: TenantIntegration[];
-  meta: {
-    total: number;
-  };
-}
-
-// ============================================================================
-// Request Types
-// ============================================================================
-
-/** Update branding request */
-export interface UpdateBrandingRequest {
-  logoUrl?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  name?: string;
-  description?: string;
-  faviconUrl?: string;
-}
-
-/** Update integration request */
-export interface UpdateIntegrationRequest {
-  enabled: boolean;
-  apiKey?: string;
-  apiSecret?: string;
-  webhookUrl?: string;
-  settings?: Record<string, unknown>;
-}
-
-// ============================================================================
-// Response Wrappers
-// ============================================================================
-
-/** Single response wrapper */
-export interface SingleResponse<T> {
-  data: T;
-}
-
-/** Wrapper response with named property */
-export interface CapabilitiesResponse {
-  capabilities: TenantAdminCapabilities;
-}
-
-export interface SubscriptionResponse {
-  subscription: TenantSubscription;
-}
-
-export interface BrandingResponse {
-  branding: TenantBranding;
-}
-
-export interface IntegrationResponse {
-  integration: TenantIntegration;
-}
+import type {
+  TenantAdminFlags as TenantFlags,
+  TenantAdminIntegrationsResponse as TenantIntegrationsResponse,
+  UpdateTenantBrandingRequest as UpdateBrandingRequest,
+  UpdateTenantIntegrationRequest as UpdateIntegrationRequest,
+  TenantAdminCapabilitiesResponse as CapabilitiesResponse,
+  TenantAdminSubscriptionResponse as SubscriptionResponse,
+  TenantAdminBrandingResponse as BrandingResponse,
+  TenantAdminIntegrationResponse as IntegrationResponse,
+} from '../types/tenant-admin';
 
 // ============================================================================
 // Service Implementation
