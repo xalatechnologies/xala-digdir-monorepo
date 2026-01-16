@@ -362,3 +362,47 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// RBAC hooks (Role-Based Access Control)
+export {
+  // Capabilities
+  useCapabilities,
+  usePermissions,
+  useCheckPermission,
+  useHasPermission,
+  useEffectiveRole,
+  // Access Grants
+  useAccessGrants,
+  useAccessGrant,
+  useAccessGrantsByOrganization,
+  useAccessGrantsByRentalObject,
+  useAccessibleRentalObjects,
+  useGrantedOrganizations,
+  useCheckAccess,
+  useGrantAccess,
+  useBulkGrantAccess,
+  useUpdateAccessGrant,
+  useRevokeAccess,
+  useDeleteAccessGrant,
+  // Permission Assignments
+  usePermissionAssignments,
+  usePermissionAssignment,
+  usePermissionAssignmentsByOrganization,
+  usePermissionAssignmentsByUser,
+  usePermissionAssignmentsByRentalObject,
+  useMemberPermissions,
+  useUserPermissionsSummary,
+  useAvailablePermissions,
+  useAssignPermissions,
+  useUpdatePermissionAssignment,
+  useRevokePermissions,
+  useDeletePermissionAssignment,
+  useCheckRentalObjectPermission,
+  useBulkAssignPermissions,
+  useCopyPermissions,
+  // Utility hooks
+  useHasCapability,
+  useBackofficeRole,
+  useMyOrgMemberships,
+  useMyAccessibleRentalObjects,
+} from './use-rbac';
