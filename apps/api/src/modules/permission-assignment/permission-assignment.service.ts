@@ -334,6 +334,25 @@ export class PermissionAssignmentService {
 
     const previousAssignment = existing[0];
 
+    // Verify access grant still exists and is active (org must still have access to this rental object)
+    const accessGrant = await this.db
+      .select()
+      .from(accessGrants)
+      .where(
+        and(
+          eq(accessGrants.orgId, previousAssignment.orgId),
+          eq(accessGrants.rentalObjectId, previousAssignment.rentalObjectId),
+          eq(accessGrants.status, 'active')
+        )
+      )
+      .limit(1);
+
+    if (!accessGrant.length) {
+      throw new ForbiddenError(
+        'Organization no longer has access to this rental object. Cannot update permission assignment.'
+      );
+    }
+
     // Get org for tenant ID
     const org = await this.db
       .select()
