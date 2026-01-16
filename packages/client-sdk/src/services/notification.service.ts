@@ -55,6 +55,15 @@ export interface NotificationQueryParams {
   limit?: number;
 }
 
+export interface DeliveryReportQueryParams {
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  type?: string;
+  page?: number;
+  limit?: number;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   meta: {
@@ -288,6 +297,38 @@ class NotificationService {
    */
   async delete(id: string): Promise<{ success: boolean }> {
     return getClient().delete<{ success: boolean }>(`${this.basePath}/${id}`);
+  }
+
+  /**
+   * Get delivery status for a notification
+   */
+  async getDeliveryStatus(id: string): Promise<{ data: any }> {
+    return getClient().get<{ data: any }>(`${this.basePath}/${id}/delivery-status`);
+  }
+
+  /**
+   * Get delivery reports with filtering
+   */
+  async getDeliveryReports(params?: DeliveryReportQueryParams): Promise<PaginatedResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) queryParams.set(key, String(value));
+      });
+    }
+    
+    const url = queryParams.toString() 
+      ? `${this.basePath}/delivery-reports?${queryParams.toString()}`
+      : `${this.basePath}/delivery-reports`;
+    
+    return getClient().get<PaginatedResponse<any>>(url);
+  }
+
+  /**
+   * Retry failed notification delivery
+   */
+  async retryFailed(id: string): Promise<{ success: boolean }> {
+    return getClient().post<{ success: boolean }>(`${this.basePath}/${id}/retry`);
   }
 }
 

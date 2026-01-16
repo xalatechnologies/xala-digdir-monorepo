@@ -24,7 +24,23 @@ import {
 /**
  * Options for saving flow context
  */
-export interface SaveFlowContextOptions extends Omit<RequireAuthOptions, 'flowContext'> {
+export interface SaveFlowContextOptions {
+  /** URL to return to after authentication */
+  returnTo?: string;
+  /** Tenant ID for context */
+  tenantId?: string;
+  /** Rental object ID (formerly listingId) */
+  listingId?: string;
+  /** Booking mode */
+  bookingMode?: string;
+  /** Selected dates */
+  selectedDates?: any[];
+  /** Selected time slots */
+  selectedSlots?: any[];
+  /** Recurring booking rules */
+  recurringRules?: any;
+  /** Additional form data */
+  formData?: Record<string, unknown>;
   /** Custom storage key (optional) */
   storageKey?: string;
 }
@@ -64,9 +80,9 @@ export interface UseFlowContextReturn {
   /** The currently stored context (null if none) */
   storedContext: FlowContext | null;
   /** Save flow context before authentication redirect */
-  saveFlowContext: (options: SaveFlowContextOptions) => SaveFlowContextResult;
+  saveFlowContext: (options: SaveFlowContextOptions) => Promise<SaveFlowContextResult>;
   /** Restore flow context after authentication */
-  restoreFlowContext: (options?: RestoreFlowContextOptions) => RestoreFlowContextResult;
+  restoreFlowContext: (options?: RestoreFlowContextOptions) => Promise<RestoreFlowContextResult>;
   /** Clear any stored flow context */
   clearFlowContext: (storageKey?: string) => void;
   /** Validate a returnTo URL */
@@ -201,11 +217,11 @@ export function useFlowContext(): UseFlowContextReturn {
    * Save flow context before redirecting to authentication.
    * Uses authService.requireAuth internally.
    */
-  const saveFlowContext = useCallback((options: SaveFlowContextOptions): SaveFlowContextResult => {
+  const saveFlowContext = useCallback(async (options: SaveFlowContextOptions): Promise<SaveFlowContextResult> => {
     const storageKey = options.storageKey ?? FLOW_CONTEXT_KEY;
 
     // Use authService.requireAuth which handles all the logic
-    const result = authService.requireAuth({
+    const result = await authService.requireAuth({
       returnTo: options.returnTo,
       tenantId: options.tenantId,
       listingId: options.listingId,
@@ -229,13 +245,13 @@ export function useFlowContext(): UseFlowContextReturn {
    * Restore flow context after authentication completes.
    * Uses authService.resumeFlow internally.
    */
-  const restoreFlowContext = useCallback((
+  const restoreFlowContext = useCallback(async (
     options: RestoreFlowContextOptions = {}
-  ): RestoreFlowContextResult => {
+  ): Promise<RestoreFlowContextResult> => {
     const { clearAfterLoad = true } = options;
 
     // Use authService.resumeFlow which handles all the logic
-    const result = authService.resumeFlow(clearAfterLoad);
+    const result = await authService.resumeFlow();
 
     // If we cleared context, notify subscribers
     if (clearAfterLoad && result.hasContext) {

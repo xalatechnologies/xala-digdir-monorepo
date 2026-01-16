@@ -360,3 +360,55 @@ export function useUpdateConsents() {
     },
   });
 }
+
+// ============================================================================
+// Organization Settings & Branding Hooks (TODO: Implement backend service)
+// ============================================================================
+
+/**
+ * Get organization settings
+ * @todo Implement backend service method organizationService.getSettings(organizationId)
+ */
+export function useOrganizationSettings(organizationId: string) {
+  return useQuery({
+    queryKey: [...queryKeys.organizations.detail(organizationId), "settings"],
+    queryFn: () => {
+      throw new Error("useOrganizationSettings: Backend service not yet implemented. Please implement organizationService.getSettings(organizationId)");
+    },
+    enabled: false, // Disabled until backend is implemented
+  });
+}
+
+/**
+ * Update organization settings
+ * @todo Implement backend service method organizationService.updateSettings(organizationId, settings)
+ */
+export function useUpdateOrganizationSettings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ organizationId, settings }: { organizationId: string; settings: any }) => {
+      throw new Error("useUpdateOrganizationSettings: Backend service not yet implemented. Please implement organizationService.updateSettings(organizationId, settings)");
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.organizations.detail(organizationId), "settings"] });
+    },
+  });
+}
+
+/**
+ * Update organization branding (logo, colors, theme)
+ * @todo Implement backend service method organizationService.updateBranding(organizationId, branding)
+ */
+export function useUpdateOrganizationBranding() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ organizationId, branding }: { organizationId: string; branding: any }) => {
+      throw new Error("useUpdateOrganizationBranding: Backend service not yet implemented. Please implement organizationService.updateBranding(organizationId, branding)");
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(organizationId) });
+    },
+  });
+}

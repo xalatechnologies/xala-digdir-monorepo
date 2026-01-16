@@ -12,6 +12,33 @@ import type {
 } from '../types/auth';
 import type { SingleResponse } from '../types/enums';
 
+export interface RequireAuthOptions {
+  returnUrl?: string;
+  returnTo?: string;
+  metadata?: Record<string, unknown>;
+  tenantId?: string;
+  listingId?: string;
+  bookingMode?: string;
+  selectedDates?: any[];
+  selectedSlots?: any[];
+  recurringRules?: any;
+  formData?: Record<string, unknown>;
+}
+
+export interface RequireAuthResult {
+  authenticated: boolean;
+  redirectUrl?: string;
+  session?: AuthSession;
+}
+
+export interface ResumeFlowResult {
+  success: boolean;
+  returnUrl?: string;
+  session?: AuthSession;
+  hasContext?: boolean;
+  flowContext?: any;
+}
+
 export class AuthService extends BaseService {
   constructor() {
     super('/api/auth');
@@ -172,6 +199,47 @@ export class AuthService extends BaseService {
    */
   async initiateOAuth(provider: string, callbackUrl?: string): Promise<SingleResponse<{ redirectUrl: string }>> {
     return this.client.post(this.buildPath('/oauth/initiate'), { provider, callbackUrl });
+  }
+
+  /**
+   * Require authentication for a protected action
+   * Checks if user is authenticated and initiates auth flow if needed
+   */
+  async requireAuth(options?: RequireAuthOptions): Promise<RequireAuthResult> {
+    try {
+      const session = await this.getSession();
+      return {
+        authenticated: true,
+        session: session.data,
+      };
+    } catch {
+      return {
+        authenticated: false,
+        redirectUrl: `/login?returnUrl=${encodeURIComponent(options?.returnUrl || window.location.pathname)}`,
+      };
+    }
+  }
+
+  /**
+   * Resume flow after authentication
+   * Restores user state and redirects to original destination
+   */
+  async resumeFlow(): Promise<ResumeFlowResult> {
+    try {
+      const session = await this.getSession();
+      const params = new URLSearchParams(window.location.search);
+      const returnUrl = params.get('returnUrl') || '/';
+      
+      return {
+        success: true,
+        returnUrl,
+        session: session.data,
+      };
+    } catch {
+      return {
+        success: false,
+      };
+    }
   }
 }
 

@@ -47,7 +47,7 @@ export function useRetryFailed() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => notificationService.retryFailed(),
+    mutationFn: (id: string) => notificationService.retryFailed(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },

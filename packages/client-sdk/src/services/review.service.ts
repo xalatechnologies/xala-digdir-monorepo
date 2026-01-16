@@ -113,33 +113,33 @@ export class ReviewService extends BaseService {
   }
 
   /**
-   * Get reviews for a specific listing
-   * @param listingId - Listing ID
+   * Get reviews for a specific rental object
+   * @param rentalObjectId - Rental Object ID
    * @param params - Optional query parameters for filtering and pagination
-   * @returns Promise resolving to paginated list of reviews for the listing
+   * @returns Promise resolving to paginated list of reviews for the rental object
    */
-  async getByListingId(listingId: string, params?: ReviewQueryParams): Promise<PaginatedResponse<Review>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}`), {
+  async getByRentalObjectId(rentalObjectId: string, params?: ReviewQueryParams): Promise<PaginatedResponse<Review>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}`), {
       params: params as Record<string, string | number | boolean>
     });
   }
 
   /**
-   * Get review statistics for a listing
-   * @param listingId - Listing ID
+   * Get review statistics for a rental object
+   * @param rentalObjectId - Rental Object ID
    * @returns Promise resolving to review statistics (average rating, count, distribution)
    */
-  async getStats(listingId: string): Promise<SingleResponse<ReviewStats>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}/stats`));
+  async getStats(rentalObjectId: string): Promise<SingleResponse<ReviewStats>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}/stats`));
   }
 
   /**
-   * Get review summary for a listing (stats + recent reviews)
-   * @param listingId - Listing ID
+   * Get review summary for a rental object (stats + recent reviews)
+   * @param rentalObjectId - Rental Object ID
    * @returns Promise resolving to review summary with statistics and recent reviews
    */
-  async getSummary(listingId: string): Promise<SingleResponse<ReviewSummary>> {
-    return this.client.get(this.buildPath(`/listing/${listingId}/summary`));
+  async getSummary(rentalObjectId: string): Promise<SingleResponse<ReviewSummary>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}/summary`));
   }
 
   /**

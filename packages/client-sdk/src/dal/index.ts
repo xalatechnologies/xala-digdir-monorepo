@@ -142,7 +142,7 @@ export function invalidateRecurringPreviews(queryClient: QueryClient): void {
 export interface BookingWebSocketEvent {
   type: 'created' | 'updated' | 'cancelled' | 'confirmed' | 'completed';
   bookingId: string;
-  listingId: string;
+  rentalObjectId: string;
   tenantId: string;
   startTime: string;
   endTime: string;
@@ -159,10 +159,10 @@ export function handleBookingEvent(
   event: BookingWebSocketEvent
 ): void {
   // Invalidate availability for the affected rental object
-  invalidateAvailability(queryClient, event.listingId);
+  invalidateAvailability(queryClient, event.rentalObjectId);
   
   // Invalidate quotes for the affected rental object
-  invalidateQuotes(queryClient, event.listingId);
+  invalidateQuotes(queryClient, event.rentalObjectId);
   
   // Invalidate recurring previews
   invalidateRecurringPreviews(queryClient);
@@ -182,12 +182,12 @@ export function handleBookingEvent(
  * Create a hash from booking selection for cache key
  */
 export function createSelectionHash(selection: {
-  listingId: string;
+  rentalObjectId: string;
   startTime: string;
   endTime: string;
   mode?: string;
 }): string {
-  return `${selection.listingId}-${selection.startTime}-${selection.endTime}-${selection.mode || 'SINGLE_SLOT'}`;
+  return `${selection.rentalObjectId}-${selection.startTime}-${selection.endTime}-${selection.mode || 'SINGLE_SLOT'}`;
 }
 
 // =============================================================================

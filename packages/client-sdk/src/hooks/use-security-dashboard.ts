@@ -42,7 +42,7 @@ export function useGdprStatus() {
  */
 export function useFailedLogins(params?: FailedLoginQueryParams) {
   return useQuery({
-    queryKey: queryKeys.security.failedLogins.list(params),
+    queryKey: queryKeys.security.failedLogins(params),
     queryFn: () => securityService.getFailedLogins(params),
     staleTime: 30 * 1000, // 30 seconds - security events should be fresh
     refetchInterval: 2 * 60 * 1000, // Auto-refetch every 2 minutes
@@ -55,7 +55,7 @@ export function useFailedLogins(params?: FailedLoginQueryParams) {
  */
 export function useDataExports(params?: DataExportQueryParams) {
   return useQuery({
-    queryKey: queryKeys.security.dataExports.list(params),
+    queryKey: queryKeys.security.dataExports(),
     queryFn: () => securityService.getDataExports(params),
     staleTime: 1 * 60 * 1000, // 1 minute
   });
@@ -70,7 +70,7 @@ export function useFailedLoginsByUser(
   params?: Omit<FailedLoginQueryParams, 'userId'>
 ) {
   return useQuery({
-    queryKey: queryKeys.security.failedLogins.byUser(userId, params),
+    queryKey: queryKeys.security.failedLogins(params),
     queryFn: () => securityService.getFailedLoginsByUser(userId, params),
     staleTime: 30 * 1000, // 30 seconds
     enabled: !!userId, // Only run query if userId is provided
@@ -86,7 +86,7 @@ export function useDataExportsByUser(
   params?: Omit<DataExportQueryParams, 'userId'>
 ) {
   return useQuery({
-    queryKey: queryKeys.security.dataExports.byUser(userId, params),
+    queryKey: queryKeys.security.dataExports(),
     queryFn: () => securityService.getDataExportsByUser(userId, params),
     staleTime: 1 * 60 * 1000, // 1 minute
     enabled: !!userId, // Only run query if userId is provided

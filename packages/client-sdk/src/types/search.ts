@@ -99,7 +99,7 @@ export interface SearchFilters {
   organizationId?: string;
   userId?: string;
   rentalObjectId?: string; // Preferred filter for rental objects
-  rentalObjectId?: string; // @deprecated Use rentalObjectId instead (backward compatibility)
+  listingId?: string; // @deprecated Use rentalObjectId instead (backward compatibility)
 
   // Additional filters
   minPrice?: number;

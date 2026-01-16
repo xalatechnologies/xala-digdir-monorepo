@@ -102,7 +102,7 @@ export function hasPendingSession(): boolean {
     }
 
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

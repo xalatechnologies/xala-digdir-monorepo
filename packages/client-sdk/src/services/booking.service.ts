@@ -163,7 +163,7 @@ export class BookingService extends BaseService {
    * Calculate booking pricing
    * Calculates total cost including base price, duration, and applicable discounts
    *
-   * @param listingId - Listing identifier
+   * @param rentalObjectId - Rental object identifier
    * @param startTime - Booking start time (ISO 8601)
    * @param endTime - Booking end time (ISO 8601)
    * @returns Promise with pricing breakdown including base price, discounts, and total
@@ -171,7 +171,7 @@ export class BookingService extends BaseService {
    * @example
    * ```typescript
    * const pricing = await bookingService.calculatePricing(
-   *   'listing-456',
+   *   'rental-object-456',
    *   '2024-03-15T10:00:00Z',
    *   '2024-03-15T12:00:00Z'
    * );
@@ -179,9 +179,9 @@ export class BookingService extends BaseService {
    * console.log('Currency:', pricing.data.currency);
    * ```
    */
-  async calculatePricing(listingId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
+  async calculatePricing(rentalObjectId: string, startTime: string, endTime: string): Promise<SingleResponse<BookingPricing>> {
     return this.client.get(this.buildPath('/pricing'), {
-      params: { listingId, startTime, endTime }
+      params: { rentalObjectId, startTime, endTime }
     });
   }
 
@@ -321,6 +321,22 @@ export class BookingService extends BaseService {
   async getDocuments(id: string): Promise<SingleResponse<BookingDocument[]>> {
     return this.client.get(this.buildPath(`/${id}/documents`));
   }
+
+  /**
+   * Get booking quote for a selection
+   * Returns pricing and availability information
+   */
+  async quote(selection: any): Promise<SingleResponse<any>> {
+    return this.client.post(this.buildPath('/quote'), selection);
+  }
+
+  /**
+   * Get recurring booking preview
+   * Returns server-computed occurrence preview with conflict detection
+   */
+  async getRecurringPreview(selection: any): Promise<SingleResponse<any>> {
+    return this.client.post(this.buildPath('/recurring/preview'), selection);
+  }
 }
 
 /**
@@ -367,7 +383,7 @@ export class AllocationService extends BaseService {
   /**
    * Get allocations
    */
-  async getAll(params?: { listingId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
+  async getAll(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }): Promise<PaginatedResponse<Allocation>> {
     return this.client.get(this.buildPath(), { params });
   }
 
@@ -397,15 +413,15 @@ export class AvailabilityService extends BaseService {
 
   /**
    * Get available time slots
-   * Retrieves available booking slots for a listing on a specific date
+   * Retrieves available booking slots for a rental object on a specific date
    *
-   * @param params - Query parameters including listing ID, date, and optional duration
+   * @param params - Query parameters including rental object ID, date, and optional duration
    * @returns Promise with array of time slots indicating availability and pricing
    *
    * @example
    * ```typescript
    * const slots = await availabilityService.getSlots({
-   *   listingId: 'listing-456',
+   *   rentalObjectId: 'rental-object-456',
    *   date: '2024-03-15',
    *   duration: 120 // minutes
    * });
@@ -413,7 +429,7 @@ export class AvailabilityService extends BaseService {
    * console.log(`${available.length} slots available`);
    * ```
    */
-  async getSlots(params: { listingId: string; date: string; duration?: number }): Promise<SingleResponse<Array<{
+  async getSlots(params: { rentalObjectId: string; date: string; duration?: number }): Promise<SingleResponse<Array<{
     startTime: string;
     endTime: string;
     available: boolean;
@@ -426,13 +442,13 @@ export class AvailabilityService extends BaseService {
    * Check if time range is available
    * Validates if a specific time range is available for booking
    *
-   * @param params - Query parameters with listing ID and time range
+   * @param params - Query parameters with rental object ID and time range
    * @returns Promise with availability status and any conflicting bookings
    *
    * @example
    * ```typescript
    * const availability = await availabilityService.check({
-   *   listingId: 'listing-456',
+   *   rentalObjectId: 'rental-object-456',
    *   startTime: '2024-03-15T10:00:00Z',
    *   endTime: '2024-03-15T12:00:00Z'
    * });
@@ -443,7 +459,7 @@ export class AvailabilityService extends BaseService {
    * }
    * ```
    */
-  async check(params: { listingId: string; startTime: string; endTime: string }): Promise<SingleResponse<{
+  async check(params: { rentalObjectId: string; startTime: string; endTime: string }): Promise<SingleResponse<{
     available: boolean;
     conflicts?: Array<{ startTime: string; endTime: string }>;
   }>> {

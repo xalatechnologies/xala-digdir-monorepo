@@ -479,3 +479,46 @@ export interface Municipality {
   county: string;
   rentalObjectCount?: number;
 }
+
+// =============================================================================
+// Constants - Listing Type Labels and Options
+// =============================================================================
+
+/**
+ * Legacy ListingType to Norwegian display labels
+ * @deprecated Use RentalObjectCategory instead
+ */
+export const LISTING_TYPE_LABELS: Record<import('./enums').ListingType, string> = {
+  SPACE: 'Lokale',
+  RESOURCE: 'Ressurs',
+  EVENT: 'Arrangement',
+  SERVICE: 'Tjeneste',
+  VEHICLE: 'Kjøretøy',
+  OTHER: 'Annet',
+};
+
+/**
+ * Legacy listing type filter options
+ * @deprecated Use RentalObjectCategory instead
+ */
+export const LISTING_TYPE_OPTIONS: Array<{ id: import('./enums').ListingType | 'ALL'; label: string }> = [
+  { id: 'ALL', label: 'Alle' },
+  { id: 'SPACE', label: 'Lokaler' },
+  { id: 'RESOURCE', label: 'Ressurser' },
+  { id: 'EVENT', label: 'Arrangementer' },
+  { id: 'SERVICE', label: 'Tjenester' },
+  { id: 'VEHICLE', label: 'Kjøretøy' },
+  { id: 'OTHER', label: 'Annet' },
+];
+
+/**
+ * Capacity filter options
+ */
+export const CAPACITY_OPTIONS: Array<{ id: string; label: string; min: number; max: number }> = [
+  { id: 'all', label: 'Alle størrelser', min: 0, max: Infinity },
+  { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
+  { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
+  { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
+  { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
+  { id: '100+', label: 'Over 100 personer', min: 101, max: Infinity },
+];

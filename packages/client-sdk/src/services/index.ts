@@ -10,8 +10,17 @@ export { BaseService } from './base.service';
 // Auth
 export { AuthService, authService } from './auth.service';
 
+// Rental Objects (primary)
+export {
+  RentalObjectService,
+  PublicRentalObjectService,
+  rentalObjectService,
+  publicRentalObjectService
+} from './rental-object.service';
+
 // Listings
-export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
+// TODO: Create listing.service.ts file
+// export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
 // Bookings
 export { 
@@ -110,6 +119,16 @@ export { monitoringService } from './monitoring.service';
 
 // Reviews
 export { ReviewService, reviewService } from './review.service';
+
+// Integrations (simple service)
+export { integrationsService } from './integrations.service';
+export type { Integration, IntegrationUpdate, IntegrationTestResult } from './integrations.service';
+
+// ID-porten
+export { idportenService } from './idporten.service';
+
+// Vipps
+export { vippsAuthService } from './vipps.service';
 
 // Billing (User + Org)
 export { 

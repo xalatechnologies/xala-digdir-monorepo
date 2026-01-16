@@ -61,9 +61,8 @@ interface UseBookingQuoteOptions {
 export function useBookingQuote(options: UseBookingQuoteOptions) {
   const { rentalObjectId, startTime, endTime, mode = 'SINGLE_SLOT', enabled = true } = options;
 
-  // Map rentalObjectId to listingId for DTO (backward compatibility with API/DB)
   const selection: BookingQuoteSelectionDTO = {
-    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
+    rentalObjectId,
     startTime,
     endTime,
     mode,
@@ -139,9 +138,8 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
     enabled = true 
   } = options;
 
-  // Map rentalObjectId to listingId for DTO (backward compatibility with API/DB)
   const selection = {
-    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
+    rentalObjectId,
     startTime,
     endTime,
     frequency,
@@ -150,7 +148,7 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
   };
 
   const selectionHash = createSelectionHash({
-    listingId: rentalObjectId, // DTO uses listingId for backward compatibility
+    rentalObjectId,
     startTime,
     endTime,
     mode: 'RECURRING',
@@ -197,8 +195,7 @@ export function useCreateBookingFromQuote() {
     mutationFn: (data: CreateBookingDTO) => bookingService.create(data),
     onSuccess: (_, variables) => {
       // Invalidate availability for the rental object
-      // Note: variables.listingId is used for backward compatibility with DTO/DB
-      invalidateAvailability(queryClient, variables.listingId);
+      invalidateAvailability(queryClient, variables.rentalObjectId);
       // Invalidate all booking queries
       invalidateBookings(queryClient);
     },

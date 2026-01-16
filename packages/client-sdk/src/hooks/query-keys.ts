@@ -5,10 +5,10 @@
  */
 
 import type {
-  ListingQueryParams,
+  RentalObjectQueryParams,
   AvailabilityQueryParams,
-  PublicListingParams
-} from '../types/listing';
+  PublicRentalObjectParams,
+} from '../types/rental-object';
 import type { BookingQueryParams } from '../types/booking';
 import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
@@ -76,18 +76,19 @@ export const queryKeys = {
 
 
   // =========================================================================
-  // Listing Keys
+  // Rental Object Keys (primary)
   // =========================================================================
-  listings: {
-    all: ['listings'] as const,
-    lists: () => [...queryKeys.listings.all, 'list'] as const,
-    list: (params?: ListingQueryParams) => [...queryKeys.listings.lists(), params] as const,
-    details: () => [...queryKeys.listings.all, 'detail'] as const,
-    detail: (id: string) => [...queryKeys.listings.details(), id] as const,
-    slug: (slug: string) => [...queryKeys.listings.all, 'slug', slug] as const,
+  rentalObjects: {
+    all: ['rental-objects'] as const,
+    lists: () => [...queryKeys.rentalObjects.all, 'list'] as const,
+    list: (params?: RentalObjectQueryParams) => [...queryKeys.rentalObjects.lists(), params] as const,
+    details: () => [...queryKeys.rentalObjects.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.rentalObjects.details(), id] as const,
+    slug: (slug: string) => [...queryKeys.rentalObjects.all, 'slug', slug] as const,
     availability: (id: string, params: AvailabilityQueryParams) => 
-      [...queryKeys.listings.detail(id), 'availability', params] as const,
-    stats: (id: string) => [...queryKeys.listings.detail(id), 'stats'] as const,
+      [...queryKeys.rentalObjects.detail(id), 'availability', params] as const,
+    stats: (id: string) => [...queryKeys.rentalObjects.detail(id), 'stats'] as const,
+    calendarConfig: (id: string) => [...queryKeys.rentalObjects.detail(id), 'calendar-config'] as const,
   },
 
   // =========================================================================
@@ -95,10 +96,10 @@ export const queryKeys = {
   // =========================================================================
   public: {
     all: ['public'] as const,
-    listings: (params?: PublicListingParams) => [...queryKeys.public.all, 'listings', params] as const,
-    listing: (id: string) => [...queryKeys.public.all, 'listing', id] as const,
-    availability: (listingId: string, params: AvailabilityQueryParams) =>
-      [...queryKeys.public.all, 'availability', listingId, params] as const,
+    rentalObjects: (params?: PublicRentalObjectParams) => [...queryKeys.public.all, 'rental-objects', params] as const,
+    rentalObject: (id: string) => [...queryKeys.public.all, 'rental-object', id] as const,
+    availability: (rentalObjectId: string, params: AvailabilityQueryParams) =>
+      [...queryKeys.public.all, 'availability', rentalObjectId, params] as const,
     categories: () => [...queryKeys.public.all, 'categories'] as const,
     cities: () => [...queryKeys.public.all, 'cities'] as const,
     municipalities: () => [...queryKeys.public.all, 'municipalities'] as const,
@@ -116,8 +117,8 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.bookings.details(), id] as const,
     my: (params?: BookingQueryParams) => [...queryKeys.bookings.all, 'my', params] as const,
     recurring: () => [...queryKeys.bookings.all, 'recurring'] as const,
-    pricing: (listingId: string, start: string, end: string) =>
-      [...queryKeys.bookings.all, 'pricing', listingId, start, end] as const,
+    pricing: (rentalObjectId: string, start: string, end: string) =>
+      [...queryKeys.bookings.all, 'pricing', rentalObjectId, start, end] as const,
     paymentReconciliation: (params?: { startDate?: string; endDate?: string; status?: string; provider?: string }) =>
       [...queryKeys.bookings.all, 'paymentReconciliation', params] as const,
     paymentHistory: (bookingId: string) =>
@@ -129,10 +130,14 @@ export const queryKeys = {
   // =========================================================================
   calendar: {
     all: ['calendar'] as const,
-    events: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
+    events: (params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) =>
       [...queryKeys.calendar.all, 'events', params] as const,
-    slots: (params: { listingId: string; date: string; duration?: number }) =>
+    slots: (params: { rentalObjectId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
+    config: (rentalObjectId: string, params?: any) =>
+      [...queryKeys.calendar.all, 'config', rentalObjectId, params] as const,
+    availabilityMatrix: (rentalObjectId: string, params: { from: string; to: string; bookingType?: string }) =>
+      [...queryKeys.calendar.all, 'availabilityMatrix', rentalObjectId, params] as const,
   },
 
   // =========================================================================
@@ -140,7 +145,7 @@ export const queryKeys = {
   // =========================================================================
   allocations: {
     all: ['allocations'] as const,
-    list: (params?: { listingId?: string; startDate?: string; endDate?: string }) =>
+    list: (params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) =>
       [...queryKeys.allocations.all, 'list', params] as const,
   },
 
@@ -226,6 +231,8 @@ export const queryKeys = {
     my: (params?: { type?: string; status?: string; page?: number; limit?: number }) =>
       [...queryKeys.notifications.all, 'my', params] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
+    deliveryStatus: (id: string) => [...queryKeys.notifications.all, 'deliveryStatus', id] as const,
+    deliveryReports: (params?: any) => [...queryKeys.notifications.all, 'deliveryReports', params] as const,
   },
 
   // =========================================================================
@@ -258,11 +265,11 @@ export const queryKeys = {
     list: (params?: ReviewQueryParams) => [...queryKeys.reviews.lists(), params] as const,
     details: () => [...queryKeys.reviews.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.reviews.details(), id] as const,
-    byListing: (listingId: string, params?: Omit<ReviewQueryParams, 'listingId'>) =>
-      [...queryKeys.reviews.all, 'byListing', listingId, params] as const,
+    byRentalObject: (rentalObjectId: string, params?: Omit<ReviewQueryParams, 'rentalObjectId'>) =>
+      [...queryKeys.reviews.all, 'byRentalObject', rentalObjectId, params] as const,
     byUser: (userId: string, params?: Omit<ReviewQueryParams, 'userId'>) =>
       [...queryKeys.reviews.all, 'byUser', userId, params] as const,
-    stats: (listingId: string) => [...queryKeys.reviews.all, 'stats', listingId] as const,
+    stats: (rentalObjectId: string) => [...queryKeys.reviews.all, 'stats', rentalObjectId] as const,
   },
 
   // =========================================================================
@@ -302,5 +309,76 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
+  },
+
+  // =========================================================================
+  // Security Dashboard Keys
+  // =========================================================================
+  security: {
+    all: ['security'] as const,
+    overview: () => [...queryKeys.security.all, 'overview'] as const,
+    threats: (params?: { severity?: string; status?: string }) => 
+      [...queryKeys.security.all, 'threats', params] as const,
+    auditLog: (params?: { startDate?: string; endDate?: string }) => 
+      [...queryKeys.security.all, 'auditLog', params] as const,
+    compliance: () => [...queryKeys.security.all, 'compliance'] as const,
+    vulnerabilities: () => [...queryKeys.security.all, 'vulnerabilities'] as const,
+    accessControl: () => [...queryKeys.security.all, 'accessControl'] as const,
+    metrics: () => [...queryKeys.security.all, 'metrics'] as const,
+    gdprStatus: () => [...queryKeys.security.all, 'gdprStatus'] as const,
+    failedLogins: (params?: { startDate?: string; endDate?: string }) =>
+      [...queryKeys.security.all, 'failedLogins', params] as const,
+    dataExports: () => [...queryKeys.security.all, 'dataExports'] as const,
+  },
+
+  // =========================================================================
+  // Widgets Keys
+  // =========================================================================
+  widgets: {
+    all: ['widgets'] as const,
+    lists: () => [...queryKeys.widgets.all, 'list'] as const,
+    list: (params?: { type?: string; enabled?: boolean }) => 
+      [...queryKeys.widgets.lists(), params] as const,
+    details: () => [...queryKeys.widgets.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.widgets.details(), id] as const,
+    config: (id: string) => [...queryKeys.widgets.detail(id), 'config'] as const,
+    embedCode: (id: string) => [...queryKeys.widgets.detail(id), 'embedCode'] as const,
+    preview: (id: string) => [...queryKeys.widgets.detail(id), 'preview'] as const,
+  },
+
+  // =========================================================================
+  // Monitoring Keys
+  // =========================================================================
+  monitoring: {
+    all: ['monitoring'] as const,
+    metrics: (params?: { period?: string }) => 
+      [...queryKeys.monitoring.all, 'metrics', params] as const,
+    health: () => [...queryKeys.monitoring.all, 'health'] as const,
+    performance: (params?: { startDate?: string; endDate?: string }) => 
+      [...queryKeys.monitoring.all, 'performance', params] as const,
+    errors: (params?: { severity?: string; limit?: number }) => 
+      [...queryKeys.monitoring.all, 'errors', params] as const,
+    logs: (params?: { level?: string; limit?: number }) => 
+      [...queryKeys.monitoring.all, 'logs', params] as const,
+    incidents: (params?: { status?: string; severity?: string }) =>
+      [...queryKeys.monitoring.all, 'incidents', params] as const,
+    databaseStats: () => [...queryKeys.monitoring.all, 'databaseStats'] as const,
+    apiUsage: (params?: string | { startDate?: string; endDate?: string }) =>
+      [...queryKeys.monitoring.all, 'apiUsage', params] as const,
+  },
+
+  // =========================================================================
+  // GDPR Keys
+  // =========================================================================
+  gdpr: {
+    all: ['gdpr'] as const,
+    lists: () => [...queryKeys.gdpr.all, 'list'] as const,
+    myRequests: (params?: unknown) => [...queryKeys.gdpr.lists(), 'myRequests', params] as const,
+    pending: (params?: unknown) => [...queryKeys.gdpr.lists(), 'pending', params] as const,
+    detail: (id: string) => [...queryKeys.gdpr.all, 'detail', id] as const,
+    export: () => [...queryKeys.gdpr.all, 'export'] as const,
+    consents: (userId?: string) => [...queryKeys.gdpr.all, 'consents', userId] as const,
+    dataExport: (userId: string) => [...queryKeys.gdpr.all, 'dataExport', userId] as const,
+    deletionRequests: () => [...queryKeys.gdpr.all, 'deletionRequests'] as const,
   },
 } as const;

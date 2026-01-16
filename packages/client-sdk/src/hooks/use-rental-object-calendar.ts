@@ -140,7 +140,7 @@ export function useCalendarRealtime(
 
   const handleEvent = useCallback((event: BookingWebSocketEvent) => {
     // Only handle events for this rental object
-    if (event.listingId !== rentalObjectId) return;
+    if (event.rentalObjectId !== rentalObjectId) return;
 
     // Invalidate caches using DAL helper
     handleBookingEvent(queryClient, event);

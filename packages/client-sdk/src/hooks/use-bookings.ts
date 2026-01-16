@@ -179,7 +179,7 @@ export function useDeleteBooking() {
 export function useCalendarEvents(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.calendar.events(params),
-    queryFn: () => calendarService.getEvents({ listingId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
+    queryFn: () => calendarService.getEvents({ rentalObjectId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
@@ -189,7 +189,7 @@ export function useCalendarEvents(params?: { rentalObjectId?: string; startDate?
 export function useAvailabilitySlots(params: { rentalObjectId: string; date: string; duration?: number }) {
   return useQuery({
     queryKey: queryKeys.calendar.slots(params),
-    queryFn: () => availabilityService.getSlots({ listingId: params.rentalObjectId, date: params.date, duration: params.duration }),
+    queryFn: () => availabilityService.getSlots({ rentalObjectId: params.rentalObjectId, date: params.date, duration: params.duration }),
     enabled: !!params.rentalObjectId && !!params.date,
   });
 }
@@ -204,7 +204,7 @@ export function useAvailabilitySlots(params: { rentalObjectId: string; date: str
 export function useAllocations(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.allocations.list(params),
-    queryFn: () => allocationService.getAll({ listingId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
+    queryFn: () => allocationService.getAll({ rentalObjectId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
