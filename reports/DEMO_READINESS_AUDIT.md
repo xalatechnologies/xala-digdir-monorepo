@@ -338,6 +338,125 @@ const isBlocked = [...blocked, ...bookedSlots].some((b) => {
 
 ---
 
+## Demo Fix Sprint
+
+### Sprint Overview
+
+**Duration:** 3 days (pre-demo sprint)
+**Goal:** Address high-priority gaps to ensure full SSA-L compliance for demo
+
+### Sprint Backlog
+
+#### Day 1: SDK Service Parity
+
+| Task ID | Task | Effort | Owner | Status |
+|---------|------|--------|-------|--------|
+| DFS-001 | Create `user.service.ts` in SDK | 4h | TBD | ⬜ TODO |
+| DFS-002 | Add user management hooks (`useUsers`, `useCreateUser`, `useUpdateUser`, `useDeleteUser`) | 2h | TBD | ⬜ TODO |
+| DFS-003 | Create `signicat.service.ts` for Norwegian ID integration | 3h | TBD | ⬜ TODO |
+| DFS-004 | Add Signicat hooks (`useSignicatAuth`, `useVerifyIdentity`) | 1h | TBD | ⬜ TODO |
+
+**Day 1 Deliverables:**
+- [ ] `packages/client-sdk/src/services/user.service.ts`
+- [ ] `packages/client-sdk/src/services/signicat.service.ts`
+- [ ] `packages/client-sdk/src/hooks/use-users.ts`
+- [ ] `packages/client-sdk/src/hooks/use-signicat.ts`
+- [ ] Unit tests for new services (80%+ coverage)
+
+#### Day 2: Integration Hardening
+
+| Task ID | Task | Effort | Owner | Status |
+|---------|------|--------|-------|--------|
+| DFS-005 | Extend `auth.service.ts` with OAuth methods | 2h | TBD | ⬜ TODO |
+| DFS-006 | Create `profile.service.ts` for user profile management | 2h | TBD | ⬜ TODO |
+| DFS-007 | Create `calendar.service.ts` for calendar sync/export | 3h | TBD | ⬜ TODO |
+| DFS-008 | Add integration mock data for demo scenarios | 2h | TBD | ⬜ TODO |
+
+**Day 2 Deliverables:**
+- [ ] `packages/client-sdk/src/services/profile.service.ts`
+- [ ] `packages/client-sdk/src/services/calendar.service.ts`
+- [ ] Enhanced `packages/client-sdk/src/services/auth.service.ts`
+- [ ] Mock data for all integration providers
+
+#### Day 3: Demo Polish & Verification
+
+| Task ID | Task | Effort | Owner | Status |
+|---------|------|--------|-------|--------|
+| DFS-009 | Run full E2E test suite | 2h | TBD | ⬜ TODO |
+| DFS-010 | Verify KRAV-ADM-05 compliance | 1h | TBD | ⬜ TODO |
+| DFS-011 | Verify KRAV-ADM-07 audit trail | 1h | TBD | ⬜ TODO |
+| DFS-012 | Demo data seeding and verification | 2h | TBD | ⬜ TODO |
+| DFS-013 | Create demo walkthrough script | 2h | TBD | ⬜ TODO |
+
+**Day 3 Deliverables:**
+- [ ] All E2E tests passing
+- [ ] KRAV-ADM-05 checklist signed off
+- [ ] KRAV-ADM-07 audit verification complete
+- [ ] Demo environment fully seeded
+- [ ] Demo script document ready
+
+### Acceptance Criteria
+
+#### DFS-001: User Service (KRAV-ADM-05)
+```typescript
+// Required methods
+userService.getUsers(tenantId: string): Promise<User[]>
+userService.getUser(userId: string): Promise<User>
+userService.createUser(data: CreateUserDTO): Promise<User>
+userService.updateUser(userId: string, data: UpdateUserDTO): Promise<User>
+userService.deleteUser(userId: string): Promise<void>
+userService.assignRole(userId: string, role: Role): Promise<void>
+userService.deactivateUser(userId: string): Promise<void>
+```
+
+#### DFS-003: Signicat Service (Norwegian eID)
+```typescript
+// Required methods
+signicatService.initiateAuth(config: AuthConfig): Promise<AuthSession>
+signicatService.verifyCallback(code: string): Promise<VerifiedIdentity>
+signicatService.getPersonInfo(identityId: string): Promise<PersonInfo>
+```
+
+#### DFS-007: Calendar Service
+```typescript
+// Required methods
+calendarService.getEvents(range: DateRange): Promise<CalendarEvent[]>
+calendarService.exportICS(eventIds: string[]): Promise<Blob>
+calendarService.syncToOutlook(config: SyncConfig): Promise<SyncResult>
+calendarService.syncToGoogle(config: SyncConfig): Promise<SyncResult>
+```
+
+### Definition of Done
+
+- [ ] All new services follow `BaseService` pattern
+- [ ] React Query hooks created for all services
+- [ ] Unit tests with 80%+ coverage
+- [ ] TypeScript types exported from SDK
+- [ ] No breaking changes to existing APIs
+- [ ] RFC 7807 error handling implemented
+- [ ] Audit logging for all mutations
+- [ ] Documentation updated in SDK README
+
+### Risk Mitigation
+
+| Risk | Mitigation | Contingency |
+|------|------------|-------------|
+| SDK breaking changes | Feature-flag new services | Revert to demo with known gaps |
+| Integration mocks fail | Use static response data | Disable integration demo scenarios |
+| E2E tests fail | Focus on critical path only | Manual demo walkthrough |
+| Time overrun | Prioritize DFS-001, DFS-002 | Document known gaps for auditor |
+
+### Sprint Metrics
+
+| Metric | Target | Current |
+|--------|--------|---------|
+| Tasks Completed | 13/13 | 0/13 |
+| Test Coverage | 80%+ | TBD |
+| E2E Pass Rate | 100% | TBD |
+| Demo Scenarios Working | 4/4 | 4/4 |
+
+---
+
 ## 9. Pre-Demo Checklist
 
 ### Environment
