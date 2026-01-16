@@ -50,9 +50,6 @@ export type { OpeningHoursCardProps } from './OpeningHoursCard';
 export { AvailabilityCalendar } from './AvailabilityCalendar';
 export type { AvailabilityCalendarProps } from './AvailabilityCalendar';
 
-export { ListingAvailabilityCalendar } from './ListingAvailabilityCalendar';
-export type { ListingAvailabilityCalendarProps } from './ListingAvailabilityCalendar';
-
 export { GuidelinesTab } from './GuidelinesTab';
 export type { GuidelinesTabProps } from './GuidelinesTab';
 
@@ -79,8 +76,8 @@ export { BookingSection } from './BookingSection';
 export type { BookingSectionProps } from './BookingSection';
 
 // Unified Booking Engine - Dynamic booking system for all listing types
-export { UnifiedBookingEngine } from './UnifiedBookingEngine';
-export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
+export { UnifiedBookingEngine } from './booking-engine';
+export type { UnifiedBookingEngineProps } from './booking-engine';
 
 // Key Facts Row - Display key listing information
 export { KeyFactsRow } from './KeyFactsRow';

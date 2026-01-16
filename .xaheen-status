@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "011-add-vite-manual-chunking-strategy-to-backoffice-ap",
-  "state": "building",
+  "spec": "007-split-unifiedbookingengine-tsx-3-667-lines-into-do",
+  "state": "complete",
   "subtasks": {
-    "completed": 3,
-    "total": 4,
-    "in_progress": 1,
+    "completed": 24,
+    "total": 24,
+    "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Verification",
+    "current": "Remove Old File and Final Verification",
     "id": null,
-    "total": 2
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 5,
-    "started_at": "2026-01-16T00:40:10.094318"
+    "number": 273,
+    "started_at": "2026-01-16T00:40:15.042261"
   },
-  "last_update": "2026-01-16T00:50:57.131647"
+  "last_update": "2026-01-16T02:34:24.409018"
 }

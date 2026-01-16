@@ -7,8 +7,8 @@ settings:
 overrides:
   react: ^18.3.1
   react-dom: ^18.3.1
-  '@types/react': ^18.3.18
-  '@types/react-dom': ^18.3.5
+  '@types/react': ^18.3.27
+  '@types/react-dom': ^18.3.7
   '@tanstack/react-query': ^5.62.16
 
 importers:
@@ -37,10 +37,10 @@ importers:
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
@@ -183,10 +183,10 @@ importers:
         specifier: ^3.58.1
         version: 3.58.1
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
       '@vitejs/plugin-react':
         specifier: ^4.3.3
@@ -235,10 +235,10 @@ importers:
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
       '@vitejs/plugin-react':
         specifier: ^4.3.3
@@ -293,10 +293,10 @@ importers:
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
@@ -330,7 +330,7 @@ importers:
         specifier: ^22.10.7
         version: 22.19.5
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@vitest/coverage-v8':
         specifier: ^3.0.4
@@ -376,10 +376,10 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
 
   packages/ds-registry:
@@ -388,10 +388,10 @@ importers:
         specifier: ^25.0.6
         version: 25.0.6
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.27)
       '@xala/ds':
         specifier: workspace:*
@@ -441,7 +441,7 @@ importers:
         version: 18.3.1
     devDependencies:
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.27
         version: 18.3.27
       typescript:
         specifier: ~5.6.0
@@ -1969,7 +1969,7 @@ packages:
   '@radix-ui/react-compose-refs@1.1.2':
     resolution: {integrity: sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg==}
     peerDependencies:
-      '@types/react': ^18.3.18
+      '@types/react': ^18.3.27
       react: ^18.3.1
     peerDependenciesMeta:
       '@types/react':
@@ -1978,7 +1978,7 @@ packages:
   '@radix-ui/react-slot@1.2.4':
     resolution: {integrity: sha512-Jl+bCv8HxKnlTLVrcDE8zTMJ09R9/ukw4qBs/oZClOfoQk/cOTbDn+NceXfV7j09YPVQUryJPHurafcSg6EVKA==}
     peerDependencies:
-      '@types/react': ^18.3.18
+      '@types/react': ^18.3.27
       react: ^18.3.1
     peerDependenciesMeta:
       '@types/react':
@@ -2302,8 +2302,8 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@testing-library/dom': ^10.0.0
-      '@types/react': ^18.3.18
-      '@types/react-dom': ^18.3.5
+      '@types/react': ^18.3.27
+      '@types/react-dom': ^18.3.7
       react: ^18.3.1
       react-dom: ^18.3.1
     peerDependenciesMeta:
@@ -2399,7 +2399,7 @@ packages:
   '@types/react-dom@18.3.7':
     resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
     peerDependencies:
-      '@types/react': ^18.3.18
+      '@types/react': ^18.3.27
 
   '@types/react@18.3.27':
     resolution: {integrity: sha512-cisd7gxkzjBKU2GgdYrTdtQx1SORymWyaAFhaxQPK9bYO9ot3Y5OikQRvY0VYQtvwjeQnizCINJAenh/V7MK2w==}
@@ -3146,7 +3146,7 @@ packages:
       '@tidbcloud/serverless': '*'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
-      '@types/react': ^18.3.18
+      '@types/react': ^18.3.27
       '@types/sql.js': '*'
       '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
