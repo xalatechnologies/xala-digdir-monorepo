@@ -96,6 +96,8 @@ export const nb: Record<string, string> = {
   'auth.adminDemoDialogDescription': 'Skriv inn demo token for å logge inn som administrator',
   'auth.demoToken': 'Demo Token',
   'auth.demoTokenPlaceholder': 'Skriv inn token her...',
+  'auth.demoLogin': 'Demo Innlogging',
+  'auth.demoLoginDescription': 'Logg inn med demo token for testing (3 tokens tilgjengelig)',
 
   // General actions
   'favorite': 'favorittliste',

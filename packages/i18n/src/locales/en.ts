@@ -95,6 +95,8 @@ export const en: Record<string, string> = {
   'auth.adminDemoDialogDescription': 'Enter demo token to log in as administrator',
   'auth.demoToken': 'Demo Token',
   'auth.demoTokenPlaceholder': 'Enter token here...',
+  'auth.demoLogin': 'Demo Login',
+  'auth.demoLoginDescription': 'Login with demo token for testing (3 tokens available)',
 
   // General actions
   'favorite': 'favorites',
