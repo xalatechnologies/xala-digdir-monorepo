@@ -64,7 +64,7 @@ export class AuthzController {
   @Get('/permissions')
   async getPermissions(request: AuthzRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const userId = (request as any).userId || request.headers['x-user-id'];
+    const userId = (request as any).userId;
 
     if (!userId) {
       reply.code(401);
@@ -104,7 +104,7 @@ export class AuthzController {
   @Get('/check')
   async checkPermission(request: AuthzRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const userId = (request as any).userId || request.headers['x-user-id'];
+    const userId = (request as any).userId;
     const { resource, action } = request.query as { resource?: string; action?: string };
 
     if (!resource || !action) {

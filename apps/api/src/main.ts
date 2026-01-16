@@ -11,7 +11,9 @@ import { moduleLoader } from './core/module';
 import { createFastifyApp } from './adapters/fastify.adapter';
 import { typeDefs, createResolvers, createGraphQLContext } from './graphql/schema';
 import * as schema from './database/schema/index';
-import { logger } from './core/logger';
+
+// Import JWT service
+import { JwtService } from './core/auth/jwt.service';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
@@ -65,9 +67,9 @@ async function initializeAdapters() {
   // In production, use: import { initializeAdapters } from '@xalatechnologies/platform';
   return {
     log: {
-      info: (msg: string, meta?: object) => logger.info(meta || {}, msg),
-      warn: (msg: string, meta?: object) => logger.warn(meta || {}, msg),
-      error: (msg: string, meta?: object) => logger.error(meta || {}, msg),
+      info: (msg: string, meta?: object) => console.log(`[INFO] ${msg}`, meta || ''),
+      warn: (msg: string, meta?: object) => console.warn(`[WARN] ${msg}`, meta || ''),
+      error: (msg: string, meta?: object) => console.error(`[ERROR] ${msg}`, meta || ''),
     },
     cache: {
       get: async <T>(key: string): Promise<T | null> => null,
@@ -80,7 +82,7 @@ async function initializeAdapters() {
     },
     email: {
       send: async (options: { to: string; subject: string; html: string }): Promise<void> => {
-        logger.info({ to: options.to, subject: options.subject }, '[EMAIL] Email sent');
+        console.log(`[EMAIL] To: ${options.to}, Subject: ${options.subject}`);
       },
     },
   };
@@ -90,11 +92,11 @@ async function initializeAdapters() {
  * Bootstrap the application
  */
 async function bootstrap() {
-  logger.info('🚀 Starting Unified API...\n');
+  console.log('🚀 Starting Unified API...\n');
 
   // Initialize platform adapters
   const adapters = await initializeAdapters();
-  logger.info('✓ Adapters initialized');
+  console.log('✓ Adapters initialized');
 
   // Register adapters in container
   container.registerValue('Adapters', adapters);
@@ -102,16 +104,28 @@ async function bootstrap() {
   // Connect to PostgreSQL database (required in production)
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    logger.error('❌ DATABASE_URL environment variable is required');
-    logger.error('   Set DATABASE_URL to connect to your PostgreSQL database');
+    console.error('❌ DATABASE_URL environment variable is required');
+    console.error('   Set DATABASE_URL to connect to your PostgreSQL database');
     process.exit(1);
   }
 
   // PostgreSQL connection
   const sql = postgres(databaseUrl, { max: 10 });
   const db = drizzle(sql, { schema });
-  logger.info('✓ PostgreSQL database connected');
+  console.log('✓ PostgreSQL database connected');
   container.registerValue('Database', db);
+
+  // Validate JWT secret (required for authentication)
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    console.error('❌ JWT_SECRET environment variable is required');
+    console.error('   Set JWT_SECRET to a secure random string (at least 32 characters)');
+    process.exit(1);
+  }
+
+  // Register JWT service
+  container.registerFactory('JwtService', () => new JwtService(jwtSecret));
+  console.log('✓ JWT service registered');
 
   // Register repositories
   container.registerFactory('TenantRepository', () => new TenantRepository(db));
@@ -144,7 +158,7 @@ async function bootstrap() {
     )
   );
 
-  logger.info('✓ Services registered');
+  console.log('✓ Services registered');
 
   // Register controllers with their dependencies
   container.registerFactory('TenantController', () => 
@@ -167,10 +181,10 @@ async function bootstrap() {
     new SignicatAuthController()
   );
   // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () =>
+  container.registerFactory('NotificationsController', () => 
     new NotificationsController()
   );
-  logger.info('✓ Controllers registered');
+  console.log('✓ Controllers registered');
 
   // Load modules
   await moduleLoader.load(TenantModule);
@@ -178,7 +192,7 @@ async function bootstrap() {
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
-  logger.info('✓ Modules loaded');
+  console.log('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
   const controllers = [
@@ -232,12 +246,12 @@ async function bootstrap() {
   ];
 
   // Create Fastify app with controllers
-  const app = await createFastifyApp(controllers, { adapters });
-  logger.info('✓ REST routes registered');
+  const app = await createFastifyApp(controllers, { adapters, jwtSecret });
+  console.log('✓ REST routes registered');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);
-  logger.info('✓ WebSocket routes registered');
+  console.log('✓ WebSocket routes registered');
 
   // Register GraphQL (Mercurius)
   await app.register(mercurius, {
@@ -247,11 +261,11 @@ async function bootstrap() {
     graphiql: true, // Enable GraphiQL playground
     path: '/graphql',
   });
-  logger.info('✓ GraphQL endpoint registered at /graphql');
+  console.log('✓ GraphQL endpoint registered at /graphql');
 
   // Graceful shutdown
   const shutdown = async () => {
-    logger.info('\n👋 Shutting down gracefully...');
+    console.log('\n👋 Shutting down gracefully...');
     await app.close();
     process.exit(0);
   };
@@ -264,22 +278,22 @@ async function bootstrap() {
   const host = process.env.HOST || '0.0.0.0';
 
   await app.listen({ port, host });
-
-  logger.info('\n' + '='.repeat(50));
-  logger.info(`🎉 Unified API running on http://${host}:${port}`);
-  logger.info('='.repeat(50));
-  logger.info('\nEndpoints:');
-  logger.info(`  Health:   GET  http://localhost:${port}/health`);
-  logger.info(`  GraphQL:  POST http://localhost:${port}/graphql`);
-  logger.info(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
-  logger.info(`  Listings: GET  http://localhost:${port}/api/listings`);
-  logger.info(`  Bookings: GET  http://localhost:${port}/api/bookings`);
-  logger.info(`  Audit:    GET  http://localhost:${port}/api/audit`);
-  logger.info(`  WebSocket:     ws://localhost:${port}/ws/audit`);
-  logger.info('');
+  
+  console.log('\n' + '='.repeat(50));
+  console.log(`🎉 Unified API running on http://${host}:${port}`);
+  console.log('='.repeat(50));
+  console.log('\nEndpoints:');
+  console.log(`  Health:   GET  http://localhost:${port}/health`);
+  console.log(`  GraphQL:  POST http://localhost:${port}/graphql`);
+  console.log(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
+  console.log(`  Listings: GET  http://localhost:${port}/api/listings`);
+  console.log(`  Bookings: GET  http://localhost:${port}/api/bookings`);
+  console.log(`  Audit:    GET  http://localhost:${port}/api/audit`);
+  console.log(`  WebSocket:     ws://localhost:${port}/ws/audit`);
+  console.log('');
 }
 
 bootstrap().catch((error) => {
-  logger.error({ error }, '❌ Failed to start server');
+  console.error('❌ Failed to start server:', error);
   process.exit(1);
 });

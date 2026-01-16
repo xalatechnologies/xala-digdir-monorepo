@@ -8,16 +8,11 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users, tenants } from '../../database/schema/index';
 import { getAuditService } from '../../core/audit/audit.service';
+import type { JwtService } from '../../core/auth/jwt.service';
 
 interface AuthRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
-}
-
-// Mock JWT generation (in production, use proper JWT library)
-function generateMockToken(userId: string, tenantId: string): string {
-  const payload = Buffer.from(JSON.stringify({ userId, tenantId, exp: Date.now() + 86400000 })).toString('base64');
-  return `mock.${payload}.signature`;
 }
 
 @Controller('/api/auth')
@@ -29,6 +24,7 @@ export class AuthController {
   async login(request: AuthRequest, reply: FastifyReply) {
     const body = request.body as any;
     const db = container.resolve<any>('Database');
+    const jwtService = container.resolve<JwtService>('JwtService');
 
     // Find user by email
     const result = await db
@@ -43,33 +39,7 @@ export class AuthController {
     }
 
     const user = result[0];
-
-    // Check if user is active
-    if (user.status !== 'active') {
-      // Audit failed login attempt
-      getAuditService().log({
-        tenantId: user.tenantId,
-        userId: user.id,
-        action: 'login_attempt',
-        resource: 'auth',
-        severity: 'warning',
-        metadata: {
-          reason: 'inactive_account',
-          email: user.email,
-          status: user.status,
-        },
-      });
-
-      reply.code(403);
-      return {
-        type: 'https://problems.digilist.no/account-inactive',
-        title: 'Account Inactive',
-        status: 403,
-        detail: 'This account has been deactivated. Please contact support if you believe this is an error.',
-      };
-    }
-
-    const token = generateMockToken(user.id, user.tenantId);
+    const tokenResult = jwtService.generateToken(user.id, user.tenantId);
 
     // Update last login
     await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
@@ -88,8 +58,8 @@ export class AuthController {
 
     return {
       data: {
-        token,
-        expiresAt: new Date(Date.now() + 86400000).toISOString(),
+        token: tokenResult.token,
+        expiresAt: tokenResult.expiresAt.toISOString(),
         user: {
           id: user.id,
           email: user.email,
@@ -122,8 +92,8 @@ export class AuthController {
   @Get('/session')
   async getSession(request: AuthRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const userId = (request as any).userId || request.headers['x-user-id'];
-    const tenantId = request.tenantId || request.headers['x-tenant-id'];
+    const userId = (request as any).userId;
+    const tenantId = request.tenantId;
 
     if (!userId) {
       reply.code(401);
@@ -160,8 +130,8 @@ export class AuthController {
    */
   @Post('/logout')
   async logout(request: AuthRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'];
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const userId = (request as any).userId;
+    const tenantId = request.tenantId;
 
     if (userId && tenantId) {
       getAuditService().log({
@@ -183,20 +153,21 @@ export class AuthController {
    */
   @Post('/refresh')
   async refresh(request: AuthRequest, reply: FastifyReply) {
-    const userId = (request as any).userId || request.headers['x-user-id'];
-    const tenantId = request.tenantId || (request.headers['x-tenant-id'] as string);
+    const userId = (request as any).userId;
+    const tenantId = request.tenantId;
 
     if (!userId || !tenantId) {
       reply.code(401);
       return { error: { code: 'UNAUTHORIZED', message: 'Invalid session' } };
     }
 
-    const token = generateMockToken(userId as string, tenantId);
+    const jwtService = container.resolve<JwtService>('JwtService');
+    const tokenResult = jwtService.generateToken(userId as string, tenantId);
 
     return {
       data: {
-        token,
-        expiresAt: new Date(Date.now() + 86400000).toISOString(),
+        token: tokenResult.token,
+        expiresAt: tokenResult.expiresAt.toISOString(),
       },
     };
   }
@@ -241,7 +212,7 @@ function getPermissionsForRole(role: string): string[] {
   const permissions: Record<string, string[]> = {
     admin: [
       'dashboard:*',
-      'listings:*',
+      'rentalObjects:*',
       'bookings:*',
       'users:*',
       'organizations:*',
@@ -253,7 +224,7 @@ function getPermissionsForRole(role: string): string[] {
     ],
     saksbehandler: [
       'dashboard:read',
-      'listings:*',
+      'rentalObjects:*',
       'bookings:*',
       'organizations:read',
       'reports:read',
@@ -262,7 +233,7 @@ function getPermissionsForRole(role: string): string[] {
       'seasonal-leases:*',
     ],
     user: [
-      'listings:read',
+      'rentalObjects:read',
       'bookings:read',
       'bookings:create',
       'messages:read',

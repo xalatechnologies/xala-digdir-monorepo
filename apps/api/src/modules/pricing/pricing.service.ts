@@ -31,20 +31,20 @@ export class PricingService {
    */
   async calculateQuote(request: PricingQuoteRequest): Promise<PricingQuoteResponse> {
     const { rentalObjectId, start, end, userGroupId } = request;
-    
+
     const startDate = new Date(start);
     const endDate = new Date(end);
-    
+
     // Determine if weekend
     const isWeekend = this.isWeekendBooking(startDate, endDate);
-    
-    // Get applicable price rules for this listing
+
+    // Get applicable price rules for this rental object
     const rules = await this.getPriceRules(rentalObjectId, userGroupId, isWeekend);
-    
+
     if (rules.length === 0) {
-      // Fallback to listing base price
-      const listing = await this.getListing(listingId);
-      return this.createFallbackQuote(listing, startDate, endDate, isWeekend, userGroupId);
+      // Fallback to rental object base price
+      const rentalObject = await this.getRentalObject(rentalObjectId);
+      return this.createFallbackQuote(rentalObject, startDate, endDate, isWeekend, userGroupId);
     }
     
     // Find best matching rule (highest priority)
@@ -78,7 +78,7 @@ export class PricingService {
   }
 
   /**
-   * Get price rules for a listing, optionally filtered by user group
+   * Get price rules for a rental object, optionally filtered by user group
    */
   private async getPriceRules(
     rentalObjectId: string,
@@ -88,8 +88,8 @@ export class PricingService {
     // In real implementation, this would query the database
     // For now, return mock data matching our seed
     const allRules = await mockDb.query<PriceRule[]>(`
-      SELECT * FROM price_rules 
-      WHERE rental_object_id = $1 
+      SELECT * FROM price_rules
+      WHERE rental_object_id = $1
       AND (
         (applies_weekends = $2 AND $2 = true) OR
         (applies_weekdays = $3 AND $3 = true)
@@ -183,25 +183,25 @@ export class PricingService {
   }
 
   /**
-   * Get listing for fallback pricing
+   * Get rental object for fallback pricing
    */
-  private async getListing(rentalObjectId: string): Promise<{ pricing: { basePrice: number; unit: string } }> {
-    const listing = await mockDb.query<any>('SELECT * FROM listings WHERE id = $1', [listingId]);
-    return listing || { pricing: { basePrice: 0, unit: 'hour' } };
+  private async getRentalObject(rentalObjectId: string): Promise<{ pricing: { basePrice: number; unit: string } }> {
+    const rentalObject = await mockDb.query<any>('SELECT * FROM rental_objects WHERE id = $1', [rentalObjectId]);
+    return rentalObject || { pricing: { basePrice: 0, unit: 'hour' } };
   }
 
   /**
    * Create fallback quote when no rules match
    */
   private createFallbackQuote(
-    listing: any,
+    rentalObject: any,
     start: Date,
     end: Date,
     isWeekend: boolean,
     userGroupId: string | null | undefined
   ): PricingQuoteResponse {
-    const basePrice = listing?.pricing?.basePrice || 0;
-    const unit = listing?.pricing?.unit || 'hour';
+    const basePrice = rentalObject?.pricing?.basePrice || 0;
+    const unit = rentalObject?.pricing?.unit || 'hour';
     const hours = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60));
     
     return {

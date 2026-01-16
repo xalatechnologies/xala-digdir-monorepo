@@ -17,8 +17,8 @@ export interface GraphQLContext {
  */
 export function createGraphQLContext(request: any): GraphQLContext {
   return {
-    tenantId: request.tenantId || request.headers?.['x-tenant-id'] || 'default',
-    userId: request.userId || request.headers?.['x-user-id'],
+    tenantId: request.tenantId || 'default',
+    userId: request.userId,
     adapters: request.adapters,
   };
 }

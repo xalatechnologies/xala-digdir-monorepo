@@ -10,7 +10,6 @@ import { validate } from '../../core/validation/zod-pipe';
 import { PricingQuoteRequestSchema } from '../../schemas/pricing.schema';
 import { createProblemDetails } from '../../core/errors/problem-details';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { logger } from '../../core/logger';
 
 @Controller('/pricing')
 export class PricingController {
@@ -28,9 +27,9 @@ export class PricingController {
   async calculateQuote(request: FastifyRequest, reply: FastifyReply) {
     try {
       const quoteRequest = validate(PricingQuoteRequestSchema, request.body);
-      
+
       const quote = await this.pricingService.calculateQuote({
-        listingId: quoteRequest.listingId,
+        rentalObjectId: quoteRequest.rentalObjectId,
         start: quoteRequest.start,
         end: quoteRequest.end,
         userGroupId: quoteRequest.userGroupId,
@@ -51,7 +50,6 @@ export class PricingController {
         }));
       }
 
-      logger.error({ error }, 'Quote calculation error');
       return reply.status(500).send(createProblemDetails({
         type: 'internal-error',
         title: 'Internal Server Error',

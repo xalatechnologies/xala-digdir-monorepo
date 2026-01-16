@@ -11,8 +11,6 @@ import {
   CreateBookingSchema,
   BookingQuerySchema,
   CancelBookingSchema,
-  RecurringPreviewRequestSchema,
-  RecurringCreateSchema,
 } from '../../schemas/booking.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -114,38 +112,25 @@ export class BookingController {
   }
 
   /**
-   * GET /api/bookings/pricing - Calculate price (legacy)
+   * GET /api/bookings/pricing - Calculate price
    */
   @Get('/pricing')
   async calculatePricing(request: TenantRequest, reply: FastifyReply) {
-    const { rentalObjectId, startTime, endTime } = request.query as any;
+    const { listingId, startTime, endTime } = request.query as any;
     if (!listingId || !startTime || !endTime) {
       reply.code(400);
-      return { error: { code: 'VALIDATION_ERROR', message: 'rentalObjectId, startTime, endTime required' } };
+      return { error: { code: 'VALIDATION_ERROR', message: 'listingId, startTime, endTime required' } };
     }
-    const pricing = await this.service.calculatePricing(rentalObjectId, startTime, endTime);
+    const pricing = await this.service.calculatePricing(listingId, startTime, endTime);
     return { data: pricing };
   }
 
   /**
-   * POST /api/bookings/quote - Get booking quote projection
-   * Returns rental-object-driven quote with pricing, availability, and available actions
-   * Enforces booking rules from rental_objects configuration
-   */
-  @Post('/quote')
-  async getQuote(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = getTenantId(request);
-    const userId = getOptionalUserId(request);
-    const quote = await this.service.getQuote(tenantId, userId, request.body as any);
-    return { data: quote };
-  }
-
-  /**
-   * GET /api/bookings/my - Get user's bookings with rental object details
+   * GET /api/bookings/my - Get user's bookings with listing details
    */
   @Get('/my')
   async getMyBookings(request: TenantRequest, reply: FastifyReply) {
-    const userId = request.userId || (request.headers['x-user-id'] as string);
+    const userId = request.userId;
     if (!userId) {
       reply.code(401);
       return { error: { code: 'UNAUTHORIZED', message: 'User not authenticated' } };
@@ -170,29 +155,15 @@ export class BookingController {
 
   /**
    * POST /api/bookings/recurring - Create recurring booking
-   * Supports stopOnConflict and allowPartial conflict policies
-   * Returns result projection with created bookings and failed occurrences
    */
   @Post('/recurring')
   async createRecurring(request: TenantRequest, reply: FastifyReply) {
     const tenantId = getTenantId(request);
     const userId = getOptionalUserId(request);
-    // Pass raw body to service - validation happens there with proper type coercion
-    const result = await this.service.createRecurringWithPolicy(tenantId, userId, request.body as any);
+    const body = request.body as any;
+    const bookings = await this.service.createRecurring(tenantId, userId, body);
     reply.code(201);
-    return { data: result };
-  }
-
-  /**
-   * POST /api/bookings/recurring/preview - Preview recurring booking with conflict detection
-   * Returns computed occurrences with availability status for each date
-   */
-  @Post('/recurring/preview')
-  async previewRecurring(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = getTenantId(request);
-    const data = validate(RecurringPreviewRequestSchema, request.body);
-    const preview = await this.service.previewRecurring(tenantId, data);
-    return { data: preview };
+    return { data: bookings };
   }
 
   /**
@@ -217,7 +188,7 @@ export class BookingController {
       
       // WHAT (Hva)
       service: {
-        rentalObjectId: booking.rentalObjectId,
+        listingId: booking.listingId,
         description: booking.notes || 'Leie av lokale',
         duration: `${new Date(booking.startTime).toISOString()} - ${new Date(booking.endTime).toISOString()}`,
       },
@@ -225,7 +196,7 @@ export class BookingController {
       // WHERE (Hvor)
       location: {
         tenantId: booking.tenantId,
-        rentalObjectId: booking.rentalObjectId,
+        listingId: booking.listingId,
       },
       
       // WHEN (Når)

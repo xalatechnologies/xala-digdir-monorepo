@@ -4,16 +4,17 @@
  */
 import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
-import helmet from '@fastify/helmet';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
 import { getControllerMetadata } from '../core/decorators';
 import { serializeError } from '../core/errors/problem-details';
+import { createJwtMiddleware } from '../core/auth/jwt.middleware';
 
 export interface FastifyAdapterOptions {
   logger?: boolean;
   prefix?: string;
   adapters?: any;
+  jwtSecret?: string;
 }
 
 /**
@@ -35,43 +36,6 @@ export async function createFastifyApp(
     allowedHeaders: '*', // Allow ALL headers
   });
 
-  // Enable security headers
-  await app.register(helmet, {
-    // Content Security Policy - disabled for JSON API
-    contentSecurityPolicy: false,
-
-    // HTTP Strict Transport Security - enforce HTTPS
-    hsts: {
-      maxAge: 31536000, // 1 year in seconds
-      includeSubDomains: true,
-      preload: true,
-    },
-
-    // X-Frame-Options - prevent clickjacking
-    frameguard: {
-      action: 'deny', // Don't allow API to be embedded in iframes
-    },
-
-    // X-Content-Type-Options - prevent MIME-sniffing
-    noSniff: true,
-
-    // Referrer-Policy - control referrer information
-    referrerPolicy: {
-      policy: 'strict-origin-when-cross-origin',
-    },
-
-    // X-DNS-Prefetch-Control - control DNS prefetching
-    dnsPrefetchControl: {
-      allow: false,
-    },
-
-    // X-Download-Options - prevent IE from executing downloads
-    ieNoOpen: true,
-
-    // Hide X-Powered-By header
-    hidePoweredBy: true,
-  });
-
   // Handle empty JSON bodies (fixes SDK sending Content-Type: application/json with no body)
   app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {
     if (!body || body === '') {
@@ -85,6 +49,29 @@ export async function createFastifyApp(
     }
   });
 
+  // JWT verification middleware (runs before adapters injection)
+  if (options.jwtSecret) {
+    const jwtMiddleware = createJwtMiddleware(options.jwtSecret);
+
+    app.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
+      // Skip JWT verification for public routes and auth endpoints
+      const publicRoutes = [
+        '/api/auth/login',
+        '/api/auth/callback',
+        '/api/public',
+        '/health',
+      ];
+
+      // Check if route should skip JWT verification
+      const shouldSkip = publicRoutes.some((route) => request.url.startsWith(route));
+
+      if (!shouldSkip) {
+        // Run JWT middleware for protected routes
+        await jwtMiddleware(request, reply);
+      }
+    });
+  }
+
   // Inject adapters into requests
   if (options.adapters) {
     app.decorateRequest('adapters', null);
@@ -93,9 +80,6 @@ export async function createFastifyApp(
 
     app.addHook('onRequest', async (request: any) => {
       request.adapters = options.adapters;
-      // Use Skien Kommune as default tenant for demo, or null for public access
-      request.tenantId = request.headers['x-tenant-id'] || null;
-      request.userId = request.headers['x-user-id'] || null;
     });
   }
 

@@ -8,7 +8,7 @@ import { z } from 'zod';
  * Pricing Quote Request
  */
 export const PricingQuoteRequestSchema = z.object({
-  listingId: z.string().uuid(),
+  rentalObjectId: z.string().uuid(),
   start: z.string().datetime({ offset: true }).or(z.coerce.date()),
   end: z.string().datetime({ offset: true }).or(z.coerce.date()),
   userGroupId: z.string().uuid().optional().nullable(),

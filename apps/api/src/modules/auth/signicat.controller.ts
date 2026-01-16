@@ -13,7 +13,6 @@
 import { Controller, Get, Post } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import * as crypto from 'node:crypto';
-import { logger } from '../../core/logger';
 
 // =============================================================================
 // Configuration
@@ -157,7 +156,6 @@ export class SignicatAuthController {
       
       if (!response.ok) {
         const error = await response.text();
-        logger.error({ error }, 'Session creation failed');
         return reply.status(500).send({
           error: 'session_creation_failed',
           message: 'Failed to create authentication session',
@@ -178,7 +176,6 @@ export class SignicatAuthController {
       // Redirect to Signicat authentication URL
       return reply.redirect(session.url);
     } catch (error) {
-      logger.error({ error }, 'Authorization error');
       return reply.status(500).send({
         error: 'authorization_failed',
         message: error instanceof Error ? error.message : 'Unknown error',
@@ -270,7 +267,6 @@ export class SignicatAuthController {
         message: 'Authentication successful',
       });
     } catch (error) {
-      logger.error({ error }, 'Callback error');
       return reply.status(500).send({
         error: 'callback_failed',
         message: error instanceof Error ? error.message : 'Unknown error',

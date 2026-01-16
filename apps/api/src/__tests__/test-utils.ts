@@ -4,6 +4,7 @@
  */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import Fastify, { FastifyInstance } from 'fastify';
+import { JwtService } from '../core/auth/jwt.service';
 
 // Test context interface
 export interface TestContext {
@@ -12,7 +13,7 @@ export interface TestContext {
   testUserId: string;
   adminUserId: string;
   saksbehandlerUserId: string;
-  testListingId: string;
+  testRentalObjectId: string;
   testOrganizationId: string;
   cleanup: () => Promise<void>;
 }
@@ -23,10 +24,14 @@ export const TEST_IDS = {
   adminUserId: 'admin007-0000-0000-0000-000000000001',
   saksbehandlerUserId: 'saksbe01-0000-0000-0000-000000000002',
   userId: 'user0001-0000-0000-0000-000000000003',
-  listingId: 'listing1-0000-0000-0000-000000000001',
+  rentalObjectId: 'rental01-0000-0000-0000-000000000001',
   bookingId: 'booking1-0000-0000-0000-000000000001',
   organizationId: 'organi01-0000-0000-0000-000000000001',
 };
+
+// Test JWT service with minimum 32-character secret
+const TEST_JWT_SECRET = 'test-secret-for-jwt-tokens-minimum-32-chars-required';
+export const testJwtService = new JwtService(TEST_JWT_SECRET);
 
 /**
  * Create a test application instance
@@ -45,7 +50,7 @@ export async function createTestApp(): Promise<TestContext> {
     testUserId: TEST_IDS.userId,
     adminUserId: TEST_IDS.adminUserId,
     saksbehandlerUserId: TEST_IDS.saksbehandlerUserId,
-    testListingId: TEST_IDS.listingId,
+    testRentalObjectId: TEST_IDS.rentalObjectId,
     testOrganizationId: TEST_IDS.organizationId,
     cleanup: async () => {
       await app.close();
@@ -68,20 +73,13 @@ async function registerTestRoutes(app: FastifyInstance) {
       reply.code(404);
       return { error: { code: 'NOT_FOUND', message: 'User not found' } };
     }
-    if (body.email === 'inactive@test.no') {
-      reply.code(403);
-      return {
-        type: 'https://problems.digilist.no/account-inactive',
-        title: 'Account Inactive',
-        status: 403,
-        detail: 'This account has been deactivated. Please contact support if you believe this is an error.',
-      };
-    }
+    // Generate real JWT token
+    const tokenResult = testJwtService.generateToken(TEST_IDS.userId, TEST_IDS.tenantId);
     return {
       data: {
-        token: 'test-jwt-token',
+        token: tokenResult.token,
         user: { id: TEST_IDS.userId, email: body.email, name: 'Test User', role: 'user' },
-        expiresAt: new Date(Date.now() + 3600000).toISOString(),
+        expiresAt: tokenResult.expiresAt.toISOString(),
       },
     };
   });
@@ -92,10 +90,12 @@ async function registerTestRoutes(app: FastifyInstance) {
       reply.code(401);
       return { error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
     }
+    // Generate real JWT token
+    const tokenResult = testJwtService.generateToken(userId as string, TEST_IDS.tenantId);
     return {
       data: {
         user: { id: userId, email: 'test@test.no', name: 'Test User', role: 'user' },
-        token: 'test-token',
+        token: tokenResult.token,
       },
     };
   });
@@ -105,7 +105,9 @@ async function registerTestRoutes(app: FastifyInstance) {
   });
 
   app.post('/api/auth/refresh', async () => {
-    return { data: { token: 'new-test-token', expiresAt: new Date(Date.now() + 3600000).toISOString() } };
+    // Generate real JWT token
+    const tokenResult = testJwtService.generateToken(TEST_IDS.userId, TEST_IDS.tenantId);
+    return { data: { token: tokenResult.token, expiresAt: tokenResult.expiresAt.toISOString() } };
   });
 
   app.get('/api/auth/providers', async () => {
@@ -128,9 +130,11 @@ async function registerTestRoutes(app: FastifyInstance) {
       reply.code(400);
       return { error: { code: 'VALIDATION_ERROR', message: 'Email and password required' } };
     }
+    // Generate real JWT token
+    const tokenResult = testJwtService.generateToken(TEST_IDS.userId, TEST_IDS.tenantId);
     return {
       data: {
-        token: 'test-jwt-token',
+        token: tokenResult.token,
         user: { id: TEST_IDS.userId, email: body.email, name: 'Test User' },
       },
     };
@@ -140,7 +144,7 @@ async function registerTestRoutes(app: FastifyInstance) {
   const permissions: Record<string, Record<string, string[]>> = {
     admin: {
       dashboard: ['read', 'write'],
-      listings: ['read', 'create', 'update', 'delete'],
+      rentalObjects: ['read', 'create', 'update', 'delete'],
       bookings: ['read', 'create', 'update', 'delete'],
       users: ['read', 'create', 'update', 'delete'],
       organizations: ['read', 'create', 'update', 'delete'],
@@ -148,14 +152,14 @@ async function registerTestRoutes(app: FastifyInstance) {
     },
     saksbehandler: {
       dashboard: ['read'],
-      listings: ['read', 'create', 'update'],
+      rentalObjects: ['read', 'create', 'update'],
       bookings: ['read', 'create', 'update'],
       users: ['read'],
       organizations: ['read', 'update'],
       settings: ['read'],
     },
     user: {
-      listings: ['read'],
+      rentalObjects: ['read'],
       bookings: ['read', 'create'],
       users: ['read'],
       organizations: ['read'],
@@ -180,26 +184,26 @@ async function registerTestRoutes(app: FastifyInstance) {
   });
 
   // Public routes
-  app.get('/api/public/listings', async (request) => {
+  app.get('/api/public/rental-objects', async (request) => {
     const query = request.query as Record<string, string>;
-    const listings = [
-      { id: TEST_IDS.listingId, name: 'Test Hall', type: 'SPACE', status: 'published', pricing: { basePrice: 500, currency: 'NOK', unit: 'hour' } },
+    const rentalObjects = [
+      { id: TEST_IDS.rentalObjectId, name: 'Test Hall', type: 'SPACE', status: 'published', pricing: { basePrice: 500, currency: 'NOK', unit: 'hour' } },
     ];
-    return { data: listings, meta: { total: 1, page: Number(query.page) || 1, limit: Number(query.limit) || 20, totalPages: 1 } };
+    return { data: rentalObjects, meta: { total: 1, page: Number(query.page) || 1, limit: Number(query.limit) || 20, totalPages: 1 } };
   });
 
-  app.get('/api/public/listings/:id', async (request, reply) => {
+  app.get('/api/public/rental-objects/:id', async (request, reply) => {
     const { id } = request.params as { id: string };
     if (id === '00000000-0000-0000-0000-000000000000') {
       reply.code(404);
-      return { error: { code: 'NOT_FOUND', message: 'Listing not found' } };
+      return { error: { code: 'NOT_FOUND', message: 'Rental object not found' } };
     }
     return { data: { id, name: 'Test Hall', type: 'SPACE', status: 'published' } };
   });
 
-  app.get('/api/public/listings/:id/availability', async (request) => {
+  app.get('/api/public/rental-objects/:id/availability', async (request) => {
     const { id } = request.params as { id: string };
-    return { data: { listingId: id, slots: [] } };
+    return { data: { rentalObjectId: id, slots: [] } };
   });
 
   app.get('/api/public/categories', async () => {

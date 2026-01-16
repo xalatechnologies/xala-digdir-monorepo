@@ -32,18 +32,25 @@ describe('AuthController', () => {
       expect(data.data.user.email).toBe('admin@test.no');
     });
 
-    it('should reject login for inactive user', async () => {
+    it('should return a properly formatted JWT token', async () => {
       const response = await ctx.app.inject({
         method: 'POST',
         url: '/api/auth/login',
-        payload: { email: 'inactive@test.no' },
+        payload: { email: 'admin@test.no' },
       });
 
-      expect(response.statusCode).toBe(403);
+      expect(response.statusCode).toBe(200);
       const data = response.json();
-      expect(data.type).toBe('https://problems.digilist.no/account-inactive');
-      expect(data.title).toBe('Account Inactive');
-      expect(data.detail).toContain('deactivated');
+      const token = data.data.token;
+
+      // JWT tokens have 3 parts separated by dots: header.payload.signature
+      const parts = token.split('.');
+      expect(parts.length).toBe(3);
+
+      // Each part should be non-empty
+      expect(parts[0].length).toBeGreaterThan(0);
+      expect(parts[1].length).toBeGreaterThan(0);
+      expect(parts[2].length).toBeGreaterThan(0);
     });
 
     it('should return validation error for missing email', async () => {
@@ -82,6 +89,27 @@ describe('AuthController', () => {
       expect(data.data.user).toBeDefined();
     });
 
+    it('should return a properly formatted JWT token', async () => {
+      const response = await ctx.app.inject({
+        method: 'GET',
+        url: '/api/auth/session',
+        headers: { 'X-User-Id': ctx.testUserId },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const data = response.json();
+      const token = data.data.token;
+
+      // JWT tokens have 3 parts separated by dots: header.payload.signature
+      const parts = token.split('.');
+      expect(parts.length).toBe(3);
+
+      // Each part should be non-empty
+      expect(parts[0].length).toBeGreaterThan(0);
+      expect(parts[1].length).toBeGreaterThan(0);
+      expect(parts[2].length).toBeGreaterThan(0);
+    });
+
     it('should return 401 without user header', async () => {
       const response = await ctx.app.inject({
         method: 'GET',
@@ -117,6 +145,27 @@ describe('AuthController', () => {
       expect(response.statusCode).toBe(200);
       const data = response.json();
       expect(data.data.token).toBeDefined();
+    });
+
+    it('should return a properly formatted JWT token', async () => {
+      const response = await ctx.app.inject({
+        method: 'POST',
+        url: '/api/auth/refresh',
+        headers: { 'X-User-Id': ctx.testUserId },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const data = response.json();
+      const token = data.data.token;
+
+      // JWT tokens have 3 parts separated by dots: header.payload.signature
+      const parts = token.split('.');
+      expect(parts.length).toBe(3);
+
+      // Each part should be non-empty
+      expect(parts[0].length).toBeGreaterThan(0);
+      expect(parts[1].length).toBeGreaterThan(0);
+      expect(parts[2].length).toBeGreaterThan(0);
     });
   });
 
@@ -163,6 +212,27 @@ describe('AuthController', () => {
       expect(response.statusCode).toBe(200);
       const data = response.json();
       expect(data.data.token).toBeDefined();
+    });
+
+    it('should return a properly formatted JWT token', async () => {
+      const response = await ctx.app.inject({
+        method: 'POST',
+        url: '/api/auth/email',
+        payload: { email: 'admin@test.no', password: 'password123' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const data = response.json();
+      const token = data.data.token;
+
+      // JWT tokens have 3 parts separated by dots: header.payload.signature
+      const parts = token.split('.');
+      expect(parts.length).toBe(3);
+
+      // Each part should be non-empty
+      expect(parts[0].length).toBeGreaterThan(0);
+      expect(parts[1].length).toBeGreaterThan(0);
+      expect(parts[2].length).toBeGreaterThan(0);
     });
 
     it('should reject without password', async () => {
