@@ -4,6 +4,7 @@ import { I18nProvider } from '@xala/i18n';
 
 import type { ColorScheme } from '@xala/ds';
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
+import { DocsLayout } from './layouts/DocsLayout';
 
 // =============================================================================
 // Theme Context (simplified version for docs app)
@@ -90,23 +91,19 @@ export function useTheme() {
 
 function DocsHomePage() {
   return (
-    <div style={{ padding: 'var(--ds-spacing-8)' }}>
-      <Card asChild>
-        <article style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={1} size="xlarge">
-            Xala/Digilist Platform Documentation
-          </Heading>
-          <Paragraph>
-            Welcome to the documentation site for the Xala/Digilist Platform -
-            a Norwegian municipal booking and resource management system.
-          </Paragraph>
-          <Paragraph>
-            This documentation covers roles, permissions, user journeys, integrations,
-            seeding processes, and platform features.
-          </Paragraph>
-        </article>
-      </Card>
-    </div>
+    <Card style={{ padding: 'var(--ds-spacing-6)' }}>
+      <Heading level={1} data-size="xl">
+        Xala/Digilist Platform Documentation
+      </Heading>
+      <Paragraph style={{ marginTop: 'var(--ds-spacing-4)' }}>
+        Welcome to the documentation site for the Xala/Digilist Platform -
+        a Norwegian municipal booking and resource management system.
+      </Paragraph>
+      <Paragraph style={{ marginTop: 'var(--ds-spacing-3)' }}>
+        This documentation covers roles, permissions, user journeys, integrations,
+        seeding processes, and platform features.
+      </Paragraph>
+    </Card>
   );
 }
 
@@ -137,26 +134,34 @@ function AppWithTheme() {
               }}
             >
               <Routes>
-                {/* Main documentation routes */}
-                <Route path="/" element={<DocsHomePage />} />
+                {/* All routes wrapped in DocsLayout */}
+                <Route element={<DocsLayout />}>
+                  {/* Main documentation routes */}
+                  <Route path="/" element={<DocsHomePage />} />
 
-                {/* Role documentation routes (to be implemented in Phase 3) */}
-                <Route path="/roles/*" element={<DocsHomePage />} />
+                  {/* Role documentation routes */}
+                  <Route path="/roles" element={<DocsHomePage />} />
+                  <Route path="/roles/*" element={<DocsHomePage />} />
 
-                {/* Journey documentation routes */}
-                <Route path="/journeys/*" element={<DocsHomePage />} />
+                  {/* Journey documentation routes */}
+                  <Route path="/journeys" element={<DocsHomePage />} />
+                  <Route path="/journeys/*" element={<DocsHomePage />} />
 
-                {/* Seeding documentation routes */}
-                <Route path="/seeding/*" element={<DocsHomePage />} />
+                  {/* Seeding documentation routes */}
+                  <Route path="/seeding" element={<DocsHomePage />} />
+                  <Route path="/seeding/*" element={<DocsHomePage />} />
 
-                {/* Integration documentation routes */}
-                <Route path="/integrations/*" element={<DocsHomePage />} />
+                  {/* Integration documentation routes */}
+                  <Route path="/integrations" element={<DocsHomePage />} />
+                  <Route path="/integrations/*" element={<DocsHomePage />} />
 
-                {/* Platform documentation routes */}
-                <Route path="/platform/*" element={<DocsHomePage />} />
+                  {/* Platform documentation routes */}
+                  <Route path="/platform" element={<DocsHomePage />} />
+                  <Route path="/platform/*" element={<DocsHomePage />} />
 
-                {/* Catch-all redirect to home */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                  {/* Catch-all redirect to home */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
               </Routes>
             </BrowserRouter>
           </ErrorBoundary>
