@@ -22,6 +22,7 @@ export default defineConfig({
       'apps/backoffice/src/**/*.{test,spec}.{ts,tsx}',
       'apps/tenant-admin/src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
+      'tests/integration/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: [
       '**/node_modules/**',
