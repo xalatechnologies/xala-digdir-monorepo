@@ -69,12 +69,64 @@ export const users = pgTable('users', {
 }));
 
 // ============================================================================
-// Subscriptions & Billing
+// Plans & Subscriptions
 // ============================================================================
+
+export const plans = pgTable('plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 100 }).notNull(),
+  slug: varchar('slug', { length: 50 }).notNull().unique(),
+  description: text('description'),
+  displayOrder: integer('display_order').notNull().default(0),
+  basePrice: decimal('base_price', { precision: 10, scale: 2 }).notNull().default('0'),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+  billingPeriod: varchar('billing_period', { length: 20 }).notNull().default('monthly'),
+  seatLimits: jsonb('seat_limits').default({
+    maxUsers: 5,
+    maxOrganizations: 1,
+    maxListings: 10,
+    maxBookingsPerMonth: 100,
+    maxStorageMb: 500,
+  }),
+  entitlements: jsonb('entitlements').default({
+    modules: {
+      rating: false,
+      recommendations: false,
+      feedback: true,
+      favorites: true,
+      share: true,
+      recurringBookings: false,
+    },
+    integrations: {
+      visma: false,
+      rco: false,
+      acos: false,
+      outlook: false,
+      vipps: false,
+    },
+    features: {
+      customBranding: false,
+      advancedReporting: false,
+      apiAccess: false,
+      prioritySupport: false,
+    },
+  }),
+  trialDays: integer('trial_days').default(0),
+  isPublic: boolean('is_public').notNull().default(true),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  slugIdx: index('plans_slug_idx').on(table.slug),
+  statusIdx: index('plans_status_idx').on(table.status),
+  displayOrderIdx: index('plans_display_order_idx').on(table.displayOrder),
+}));
 
 export const subscriptions = pgTable('subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
+  planId: uuid('plan_id').references(() => plans.id, { onDelete: 'set null' }),
   stripeCustomerId: varchar('stripe_customer_id', { length: 255 }),
   stripeSubscriptionId: varchar('stripe_subscription_id', { length: 255 }),
   plan: varchar('plan', { length: 50 }).notNull().default('free'),
@@ -86,6 +138,7 @@ export const subscriptions = pgTable('subscriptions', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   tenantIdx: index('subscriptions_tenant_idx').on(table.tenantId),
+  planIdx: index('subscriptions_plan_idx').on(table.planId),
 }));
 
 // ============================================================================
@@ -301,6 +354,8 @@ export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type Plan = typeof plans.$inferSelect;
+export type NewPlan = typeof plans.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;
 export type Listing = typeof listings.$inferSelect;
