@@ -9,21 +9,51 @@ import {
   ClockIcon,
   BuildingIcon,
   ChartIcon,
+  ShieldIcon,
+  PlayIcon,
+  ExternalLinkIcon,
+  FileTextIcon,
+  InboxIcon,
 } from '@xala/ds';
+import { docsNav, type NavItem, type NavIconKey } from '../../navigation/docsNav';
 
-interface NavItem {
-  name: string;
-  description: string;
-  href: string;
-  icon: React.ReactNode;
+// =============================================================================
+// Icon Mapping
+// =============================================================================
+
+/**
+ * Maps icon keys from the docsNav registry to actual icon components
+ */
+const iconMap: Record<NavIconKey, React.ReactNode> = {
+  home: <HomeIcon />,
+  users: <UsersIcon />,
+  book: <BookOpenIcon />,
+  settings: <SettingsIcon />,
+  'arrow-right': <ArrowRightIcon />,
+  clock: <ClockIcon />,
+  building: <BuildingIcon />,
+  chart: <ChartIcon />,
+  database: <InboxIcon />,
+  link: <ExternalLinkIcon />,
+  shield: <ShieldIcon />,
+  play: <PlayIcon />,
+  folder: <FileTextIcon />,
+};
+
+/**
+ * Resolves an icon key to its React component
+ */
+function resolveIcon(iconKey: string): React.ReactNode {
+  return iconMap[iconKey as NavIconKey] || <HomeIcon />;
 }
 
-interface NavSection {
-  title?: string;
-  items: NavItem[];
-}
+// =============================================================================
+// NavItem Component
+// =============================================================================
 
-// NavItem component with proper active state handling
+/**
+ * SidebarNavItem - Renders a single navigation item with active state styling
+ */
 function SidebarNavItem({ item }: { item: NavItem }) {
   const location = useLocation();
   const isActive = item.href === '/'
@@ -72,7 +102,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
           transition: 'all 0.15s ease',
         }}
       >
-        {item.icon}
+        {resolveIcon(item.icon)}
       </div>
 
       {/* Text content */}
@@ -116,42 +146,20 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   );
 }
 
+// =============================================================================
+// DocsSidebar Component
+// =============================================================================
+
 export function DocsSidebar() {
-  const navSections: NavSection[] = [
-    {
-      items: [
-        { name: 'Home', description: 'Documentation overview', href: '/', icon: <HomeIcon /> },
-      ],
-    },
-    {
-      title: 'Roles & Permissions',
-      items: [
-        { name: 'Roles Overview', description: 'User roles in the system', href: '/roles', icon: <UsersIcon /> },
-        { name: 'Admin', description: 'Administrator permissions', href: '/roles/admin', icon: <SettingsIcon /> },
-        { name: 'Case Handler', description: 'Case handler permissions', href: '/roles/case-handler', icon: <ClockIcon /> },
-        { name: 'Booker', description: 'Booker permissions', href: '/roles/booker', icon: <BookOpenIcon /> },
-      ],
-    },
-    {
-      title: 'User Journeys',
-      items: [
-        { name: 'Journeys Overview', description: 'End-to-end user flows', href: '/journeys', icon: <ChartIcon /> },
-        { name: 'Booking Flow', description: 'How users book resources', href: '/journeys/booking', icon: <BookOpenIcon /> },
-        { name: 'Seasonal Leases', description: 'Seasonal booking process', href: '/journeys/seasonal', icon: <ClockIcon /> },
-      ],
-    },
-    {
-      title: 'Platform',
-      items: [
-        { name: 'Platform Overview', description: 'System architecture', href: '/platform', icon: <BuildingIcon /> },
-        { name: 'Integrations', description: 'Third-party integrations', href: '/integrations', icon: <SettingsIcon /> },
-        { name: 'Seeding', description: 'Data seeding guide', href: '/seeding', icon: <ChartIcon /> },
-      ],
-    },
-  ];
+  // Filter out hidden items from navigation
+  const visibleNav = docsNav.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => !item.hidden),
+  }));
 
   return (
     <aside
+      className="docs-sidebar"
       style={{
         width: '320px',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
@@ -209,8 +217,8 @@ export function DocsSidebar() {
 
       {/* Navigation */}
       <nav style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>
-        {navSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} style={{ marginBottom: 'var(--ds-spacing-6)' }}>
+        {visibleNav.map((section) => (
+          <div key={section.id} style={{ marginBottom: 'var(--ds-spacing-6)' }}>
             {section.title && (
               <Paragraph
                 data-size="xs"
@@ -238,7 +246,7 @@ export function DocsSidebar() {
         ))}
       </nav>
 
-      {/* CSS for hover states */}
+      {/* CSS for hover states and mobile responsive */}
       <style>{`
         .sidebar-nav-item:hover {
           background-color: var(--ds-color-neutral-surface-hover) !important;
@@ -246,6 +254,37 @@ export function DocsSidebar() {
         .sidebar-nav-item:hover .sidebar-nav-icon {
           background-color: var(--ds-color-accent-surface-default) !important;
           color: var(--ds-color-accent-text-default) !important;
+        }
+
+        /* Mobile responsive - collapsible sidebar */
+        @media (max-width: 768px) {
+          .docs-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+          }
+
+          .docs-sidebar.open {
+            transform: translateX(0);
+          }
+
+          .docs-sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+          }
+
+          .docs-sidebar-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+          }
         }
       `}</style>
     </aside>
