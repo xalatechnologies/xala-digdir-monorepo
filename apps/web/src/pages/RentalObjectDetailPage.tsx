@@ -111,8 +111,37 @@ function transformApiToListing(api: ApiListing): RentalObject {
 
   // Map opening hours from DTO - check both flat and nested in metadata
   const openingHoursData = dto.openingHours || dto.metadata?.openingHours;
+
+  // Convert opening hours to array format
+  let openingHoursArray: any[] = [];
+  if (Array.isArray(openingHoursData)) {
+    // Already in array format
+    openingHoursArray = openingHoursData;
+  } else if (openingHoursData && typeof openingHoursData === 'object') {
+    // Convert object format {monday: {open, close}, tuesday: {...}} to array
+    const dayNameMap: Record<string, { name: string; index: number }> = {
+      monday: { name: 'Mandag', index: 1 },
+      tuesday: { name: 'Tirsdag', index: 2 },
+      wednesday: { name: 'Onsdag', index: 3 },
+      thursday: { name: 'Torsdag', index: 4 },
+      friday: { name: 'Fredag', index: 5 },
+      saturday: { name: 'Lørdag', index: 6 },
+      sunday: { name: 'Søndag', index: 0 },
+    };
+
+    openingHoursArray = Object.entries(openingHoursData)
+      .filter(([key]) => dayNameMap[key])
+      .map(([key, hours]: [string, any]) => ({
+        day: dayNameMap[key]?.name || key,
+        dayIndex: dayNameMap[key]?.index ?? 0,
+        open: hours.open || '',
+        close: hours.close || '',
+        isClosed: !hours.open && !hours.close,
+      }));
+  }
+
   const openingHours: OpeningHours = {
-    regular: (Array.isArray(openingHoursData) ? openingHoursData : []).map((day: any) => ({
+    regular: openingHoursArray.map((day: any) => ({
       day: day.day || '',
       dayIndex: day.dayIndex ?? 0,
       open: day.open || day.openTime || '',
@@ -121,22 +150,26 @@ function transformApiToListing(api: ApiListing): RentalObject {
     })),
   };
 
-  // Build contact from either flat fields or nested metadata.contact
+  // Build contact from either flat fields or nested metadata
   const contactData = dto.metadata?.contact || {};
-  const contact = (dto.contactName || dto.contactEmail || dto.contactPhone || contactData.name || contactData.email || contactData.phone) ? {
-    ...(dto.contactName || contactData.name ? { name: dto.contactName || contactData.name } : {}),
-    ...(dto.contactEmail || contactData.email ? { email: dto.contactEmail || contactData.email } : {}),
-    ...(dto.contactPhone || contactData.phone ? { phone: dto.contactPhone || contactData.phone } : {}),
+  const metadataContactName = dto.metadata?.contactName;
+  const metadataContactEmail = dto.metadata?.contactEmail;
+  const metadataContactPhone = dto.metadata?.contactPhone;
+
+  const contact = (dto.contactName || dto.contactEmail || dto.contactPhone || contactData.name || contactData.email || contactData.phone || metadataContactName || metadataContactEmail || metadataContactPhone) ? {
+    ...(dto.contactName || contactData.name || metadataContactName ? { name: dto.contactName || contactData.name || metadataContactName } : {}),
+    ...(dto.contactEmail || contactData.email || metadataContactEmail ? { email: dto.contactEmail || contactData.email || metadataContactEmail } : {}),
+    ...(dto.contactPhone || contactData.phone || metadataContactPhone ? { phone: dto.contactPhone || contactData.phone || metadataContactPhone } : {}),
   } : undefined;
 
-  // Build address from either flat fields or nested metadata.address
+  // Build address from either flat fields or nested metadata
   const addressData = dto.metadata?.address || {};
   const locationData = dto.metadata?.location || {};
   const address = {
     formatted: dto.locationFormatted || '',
-    street: dto.addressStreet || addressData.street || '',
-    postalCode: dto.addressPostalCode || addressData.postalCode || '',
-    city: dto.addressCity || dto.city || addressData.city || '',
+    street: dto.addressStreet || addressData.street || locationData.address || '',
+    postalCode: dto.addressPostalCode || addressData.postalCode || locationData.postalCode || '',
+    city: dto.addressCity || dto.city || addressData.city || locationData.city || '',
     ...(dto.latitude || locationData.latitude ? {
       coordinates: {
         latitude: dto.latitude || locationData.latitude,

@@ -1,7 +1,49 @@
 /**
  * Types Index - Public API
  * Exports all type definitions for the SDK
+ *
+ * NOTE: Types are now sourced from @xala/contracts for schema-agnostic architecture.
+ * Legacy types are re-exported for backward compatibility.
  */
+
+// =============================================================================
+// Re-export from @xala/contracts (Schema-Agnostic Contracts)
+// These are the canonical type definitions derived from Zod schemas.
+// =============================================================================
+
+// Projection types from contracts
+export type {
+  RentalObjectCardProjection,
+  RentalObjectDetailsProjection,
+  RentalObjectSearchResultProjection,
+  BookingCardProjection,
+  BookingDetailsProjection,
+  BookingReceiptProjection,
+  CalendarEventProjection,
+  OrganizationCardProjection,
+  OrganizationDetailsProjection,
+  MemberProjection,
+  UserCardProjection,
+  UserDetailsProjection,
+  CurrentUserProjection,
+} from '@xala/contracts/projections';
+
+// Capability types from contracts
+export type {
+  Capability,
+  UIHints,
+  FeatureFlags,
+  CapabilitiesResponse,
+  CapabilityKey,
+} from '@xala/contracts/schemas';
+
+export {
+  CAPABILITIES,
+} from '@xala/contracts/schemas';
+
+// =============================================================================
+// Legacy Types (for backward compatibility)
+// =============================================================================
 
 // Core types
 export * from './enums';

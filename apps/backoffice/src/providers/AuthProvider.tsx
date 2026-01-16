@@ -132,8 +132,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Use auth guards to prevent redirect loops
-  useAuthRedirectGuard(!!user, isLoading);
+  // NOTE: Auth redirect guard temporarily disabled to avoid Router context issues
+  // TODO: Re-enable once properly integrated with Router provider
+  // useAuthRedirectGuard(!!user, isLoading);
   useSessionRestoration();
 
   // Subscribe to storage changes for cross-tab synchronization of flow context

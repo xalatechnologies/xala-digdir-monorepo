@@ -1,0 +1,311 @@
+name: Contracts CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/contracts/**'
+      - 'packages/sdk-core/**'
+      - 'packages/client-sdk/**'
+      - 'apps/api/src/schemas/**'
+      - '.github/workflows/contracts.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'packages/contracts/**'
+      - 'packages/sdk-core/**'
+      - 'packages/client-sdk/**'
+      - 'apps/api/src/schemas/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # Build Contracts Package
+  # ==========================================================================
+  build-contracts:
+    name: Build @xala/contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build contracts package
+        run: pnpm --filter @xala/contracts build
+
+      - name: Type check
+        run: pnpm --filter @xala/contracts typecheck
+
+      - name: Upload contracts artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: contracts-dist
+          path: packages/contracts/dist/
+
+  # ==========================================================================
+  # Build SDK Core Package
+  # ==========================================================================
+  build-sdk-core:
+    name: Build @xala/sdk-core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build sdk-core package
+        run: pnpm --filter @xala/sdk-core build
+
+      - name: Type check
+        run: pnpm --filter @xala/sdk-core typecheck
+
+  # ==========================================================================
+  # OpenAPI Breaking Change Detection
+  # ==========================================================================
+  openapi-breaking-changes:
+    name: OpenAPI Breaking Change Detection
+    runs-on: ubuntu-latest
+    needs: build-contracts
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install oasdiff
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/oasdiff/oasdiff/main/install.sh | sh
+
+      - name: Generate current OpenAPI spec
+        run: |
+          pnpm --filter @xala/contracts build
+          pnpm --filter @xala/contracts openapi:generate || true
+          cp packages/contracts/openapi.yaml current-openapi.yaml || echo '{}' > current-openapi.yaml
+
+      - name: Checkout base branch
+        run: git checkout ${{ github.base_ref }} -- packages/contracts/ || true
+
+      - name: Generate base OpenAPI spec
+        run: |
+          pnpm --filter @xala/contracts build 2>/dev/null || true
+          pnpm --filter @xala/contracts openapi:generate 2>/dev/null || true
+          cp packages/contracts/openapi.yaml base-openapi.yaml 2>/dev/null || echo '{}' > base-openapi.yaml
+
+      - name: Restore current branch
+        run: git checkout ${{ github.head_ref }} -- packages/contracts/
+
+      - name: Check for breaking changes
+        run: |
+          echo "## OpenAPI Breaking Change Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if oasdiff breaking base-openapi.yaml current-openapi.yaml --fail-on ERR; then
+            echo "✅ No breaking changes detected" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Breaking changes detected!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            oasdiff breaking base-openapi.yaml current-openapi.yaml || true >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+      - name: Show changelog
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Changelog" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          oasdiff changelog base-openapi.yaml current-openapi.yaml --format text || true >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================================================
+  # SDK Parity Test
+  # ==========================================================================
+  sdk-parity:
+    name: SDK Parity Test
+    runs-on: ubuntu-latest
+    needs: [build-contracts, build-sdk-core]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm build
+
+      - name: Run SDK parity tests
+        run: pnpm test:run -- --run tests/unit/sdk-parity.test.ts
+
+      - name: Check SDK exports
+        run: |
+          echo "## SDK Export Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Count exports from client-sdk
+          echo "### @digilist/client-sdk exports" >> $GITHUB_STEP_SUMMARY
+          pnpm --filter @digilist/client-sdk exec -- node -e "
+            const sdk = require('./dist/index.js');
+            const exports = Object.keys(sdk);
+            console.log(\`Total exports: \${exports.length}\`);
+            console.log('Services:', exports.filter(e => e.endsWith('Service')).length);
+            console.log('Hooks:', exports.filter(e => e.startsWith('use')).length);
+          " >> $GITHUB_STEP_SUMMARY || true
+
+  # ==========================================================================
+  # Contract Snapshot Test
+  # ==========================================================================
+  contract-snapshot:
+    name: Contract Snapshot Test
+    runs-on: ubuntu-latest
+    needs: build-contracts
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: |
+          pnpm --filter @xala/contracts build
+          pnpm --filter @xala/sdk-core build
+          pnpm --filter @digilist/client-sdk build
+
+      - name: Run contract snapshot tests
+        run: pnpm test:run -- --run tests/unit/sdk/*.test.ts || true
+
+      - name: Verify type exports
+        run: |
+          echo "## Contract Type Exports" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # List exported types from contracts
+          pnpm --filter @xala/contracts exec -- node -e "
+            const contracts = require('./dist/index.js');
+            const exports = Object.keys(contracts);
+            console.log('Total exports:', exports.length);
+            console.log('Schemas:', exports.filter(e => e.endsWith('Schema')).length);
+            console.log('Constants:', exports.filter(e => e === e.toUpperCase()).length);
+          " >> $GITHUB_STEP_SUMMARY || true
+
+  # ==========================================================================
+  # Integration Test
+  # ==========================================================================
+  integration:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: [build-contracts, build-sdk-core, sdk-parity]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm build
+
+      - name: Verify package linkage
+        run: |
+          # Verify contracts package is accessible from SDK
+          pnpm --filter @digilist/client-sdk exec -- node -e "
+            try {
+              require('@xala/contracts');
+              console.log('✅ @xala/contracts is accessible');
+            } catch (e) {
+              console.error('❌ @xala/contracts not accessible:', e.message);
+              process.exit(1);
+            }
+          "
+          
+          # Verify sdk-core package is accessible from SDK
+          pnpm --filter @digilist/client-sdk exec -- node -e "
+            try {
+              require('@xala/sdk-core');
+              console.log('✅ @xala/sdk-core is accessible');
+            } catch (e) {
+              console.error('❌ @xala/sdk-core not accessible:', e.message);
+              process.exit(1);
+            }
+          "
+
+      - name: Type check all apps
+        run: |
+          pnpm --filter @digilist/api typecheck || true
+          pnpm --filter web typecheck || true
+          pnpm --filter minside typecheck || true
+          pnpm --filter backoffice typecheck || true

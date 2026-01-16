@@ -1,9 +1,58 @@
 /**
  * Schema Module Exports
- * 
- * NOTE: rental-object.schema.ts is the primary schema for rental objects.
- * listing.schema.ts contains legacy schemas for backwards compatibility.
+ *
+ * NOTE: Schemas are now sourced from @xala/contracts for schema-agnostic architecture.
+ * Local schemas are kept for API-specific validation and backwards compatibility.
+ *
+ * @xala/contracts provides:
+ * - Zod schemas for validation
+ * - TypeScript types derived from schemas
+ * - Projection schemas for UI-ready DTOs
  */
+
+// =============================================================================
+// Re-export from @xala/contracts (Schema-Agnostic Contracts)
+// =============================================================================
+
+// Common schemas
+export {
+  UUIDSchema,
+  SlugSchema,
+  PaginationSchema,
+  PaginatedResponseMetaSchema,
+  SortOrderSchema,
+  MetadataSchema,
+  CurrencyCodeSchema,
+  MoneySchema,
+  ProblemDetailsSchema,
+  FieldErrorSchema,
+  type Pagination,
+  type PaginatedResponseMeta,
+  type SortOrder,
+  type Metadata,
+  type CurrencyCode,
+  type Money,
+  type ProblemDetails,
+  type FieldError,
+} from '@xala/contracts/schemas';
+
+// Capabilities schemas
+export {
+  CapabilitySchema,
+  UIHintsSchema,
+  FeatureFlagsSchema,
+  CapabilitiesResponseSchema,
+  CAPABILITIES,
+  type Capability,
+  type UIHints,
+  type CapabilitiesResponse,
+  type CapabilityKey,
+} from '@xala/contracts/schemas';
+
+// =============================================================================
+// Local Schemas (API-specific, backwards compatible)
+// =============================================================================
+
 export * from './tenant.schema';
 export * from './user.schema';
 export * from './booking.schema';

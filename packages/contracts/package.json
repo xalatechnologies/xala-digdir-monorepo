@@ -1,0 +1,65 @@
+{
+  "name": "@xala/contracts",
+  "version": "1.0.0",
+  "description": "Shared API contracts: Zod schemas, TypeScript types, and OpenAPI generation",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas/index.d.ts",
+      "import": "./dist/schemas/index.mjs",
+      "require": "./dist/schemas/index.js"
+    },
+    "./projections": {
+      "types": "./dist/projections/index.d.ts",
+      "import": "./dist/projections/index.mjs",
+      "require": "./dist/projections/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "openapi:generate": "tsx src/openapi/generate.ts",
+    "openapi:validate": "redocly lint openapi.yaml"
+  },
+  "keywords": [
+    "api",
+    "contracts",
+    "zod",
+    "openapi",
+    "typescript"
+  ],
+  "author": "Xala Technologies",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@anatine/zod-openapi": "^2.2.0",
+    "openapi3-ts": "^4.2.1",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  }
+}

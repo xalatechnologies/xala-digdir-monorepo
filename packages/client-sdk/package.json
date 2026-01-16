@@ -58,6 +58,8 @@
     }
   },
   "dependencies": {
+    "@xala/contracts": "workspace:*",
+    "@xala/sdk-core": "workspace:*",
     "browser-image-compression": "^2.0.2"
   },
   "devDependencies": {
