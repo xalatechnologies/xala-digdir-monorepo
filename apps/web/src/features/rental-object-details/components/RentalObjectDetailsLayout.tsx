@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { RequireAuthModal, ShareSheet } from '@xala/ds';
-import type { Listing } from '../types';
+import type { RentalObject } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
 import {
   isNativeShareAvailable,

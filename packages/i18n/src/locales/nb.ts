@@ -144,6 +144,10 @@ export const nb: Record<string, string> = {
   'listings.filter.capacity.11-20': '11-20 personer',
   'listings.filter.capacity.21-50': '21-50 personer',
   'listings.filter.capacity.50+': '50+ personer',
+  'listings.notFound': 'Lokalet ble ikke funnet',
+  'listings.notFoundDescription': 'Lokalet du leter etter finnes ikke eller er ikke tilgjengelig.',
+  'listings.errorDescription': 'Det oppstod en feil ved lasting av lokalet.',
+  'listings.backToOverview': 'Tilbake til oversikten',
 
   // Booking statuses
   'booking.pending': 'Venter',

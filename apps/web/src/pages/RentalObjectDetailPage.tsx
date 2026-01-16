@@ -285,9 +285,9 @@ export function RentalObjectDetailPage(): React.ReactElement {
       <ContentLayout maxWidth="1440px">
         <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
           <div role="status" aria-live="polite" aria-busy="true" style={{ textAlign: 'center' }}>
-            <Spinner aria-label={t('laster.innhold')} />
+            <Spinner aria-label={t('common.loading')} />
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Laster lokale...
+              {t('listings.loading')}
             </Paragraph>
           </div>
         </main>
@@ -302,10 +302,10 @@ export function RentalObjectDetailPage(): React.ReactElement {
         <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
           <div role="alert" aria-live="assertive" style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Paragraph data-size="lg" style={{ marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-default)' }}>
-              Lokalet ble ikke funnet
+              {t('listings.notFound')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {error ? 'Det oppstod en feil ved lasting av lokalet.' : 'Lokalet du leter etter finnes ikke eller er ikke tilgjengelig.'}
+              {error ? t('listings.errorDescription') : t('listings.notFoundDescription')}
             </Paragraph>
             <button
               type="button"
@@ -320,7 +320,7 @@ export function RentalObjectDetailPage(): React.ReactElement {
                 fontSize: 'var(--ds-font-size-sm)',
               }}
             >
-              Tilbake til oversikten
+              {t('listings.backToOverview')}
             </button>
           </div>
         </main>
@@ -329,8 +329,8 @@ export function RentalObjectDetailPage(): React.ReactElement {
   }
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: t('hjem'), href: '/', onClick: () => navigate('/') },
-    { label: t('utleieobjekter'), href: '/', onClick: () => navigate('/') },
+    { label: t('nav.home'), href: '/', onClick: () => navigate('/') },
+    { label: t('nav.listings'), href: '/', onClick: () => navigate('/') },
     { label: getDisplayName(listing) },
   ];
 

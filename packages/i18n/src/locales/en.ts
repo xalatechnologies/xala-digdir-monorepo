@@ -143,6 +143,10 @@ export const en: Record<string, string> = {
   'listings.filter.capacity.11-20': '11-20 people',
   'listings.filter.capacity.21-50': '21-50 people',
   'listings.filter.capacity.50+': '50+ people',
+  'listings.notFound': 'Space not found',
+  'listings.notFoundDescription': 'The space you are looking for does not exist or is not available.',
+  'listings.errorDescription': 'An error occurred while loading the space.',
+  'listings.backToOverview': 'Back to overview',
 
   // Booking statuses
   'booking.pending': 'Pending',
