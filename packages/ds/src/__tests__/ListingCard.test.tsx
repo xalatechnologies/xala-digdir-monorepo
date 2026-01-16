@@ -81,8 +81,8 @@ describe('ListingCard', () => {
       expect(screen.getByText('Kitchen')).toBeInTheDocument();
     });
 
-    it('renders listing type badge when provided', () => {
-      render(<ListingCard {...defaultProps} listingType="SPACE" />);
+    it('renders listing type badge when provided (detailed variant only)', () => {
+      render(<ListingCard {...defaultProps} listingType="SPACE" variant="detailed" />);
       expect(screen.getByText('Lokale')).toBeInTheDocument();
     });
   });

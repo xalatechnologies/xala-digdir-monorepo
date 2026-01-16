@@ -138,9 +138,10 @@ describe('ProtectedRoute', () => {
         </ProtectedRoute>
       );
 
-      // The Spinner component renders with role="img" and aria-label
-      const spinner = screen.getByRole('img', { name: 'Laster...' });
+      // The Spinner component renders with data-testid and aria-label
+      const spinner = screen.getByTestId('spinner');
       expect(spinner).toBeInTheDocument();
+      expect(spinner).toHaveAttribute('aria-label', 'Laster...');
       expect(spinner).toHaveAttribute('data-size', 'lg');
     });
 
@@ -378,7 +379,7 @@ describe('ProtectedRoute', () => {
       );
 
       expect(screen.getByText('Protected Content')).toBeInTheDocument();
-      expect(screen.queryByRole('img', { name: 'Laster...' })).not.toBeInTheDocument();
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
       // Should stay on protected route
       expect(screen.getByTestId('location')).toHaveTextContent('/protected');
     });
@@ -522,7 +523,7 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByRole('img', { name: 'Laster...' })).toBeInTheDocument();
+      expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
       // Transition to authenticated
       setMockAuthState({
@@ -546,7 +547,7 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
-      expect(screen.queryByRole('img', { name: 'Laster...' })).not.toBeInTheDocument();
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
       expect(screen.getByText('Protected Content')).toBeInTheDocument();
     });
 
@@ -573,7 +574,7 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByRole('img', { name: 'Laster...' })).toBeInTheDocument();
+      expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
       // Transition to unauthenticated
       setMockAuthState({
@@ -597,7 +598,7 @@ describe('ProtectedRoute', () => {
         </MemoryRouter>
       );
 
-      expect(screen.queryByRole('img', { name: 'Laster...' })).not.toBeInTheDocument();
+      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
       expect(screen.getByTestId('login-page')).toBeInTheDocument();
     });
   });
