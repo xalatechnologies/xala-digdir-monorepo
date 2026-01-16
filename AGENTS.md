@@ -107,6 +107,23 @@ docs/
 - `CLAUDE.md` - Claude-specific guidance  
 - `AI_RULES.md` - AI coding rules
 
+### Script Organization (REQUIRED)
+
+All scripts MUST be organized under the `scripts/` directory:
+
+**CRITICAL RULES:**
+- **NEVER create script files (.sh, .js, .mjs, .ts) in the repository root**
+- All utility scripts → `scripts/`
+- All deployment scripts → `scripts/`
+- All test scripts → `scripts/`
+- All build scripts → `scripts/`
+
+**Current scripts directory contains:**
+- Deployment scripts (deploy.sh, setup-ssl.sh, etc.)
+- i18n scripts (scan-i18n.js, check-i18n-keys.js, etc.)
+- Testing scripts (test-rate-limit.sh, test-auth-endpoints.sh, etc.)
+- Compliance scripts (scan-compliance.mjs, etc.)
+
 ### Unit Tests (Vitest)
 
 - All tests (watch): `pnpm test`

@@ -50,7 +50,7 @@ tests/
 │   ├── api/               # API integration
 │   ├── database/          # Database tests
 │   └── external/          # External service tests
-├── e2e/                   # E2E tests
+├── e2e/                   # E2E tests (within tests/ directory)
 │   ├── auth/              # Authentication flows
 │   ├── booking/           # Booking flows
 │   ├── listing/           # Listing management

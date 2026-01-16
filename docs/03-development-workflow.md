@@ -176,7 +176,7 @@ describe('ListingCard', () => {
 ### Test Organization
 - **Unit tests**: Next to components (`__tests__/` folder)
 - **Integration tests**: Feature level (`__tests__/integration/`)
-- **E2E tests**: In `e2e/` directory
+- **E2E tests**: In `tests/e2e/` directory
 - **Contract tests**: In SDK package
 
 ## Internationalization

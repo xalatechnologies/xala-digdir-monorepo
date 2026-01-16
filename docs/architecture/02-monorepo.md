@@ -47,9 +47,12 @@ xala-digdir-monorepo/
 │   ├── eslint-config/          # Linting rules
 │   └── i18n/                   # Internationalization
 ├── docs/                       # Documentation
-├── e2e/                        # E2E tests
 ├── scripts/                    # Build and utility scripts
-├── tests/                      # Test utilities and fixtures
+├── tests/                      # All tests (unit, e2e, integration, etc.)
+│   ├── e2e/                    # E2E tests
+│   ├── unit/                   # Unit tests
+│   ├── integration/            # Integration tests
+│   └── fixtures/               # Test utilities and fixtures
 └── tools/                      # Development tools
 ```
 
@@ -285,7 +288,7 @@ pnpm -F @digilist/client-sdk publish
 - Run with `pnpm test:integration`
 
 ### E2E Tests
-- Located in `e2e/` directory
+- Located in `tests/e2e/` directory
 - Test full user flows
 - Run with Playwright
 

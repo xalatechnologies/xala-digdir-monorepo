@@ -834,6 +834,25 @@ docs/
 - `CLAUDE.md` - Claude-specific guidance
 - `AI_RULES.md` - AI coding rules
 
+### Script Organization (REQUIRED STRUCTURE)
+
+All scripts MUST be organized under the `scripts/` directory:
+
+**⚠️ CRITICAL RULES:**
+- **NEVER create script files (.sh, .js, .mjs, .ts) in the repository root**
+- All utility scripts → `scripts/`
+- All deployment scripts → `scripts/`
+- All test scripts → `scripts/`
+- All build scripts → `scripts/`
+- All migration scripts → `scripts/`
+
+**Examples of properly organized scripts:**
+- `scripts/deploy.sh` - Deployment automation
+- `scripts/scan-i18n.js` - i18n localization scanner
+- `scripts/test-rate-limit.sh` - Rate limit testing
+- `scripts/scan-compliance.mjs` - Design system compliance
+- `scripts/setup-ssl.sh` - SSL certificate setup
+
 ### Unit Tests (Vitest)
 
 Located in `tests/unit/` AND co-located with source code:
