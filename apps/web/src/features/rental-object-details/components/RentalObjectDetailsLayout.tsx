@@ -113,7 +113,7 @@ export function RentalObjectDetailsLayout({
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [showShareSheet, setShowShareSheet] = React.useState(false);
 
-  const presenter = React.useMemo(() => createPresenter(rentalObject.type), [listing.type]);
+  const presenter = React.useMemo(() => createPresenter(listing.type), [listing.type]);
 
   // Subscribe to real-time updates
   useRealtimeUpdates(listing.id, (_event) => {
