@@ -29,6 +29,7 @@ export function useOrganizations(params?: OrganizationQueryParams) {
   return useQuery({
     queryKey: queryKeys.organizations.list(params),
     queryFn: () => organizationService.getAll(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -40,6 +41,7 @@ export function useOrganization(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.organizations.detail(id),
     queryFn: () => organizationService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -51,6 +53,7 @@ export function useOrganizationMembers(id: string) {
     queryKey: queryKeys.organizations.members(id),
     queryFn: () => organizationService.getMembers(id),
     enabled: !!id,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -155,38 +158,6 @@ export function useUploadOrganizationLogo() {
 }
 
 // ============================================================================
-// Organization Branding Hooks
-// ============================================================================
-
-/**
- * Get organization branding settings
- */
-export function useOrganizationBranding(id: string, options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: queryKeys.organizations.branding(id),
-    queryFn: () => organizationService.getBranding(id),
-    enabled: !!id && (options?.enabled ?? true),
-  });
-}
-
-/**
- * Update organization branding mutation
- */
-export function useUpdateOrganizationBranding() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<import('../services/organization.service').BrandingSettings> }) =>
-      organizationService.updateBranding(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.branding(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.lists() });
-    },
-  });
-}
-
-// ============================================================================
 // User Hooks
 // ============================================================================
 
@@ -197,6 +168,7 @@ export function useUsers(params?: UserQueryParams) {
   return useQuery({
     queryKey: queryKeys.users.list(params),
     queryFn: () => userService.getAll(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -208,6 +180,7 @@ export function useUser(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.users.detail(id),
     queryFn: () => userService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -218,6 +191,7 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: queryKeys.users.me(),
     queryFn: () => userService.getCurrentUser(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -369,6 +343,7 @@ export function useConsents() {
   return useQuery({
     queryKey: queryKeys.users.consents(),
     queryFn: () => userService.getConsents(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

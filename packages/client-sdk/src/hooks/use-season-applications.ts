@@ -30,6 +30,7 @@ export function useSeasonApplications(seasonId?: string, params?: SeasonApplicat
     queryKey: seasonApplicationKeys.list(queryParams),
     queryFn: () => seasonApplicationService.getAll(queryParams),
     enabled: !!seasonId || !!params,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -41,6 +42,7 @@ export function useSeasonApplication(id: string) {
     queryKey: seasonApplicationKeys.detail(id),
     queryFn: () => seasonApplicationService.getById(id),
     enabled: !!id,
+    staleTime: 60 * 1000, // 1 minute
   });
 }
 

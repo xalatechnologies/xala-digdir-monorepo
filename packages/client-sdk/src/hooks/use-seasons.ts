@@ -9,7 +9,6 @@ import {
   type SeasonQueryParams,
   type CreateSeasonDTO,
   type UpdateSeasonDTO,
-  type SeasonVenue,
 } from '../services/season.service';
 
 // Query keys for seasons
@@ -20,8 +19,6 @@ export const seasonKeys = {
   details: () => [...seasonKeys.all, 'detail'] as const,
   detail: (id: string) => [...seasonKeys.details(), id] as const,
   stats: (id: string) => [...seasonKeys.all, 'stats', id] as const,
-  venues: () => [...seasonKeys.all, 'venues'] as const,
-  venueList: (id: string) => [...seasonKeys.venues(), id] as const,
 };
 
 /**
@@ -31,6 +28,7 @@ export function useSeasons(params?: SeasonQueryParams) {
   return useQuery({
     queryKey: seasonKeys.list(params),
     queryFn: () => seasonService.getAll(params),
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -42,6 +40,7 @@ export function useSeason(id: string, options?: Omit<UseQueryOptions<{ data: Sea
     queryKey: seasonKeys.detail(id),
     queryFn: () => seasonService.getById(id),
     enabled: !!id,
+    staleTime: 60 * 1000, // 1 minute
     ...options,
   });
 }
@@ -54,17 +53,7 @@ export function useSeasonStats(id: string) {
     queryKey: seasonKeys.stats(id),
     queryFn: () => seasonService.getStats(id),
     enabled: !!id,
-  });
-}
-
-/**
- * Fetch venues assigned to a season
- */
-export function useSeasonVenues(seasonId: string) {
-  return useQuery({
-    queryKey: seasonKeys.venueList(seasonId),
-    queryFn: () => seasonService.getSeasonVenues(seasonId),
-    enabled: !!seasonId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -184,40 +173,6 @@ export function useDeleteSeason() {
     mutationFn: (id: string) => seasonService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: seasonKeys.all });
-    },
-  });
-}
-
-/**
- * Add a venue to a season
- */
-export function useAddVenueToSeason() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ seasonId, listingId }: { seasonId: string; listingId: string }) =>
-      seasonService.addVenueToSeason(seasonId, listingId),
-    onSuccess: (_, { seasonId }) => {
-      queryClient.invalidateQueries({ queryKey: seasonKeys.venueList(seasonId) });
-      queryClient.invalidateQueries({ queryKey: seasonKeys.detail(seasonId) });
-      queryClient.invalidateQueries({ queryKey: seasonKeys.lists() });
-    },
-  });
-}
-
-/**
- * Remove a venue from a season
- */
-export function useRemoveVenueFromSeason() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ seasonId, listingId }: { seasonId: string; listingId: string }) =>
-      seasonService.removeVenueFromSeason(seasonId, listingId),
-    onSuccess: (_, { seasonId }) => {
-      queryClient.invalidateQueries({ queryKey: seasonKeys.venueList(seasonId) });
-      queryClient.invalidateQueries({ queryKey: seasonKeys.detail(seasonId) });
-      queryClient.invalidateQueries({ queryKey: seasonKeys.lists() });
     },
   });
 }

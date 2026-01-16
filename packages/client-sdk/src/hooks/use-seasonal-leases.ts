@@ -25,6 +25,7 @@ export function useSeasonalLeases(params?: SeasonalLeaseQueryParams) {
   return useQuery({
     queryKey: seasonalLeaseKeys.list(params),
     queryFn: () => seasonalLeaseService.getAll(params),
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -36,6 +37,7 @@ export function useSeasonalLease(id: string) {
     queryKey: seasonalLeaseKeys.detail(id),
     queryFn: () => seasonalLeaseService.getById(id),
     enabled: !!id,
+    staleTime: 60 * 1000, // 1 minute
   });
 }
 
