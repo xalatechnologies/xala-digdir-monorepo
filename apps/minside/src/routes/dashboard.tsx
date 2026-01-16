@@ -5,7 +5,7 @@ import {
   Heading,
   Paragraph,
   Button,
-  Spinner,
+  Skeleton,
   CalendarIcon,
   MessageSquareIcon,
   ClockIcon,
@@ -55,12 +55,114 @@ export function DashboardPage() {
   const pendingCount = pendingData?.meta?.total ?? 0;
   const totalBookings = allData?.meta?.total ?? 0;
 
+  // Loading state - Skeleton screen
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Welcome Section Skeleton */}
+        <div>
+          <Skeleton width="50%" height={40} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+          <Skeleton width="70%" height={20} />
+        </div>
+
+        {/* Quick Stats Skeleton */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)'
+        }}>
+          {[1, 2, 3].map((i) => (
+            <Card key={i} style={{ padding: 'var(--ds-spacing-5)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-3)',
+                marginBottom: 'var(--ds-spacing-3)',
+              }}>
+                <Skeleton width={40} height={40} style={{ borderRadius: 'var(--ds-border-radius-md)' }} />
+                <Skeleton width="60%" height={20} />
+              </div>
+              <Skeleton width={60} height={40} />
+            </Card>
+          ))}
+        </div>
+
+        {/* Quick Actions Skeleton */}
+        <div>
+          <Skeleton width="30%" height={28} style={{ marginBottom: 'var(--ds-spacing-4)' }} />
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+            gap: 'var(--ds-spacing-3)'
+          }}>
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} style={{
+                padding: 'var(--ds-spacing-4)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+              }}>
+                <Skeleton width={48} height={48} style={{ borderRadius: 'var(--ds-border-radius-md)' }} />
+                <Skeleton width="80%" height={20} />
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Upcoming Bookings Skeleton */}
+        <Card style={{ padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-5)' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 'var(--ds-spacing-4)',
+          }}>
+            <Skeleton width="40%" height={28} />
+            <Skeleton width={100} height={36} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{
+                padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                border: '1px solid var(--ds-color-neutral-border-default)',
+                display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'space-between',
+                alignItems: isMobile ? 'stretch' : 'center',
+                gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
+                  <Skeleton width={isMobile ? 40 : 48} height={isMobile ? 40 : 48} style={{ borderRadius: 'var(--ds-border-radius-md)', flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <Skeleton width="70%" height={20} style={{ marginBottom: 'var(--ds-spacing-1)' }} />
+                    <Skeleton width="50%" height={16} />
+                  </div>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--ds-spacing-3)',
+                  marginLeft: isMobile ? 'calc(40px + var(--ds-spacing-3))' : '0'
+                }}>
+                  <Skeleton width={80} height={20} />
+                  <Skeleton width={80} height={24} style={{ borderRadius: 'var(--ds-border-radius-full)' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Welcome Section */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('minside.welcome')}, {user?.name?.split(' ')[0] || t('minside.user')}!
+          {t('minside.welcome')}, {user?.name?.split(' ')[0] || 'Bruker'}!
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
           {t('minside.dashboardDesc')}
@@ -318,11 +420,7 @@ export function DashboardPage() {
           </Link>
         </div>
 
-        {isLoading ? (
-          <div style={{ padding: isMobile ? 'var(--ds-spacing-6)' : 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-            <Spinner aria-label={t('common.loading')} data-size="md" />
-          </div>
-        ) : upcomingBookings.length === 0 ? (
+        {upcomingBookings.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: isMobile ? 'var(--ds-spacing-6)' : 'var(--ds-spacing-8)',

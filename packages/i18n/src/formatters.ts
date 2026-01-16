@@ -1,170 +1,130 @@
-import type { SupportedLocale } from './types';
-
 /**
- * Internal mapping from SupportedLocale to Intl locale string (BCP 47)
+ * Formatting utilities for internationalization
+ * Provides consistent formatting for dates, times, numbers, and durations
+ * across the application using locale-aware methods.
  */
-const INTL_LOCALE_MAP: Record<SupportedLocale, string> = {
-  nb: 'nb-NO', // Norwegian Bokmål (Norway)
-  en: 'en-US', // English (US)
-};
 
 /**
- * Default currency for all formatters
- */
-const DEFAULT_CURRENCY = 'NOK';
-
-/**
- * Options for date formatting
- */
-export interface DateFormatOptions {
-  /** Include time in the formatted output */
-  includeTime?: boolean;
-  /** Date format style: 'short', 'medium', 'long', 'full' */
-  dateStyle?: 'short' | 'medium' | 'long' | 'full';
-  /** Time format style: 'short', 'medium', 'long', 'full' */
-  timeStyle?: 'short' | 'medium' | 'long' | 'full';
-}
-
-/**
- * Options for number formatting
- */
-export interface NumberFormatOptions {
-  /** Minimum fraction digits */
-  minimumFractionDigits?: number;
-  /** Maximum fraction digits */
-  maximumFractionDigits?: number;
-  /** Use grouping separators (thousand separators) */
-  useGrouping?: boolean;
-}
-
-/**
- * Options for currency formatting
- */
-export interface CurrencyFormatOptions {
-  /** Currency code (defaults to NOK) */
-  currency?: string;
-  /** Display style: 'symbol', 'code', 'name' */
-  currencyDisplay?: 'symbol' | 'code' | 'name';
-}
-
-/**
- * Creates a locale-aware currency formatter
- *
- * @param locale - The supported locale ('nb' or 'en')
- * @param options - Optional formatting options
- * @returns A function that formats numbers as currency
- *
+ * Get relative time description
+ * @param date - ISO date string or Date object
+ * @param locale - Locale code (default: 'nb-NO')
+ * @returns Relative time string (e.g., "2 timer siden", "om 3 dager")
  * @example
- * ```ts
- * const format = formatCurrency('nb');
- * format(1234.56); // "kr 1 234,56"
- *
- * const formatEn = formatCurrency('en');
- * formatEn(1234.56); // "NOK 1,234.56"
- * ```
+ * formatRelativeTime(new Date()) // "nå"
+ * formatRelativeTime('2024-01-15T10:00:00') // "2 timer siden"
  */
-export function formatCurrency(
-  locale: SupportedLocale,
-  options?: CurrencyFormatOptions
-): (value: number) => string {
-  const intlLocale = INTL_LOCALE_MAP[locale];
-  const currency = options?.currency ?? DEFAULT_CURRENCY;
-  const currencyDisplay = options?.currencyDisplay ?? 'symbol';
+export function formatRelativeTime(
+  date: string | Date,
+  locale: string = 'nb-NO'
+): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
 
-  const formatter = new Intl.NumberFormat(intlLocale, {
-    style: 'currency',
-    currency,
-    currencyDisplay,
-  });
+  const now = new Date();
+  const diffMs = d.getTime() - now.getTime();
+  const diffMinutes = Math.round(diffMs / 60000);
+  const diffHours = Math.round(diffMs / 3600000);
+  const diffDays = Math.round(diffMs / 86400000);
 
-  return (value: number): string => formatter.format(value);
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+
+  if (Math.abs(diffMinutes) < 60) {
+    return rtf.format(diffMinutes, 'minutes');
+  } else if (Math.abs(diffHours) < 24) {
+    return rtf.format(diffHours, 'hours');
+  } else {
+    return rtf.format(diffDays, 'days');
+  }
 }
 
 /**
- * Creates a locale-aware date formatter
- *
- * @param locale - The supported locale ('nb' or 'en')
- * @param options - Optional formatting options
- * @returns A function that formats dates
- *
+ * Format duration as human-readable string
+ * @param value - Duration in milliseconds (default) or seconds
+ * @param options - Formatting options
+ * @param options.style - Display style: 'compact' (1h 30m) or 'long' (1 hour 30 minutes)
+ * @param options.unit - Input unit: 'milliseconds' or 'seconds'
+ * @param options.locale - Locale code (default: 'nb-NO')
+ * @returns Formatted duration string
  * @example
- * ```ts
- * const format = formatDate('nb');
- * format(new Date('2026-01-15')); // "15.01.2026"
- *
- * const formatEn = formatDate('en');
- * formatEn(new Date('2026-01-15')); // "1/15/2026"
- *
- * const formatWithTime = formatDate('nb', { includeTime: true });
- * formatWithTime(new Date('2026-01-15T14:30:00')); // "15.01.2026, 14:30"
- * ```
+ * formatDuration(5400000) // "1t 30m" (1.5 hours in ms, compact Norwegian)
+ * formatDuration(5400, { unit: 'seconds' }) // "1t 30m"
+ * formatDuration(5400000, { style: 'long' }) // "1 time 30 minutter"
+ * formatDuration(5400000, { locale: 'en' }) // "1h 30m"
  */
-export function formatDate(
-  locale: SupportedLocale,
-  options?: DateFormatOptions
-): (value: Date | number | string) => string {
-  const intlLocale = INTL_LOCALE_MAP[locale];
+export function formatDuration(
+  value: number,
+  options: {
+    style?: 'compact' | 'long';
+    unit?: 'milliseconds' | 'seconds';
+    locale?: string;
+  } = {}
+): string {
+  const { style = 'compact', unit = 'milliseconds', locale = 'nb-NO' } = options;
 
-  // Build formatter options based on provided options
-  const formatterOptions: Intl.DateTimeFormatOptions = {};
+  // Handle zero and negative durations
+  if (value <= 0) return '0m';
 
-  if (options?.dateStyle) {
-    // Use dateStyle if explicitly provided
-    (formatterOptions as Record<string, unknown>).dateStyle = options.dateStyle;
-  } else if (!options?.timeStyle) {
-    // Default: short date format
-    formatterOptions.year = 'numeric';
-    formatterOptions.month = '2-digit';
-    formatterOptions.day = '2-digit';
-  }
+  // Convert to milliseconds if needed
+  const ms = unit === 'seconds' ? value * 1000 : value;
 
-  if (options?.timeStyle) {
-    // Use timeStyle if explicitly provided
-    (formatterOptions as Record<string, unknown>).timeStyle = options.timeStyle;
-  } else if (options?.includeTime) {
-    // Include time with default format
-    formatterOptions.hour = '2-digit';
-    formatterOptions.minute = '2-digit';
-  }
+  // Calculate time units
+  const days = Math.floor(ms / 86400000);
+  const hours = Math.floor((ms % 86400000) / 3600000);
+  const minutes = Math.floor((ms % 3600000) / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
 
-  const formatter = new Intl.DateTimeFormat(intlLocale, formatterOptions);
-
-  return (value: Date | number | string): string => {
-    const date = value instanceof Date ? value : new Date(value);
-    return formatter.format(date);
+  // Define labels based on locale and style
+  const labels = {
+    nb: {
+      compact: { d: 'd', h: 't', m: 'm', s: 's' },
+      long: {
+        d: (n: number) => (n === 1 ? 'dag' : 'dager'),
+        h: (n: number) => (n === 1 ? 'time' : 'timer'),
+        m: (n: number) => (n === 1 ? 'minutt' : 'minutter'),
+        s: (n: number) => (n === 1 ? 'sekund' : 'sekunder'),
+      },
+    },
+    en: {
+      compact: { d: 'd', h: 'h', m: 'm', s: 's' },
+      long: {
+        d: (n: number) => (n === 1 ? 'day' : 'days'),
+        h: (n: number) => (n === 1 ? 'hour' : 'hours'),
+        m: (n: number) => (n === 1 ? 'minute' : 'minutes'),
+        s: (n: number) => (n === 1 ? 'second' : 'seconds'),
+      },
+    },
   };
-}
 
-/**
- * Creates a locale-aware number formatter
- *
- * @param locale - The supported locale ('nb' or 'en')
- * @param options - Optional formatting options
- * @returns A function that formats numbers
- *
- * @example
- * ```ts
- * const format = formatNumber('nb');
- * format(1234.56); // "1 234,56"
- *
- * const formatEn = formatNumber('en');
- * formatEn(1234.56); // "1,234.56"
- *
- * const formatInt = formatNumber('nb', { maximumFractionDigits: 0 });
- * formatInt(1234.56); // "1 235"
- * ```
- */
-export function formatNumber(
-  locale: SupportedLocale,
-  options?: NumberFormatOptions
-): (value: number) => string {
-  const intlLocale = INTL_LOCALE_MAP[locale];
+  // Determine locale key (nb-NO -> nb, en-US -> en, etc.)
+  const localeKey = locale.startsWith('nb') ? 'nb' : 'en';
+  const labelSet = labels[localeKey][style];
 
-  const formatter = new Intl.NumberFormat(intlLocale, {
-    minimumFractionDigits: options?.minimumFractionDigits,
-    maximumFractionDigits: options?.maximumFractionDigits,
-    useGrouping: options?.useGrouping ?? true,
-  });
+  // Build parts array
+  const parts: string[] = [];
 
-  return (value: number): string => formatter.format(value);
+  if (days > 0) {
+    const label = style === 'compact' ? labelSet.d : (labelSet.d as (n: number) => string)(days);
+    parts.push(`${days}${style === 'compact' ? label : ` ${label}`}`);
+  }
+
+  if (hours > 0) {
+    const label = style === 'compact' ? labelSet.h : (labelSet.h as (n: number) => string)(hours);
+    parts.push(`${hours}${style === 'compact' ? label : ` ${label}`}`);
+  }
+
+  if (minutes > 0) {
+    const label = style === 'compact' ? labelSet.m : (labelSet.m as (n: number) => string)(minutes);
+    parts.push(`${minutes}${style === 'compact' ? label : ` ${label}`}`);
+  }
+
+  // Only include seconds for durations under 1 hour
+  if (seconds > 0 && days === 0 && hours === 0) {
+    const label = style === 'compact' ? labelSet.s : (labelSet.s as (n: number) => string)(seconds);
+    parts.push(`${seconds}${style === 'compact' ? label : ` ${label}`}`);
+  }
+
+  // If no parts (shouldn't happen with > 0 check), return 0m
+  if (parts.length === 0) return '0m';
+
+  return parts.join(' ');
 }

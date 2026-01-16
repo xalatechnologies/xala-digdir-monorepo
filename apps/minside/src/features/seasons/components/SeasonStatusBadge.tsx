@@ -1,38 +1,41 @@
-import { Badge } from '@xala/ds';
-import type { SeasonStatus } from '@digilist/client-sdk/types';
-import { SEASON_STATUS_CONFIG } from '../constants';
-import { useT } from '@xala/i18n';
-
 /**
  * Season Status Badge Component
  *
- * Displays a colored badge for season status.
+ * Displays a colored badge for season status using GenericStatusBadge from @xala/ds.
+ *
+ * Usage:
+ * ```tsx
+ * import { SeasonStatusBadge } from './features/seasons/components/SeasonStatusBadge';
+ *
+ * <SeasonStatusBadge status="open" />
+ * <SeasonStatusBadge status="active" size="md" />
+ * <SeasonStatusBadge status="cancelled" />
+ * ```
+ *
+ * Status values:
+ * - 'draft': Season is in draft mode (gray)
+ * - 'open': Season is open for applications (green)
+ * - 'closed': Season is closed (gray)
+ * - 'active': Season is currently active (blue)
+ * - 'completed': Season has been completed (gray)
+ * - 'cancelled': Season has been cancelled (red)
  */
+
+import { GenericStatusBadge } from '@xala/ds';
+import type { SeasonStatus } from '@digilist/client-sdk/types';
+import { SEASON_STATUS_CONFIG } from '../constants';
 
 interface SeasonStatusBadgeProps {
   status: SeasonStatus;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function SeasonStatusBadge({ status, size = 'md' }: SeasonStatusBadgeProps) {
-  const t = useT();
-  const config = SEASON_STATUS_CONFIG[status];
-
-  if (!config) {
-    return null;
-  }
-
+export function SeasonStatusBadge({ status, size = 'sm' }: SeasonStatusBadgeProps) {
   return (
-    <Badge
-      data-size={size}
-      style={{
-        backgroundColor: config.bgColor,
-        color: config.color,
-        border: 'none',
-        fontWeight: 'var(--ds-font-weight-medium)',
-      }}
-    >
-      {t(config.labelKey)}
-    </Badge>
+    <GenericStatusBadge
+      status={status}
+      config={SEASON_STATUS_CONFIG}
+      size={size}
+    />
   );
 }

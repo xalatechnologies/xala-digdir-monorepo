@@ -1,7 +1,7 @@
 import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
-import { useT } from '@xala/i18n';
+import { WEEKDAY_LABELS } from '../constants';
 
 /**
  * Application Card Component
@@ -39,21 +39,25 @@ function MapPinIcon() {
   );
 }
 
-// Status configuration (colors only - labels from i18n)
+// Status configuration
 const APPLICATION_STATUS_CONFIG = {
   pending: {
+    label: 'Til behandling',
     color: 'var(--ds-color-warning-text-default)',
     bgColor: 'var(--ds-color-warning-surface-default)',
   },
   approved: {
+    label: 'Godkjent',
     color: 'var(--ds-color-success-text-default)',
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
+    label: 'Avslått',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
   cancelled: {
+    label: 'Kansellert',
     color: 'var(--ds-color-neutral-text-subtle)',
     bgColor: 'var(--ds-color-neutral-surface-default)',
   },
@@ -66,46 +70,20 @@ interface ApplicationCardProps {
 
 export function ApplicationCard({ application, showActions = true }: ApplicationCardProps) {
   const navigate = useNavigate();
-  const t = useT();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('no-NO', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  // Get weekday label
-  const getWeekdayLabel = (weekday: number) => {
-    const weekdays = [
-      'seasons.weekday.sunday',
-      'seasons.weekday.monday',
-      'seasons.weekday.tuesday',
-      'seasons.weekday.wednesday',
-      'seasons.weekday.thursday',
-      'seasons.weekday.friday',
-      'seasons.weekday.saturday',
-    ];
-    return t(weekdays[weekday] || weekdays[0]);
-  };
-
-  // Get status label
-  const getStatusLabel = (status: string) => {
-    const statusKey = `seasons.application.${status}`;
-    return t(statusKey);
-  };
-
   const handleViewSeason = () => {
     navigate(`/seasons/${application.seasonId}`);
   };
 
-  const handleViewRentalObject = () => {
-    // TODO: Navigate to rental object detail page when available
-    const rentalObjectId = application.listingId || application.rentalObjectId;
-    if (rentalObjectId) {
-      navigate(`/rental-objects/${rentalObjectId}`);
-    }
+  const handleViewListing = () => {
+    // TODO: Navigate to listing detail page when available
+    navigate(`/listings/${application.listingId}`);
   };
-  // Backward compatibility alias
-  const handleViewListing = handleViewRentalObject;
 
   const statusConfig = APPLICATION_STATUS_CONFIG[application.status as keyof typeof APPLICATION_STATUS_CONFIG] || APPLICATION_STATUS_CONFIG.pending;
 
@@ -132,10 +110,10 @@ export function ApplicationCard({ application, showActions = true }: Application
       >
         <div style={{ flex: 1, minWidth: 0 }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-            {application.season?.name || t('seasons.applicationCard.season')}
+            {application.season?.name || 'Sesong'}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('seasons.applicationCard.applicationSent', { date: formatDate(application.createdAt) })}
+            Søknad sendt {formatDate(application.createdAt)}
           </Paragraph>
         </div>
         <Badge
@@ -148,7 +126,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             flexShrink: 0,
           }}
         >
-          {getStatusLabel(application.status)}
+          {statusConfig.label}
         </Badge>
       </div>
 
@@ -180,10 +158,10 @@ export function ApplicationCard({ application, showActions = true }: Application
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('seasons.applicationCard.venue')}
+              Lokale
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {application.listing?.name || t('seasons.applicationCard.unknownVenue')}
+              {application.listingName || 'Ukjent lokale'}
             </Paragraph>
           </div>
         </div>
@@ -207,10 +185,10 @@ export function ApplicationCard({ application, showActions = true }: Application
           </div>
           <div>
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('seasons.applicationCard.dayAndTime')}
+              Dag og tid
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {getWeekdayLabel(application.weekday)} • {application.startTime} - {application.endTime}
+              {WEEKDAY_LABELS[application.weekday]} • {application.startTime} - {application.endTime}
             </Paragraph>
           </div>
         </div>
@@ -235,7 +213,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('seasons.applicationCard.seasonPeriod')}
+                Sesongperiode
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {formatDate(application.season.startDate)} - {formatDate(application.season.endDate)}
@@ -255,7 +233,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             }}
           >
             <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
-              {t('seasons.applicationCard.note')}
+              Merknad
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               {application.notes}
@@ -274,7 +252,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             }}
           >
             <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-danger-text-default)' }}>
-              {t('seasons.applicationCard.rejectionReason')}
+              Årsak til avslag
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
               {application.rejectionReason}
@@ -301,16 +279,16 @@ export function ApplicationCard({ application, showActions = true }: Application
             data-size="sm"
             onClick={handleViewSeason}
           >
-            {t('seasons.applicationCard.viewSeason')}
+            Se sesong
           </Button>
           {application.status === 'approved' && (
             <Button
               type="button"
               variant="secondary"
               data-size="sm"
-              onClick={handleViewRentalObject}
+              onClick={handleViewListing}
             >
-              {t('seasons.applicationCard.viewVenue')}
+              Se lokale
             </Button>
           )}
         </div>

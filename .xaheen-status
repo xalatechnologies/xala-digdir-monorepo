@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "019-add-userealtimemonitoring-websocket-hook",
+  "spec": "026-consolidate-statusbadge-implementations-to-use-xal",
   "state": "building",
   "subtasks": {
-    "completed": 4,
-    "total": 6,
+    "completed": 7,
+    "total": 8,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Final Verification",
+    "current": "Cross-App Verification",
     "id": null,
-    "total": 2
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 6,
-    "started_at": "2026-01-16T00:40:23.384005"
+    "number": 9,
+    "started_at": "2026-01-16T00:40:28.899522"
   },
-  "last_update": "2026-01-16T00:55:04.593444"
+  "last_update": "2026-01-16T00:59:55.279658"
 }
