@@ -11,9 +11,9 @@ export HOSTINGER_PORT="22"                     # SSH port
 
 # Domain Configuration
 export DOMAIN_BASE="digilist.no"
-export WEB_SUBDOMAIN="web-test"              # apps/web → web-test.digilist.no
-export BACKOFFICE_SUBDOMAIN="backoffice-test"
-export MINSIDE_SUBDOMAIN="minside-test"
+export WEB_SUBDOMAIN="web"                   # apps/web → web.digilist.no
+export BACKOFFICE_SUBDOMAIN="backoffice"     # apps/backoffice → backoffice.digilist.no
+export MINSIDE_SUBDOMAIN="minside"           # apps/minside → minside.digilist.no
 export SAAS_ADMIN_SUBDOMAIN="saas-admin"     # apps/saas-admin → saas-admin.digilist.no
 export TENANT_ADMIN_SUBDOMAIN="tenant-admin" # apps/tenant-admin → tenant-admin.digilist.no
 

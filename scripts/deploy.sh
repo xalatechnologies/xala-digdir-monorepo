@@ -31,16 +31,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Load configuration
-if [ -f "$SCRIPT_DIR/deploy-config.sh" ]; then
-    source "$SCRIPT_DIR/deploy-config.sh"
-else
-    echo -e "${RED}Error: deploy-config.sh not found!${NC}"
-    echo "Please copy deploy-config.example.sh to deploy-config.sh and update values."
-    exit 1
-fi
-
-# Function to print status
+# Function to print status (define early)
 print_status() {
     echo -e "${BLUE}[DEPLOY]${NC} $1"
 }
@@ -56,6 +47,38 @@ print_warning() {
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
+
+# Load deployment configuration
+if [ -f "$SCRIPT_DIR/deploy-config.sh" ]; then
+    source "$SCRIPT_DIR/deploy-config.sh"
+else
+    print_error "deploy-config.sh not found!"
+    echo "Please copy deploy-config.example.sh to deploy-config.sh and update values."
+    exit 1
+fi
+
+# Load credentials from .env.production
+if [ -f "$PROJECT_ROOT/.env.production" ]; then
+    print_status "Loading credentials from .env.production..."
+
+    # Export SSH credentials
+    export HOSTINGER_HOST=$(grep -E "^SERVER_HOST=" "$PROJECT_ROOT/.env.production" | cut -d '=' -f2)
+    export HOSTINGER_PORT=$(grep -E "^SERVER_PORT=" "$PROJECT_ROOT/.env.production" | cut -d '=' -f2)
+    export HOSTINGER_USER=$(grep -E "^SERVER_USER=" "$PROJECT_ROOT/.env.production" | cut -d '=' -f2)
+
+    # Verify credentials are loaded
+    if [ -z "$HOSTINGER_HOST" ] || [ -z "$HOSTINGER_PORT" ] || [ -z "$HOSTINGER_USER" ]; then
+        print_error "Failed to load SSH credentials from .env.production"
+        echo "Required variables: SERVER_HOST, SERVER_PORT, SERVER_USER"
+        exit 1
+    fi
+
+    print_success "Loaded SSH credentials: $HOSTINGER_USER@$HOSTINGER_HOST:$HOSTINGER_PORT"
+else
+    print_error ".env.production not found!"
+    echo "Please create .env.production with SSH credentials (SERVER_HOST, SERVER_PORT, SERVER_USER)"
+    exit 1
+fi
 
 # =============================================================================
 # Safety Checks - Run before any deployment
@@ -177,32 +200,80 @@ EOF
     print_success "Created $env_file"
 }
 
+# =============================================================================
+# Server Cleanup Functions
+# =============================================================================
+
+# Function to clean deployment directories on server
+clean_server_deployment() {
+    local remote_path=$1
+    local app_name=$2
+
+    print_status "Cleaning server deployment directory for $app_name..."
+    print_warning "This will DELETE ALL FILES in $remote_path (except database)"
+
+    # Delete all files in the deployment directory
+    ssh -p "$HOSTINGER_PORT" "$HOSTINGER_USER@$HOSTINGER_HOST" \
+        "rm -rf $remote_path/* && mkdir -p $remote_path"
+
+    print_success "Server directory cleaned: $remote_path"
+}
+
+# Function to clean all caches on server
+clean_server_caches() {
+    print_status "Cleaning all caches on server..."
+
+    # Clean node_modules cache, .turbo cache, and build artifacts
+    ssh -p "$HOSTINGER_PORT" "$HOSTINGER_USER@$HOSTINGER_HOST" << 'EOF'
+        # Clean API cache
+        if [ -d "/var/www/digilist-api" ]; then
+            echo "Cleaning API cache..."
+            rm -rf /var/www/digilist-api/.turbo
+            rm -rf /var/www/digilist-api/node_modules/.cache
+        fi
+
+        # Clean frontend app caches
+        for app in web backoffice minside saas-admin tenant-admin; do
+            app_path="/var/www/digilist/$app"
+            if [ -d "$app_path" ]; then
+                echo "Cleaning $app cache..."
+                rm -rf "$app_path/.turbo"
+                rm -rf "$app_path/.vite"
+                rm -rf "$app_path/node_modules/.cache"
+            fi
+        done
+
+        echo "Server caches cleared!"
+EOF
+
+    print_success "All server caches cleaned"
+}
+
 # Function to deploy an app
 deploy_app() {
     local app_name=$1
     local dist_path=$2
     local remote_path=$3
     local subdomain=$4
-    
+
     print_status "Deploying $app_name to $subdomain.$DOMAIN_BASE..."
-    
+
     # Check if dist directory exists
     if [ ! -d "$PROJECT_ROOT/$dist_path" ]; then
         print_error "Build directory not found: $dist_path"
         print_warning "Run 'pnpm build' first or use deploy.sh which builds automatically."
         exit 1
     fi
-    
-    # Create remote directory if needed
-    ssh -p "$HOSTINGER_PORT" "$HOSTINGER_USER@$HOSTINGER_HOST" \
-        "mkdir -p $remote_path"
-    
-    # Sync files with rsync
-    rsync -avz --delete \
+
+    # Clean server deployment directory first
+    clean_server_deployment "$remote_path" "$app_name"
+
+    # Sync files with rsync (fresh deployment)
+    rsync -avz \
         -e "ssh -p $HOSTINGER_PORT" \
         "$PROJECT_ROOT/$dist_path/" \
         "$HOSTINGER_USER@$HOSTINGER_HOST:$remote_path/"
-    
+
     print_success "$app_name deployed to https://$subdomain.$DOMAIN_BASE"
 }
 
