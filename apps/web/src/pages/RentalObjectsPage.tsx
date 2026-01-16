@@ -42,21 +42,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-// Direct category label map for reliable display
-const CATEGORY_LABELS: Record<string, string> = {
-  'LOKALER_OG_BANER': 'Lokaler og baner',
-  'UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
-  'KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
-  'OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
+// Direct category label key map for i18n lookup
+const CATEGORY_LABEL_KEYS: Record<string, string> = {
+  'LOKALER_OG_BANER': 'sdk.rentalObject.category.LOKALER_OG_BANER',
+  'UTSTYR_OG_INVENTAR': 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
+  'KJORETOY_OG_TRANSPORT': 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
+  'OPPLEVELSER_OG_ARRANGEMENT': 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
 };
 
 // Category options using V3 4-category model
 const CATEGORY_OPTIONS = [
-  { id: 'ALL', key: 'ALL', label: 'Alle typer' },
-  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
-  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
-  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
+  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
+  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
+  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
+  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
 ];
 
 const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT'];
@@ -327,7 +327,7 @@ export function RentalObjectsPage(): React.ReactElement {
 
     if (listingType !== 'ALL') {
       const cat = CATEGORY_OPTIONS.find(c => c.id === listingType);
-      if (cat) chips.push({ id: 'cat', label: cat.label, type: 'category', value: listingType });
+      if (cat) chips.push({ id: 'cat', label: t(cat.labelKey), type: 'category', value: listingType });
     }
 
     if (selectedArea !== 'all') {
@@ -386,12 +386,12 @@ export function RentalObjectsPage(): React.ReactElement {
             {(showMoreType ? CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)) : CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).slice(0, MAX_VISIBLE_ITEMS)).map((cat) => (
               <DrawerItem
                 key={cat.id}
-                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={cat.label} />}
+                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={t(cat.labelKey)} />}
                 right={<Text size="sm">({typeCounts[cat.id] || 0})</Text>}
                 onClick={() => setRentalObjectType(cat.id)}
                 selected={listingType === cat.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{cat.label}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cat.labelKey)}</Text>
               </DrawerItem>
             ))}
             {CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length > MAX_VISIBLE_ITEMS && (
@@ -486,7 +486,7 @@ export function RentalObjectsPage(): React.ReactElement {
 
           {/* Loading State - Skeletons */}
           {isLoading && (
-             <RentalObjectGrid minCardWidth={380} maxColumns={3}>
+             <RentalObjectGrid minCardWidth={450} maxColumns={3}>
                {Array.from({ length: 6 }).map((_, i) => (
                  <RentalObjectSkeleton key={i} />
                ))}
@@ -690,7 +690,7 @@ export function RentalObjectsPage(): React.ReactElement {
               </div>
 
               {viewMode === 'grid' ? (
-                <RentalObjectGrid minCardWidth={380} maxColumns={3}>
+                <RentalObjectGrid minCardWidth={450} maxColumns={3}>
                   <AnimatePresence mode="popLayout">
                     {visibleListings.map((listing) => (
                       <motion.div
@@ -704,7 +704,7 @@ export function RentalObjectsPage(): React.ReactElement {
                         <RentalObjectCard
                           id={listing.id}
                           name={listing.name}
-                          type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
+                          type={CATEGORY_LABEL_KEYS[listing.category] ? t(CATEGORY_LABEL_KEYS[listing.category]) : listing.category}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}
@@ -747,7 +747,7 @@ export function RentalObjectsPage(): React.ReactElement {
                         <RentalObjectListItem
                           id={listing.id}
                           name={listing.name}
-                          type={CATEGORY_LABELS[listing.category] || listing.category || 'Lokale'}
+                          type={CATEGORY_LABEL_KEYS[listing.category] ? t(CATEGORY_LABEL_KEYS[listing.category]) : listing.category}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}

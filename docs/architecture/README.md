@@ -82,6 +82,13 @@ Contract-driven SDK architecture:
 - Type flow from Zod to UI
 - Import guidelines
 
+### [Production-Ready SDK](./production-ready-sdk.md)
+Complete implementation guide for the schema-agnostic SDK:
+- @xala/sdk-core: HTTP client, RFC 7807 errors, retry, query keys
+- @xala/contracts: Zod schemas, projections, TypeScript types
+- Integration patterns
+- Testing and CI enforcement
+
 ### [Contract Evolution Guide](./contract-evolution.md)
 Safe schema change strategies:
 - Expand-Contract pattern
