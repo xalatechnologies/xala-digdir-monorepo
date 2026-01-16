@@ -6,3 +6,4 @@
 
 export { LoginPage } from './login';
 export { DashboardPage } from './dashboard';
+export { SubscriptionPage } from './subscription';
