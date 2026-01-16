@@ -3,6 +3,11 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Playwright E2E Test Configuration
  * @see https://playwright.dev/docs/test-configuration
+ *
+ * Supports multiple apps:
+ * - Web app (public): http://localhost:5173
+ * - SaaS Admin: http://localhost:5176
+ * - Tenant Admin: http://localhost:5177
  */
 export default defineConfig({
   testDir: './e2e',
@@ -32,6 +37,7 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Web App Tests (Default)
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -56,13 +62,47 @@ export default defineConfig({
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
     },
+
+    // SaaS Admin App Tests
+    {
+      name: 'saas-admin',
+      testMatch: '**/saas-admin*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5176',
+      },
+    },
+
+    // Tenant Admin App Tests
+    {
+      name: 'tenant-admin',
+      testMatch: '**/tenant-admin*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5177',
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm --filter @xala/web dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: [
+    {
+      command: 'pnpm --filter @xala/web dev',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
+      command: 'pnpm --filter @xala/saas-admin dev',
+      url: 'http://localhost:5176',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
+      command: 'pnpm --filter @xala/tenant-admin dev',
+      url: 'http://localhost:5177',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+  ],
 });
