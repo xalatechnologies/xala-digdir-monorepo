@@ -3,7 +3,7 @@ import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds'
 import { I18nProvider } from '@xala/i18n';
 import { useState, useCallback, createContext, useContext } from 'react';
 
-import { AuthProvider } from './providers/AuthProvider';
+import { AuthProvider } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
@@ -109,7 +109,7 @@ function AppWithTheme() {
         }}
       >
         <NotificationCenterProvider>
-          <AuthProvider>
+          <AuthProvider config={{ appType: 'minside', debug: import.meta.env.DEV }}>
             <AccountContextProvider>
             <AccountSelectionWrapper>
             <RealtimeProvider

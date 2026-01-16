@@ -13,7 +13,7 @@ import {
   Select,
 } from '@xala/ds';
 import { useLocale } from '@xala/i18n';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 export function PreferencesTab() {
   const { locale, setLocale } = useLocale();

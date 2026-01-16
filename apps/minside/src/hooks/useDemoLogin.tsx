@@ -1,6 +1,6 @@
 /**
- * Demo Login Hook - Web App
- * Provides demo login functionality with web-specific redirect logic
+ * Demo Login Hook - Minside App
+ * Provides demo login functionality with minside-specific redirect logic
  */
 
 import { useState } from 'react';
@@ -36,25 +36,22 @@ export function useDemoLogin() {
       // Call the auth service to validate the demo token
       const response = await authService.loginWithDemoToken(data.token.trim());
 
-      if (response.data?.token && response.data?.user) {
-        // Token is valid - store JWT token for API auth
-        localStorage.setItem('digilist_token', response.data.token);
-        localStorage.setItem('web_user', JSON.stringify(response.data.user));
+      if (response.data?.user) {
+        // Token is valid - store user session
+        localStorage.setItem('minside_user', JSON.stringify(response.data.user));
 
         // Close dialog
         setShowDialog(false);
 
-        // Verify session is established
-        const sessionCheck = await authService.getSession();
-        console.log('[DEMO LOGIN] Session verified:', sessionCheck.data);
-
-        // Determine redirect based on user role (web-specific)
+        // Determine redirect based on user role (minside-specific)
         const user = response.data.user;
         let redirectPath = '/';
 
-        // For web app, most users go to listings
-        if (user.role === 'user' || user.role === 'organization') {
-         redirectPath = '/listings';
+        // For minside app, users typically go to their dashboard
+        if (user.role === 'user') {
+          redirectPath = '/bookings';
+        } else if (user.role === 'organization') {
+          redirectPath = '/organization';
         }
 
         // Navigate and reload to pick up auth state

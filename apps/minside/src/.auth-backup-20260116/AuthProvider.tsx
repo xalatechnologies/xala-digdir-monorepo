@@ -73,7 +73,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type AuthContextType, AuthContext, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { type AuthContextType, AuthContext, type User, type UserRole, type RestoreFlowContextResult } from '@xala/auth';
 import { authService } from '@digilist/client-sdk/services';
 import {
   FLOW_CONTEXT_KEY,
@@ -91,14 +91,14 @@ import { useAuthRedirectGuard, useSessionRestoration } from '@digilist/client-sd
  *
  * Mock users match the seeded database for consistent testing.
  */
-const MOCK_ADMIN_USER: BackofficeUser = {
+const MOCK_ADMIN_USER: User = {
   id: 'test-admin-001',
   name: 'Test Admin User',
   email: 'admin@test.kommune.no',
   role: 'admin',
 };
 
-const MOCK_USER: BackofficeUser = {
+const MOCK_USER: User = {
   id: '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c',
   name: 'Test User',
   email: 'user@test.kommune.no',
@@ -216,7 +216,7 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
           const response = await authService.handleOAuthCallback(code);
           const session: AuthSession = response.data;
 
-          const userData: BackofficeUser = {
+          const userData: User = {
             id: session.user.id,
             name: session.user.name,
             email: session.user.email,
@@ -259,7 +259,7 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
         const response = await authService.getSession();
         const session: AuthSession = response.data;
 
-        const userData: BackofficeUser = {
+        const userData: User = {
           id: session.user.id,
           name: session.user.name,
           email: session.user.email,
@@ -378,7 +378,7 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
   }, [navigate]);
 
   const checkRole = useCallback(
-    (role: BackofficeRole): boolean => {
+    (role: UserRole): boolean => {
       if (!user) return false;
       if (role === 'admin') return user.role === 'admin';
       if (role === 'saksbehandler')

@@ -41,7 +41,7 @@ import {
   type Address,
 } from '@digilist/client-sdk';
 import { useLocale } from '@xala/i18n';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 export function SettingsPage() {
   const navigate = useNavigate();

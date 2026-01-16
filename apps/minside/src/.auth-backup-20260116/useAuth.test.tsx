@@ -4,14 +4,14 @@ import { ReactNode } from 'react';
 import { useAuth, AuthContext, AuthContextType, BackofficeUser } from './useAuth';
 
 describe('useAuth', () => {
-  const mockUser: BackofficeUser = {
+  const mockUser: User = {
     id: 'user-1',
     name: 'Test User',
     email: 'test@example.com',
     role: 'admin',
   };
 
-  const mockSaksbehandlerUser: BackofficeUser = {
+  const mockSaksbehandlerUser: User = {
     id: 'user-2',
     name: 'Saksbehandler User',
     email: 'saksbehandler@example.com',

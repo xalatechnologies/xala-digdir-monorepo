@@ -27,8 +27,8 @@
 }
 
 .searchWrapper {
-  flex: 1 1 300px;
-  min-width: 200px;
+  flex: 1 1 var(--ds-size-container-sm, 300px);
+  min-width: var(--ds-size-20, 200px);
 }
 
 .loadingContainer {

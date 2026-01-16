@@ -18,7 +18,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 // Web app URL for booking - can be configured via env
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL || 'https://digilist.no';

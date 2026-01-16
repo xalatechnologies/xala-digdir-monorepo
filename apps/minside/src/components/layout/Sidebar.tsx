@@ -14,7 +14,7 @@ import {
   Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useAccountContext } from '../../providers/AccountContextProvider';
 
 // Icon for Billing/Credit Card

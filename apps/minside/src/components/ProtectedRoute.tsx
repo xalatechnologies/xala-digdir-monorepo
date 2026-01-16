@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner, Heading, Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useAuth, type BackofficeRole } from '../hooks/useAuth';
+import { useAuth, type UserRole } from '@xala/auth';
 import { useAccountContext, type DashboardContext } from '../providers/AccountContextProvider';
 import {
   createFlowContext,
@@ -17,7 +17,7 @@ import type { FlowContext } from '@digilist/client-sdk';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   /** Required role to access this route */
-  requiredRole?: BackofficeRole;
+  requiredRole?: UserRole;
   /** Tenant ID for flow context (optional, defaults to env or 'minside') */
   tenantId?: string;
   /** Required account context for this route */

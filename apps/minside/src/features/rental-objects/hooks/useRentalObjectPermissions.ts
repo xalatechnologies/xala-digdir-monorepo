@@ -4,7 +4,7 @@
  */
 
 import { useMemo } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import type { ListingPermissions } from '../types';
 import type { ListingStatus, RentalObjectStatus } from '@digilist/client-sdk';
 

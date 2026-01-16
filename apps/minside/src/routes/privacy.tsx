@@ -26,7 +26,7 @@ import {
   useConsents,
   useUpdateConsents,
 } from '@digilist/client-sdk';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 const MOBILE_BREAKPOINT = 768;
 

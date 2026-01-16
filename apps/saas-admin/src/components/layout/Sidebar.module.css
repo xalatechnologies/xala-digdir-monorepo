@@ -86,8 +86,8 @@
   text-decoration: none;
   position: relative;
   background-color: transparent;
-  border-left: 3px solid transparent;
-  transition: all 0.15s ease;
+  border-left: var(--ds-border-width-md, 3px) solid transparent;
+  transition: all var(--ds-transition-duration-fast, 0.15s) ease;
 }
 
 .navItem:hover {

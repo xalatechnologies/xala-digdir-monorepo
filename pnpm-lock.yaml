@@ -230,6 +230,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.16
         version: 5.90.16(react@18.3.1)
+      '@xala/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@xala/ds':
         specifier: workspace:*
         version: link:../../packages/ds

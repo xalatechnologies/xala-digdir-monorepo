@@ -31,7 +31,7 @@ vi.mock('@digilist/client-sdk/hooks', () => ({
 // Import after mocking
 import { useOrganizations } from '@digilist/client-sdk/hooks';
 import { ProtectedRoute } from './ProtectedRoute';
-import { AuthContext, type AuthContextType } from '../hooks/useAuth';
+import { AuthContext, type AuthContextType } from '@xala/auth';
 import { AccountContextProvider } from '../providers/AccountContextProvider';
 
 describe('ProtectedRoute', () => {

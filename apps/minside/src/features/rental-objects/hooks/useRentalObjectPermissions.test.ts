@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useRentalObjectPermissions } from './useRentalObjectPermissions';
-import type { BackofficeUser } from '../../../hooks/useAuth';
+import type { BackofficeUser } from '@xala/auth';
 import type { ListingStatus } from '@digilist/client-sdk';
 
 // Mock useAuth hook
@@ -8,19 +8,19 @@ vi.mock('../../../hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }));
 
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 
 const mockUseAuth = useAuth as ReturnType<typeof vi.fn>;
 
 describe('useRentalObjectPermissions', () => {
-  const adminUser: BackofficeUser = {
+  const adminUser: User = {
     id: 'admin-1',
     name: 'Admin User',
     email: 'admin@example.com',
     role: 'admin',
   };
 
-  const saksbehandlerUser: BackofficeUser = {
+  const saksbehandlerUser: User = {
     id: 'user-1',
     name: 'Regular User',
     email: 'user@example.com',
