@@ -8,6 +8,7 @@
 import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '../hooks/useAuth';
 import { useToast } from '../providers/ToastProvider';
 
@@ -21,6 +22,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+  const t = useT();
   const { isLoading, isAuthenticated, checkRole } = useAuth();
   const location = useLocation();
   const { error } = useToast();
@@ -34,11 +36,11 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     if (!isLoading && isAuthenticated && !hasRequiredRole && !hasShownToast.current) {
       hasShownToast.current = true;
       error(
-        'Ingen tilgang',
-        'Du har ikke tilgang til denne siden. Kontakt plattformadministrator hvis du mener dette er feil.'
+        t('auth.accessDenied.title'),
+        t('auth.accessDenied.message')
       );
     }
-  }, [isLoading, isAuthenticated, hasRequiredRole, error]);
+  }, [isLoading, isAuthenticated, hasRequiredRole, error, t]);
 
   // Reset toast flag when location changes
   useEffect(() => {
@@ -56,7 +58,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label={t('common.loading')} data-size="lg" />
       </div>
     );
   }
