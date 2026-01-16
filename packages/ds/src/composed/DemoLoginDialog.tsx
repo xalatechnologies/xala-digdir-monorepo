@@ -11,11 +11,9 @@
  */
 
 import React, { useState } from 'react';
-import { Dialog } from '../primitives/Dialog';
-import { Textfield } from '../primitives/Textfield';
-import { Button } from '../primitives/Button';
-import { Alert } from '../primitives/Alert';
-import { Stack } from '../primitives/Stack';
+import { Textfield, Button, Alert } from '@digdir/designsystemet-react';
+import { Dialog } from '@digdir/designsystemet-react';
+import { Stack } from '../primitives';
 
 export interface DemoLoginDialogProps {
   /** Whether the dialog is open */

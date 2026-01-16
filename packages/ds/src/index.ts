@@ -92,6 +92,7 @@ export {
   useDialog,
   ConfirmDialog,
   AlertDialog,
+  DemoLoginDialog,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -138,6 +139,8 @@ export type {
   ConfirmDialogProps,
   AlertDialogProps,
   DialogVariant,
+  DemoLoginDialogProps,
+  DemoLoginFormData,
 } from './composed';
 
 // Primitives - Low-level building blocks
