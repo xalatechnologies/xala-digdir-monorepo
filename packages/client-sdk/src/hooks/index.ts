@@ -389,3 +389,14 @@ export {
   useSaasTenantCategories,
   useUpdateSaasTenantCategories,
 } from './use-saas';
+
+// Tenant Admin hooks (Tenant-scoped administration)
+export {
+  useTenantCapabilities,
+  useTenantSubscription,
+  useTenantFlags,
+  useTenantBranding,
+  useUpdateTenantBranding,
+  useTenantIntegrations,
+  useUpdateTenantIntegration,
+} from './use-tenant-admin';
