@@ -28,7 +28,7 @@ import {
   type SeasonApplication,
 } from '@digilist/client-sdk';
 
-type ApplicationStatus = SeasonApplication['status'];
+type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'allocated';
 
 interface SeasonApplicationManagementProps {
   seasonId: string;
@@ -67,7 +67,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   const filteredApplications = useMemo(() => {
     return applications.filter(app => {
       if (filterStatus !== 'all' && app.status !== filterStatus) return false;
-      if (filterVenue !== 'all' && app.listingId !== filterVenue) return false;
+      if (filterVenue !== 'all' && app.rentalObjectId !== filterVenue) return false;
       return true;
     });
   }, [applications, filterStatus, filterVenue]);
@@ -76,10 +76,10 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   const applicationsByVenue = useMemo(() => {
     const groups: Record<string, SeasonApplication[]> = {};
     applications.forEach(app => {
-      if (!groups[app.listingId]) {
-        groups[app.listingId] = [];
+      if (!groups[app.rentalObjectId]) {
+        groups[app.rentalObjectId] = [];
       }
-      groups[app.listingId].push(app);
+      groups[app.rentalObjectId].push(app);
     });
     return groups;
   }, [applications]);
@@ -88,7 +88,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   const venues = useMemo(() => {
     const venueMap = new Map<string, string>();
     applications.forEach(app => {
-      venueMap.set(app.listingId, app.listingName);
+      venueMap.set(app.rentalObjectId, app.rentalObjectName);
     });
     return Array.from(venueMap.entries());
   }, [applications]);
@@ -226,7 +226,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
           <Table.Body>
             {filteredApplications.map(application => {
               // Check for conflicts
-              const conflicts = applicationsByVenue[application.listingId]?.filter(
+              const conflicts = applicationsByVenue[application.rentalObjectId]?.filter(
                 other =>
                   other.id !== application.id &&
                   other.weekday === application.weekday &&
@@ -246,7 +246,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                      {application.listingName}
+                      {application.rentalObjectName}
                       {conflicts.length > 0 && (
                         <Badge color="warning" size="sm" style={{ marginLeft: 'var(--ds-spacing-1)' }}>
                           {conflicts.length} konflikt{conflicts.length > 1 ? 'er' : ''}

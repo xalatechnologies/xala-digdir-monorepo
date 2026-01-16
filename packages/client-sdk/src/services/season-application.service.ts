@@ -8,8 +8,8 @@ export interface SeasonApplication {
   id: string;
   tenantId: string;
   seasonId: string;
-  listingId: string;
-  listingName?: string;
+  rentalObjectId: string;
+  rentalObjectName?: string;
   organizationId: string;
   organizationName?: string;
   applicantName: string;
@@ -29,7 +29,7 @@ export interface SeasonApplication {
 
 export interface SeasonApplicationQueryParams {
   seasonId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   organizationId?: string;
   status?: string;
   page?: number;
@@ -38,7 +38,7 @@ export interface SeasonApplicationQueryParams {
 
 export interface CreateSeasonApplicationDTO {
   seasonId: string;
-  listingId: string;
+  rentalObjectId: string;
   organizationId: string;
   applicantName: string;
   applicantEmail: string;

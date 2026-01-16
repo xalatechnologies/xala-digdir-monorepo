@@ -1,17 +1,17 @@
 {
   "active": true,
-  "spec": "035-security-compliance-dashboard",
+  "spec": "033-season-application-sdk-hooks-completion",
   "state": "building",
   "subtasks": {
     "completed": 5,
-    "total": 15,
+    "total": 6,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "SDK Service Extensions and Hooks",
+    "current": "Integration Verification",
     "id": null,
-    "total": 4
+    "total": 1
   },
   "workers": {
     "active": 0,
@@ -19,7 +19,7 @@
   },
   "session": {
     "number": 7,
-    "started_at": "2026-01-16T00:47:37.586598"
+    "started_at": "2026-01-16T00:47:41.161132"
   },
-  "last_update": "2026-01-16T01:08:14.279895"
+  "last_update": "2026-01-16T01:03:35.062804"
 }

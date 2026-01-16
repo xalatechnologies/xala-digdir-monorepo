@@ -97,8 +97,8 @@ export interface SeasonQueryParams extends BaseQueryParams {
 
 export interface SeasonApplication extends TenantEntity {
   seasonId: string;
-  listingId: string;
-  listingName?: string;
+  rentalObjectId: string;
+  rentalObjectName?: string;
   organizationId: string;
   organizationName?: string;
   applicantName: string;
@@ -116,7 +116,7 @@ export interface SeasonApplication extends TenantEntity {
 
 export interface CreateSeasonApplicationDTO {
   seasonId: string;
-  listingId: string;
+  rentalObjectId: string;
   organizationId: string;
   applicantName: string;
   applicantEmail: string;
@@ -130,7 +130,7 @@ export interface CreateSeasonApplicationDTO {
 
 export interface SeasonApplicationQueryParams extends BaseQueryParams {
   seasonId?: string;
-  listingId?: string;
+  rentalObjectId?: string;
   organizationId?: string;
   status?: string;
 }
