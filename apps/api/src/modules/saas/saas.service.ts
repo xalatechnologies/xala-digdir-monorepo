@@ -22,7 +22,7 @@ import {
   type UpdateSaasTenantDTO,
   type UpdateSeatLimitsDTO,
   type UpdateFeatureFlagsDTO,
-  type CreatePlanDTO,
+  type CreatePlanInput,
   type TenantDetailResponse,
   type TenantListResponse,
   type PlanListResponse,
@@ -467,7 +467,7 @@ export class SaasService {
   /**
    * Create a new subscription plan
    */
-  async createPlan(data: CreatePlanDTO, actorId: string): Promise<Plan> {
+  async createPlan(data: CreatePlanInput, actorId: string): Promise<Plan> {
     const validated = validate(CreatePlanSchema, data);
 
     // Generate slug from name if not provided
@@ -485,11 +485,16 @@ export class SaasService {
       name: validated.name,
       slug,
       description: validated.description || null,
-      priceMonthly: validated.priceMonthly,
-      priceYearly: validated.priceYearly || validated.priceMonthly * 10, // Default yearly = 10 months
+      displayOrder: 0,
+      basePrice: validated.basePrice,
+      currency: validated.currency ?? 'NOK',
+      billingPeriod: validated.billingPeriod ?? 'monthly',
       seatLimits: validated.seatLimits,
       entitlements: validated.entitlements || {},
-      isActive: validated.isActive ?? true,
+      trialDays: 0,
+      isPublic: true,
+      status: validated.isActive !== false ? 'active' : 'inactive',
+      metadata: {},
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -500,7 +505,7 @@ export class SaasService {
       'plan',
       plan.id,
       actorId,
-      { name: plan.name, slug: plan.slug, priceMonthly: plan.priceMonthly }
+      { name: plan.name, slug: plan.slug, basePrice: plan.basePrice, billingPeriod: plan.billingPeriod }
     );
 
     this.adapters?.log?.info('SaaS: Plan created', {
@@ -512,7 +517,8 @@ export class SaasService {
     // Track analytics
     await this.adapters?.analytics?.track('saas_plan_created', {
       planId: plan.id,
-      priceMonthly: plan.priceMonthly,
+      basePrice: plan.basePrice,
+      billingPeriod: plan.billingPeriod,
     });
 
     return plan;

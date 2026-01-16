@@ -142,13 +142,18 @@ export const CreatePlanSchema = z.object({
   name: z.string().min(1).max(255),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens').max(100).optional(),
   description: z.string().max(1000).optional(),
-  priceMonthly: z.number().nonnegative(),
-  priceYearly: z.number().nonnegative().optional(),
+  basePrice: z.coerce.string(),
+  billingPeriod: z.enum(['monthly', 'yearly']).default('monthly'),
+  currency: z.string().max(3).default('NOK'),
   seatLimits: SeatLimitsSchema,
   entitlements: EntitlementsSchema.optional(),
   isActive: z.boolean().default(true),
 });
 
+/** Input type (before defaults are applied) */
+export type CreatePlanInput = z.input<typeof CreatePlanSchema>;
+
+/** Output type (after validation with defaults applied) */
 export type CreatePlanDTO = z.infer<typeof CreatePlanSchema>;
 
 // =============================================================================

@@ -6,7 +6,7 @@
 /* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex detail page */
 
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -49,8 +49,6 @@ import {
 } from '@digilist/client-sdk/hooks';
 import type {
   SaasTenantStatus,
-  TenantFeatureFlag,
-  FeatureFlagCatalogItem,
   FeatureFlagCategory,
 } from '@digilist/client-sdk/types';
 
@@ -82,7 +80,6 @@ const categoryColors: Record<FeatureFlagCategory, 'info' | 'success' | 'warning'
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
 
   // State for license key display (only shown once after rotation)
   const [newLicenseKey, setNewLicenseKey] = useState<string | null>(null);
