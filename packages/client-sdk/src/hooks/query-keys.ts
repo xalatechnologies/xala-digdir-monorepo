@@ -14,7 +14,6 @@ import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
 import type { EconomyQueryParams } from '../types/economy';
 import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
-import type { GdprRequestQueryParams } from '../types/gdpr';
 
 /**
  * Strongly-typed query key factory
@@ -150,11 +149,12 @@ export const queryKeys = {
   organizations: {
     all: ['organizations'] as const,
     lists: () => [...queryKeys.organizations.all, 'list'] as const,
-    list: (params?: { status?: string; search?: string }) => 
+    list: (params?: { status?: string; search?: string }) =>
       [...queryKeys.organizations.lists(), params] as const,
     details: () => [...queryKeys.organizations.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.organizations.details(), id] as const,
     members: (id: string) => [...queryKeys.organizations.detail(id), 'members'] as const,
+    branding: (id: string) => [...queryKeys.organizations.detail(id), 'branding'] as const,
   },
 
   // =========================================================================
@@ -213,21 +213,6 @@ export const queryKeys = {
       [...queryKeys.audit.all, 'resource', resource, params] as const,
     user: (userId: string, params?: Omit<AuditQueryParams, 'userId'>) =>
       [...queryKeys.audit.all, 'user', userId, params] as const,
-  },
-
-  // =========================================================================
-  // GDPR Keys
-  // =========================================================================
-  gdpr: {
-    all: ['gdpr'] as const,
-    lists: () => [...queryKeys.gdpr.all, 'list'] as const,
-    myRequests: (params?: GdprRequestQueryParams) =>
-      [...queryKeys.gdpr.lists(), 'my', params] as const,
-    detail: (id: string) => [...queryKeys.gdpr.all, 'detail', id] as const,
-    pending: (params?: GdprRequestQueryParams) =>
-      [...queryKeys.gdpr.lists(), 'pending', params] as const,
-    export: () => [...queryKeys.gdpr.all, 'export'] as const,
-    consents: () => [...queryKeys.gdpr.all, 'consents'] as const,
   },
 
   // =========================================================================
