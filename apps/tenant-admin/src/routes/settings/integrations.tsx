@@ -241,7 +241,7 @@ export function IntegrationsSettingsPage(): React.ReactElement {
   const handleSaveIntegration = async () => {
     if (!editingProvider) return;
 
-    const config = INTEGRATION_CONFIG[editingProvider];
+    const config = INTEGRATION_STATIC_CONFIG[editingProvider];
     const data: Record<string, unknown> = { enabled: true };
 
     if (config?.requiresApiKey && editState.apiKey) {

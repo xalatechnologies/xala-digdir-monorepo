@@ -4,7 +4,7 @@
  * Uses reusable login components from @xala/ds.
  * After successful login, redirects to the tenant dashboard.
  */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LoginLayout,

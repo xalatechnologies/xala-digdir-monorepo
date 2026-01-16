@@ -467,27 +467,31 @@ describe('IntegrationsSettingsPage', () => {
     it('displays all integration cards', () => {
       render(<IntegrationsSettingsPage />);
 
-      expect(screen.getByText('Vipps')).toBeInTheDocument();
-      expect(screen.getByText('Visma')).toBeInTheDocument();
-      expect(screen.getByText('Microsoft Outlook')).toBeInTheDocument();
-      expect(screen.getByText('SMTP E-post')).toBeInTheDocument();
+      // Mock returns defaultValue (lowercase provider keys)
+      expect(screen.getByText('vipps')).toBeInTheDocument();
+      expect(screen.getByText('visma')).toBeInTheDocument();
+      expect(screen.getByText('outlook')).toBeInTheDocument();
+      expect(screen.getByText('smtp')).toBeInTheDocument();
     });
 
     it('displays integration descriptions', () => {
       render(<IntegrationsSettingsPage />);
 
-      expect(screen.getByText('Norsk betalingsløsning for online betaling')).toBeInTheDocument();
-      expect(screen.getByText('Integrasjon med Visma for regnskapsføring og fakturering')).toBeInTheDocument();
+      // Mock returns the translation key when no defaultValue provided
+      // The descriptionKey is returned since defaultValue is empty string
+      expect(screen.getByText('tenantAdmin.integrations.providers.vipps.description')).toBeInTheDocument();
+      expect(screen.getByText('tenantAdmin.integrations.providers.visma.description')).toBeInTheDocument();
     });
 
     it('displays category badges on integration cards', () => {
       render(<IntegrationsSettingsPage />);
 
       // Categories appear both on cards and section headings, so use getAllByText
-      expect(screen.getAllByText('Betaling').length).toBeGreaterThanOrEqual(1);
-      expect(screen.getAllByText('Synkronisering').length).toBeGreaterThanOrEqual(1);
-      expect(screen.getAllByText('Kalender').length).toBeGreaterThanOrEqual(1);
-      expect(screen.getAllByText('Varsler').length).toBeGreaterThanOrEqual(1);
+      // Mock returns defaultValue (English lowercase category keys)
+      expect(screen.getAllByText('payment').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('sync').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('calendar').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('notification').length).toBeGreaterThanOrEqual(1);
     });
 
     it('displays correct status for active configured integration', () => {
@@ -585,7 +589,8 @@ describe('IntegrationsSettingsPage', () => {
       render(<IntegrationsSettingsPage />);
 
       const switches = screen.getAllByRole('switch');
-      expect(switches[0]).toHaveAttribute('aria-label', 'Toggle Vipps');
+      // Mock returns defaultValue (provider key lowercase)
+      expect(switches[0]).toHaveAttribute('aria-label', 'Toggle vipps');
     });
 
     it('calls update mutation when toggle is clicked', async () => {
@@ -842,8 +847,9 @@ describe('IntegrationsSettingsPage', () => {
       const headings = screen.getAllByTestId('heading-2');
       const headingTexts = headings.map((h) => h.textContent);
 
-      expect(headingTexts).toContain('Betaling');
-      expect(headingTexts).toContain('Synkronisering');
+      // Mock returns defaultValue (lowercase category keys)
+      expect(headingTexts).toContain('payment');
+      expect(headingTexts).toContain('sync');
     });
 
     it('displays badge with count for each category', () => {

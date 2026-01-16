@@ -55,6 +55,13 @@ vi.mock('@xala/ds', () => ({
     }, 'Loading...'),
 }));
 
+// Mock @xala/i18n - return the defaultValue or key
+vi.mock('@xala/i18n', () => ({
+  useT: () => (key: string, options?: { defaultValue?: string }) => {
+    return options?.defaultValue || key;
+  },
+}));
+
 // Import after mocks are set up
 import { ProtectedRoute } from '../../../../apps/tenant-admin/src/components/ProtectedRoute';
 
@@ -139,9 +146,10 @@ describe('ProtectedRoute', () => {
       );
 
       // The Spinner component renders with data-testid and aria-label
+      // Mock returns defaultValue (English)
       const spinner = screen.getByTestId('spinner');
       expect(spinner).toBeInTheDocument();
-      expect(spinner).toHaveAttribute('aria-label', 'Laster...');
+      expect(spinner).toHaveAttribute('aria-label', 'Loading...');
       expect(spinner).toHaveAttribute('data-size', 'lg');
     });
 
@@ -297,9 +305,10 @@ describe('ProtectedRoute', () => {
       );
 
       await waitFor(() => {
+        // Mock returns defaultValue (English)
         expect(mockError).toHaveBeenCalledWith(
-          'Ingen tilgang',
-          'Du har ikke tilgang til denne siden. Kontakt tenant-administrator hvis du mener dette er feil.'
+          'No access',
+          'You do not have access to this page. Contact tenant administrator if you believe this is an error.'
         );
       });
     });
