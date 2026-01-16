@@ -88,11 +88,6 @@ export {
   useDialog,
   ConfirmDialog,
   AlertDialog,
-  // Language Switcher
-  LanguageSwitcher,
-  ConnectedLanguageSwitcher,
-  // Calendar (XALA-compliant rental object calendar)
-  RentalObjectCalendar,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -139,20 +134,6 @@ export type {
   ConfirmDialogProps,
   AlertDialogProps,
   DialogVariant,
-  // Language Switcher Types
-  LanguageSwitcherProps,
-  LanguageSwitcherVariant,
-  LanguageSwitcherSize,
-  LocaleLabels,
-  ConnectedLanguageSwitcherProps,
-  // Calendar Types (XALA-compliant)
-  RentalObjectCalendarProps,
-  CalendarSlot,
-  CalendarMode,
-  CalendarSlotStatus,
-  CalendarAction,
-  CalendarConfig,
-  CalendarSelection,
 } from './composed';
 
 // Primitives - Low-level building blocks
@@ -264,7 +245,6 @@ export {
   ListingListItem,
   ListingGrid,
   ListingToolbar,
-  ListingMap,
   ListingTableView,
   ImageGallery,
   ImageSlider,
@@ -276,7 +256,6 @@ export {
   LocationCard,
   OpeningHoursCard,
   AvailabilityCalendar,
-  ListingAvailabilityCalendar,
   GuidelinesTab,
   FAQTab,
   PriceSummaryCard,
@@ -343,8 +322,6 @@ export type {
   ListingListItemProps,
   ListingGridProps,
   ListingToolbarProps,
-  ListingMapProps,
-  MapListing,
   ListingTableViewProps,
   ViewMode,
   ImageGalleryProps,
@@ -357,7 +334,6 @@ export type {
   LocationCardProps,
   OpeningHoursCardProps,
   AvailabilityCalendarProps,
-  ListingAvailabilityCalendarProps,
   GuidelinesTabProps,
   FAQTabProps,
   PriceSummaryCardProps,

@@ -1,7 +1,7 @@
 /**
- * ListingMap - Full map view with location pins and popups
+ * RentalObjectMap - Full map view with location pins and popups
  *
- * Uses Mapbox GL for interactive map display with venue markers.
+ * Uses Mapbox GL for interactive map display with rental object markers.
  * Custom popup renders outside map container to avoid clipping.
  * Supports dark mode with automatic map style switching.
  */
@@ -18,7 +18,7 @@ const MAP_STYLES = {
   dark: 'mapbox://styles/mapbox/dark-v11',
 } as const;
 
-export interface MapListing {
+export interface MapRentalObject {
   id: string;
   name: string;
   slug?: string;
@@ -36,14 +36,14 @@ export interface MapListing {
   available?: boolean;
 }
 
-export interface ListingMapProps {
-  listings: MapListing[];
+export interface RentalObjectMapProps {
+  rentalObjects: MapRentalObject[];
   mapboxToken: string;
   initialLatitude?: number;
   initialLongitude?: number;
   initialZoom?: number;
   height?: string | number;
-  onListingClick?: (id: string, slug?: string) => void;
+  onRentalObjectClick?: (id: string, slug?: string) => void;
   onFavorite?: (id: string) => void;
   onShare?: (id: string, slug?: string) => void;
   /** Override map style URL. If not provided, uses automatic light/dark switching */
@@ -163,32 +163,32 @@ function useColorScheme(colorScheme: 'light' | 'dark' | 'auto'): 'light' | 'dark
   return detectedScheme;
 }
 
-export function ListingMap({
-  listings,
+export function RentalObjectMap({
+  rentalObjects,
   mapboxToken,
   initialZoom: _initialZoom = 12,
   height = '600px',
-  onListingClick,
+  onRentalObjectClick,
   onFavorite,
   onShare,
   mapStyle,
   colorScheme = 'auto',
   className,
-}: ListingMapProps): React.ReactElement {
+}: RentalObjectMapProps): React.ReactElement {
   const mapRef = useRef<MapRef>(null);
-  const [selectedListing, setSelectedListing] = useState<MapListing | null>(null);
+  const [selectedRentalObject, setSelectedRentalObject] = useState<MapRentalObject | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   // Detect color scheme for map style
   const detectedColorScheme = useColorScheme(colorScheme);
   const effectiveMapStyle = mapStyle || MAP_STYLES[detectedColorScheme];
 
-  // Calculate bounds for all listings
+  // Calculate bounds for all rental objects
   const bounds = useMemo(() => {
-    if (!listings.length) return null;
+    if (!rentalObjects.length) return null;
 
-    const lats = listings.map(l => l.latitude);
-    const lngs = listings.map(l => l.longitude);
+    const lats = rentalObjects.map(ro => ro.latitude);
+    const lngs = rentalObjects.map(ro => ro.longitude);
 
     return {
       minLat: Math.min(...lats),
@@ -196,17 +196,17 @@ export function ListingMap({
       minLng: Math.min(...lngs),
       maxLng: Math.max(...lngs),
     };
-  }, [listings]);
+  }, [rentalObjects]);
 
   // Initial view state (fallback before fitBounds)
   const initialViewState = useMemo(() => {
-    if (!listings.length) {
+    if (!rentalObjects.length) {
       // Default to Norway center
       return { latitude: 62.0, longitude: 10.0, zoom: 5 };
     }
 
-    if (listings.length === 1) {
-      const first = listings[0]!;
+    if (rentalObjects.length === 1) {
+      const first = rentalObjects[0]!;
       return {
         latitude: first.latitude,
         longitude: first.longitude,
@@ -223,11 +223,11 @@ export function ListingMap({
       longitude: centerLng,
       zoom: 6, // Start zoomed out, fitBounds will adjust
     };
-  }, [listings, bounds]);
+  }, [rentalObjects, bounds]);
 
-  // Fit bounds when map loads or listings change
+  // Fit bounds when map loads or rental objects change
   useEffect(() => {
-    if (!mapLoaded || !mapRef.current || !bounds || listings.length <= 1) return;
+    if (!mapLoaded || !mapRef.current || !bounds || rentalObjects.length <= 1) return;
 
     // Use fitBounds for accurate zoom to show all markers
     mapRef.current.fitBounds(
@@ -241,37 +241,37 @@ export function ListingMap({
         duration: 1000,
       }
     );
-  }, [mapLoaded, bounds, listings.length]);
+  }, [mapLoaded, bounds, rentalObjects.length]);
 
   const handleMapLoad = useCallback(() => {
     setMapLoaded(true);
   }, []);
 
-  const handleMarkerClick = useCallback((listing: MapListing) => {
-    setSelectedListing(listing);
+  const handleMarkerClick = useCallback((rentalObject: MapRentalObject) => {
+    setSelectedRentalObject(rentalObject);
   }, []);
 
   const handlePopupClose = useCallback(() => {
-    setSelectedListing(null);
+    setSelectedRentalObject(null);
   }, []);
 
   const heightValue = typeof height === 'number' ? `${height}px` : height;
 
   const markers = useMemo(() =>
-    listings.map((listing) => (
+    rentalObjects.map((rentalObject) => (
       <Marker
-        key={listing.id}
-        latitude={listing.latitude}
-        longitude={listing.longitude}
+        key={rentalObject.id}
+        latitude={rentalObject.latitude}
+        longitude={rentalObject.longitude}
         anchor="bottom"
         onClick={(e: { originalEvent: MouseEvent }) => {
           e.originalEvent.stopPropagation();
-          handleMarkerClick(listing);
+          handleMarkerClick(rentalObject);
         }}
       >
-        <MapPin isSelected={selectedListing?.id === listing.id} />
+        <MapPin isSelected={selectedRentalObject?.id === rentalObject.id} />
       </Marker>
-    )), [listings, selectedListing, handleMarkerClick]);
+    )), [rentalObjects, selectedRentalObject, handleMarkerClick]);
 
   // CSS for dark mode navigation controls - uses token fallbacks
   const darkModeControlStyles = detectedColorScheme === 'dark' ? `
@@ -333,7 +333,7 @@ export function ListingMap({
 
 
       {/* Custom popup rendered outside map container */}
-      {selectedListing && (
+      {selectedRentalObject && (
         <>
           <Overlay onClick={handlePopupClose} />
           <div
@@ -346,29 +346,29 @@ export function ListingMap({
             }}
           >
             <ListingCard
-              id={selectedListing.id}
-              name={selectedListing.name}
-              type={selectedListing.type || ''}
-              location={selectedListing.location}
-              description={selectedListing.description || ''}
-              image={selectedListing.image || ''}
+              id={selectedRentalObject.id}
+              name={selectedRentalObject.name}
+              type={selectedRentalObject.type || ''}
+              location={selectedRentalObject.location}
+              description={selectedRentalObject.description || ''}
+              image={selectedRentalObject.image || ''}
               variant="grid"
               onClose={handlePopupClose}
               showFavoriteButton={!!onFavorite}
               showShareButton={!!onShare}
               showDescription={true}
               showPrice={true}
-              {...(selectedListing.listingType && {
-                listingType: selectedListing.listingType as 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER'
+              {...(selectedRentalObject.listingType && {
+                listingType: selectedRentalObject.listingType as 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER'
               })}
-              {...(selectedListing.capacity !== undefined && { capacity: selectedListing.capacity })}
-              {...(selectedListing.price !== undefined && { price: selectedListing.price })}
-              {...(selectedListing.priceUnit && { priceUnit: selectedListing.priceUnit })}
-              {...(selectedListing.facilities && { facilities: selectedListing.facilities })}
-              {...(selectedListing.available !== undefined && { available: selectedListing.available })}
-              {...(onListingClick && { onClick: () => onListingClick(selectedListing.id, selectedListing.slug) })}
-              {...(onFavorite && { onFavorite: () => onFavorite(selectedListing.id) })}
-              {...(onShare && { onShare: () => onShare(selectedListing.id, selectedListing.slug) })}
+              {...(selectedRentalObject.capacity !== undefined && { capacity: selectedRentalObject.capacity })}
+              {...(selectedRentalObject.price !== undefined && { price: selectedRentalObject.price })}
+              {...(selectedRentalObject.priceUnit && { priceUnit: selectedRentalObject.priceUnit })}
+              {...(selectedRentalObject.facilities && { facilities: selectedRentalObject.facilities })}
+              {...(selectedRentalObject.available !== undefined && { available: selectedRentalObject.available })}
+              {...(onRentalObjectClick && { onClick: () => onRentalObjectClick(selectedRentalObject.id, selectedRentalObject.slug) })}
+              {...(onFavorite && { onFavorite: () => onFavorite(selectedRentalObject.id) })}
+              {...(onShare && { onShare: () => onShare(selectedRentalObject.id, selectedRentalObject.slug) })}
             />
           </div>
         </>
@@ -377,4 +377,4 @@ export function ListingMap({
   );
 }
 
-export default ListingMap;
+export default RentalObjectMap;
