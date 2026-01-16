@@ -115,7 +115,7 @@ export class PermissionAssignmentService extends BaseService {
   ): Promise<SuccessResponse> {
     return this.client.delete(
       `/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${userId}`,
-      { data: { reason } }
+      { body: { reason } }
     );
   }
 

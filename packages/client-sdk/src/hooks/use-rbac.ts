@@ -17,12 +17,10 @@ import { permissionAssignmentService } from '../services/permission-assignment.s
 import type {
   UserCapabilities,
   AccessGrantQueryParams,
-  AccessGrantWithDetails,
   CreateAccessGrantDTO,
   UpdateAccessGrantDTO,
   BulkAccessGrantDTO,
   PermissionAssignmentQueryParams,
-  PermissionAssignmentWithDetails,
   AssignPermissionsDTO,
   RentalObjectPermission,
   CheckPermissionRequest,
