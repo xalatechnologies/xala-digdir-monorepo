@@ -149,12 +149,11 @@ export const queryKeys = {
   organizations: {
     all: ['organizations'] as const,
     lists: () => [...queryKeys.organizations.all, 'list'] as const,
-    list: (params?: { status?: string; search?: string }) =>
+    list: (params?: { status?: string; search?: string }) => 
       [...queryKeys.organizations.lists(), params] as const,
     details: () => [...queryKeys.organizations.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.organizations.details(), id] as const,
     members: (id: string) => [...queryKeys.organizations.detail(id), 'members'] as const,
-    branding: (id: string) => [...queryKeys.organizations.detail(id), 'branding'] as const,
   },
 
   // =========================================================================
@@ -269,6 +268,19 @@ export const queryKeys = {
     all: ['settings'] as const,
     tenant: () => [...queryKeys.settings.all, 'tenant'] as const,
     integrations: () => [...queryKeys.settings.all, 'integrations'] as const,
+  },
+
+  // =========================================================================
+  // Widget Keys
+  // =========================================================================
+  widgets: {
+    all: ['widgets'] as const,
+    lists: () => [...queryKeys.widgets.all, 'list'] as const,
+    list: () => [...queryKeys.widgets.lists()] as const,
+    details: () => [...queryKeys.widgets.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.widgets.details(), id] as const,
+    embedCode: (id: string) => [...queryKeys.widgets.detail(id), 'embedCode'] as const,
+    preview: (id: string) => [...queryKeys.widgets.detail(id), 'preview'] as const,
   },
 
   // =========================================================================

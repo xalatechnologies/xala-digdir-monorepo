@@ -122,7 +122,7 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeRentalObjects,
+  useRealtimeListings,
   useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
@@ -362,3 +362,14 @@ export {
   useTooltips,
   useSubmitContact,
 } from './useHelp';
+
+// Widget hooks
+export {
+  useWidgets,
+  useWidget,
+  useWidgetEmbedCode,
+  useWidgetPreview,
+  useCreateWidget,
+  useUpdateWidget,
+  useDeleteWidget,
+} from './use-widgets';
