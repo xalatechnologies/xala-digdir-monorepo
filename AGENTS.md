@@ -20,7 +20,9 @@ xala-digdir-monorepo/
 │   └── api/          → API server (4000)           [CLAUDE.md | AGENTS.md]
 │
 ├── packages/
-│   ├── client-sdk/   → Enterprise SDK ⭐           [CLAUDE.md | AGENTS.md]
+│   ├── sdk-core/     → Generic SDK primitives ⭐   [CLAUDE.md | AGENTS.md]
+│   ├── contracts/    → API contracts (Zod) ⭐      [CLAUDE.md | AGENTS.md]
+│   ├── client-sdk/   → Domain SDK ⭐               [CLAUDE.md | AGENTS.md]
 │   ├── ds/           → Design System facade ⭐     [CLAUDE.md | AGENTS.md]
 │   ├── i18n/         → Internationalization ⭐     [CLAUDE.md | AGENTS.md]
 │   └── eslint-config/→ Shared ESLint rules ⭐      [CLAUDE.md | AGENTS.md]
@@ -121,6 +123,8 @@ tests/
 
 - UI components: ONLY from `@xala/ds`.
 - SDK access: ONLY from `@digilist/client-sdk` or `@digilist/client-sdk/hooks`.
+- Types/Schemas: Import from `@xala/contracts` for shared types.
+- Core utilities: Import from `@xala/sdk-core` for HTTP client, errors, retry.
 - Do NOT import from `@digdir/*` inside apps.
 - Do NOT use `fetch`, `axios`, or custom API wrappers.
 
