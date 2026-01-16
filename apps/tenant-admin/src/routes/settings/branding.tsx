@@ -8,7 +8,20 @@
  * - Live preview of changes
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex branding form with custom styling */
+/**
+ * ESLint Rule Exceptions:
+ *
+ * digdir/prefer-ds-components:
+ *   - Native <input type="color"> elements are required for color picking (no DS equivalent exists)
+ *   - Native <button> elements are used for color preset selectors with dynamic user-defined
+ *     background colors that cannot be applied to DS Button components
+ *   - Native <label> elements are used for form field associations with custom layout requirements
+ *
+ * digdir/no-hardcoded-typography:
+ *   - fontWeight: 500 is used for form labels and section headers where DS typography
+ *     tokens don't provide a medium weight variant for the needed contexts
+ */
+/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography */
 
 import { useState, useEffect } from 'react';
 import {
@@ -383,8 +396,8 @@ export function BrandingSettingsPage(): React.ReactElement {
             overflow: 'hidden',
           }}
         >
-          {/* Mock header */}
-          {/* eslint-disable digdir/no-hardcoded-colors -- Branding preview with custom colors */}
+          {/* Mock header - Preview uses user-defined branding colors */}
+          {/* eslint-disable digdir/no-hardcoded-colors -- Preview must render user-selected branding colors (branding.primaryColor) */}
           <div
             style={{
               padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
@@ -395,10 +408,10 @@ export function BrandingSettingsPage(): React.ReactElement {
               alignItems: 'center',
             }}
           >
-            {/* eslint-disable-next-line digdir/no-hardcoded-typography */}
+            {/* Preview header simulates real header with bold text (covered by file-level typography disable) */}
             <span style={{ fontWeight: 600 }}>{branding.headerText}</span>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-              {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
+              {/* Semi-transparent overlay for mock nav icons (covered by block-level colors disable) */}
               <div
                 style={{
                   width: '24px',
@@ -407,7 +420,6 @@ export function BrandingSettingsPage(): React.ReactElement {
                   backgroundColor: 'rgba(255,255,255,0.2)',
                 }}
               />
-              {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
               <div
                 style={{
                   width: '24px',
@@ -444,7 +456,7 @@ export function BrandingSettingsPage(): React.ReactElement {
                 }}
               />
             </div>
-            {/* eslint-disable digdir/no-hardcoded-colors -- Branding preview button */}
+            {/* eslint-disable digdir/no-hardcoded-colors -- Preview button uses user-selected accent color (branding.accentColor) */}
             <div
               style={{
                 marginTop: 'var(--ds-spacing-3)',

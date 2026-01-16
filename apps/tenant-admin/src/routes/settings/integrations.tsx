@@ -8,7 +8,22 @@
  * - View last sync timestamps
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex settings form */
+/**
+ * ESLint Rule Exceptions:
+ *
+ * digdir/prefer-ds-components:
+ *   - Native <label> elements are used for form field associations in credential configuration
+ *     forms where DS Label component doesn't provide the required htmlFor binding behavior
+ *   - Native <div> elements are used extensively for complex card layouts and status displays
+ *     that require fine-grained styling control not available in DS layout components
+ *
+ * digdir/no-hardcoded-typography:
+ *   - fontWeight: 500 is used for emphasis in status labels and form field labels where
+ *     DS typography tokens don't provide a medium weight variant
+ *   - fontSize: '1.5rem' is used for integration icons (emoji) sizing outside DS token scope
+ *   - fontFamily: 'monospace' is used for displaying masked API keys in a code-like format
+ */
+/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography */
 
 import { useState, useEffect } from 'react';
 import {
