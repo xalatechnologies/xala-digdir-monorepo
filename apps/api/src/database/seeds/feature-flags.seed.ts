@@ -276,8 +276,9 @@ export async function seedFeatureFlags(databaseUrl?: string) {
 // Export flag definitions for use in tests and other seeds
 export { FEATURE_FLAGS };
 
-// CLI Runner
-if (require.main === module) {
+// CLI Runner (ESM-compatible check)
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   (async () => {
     process.stdout.write('\n');
     process.stdout.write('='.repeat(60) + '\n');
