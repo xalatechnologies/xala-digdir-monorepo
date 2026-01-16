@@ -13,6 +13,7 @@ import {
   integer,
   decimal,
   index,
+  unique,
 } from 'drizzle-orm/pg-core';
 
 // ============================================================================
@@ -161,6 +162,38 @@ export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
   keyIdx: index('feature_flags_catalog_key_idx').on(table.key),
   categoryIdx: index('feature_flags_catalog_category_idx').on(table.category),
   statusIdx: index('feature_flags_catalog_status_idx').on(table.status),
+}));
+
+export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('tenant_feature_flags_tenant_idx').on(table.tenantId),
+  featureFlagIdx: index('tenant_feature_flags_flag_idx').on(table.featureFlagId),
+  tenantFlagUnique: unique('tenant_feature_flags_unique').on(table.tenantId, table.featureFlagId),
+}));
+
+export const orgFeatureFlags = pgTable('org_feature_flags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
+  value: jsonb('value').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  reason: text('reason'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  orgIdx: index('org_feature_flags_org_idx').on(table.organizationId),
+  featureFlagIdx: index('org_feature_flags_flag_idx').on(table.featureFlagId),
+  orgFlagUnique: unique('org_feature_flags_unique').on(table.organizationId, table.featureFlagId),
 }));
 
 // ============================================================================
@@ -402,4 +435,8 @@ export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
 export type FeatureFlagCatalog = typeof featureFlagsCatalog.$inferSelect;
 export type NewFeatureFlagCatalog = typeof featureFlagsCatalog.$inferInsert;
+export type TenantFeatureFlag = typeof tenantFeatureFlags.$inferSelect;
+export type NewTenantFeatureFlag = typeof tenantFeatureFlags.$inferInsert;
+export type OrgFeatureFlag = typeof orgFeatureFlags.$inferSelect;
+export type NewOrgFeatureFlag = typeof orgFeatureFlags.$inferInsert;
 
