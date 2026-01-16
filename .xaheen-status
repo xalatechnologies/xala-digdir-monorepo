@@ -3,23 +3,23 @@
   "spec": "042-you-ve-hit-your-limit-resets-jan-19-at-9pm-europe-",
   "state": "building",
   "subtasks": {
-    "completed": 15,
+    "completed": 17,
     "total": 30,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Unit Test Suite",
+    "current": "Integration Test Suite",
     "id": null,
-    "total": 10
+    "total": 2
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 16,
+    "number": 18,
     "started_at": "2026-01-16T21:03:23.360259"
   },
-  "last_update": "2026-01-16T22:09:24.825180"
+  "last_update": "2026-01-16T22:14:41.532053"
 }
