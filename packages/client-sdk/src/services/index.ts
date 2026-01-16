@@ -10,6 +10,9 @@ export { BaseService } from './base.service';
 // Auth
 export { AuthService, authService } from './auth.service';
 
+// Authorization / RBAC
+export { AuthzService, authzService } from './authz.service';
+
 // Listings
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
 
