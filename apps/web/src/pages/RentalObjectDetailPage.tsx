@@ -162,6 +162,7 @@ function transformApiToListing(api: ApiListing): RentalObject {
     tenantId: dto.tenantId || TENANT_ID,
     type: listingType,
     name: dto.name || '',
+    title: dto.title, // EXPAND phase: include title field from API
     category: dto.typeLabel || dto.type,
     status: 'published',
     images,
@@ -243,9 +244,12 @@ export function RentalObjectDetailPage(): React.ReactElement {
     return null;
   }, [apiResponse]);
 
+  // Helper to get display name (prefer title over name during EXPAND phase)
+  const getDisplayName = (listing: RentalObject): string => listing.title || listing.name;
+
   // Gallery images for ImageSlider
   const galleryImages: GalleryImage[] = React.useMemo(() =>
-    listing?.images.map(img => ({ id: img.id, src: img.url, alt: img.alt || listing.name, thumbnail: img.url })) || [],
+    listing?.images.map(img => ({ id: img.id, src: img.url, alt: img.alt || getDisplayName(listing), thumbnail: img.url })) || [],
   [listing]);
 
 
@@ -327,7 +331,7 @@ export function RentalObjectDetailPage(): React.ReactElement {
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: t('hjem'), href: '/', onClick: () => navigate('/') },
     { label: t('utleieobjekter'), href: '/', onClick: () => navigate('/') },
-    { label: listing.name },
+    { label: getDisplayName(listing) },
   ];
 
   return (

@@ -120,12 +120,15 @@ export function RentalObjectDetailsLayout({
     // Real-time listing updates handled by React Query invalidation
   });
 
+  // Helper to get display name (prefer title over name during EXPAND phase)
+  const getDisplayName = React.useCallback((listing: RentalObject): string => listing.title || listing.name, []);
+
   // Share data
   const shareData = React.useMemo((): ShareData => ({
     url: typeof window !== 'undefined' ? window.location.href : '',
-    title: listing.name,
+    title: getDisplayName(listing),
     description: listing.metadata.shortDescription || listing.metadata.description?.slice(0, 150) || '',
-  }), [listing]);
+  }), [listing, getDisplayName]);
 
   // Handle share action
   const handleShare = React.useCallback(async () => {

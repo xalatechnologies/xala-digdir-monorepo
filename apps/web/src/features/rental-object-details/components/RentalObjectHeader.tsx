@@ -98,7 +98,7 @@ export function RentalObjectHeader({
             minWidth: '280px',
           }}
         >
-          {listing.name}
+          {listing.title || listing.name}
         </Heading>
 
         {/* Action buttons */}
@@ -118,7 +118,7 @@ export function RentalObjectHeader({
           />
           <ShareButton
             onShare={onShare}
-            listingName={listing.name}
+            listingName={listing.title || listing.name}
           />
         </div>
       </div>

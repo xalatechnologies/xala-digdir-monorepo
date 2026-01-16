@@ -39,19 +39,27 @@ import { useT } from '@xala/i18n';
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
+// Direct category label map for reliable display
+const CATEGORY_LABELS: Record<string, string> = {
+  'LOKALER_OG_BANER': 'Lokaler og baner',
+  'UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
+  'KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
+  'OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
+};
+
 // Category options using V3 4-category model
 // Note: Categories can be disabled per tenant via feature flags
-// Labels are i18n keys to be translated at render time
 const CATEGORY_OPTIONS = [
-  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
-  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
-  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
-  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
+  { id: 'ALL', key: 'ALL', label: 'Alle typer' },
+  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
+  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
+  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
 ];
 
 // Feature flag check for disabled categories (Skien has KJORETOY_OG_TRANSPORT disabled)
 const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT']; // TODO: fetch from tenant feature flags
+
 
 // Capacity filter options (i18n keys)
 const CAPACITY_OPTIONS = [
@@ -282,12 +290,12 @@ export function RentalObjectsPage(): React.ReactElement {
             {(showMoreType ? CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)) : CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).slice(0, MAX_VISIBLE_ITEMS)).map((cat) => (
               <DrawerItem
                 key={cat.id}
-                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={t(cat.labelKey)} />}
+                left={<Checkbox checked={listingType === cat.id} onChange={() => setRentalObjectType(cat.id)} aria-label={cat.label} />}
                 right={<Text size="sm">({typeCounts[cat.id] || 0})</Text>}
                 onClick={() => setRentalObjectType(cat.id)}
                 selected={listingType === cat.id}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{t(cat.labelKey)}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{cat.label}</Text>
               </DrawerItem>
             ))}
             {CATEGORY_OPTIONS.filter(c => !DISABLED_CATEGORIES.includes(c.id)).length > MAX_VISIBLE_ITEMS && (
@@ -460,8 +468,8 @@ export function RentalObjectsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={t(listing.categoryLabel) || listing.category}
-                      listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      type={CATEGORY_LABELS[listing.categoryKey] || listing.categoryKey || 'Lokale'}
+                      listingType={listing.categoryKey as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                       location={listing.locationFormatted}
                       description={listing.descriptionExcerpt || ''}
                       image={listing.primaryImageUrl}
@@ -493,8 +501,8 @@ export function RentalObjectsPage(): React.ReactElement {
                       key={listing.id}
                       id={listing.id}
                       name={listing.name}
-                      type={t(listing.categoryLabel) || listing.category}
-                      listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                      type={CATEGORY_LABELS[listing.categoryKey] || listing.categoryKey || 'Lokale'}
+                      listingType={listing.categoryKey as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                       location={listing.locationFormatted}
                       description={listing.descriptionExcerpt || ''}
                       image={listing.primaryImageUrl}

@@ -37,6 +37,7 @@ export interface RentalObjectCardProjectionDTO {
   id: string;
   slug: string;
   name: string;
+  title?: string; // EXPAND phase: new canonical field, prefer over name
   tenantId: string;
 
   // === TYPE (Display-Ready) ===
@@ -270,6 +271,7 @@ export interface BookingCardProjectionDTO {
   // === RENTAL OBJECT (Embedded, Flat) ===
   rentalObjectId: string;
   rentalObjectName: string;
+  rentalObjectTitle?: string; // EXPAND phase: new canonical field, prefer over name
   rentalObjectSlug: string;
   rentalObjectImageUrl: string;
   rentalObjectLocation: string;

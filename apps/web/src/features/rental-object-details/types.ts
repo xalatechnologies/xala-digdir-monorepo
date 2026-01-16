@@ -237,6 +237,7 @@ export interface RentalObject {
   tenantId: string;
   type: RentalObjectType;
   name: string;
+  title?: string; // EXPAND phase: new canonical field, prefer over name
   category?: string;
   subcategory?: string;
   status: 'draft' | 'published' | 'archived';
