@@ -1,6 +1,6 @@
 {
   "active": true,
-  "spec": "026-consolidate-statusbadge-implementations-to-use-xal",
+  "spec": "004-no-rate-limiting-on-authentication-endpoints",
   "state": "building",
   "subtasks": {
     "completed": 7,
@@ -9,9 +9,9 @@
     "failed": 0
   },
   "phase": {
-    "current": "Cross-App Verification",
+    "current": "Integration Verification",
     "id": null,
-    "total": 3
+    "total": 2
   },
   "workers": {
     "active": 0,
@@ -19,7 +19,7 @@
   },
   "session": {
     "number": 9,
-    "started_at": "2026-01-16T00:40:28.899522"
+    "started_at": "2026-01-16T00:39:31.992047"
   },
-  "last_update": "2026-01-16T00:59:55.279658"
+  "last_update": "2026-01-16T01:06:51.032234"
 }
