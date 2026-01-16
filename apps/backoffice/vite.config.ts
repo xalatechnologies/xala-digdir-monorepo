@@ -4,8 +4,6 @@ import path from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
-  // Load .env from monorepo root
-  envDir: path.resolve(__dirname, '../..'),
   plugins: [
     react(),
     // Upload source maps to Sentry on production builds
@@ -35,5 +33,38 @@ export default defineConfig({
   },
   build: {
     sourcemap: true, // Generate source maps for production builds
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Mapbox GL in separate chunk (large, rarely changes)
+          if (id.includes('node_modules/mapbox-gl')) {
+            return 'vendor-mapbox';
+          }
+
+          // React Query in separate chunk
+          if (id.includes('node_modules/@tanstack/react-query')) {
+            return 'vendor-query';
+          }
+
+          // Client SDK in separate chunk
+          if (id.includes('packages/client-sdk/src')) {
+            return 'vendor-sdk';
+          }
+
+          // Design system in separate chunk
+          if (id.includes('packages/ds/src') || id.includes('@xala/ds')) {
+            return 'vendor-ds';
+          }
+
+          // Everything else from node_modules goes together
+          // This prevents circular dependencies between chunks
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
+    // Increase chunk size warning limit
+    chunkSizeWarningLimit: 800,
   },
 });
