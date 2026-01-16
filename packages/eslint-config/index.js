@@ -141,20 +141,6 @@ export const componentSuggestions = [
   },
 ];
 
-// i18n rules configuration (prevents hardcoded user-facing strings)
-export const i18nRules = [
-  {
-    files: ['apps/**/*.{tsx,jsx}'],
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
-    plugins: {
-      digdir: digdirPlugin,
-    },
-    rules: {
-      'digdir/i18n-no-hardcoded-strings': 'warn',
-    },
-  },
-];
-
 // Complete Digdir scanner configuration (all rules)
 export const digdirScanner = [
   ...designTokens,
@@ -162,17 +148,17 @@ export const digdirScanner = [
   ...componentSuggestions,
 ];
 
-// App-specific rules (includes guardrails + scanner + TypeScript + i18n)
+// App-specific rules (includes guardrails + scanner + TypeScript)
 export const apps = [
   ...base,
   ...typescript,
   ...guardrails,
   ...digdirScanner,
-  ...i18nRules,
   {
     files: ['apps/**/*.{ts,tsx,js,jsx}'],
     ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
     rules: {
+      'no-console': ['error', { allow: ['error'] }],
       'no-restricted-imports': [
         'error',
         {

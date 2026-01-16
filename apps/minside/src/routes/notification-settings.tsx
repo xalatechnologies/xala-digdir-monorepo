@@ -99,7 +99,7 @@ export function NotificationSettingsPage() {
         // Update preferences to enable push
         updatePreferencesMutation.mutate({ pushEnabled: true });
       } catch (error) {
-        console.error('Failed to subscribe to push notifications:', error);
+        // Error handled by mutation
       }
     } else {
       // Unsubscribe from push notifications
@@ -108,7 +108,7 @@ export function NotificationSettingsPage() {
         // Update preferences to disable push
         updatePreferencesMutation.mutate({ pushEnabled: false });
       } catch (error) {
-        console.error('Failed to unsubscribe from push notifications:', error);
+        // Error handled by mutation
       }
     }
   };

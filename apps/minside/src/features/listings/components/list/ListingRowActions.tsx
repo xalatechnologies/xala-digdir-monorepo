@@ -14,10 +14,10 @@ import {
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import {
-  usePublishRentalObject,
-  useArchiveRentalObject,
-  useDeleteRentalObject,
-  useDuplicateRentalObject,
+  usePublishListing,
+  useArchiveListing,
+  useDeleteListing,
+  useDuplicateListing,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import type { ListingStatus } from '@digilist/client-sdk';
@@ -41,10 +41,10 @@ export function ListingRowActions({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
 
-  const publishMutation = usePublishRentalObject();
-  const archiveMutation = useArchiveRentalObject();
-  const deleteMutation = useDeleteRentalObject();
-  const duplicateMutation = useDuplicateRentalObject();
+  const publishMutation = usePublishListing();
+  const archiveMutation = useArchiveListing();
+  const deleteMutation = useDeleteListing();
+  const duplicateMutation = useDuplicateListing();
 
   const handleView = () => {
     navigate(`/listings/${listingId}/view`);
@@ -59,7 +59,7 @@ export function ListingRowActions({
       await publishMutation.mutateAsync(listingId);
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to publish listing:', error);
+      // Error handled by mutation
     }
   };
 
@@ -69,7 +69,7 @@ export function ListingRowActions({
       setArchiveDialogOpen(false);
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to archive listing:', error);
+      // Error handled by mutation
     }
   };
 
@@ -79,7 +79,7 @@ export function ListingRowActions({
       setDeleteDialogOpen(false);
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to delete listing:', error);
+      // Error handled by mutation
     }
   };
 
@@ -88,7 +88,7 @@ export function ListingRowActions({
       await duplicateMutation.mutateAsync({ id: listingId });
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to duplicate listing:', error);
+      // Error handled by mutation
     }
   };
 

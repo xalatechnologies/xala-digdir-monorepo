@@ -15,7 +15,7 @@ import {
   ChevronLeftIcon,
   AlertTriangleIcon,
 } from '@xala/ds';
-import { useRentalObjectBySlug, useListing } from '@digilist/client-sdk';
+import { useListingBySlug, useListing } from '@digilist/client-sdk';
 import { DetailHeader } from './DetailHeader';
 import { OverviewTab } from './OverviewTab';
 import { BookingsTab } from './BookingsTab';
@@ -47,10 +47,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: unknown) {
-    // Log error to console for debugging (in development)
-    if (import.meta.env.DEV) {
-      console.error('ErrorBoundary caught error:', error, errorInfo);
-    }
+    // Error caught by boundary
+    // In development, errors are logged by React DevTools
   }
 
   render() {
@@ -74,11 +72,11 @@ export function ListingDetailView({ slug }: ListingDetailViewProps) {
   const isUuid = slug?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
 
   // Fetch listing data by slug or ID
-  const slugQuery = useRentalObjectBySlug(slug || '', {
+  const slugQuery = useListingBySlug(slug || '', {
     enabled: !!slug && !isUuid,
   });
 
-  const idQuery = useRentalObject(slug || '', {
+  const idQuery = useListing(slug || '', {
     enabled: !!slug && !!isUuid,
   });
 

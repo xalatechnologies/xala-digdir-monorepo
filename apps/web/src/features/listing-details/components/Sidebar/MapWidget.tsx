@@ -80,7 +80,7 @@ export function MapWidget({
           setGeocodedCoords({ latitude: lat, longitude: lng });
         }
       } catch (error) {
-        console.warn('Geocoding failed:', error);
+        // Geocoding failed - silently handle, component will show fallback UI
       } finally {
         setIsGeocoding(false);
       }

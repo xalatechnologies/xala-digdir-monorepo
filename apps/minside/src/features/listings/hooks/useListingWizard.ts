@@ -7,8 +7,8 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useListing,
-  useCreateRentalObject,
-  useUpdateRentalObject,
+  useCreateListing,
+  useUpdateListing,
 } from '@digilist/client-sdk';
 import type { ListingType } from '@digilist/client-sdk';
 import type {
@@ -85,8 +85,8 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
   const { data: existingListing, isLoading: isLoadingListing } = useListing(listingId || '', {
     enabled: isEditMode,
   });
-  const createMutation = useCreateRentalObject();
-  const updateMutation = useUpdateRentalObject();
+  const createMutation = useCreateListing();
+  const updateMutation = useUpdateListing();
 
   // Local state
   const [currentStep, setCurrentStep] = useState(0);
@@ -242,7 +242,6 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
       }
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to save draft:', error);
       throw error;
     }
   }, [isEditMode, listingId, toCreateDTO, createMutation, updateMutation, navigate]);
@@ -256,7 +255,6 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
       onComplete?.(formData as BackofficeListing);
       navigate('/listings');
     } catch (error) {
-      console.error('Failed to publish:', error);
       throw error;
     }
   }, [saveDraft, formData, onComplete, navigate]);

@@ -1,14 +1,14 @@
 /**
- * Rental Object Wizard Hook (formerly Listing Wizard Hook)
+ * Listing Wizard Hook
  * Manages wizard state, step navigation, and form data persistence
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  useRentalObjectBySlug,
-  useCreateRentalObject,
-  useUpdateRentalObject,
+  useListingBySlug,
+  useCreateListing,
+  useUpdateListing,
 } from '@digilist/client-sdk';
 import type { ListingType } from '@digilist/client-sdk';
 import type {
@@ -85,11 +85,11 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
   const isEditMode = !!slug;
 
   // SDK hooks - fetch by slug for edit mode
-  const { data: existingListing, isLoading: isLoadingListing } = useRentalObjectBySlug(slug || '', {
+  const { data: existingListing, isLoading: isLoadingListing } = useListingBySlug(slug || '', {
     enabled: isEditMode,
   });
-  const createMutation = useCreateRentalObject();
-  const updateMutation = useUpdateRentalObject();
+  const createMutation = useCreateListing();
+  const updateMutation = useUpdateListing();
 
   // Local state
   const [currentStep, setCurrentStep] = useState(0);
@@ -110,7 +110,7 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
   const [errors, setErrorsState] = useState<Record<string, string[]>>({});
   const [isDirty, setIsDirty] = useState(false);
 
-  // Load existing rental object data in edit mode
+  // Load existing listing data in edit mode
   useEffect(() => {
     if (isEditMode && existingListing?.data) {
       const listing = existingListing.data;
@@ -336,7 +336,7 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
       }
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to save draft:', error);
+      // Failed to save draft
       throw error;
     }
   }, [formData.id, toCreateDTO, createMutation, updateMutation, navigate]);
@@ -350,7 +350,7 @@ export function useListingWizard(options: UseListingWizardOptions = {}): UseList
       onComplete?.(formData as BackofficeListing);
       navigate('/listings');
     } catch (error) {
-      console.error('Failed to publish:', error);
+      // Failed to publish
       throw error;
     }
   }, [saveDraft, formData, onComplete, navigate]);

@@ -61,7 +61,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
       setSelectedRole('member');
       setIsAdding(false);
     } catch (error) {
-      console.error('Failed to add member:', error);
+      // Failed to add member
     } finally {
       setIsSubmitting(false);
     }
@@ -76,7 +76,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
       await organizationService.removeMember(organizationId, memberId);
       queryClient.invalidateQueries({ queryKey: ['organizations', organizationId, 'members'] });
     } catch (error) {
-      console.error('Failed to remove member:', error);
+      // Failed to remove member
     }
   };
 
@@ -85,7 +85,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
       await organizationService.updateMember(organizationId, memberId, { role: newRole });
       queryClient.invalidateQueries({ queryKey: ['organizations', organizationId, 'members'] });
     } catch (error) {
-      console.error('Failed to update member role:', error);
+      // Failed to update member role
     }
   };
 

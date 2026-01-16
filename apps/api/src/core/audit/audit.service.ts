@@ -5,6 +5,7 @@
 import { container } from '../../core/container';
 import { auditLogs } from '../../database/schema/index';
 import { eq, and, gte, lte, desc, count } from 'drizzle-orm';
+import { logger } from '../logger';
 
 export type AuditAction =
   | 'create' | 'read' | 'update' | 'delete'
@@ -16,8 +17,7 @@ export type AuditAction =
 export type AuditResource =
   | 'booking' | 'listing' | 'user' | 'tenant' | 'organization'
   | 'conversation' | 'message' | 'allocation' | 'subscription'
-  | 'setting' | 'integration' | 'report' | 'auth'
-  | 'credential' | 'consent';
+  | 'setting' | 'integration' | 'report' | 'auth';
 
 export type AuditSeverity = 'debug' | 'info' | 'warning' | 'error' | 'critical';
 
@@ -71,39 +71,6 @@ function broadcastAuditEvent(event: AuditLogResult) {
   });
 }
 
-/**
- * Broadcast booking-specific events to WebSocket clients
- * Used for real-time availability updates and conflict prevention
- */
-export function broadcastBookingEvent(event: {
-  type: 'created' | 'updated' | 'cancelled' | 'confirmed' | 'completed';
-  bookingId: string;
-  listingId: string;
-  tenantId: string;
-  startTime: Date | string;
-  endTime: Date | string;
-  userId?: string;
-  version?: number;
-  metadata?: Record<string, unknown>;
-}) {
-  const message = JSON.stringify({
-    type: 'booking',
-    data: {
-      ...event,
-      timestamp: new Date().toISOString(),
-    },
-  });
-  wsConnections.forEach((ws) => {
-    try {
-      if (ws.readyState === 1) { // OPEN
-        ws.send(message);
-      }
-    } catch (err) {
-      // Ignore send errors
-    }
-  });
-}
-
 export class AuditService {
   private db: any;
 
@@ -140,8 +107,14 @@ export class AuditService {
     // Broadcast to WebSocket clients
     broadcastAuditEvent(result);
 
-    // Also log to console for debugging
-    console.log(`[AUDIT] ${entry.action} ${entry.resource}${entry.resourceId ? ':' + entry.resourceId : ''}`);
+    // Also log to structured logger for debugging
+    logger.info({
+      action: entry.action,
+      resource: entry.resource,
+      resourceId: entry.resourceId,
+      tenantId: entry.tenantId,
+      userId: entry.userId
+    }, `[AUDIT] ${entry.action} ${entry.resource}${entry.resourceId ? ':' + entry.resourceId : ''}`);
 
     return result;
   }

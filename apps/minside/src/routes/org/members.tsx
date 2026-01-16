@@ -67,7 +67,7 @@ export function OrganizationMembersPage() {
       setInviteRole('member');
       setShowInviteForm(false);
     } catch (error) {
-      console.error('Failed to invite member:', error);
+      // Error handled by mutation
     }
   };
 

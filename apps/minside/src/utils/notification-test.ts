@@ -14,8 +14,7 @@ export interface SimulateNotificationOptions {
   message?: string;
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   bookingId?: string;
-  listingId?: string; // @deprecated Use rentalObjectId instead
-  rentalObjectId?: string;
+  listingId?: string;
 }
 
 /**
@@ -29,8 +28,7 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
     message = 'This is a test notification',
     priority = 'medium',
     bookingId = 'test-booking-123',
-    listingId = 'test-listing-456', // @deprecated Use rentalObjectId instead
-    rentalObjectId = options.rentalObjectId || options.listingId || 'test-rental-object-456',
+    listingId = 'test-listing-456',
   } = options;
 
   // Create a mock notification event that matches the backend format
@@ -47,8 +45,7 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
       readAt: null,
       metadata: {
         bookingId,
-        listingId, // Backward compatibility
-        rentalObjectId: rentalObjectId || listingId,
+        listingId,
       },
     },
   };
@@ -60,8 +57,6 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
     realtimeClient.emit('notification', notificationEvent);
     // @ts-expect-error - private method
     realtimeClient.emit('*', notificationEvent);
-  } else {
-    console.warn('[NotificationTest] Could not emit event - realtimeClient.emit is not available');
   }
 
   return notificationEvent;

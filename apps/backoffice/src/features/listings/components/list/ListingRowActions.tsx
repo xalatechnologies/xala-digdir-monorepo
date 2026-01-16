@@ -14,10 +14,10 @@ import {
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import {
-  usePublishRentalObject,
-  useArchiveRentalObject,
-  useDeleteRentalObject,
-  useDuplicateRentalObject,
+  usePublishListing,
+  useArchiveListing,
+  useDeleteListing,
+  useDuplicateListing,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
@@ -29,8 +29,6 @@ interface ListingRowActionsProps {
   listingName: string;
   status: ListingStatus;
   onActionComplete?: (() => void) | undefined;
-  /** Base path for navigation (defaults to '/listings') */
-  basePath?: string;
 }
 
 export function ListingRowActions({
@@ -39,7 +37,6 @@ export function ListingRowActions({
   listingName,
   status,
   onActionComplete,
-  basePath = '/listings',
 }: ListingRowActionsProps) {
   const navigate = useNavigate();
   const toast = useToast();
@@ -48,21 +45,21 @@ export function ListingRowActions({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
 
-  const publishMutation = usePublishRentalObject();
-  const archiveMutation = useArchiveRentalObject();
-  const deleteMutation = useDeleteRentalObject();
-  const duplicateMutation = useDuplicateRentalObject();
+  const publishMutation = usePublishListing();
+  const archiveMutation = useArchiveListing();
+  const deleteMutation = useDeleteListing();
+  const duplicateMutation = useDuplicateListing();
 
   const handleView = () => {
     // Use slug if available, fallback to ID
     const identifier = listingSlug || listingId;
-    navigate(`${basePath}/${identifier}/view`);
+    navigate(`/listings/${identifier}/view`);
   };
 
   const handleEdit = () => {
     // Use slug if available, fallback to ID
     const identifier = listingSlug || listingId;
-    navigate(`${basePath}/${identifier}`);
+    navigate(`/listings/${identifier}`);
   };
 
   const handlePublish = async () => {
@@ -71,7 +68,7 @@ export function ListingRowActions({
       onActionComplete?.();
       toast.success('Publisert', `"${listingName}" er nå publisert!`);
     } catch (error) {
-      console.error('Failed to publish listing:', error);
+      // Failed to publish listing
       toast.error('Kunne ikke publisere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
   };
@@ -83,7 +80,7 @@ export function ListingRowActions({
       onActionComplete?.();
       toast.success('Arkivert', `"${listingName}" er nå arkivert`);
     } catch (error) {
-      console.error('Failed to archive listing:', error);
+      // Failed to archive listing
       setArchiveDialogOpen(false);
       toast.error('Kunne ikke arkivere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
@@ -96,7 +93,7 @@ export function ListingRowActions({
       onActionComplete?.();
       toast.success('Slettet', `"${listingName}" er slettet`);
     } catch (error) {
-      console.error('Failed to delete listing:', error);
+      // Failed to delete listing
       setDeleteDialogOpen(false);
       toast.error('Kunne ikke slette', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
@@ -109,10 +106,10 @@ export function ListingRowActions({
       toast.success('Duplisert', `"${listingName}" er duplisert!`);
       // Navigate to the new duplicate if we got a response
       if (result?.data?.slug) {
-        navigate(`${basePath}/${result.data.slug}`);
+        navigate(`/listings/${result.data.slug}`);
       }
     } catch (error) {
-      console.error('Failed to duplicate listing:', error);
+      // Failed to duplicate listing
       toast.error('Kunne ikke duplisere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
   };

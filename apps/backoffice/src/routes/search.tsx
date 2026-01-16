@@ -131,7 +131,7 @@ export function SearchPage() {
       });
       // Note: SDK should handle download automatically
     } catch (error) {
-      console.error('Export failed:', error);
+      // Export failed
     }
   }, [query, entityType, searchFilters, exportResults]);
 

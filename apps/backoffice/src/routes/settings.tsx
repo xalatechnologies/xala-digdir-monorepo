@@ -26,10 +26,6 @@ import {
   CameraIcon,
   CopyIcon,
   InfoIcon,
-  EditIcon,
-  XIcon,
-  CheckIcon,
-  AlertTriangleIcon,
 } from '@xala/ds';
 import {
   useTenantSettings,
@@ -39,12 +35,8 @@ import {
   useCurrentUser,
   useUpdateCurrentUser,
   useUploadUserAvatar,
-  useIntegrationConfigs,
-  useUpdateIntegrationConfig,
-  useTestIntegrationConfig,
   type Address,
 } from '@digilist/client-sdk';
-import { IntegrationConfigModal } from '../components/IntegrationConfigModal';
 
 export function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -58,10 +50,6 @@ export function SettingsPage() {
   const { data: integrationsData } = useIntegrationSettings();
   const integrations = integrationsData?.data;
 
-  // Integration configuration queries
-  const { data: integrationConfigsData, isLoading: isLoadingIntegrations } = useIntegrationConfigs();
-  const integrationConfigs = integrationConfigsData || [];
-
   const { data: currentUserData, isLoading: isLoadingUser } = useCurrentUser();
   const currentUser = currentUserData?.data;
 
@@ -70,10 +58,6 @@ export function SettingsPage() {
   const updateIntegrationMutation = useUpdateIntegration();
   const updateProfileMutation = useUpdateCurrentUser();
   const uploadAvatarMutation = useUploadUserAvatar();
-
-  // Integration configuration mutations
-  const updateIntegrationConfigMutation = useUpdateIntegrationConfig();
-  const testIntegrationConfigMutation = useTestIntegrationConfig();
 
   const [formData, setFormData] = useState({
     general: {
@@ -133,12 +117,6 @@ export function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
-  // Integration configuration state
-  const [editingIntegration, setEditingIntegration] = useState<string | null>(null);
-  const [integrationFormData, setIntegrationFormData] = useState<Record<string, any>>({});
-  const [isTestingConnection, setIsTestingConnection] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
-
   // Load settings into form
   useState(() => {
     if (settings) {
@@ -177,7 +155,7 @@ export function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      // Failed to save settings
     } finally {
       setIsSaving(false);
     }
@@ -187,7 +165,7 @@ export function SettingsPage() {
     try {
       await updateIntegrationMutation.mutateAsync({ provider, data: { enabled } });
     } catch (error) {
-      console.error(`Failed to toggle ${provider}:`, error);
+      // Failed to toggle integration
     }
   };
 
@@ -199,7 +177,7 @@ export function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('Failed to save profile:', error);
+      // Failed to save profile
     } finally {
       setIsSaving(false);
     }
@@ -225,7 +203,7 @@ export function SettingsPage() {
         options: { compress: true },
       });
     } catch (error) {
-      console.error('Failed to upload avatar:', error);
+      // Failed to upload avatar
     } finally {
       setIsUploadingAvatar(false);
     }
@@ -236,65 +214,6 @@ export function SettingsPage() {
       ...prev,
       invoiceAddress: { ...prev.residenceAddress },
     }));
-  };
-
-  // Integration configuration handlers
-  const handleEditIntegration = (provider: string) => {
-    const integration = integrationConfigs.find((i: any) => i.provider === provider);
-    if (integration) {
-      setEditingIntegration(provider);
-      setIntegrationFormData({
-        name: integration.name,
-        status: integration.status,
-        config: { ...integration.config },
-      });
-      setTestResult(null);
-    }
-  };
-
-  const handleCloseIntegrationModal = () => {
-    setEditingIntegration(null);
-    setIntegrationFormData({});
-    setTestResult(null);
-  };
-
-  const handleSaveIntegration = async () => {
-    if (!editingIntegration) return;
-
-    setIsSaving(true);
-    try {
-      await updateIntegrationConfigMutation.mutateAsync({
-        provider: editingIntegration,
-        data: integrationFormData,
-      });
-      setSaveSuccess(true);
-      setTimeout(() => {
-        setSaveSuccess(false);
-        handleCloseIntegrationModal();
-      }, 1500);
-    } catch (error) {
-      console.error('Failed to save integration:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleTestConnection = async () => {
-    if (!editingIntegration) return;
-
-    setIsTestingConnection(true);
-    setTestResult(null);
-    try {
-      const result = await testIntegrationConfigMutation.mutateAsync(editingIntegration);
-      setTestResult(result);
-    } catch (error) {
-      setTestResult({
-        success: false,
-        message: error instanceof Error ? error.message : 'Connection test failed',
-      });
-    } finally {
-      setIsTestingConnection(false);
-    }
   };
 
   if (isLoading || isLoadingUser) {
@@ -1055,134 +974,228 @@ export function SettingsPage() {
         {/* Integrations */}
         <Tabs.Panel value="integrations">
           <Stack spacing={4}>
-            {/* Header */}
             <Card>
-              <Stack spacing={3}>
+              <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    Integrasjonskonfigurasjon
+                    Autentisering
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Administrer API-legitimasjon og innstillinger for alle eksterne integrasjoner.
-                    Klikk "Konfigurer" for å endre innstillinger for hver integrasjon.
+                    ID-løsninger og pålogging
                   </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>BankID</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Norsk e-ID for sikker pålogging</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.bankid?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.bankid?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('bankid', checked)}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>ID-porten</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Offentlig påloggingsløsning</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.idporten?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.idporten?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('idporten', checked)}
+                    />
+                  </div>
                 </div>
               </Stack>
             </Card>
 
-            {/* Loading State */}
-            {isLoadingIntegrations && (
-              <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                <Spinner data-size="lg" aria-label="Laster integrasjoner..." />
-              </div>
-            )}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Betaling
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Betalingsløsninger
+                  </Paragraph>
+                </div>
 
-            {/* Integrations List */}
-            {!isLoadingIntegrations && integrationConfigs.map((integration: any) => {
-              const getStatusBadge = () => {
-                switch (integration.status) {
-                  case 'active':
-                    return <Badge color="success">Aktiv</Badge>;
-                  case 'error':
-                    return <Badge color="danger">Feil</Badge>;
-                  default:
-                    return <Badge color="neutral">Inaktiv</Badge>;
-                }
-              };
-
-              const getDescription = () => {
-                const descriptions: Record<string, string> = {
-                  idporten: 'BankID/eID via Signicat - Sikker pålogging med norsk e-ID',
-                  vipps: 'Mobilbetaling og e-handel via Vipps MobilePay',
-                  visma: 'Fakturering og økonomisystem via Visma',
-                  rco: 'Digital låsstyring og tilgangskontroll',
-                  acos: 'Arkivintegrasjon (WebSak, Elements, P360)',
-                };
-                return descriptions[integration.provider] || 'Ekstern tjeneste integrasjon';
-              };
-
-              return (
-                <Card key={integration.id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
-                        <Heading level={4} data-size="xs" style={{ margin: 0 }}>
-                          {integration.name}
-                        </Heading>
-                        {getStatusBadge()}
-                      </div>
-                      <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                        {getDescription()}
-                      </Paragraph>
-                      <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', margin: 0 }}>
-                        Provider: <code style={{ fontSize: 'var(--ds-font-size-sm)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', padding: '2px 6px', borderRadius: 'var(--ds-border-radius-sm)' }}>{integration.provider}</code>
-                      </Paragraph>
-                    </div>
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                      <Button
-                        variant="secondary"
-                        data-size="sm"
-                        onClick={() => handleEditIntegration(integration.provider)}
-                        type="button"
-                      >
-                        <EditIcon />
-                        Konfigurer
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-
-            {/* Info Box */}
-            <Card style={{ backgroundColor: 'var(--ds-color-info-surface-default)', border: '1px solid var(--ds-color-info-border-subtle)' }}>
-              <Stack spacing={3}>
-                <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'flex-start' }}>
-                  <InfoIcon style={{ color: 'var(--ds-color-info-text-default)', marginTop: '2px', flexShrink: 0 }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
                   <div>
-                    <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Sikkerhetsinformasjon
-                    </Paragraph>
-                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      API-nøkler og hemmeligheter lagres kryptert i databasen og vises kun maskert i brukergrensesnittet.
-                      Bruk "Test tilkobling" for å verifisere at legitimasjonen er korrekt før du aktiverer integrasjonen.
-                    </Paragraph>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Vipps</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Mobilbetaling med Vipps</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.vipps?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.vipps?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('vipps', checked)}
+                    />
+                  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Tilgangskontroll
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Låssystemer og adgangskontroll
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>RCO</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Digital låssystem</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.rco?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.rco?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('rco', checked)}
+                    />
+                  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Kalender
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Kalendersynkronisering
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Google Calendar</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Synkroniser med Google Calendar</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.googleCalendar?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.googleCalendar?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('googleCalendar', checked)}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Outlook</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Synkroniser med Outlook/Exchange</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.outlook?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.outlook?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('outlook', checked)}
+                    />
+                  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Økonomi & ERP
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Økonomisystemer og fakturering
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Visma</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Fakturering via Visma</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.visma?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.visma?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('visma', checked)}
+                    />
+                  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Offentlige registre
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Verifikasjon og oppslag
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                  <div>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Brønnøysundregistrene</div>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Verifiser organisasjoner</Paragraph>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    {integrations?.brreg?.enabled ? (
+                      <Badge color="success">Aktiv</Badge>
+                    ) : (
+                      <Badge color="neutral">Inaktiv</Badge>
+                    )}
+                    <Switch
+                      checked={integrations?.brreg?.enabled || false}
+                      onChange={(checked) => handleIntegrationToggle('brreg', checked)}
+                    />
                   </div>
                 </div>
               </Stack>
             </Card>
           </Stack>
-
-          {/* Integration Config Modal */}
-          {editingIntegration && integrationConfigs.find((i: any) => i.provider === editingIntegration) && (() => {
-            const integration = integrationConfigs.find((i: any) => i.provider === editingIntegration);
-            return (
-              <IntegrationConfigModal
-                provider={integration.provider}
-                name={integration.name}
-                status={integration.status}
-                config={integration.config}
-                formData={integrationFormData}
-                onClose={handleCloseIntegrationModal}
-                onSave={handleSaveIntegration}
-                onTest={handleTestConnection}
-                onFieldChange={(field, value) => {
-                  if (field.startsWith('config.')) {
-                    const configKey = field.replace('config.', '');
-                    setIntegrationFormData(prev => ({
-                      ...prev,
-                      config: { ...prev.config, [configKey]: value },
-                    }));
-                  } else {
-                    setIntegrationFormData(prev => ({ ...prev, [field]: value }));
-                  }
-                }}
-                isSaving={isSaving}
-                isTesting={isTestingConnection}
-                testResult={testResult}
-              />
-            );
-          })()}
         </Tabs.Panel>
 
         {/* Branding */}

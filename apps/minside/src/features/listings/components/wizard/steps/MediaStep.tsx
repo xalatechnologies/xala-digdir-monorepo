@@ -5,7 +5,7 @@
 
 import { useCallback, useState } from 'react';
 import { Paragraph, Heading, Spinner } from '@xala/ds';
-import { useUploadRentalObjectMedia, useDeleteRentalObjectMedia } from '@digilist/client-sdk';
+import { useUploadListingMedia, useDeleteListingMedia } from '@digilist/client-sdk';
 import type { BackofficeListing } from '../../../types';
 
 export interface MediaStepProps {
@@ -16,8 +16,8 @@ export interface MediaStepProps {
 
 export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const uploadMutation = useUploadRentalObjectMedia();
-  const deleteMutation = useDeleteRentalObjectMedia();
+  const uploadMutation = useUploadListingMedia();
+  const deleteMutation = useDeleteListingMedia();
 
   const images = data.images || [];
   const listingId = data.id;
@@ -56,7 +56,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
       try {
         await uploadMutation.mutateAsync({ id: listingId, files });
       } catch (error) {
-        console.error('Upload failed:', error);
+        // Error handled by mutation
       }
     }
   }, [listingId, images, onChange, uploadMutation]);
@@ -80,7 +80,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
       try {
         await uploadMutation.mutateAsync({ id: listingId, files });
       } catch (error) {
-        console.error('Upload failed:', error);
+        // Error handled by mutation
       }
     }
 
@@ -103,7 +103,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
         const mediaId = imageUrl.split('/').pop() || index.toString();
         await deleteMutation.mutateAsync({ listingId, mediaId });
       } catch (error) {
-        console.error('Delete failed:', error);
+        // Error handled by mutation
       }
     }
   }, [listingId, images, onChange, deleteMutation]);

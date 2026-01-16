@@ -15,10 +15,10 @@ import {
 } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import {
-  usePublishRentalObject,
-  useArchiveRentalObject,
-  useDuplicateRentalObject,
-  useDeleteRentalObject,
+  usePublishListing,
+  useArchiveListing,
+  useDuplicateListing,
+  useDeleteListing,
 } from '@digilist/client-sdk';
 import { useListingPermissions } from '../../hooks/useListingPermissions';
 import { useToast } from '../../../../providers/ToastProvider';
@@ -43,10 +43,10 @@ export function PublishControls({
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const publishMutation = usePublishRentalObject();
-  const archiveMutation = useArchiveRentalObject();
-  const duplicateMutation = useDuplicateRentalObject();
-  const deleteMutation = useDeleteRentalObject();
+  const publishMutation = usePublishListing();
+  const archiveMutation = useArchiveListing();
+  const duplicateMutation = useDuplicateListing();
+  const deleteMutation = useDeleteListing();
 
   const handlePublish = async () => {
     try {
@@ -54,7 +54,7 @@ export function PublishControls({
       onActionComplete?.();
       toast.success('Publisert', `"${listingName}" er nå publisert!`);
     } catch (error) {
-      console.error('Failed to publish listing:', error);
+      // Failed to publish listing
       toast.error('Kunne ikke publisere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
   };
@@ -66,7 +66,7 @@ export function PublishControls({
       onActionComplete?.();
       toast.success('Arkivert', `"${listingName}" er nå arkivert`);
     } catch (error) {
-      console.error('Failed to archive listing:', error);
+      // Failed to archive listing
       setArchiveDialogOpen(false);
       toast.error('Kunne ikke arkivere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
@@ -82,7 +82,7 @@ export function PublishControls({
         navigate(`/listings/${result.data.slug}`);
       }
     } catch (error) {
-      console.error('Failed to duplicate listing:', error);
+      // Failed to duplicate listing
       toast.error('Kunne ikke duplisere', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
   };
@@ -96,7 +96,7 @@ export function PublishControls({
       // Navigate back to listings after delete
       navigate('/listings');
     } catch (error) {
-      console.error('Failed to delete listing:', error);
+      // Failed to delete listing
       setDeleteDialogOpen(false);
       toast.error('Kunne ikke slette', error instanceof Error ? error.message : 'En uventet feil oppstod');
     }

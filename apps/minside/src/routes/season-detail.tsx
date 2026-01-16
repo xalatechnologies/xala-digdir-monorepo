@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
-import { useSeasons, useSeasonApplications } from '@digilist/client-sdk/hooks';
+import { useSeasons } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { SeasonStatusBadge } from '../features/seasons/components/SeasonStatusBadge';
 import { SeasonApplicationDrawer, type SeasonApplicationFormData } from '../features/seasons/components/SeasonApplicationDrawer';
@@ -11,7 +11,7 @@ import { SeasonApplicationDrawer, type SeasonApplicationFormData } from '../feat
  *
  * Displays detailed information about a specific season with tabs for:
  * - Overview: General information and description
- * - Available Venues: Rental objects that support this season
+ * - Available Venues: Listings that support this season
  * - My Applications: User's submitted applications for this season
  * - Rules: Terms and conditions
  */
@@ -109,13 +109,6 @@ export function SeasonDetailPage() {
   const { data: seasonsResponse, isLoading, error } = useSeasons();
   const season = seasonsResponse?.data?.find((s) => s.id === id);
 
-  // Fetch user's applications for this season
-  const {
-    data: applicationsResponse,
-    isLoading: isLoadingApplications,
-    error: applicationsError
-  } = useSeasonApplications(id);
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -141,7 +134,6 @@ export function SeasonDetailPage() {
   const handleSubmitApplication = async (data: SeasonApplicationFormData) => {
     // TODO: Use SDK's useCreateSeasonApplication() hook
     // For now, just simulate a successful submission
-    console.log('Submitting season application:', data);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -459,7 +451,7 @@ export function SeasonDetailPage() {
 
         {activeTab === 'venues' && (
           <>
-            {/* TODO: Replace with useRentalObjects({ seasonId: id }) from SDK */}
+            {/* TODO: Replace with useListings({ seasonId: id }) from SDK */}
             {/* For now, show empty state */}
             {[].length === 0 ? (
               <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -489,17 +481,9 @@ export function SeasonDetailPage() {
 
         {activeTab === 'applications' && (
           <>
-            {isLoadingApplications ? (
-              <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-                <Spinner aria-label="Laster søknader..." />
-              </Card>
-            ) : applicationsError ? (
-              <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-                <Paragraph style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
-                  Kunne ikke laste søknader. Vennligst prøv igjen senere.
-                </Paragraph>
-              </Card>
-            ) : !applicationsResponse?.data || applicationsResponse.data.length === 0 ? (
+            {/* TODO: Replace with useSeasonApplications({ seasonId: id }) from SDK */}
+            {/* For now, show empty state */}
+            {[].length === 0 ? (
               <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
                 <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
                   Mine søknader
@@ -526,16 +510,7 @@ export function SeasonDetailPage() {
                   gap: 'var(--ds-spacing-6)',
                 }}
               >
-                {applicationsResponse.data.map((application) => (
-                  <Card key={application.id} style={{ padding: 'var(--ds-spacing-5)' }}>
-                    <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                      {application.rentalObjectName || 'Søknad'}
-                    </Heading>
-                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Status: {application.status}
-                    </Paragraph>
-                  </Card>
-                ))}
+                {/* Application cards will be mapped here */}
               </div>
             )}
           </>

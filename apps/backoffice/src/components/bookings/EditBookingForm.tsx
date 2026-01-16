@@ -12,7 +12,7 @@ import {
   Alert,
 } from '@xala/ds';
 import {
-  useRentalObjects,
+  useListings,
   type Booking,
   type UpdateBookingDTO,
 } from '@digilist/client-sdk';
@@ -37,7 +37,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch listings for dropdown
-  const { data: listingsData } = useRentalObjects({ limit: 100 });
+  const { data: listingsData } = useListings({ limit: 100 });
   const listings = listingsData?.data ?? [];
 
   // Initialize form data from booking
@@ -120,7 +120,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
 
       await onSubmit(updateData);
     } catch (error) {
-      console.error('Failed to update booking:', error);
+      // Failed to update booking
     } finally {
       setIsSubmitting(false);
     }

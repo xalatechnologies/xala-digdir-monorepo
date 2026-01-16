@@ -5,7 +5,6 @@
 
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from '@xala/ds';
-import { t as translateFn } from '@xala/i18n';
 import * as Sentry from '@sentry/react';
 
 interface ErrorBoundaryProps {
@@ -29,8 +28,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-
     // Report to Sentry with component stack context
     Sentry.captureException(error, {
       contexts: {
@@ -54,10 +51,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       return (
         <ErrorScreen
-          title={translateFn('components.error.title')}
-          description={this.state.error?.message || translateFn('components.error.description')}
+          title="Noe gikk galt"
+          description={this.state.error?.message || 'En uventet feil har oppstått. Vennligst prøv igjen.'}
           showRetryButton
-          retryButtonText={translateFn('components.error.retry')}
+          retryButtonText="Last siden på nytt"
           onRetry={this.handleRetry}
         />
       );

@@ -85,12 +85,12 @@ export function UsersManagementPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Deactivated:', id);
+      // User deactivated
     }
   };
 
   const handleInvite = () => {
-    console.log('Invite:', inviteEmail, inviteRole);
+    // Invite user
     setInviteEmail('');
     setShowInvite(false);
   };

@@ -4,7 +4,6 @@
  */
 
 import { Button, Heading, Paragraph, Spinner } from '@xala/ds';
-import { useT } from '@xala/i18n';
 import { useListingWizard } from '../../hooks/useListingWizard';
 import { WizardStepper } from './WizardStepper';
 import { BasicsStep } from './steps/BasicsStep';
@@ -23,7 +22,6 @@ export interface ListingWizardProps {
 }
 
 export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
-  const t = useT();
   const wizard = useListingWizard({
     listingId,
     initialType,
@@ -61,8 +59,8 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner aria-label={t('common.loading')} />
-        <Paragraph>{t('listings.wizard.loading')}</Paragraph>
+        <Spinner aria-label="Laster..." />
+        <Paragraph>Laster utleieobjekt...</Paragraph>
       </div>
     );
   }
@@ -88,7 +86,7 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       default:
         return (
           <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
-            <Paragraph>{t('listings.wizard.unknownStep')}: {currentStepId}</Paragraph>
+            <Paragraph>Ukjent steg: {currentStepId}</Paragraph>
           </div>
         );
     }
@@ -98,7 +96,7 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
     try {
       await saveDraft();
     } catch (error) {
-      console.error('Failed to save draft:', error);
+      // Error handled by mutation
     }
   };
 
@@ -107,12 +105,12 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       {/* Page header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {isEditMode ? t('listings.wizard.editTitle') : t('listings.wizard.createTitle')}
+          {isEditMode ? 'Rediger utleieobjekt' : 'Opprett nytt utleieobjekt'}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {isEditMode
-            ? t('listings.wizard.editDescription')
-            : t('listings.wizard.createDescription')}
+            ? 'Gjør endringer i utleieobjektet og lagre'
+            : 'Fyll ut informasjon om utleieobjektet. Du kan lagre som utkast og fortsette senere.'}
         </Paragraph>
       </div>
 
@@ -122,7 +120,7 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
           steps={steps}
           currentStep={currentStep}
           onStepClick={goToStep}
-          title={isEditMode ? t('listings.wizard.edit') : t('listings.wizard.create')}
+          title={isEditMode ? 'Rediger utleieobjekt' : 'Opprett utleieobjekt'}
           errors={errors}
         />
       </div>
@@ -154,29 +152,29 @@ export function ListingWizard({ listingId, initialType }: ListingWizardProps) {
       >
         {/* Left side - Cancel */}
         <Button type="button" variant="tertiary" onClick={cancel} disabled={isSaving}>
-          {t('common.cancel')}
+          Avbryt
         </Button>
 
         {/* Center - Save draft */}
         <Button type="button" variant="secondary" onClick={handleSaveDraft} loading={isSaving}>
-          {t('listings.wizard.saveDraft')}
+          Lagre utkast
         </Button>
 
         {/* Right side - Navigation */}
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           {canGoPrev && (
             <Button type="button" variant="secondary" onClick={prevStep} disabled={isSaving}>
-              ← {t('common.previous')}
+              ← Forrige
             </Button>
           )}
           {canGoNext && (
             <Button type="button" variant="primary" onClick={nextStep} disabled={isSaving}>
-              {t('common.next')} →
+              Neste →
             </Button>
           )}
           {isLastStep && (
             <Button type="button" variant="primary" onClick={handleSaveDraft} loading={isSaving}>
-              {t('listings.wizard.complete')}
+              Fullfør
             </Button>
           )}
         </div>

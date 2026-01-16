@@ -120,7 +120,7 @@ export function SeasonFormPage() {
         navigate(`/seasons/${result.data.id}`);
       }
     } catch (error) {
-      console.error('Failed to save season:', error);
+      // Failed to save season
     } finally {
       setIsSubmitting(false);
     }

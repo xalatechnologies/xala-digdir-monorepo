@@ -86,7 +86,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
       await onSubmit(cleanData);
     } catch (error) {
-      console.error('Failed to save user:', error);
+      // Failed to save user
     } finally {
       setIsSubmitting(false);
     }

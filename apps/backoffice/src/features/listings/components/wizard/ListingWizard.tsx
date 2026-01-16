@@ -110,7 +110,7 @@ export function ListingWizard({ slug, initialType }: ListingWizardProps) {
       // Auto-hide success message after 3 seconds
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      console.error('Failed to save draft:', error);
+      // Failed to save draft
       setSaveStatus('error');
     }
   };

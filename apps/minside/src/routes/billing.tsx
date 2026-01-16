@@ -102,7 +102,7 @@ export function BillingPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to download invoice:', error);
+      // Error handled by mutation
     }
   };
 

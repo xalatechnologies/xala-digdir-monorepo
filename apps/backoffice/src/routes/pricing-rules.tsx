@@ -84,7 +84,7 @@ export function PricingRulesPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      console.log('Deleted:', id);
+      // Rule deleted
     }
   };
 

@@ -108,7 +108,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
       await onSubmit(cleanData);
     } catch (error) {
-      console.error('Failed to save organization:', error);
+      // Failed to save organization
     } finally {
       setIsSubmitting(false);
     }

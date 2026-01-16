@@ -8,8 +8,8 @@
 import { useCallback, useState } from 'react';
 import { Paragraph, Heading, Button, Card } from '@xala/ds';
 import {
-  useUploadRentalObjectMedia,
-  useDeleteRentalObjectMedia,
+  useUploadListingMedia,
+  useDeleteListingMedia,
   formatBytes,
   formatSpeed,
   formatETA,
@@ -36,8 +36,8 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
   const [isDraggingDocs, setIsDraggingDocs] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Map<string, FileUploadProgress>>(new Map());
-  const uploadMutation = useUploadRentalObjectMedia();
-  const deleteMutation = useDeleteRentalObjectMedia();
+  const uploadMutation = useUploadListingMedia();
+  const deleteMutation = useDeleteListingMedia();
 
   const images = data.images || [];
   const documents: ListingDocument[] = data.documents || [];
@@ -294,7 +294,7 @@ export function MediaStep({ data, onChange, errors = [] }: MediaStepProps) {
         const mediaId = parts[parts.length - 1] || index.toString();
         await deleteMutation.mutateAsync({ listingId, mediaId });
       } catch {
-        console.error('Delete failed:', error);
+        // Delete failed
       }
     }
   }, [listingId, images, onChange, deleteMutation]);

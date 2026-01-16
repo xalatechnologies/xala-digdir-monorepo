@@ -155,7 +155,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
       await approveMutation.mutateAsync({ id: review.id });
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to approve review:', error);
+      // Failed to approve review
     }
   };
 
@@ -165,7 +165,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
       setRejectDialogOpen(false);
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to reject review:', error);
+      // Failed to reject review
       setRejectDialogOpen(false);
     }
   };
@@ -176,7 +176,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
       setDeleteDialogOpen(false);
       onActionComplete?.();
     } catch (error) {
-      console.error('Failed to delete review:', error);
+      // Failed to delete review
       setDeleteDialogOpen(false);
     }
   };

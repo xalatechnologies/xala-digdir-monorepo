@@ -111,8 +111,8 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
  * <ReviewForm
  *   listingId="listing-123"
  *   bookingId="booking-456"
- *   onSuccess={() => console.log('Review submitted')}
- *   onCancel={() => console.log('Form cancelled')}
+ *   onSuccess={handleSuccess}
+ *   onCancel={handleCancel}
  * />
  * ```
  */

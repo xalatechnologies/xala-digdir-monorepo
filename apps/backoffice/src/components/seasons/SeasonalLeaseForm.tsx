@@ -15,7 +15,7 @@ import {
 } from '@xala/ds';
 import {
   useOrganizations,
-  useRentalObjects,
+  useListings,
   type SeasonalLease,
   type CreateSeasonalLeaseDTO,
 } from '@digilist/client-sdk';
@@ -58,7 +58,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
   const { data: orgsData } = useOrganizations();
   const organizations = orgsData?.data ?? [];
 
-  const { data: listingsData } = useRentalObjects();
+  const { data: listingsData } = useListings();
   const listings = listingsData?.data ?? [];
 
   // Pre-fill form if editing
@@ -143,7 +143,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
       await onSubmit(cleanData);
     } catch (error) {
-      console.error('Failed to save seasonal lease:', error);
+      // Failed to save seasonal lease
     } finally {
       setIsSubmitting(false);
     }

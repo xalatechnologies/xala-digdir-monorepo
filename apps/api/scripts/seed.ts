@@ -5,7 +5,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
-import { seedConfigurationData } from '../src/database/seeds/configuration.seed';
+import { logger } from '../src/core/logger';
 
 // ============================================================================
 // UUID Constants (valid UUIDs for all entities)
@@ -32,12 +32,6 @@ const USER_PIL_MEMBER = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 const USER_DEMO = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
 const USER_OLA_HANSEN = '01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c'; // Citizen for Minside testing
 
-// ID-porten Test Users (with Norwegian national IDs)
-const USER_IDPORTEN_BRUKER = 'cccccccc-cccc-cccc-cccc-cccccccccccc'; // 15860771346 (Bruker/User)
-const USER_IDPORTEN_SAKSBEHANDLER = 'dddddddd-dddd-dddd-dddd-dddddddddddd'; // 06881271913 (Saksbehandler/Admin)
-const USER_IDPORTEN_ADMIN = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'; // 30916326773 (Admin)
-const USER_IDPORTEN_ORG = 'ffffffff-ffff-ffff-ffff-ffffffffffff'; // 03852358504 (Organisasjonskonto)
-
 // Bookings for Ola Hansen (Minside testing)
 const BOOKING_OLA_1 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4d';
 const BOOKING_OLA_2 = 'b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4e';
@@ -53,30 +47,17 @@ const CONV_BOOKING_QUESTION = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4c';
 const CONV_WEEKEND_AVAILABILITY = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4d';
 const CONV_WEATHER_CANCEL = 'c0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4e';
 
-// Rental Objects (formerly "Listings")
-const RENTAL_OBJECT_HALL_A = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
-const RENTAL_OBJECT_HALL_B = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
-const RENTAL_OBJECT_MEETING = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
-const RENTAL_OBJECT_SCENE = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
-const RENTAL_OBJECT_STUDIO = '11111111-2222-3333-4444-555555555555';
-const RENTAL_OBJECT_PROJECTOR = '22222222-3333-4444-5555-666666666666';
-const RENTAL_OBJECT_PA = '33333333-4444-5555-6666-777777777777';
-const RENTAL_OBJECT_FOTBALL = '44444444-5555-6666-7777-888888888888';
-const RENTAL_OBJECT_KLUBBHUS = '55555555-6666-7777-8888-999999999999';
-const RENTAL_OBJECT_DEMO = '66666666-7777-8888-9999-aaaaaaaaaaaa';
-
-// Backward compatibility aliases (deprecated)
-/** @deprecated Use RENTAL_OBJECT_* constants instead */
-const LISTING_HALL_A = RENTAL_OBJECT_HALL_A;
-const LISTING_HALL_B = RENTAL_OBJECT_HALL_B;
-const LISTING_MEETING = RENTAL_OBJECT_MEETING;
-const LISTING_SCENE = RENTAL_OBJECT_SCENE;
-const LISTING_STUDIO = RENTAL_OBJECT_STUDIO;
-const LISTING_PROJECTOR = RENTAL_OBJECT_PROJECTOR;
-const LISTING_PA = RENTAL_OBJECT_PA;
-const LISTING_FOTBALL = RENTAL_OBJECT_FOTBALL;
-const LISTING_KLUBBHUS = RENTAL_OBJECT_KLUBBHUS;
-const LISTING_DEMO = RENTAL_OBJECT_DEMO;
+// Listings
+const LISTING_HALL_A = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
+const LISTING_HALL_B = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+const LISTING_MEETING = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
+const LISTING_SCENE = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+const LISTING_STUDIO = '11111111-2222-3333-4444-555555555555';
+const LISTING_PROJECTOR = '22222222-3333-4444-5555-666666666666';
+const LISTING_PA = '33333333-4444-5555-6666-777777777777';
+const LISTING_FOTBALL = '44444444-5555-6666-7777-888888888888';
+const LISTING_KLUBBHUS = '55555555-6666-7777-8888-999999999999';
+const LISTING_DEMO = '66666666-7777-8888-9999-aaaaaaaaaaaa';
 
 // ============================================================================
 // Seed Data
@@ -223,47 +204,6 @@ const USERS = [
     role: 'user',
     status: 'active',
   },
-  // ID-porten Test Users
-  {
-    id: USER_IDPORTEN_BRUKER,
-    tenantId: TENANT_SKIEN,
-    organizationId: ORG_SKIEN_HALL,
-    email: 'bruker@idporten.test',
-    name: 'Test Bruker',
-    nationalId: '15860771346',
-    role: 'user',
-    status: 'active',
-  },
-  {
-    id: USER_IDPORTEN_SAKSBEHANDLER,
-    tenantId: TENANT_SKIEN,
-    organizationId: ORG_SKIEN_HALL,
-    email: 'saksbehandler@idporten.test',
-    name: 'Test Saksbehandler',
-    nationalId: '06881271913',
-    role: 'admin',
-    status: 'active',
-  },
-  {
-    id: USER_IDPORTEN_ADMIN,
-    tenantId: TENANT_SKIEN,
-    organizationId: ORG_SKIEN_HALL,
-    email: 'admin@idporten.test',
-    name: 'Test Admin',
-    nationalId: '30916326773',
-    role: 'admin',
-    status: 'active',
-  },
-  {
-    id: USER_IDPORTEN_ORG,
-    tenantId: TENANT_SKIEN,
-    organizationId: ORG_SKIEN_HALL,
-    email: 'org@idporten.test',
-    name: 'Test Organisasjonskonto',
-    nationalId: '03852358504',
-    role: 'org_admin',
-    status: 'active',
-  },
 ];
 
 const SUBSCRIPTIONS = [
@@ -286,20 +226,14 @@ const SUBSCRIPTIONS = [
   },
 ];
 
-const RENTAL_OBJECTS = [
+const LISTINGS = [
   {
     id: LISTING_HALL_A,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
     name: 'Hall A - Hovedhall',
     slug: 'hall-a-hovedhall',
-    category: 'LOKALER_OG_BANER',
-    // V2 Category & Booking Model
-    subcategory: 'Idrettshall',
-    tags: ['handball', 'basketball', 'arrangement', 'tribune'],
-    fixedLocation: true,
-    timeMode: 'SLOT',
-    bookingFeatures: { sharedCapacity: { enabled: true, total: 500, policy: 'PER_SLOT' } },
+    type: 'SPACE',
     status: 'published',
     description: 'Stor idrettshall for håndball, basketball og arrangementer. 1200 m². Moderne gulv, elektronisk måltavle og fullverdig tribuneanlegg.',
     capacity: 500,
@@ -335,12 +269,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_HALL_B,
+    id: LISTING_HALL_B,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
     name: 'Hall B - Treningshall',
     slug: 'hall-b-treningshall',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Mindre treningshall for gymnastikk og kampsport. 400 m². Speilvegg og matter tilgjengelig.',
     capacity: 100,
@@ -374,12 +308,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_MEETING,
+    id: LISTING_MEETING,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
     name: 'Møterom 1',
     slug: 'moterom-1',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Moderne møterom med projektor og whiteboard. Perfekt for styremøter og presentasjoner.',
     capacity: 20,
@@ -417,12 +351,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_SCENE,
+    id: LISTING_SCENE,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Hovedscene',
     slug: 'hovedscene',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Profesjonell scene med lyd- og lysanlegg. 800 sitteplasser. Perfekt for konserter, teater og store arrangementer.',
     capacity: 800,
@@ -463,12 +397,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_STUDIO,
+    id: LISTING_STUDIO,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Øvingsstudio',
     slug: 'ovingsstudio',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Lydtett studio for band og musikkøving. Backline inkludert med trommer, forsterker og PA.',
     capacity: 10,
@@ -502,18 +436,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_PROJECTOR,
+    id: LISTING_PROJECTOR,
     tenantId: TENANT_SKIEN,
     organizationId: ORG_KULTURHUS,
     name: 'Projektor (4K)',
     slug: 'projektor-4k',
-    category: 'UTSTYR_OG_INVENTAR',
-    // V2 Category & Booking Model
-    subcategory: 'AV-utstyr',
-    tags: ['projektor', '4k', 'presentasjon', 'film'],
-    fixedLocation: false,
-    timeMode: 'ALL_DAY',
-    bookingFeatures: { inventory: { enabled: true, total: 3, policy: 'FIFO' } },
+    type: 'RESOURCE',
     status: 'published',
     description: 'Epson 4K-projektor for presentasjoner og film. 5000 lumen, HDMI og trådløs tilkobling.',
     capacity: 1,
@@ -550,13 +478,7 @@ const RENTAL_OBJECTS = [
     organizationId: ORG_KULTURHUS,
     name: 'PA-anlegg',
     slug: 'pa-anlegg',
-    category: 'UTSTYR_OG_INVENTAR',
-    // V2 Category & Booking Model
-    subcategory: 'Lydanlegg',
-    tags: ['lyd', 'mikser', 'høyttaler', 'mikrofon'],
-    fixedLocation: false,
-    timeMode: 'ALL_DAY',
-    bookingFeatures: { inventory: { enabled: true, total: 2, policy: 'FIFO' } },
+    type: 'RESOURCE',
     status: 'published',
     description: 'Komplett PA-anlegg med mikser, høyttalere og mikrofoner. Egnet for arrangementer opp til 200 personer.',
     capacity: 1,
@@ -589,18 +511,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_FOTBALL,
+    id: LISTING_FOTBALL,
     tenantId: TENANT_PORSGRUNN,
     organizationId: ORG_PORSGRUNN,
     name: 'Fotballbane - Kunstgress',
     slug: 'fotballbane-kunstgress',
-    category: 'LOKALER_OG_BANER',
-    // V2 Category & Booking Model
-    subcategory: 'Utendørs bane',
-    tags: ['fotball', 'kunstgress', 'flomlys', 'utendørs'],
-    fixedLocation: true,
-    timeMode: 'SLOT',
-    bookingFeatures: {},
+    type: 'SPACE',
     status: 'published',
     description: 'Full størrelse kunstgressbane med flomlys. FIFA-godkjent underlag. Garderober og kafeteria på området.',
     capacity: 30,
@@ -637,12 +553,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_KLUBBHUS,
+    id: LISTING_KLUBBHUS,
     tenantId: TENANT_PORSGRUNN,
     organizationId: ORG_PORSGRUNN,
     name: 'Klubbhus',
     slug: 'klubbhus',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Koselig klubbhus med kjøkken og møterom. Perfekt for årsmøter, feiringer og sosiale arrangementer.',
     capacity: 50,
@@ -676,12 +592,12 @@ const RENTAL_OBJECTS = [
     },
   },
   {
-    id: RENTAL_OBJECT_DEMO,
+    id: LISTING_DEMO,
     tenantId: TENANT_DEMO,
     organizationId: ORG_DEMO,
     name: 'Demo Hall',
     slug: 'demo-hall',
-    category: 'LOKALER_OG_BANER',
+    type: 'SPACE',
     status: 'published',
     description: 'Demo facility for testing all booking features.',
     capacity: 100,
@@ -715,8 +631,8 @@ const RENTAL_OBJECTS = [
   },
 ];
 
-// Collect rental object and user IDs for bookings
-const RENTAL_OBJECT_IDS = [RENTAL_OBJECT_HALL_A, RENTAL_OBJECT_HALL_B, RENTAL_OBJECT_MEETING, RENTAL_OBJECT_SCENE, RENTAL_OBJECT_STUDIO];
+// Collect listing and user IDs for bookings
+const LISTING_IDS = [LISTING_HALL_A, LISTING_HALL_B, LISTING_MEETING, LISTING_SCENE, LISTING_STUDIO];
 const USER_IDS = [USER_ADMIN, USER_MANAGER, USER_STAFF];
 
 // Generate bookings with proper UUIDs
@@ -744,7 +660,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_1,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(1, 10),
@@ -757,7 +673,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_2,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(4, 14),
@@ -770,7 +686,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_3,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'confirmed',
       startTime: getTime(7, 18),
@@ -783,7 +699,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_4,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(10, 9),
@@ -796,7 +712,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_5,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'pending',
       startTime: getTime(14, 14),
@@ -809,7 +725,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_6,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-7, 10),
@@ -822,7 +738,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_7,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'completed',
       startTime: getTime(-3, 16),
@@ -835,7 +751,7 @@ function generateOlaBookings() {
     {
       id: BOOKING_OLA_8,
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_HALL_A,
+      listingId: LISTING_HALL_A,
       userId: USER_OLA_HANSEN,
       status: 'cancelled',
       startTime: getTime(-1, 18),
@@ -865,7 +781,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i, 'b00c'),
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_IDS[Math.floor(Math.random() * RENTAL_OBJECT_IDS.length)],
+      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'completed',
       startTime: start,
@@ -886,7 +802,7 @@ function generateBookings() {
     bookings.push({
       id: generateUUID(i + 10, 'b00d'),
       tenantId: TENANT_SKIEN,
-      rentalObjectId: RENTAL_OBJECT_IDS[Math.floor(Math.random() * RENTAL_OBJECT_IDS.length)],
+      listingId: LISTING_IDS[Math.floor(Math.random() * LISTING_IDS.length)],
       userId: USER_IDS[Math.floor(Math.random() * USER_IDS.length)],
       status: 'confirmed',
       startTime: start,
@@ -1097,7 +1013,7 @@ function generateAllocations(bookings: any[]) {
     .map((booking, index) => ({
       id: generateUUID(index, 'a00b'),
       tenantId: booking.tenantId,
-      rentalObjectId: booking.rentalObjectId,
+      listingId: booking.listingId,
       bookingId: booking.id,
       userId: booking.userId,
       title: `Booking - ${booking.userId === USER_OLA_HANSEN ? 'Ola Hansen' : 'Bruker'}`,
@@ -1116,18 +1032,18 @@ async function seed() {
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
-    console.error('❌ DATABASE_URL environment variable is required');
+    logger.error('❌ DATABASE_URL environment variable is required');
     process.exit(1);
   }
 
-  console.log('🌱 Starting database seed...\n');
+  logger.info('🌱 Starting database seed...\n');
 
   const sql = postgres(databaseUrl, { max: 1 });
   const db = drizzle(sql, { schema });
 
   try {
     // Clear existing data (in reverse order of dependencies)
-    console.log('🧹 Clearing existing data...');
+    logger.info('🧹 Clearing existing data...');
     await db.delete(schema.messages);
     await db.delete(schema.conversations);
     await db.delete(schema.allocations);
@@ -1136,80 +1052,67 @@ async function seed() {
     await db.delete(schema.alerts);
     await db.delete(schema.auditLogs);
     await db.delete(schema.bookings);
-    await db.delete(schema.rentalObjects);
+    await db.delete(schema.listings);
     await db.delete(schema.subscriptions);
     await db.delete(schema.users);
     await db.delete(schema.organizations);
     await db.delete(schema.tenants);
-    // Clear configuration tables
-    await db.delete(schema.rentalObjectSubcategories);
-    await db.delete(schema.rentalObjectCategories);
-    await db.delete(schema.bookingTimeModes);
-    await db.delete(schema.pricingUnits);
-    await db.delete(schema.rentalObjectStatuses);
-    await db.delete(schema.bookingStatuses);
-    await db.delete(schema.systemConfigurations);
-    await db.delete(schema.integrations);
-
-    // Seed configuration data (categories, time modes, pricing units, statuses)
-    console.log('⚙️ Seeding configuration data...');
-    await seedConfigurationData(db as any);
 
     // Insert tenants
-    console.log('📦 Inserting tenants...');
+    logger.info('📦 Inserting tenants...');
     await db.insert(schema.tenants).values(TENANTS);
 
     // Insert organizations
-    console.log('🏢 Inserting organizations...');
+    logger.info('🏢 Inserting organizations...');
     await db.insert(schema.organizations).values(ORGANIZATIONS);
 
     // Insert users
-    console.log('👥 Inserting users...');
+    logger.info('👥 Inserting users...');
     await db.insert(schema.users).values(USERS);
 
     // Insert subscriptions
-    console.log('💳 Inserting subscriptions...');
+    logger.info('💳 Inserting subscriptions...');
     await db.insert(schema.subscriptions).values(SUBSCRIPTIONS);
 
-    // Insert rental objects
-    console.log('📋 Inserting rental objects...');
-    await db.insert(schema.rentalObjects).values(RENTAL_OBJECTS);
+    // Insert listings
+    logger.info('📋 Inserting listings...');
+    await db.insert(schema.listings).values(LISTINGS);
 
     // Insert bookings
-    console.log('📅 Inserting bookings...');
+    logger.info('📅 Inserting bookings...');
     const bookings = generateBookings();
     await db.insert(schema.bookings).values(bookings);
 
     // Insert conversations for Minside testing
-    console.log('💬 Inserting conversations...');
+    logger.info('💬 Inserting conversations...');
     const conversations = generateConversations();
     await db.insert(schema.conversations).values(conversations);
 
     // Insert messages for Minside testing
-    console.log('✉️ Inserting messages...');
+    logger.info('✉️ Inserting messages...');
     const messages = generateMessages();
     await db.insert(schema.messages).values(messages);
 
     // Insert allocations for calendar blocking
-    console.log('📆 Inserting allocations...');
+    logger.info('📆 Inserting allocations...');
     const allocations = generateAllocations(bookings);
     await db.insert(schema.allocations).values(allocations);
 
     // Count Ola's specific data
     const olaBookings = bookings.filter((b: any) => b.userId === USER_OLA_HANSEN);
 
-    console.log('\n✅ Seed completed successfully!');
-    console.log(`   - ${TENANTS.length} tenants`);
-    console.log(`   - ${ORGANIZATIONS.length} organizations`);
-    console.log(`   - ${USERS.length} users`);
-    console.log(`   - ${SUBSCRIPTIONS.length} subscriptions`);
-    console.log(`   - ${RENTAL_OBJECTS.length} rental objects`);
-    console.log(`   - ${bookings.length} bookings (${olaBookings.length} for Ola Hansen)`);
-    console.log(`   - ${conversations.length} conversations`);
-    console.log(`   - ${messages.length} messages`);
-    console.log(`   - ${allocations.length} allocations`);
+    logger.info('\n✅ Seed completed successfully!');
+    logger.info(`   - ${TENANTS.length} tenants`);
+    logger.info(`   - ${ORGANIZATIONS.length} organizations`);
+    logger.info(`   - ${USERS.length} users`);
+    logger.info(`   - ${SUBSCRIPTIONS.length} subscriptions`);
+    logger.info(`   - ${LISTINGS.length} listings`);
+    logger.info(`   - ${bookings.length} bookings (${olaBookings.length} for Ola Hansen)`);
+    logger.info(`   - ${conversations.length} conversations`);
+    logger.info(`   - ${messages.length} messages`);
+    logger.info(`   - ${allocations.length} allocations`);
   } catch (error) {
-    console.error('❌ Seed failed:', error);
+    logger.error({ error }, '❌ Seed failed');
     process.exit(1);
   } finally {
     await sql.end();

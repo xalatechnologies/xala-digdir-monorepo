@@ -11,13 +11,13 @@ import { moduleLoader } from './core/module';
 import { createFastifyApp } from './adapters/fastify.adapter';
 import { typeDefs, createResolvers, createGraphQLContext } from './graphql/schema';
 import * as schema from './database/schema/index';
+import { logger } from './core/logger';
 
 // Import modules
 import { TenantModule, TenantController, TenantService, TenantRepository } from './modules/tenant';
 import { ListingModule, ListingController, ListingService, ListingRepository } from './modules/listing';
 import { BookingModule, BookingController, BookingService, BookingRepository } from './modules/booking';
 import { UserModule, UserController, UserService, UserRepository } from './modules/user';
-import { GdprModule, GdprController, GdprService, GdprRepository } from './modules/gdpr';
 import { MonitoringModule, MonitoringController, MonitoringService, AuditLogRepository, AlertRepository, IncidentRepository } from './modules/monitoring';
 import { DashboardController } from './modules/dashboard/dashboard.controller';
 import { CalendarController } from './modules/calendar/calendar.controller';
@@ -65,9 +65,9 @@ async function initializeAdapters() {
   // In production, use: import { initializeAdapters } from '@xalatechnologies/platform';
   return {
     log: {
-      info: (msg: string, meta?: object) => console.log(`[INFO] ${msg}`, meta || ''),
-      warn: (msg: string, meta?: object) => console.warn(`[WARN] ${msg}`, meta || ''),
-      error: (msg: string, meta?: object) => console.error(`[ERROR] ${msg}`, meta || ''),
+      info: (msg: string, meta?: object) => logger.info(meta || {}, msg),
+      warn: (msg: string, meta?: object) => logger.warn(meta || {}, msg),
+      error: (msg: string, meta?: object) => logger.error(meta || {}, msg),
     },
     cache: {
       get: async <T>(key: string): Promise<T | null> => null,
@@ -80,7 +80,7 @@ async function initializeAdapters() {
     },
     email: {
       send: async (options: { to: string; subject: string; html: string }): Promise<void> => {
-        console.log(`[EMAIL] To: ${options.to}, Subject: ${options.subject}`);
+        logger.info({ to: options.to, subject: options.subject }, '[EMAIL] Email sent');
       },
     },
   };
@@ -90,11 +90,11 @@ async function initializeAdapters() {
  * Bootstrap the application
  */
 async function bootstrap() {
-  console.log('🚀 Starting Unified API...\n');
+  logger.info('🚀 Starting Unified API...\n');
 
   // Initialize platform adapters
   const adapters = await initializeAdapters();
-  console.log('✓ Adapters initialized');
+  logger.info('✓ Adapters initialized');
 
   // Register adapters in container
   container.registerValue('Adapters', adapters);
@@ -102,15 +102,15 @@ async function bootstrap() {
   // Connect to PostgreSQL database (required in production)
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    console.error('❌ DATABASE_URL environment variable is required');
-    console.error('   Set DATABASE_URL to connect to your PostgreSQL database');
+    logger.error('❌ DATABASE_URL environment variable is required');
+    logger.error('   Set DATABASE_URL to connect to your PostgreSQL database');
     process.exit(1);
   }
 
   // PostgreSQL connection
   const sql = postgres(databaseUrl, { max: 10 });
   const db = drizzle(sql, { schema });
-  console.log('✓ PostgreSQL database connected');
+  logger.info('✓ PostgreSQL database connected');
   container.registerValue('Database', db);
 
   // Register repositories
@@ -118,7 +118,6 @@ async function bootstrap() {
   container.registerFactory('ListingRepository', () => new ListingRepository(db));
   container.registerFactory('BookingRepository', () => new BookingRepository(db));
   container.registerFactory('UserRepository', () => new UserRepository(db));
-  container.registerFactory('GdprRepository', () => new GdprRepository(db));
   container.registerFactory('AuditLogRepository', () => new AuditLogRepository(db));
   container.registerFactory('AlertRepository', () => new AlertRepository(db));
   container.registerFactory('IncidentRepository', () => new IncidentRepository(db));
@@ -133,15 +132,8 @@ async function bootstrap() {
   container.registerFactory('BookingService', () => 
     new BookingService(container.resolve('BookingRepository'), adapters)
   );
-  container.registerFactory('UserService', () =>
+  container.registerFactory('UserService', () => 
     new UserService(container.resolve('UserRepository'), adapters)
-  );
-  container.registerFactory('GdprService', () =>
-    new GdprService(
-      container.resolve('GdprRepository'),
-      container.resolve('UserRepository'),
-      adapters
-    )
   );
   container.registerFactory('MonitoringService', () => 
     new MonitoringService(
@@ -152,7 +144,7 @@ async function bootstrap() {
     )
   );
 
-  console.log('✓ Services registered');
+  logger.info('✓ Services registered');
 
   // Register controllers with their dependencies
   container.registerFactory('TenantController', () => 
@@ -164,11 +156,8 @@ async function bootstrap() {
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
   );
-  container.registerFactory('UserController', () =>
+  container.registerFactory('UserController', () => 
     new UserController(container.resolve('UserService'))
-  );
-  container.registerFactory('GdprController', () =>
-    new GdprController(container.resolve('GdprService'))
   );
   container.registerFactory('MonitoringController', () => 
     new MonitoringController(container.resolve('MonitoringService'))
@@ -178,27 +167,25 @@ async function bootstrap() {
     new SignicatAuthController()
   );
   // Notifications controller (no dependencies)
-  container.registerFactory('NotificationsController', () => 
+  container.registerFactory('NotificationsController', () =>
     new NotificationsController()
   );
-  console.log('✓ Controllers registered');
+  logger.info('✓ Controllers registered');
 
   // Load modules
   await moduleLoader.load(TenantModule);
   await moduleLoader.load(ListingModule);
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
-  await moduleLoader.load(GdprModule);
   await moduleLoader.load(MonitoringModule);
-  console.log('✓ Modules loaded');
+  logger.info('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
   const controllers = [
     TenantController, 
     ListingController, 
     BookingController, 
-    UserController,
-    GdprController,
+    UserController, 
     MonitoringController,
     // Backoffice modules
     DashboardController,
@@ -246,11 +233,11 @@ async function bootstrap() {
 
   // Create Fastify app with controllers
   const app = await createFastifyApp(controllers, { adapters });
-  console.log('✓ REST routes registered');
+  logger.info('✓ REST routes registered');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);
-  console.log('✓ WebSocket routes registered');
+  logger.info('✓ WebSocket routes registered');
 
   // Register GraphQL (Mercurius)
   await app.register(mercurius, {
@@ -260,11 +247,11 @@ async function bootstrap() {
     graphiql: true, // Enable GraphiQL playground
     path: '/graphql',
   });
-  console.log('✓ GraphQL endpoint registered at /graphql');
+  logger.info('✓ GraphQL endpoint registered at /graphql');
 
   // Graceful shutdown
   const shutdown = async () => {
-    console.log('\n👋 Shutting down gracefully...');
+    logger.info('\n👋 Shutting down gracefully...');
     await app.close();
     process.exit(0);
   };
@@ -277,22 +264,22 @@ async function bootstrap() {
   const host = process.env.HOST || '0.0.0.0';
 
   await app.listen({ port, host });
-  
-  console.log('\n' + '='.repeat(50));
-  console.log(`🎉 Unified API running on http://${host}:${port}`);
-  console.log('='.repeat(50));
-  console.log('\nEndpoints:');
-  console.log(`  Health:   GET  http://localhost:${port}/health`);
-  console.log(`  GraphQL:  POST http://localhost:${port}/graphql`);
-  console.log(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
-  console.log(`  Listings: GET  http://localhost:${port}/api/listings`);
-  console.log(`  Bookings: GET  http://localhost:${port}/api/bookings`);
-  console.log(`  Audit:    GET  http://localhost:${port}/api/audit`);
-  console.log(`  WebSocket:     ws://localhost:${port}/ws/audit`);
-  console.log('');
+
+  logger.info('\n' + '='.repeat(50));
+  logger.info(`🎉 Unified API running on http://${host}:${port}`);
+  logger.info('='.repeat(50));
+  logger.info('\nEndpoints:');
+  logger.info(`  Health:   GET  http://localhost:${port}/health`);
+  logger.info(`  GraphQL:  POST http://localhost:${port}/graphql`);
+  logger.info(`  Tenants:  GET  http://localhost:${port}/api/tenants`);
+  logger.info(`  Listings: GET  http://localhost:${port}/api/listings`);
+  logger.info(`  Bookings: GET  http://localhost:${port}/api/bookings`);
+  logger.info(`  Audit:    GET  http://localhost:${port}/api/audit`);
+  logger.info(`  WebSocket:     ws://localhost:${port}/ws/audit`);
+  logger.info('');
 }
 
 bootstrap().catch((error) => {
-  console.error('❌ Failed to start server:', error);
+  logger.error({ error }, '❌ Failed to start server');
   process.exit(1);
 });
