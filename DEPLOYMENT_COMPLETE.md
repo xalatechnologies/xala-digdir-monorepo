@@ -30,8 +30,8 @@ Successfully fixed authentication for ALL apps and deployed to production:
 |-----|--------|-----|
 | **Web** | ✅ DEPLOYED | https://digilist.no |
 | **Minside** | ✅ DEPLOYED | https://minside.digilist.no |
+| **Backoffice** | ✅ DEPLOYED | https://backoffice.digilist.no |
 | **API** | ✅ DEPLOYED | https://api.digilist.no |
-| **Backoffice** | ⏳ TODO | https://backoffice.digilist.no |
 | **SaaS Admin** | ⏳ TODO | https://saas.digilist.no |
 | **Tenant Admin** | ⏳ TODO | https://tenant.digilist.no |
 
