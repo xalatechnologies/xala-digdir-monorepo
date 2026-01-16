@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "008-split-settings-tsx-route-files-1267-lines-in-backo",
+  "spec": "009-implement-route-level-code-splitting-with-react-la",
   "state": "building",
   "subtasks": {
-    "completed": 33,
-    "total": 34,
+    "completed": 5,
+    "total": 6,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Verification and Cleanup",
+    "current": "Performance Testing & Verification",
     "id": null,
-    "total": 4
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 285,
-    "started_at": "2026-01-16T00:40:11.604819"
+    "number": 7,
+    "started_at": "2026-01-16T00:40:16.496843"
   },
-  "last_update": "2026-01-16T02:32:09.624815"
+  "last_update": "2026-01-16T00:58:01.259460"
 }

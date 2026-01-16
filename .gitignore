@@ -34,3 +34,7 @@ logs/security/
 
 # Xaheen data directory
 .xaheen/
+
+# Xaheen generated files
+.xaheen-security.json
+.xaheen-status

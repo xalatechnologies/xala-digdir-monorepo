@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
@@ -9,38 +10,50 @@ import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
+import { LoadingFallback } from './components/LoadingFallback';
+import { initSentry } from './lib/sentry';
+
+// Eager imports - frequently accessed pages
 import { LoginPage } from './routes/login';
 import { RoleSelectionPage } from './routes/role-selection';
-import { DashboardPage } from './routes/dashboard';
-import { ListingsPage, ListingEditPage, ListingDetailPage } from './routes/listings';
-import { CalendarPage } from './routes/calendar';
-import { BookingsPage } from './routes/bookings';
-import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
-import { MessagesPage } from './routes/messages';
-import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage } from './routes/organizations';
-import { UsersPage } from './routes/users';
-import { ReportsPage } from './routes/reports';
-import { AuditPage } from './routes/audit';
-import { ReviewModerationPage } from './routes/reviews';
-import { SettingsPage } from './routes/settings';
-import { initSentry } from './lib/sentry';
-// New Saksbehandler pages
-import { WorkQueuePage } from './routes/work-queue';
-import { SeasonApplicationsReviewPage } from './routes/season-applications';
-import { AllocationPlannerPage } from './routes/allocation-planner';
-import { DecisionFormsPage } from './routes/decision-forms';
-import { AuditTimelinePage } from './routes/audit-timeline';
-// New Admin pages
-import { ListingWizardPage } from './routes/listing-wizard';
-import { PricingRulesPage } from './routes/pricing-rules';
-import { UsersManagementPage } from './routes/users-management';
-import { AdminReportsPage } from './routes/admin-reports';
-// New TenantAdmin pages
-import { TenantSettingsPage } from './routes/tenant/settings';
-import { TenantBrandingPage } from './routes/tenant/branding';
-import { TenantAuditLogPage } from './routes/tenant/audit-log';
-// GDPR pages
-import { GdprRequestsPage } from './routes/gdpr-requests';
+
+// Lazy-loaded page components
+const DashboardPage = React.lazy(() => import('./routes/dashboard').then(m => ({ default: m.DashboardPage })));
+const ListingsPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingsPage })));
+const ListingEditPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingEditPage })));
+const ListingDetailPage = React.lazy(() => import('./routes/listings').then(m => ({ default: m.ListingDetailPage })));
+const CalendarPage = React.lazy(() => import('./routes/calendar').then(m => ({ default: m.CalendarPage })));
+const BookingsPage = React.lazy(() => import('./routes/bookings').then(m => ({ default: m.BookingsPage })));
+const SeasonsListPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonsListPage })));
+const SeasonDetailPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonDetailPage })));
+const SeasonFormPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonFormPage })));
+const MessagesPage = React.lazy(() => import('./routes/messages').then(m => ({ default: m.MessagesPage })));
+const OrganizationsListPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationsListPage })));
+const OrganizationDetailPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationDetailPage })));
+const OrganizationFormPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationFormPage })));
+const UsersPage = React.lazy(() => import('./routes/users').then(m => ({ default: m.UsersPage })));
+const ReportsPage = React.lazy(() => import('./routes/reports').then(m => ({ default: m.ReportsPage })));
+const AuditPage = React.lazy(() => import('./routes/audit').then(m => ({ default: m.AuditPage })));
+const ReviewModerationPage = React.lazy(() => import('./routes/reviews').then(m => ({ default: m.ReviewModerationPage })));
+const SettingsPage = React.lazy(() => import('./routes/settings').then(m => ({ default: m.SettingsPage })));
+
+// Saksbehandler pages
+const WorkQueuePage = React.lazy(() => import('./routes/work-queue').then(m => ({ default: m.WorkQueuePage })));
+const SeasonApplicationsReviewPage = React.lazy(() => import('./routes/season-applications').then(m => ({ default: m.SeasonApplicationsReviewPage })));
+const AllocationPlannerPage = React.lazy(() => import('./routes/allocation-planner').then(m => ({ default: m.AllocationPlannerPage })));
+const DecisionFormsPage = React.lazy(() => import('./routes/decision-forms').then(m => ({ default: m.DecisionFormsPage })));
+const AuditTimelinePage = React.lazy(() => import('./routes/audit-timeline').then(m => ({ default: m.AuditTimelinePage })));
+
+// Admin pages
+const ListingWizardPage = React.lazy(() => import('./routes/listing-wizard').then(m => ({ default: m.ListingWizardPage })));
+const PricingRulesPage = React.lazy(() => import('./routes/pricing-rules').then(m => ({ default: m.PricingRulesPage })));
+const UsersManagementPage = React.lazy(() => import('./routes/users-management').then(m => ({ default: m.UsersManagementPage })));
+const AdminReportsPage = React.lazy(() => import('./routes/admin-reports').then(m => ({ default: m.AdminReportsPage })));
+
+// TenantAdmin pages
+const TenantSettingsPage = React.lazy(() => import('./routes/tenant/settings').then(m => ({ default: m.TenantSettingsPage })));
+const TenantBrandingPage = React.lazy(() => import('./routes/tenant/branding').then(m => ({ default: m.TenantBrandingPage })));
+const TenantAuditLogPage = React.lazy(() => import('./routes/tenant/audit-log').then(m => ({ default: m.TenantAuditLogPage })));
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -74,6 +87,7 @@ function AppWithTheme() {
             wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
           >
+          <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/role-selection" element={<RoleSelectionPage />} />
@@ -87,10 +101,15 @@ function AppWithTheme() {
               }
             >
               <Route index element={<DashboardPage />} />
-              <Route path="listings" element={<ListingsPage />} />
-              <Route path="listings/new" element={<ListingEditPage />} />
-              <Route path="listings/:slug" element={<ListingEditPage />} />
-              <Route path="listings/:slug/view" element={<ListingDetailPage />} />
+              {/* Rental Objects routes */}
+              <Route path="rental-objects" element={<ListingsPage />} />
+              <Route path="rental-objects/new" element={<ListingEditPage />} />
+              <Route path="rental-objects/:slug" element={<ListingEditPage />} />
+              <Route path="rental-objects/:slug/view" element={<ListingDetailPage />} />
+              {/* Legacy redirects for backwards compatibility */}
+              <Route path="listings" element={<Navigate to="/rental-objects" replace />} />
+              <Route path="listings/new" element={<Navigate to="/rental-objects/new" replace />} />
+              {/* Note: Dynamic redirects for /listings/:slug routes would require custom component - handled by 404 for now */}
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
@@ -113,14 +132,6 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AuditPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="gdpr-requests"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <GdprRequestsPage />
                   </ProtectedRoute>
                 }
               />
@@ -217,7 +228,7 @@ function AppWithTheme() {
               
               {/* Admin routes */}
               <Route
-                path="listings/wizard"
+                path="rental-objects/wizard"
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <ListingWizardPage />
@@ -225,13 +236,15 @@ function AppWithTheme() {
                 }
               />
               <Route
-                path="listings/wizard/:id"
+                path="rental-objects/wizard/:id"
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <ListingWizardPage />
                   </ProtectedRoute>
                 }
               />
+              {/* Legacy wizard redirects */}
+              <Route path="listings/wizard" element={<Navigate to="/rental-objects/wizard" replace />} />
               <Route
                 path="pricing-rules"
                 element={
@@ -286,6 +299,7 @@ function AppWithTheme() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </Suspense>
           </RealtimeProvider>
           </BackofficeRoleProvider>
         </AuthProvider>
