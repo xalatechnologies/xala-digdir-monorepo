@@ -29,7 +29,7 @@ import { AllocationsController } from './modules/allocations/allocations.control
 import { AvailabilityController } from './modules/availability/availability.controller';
 // Phase 2: Auth, RBAC, Public, Audit, Settings
 import { AuthController } from './modules/auth/auth.controller';
-import { AuthzController } from './modules/authz/authz.controller';
+import { AuthzController, MeController } from './modules/authz/authz.controller';
 import { PublicController } from './modules/public/public.controller';
 import { AuditController } from './modules/audit/audit.controller';
 import { SettingsController } from './modules/settings/settings.controller';
@@ -199,6 +199,7 @@ async function bootstrap() {
     // Phase 2: Auth, RBAC, Public, Audit, Settings
     AuthController,
     AuthzController,
+    MeController,
     PublicController,
     AuditController,
     SettingsController,
