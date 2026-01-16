@@ -18,7 +18,7 @@ import { CalendarPage } from './routes/calendar';
 import { BookingsPage } from './routes/bookings';
 import { SeasonsListPage, SeasonDetailPage, SeasonFormPage } from './routes/seasons';
 import { MessagesPage } from './routes/messages';
-import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage, OrganizationMembersPage } from './routes/organizations';
+import { OrganizationsListPage, OrganizationDetailPage, OrganizationFormPage, OrganizationMembersPage, PermissionAssignmentPage } from './routes/organizations';
 import { AccessGrantsPage } from './routes/access-grants';
 import { UsersPage } from './routes/users';
 import { ReportsPage } from './routes/reports';
@@ -154,6 +154,14 @@ function AppWithTheme() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <OrganizationMembersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/permissions"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <PermissionAssignmentPage />
                   </ProtectedRoute>
                 }
               />
