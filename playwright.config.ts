@@ -56,13 +56,32 @@ export default defineConfig({
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
     },
+
+    /* Tenant Admin app tests */
+    {
+      name: 'tenant-admin',
+      testDir: './tests/e2e',
+      testMatch: '**/tenant-admin*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5177',
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm --filter @xala/web dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: [
+    {
+      command: 'pnpm --filter @xala/web dev',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
+      command: 'pnpm --filter @xala/tenant-admin dev',
+      url: 'http://localhost:5177',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+  ],
 });
