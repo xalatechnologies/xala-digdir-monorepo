@@ -3,11 +3,12 @@ import { DesignsystemetProvider, ErrorBoundary, Heading, Paragraph } from '@xala
 import { I18nProvider } from '@xala/i18n';
 import { AuthProvider, ToastProvider } from './providers';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { LoginPage } from './routes';
+import { AppLayout } from './components/layout/AppLayout';
+import { LoginPage, TenantsListPage } from './routes';
 
 function DashboardPage() {
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <Heading level={1} data-size="lg">SaaS Admin Dashboard</Heading>
       <Paragraph>Welcome to the Digilist SaaS Administration Portal.</Paragraph>
       <Paragraph>This application is used for platform-wide tenant management.</Paragraph>
@@ -31,13 +32,15 @@ export function App() {
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
                   <Route
-                    path="/"
                     element={
                       <ProtectedRoute>
-                        <DashboardPage />
+                        <AppLayout />
                       </ProtectedRoute>
                     }
-                  />
+                  >
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/tenants" element={<TenantsListPage />} />
+                  </Route>
                 </Routes>
               </AuthProvider>
             </BrowserRouter>

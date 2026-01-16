@@ -6,3 +6,4 @@
  */
 
 export { LoginPage } from './login';
+export { TenantsListPage } from './tenants';
