@@ -3,23 +3,23 @@
   "spec": "039-back-office-users-and-roles",
   "state": "building",
   "subtasks": {
-    "completed": 4,
+    "completed": 20,
     "total": 40,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Database Schema - RBAC Tables",
+    "current": "SDK - RBAC Services",
     "id": null,
-    "total": 6
+    "total": 4
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 3,
+    "number": 18,
     "started_at": "2026-01-16T09:01:53.665799"
   },
-  "last_update": "2026-01-16T09:03:44.035049"
+  "last_update": "2026-01-16T09:48:35.637128"
 }

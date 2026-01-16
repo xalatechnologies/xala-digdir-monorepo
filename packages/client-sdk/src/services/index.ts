@@ -12,6 +12,8 @@ export { AuthService, authService } from './auth.service';
 
 // Authorization / RBAC
 export { AuthzService, authzService } from './authz.service';
+export { AccessGrantService, accessGrantService } from './access-grant.service';
+export { PermissionAssignmentService, permissionAssignmentService } from './permission-assignment.service';
 
 // Listings
 export { ListingService, PublicListingService, listingService, publicListingService } from './listing.service';
