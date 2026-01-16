@@ -1,13 +1,339 @@
 {
   "feature": "Add skeleton loading states for data-heavy pages",
-  "description": "Replace spinner loading indicators with skeleton loading patterns on dashboard, bookings, and settings pages to improve perceived performance and reduce layout shift",
-  "created_at": "2026-01-15T23:38:32.267Z",
-  "updated_at": "2026-01-15T23:40:28.361Z",
-  "status": "in_progress",
-  "planStatus": "in_progress",
-  "phases": [],
-  "workflow_type": "development",
-  "services_involved": [],
-  "final_acceptance": [],
-  "spec_file": "spec.md"
+  "workflow_type": "simple",
+  "workflow_rationale": "This is a straightforward UI enhancement that only affects frontend components in a single service (minside). No backend changes, no API modifications, no complex dependencies. Each page can be updated independently with skeleton loading patterns.",
+  "phases": [
+    {
+      "id": "phase-1-implementation",
+      "name": "Skeleton Loading Implementation",
+      "type": "implementation",
+      "description": "Replace Spinner loading indicators with Skeleton components on dashboard, bookings, and settings pages",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add skeleton loading to dashboard page (stats cards, quick actions, upcoming bookings)",
+          "service": "minside",
+          "files_to_modify": [
+            "apps/minside/src/routes/dashboard.tsx"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx"
+          ],
+          "implementation_notes": [
+            "Import Skeleton from @xala/ds (already exported, no need to modify ds package)",
+            "Replace isLoading Spinner at lines 321-324 with skeleton layout matching:",
+            "  - 3 stats cards: Icon circle skeleton + Label skeleton + Number skeleton",
+            "  - 4 quick action cards: Icon skeleton + Label skeleton",
+            "  - Upcoming bookings list: 5 booking item skeletons with icon, title, date, price",
+            "Match existing spacing (var(--ds-spacing-X)) and responsive isMobile patterns",
+            "Ensure skeleton layout matches actual content structure to prevent layout shift"
+          ],
+          "verification": {
+            "type": "browser",
+            "url": "http://localhost:5174/dashboard",
+            "checks": [
+              "Dashboard renders skeleton layout while loading",
+              "Skeleton structure matches actual content layout",
+              "No layout shift when data loads",
+              "Skeleton respects mobile/desktop breakpoints",
+              "No console errors"
+            ]
+          },
+          "status": "completed",
+          "notes": "Successfully added skeleton loading states to minside dashboard page. The skeleton mirrors the actual content layout including welcome section, 3 stat cards, 4 quick action cards, and upcoming bookings list. Follows the pattern from ListingDetailView.tsx using Skeleton component from @xala/ds with design tokens for spacing.",
+          "updated_at": "2026-01-15T23:48:56.602536+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Add skeleton loading to bookings page (stats cards and bookings table/cards)",
+          "service": "minside",
+          "files_to_modify": [
+            "apps/minside/src/routes/bookings.tsx"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx"
+          ],
+          "implementation_notes": [
+            "Import Skeleton from @xala/ds",
+            "Replace isLoading Spinner at lines 254-257 with skeleton layout matching:",
+            "  - 3 stats cards: Label skeleton + Number skeleton",
+            "  - Bookings table (desktop): Table header skeleton + 5 table row skeletons",
+            "  - Bookings cards (mobile): 5 booking card skeletons with title, date, time, price",
+            "Handle both mobile and desktop layouts with isMobile state",
+            "Match existing Table structure for desktop skeleton",
+            "Match Card structure for mobile skeleton"
+          ],
+          "verification": {
+            "type": "browser",
+            "url": "http://localhost:5174/bookings",
+            "checks": [
+              "Bookings page renders skeleton layout while loading",
+              "Desktop shows table skeleton",
+              "Mobile shows card skeletons",
+              "No layout shift when data loads",
+              "Filter buttons remain visible during loading",
+              "No console errors"
+            ]
+          },
+          "status": "completed",
+          "notes": "Successfully added skeleton loading states to minside bookings page. The skeleton mirrors the actual content layout including 3 stats cards (confirmed/pending/cancelled) and the bookings list with responsive handling for both desktop (table skeleton with 5 rows) and mobile (card skeletons). Removed unused Spinner import. Follows the pattern from ListingDetailView.tsx using Skeleton component from @xala/ds with design tokens for spacing. Filter buttons remain visible during loading as required.",
+          "updated_at": "2026-01-15T23:51:32.583123+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Add skeleton loading to settings page (tabs and form fields)",
+          "service": "minside",
+          "files_to_modify": [
+            "apps/minside/src/routes/settings.tsx"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx"
+          ],
+          "implementation_notes": [
+            "Import Skeleton from @xala/ds",
+            "Replace full-page isLoadingUser Spinner at lines 216-221 with skeleton layout",
+            "Create skeleton layout matching the active tab structure:",
+            "  - Page header: Heading skeleton + Subtext skeleton",
+            "  - Tab navigation skeleton: 5 tab button skeletons",
+            "  - Profile tab content: Avatar circle skeleton + Form field skeletons (name, email, phone, etc.)",
+            "Keep tab navigation visible during loading, only skeleton the tab content",
+            "Match Card and FormField structure for consistency"
+          ],
+          "verification": {
+            "type": "browser",
+            "url": "http://localhost:5174/settings",
+            "checks": [
+              "Settings page renders skeleton layout while loading",
+              "Tabs are visible during loading",
+              "Profile tab shows form field skeletons",
+              "No layout shift when data loads",
+              "Avatar skeleton is circular to match actual avatar",
+              "No console errors"
+            ]
+          },
+          "status": "completed",
+          "notes": "Successfully added skeleton loading states to minside settings page. The skeleton mirrors the actual content layout including page header, 5 tab navigation buttons, and profile tab content with circular avatar skeleton and form field skeletons. Follows the pattern from ListingDetailView.tsx using Skeleton component from @xala/ds with design tokens for spacing. Avatar skeleton uses border-radius-full to match the actual circular avatar. The skeleton layout prevents layout shift when data loads.",
+          "updated_at": "2026-01-15T23:55:29.017718+00:00"
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Add skeleton loading to backoffice dashboard and settings pages",
+          "service": "backoffice",
+          "files_to_modify": [
+            "apps/backoffice/src/routes/dashboard.tsx",
+            "apps/backoffice/src/routes/settings.tsx"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "apps/backoffice/src/features/listings/components/detail/ListingDetailView.tsx",
+            "apps/minside/src/routes/dashboard.tsx",
+            "apps/minside/src/routes/settings.tsx"
+          ],
+          "implementation_notes": [
+            "Apply same skeleton patterns from minside to backoffice pages",
+            "Import Skeleton from @xala/ds",
+            "Follow the exact same structure as implemented in subtasks 1-1 and 1-3",
+            "Ensure consistency across minside and backoffice apps"
+          ],
+          "verification": {
+            "type": "browser",
+            "url": "http://localhost:5175/dashboard",
+            "checks": [
+              "Backoffice dashboard renders skeleton layout while loading",
+              "Backoffice settings renders skeleton layout while loading",
+              "Skeleton structure matches minside implementation",
+              "No console errors"
+            ]
+          },
+          "status": "completed",
+          "notes": "Successfully added skeleton loading states to backoffice dashboard and settings pages. Dashboard skeleton mirrors the actual content layout including welcome section, 4 stat cards (pending/approved/rejected/total), recent activity section with 4 activity items, quick actions card with 3 buttons, and system status card. Settings skeleton includes page header, 7 tab navigation buttons, and tab content with avatar section and form fields. Both implementations follow the exact patterns from minside pages and ListingDetailView.tsx using Skeleton component from @xala/ds with design tokens for spacing. Removed Spinner import and replaced with Skeleton in both files.",
+          "updated_at": "2026-01-15T23:59:01.478600+00:00"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 1,
+    "total_subtasks": 4,
+    "services_involved": [
+      "minside",
+      "backoffice"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "N/A - sequential implementation recommended for consistency",
+      "reasoning": "Subtasks should be done sequentially to ensure consistent skeleton patterns across all pages. First implement and verify minside pages, then replicate patterns to backoffice."
+    },
+    "startup_command": "pnpm dev"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All dashboard, bookings, and settings pages use skeleton loading instead of spinners",
+      "Skeleton layouts match actual content structure to prevent layout shift",
+      "Responsive behavior (mobile/desktop) is preserved",
+      "No console errors or warnings",
+      "Existing tests pass",
+      "Visual regression testing confirms smooth loading transitions"
+    ],
+    "verification_steps": [
+      {
+        "name": "Browser Visual Verification",
+        "command": "manual",
+        "expected_outcome": "All pages show skeleton loaders during data fetch, no layout shift",
+        "type": "manual",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Component Tests",
+        "command": "pnpm test",
+        "expected_outcome": "All existing tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Lint Check",
+        "command": "pnpm lint",
+        "expected_outcome": "No linting errors, design system compliance maintained",
+        "type": "test",
+        "required": true,
+        "blocking": false
+      },
+      {
+        "name": "Design System Compliance",
+        "command": "pnpm scan:compliance",
+        "expected_outcome": "No new design system violations",
+        "type": "test",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Low risk UI-only change. Skeleton component is already available and proven. Pattern is already used in ListingDetailView. Main verification is visual confirmation of smooth loading states."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [
+        "pnpm test"
+      ],
+      "minimum_coverage": null,
+      "notes": "Existing tests should pass. New skeleton-specific tests optional since this is visual enhancement."
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": [],
+      "notes": "No integration points to test - pure frontend change"
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": [],
+      "notes": "Visual verification is sufficient for skeleton loaders"
+    },
+    "browser_verification": {
+      "required": true,
+      "pages": [
+        {
+          "url": "http://localhost:5174/dashboard",
+          "checks": [
+            "Skeleton shows during loading",
+            "Matches content layout",
+            "No layout shift"
+          ]
+        },
+        {
+          "url": "http://localhost:5174/bookings",
+          "checks": [
+            "Table skeleton on desktop",
+            "Card skeleton on mobile",
+            "No layout shift"
+          ]
+        },
+        {
+          "url": "http://localhost:5174/settings",
+          "checks": [
+            "Form field skeletons",
+            "Tabs visible",
+            "No layout shift"
+          ]
+        },
+        {
+          "url": "http://localhost:5175/dashboard",
+          "checks": [
+            "Backoffice skeleton matches minside pattern"
+          ]
+        }
+      ]
+    },
+    "database_verification": {
+      "required": false,
+      "checks": [],
+      "notes": "No database changes"
+    }
+  },
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 1,
+    "issues_found": [
+      {
+        "description": "None - All issues from QA Session 1 resolved. Implementation is production-ready."
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-16T00:13:19.661377+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "status": "human_review",
+  "planStatus": "review",
+  "updated_at": "2026-01-16T00:07:25.831Z",
+  "last_updated": "2026-01-16T00:13:19.661388+00:00",
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "rejected",
+      "timestamp": "2026-01-16T00:05:23.866233+00:00",
+      "issues": [
+        {
+          "type": "critical",
+          "title": "Unused Spinner Import in minside/settings.tsx",
+          "location": "apps/minside/src/routes/settings.tsx:13",
+          "fix_required": "Remove Spinner, from the import statement"
+        }
+      ],
+      "duration_seconds": 359.47
+    },
+    {
+      "iteration": 2,
+      "status": "approved",
+      "timestamp": "2026-01-16T00:14:10.928805+00:00",
+      "issues": [],
+      "duration_seconds": 408.78
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 2,
+    "last_iteration": 2,
+    "last_status": "approved",
+    "issues_by_type": {
+      "critical": 1
+    }
+  }
 }

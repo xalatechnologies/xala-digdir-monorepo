@@ -1,13 +1,405 @@
 {
   "feature": "Add relative time and duration formatters to i18n",
-  "description": "Add formatRelativeTime (e.g., '2 hours ago', 'in 3 days') and formatDuration (e.g., '1h 30m', '2 days') formatters to the i18n package, following the existing formatCurrency/formatDate/formatNumber pattern.",
-  "created_at": "2026-01-15T23:38:26.745Z",
-  "updated_at": "2026-01-15T23:40:27.094Z",
-  "status": "in_progress",
-  "planStatus": "in_progress",
-  "phases": [],
-  "workflow_type": "development",
-  "services_involved": [],
-  "final_acceptance": [],
-  "spec_file": "spec.md"
+  "workflow_type": "simple",
+  "workflow_rationale": "This is a simple workflow because it involves a single package (@xala/i18n), has a small scope (adding two new formatter functions), and requires no coordination with other services. The formatter pattern already exists in the codebase and just needs to be implemented in the i18n package.",
+  "phases": [
+    {
+      "id": "phase-1-core-formatters",
+      "name": "Core Formatter Implementation",
+      "type": "implementation",
+      "description": "Create the core formatter functions (formatRelativeTime and formatDuration) with locale support",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create formatters.ts with formatRelativeTime function",
+          "service": "i18n",
+          "files_to_modify": [],
+          "files_to_create": [
+            "packages/i18n/src/formatters.ts"
+          ],
+          "patterns_from": [
+            "packages/client-sdk/src/utils/date-utils.ts",
+            "archived/client-sdk/src/utils/format.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm typecheck",
+            "expected": "No type errors"
+          },
+          "implementation_notes": [
+            "Use Intl.RelativeTimeFormat API for locale-aware formatting",
+            "Support both past and future times ('2 hours ago', 'in 3 days')",
+            "Accept locale parameter (nb or en)",
+            "Handle edge cases (just now, invalid dates)",
+            "Follow pattern from client-sdk/utils/date-utils.ts lines 92-111"
+          ],
+          "status": "completed",
+          "notes": "Created formatters.ts with formatRelativeTime function. The function uses Intl.RelativeTimeFormat API for locale-aware formatting, supports both past and future times, accepts a locale parameter (default 'nb-NO'), and handles edge cases like invalid dates. Typecheck passed successfully.",
+          "updated_at": "2026-01-15T23:47:15.904271+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Add formatDuration function to formatters.ts",
+          "service": "i18n",
+          "files_to_modify": [
+            "packages/i18n/src/formatters.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "archived/client-sdk/src/utils/format.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm typecheck",
+            "expected": "No type errors"
+          },
+          "implementation_notes": [
+            "Support multiple duration formats: compact ('1h 30m'), long ('1 hour 30 minutes')",
+            "Accept duration in milliseconds or seconds",
+            "Locale-aware labels (Norwegian: 't/timer/minutter', English: 'h/hours/minutes')",
+            "Handle zero and negative durations gracefully",
+            "Reference archived/client-sdk/src/utils/format.ts line 202"
+          ],
+          "status": "completed",
+          "notes": "Added formatDuration function to formatters.ts. The function supports multiple duration formats (compact: '1t 30m' and long: '1 time 30 minutter'), accepts duration in milliseconds or seconds, provides locale-aware labels for Norwegian and English, handles zero and negative durations gracefully, and includes comprehensive JSDoc documentation with examples. Typecheck passed successfully.",
+          "updated_at": "2026-01-15T23:50:23.769727+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Add TypeScript type definitions for formatters",
+          "service": "i18n",
+          "files_to_modify": [
+            "packages/i18n/src/types.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "packages/i18n/src/types.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm typecheck",
+            "expected": "No type errors"
+          },
+          "implementation_notes": [
+            "Add FormatRelativeTimeOptions type (with style: 'long' | 'short' | 'narrow')",
+            "Add FormatDurationOptions type (with style: 'compact' | 'long', units: array)",
+            "Add formatter function signatures to exports"
+          ],
+          "status": "completed",
+          "notes": "Added TypeScript type definitions for formatters including FormatRelativeTimeOptions (with style: 'long' | 'short' | 'narrow'), FormatDurationOptions (with style: 'compact' | 'long', unit, locale), and function type signatures (FormatRelativeTimeFunction, FormatDurationFunction). All types follow existing patterns in types.ts. Typecheck passed successfully with no errors.",
+          "updated_at": "2026-01-15T23:52:18.729631+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-hooks",
+      "name": "React Hooks Integration",
+      "type": "implementation",
+      "description": "Create React hooks that use the i18n context for locale-aware formatting",
+      "depends_on": [
+        "phase-1-core-formatters"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Add useFormatRelativeTime and useFormatDuration hooks",
+          "service": "i18n",
+          "files_to_modify": [
+            "packages/i18n/src/hooks.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "packages/i18n/src/hooks.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm typecheck",
+            "expected": "No type errors"
+          },
+          "implementation_notes": [
+            "useFormatRelativeTime returns a memoized formatter function that uses current locale",
+            "useFormatDuration returns a memoized formatter function that uses current locale",
+            "Both hooks should use useI18n() to access the current locale",
+            "Use useCallback for memoization to prevent unnecessary re-renders",
+            "Follow the pattern of existing hooks (useT, useLocale)"
+          ],
+          "status": "completed",
+          "notes": "Added useFormatRelativeTime and useFormatDuration hooks to packages/i18n/src/hooks.ts. Both hooks use useCallback for memoization, access current locale from i18n context, and follow the existing hook patterns (useT, useLocale). Locale conversion is handled automatically (nb -> nb-NO, en -> en-US). Typecheck passed successfully with no errors.",
+          "updated_at": "2026-01-15T23:54:22.168703+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-exports",
+      "name": "Public API Exports",
+      "type": "implementation",
+      "description": "Export formatters and hooks from the package index",
+      "depends_on": [
+        "phase-2-hooks"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Export formatters and hooks from index.ts",
+          "service": "i18n",
+          "files_to_modify": [
+            "packages/i18n/src/index.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "packages/i18n/src/index.ts"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm build",
+            "expected": "Build succeeds with no errors"
+          },
+          "implementation_notes": [
+            "Export formatRelativeTime and formatDuration functions from './formatters'",
+            "Export useFormatRelativeTime and useFormatDuration from './hooks'",
+            "Export type definitions (FormatRelativeTimeOptions, FormatDurationOptions)",
+            "Follow the existing export pattern in index.ts"
+          ],
+          "status": "completed",
+          "notes": "Added exports to packages/i18n/src/index.ts for formatRelativeTime and formatDuration functions from './formatters', useFormatRelativeTime and useFormatDuration hooks from './hooks', and type definitions (FormatRelativeTimeOptions, FormatDurationOptions, FormatRelativeTimeFunction, FormatDurationFunction) from './types'. Followed existing export pattern in the file. Build succeeded with no errors.",
+          "updated_at": "2026-01-15T23:56:03.197887+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-testing",
+      "name": "Unit Tests",
+      "type": "implementation",
+      "description": "Add comprehensive unit tests for formatters",
+      "depends_on": [
+        "phase-1-core-formatters"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Create formatters.test.ts with test coverage",
+          "service": "i18n",
+          "files_to_modify": [],
+          "files_to_create": [
+            "packages/i18n/src/formatters.test.ts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd packages/i18n && pnpm test formatters.test.ts",
+            "expected": "All tests pass"
+          },
+          "implementation_notes": [
+            "Test formatRelativeTime: past times, future times, edge cases (now, invalid)",
+            "Test formatDuration: various durations, different formats, zero/negative values",
+            "Test locale switching (nb vs en)",
+            "Test with different options (style variations)",
+            "Use vitest as the test framework (already configured in monorepo)"
+          ],
+          "status": "completed",
+          "notes": "Created formatters.test.ts with comprehensive test coverage. 59 tests pass successfully covering formatRelativeTime (past/future times, edge cases, locale switching) and formatDuration (various durations, compact/long formats, zero/negative values, input unit handling). Updated vitest.config.ts to include i18n package tests in the test suite. Verified all tests pass with the command: cd packages/i18n && pnpm -w run test formatters.test.ts",
+          "updated_at": "2026-01-16T00:00:10.813676+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-5-documentation",
+      "name": "Documentation",
+      "type": "implementation",
+      "description": "Add JSDoc comments and usage examples",
+      "depends_on": [
+        "phase-3-exports"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Add comprehensive JSDoc comments to formatters",
+          "service": "i18n",
+          "files_to_modify": [
+            "packages/i18n/src/formatters.ts",
+            "packages/i18n/src/hooks.ts"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "packages/client-sdk/src/utils/date-utils.ts"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review JSDoc comments for completeness and clarity"
+          },
+          "implementation_notes": [
+            "Add function descriptions",
+            "Document all parameters with @param tags",
+            "Document return values with @returns tags",
+            "Add @example tags showing typical usage",
+            "Include locale-specific examples (both nb and en)"
+          ],
+          "status": "completed",
+          "notes": "Enhanced JSDoc comments in hooks.ts with detailed descriptions, @returns tags, @example tags, and @throws tags. Verified formatters.ts already had comprehensive documentation following the pattern from date-utils.ts.",
+          "updated_at": "2026-01-16T00:01:54.073454+00:00"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 5,
+    "total_subtasks": 7,
+    "services_involved": [
+      "i18n"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 2,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-4-testing",
+            "phase-5-documentation"
+          ],
+          "reason": "Testing and documentation can proceed in parallel after core implementation is complete"
+        }
+      ],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution recommended for single package"
+    },
+    "startup_command": "cd packages/i18n && pnpm dev"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "test_creation_phase": "phase-4-testing",
+    "test_types_required": [
+      "unit"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "formatRelativeTime function works for past and future times in both locales",
+      "formatDuration function supports multiple format styles",
+      "React hooks (useFormatRelativeTime, useFormatDuration) work correctly",
+      "All exports are available from @xala/i18n package",
+      "Unit tests pass with good coverage",
+      "TypeScript types are correct and complete",
+      "No breaking changes to existing i18n functionality"
+    ],
+    "verification_steps": [
+      {
+        "name": "Type Check",
+        "command": "cd packages/i18n && pnpm typecheck",
+        "expected_outcome": "No type errors",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Build Package",
+        "command": "cd packages/i18n && pnpm build",
+        "expected_outcome": "Build succeeds",
+        "type": "build",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Unit Tests",
+        "command": "cd packages/i18n && pnpm test",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Lint Check",
+        "command": "cd packages/i18n && pnpm lint",
+        "expected_outcome": "No lint errors",
+        "type": "quality",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Low risk change - adding new formatters to existing package without modifying core functionality. Unit tests and type checking are sufficient."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "cd packages/i18n && pnpm test"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "manual_verification": {
+      "required": true,
+      "steps": [
+        "Import formatRelativeTime from @xala/i18n in a test component",
+        "Verify it formats relative times correctly in Norwegian",
+        "Switch locale to English and verify formatting changes",
+        "Import formatDuration and test various duration values",
+        "Test useFormatRelativeTime hook in a React component",
+        "Verify formatters work correctly in both apps (web, minside)"
+      ]
+    }
+  },
+  "qa_signoff": {
+    "status": "approved",
+    "timestamp": "2026-01-16T01:05:00Z",
+    "qa_session": 1,
+    "report_file": "qa_report.md",
+    "tests_passed": {
+      "unit": "59/59",
+      "integration": "N/A",
+      "e2e": "N/A"
+    },
+    "verified_by": "qa_agent",
+    "issues_found": {
+      "critical": 0,
+      "major": 0,
+      "minor": 0
+    },
+    "acceptance_criteria_met": [
+      "formatRelativeTime function works for past and future times in both locales",
+      "formatDuration function supports multiple format styles",
+      "React hooks (useFormatRelativeTime, useFormatDuration) work correctly",
+      "All exports are available from @xala/i18n package",
+      "Unit tests pass with good coverage",
+      "TypeScript types are correct and complete",
+      "No breaking changes to existing i18n functionality"
+    ]
+  },
+  "status": "ai_review",
+  "planStatus": "review",
+  "updated_at": "2026-01-16T00:02:14.268Z",
+  "last_updated": "2026-01-16T00:01:54.073462+00:00",
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-16T00:08:38.053255+00:00",
+      "issues": [],
+      "duration_seconds": 390.15
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  }
 }
