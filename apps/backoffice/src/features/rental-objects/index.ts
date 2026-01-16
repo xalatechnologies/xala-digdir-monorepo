@@ -1,19 +1,15 @@
 /**
  * Rental Objects Feature
- * 
- * This module provides the rental objects management functionality
- * using the new category-based system instead of the legacy ListingType system.
+ *
+ * Complete CRUD module for managing rental objects in the Backoffice
  */
 
-// Types
-export * from './types';
+// Components - List View
+export { RentalObjectsListView } from './components/RentalObjectsListView';
 
-// Hooks
-export * from './hooks';
+// Components - Detail View
+export { RentalObjectDetailView } from './components/detail/RentalObjectDetailView';
 
-// Components
-export * from './components';
-export * from './components/wizard';
-
-// Utils
-export { validateStep, validateAllSteps, canPublish } from './utils/wizard-validation';
+// Components - Wizard (Create/Edit)
+export { RentalObjectWizard } from './components/wizard/RentalObjectWizard';
+export type { RentalObjectWizardProps } from './components/wizard/RentalObjectWizard';

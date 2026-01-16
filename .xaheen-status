@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "033-season-application-sdk-hooks-completion",
+  "spec": "031-fix-rental-objects-export-issues",
   "state": "building",
   "subtasks": {
-    "completed": 5,
-    "total": 6,
+    "completed": 8,
+    "total": 9,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Integration Verification",
+    "current": "Enable Feature in App.tsx",
     "id": null,
-    "total": 1
+    "total": 3
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 7,
-    "started_at": "2026-01-16T00:47:41.161132"
+    "number": 10,
+    "started_at": "2026-01-16T00:47:47.515090"
   },
-  "last_update": "2026-01-16T01:03:35.062804"
+  "last_update": "2026-01-16T01:13:35.809809"
 }

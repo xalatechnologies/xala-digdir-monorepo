@@ -1,7 +1,9 @@
 /**
  * Rental Object Detail View
- * Main container for the rental object detail page with tabs for overview, bookings, availability, and audit
- * Admin interface for comprehensive rental object management
+ * Main container for rental object detail page with tabs
+ *
+ * NOTE: Rental objects use rental_object terminology throughout.
+ * Internally, rental objects are stored as listings with type=RESOURCE.
  */
 
 import { Component, useCallback, type ReactNode } from 'react';
@@ -15,14 +17,12 @@ import {
   ChevronLeftIcon,
   AlertTriangleIcon,
 } from '@xala/ds';
-import { useRentalObjectBySlug, useRentalObject } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
-// Reuse tab components from listings (they work with rental objects)
-import { DetailHeader } from '../../../listings/components/detail/DetailHeader';
-import { OverviewTab } from '../../../listings/components/detail/OverviewTab';
-import { BookingsTab } from '../../../listings/components/detail/BookingsTab';
-import { AvailabilityTab } from '../../../listings/components/detail/AvailabilityTab';
-import { AuditTab } from '../../../listings/components/detail/AuditTab';
+import { useListingBySlug, useListing } from '@digilist/client-sdk';
+import { RentalObjectHeader } from './RentalObjectHeader';
+import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';
+import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';
+import { RentalObjectAvailabilityTab } from './RentalObjectAvailabilityTab';
+import { RentalObjectAuditTab } from './RentalObjectAuditTab';
 
 /**
  * Error Boundary to catch JavaScript runtime errors
@@ -68,20 +68,20 @@ interface RentalObjectDetailViewProps {
   slug: string;
 }
 
-export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): React.ReactElement {
+export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const t = useT();
 
   // Check if the param looks like a UUID (ID) or a slug
   const isUuid = slug?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
 
   // Fetch rental object data by slug or ID
-  const slugQuery = useRentalObjectBySlug(slug || '', {
+  // NOTE: Uses listing hooks internally - rental objects are RESOURCE type listings
+  const slugQuery = useListingBySlug(slug || '', {
     enabled: !!slug && !isUuid,
   });
 
-  const idQuery = useRentalObject(slug || '', {
+  const idQuery = useListing(slug || '', {
     enabled: !!slug && !!isUuid,
   });
 
@@ -94,14 +94,11 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
   // Active tab from URL query params
   const activeTab = searchParams.get('tab') || 'overview';
 
-  const handleTabChange = useCallback(
-    (tab: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set('tab', tab);
-      setSearchParams(params);
-    },
-    [searchParams, setSearchParams],
-  );
+  const handleTabChange = useCallback((tab: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('tab', tab);
+    setSearchParams(params);
+  }, [searchParams, setSearchParams]);
 
   const handleEditSuccess = useCallback(() => {
     refetch();
@@ -161,7 +158,9 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
               {/* Description skeleton */}
               <div>
                 <Skeleton width="30%" height={24} style={{ marginBottom: 'var(--ds-spacing-3)' }} />
-                <Skeleton count={3} />
+                <Skeleton width="100%" height={16} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                <Skeleton width="100%" height={16} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
+                <Skeleton width="80%" height={16} />
               </div>
 
               {/* Facilities skeleton */}
@@ -185,7 +184,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
     return (
       <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
         <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('rentalObjects.error')}
+          Kunne ikke laste utleieobjekt
         </Heading>
         <Paragraph
           data-size="sm"
@@ -195,7 +194,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
         </Paragraph>
         <Button type="button" variant="primary" onClick={() => navigate('/rental-objects')}>
           <ChevronLeftIcon size={16} />
-          {t('common.back')} til liste
+          Tilbake til liste
         </Button>
       </Card>
     );
@@ -216,7 +215,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
         </Paragraph>
         <Button type="button" variant="primary" onClick={() => navigate('/rental-objects')}>
           <ChevronLeftIcon size={16} />
-          {t('common.back')} til liste
+          Tilbake til liste
         </Button>
       </Card>
     );
@@ -227,7 +226,10 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
       fallback={
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
-            <AlertTriangleIcon size={48} style={{ color: 'var(--ds-color-danger-border-default)' }} />
+            <AlertTriangleIcon
+              size={48}
+              style={{ color: 'var(--ds-color-danger-border-default)' }}
+            />
           </div>
           <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
             Noe gikk galt
@@ -244,16 +246,15 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
             </Button>
             <Button type="button" variant="primary" onClick={() => navigate('/rental-objects')}>
               <ChevronLeftIcon size={16} />
-              {t('common.back')} til liste
+              Tilbake til liste
             </Button>
           </div>
         </Card>
       }
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-        {/* Header Section - Integrated with EditModal and RBAC */}
-        {/* Note: DetailHeader expects 'listing' prop but works with RentalObject type */}
-        <DetailHeader listing={rentalObject} backPath="/rental-objects" onEditSuccess={handleEditSuccess} />
+        {/* Header Section */}
+        <RentalObjectHeader rentalObject={rentalObject} onEditSuccess={handleEditSuccess} />
 
         {/* Tabs Section */}
         <div>
@@ -301,14 +302,16 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps): R
           </div>
 
           {/* Tab Content */}
-          {/* Note: Tab components expect 'listing' or 'listingId' props but work with RentalObject */}
           <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-            {activeTab === 'overview' && <OverviewTab listing={rentalObject} />}
-            {activeTab === 'bookings' && <BookingsTab listingId={rentalObject.id} />}
+            {activeTab === 'overview' && <RentalObjectOverviewTab rentalObject={rentalObject} />}
+            {activeTab === 'bookings' && <RentalObjectBookingsTab rentalObjectId={rentalObject.id} />}
             {activeTab === 'availability' && (
-              <AvailabilityTab listingId={rentalObject.id} listingName={rentalObject.name} />
+              <RentalObjectAvailabilityTab
+                rentalObjectId={rentalObject.id}
+                rentalObjectName={rentalObject.name}
+              />
             )}
-            {activeTab === 'audit' && <AuditTab listingId={rentalObject.id} />}
+            {activeTab === 'audit' && <RentalObjectAuditTab rentalObjectId={rentalObject.id} />}
           </Card>
         </div>
       </div>

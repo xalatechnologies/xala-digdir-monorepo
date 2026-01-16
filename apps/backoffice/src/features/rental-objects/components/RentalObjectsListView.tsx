@@ -1,11 +1,12 @@
 /**
  * Rental Objects List View
- * Main container for the rental objects list with right drawer filters
- * Styled similar to web app ListingsPage but for admin use
+ * Main container for rental objects list with right drawer filters
+ *
+ * NOTE: Rental objects use rental_object terminology throughout.
+ * Internally, rental objects are stored as listings with type=RESOURCE.
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Paragraph,
@@ -21,29 +22,27 @@ import {
   Stack,
   Text,
 } from '@xala/ds';
-import { useT } from '@xala/i18n';
-import { useRentalObjects, type ListingType } from '@digilist/client-sdk';
+import { useNavigate } from 'react-router-dom';
+import { useListings } from '@digilist/client-sdk';
 import type { ListingStatus } from '@digilist/client-sdk';
-import { ListingsGrid } from '../../listings/components/list/ListingsGrid';
-import { ListingsTable } from '../../listings/components/list/ListingsTable';
+import { RentalObjectsGrid } from './list/RentalObjectsGrid';
+import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { useListingFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../../listings/hooks/useListingFilters';
 import { useListingPermissions } from '../../listings/hooks/useListingPermissions';
-import { LISTING_TYPE_OPTIONS } from '../../listings/constants';
 
-export function RentalObjectsListView(): React.ReactElement {
+// Capacity filter options for rental objects
+const CAPACITY_OPTIONS = [
+  { id: 'all', label: 'Alle størrelser', min: 0, max: 999999 },
+  { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
+  { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
+  { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
+  { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
+  { id: '100+', label: 'Over 100 personer', min: 101, max: 999999 },
+];
+
+export function RentalObjectsListView() {
   const navigate = useNavigate();
-  const t = useT();
   const { permissions } = useListingPermissions();
-
-  // Capacity filter options (using i18n)
-  const CAPACITY_OPTIONS = [
-    { id: 'all', label: t('common.allSizes'), min: 0, max: 999999 },
-    { id: '1-10', label: `1-10 ${t('common.persons')}`, min: 1, max: 10 },
-    { id: '11-25', label: `11-25 ${t('common.persons')}`, min: 11, max: 25 },
-    { id: '26-50', label: `26-50 ${t('common.persons')}`, min: 26, max: 50 },
-    { id: '51-100', label: `51-100 ${t('common.persons')}`, min: 51, max: 100 },
-    { id: '100+', label: `${t('common.over100')} ${t('common.persons')}`, min: 101, max: 999999 },
-  ];
 
   const {
     filters,
@@ -60,15 +59,15 @@ export function RentalObjectsListView(): React.ReactElement {
   const [searchValue, setSearchValue] = useState(filters.search || '');
 
   // Filter state for drawer
-  const [selectedType, setSelectedType] = useState<ListingType | 'ALL'>(filters.type || 'ALL');
   const [selectedStatus, setSelectedStatus] = useState<string>(filters.status || 'all');
   const [selectedCapacity, setSelectedCapacity] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('updated-desc');
 
-  // Build query params, only including defined values
-  const queryParams: Record<string, unknown> = {};
+  // Build query params, forcing type to RESOURCE for rental objects
+  const queryParams: Record<string, unknown> = {
+    type: 'RESOURCE', // Always filter for RESOURCE type (rental objects)
+  };
   if (filters.status) queryParams.status = filters.status;
-  if (filters.type) queryParams.type = filters.type;
   if (filters.search) queryParams.search = filters.search;
   if (filters.city) queryParams.city = filters.city;
   if (filters.page) queryParams.page = filters.page;
@@ -76,20 +75,13 @@ export function RentalObjectsListView(): React.ReactElement {
   if (filters.sortBy) queryParams.sortBy = filters.sortBy;
   if (filters.sortOrder) queryParams.sortOrder = filters.sortOrder;
 
-  const { data, isLoading, refetch } = useRentalObjects(queryParams);
+  const { data, isLoading, refetch } = useListings(queryParams);
 
   const rentalObjects = data?.data || [];
   const pagination = data?.meta;
   const totalCount = pagination?.total || 0;
   const currentPage = pagination?.page || 1;
   const totalPages = pagination?.totalPages || 1;
-
-  // Get type counts for filter display
-  const typeCounts = rentalObjects.reduce((acc, obj) => {
-    acc[obj.type] = (acc[obj.type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-  typeCounts['ALL'] = totalCount;
 
   // Search handlers
   const handleSearchChange = useCallback((value: string) => {
@@ -102,9 +94,6 @@ export function RentalObjectsListView(): React.ReactElement {
 
   // Apply filters from drawer
   const applyFilters = useCallback(() => {
-    // Apply type
-    setFilter('type', selectedType === 'ALL' ? undefined : selectedType);
-
     // Apply status
     setFilter('status', selectedStatus === 'all' ? undefined : selectedStatus as ListingStatus);
 
@@ -126,11 +115,10 @@ export function RentalObjectsListView(): React.ReactElement {
     }
 
     setIsFilterOpen(false);
-  }, [selectedType, selectedStatus, selectedCapacity, selectedSort, setFilter]);
+  }, [selectedStatus, selectedCapacity, selectedSort, setFilter]);
 
   // Reset drawer filters
   const resetDrawerFilters = useCallback(() => {
-    setSelectedType('ALL');
     setSelectedStatus('all');
     setSelectedCapacity('all');
     setSelectedSort('updated-desc');
@@ -181,7 +169,7 @@ export function RentalObjectsListView(): React.ReactElement {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t('common.filterAndSort')}
+        title="Filter og sortering"
         icon={<FilterIcon size={20} />}
         position="right"
         size="sm"
@@ -192,7 +180,7 @@ export function RentalObjectsListView(): React.ReactElement {
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
-              {t('common.showingResults', { count: totalCount })}
+              Viser {totalCount} resultater
             </Text>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <Button
@@ -205,7 +193,7 @@ export function RentalObjectsListView(): React.ReactElement {
                   setIsFilterOpen(false);
                 }}
               >
-                {t('common.reset')}
+                Nullstill
               </Button>
               <Button
                 type="button"
@@ -213,45 +201,14 @@ export function RentalObjectsListView(): React.ReactElement {
                 style={{ flex: 1 }}
                 onClick={applyFilters}
               >
-                {t('common.applyFilter')}
+                Bruk filter
               </Button>
             </div>
           </Stack>
         }
       >
-        {/* Type Section */}
-        <DrawerSection title={t('rentalObjects.type')} collapsible>
-          <Stack spacing="var(--ds-spacing-1)">
-            {LISTING_TYPE_OPTIONS.map((type) => (
-              <DrawerItem
-                key={type.id}
-                left={
-                  <input
-                    type="radio"
-                    name="type"
-                    checked={selectedType === type.id}
-                    onChange={() => setSelectedType(type.id as ListingType | 'ALL')}
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      accentColor: 'var(--ds-color-accent-base-default)',
-                    }}
-                  />
-                }
-                right={<Text size="sm">({typeCounts[type.id] || 0})</Text>}
-                onClick={() => setSelectedType(type.id as ListingType | 'ALL')}
-                selected={selectedType === type.id}
-              >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">
-                  {type.label}
-                </Text>
-              </DrawerItem>
-            ))}
-          </Stack>
-        </DrawerSection>
-
         {/* Status Section */}
-        <DrawerSection title={t('common.status')} collapsible defaultCollapsed>
+        <DrawerSection title="Status" collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {STATUS_OPTIONS.map((status) => (
               <DrawerItem
@@ -281,7 +238,7 @@ export function RentalObjectsListView(): React.ReactElement {
         </DrawerSection>
 
         {/* Capacity Section */}
-        <DrawerSection title={t('rentalObjects.capacity')} collapsible defaultCollapsed>
+        <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {CAPACITY_OPTIONS.map((cap) => (
               <DrawerItem
@@ -311,7 +268,7 @@ export function RentalObjectsListView(): React.ReactElement {
         </DrawerSection>
 
         {/* Sort Section */}
-        <DrawerSection title={t('common.sorting')} collapsible defaultCollapsed>
+        <DrawerSection title="Sortering" collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {SORT_OPTIONS.map((sort) => (
               <DrawerItem
@@ -358,7 +315,7 @@ export function RentalObjectsListView(): React.ReactElement {
           }}
         >
           <Heading level={1} data-size="md" style={{ margin: 0 }}>
-            {t('rentalObjects.title')}
+            Utleieobjekter
             {totalCount > 0 && (
               <span
                 style={{
@@ -379,7 +336,7 @@ export function RentalObjectsListView(): React.ReactElement {
               onClick={() => navigate('/rental-objects/new')}
             >
               <PlusIcon />
-              {t('common.newRentalObject')}
+              Nytt utleieobjekt
             </Button>
           )}
         </div>
@@ -394,7 +351,7 @@ export function RentalObjectsListView(): React.ReactElement {
         >
           {/* Search on left */}
           <HeaderSearch
-            placeholder={t('rentalObjects.search')}
+            placeholder="Søk etter utleieobjekter..."
             value={searchValue}
             onSearchChange={handleSearchChange}
             onSearch={handleSearch}
@@ -404,7 +361,7 @@ export function RentalObjectsListView(): React.ReactElement {
           {/* Count in center */}
           <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', whiteSpace: 'nowrap' }}>
-              {t('common.rentalObjectsCount', { count: totalCount })}
+              {totalCount} utleieobjekter
             </Paragraph>
           </div>
 
@@ -417,7 +374,7 @@ export function RentalObjectsListView(): React.ReactElement {
                 variant={viewMode === 'grid' ? 'primary' : 'tertiary'}
                 data-size="sm"
                 onClick={() => setViewMode('grid')}
-                aria-label={t('common.gridView')}
+                aria-label="Rutenettvisning"
                 style={{ padding: 'var(--ds-spacing-2)' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -430,7 +387,7 @@ export function RentalObjectsListView(): React.ReactElement {
                 variant={viewMode === 'table' ? 'primary' : 'tertiary'}
                 data-size="sm"
                 onClick={() => setViewMode('table')}
-                aria-label={t('common.listView')}
+                aria-label="Listevisning"
                 style={{ padding: 'var(--ds-spacing-2)' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -447,7 +404,7 @@ export function RentalObjectsListView(): React.ReactElement {
               style={{ position: 'relative' }}
             >
               <FilterIcon />
-              {t('common.filters')}
+              Filtre
               {activeFilterCount > 0 && (
                 <span
                   style={{
@@ -487,10 +444,10 @@ export function RentalObjectsListView(): React.ReactElement {
             }}
           >
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              {t('common.selected', { count: selectedIds.length })}
+              {selectedIds.length} valgt
             </Paragraph>
-            <Button type="button" variant="secondary" data-data-size="sm" onClick={() => setSelectedIds([])}>
-              {t('common.removeSelection')}
+            <Button type="button" variant="secondary" data-size="sm" onClick={() => setSelectedIds([])}>
+              Fjern valg
             </Button>
           </div>
         )}
@@ -498,17 +455,16 @@ export function RentalObjectsListView(): React.ReactElement {
         {/* Content - Grid or Table View */}
         <div style={{ flex: 1, overflow: 'auto' }}>
           {viewMode === 'grid' ? (
-            <ListingsGrid
-              listings={rentalObjects}
+            <RentalObjectsGrid
+              rentalObjects={rentalObjects}
               isLoading={isLoading}
               selectedIds={selectedIds}
               onSelectOne={handleSelectOne}
               onRefresh={handleRefresh}
-              basePath="/rental-objects"
             />
           ) : (
-            <ListingsTable
-              listings={rentalObjects}
+            <RentalObjectsTable
+              rentalObjects={rentalObjects}
               isLoading={isLoading}
               selectedIds={selectedIds}
               onSelectAll={handleSelectAll}
@@ -517,7 +473,6 @@ export function RentalObjectsListView(): React.ReactElement {
               sortBy={filters.sortBy}
               sortOrder={filters.sortOrder}
               onRefresh={handleRefresh}
-              basePath="/rental-objects"
             />
           )}
         </div>
@@ -540,13 +495,13 @@ export function RentalObjectsListView(): React.ReactElement {
               data-size="sm"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              aria-label={t('common.previousPage')}
+              aria-label="Forrige side"
             >
               <ChevronLeftIcon />
             </Button>
 
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              {t('common.page')} {currentPage} {t('common.of')} {totalPages}
+              Side {currentPage} av {totalPages}
             </Paragraph>
 
             <Button
@@ -555,7 +510,7 @@ export function RentalObjectsListView(): React.ReactElement {
               data-size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              aria-label={t('common.nextPage')}
+              aria-label="Neste side"
             >
               <ChevronRightIcon />
             </Button>
