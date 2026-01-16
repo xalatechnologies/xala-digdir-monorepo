@@ -36,6 +36,10 @@ export function RentalObjectTableView({
 
   // Sort rental objects
   const sortedRentalObjects = React.useMemo(() => {
+    // Guard against undefined/null rentalObjects
+    if (!rentalObjects || !Array.isArray(rentalObjects)) {
+      return [];
+    }
     const sorted = [...rentalObjects].sort((a, b) => {
       let aVal: string | number = '';
       let bVal: string | number = '';
