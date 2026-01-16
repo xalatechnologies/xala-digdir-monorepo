@@ -66,6 +66,17 @@ export {
   usePaymentReconciliation,
 } from './use-bookings';
 
+// Discount Code hooks
+export {
+  useDiscountCodes,
+  useDiscountCode,
+  useValidateCode,
+  useCreateDiscountCode,
+  useUpdateDiscountCode,
+  useDeleteDiscountCode,
+  useToggleActive,
+} from './use-discount-codes';
+
 // Organization & User hooks
 export {
   useOrganizations,
@@ -268,22 +279,6 @@ export {
   type FocusManagementMetric,
   type AriaAnnouncementMetric,
 } from './use-accessibility-monitoring';
-
-// Monitoring hooks
-export {
-  useHealthStatus,
-  useSystemMetrics,
-  useLogs,
-  useIncidents,
-  useDatabaseStats,
-  useApiUsage,
-  useTriggerHealthCheck,
-  type HealthStatus,
-  type SystemMetrics,
-  type LogEntry,
-  type LogQueryParams,
-  type Incident,
-} from './use-monitoring';
 
 // Search hooks
 export {

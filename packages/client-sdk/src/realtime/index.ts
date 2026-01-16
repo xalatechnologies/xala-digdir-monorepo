@@ -3,7 +3,7 @@
  * Provides real-time event streaming via WebSocket
  */
 
-export type RealtimeEventType = 'audit' | 'booking' | 'rentalObject' | 'message' | 'notification' | 'connected' | 'pong';
+export type RealtimeEventType = 'audit' | 'booking' | 'rentalObject' | 'message' | 'notification' | 'monitoring' | 'connected' | 'pong';
 
 export interface RealtimeEvent {
   type: RealtimeEventType;
@@ -21,12 +21,6 @@ export interface RealtimeClientConfig {
   reconnectInterval?: number;
   maxReconnectAttempts?: number;
   tenantId?: string;
-  /** User ID for authentication */
-  userId?: string;
-  /** Authentication token (Bearer) */
-  token?: string;
-  /** License key for API access */
-  licenseKey?: string;
   /** Enable debug logging (default: false) */
   debug?: boolean;
 }
@@ -38,33 +32,6 @@ class RealtimeClient {
   private reconnectAttempts = 0;
   private isConnecting = false;
   private debug = false;
-
-  /**
-   * Build WebSocket URL with authentication query parameters
-   * Note: Browser WebSocket doesn't support custom headers, so we use query params
-   */
-  private buildAuthenticatedUrl(config: RealtimeClientConfig): string {
-    const url = new URL(config.url);
-
-    // Append authentication parameters as query strings
-    if (config.tenantId) {
-      url.searchParams.set('tenantId', config.tenantId);
-    }
-
-    if (config.userId) {
-      url.searchParams.set('userId', config.userId);
-    }
-
-    if (config.token) {
-      url.searchParams.set('token', config.token);
-    }
-
-    if (config.licenseKey) {
-      url.searchParams.set('licenseKey', config.licenseKey);
-    }
-
-    return url.toString();
-  }
 
   /**
    * Connect to WebSocket endpoint
@@ -79,11 +46,10 @@ class RealtimeClient {
     this.debug = config.debug ?? false;
 
     try {
-      const authenticatedUrl = this.buildAuthenticatedUrl(config);
-      this.socket = new WebSocket(authenticatedUrl);
+      this.socket = new WebSocket(config.url);
       
       this.socket.onopen = () => {
-        if (this.debug) console.log('[Realtime] Connected with authentication');
+        if (this.debug) console.log('[Realtime] Connected to', config.url);
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.emit('connected', { type: 'connected', message: 'Connected to realtime server' });
@@ -95,7 +61,7 @@ class RealtimeClient {
             this.socket.send(JSON.stringify({
               type: 'subscribe',
               tenantId: config.tenantId,
-              events: ['booking', 'rentalObject', 'message', 'notification', 'audit'],
+              events: ['booking', 'rentalObject', 'message', 'notification', 'audit', 'monitoring'],
             }));
             if (this.debug) console.log('[Realtime] Sent subscription request for tenant:', config.tenantId);
           } catch {
@@ -186,6 +152,13 @@ class RealtimeClient {
    */
   onMessage(handler: RealtimeEventHandler): () => void {
     return this.on('message', handler);
+  }
+
+  /**
+   * Subscribe to monitoring events
+   */
+  onMonitoring(handler: RealtimeEventHandler): () => void {
+    return this.on('monitoring', handler);
   }
 
   /**

@@ -172,6 +172,22 @@ export function useRealtimeAudit(handler?: RealtimeEventHandler) {
 }
 
 /**
+ * Hook to subscribe to monitoring events (admin only)
+ */
+export function useRealtimeMonitoring(handler?: RealtimeEventHandler) {
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+
+  useEffect(() => {
+    const unsubscribe = realtimeClient.onMonitoring((event) => {
+      handlerRef.current?.(event);
+    });
+
+    return unsubscribe;
+  }, []);
+}
+
+/**
  * Hook to subscribe to all realtime events
  */
 export function useRealtimeEvents(handler: RealtimeEventHandler) {

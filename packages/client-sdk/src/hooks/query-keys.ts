@@ -14,6 +14,7 @@ import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
 import type { EconomyQueryParams } from '../types/economy';
 import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
+import type { DiscountCodeQueryParams } from '../services/discount-code.service';
 
 /**
  * Strongly-typed query key factory
@@ -241,8 +242,11 @@ export const queryKeys = {
   // =========================================================================
   discountCodes: {
     all: ['discountCodes'] as const,
-    list: () => [...queryKeys.discountCodes.all, 'list'] as const,
-    detail: (id: string) => [...queryKeys.discountCodes.all, 'detail', id] as const,
+    lists: () => [...queryKeys.discountCodes.all, 'list'] as const,
+    list: (params?: DiscountCodeQueryParams) =>
+      [...queryKeys.discountCodes.lists(), params] as const,
+    details: () => [...queryKeys.discountCodes.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.discountCodes.details(), id] as const,
   },
 
   // =========================================================================
@@ -298,20 +302,5 @@ export const queryKeys = {
     calendar: {
       status: () => [...queryKeys.integrations.all, 'calendar', 'status'] as const,
     },
-  },
-
-  // =========================================================================
-  // Monitoring Keys
-  // =========================================================================
-  monitoring: {
-    all: ['monitoring'] as const,
-    health: () => [...queryKeys.monitoring.all, 'health'] as const,
-    metrics: () => [...queryKeys.monitoring.all, 'metrics'] as const,
-    logs: (params?: { level?: string; startDate?: string; endDate?: string; search?: string; page?: number; limit?: number }) =>
-      [...queryKeys.monitoring.all, 'logs', params] as const,
-    incidents: () => [...queryKeys.monitoring.all, 'incidents'] as const,
-    databaseStats: () => [...queryKeys.monitoring.all, 'databaseStats'] as const,
-    apiUsage: (period?: 'day' | 'week' | 'month') =>
-      [...queryKeys.monitoring.all, 'apiUsage', period] as const,
   },
 } as const;

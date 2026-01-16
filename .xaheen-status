@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "020-add-react-query-hooks-for-widget-service",
-  "state": "planning",
+  "spec": "019-add-userealtimemonitoring-websocket-hook",
+  "state": "building",
   "subtasks": {
-    "completed": 0,
-    "total": 0,
+    "completed": 4,
+    "total": 6,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Widget Hooks Implementation",
+    "current": "Final Verification",
     "id": null,
-    "total": 3
+    "total": 2
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 2,
-    "started_at": "2026-01-16T00:40:24.832026"
+    "number": 6,
+    "started_at": "2026-01-16T00:40:23.384005"
   },
-  "last_update": "2026-01-16T00:44:33.780440"
+  "last_update": "2026-01-16T00:55:04.593444"
 }

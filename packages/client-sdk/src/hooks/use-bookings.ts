@@ -30,7 +30,6 @@ export function useBookings(params?: BookingQueryParams) {
   return useQuery({
     queryKey: queryKeys.bookings.list(params),
     queryFn: () => bookingService.getAll(params),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -42,7 +41,6 @@ export function useBooking(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.bookings.detail(id),
     queryFn: () => bookingService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -53,7 +51,6 @@ export function useMyBookings(params?: BookingQueryParams) {
   return useQuery({
     queryKey: queryKeys.bookings.my(params),
     queryFn: () => bookingService.getMyBookings(params),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -64,19 +61,17 @@ export function useRecurringBookings() {
   return useQuery({
     queryKey: queryKeys.bookings.recurring(),
     queryFn: () => bookingService.getRecurring(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
 /**
  * Calculate booking pricing
  */
-export function useBookingPricing(listingId: string, startTime: string, endTime: string) {
+export function useBookingPricing(rentalObjectId: string, startTime: string, endTime: string) {
   return useQuery({
-    queryKey: queryKeys.bookings.pricing(listingId, startTime, endTime),
-    queryFn: () => bookingService.calculatePricing(listingId, startTime, endTime),
-    enabled: !!listingId && !!startTime && !!endTime,
-    staleTime: 2 * 60 * 1000, // 2 minutes - pricing may fluctuate
+    queryKey: queryKeys.bookings.pricing(rentalObjectId, startTime, endTime),
+    queryFn: () => bookingService.calculatePricing(rentalObjectId, startTime, endTime),
+    enabled: !!rentalObjectId && !!startTime && !!endTime,
   });
 }
 
@@ -181,23 +176,21 @@ export function useDeleteBooking() {
 /**
  * Get calendar events
  */
-export function useCalendarEvents(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+export function useCalendarEvents(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.calendar.events(params),
-    queryFn: () => calendarService.getEvents(params),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryFn: () => calendarService.getEvents({ listingId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
 /**
  * Get available time slots
  */
-export function useAvailabilitySlots(params: { listingId: string; date: string; duration?: number }) {
+export function useAvailabilitySlots(params: { rentalObjectId: string; date: string; duration?: number }) {
   return useQuery({
     queryKey: queryKeys.calendar.slots(params),
-    queryFn: () => availabilityService.getSlots(params),
-    enabled: !!params.listingId && !!params.date,
-    staleTime: 60 * 1000, // 1 minute
+    queryFn: () => availabilityService.getSlots({ listingId: params.rentalObjectId, date: params.date, duration: params.duration }),
+    enabled: !!params.rentalObjectId && !!params.date,
   });
 }
 
@@ -208,11 +201,10 @@ export function useAvailabilitySlots(params: { listingId: string; date: string; 
 /**
  * Get allocations
  */
-export function useAllocations(params?: { listingId?: string; startDate?: string; endDate?: string }) {
+export function useAllocations(params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) {
   return useQuery({
     queryKey: queryKeys.allocations.list(params),
-    queryFn: () => allocationService.getAll(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryFn: () => allocationService.getAll({ listingId: params?.rentalObjectId, startDate: params?.startDate, endDate: params?.endDate }),
   });
 }
 
@@ -262,7 +254,6 @@ export function usePaymentReconciliation(params?: {
   return useQuery({
     queryKey: queryKeys.bookings.paymentReconciliation(params),
     queryFn: () => bookingService.getPaymentReconciliation(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes - reconciliation reports
   });
 }
 
@@ -274,6 +265,5 @@ export function usePaymentHistory(bookingId: string) {
     queryKey: queryKeys.bookings.paymentHistory(bookingId),
     queryFn: () => bookingService.getPaymentHistory(bookingId),
     enabled: !!bookingId,
-    staleTime: 3 * 60 * 1000, // 3 minutes - payment history
   });
 }

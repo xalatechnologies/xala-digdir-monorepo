@@ -30,6 +30,7 @@ describe('HelpService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (getClient as any).mockReturnValue(mockClient);
   });
 
@@ -171,6 +172,7 @@ describe('SeasonalLeaseService - getSuggestions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (getClient as any).mockReturnValue(mockClient);
   });
 

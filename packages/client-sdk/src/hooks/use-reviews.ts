@@ -24,7 +24,6 @@ export function useReviews(params?: ReviewQueryParams) {
   return useQuery({
     queryKey: queryKeys.reviews.list(params),
     queryFn: () => reviewService.getAll(params),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -36,7 +35,6 @@ export function useReview(id: string, options?: { enabled?: boolean }) {
     queryKey: queryKeys.reviews.detail(id),
     queryFn: () => reviewService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -49,10 +47,9 @@ export function useListingReviews(
   options?: { enabled?: boolean }
 ) {
   return useQuery({
-    queryKey: queryKeys.reviews.byListing(listingId, params),
+    queryKey: queryKeys.reviews.byRentalObject(listingId, params),
     queryFn: () => reviewService.getByListingId(listingId, params),
     enabled: !!listingId && (options?.enabled ?? true),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -64,7 +61,6 @@ export function useReviewStats(listingId: string, options?: { enabled?: boolean 
     queryKey: queryKeys.reviews.stats(listingId),
     queryFn: () => reviewService.getStats(listingId),
     enabled: !!listingId && (options?.enabled ?? true),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -76,7 +72,6 @@ export function useReviewSummary(listingId: string, options?: { enabled?: boolea
     queryKey: [...queryKeys.reviews.all, 'summary', listingId] as const,
     queryFn: () => reviewService.getSummary(listingId),
     enabled: !!listingId && (options?.enabled ?? true),
-    staleTime: 5 * 60 * 1000, // 5 minutes - review aggregates
   });
 }
 
@@ -87,7 +82,6 @@ export function useMyReviews(params?: ReviewQueryParams) {
   return useQuery({
     queryKey: [...queryKeys.reviews.all, 'my', params] as const,
     queryFn: () => reviewService.getMyReviews(params),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
@@ -111,7 +105,7 @@ export function useCreateReview() {
       // Invalidate specific listing's reviews and stats
       if (variables.listingId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', variables.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', variables.listingId],
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.stats(variables.listingId),
@@ -143,7 +137,7 @@ export function useUpdateReview() {
       // Invalidate listing reviews and stats if we have the listingId
       if (response.data?.listingId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.listingId],
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.stats(response.data.listingId),
@@ -188,7 +182,7 @@ export function useModerateReview() {
       // Invalidate listing reviews and stats if we have the listingId
       if (response.data?.listingId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.listingId],
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.stats(response.data.listingId),
@@ -218,7 +212,7 @@ export function useApproveReview() {
       // Invalidate listing reviews and stats if we have the listingId
       if (response.data?.listingId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.listingId],
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.stats(response.data.listingId),
@@ -248,7 +242,7 @@ export function useRejectReview() {
       // Invalidate listing reviews and stats if we have the listingId
       if (response.data?.listingId) {
         queryClient.invalidateQueries({
-          queryKey: [...queryKeys.reviews.all, 'byListing', response.data.listingId],
+          queryKey: [...queryKeys.reviews.all, 'byRentalObject', response.data.listingId],
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.stats(response.data.listingId),
