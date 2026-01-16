@@ -10,10 +10,11 @@
  *
  * Integrations:
  * - Visma Enterprise: ERP/invoicing (Norwegian municipal financial system)
+ * - Microsoft Outlook: Calendar sync via Microsoft Graph API
  * - ACOS WebSak: Case management (NOARK-compliant archive system) - TODO
  * - RCO Security: Physical access control - TODO
  * - Vipps: Payment processing - TODO
- * - Outlook/Google Calendar: Calendar sync - TODO
+ * - Google Calendar: Calendar sync via Google APIs - TODO
  *
  * Environment variables control mock vs real implementation.
  */
@@ -61,6 +62,42 @@ export {
 } from './visma';
 
 // =============================================================================
+// Microsoft Outlook (Calendar Sync)
+// =============================================================================
+export {
+  // Client factory
+  getOutlookClient,
+  getOutlookClientSingleton,
+  resetOutlookClient,
+  outlookClient,
+
+  // Client classes
+  OutlookClient,
+  OutlookMockClient,
+
+  // Types
+  type IOutlookClient,
+  type OutlookConfig,
+  type OutlookConnectionStatus,
+  type OutlookSyncResult,
+  type OutlookCalendar,
+  type OutlookEmailAddress,
+  type OutlookEvent,
+  type OutlookDateTime,
+  type OutlookLocation,
+  type OutlookAttendee,
+  type OutlookResponseStatus,
+  type OutlookEventStatus,
+  type OutlookRecurrence,
+  type CreateOutlookEventDTO,
+  type UpdateOutlookEventDTO,
+  type OutlookEventQueryParams,
+  type OutlookSyncMapping,
+  type OutlookIntegrationEvent,
+  type OutlookEventType,
+} from './outlook';
+
+// =============================================================================
 // Integration Status Helper
 // =============================================================================
 
@@ -70,7 +107,7 @@ export {
  */
 export async function getAllIntegrationStatuses(): Promise<{
   visma: { connected: boolean; provider: string; error?: string };
-  // Future integrations will be added here
+  outlook: { connected: boolean; provider: string; error?: string };
 }> {
   const statuses: Record<string, { connected: boolean; provider: string; error?: string }> = {};
 
@@ -86,6 +123,22 @@ export async function getAllIntegrationStatuses(): Promise<{
     statuses.visma = {
       connected: false,
       provider: 'Visma Enterprise',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+
+  // Outlook status
+  try {
+    const { outlookClient } = await import('./outlook');
+    const outlookStatus = await outlookClient.getStatus();
+    statuses.outlook = {
+      connected: outlookStatus.connected,
+      provider: outlookStatus.provider,
+    };
+  } catch (error) {
+    statuses.outlook = {
+      connected: false,
+      provider: 'Microsoft Outlook',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }

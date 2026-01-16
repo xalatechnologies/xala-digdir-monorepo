@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "040-prepare-digilist-for-ssa-l-demo-and-compliance-aud",
+  "state": "building",
+  "subtasks": {
+    "completed": 13,
+    "total": 33,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Code Phase - Integration Adapters",
+    "id": null,
+    "total": 5
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 2,
+    "started_at": "2026-01-16T10:53:19.436007"
+  },
+  "last_update": "2026-01-16T10:59:43.703868"
+}
