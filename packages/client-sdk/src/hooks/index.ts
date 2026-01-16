@@ -122,7 +122,7 @@ export {
 export {
   useRealtimeConnection,
   useRealtimeBookings,
-  useRealtimeListings,
+  useRealtimeRentalObjects,
   useRealtimeCalendar,
   useRealtimeMessages,
   useRealtimeNotifications,
@@ -167,17 +167,6 @@ export {
   type AuditQueryParams,
   type AuditStats
 } from './use-audit';
-
-// GDPR hooks
-export {
-  useMyGdprRequests,
-  useGdprRequest,
-  usePendingGdprRequests,
-  useGdprDataExport,
-  useCreateGdprRequest,
-  useCancelGdprRequest,
-  useUpdateGdprRequestStatus,
-} from './use-gdpr';
 
 // Conversation hooks
 export {

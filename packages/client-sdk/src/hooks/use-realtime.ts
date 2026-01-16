@@ -7,11 +7,9 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   realtimeClient,
-  type RealtimeEvent,
   type RealtimeEventHandler,
   type RealtimeClientConfig,
 } from '../realtime';
-import { queryKeys } from './query-keys';
 
 /**
  * Hook to connect to realtime WebSocket on mount
@@ -56,47 +54,9 @@ export function useRealtimeBookings(handler?: RealtimeEventHandler) {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-
+      
       // Call custom handler if provided
       handlerRef.current?.(event);
-    });
-
-    return unsubscribe;
-  }, [queryClient]);
-}
-
-/**
- * Hook to handle booking conflicts in real-time
- * Monitors booking events for potential conflicts with user's current selections
- * Auto-invalidates availability queries when conflicts detected
- */
-export function useRealtimeBookingConflicts(
-  listingId?: string,
-  onConflict?: (event: RealtimeEvent) => void
-) {
-  const queryClient = useQueryClient();
-  const listingIdRef = useRef(listingId);
-  const onConflictRef = useRef(onConflict);
-
-  listingIdRef.current = listingId;
-  onConflictRef.current = onConflict;
-
-  useEffect(() => {
-    const unsubscribe = realtimeClient.onBooking((event) => {
-      // Check if this booking event affects the current listing
-      const eventData = event.data as any;
-      const affectsCurrentListing = !listingIdRef.current ||
-        (eventData?.listingId === listingIdRef.current);
-
-      if (affectsCurrentListing) {
-        // Invalidate availability queries to refetch latest data
-        queryClient.invalidateQueries({ queryKey: ['availability'] });
-        queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-        queryClient.invalidateQueries({ queryKey: ['bookings'] });
-
-        // Notify about potential conflict
-        onConflictRef.current?.(event);
-      }
     });
 
     return unsubscribe;
@@ -115,9 +75,7 @@ export function useRealtimeRentalObjects(handler?: RealtimeEventHandler) {
   useEffect(() => {
     const unsubscribe = realtimeClient.onRentalObject((event) => {
       // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: queryKeys.rentalObjects.all });
-      // Also invalidate backward compatibility keys
-      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      queryClient.invalidateQueries({ queryKey: ['rentalObjects'] });
 
       // Call custom handler if provided
       handlerRef.current?.(event);

@@ -18,11 +18,11 @@ export type WSEventType =
   | 'booking.cancelled'
   | 'booking.confirmed'
   | 'booking.completed'
-  // Listing events
-  | 'listing.updated'
-  | 'listing.published'
-  | 'listing.unpublished'
-  | 'listing.deleted'
+  // Rental Object events
+  | 'rentalObject.updated'
+  | 'rentalObject.published'
+  | 'rentalObject.unpublished'
+  | 'rentalObject.deleted'
   // Availability events
   | 'availability.changed'
   | 'block.created'
@@ -37,10 +37,7 @@ export type WSEventType =
   // Season events
   | 'season.updated'
   | 'application.submitted'
-  | 'application.allocated'
-  // Reservation events (recurring booking)
-  | 'reservation.created'
-  | 'reservation.expired';
+  | 'application.allocated';
 
 export interface WSEvent<T = unknown> {
   type: WSEventType;
@@ -61,7 +58,7 @@ export interface WSEvent<T = unknown> {
 export const wsInvalidationMap: Record<WSEventType, string[][]> = {
   // Booking events
   'booking.created': [
-    ['listing', 'availability'],
+    ['rentalObject', 'availability'],
     ['booking', 'mine'],
     ['organization', 'bookings'],
   ],
@@ -70,7 +67,7 @@ export const wsInvalidationMap: Record<WSEventType, string[][]> = {
     ['booking', 'mine'],
   ],
   'booking.cancelled': [
-    ['listing', 'availability'],
+    ['rentalObject', 'availability'],
     ['booking', 'mine'],
     ['booking', 'details'],
     ['organization', 'bookings'],
@@ -84,32 +81,32 @@ export const wsInvalidationMap: Record<WSEventType, string[][]> = {
     ['booking', 'details'],
   ],
 
-  // Listing events
-  'listing.updated': [
-    ['listing', 'details'],
-    ['listing', 'search'],
+  // Rental Object events
+  'rentalObject.updated': [
+    ['rentalObject', 'details'],
+    ['rentalObject', 'search'],
   ],
-  'listing.published': [
-    ['listing', 'details'],
-    ['listing', 'search'],
+  'rentalObject.published': [
+    ['rentalObject', 'details'],
+    ['rentalObject', 'search'],
   ],
-  'listing.unpublished': [
-    ['listing', 'details'],
-    ['listing', 'search'],
+  'rentalObject.unpublished': [
+    ['rentalObject', 'details'],
+    ['rentalObject', 'search'],
   ],
-  'listing.deleted': [
-    ['listing', 'search'],
+  'rentalObject.deleted': [
+    ['rentalObject', 'search'],
   ],
 
   // Availability events
   'availability.changed': [
-    ['listing', 'availability'],
+    ['rentalObject', 'availability'],
   ],
   'block.created': [
-    ['listing', 'availability'],
+    ['rentalObject', 'availability'],
   ],
   'block.removed': [
-    ['listing', 'availability'],
+    ['rentalObject', 'availability'],
   ],
 
   // Organization events
@@ -126,12 +123,12 @@ export const wsInvalidationMap: Record<WSEventType, string[][]> = {
 
   // Review events
   'review.created': [
-    ['listing', 'details'],
-    ['review', 'listing'],
+    ['rentalObject', 'details'],
+    ['review', 'rentalObject'],
   ],
   'review.approved': [
-    ['listing', 'details'],
-    ['review', 'listing'],
+    ['rentalObject', 'details'],
+    ['review', 'rentalObject'],
   ],
 
   // Season events
@@ -145,16 +142,6 @@ export const wsInvalidationMap: Record<WSEventType, string[][]> = {
   'application.allocated': [
     ['season', 'applications'],
     ['allocation'],
-  ],
-
-  // Reservation events (recurring booking)
-  'reservation.created': [
-    ['listing', 'availability'],
-    ['recurringPreview'],
-  ],
-  'reservation.expired': [
-    ['listing', 'availability'],
-    ['recurringPreview'],
   ],
 };
 

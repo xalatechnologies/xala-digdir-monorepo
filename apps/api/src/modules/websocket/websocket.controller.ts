@@ -6,15 +6,15 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import websocket from '@fastify/websocket';
 import type { WebSocket } from 'ws';
 import { registerWebSocket } from '../../core/audit/audit.service';
-import { logger } from '../../core/logger';
+import { authenticateWebSocket, validateTenantScope } from './websocket.middleware';
 
 export async function registerWebSocketRoutes(app: FastifyInstance) {
   // Register WebSocket plugin
   await app.register(websocket);
 
   // WebSocket route for real-time audit events
-  app.get('/ws/audit', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
-    logger.info({ path: '/ws/audit' }, 'WebSocket client connected');
+  app.get('/ws/audit', { websocket: true, preValidation: authenticateWebSocket }, (socket: WebSocket, req: FastifyRequest) => {
+    console.log('[WS] Client connected to /ws/audit');
     
     // Register this socket for audit broadcasts
     registerWebSocket(socket);
@@ -39,14 +39,14 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     });
     
     socket.on('close', () => {
-      logger.info({ path: '/ws/audit' }, 'WebSocket client disconnected');
+      console.log('[WS] Client disconnected from /ws/audit');
     });
   });
 
   // WebSocket route for tenant-specific events
-  app.get('/ws/events/:tenantId', { websocket: true }, (socket: WebSocket, req: FastifyRequest) => {
+  app.get('/ws/events/:tenantId', { websocket: true, preValidation: [authenticateWebSocket, validateTenantScope('tenantId')] }, (socket: WebSocket, req: FastifyRequest) => {
     const { tenantId } = req.params as { tenantId: string };
-    logger.info({ path: '/ws/events/:tenantId', tenantId }, 'WebSocket client connected to tenant events');
+    console.log(`[WS] Client connected to /ws/events/${tenantId}`);
     
     registerWebSocket(socket);
     
@@ -58,9 +58,9 @@ export async function registerWebSocketRoutes(app: FastifyInstance) {
     }));
     
     socket.on('close', () => {
-      logger.info({ path: '/ws/events/:tenantId', tenantId }, 'WebSocket client disconnected from tenant events');
+      console.log(`[WS] Client disconnected from /ws/events/${tenantId}`);
     });
   });
 
-  logger.info({ routes: ['/ws/audit', '/ws/events/:tenantId'] }, 'WebSocket routes registered');
+  console.log('[WS] WebSocket routes registered: /ws/audit, /ws/events/:tenantId');
 }
