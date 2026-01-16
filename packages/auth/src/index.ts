@@ -16,6 +16,7 @@
 
 export { AuthProvider } from './providers/AuthProvider';
 export { useAuth } from './hooks/useAuth';
+export { useOAuthCallback } from './hooks/useOAuthCallback';
 export { ProtectedRoute } from './components/ProtectedRoute';
 
 export type {

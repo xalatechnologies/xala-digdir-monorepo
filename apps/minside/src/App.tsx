@@ -6,9 +6,13 @@ import { useState, useCallback, createContext, useContext } from 'react';
 import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
-import { AccountContextProvider, useAccountContext } from './providers/AccountContextProvider';
+import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
+
+// Dashboard context constants (technical identifiers, not user-facing strings)
+const CONTEXT_PERSONAL: DashboardContext = 'personal';
+const CONTEXT_ORGANIZATION: DashboardContext = 'organization';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
@@ -131,11 +135,11 @@ function AppWithTheme() {
               }
             >
               {/* Personal context routes */}
-              <Route index element={<ProtectedRoute requiredContext="personal"><DashboardPage /></ProtectedRoute>} />
-              <Route path="bookings" element={<ProtectedRoute requiredContext="personal"><BookingsPage /></ProtectedRoute>} />
-              <Route path="billing" element={<ProtectedRoute requiredContext="personal"><BillingPage /></ProtectedRoute>} />
-              <Route path="calendar" element={<ProtectedRoute requiredContext="personal"><CalendarPage /></ProtectedRoute>} />
-              <Route path="messages" element={<ProtectedRoute requiredContext="personal"><MessagesPage /></ProtectedRoute>} />
+              <Route index element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><DashboardPage /></ProtectedRoute>} />
+              <Route path="bookings" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><BookingsPage /></ProtectedRoute>} />
+              <Route path="billing" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><BillingPage /></ProtectedRoute>} />
+              <Route path="calendar" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><CalendarPage /></ProtectedRoute>} />
+              <Route path="messages" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><MessagesPage /></ProtectedRoute>} />
 
               {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />
@@ -145,13 +149,13 @@ function AppWithTheme() {
               <Route path="help" element={<HelpPage />} />
 
               {/* Organization portal routes */}
-              <Route path="org" element={<ProtectedRoute requiredContext="organization"><OrganizationDashboardPage /></ProtectedRoute>} />
-              <Route path="org/bookings" element={<ProtectedRoute requiredContext="organization"><OrganizationBookingsPage /></ProtectedRoute>} />
-              <Route path="org/invoices" element={<ProtectedRoute requiredContext="organization"><OrganizationInvoicesPage /></ProtectedRoute>} />
-              <Route path="org/members" element={<ProtectedRoute requiredContext="organization"><OrganizationMembersPage /></ProtectedRoute>} />
-              <Route path="org/season-rental" element={<ProtectedRoute requiredContext="organization"><SeasonRentalPage /></ProtectedRoute>} />
-              <Route path="org/settings" element={<ProtectedRoute requiredContext="organization"><OrganizationSettingsPage /></ProtectedRoute>} />
-              <Route path="org/activity" element={<ProtectedRoute requiredContext="organization"><OrganizationActivityPage /></ProtectedRoute>} />
+              <Route path="org" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationDashboardPage /></ProtectedRoute>} />
+              <Route path="org/bookings" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationBookingsPage /></ProtectedRoute>} />
+              <Route path="org/invoices" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationInvoicesPage /></ProtectedRoute>} />
+              <Route path="org/members" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationMembersPage /></ProtectedRoute>} />
+              <Route path="org/season-rental" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><SeasonRentalPage /></ProtectedRoute>} />
+              <Route path="org/settings" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationSettingsPage /></ProtectedRoute>} />
+              <Route path="org/activity" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationActivityPage /></ProtectedRoute>} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

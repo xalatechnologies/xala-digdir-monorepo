@@ -78,6 +78,13 @@ const CONFIG = {
     /MOCK_[A-Z_]+/,
     /^Test\s/,
     /@test\./,
+    // Technical identifier constants (CONTEXT_, TYPE_, etc.)
+    /(?:const|let|var)\s+[A-Z_][A-Z0-9_]*\s*[:=]\s*["']/,
+    // Technical identifiers in assignments
+    /CONTEXT_[A-Z_]+\s*[:=]\s*["']/,
+    /TYPE_[A-Z_]+\s*[:=]\s*["']/,
+    // Route context values (technical identifiers)
+    /requiredContext\s*=\s*\{[A-Z_]+\}/,
   ],
 
   // Common Norwegian/English words that indicate user-facing text
@@ -190,6 +197,14 @@ function extractStrings(content, filePath) {
     const lineContent = lines[lineNumber - 1]?.trim() || '';
 
     if (shouldIgnore(propValue, lineContent)) continue;
+
+    // Ignore if this is a constant assignment (technical identifier)
+    // Check if line contains const/let/var declaration with uppercase constant name
+    if (/^\s*(const|let|var)\s+[A-Z_][A-Z0-9_]*\s*[:=]\s*["']/.test(lineContent)) continue;
+    
+    // Ignore technical identifier values (personal, organization, etc. in constant context)
+    if ((propValue === 'personal' || propValue === 'organization') && 
+        /CONTEXT_|TYPE_|const\s+[A-Z_]/.test(lineContent)) continue;
 
     // Check if it's using t()
     if (!lineContent.includes('t(')) {
