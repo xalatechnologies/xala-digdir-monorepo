@@ -4,6 +4,7 @@ import { I18nProvider } from '@xala/i18n';
 
 import { AuthProvider } from './providers/AuthProvider';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
+import { CapabilityProvider } from './providers/CapabilityProvider';
 import { ToastProvider } from './providers/ToastProvider';
 import { RealtimeProvider } from './providers/RealtimeProvider';
 import { ThemeProvider, useTheme } from './providers/ThemeProvider';
@@ -68,6 +69,7 @@ function AppWithTheme() {
       >
         <AuthProvider>
           <BackofficeRoleProvider>
+          <CapabilityProvider>
           <RealtimeProvider
             wsUrl={import.meta.env.VITE_WS_URL}
             tenantId={import.meta.env.VITE_TENANT_ID}
@@ -277,6 +279,7 @@ function AppWithTheme() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </RealtimeProvider>
+          </CapabilityProvider>
           </BackofficeRoleProvider>
         </AuthProvider>
       </BrowserRouter>

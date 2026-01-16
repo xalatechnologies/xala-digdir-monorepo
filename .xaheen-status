@@ -3,13 +3,13 @@
   "spec": "039-back-office-users-and-roles",
   "state": "building",
   "subtasks": {
-    "completed": 23,
+    "completed": 25,
     "total": 40,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "SDK - RBAC React Query Hooks",
+    "current": "Backoffice - Capability Provider & Guards",
     "id": null,
     "total": 3
   },
@@ -18,8 +18,8 @@
     "max": 1
   },
   "session": {
-    "number": 21,
+    "number": 23,
     "started_at": "2026-01-16T09:01:53.665799"
   },
-  "last_update": "2026-01-16T09:54:56.937050"
+  "last_update": "2026-01-16T09:58:37.409494"
 }
