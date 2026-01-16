@@ -7,3 +7,7 @@
 export { LoginPage } from './login';
 export { DashboardPage } from './dashboard';
 export { SubscriptionPage } from './subscription';
+
+// Settings
+export { BrandingSettingsPage } from './settings/branding';
+export { IntegrationsSettingsPage } from './settings/integrations';
