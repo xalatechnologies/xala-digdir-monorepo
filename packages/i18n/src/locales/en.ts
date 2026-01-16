@@ -348,4 +348,15 @@ export const en: Record<string, string> = {
   'org.membersDesc': 'Manage members',
   'org.seasonRental': 'Season rental',
   'org.seasonRentalDesc': 'Fixed rental periods',
+
+  // Tenant Admin
+  'tenantAdmin.panelTitle': 'Tenant Admin',
+  'tenantAdmin.panelSubtitle': 'Administration panel for tenants',
+  'tenantAdmin.panelDescription': 'Manage settings, branding, users, and integrations for your organization.',
+  'tenantAdmin.featureBranding': 'Branding & Theme',
+  'tenantAdmin.featureBrandingDesc': 'Customize appearance with your colors and logo',
+  'tenantAdmin.featureSettings': 'Settings',
+  'tenantAdmin.featureSettingsDesc': 'Configure booking rules and notifications',
+  'tenantAdmin.featureAudit': 'Audit Log',
+  'tenantAdmin.featureAuditDesc': 'Full traceability on all actions',
 };

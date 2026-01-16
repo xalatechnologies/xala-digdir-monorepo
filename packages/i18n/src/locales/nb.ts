@@ -349,6 +349,17 @@ export const nb: Record<string, string> = {
   'org.membersDesc': 'Administrer medlemmer',
   'org.seasonRental': 'Sesongleie',
   'org.seasonRentalDesc': 'Faste leieperioder',
+
+  // Tenant Admin
+  'tenantAdmin.panelTitle': 'Tenant Admin',
+  'tenantAdmin.panelSubtitle': 'Administrasjonspanel for leietakere',
+  'tenantAdmin.panelDescription': 'Administrer innstillinger, merkevare, brukere og integrasjoner for din organisasjon.',
+  'tenantAdmin.featureBranding': 'Merkevare og tema',
+  'tenantAdmin.featureBrandingDesc': 'Tilpass utseende med egne farger og logo',
+  'tenantAdmin.featureSettings': 'Innstillinger',
+  'tenantAdmin.featureSettingsDesc': 'Konfigurer bookingsregler og varsler',
+  'tenantAdmin.featureAudit': 'Revisjonslogg',
+  'tenantAdmin.featureAuditDesc': 'Full sporbarhet på alle handlinger',
 };
 
 
