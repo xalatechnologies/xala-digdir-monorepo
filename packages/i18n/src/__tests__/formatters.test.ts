@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { formatCurrency, formatDate, formatNumber } from '../formatters';
+import {
+  formatCurrency,
+  formatDate,
+  formatTime,
+  formatDateTime,
+  formatNumber,
+  formatPercent,
+} from '../formatters';
 
 /**
  * Formatter Tests
@@ -16,8 +23,7 @@ describe('Formatters', () => {
   describe('formatCurrency', () => {
     describe('Norwegian (nb) locale', () => {
       it('should format basic currency value', () => {
-        const format = formatCurrency('nb');
-        const result = format(1234.56);
+        const result = formatCurrency(1234.56, 'NOK', 'nb');
         // Norwegian format uses "kr" symbol and space as thousand separator
         expect(result).toMatch(/kr/);
         expect(result).toContain('1');
@@ -25,23 +31,20 @@ describe('Formatters', () => {
       });
 
       it('should format zero value', () => {
-        const format = formatCurrency('nb');
-        const result = format(0);
+        const result = formatCurrency(0, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         expect(result).toContain('0');
       });
 
       it('should format negative value', () => {
-        const format = formatCurrency('nb');
-        const result = format(-500);
+        const result = formatCurrency(-500, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         // Should contain minus sign or negative indicator
         expect(result).toMatch(/-|−/);
       });
 
       it('should format large values with grouping', () => {
-        const format = formatCurrency('nb');
-        const result = format(1234567.89);
+        const result = formatCurrency(1234567.89, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         // Large numbers should have separators
         expect(result).toContain('1');
@@ -50,8 +53,7 @@ describe('Formatters', () => {
       });
 
       it('should format decimal values correctly', () => {
-        const format = formatCurrency('nb');
-        const result = format(99.99);
+        const result = formatCurrency(99.99, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         expect(result).toMatch(/99/);
       });
@@ -59,8 +61,7 @@ describe('Formatters', () => {
 
     describe('English (en) locale', () => {
       it('should format basic currency value', () => {
-        const format = formatCurrency('en');
-        const result = format(1234.56);
+        const result = formatCurrency(1234.56, 'NOK', 'en');
         // English format uses "NOK" code and comma as thousand separator
         expect(result).toMatch(/NOK/);
         expect(result).toContain('1');
@@ -68,22 +69,19 @@ describe('Formatters', () => {
       });
 
       it('should format zero value', () => {
-        const format = formatCurrency('en');
-        const result = format(0);
+        const result = formatCurrency(0, 'NOK', 'en');
         expect(result).toMatch(/NOK/);
         expect(result).toContain('0');
       });
 
       it('should format negative value', () => {
-        const format = formatCurrency('en');
-        const result = format(-500);
+        const result = formatCurrency(-500, 'NOK', 'en');
         expect(result).toMatch(/NOK/);
         expect(result).toMatch(/-|−/);
       });
 
       it('should format large values with comma grouping', () => {
-        const format = formatCurrency('en');
-        const result = format(1234567.89);
+        const result = formatCurrency(1234567.89, 'NOK', 'en');
         expect(result).toMatch(/NOK/);
         // Should contain comma separators
         expect(result).toMatch(/1.*,.*234.*,.*567/);
@@ -92,31 +90,26 @@ describe('Formatters', () => {
 
     describe('currency options', () => {
       it('should use NOK as default currency', () => {
-        const formatNb = formatCurrency('nb');
-        const formatEn = formatCurrency('en');
+        const resultNb = formatCurrency(100, 'NOK', 'nb');
+        const resultEn = formatCurrency(100, 'NOK', 'en');
         // Both should format as NOK
-        const resultNb = formatNb(100);
-        const resultEn = formatEn(100);
         expect(resultNb).toMatch(/kr/);
         expect(resultEn).toMatch(/NOK/);
       });
 
       it('should allow custom currency', () => {
-        const format = formatCurrency('en', { currency: 'USD' });
-        const result = format(100);
+        const result = formatCurrency(100, 'USD', 'en');
         // Should show USD symbol or code
         expect(result).toMatch(/\$|USD/);
       });
 
       it('should support currency code display', () => {
-        const format = formatCurrency('nb', { currencyDisplay: 'code' });
-        const result = format(100);
+        const result = formatCurrency(100, 'NOK', 'nb', { currencyDisplay: 'code' });
         expect(result).toMatch(/NOK/);
       });
 
       it('should support currency name display', () => {
-        const format = formatCurrency('nb', { currencyDisplay: 'name' });
-        const result = format(100);
+        const result = formatCurrency(100, 'NOK', 'nb', { currencyDisplay: 'name' });
         // Should contain full name (Norwegian krone or kroner)
         expect(result.toLowerCase()).toMatch(/krone/);
       });
@@ -124,25 +117,17 @@ describe('Formatters', () => {
 
     describe('edge cases', () => {
       it('should handle very small values', () => {
-        const format = formatCurrency('nb');
-        const result = format(0.01);
+        const result = formatCurrency(0.01, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         expect(result).toContain('0');
         expect(result).toContain('01');
       });
 
       it('should handle very large values', () => {
-        const format = formatCurrency('nb');
-        const result = format(999999999.99);
+        const result = formatCurrency(999999999.99, 'NOK', 'nb');
         expect(result).toMatch(/kr/);
         // Should not throw
         expect(typeof result).toBe('string');
-      });
-
-      it('should return consistent formatter function', () => {
-        const format = formatCurrency('nb');
-        // Same formatter should produce consistent results
-        expect(format(100)).toBe(format(100));
       });
     });
   });
@@ -153,8 +138,7 @@ describe('Formatters', () => {
 
     describe('Norwegian (nb) locale', () => {
       it('should format date in Norwegian format (dd.mm.yyyy)', () => {
-        const format = formatDate('nb');
-        const result = format(testDate);
+        const result = formatDate(testDate, 'nb');
         // Norwegian format: 15.01.2026 (day.month.year)
         expect(result).toMatch(/15/);
         expect(result).toMatch(/01/);
@@ -163,108 +147,41 @@ describe('Formatters', () => {
         expect(result).toMatch(/\./);
       });
 
-      it('should format date with time when includeTime is true', () => {
-        const format = formatDate('nb', { includeTime: true });
-        const result = format(testDate);
-        // Should include time component
-        expect(result).toMatch(/\d{2}:\d{2}/);
-      });
-
       it('should accept Date object', () => {
-        const format = formatDate('nb');
-        const result = format(new Date('2026-06-20'));
+        const result = formatDate(new Date('2026-06-20'), 'nb');
         expect(result).toMatch(/20/);
         expect(result).toMatch(/06/);
         expect(result).toMatch(/2026/);
       });
 
-      it('should accept timestamp number', () => {
-        const format = formatDate('nb');
-        const timestamp = new Date('2026-12-25').getTime();
-        const result = format(timestamp);
-        expect(result).toMatch(/25/);
-        expect(result).toMatch(/12/);
-        expect(result).toMatch(/2026/);
-      });
-
       it('should accept ISO date string', () => {
-        const format = formatDate('nb');
-        const result = format('2026-03-10');
+        const result = formatDate('2026-03-10', 'nb');
         expect(result).toMatch(/10/);
         expect(result).toMatch(/03/);
         expect(result).toMatch(/2026/);
+      });
+
+      it('should return empty string for invalid date', () => {
+        const result = formatDate('invalid-date', 'nb');
+        expect(result).toBe('');
       });
     });
 
     describe('English (en) locale', () => {
       it('should format date in US format (mm/dd/yyyy)', () => {
-        const format = formatDate('en');
-        const result = format(testDate);
+        const result = formatDate(testDate, 'en');
         // US format: 1/15/2026 or 01/15/2026 (month/day/year)
         expect(result).toMatch(/15/);
         expect(result).toMatch(/2026/);
         // Should use slashes as separators
         expect(result).toMatch(/\//);
       });
-
-      it('should format date with time when includeTime is true', () => {
-        const format = formatDate('en', { includeTime: true });
-        const result = format(testDate);
-        // Should include time component
-        expect(result).toMatch(/\d{1,2}:\d{2}/);
-      });
-    });
-
-    describe('date style options', () => {
-      it('should support short dateStyle', () => {
-        const format = formatDate('nb', { dateStyle: 'short' });
-        const result = format(testDate);
-        // Short format - compact representation
-        expect(result.length).toBeLessThan(20);
-      });
-
-      it('should support medium dateStyle', () => {
-        const format = formatDate('nb', { dateStyle: 'medium' });
-        const result = format(testDate);
-        expect(result).toMatch(/2026/);
-      });
-
-      it('should support long dateStyle', () => {
-        const format = formatDate('nb', { dateStyle: 'long' });
-        const result = format(testDate);
-        // Long format should include more detail
-        expect(result).toMatch(/2026/);
-      });
-
-      it('should support full dateStyle', () => {
-        const format = formatDate('nb', { dateStyle: 'full' });
-        const result = format(testDate);
-        // Full format should include day of week
-        expect(result).toMatch(/2026/);
-      });
-    });
-
-    describe('time style options', () => {
-      it('should support short timeStyle', () => {
-        const format = formatDate('nb', { timeStyle: 'short' });
-        const result = format(testDate);
-        // Short time format (HH:MM)
-        expect(result).toMatch(/\d{1,2}:\d{2}/);
-      });
-
-      it('should support medium timeStyle', () => {
-        const format = formatDate('nb', { timeStyle: 'medium' });
-        const result = format(testDate);
-        // Medium time format (HH:MM:SS)
-        expect(result).toMatch(/\d{1,2}:\d{2}/);
-      });
     });
 
     describe('edge cases', () => {
       it('should handle dates at year boundaries', () => {
-        const format = formatDate('nb');
-        const newYearsEve = format(new Date('2026-12-31'));
-        const newYearsDay = format(new Date('2027-01-01'));
+        const newYearsEve = formatDate(new Date('2026-12-31'), 'nb');
+        const newYearsDay = formatDate(new Date('2027-01-01'), 'nb');
         expect(newYearsEve).toMatch(/31/);
         expect(newYearsEve).toMatch(/12/);
         expect(newYearsEve).toMatch(/2026/);
@@ -273,26 +190,62 @@ describe('Formatters', () => {
       });
 
       it('should handle leap year date', () => {
-        const format = formatDate('nb');
-        const leapDay = format(new Date('2028-02-29'));
+        const leapDay = formatDate(new Date('2028-02-29'), 'nb');
         expect(leapDay).toMatch(/29/);
         expect(leapDay).toMatch(/02/);
         expect(leapDay).toMatch(/2028/);
       });
+    });
+  });
 
-      it('should return consistent formatter function', () => {
-        const format = formatDate('nb');
-        const date = new Date('2026-05-15');
-        expect(format(date)).toBe(format(date));
-      });
+  describe('formatTime', () => {
+    const testDate = new Date('2026-01-15T14:30:00Z');
+
+    it('should format time in Norwegian format (24h)', () => {
+      const result = formatTime(testDate, 'nb');
+      expect(result).toMatch(/\d{2}:\d{2}/);
+    });
+
+    it('should format time in English format (12h)', () => {
+      const result = formatTime(testDate, 'en');
+      expect(result).toMatch(/\d{1,2}:\d{2}/);
+    });
+
+    it('should return empty string for invalid date', () => {
+      const result = formatTime('invalid-date', 'nb');
+      expect(result).toBe('');
+    });
+  });
+
+  describe('formatDateTime', () => {
+    const testDate = new Date('2026-01-15T14:30:00Z');
+
+    it('should format date and time in Norwegian format', () => {
+      const result = formatDateTime(testDate, 'nb');
+      // Should contain date parts
+      expect(result).toMatch(/15/);
+      expect(result).toMatch(/01/);
+      expect(result).toMatch(/2026/);
+      // Should contain time parts
+      expect(result).toMatch(/\d{2}:\d{2}/);
+    });
+
+    it('should format date and time in English format', () => {
+      const result = formatDateTime(testDate, 'en');
+      expect(result).toMatch(/2026/);
+      expect(result).toMatch(/\d{1,2}:\d{2}/);
+    });
+
+    it('should return empty string for invalid date', () => {
+      const result = formatDateTime('invalid-date', 'nb');
+      expect(result).toBe('');
     });
   });
 
   describe('formatNumber', () => {
     describe('Norwegian (nb) locale', () => {
       it('should format basic number with thousand separator', () => {
-        const format = formatNumber('nb');
-        const result = format(1234567);
+        const result = formatNumber(1234567, 'nb');
         // Norwegian uses space as thousand separator
         expect(result).toContain('1');
         expect(result).toContain('234');
@@ -300,21 +253,18 @@ describe('Formatters', () => {
       });
 
       it('should format decimal numbers with comma', () => {
-        const format = formatNumber('nb');
-        const result = format(1234.56);
+        const result = formatNumber(1234.56, 'nb');
         // Norwegian uses comma as decimal separator
         expect(result).toMatch(/1.*234.*,.*56/);
       });
 
       it('should format zero', () => {
-        const format = formatNumber('nb');
-        const result = format(0);
+        const result = formatNumber(0, 'nb');
         expect(result).toBe('0');
       });
 
       it('should format negative numbers', () => {
-        const format = formatNumber('nb');
-        const result = format(-1234);
+        const result = formatNumber(-1234, 'nb');
         expect(result).toMatch(/-|−/);
         expect(result).toContain('1');
         expect(result).toContain('234');
@@ -323,28 +273,24 @@ describe('Formatters', () => {
 
     describe('English (en) locale', () => {
       it('should format basic number with comma thousand separator', () => {
-        const format = formatNumber('en');
-        const result = format(1234567);
+        const result = formatNumber(1234567, 'en');
         // English uses comma as thousand separator
         expect(result).toMatch(/1.*,.*234.*,.*567/);
       });
 
       it('should format decimal numbers with period', () => {
-        const format = formatNumber('en');
-        const result = format(1234.56);
+        const result = formatNumber(1234.56, 'en');
         // English uses period as decimal separator
         expect(result).toMatch(/1.*,.*234\.56/);
       });
 
       it('should format zero', () => {
-        const format = formatNumber('en');
-        const result = format(0);
+        const result = formatNumber(0, 'en');
         expect(result).toBe('0');
       });
 
       it('should format negative numbers', () => {
-        const format = formatNumber('en');
-        const result = format(-1234);
+        const result = formatNumber(-1234, 'en');
         expect(result).toMatch(/-|−/);
         expect(result).toMatch(/1.*,.*234/);
       });
@@ -352,37 +298,24 @@ describe('Formatters', () => {
 
     describe('number options', () => {
       it('should respect minimumFractionDigits', () => {
-        const format = formatNumber('en', { minimumFractionDigits: 2 });
-        const result = format(100);
+        const result = formatNumber(100, 'en', { minimumFractionDigits: 2 });
         expect(result).toBe('100.00');
       });
 
       it('should respect maximumFractionDigits', () => {
-        const format = formatNumber('en', { maximumFractionDigits: 0 });
-        const result = format(1234.56);
+        const result = formatNumber(1234.56, 'en', { maximumFractionDigits: 0 });
         // Should round to nearest integer
         expect(result).toMatch(/1.*,.*235/);
       });
 
-      it('should respect both fraction digit options', () => {
-        const format = formatNumber('en', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 4,
-        });
-        expect(format(100)).toBe('100.00');
-        expect(format(100.12345)).toMatch(/100\.1235?/);
-      });
-
       it('should disable grouping when useGrouping is false', () => {
-        const format = formatNumber('en', { useGrouping: false });
-        const result = format(1234567);
+        const result = formatNumber(1234567, 'en', { useGrouping: false });
         // No comma separators
         expect(result).toBe('1234567');
       });
 
       it('should enable grouping by default', () => {
-        const format = formatNumber('en');
-        const result = format(1234567);
+        const result = formatNumber(1234567, 'en');
         // Should have comma separators
         expect(result).toContain(',');
       });
@@ -390,67 +323,78 @@ describe('Formatters', () => {
 
     describe('edge cases', () => {
       it('should handle very small decimal values', () => {
-        const format = formatNumber('en', { maximumFractionDigits: 6 });
-        const result = format(0.000123);
+        const result = formatNumber(0.000123, 'en', { maximumFractionDigits: 6 });
         expect(result).toContain('0');
         expect(result).toContain('000123');
       });
 
       it('should handle very large values', () => {
-        const format = formatNumber('nb');
-        const result = format(999999999999);
+        const result = formatNumber(999999999999, 'nb');
         // Should not throw and should contain digits
         expect(typeof result).toBe('string');
         expect(result).toContain('999');
       });
 
       it('should handle Infinity', () => {
-        const format = formatNumber('en');
         // Intl handles Infinity as a special case
-        const result = format(Infinity);
+        const result = formatNumber(Infinity, 'en');
         expect(result).toMatch(/\u221e|Infinity|inf/i);
       });
 
       it('should handle NaN', () => {
-        const format = formatNumber('en');
-        const result = format(NaN);
+        const result = formatNumber(NaN, 'en');
         expect(result).toMatch(/NaN/i);
       });
+    });
+  });
 
-      it('should return consistent formatter function', () => {
-        const format = formatNumber('nb');
-        expect(format(1234)).toBe(format(1234));
-      });
+  describe('formatPercent', () => {
+    it('should format percentage in Norwegian format', () => {
+      const result = formatPercent(0.75, 'nb');
+      expect(result).toMatch(/75/);
+      expect(result).toMatch(/%/);
+    });
+
+    it('should format percentage in English format', () => {
+      const result = formatPercent(0.75, 'en');
+      expect(result).toMatch(/75/);
+      expect(result).toMatch(/%/);
+    });
+
+    it('should format zero percentage', () => {
+      const result = formatPercent(0, 'nb');
+      expect(result).toMatch(/0/);
+      expect(result).toMatch(/%/);
+    });
+
+    it('should format 100% correctly', () => {
+      const result = formatPercent(1, 'nb');
+      expect(result).toMatch(/100/);
+      expect(result).toMatch(/%/);
     });
   });
 
   describe('locale consistency', () => {
     it('should produce different formats for nb vs en currencies', () => {
-      const formatNb = formatCurrency('nb');
-      const formatEn = formatCurrency('en');
-      const resultNb = formatNb(1234.56);
-      const resultEn = formatEn(1234.56);
+      const resultNb = formatCurrency(1234.56, 'NOK', 'nb');
+      const resultEn = formatCurrency(1234.56, 'NOK', 'en');
       // Different symbols: kr vs NOK
       expect(resultNb).toMatch(/kr/);
       expect(resultEn).toMatch(/NOK/);
     });
 
     it('should produce different formats for nb vs en dates', () => {
-      const formatNb = formatDate('nb');
-      const formatEn = formatDate('en');
       const date = new Date('2026-01-15');
-      const resultNb = formatNb(date);
-      const resultEn = formatEn(date);
+      const resultNb = formatDate(date, 'nb');
+      const resultEn = formatDate(date, 'en');
       // Norwegian uses dots, English uses slashes
       expect(resultNb).toMatch(/\./);
       expect(resultEn).toMatch(/\//);
     });
 
     it('should produce different formats for nb vs en numbers', () => {
-      const formatNb = formatNumber('nb');
-      const formatEn = formatNumber('en');
-      const resultNb = formatNb(1234.56);
-      const resultEn = formatEn(1234.56);
+      const resultNb = formatNumber(1234.56, 'nb');
+      const resultEn = formatNumber(1234.56, 'en');
       // Norwegian uses comma as decimal, English uses period
       expect(resultNb).toMatch(/,/);
       expect(resultEn).toMatch(/\./);

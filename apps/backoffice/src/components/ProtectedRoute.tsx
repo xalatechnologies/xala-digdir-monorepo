@@ -174,7 +174,11 @@ export function ProtectedRoute({
     );
   }
 
-  if (!isAuthenticated) {
+  // Add a check to prevent redirect loops
+  const isLoginPage = location.pathname === '/login';
+  const isRoleSelectionPage = location.pathname === '/role-selection';
+
+  if (!isAuthenticated && !isLoginPage && !isRoleSelectionPage) {
     // Create minimal state for backwards compatibility and as fallback
     const loginState: ProtectedRouteLoginState = {
       from: {
@@ -185,6 +189,15 @@ export function ProtectedRoute({
     };
 
     return <Navigate to="/login" state={loginState} replace />;
+  }
+
+  // If we're on login page but authenticated, redirect to appropriate home
+  if (isAuthenticated && (isLoginPage || isRoleSelectionPage)) {
+    // Check if user needs role selection first
+    if (needsRoleSelection && !isRoleSelectionPage) {
+      return <Navigate to="/role-selection" replace />;
+    }
+    return <Navigate to={getHomeRoute()} replace />;
   }
 
   // Dual-role users without selection must select a role first

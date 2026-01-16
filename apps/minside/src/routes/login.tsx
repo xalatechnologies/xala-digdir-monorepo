@@ -18,7 +18,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '../hooks/useAuth';
-import { idportenService, vippsAuthService } from '@digilist/client-sdk';
+import { idportenService } from '@digilist/client-sdk';
 import type { FlowContext } from '@digilist/client-sdk';
 
 /**
@@ -40,7 +40,7 @@ export interface FlowContextExpiredState {
 }
 
 export function LoginPage(): React.ReactElement {
-  const { isAuthenticated, isLoading, login, restoreFlowContext, hasStoredContext } = useAuth();
+  const { isAuthenticated, isLoading, restoreFlowContext, hasStoredContext } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
@@ -112,7 +112,12 @@ export function LoginPage(): React.ReactElement {
   // Navigate after successful authentication
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      handlePostAuthNavigation();
+      // Add a small delay to ensure all auth state is properly set
+      const timer = setTimeout(() => {
+        handlePostAuthNavigation();
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [isAuthenticated, isLoading, handlePostAuthNavigation]);
 

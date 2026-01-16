@@ -69,7 +69,7 @@ export async function createFastifyApp(
     },
     credentials: true, // Allow cookies and auth headers
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'Accept', 'Origin', 'Cache-Control'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'X-License-Key', 'Accept', 'Origin', 'Cache-Control'],
     exposedHeaders: ['Set-Cookie'],
   });
 

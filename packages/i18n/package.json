@@ -19,7 +19,9 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "check:keys": "node ../../scripts/check-i18n-keys.js",
+    "check:unused": "node ../../scripts/check-unused-keys.js"
   },
   "dependencies": {
     "js-cookie": "^3.0.5"

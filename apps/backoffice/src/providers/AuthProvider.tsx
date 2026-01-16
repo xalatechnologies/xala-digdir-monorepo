@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext, type AuthContextType, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { authService } from '@digilist/client-sdk/services';
 import {
-  authService,
   FLOW_CONTEXT_KEY,
   hasStoredFlowContext as checkStoredFlowContext,
   clearFlowContextFromStorage,
   getFlowContextTTL,
 } from '@digilist/client-sdk';
-import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
-import { useT } from '@xala/i18n';
+import { ROLE_STORAGE_KEYS } from '../hooks/useBackofficeRole';
+import { useAuthRedirectGuard, useSessionRestoration } from '../hooks/useAuthGuards';
 
 // =============================================================================
 // Local Storage Keys
@@ -126,11 +127,14 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const t = useT();
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Use auth guards to prevent redirect loops
+  useAuthRedirectGuard(!!user, isLoading);
+  useSessionRestoration();
 
   // Subscribe to storage changes for cross-tab synchronization of flow context
   const hasStoredContext = useSyncExternalStore(

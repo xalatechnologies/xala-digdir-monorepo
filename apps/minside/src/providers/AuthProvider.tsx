@@ -73,7 +73,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
 import { authService } from '@digilist/client-sdk/services';
 import {
   FLOW_CONTEXT_KEY,
@@ -81,7 +81,7 @@ import {
   clearFlowContextFromStorage,
   getFlowContextTTL,
 } from '@digilist/client-sdk';
-import type { AuthSession } from '@digilist/client-sdk/types';
+import { useAuthRedirectGuard, useSessionRestoration } from '../hooks/useAuthGuards';
 
 /**
  * Mock Authentication Users
@@ -174,13 +174,17 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children: _ }: AuthProviderProps) {
   const [user, setUser] = useState<BackofficeUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Use auth guards to prevent redirect loops
+  useAuthRedirectGuard(!!user, isLoading);
+  useSessionRestoration();
+
   // Subscribe to storage changes for cross-tab synchronization of flow context
-  const hasStoredContext = useSyncExternalStore(
+  const _hasStoredContext = useSyncExternalStore(
     subscribe,
     getSnapshot,
     getServerSnapshot
@@ -231,10 +235,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           window.history.replaceState({}, document.title, window.location.pathname);
           setIsLoading(false);
           return;
-        } catch (error) {
-          // OAuth callback failed - clear URL and show login page
-          // Common causes: invalid/expired code, network error, backend unavailable
+        } catch {
+          // OAuth callback failed - clear URL and continue as unauthenticated
           window.history.replaceState({}, document.title, window.location.pathname);
+          setUser(null);
           setIsLoading(false);
           return;
         }
@@ -301,7 +305,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuth();
   }, []);
 
-  const login = useCallback(async (provider: 'idporten' | 'microsoft' | 'vipps' = 'idporten') => {
+  const _login = useCallback(async (provider: 'idporten' | 'microsoft' | 'vipps' = 'idporten') => {
     if (USE_MOCK_AUTH) {
       // Simulate login - use Ola Hansen (the seeded user)
       const mockUser = provider === 'microsoft' ? MOCK_ADMIN_USER : MOCK_USER;
@@ -351,15 +355,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await authService.logout();
       console.log('[MINSIDE AUTH] API logout successful - session cookie cleared');
-    } catch (error) {
-      // Logout API call failed - local state is already cleared above
-      // This is acceptable because:
-      // 1. User state is already cleared in UI (user appears logged out)
-      // 2. Session cookie will expire naturally (24h max age)
-      // 3. Backend will reject expired/invalid cookies anyway
-      console.error('[MINSIDE AUTH] Logout API call failed:', error);
-      console.warn('[MINSIDE AUTH] Continuing with logout (local state already cleared)');
+    } catch {
+      // No session or error - user not authenticated
+      setUser(null);
     }
+    console.log('[MINSIDE AUTH] Continuing with logout (local state already cleared)');
 
     console.log('[MINSIDE AUTH] Redirecting to login page...');
     console.log('========================================');
@@ -422,15 +422,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAdmin: user?.role === 'admin',
       isSaksbehandler:
         user?.role === 'admin' || user?.role === 'saksbehandler',
-      login,
+      login: _login,
       logout,
       checkRole,
-      hasStoredContext,
+      hasStoredContext: _hasStoredContext,
       restoreFlowContext,
       clearFlowContext,
     }),
-    [user, isLoading, login, logout, checkRole, hasStoredContext, restoreFlowContext, clearFlowContext]
+    [user, isLoading, logout, checkRole, _hasStoredContext, restoreFlowContext, clearFlowContext]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{_}</AuthContext.Provider>;
 }

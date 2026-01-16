@@ -162,7 +162,10 @@ export function ProtectedRoute({
     );
   }
 
-  if (!isAuthenticated) {
+  // Add a check to prevent redirect loops
+  const isLoginPage = location.pathname === '/login';
+  
+  if (!isAuthenticated && !isLoginPage) {
     // Create minimal state for backwards compatibility and as fallback
     const loginState: ProtectedRouteLoginState = {
       from: {
@@ -173,6 +176,11 @@ export function ProtectedRoute({
     };
 
     return <Navigate to={redirectTo} state={loginState} replace />;
+  }
+
+  // If we're on login page but authenticated, redirect to home
+  if (isAuthenticated && isLoginPage) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

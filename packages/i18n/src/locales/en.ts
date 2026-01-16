@@ -1389,4 +1389,56 @@ export const en: Record<string, string> = {
   'ui.next': 'Next',
   'ui.submit': 'Submit',
   'ui.confirm': 'Confirm',
+
+  // Policy reason keys - explain why an action is not allowed
+  'policy.role.insufficient_permissions': 'You do not have sufficient permissions for this action',
+  'policy.slot.already_booked': 'This time slot is already booked',
+  'policy.booking.cancelled': 'This booking has been cancelled',
+  'policy.booking.past': 'This booking has already taken place',
+  'policy.listing.inactive': 'This listing is no longer available',
+  'policy.user.not_verified': 'Your account is not verified',
+  'policy.organization.suspended': 'The organization is suspended',
+
+  // Action reason keys - explain why a UI action is disabled
+  'actions.book.disabled.slot_unavailable': 'This time slot is no longer available',
+  'actions.book.disabled.not_authenticated': 'You must log in to book',
+  'actions.cancel.disabled.too_late': 'Cancellation is not possible within {{hours}} hours of booking',
+  'actions.edit.disabled.not_owner': 'Only the owner can edit this booking',
+
+  // RFC 7807 Error keys
+  'errors.generic': 'An error occurred',
+  'errors.VALIDATION_ERROR.title': 'Validation Error',
+  'errors.VALIDATION_ERROR.description': 'Please check that all fields are filled in correctly',
+  'errors.NOT_FOUND.title': 'Not Found',
+  'errors.NOT_FOUND.description': 'The resource you are looking for does not exist',
+  'errors.UNAUTHORIZED.title': 'Unauthorized',
+  'errors.UNAUTHORIZED.description': 'You must log in to access this resource',
+  'errors.FORBIDDEN.title': 'Access Denied',
+  'errors.FORBIDDEN.description': 'You do not have access to this resource',
+  'errors.INTERNAL_ERROR.title': 'Server Error',
+  'errors.INTERNAL_ERROR.description': 'Something went wrong. Please try again later',
+
+  // Web app - missing keys
+  'filtrer': 'Filter',
+  'område': 'Area',
+  'fasiliteter': 'Facilities',
+  'søk.etter.lokaler': 'Search for spaces',
+  'laster.lokaler': 'Loading spaces...',
+  'alle.områder': 'All areas',
+  'kunne.ikke.laste.lokaler': 'Could not load spaces',
+
+  // SDK placeholders - rental object card
+  'sdk.rentalObject.category.undefined': 'Space',
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Spaces and venues',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Equipment and inventory',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Vehicles and transport',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Experiences and events',
+  'sdk.timeMode.PERIOD': 'Period',
+  'sdk.timeMode.SLOT': 'Time slot',
+  'sdk.timeMode.ALL_DAY': 'All day',
+  'sdk.placeholder.noAddress': 'No address',
+  'sdk.placeholder.unknown': 'Unknown',
+  'sdk.placeholder.noImage': 'No image',
+  'sdk.placeholder.priceNotSet': 'Price not set',
+  'sdk.placeholder.noReviews': 'No reviews',
 };

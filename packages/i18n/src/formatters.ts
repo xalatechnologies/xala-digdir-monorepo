@@ -2,7 +2,179 @@
  * Formatting utilities for internationalization
  * Provides consistent formatting for dates, times, numbers, and durations
  * across the application using locale-aware methods.
+ *
+ * All formatters use the Intl API for standards-compliant localization.
  */
+
+import type { SupportedLocale } from './types';
+
+/**
+ * Default locale for formatting
+ */
+const DEFAULT_LOCALE = 'nb-NO';
+
+/**
+ * Convert short locale to full BCP 47 locale tag
+ */
+function toFullLocale(locale: SupportedLocale | string): string {
+  if (locale === 'nb') return 'nb-NO';
+  if (locale === 'en') return 'en-US';
+  return locale;
+}
+
+/**
+ * Format a date according to locale conventions
+ * @param date - Date to format (Date object or ISO string)
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Intl.DateTimeFormat options
+ * @returns Formatted date string
+ *
+ * @example
+ * formatDate(new Date('2024-01-15')) // "15.01.2024" (nb-NO)
+ * formatDate(new Date('2024-01-15'), 'en') // "1/15/2024" (en-US)
+ */
+export function formatDate(
+  date: Date | string,
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.DateTimeFormatOptions = {}
+): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    ...options,
+  };
+
+  return new Intl.DateTimeFormat(toFullLocale(locale), defaultOptions).format(d);
+}
+
+/**
+ * Format a time according to locale conventions
+ * @param date - Date/time to format (Date object or ISO string)
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Intl.DateTimeFormat options
+ * @returns Formatted time string
+ *
+ * @example
+ * formatTime(new Date('2024-01-15T14:30:00')) // "14:30" (nb-NO)
+ * formatTime(new Date('2024-01-15T14:30:00'), 'en') // "2:30 PM" (en-US)
+ */
+export function formatTime(
+  date: Date | string,
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.DateTimeFormatOptions = {}
+): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    ...options,
+  };
+
+  return new Intl.DateTimeFormat(toFullLocale(locale), defaultOptions).format(d);
+}
+
+/**
+ * Format a date and time according to locale conventions
+ * @param date - Date/time to format (Date object or ISO string)
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Intl.DateTimeFormat options
+ * @returns Formatted date and time string
+ *
+ * @example
+ * formatDateTime(new Date('2024-01-15T14:30:00')) // "15.01.2024 14:30" (nb-NO)
+ */
+export function formatDateTime(
+  date: Date | string,
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.DateTimeFormatOptions = {}
+): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    ...options,
+  };
+
+  return new Intl.DateTimeFormat(toFullLocale(locale), defaultOptions).format(d);
+}
+
+/**
+ * Format a number according to locale conventions
+ * @param value - Number to format
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Intl.NumberFormat options
+ * @returns Formatted number string
+ *
+ * @example
+ * formatNumber(1234.56) // "1 234,56" (nb-NO)
+ * formatNumber(1234.56, 'en') // "1,234.56" (en-US)
+ */
+export function formatNumber(
+  value: number,
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.NumberFormatOptions = {}
+): string {
+  return new Intl.NumberFormat(toFullLocale(locale), options).format(value);
+}
+
+/**
+ * Format a currency value according to locale conventions
+ * @param value - Amount to format
+ * @param currency - ISO 4217 currency code (default: 'NOK')
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Additional Intl.NumberFormat options
+ * @returns Formatted currency string
+ *
+ * @example
+ * formatCurrency(1234.56) // "kr 1 234,56" (nb-NO, NOK)
+ * formatCurrency(1234.56, 'USD', 'en') // "$1,234.56" (en-US)
+ */
+export function formatCurrency(
+  value: number,
+  currency: string = 'NOK',
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.NumberFormatOptions = {}
+): string {
+  return new Intl.NumberFormat(toFullLocale(locale), {
+    style: 'currency',
+    currency,
+    ...options,
+  }).format(value);
+}
+
+/**
+ * Format a percentage value
+ * @param value - Value between 0 and 1 (0.5 = 50%)
+ * @param locale - Locale code (default: 'nb-NO')
+ * @param options - Additional Intl.NumberFormat options
+ * @returns Formatted percentage string
+ *
+ * @example
+ * formatPercent(0.75) // "75 %" (nb-NO)
+ * formatPercent(0.75, 'en') // "75%" (en-US)
+ */
+export function formatPercent(
+  value: number,
+  locale: SupportedLocale | string = DEFAULT_LOCALE,
+  options: Intl.NumberFormatOptions = {}
+): string {
+  return new Intl.NumberFormat(toFullLocale(locale), {
+    style: 'percent',
+    maximumFractionDigits: 0,
+    ...options,
+  }).format(value);
+}
 
 /**
  * Get relative time description

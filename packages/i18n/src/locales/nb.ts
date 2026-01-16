@@ -1390,4 +1390,56 @@ export const nb: Record<string, string> = {
   'ui.next': 'Neste',
   'ui.submit': 'Send inn',
   'ui.confirm': 'Bekreft',
+
+  // Policy reason keys - explain why an action is not allowed
+  'policy.role.insufficient_permissions': 'Du har ikke tilstrekkelige rettigheter for denne handlingen',
+  'policy.slot.already_booked': 'Denne tidsluken er allerede booket',
+  'policy.booking.cancelled': 'Denne bookingen er kansellert',
+  'policy.booking.past': 'Denne bookingen har allerede funnet sted',
+  'policy.listing.inactive': 'Dette lokalet er ikke lenger tilgjengelig',
+  'policy.user.not_verified': 'Din bruker er ikke verifisert',
+  'policy.organization.suspended': 'Organisasjonen er suspendert',
+
+  // Action reason keys - explain why a UI action is disabled
+  'actions.book.disabled.slot_unavailable': 'Denne tidsluken er ikke lenger tilgjengelig',
+  'actions.book.disabled.not_authenticated': 'Du må logge inn for å booke',
+  'actions.cancel.disabled.too_late': 'Kansellering er ikke mulig innen {{hours}} timer før booking',
+  'actions.edit.disabled.not_owner': 'Kun eieren kan redigere denne bookingen',
+
+  // RFC 7807 Error keys
+  'errors.generic': 'En feil oppstod',
+  'errors.VALIDATION_ERROR.title': 'Valideringsfeil',
+  'errors.VALIDATION_ERROR.description': 'Vennligst sjekk at alle felt er korrekt utfylt',
+  'errors.NOT_FOUND.title': 'Ikke funnet',
+  'errors.NOT_FOUND.description': 'Ressursen du leter etter finnes ikke',
+  'errors.UNAUTHORIZED.title': 'Ikke autentisert',
+  'errors.UNAUTHORIZED.description': 'Du må logge inn for å få tilgang',
+  'errors.FORBIDDEN.title': 'Tilgang nektet',
+  'errors.FORBIDDEN.description': 'Du har ikke tilgang til denne ressursen',
+  'errors.INTERNAL_ERROR.title': 'Serverfeil',
+  'errors.INTERNAL_ERROR.description': 'Noe gikk galt. Vennligst prøv igjen senere',
+
+  // Web app - missing keys
+  'filtrer': 'Filtrer',
+  'område': 'Område',
+  'fasiliteter': 'Fasiliteter',
+  'søk.etter.lokaler': 'Søk etter lokaler',
+  'laster.lokaler': 'Laster lokaler...',
+  'alle.områder': 'Alle områder',
+  'kunne.ikke.laste.lokaler': 'Kunne ikke laste lokaler',
+
+  // SDK placeholders - rental object card
+  'sdk.rentalObject.category.undefined': 'Lokale',
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Lokaler og baner',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
+  'sdk.timeMode.PERIOD': 'Periode',
+  'sdk.timeMode.SLOT': 'Tidsluke',
+  'sdk.timeMode.ALL_DAY': 'Hele dagen',
+  'sdk.placeholder.noAddress': 'Ingen adresse',
+  'sdk.placeholder.unknown': 'Ukjent',
+  'sdk.placeholder.noImage': 'Ingen bilde',
+  'sdk.placeholder.priceNotSet': 'Pris ikke satt',
+  'sdk.placeholder.noReviews': 'Ingen anmeldelser',
 };

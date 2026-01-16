@@ -464,5 +464,19 @@ export {
   useRetryFailed,
 } from './use-notification-delivery';
 
+// App-specific Capabilities hooks
+export {
+  useWebCapabilities,
+  useMinsideCapabilities,
+  useBackofficeCapabilities,
+  useHasCapability,
+  useHasAllCapabilities,
+  useHasAnyCapability,
+  useFeatureFlag,
+  capabilitiesKeys,
+  type AppCapabilities,
+  type CapabilitiesApiResponse,
+} from './use-capabilities';
+
 // Utility hooks
 export { useDebounced } from './useDebounced';

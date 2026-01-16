@@ -15,7 +15,7 @@ import {
   validateReturnToUrl,
 } from '@digilist/client-sdk';
 import type { FlowContext, FlowBookingMode, FlowSelectedSlot, FlowRecurringRules } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useAuthRedirectGuard, useSessionRestoration } from './useAuthGuards';
 
 // =============================================================================
 // Types
@@ -197,9 +197,12 @@ function notifySubscribers(): void {
  * ```
  */
 export function useAuth(): UseAuthReturn {
-  const t = useT();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Use auth guards to prevent redirect loops
+  useAuthRedirectGuard(!!user, isLoading);
+  useSessionRestoration();
 
   // Subscribe to storage changes for cross-tab synchronization
   const hasStoredContext = useSyncExternalStore(
@@ -227,14 +230,14 @@ export function useAuth(): UseAuthReturn {
         const response = await authService.getSession();
         if (response.data) {
           const userData = {
-            id: response.data.userId,
+            id: response.data.user?.id || response.data.sub || 'unknown',
             name: response.data.user?.name || response.data.user?.email || 'User',
             email: response.data.user?.email || '',
           };
           localStorage.setItem('web_user', JSON.stringify(userData));
           setUser(userData);
         }
-      } catch (error) {
+      } catch {
         // No valid session cookie - user not logged in
         console.log('[WEB AUTH] No valid session found');
       } finally {
@@ -271,12 +274,11 @@ export function useAuth(): UseAuthReturn {
    * Login with flow context preservation
    * Saves complete booking state before OAuth redirect
    */
-  const loginWithFlowContext = useCallback((options: LoginWithFlowContextOptions) => {
+  const loginWithFlowContext = useCallback(async (options: LoginWithFlowContextOptions) => {
     // Use authService.requireAuth to save flow context
-    const result = authService.requireAuth({
+    const result = await authService.requireAuth({
       returnTo: options.returnTo || window.location.pathname + window.location.search,
       tenantId: options.tenantId,
-      rentalObjectId: options.rentalObjectId,
       bookingMode: options.bookingMode,
       selectedDates: options.selectedDates,
       selectedSlots: options.selectedSlots,

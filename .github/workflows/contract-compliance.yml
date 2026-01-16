@@ -149,3 +149,123 @@ jobs:
           
           cd packages/client-sdk
           node /tmp/verify-exports.mjs
+
+  boundary-enforcement:
+    name: Architecture Boundary Enforcement
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check for direct schema imports in controllers
+        run: |
+          echo "🔍 Checking for direct schema imports in controllers..."
+          
+          # Find controllers importing from database/schema
+          VIOLATIONS=$(grep -r "from '.*database/schema" apps/api/src/modules/*/*.controller.ts 2>/dev/null || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ Warning: Found direct schema imports in controllers:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "Controllers should use Service → ACL → Repository pattern"
+            # Currently warning only, will be error after refactoring
+          else
+            echo "✅ No direct schema imports in controllers"
+          fi
+      
+      - name: Check persistence imports in SDK
+        run: |
+          echo "🔍 Checking for persistence imports in SDK..."
+          
+          # SDK should never import from apps/api or database
+          VIOLATIONS=$(grep -r "from '@digilist/api\|from '.*apps/api\|from '.*database/" packages/client-sdk/src/ --include="*.ts" 2>/dev/null || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ SDK importing from persistence layer:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          
+          echo "✅ SDK does not import from persistence layer"
+      
+      - name: Check for raw fetch in apps
+        run: |
+          echo "🔍 Checking for raw fetch() in apps..."
+          
+          # Find raw fetch calls that aren't in allowed patterns
+          VIOLATIONS=$(grep -r "fetch\s*(" apps/*/src/ --include="*.ts" --include="*.tsx" | grep -v "fetchClient\|refetch\|useFetch\|// allowed:" | head -20 || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ Warning: Found potential raw fetch() calls:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "Use SDK methods instead of raw fetch()"
+          else
+            echo "✅ No problematic raw fetch() calls found"
+          fi
+
+  capabilities-endpoints-check:
+    name: Capabilities Endpoints Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Verify capabilities controller exists
+        run: |
+          echo "🔍 Checking for capabilities endpoints..."
+          
+          if [ -f "apps/api/src/modules/capabilities/capabilities.controller.ts" ]; then
+            echo "✅ Capabilities controller exists"
+            
+            # Check for required endpoints
+            ENDPOINTS=("web/me/capabilities" "minside/me/capabilities" "backoffice/me/capabilities")
+            for endpoint in "${ENDPOINTS[@]}"; do
+              if grep -q "$endpoint" apps/api/src/modules/capabilities/capabilities.controller.ts; then
+                echo "  ✅ $endpoint endpoint defined"
+              else
+                echo "  ❌ Missing $endpoint endpoint"
+              fi
+            done
+          else
+            echo "❌ Capabilities controller not found"
+            exit 1
+          fi
+      
+      - name: Verify SDK capabilities hooks exist
+        run: |
+          echo "🔍 Checking for SDK capabilities hooks..."
+          
+          if [ -f "packages/client-sdk/src/hooks/use-capabilities.ts" ]; then
+            echo "✅ Capabilities hooks exist"
+            
+            # Check for required exports
+            HOOKS=("useWebCapabilities" "useMinsideCapabilities" "useBackofficeCapabilities")
+            for hook in "${HOOKS[@]}"; do
+              if grep -q "export function $hook" packages/client-sdk/src/hooks/use-capabilities.ts; then
+                echo "  ✅ $hook hook defined"
+              else
+                echo "  ❌ Missing $hook hook"
+              fi
+            done
+          else
+            echo "❌ Capabilities hooks file not found"
+            exit 1
+          fi
