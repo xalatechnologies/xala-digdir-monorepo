@@ -112,9 +112,50 @@ export {
 } from './billing.service';
 
 // Re-export billing types for convenience
-export type { 
-  BillingSummary, 
+export type {
+  BillingSummary,
   Invoice,
-  InvoiceQueryParams 
+  InvoiceQueryParams
 } from './billing.service';
+
+// SaaS Admin
+export {
+  saasService,
+  type SaasTenantStatus,
+  type PlanStatus,
+  type BillingPeriod,
+  type FeatureFlagType,
+  type FeatureFlagCategory,
+  type BillingStatus,
+  type SeatLimits,
+  type ModuleEntitlements,
+  type IntegrationEntitlements,
+  type FeatureEntitlements,
+  type Entitlements,
+  type SaasTenant,
+  type SaasTenantWithStats,
+  type Plan,
+  type FeatureFlagCatalogItem,
+  type TenantFeatureFlag,
+  type CategoryEntitlement,
+  type TenantBillingSummary,
+  type TenantInvoice,
+  type MaskedSecret,
+  type SaasAdminCapabilities,
+  type LicenseKeyResponse,
+  type PaginatedResponse,
+  type SingleResponse,
+  type SaasTenantQueryParams,
+  type CreateSaasTenantRequest,
+  type UpdateSaasTenantRequest,
+  type SuspendTenantRequest,
+  type UpdateSeatLimitsRequest,
+  type UpdateFeatureFlagsRequest,
+  type PlanQueryParams,
+  type CreatePlanRequest,
+  type UpdatePlanRequest,
+  type FeatureFlagsQueryParams,
+  type UpdateCategoryEntitlementsRequest,
+  type UpdateSecretRequest,
+} from './saas.service';
 
