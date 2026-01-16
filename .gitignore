@@ -13,10 +13,14 @@ coverage
 .vite
 .turbo
 
-# TypeScript compiled output (keep source .ts/.tsx files only)
-*.tsbuildinfo
-apps/**/*.js
-apps/**/*.d.ts
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Old migration systems (removed - use Drizzle only)
+supabase/
+apps/api/supabase/
 !apps/**/vite.config.js
 !apps/**/eslint.config.js
 packages/**/*.js
