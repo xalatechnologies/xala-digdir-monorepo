@@ -258,10 +258,10 @@ export function OverviewTab({
 
   // Mock additional services if not provided
   const services: AdditionalService[] = additionalServices || [
-    { id: 'extra-time', name: t('ekstra.tid'), description: t('forleng.bookingen.med.30.minutter'), price: 200, currency: 'NOK' },
-    { id: 'equipment', name: t('utstyr'), description: t('inkluderer.ballnett.musikanlegg.og.annet.utstyr'), price: 150, currency: 'NOK' },
-    { id: 'caretaker', name: t('vaktmesterhjelp'), description: t('hjelp.med.oppsett.og.nedrigg.av.utstyr'), price: 300, currency: 'NOK' },
-    { id: 'security', name: t('sikkerhet'), description: t('vaktmester.til.stede.under.hele.arrangementet'), price: 500, currency: 'NOK' },
+    { id: 'extra-time', name: t('services.extraTime'), description: t('services.extraTimeDesc'), price: 200, currency: 'NOK' },
+    { id: 'equipment', name: t('services.equipment'), description: t('services.equipmentDesc'), price: 150, currency: 'NOK' },
+    { id: 'caretaker', name: t('services.caretaker'), description: t('services.caretakerDesc'), price: 300, currency: 'NOK' },
+    { id: 'security', name: t('services.security'), description: t('services.securityDesc'), price: 500, currency: 'NOK' },
   ];
 
   const toggleService = (serviceId: string) => {
@@ -345,7 +345,7 @@ export function OverviewTab({
       {metadata.amenities && metadata.amenities.length > 0 && (
         <section>
           <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
-            Fasiliteter
+            {t('overview.facilities')}
           </Paragraph>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
             {metadata.amenities.map((amenity: Amenity) => (
@@ -375,7 +375,7 @@ export function OverviewTab({
       {services.length > 0 && (
         <section>
           <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
-            Tilleggstjenester
+            {t('overview.additionalServices')}
           </Paragraph>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
             {services.map((service) => {
@@ -454,7 +454,7 @@ export function OverviewTab({
       {metadata.includedFacilities && metadata.includedFacilities.length > 0 && (
         <section>
           <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-            Inkludert utstyr
+            {t('overview.includedEquipment')}
           </Heading>
           <div
             style={{
@@ -490,7 +490,7 @@ export function OverviewTab({
       {metadata.highlights && metadata.highlights.length > 0 && (
         <section>
           <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-            Høydepunkter
+            {t('overview.highlights')}
           </Heading>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
             {metadata.highlights.map((highlight, index) => (
@@ -525,7 +525,7 @@ export function OverviewTab({
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, fontStyle: 'italic' }}>
-            Ingen detaljert informasjon er tilgjengelig for dette lokalet.
+            {t('overview.noInfo')}
           </Paragraph>
         </div>
       )}

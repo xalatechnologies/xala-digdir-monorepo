@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext, type AuthContextType, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
 import { authService } from '@digilist/client-sdk/services';
@@ -69,8 +69,9 @@ const MOCK_DUAL_ROLE_USER: BackofficeUser = {
   grantedRoles: ['admin', 'case_handler'],
 };
 
-// Use real auth - fetches session from API
-const USE_MOCK_AUTH = false;
+// Use mock auth for local development (cross-origin cookies don't work with api.digilist.no)
+// Set VITE_USE_MOCK_AUTH=true in .env.local for local development
+const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 
 // =============================================================================
 // Storage Event Subscription (for cross-tab sync of flow context)

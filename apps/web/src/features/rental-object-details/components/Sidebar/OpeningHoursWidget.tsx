@@ -24,17 +24,17 @@ function ClockIcon({ size = 18 }: { size?: number }): React.ReactElement {
 }
 
 // =============================================================================
-// Day names
+// Day names (i18n keys)
 // =============================================================================
 
-const dayNames: Record<number, string> = {
-  0: 'Søndag',
-  1: 'Mandag',
-  2: 'Tirsdag',
-  3: 'Onsdag',
-  4: 'Torsdag',
-  5: 'Fredag',
-  6: 'Lørdag',
+const dayNameKeys: Record<number, string> = {
+  0: 'days.sunday',
+  1: 'days.monday',
+  2: 'days.tuesday',
+  3: 'days.wednesday',
+  4: 'days.thursday',
+  5: 'days.friday',
+  6: 'days.saturday',
 };
 
 // =============================================================================
@@ -55,7 +55,7 @@ interface GroupedHours {
   hours: string;
 }
 
-function groupConsecutiveDays(days: DayHours[]): GroupedHours[] {
+function groupConsecutiveDays(days: DayHours[], t: (key: string) => string): GroupedHours[] {
   if (!days || days.length === 0) return [];
 
   // Sort days: Monday (1) to Sunday (0 treated as 7)
@@ -70,7 +70,7 @@ function groupConsecutiveDays(days: DayHours[]): GroupedHours[] {
   let currentHours = '';
 
   for (const day of sortedDays) {
-    const dayHours = day.isClosed ? 'Stengt' : `${day.open} - ${day.close}`;
+    const dayHours = day.isClosed ? t('listing.closed') : `${day.open} - ${day.close}`;
 
     if (currentGroup.length === 0) {
       currentGroup = [day];
@@ -91,7 +91,7 @@ function groupConsecutiveDays(days: DayHours[]): GroupedHours[] {
         currentGroup.push(day);
       } else {
         // Save current group and start new one
-        groups.push(formatGroup(currentGroup, currentHours));
+        groups.push(formatGroup(currentGroup, currentHours, t));
         currentGroup = [day];
         currentHours = dayHours;
       }
@@ -100,13 +100,13 @@ function groupConsecutiveDays(days: DayHours[]): GroupedHours[] {
 
   // Don't forget the last group
   if (currentGroup.length > 0) {
-    groups.push(formatGroup(currentGroup, currentHours));
+    groups.push(formatGroup(currentGroup, currentHours, t));
   }
 
   return groups;
 }
 
-function formatGroup(days: DayHours[], hours: string): GroupedHours {
+function formatGroup(days: DayHours[], hours: string, t: (key: string) => string): GroupedHours {
   const first = days[0];
   const last = days[days.length - 1];
 
@@ -116,13 +116,13 @@ function formatGroup(days: DayHours[], hours: string): GroupedHours {
 
   if (days.length === 1) {
     return {
-      label: dayNames[first.dayIndex] ?? `Dag ${first.dayIndex}`,
+      label: t(dayNameKeys[first.dayIndex] ?? 'days.day'),
       hours,
     };
   }
 
-  const firstDay = dayNames[first.dayIndex] ?? `Dag ${first.dayIndex}`;
-  const lastDay = dayNames[last.dayIndex] ?? `Dag ${last.dayIndex}`;
+  const firstDay = t(dayNameKeys[first.dayIndex] ?? 'days.day');
+  const lastDay = t(dayNameKeys[last.dayIndex] ?? 'days.day');
 
   return {
     label: `${firstDay}-${lastDay}`,
@@ -140,9 +140,14 @@ export function OpeningHoursWidget({
 }: OpeningHoursWidgetProps): React.ReactElement {
   const t = useT();
   const groupedHours = React.useMemo(
-    () => groupConsecutiveDays(openingHours.regular),
-    [openingHours.regular]
+    () => groupConsecutiveDays(openingHours.regular, t),
+    [openingHours.regular, t]
   );
+
+  // Hide widget if no opening hours
+  if (!openingHours.regular || openingHours.regular.length === 0) {
+    return <></>;
+  }
 
   return (
     <div
@@ -176,7 +181,7 @@ export function OpeningHoursWidget({
             fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
-          Åpningstider
+          {t('listing.openingHours')}
         </Paragraph>
       </div>
 
@@ -204,7 +209,7 @@ export function OpeningHoursWidget({
               data-size="sm"
               style={{
                 margin: 0,
-                color: group.hours === 'Stengt'
+                color: group.hours === t('listing.closed')
                   ? 'var(--ds-color-neutral-text-subtle)'
                   : 'var(--ds-color-neutral-text-default)',
               }}
@@ -232,7 +237,7 @@ export function OpeningHoursWidget({
               color: 'var(--ds-color-neutral-text-subtle)',
             }}
           >
-            Spesielle dager
+            {t('listing.specialDays')}
           </Paragraph>
           {openingHours.exceptions.map((exception) => (
             <div
@@ -252,7 +257,7 @@ export function OpeningHoursWidget({
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
               >
                 {exception.isClosed
-                  ? 'Stengt'
+                  ? t('listing.closed')
                   : exception.hours
                   ? `${exception.hours.open} - ${exception.hours.close}`
                   : ''}

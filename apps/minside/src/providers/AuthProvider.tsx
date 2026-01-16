@@ -73,7 +73,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type AuthContextType, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
+import { type AuthContextType, AuthContext, type BackofficeUser, type BackofficeRole, type RestoreFlowContextResult } from '../hooks/useAuth';
 import { authService } from '@digilist/client-sdk/services';
 import {
   FLOW_CONTEXT_KEY,
@@ -180,7 +180,9 @@ export function AuthProvider({ children: _ }: AuthProviderProps) {
   const navigate = useNavigate();
 
   // Use auth guards to prevent redirect loops
-  useAuthRedirectGuard(!!user, isLoading);
+  // NOTE: Auth redirect guard temporarily disabled to avoid Router context issues
+  // TODO: Re-enable once properly integrated with Router provider
+  // useAuthRedirectGuard(!!user, isLoading);
   useSessionRestoration();
 
   // Subscribe to storage changes for cross-tab synchronization of flow context

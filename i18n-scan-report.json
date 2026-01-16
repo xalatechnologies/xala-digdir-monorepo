@@ -1,14 +1,798 @@
 {
-  "timestamp": "2026-01-16T13:48:15.881Z",
+  "timestamp": "2026-01-16T15:37:54.418Z",
   "summary": {
-    "filesScanned": 1,
+    "filesScanned": 37,
     "filesSkipped": 0,
-    "totalFiles": 1,
-    "totalIssues": 0,
-    "hardcodedStrings": 0,
+    "totalFiles": 37,
+    "totalIssues": 43,
+    "hardcodedStrings": 43,
     "missingT": 0,
     "suspiciousPatterns": 0
   },
-  "issuesByFile": {},
-  "allIssues": []
+  "issuesByFile": {
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/adapters/favoritesProvider.ts": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/adapters/favoritesProvider.ts",
+        "line": 148,
+        "type": "hardcoded_jsx_text",
+        "string": "Promise",
+        "context": "toggle: () => Promise<void>;",
+        "severity": "high"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 140,
+        "type": "hardcoded_object_value",
+        "string": "Ma",
+        "key": "label",
+        "context": "{ key: 'ma', label: 'Ma' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 141,
+        "type": "hardcoded_object_value",
+        "string": "Ti",
+        "key": "label",
+        "context": "{ key: 'ti', label: 'Ti' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 142,
+        "type": "hardcoded_object_value",
+        "string": "On",
+        "key": "label",
+        "context": "{ key: 'on', label: 'On' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 143,
+        "type": "hardcoded_object_value",
+        "string": "To",
+        "key": "label",
+        "context": "{ key: 'to', label: 'To' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 144,
+        "type": "hardcoded_object_value",
+        "string": "Fr",
+        "key": "label",
+        "context": "{ key: 'fr', label: 'Fr' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+        "line": 145,
+        "type": "hardcoded_object_value",
+        "string": "Lø",
+        "key": "label",
+        "context": "{ key: 'lo', label: 'Lø' },",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 125,
+        "type": "hardcoded_object_value",
+        "string": "Mandag",
+        "key": "label",
+        "context": "{ value: 1, label: 'Mandag', shortLabel: 'Man' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 126,
+        "type": "hardcoded_object_value",
+        "string": "Tirsdag",
+        "key": "label",
+        "context": "{ value: 2, label: 'Tirsdag', shortLabel: 'Tir' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 127,
+        "type": "hardcoded_object_value",
+        "string": "Onsdag",
+        "key": "label",
+        "context": "{ value: 3, label: 'Onsdag', shortLabel: 'Ons' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 128,
+        "type": "hardcoded_object_value",
+        "string": "Torsdag",
+        "key": "label",
+        "context": "{ value: 4, label: 'Torsdag', shortLabel: 'Tor' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 129,
+        "type": "hardcoded_object_value",
+        "string": "Fredag",
+        "key": "label",
+        "context": "{ value: 5, label: 'Fredag', shortLabel: 'Fre' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 130,
+        "type": "hardcoded_object_value",
+        "string": "Lørdag",
+        "key": "label",
+        "context": "{ value: 6, label: 'Lørdag', shortLabel: 'Lør' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 131,
+        "type": "hardcoded_object_value",
+        "string": "Søndag",
+        "key": "label",
+        "context": "{ value: 7, label: 'Søndag', shortLabel: 'Søn' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 138,
+        "type": "hardcoded_object_value",
+        "string": "Ukentlig",
+        "key": "label",
+        "context": "{ value: 'WEEKLY', label: 'Ukentlig' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 139,
+        "type": "hardcoded_object_value",
+        "string": "Månedlig",
+        "key": "label",
+        "context": "{ value: 'MONTHLY', label: 'Månedlig' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 146,
+        "type": "hardcoded_object_value",
+        "string": "Etter antall ganger",
+        "key": "label",
+        "context": "{ value: 'AFTER_OCCURRENCES', label: 'Etter antall ganger' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+        "line": 147,
+        "type": "hardcoded_object_value",
+        "string": "Til en bestemt dato",
+        "key": "label",
+        "context": "{ value: 'UNTIL_DATE', label: 'Til en bestemt dato' },",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 171,
+        "type": "hardcoded_object_value",
+        "string": "Ledig",
+        "key": "label",
+        "context": "label: 'Ledig',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 178,
+        "type": "hardcoded_object_value",
+        "string": "Konflikt",
+        "key": "label",
+        "context": "label: 'Konflikt',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 185,
+        "type": "hardcoded_object_value",
+        "string": "Reservert",
+        "key": "label",
+        "context": "label: 'Reservert',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 192,
+        "type": "hardcoded_object_value",
+        "string": "Blokkert",
+        "key": "label",
+        "context": "label: 'Blokkert',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 199,
+        "type": "hardcoded_object_value",
+        "string": "Stengt",
+        "key": "label",
+        "context": "label: 'Stengt',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+        "line": 206,
+        "type": "hardcoded_object_value",
+        "string": "Stengt",
+        "key": "label",
+        "context": "label: 'Stengt',",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 98,
+        "type": "hardcoded_object_value",
+        "string": "Velg tidspunkter",
+        "key": "label",
+        "context": "{ id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 99,
+        "type": "hardcoded_object_value",
+        "string": "Detaljer og vilkår",
+        "key": "label",
+        "context": "{ id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 100,
+        "type": "hardcoded_object_value",
+        "string": "Bekreft",
+        "key": "label",
+        "context": "{ id: 'confirm', label: 'Bekreft', icon: 'confirm' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 101,
+        "type": "hardcoded_object_value",
+        "string": "Sendt",
+        "key": "label",
+        "context": "{ id: 'done', label: 'Sendt', icon: 'success' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 105,
+        "type": "hardcoded_object_value",
+        "string": "Standard",
+        "key": "label",
+        "context": "{ id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 105,
+        "type": "hardcoded_object_value",
+        "string": "Vanlig pris for alle",
+        "key": "description",
+        "context": "{ id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 106,
+        "type": "hardcoded_object_value",
+        "string": "Medlem",
+        "key": "label",
+        "context": "{ id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 106,
+        "type": "hardcoded_object_value",
+        "string": "Rabattert pris for medlemmer",
+        "key": "description",
+        "context": "{ id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 107,
+        "type": "hardcoded_object_value",
+        "string": "Ungdom under 26",
+        "key": "label",
+        "context": "{ id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 107,
+        "type": "hardcoded_object_value",
+        "string": "Redusert pris for unge",
+        "key": "description",
+        "context": "{ id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 111,
+        "type": "hardcoded_object_value",
+        "string": "Rengjøring",
+        "key": "label",
+        "context": "{ id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 111,
+        "type": "hardcoded_object_value",
+        "string": "Profesjonell rengjøring etter bruk",
+        "key": "description",
+        "context": "{ id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 112,
+        "type": "hardcoded_object_value",
+        "string": "Utstyrspakke",
+        "key": "label",
+        "context": "{ id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+        "line": 112,
+        "type": "hardcoded_object_value",
+        "string": "Inkluderer bord, stoler og projektor",
+        "key": "description",
+        "context": "{ id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+        "line": 494,
+        "type": "hardcoded_jsx_text",
+        "string": "= todayHours.open && currentTime",
+        "context": "const isOpen = currentTime >= todayHours.open && currentTime < todayHours.close;",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+        "line": 146,
+        "type": "hardcoded_object_value",
+        "string": "Ingen beskrivelse tilgjengelig.",
+        "key": "description",
+        "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+        "line": 212,
+        "type": "hardcoded_object_value",
+        "string": "Ingen beskrivelse tilgjengelig.",
+        "key": "description",
+        "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+        "line": 271,
+        "type": "hardcoded_object_value",
+        "string": "Ingen beskrivelse tilgjengelig.",
+        "key": "description",
+        "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+        "line": 331,
+        "type": "hardcoded_object_value",
+        "string": "Ingen beskrivelse tilgjengelig.",
+        "key": "description",
+        "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+        "severity": "medium"
+      }
+    ]
+  },
+  "allIssues": [
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/adapters/favoritesProvider.ts",
+      "line": 148,
+      "type": "hardcoded_jsx_text",
+      "string": "Promise",
+      "context": "toggle: () => Promise<void>;",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 140,
+      "type": "hardcoded_object_value",
+      "string": "Ma",
+      "key": "label",
+      "context": "{ key: 'ma', label: 'Ma' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 141,
+      "type": "hardcoded_object_value",
+      "string": "Ti",
+      "key": "label",
+      "context": "{ key: 'ti', label: 'Ti' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 142,
+      "type": "hardcoded_object_value",
+      "string": "On",
+      "key": "label",
+      "context": "{ key: 'on', label: 'On' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 143,
+      "type": "hardcoded_object_value",
+      "string": "To",
+      "key": "label",
+      "context": "{ key: 'to', label: 'To' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 144,
+      "type": "hardcoded_object_value",
+      "string": "Fr",
+      "key": "label",
+      "context": "{ key: 'fr', label: 'Fr' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+      "line": 145,
+      "type": "hardcoded_object_value",
+      "string": "Lø",
+      "key": "label",
+      "context": "{ key: 'lo', label: 'Lø' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 125,
+      "type": "hardcoded_object_value",
+      "string": "Mandag",
+      "key": "label",
+      "context": "{ value: 1, label: 'Mandag', shortLabel: 'Man' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 126,
+      "type": "hardcoded_object_value",
+      "string": "Tirsdag",
+      "key": "label",
+      "context": "{ value: 2, label: 'Tirsdag', shortLabel: 'Tir' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 127,
+      "type": "hardcoded_object_value",
+      "string": "Onsdag",
+      "key": "label",
+      "context": "{ value: 3, label: 'Onsdag', shortLabel: 'Ons' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 128,
+      "type": "hardcoded_object_value",
+      "string": "Torsdag",
+      "key": "label",
+      "context": "{ value: 4, label: 'Torsdag', shortLabel: 'Tor' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 129,
+      "type": "hardcoded_object_value",
+      "string": "Fredag",
+      "key": "label",
+      "context": "{ value: 5, label: 'Fredag', shortLabel: 'Fre' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 130,
+      "type": "hardcoded_object_value",
+      "string": "Lørdag",
+      "key": "label",
+      "context": "{ value: 6, label: 'Lørdag', shortLabel: 'Lør' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 131,
+      "type": "hardcoded_object_value",
+      "string": "Søndag",
+      "key": "label",
+      "context": "{ value: 7, label: 'Søndag', shortLabel: 'Søn' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 138,
+      "type": "hardcoded_object_value",
+      "string": "Ukentlig",
+      "key": "label",
+      "context": "{ value: 'WEEKLY', label: 'Ukentlig' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 139,
+      "type": "hardcoded_object_value",
+      "string": "Månedlig",
+      "key": "label",
+      "context": "{ value: 'MONTHLY', label: 'Månedlig' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 146,
+      "type": "hardcoded_object_value",
+      "string": "Etter antall ganger",
+      "key": "label",
+      "context": "{ value: 'AFTER_OCCURRENCES', label: 'Etter antall ganger' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx",
+      "line": 147,
+      "type": "hardcoded_object_value",
+      "string": "Til en bestemt dato",
+      "key": "label",
+      "context": "{ value: 'UNTIL_DATE', label: 'Til en bestemt dato' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 171,
+      "type": "hardcoded_object_value",
+      "string": "Ledig",
+      "key": "label",
+      "context": "label: 'Ledig',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 178,
+      "type": "hardcoded_object_value",
+      "string": "Konflikt",
+      "key": "label",
+      "context": "label: 'Konflikt',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 185,
+      "type": "hardcoded_object_value",
+      "string": "Reservert",
+      "key": "label",
+      "context": "label: 'Reservert',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 192,
+      "type": "hardcoded_object_value",
+      "string": "Blokkert",
+      "key": "label",
+      "context": "label: 'Blokkert',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 199,
+      "type": "hardcoded_object_value",
+      "string": "Stengt",
+      "key": "label",
+      "context": "label: 'Stengt',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx",
+      "line": 206,
+      "type": "hardcoded_object_value",
+      "string": "Stengt",
+      "key": "label",
+      "context": "label: 'Stengt',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 98,
+      "type": "hardcoded_object_value",
+      "string": "Velg tidspunkter",
+      "key": "label",
+      "context": "{ id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 99,
+      "type": "hardcoded_object_value",
+      "string": "Detaljer og vilkår",
+      "key": "label",
+      "context": "{ id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 100,
+      "type": "hardcoded_object_value",
+      "string": "Bekreft",
+      "key": "label",
+      "context": "{ id: 'confirm', label: 'Bekreft', icon: 'confirm' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 101,
+      "type": "hardcoded_object_value",
+      "string": "Sendt",
+      "key": "label",
+      "context": "{ id: 'done', label: 'Sendt', icon: 'success' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 105,
+      "type": "hardcoded_object_value",
+      "string": "Standard",
+      "key": "label",
+      "context": "{ id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 105,
+      "type": "hardcoded_object_value",
+      "string": "Vanlig pris for alle",
+      "key": "description",
+      "context": "{ id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 106,
+      "type": "hardcoded_object_value",
+      "string": "Medlem",
+      "key": "label",
+      "context": "{ id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 106,
+      "type": "hardcoded_object_value",
+      "string": "Rabattert pris for medlemmer",
+      "key": "description",
+      "context": "{ id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 107,
+      "type": "hardcoded_object_value",
+      "string": "Ungdom under 26",
+      "key": "label",
+      "context": "{ id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 107,
+      "type": "hardcoded_object_value",
+      "string": "Redusert pris for unge",
+      "key": "description",
+      "context": "{ id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 111,
+      "type": "hardcoded_object_value",
+      "string": "Rengjøring",
+      "key": "label",
+      "context": "{ id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 111,
+      "type": "hardcoded_object_value",
+      "string": "Profesjonell rengjøring etter bruk",
+      "key": "description",
+      "context": "{ id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 112,
+      "type": "hardcoded_object_value",
+      "string": "Utstyrspakke",
+      "key": "label",
+      "context": "{ id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx",
+      "line": 112,
+      "type": "hardcoded_object_value",
+      "string": "Inkluderer bord, stoler og projektor",
+      "key": "description",
+      "context": "{ id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+      "line": 494,
+      "type": "hardcoded_jsx_text",
+      "string": "= todayHours.open && currentTime",
+      "context": "const isOpen = currentTime >= todayHours.open && currentTime < todayHours.close;",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+      "line": 146,
+      "type": "hardcoded_object_value",
+      "string": "Ingen beskrivelse tilgjengelig.",
+      "key": "description",
+      "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+      "line": 212,
+      "type": "hardcoded_object_value",
+      "string": "Ingen beskrivelse tilgjengelig.",
+      "key": "description",
+      "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+      "line": 271,
+      "type": "hardcoded_object_value",
+      "string": "Ingen beskrivelse tilgjengelig.",
+      "key": "description",
+      "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts",
+      "line": 331,
+      "type": "hardcoded_object_value",
+      "string": "Ingen beskrivelse tilgjengelig.",
+      "key": "description",
+      "context": "description: 'Ingen beskrivelse tilgjengelig.',",
+      "severity": "medium"
+    }
+  ]
 }

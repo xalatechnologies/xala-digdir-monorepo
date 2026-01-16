@@ -207,7 +207,7 @@ export function LoginPage(): React.ReactElement {
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: '4px' }}>
-            Ingen tilgang
+            {t('auth.noAccess')}
           </div>
           <div style={{ fontSize: '14px' }}>
             {accessDeniedError}

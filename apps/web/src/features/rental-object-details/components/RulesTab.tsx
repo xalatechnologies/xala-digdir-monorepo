@@ -98,57 +98,57 @@ interface CategoryConfig {
   icon: React.ComponentType<{ size?: number }>;
   bgColor: string;
   iconColor: string;
-  label: string;
+  labelKey: string;
 }
 
-const categoryConfigs: Record<string, CategoryConfig> = {
+const categoryConfigsBase: Record<string, Omit<CategoryConfig, 'labelKey'> & { labelKey: string }> = {
   safety: {
     icon: LockIcon,
     bgColor: '#FEE2E2',
     iconColor: '#DC2626',
-    label: 'Sikkerhet',
+    labelKey: 'rules.category.safety',
   },
   cleaning: {
     icon: SparklesIcon,
     bgColor: '#DBEAFE',
     iconColor: '#2563EB',
-    label: 'Renhold',
+    labelKey: 'rules.category.cleaning',
   },
   food: {
     icon: UtensilsIcon,
     bgColor: '#FEF3C7',
     iconColor: '#D97706',
-    label: 'Mat og drikke',
+    labelKey: 'rules.category.food',
   },
   noise: {
     icon: VolumeOffIcon,
     bgColor: '#F3E8FF',
     iconColor: '#9333EA',
-    label: 'Støy',
+    labelKey: 'rules.category.noise',
   },
   cancellation: {
     icon: CalendarIcon,
     bgColor: '#DBEAFE',
     iconColor: '#2563EB',
-    label: 'Booking',
+    labelKey: 'rules.category.cancellation',
   },
   equipment: {
     icon: WrenchIcon,
     bgColor: '#D1FAE5',
     iconColor: '#059669',
-    label: 'Utstyr og inventar',
+    labelKey: 'rules.category.equipment',
   },
   general: {
     icon: AlertCircleIcon,
     bgColor: '#F3F4F6',
     iconColor: '#6B7280',
-    label: 'Generelt',
+    labelKey: 'rules.category.general',
   },
   other: {
     icon: ShieldIcon,
     bgColor: '#F3F4F6',
     iconColor: '#6B7280',
-    label: 'Annet',
+    labelKey: 'rules.category.other',
   },
 };
 
@@ -224,17 +224,17 @@ export function RulesTab({
       }}
     >
       <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-        Regler og retningslinjer
+        {t('listing.rules')}
       </Heading>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
         {rules.map((rule: Rule) => {
           const category = detectCategory(rule);
-          const config = categoryConfigs[category] ?? categoryConfigs.general ?? {
+          const config = categoryConfigsBase[category] ?? categoryConfigsBase.general ?? {
             icon: AlertCircleIcon,
             bgColor: '#F3F4F6',
             iconColor: '#6B7280',
-            label: t('generelt'),
+            labelKey: 'rules.category.general',
           };
           const IconComponent = config.icon;
           const required = isRequired(rule);
@@ -296,7 +296,7 @@ export function RulesTab({
                         fontWeight: 'var(--ds-font-weight-medium)',
                       }}
                     >
-                      Påkrevd
+                      {t('rules.required')}
                     </span>
                   )}
                 </div>
@@ -308,7 +308,7 @@ export function RulesTab({
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}
                 >
-                  {rule.content || config.label}
+                  {rule.content || t(config.labelKey)}
                 </Paragraph>
               </div>
             </div>

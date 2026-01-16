@@ -31,6 +31,7 @@ export const en: Record<string, string> = {
   'common.noResults': 'No results found',
   'common.actions': 'Actions',
   'common.copy': 'Copy',
+  'common.share': 'Share',
   'common.archive': 'Archive',
   'common.publish': 'Publish',
   'common.unpublish': 'Unpublish',
@@ -82,10 +83,15 @@ export const en: Record<string, string> = {
   'auth.vippsDesc': 'Quick login with Vipps',
   'auth.temporarilyDisabled': 'Temporarily disabled',
   'auth.comingSoon': 'Coming soon',
+  'auth.microsoftComingSoon': 'Single Sign-On (SSO) coming soon',
+  'auth.noAccess': 'No access',
   'auth.privacy': 'Privacy',
   'auth.terms': 'Terms of use',
   'auth.contactSupport': 'Contact support',
   'auth.copyright': '© 2026 Digilist. All rights reserved.',
+
+  // General actions
+  'favorite': 'favorites',
 
   // Dashboard
   'dashboard.welcomeBack': 'Welcome back, {{name}}',
@@ -184,6 +190,15 @@ export const en: Record<string, string> = {
   'calendar.selectAvailable.slots': 'Select available time slots',
   'calendar.selectAvailable.days': 'Select available days',
   'calendar.selectAvailable.period': 'Select period',
+  'calendar.previousWeek': 'Previous week',
+  'calendar.nextWeek': 'Next week',
+  'calendar.busy': 'Busy',
+  'calendar.selected': 'Selected',
+  // Legacy keys for backward compatibility
+  'forrige.uke': 'Previous week',
+  'neste.uke': 'Next week',
+  'opptatt': 'Busy',
+  'valgt': 'Selected',
   // FAQ tab
   'faq.heading': 'Frequently asked questions',
   // Rules tab
@@ -197,6 +212,40 @@ export const en: Record<string, string> = {
   'rules.category.general': 'General',
   'rules.category.other': 'Other',
   'rules.required': 'Required',
+
+  // Contact widget
+  'listing.contactInfo': 'Contact Information',
+  'listing.contactPerson': 'Contact Person',
+  'listing.email': 'Email',
+  'listing.phone': 'Phone',
+
+  // Opening hours widget
+  'listing.openingHours': 'Opening Hours',
+  'listing.closed': 'Closed',
+  'listing.noOpeningHours': 'Opening hours not specified',
+  'listing.specialDays': 'Special Days',
+
+  // Days of the week
+  'days.sunday': 'Sunday',
+  'days.monday': 'Monday',
+  'days.tuesday': 'Tuesday',
+  'days.wednesday': 'Wednesday',
+  'days.thursday': 'Thursday',
+  'days.friday': 'Friday',
+  'days.saturday': 'Saturday',
+  'days.day': 'Day',
+
+  // Activity/Event status
+  'activity.status.upcoming': 'Upcoming',
+  'activity.status.ongoing': 'Ongoing',
+  'activity.status.past': 'Past',
+  'activity.status.cancelled': 'Cancelled',
+
+  // Activity labels
+  'activity.organizer': 'Organizer',
+  'activity.events': 'Events',
+  'activity.rentalHistory': 'Rental History',
+  'activity.showingCount': 'Showing {{current}} of {{total}} total',
 
   // Booking statuses
   'booking.pending': 'Pending',

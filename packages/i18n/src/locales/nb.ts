@@ -32,6 +32,7 @@ export const nb: Record<string, string> = {
   'common.noResults': 'Ingen resultater funnet',
   'common.actions': 'Handlinger',
   'common.copy': 'Kopier',
+  'common.share': 'Del',
   'common.archive': 'Arkiver',
   'common.publish': 'Publiser',
   'common.unpublish': 'Avpubliser',
@@ -83,10 +84,15 @@ export const nb: Record<string, string> = {
   'auth.vippsDesc': 'Rask innlogging med Vipps',
   'auth.temporarilyDisabled': 'Midlertidig deaktivert',
   'auth.comingSoon': 'Kommer snart',
+  'auth.microsoftComingSoon': 'Single Sign-On (SSO) kommer snart',
+  'auth.noAccess': 'Ingen tilgang',
   'auth.privacy': 'Personvern',
   'auth.terms': 'Vilkår for bruk',
   'auth.contactSupport': 'Kontakt support',
   'auth.copyright': '© 2026 Digilist. Alle rettigheter reservert.',
+
+  // General actions
+  'favorite': 'favorittliste',
 
   // Dashboard
   'dashboard.welcomeBack': 'Velkommen tilbake, {{name}}',
@@ -185,6 +191,15 @@ export const nb: Record<string, string> = {
   'calendar.selectAvailable.slots': 'Velg ledige tidspunkter',
   'calendar.selectAvailable.days': 'Velg ledige dager',
   'calendar.selectAvailable.period': 'Velg periode',
+  'calendar.previousWeek': 'Forrige uke',
+  'calendar.nextWeek': 'Neste uke',
+  'calendar.busy': 'Opptatt',
+  'calendar.selected': 'Valgt',
+  // Legacy keys for backward compatibility
+  'forrige.uke': 'Forrige uke',
+  'neste.uke': 'Neste uke',
+  'opptatt': 'Opptatt',
+  'valgt': 'Valgt',
   // FAQ tab
   'faq.heading': 'Ofte stilte spørsmål',
   // Rules tab
@@ -198,6 +213,40 @@ export const nb: Record<string, string> = {
   'rules.category.general': 'Generelt',
   'rules.category.other': 'Annet',
   'rules.required': 'Påkrevd',
+
+  // Contact widget
+  'listing.contactInfo': 'Kontaktinformasjon',
+  'listing.contactPerson': 'Kontaktperson',
+  'listing.email': 'E-post',
+  'listing.phone': 'Telefon',
+
+  // Opening hours widget
+  'listing.openingHours': 'Åpningstider',
+  'listing.closed': 'Stengt',
+  'listing.noOpeningHours': 'Åpningstider ikke angitt',
+  'listing.specialDays': 'Spesielle dager',
+
+  // Days of the week
+  'days.sunday': 'Søndag',
+  'days.monday': 'Mandag',
+  'days.tuesday': 'Tirsdag',
+  'days.wednesday': 'Onsdag',
+  'days.thursday': 'Torsdag',
+  'days.friday': 'Fredag',
+  'days.saturday': 'Lørdag',
+  'days.day': 'Dag',
+
+  // Activity/Event status
+  'activity.status.upcoming': 'Kommende',
+  'activity.status.ongoing': 'Pågår',
+  'activity.status.past': 'Avsluttet',
+  'activity.status.cancelled': 'Avlyst',
+
+  // Activity labels
+  'activity.organizer': 'Arrangør',
+  'activity.events': 'Arrangementer',
+  'activity.rentalHistory': 'Utleiehistorikk',
+  'activity.showingCount': 'Viser {{current}} av {{total}} totalt',
 
   // Booking statuses
   'booking.pending': 'Venter',

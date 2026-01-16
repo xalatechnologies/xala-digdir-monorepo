@@ -48,7 +48,8 @@ export function ShareButton({
   showLabel = true,
   className,
 }: ShareButtonProps): React.ReactElement {
-  const ariaLabel = `Del ${listingName}`;
+  const t = useT();
+  const ariaLabel = `${t('common.share')} ${listingName}`;
 
   return (
     <Button
