@@ -443,6 +443,9 @@ export const queryKeys = {
       list: () => [...queryKeys.tenantAdmin.integrations.all(), 'list'] as const,
       provider: (provider: string) => [...queryKeys.tenantAdmin.integrations.all(), provider] as const,
     },
+  },
+
+  // =========================================================================
   // Security Dashboard Keys
   // =========================================================================
   security: {
