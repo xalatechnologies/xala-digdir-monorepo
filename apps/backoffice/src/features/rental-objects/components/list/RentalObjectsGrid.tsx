@@ -17,17 +17,19 @@ import {
 import type { RentalObject } from '@digilist/client-sdk/types';
 
 export interface RentalObjectsGridProps {
-  items: RentalObject[];
+  rentalObjects: RentalObject[];
   isLoading?: boolean;
-  canEdit?: boolean;
-  onItemClick?: (item: RentalObject) => void;
+  selectedIds?: string[];
+  onSelectOne?: (id: string, selected: boolean) => void;
+  onRefresh?: () => void;
 }
 
 export function RentalObjectsGrid({
-  items,
+  rentalObjects,
   isLoading = false,
-  canEdit = false,
-  onItemClick,
+  selectedIds = [],
+  onSelectOne,
+  onRefresh: _onRefresh,
 }: RentalObjectsGridProps) {
   const t = useT();
   const navigate = useNavigate();
@@ -35,12 +37,12 @@ export function RentalObjectsGrid({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-        <Spinner size="lg" />
+        <Spinner aria-label="Laster..." />
       </div>
     );
   }
 
-  if (items.length === 0) {
+  if (rentalObjects.length === 0) {
     return (
       <div
         style={{
@@ -54,6 +56,10 @@ export function RentalObjectsGrid({
     );
   }
 
+  const handleItemClick = (item: RentalObject) => {
+    navigate(`/rental-objects/${item.slug}`);
+  };
+
   return (
     <div
       style={{
@@ -63,12 +69,13 @@ export function RentalObjectsGrid({
         padding: 'var(--ds-spacing-4)',
       }}
     >
-      {items.map((item) => (
+      {rentalObjects.map((item) => (
         <RentalObjectCard
           key={item.id}
           item={item}
-          canEdit={canEdit}
-          onItemClick={onItemClick}
+          isSelected={selectedIds.includes(item.id)}
+          onSelect={(selected) => onSelectOne?.(item.id, selected)}
+          onItemClick={handleItemClick}
         />
       ))}
     </div>
@@ -77,11 +84,12 @@ export function RentalObjectsGrid({
 
 interface RentalObjectCardProps {
   item: RentalObject;
-  canEdit: boolean;
+  isSelected?: boolean;
+  onSelect?: (selected: boolean) => void;
   onItemClick?: (item: RentalObject) => void;
 }
 
-function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps) {
+function RentalObjectCard({ item, isSelected: _isSelected, onSelect: _onSelect, onItemClick }: RentalObjectCardProps) {
   const t = useT();
   const navigate = useNavigate();
 
@@ -130,7 +138,7 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
     }
   };
 
-  const handleEditClick = (e: React.MouseEvent) => {
+  const _handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/rental-objects/${item.slug}/edit`);
   };
@@ -222,7 +230,7 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
         {/* Location (only for venues and experiences) */}
         {(item.category === 'LOKALER_OG_BANER' ||
           item.category === 'OPPLEVELSER_OG_ARRANGEMENT') && (
-          <Stack direction="row" gap={2} align="center">
+          <Stack direction="horizontal" spacing="var(--ds-spacing-2)">
             <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>📍</span>
             <Paragraph data-size="sm" style={{ margin: 0 }}>
               {locationFormatted}
@@ -232,9 +240,8 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
 
         {/* Price and Capacity */}
         <Stack
-          direction="row"
-          gap={2}
-          align="center"
+          direction="horizontal"
+          spacing="var(--ds-spacing-2)"
           style={{ marginTop: 'auto', paddingTop: 'var(--ds-spacing-3)' }}
         >
           <Paragraph
@@ -271,22 +278,12 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
       >
         <Button
           variant="secondary"
-          size="sm"
+          data-size="sm"
           onClick={handleViewClick}
           style={{ flex: 1 }} type="button"
         >
           {t('common.viewDetails')}
         </Button>
-        {canEdit && (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleEditClick}
-            style={{ flex: 1 }} type="button"
-          >
-            {t('common.edit')}
-          </Button>
-        )}
       </div>
 
       {/* Hover Effect */}

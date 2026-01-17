@@ -8,7 +8,6 @@ import { RentalObjectsListView } from './RentalObjectsListView';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastProvider } from '../../../providers/ToastProvider';
-import { useT } from '@xala/i18n';
 
 // Note: This file requires Storybook to be configured in the project
 // Install: pnpm add -D @storybook/react @storybook/react-vite
@@ -17,7 +16,7 @@ const meta: Meta<typeof RentalObjectsListView> = {
   title: 'Features/RentalObjects/ListView',
   component: RentalObjectsListView,
   decorators: [
-    (Story) => {
+    (Story: React.ComponentType) => {
       const queryClient = new QueryClient({
         defaultOptions: {
           queries: { retry: false },
@@ -57,22 +56,22 @@ const generateRentalObjects = (count: number) =>
     capacity: Math.floor(Math.random() * 100) + 1,
     location: `Location ${i + 1}`,
     image: `https://picsum.photos/400/300?random=${i}`,
-    facilities: [t("amenity.wifi"), 'Parking', 'Accessible'],
+    facilities: ['WiFi', 'Parking', 'Accessible'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }));
 
 // Mock hooks (when Storybook is configured)
 // vi.mock('@digilist/client-sdk', () => ({
-  useRentalObjects: vi.fn((params) => {
-    const count = params?.limit || 20;
-    return {
-      data: { data: generateRentalObjects(count), meta: { total: 100, page: 1, limit: count } },
-      isLoading: false,
-      error: null,
-    };
-  }),
-}));
+//   useRentalObjects: vi.fn((params) => {
+//     const count = params?.limit || 20;
+//     return {
+//       data: { data: generateRentalObjects(count), meta: { total: 100, page: 1, limit: count } },
+//       isLoading: false,
+//       error: null,
+//     };
+//   }),
+// }));
 
 // vi.mock('../../hooks/useListingPermissions', () => ({
 //   useListingPermissions: () => ({
