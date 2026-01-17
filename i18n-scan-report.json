@@ -1,14 +1,472 @@
 {
-  "timestamp": "2026-01-17T00:37:29.653Z",
+  "timestamp": "2026-01-17T00:42:05.116Z",
   "summary": {
-    "filesScanned": 1,
+    "filesScanned": 22,
     "filesSkipped": 0,
-    "totalFiles": 1,
-    "totalIssues": 0,
-    "hardcodedStrings": 0,
+    "totalFiles": 22,
+    "totalIssues": 25,
+    "hardcodedStrings": 25,
     "missingT": 0,
     "suspiciousPatterns": 0
   },
-  "issuesByFile": {},
-  "allIssues": []
+  "issuesByFile": {
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+        "line": 28,
+        "type": "hardcoded_object_value",
+        "string": "Tenant Admin",
+        "key": "name",
+        "context": "name: 'Tenant Admin',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+        "line": 44,
+        "type": "hardcoded_object_value",
+        "string": "Billing Admin",
+        "key": "name",
+        "context": "name: 'Billing Admin',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+        "line": 60,
+        "type": "hardcoded_object_value",
+        "string": "Tech Admin",
+        "key": "name",
+        "context": "name: 'Tech Admin',",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/useAuth.ts": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/useAuth.ts",
+        "line": 58,
+        "type": "hardcoded_jsx_text",
+        "string": "Promise",
+        "context": "logout: () => Promise<void>;",
+        "severity": "high"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/login.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/login.tsx",
+        "line": 78,
+        "type": "hardcoded_prop",
+        "string": "DIGILIST",
+        "prop": "brandName",
+        "context": "brandName=\"DIGILIST\"",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/login.tsx",
+        "line": 79,
+        "type": "hardcoded_prop",
+        "string": "TENANT ADMIN",
+        "prop": "brandTagline",
+        "context": "brandTagline=\"TENANT ADMIN\"",
+        "severity": "high"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 54,
+        "type": "hardcoded_object_value",
+        "string": "Vipps",
+        "key": "name",
+        "context": "name: 'Vipps',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 55,
+        "type": "hardcoded_object_value",
+        "string": "Norsk betalingsløsning for online betaling",
+        "key": "description",
+        "context": "description: 'Norsk betalingsløsning for online betaling',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 64,
+        "type": "hardcoded_object_value",
+        "string": "Visma",
+        "key": "name",
+        "context": "name: 'Visma',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 65,
+        "type": "hardcoded_object_value",
+        "string": "Integrasjon med Visma for regnskapsføring og fakturering",
+        "key": "description",
+        "context": "description: 'Integrasjon med Visma for regnskapsføring og fakturering',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 73,
+        "type": "hardcoded_object_value",
+        "string": "RCO Access",
+        "key": "name",
+        "context": "name: 'RCO Access',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 74,
+        "type": "hardcoded_object_value",
+        "string": "Adgangskontrollsystem for fysiske lokaler",
+        "key": "description",
+        "context": "description: 'Adgangskontrollsystem for fysiske lokaler',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 82,
+        "type": "hardcoded_object_value",
+        "string": "Acos",
+        "key": "name",
+        "context": "name: 'Acos',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 83,
+        "type": "hardcoded_object_value",
+        "string": "Kommunal sakssystem-integrasjon",
+        "key": "description",
+        "context": "description: 'Kommunal sakssystem-integrasjon',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 91,
+        "type": "hardcoded_object_value",
+        "string": "Microsoft Outlook",
+        "key": "name",
+        "context": "name: 'Microsoft Outlook',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 92,
+        "type": "hardcoded_object_value",
+        "string": "Kalendersynkronisering med Microsoft 365",
+        "key": "description",
+        "context": "description: 'Kalendersynkronisering med Microsoft 365',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 100,
+        "type": "hardcoded_object_value",
+        "string": "SMTP E-post",
+        "key": "name",
+        "context": "name: 'SMTP E-post',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 101,
+        "type": "hardcoded_object_value",
+        "string": "Egendefinert e-postserver for varslinger",
+        "key": "description",
+        "context": "description: 'Egendefinert e-postserver for varslinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 109,
+        "type": "hardcoded_object_value",
+        "string": "SMS Gateway",
+        "key": "name",
+        "context": "name: 'SMS Gateway',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 110,
+        "type": "hardcoded_object_value",
+        "string": "SMS-varsler via tredjeparts gateway",
+        "key": "description",
+        "context": "description: 'SMS-varsler via tredjeparts gateway',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 120,
+        "type": "hardcoded_object_value",
+        "string": "Betaling",
+        "key": "name",
+        "context": "payment: { name: 'Betaling', color: 'success' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 121,
+        "type": "hardcoded_object_value",
+        "string": "Synkronisering",
+        "key": "name",
+        "context": "sync: { name: 'Synkronisering', color: 'info' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 122,
+        "type": "hardcoded_object_value",
+        "string": "Varsler",
+        "key": "name",
+        "context": "notification: { name: 'Varsler', color: 'warning' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 123,
+        "type": "hardcoded_object_value",
+        "string": "Kalender",
+        "key": "name",
+        "context": "calendar: { name: 'Kalender', color: 'info' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+        "line": 267,
+        "type": "hardcoded_object_value",
+        "string": "Unknown integration",
+        "key": "description",
+        "context": "description: 'Unknown integration',",
+        "severity": "medium"
+      }
+    ]
+  },
+  "allIssues": [
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+      "line": 28,
+      "type": "hardcoded_object_value",
+      "string": "Tenant Admin",
+      "key": "name",
+      "context": "name: 'Tenant Admin',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+      "line": 44,
+      "type": "hardcoded_object_value",
+      "string": "Billing Admin",
+      "key": "name",
+      "context": "name: 'Billing Admin',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/AuthProvider.tsx",
+      "line": 60,
+      "type": "hardcoded_object_value",
+      "string": "Tech Admin",
+      "key": "name",
+      "context": "name: 'Tech Admin',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/.auth-backup-20260116/useAuth.ts",
+      "line": 58,
+      "type": "hardcoded_jsx_text",
+      "string": "Promise",
+      "context": "logout: () => Promise<void>;",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/login.tsx",
+      "line": 78,
+      "type": "hardcoded_prop",
+      "string": "DIGILIST",
+      "prop": "brandName",
+      "context": "brandName=\"DIGILIST\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/login.tsx",
+      "line": 79,
+      "type": "hardcoded_prop",
+      "string": "TENANT ADMIN",
+      "prop": "brandTagline",
+      "context": "brandTagline=\"TENANT ADMIN\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 54,
+      "type": "hardcoded_object_value",
+      "string": "Vipps",
+      "key": "name",
+      "context": "name: 'Vipps',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 55,
+      "type": "hardcoded_object_value",
+      "string": "Norsk betalingsløsning for online betaling",
+      "key": "description",
+      "context": "description: 'Norsk betalingsløsning for online betaling',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 64,
+      "type": "hardcoded_object_value",
+      "string": "Visma",
+      "key": "name",
+      "context": "name: 'Visma',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 65,
+      "type": "hardcoded_object_value",
+      "string": "Integrasjon med Visma for regnskapsføring og fakturering",
+      "key": "description",
+      "context": "description: 'Integrasjon med Visma for regnskapsføring og fakturering',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 73,
+      "type": "hardcoded_object_value",
+      "string": "RCO Access",
+      "key": "name",
+      "context": "name: 'RCO Access',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 74,
+      "type": "hardcoded_object_value",
+      "string": "Adgangskontrollsystem for fysiske lokaler",
+      "key": "description",
+      "context": "description: 'Adgangskontrollsystem for fysiske lokaler',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 82,
+      "type": "hardcoded_object_value",
+      "string": "Acos",
+      "key": "name",
+      "context": "name: 'Acos',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 83,
+      "type": "hardcoded_object_value",
+      "string": "Kommunal sakssystem-integrasjon",
+      "key": "description",
+      "context": "description: 'Kommunal sakssystem-integrasjon',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 91,
+      "type": "hardcoded_object_value",
+      "string": "Microsoft Outlook",
+      "key": "name",
+      "context": "name: 'Microsoft Outlook',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 92,
+      "type": "hardcoded_object_value",
+      "string": "Kalendersynkronisering med Microsoft 365",
+      "key": "description",
+      "context": "description: 'Kalendersynkronisering med Microsoft 365',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 100,
+      "type": "hardcoded_object_value",
+      "string": "SMTP E-post",
+      "key": "name",
+      "context": "name: 'SMTP E-post',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 101,
+      "type": "hardcoded_object_value",
+      "string": "Egendefinert e-postserver for varslinger",
+      "key": "description",
+      "context": "description: 'Egendefinert e-postserver for varslinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 109,
+      "type": "hardcoded_object_value",
+      "string": "SMS Gateway",
+      "key": "name",
+      "context": "name: 'SMS Gateway',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 110,
+      "type": "hardcoded_object_value",
+      "string": "SMS-varsler via tredjeparts gateway",
+      "key": "description",
+      "context": "description: 'SMS-varsler via tredjeparts gateway',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 120,
+      "type": "hardcoded_object_value",
+      "string": "Betaling",
+      "key": "name",
+      "context": "payment: { name: 'Betaling', color: 'success' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 121,
+      "type": "hardcoded_object_value",
+      "string": "Synkronisering",
+      "key": "name",
+      "context": "sync: { name: 'Synkronisering', color: 'info' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 122,
+      "type": "hardcoded_object_value",
+      "string": "Varsler",
+      "key": "name",
+      "context": "notification: { name: 'Varsler', color: 'warning' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 123,
+      "type": "hardcoded_object_value",
+      "string": "Kalender",
+      "key": "name",
+      "context": "calendar: { name: 'Kalender', color: 'info' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/tenant-admin/src/routes/settings/integrations.tsx",
+      "line": 267,
+      "type": "hardcoded_object_value",
+      "string": "Unknown integration",
+      "key": "description",
+      "context": "description: 'Unknown integration',",
+      "severity": "medium"
+    }
+  ]
 }

@@ -7,10 +7,18 @@
 export class JsonToSqlService {
   async convertToSQL(entityType: string, data: any[]): Promise<string> {
     switch (entityType) {
-      case 'rental_object':
-        return this.convertRentalObjects(data);
+      case 'tenant':
+        return this.convertTenants(data);
+      case 'organization':
+        return this.convertOrganizations(data);
       case 'user':
         return this.convertUsers(data);
+      case 'pricing_group':
+        return this.convertPricingGroups(data);
+      case 'organization_member':
+        return this.convertOrganizationMembers(data);
+      case 'rental_object':
+        return this.convertRentalObjects(data);
       case 'amenity':
         return this.convertAmenities(data);
       case 'addon':
@@ -20,6 +28,92 @@ export class JsonToSqlService {
       default:
         throw new Error(`Unsupported entity type: ${entityType}`);
     }
+  }
+  
+  private convertTenants(tenants: any[]): string {
+    let sql = `-- Generated: ${new Date().toISOString()}\n`;
+    sql += `-- Tenants (${tenants.length} items)\n\n`;
+    sql += `BEGIN;\n\n`;
+    
+    sql += `INSERT INTO platform.tenants (\n`;
+    sql += `  id, subdomain, name, status, is_active\n`;
+    sql += `) VALUES\n`;
+    
+    const values = tenants.map((tenant, i) => {
+      const comma = i < tenants.length - 1 ? ',' : '';
+      return `  ('${tenant.id}', '${tenant.subdomain}', '${this.escape(tenant.name)}', '${tenant.status}', ${tenant.isActive ?? true})${comma}`;
+    });
+    
+    sql += values.join('\n');
+    sql += `\nON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;\n\n`;
+    
+    sql += `COMMIT;\n`;
+    return sql;
+  }
+  
+  private convertOrganizations(orgs: any[]): string {
+    let sql = `-- Generated: ${new Date().toISOString()}\n`;
+    sql += `-- Organizations (${orgs.length} items)\n\n`;
+    sql += `BEGIN;\n\n`;
+    
+    sql += `INSERT INTO platform.organizations (\n`;
+    sql += `  id, tenant_id, parent_id, name, type, status\n`;
+    sql += `) VALUES\n`;
+    
+    const values = orgs.map((org, i) => {
+      const comma = i < orgs.length - 1 ? ',' : '';
+      const parentId = org.parentId ? `'${org.parentId}'` : 'NULL';
+      return `  ('${org.id}', '${org.tenantId}', ${parentId}, '${this.escape(org.name)}', '${org.type}', '${org.status || 'active'}')${comma}`;
+    });
+    
+    sql += values.join('\n');
+    sql += `\nON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;\n\n`;
+    
+    sql += `COMMIT;\n`;
+    return sql;
+  }
+  
+  private convertPricingGroups(groups: any[]): string {
+    let sql = `-- Generated: ${new Date().toISOString()}\n`;
+    sql += `-- Pricing Groups (${groups.length} items)\n\n`;
+    sql += `BEGIN;\n\n`;
+    
+    sql += `INSERT INTO platform.pricing_groups (\n`;
+    sql += `  tenant_id, code, name, description, discount_percentage, is_active, requires_verification\n`;
+    sql += `) VALUES\n`;
+    
+    const values = groups.map((group, i) => {
+      const comma = i < groups.length - 1 ? ',' : '';
+      return `  ('${group.tenantId}', '${group.code}', '${this.escape(group.name)}', '${this.escape(group.description || '')}', ${group.discountPercentage}, ${group.isActive ?? true}, ${group.requiresVerification ?? false})${comma}`;
+    });
+    
+    sql += values.join('\n');
+    sql += `\nON CONFLICT (tenant_id, code) DO UPDATE SET discount_percentage = EXCLUDED.discount_percentage;\n\n`;
+    
+    sql += `COMMIT;\n`;
+    return sql;
+  }
+  
+  private convertOrganizationMembers(members: any[]): string {
+    let sql = `-- Generated: ${new Date().toISOString()}\n`;
+    sql += `-- Organization Members (${members.length} items)\n\n`;
+    sql += `BEGIN;\n\n`;
+    
+    sql += `INSERT INTO platform.organization_members (\n`;
+    sql += `  tenant_id, organization_id, user_id, role, joined_at, is_active\n`;
+    sql += `) VALUES\n`;
+    
+    const values = members.map((member, i) => {
+      const comma = i < members.length - 1 ? ',' : '';
+      const joinedAt = member.joinedAt || new Date().toISOString();
+      return `  ('${member.tenantId}', '${member.organizationId}', '${member.userId}', '${member.role}', '${joinedAt}', ${member.isActive ?? true})${comma}`;
+    });
+    
+    sql += values.join('\n');
+    sql += `\nON CONFLICT (organization_id, user_id) DO UPDATE SET role = EXCLUDED.role;\n\n`;
+    
+    sql += `COMMIT;\n`;
+    return sql;
   }
   
   private convertRentalObjects(objects: any[]): string {

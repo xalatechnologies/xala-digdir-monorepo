@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initializeClient } from '@digilist/client-sdk';
 
 import '@xala/ds/styles';
+import './root.css';
 import { App } from './App';
 
 // Initialize SDK with configuration

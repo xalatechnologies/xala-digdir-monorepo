@@ -6,3 +6,6 @@
 
 export { AppShell } from './app-shell';
 export type { AppShellProps } from './app-shell';
+
+export { AppLayout } from './AppLayout';
+export type { AppLayoutProps } from './AppLayout';

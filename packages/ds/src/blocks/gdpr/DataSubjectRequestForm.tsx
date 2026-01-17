@@ -1,3 +1,13 @@
+/**
+ * DataSubjectRequestForm Component
+ * 
+ * GDPR data subject request form that allows users to submit requests
+ * for data access, rectification, erasure, and other GDPR rights.
+ * 
+ * This component is reusable across all apps (web, minside, etc.)
+ * and follows the SDK-first architecture pattern.
+ */
+
 import React from 'react';
 import {
   Card,
@@ -54,41 +64,14 @@ export function DataSubjectRequestForm() {
     );
   };
 
-  const renderRequestCard = (request: DataSubjectRequestDTO) => {
-    return (
-      <Card key={request.id}>
-        <Stack direction="column" gap="12px">
-          <Stack direction="row" gap="12px" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Heading size="sm">
-              {t(`gdpr.dataRequest.types.${request.requestType}`)}
-            </Heading>
-            {getStatusBadge(request.status)}
-          </Stack>
-
-          {request.details && (
-            <Paragraph size="sm">{request.details}</Paragraph>
-          )}
-
-          <Stack direction="row" gap="16px">
-            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('gdpr.dataRequest.submittedAt')}: {new Date(request.createdAt).toLocaleDateString()}
-            </Paragraph>
-            {request.completedAt && (
-              <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('gdpr.dataRequest.completedAt')}: {new Date(request.completedAt).toLocaleDateString()}
-              </Paragraph>
-            )}
-          </Stack>
-
-          {request.adminNotes && (
-            <Alert severity="info" size="sm">
-              <strong>{t('gdpr.dataRequest.adminNotes')}:</strong> {request.adminNotes}
-            </Alert>
-          )}
-        </Stack>
-      </Card>
-    );
-  };
+  const requestTypeOptions = [
+    { value: 'access', label: t('gdpr.dataRequest.typeAccess') },
+    { value: 'rectification', label: t('gdpr.dataRequest.typeRectification') },
+    { value: 'erasure', label: t('gdpr.dataRequest.typeErasure') },
+    { value: 'portability', label: t('gdpr.dataRequest.typePortability') },
+    { value: 'objection', label: t('gdpr.dataRequest.typeObjection') },
+    { value: 'restriction', label: t('gdpr.dataRequest.typeRestriction') },
+  ];
 
   return (
     <Stack direction="column" gap="32px">
@@ -100,11 +83,11 @@ export function DataSubjectRequestForm() {
       <Card>
         <form onSubmit={handleSubmit}>
           <Stack direction="column" gap="24px">
-            <Heading size="md">{t('gdpr.dataRequest.newRequest')}</Heading>
-
             <Stack direction="column" gap="8px">
               <label htmlFor="request-type">
-                <strong>{t('gdpr.dataRequest.requestType')}</strong>
+                <Paragraph size="sm" style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                  {t('gdpr.dataRequest.typeLabel')}
+                </Paragraph>
               </label>
               <Select
                 id="request-type"
@@ -112,39 +95,36 @@ export function DataSubjectRequestForm() {
                 onChange={(e) => setRequestType(e.target.value as DataRequestType)}
                 disabled={isPending}
               >
-                <option value="access">{t('gdpr.dataRequest.types.access')}</option>
-                <option value="erasure">{t('gdpr.dataRequest.types.erasure')}</option>
-                <option value="portability">{t('gdpr.dataRequest.types.portability')}</option>
-                <option value="rectification">{t('gdpr.dataRequest.types.rectification')}</option>
-                <option value="restriction">{t('gdpr.dataRequest.types.restriction')}</option>
-                <option value="objection">{t('gdpr.dataRequest.types.objection')}</option>
+                {requestTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </Select>
-              <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t(`gdpr.dataRequest.typeDescriptions.${requestType}`)}
-              </Paragraph>
             </Stack>
 
             <Stack direction="column" gap="8px">
               <label htmlFor="request-details">
-                <strong>{t('gdpr.dataRequest.details')}</strong>
+                <Paragraph size="sm" style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                  {t('gdpr.dataRequest.detailsLabel')}
+                </Paragraph>
               </label>
               <Textarea
                 id="request-details"
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
                 placeholder={t('gdpr.dataRequest.detailsPlaceholder')}
-                rows={4}
                 disabled={isPending}
+                rows={5}
               />
+              <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                {t('gdpr.dataRequest.detailsHelp')}
+              </Paragraph>
             </Stack>
-
-            <Alert severity="info">
-              {t('gdpr.dataRequest.processingTime')}
-            </Alert>
 
             {isSuccess && (
               <Alert severity="success">
-                {t('gdpr.dataRequest.submitSuccess')}
+                {t('gdpr.dataRequest.success')}
               </Alert>
             )}
 
@@ -159,11 +139,34 @@ export function DataSubjectRequestForm() {
         </form>
       </Card>
 
-      {!isLoadingRequests && myRequests.length > 0 && (
+      {myRequests.length > 0 && (
         <Stack direction="column" gap="16px">
           <Heading size="md">{t('gdpr.dataRequest.myRequests')}</Heading>
           <Stack direction="column" gap="12px">
-            {myRequests.map(renderRequestCard)}
+            {myRequests.map((request: DataSubjectRequestDTO) => (
+              <Card key={request.id}>
+                <Stack direction="column" gap="12px">
+                  <Stack direction="row" gap="12px" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <Stack direction="column" gap="4px" style={{ flex: 1 }}>
+                      <Stack direction="row" gap="8px" style={{ alignItems: 'center' }}>
+                        <Heading size="sm">
+                          {requestTypeOptions.find((opt) => opt.value === request.requestType)?.label || request.requestType}
+                        </Heading>
+                        {getStatusBadge(request.status)}
+                      </Stack>
+                      {request.details && (
+                        <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                          {request.details}
+                        </Paragraph>
+                      )}
+                      <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        {t('gdpr.dataRequest.submittedAt')}: {new Date(request.createdAt).toLocaleDateString()}
+                      </Paragraph>
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Card>
+            ))}
           </Stack>
         </Stack>
       )}

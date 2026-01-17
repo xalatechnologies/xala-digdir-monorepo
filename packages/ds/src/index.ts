@@ -60,8 +60,8 @@ export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 // =============================================================================
 
 // Shells - High-level layout components
-export { AppShell } from './shells';
-export type { AppShellProps } from './shells';
+export { AppShell, AppLayout } from './shells';
+export type { AppShellProps, AppLayoutProps } from './shells';
 
 // Composed - Mid-level components
 export {
@@ -93,13 +93,12 @@ export {
   ConfirmDialog,
   AlertDialog,
   DemoLoginDialog,
-  // Form Components
-  FormSection,
-  FormActions,
-  InfoBox,
-  // Loading and Utility Components
-  LoadingFallback,
-  SkipLinks,
+  GlobalSearch,
+  ProtectedRoute,
+} from './composed';
+export type {
+  ProtectedRouteProps,
+  ProtectedRouteLoginState,
 } from './composed';
 export { mockFilterData } from './composed';
 export type {
@@ -148,15 +147,6 @@ export type {
   DialogVariant,
   DemoLoginDialogProps,
   DemoLoginFormData,
-  // Form Component Types
-  FormSectionProps,
-  FormActionsProps,
-  InfoBoxProps,
-  InfoBoxVariant,
-  // Loading and Utility Types
-  LoadingFallbackProps,
-  SkipLinksProps,
-  SkipLink,
 } from './composed';
 
 // Primitives - Low-level building blocks
@@ -351,6 +341,10 @@ export {
   withErrorBoundary,
   GlobalErrorHandler,
   useGlobalError,
+  // GDPR Components
+  ConsentPopup,
+  ConsentSettings,
+  DataSubjectRequestForm,
 } from './blocks';
 export type {
   RentalObjectCardProps,

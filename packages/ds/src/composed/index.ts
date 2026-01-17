@@ -141,19 +141,12 @@ export type {
   DemoLoginFormData
 } from './DemoLoginDialog';
 
-// Form Components
-export { FormSection } from './FormSection';
-export type { FormSectionProps } from './FormSection';
+// Global Search
+export { GlobalSearch } from './GlobalSearch';
 
-export { FormActions } from './FormActions';
-export type { FormActionsProps } from './FormActions';
-
-export { InfoBox } from './InfoBox';
-export type { InfoBoxProps, InfoBoxVariant } from './InfoBox';
-
-// Loading and Utility Components
-export { LoadingFallback } from './LoadingFallback';
-export type { LoadingFallbackProps } from './LoadingFallback';
-
-export { SkipLinks } from './SkipLinks';
-export type { SkipLinksProps, SkipLink } from './SkipLinks';
+// Protected Route
+export { ProtectedRoute } from './ProtectedRoute';
+export type {
+  ProtectedRouteProps,
+  ProtectedRouteLoginState,
+} from './ProtectedRoute';

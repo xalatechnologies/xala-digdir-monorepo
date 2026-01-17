@@ -22,6 +22,12 @@
   padding: var(--ds-spacing-8);
 }
 
+@media (max-width: 767px) {
+  .content {
+    padding: var(--ds-spacing-4);
+  }
+}
+
 .contentContainer {
   max-width: var(--ds-size-container-xl, 1400px);
 }

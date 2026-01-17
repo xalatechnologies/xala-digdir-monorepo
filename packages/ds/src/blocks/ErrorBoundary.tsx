@@ -5,6 +5,8 @@
  * and displays a user-friendly error screen with recovery options.
  *
  * This is a class component as required by React's error boundary API.
+ * 
+ * Supports optional Sentry integration and audit logging for compliance tracking.
  */
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from './AuthComponents';
@@ -30,6 +32,10 @@ export interface ErrorBoundaryProps {
   retryButtonText?: string;
   /** Custom retry handler (defaults to page reload) */
   onRetry?: () => void;
+  /** Enable Sentry error reporting (requires @sentry/react) */
+  enableSentry?: boolean;
+  /** Enable audit logging (requires @digilist/client-sdk auditService) */
+  enableAuditLogging?: boolean;
 }
 
 interface ErrorBoundaryState {
@@ -52,8 +58,41 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Log error to console for development debugging
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
+    // Optional Sentry integration
+    if (this.props.enableSentry) {
+      try {
+        // Dynamic import to avoid requiring @sentry/react as a dependency
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const Sentry = require('@sentry/react');
+        Sentry.captureException(error, {
+          contexts: {
+            react: {
+              componentStack: errorInfo.componentStack,
+            },
+          },
+        });
+      } catch (e) {
+        // Sentry not available, skip silently
+        console.warn('Sentry integration requested but @sentry/react not available');
+      }
+    }
+
+    // Optional audit logging
+    if (this.props.enableAuditLogging) {
+      try {
+        // Dynamic import to avoid requiring @digilist/client-sdk as a dependency
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { auditService } = require('@digilist/client-sdk');
+        auditService.logError('react_error_boundary', 'application', error, {
+          componentStack: errorInfo.componentStack,
+        });
+      } catch (e) {
+        // Audit service not available, skip silently
+        console.warn('Audit logging requested but @digilist/client-sdk auditService not available');
+      }
+    }
+
     // Call the onError callback if provided (for error tracking services)
-    // TODO: Integrate with error tracking service (e.g., Sentry)
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }

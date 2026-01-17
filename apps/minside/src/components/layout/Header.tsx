@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   HeaderSearch,
@@ -12,6 +12,7 @@ import {
   SearchIcon,
   CalendarIcon,
   PeopleIcon,
+  UserIcon,
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
@@ -23,6 +24,8 @@ import { AccountSwitcher } from '../AccountSwitcher';
 interface HeaderProps {
   title?: string;
 }
+
+const MOBILE_BREAKPOINT = 768;
 
 /**
  * Get navigation search results based on query
@@ -101,6 +104,35 @@ export function Header({ title: _title }: HeaderProps) {
   const { openNotificationCenter } = useNotificationCenter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
+  );
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Track viewport size for mobile/desktop detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isUserMenuOpen]);
 
   // Get real unread notification count
   const { data: unreadData } = useNotificationUnreadCount();
@@ -159,77 +191,191 @@ export function Header({ title: _title }: HeaderProps) {
       >
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
+            display: 'flex',
             alignItems: 'center',
             height: '72px',
             padding: '0 var(--ds-spacing-6)',
             gap: 'var(--ds-spacing-4)',
           }}
         >
-          {/* Left zone - Account Switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-            <AccountSwitcher />
-          </div>
-
-          {/* Center zone - Search */}
-          <div className="minside-header-search-container">
-            <HeaderSearch
-              placeholder="Søk i bookinger, brukere..."
-              value={searchQuery}
-              onSearchChange={handleSearchChange}
-              onResultSelect={handleResultSelect}
-              results={searchResults}
-              showShortcut
-              enableGlobalShortcut
-              noResultsText="Ingen resultater funnet"
-            />
-          </div>
-
-
-        {/* Right zone - Actions */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <HeaderActions spacing="var(--ds-spacing-2)">
-            <HeaderThemeToggle
-              isDark={isDark}
-              onToggle={toggleTheme}
-            />
-            <NotificationBell
-              count={unreadCount}
-              onClick={openNotificationCenter}
-              aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-            />
-            <HeaderIconButton
-              icon={<SettingsIcon size={22} />}
-              size="md"
-              aria-label="Innstillinger"
-              title="Innstillinger"
-              onClick={() => navigate('/settings')}
-            />
-            <div
-              style={{
-                width: '1px',
-                height: '28px',
-                backgroundColor: 'var(--ds-color-neutral-border-subtle)',
-                margin: '0 var(--ds-spacing-2)',
-              }}
-            />
-            {user && (
-              <Button
-                type="button"
-                variant="tertiary"
-                data-size="md"
-                onClick={logout}
-                aria-label="Logg ut"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                <LogOutIcon size={20} />
-                Logg ut
-              </Button>
+          {/* Left zone - Logo icon only on mobile, Account Switcher on desktop */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', flexShrink: 0 }}>
+            {isMobile ? (
+              <img
+                src="/logo.svg"
+                alt="Digilist"
+                style={{
+                  height: '32px',
+                  width: 'auto',
+                }}
+              />
+            ) : (
+              <AccountSwitcher />
             )}
-          </HeaderActions>
+          </div>
+
+          {/* Center zone - Search (desktop only) */}
+          {!isMobile && (
+            <div className="minside-header-search-container" style={{ flex: '0 1 auto' }}>
+              <HeaderSearch
+                placeholder="Søk i bookinger, brukere..."
+                value={searchQuery}
+                onSearchChange={handleSearchChange}
+                onResultSelect={handleResultSelect}
+                results={searchResults}
+                showShortcut
+                enableGlobalShortcut
+                noResultsText="Ingen resultater funnet"
+              />
+            </div>
+          )}
+
+          {/* Right zone - Actions */}
+          <div style={{ flex: isMobile ? '1' : 'none', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+            {isMobile ? (
+              // Mobile: Theme toggle + User menu dropdown
+              <>
+                <HeaderThemeToggle
+                  isDark={isDark}
+                  onToggle={toggleTheme}
+                />
+                <div ref={userMenuRef} style={{ position: 'relative' }}>
+                  <Button
+                    type="button"
+                    variant="tertiary"
+                    data-size="md"
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    aria-label={user ? `${user.name || 'User'} menu` : 'User menu'}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--ds-spacing-2)',
+                      padding: 'var(--ds-spacing-2)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: 'var(--ds-border-radius-full)',
+                        backgroundColor: 'var(--ds-color-accent-surface-default)',
+                        color: 'var(--ds-color-accent-text-default)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 'var(--ds-font-size-sm)',
+                        fontWeight: 'var(--ds-font-weight-semibold)',
+                      }}
+                    >
+                      {user?.name?.charAt(0).toUpperCase() || <UserIcon size={18} />}
+                    </div>
+                  </Button>
+                  {isUserMenuOpen && user && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        right: 0,
+                        marginTop: 'var(--ds-spacing-2)',
+                        backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        boxShadow: 'var(--ds-shadow-md)',
+                        border: '1px solid var(--ds-color-neutral-border-subtle)',
+                        minWidth: '200px',
+                        overflow: 'hidden',
+                        zIndex: 1000,
+                      }}
+                    >
+                      <div
+                        style={{
+                          padding: 'var(--ds-spacing-4)',
+                          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                        }}
+                      >
+                        <div style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
+                          {user.name}
+                        </div>
+                        <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                          {user.email}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setIsUserMenuOpen(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          color: 'var(--ds-color-neutral-text-default)',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--ds-spacing-3)',
+                          fontSize: 'var(--ds-font-size-sm)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
+                      >
+                        <LogOutIcon size={18} />
+                        Logg ut
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              // Desktop: Full actions
+              <HeaderActions spacing="var(--ds-spacing-2)">
+                <HeaderThemeToggle
+                  isDark={isDark}
+                  onToggle={toggleTheme}
+                />
+                <NotificationBell
+                  count={unreadCount}
+                  onClick={openNotificationCenter}
+                  aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
+                />
+                <HeaderIconButton
+                  icon={<SettingsIcon size={22} />}
+                  size="md"
+                  aria-label="Innstillinger"
+                  title="Innstillinger"
+                  onClick={() => navigate('/settings')}
+                />
+                <div
+                  style={{
+                    width: '1px',
+                    height: '28px',
+                    backgroundColor: 'var(--ds-color-neutral-border-subtle)',
+                    margin: '0 var(--ds-spacing-2)',
+                  }}
+                />
+                {user && (
+                  <Button
+                    type="button"
+                    variant="tertiary"
+                    data-size="md"
+                    onClick={logout}
+                    aria-label="Logg ut"
+                    style={{ whiteSpace: 'nowrap' }}
+                  >
+                    <LogOutIcon size={20} />
+                    Logg ut
+                  </Button>
+                )}
+              </HeaderActions>
+            )}
+          </div>
         </div>
-      </div>
     </header>
     </>
   );

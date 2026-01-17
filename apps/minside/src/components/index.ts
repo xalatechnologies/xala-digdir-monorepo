@@ -1,8 +1,7 @@
 /**
  * Components Index
  * Exports all shared components
+ * 
+ * Note: ConsentPopup, ConsentSettings, and DataSubjectRequestForm
+ * have been moved to @xala/ds and should be imported from there.
  */
-
-export { ConsentPopup } from './ConsentPopup';
-export { ConsentSettings } from './ConsentSettings';
-export { DataSubjectRequestForm } from './DataSubjectRequestForm';

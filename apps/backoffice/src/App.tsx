@@ -9,7 +9,7 @@ import { CapabilityProvider } from './providers/CapabilityProvider';
 import { ToastProvider } from './providers/ToastProvider';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoadingFallback } from './components/LoadingFallback';
 import { initSentry } from './lib/sentry';

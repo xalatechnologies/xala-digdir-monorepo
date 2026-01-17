@@ -1,7 +1,11 @@
 /**
  * GlobalSearch Component
- * Global search with typeahead suggestions and recent searches
- * Integrates with HeaderSearch from design system and SDK search hooks
+ * 
+ * Global search with typeahead suggestions and recent searches.
+ * Integrates with HeaderSearch from design system and SDK search hooks.
+ * 
+ * This component is reusable across all apps (web, backoffice, etc.)
+ * and follows the SDK-first architecture pattern.
  */
 
 import { useState, useMemo, useCallback } from 'react';
@@ -22,7 +26,7 @@ import {
 import { useT } from '@xala/i18n';
 
 interface GlobalSearchProps {
-  /** Placeholder text */
+  /** Placeholder text (defaults to i18n key if not provided) */
   placeholder?: string;
 
   /** Show keyboard shortcut */
@@ -151,7 +155,7 @@ export function GlobalSearch({
         items,
       },
     ];
-  }, [recentSearchesData]);
+  }, [recentSearchesData, t]);
 
   // Combine typeahead and recent search results
   const searchResults = useMemo(() => {
@@ -188,9 +192,12 @@ export function GlobalSearch({
     }
   }, [searchQuery, navigate]);
 
+  // Determine placeholder text - use provided, fallback to i18n, or default
+  const placeholderText = placeholder || t('search.placeholderListings') || 'Søk i bookinger, lokaler, organisasjoner...';
+
   return (
     <HeaderSearch
-      placeholder={placeholder || t('search.placeholderListings')}
+      placeholder={placeholderText}
       value={searchQuery}
       onSearchChange={handleSearchChange}
       onResultSelect={handleResultSelect}

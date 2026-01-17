@@ -17,6 +17,12 @@
   padding: var(--ds-spacing-8);
 }
 
+@media (max-width: 767px) {
+  .mainContent {
+    padding: var(--ds-spacing-4);
+  }
+}
+
 .maxWidthWrapper {
   max-width: 1400px;
 }

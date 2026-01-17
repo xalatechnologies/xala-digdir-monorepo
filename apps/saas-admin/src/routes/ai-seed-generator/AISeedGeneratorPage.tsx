@@ -26,13 +26,22 @@ import { aiSeedGeneratorService } from '../../services/ai-seed-generator.service
 import { jsonToSqlService } from '../../services/json-to-sql.service';
 import styles from './AISeedGenerator.module.css';
 
-export type EntityType = 'rental_object' | 'user' | 'amenity' | 'addon' | 'booking';
+export type EntityType = 
+  | 'tenant'
+  | 'organization' 
+  | 'user' 
+  | 'pricing_group'
+  | 'organization_member'
+  | 'rental_object' 
+  | 'amenity' 
+  | 'addon' 
+  | 'booking';
 
 export function AISeedGeneratorPage() {
   const t = useT();
   const { toast } = useToast();
   
-  const [entityType, setEntityType] = useState<EntityType>('rental_object');
+  const [entityType, setEntityType] = useState<EntityType>('tenant');
   const [count, setCount] = useState<number>(10);
   const [tenantId, setTenantId] = useState<string>('f47ac10b-58cc-4372-a567-0e02b2c3d479');
   const [customPrompt, setCustomPrompt] = useState<string>('');
@@ -58,14 +67,14 @@ export function AISeedGeneratorPage() {
       setGeneratedSQL(sql);
       
       toast.success({
-        title: 'Seeds Generated!',
-        description: `Generated ${seeds.length} ${entityType} seeds successfully`,
+        title: t('saasAdmin.aiSeed.success.title'),
+        description: t('saasAdmin.aiSeed.success.description', { count: seeds.length, entityType }),
       });
     } catch (error: any) {
       console.error('Generation failed:', error);
       toast.error({
-        title: 'Generation Failed',
-        description: error.message || 'Failed to generate seeds. Check API key and try again.',
+        title: t('saasAdmin.aiSeed.error.title'),
+        description: error.message || t('saasAdmin.aiSeed.error.description'),
       });
     } finally {
       setGenerating(false);
@@ -96,11 +105,10 @@ export function AISeedGeneratorPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <Heading level={1} data-size="lg">
-          🤖 AI Seed Generator
+          {t('saasAdmin.aiSeed.title')}
         </Heading>
         <Paragraph>
-          Generate production-ready seed data using AI. Seeds are validated against database schema
-          and ready to import.
+          {t('saasAdmin.aiSeed.description')}
         </Paragraph>
       </div>
       
@@ -116,13 +124,21 @@ export function AISeedGeneratorPage() {
             <Select
               id="entityType"
               value={entityType}
-              onChange={(e) => setEntityType(e.target.value as EntityType)}
+              onChange={(e: any) => setEntityType(e.target.value as EntityType)}
             >
-              <option value="rental_object">Rental Objects (Lokaler/Utstyr)</option>
-              <option value="user">Users (Brukere)</option>
-              <option value="amenity">Amenities (Fasiliteter)</option>
-              <option value="addon">Add-ons (Tilleggstjenester)</option>
-              <option value="booking">Bookings (Bookinger)</option>
+              <optgroup label={t('saasAdmin.aiSeed.entityGroup.platform', { defaultValue: 'Platform Entities' })}>
+                <option value="tenant">{t('saasAdmin.aiSeed.entityType.tenant')}</option>
+                <option value="organization">{t('saasAdmin.aiSeed.entityType.organization')}</option>
+                <option value="user">{t('saasAdmin.aiSeed.entityType.user')}</option>
+                <option value="pricing_group">{t('saasAdmin.aiSeed.entityType.pricing_group')}</option>
+                <option value="organization_member">{t('saasAdmin.aiSeed.entityType.organization_member')}</option>
+              </optgroup>
+              <optgroup label={t('saasAdmin.aiSeed.entityGroup.domain', { defaultValue: 'Domain Entities' })}>
+                <option value="rental_object">{t('saasAdmin.aiSeed.entityType.rental_object')}</option>
+                <option value="amenity">{t('saasAdmin.aiSeed.entityType.amenity')}</option>
+                <option value="addon">{t('saasAdmin.aiSeed.entityType.addon')}</option>
+                <option value="booking">{t('saasAdmin.aiSeed.entityType.booking')}</option>
+              </optgroup>
             </Select>
             <Paragraph data-size="xs" className={styles.helpText}>
               Choose what type of data to generate
@@ -156,22 +172,22 @@ export function AISeedGeneratorPage() {
               <option value="b2c3d4e5-f6a7-5b6c-9d0e-1f2a3b4c5d6e">Bamble Kommune</option>
             </Select>
             <Paragraph data-size="xs" className={styles.helpText}>
-              Which tenant to generate data for
+              {t('saasAdmin.aiSeed.tenantIdHelp')}
             </Paragraph>
           </div>
         </div>
         
         <div className={styles.formGroup}>
-          <label htmlFor="customPrompt">Custom Instructions (optional)</label>
+          <label htmlFor="customPrompt">{t('saasAdmin.aiSeed.customPrompt')}</label>
           <TextArea
             id="customPrompt"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            placeholder="E.g., 'Generate diverse sports facilities across different Norwegian cities with realistic pricing'"
+            placeholder={t('saasAdmin.aiSeed.customPromptPlaceholder')}
             rows={4}
           />
           <Paragraph data-size="xs" className={styles.helpText}>
-            Add specific instructions for AI to follow
+            {t('saasAdmin.aiSeed.customPromptHelp')}
           </Paragraph>
         </div>
         
@@ -184,10 +200,10 @@ export function AISeedGeneratorPage() {
           >
             {generating ? (
               <>
-                <Spinner size="sm" /> Generating...
+                <Spinner size="sm" /> {t('saasAdmin.aiSeed.generating')}
               </>
             ) : (
-              <>🚀 Generate Seeds</>
+              <>{t('saasAdmin.aiSeed.generate')}</>
             )}
           </Button>
         </div>
@@ -198,14 +214,14 @@ export function AISeedGeneratorPage() {
         <Card className={styles.resultsCard}>
           <div className={styles.resultsHeader}>
             <Heading level={2} data-size="md">
-              Generated {generatedData.length} {entityType} seeds
+              {t('saasAdmin.aiSeed.results.title', { count: generatedData.length, entityType })}
             </Heading>
             <div className={styles.resultActions}>
               <Button onClick={handleDownloadJSON} variant="outline" size="sm">
-                📥 Download JSON
+                {t('saasAdmin.aiSeed.results.downloadJSON')}
               </Button>
               <Button onClick={handleDownloadSQL} variant="outline" size="sm">
-                📥 Download SQL
+                {t('saasAdmin.aiSeed.results.downloadSQL')}
               </Button>
             </div>
           </div>
@@ -238,14 +254,13 @@ export function AISeedGeneratorPage() {
       {/* Schema Reference */}
       <Card className={styles.schemaCard}>
         <Heading level={3} data-size="sm">
-          📋 Schema Reference
+          {t('saasAdmin.aiSeed.schema.title')}
         </Heading>
         <Paragraph data-size="sm">
-          AI generates data based on <code>complete-database-schema.json</code> (217 tables, 1303 columns).
-          All generated data is validated before display.
+          {t('saasAdmin.aiSeed.schema.description')}
         </Paragraph>
         <Paragraph data-size="sm">
-          <strong>Powered by:</strong> OpenAI GPT-4 Turbo
+          <strong>{t('saasAdmin.aiSeed.schema.poweredBy')}</strong> OpenAI GPT-4 Turbo
         </Paragraph>
       </Card>
     </div>

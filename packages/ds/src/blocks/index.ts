@@ -246,3 +246,10 @@ export type {
   GlobalError,
   UseGlobalErrorOptions,
 } from './GlobalErrorHandler';
+
+// GDPR Components
+export {
+  ConsentPopup,
+  ConsentSettings,
+  DataSubjectRequestForm,
+} from './gdpr';

@@ -75,8 +75,8 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <LoginLayout
-      brandName="DIGILIST"
-      brandTagline="TENANT ADMIN"
+      brandName={t('common.brandName', { defaultValue: 'DIGILIST' })}
+      brandTagline={t('tenantAdmin.brandTagline', { defaultValue: 'TENANT ADMIN' })}
       title={t('auth.login')}
       subtitle={t('auth.selectMethod')}
       panelTitle={t('tenantAdmin.panelTitle')}

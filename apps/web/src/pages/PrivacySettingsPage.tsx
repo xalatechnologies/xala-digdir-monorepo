@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Tabs, TabsList, TabsTab, TabsPanel, Paragraph } from '@xala/ds';
+import { Container, Tabs, TabsList, TabsTab, TabsPanel } from '@xala/ds';
+import { ConsentSettings, DataSubjectRequestForm } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { /* ConsentSettings, DataSubjectRequestForm */ } from '../components';
 
 export function PrivacySettingsPage() {
   const t = useT();
@@ -17,15 +17,13 @@ export function PrivacySettingsPage() {
 
         <TabsPanel value="consents">
           <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-            {/* TODO: Re-enable when SDK consent hooks are implemented */}
-            <Paragraph>Consent settings will be available soon.</Paragraph>
+            <ConsentSettings />
           </div>
         </TabsPanel>
 
         <TabsPanel value="requests">
           <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
-            {/* TODO: Re-enable when SDK GDPR hooks are implemented */}
-            <Paragraph>Data subject request form will be available soon.</Paragraph>
+            <DataSubjectRequestForm />
           </div>
         </TabsPanel>
       </Tabs>

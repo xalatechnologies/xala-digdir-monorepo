@@ -216,7 +216,13 @@ export function Sidebar() {
     {
       title: 'Administrasjon',
       items: [
-        { name: 'Utleieobjekter', description: 'Administrer utleieobjekter', href: '/rental-objects', icon: <BuildingIcon /> },
+        {
+          name: 'Utleieobjekter',
+          description: 'Lokaler, utstyr, kjøretøy og opplevelser',
+          href: '/rental-objects',
+          icon: <BuildingIcon />,
+          capability: 'rental_objects:read'
+        },
         { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
         { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
         { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },

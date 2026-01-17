@@ -5,7 +5,7 @@
  */
 
 export interface GenerateRequest {
-  entityType: 'rental_object' | 'user' | 'amenity' | 'addon' | 'booking';
+  entityType: 'tenant' | 'organization' | 'user' | 'pricing_group' | 'organization_member' | 'rental_object' | 'amenity' | 'addon' | 'booking';
   count: number;
   tenantId: string;
   prompt?: string;
@@ -50,8 +50,12 @@ class AISeedGeneratorService {
     const schema = await response.json();
     
     const schemaMap: Record<string, string> = {
-      rental_object: 'RentalObject',
+      tenant: 'Tenant',
+      organization: 'Organization',
       user: 'User',
+      pricing_group: 'PricingGroup',
+      organization_member: 'OrganizationMember',
+      rental_object: 'RentalObject',
       amenity: 'Amenity',
       addon: 'AddOn',
       booking: 'Booking',
@@ -206,3 +210,6 @@ IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, just th
     return validSeeds;
   }
 }
+
+// Export singleton instance
+export const aiSeedGeneratorService = new AISeedGeneratorService();

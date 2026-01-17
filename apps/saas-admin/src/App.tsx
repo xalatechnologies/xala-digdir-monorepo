@@ -3,9 +3,9 @@ import { DesignsystemetProvider, ErrorBoundary, Heading, Paragraph } from '@xala
 import { I18nProvider, useT } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage, AISeedGeneratorPage } from './routes';
+import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage, AISeedGeneratorPage, FeatureFlagsCatalogPage, BillingPage, UsersPage, AuditLogPage, SettingsPage } from './routes';
 
 function DashboardPage() {
   const t = useT();
@@ -44,6 +44,11 @@ export function App() {
                     <Route path="/tenants" element={<TenantsListPage />} />
                     <Route path="/tenants/:id" element={<TenantDetailPage />} />
                     <Route path="/plans" element={<PlansListPage />} />
+                    <Route path="/feature-flags" element={<FeatureFlagsCatalogPage />} />
+                    <Route path="/billing" element={<BillingPage />} />
+                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/audit" element={<AuditLogPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/ai-seeds" element={<AISeedGeneratorPage />} />
                   </Route>
                 </Routes>

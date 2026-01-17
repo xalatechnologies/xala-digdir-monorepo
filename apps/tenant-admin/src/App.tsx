@@ -3,7 +3,7 @@ import { DesignsystemetProvider, ErrorBoundary } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
 import {
   LoginPage,
@@ -11,6 +11,10 @@ import {
   SubscriptionPage,
   BrandingSettingsPage,
   IntegrationsSettingsPage,
+  UsersPage,
+  FeatureFlagsPage,
+  AuditLogPage,
+  SettingsPage,
 } from './routes';
 
 /**
@@ -43,7 +47,11 @@ export function App() {
                   >
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/subscription" element={<SubscriptionPage />} />
+                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/feature-flags" element={<FeatureFlagsPage />} />
+                    <Route path="/audit" element={<AuditLogPage />} />
                     <Route path="/branding" element={<BrandingSettingsPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/settings/integrations" element={<IntegrationsSettingsPage />} />
                   </Route>
                 </Routes>

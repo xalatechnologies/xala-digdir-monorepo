@@ -1,3 +1,13 @@
+/**
+ * ConsentSettings Component
+ * 
+ * GDPR consent management settings page that displays all consent types
+ * and allows users to manage their consent preferences.
+ * 
+ * This component is reusable across all apps (web, minside, etc.)
+ * and follows the SDK-first architecture pattern.
+ */
+
 import React from 'react';
 import {
   Card,

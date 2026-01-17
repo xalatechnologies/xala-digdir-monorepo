@@ -7,7 +7,7 @@ import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from '@xala/ds';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
 
 // Dashboard context constants (technical identifiers, not user-facing strings)

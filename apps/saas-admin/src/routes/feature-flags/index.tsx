@@ -25,11 +25,7 @@ import { useSaasFeatureFlagsCatalog } from '@digilist/client-sdk/hooks';
 import type { FeatureFlagCatalogItem, FeatureFlagCategory } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 
-const categoryLabels: Record<FeatureFlagCategory, string> = {
-  module: 'Modul',
-  integration: 'Integrasjon',
-  policy: 'Policy',
-};
+// Category labels will be retrieved via i18n
 
 const categoryColors: Record<FeatureFlagCategory, 'info' | 'success' | 'warning'> = {
   module: 'info',
@@ -42,14 +38,21 @@ const statusColors: Record<'active' | 'deprecated', 'success' | 'danger'> = {
   deprecated: 'danger',
 };
 
-const statusLabels: Record<'active' | 'deprecated', string> = {
-  active: 'Aktiv',
-  deprecated: 'Utgått',
-};
+// Status labels will be retrieved via i18n
 
 export function FeatureFlagsCatalogPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const t = useT();
+  
+  const categoryLabels: Record<FeatureFlagCategory, string> = {
+    module: t('saasAdmin.featureFlagsCatalog.categoryModule'),
+    integration: t('saasAdmin.featureFlagsCatalog.categoryIntegration'),
+    policy: t('saasAdmin.featureFlagsCatalog.categoryPolicy'),
+  };
+  
+  const statusLabels: Record<'active' | 'deprecated', string> = {
+    active: t('saasAdmin.featureFlagsCatalog.statusActive'),
+    deprecated: t('saasAdmin.featureFlagsCatalog.statusDeprecated'),
+  };
 
   // State
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,12 +94,12 @@ export function FeatureFlagsCatalogPage() {
       return flag.defaultValue ? (
         <Badge color="success">
           <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-sm)' }} />
-          På
+          {t('saasAdmin.featureFlagsCatalog.boolean.on')}
         </Badge>
       ) : (
         <Badge color="neutral">
           <XCircleIcon style={{ fontSize: 'var(--ds-font-size-sm)' }} />
-          Av
+          {t('saasAdmin.featureFlagsCatalog.boolean.off')}
         </Badge>
       );
     }
@@ -106,19 +109,14 @@ export function FeatureFlagsCatalogPage() {
   return (
     <Stack direction="column" gap={20}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <Heading level={2} data-size="md">
-            Feature Flags
-          </Heading>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
-          >
-            Katalog over alle tilgjengelige feature flags i plattformen
-          </Paragraph>
-        </div>
-      </div>
+      <Stack direction="column" gap={1}>
+        <Heading level={2} data-size="md">
+          {t('saasAdmin.featureFlagsCatalog.title')}
+        </Heading>
+        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          {t('saasAdmin.featureFlagsCatalog.description')}
+        </Paragraph>
+      </Stack>
 
       {/* Stats */}
       <Grid
@@ -126,48 +124,44 @@ export function FeatureFlagsCatalogPage() {
         gap={12}
       >
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-          >
-            Totalt
-          </Paragraph>
-          <Heading level={3} data-size="lg" style={{ margin: 0 }}>
-            {stats.total}
-          </Heading>
+          <Stack direction="column" gap={2}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              {t('saasAdmin.featureFlagsCatalog.total')}
+            </Paragraph>
+            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              {stats.total}
+            </Heading>
+          </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-          >
-            Moduler
-          </Paragraph>
-          <Heading level={3} data-size="lg" style={{ margin: 0 }}>
-            {stats.module}
-          </Heading>
+          <Stack direction="column" gap={2}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              {t('saasAdmin.featureFlagsCatalog.modules')}
+            </Paragraph>
+            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              {stats.module}
+            </Heading>
+          </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-          >
-            Integrasjoner
-          </Paragraph>
-          <Heading level={3} data-size="lg" style={{ margin: 0 }}>
-            {stats.integration}
-          </Heading>
+          <Stack direction="column" gap={2}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              {t('saasAdmin.featureFlagsCatalog.integrations')}
+            </Paragraph>
+            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              {stats.integration}
+            </Heading>
+          </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}
-          >
-            Policies
-          </Paragraph>
-          <Heading level={3} data-size="lg" style={{ margin: 0 }}>
-            {stats.policy}
-          </Heading>
+          <Stack direction="column" gap={2}>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              {t('saasAdmin.featureFlagsCatalog.policies')}
+            </Paragraph>
+            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              {stats.policy}
+            </Heading>
+          </Stack>
         </Card>
       </Grid>
 
@@ -176,7 +170,7 @@ export function FeatureFlagsCatalogPage() {
         <Stack direction="horizontal" gap={12} wrap align="center">
           <div style={{ flex: '1 1 var(--ds-size-container-sm, 300px)', minWidth: 'var(--ds-size-20, 200px)' }}>
             <HeaderSearch
-              placeholder="Søk etter flag..."
+              placeholder={t('saasAdmin.featureFlagsCatalog.searchPlaceholder')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -185,21 +179,21 @@ export function FeatureFlagsCatalogPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Kategori: {categoryFilter === 'all' ? 'Alle' : categoryLabels[categoryFilter]}
+              {t('saasAdmin.featureFlagsCatalog.category')}: {categoryFilter === 'all' ? t('saasAdmin.featureFlagsCatalog.categoryAll') : categoryLabels[categoryFilter]}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setCategoryFilter('all')}>{t('saasAdmin.featureFlagsCatalog.categoryAll')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('module')}>Modul</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setCategoryFilter('module')}>{t('saasAdmin.featureFlagsCatalog.categoryModule')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('integration')}>Integrasjon</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setCategoryFilter('integration')}>{t('saasAdmin.featureFlagsCatalog.categoryIntegration')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('policy')}>Policy</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setCategoryFilter('policy')}>{t('saasAdmin.featureFlagsCatalog.categoryPolicy')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -208,18 +202,18 @@ export function FeatureFlagsCatalogPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
+              {t('saasAdmin.featureFlagsCatalog.status')}: {statusFilter === 'all' ? t('saasAdmin.featureFlagsCatalog.statusAll') : statusLabels[statusFilter]}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('saasAdmin.featureFlagsCatalog.statusAll')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('saasAdmin.featureFlagsCatalog.statusActive')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>Utgått</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>{t('saasAdmin.featureFlagsCatalog.statusDeprecated')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -231,37 +225,40 @@ export function FeatureFlagsCatalogPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t('saasAdmin.featureFlagsCatalog.loading')} />
           </div>
         ) : filteredFlags.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <SettingsIcon
-              style={{
-                fontSize: 'var(--ds-font-size-heading-lg)',
-                color: 'var(--ds-color-neutral-text-subtle)',
-                marginBottom: 'var(--ds-spacing-3)',
-              }}
-            />
-            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Ingen feature flags funnet
-            </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
-                : 'Ingen feature flags er definert i plattformen'}
-            </Paragraph>
-          </div>
+          <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
+            <Stack direction="column" gap={3} align="center">
+              <SettingsIcon
+                style={{
+                  fontSize: 'var(--ds-font-size-heading-lg)',
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                }}
+              />
+              <Stack direction="column" gap={2} align="center">
+                <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+                  {t('saasAdmin.featureFlagsCatalog.empty.title')}
+                </Heading>
+                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                  {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
+                    ? t('saasAdmin.featureFlagsCatalog.empty.tryDifferentSearch')
+                    : t('saasAdmin.featureFlagsCatalog.empty.noFlags')}
+                </Paragraph>
+              </Stack>
+            </Stack>
+          </Stack>
         ) : (
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Nøkkel</Table.HeaderCell>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Kategori</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell>Standardverdi</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Beskrivelse</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.key')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.category')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.type')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.defaultValue')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.featureFlagsCatalog.table.description')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -271,10 +268,10 @@ export function FeatureFlagsCatalogPage() {
                     <Stack direction="horizontal" gap={8} align="center">
                       <SettingsIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
                       <Text
-                        data-size="sm"
+                        size="sm"
+                        weight="medium"
                         style={{
                           fontFamily: 'var(--ds-font-family-monospace)',
-                          fontWeight: 'var(--ds-font-weight-medium)',
                         }}
                       >
                         {flag.key}
@@ -282,7 +279,7 @@ export function FeatureFlagsCatalogPage() {
                     </Stack>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    <Text size="sm" weight="medium">
                       {flag.name}
                     </Text>
                   </Table.Cell>
@@ -291,10 +288,10 @@ export function FeatureFlagsCatalogPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <Text
-                      data-size="sm"
+                      size="sm"
+                      color="var(--ds-color-neutral-text-subtle)"
                       style={{
                         fontFamily: 'var(--ds-font-family-monospace)',
-                        color: 'var(--ds-color-neutral-text-subtle)',
                       }}
                     >
                       {flag.type}
@@ -307,9 +304,9 @@ export function FeatureFlagsCatalogPage() {
                   <Table.Cell>
                     {flag.description ? (
                       <Text
-                        data-size="sm"
+                        size="sm"
+                        color="var(--ds-color-neutral-text-subtle)"
                         style={{
-                          color: 'var(--ds-color-neutral-text-subtle)',
                           maxWidth: 'var(--ds-size-container-sm, 300px)',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -320,7 +317,7 @@ export function FeatureFlagsCatalogPage() {
                         {flag.description}
                       </Text>
                     ) : (
-                      <Text data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      <Text size="sm" color="var(--ds-color-neutral-text-subtle)">
                         —
                       </Text>
                     )}
@@ -334,8 +331,8 @@ export function FeatureFlagsCatalogPage() {
 
       {/* Results info */}
       <Stack direction="horizontal" justify="end" align="center">
-        <Text data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Viser {filteredFlags.length} av {flags.length} feature flags
+        <Text size="sm" color="var(--ds-color-neutral-text-subtle)">
+          {t('saasAdmin.featureFlagsCatalog.results', { showing: filteredFlags.length, total: flags.length })}
         </Text>
       </Stack>
     </Stack>

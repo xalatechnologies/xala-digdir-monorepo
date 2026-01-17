@@ -152,8 +152,8 @@ export function Sidebar() {
       title: t('saasAdmin.nav.sections.system'),
       items: [
         {
-          name: '🤖 AI Seed Generator',
-          description: 'Generate production seed data with AI',
+          name: t('saasAdmin.aiSeed.title'),
+          description: t('saasAdmin.aiSeed.description'),
           href: '/ai-seeds',
           icon: <SparklesIcon />,
           roles: ['SAAS_SUPER_ADMIN'],
@@ -218,7 +218,7 @@ export function Sidebar() {
         <div className={styles.logoWrapper}>
           <img
             src="/logo.svg"
-            alt="Digilist"
+            alt={t('common.brandName', { defaultValue: 'Digilist' })}
             className={styles.logoImage}
           />
           <div>

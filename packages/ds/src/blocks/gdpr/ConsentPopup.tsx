@@ -1,3 +1,13 @@
+/**
+ * ConsentPopup Component
+ * 
+ * GDPR consent management popup dialog that displays required and optional
+ * consent types and allows users to grant or deny consent.
+ * 
+ * This component is reusable across all apps (web, minside, etc.)
+ * and follows the SDK-first architecture pattern.
+ */
+
 import React, { useEffect, useRef } from 'react';
 import {
   Heading,

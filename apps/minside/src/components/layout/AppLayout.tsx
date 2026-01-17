@@ -18,6 +18,10 @@ import {
   CalendarIcon,
   MessageIcon,
   SettingsIcon,
+  HeaderSearch,
+  SearchIcon,
+  type SearchResultItem,
+  type SearchResultGroup,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
@@ -40,6 +44,75 @@ const pageTitles: Record<string, string> = {
 
 const MOBILE_BREAKPOINT = 768;
 
+/**
+ * Get navigation search results based on query
+ */
+const getNavigationResults = (query: string, t: (key: string) => string): SearchResultGroup[] => {
+  if (!query.trim()) return [];
+
+  const q = query.toLowerCase();
+  const navItems: SearchResultItem[] = [];
+
+  // Dashboard
+  if ('dashboard'.includes(q) || 'hjem'.includes(q) || 'oversikt'.includes(q)) {
+    navItems.push({
+      id: 'nav-dashboard',
+      label: 'Dashboard',
+      description: 'Gå til oversikt',
+      icon: <SearchIcon size={18} />,
+      href: '/',
+    });
+  }
+
+  // Bookings
+  if ('booking'.includes(q) || 'bestilling'.includes(q)) {
+    navItems.push({
+      id: 'nav-bookings',
+      label: 'Bookinger',
+      description: 'Se alle dine bookinger',
+      icon: <CalendarIcon size={18} />,
+      href: '/bookings',
+    });
+  }
+
+  // Calendar
+  if ('kalender'.includes(q) || 'calendar'.includes(q)) {
+    navItems.push({
+      id: 'nav-calendar',
+      label: 'Kalender',
+      description: 'Se bookinger i kalendervisning',
+      icon: <CalendarIcon size={18} />,
+      href: '/calendar',
+    });
+  }
+
+  // Messages
+  if ('melding'.includes(q) || 'message'.includes(q) || 'samtale'.includes(q)) {
+    navItems.push({
+      id: 'nav-messages',
+      label: 'Meldinger',
+      description: 'Se samtaler og meldinger',
+      icon: <MessageIcon size={18} />,
+      href: '/messages',
+    });
+  }
+
+  // Settings
+  if ('innstilling'.includes(q) || 'setting'.includes(q)) {
+    navItems.push({
+      id: 'nav-settings',
+      label: 'Innstillinger',
+      description: 'Systemkonfigurasjon',
+      icon: <SettingsIcon size={18} />,
+      href: '/settings',
+    });
+  }
+
+  if (navItems.length === 0) return [];
+
+  return [{ id: 'navigation', label: 'Sider', items: navItems }];
+};
+
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -50,6 +123,8 @@ export function AppLayout() {
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResultGroup[]>([]);
 
   // Handle context redirect message from navigation state
   // Skip showing message if this was an intentional switch via AccountSwitcher
@@ -89,6 +164,20 @@ export function AppLayout() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Handle search
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setSearchResults(getNavigationResults(value, t));
+  };
+
+  const handleResultSelect = (result: SearchResultItem) => {
+    if (result.href) {
+      navigate(result.href);
+      setSearchQuery('');
+      setSearchResults([]);
+    }
+  };
 
   // Bottom navigation items for mobile
   const bottomNavItems: BottomNavigationItem[] = [
@@ -149,6 +238,22 @@ export function AppLayout() {
         }}
       >
         <Header title={title} />
+
+        {/* Mobile Search - Below header */}
+        {isMobile && (
+          <div style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+            <HeaderSearch
+              placeholder="Søk i bookinger, brukere..."
+              value={searchQuery}
+              onSearchChange={handleSearchChange}
+              onResultSelect={handleResultSelect}
+              results={searchResults}
+              showShortcut={false}
+              enableGlobalShortcut={false}
+              noResultsText="Ingen resultater funnet"
+            />
+          </div>
+        )}
 
         {/* Context redirect notification */}
         {redirectMessage && (

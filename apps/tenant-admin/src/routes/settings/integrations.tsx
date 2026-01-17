@@ -34,10 +34,10 @@ import type { TenantIntegration } from '@digilist/client-sdk/services/tenant-adm
 const MOBILE_BREAKPOINT = 768;
 
 /**
- * Integration provider configuration
+ * Get integration provider configuration
  * Defines display names, descriptions, and required fields for each provider
  */
-const INTEGRATION_CONFIG: Record<
+const getIntegrationConfig = (t: (key: string) => string): Record<
   string,
   {
     name: string;
@@ -49,10 +49,10 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: boolean;
     docsUrl?: string;
   }
-> = {
+> => ({
   vipps: {
-    name: 'Vipps',
-    description: 'Norsk betalingsløsning for online betaling',
+    name: t('tenantAdmin.integrations.provider.vipps'),
+    description: t('tenantAdmin.integrations.provider.vippsDesc'),
     category: 'payment',
     icon: '💳',
     requiresApiKey: true,
@@ -61,8 +61,8 @@ const INTEGRATION_CONFIG: Record<
     docsUrl: 'https://developer.vipps.no/',
   },
   visma: {
-    name: 'Visma',
-    description: 'Integrasjon med Visma for regnskapsføring og fakturering',
+    name: t('tenantAdmin.integrations.provider.visma'),
+    description: t('tenantAdmin.integrations.provider.vismaDesc'),
     category: 'sync',
     icon: '📊',
     requiresApiKey: true,
@@ -70,8 +70,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   rco: {
-    name: 'RCO Access',
-    description: 'Adgangskontrollsystem for fysiske lokaler',
+    name: t('tenantAdmin.integrations.provider.rco'),
+    description: t('tenantAdmin.integrations.provider.rcoDesc'),
     category: 'sync',
     icon: '🔐',
     requiresApiKey: true,
@@ -79,8 +79,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   acos: {
-    name: 'Acos',
-    description: 'Kommunal sakssystem-integrasjon',
+    name: t('tenantAdmin.integrations.provider.acos'),
+    description: t('tenantAdmin.integrations.provider.acosDesc'),
     category: 'sync',
     icon: '📁',
     requiresApiKey: true,
@@ -88,8 +88,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   outlook: {
-    name: 'Microsoft Outlook',
-    description: 'Kalendersynkronisering med Microsoft 365',
+    name: t('tenantAdmin.integrations.provider.outlook'),
+    description: t('tenantAdmin.integrations.provider.outlookDesc'),
     category: 'calendar',
     icon: '📅',
     requiresApiKey: false,
@@ -97,8 +97,8 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   smtp: {
-    name: 'SMTP E-post',
-    description: 'Egendefinert e-postserver for varslinger',
+    name: t('tenantAdmin.integrations.provider.smtp'),
+    description: t('tenantAdmin.integrations.provider.smtpDesc'),
     category: 'notification',
     icon: '📧',
     requiresApiKey: true,
@@ -106,22 +106,22 @@ const INTEGRATION_CONFIG: Record<
     requiresWebhook: false,
   },
   sms: {
-    name: 'SMS Gateway',
-    description: 'SMS-varsler via tredjeparts gateway',
+    name: t('tenantAdmin.integrations.provider.sms'),
+    description: t('tenantAdmin.integrations.provider.smsDesc'),
     category: 'notification',
     icon: '📱',
     requiresApiKey: true,
     requiresApiSecret: false,
     requiresWebhook: false,
   },
-};
+});
 
-const CATEGORY_LABELS: Record<string, { name: string; color: 'info' | 'success' | 'warning' | 'danger' }> = {
-  payment: { name: 'Betaling', color: 'success' },
-  sync: { name: 'Synkronisering', color: 'info' },
-  notification: { name: 'Varsler', color: 'warning' },
-  calendar: { name: 'Kalender', color: 'info' },
-};
+const getCategoryLabels = (t: (key: string) => string): Record<string, { name: string; color: 'info' | 'success' | 'warning' | 'danger' }> => ({
+  payment: { name: t('tenantAdmin.integrations.category.payment'), color: 'success' },
+  sync: { name: t('tenantAdmin.integrations.category.sync'), color: 'info' },
+  notification: { name: t('tenantAdmin.integrations.category.notification'), color: 'warning' },
+  calendar: { name: t('tenantAdmin.integrations.category.calendar'), color: 'info' },
+});
 
 interface IntegrationEditState {
   apiKey: string;
@@ -132,6 +132,9 @@ interface IntegrationEditState {
 export function IntegrationsSettingsPage(): React.ReactElement {
   const t = useT();
   const { isTenantAdmin, isTechAdmin } = useAuth();
+  
+  const INTEGRATION_CONFIG = getIntegrationConfig(t);
+  const CATEGORY_LABELS = getCategoryLabels(t);
 
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -264,7 +267,7 @@ export function IntegrationsSettingsPage(): React.ReactElement {
   const renderIntegrationCard = (integration: TenantIntegration) => {
     const config = INTEGRATION_CONFIG[integration.provider] ?? {
       name: integration.provider,
-      description: 'Unknown integration',
+      description: t('tenantAdmin.integrations.provider.unknown'),
       category: 'sync' as const,
       icon: '🔗',
       requiresApiKey: false,
