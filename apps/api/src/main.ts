@@ -66,8 +66,13 @@ import { ReviewsController } from './modules/reviews/reviews.controller';
 // Phase 8: SaaS Admin & Tenant Admin
 import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
+import { TenantAdminUserController } from './modules/user-management';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
+// TODO: These routes exist but have broken imports - need refactoring
+// import { amenitiesRoutes } from './modules/amenities/amenities.routes';
+// import { addonsRoutes } from './modules/addons/addons.routes';
+// import { favoritesRoutes } from './modules/favorites/favorites.routes';
 // Storage
 import { StorageController } from './modules/storage/storage.controller';
 import { StorageService } from './modules/storage/storage.service';
@@ -204,8 +209,11 @@ async function bootstrap() {
   container.registerFactory('BookingController', () => 
     new BookingController(container.resolve('BookingService'))
   );
-  container.registerFactory('UserController', () => 
+  container.registerFactory('UserController', () =>
     new UserController(container.resolve('UserService'))
+  );
+  container.registerFactory('TenantAdminUserController', () =>
+    new TenantAdminUserController(container.resolve('UserService'))
   );
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
@@ -226,10 +234,11 @@ async function bootstrap() {
 
   // Get controllers (core + backoffice modules)
   const controllers = [
-    TenantController, 
-    RentalObjectController, 
-    BookingController, 
-    UserController, 
+    TenantController,
+    RentalObjectController,
+    BookingController,
+    UserController,
+    TenantAdminUserController,
     MonitoringController,
     // Backoffice modules
     DashboardController,
@@ -288,6 +297,14 @@ async function bootstrap() {
   // Create Fastify app with controllers
   const app = await createFastifyApp(controllers, { adapters });
   console.log('✓ REST routes registered');
+
+  // Register Fastify plugin routes
+  // TODO: Enable after refactoring amenities/addons/favorites services to use DI pattern
+  // await app.register(amenitiesRoutes, { prefix: '/api' });
+  // await app.register(addonsRoutes, { prefix: '/api' });
+  // await app.register(favoritesRoutes, { prefix: '/api' });
+  await app.register(featuresRoutes, { prefix: '/api' });
+  console.log('✓ Feature flags routes registered');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);

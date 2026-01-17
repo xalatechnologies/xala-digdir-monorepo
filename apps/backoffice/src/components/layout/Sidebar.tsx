@@ -15,7 +15,6 @@ import {
   ClockIcon,
   CheckCircleIcon,
   ShieldIcon,
-  BlockIcon,
 } from '@xala/ds';
 import { useAuth } from '@xala/auth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
@@ -306,7 +305,7 @@ export function Sidebar() {
           name: 'Blokkeringer',
           description: 'Sperringer og vedlikehold',
           href: '/blocks',
-          icon: <BlockIcon />,
+          icon: <ShieldIcon />,
           capability: 'CAP_NAV_BLOCKS',
         },
       ],
@@ -361,6 +360,7 @@ export function Sidebar() {
       title: 'Tenant',
       items: [
         { name: t('tenantAdmin.nav.users'), description: t('tenantAdmin.nav.usersDesc'), href: '/tenant/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
+        { name: 'Funksjoner', description: 'Aktiver/deaktiver moduler', href: '/tenant/features', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
         { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
         { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, capability: 'CAP_SETTINGS_ADMIN' },
         { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },

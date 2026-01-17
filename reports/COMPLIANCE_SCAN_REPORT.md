@@ -1,6 +1,6 @@
 # Designsystemet Compliance Scan Report
 
-**Scan Date:** 2026-01-16
+**Scan Date:** 2026-01-17
 **Repository:** xala-digdir-monorepo
 **Scanned Directories:** packages/ds/src, apps/web/src
 
@@ -10,30 +10,30 @@
 
 | Category | Issues | Severity | Status |
 |----------|--------|----------|--------|
-| Hardcoded Colors | 100 | high | ❌ Needs Fix |
+| Hardcoded Colors | 124 | high | ❌ Needs Fix |
 | Hardcoded Font Family | 1 | medium | ⚠️ Minor |
-| Hardcoded Letter Spacing | 0 | low | ✅ Clean |
+| Hardcoded Letter Spacing | 2 | low | ⚠️ Minor |
 | Hardcoded Line Height | 0 | low | ✅ Clean |
 | Hardcoded Box Shadow | 13 | medium | ❌ Needs Fix |
 | Hardcoded Z-Index | 0 | low | ✅ Clean |
 | Hardcoded Transition Duration | 12 | low | ❌ Needs Fix |
 | Hardcoded Opacity | 1 | low | ⚠️ Minor |
-| Hardcoded Spacing | 36 | high | ❌ Needs Fix |
+| Hardcoded Spacing | 44 | high | ❌ Needs Fix |
 | Hardcoded Typography | 30 | medium | ❌ Needs Fix |
 | Hardcoded Border Radius | 9 | medium | ❌ Needs Fix |
-| Raw HTML Layouts in Apps | 70 | medium | ❌ Needs Fix |
-| Hardcoded Dimensions | 320 | low | ❌ Needs Fix |
+| Raw HTML Layouts in Apps | 71 | medium | ❌ Needs Fix |
+| Hardcoded Dimensions | 355 | low | ❌ Needs Fix |
 | Hardcoded Breakpoints | 0 | low | ✅ Clean |
 | SVG Hardcoded Colors | 9 | low | ❌ Needs Fix |
 | Touch Target Size | 2 | medium | ⚠️ Minor |
 | Missing Button Type | 0 | medium | ✅ Clean |
 | Inline !important | 0 | low | ✅ Clean |
-| Hardcoded Gap | 12 | high | ❌ Needs Fix |
+| Hardcoded Gap | 15 | high | ❌ Needs Fix |
 | Inconsistent Icon Size | 14 | low | ❌ Needs Fix |
 | Raw Div with Click Handler | 0 | medium | ✅ Clean |
 
-**Total Issues:** 629
-**High Severity:** 148
+**Total Issues:** 702
+**High Severity:** 183
 
 ---
 
@@ -41,7 +41,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use design tokens: var(--ds-color-*)
-**Issues Found:** 100
+**Issues Found:** 124
 
 ### Findings by File
 
@@ -122,6 +122,27 @@
 | 132 | Named color | `color: 'white',...` |
 | 271 | Named color | `color: 'white',...` |
 
+#### `packages/ds/src/components/ImageUpload.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 279 | Hex color | `border: 2px dashed #cbd5e1;...` |
+| 285 | Hex color | `background: #f8fafc;...` |
+| 289 | Hex color | `border-color: #3b82f6;...` |
+| 290 | Hex color | `background: #eff6ff;...` |
+| 294 | Hex color | `border-color: #3b82f6;...` |
+| 295 | Hex color | `background: #dbeafe;...` |
+| 305 | Hex color | `color: #64748b;...` |
+| 311 | Hex color | `color: #1e293b;...` |
+| 317 | Hex color | `color: #64748b;...` |
+| 331 | Hex color | `border: 4px solid #e2e8f0;...` |
+| 332 | Hex color | `border-top-color: #3b82f6;...` |
+| 350 | Hex color | `background: #fef2f2;...` |
+| 351 | Hex color | `border: 1px solid #fecaca;...` |
+| 353 | Hex color | `color: #dc2626;...` |
+| 369 | Hex color | `background: #f1f5f9;...` |
+| ... | +7 more | ... |
+
 #### `packages/ds/src/composed/BookingStepper.tsx`
 
 | Line | Issue | Content |
@@ -153,19 +174,19 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 585 | Hex color | `<rect width="40" height="40" rx="8" fill="#1E2B3C"...` |
-| 603 | Hex color | `<rect width="40" height="40" rx="8" fill="#F3F3F3"...` |
-| 604 | Hex color | `<rect x="10" y="10" width="9" height="9" fill="#F2...` |
-| 605 | Hex color | `<rect x="21" y="10" width="9" height="9" fill="#7F...` |
-| 606 | Hex color | `<rect x="10" y="21" width="9" height="9" fill="#00...` |
-| 607 | Hex color | `<rect x="21" y="21" width="9" height="9" fill="#FF...` |
-| 622 | Hex color | `<rect width="40" height="40" rx="8" fill="#FFFFFF"...` |
-| 623 | Hex color | `<path d="M29.6 20.227c0-.709-.064-1.39-.182-2.045H...` |
-| 624 | Hex color | `<path d="M20 30c2.7 0 4.964-.895 6.618-2.423l-3.23...` |
-| 625 | Hex color | `<path d="M14.405 21.9c-.2-.6-.314-1.24-.314-1.9s.1...` |
-| 626 | Hex color | `<path d="M20 13.977c1.468 0 2.786.505 3.823 1.496l...` |
-| 641 | Hex color | `<rect width="40" height="40" rx="8" fill="#002776"...` |
-| 660 | Hex color | `<rect width="40" height="40" rx="8" fill="#FF5B24"...` |
+| 603 | Hex color | `<rect width="40" height="40" rx="8" fill="#1E2B3C"...` |
+| 621 | Hex color | `<rect width="40" height="40" rx="8" fill="#F3F3F3"...` |
+| 622 | Hex color | `<rect x="10" y="10" width="9" height="9" fill="#F2...` |
+| 623 | Hex color | `<rect x="21" y="10" width="9" height="9" fill="#7F...` |
+| 624 | Hex color | `<rect x="10" y="21" width="9" height="9" fill="#00...` |
+| 625 | Hex color | `<rect x="21" y="21" width="9" height="9" fill="#FF...` |
+| 640 | Hex color | `<rect width="40" height="40" rx="8" fill="#FFFFFF"...` |
+| 641 | Hex color | `<path d="M29.6 20.227c0-.709-.064-1.39-.182-2.045H...` |
+| 642 | Hex color | `<path d="M20 30c2.7 0 4.964-.895 6.618-2.423l-3.23...` |
+| 643 | Hex color | `<path d="M14.405 21.9c-.2-.6-.314-1.24-.314-1.9s.1...` |
+| 644 | Hex color | `<path d="M20 13.977c1.468 0 2.786.505 3.823 1.496l...` |
+| 659 | Hex color | `<rect width="40" height="40" rx="8" fill="#002776"...` |
+| 678 | Hex color | `<rect width="40" height="40" rx="8" fill="#FF5B24"...` |
 
 #### `apps/web/src/components/SentryTestComponent.tsx`
 
@@ -225,6 +246,13 @@
 | 149 | Hex color | `bgColor: '#F3F4F6',...` |
 | ... | +3 more | ... |
 
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 252 | Named color | `color: 'white',...` |
+| 373 | Named color | `color: 'white',...` |
+
 #### `apps/web/src/pages/RentalObjectsPage.tsx`
 
 | Line | Issue | Content |
@@ -253,9 +281,21 @@
 
 **Severity:** LOW
 **Recommendation:** Use letter spacing token: var(--ds-letter-spacing-*)
-**Issues Found:** 0
+**Issues Found:** 2
 
-✅ No issues found.
+### Findings by File
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAddOnsSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 254 | Letter spacing with units | `letterSpacing: '0.5px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 288 | Letter spacing with units | `letterSpacing: '0.5px',...` |
 
 ---
 
@@ -374,7 +414,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 36
+**Issues Found:** 44
 
 ### Findings by File
 
@@ -416,11 +456,19 @@
 | 214 | Pixel spacing | `right: '2px',...` |
 | 475 | Pixel spacing | `gap: '4px',...` |
 
-#### `apps/web/src/components/ConsentSettings.tsx`
+#### `packages/ds/src/components/ImageUpload.tsx`
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 57 | Pixel spacing | `<Stack direction="column" gap="24px" style={{ alig...` |
+| 281 | Pixel spacing | `padding: 48px 24px;...` |
+| 325 | Pixel spacing | `gap: 12px;...` |
+| 342 | Pixel spacing | `margin-top: 16px;...` |
+| 345 | Pixel spacing | `gap: 8px;...` |
+| 349 | Pixel spacing | `padding: 12px 16px;...` |
+| 358 | Pixel spacing | `margin-top: 24px;...` |
+| 361 | Pixel spacing | `gap: 16px;...` |
+| 391 | Pixel spacing | `padding: 8px;...` |
+| 423 | Pixel spacing | `padding: 8px;...` |
 
 #### `apps/web/src/components/SentryTestComponent.tsx`
 
@@ -599,7 +647,7 @@
 
 **Severity:** MEDIUM
 **Recommendation:** Use layout primitives: <Stack>, <Grid>, <Flex>
-**Issues Found:** 70
+**Issues Found:** 71
 
 ### Findings by File
 
@@ -687,6 +735,12 @@
 |------|-------|--------|
 | 189 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
 
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAddOnsSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 261 | Div with inline flex | `<div style={{ display: 'flex', flexDirection: 'col...` |
+
 #### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingCartSidebar.tsx`
 
 | Line | Issue | Content |
@@ -754,7 +808,7 @@
 
 **Severity:** LOW
 **Recommendation:** Consider using tokens or calc() with tokens
-**Issues Found:** 320
+**Issues Found:** 355
 
 ### Findings by File
 
@@ -1036,6 +1090,15 @@
 | 267 | Dimension in px | `minWidth: '20px',...` |
 | 268 | Dimension in px | `height: '20px',...` |
 
+#### `packages/ds/src/components/ImageUpload.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 329 | Dimension in px | `width: 40px;...` |
+| 330 | Dimension in px | `height: 40px;...` |
+| 403 | Dimension in px | `width: 32px;...` |
+| 404 | Dimension in px | `height: 32px;...` |
+
 #### `packages/ds/src/composed/BookingStepper.tsx`
 
 | Line | Issue | Content |
@@ -1045,6 +1108,13 @@
 | 150 | Dimension in px | `height: '48px',...` |
 | 198 | Dimension in px | `maxWidth: '90px',...` |
 | 203 | Dimension in px | `height: '3px',...` |
+
+#### `packages/ds/src/composed/SkipLinks.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 59 | Dimension in px | `width: '1px',...` |
+| 60 | Dimension in px | `height: '1px',...` |
 
 #### `packages/ds/src/composed/bottom-navigation.tsx`
 
@@ -1058,6 +1128,46 @@
 | 185 | Dimension in px | `height: '16px',...` |
 | 235 | Dimension in px | `width: '32px',...` |
 | 236 | Dimension in px | `height: '2px',...` |
+
+#### `packages/ds/src/composed/data-page/BulkActionsBar.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 97 | Dimension in px | `width: '1px',...` |
+| 98 | Dimension in px | `height: '32px',...` |
+| 122 | Dimension in px | `width: '1px',...` |
+| 123 | Dimension in px | `height: '32px',...` |
+
+#### `packages/ds/src/composed/data-page/EmptyState.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 148 | Dimension in px | `maxWidth: '500px',...` |
+
+#### `packages/ds/src/composed/data-page/FilterChips.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 87 | Dimension in px | `height: '32px',...` |
+
+#### `packages/ds/src/composed/data-page/StatusTabs.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 111 | Dimension in px | `minWidth: '20px',...` |
+| 112 | Dimension in px | `height: '20px',...` |
+
+#### `packages/ds/src/composed/data-page/Wizard.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 138 | Dimension in px | `<div style={{ maxWidth: '1200px', margin: '0 auto'...` |
+| 177 | Dimension in px | `width: '40px',...` |
+| 178 | Dimension in px | `height: '40px',...` |
+| 215 | Dimension in px | `minWidth: '80px',...` |
+| 266 | Dimension in px | `height: '2px',...` |
+| 272 | Dimension in px | `minWidth: '40px',...` |
+| 402 | Dimension in px | `<div style={{ maxWidth: '800px', margin: '0 auto' ...` |
 
 #### `packages/ds/src/composed/dialogs.tsx`
 
@@ -1085,12 +1195,6 @@
 | 271 | Dimension in px | `minHeight: '48px',...` |
 | 317 | Dimension in px | `width: '24px',...` |
 | 318 | Dimension in px | `height: '24px',...` |
-
-#### `apps/web/src/components/ConsentPopup.tsx`
-
-| Line | Issue | Content |
-|------|-------|--------|
-| 127 | Dimension in px | `maxWidth: '600px',...` |
 
 #### `apps/web/src/components/LazyRentalObjectMap.tsx`
 
@@ -1243,6 +1347,16 @@
 | 939 | Dimension in px | `width: '80px',...` |
 | 940 | Dimension in px | `height: '80px',...` |
 
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAddOnsSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 394 | Dimension in px | `width: '28px',...` |
+| 395 | Dimension in px | `height: '28px',...` |
+| 410 | Dimension in px | `minWidth: '30px',...` |
+| 422 | Dimension in px | `width: '28px',...` |
+| 423 | Dimension in px | `height: '28px',...` |
+
 #### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx`
 
 | Line | Issue | Content |
@@ -1278,6 +1392,19 @@
 | 582 | Dimension in px | `style={{ minWidth: '120px' }}...` |
 | 590 | Dimension in px | `style={{ minWidth: '120px' }}...` |
 
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 203 | Dimension in px | `width: '40px',...` |
+| 204 | Dimension in px | `height: '40px',...` |
+| 248 | Dimension in px | `width: '24px',...` |
+| 249 | Dimension in px | `height: '24px',...` |
+| 324 | Dimension in px | `width: '40px',...` |
+| 325 | Dimension in px | `height: '40px',...` |
+| 369 | Dimension in px | `width: '24px',...` |
+| 370 | Dimension in px | `height: '24px',...` |
+
 #### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx`
 
 | Line | Issue | Content |
@@ -1305,6 +1432,13 @@
 | 130 | Dimension in px | `height: '40px',...` |
 | 162 | Dimension in px | `maxWidth: '100px',...` |
 | 172 | Dimension in px | `height: '2px',...` |
+
+#### `apps/web/src/features/rental-object-details/components/Sidebar/components/BookingVisibilitySelector.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 196 | Dimension in px | `width: '18px',...` |
+| 197 | Dimension in px | `height: '18px',...` |
 
 #### `apps/web/src/features/reviews/components/ReviewForm.tsx`
 
@@ -1367,14 +1501,14 @@
 
 | Line | Issue | Content |
 |------|-------|--------|
-| 586 | SVG stroke="white" | `<path d="M20 8L12 14V26L20 32L28 26V14L20 8Z" stro...` |
-| 587 | SVG fill="white" | `<rect x="18" y="14" width="4" height="8" fill="whi...` |
-| 588 | SVG fill="white" | `<rect x="18" y="24" width="4" height="3" fill="whi...` |
-| 642 | SVG fill="white" | `<path d="M12 14h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4v-8...` |
-| 643 | SVG fill="white" | `<rect x="12" y="24" width="4" height="4" fill="whi...` |
-| 644 | SVG fill="white" | `<rect x="20" y="14" width="4" height="14" fill="wh...` |
-| 645 | SVG fill="white" | `<path d="M28 14h-4v14h4c2.2 0 4-3.1 4-7s-1.8-7-4-7...` |
-| 663 | SVG stroke="white" | `stroke="white"...` |
+| 604 | SVG stroke="white" | `<path d="M20 8L12 14V26L20 32L28 26V14L20 8Z" stro...` |
+| 605 | SVG fill="white" | `<rect x="18" y="14" width="4" height="8" fill="whi...` |
+| 606 | SVG fill="white" | `<rect x="18" y="24" width="4" height="3" fill="whi...` |
+| 660 | SVG fill="white" | `<path d="M12 14h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4v-8...` |
+| 661 | SVG fill="white" | `<rect x="12" y="24" width="4" height="4" fill="whi...` |
+| 662 | SVG fill="white" | `<rect x="20" y="14" width="4" height="14" fill="wh...` |
+| 663 | SVG fill="white" | `<path d="M28 14h-4v14h4c2.2 0 4-3.1 4-7s-1.8-7-4-7...` |
+| 681 | SVG stroke="white" | `stroke="white"...` |
 
 #### `apps/web/src/features/rental-object-details/components/PaymentSection.tsx`
 
@@ -1425,7 +1559,7 @@
 
 **Severity:** HIGH
 **Recommendation:** Use spacing tokens: var(--ds-spacing-*)
-**Issues Found:** 12
+**Issues Found:** 15
 
 ### Findings by File
 
@@ -1449,6 +1583,14 @@
 | Line | Issue | Content |
 |------|-------|--------|
 | 475 | Gap in px | `gap: '4px',...` |
+
+#### `packages/ds/src/components/ImageUpload.tsx`
+
+| Line | Issue | Content |
+|------|-------|--------|
+| 325 | Gap in px | `gap: 12px;...` |
+| 345 | Gap in px | `gap: 8px;...` |
+| 361 | Gap in px | `gap: 16px;...` |
 
 #### `apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx`
 
@@ -1570,22 +1712,23 @@
 ## Action Items
 
 ### Priority 1 (High Severity)
-- [ ] Fix 100 hardcoded colors issues
-- [ ] Fix 36 hardcoded spacing issues
-- [ ] Fix 12 hardcoded gap issues
+- [ ] Fix 124 hardcoded colors issues
+- [ ] Fix 44 hardcoded spacing issues
+- [ ] Fix 15 hardcoded gap issues
 
 ### Priority 2 (Medium Severity)
 - [ ] Fix 1 hardcoded font family issues
 - [ ] Fix 13 hardcoded box shadow issues
 - [ ] Fix 30 hardcoded typography issues
 - [ ] Fix 9 hardcoded border radius issues
-- [ ] Fix 70 raw html layouts in apps issues
+- [ ] Fix 71 raw html layouts in apps issues
 - [ ] Fix 2 touch target size issues
 
 ### Priority 3 (Low Severity / Acceptable)
+- [ ] Review 2 hardcoded letter spacing issues
 - [ ] Review 12 hardcoded transition duration issues
 - [ ] Review 1 hardcoded opacity issues
-- [ ] Review 320 hardcoded dimensions issues
+- [ ] Review 355 hardcoded dimensions issues
 - [ ] Review 9 svg hardcoded colors issues
 - [ ] Review 14 inconsistent icon size issues
 
@@ -1610,4 +1753,4 @@ pnpm scan:all
 ---
 
 *Generated by scan-compliance.mjs*
-*Date: 2026-01-16*
+*Date: 2026-01-17*

@@ -19,7 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
 import { usePendingItems } from '@digilist/client-sdk';
-import { useCapabilityContext } from '../../contexts/CapabilityContext';
+import { useCapabilityContext } from '../../providers/CapabilityProvider';
 
 interface PendingTask {
   id: string;

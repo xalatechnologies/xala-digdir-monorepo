@@ -312,4 +312,156 @@ export class RentalObjectService {
       },
     };
   }
+
+  /**
+   * Get booking policy (Contract-First DTO)
+   * Returns BookingPolicyDTO with all booking rules
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  async getBookingPolicy(id: string): Promise<any> {
+    const rentalObject = await this.findByIdOrFail(id);
+    const features = rentalObject.bookingFeatures || {};
+    
+    return {
+      rentalObjectId: rentalObject.id,
+      modes: {
+        single: true,
+        range: rentalObject.timeMode === 'PERIOD',
+        allDay: rentalObject.timeMode === 'ALL_DAY',
+        recurring: features.recurringBookings === true,
+        season: false, // Future feature
+        activity: rentalObject.category === 'ARRANGEMENTER_OG_TJENESTER',
+      },
+      slots: {
+        enabled: rentalObject.timeMode === 'SLOT',
+        durationMinutes: [30, 60, 120, 180],
+        gridStart: '08:00',
+        gridEnd: '22:00',
+      },
+      constraints: {
+        minDurationMinutes: 30,
+        maxDurationMinutes: 480,
+        minNoticeDays: 0,
+        maxAdvanceDays: 90,
+        maxConcurrentBookings: 3,
+      },
+      rules: {
+        requiresApproval: features.requiresApproval === true,
+        allowWeekends: true,
+        allowHolidays: true,
+        blackoutDates: [],
+        customRules: [],
+      },
+    };
+  }
+
+  /**
+   * Get payment policy (Contract-First DTO)
+   * Returns PaymentPolicyDTO with payment requirements
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  async getPaymentPolicy(id: string): Promise<any> {
+    const rentalObject = await this.findByIdOrFail(id);
+    const features = rentalObject.bookingFeatures || {};
+    const pricing = rentalObject.pricing || {};
+    
+    return {
+      rentalObjectId: rentalObject.id,
+      requiresApproval: features.requiresApproval === true,
+      approvalWorkflow: features.requiresApproval
+        ? {
+            roles: ['ORG_ADMIN', 'TENANT_ADMIN'],
+            autoApproveForGroups: [],
+            estimatedApprovalTime: '24-48 hours',
+          }
+        : undefined,
+      deposit: {
+        required: false,
+        type: 'PERCENTAGE' as const,
+        value: 0,
+        paymentTiming: 'BEFORE_SUBMIT' as const,
+      },
+      payment: {
+        payNowEnabled: pricing.basePrice > 0,
+        payLaterEnabled: features.requiresApproval === true,
+        payOnlineRequired: false,
+        providers: pricing.basePrice > 0 ? ['VIPPS' as const, 'STRIPE' as const] : [],
+      },
+      cancellation: {
+        feeCents: 0,
+        freeCancellationHours: 24,
+        refundPolicy: {
+          fullRefundHours: 48,
+          partialRefundHours: 24,
+          partialRefundPercent: 50,
+        },
+      },
+    };
+  }
+
+  /**
+   * Get dynamic tabs configuration (Contract-First DTO)
+   * Returns TabConfigDTO[] for rental object details page
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  async getTabs(id: string): Promise<any[]> {
+    const rentalObject = await this.findByIdOrFail(id);
+    const features = rentalObject.bookingFeatures || {};
+    const hasLocation = rentalObject.fixedLocation && rentalObject.metadata?.location;
+    
+    const tabs = [
+      {
+        key: 'overview',
+        label: { nb: 'Oversikt', en: 'Overview' },
+        order: 1,
+        enabled: true,
+        contentAvailable: true,
+        icon: 'information',
+      },
+      {
+        key: 'availability',
+        label: { nb: 'Tilgjengelighet', en: 'Availability' },
+        order: 2,
+        enabled: true,
+        contentAvailable: true,
+        icon: 'calendar',
+      },
+      {
+        key: 'pricing',
+        label: { nb: 'Priser', en: 'Pricing' },
+        order: 3,
+        enabled: rentalObject.pricing?.basePrice > 0,
+        contentAvailable: rentalObject.pricing?.basePrice > 0,
+        icon: 'currency',
+        featureFlag: 'feature.pricing',
+      },
+      {
+        key: 'activities',
+        label: { nb: 'Aktiviteter', en: 'Activities' },
+        order: 4,
+        enabled: rentalObject.category === 'ARRANGEMENTER_OG_TJENESTER',
+        contentAvailable: false, // Would check if activities exist
+        icon: 'event',
+      },
+      {
+        key: 'reviews',
+        label: { nb: 'Anmeldelser', en: 'Reviews' },
+        order: 5,
+        enabled: false, // Feature flag controlled
+        contentAvailable: false,
+        icon: 'star',
+        featureFlag: 'feature.ratings_reviews',
+      },
+      {
+        key: 'location',
+        label: { nb: 'Plassering', en: 'Location' },
+        order: 6,
+        enabled: hasLocation,
+        contentAvailable: hasLocation,
+        icon: 'location',
+      },
+    ];
+    
+    return tabs.filter((tab) => tab.enabled);
+  }
 }

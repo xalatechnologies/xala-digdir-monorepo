@@ -2,8 +2,9 @@
  * Reports Controller
  * Provides usage, revenue, and analytics reports
  */
-import { Controller, Get } from '../../core/decorators';
-import { container } from '../../core/container';
+import { Controller, Get, Post } from '../../core/decorators';
+import { Inject } from '../../core/decorators';
+import { ReportsService } from './reports.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, sql, and, gte, lte, count, sum } from 'drizzle-orm';
 import { rentalObjects, bookings, organizations, users, seasonalLeases } from '../../database/schema/index';
@@ -15,6 +16,53 @@ interface TenantRequest extends FastifyRequest {
 
 @Controller('/api/reports')
 export class ReportsController {
+  constructor(
+    @Inject('ReportsService') private readonly service: ReportsService
+  ) {}
+
+  /**
+   * GET /api/reports/templates - Get report templates (Contract-First)
+   * Returns ReportTemplateDTO
+   */
+  @Get('/templates')
+  async getTemplates(_request: FastifyRequest, _reply: FastifyReply) {
+    const templates = await this.service.getTemplates();
+    return { data: templates };
+  }
+
+  /**
+   * POST /api/reports/generate - Generate report (Contract-First)
+   * Returns ReportDTO
+   */
+  @Post('/generate')
+  async generate(request: FastifyRequest, _reply: FastifyReply) {
+    const body = request.body as any;
+    const userId = (request as any).user?.id || 'system';
+    const report = await this.service.generateReport(body, userId);
+    return { data: report };
+  }
+
+  /**
+   * GET /api/reports/:id - Get report status
+   * Returns ReportDTO
+   */
+  @Get('/:id')
+  async getReport(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
+    const report = await this.service.getReport(request.params.id);
+    return { data: report };
+  }
+
+  /**
+   * GET /api/reports - List user's reports
+   * Returns ReportDTO[]
+   */
+  @Get()
+  async listReports(request: FastifyRequest, _reply: FastifyReply) {
+    const userId = (request as any).user?.id || 'system';
+    const reports = await this.service.listReports(userId);
+    return { data: reports };
+  }
+
   @Get('/usage')
   async getUsageReport(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');

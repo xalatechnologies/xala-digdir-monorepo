@@ -25,6 +25,7 @@ const RentalObjectEditPage = React.lazy(() => import('./routes/rental-objects').
 const RentalObjectDetailPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectDetailPage })));
 const CalendarPage = React.lazy(() => import('./routes/calendar').then(m => ({ default: m.CalendarPage })));
 const BookingsPage = React.lazy(() => import('./routes/bookings').then(m => ({ default: m.BookingsPage })));
+const PendingBookingsPage = React.lazy(() => import('./routes/bookings/pending'));
 const SeasonsListPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonsListPage })));
 const SeasonDetailPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonDetailPage })));
 const SeasonFormPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonFormPage })));
@@ -64,6 +65,7 @@ const TenantBrandingPage = React.lazy(() => import('./routes/tenant/branding').t
 const TenantAuditLogPage = React.lazy(() => import('./routes/tenant/audit-log').then(m => ({ default: m.TenantAuditLogPage })));
 const TenantUsersListPage = React.lazy(() => import('./routes/tenant/users').then(m => ({ default: m.TenantUsersListPage })));
 const TenantUserInvitePage = React.lazy(() => import('./routes/tenant/users/invite').then(m => ({ default: m.TenantUserInvitePage })));
+const TenantFeaturesPage = React.lazy(() => import('./routes/tenant/features').then(m => ({ default: m.TenantFeaturesPage })));
 const OrganizationRentalObjectsPage = React.lazy(() => import('./routes/organizations/rental-objects').then(m => ({ default: m.OrganizationRentalObjectsPage })));
 
 // OrgAdmin pages
@@ -73,6 +75,11 @@ const OrgAdminDashboardPage = React.lazy(() => import('./routes/org-admin').then
 const BlocksListPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlocksListPage })));
 const BlockDetailPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlockDetailPage })));
 const BlockFormPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlockFormPage })));
+
+// Help pages
+const HelpPage = React.lazy(() => import('./routes/help/index'));
+const HelpGuidesPage = React.lazy(() => import('./routes/help/guides'));
+const HelpFAQPage = React.lazy(() => import('./routes/help/faq'));
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -149,6 +156,7 @@ function AppContent() {
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
+              <Route path="bookings/pending" element={<PendingBookingsPage />} />
               <Route path="seasons" element={<SeasonsListPage />} />
               <Route path="seasons/new" element={<SeasonFormPage />} />
               <Route path="seasons/:id" element={<SeasonDetailPage />} />
@@ -395,6 +403,14 @@ function AppContent() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="tenant/features"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantFeaturesPage />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* OrgAdmin routes */}
               <Route
@@ -411,6 +427,11 @@ function AppContent() {
               <Route path="blocks/new" element={<BlockFormPage />} />
               <Route path="blocks/:id" element={<BlockDetailPage />} />
               <Route path="blocks/:id/edit" element={<BlockFormPage />} />
+
+              {/* Help routes - accessible to all authenticated users */}
+              <Route path="help" element={<HelpPage />} />
+              <Route path="help/guides" element={<HelpGuidesPage />} />
+              <Route path="help/faq" element={<HelpFAQPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

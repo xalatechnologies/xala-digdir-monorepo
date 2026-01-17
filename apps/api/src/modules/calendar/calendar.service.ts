@@ -1,14 +1,18 @@
 /**
  * Calendar Service
  * Business logic for calendar domain - config generation and availability matrix
+ * 
+ * Scope Enforcement:
+ * - org_member users can only access calendar for assigned rental objects
+ * - Scope is validated via case_handler_scopes table
  */
 import { Injectable, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
-import { NotFoundError, BadRequestError } from '../../core/errors/problem-details';
+import { NotFoundError, BadRequestError, ForbiddenError } from '../../core/errors/problem-details';
 import { validate } from '../../core/validation/zod-pipe';
 import { getAuditService } from '../../core/audit/audit.service';
 import { eq, and, gte, lte, or } from 'drizzle-orm';
-import { rentalObjects, allocations, bookings } from '../../database/schema/index';
+import { rentalObjects, allocations, bookings, caseHandlerScopes, users } from '../../database/schema/index';
 import {
   CalendarConfigQuerySchema,
   AvailabilityMatrixQuerySchema,
@@ -71,6 +75,70 @@ export class CalendarService {
   constructor(
     @Inject('Adapters') private readonly adapters: any
   ) {}
+
+  /**
+   * Validate that a user has scope access to a rental object
+   * org_member and saksbehandler users must have active case_handler_scope
+   * Returns true if access is allowed, throws ForbiddenError if denied
+   */
+  private async validateUserScope(
+    userId: string | null | undefined,
+    rentalObjectId: string
+  ): Promise<void> {
+    if (!userId) return; // No user context, skip scope check (handled by auth middleware)
+
+    const db = container.resolve<any>('Database');
+
+    // Get user's role
+    const [user] = await db
+      .select({ role: users.role })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    // Admin/super_admin bypass scope checks
+    if (!user || ['admin', 'super_admin'].includes(user.role)) {
+      return;
+    }
+
+    // org_member and saksbehandler require scope validation
+    if (['org_member', 'saksbehandler'].includes(user.role)) {
+      // Check for 'all' scope first
+      const [allScope] = await db
+        .select({ id: caseHandlerScopes.id })
+        .from(caseHandlerScopes)
+        .where(
+          and(
+            eq(caseHandlerScopes.userId, userId),
+            eq(caseHandlerScopes.scopeType, 'all'),
+            eq(caseHandlerScopes.status, 'active')
+          )
+        )
+        .limit(1);
+
+      if (allScope) return;
+
+      // Check for specific rental object scope
+      const [specificScope] = await db
+        .select({ id: caseHandlerScopes.id })
+        .from(caseHandlerScopes)
+        .where(
+          and(
+            eq(caseHandlerScopes.userId, userId),
+            eq(caseHandlerScopes.scopeType, 'specific'),
+            eq(caseHandlerScopes.rentalObjectId, rentalObjectId),
+            eq(caseHandlerScopes.status, 'active')
+          )
+        )
+        .limit(1);
+
+      if (!specificScope) {
+        throw new ForbiddenError(
+          'You do not have access to this rental object calendar'
+        );
+      }
+    }
+  }
 
   /**
    * Get calendar configuration for a listing

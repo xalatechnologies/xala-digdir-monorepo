@@ -51,6 +51,12 @@ export * from './enums';
 // Feature flags & tenant controls
 export * from './feature-flags';
 
+// Booking Engine Contracts (Contract-First DTOs)
+export * from './booking-contracts';
+
+// Advanced Feature Contracts (Contract-First DTOs)
+export * from './advanced-contracts';
+
 // Authorization types (ActionCode enums + helpers)
 export * from './actions';
 

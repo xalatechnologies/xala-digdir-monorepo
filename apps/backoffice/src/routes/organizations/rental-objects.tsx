@@ -21,7 +21,7 @@ import {
   Badge,
   Spinner,
   Checkbox,
-  TextField,
+  Textfield,
   PageHeader,
   Container,
   Stack,
@@ -273,7 +273,7 @@ export function OrganizationRentalObjectsPage() {
             </div>
 
             {/* Search */}
-            <TextField
+            <Textfield
               label={t('common.search')}
               placeholder={t('tenantAdmin.rentalObjects.searchPlaceholder')}
               value={searchAvailable}
@@ -356,7 +356,7 @@ export function OrganizationRentalObjectsPage() {
             </div>
 
             {/* Search */}
-            <TextField
+            <Textfield
               label={t('common.search')}
               placeholder={t('tenantAdmin.rentalObjects.searchPlaceholder')}
               value={searchAssigned}

@@ -17,7 +17,7 @@ import {
   Heading,
   Paragraph,
   Button,
-  TextField,
+  Textfield,
   Select,
   Alert,
   Spinner,
@@ -27,11 +27,13 @@ import {
   ArrowLeftIcon,
   SendIcon,
 } from '@xala/ds';
-import { useCreateUser, useOrganizations } from '@digilist/client-sdk/hooks';
+import {
+  useInviteTenantUser,
+  useOrganizations,
+} from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
-import { useToast } from '../../providers/ToastProvider';
-
-type UserRole = 'BO-ORG-ADMIN' | 'BO-ORG-MEMBER' | 'BO-CASE-HANDLER';
+import { useToast } from '../../../providers/ToastProvider';
+import type { TenantUserRole as UserRole } from '@digilist/client-sdk';
 
 interface InviteUserFormData {
   email: string;
@@ -71,7 +73,7 @@ export function TenantUserInvitePage() {
   const organizations = organizationsData?.data ?? [];
 
   // Mutations
-  const createUserMutation = useCreateUser();
+  const inviteUserMutation = useInviteTenantUser();
 
   // Handlers
   const handleChange = (field: keyof InviteUserFormData, value: string) => {
@@ -116,12 +118,13 @@ export function TenantUserInvitePage() {
     }
 
     try {
-      await createUserMutation.mutateAsync({
+      await inviteUserMutation.mutateAsync({
         email: formData.email,
         role: formData.role as UserRole,
         organizationId: formData.organizationId || undefined,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        sendEmail: true,
       });
 
       showToast({
@@ -172,7 +175,7 @@ export function TenantUserInvitePage() {
               </Heading>
 
               {/* First Name */}
-              <TextField
+              <Textfield
                 label={t('tenantAdmin.users.firstName')}
                 placeholder={t('tenantAdmin.users.firstNamePlaceholder')}
                 value={formData.firstName}
@@ -182,7 +185,7 @@ export function TenantUserInvitePage() {
               />
 
               {/* Last Name */}
-              <TextField
+              <Textfield
                 label={t('tenantAdmin.users.lastName')}
                 placeholder={t('tenantAdmin.users.lastNamePlaceholder')}
                 value={formData.lastName}
@@ -192,7 +195,7 @@ export function TenantUserInvitePage() {
               />
 
               {/* Email */}
-              <TextField
+              <Textfield
                 label={t('users.email')}
                 type="email"
                 placeholder={t('tenantAdmin.users.emailPlaceholder')}
@@ -262,9 +265,9 @@ export function TenantUserInvitePage() {
                   type="submit"
                   variant="primary"
                   icon={<SendIcon aria-hidden />}
-                  disabled={createUserMutation.isPending}
+                  disabled={inviteUserMutation.isPending}
                 >
-                  {createUserMutation.isPending ? (
+                  {inviteUserMutation.isPending ? (
                     <>
                       <Spinner size="sm" />
                       {t('tenantAdmin.users.sending')}

@@ -2,12 +2,17 @@
  * Messages Controller
  * Manages conversations and messages between users and admins
  * 
- * Uses repository pattern for clean separation:
- * - Repository handles data access (no direct schema imports)
+ * Scope Enforcement:
+ * - org_member users can only access conversations for their assigned rental objects
+ * - Conversations are linked to bookings, which are linked to rental objects
  */
 import { Controller, Get, Post, Put } from '../../core/decorators';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { getMessagesRepository } from './messages.repository';
+import { ForbiddenError } from '../../core/errors/problem-details';
+import { container } from '../../core/container';
+import { eq, and } from 'drizzle-orm';
+import { users, caseHandlerScopes, bookings, conversations } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -17,6 +22,78 @@ interface TenantRequest extends FastifyRequest {
 @Controller('/api/messages')
 export class MessagesController {
   private readonly repository = getMessagesRepository();
+
+  /**
+   * Check if user has scope access to a conversation
+   * org_member must have scope for the booking's rental object
+   */
+  private async checkConversationScope(userId: string | null, conversationId: string): Promise<void> {
+    if (!userId) return;
+
+    const db = container.resolve<any>('Database');
+
+    // Get user role
+    const [user] = await db
+      .select({ role: users.role })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    // Admin/super_admin bypass
+    if (!user || ['admin', 'super_admin'].includes(user.role)) return;
+
+    // For org_member/saksbehandler, check scope via booking
+    if (['org_member', 'saksbehandler'].includes(user.role)) {
+      const [conv] = await db
+        .select({ bookingId: conversations.bookingId })
+        .from(conversations)
+        .where(eq(conversations.id, conversationId))
+        .limit(1);
+
+      if (!conv?.bookingId) return; // No booking linked, allow access
+
+      const [booking] = await db
+        .select({ rentalObjectId: bookings.rentalObjectId })
+        .from(bookings)
+        .where(eq(bookings.id, conv.bookingId))
+        .limit(1);
+
+      if (!booking) return;
+
+      // Check for 'all' scope
+      const [allScope] = await db
+        .select({ id: caseHandlerScopes.id })
+        .from(caseHandlerScopes)
+        .where(
+          and(
+            eq(caseHandlerScopes.userId, userId),
+            eq(caseHandlerScopes.scopeType, 'all'),
+            eq(caseHandlerScopes.status, 'active')
+          )
+        )
+        .limit(1);
+
+      if (allScope) return;
+
+      // Check for specific scope
+      const [specificScope] = await db
+        .select({ id: caseHandlerScopes.id })
+        .from(caseHandlerScopes)
+        .where(
+          and(
+            eq(caseHandlerScopes.userId, userId),
+            eq(caseHandlerScopes.scopeType, 'specific'),
+            eq(caseHandlerScopes.rentalObjectId, booking.rentalObjectId),
+            eq(caseHandlerScopes.status, 'active')
+          )
+        )
+        .limit(1);
+
+      if (!specificScope) {
+        throw new ForbiddenError('You do not have access to this conversation');
+      }
+    }
+  }
 
   @Get('/conversations')
   async getConversations(request: TenantRequest, reply: FastifyReply) {
@@ -36,6 +113,9 @@ export class MessagesController {
   @Get('/conversations/:id')
   async getConversation(request: TenantRequest, reply: FastifyReply) {
     const { id } = request.params as any;
+
+    // Check org_member scope before accessing conversation
+    await this.checkConversationScope(request.userId ?? null, id);
 
     const result = await this.repository.findConversationById(id);
 

@@ -13,15 +13,14 @@ import {
   Textarea,
   Checkbox,
   Skeleton,
-  Breadcrumbs,
-  BreadcrumbItem,
+  Breadcrumb,
   Alert,
   SaveIcon,
   ArrowLeftIcon,
 } from '@xala/ds';
 import { useBlock, useCreateBlock, useUpdateBlock, useAssignedRentalObjects, useCheckConflicts } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 
 interface BlockFormData {
@@ -241,12 +240,12 @@ export function BlockFormPage(): React.ReactElement {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Breadcrumbs */}
-      <Breadcrumbs>
-        <BreadcrumbItem asChild>
-          <Link to="/blocks">{t('blocks.title')}</Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>{isEditing ? t('blocks.editBlock') : t('blocks.createBlock')}</BreadcrumbItem>
-      </Breadcrumbs>
+      <Breadcrumb
+        items={[
+          { label: t('blocks.title'), href: '/blocks' },
+          { label: isEditing ? t('blocks.editBlock') : t('blocks.createBlock') },
+        ]}
+      />
 
       {/* Header */}
       <div>

@@ -8,6 +8,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
+import { BookingVisibilitySelector, type BookingVisibility } from './BookingVisibilitySelector';
 
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   return (
@@ -38,6 +39,8 @@ export interface BookingFlowState {
   bookingAccountType?: 'private' | 'organization';
   /** Selected organization ID if booking as organization */
   selectedOrganizationId?: string;
+  /** Calendar visibility preference (GDPR compliance) */
+  visibility?: BookingVisibility;
 }
 
 /**
@@ -101,6 +104,10 @@ export interface BookingConfirmationStepProps {
   tenantId?: string;
   /** Current booking mode for flow context */
   bookingMode?: FlowBookingMode;
+  /** Selected calendar visibility (GDPR compliance) */
+  visibility?: BookingVisibility;
+  /** Handler for visibility change */
+  onVisibilityChange?: (visibility: BookingVisibility) => void;
 }
 
 export function BookingConfirmationStep({
@@ -126,6 +133,8 @@ export function BookingConfirmationStep({
   rentalObjectId,
   tenantId,
   bookingMode,
+  visibility,
+  onVisibilityChange,
 }: BookingConfirmationStepProps): React.ReactElement {
   const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
@@ -175,8 +184,9 @@ export function BookingConfirmationStep({
       weekStart: weekStart.toISOString(),
       bookingAccountType,
       selectedOrganizationId,
+      visibility,
     };
-  }, [convertSlotsToFlowFormat, slotDetails, weekStart, bookingAccountType, selectedOrganizationId]);
+  }, [convertSlotsToFlowFormat, slotDetails, weekStart, bookingAccountType, selectedOrganizationId, visibility]);
 
   /**
    * Handle Vipps login with flow context preservation
@@ -600,12 +610,20 @@ export function BookingConfirmationStep({
             Bekreft booking
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {bookingAccountType === 'private' 
+            {bookingAccountType === 'private'
               ? 'Du booker som privatperson.'
               : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
                 ? `Du booker på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
                 : 'Du booker på vegne av en organisasjon.'}
           </Paragraph>
+
+          {/* Calendar Visibility Selection (GDPR Compliance) */}
+          <div style={{ marginBottom: 'var(--ds-spacing-5)' }}>
+            <BookingVisibilitySelector
+              value={visibility ?? 'PUBLIC_TITLE'}
+              onChange={onVisibilityChange ?? (() => {})}
+            />
+          </div>
 
           {/* Error Display */}
           {bookingError && (

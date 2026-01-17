@@ -26,34 +26,29 @@ import {
   SearchIcon,
   Dropdown,
   DropdownTrigger,
-  DropdownMenu,
+  DropdownTriggerContext,
+  DropdownList,
   DropdownItem,
+  DropdownButton,
   MoreVerticalIcon,
   EditIcon,
-  UserMinusIcon,
-  UserCheckIcon,
   EmptyState,
   PageHeader,
   Container,
   Stack,
-  TextField,
+  Textfield,
 } from '@xala/ds';
-import { useUsers } from '@digilist/client-sdk/hooks';
+import {
+  useTenantAdminUsers,
+  useDeactivateTenantUser,
+  useReactivateTenantUser,
+} from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
-
-type UserRole = 'BO-ORG-ADMIN' | 'BO-ORG-MEMBER' | 'BO-CASE-HANDLER' | 'BO-TENANT-ADMIN';
-type UserStatus = 'active' | 'suspended' | 'pending_invite';
-
-interface TenantUser {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  status: UserStatus;
-  organizationName?: string;
-  createdAt: string;
-  lastLoginAt?: string;
-}
+import type {
+  TenantUser,
+  TenantUserRole as UserRole,
+  TenantUserStatus as UserStatus,
+} from '@digilist/client-sdk';
 
 const roleLabels: Record<UserRole, string> = {
   'BO-TENANT-ADMIN': 'Tenant Admin',
@@ -93,7 +88,7 @@ export function TenantUsersListPage() {
   const limit = 50;
 
   // Queries
-  const { data: usersData, isLoading, error } = useUsers({
+  const { data: usersData, isLoading, error } = useTenantAdminUsers({
     role: roleFilter === 'all' ? undefined : roleFilter,
     status: statusFilter === 'all' ? undefined : statusFilter,
     search: searchQuery || undefined,
@@ -101,7 +96,11 @@ export function TenantUsersListPage() {
     limit,
   });
 
-  const users = (usersData?.data ?? []) as TenantUser[];
+  // Mutations
+  const { mutate: deactivateUser } = useDeactivateTenantUser();
+  const { mutate: reactivateUser } = useReactivateTenantUser();
+
+  const users = usersData?.data ?? [];
   const totalUsers = usersData?.meta?.total ?? 0;
   const totalPages = Math.ceil(totalUsers / limit);
 
@@ -120,14 +119,12 @@ export function TenantUsersListPage() {
 
   const handleDeactivateUser = async (userId: string) => {
     if (confirm(t('tenantAdmin.users.confirmDeactivate'))) {
-      // TODO: Implement deactivation mutation
-      console.log('Deactivate user:', userId);
+      deactivateUser({ userId });
     }
   };
 
   const handleReactivateUser = async (userId: string) => {
-    // TODO: Implement reactivation mutation
-    console.log('Reactivate user:', userId);
+    reactivateUser(userId);
   };
 
   // Loading state
@@ -179,7 +176,7 @@ export function TenantUsersListPage() {
         <Card>
           <Stack gap="4">
             {/* Search */}
-            <TextField
+            <Textfield
               label={t('common.search')}
               placeholder={t('tenantAdmin.users.searchPlaceholder')}
               value={searchQuery}
@@ -196,7 +193,7 @@ export function TenantUsersListPage() {
                     {roleFilter === 'all' ? t('tenantAdmin.users.allRoles') : roleLabels[roleFilter]}
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu>
+                <DropdownList>
                   <DropdownItem onClick={() => setRoleFilter('all')}>
                     {t('tenantAdmin.users.allRoles')}
                   </DropdownItem>
@@ -209,7 +206,7 @@ export function TenantUsersListPage() {
                   <DropdownItem onClick={() => setRoleFilter('BO-CASE-HANDLER')}>
                     {roleLabels['BO-CASE-HANDLER']}
                   </DropdownItem>
-                </DropdownMenu>
+                </DropdownList>
               </Dropdown>
 
               {/* Status Filter */}
@@ -219,7 +216,7 @@ export function TenantUsersListPage() {
                     {statusFilter === 'all' ? t('tenantAdmin.users.allStatuses') : statusLabels[statusFilter]}
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu>
+                <DropdownList>
                   <DropdownItem onClick={() => setStatusFilter('all')}>
                     {t('tenantAdmin.users.allStatuses')}
                   </DropdownItem>
@@ -232,7 +229,7 @@ export function TenantUsersListPage() {
                   <DropdownItem onClick={() => setStatusFilter('pending_invite')}>
                     {statusLabels.pending_invite}
                   </DropdownItem>
-                </DropdownMenu>
+                </DropdownList>
               </Dropdown>
             </div>
           </Stack>
@@ -300,7 +297,7 @@ export function TenantUsersListPage() {
                               {t('common.actions')}
                             </Button>
                           </DropdownTrigger>
-                          <DropdownMenu>
+                          <DropdownList>
                             <DropdownItem onClick={() => handleViewUser(user.id)}>
                               <UsersIcon aria-hidden /> {t('common.view')}
                             </DropdownItem>
@@ -309,14 +306,14 @@ export function TenantUsersListPage() {
                             </DropdownItem>
                             {user.status === 'active' ? (
                               <DropdownItem onClick={() => handleDeactivateUser(user.id)}>
-                                <UserMinusIcon aria-hidden /> {t('tenantAdmin.users.deactivate')}
+                                {t('tenantAdmin.users.deactivate')}
                               </DropdownItem>
                             ) : (
                               <DropdownItem onClick={() => handleReactivateUser(user.id)}>
-                                <UserCheckIcon aria-hidden /> {t('tenantAdmin.users.reactivate')}
+                                {t('tenantAdmin.users.reactivate')}
                               </DropdownItem>
                             )}
-                          </DropdownMenu>
+                          </DropdownList>
                         </Dropdown>
                       </Table.Cell>
                     </Table.Row>

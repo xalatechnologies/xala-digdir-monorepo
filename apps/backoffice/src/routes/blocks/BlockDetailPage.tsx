@@ -9,8 +9,7 @@ import {
   Button,
   Badge,
   Skeleton,
-  Breadcrumbs,
-  BreadcrumbItem,
+  Breadcrumb,
   EditIcon,
   TrashIcon,
   ArrowLeftIcon,
@@ -98,12 +97,12 @@ export function BlockDetailPage(): React.ReactElement {
   if (error || !block) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-        <Breadcrumbs>
-          <BreadcrumbItem asChild>
-            <Link to="/blocks">{t('blocks.title')}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>{t('common.error')}</BreadcrumbItem>
-        </Breadcrumbs>
+        <Breadcrumb
+          breadcrumbs={[
+            { label: t('blocks.title'), href: '/blocks' },
+            { label: t('common.error') },
+          ]}
+        />
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
             {error?.message || t('blocks.notFound')}
@@ -120,12 +119,12 @@ export function BlockDetailPage(): React.ReactElement {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Breadcrumbs */}
-      <Breadcrumbs>
-        <BreadcrumbItem asChild>
-          <Link to="/blocks">{t('blocks.title')}</Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>{block.title}</BreadcrumbItem>
-      </Breadcrumbs>
+      <Breadcrumb
+        breadcrumbs={[
+          { label: t('blocks.title'), href: '/blocks' },
+          { label: block.title },
+        ]}
+      />
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

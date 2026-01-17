@@ -169,6 +169,27 @@ export { saasService } from './saas.service';
 // Tenant Admin - Service only (types from ./types)
 export { tenantAdminService } from './tenant-admin.service';
 
+// Tenant Admin User Management
+export {
+  TenantAdminUserService,
+  tenantAdminUserService
+} from './tenant-admin-user.service';
+export type {
+  TenantUser,
+  UserRole as TenantUserRole,
+  UserStatus as TenantUserStatus,
+  InviteUserDTO,
+  AssignRoleDTO,
+  AssignOrganizationDTO,
+  DelegateScope,
+  AssignScopeDTO,
+  EffectivePermissions,
+  UserQueryParams as TenantUserQueryParams,
+  UserInvitation,
+  ResendInvitationDTO,
+  CancelInvitationDTO,
+} from './tenant-admin-user.service';
+
 // Modules - Feature flags
 export { modulesService, ModulesService } from './modules.service';
 export type {

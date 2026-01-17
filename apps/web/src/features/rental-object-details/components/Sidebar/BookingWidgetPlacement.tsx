@@ -17,6 +17,7 @@ import { BookingStepperHeader, type BookingStep } from './components/BookingStep
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
 import { BookingPricingStep, type PriceGroup, type AdditionalService } from './components/BookingPricingStep';
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
+import type { BookingVisibility } from './components/BookingVisibilitySelector';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
 
 // =============================================================================
@@ -219,6 +220,7 @@ export function BookingWidgetPlacement({
   const [bookingAccountType, setBookingAccountType] = React.useState<'private' | 'organization' | undefined>(undefined);
   const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
+  const [visibility, setVisibility] = React.useState<BookingVisibility>('PUBLIC_TITLE');
   
   // Use real authentication state with flow context support
   const { isAuthenticated: authIsAuthenticated, user, login: authLogin, loginWithFlowContext } = useAuth();
@@ -509,6 +511,8 @@ export function BookingWidgetPlacement({
           activityType: details.activityType,
           priceGroupId: selectedPriceGroup || undefined,
           additionalServices: Array.from(selectedServices),
+          visibility,
+          organizationId: bookingAccountType === 'organization' ? selectedOrganizationId : undefined,
         };
       });
 
@@ -928,6 +932,8 @@ export function BookingWidgetPlacement({
               rentalObjectId={rentalObjectId}
               tenantId={import.meta.env.VITE_TENANT_ID}
               bookingMode={bookingConfig?.mode || 'SLOTS'}
+              visibility={visibility}
+              onVisibilityChange={setVisibility}
             />
           )}
 

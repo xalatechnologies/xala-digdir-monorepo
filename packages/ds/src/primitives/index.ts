@@ -31,6 +31,8 @@ export {
   SearchIcon,
   GlobeIcon,
   UserIcon,
+  UserMinusIcon,
+  UserCheckIcon,
   LogOutIcon,
   FilterIcon,
   GridIcon,

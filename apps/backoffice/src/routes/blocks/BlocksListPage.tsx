@@ -44,7 +44,6 @@ export function BlocksListPage(): React.ReactElement {
   const isOrgAdmin = effectiveRole === 'org_admin' || effectiveRole === 'org_member';
   const canManageBlocks = hasCapability('CAP_BLOCKS_MANAGE_ASSIGNED') || hasCapability('CAP_BOOKING_MANAGE');
   const canCreateBlock = canManageBlocks;
-  const canDeleteBlock = canManageBlocks;
 
   // Fetch rental objects for filter dropdown
   const { data: rentalObjectsData } = useAssignedRentalObjects();

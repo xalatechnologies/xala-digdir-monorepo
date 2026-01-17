@@ -1,198 +1,61 @@
 /**
- * GDPR Controller
- * REST API endpoints for GDPR data subject rights management
+ * GDPR Tools Controller (GAP-013)
+ * Contract-First endpoints for DSAR and consent management
+ * 
+ * Reference: packages/client-sdk/src/types/advanced-contracts.ts
  */
 import { Controller, Get, Post, Put } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
-import { GdprService } from './gdpr.service';
-import { validate } from '../../core/validation/zod-pipe';
-import { getTenantId, getUserId, TenantRequest } from '../../core/validation/tenant';
-import {
-  CreateGdprRequestSchema,
-  UpdateGdprRequestStatusSchema,
-  GdprRequestQuerySchema,
-} from '../../schemas/gdpr.schema';
+import { GDPRService } from './gdpr.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { ForbiddenError } from '../../core/errors/problem-details';
-import { getAuditService } from '../../core/audit/audit.service';
 
 @Controller('/api/gdpr')
-export class GdprController {
+export class GDPRController {
   constructor(
-    @Inject('GdprService') private readonly service: GdprService
+    @Inject('GDPRService') private readonly service: GDPRService
   ) {}
 
   /**
-   * POST /api/gdpr/requests - Create new GDPR request
+   * POST /api/gdpr/dsar - Create DSAR request (Contract-First)
+   * Returns DSARRequestDTO
    */
-  @Post('/requests')
-  async createRequest(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = getTenantId(request);
-    const userId = getUserId(request);
-    const data = validate(CreateGdprRequestSchema, request.body);
-
-    // Route to appropriate service method based on request type
-    let gdprRequest;
-    if (data.requestType === 'export') {
-      gdprRequest = await this.service.createExportRequest(tenantId, userId, data);
-    } else if (data.requestType === 'deletion') {
-      gdprRequest = await this.service.createDeletionRequest(tenantId, userId, data);
-    } else {
-      reply.code(400);
-      return {
-        type: 'https://tools.ietf.org/html/rfc7807',
-        title: 'Bad Request',
-        status: 400,
-        detail: 'Invalid request type. Must be "export" or "deletion".',
-      };
-    }
-
-    return reply.status(201).send({ data: gdprRequest });
+  @Post('/dsar')
+  async createDSAR(request: FastifyRequest, _reply: FastifyReply) {
+    const body = request.body as any;
+    const dsar = await this.service.createDSAR(body);
+    return { data: dsar };
   }
 
   /**
-   * GET /api/gdpr/requests - List user's GDPR requests
+   * GET /api/gdpr/dsar/:id - Get DSAR request status
+   * Returns DSARRequestDTO
    */
-  @Get('/requests')
-  async listRequests(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = getTenantId(request);
-    const userId = getUserId(request);
-    const params = validate(GdprRequestQuerySchema, request.query);
-
-    // Filter to only show current user's requests
-    const result = await this.service.findAll(tenantId, {
-      ...params,
-      userId, // Force filter by current user
-      page: params.page ?? 1,
-      limit: params.limit ?? 20,
-    });
-
-    return {
-      data: result.data,
-      meta: {
-        total: result.pagination.total,
-        page: result.pagination.page,
-        limit: result.pagination.limit,
-        totalPages: result.pagination.totalPages,
-      },
-    };
+  @Get('/dsar/:id')
+  async getDSAR(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
+    const dsar = await this.service.getDSAR(request.params.id);
+    return { data: dsar };
   }
 
   /**
-   * GET /api/gdpr/requests/pending - List pending GDPR requests (admin)
+   * GET /api/gdpr/consents - Get user consents (Contract-First)
+   * Returns ConsentDTO
    */
-  @Get('/requests/pending')
-  async listPendingRequests(request: TenantRequest, reply: FastifyReply) {
-    const tenantId = getTenantId(request);
-    const params = validate(GdprRequestQuerySchema, request.query);
-
-    const result = await this.service.findPendingRequests(tenantId, {
-      page: params.page ?? 1,
-      limit: params.limit ?? 20,
-    });
-
-    return {
-      data: result.data,
-      meta: {
-        total: result.pagination.total,
-        page: result.pagination.page,
-        limit: result.pagination.limit,
-        totalPages: result.pagination.totalPages,
-      },
-    };
+  @Get('/consents')
+  async getConsents(request: FastifyRequest, _reply: FastifyReply) {
+    const userId = (request as any).user?.id || 'current-user';
+    const consents = await this.service.getConsents(userId);
+    return { data: consents };
   }
 
   /**
-   * GET /api/gdpr/requests/:id - Get single GDPR request
+   * PUT /api/gdpr/consents/:type - Update consent
+   * Returns ConsentDTO
    */
-  @Get('/requests/:id')
-  async getRequest(
-    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
-    reply: FastifyReply
-  ) {
-    const tenantId = getTenantId(request);
-    const userId = getUserId(request);
-
-    const gdprRequest = await this.service.findByIdOrFail(request.params.id);
-
-    // Verify tenant isolation
-    if (gdprRequest.tenantId !== tenantId) {
-      // Audit failed access attempt
-      getAuditService().log({
-        tenantId,
-        userId,
-        action: 'access_denied',
-        resource: 'gdpr_request',
-        resourceId: request.params.id,
-        severity: 'warning',
-        metadata: {
-          reason: 'cross_tenant_access_attempt',
-          requestedTenantId: gdprRequest.tenantId,
-        },
-      });
-
-      throw new ForbiddenError('You do not have permission to access this request');
-    }
-
-    // Verify ownership or admin role
-    // Note: request.user should be set by auth middleware
-    const user = (request as any).user;
-    const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
-    const isOwner = gdprRequest.userId === userId;
-
-    if (!isAdmin && !isOwner) {
-      // Audit failed access attempt
-      getAuditService().log({
-        tenantId,
-        userId,
-        action: 'access_denied',
-        resource: 'gdpr_request',
-        resourceId: request.params.id,
-        severity: 'warning',
-        metadata: {
-          reason: 'insufficient_permissions',
-          isAdmin,
-          isOwner,
-          requestUserId: gdprRequest.userId,
-        },
-      });
-
-      throw new ForbiddenError('You do not have permission to access this request');
-    }
-
-    return { data: gdprRequest };
-  }
-
-  /**
-   * PUT /api/gdpr/requests/:id/status - Update request status (admin)
-   */
-  @Put('/requests/:id/status')
-  async updateStatus(
-    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
-    reply: FastifyReply
-  ) {
-    const userId = getUserId(request);
-    const data = validate(UpdateGdprRequestStatusSchema, request.body);
-
-    const gdprRequest = await this.service.updateRequestStatus(
-      request.params.id,
-      data,
-      userId
-    );
-
-    return { data: gdprRequest };
-  }
-
-  /**
-   * PUT /api/gdpr/requests/:id/cancel - Cancel request (user)
-   */
-  @Put('/requests/:id/cancel')
-  async cancelRequest(
-    request: FastifyRequest<{ Params: { id: string } }> & TenantRequest,
-    reply: FastifyReply
-  ) {
-    const userId = getUserId(request);
-    const gdprRequest = await this.service.cancelRequest(request.params.id, userId);
-    return { data: gdprRequest };
+  @Put('/consents/:type')
+  async updateConsent(request: FastifyRequest<{ Params: { type: string } }>, _reply: FastifyReply) {
+    const userId = (request as any).user?.id || 'current-user';
+    const body = request.body as any;
+    const consents = await this.service.updateConsent(userId, request.params.type, body.granted);
+    return { data: consents };
   }
 }

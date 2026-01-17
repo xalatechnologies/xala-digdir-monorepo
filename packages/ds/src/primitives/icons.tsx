@@ -54,6 +54,24 @@ export const UserIcon = (props: React.ComponentProps<typeof Icon>) => (
   </Icon>
 );
 
+// User Minus Icon (for deactivating users)
+export const UserMinusIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="8.5" cy="7" r="4" />
+    <line x1="23" y1="11" x2="17" y2="11" />
+  </Icon>
+);
+
+// User Check Icon (for activating users)
+export const UserCheckIcon = (props: React.ComponentProps<typeof Icon>) => (
+  <Icon {...props}>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="8.5" cy="7" r="4" />
+    <polyline points="17 11 19 13 23 9" />
+  </Icon>
+);
+
 // Log Out Icon
 export const LogOutIcon = (props: React.ComponentProps<typeof Icon>) => (
   <Icon {...props}>

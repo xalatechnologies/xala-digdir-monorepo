@@ -4,37 +4,54 @@
  */
 
 /**
- * Rental Object Categories
+ * Rental Object Categories (CANONICAL - matches DB enum)
+ * Reference: apps/api/drizzle/0034_rental_object_categories_enum.sql
  */
 export enum RentalObjectCategory {
-  LOCALE = 'LOCALE',           // Rooms/spaces (lokaler/rom)
-  ARRANGEMENT = 'ARRANGEMENT', // Events/activities (arrangement/aktiviteter)
-  EQUIPMENT = 'EQUIPMENT',     // Equipment (utstyr) - future
-  VEHICLE = 'VEHICLE',         // Vehicles (kjøretøy) - future
-  OTHER = 'OTHER',             // Other (annet) - placeholder
+  LOKALER_OG_BANER = 'LOKALER_OG_BANER',                   // Spaces and fields
+  ARRANGEMENTER_OG_TJENESTER = 'ARRANGEMENTER_OG_TJENESTER', // Events and services
+  UTSTYR_OG_KJORETOY = 'UTSTYR_OG_KJORETOY',               // Equipment and vehicles
 }
 
 /**
- * Feature Flag Keys
+ * Feature Flag Keys (CANONICAL - follows naming convention: feature.{module})
+ * Reference: docs/roles/matrix.md Section 3
+ * Naming: feature.{module} or integrations.{name}
  */
 export enum FeatureFlag {
+  // Core modules (always on in production)
+  RENTAL_OBJECTS = 'feature.rental_objects',
+  BOOKINGS = 'feature.bookings',
+  CALENDAR = 'feature.calendar',
+  
   // Backoffice modules
-  BACKOFFICE_ORG_MANAGEMENT = 'backoffice.orgManagement',
-  BACKOFFICE_REPORTING = 'backoffice.reporting',
-  BACKOFFICE_AUDIT_LOG = 'backoffice.auditLog',
-  BACKOFFICE_MESSAGING = 'backoffice.messaging',
-  BACKOFFICE_MAINTENANCE_CALENDAR = 'backoffice.maintenanceCalendar',
+  BLOCKS_MAINTENANCE = 'feature.blocks_maintenance',
+  REPORTS_EXPORTS = 'feature.reports_exports',
+  AUDIT_LOG = 'feature.audit_log',
+  MESSAGING = 'feature.messaging',
   
   // Web/Public modules
-  WEB_RATINGS = 'web.ratings',
-  WEB_FEEDBACK = 'web.feedback',
-  WEB_PUBLIC_ACTIVITY_CALENDAR = 'web.publicActivityCalendar',
-  WEB_PAYMENTS = 'web.payments',
+  RATINGS_REVIEWS = 'feature.ratings_reviews',
+  FAVORITES = 'feature.favorites',
+  HELP_SUPPORT = 'feature.help_support',
+  GLOBAL_SEARCH = 'feature.global_search',
   
-  // Rental object features
-  RENTAL_OBJECT_RECURRING_BOOKINGS = 'rentalObject.recurringBookings',
-  RENTAL_OBJECT_PACKAGES = 'rentalObject.packages',
-  RENTAL_OBJECT_DISCOUNTS = 'rentalObject.discounts',
+  // Advanced booking features
+  RECURRING_BOOKINGS = 'feature.recurring_bookings',
+  SEASON_RENTALS = 'feature.season_rentals',
+  
+  // Economy modules
+  PRICING = 'feature.pricing',
+  ECONOMY_INVOICING = 'feature.economy_invoicing',
+  PAYMENTS = 'feature.payments',
+  
+  // Compliance
+  GDPR_TOOLS = 'feature.gdpr_tools',
+  
+  // Integrations
+  INTEGRATION_IDPORTEN = 'integrations.idporten',
+  INTEGRATION_VIPPS = 'integrations.vipps',
+  INTEGRATION_STRIPE = 'integrations.stripe',
 }
 
 /**
@@ -58,71 +75,95 @@ export interface TenantFeatures {
  * Default feature flags for new tenants
  */
 export const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
-  // Backoffice - all enabled by default
-  [FeatureFlag.BACKOFFICE_ORG_MANAGEMENT]: true,
-  [FeatureFlag.BACKOFFICE_REPORTING]: true,
-  [FeatureFlag.BACKOFFICE_AUDIT_LOG]: true,
-  [FeatureFlag.BACKOFFICE_MESSAGING]: true,
-  [FeatureFlag.BACKOFFICE_MAINTENANCE_CALENDAR]: true,
+  // Core modules (always on)
+  [FeatureFlag.RENTAL_OBJECTS]: true,
+  [FeatureFlag.BOOKINGS]: true,
+  [FeatureFlag.CALENDAR]: true,
   
-  // Web - selective by default
-  [FeatureFlag.WEB_RATINGS]: false,
-  [FeatureFlag.WEB_FEEDBACK]: false,
-  [FeatureFlag.WEB_PUBLIC_ACTIVITY_CALENDAR]: true,
-  [FeatureFlag.WEB_PAYMENTS]: false,
+  // Backoffice modules
+  [FeatureFlag.BLOCKS_MAINTENANCE]: true,
+  [FeatureFlag.REPORTS_EXPORTS]: true,
+  [FeatureFlag.AUDIT_LOG]: true,
+  [FeatureFlag.MESSAGING]: true,
   
-  // Rental object features
-  [FeatureFlag.RENTAL_OBJECT_RECURRING_BOOKINGS]: true,
-  [FeatureFlag.RENTAL_OBJECT_PACKAGES]: true,
-  [FeatureFlag.RENTAL_OBJECT_DISCOUNTS]: true,
+  // Web/Public modules
+  [FeatureFlag.RATINGS_REVIEWS]: false,  // Opt-in
+  [FeatureFlag.FAVORITES]: true,
+  [FeatureFlag.HELP_SUPPORT]: true,
+  [FeatureFlag.GLOBAL_SEARCH]: true,
+  
+  // Advanced booking
+  [FeatureFlag.RECURRING_BOOKINGS]: true,
+  [FeatureFlag.SEASON_RENTALS]: false,  // Opt-in
+  
+  // Economy
+  [FeatureFlag.PRICING]: true,
+  [FeatureFlag.ECONOMY_INVOICING]: false,  // Subscription-gated
+  [FeatureFlag.PAYMENTS]: false,  // Subscription-gated
+  
+  // Compliance
+  [FeatureFlag.GDPR_TOOLS]: true,
+  
+  // Integrations
+  [FeatureFlag.INTEGRATION_IDPORTEN]: true,
+  [FeatureFlag.INTEGRATION_VIPPS]: false,
+  [FeatureFlag.INTEGRATION_STRIPE]: false,
 };
 
 /**
- * Demo tenant preset (Cheyenne Kommune)
+ * Demo tenant preset
  * Minimal feature set for demo purposes
  */
 export const DEMO_FEATURE_FLAGS: FeatureFlags = {
+  // Core modules
+  [FeatureFlag.RENTAL_OBJECTS]: true,
+  [FeatureFlag.BOOKINGS]: true,
+  [FeatureFlag.CALENDAR]: true,
+  
   // Backoffice - demo-safe subset
-  [FeatureFlag.BACKOFFICE_ORG_MANAGEMENT]: true,
-  [FeatureFlag.BACKOFFICE_REPORTING]: false,  // Hide for demo
-  [FeatureFlag.BACKOFFICE_AUDIT_LOG]: true,
-  [FeatureFlag.BACKOFFICE_MESSAGING]: true,
-  [FeatureFlag.BACKOFFICE_MAINTENANCE_CALENDAR]: true,
+  [FeatureFlag.BLOCKS_MAINTENANCE]: true,
+  [FeatureFlag.REPORTS_EXPORTS]: false,  // Hide for demo
+  [FeatureFlag.AUDIT_LOG]: true,
+  [FeatureFlag.MESSAGING]: true,
   
-  // Web - minimal for demo
-  [FeatureFlag.WEB_RATINGS]: false,
-  [FeatureFlag.WEB_FEEDBACK]: false,
-  [FeatureFlag.WEB_PUBLIC_ACTIVITY_CALENDAR]: true,
-  [FeatureFlag.WEB_PAYMENTS]: false,
+  // Web - minimal
+  [FeatureFlag.RATINGS_REVIEWS]: false,
+  [FeatureFlag.FAVORITES]: true,
+  [FeatureFlag.HELP_SUPPORT]: true,
+  [FeatureFlag.GLOBAL_SEARCH]: true,
   
-  // Rental object features
-  [FeatureFlag.RENTAL_OBJECT_RECURRING_BOOKINGS]: true,
-  [FeatureFlag.RENTAL_OBJECT_PACKAGES]: false,
-  [FeatureFlag.RENTAL_OBJECT_DISCOUNTS]: false,
+  // Advanced booking
+  [FeatureFlag.RECURRING_BOOKINGS]: true,
+  [FeatureFlag.SEASON_RENTALS]: false,
+  
+  // Economy - disabled for demo
+  [FeatureFlag.PRICING]: true,
+  [FeatureFlag.ECONOMY_INVOICING]: false,
+  [FeatureFlag.PAYMENTS]: false,
+  
+  // Compliance
+  [FeatureFlag.GDPR_TOOLS]: true,
+  
+  // Integrations
+  [FeatureFlag.INTEGRATION_IDPORTEN]: true,
+  [FeatureFlag.INTEGRATION_VIPPS]: false,
+  [FeatureFlag.INTEGRATION_STRIPE]: false,
 };
 
 /**
- * Category labels for UI
+ * Category labels for UI (CANONICAL - matches DB enum)
  */
 export const RENTAL_OBJECT_CATEGORY_LABELS: Record<RentalObjectCategory, { no: string; en: string }> = {
-  [RentalObjectCategory.LOCALE]: {
-    no: 'Lokaler',
-    en: 'Spaces',
+  [RentalObjectCategory.LOKALER_OG_BANER]: {
+    no: 'Lokaler og baner',
+    en: 'Spaces and Fields',
   },
-  [RentalObjectCategory.ARRANGEMENT]: {
-    no: 'Arrangement',
-    en: 'Events',
+  [RentalObjectCategory.ARRANGEMENTER_OG_TJENESTER]: {
+    no: 'Arrangementer og tjenester',
+    en: 'Events and Services',
   },
-  [RentalObjectCategory.EQUIPMENT]: {
-    no: 'Utstyr',
-    en: 'Equipment',
-  },
-  [RentalObjectCategory.VEHICLE]: {
-    no: 'Kjøretøy',
-    en: 'Vehicles',
-  },
-  [RentalObjectCategory.OTHER]: {
-    no: 'Annet',
-    en: 'Other',
+  [RentalObjectCategory.UTSTYR_OG_KJORETOY]: {
+    no: 'Utstyr og kjøretøy',
+    en: 'Equipment and Vehicles',
   },
 };

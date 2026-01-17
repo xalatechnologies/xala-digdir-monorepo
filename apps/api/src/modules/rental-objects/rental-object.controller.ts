@@ -199,6 +199,39 @@ export class RentalObjectController {
     const config = await this.service.getCalendarConfig(request.params.id);
     return { data: config };
   }
+
+  /**
+   * GET /api/rental-objects/:id/booking-policy - Get booking policy (Contract-First)
+   * Returns all booking rules and constraints that drive the booking UI
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  @Get('/:id/booking-policy')
+  async getBookingPolicy(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const policy = await this.service.getBookingPolicy(request.params.id);
+    return { data: policy };
+  }
+
+  /**
+   * GET /api/rental-objects/:id/payment-policy - Get payment policy (Contract-First)
+   * Returns payment requirements, deposit rules, and cancellation policy
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  @Get('/:id/payment-policy')
+  async getPaymentPolicy(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const policy = await this.service.getPaymentPolicy(request.params.id);
+    return { data: policy };
+  }
+
+  /**
+   * GET /api/rental-objects/:id/tabs - Get dynamic tab configuration (Contract-First)
+   * Returns which tabs to show on rental object details page
+   * Reference: packages/client-sdk/src/types/booking-contracts.ts
+   */
+  @Get('/:id/tabs')
+  async getTabs(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const tabs = await this.service.getTabs(request.params.id);
+    return { data: tabs };
+  }
 }
 
 // =============================================================================

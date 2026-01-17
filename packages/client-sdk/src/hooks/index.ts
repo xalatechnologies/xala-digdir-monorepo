@@ -504,6 +504,30 @@ export {
   useTenantIntegrations,
   useUpdateTenantIntegration,
 } from './use-tenant-admin';
+
+// Tenant Admin User Management hooks
+export {
+  tenantAdminUserKeys,
+  useTenantAdminUsers,
+  useTenantAdminUser,
+  useUserEffectivePermissions,
+  useUserActivity,
+  useUserInvitations,
+  useInviteTenantUser,
+  useResendInvitation,
+  useCancelInvitation,
+  useAssignUserRole,
+  useAssignUserToOrganization,
+  useRemoveUserFromOrganization,
+  useAssignUserScopes,
+  useDeactivateTenantUser,
+  useReactivateTenantUser,
+  useSuspendUser,
+  useUnsuspendUser,
+  useBulkInviteUsers,
+  useBulkDeactivateUsers,
+  useBulkAssignRole,
+} from './use-tenant-admin-users';
 // RBAC hooks (Role-Based Access Control)
 export {
   // Capabilities

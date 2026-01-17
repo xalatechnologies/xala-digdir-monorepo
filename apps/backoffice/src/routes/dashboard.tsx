@@ -39,9 +39,15 @@ function mapActivityTypeToStatus(type: string): ActivityStatus {
 
 export function DashboardPage(): React.ReactElement {
   const { user, isAdmin, isSaksbehandler } = useAuth();
+  const { effectiveRole } = useBackofficeRole();
   const navigate = useNavigate();
   const t = useT();
   const { locale } = useLocale();
+
+  // Render specialized dashboard for org_member role
+  if (effectiveRole === 'org_member') {
+    return <OrgMemberDashboard />;
+  }
 
   // Use dedicated dashboard endpoints
   const { data: statsData, isLoading: loadingStats } = useDashboardStats();

@@ -107,6 +107,14 @@ export interface Booking extends TenantEntity {
 // Booking DTOs
 // =============================================================================
 
+/**
+ * Calendar visibility options for bookings (GDPR compliance)
+ * - PUBLIC_TITLE: Booking title visible to everyone on public calendar
+ * - PRIVATE_TITLE: Title visible only to organizer and admin
+ * - ANONYMOUS: Only time blocked, no booking details visible
+ */
+export type BookingVisibility = 'PUBLIC_TITLE' | 'PRIVATE_TITLE' | 'ANONYMOUS';
+
 export interface CreateBookingDTO {
   rentalObjectId: string;
   startTime: string | Date;
@@ -115,6 +123,22 @@ export interface CreateBookingDTO {
   notes?: string;
   totalPrice?: number;
   metadata?: BookingMetadata;
+  /** Booking date (ISO format YYYY-MM-DD) */
+  date?: string;
+  /** Purpose/reason for the booking */
+  purpose?: string;
+  /** Number of attendees */
+  attendees?: number;
+  /** Activity type (for activity-based bookings) */
+  activityType?: string;
+  /** Selected price group ID */
+  priceGroupId?: string;
+  /** Selected additional services IDs */
+  additionalServices?: string[];
+  /** Calendar visibility preference (GDPR compliance) */
+  visibility?: BookingVisibility;
+  /** Organization ID (for organizational bookings) */
+  organizationId?: string;
 }
 
 export interface UpdateBookingDTO {
