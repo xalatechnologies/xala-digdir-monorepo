@@ -308,3 +308,73 @@ import type { Booking } from '@digilist/client-sdk/types';
 // ✅ Correct  
 import type { BookingProjection } from '@xala/contracts/projections';
 ```
+
+---
+
+## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
+
+> **⚠️ MANDATORY READING**
+> 
+> These lessons come from a 4-hour production debugging session that fixed critical authentication issues.
+> **ALL developers working on packages/client-sdk MUST read these.**
+
+### Required Reading
+
+1. **`docs/architecture/AUTHENTICATION_SYSTEM.md`** (comprehensive)
+   - Complete authentication flow
+   - Cookie architecture
+   - Database schema requirements
+   - Troubleshooting guide
+
+2. **`docs/operations/LESSONS_LEARNED_AUTH_FIX_2026-01-17.md`** (detailed)
+   - Root cause analysis
+   - 10 critical lessons learned
+   - Anti-patterns to avoid
+   - Process improvements
+
+3. **Root `CLAUDE.md`** → Critical Lessons Learned section
+
+4. **Root `AI_RULES.md`** → Hard Lines section
+
+### Recommended AI Skill for packages/client-sdk
+
+When working on packages/client-sdk, use: **client-sdk-expert**
+
+Available in: `.claude/skills/client-sdk-expert/`
+
+### Critical Rules for packages/client-sdk
+
+1. **Database Schema:** Tables MUST be in named schemas (platform, domain, compliance)
+2. **Authentication:** System is LOCKED - no changes without approval
+3. **Deployment:** Follow mandatory checklist in AI_RULES.md
+4. **Testing:** Test authentication after ANY deployment
+5. **Documentation:** Update docs when making significant changes
+
+### Quick Validation
+
+Before deploying changes to packages/client-sdk:
+
+```bash
+# 1. Verify database schemas
+psql -d digilist_prod -c "\dn"
+
+# 2. Rebuild if SDK changed
+pnpm -F packages/client-sdk build
+
+# 3. Test locally
+pnpm -F packages/client-sdk dev
+
+# 4. Deploy
+# (Follow deployment checklist)
+
+# 5. Test authentication
+# - BankID login → Dashboard
+# - Demo login → Dashboard
+# - Check browser cookies
+```
+
+---
+
+**Last Updated:** 2026-01-17
+**Status:** Production Stable
+**Next Review:** After significant changes

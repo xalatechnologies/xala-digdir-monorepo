@@ -401,21 +401,58 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
  */
 export function toDetailsProjection(
   obj: DbRentalObject,
-  options: { canBook?: boolean; canEdit?: boolean; canViewPricing?: boolean } = {}
+  options: { canBook?: boolean; canEdit?: boolean; canViewPricing?: boolean} = {}
 ): RentalObjectDetailsProjectionDTO {
+  // DEBUG: Log what we're receiving
+  console.log('[PROJECTION DEBUG]', {
+    id: obj.id,
+    name: obj.name,
+    imagesType: typeof obj.images,
+    imagesIsArray: Array.isArray(obj.images),
+    imagesLength: Array.isArray(obj.images) ? obj.images.length : 'not array',
+    metadataType: typeof obj.metadata,
+    metadataKeys: obj.metadata ? Object.keys(obj.metadata) : 'no metadata'
+  });
+  
   const card = toCardProjection(obj);
   const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
   const addr = (meta.address && typeof meta.address === 'object' ? meta.address : {}) as Record<string, string>;
 
-  const images: RentalObjectImageDTO[] = safeArray<string>(obj.images).map((url, index) => ({
-    id: `img-${index}`,
-    url,
-    thumbnailUrl: url,
-    alt: `${obj.name} ${index + 1}`,
-    isPrimary: index === 0,
-    order: index,
-  }));
+  // Handle both string array and object array formats for images
+  const rawImages = obj.images || [];
+  const images: RentalObjectImageDTO[] = Array.isArray(rawImages) 
+    ? rawImages.map((img, index) => {
+        if (typeof img === 'string') {
+          return {
+            id: `img-${index}`,
+            url: img,
+            thumbnailUrl: img,
+            alt: `${obj.name} ${index + 1}`,
+            isPrimary: index === 0,
+            order: index,
+          };
+        } else if (img && typeof img === 'object' && 'url' in img) {
+          const imgObj = img as { url: string; alt?: string; thumbnail?: string };
+          return {
+            id: `img-${index}`,
+            url: imgObj.url || '',
+            thumbnailUrl: imgObj.thumbnail || imgObj.url || '',
+            alt: imgObj.alt || `${obj.name} ${index + 1}`,
+            isPrimary: index === 0,
+            order: index,
+          };
+        }
+        return {
+          id: `img-${index}`,
+          url: '',
+          thumbnailUrl: '',
+          alt: `${obj.name} ${index + 1}`,
+          isPrimary: index === 0,
+          order: index,
+        };
+      })
+    : [];
 
   const rawAmenities = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
   const allAmenities: RentalObjectAmenityDTO[] = rawAmenities.map((name, i) => ({
@@ -425,15 +462,16 @@ export function toDetailsProjection(
     category: 'general',
   }));
 
-  const rawHoursData = meta.openingHours;
+  const rawHoursData = meta.opening_hours || meta.openingHours;
   let openingHours: RentalObjectOpeningHoursDTO[] = [];
   
   if (Array.isArray(rawHoursData)) {
     openingHours = rawHoursData.map((item: any, i: number) => {
       const dayName = safeString(item.day) || safeString(item.dayName) || getWeekdayLabelKey(`day${i}`);
       const dayIdx = typeof item.dayIndex === 'number' ? item.dayIndex : i;
-      const openTime = safeString(item.open) || safeString(item.openTime) || '';
-      const closeTime = safeString(item.close) || safeString(item.closeTime) || '';
+      // Handle both {open, close} and {from, to} formats
+      const openTime = safeString(item.open) || safeString(item.openTime) || safeString(item.from) || '';
+      const closeTime = safeString(item.close) || safeString(item.closeTime) || safeString(item.to) || '';
       const isClosed = item.isClosed === true || (!openTime && !closeTime);
       return {
         day: dayName,
@@ -445,17 +483,21 @@ export function toDetailsProjection(
       };
     });
   } else if (rawHoursData && typeof rawHoursData === 'object') {
-    openingHours = Object.entries(rawHoursData as Record<string, { open?: string; close?: string }>)
+    openingHours = Object.entries(rawHoursData as Record<string, any>)
       .map(([day, times]) => {
         const dayLower = day.toLowerCase();
         const idx = DAY_INDICES[dayLower] ?? 0;
-        const isClosed = !times.open || !times.close;
+        // Handle both {open, close} and {from, to} formats, including arrays
+        const timeData = Array.isArray(times) ? times[0] : times;
+        const openTime = safeString(timeData?.open) || safeString(timeData?.from) || '';
+        const closeTime = safeString(timeData?.close) || safeString(timeData?.to) || '';
+        const isClosed = !openTime || !closeTime;
         return {
           day: getWeekdayLabelKey(dayLower),
           dayIndex: idx,
-          openTime: times.open || '',
-          closeTime: times.close || '',
-          hoursDisplay: isClosed ? 'sdk.placeholder.closed' : `${times.open} - ${times.close}`,
+          openTime,
+          closeTime,
+          hoursDisplay: isClosed ? 'sdk.placeholder.closed' : `${openTime} - ${closeTime}`,
           isClosed,
         };
       })

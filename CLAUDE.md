@@ -23,6 +23,108 @@ municipal booking and resource management system.
 
 ---
 
+## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
+
+> **HARD LINE - READ THIS FIRST**
+>
+> The following lessons are from real production incidents and MUST be followed.
+> These are non-negotiable and have been learned the hard way.
+
+### 1. Database Schema Structure (CRITICAL)
+
+**⚠️ HARD REQUIREMENT:** The application code expects tables in **named schemas**, NOT the `public` schema.
+
+```sql
+-- REQUIRED: These schemas MUST exist
+CREATE SCHEMA IF NOT EXISTS platform;   -- User/tenant infrastructure
+CREATE SCHEMA IF NOT EXISTS domain;     -- Business domain tables
+CREATE SCHEMA IF NOT EXISTS compliance; -- Audit and GDPR
+CREATE SCHEMA IF NOT EXISTS monitoring; -- Health checks, metrics
+CREATE SCHEMA IF NOT EXISTS saas;       -- Billing, subscriptions
+```
+
+**Schema Assignment:**
+- `platform` schema: users, tenants, organizations, sessions, org_memberships, permission_assignments, case_handler_scopes, branding_tokens, branding_versions
+- `domain` schema: rental_objects, bookings, alerts, allocations, seasonal_leases, conversations, messages, seasons, season_applications, priority_rules, access_grants
+- `compliance` schema: audit_logs, gdpr_requests
+
+**Why This Matters:**
+- ❌ Tables in `public` schema will cause "relation does not exist" errors
+- ❌ Authentication will fail completely
+- ❌ All database operations will fail
+
+**Validation:**
+```bash
+# Before deployment, verify schema structure
+psql -d digilist_prod -c "\dn"  # Should show all 5 schemas
+psql -d digilist_prod -c "SELECT schemaname, COUNT(*) FROM pg_tables WHERE schemaname IN ('platform', 'domain', 'compliance') GROUP BY schemaname;"
+```
+
+### 2. Authentication System (LOCKED)
+
+**🔒 HARD LINE - NO CHANGES WITHOUT APPROVAL**
+
+Authentication is **STABLE AND WORKING**. Do not modify without explicit approval.
+
+**Critical Files (DO NOT CHANGE):**
+- `apps/api/src/modules/auth/idporten.controller.ts` - BankID REST API
+- `apps/api/src/modules/auth/session.service.ts` - Session management
+- `apps/api/src/config/cookies.ts` - Cookie configuration
+- `packages/client-sdk/src/services/idporten.service.ts` - Frontend SDK
+
+**Key Requirements:**
+1. Use `/api/auth/idporten` endpoint (REST), NOT `/api/auth/idporten-oidc`
+2. Three HTTP-only cookies: `dl_at`, `dl_rt`, `dl_csrf`
+3. Cookie domain MUST be `.digilist.no` for cross-subdomain SSO
+4. Redirect to frontend domain (extract origin from returnTo URL)
+5. Audit logging with `action: 'login'`
+
+**Documentation:** See `docs/architecture/AUTHENTICATION_SYSTEM.md` for complete details.
+
+### 3. Deployment Checklist (MANDATORY)
+
+Before deploying ANY changes:
+
+- [ ] Verify database schemas exist and tables are in correct schemas
+- [ ] Rebuild ALL dependent apps after SDK changes (`pnpm -r build`)
+- [ ] Test authentication (both BankID and demo login)
+- [ ] Check API logs for errors (`pm2 logs xala-api`)
+- [ ] Verify cookies are set with correct domain in browser dev tools
+- [ ] Monitor for 10 minutes after deployment
+
+### 4. Debugging Principles (LEARN FROM MISTAKES)
+
+**When debugging authentication/session issues:**
+
+1. **Trace the full request path:** Frontend → SDK → API endpoint
+   - Don't assume which API is being called - verify in SDK code
+   - Check actual endpoint URLs in network tab
+
+2. **Read BOTH frontend console AND backend logs**
+   - Database errors appear in API logs, not frontend
+   - Cookie issues appear in both places
+
+3. **Check infrastructure before application logic**
+   - Database schemas, cookie domains, CORS settings
+   - These cause symptoms that look like logic bugs
+
+4. **Fix one thing at a time**
+   - Deploy and test after each change
+   - Don't batch multiple fixes together
+
+5. **Verify assumptions**
+   - "It should work" ≠ "It does work"
+   - Test every change, don't assume success
+
+**Common Pitfall:** Same symptom ("redirects to login") can have multiple causes:
+- Missing database schemas
+- Cookies on wrong domain
+- Wrong API endpoint being called
+- Session not created
+- Redirect to wrong domain
+
+---
+
 ## Monorepo Structure
 
 This is a **Turborepo** using **pnpm workspaces**.

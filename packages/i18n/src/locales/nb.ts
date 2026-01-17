@@ -2322,6 +2322,16 @@ export const nb: Record<string, string> = {
   'amenity.kiosk': 'Kiosk',
   'amenity.cafe': 'Kafé',
   'amenity.mirrors': 'Speil',
+  // Case-sensitive amenity variants (exact match from seed data)
+  'amenity.WiFi': 'WiFi',
+  'amenity.Parkering': 'Parkering',
+  'amenity.Garderober': 'Garderober',
+  'amenity.Dusjer': 'Dusjer',
+  'amenity.Tilgjengelig for rullestol': 'Tilgjengelig for rullestol',
+  'amenity.Projektor': 'Projektor',
+  'amenity.Whiteboard': 'Whiteboard',
+  'amenity.Kaffe/te': 'Kaffe/te',
+  'amenity.Aircondition': 'Aircondition',
 
   // Rental Objects (Backoffice)
   'rentalObjects.title': 'Utleieobjekter',
