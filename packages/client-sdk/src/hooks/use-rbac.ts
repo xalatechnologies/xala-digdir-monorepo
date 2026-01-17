@@ -271,7 +271,7 @@ export function useDeleteAccessGrant() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => accessGrantService.delete(id),
+    mutationFn: (id: string) => accessGrantService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.accessGrants.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.rbac.capabilities() });
@@ -484,7 +484,7 @@ export function useDeletePermissionAssignment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => permissionAssignmentService.delete(id),
+    mutationFn: (id: string) => permissionAssignmentService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.rbac.capabilities() });

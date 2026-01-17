@@ -148,7 +148,7 @@ export function useDeleteSeasonApplication() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => seasonApplicationService.delete(id),
+    mutationFn: (id: string) => seasonApplicationService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: seasonApplicationKeys.all });
     },

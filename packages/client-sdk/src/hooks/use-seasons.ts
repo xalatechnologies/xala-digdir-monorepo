@@ -170,7 +170,7 @@ export function useDeleteSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => seasonService.delete(id),
+    mutationFn: (id: string) => seasonService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: seasonKeys.all });
     },

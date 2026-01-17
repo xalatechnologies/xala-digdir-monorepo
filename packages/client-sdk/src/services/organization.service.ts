@@ -66,11 +66,12 @@ export class OrganizationService extends BaseService {
   }
 
   /**
-   * Delete organization
+   * Delete an organization
    */
-  async delete(id: string): Promise<SuccessResponse> {
-    return this.client.delete(this.buildPath(`/${id}`));
+  async deleteOrganization(id: string): Promise<SuccessResponse> {
+    return this.delete<SuccessResponse>(`/${id}`);
   }
+
 
   /**
    * Request verification

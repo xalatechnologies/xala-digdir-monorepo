@@ -276,7 +276,7 @@ class SeasonApplicationService {
    * console.log('Application deleted');
    * ```
    */
-  async delete(id: string): Promise<void> {
+  async deleteById(id: string): Promise<void> {
     return getClient().delete(`${this.basePath}/${id}`);
   }
 }

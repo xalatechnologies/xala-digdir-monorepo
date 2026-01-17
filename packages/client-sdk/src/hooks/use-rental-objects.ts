@@ -169,7 +169,7 @@ export function useDeleteRentalObject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => rentalObjectService.delete(id),
+    mutationFn: (id: string) => rentalObjectService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: rentalObjectKeys.lists() });
     },

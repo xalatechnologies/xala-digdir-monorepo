@@ -78,7 +78,7 @@ export class ReviewService extends BaseService {
    * @param id - Review ID
    * @returns Promise resolving to success response
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

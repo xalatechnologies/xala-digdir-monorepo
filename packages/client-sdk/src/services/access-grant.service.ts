@@ -93,7 +93,7 @@ export class AccessGrantService extends BaseService {
    * Delete access grant permanently (Commune Admin only)
    * Use with caution - prefer revoke for audit trail
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

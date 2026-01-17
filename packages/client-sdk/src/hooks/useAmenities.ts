@@ -132,7 +132,7 @@ export function useDeleteAmenity() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => amenities.delete(id),
+    mutationFn: (id: string) => amenities.deleteById(id),
     onSuccess: () => {
       // Invalidate all amenity queries
       queryClient.invalidateQueries({ queryKey: amenitiesKeys.all });

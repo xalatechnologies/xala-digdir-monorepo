@@ -115,7 +115,7 @@ export class RentalObjectService extends BaseService {
   /**
    * Delete rental object
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

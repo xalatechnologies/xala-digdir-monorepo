@@ -26,7 +26,7 @@ export abstract class BaseService {
   /**
    * HTTP GET request
    */
-  protected async get<T>(path: string, config?: { params?: any }): Promise<T> {
+  public async get<T>(path: string, config?: { params?: any }): Promise<T> {
     const url = this.buildPath(path);
     return this.client.get<T>(url, config);
   }
@@ -34,7 +34,7 @@ export abstract class BaseService {
   /**
    * HTTP POST request
    */
-  protected async post<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async post<T>(path: string, data?: any, config?: any): Promise<T> {
     const url = this.buildPath(path);
     return this.client.post<T>(url, data, config);
   }
@@ -42,7 +42,7 @@ export abstract class BaseService {
   /**
    * HTTP PUT request
    */
-  protected async put<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async put<T>(path: string, data?: any, config?: any): Promise<T> {
     const url = this.buildPath(path);
     return this.client.put<T>(url, data, config);
   }
@@ -50,7 +50,7 @@ export abstract class BaseService {
   /**
    * HTTP PATCH request
    */
-  protected async patch<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async patch<T>(path: string, data?: any, config?: any): Promise<T> {
     const url = this.buildPath(path);
     return this.client.patch<T>(url, data, config);
   }
@@ -58,7 +58,7 @@ export abstract class BaseService {
   /**
    * HTTP DELETE request
    */
-  protected async delete<T = void>(path: string, config?: { data?: any }): Promise<T> {
+  public async delete<T = void>(path: string, config?: any): Promise<T> {
     const url = this.buildPath(path);
     return this.client.delete<T>(url, config);
   }
@@ -70,7 +70,7 @@ export abstract class BaseService {
    * @param options - Upload options (fields, etc.)
    * @returns MediaUploadResponse with uploaded file details
    */
-  protected async uploadMedia(
+  public async uploadMedia(
     path: string,
     files: File[],
     options?: UploadOptions

@@ -161,7 +161,7 @@ export function useDeleteBooking() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (id: string) => bookingService.delete(id),
+    mutationFn: (id: string) => bookingService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
@@ -230,7 +230,7 @@ export function useDeleteAllocation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => allocationService.delete(id),
+    mutationFn: (id: string) => allocationService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.allocations.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });

@@ -238,7 +238,7 @@ class SeasonalLeaseService {
    * await seasonalLeaseService.delete('lease-draft-123');
    * ```
    */
-  async delete(id: string): Promise<{ success: boolean }> {
+  async deleteById(id: string): Promise<{ success: boolean }> {
     return getClient().delete<{ success: boolean }>(`${this.basePath}/${id}`);
   }
 

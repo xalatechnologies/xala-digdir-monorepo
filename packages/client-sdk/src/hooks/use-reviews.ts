@@ -162,7 +162,7 @@ export function useDeleteReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => reviewService.delete(id),
+    mutationFn: (id: string) => reviewService.deleteById(id),
     onSuccess: () => {
       // Invalidate all review-related queries
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews.all });

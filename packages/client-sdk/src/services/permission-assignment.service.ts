@@ -122,7 +122,7 @@ export class PermissionAssignmentService extends BaseService {
   /**
    * Delete permission assignment by ID (Org Admin only)
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

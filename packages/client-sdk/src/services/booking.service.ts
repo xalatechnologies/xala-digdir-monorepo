@@ -155,7 +155,7 @@ export class BookingService extends BaseService {
   /**
    * Delete booking
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 
@@ -397,7 +397,7 @@ export class AllocationService extends BaseService {
   /**
    * Delete allocation
    */
-  async delete(id: string): Promise<SuccessResponse> {
+  async deleteById(id: string): Promise<SuccessResponse> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 }

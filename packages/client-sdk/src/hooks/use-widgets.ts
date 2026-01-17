@@ -103,7 +103,7 @@ export function useDeleteWidget() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => widgetService.delete(id),
+    mutationFn: (id: string) => widgetService.deleteById(id),
     onSuccess: () => {
       // Invalidate all widget-related queries
       queryClient.invalidateQueries({ queryKey: queryKeys.widgets.all });

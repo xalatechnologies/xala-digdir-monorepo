@@ -177,7 +177,7 @@ export function useDeleteDiscountCode() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => discountCodeService.delete(id),
+    mutationFn: (id: string) => discountCodeService.deleteById(id),
     onMutate: async (id) => {
       // Cancel outgoing refetches to prevent overwriting optimistic update
       await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.lists() });

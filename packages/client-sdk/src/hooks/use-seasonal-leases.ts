@@ -125,7 +125,7 @@ export function useDeleteSeasonalLease() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => seasonalLeaseService.delete(id),
+    mutationFn: (id: string) => seasonalLeaseService.deleteById(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: seasonalLeaseKeys.all });
     },

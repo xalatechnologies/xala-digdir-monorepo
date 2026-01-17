@@ -118,7 +118,7 @@ export class AmenitiesService {
   /**
    * Delete amenity (admin only)
    */
-  async delete(id: string): Promise<void> {
+  async deleteById(id: string): Promise<void> {
     const response = await this.fetch(`${this.baseUrl}/amenities/${id}`, {
       method: 'DELETE',
       credentials: 'include',

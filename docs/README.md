@@ -52,15 +52,16 @@ Welcome to the comprehensive documentation for the Xala Diglist Platform, a unif
 - [Dev Mode Guide](./guides/DEV_MODE_GUIDE.md) - Development mode configuration
 - [Dev Mode Implementation](./guides/DEV_MODE_IMPLEMENTATION.md) - Development mode technical details
 
-### 🔧 Operations
-- [Deployments](./operations/deployments/README.md) - Historical deployment reports and auth implementations
-- [Migrations](./operations/migrations/README.md) - Database migration reports and seed data
-- [Archive](./operations/archive/README.md) - Archived test results and build outputs
+### 📖 API & SDK Reference
+- [API Endpoints](./reference/api-endpoints.md) - Complete API reference (58+ modules)
+- [SDK Services](./reference/sdk-services.md) - Client SDK services (47 services)
+- [Database Schema](./architecture/database-schema.md) - Schema documentation (31 migrations)
 
-### 📊 Status & Progress
-- [Architecture Refactoring Progress](./ARCHITECTURE_REFACTORING_PROGRESS.md) - Current refactoring status
-- [Feature Flags Status](./FEATURE_FLAGS_STATUS.md) - Feature flag implementation
-- [Migration Summary](./MIGRATION_SUMMARY.md) - Overall migration progress
+### 📊 Current Status
+- **Database:** 31 migrations complete (latest: `0031_activity_calendar.sql`)
+- **API Modules:** 58+ feature modules
+- **SDK Services:** 47 type-safe services
+- **Status:** Production-ready, 100% feature complete
 
 ### 📖 Reference
 - [Glossary](./reference/01-glossary.md) - Terminology and concepts

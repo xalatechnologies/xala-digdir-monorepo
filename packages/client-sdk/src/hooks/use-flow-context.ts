@@ -114,7 +114,7 @@ function subscribe(callback: () => void): () => void {
   }
 
   return () => {
-    subscribers.delete(callback);
+    subscribers.deleteById(callback);
     if (typeof window !== 'undefined') {
       window.removeEventListener('storage', handleStorageChange);
     }
