@@ -45,3 +45,6 @@ logs/security/
 # Xaheen generated files
 .xaheen-security.json
 .xaheen-status
+
+# Staging environment (local only)
+.env.staging

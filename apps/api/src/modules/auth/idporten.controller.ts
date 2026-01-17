@@ -608,53 +608,68 @@ export class IdPortenAuthController {
       // Clean up session
       await sessionStore.delete(state);
 
-      // Set session cookie with user ID using raw header
-      // Cookie is HttpOnly, Secure (in prod), SameSite=None for cross-site redirects
+      // Create proper session with HTTP-only cookies
+      const { sessionService } = await import('./session.service');
+      const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
+
+      const userSession = await sessionService.createSession({
+        userId,
+        tenantId,
+        userAgent: request.headers['user-agent'],
+        ipAddress: request.ip,
+      });
+
+      // Generate CSRF token
+      const { randomBytes } = await import('crypto');
+      const csrfToken = randomBytes(32).toString('base64url');
       const isProduction = process.env.NODE_ENV === 'production';
-      const cookieValue = encodeURIComponent(JSON.stringify({ userId, tenantId }));
 
-      // Always use Secure and SameSite=None in production for cross-domain cookies
-      const cookieParts = [
-        `digilist_session=${cookieValue}`,
-        'Path=/',
-        'HttpOnly',
-        'Max-Age=86400',
-      ];
+      // Set three HTTP-only cookies
+      reply
+        .setCookie(
+          COOKIE_CONFIG.ACCESS.name,
+          userSession.accessToken,
+          getCookieOptions('ACCESS', isProduction)
+        )
+        .setCookie(
+          COOKIE_CONFIG.REFRESH.name,
+          userSession.refreshToken,
+          getCookieOptions('REFRESH', isProduction)
+        )
+        .setCookie(
+          COOKIE_CONFIG.CSRF.name,
+          csrfToken,
+          getCookieOptions('CSRF', isProduction)
+        );
 
-      if (isProduction) {
-        cookieParts.push('Secure');
-        // SameSite=None is required for cross-domain cookies with Secure
-        cookieParts.push('SameSite=None');
-        // Don't set Domain - let browser use the API domain for same-site requests
-      } else {
-        cookieParts.push('SameSite=Lax');
-      }
-
-      reply.header('Set-Cookie', cookieParts.join('; '));
-
-      console.log('[ID-PORTEN CALLBACK] Cookie configuration:');
-      console.log('  isProduction:', isProduction);
-      console.log('  cookieParts:', cookieParts);
+      console.log('[ID-PORTEN CALLBACK] Session created:');
+      console.log('  sessionId:', userSession.sessionId);
+      console.log('  expiresAt:', userSession.expiresAt);
 
       // Audit log successful authentication
       getAuditService().log({
         tenantId,
         userId,
-        action: 'auth_success',
-        resource: 'idporten',
-        resourceId: session.sessionId,
+        action: 'login',
+        resource: 'auth',
+        resourceId: userId,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
         metadata: {
+          method: 'bankid',
           provider: 'nbid',
           returnTo,
           hasIdentity: !!sessionData.identity,
           userEmail: user.email,
+          sessionId: userSession.sessionId,
         },
       });
 
-      // Build success redirect URL with auth success flag
-      const redirectUrl = buildRedirectUrl(returnTo, {
+      // Redirect to dashboard on the frontend domain (extract origin from returnTo)
+      const returnToUrl = new URL(returnTo);
+      const dashboardUrl = `${returnToUrl.origin}/`;
+
+      const redirectUrl = buildRedirectUrl(dashboardUrl, {
         auth_success: 'true',
         auth_provider: 'bankid',
       });
@@ -662,9 +677,9 @@ export class IdPortenAuthController {
       console.log('[ID-PORTEN CALLBACK] Success redirect:');
       console.log('  userId:', userId);
       console.log('  userEmail:', user.email);
-      console.log('  returnTo:', returnTo);
-      console.log('  redirectUrl:', redirectUrl);
-      console.log('  Cookie set:', cookieParts.join('; '));
+      console.log('  returnTo origin:', returnToUrl.origin);
+      console.log('  redirecting to:', dashboardUrl);
+      console.log('  final redirectUrl:', redirectUrl);
 
       return reply.redirect(redirectUrl);
     } catch (error) {

@@ -5,6 +5,7 @@
  */
 import {
   pgTable,
+  pgSchema,
   uuid,
   varchar,
   text,
@@ -15,6 +16,9 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { tenants, organizations, users } from './index';
+
+// Use domain schema
+const domainSchema = pgSchema('domain');
 
 // =============================================================================
 // RENTAL OBJECT CATEGORIES (Seed table - source of truth)

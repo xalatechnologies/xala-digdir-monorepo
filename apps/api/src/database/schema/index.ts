@@ -4,6 +4,7 @@
  */
 import {
   pgTable,
+  pgSchema,
   uuid,
   varchar,
   text,
@@ -16,11 +17,18 @@ import {
   unique,
 } from 'drizzle-orm/pg-core';
 
+// Define schemas
+export const platformSchema = pgSchema('platform');
+export const domainSchema = pgSchema('domain');
+export const complianceSchema = pgSchema('compliance');
+export const monitoringSchema = pgSchema('monitoring');
+export const saasSchema = pgSchema('saas');
+
 // ============================================================================
 // Tenants & Organizations
 // ============================================================================
 
-export const tenants = pgTable('tenants', {
+export const tenants = platformSchema.table('tenants', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 100 }).notNull().unique(),
@@ -55,7 +63,7 @@ export const tenants = pgTable('tenants', {
   subscriptionPlanIdx: index('tenants_subscription_plan_idx').on(table.subscriptionPlanId),
 }));
 
-export const organizations = pgTable('organizations', {
+export const organizations = platformSchema.table('organizations', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),
@@ -79,7 +87,7 @@ export const organizations = pgTable('organizations', {
 // Users & RBAC
 // ============================================================================
 
-export const users = pgTable('users', {
+export const users = platformSchema.table('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
@@ -103,7 +111,7 @@ export const users = pgTable('users', {
 // Sessions & Authentication
 // ============================================================================
 
-export const sessions = pgTable('sessions', {
+export const sessions = platformSchema.table('sessions', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
@@ -124,7 +132,7 @@ export const sessions = pgTable('sessions', {
   userTenantIdx: index('sessions_user_tenant_idx').on(table.userId, table.tenantId),
 }));
 
-export const orgMemberships = pgTable('org_memberships', {
+export const orgMemberships = platformSchema.table('org_memberships', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
@@ -139,7 +147,7 @@ export const orgMemberships = pgTable('org_memberships', {
   userOrgIdx: index('org_memberships_user_org_idx').on(table.userId, table.orgId),
 }));
 
-export const accessGrants = pgTable('access_grants', {
+export const accessGrants = domainSchema.table('access_grants', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
@@ -158,7 +166,7 @@ export const accessGrants = pgTable('access_grants', {
   orgRentalObjectIdx: index('access_grants_org_rental_object_idx').on(table.orgId, table.rentalObjectId),
 }));
 
-export const permissionAssignments = pgTable('permission_assignments', {
+export const permissionAssignments = platformSchema.table('permission_assignments', {
   id: uuid('id').primaryKey().defaultRandom(),
   orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -176,7 +184,7 @@ export const permissionAssignments = pgTable('permission_assignments', {
   orgUserRentalObjectIdx: index('permission_assignments_org_user_rental_object_idx').on(table.orgId, table.userId, table.rentalObjectId),
 }));
 
-export const caseHandlerScopes = pgTable('case_handler_scopes', {
+export const caseHandlerScopes = platformSchema.table('case_handler_scopes', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -199,7 +207,7 @@ export const caseHandlerScopes = pgTable('case_handler_scopes', {
 // Plans & Subscriptions
 // ============================================================================
 
-export const plans = pgTable('plans', {
+export const plans = saasSchema.table('plans', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 100 }).notNull(),
   slug: varchar('slug', { length: 50 }).notNull().unique(),
@@ -250,7 +258,7 @@ export const plans = pgTable('plans', {
   displayOrderIdx: index('plans_display_order_idx').on(table.displayOrder),
 }));
 
-export const subscriptions = pgTable('subscriptions', {
+export const subscriptions = saasSchema.table('subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
   planId: uuid('plan_id').references(() => plans.id, { onDelete: 'set null' }),
@@ -272,7 +280,7 @@ export const subscriptions = pgTable('subscriptions', {
 // Feature Flags
 // ============================================================================
 
-export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
+export const featureFlagsCatalog = saasSchema.table('feature_flags_catalog', {
   id: uuid('id').primaryKey().defaultRandom(),
   key: varchar('key', { length: 100 }).notNull().unique(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -290,7 +298,7 @@ export const featureFlagsCatalog = pgTable('feature_flags_catalog', {
   statusIdx: index('feature_flags_catalog_status_idx').on(table.status),
 }));
 
-export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
+export const tenantFeatureFlags = saasSchema.table('tenant_feature_flags', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
@@ -306,7 +314,7 @@ export const tenantFeatureFlags = pgTable('tenant_feature_flags', {
   tenantFlagUnique: unique('tenant_feature_flags_unique').on(table.tenantId, table.featureFlagId),
 }));
 
-export const orgFeatureFlags = pgTable('org_feature_flags', {
+export const orgFeatureFlags = saasSchema.table('org_feature_flags', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   featureFlagId: uuid('feature_flag_id').notNull().references(() => featureFlagsCatalog.id, { onDelete: 'cascade' }),
@@ -326,7 +334,7 @@ export const orgFeatureFlags = pgTable('org_feature_flags', {
 // Category Entitlements (Rental Object Category Access Control)
 // ============================================================================
 
-export const categoryEntitlements = pgTable('category_entitlements', {
+export const categoryEntitlements = saasSchema.table('category_entitlements', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'cascade' }),
@@ -349,7 +357,7 @@ export const categoryEntitlements = pgTable('category_entitlements', {
 // Rental Objects (V3 Model)
 // ============================================================================
 
-export const rentalObjects = pgTable('rental_objects', {
+export const rentalObjects = domainSchema.table('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
@@ -393,7 +401,7 @@ export const rentalObjects = pgTable('rental_objects', {
 // Bookings
 // ============================================================================
 
-export const bookings = pgTable('bookings', {
+export const bookings = domainSchema.table('bookings', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
@@ -418,7 +426,7 @@ export const bookings = pgTable('bookings', {
 // Monitoring & Alerts
 // ============================================================================
 
-export const auditLogs = pgTable('audit_logs', {
+export const auditLogs = complianceSchema.table('audit_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
@@ -435,7 +443,7 @@ export const auditLogs = pgTable('audit_logs', {
   resourceIdx: index('audit_logs_resource_idx').on(table.resource, table.resourceId),
 }));
 
-export const alerts = pgTable('alerts', {
+export const alerts = domainSchema.table('alerts', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   type: varchar('type', { length: 50 }).notNull().default('threshold'),
@@ -448,7 +456,7 @@ export const alerts = pgTable('alerts', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const incidents = pgTable('incidents', {
+export const incidents = monitoringSchema.table('incidents', {
   id: uuid('id').primaryKey().defaultRandom(),
   alertId: uuid('alert_id').references(() => alerts.id, { onDelete: 'set null' }),
   title: varchar('title', { length: 255 }).notNull(),
@@ -470,7 +478,7 @@ export const incidents = pgTable('incidents', {
 // Usage Tracking
 // ============================================================================
 
-export const usage = pgTable('usage', {
+export const usage = saasSchema.table('usage', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   metric: varchar('metric', { length: 100 }).notNull(),
@@ -485,7 +493,7 @@ export const usage = pgTable('usage', {
 // Allocations (Calendar Events, Time Blocking)
 // ============================================================================
 
-export const allocations = pgTable('allocations', {
+export const allocations = domainSchema.table('allocations', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
@@ -510,7 +518,7 @@ export const allocations = pgTable('allocations', {
 // Seasonal Leases
 // ============================================================================
 
-export const seasonalLeases = pgTable('seasonal_leases', {
+export const seasonalLeases = domainSchema.table('seasonal_leases', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
@@ -537,7 +545,7 @@ export const seasonalLeases = pgTable('seasonal_leases', {
 // Conversations & Messages
 // ============================================================================
 
-export const conversations = pgTable('conversations', {
+export const conversations = domainSchema.table('conversations', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -553,7 +561,7 @@ export const conversations = pgTable('conversations', {
   userIdx: index('conversations_user_idx').on(table.userId),
 }));
 
-export const messages = pgTable('messages', {
+export const messages = domainSchema.table('messages', {
   id: uuid('id').primaryKey().defaultRandom(),
   conversationId: uuid('conversation_id').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
   senderType: varchar('sender_type', { length: 20 }).notNull().default('user'),
@@ -570,7 +578,7 @@ export const messages = pgTable('messages', {
 // Branding & White-Label
 // ============================================================================
 
-export const brandingTokens = pgTable('branding_tokens', {
+export const brandingTokens = platformSchema.table('branding_tokens', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }).unique(),
   name: varchar('name', { length: 255 }),
@@ -591,7 +599,7 @@ export const brandingTokens = pgTable('branding_tokens', {
   tenantIdx: index('branding_tokens_tenant_idx').on(table.tenantId),
 }));
 
-export const brandingVersions = pgTable('branding_versions', {
+export const brandingVersions = platformSchema.table('branding_versions', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   brandingTokensId: uuid('branding_tokens_id').notNull().references(() => brandingTokens.id, { onDelete: 'cascade' }),
@@ -689,7 +697,7 @@ export type Listing = RentalObject;
 export type NewListing = NewRentalObject;
 
 // Stub exports for seasons module (pending implementation)
-export const seasons = pgTable('seasons', {
+export const seasons = domainSchema.table('seasons', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),
@@ -700,7 +708,7 @@ export const seasons = pgTable('seasons', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const seasonApplications = pgTable('season_applications', {
+export const seasonApplications = domainSchema.table('season_applications', {
   id: uuid('id').primaryKey().defaultRandom(),
   seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -709,7 +717,7 @@ export const seasonApplications = pgTable('season_applications', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const priorityRules = pgTable('priority_rules', {
+export const priorityRules = domainSchema.table('priority_rules', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),

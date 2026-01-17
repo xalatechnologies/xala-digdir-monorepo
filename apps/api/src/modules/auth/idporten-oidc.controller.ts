@@ -194,8 +194,7 @@ export class IdPortenOIDCAuthController {
 
       // Find or create user based on the subject ID
       const db = container.resolve<any>('Database');
-      const jwtService = container.resolve<JwtService>('JwtService');
-      
+
       //  For now, try to find existing user by demo mapping
       // In production, you'd create/update users based on the eID subject
       let user = null;
@@ -211,8 +210,38 @@ export class IdPortenOIDCAuthController {
         });
       }
 
-      // Generate JWT token for the user
-      const tokenResult = jwtService.generateToken(user.id, user.tenantId);
+      // Create session with HTTP-only cookies (NEW secure method)
+      const { sessionService } = await import('./session.service');
+      const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
+
+      const userSession = await sessionService.createSession({
+        userId: user.id,
+        tenantId: user.tenantId,
+        userAgent: request.headers['user-agent'],
+        ipAddress: request.ip,
+      });
+
+      // Generate CSRF token
+      const csrfToken = crypto.randomBytes(32).toString('base64url');
+      const isProduction = process.env.NODE_ENV === 'production';
+
+      // Set three HTTP-only cookies
+      reply
+        .setCookie(
+          COOKIE_CONFIG.ACCESS.name,
+          userSession.accessToken,
+          getCookieOptions('ACCESS', isProduction)
+        )
+        .setCookie(
+          COOKIE_CONFIG.REFRESH.name,
+          userSession.refreshToken,
+          getCookieOptions('REFRESH', isProduction)
+        )
+        .setCookie(
+          COOKIE_CONFIG.CSRF.name,
+          csrfToken,
+          getCookieOptions('CSRF', isProduction)
+        );
 
       //  Update last login
       await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
@@ -226,14 +255,17 @@ export class IdPortenOIDCAuthController {
         resourceId: query.state,
         ipAddress: request.ip,
         userAgent: request.headers['user-agent'],
-        metadata: { subject: idTokenPayload.sub, email: user.email },
+        metadata: {
+          subject: idTokenPayload.sub,
+          email: user.email,
+          sessionId: userSession.sessionId,
+        },
       });
 
-      // Redirect to returnTo with JWT token
+      // Redirect to returnTo WITHOUT token (cookies handle auth)
       const redirectUrl = new URL(session.returnTo || DEFAULT_REDIRECT_URL, request.protocol + '://' + request.hostname);
       redirectUrl.searchParams.set('auth_success', 'true');
-      redirectUrl.searchParams.set('token', tokenResult.token);
-      redirectUrl.searchParams.set('session_id', query.state);
+      redirectUrl.searchParams.set('auth_provider', 'bankid');
 
       return reply.redirect(redirectUrl.toString());
     } catch (error: any) {
