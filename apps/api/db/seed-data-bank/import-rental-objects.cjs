@@ -60,7 +60,7 @@ async function importSeeds() {
     // Insert rental objects
     for (const obj of seedData.rental_objects) {
       await client.query(`
-        INSERT INTO domain.rental_objects (
+        INSERT INTO platform.rental_objects (
           id, tenant_id, organization_id, name, slug, description,
           category_key, time_mode, features, status, requires_approval,
           capacity, images, pricing, metadata

@@ -17,14 +17,14 @@ import {
 } from 'drizzle-orm/pg-core';
 import { tenants, organizations, users } from './index';
 
-// Use domain schema
-const domainSchema = pgSchema('domain');
+// Use platform schema (where data is stored)
+const platformSchema = pgSchema('platform');
 
 // =============================================================================
 // RENTAL OBJECT CATEGORIES (Seed table - source of truth)
 // =============================================================================
 
-export const rentalObjectCategories = pgTable('rental_object_categories', {
+export const rentalObjectCategories = platformSchema.table('rental_object_categories', {
   key: varchar('key', { length: 50 }).primaryKey(),
   titleNb: varchar('title_nb', { length: 100 }).notNull(),
   titleEn: varchar('title_en', { length: 100 }).notNull(),
@@ -39,7 +39,7 @@ export const rentalObjectCategories = pgTable('rental_object_categories', {
 // BOOKING TIME MODES (Seed table - source of truth)
 // =============================================================================
 
-export const bookingTimeModes = pgTable('booking_time_modes', {
+export const bookingTimeModes = platformSchema.table('booking_time_modes', {
   key: varchar('key', { length: 20 }).primaryKey(),
   titleNb: varchar('title_nb', { length: 50 }).notNull(),
   titleEn: varchar('title_en', { length: 50 }).notNull(),
@@ -51,7 +51,7 @@ export const bookingTimeModes = pgTable('booking_time_modes', {
 // RENTAL OBJECT FEATURES (Seed table - source of truth)
 // =============================================================================
 
-export const rentalObjectFeatures = pgTable('rental_object_features', {
+export const rentalObjectFeatures = platformSchema.table('rental_object_features', {
   key: varchar('key', { length: 50 }).primaryKey(),
   titleNb: varchar('title_nb', { length: 100 }).notNull(),
   titleEn: varchar('title_en', { length: 100 }).notNull(),
@@ -62,7 +62,7 @@ export const rentalObjectFeatures = pgTable('rental_object_features', {
 // RULE SETS (Reusable booking rules)
 // =============================================================================
 
-export const ruleSets = pgTable('rule_sets', {
+export const ruleSets = platformSchema.table('rule_sets', {
   id: uuid('id').primaryKey().defaultRandom(),
   key: varchar('key', { length: 50 }).notNull().unique(),
   titleNb: varchar('title_nb', { length: 100 }).notNull(),
@@ -76,7 +76,7 @@ export const ruleSets = pgTable('rule_sets', {
 // RENTAL OBJECTS (Main entity)
 // =============================================================================
 
-export const rentalObjects = pgTable('rental_objects', {
+export const rentalObjects = platformSchema.table('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
@@ -122,7 +122,7 @@ export const rentalObjects = pgTable('rental_objects', {
 // BLACKOUTS (Calendar blocks)
 // =============================================================================
 
-export const blackouts = pgTable('blackouts', {
+export const blackouts = platformSchema.table('blackouts', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),

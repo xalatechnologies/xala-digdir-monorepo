@@ -69,6 +69,22 @@ export {
   updateChannelSetting,
 } from './types/notification-preferences';
 
+// Hooks
+export * from './hooks/use-rental-objects';
+export * from './hooks/use-bookings';
+export * from './hooks/use-organizations';
+export * from './hooks/use-users';
+export * from './hooks/use-capabilities';
+export * from './hooks/use-storage';
+
+// Services
+export { RentalObjectService } from './services/rental-object.service';
+export { BookingService } from './services/booking.service';
+export { OrganizationService } from './services/organization.service';
+export { UserService } from './services/user.service';
+export { CapabilityService } from './services/capability.service';
+export { StorageService } from './services/storage.service';
+
 // Services - Domain services (24 services)
 export * from './services';
 

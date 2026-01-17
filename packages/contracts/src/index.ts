@@ -40,6 +40,9 @@ export * from './schemas';
 // Projections
 export * from './projections';
 
+// Storage
+export * from './storage';
+
 // Types (re-export for convenience)
 export type {
   // Common

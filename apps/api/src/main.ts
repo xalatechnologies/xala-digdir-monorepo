@@ -70,6 +70,9 @@ import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
+// Storage
+import { StorageController } from './modules/storage/storage.controller';
+import { StorageService } from './modules/storage/storage.service';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -287,6 +290,8 @@ async function bootstrap() {
     // Phase 8: SaaS Admin & Tenant Admin
     SaasController,
     TenantAdminController,
+    // Storage
+    StorageController,
   ];
 
   // Create Fastify app with controllers

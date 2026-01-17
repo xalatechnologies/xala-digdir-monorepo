@@ -43,6 +43,7 @@ const ReportsPage = React.lazy(() => import('./routes/reports').then(m => ({ def
 const AuditPage = React.lazy(() => import('./routes/audit').then(m => ({ default: m.AuditPage })));
 const ReviewModerationPage = React.lazy(() => import('./routes/reviews').then(m => ({ default: m.ReviewModerationPage })));
 const SettingsPage = React.lazy(() => import('./routes/settings').then(m => ({ default: m.SettingsPage })));
+const GdprRequestsPage = React.lazy(() => import('./routes/gdpr-requests').then(m => ({ default: m.GdprRequestsPage })));
 
 // Saksbehandler pages
 const WorkQueuePage = React.lazy(() => import('./routes/work-queue').then(m => ({ default: m.WorkQueuePage })));
@@ -236,6 +237,14 @@ function AppContent() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="gdpr-requests"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <GdprRequestsPage />
                   </ProtectedRoute>
                 }
               />

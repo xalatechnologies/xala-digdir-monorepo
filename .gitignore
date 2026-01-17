@@ -48,3 +48,4 @@ logs/security/
 
 # Staging environment (local only)
 .env.staging
+apps/web/.env.local

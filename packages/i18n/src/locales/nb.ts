@@ -2239,13 +2239,20 @@ export const nb: Record<string, string> = {
 
   // SDK placeholders - rental object card
   'sdk.rentalObject.category.undefined': 'Lokale',
-  'sdk.rentalObject.category.LOKALER-OG-BANER': 'Lokaler og baner',
-  'sdk.rentalObject.category.UTSTYR-OG-INVENTAR': 'Utstyr og inventar',
-  'sdk.rentalObject.category.KJORETOY-OG-TRANSPORT': 'Kjøretøy og transport',
-  'sdk.rentalObject.category.OPPLEVELSER-OG-ARRANGEMENT': 'Opplevelser og arrangement',
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Lokaler og baner',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
   'sdk.timeMode.PERIOD': 'Periode',
   'sdk.timeMode.SLOT': 'Tidsluke',
-  'sdk.timeMode.ALL-DAY': 'Hele dagen',
+  'sdk.timeMode.ALL_DAY': 'Hele dagen',
+
+  // Standalone filter/form keys
+  filtrer: 'Filtrer',
+  type: 'Type',
+  område: 'Område',
+  kapasitet: 'Kapasitet',
+  fasiliteter: 'Fasiliteter',
   'sdk.placeholder.noAddress': 'Ingen adresse',
   'sdk.placeholder.unknown': 'Ukjent',
   'sdk.placeholder.noImage': 'Ingen bilde',
