@@ -22,7 +22,7 @@ import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
 import { RealtimeProvider } from './providers';
 import { RealtimeToast, UserMenu } from './components';
 import { GlobalSearch, ProtectedRoute, ConsentPopup } from '@xala/ds';
-import { useAuth, useOAuthCallback } from '@xala/auth';
+import { useAuth, useOAuthCallback, AuthProvider } from '@xala/auth';
 
 // Theme context type
 type ColorScheme = 'auto' | 'light' | 'dark';
@@ -261,7 +261,11 @@ export function App() {
           v7_relativeSplatPath: true,
         }}
       >
-        <AppContent />
+        <AuthProvider config={{
+          apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
+        }}>
+          <AppContent />
+        </AuthProvider>
       </BrowserRouter>
     </I18nProvider>
   );

@@ -143,8 +143,8 @@ export class AuthController {
 
     const user = userResult[0];
 
-    // Check if user is active
-    if (user.status !== 'active') {
+    // Check if user is active (database uses uppercase status values)
+    if (user.status?.toUpperCase() !== 'ACTIVE') {
       reply.code(401);
       return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
     }
@@ -443,8 +443,8 @@ export class AuthController {
 
     const user = result[0];
 
-    // Check if user is active
-    if (user.status !== 'active') {
+    // Check if user is active (database uses uppercase status values)
+    if (user.status?.toUpperCase() !== 'ACTIVE') {
       reply.code(401);
       return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
     }
@@ -530,12 +530,124 @@ export class AuthController {
   }
 
   /**
+   * POST /api/auth/national-id - National ID login (BankID/Vipps test simulation)
+   * Authenticates user using Norwegian national ID for testing purposes
+   * Sets HTTP-only cookies with access token, refresh token, and CSRF token
+   */
+  @Post('/national-id')
+  async nationalIdLogin(request: AuthRequest, reply: FastifyReply) {
+    // Add Cache-Control headers to prevent caching of auth responses
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
+    const body = request.body as any;
+    const db = container.resolve<any>('Database');
+    const { sessionService } = await import('./session.service');
+    const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
+    const { randomBytes } = await import('crypto');
+
+    if (!body.nationalId) {
+      reply.code(400);
+      return createErrorResponse(request, 'BAD_REQUEST', 'auth.national_id_required');
+    }
+
+    // Find user by national ID
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.nationalId, body.nationalId))
+      .limit(1);
+
+    if (!result.length) {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.invalid_national_id');
+    }
+
+    const user = result[0];
+
+    // Check if user is active
+    if (user.status?.toUpperCase() !== 'ACTIVE') {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
+    }
+
+    // Create session with access and refresh tokens
+    const session = await sessionService.createSession({
+      userId: user.id,
+      tenantId: user.tenantId,
+      userAgent: request.headers['user-agent'],
+      ipAddress: request.ip,
+    });
+
+    // Generate CSRF token
+    const csrfToken = randomBytes(32).toString('base64url');
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Set three HTTP-only cookies
+    reply
+      .setCookie(
+        COOKIE_CONFIG.ACCESS.name,
+        session.accessToken,
+        getCookieOptions('ACCESS', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.REFRESH.name,
+        session.refreshToken,
+        getCookieOptions('REFRESH', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.CSRF.name,
+        csrfToken,
+        getCookieOptions('CSRF', isProduction)
+      );
+
+    // Update last login
+    await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
+
+    // Audit national ID login event
+    const authMethod = user.metadata?.auth_method || 'national-id';
+    getAuditService().log({
+      tenantId: user.tenantId,
+      userId: user.id,
+      action: 'login',
+      resource: 'auth',
+      resourceId: user.id,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        email: user.email,
+        method: authMethod,
+        nationalId: body.nationalId,
+        sessionId: session.sessionId,
+      },
+    });
+
+    // Return user data ONLY (tokens are in HTTP-only cookies)
+    return {
+      data: {
+        expiresAt: session.expiresAt.toISOString(),
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: user.tenantId,
+        },
+      },
+    };
+  }
+
+  /**
    * GET /api/auth/providers - List auth providers
    */
   @Get('/providers')
   async getProviders(request: AuthRequest, reply: FastifyReply) {
     return {
       data: [
+        { id: 'demo-token', name: 'Demo Token', enabled: true },
+        { id: 'national-id', name: 'National ID (Test)', enabled: true },
         { id: 'email', name: 'Email', enabled: true },
         { id: 'bankid', name: 'BankID', enabled: false },
         { id: 'idporten', name: 'ID-porten', enabled: false },

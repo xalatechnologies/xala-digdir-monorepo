@@ -2704,4 +2704,13 @@ export const nb: Record<string, string> = {
 
   // Error Messages
   'error.uploadFailed': 'Opplasting feilet. Vennligst prøv igjen.',
+
+  // Components - Account Modal
+  'components.accountModal.title': 'Velg kontotype',
+  'components.accountModal.subtitle': 'Hvordan vil du logge inn?',
+  'components.accountModal.personalAccount': 'Personlig konto',
+  'components.accountModal.personalAccountDesc': 'Logg inn som privatperson',
+  'components.accountModal.organizationAccount': 'Organisasjonskonto',
+  'components.accountModal.organizationAccountDesc': 'Logg inn på vegne av organisasjon',
+  'components.accountModal.rememberChoice': 'Husk mitt valg',
 };

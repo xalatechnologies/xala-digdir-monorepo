@@ -2680,4 +2680,13 @@ export const en: Record<string, string> = {
 
   // Error Messages
   'error.uploadFailed': 'Upload failed. Please try again.',
+
+  // Components - Account Modal
+  'components.accountModal.title': 'Select account type',
+  'components.accountModal.subtitle': 'How would you like to log in?',
+  'components.accountModal.personalAccount': 'Personal account',
+  'components.accountModal.personalAccountDesc': 'Log in as an individual',
+  'components.accountModal.organizationAccount': 'Organization account',
+  'components.accountModal.organizationAccountDesc': 'Log in on behalf of organization',
+  'components.accountModal.rememberChoice': 'Remember my choice',
 };

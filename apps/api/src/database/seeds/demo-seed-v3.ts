@@ -40,10 +40,30 @@ const DEMO_TENANT = {
 };
 
 const DEMO_USERS = [
-  { id: 'u0000000-0000-0000-0000-000000000001', email: 'citizen@demo.no', name: 'Demo Innbygger', role: 'CITIZEN' },
-  { id: 'u0000000-0000-0000-0000-000000000002', email: 'caseworker@demo.no', name: 'Demo Saksbehandler', role: 'CASEWORKER' },
-  { id: 'u0000000-0000-0000-0000-000000000003', email: 'admin@demo.no', name: 'Demo Administrator', role: 'ADMIN' },
-  { id: 'u0000000-0000-0000-0000-000000000004', email: 'saas@demo.no', name: 'Demo SaaS Admin', role: 'SAAS_ADMIN' },
+  // Demo token users
+  { id: 'a0000000-0000-0000-0000-000000000001', email: 'admin@skien.kommune.no', name: 'Admin Skien', role: 'admin', demoToken: 'skien-admin-001' },
+  { id: 'a0000000-0000-0000-0000-000000000002', email: 'demo@xala.no', name: 'Demo Xala', role: 'admin', demoToken: 'xala-demo-001' },
+  { id: 'a0000000-0000-0000-0000-000000000003', email: 'leder@porsgrunn-il.no', name: 'Leder Porsgrunn IL', role: 'admin', demoToken: 'porsgrunn-admin-001' },
+  { id: 'a0000000-0000-0000-0000-000000000004', email: 'ola.hansen@kommune.no', name: 'Ola Hansen', role: 'member', demoToken: 'skien-citizen-001' },
+  { id: 'a0000000-0000-0000-0000-000000000005', email: 'staff@skien.kommune.no', name: 'Staff Skien', role: 'case_handler', demoToken: 'skien-staff-001' },
+
+  // Vipps test users
+  { id: 'b0000000-0000-0000-0000-000000000001', email: 'vipps.bruker@test.no', name: 'Vipps Bruker', nationalId: '24014005907', role: 'member', metadata: { phone: '95303914', auth_method: 'vipps' } },
+  { id: 'b0000000-0000-0000-0000-000000000002', email: 'vipps.admin@test.no', name: 'Vipps Admin', nationalId: '19075716691', role: 'admin', metadata: { phone: '93279034', auth_method: 'vipps' } },
+  { id: 'b0000000-0000-0000-0000-000000000003', email: 'vipps.saksbehandler@test.no', name: 'Vipps Saksbehandler', nationalId: '15055200413', role: 'case_handler', metadata: { phone: '46637228', auth_method: 'vipps' } },
+  { id: 'b0000000-0000-0000-0000-000000000004', email: 'vipps.organisasjon@test.no', name: 'Vipps Organisasjon', nationalId: '25059995475', role: 'admin', metadata: { phone: '40825303', auth_method: 'vipps' } },
+  { id: 'b0000000-0000-0000-0000-000000000005', email: 'vipps.aktor.admin@test.no', name: 'Vipps Aktør Admin', nationalId: '01028731015', role: 'admin', metadata: { phone: '91138813', auth_method: 'vipps', actor_type: 'admin' } },
+  { id: 'b0000000-0000-0000-0000-000000000006', email: 'vipps.aktor.utleier@test.no', name: 'Vipps Aktør Utleier', nationalId: '21090295842', role: 'member', metadata: { phone: '98393410', auth_method: 'vipps', actor_type: 'lessor' } },
+  { id: 'b0000000-0000-0000-0000-000000000007', email: 'vipps.aktor.saksbehandler@test.no', name: 'Vipps Aktør Saksbehandler', nationalId: '09013039841', role: 'case_handler', metadata: { phone: '47030508', auth_method: 'vipps', actor_type: 'case_handler' } },
+
+  // BankID test users
+  { id: 'c0000000-0000-0000-0000-000000000001', email: 'bankid.bruker@test.no', name: 'BankID Bruker', nationalId: '15860771346', role: 'member', metadata: { auth_method: 'bankid' } },
+  { id: 'c0000000-0000-0000-0000-000000000002', email: 'bankid.saksbehandler@test.no', name: 'BankID Saksbehandler', nationalId: '06881271913', role: 'case_handler', metadata: { auth_method: 'bankid' } },
+  { id: 'c0000000-0000-0000-0000-000000000003', email: 'bankid.admin@test.no', name: 'BankID Admin', nationalId: '30916326773', role: 'admin', metadata: { auth_method: 'bankid' } },
+  { id: 'c0000000-0000-0000-0000-000000000004', email: 'bankid.organisasjon@test.no', name: 'BankID Organisasjon', nationalId: '19860324957', role: 'admin', metadata: { auth_method: 'bankid' } },
+  { id: 'c0000000-0000-0000-0000-000000000005', email: 'bankid.aktor.admin@test.no', name: 'BankID Aktør Admin', nationalId: '03852358504', role: 'admin', metadata: { auth_method: 'bankid', actor_type: 'admin' } },
+  { id: 'c0000000-0000-0000-0000-000000000006', email: 'bankid.aktor.utleier@test.no', name: 'BankID Aktør Utleier', nationalId: '13891199915', role: 'member', metadata: { auth_method: 'bankid', actor_type: 'lessor' } },
+  { id: 'c0000000-0000-0000-0000-000000000007', email: 'bankid.aktor.saksbehandler@test.no', name: 'BankID Aktør Saksbehandler', nationalId: '16837147593', role: 'case_handler', metadata: { auth_method: 'bankid', actor_type: 'case_handler' } },
 ];
 
 // =============================================================================
@@ -189,8 +209,16 @@ async function seedV3Demo() {
     for (const user of DEMO_USERS) {
       const exists = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
       if (exists.length === 0) {
-        await db.insert(users).values({ ...user, tenantId: DEMO_TENANT.id, status: 'active' });
-        console.log(`  ✅ User: ${user.email} (${user.role})`);
+        await db.insert(users).values({
+          ...user,
+          tenantId: DEMO_TENANT.id,
+          status: 'active',
+          nationalId: (user as any).nationalId || null,
+          demoToken: (user as any).demoToken || null,
+          metadata: (user as any).metadata || {}
+        });
+        const authMethod = (user as any).metadata?.auth_method || 'demo';
+        console.log(`  ✅ User: ${user.email} (${user.role}) [${authMethod}]`);
       }
     }
 
@@ -267,11 +295,17 @@ async function seedV3Demo() {
     console.log('║    • Features: 3 (INVENTORY, SHARED_CAPACITY, PACKAGES)     ║');
     console.log(`║    • Rental Objects: ${rentalObjectIds.length}                                     ║`);
     console.log(`║    • Demo Bookings: ${DEMO_BOOKINGS.length}                                       ║`);
+    console.log(`║    • Test Users: ${DEMO_USERS.length} (5 demo, 7 Vipps, 7 BankID)             ║`);
     console.log('║                                                              ║');
     console.log('╠══════════════════════════════════════════════════════════════╣');
     console.log('║                                                              ║');
-    console.log('║  🔐 Demo Credentials:                                        ║');
-    console.log('║    citizen@demo.no / caseworker@demo.no / admin@demo.no     ║');
+    console.log('║  🔐 Demo Token Credentials:                                  ║');
+    console.log('║    • admin@skien.kommune.no (skien-admin-001)               ║');
+    console.log('║    • demo@xala.no (xala-demo-001)                           ║');
+    console.log('║    • ola.hansen@kommune.no (skien-citizen-001)              ║');
+    console.log('║                                                              ║');
+    console.log('║  🔐 Vipps Test Users: 7 users with Norwegian test numbers    ║');
+    console.log('║  🔐 BankID Test Users: 7 users with Norwegian test IDs       ║');
     console.log('║                                                              ║');
     console.log('╚══════════════════════════════════════════════════════════════╝');
 
