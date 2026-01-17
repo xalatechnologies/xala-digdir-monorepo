@@ -210,6 +210,34 @@ export {
   useUpdateOrganizationMember,
 } from './use-organizations';
 
+// Organization hooks (Backoffice aliases for compatibility)
+export {
+  useDeleteBackofficeOrganization as useDeleteOrganization,
+  useCreateBackofficeOrganization as useCreateOrganization,
+  useUpdateBackofficeOrganization as useUpdateOrganization,
+  useBackofficeOrganization as useOrganizationDetail,
+} from './use-backoffice-orgs';
+
+// Organization branding hook (stub)
+export function useUpdateOrganizationBranding() {
+  const { useMutation } = require('@tanstack/react-query');
+  return useMutation({
+    mutationFn: async ({ id, branding }: { id: string; branding: { logo?: string; primaryColor?: string } }) => {
+      return { id, ...branding };
+    },
+  });
+}
+
+// Verify organization hook (stub for Brreg verification)
+export function useVerifyOrganization() {
+  const { useMutation } = require('@tanstack/react-query');
+  return useMutation({
+    mutationFn: async (orgNumber: string) => {
+      return { verified: true, name: `Org ${orgNumber}`, orgNumber };
+    },
+  });
+}
+
 // User Management hooks (MinSide) - TEMPORARY STUB
 export {
   useUserPreferences,
@@ -220,6 +248,27 @@ export {
   useExportData,
   type UserPreferences,
 } from './use-user';
+
+// User Admin hooks (Backoffice/Admin)
+export {
+  useUsers,
+  useUser,
+  useUsersByOrganization,
+  useUsersByTenant,
+  useCreateUser,
+  useUpdateUser,
+  useDeleteUser,
+  useReinstateUser,
+  useReinstateUser as useReactivateUser,
+  useAssignRole,
+  useRemoveRole,
+  useBulkInviteUsers as useBulkInviteUsersAdmin,
+  useUserStats,
+  useSearchUsers,
+} from './use-users';
+
+// User deactivation alias (useSuspendUser already exported from use-tenant-admin-users)
+export { useSuspendUser as useDeactivateUser } from './use-users';
 
 // Integration hooks
 export {
