@@ -25,7 +25,8 @@ export interface BasicStepProps {
 }
 
 export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const handleChange = (field: keyof BasicData, value: string) => {
     onChange({ ...data, [field]: value });
   };

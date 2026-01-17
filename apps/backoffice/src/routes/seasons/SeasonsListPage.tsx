@@ -27,15 +27,6 @@ import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';
 import { useT } from '@xala/i18n';
 
-const statusLabels: Record<SeasonStatus, string> = {
-  draft: 'Utkast',
-  open: 'Åpen',
-  closed: 'Lukket',
-  active: 'Aktiv',
-  completed: 'Fullført',
-  cancelled: 'Kansellert',
-};
-
 const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
@@ -47,6 +38,19 @@ const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'suc
 
 export function SeasonsListPage() {
   const t = useT();
+
+  // Status labels using translations
+  const getStatusLabel = (status: SeasonStatus): string => {
+    const labels: Record<SeasonStatus, string> = {
+      draft: t('seasons.status.draft'),
+      open: t('seasons.status.open'),
+      closed: t('seasons.status.closed'),
+      active: t('seasons.status.active'),
+      completed: t('seasons.status.completed'),
+      cancelled: t('seasons.status.cancelled'),
+    };
+    return labels[status];
+  };
   const navigate = useNavigate();
 
   // State
@@ -70,7 +74,7 @@ export function SeasonsListPage() {
 
   // Handlers
   const handleDelete = async (id: string) => {
-    if (confirm('Er du sikker på at du vil slette denne sesongen?')) {
+    if (confirm(t('seasons.confirmDelete'))) {
       await deleteSeasonMutation.mutateAsync(id);
     }
   };
@@ -89,19 +93,19 @@ export function SeasonsListPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={2} data-size="md">
-            Sesongleie
+            {t('seasons.pageTitle')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
           >
-            Administrer sesonger, søknader og tildelinger
+            {t('seasons.pageSubtitle')}
           </Paragraph>
         </div>
         <Link to="/seasons/new">
           <Button type="button">
             <PlusIcon />
-            Ny sesong
+            {t('seasons.newSeason')}
           </Button>
         </Link>
       </div>
@@ -111,7 +115,7 @@ export function SeasonsListPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="Søk etter sesong..."
+              placeholder={t('seasons.searchPlaceholder')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -119,30 +123,30 @@ export function SeasonsListPage() {
 
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
-              Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
+              {t('common.status')}: {statusFilter === 'all' ? t('seasons.statusAll') : getStatusLabel(statusFilter)}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('seasons.statusAll')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('draft')}>{t('seasons.status.draft')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('open')}>{t('seasons.status.open')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('closed')}>{t('seasons.status.closed')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('seasons.status.active')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('completed')}>Fullført</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('completed')}>{t('seasons.status.completed')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('cancelled')}>Kansellert</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('cancelled')}>{t('seasons.status.cancelled')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -160,18 +164,18 @@ export function SeasonsListPage() {
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
             <CalendarIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Ingen sesonger funnet
+              {t('seasons.noSeasonsFound')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || statusFilter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
-                : 'Opprett din første sesong for å komme i gang'}
+                ? t('seasons.tryDifferentCriteria')
+                : t('seasons.createFirstSeason')}
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && (
               <Link to="/seasons/new">
                 <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
                   <PlusIcon />
-                  Ny sesong
+                  {t('seasons.newSeason')}
                 </Button>
               </Link>
             )}
@@ -180,13 +184,13 @@ export function SeasonsListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>{t("timeMode.period")}</Table.HeaderCell>
-                <Table.HeaderCell>Søknadsfrist</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Lokaler</Table.HeaderCell>
-                <Table.HeaderCell>Søknader</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.tableHeaderName')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.period')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.tableHeaderApplicationDeadline')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.tableHeaderStatus')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.tableHeaderVenues')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.tableHeaderApplications')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('seasons.tableHeaderActions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -207,17 +211,17 @@ export function SeasonsListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={statusVariants[season.status]}>
-                      {statusLabels[season.status]}
+                      {getStatusLabel(season.status)}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                      {season.venueCount || 0} lokaler
+                      {season.venueCount || 0} {t('seasons.venues')}
                     </div>
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
-                      {season.applicationCount || 0} søknader
+                      {season.applicationCount || 0} {t('seasons.applications')}
                     </div>
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
@@ -230,7 +234,7 @@ export function SeasonsListPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}`)}>
                               <EyeIcon />
-                              Vis detaljer
+                              {t('seasons.viewDetails')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           <Dropdown.Item>

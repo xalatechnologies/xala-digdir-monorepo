@@ -30,20 +30,24 @@ import {
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
-const statusLabels: Record<AccessGrantStatus, string> = {
-  active: 'Aktiv',
-  revoked: 'Tilbakekalt',
-  expired: 'Utl\u00F8pt',
-};
-
+// Status colors mapping
 const statusColors: Record<AccessGrantStatus, 'success' | 'danger' | 'warning'> = {
   active: 'success',
   revoked: 'danger',
   expired: 'warning',
 };
 
+// Helper function to get status labels using translation
+const getStatusLabel = (t: (key: string) => string, status: AccessGrantStatus): string => {
+  const labels: Record<AccessGrantStatus, string> = {
+    active: t('accessGrants.status.active'),
+    revoked: t('accessGrants.status.revoked'),
+    expired: t('accessGrants.status.expired'),
+  };
+  return labels[status];
+};
+
 export function AccessGrantsPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const t = useT();
   const navigate = useNavigate();
 
@@ -73,8 +77,8 @@ export function AccessGrantsPage() {
 
   // Handlers
   const handleRevoke = async (id: string) => {
-    if (confirm('Er du sikker p\u00E5 at du vil tilbakekalle denne tilgangen?')) {
-      await revokeAccessMutation.mutateAsync({ id, reason: 'Manuelt tilbakekalt' });
+    if (confirm(t('accessGrants.confirmRevoke'))) {
+      await revokeAccessMutation.mutateAsync({ id, reason: t('accessGrants.revokeReason') });
     }
   };
 
@@ -97,18 +101,18 @@ export function AccessGrantsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={2} data-size="md">
-            Tilgangstildelinger
+            {t('accessGrants.title')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
           >
-            Administrer organisasjoners tilgang til utleieobjekter
+            {t('accessGrants.subtitle')}
           </Paragraph>
         </div>
         <Button type="button" onClick={() => navigate('/access-grants/new')}>
           <PlusIcon />
-          Ny tildeling
+          {t('accessGrants.newGrant')}
         </Button>
       </div>
 
@@ -117,7 +121,7 @@ export function AccessGrantsPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="S\u00F8k etter organisasjon eller utleieobjekt..."
+              placeholder={t('accessGrants.searchPlaceholder')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -126,21 +130,21 @@ export function AccessGrantsPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Status: {statusFilter === 'all' ? 'Alle' : statusLabels[statusFilter]}
+              {t('accessGrants.statusLabel')}: {statusFilter === 'all' ? t('accessGrants.status.all') : getStatusLabel(t, statusFilter)}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('accessGrants.status.all')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('accessGrants.status.active')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('revoked')}>Tilbakekalt</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('revoked')}>{t('accessGrants.status.revoked')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('expired')}>Utl\u00F8pt</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('expired')}>{t('accessGrants.status.expired')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -152,7 +156,7 @@ export function AccessGrantsPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster..." />
+            <Spinner data-size="lg" aria-label={t('accessGrants.loading')} />
           </div>
         ) : filteredGrants.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -164,12 +168,12 @@ export function AccessGrantsPage() {
               }}
             />
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Ingen tilgangstildelinger funnet
+              {t('accessGrants.noGrantsFound')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || statusFilter !== 'all'
-                ? 'Pr\u00F8v \u00E5 endre s\u00F8kekriteriene'
-                : 'Opprett din f\u00F8rste tilgangstildeling for \u00E5 komme i gang'}
+                ? t('accessGrants.tryDifferentSearch')
+                : t('accessGrants.createFirstGrant')}
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && (
               <Button
@@ -179,7 +183,7 @@ export function AccessGrantsPage() {
                 onClick={() => navigate('/access-grants/new')}
               >
                 <PlusIcon />
-                Ny tildeling
+                {t('accessGrants.newGrant')}
               </Button>
             )}
           </div>
@@ -187,12 +191,12 @@ export function AccessGrantsPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                <Table.HeaderCell>Utleieobjekt</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Tildelt</Table.HeaderCell>
-                <Table.HeaderCell>Utl\u00F8per</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell>{t('accessGrants.table.organization')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('accessGrants.table.rentalObject')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('accessGrants.table.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('accessGrants.table.grantedAt')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('accessGrants.table.expiresAt')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('accessGrants.table.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -223,7 +227,7 @@ export function AccessGrantsPage() {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <Badge color={statusColors[grant.status]}>{statusLabels[grant.status]}</Badge>
+                    <Badge color={statusColors[grant.status]}>{getStatusLabel(t, grant.status)}</Badge>
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDate(grant.grantedAt)}</div>
@@ -234,7 +238,7 @@ export function AccessGrantsPage() {
                           color: 'var(--ds-color-neutral-text-subtle)',
                         }}
                       >
-                        av {grant.grantedByUser.name}
+                        {t('accessGrants.table.grantedBy', { name: grant.grantedByUser.name })}
                       </div>
                     )}
                   </Table.Cell>
@@ -243,7 +247,7 @@ export function AccessGrantsPage() {
                       <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDate(grant.expiresAt)}</div>
                     ) : (
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Ingen utl\u00F8psdato
+                        {t('accessGrants.table.noExpiry')}
                       </div>
                     )}
                   </Table.Cell>
@@ -257,14 +261,14 @@ export function AccessGrantsPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleViewDetail(grant)}>
                               <EyeIcon />
-                              Vis organisasjon
+                              {t('accessGrants.action.viewOrganization')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           {grant.status === 'active' && (
                             <Dropdown.Item>
                               <Dropdown.Button onClick={() => handleRevoke(grant.id)} data-color="danger">
                                 <TrashIcon />
-                                Tilbakekall tilgang
+                                {t('accessGrants.action.revokeAccess')}
                               </Dropdown.Button>
                             </Dropdown.Item>
                           )}

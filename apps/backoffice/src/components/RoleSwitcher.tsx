@@ -80,7 +80,8 @@ const ROLE_DISPLAY: Record<EffectiveBackofficeRole, { name: string; description:
 // =============================================================================
 
 export function RoleSwitcher() {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
     effectiveRole,
     grantedRoles,
@@ -188,7 +189,7 @@ export function RoleSwitcher() {
             backgroundColor: 'var(--ds-color-neutral-background-default)',
             border: '1px solid var(--ds-color-neutral-border-default)',
             borderRadius: 'var(--ds-border-radius-md)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            boxShadow: 'var(--ds-shadow-lg)',
             zIndex: 9999,
             isolation: 'isolate',
             backdropFilter: 'blur(8px)',

@@ -62,8 +62,10 @@ interface FlowContextExpiredState {
  * Map API DTO directly to feature Listing type
  * The API now returns pre-formatted DTOs via toDetailsProjection,
  * so we just need to map field names - no complex transformation needed.
+ * @param api - The API rental object data
+ * @param t - Translation function for localizing day names
  */
-function transformApiToListing(api: ApiListing): RentalObject {
+function transformApiToListing(api: ApiListing, t: (key: string) => string): RentalObject {
   // API DTO is already well-structured, just map to feature types
   const dto = api as any; // API returns flat DTO with all fields
 
@@ -120,13 +122,13 @@ function transformApiToListing(api: ApiListing): RentalObject {
   } else if (openingHoursData && typeof openingHoursData === 'object') {
     // Convert object format {monday: {open, close}, tuesday: {...}} to array
     const dayNameMap: Record<string, { name: string; index: number }> = {
-      monday: { name: 'Mandag', index: 1 },
-      tuesday: { name: 'Tirsdag', index: 2 },
-      wednesday: { name: 'Onsdag', index: 3 },
-      thursday: { name: 'Torsdag', index: 4 },
-      friday: { name: 'Fredag', index: 5 },
-      saturday: { name: 'Lørdag', index: 6 },
-      sunday: { name: 'Søndag', index: 0 },
+      monday: { name: t('weekdays.monday'), index: 1 },
+      tuesday: { name: t('weekdays.tuesday'), index: 2 },
+      wednesday: { name: t('weekdays.wednesday'), index: 3 },
+      thursday: { name: t('weekdays.thursday'), index: 4 },
+      friday: { name: t('weekdays.friday'), index: 5 },
+      saturday: { name: t('weekdays.saturday'), index: 6 },
+      sunday: { name: t('weekdays.sunday'), index: 0 },
     };
 
     openingHoursArray = Object.entries(openingHoursData)
@@ -300,9 +302,9 @@ export function RentalObjectDetailPage(): React.ReactElement {
 
   // Transform API data
   const listing = React.useMemo((): RentalObject | null => {
-    if (apiResponse?.data) return transformApiToListing(apiResponse.data);
+    if (apiResponse?.data) return transformApiToListing(apiResponse.data, t);
     return null;
-  }, [apiResponse]);
+  }, [apiResponse, t]);
 
   // Helper to get display name (prefer title over name during EXPAND phase)
   const getDisplayName = (listing: RentalObject): string => listing.title || listing.name;

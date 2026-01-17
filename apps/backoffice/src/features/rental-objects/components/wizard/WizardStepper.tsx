@@ -74,7 +74,7 @@ export function WizardStepper({
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: 'var(--ds-font-size-body-sm)',
-                    fontWeight: 600,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
                     transition: 'all 0.2s ease',
                     backgroundColor: isActive
                       ? 'var(--ds-color-accent-base-default)'

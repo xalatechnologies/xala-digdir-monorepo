@@ -25,9 +25,11 @@ import {
   useGrantAccess,
   type CreateAccessGrantDTO,
 } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 import { FormSection, FormActions } from '../../components/shared';
 
 export function NewAccessGrantPage() {
+  const t = useT();
   const navigate = useNavigate();
 
   // Form state
@@ -55,18 +57,18 @@ export function NewAccessGrantPage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.organizationId) {
-      newErrors.organizationId = 'Velg en organisasjon';
+      newErrors.organizationId = t('accessGrants.validation.organizationRequired');
     }
 
     if (!formData.rentalObjectId) {
-      newErrors.rentalObjectId = 'Velg et utleieobjekt';
+      newErrors.rentalObjectId = t('accessGrants.validation.rentalObjectRequired');
     }
 
     // Validate expiry date is in the future if provided
     if (formData.expiresAt) {
       const expiresAt = new Date(formData.expiresAt);
       if (expiresAt <= new Date()) {
-        newErrors.expiresAt = 'Utløpsdato må være i fremtiden';
+        newErrors.expiresAt = t('accessGrants.validation.expiryFuture');
       }
     }
 
@@ -93,7 +95,7 @@ export function NewAccessGrantPage() {
 
       navigate('/access-grants');
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Kunne ikke opprette tilgangstildeling';
+      const errorMessage = error instanceof Error ? error.message : t('accessGrants.createError');
       setSubmitError(errorMessage);
     }
   };
@@ -127,7 +129,7 @@ export function NewAccessGrantPage() {
         <Link to="/access-grants">
           <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('accessGrants.backToOverview')}
           </Button>
         </Link>
 
@@ -135,13 +137,13 @@ export function NewAccessGrantPage() {
           <ShieldCheckIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-brand-base)' }} />
           <div>
             <Heading level={2} data-size="lg">
-              Ny tilgangstildeling
+              {t('accessGrants.newAccessGrant')}
             </Heading>
             <Paragraph
               data-size="sm"
               style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
             >
-              Gi en organisasjon tilgang til et utleieobjekt
+              {t('accessGrants.newAccessGrantDescription')}
             </Paragraph>
           </div>
         </div>
@@ -151,7 +153,7 @@ export function NewAccessGrantPage() {
       {submitError && (
         <Alert severity="danger">
           <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
-            Feil ved oppretting
+            {t('accessGrants.errorCreating')}
           </Heading>
           <Paragraph data-size="sm">{submitError}</Paragraph>
         </Alert>
@@ -161,27 +163,27 @@ export function NewAccessGrantPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label="Laster data..." />
+            <Spinner data-size="lg" aria-label={t('accessGrants.loadingData')} />
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <Stack spacing={5}>
               {/* Organization Selection */}
               <FormSection
-                title="Organisasjon"
-                description="Velg organisasjonen som skal få tilgang"
+                title={t('accessGrants.form.organizationSection')}
+                description={t('accessGrants.form.organizationDescription')}
               >
                 <FormField
-                  label="Organisasjon"
+                  label={t('accessGrants.form.organizationLabel')}
                   required
                   error={errors.organizationId || undefined}
                 >
                   <Select
                     value={formData.organizationId}
                     onChange={(e) => handleChange('organizationId')(e.target.value)}
-                    aria-label="Velg organisasjon"
+                    aria-label={t('accessGrants.form.selectOrganizationAria')}
                   >
-                    <option value="">Velg organisasjon...</option>
+                    <option value="">{t('accessGrants.form.selectOrganization')}</option>
                     {organizations.map((org) => (
                       <option key={org.id} value={org.id}>
                         {org.name}
@@ -194,20 +196,20 @@ export function NewAccessGrantPage() {
 
               {/* Rental Object Selection */}
               <FormSection
-                title="Utleieobjekt"
-                description="Velg utleieobjektet organisasjonen skal få tilgang til"
+                title={t('accessGrants.form.rentalObjectSection')}
+                description={t('accessGrants.form.rentalObjectDescription')}
               >
                 <FormField
-                  label="Utleieobjekt"
+                  label={t('accessGrants.form.rentalObjectLabel')}
                   required
                   error={errors.rentalObjectId || undefined}
                 >
                   <Select
                     value={formData.rentalObjectId}
                     onChange={(e) => handleChange('rentalObjectId')(e.target.value)}
-                    aria-label="Velg utleieobjekt"
+                    aria-label={t('accessGrants.form.selectRentalObjectAria')}
                   >
-                    <option value="">Velg utleieobjekt...</option>
+                    <option value="">{t('accessGrants.form.selectRentalObject')}</option>
                     {rentalObjects.map((rentalObject) => (
                       <option key={rentalObject.id} value={rentalObject.id}>
                         {rentalObject.name}
@@ -220,49 +222,49 @@ export function NewAccessGrantPage() {
 
               {/* Validity Period */}
               <FormSection
-                title="Gyldighetsperiode"
-                description="Valgfritt: Angi når tilgangen utløper"
+                title={t('accessGrants.form.validitySection')}
+                description={t('accessGrants.form.validityDescription')}
               >
                 <Stack spacing={4}>
                   <FormField
-                    label="Utløpsdato"
+                    label={t('accessGrants.form.expiryLabel')}
                     error={errors.expiresAt || undefined}
                   >
                     <Textfield
                       type="date"
                       value={formData.expiresAt || ''}
                       onChange={(e) => handleChange('expiresAt')(e.target.value)}
-                      aria-label="Utløpsdato"
+                      aria-label={t('accessGrants.form.expiryAria')}
                     />
                   </FormField>
 
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Hvis ingen dato angis, vil tilgangen gjelde uten utløpsdato.
+                    {t('accessGrants.form.noExpiryNote')}
                   </Paragraph>
                 </Stack>
               </FormSection>
 
               {/* Notes */}
               <FormSection
-                title="Notater"
-                description="Valgfritt: Legg til interne notater om tildelingen"
+                title={t('accessGrants.form.notesSection')}
+                description={t('accessGrants.form.notesDescription')}
               >
-                <FormField label="Notater">
+                <FormField label={t('accessGrants.form.notesLabel')}>
                   <Textfield
                     value={formData.notes || ''}
                     onChange={(e) => handleChange('notes')(e.target.value)}
-                    placeholder="F.eks. Avtale gjelder sesong 2024/2025"
-                    aria-label="Notater"
+                    placeholder={t('accessGrants.form.notesPlaceholder')}
+                    aria-label={t('accessGrants.form.notesAria')}
                   />
                 </FormField>
               </FormSection>
 
               {/* Actions */}
               <FormActions
-                submitText="Opprett tilgangstildeling"
+                submitText={t('accessGrants.form.submit')}
                 onCancel={handleCancel}
                 isSubmitting={grantAccessMutation.isPending}
-                submittingText="Oppretter..."
+                submittingText={t('accessGrants.form.submitting')}
               />
             </Stack>
           </form>

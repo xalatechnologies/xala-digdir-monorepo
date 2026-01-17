@@ -178,7 +178,7 @@ export function DecisionFormsPage() {
                   >
                     <Table.Cell>
                       <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{decision.subject}</Paragraph>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>{decision.subject}</Paragraph>
                         <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                           {decision.applicant} • {formatDate(decision.submittedAt)}
                         </Paragraph>
@@ -210,7 +210,7 @@ export function DecisionFormsPage() {
               </div>
               
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Vedtak</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Vedtak</label>
                 <Select
                   value={outcome}
                   onChange={(e) => setOutcome(e.target.value as DecisionType)}
@@ -224,7 +224,7 @@ export function DecisionFormsPage() {
               
               {outcome === 'approved' && (
                 <div>
-                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Vilkår (valgfritt)</label>
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Vilkår (valgfritt)</label>
                   <Textarea
                     value={conditions}
                     onChange={(e) => setConditions(e.target.value)}
@@ -236,7 +236,7 @@ export function DecisionFormsPage() {
               )}
               
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                   {outcome === 'rejected' ? 'Begrunnelse *' : 'Intern kommentar'}
                 </label>
                 <Textarea

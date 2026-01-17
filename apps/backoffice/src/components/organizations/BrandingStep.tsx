@@ -31,7 +31,8 @@ export interface BrandingStepProps {
 // =============================================================================
 
 export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [isDraggingLogo, setIsDraggingLogo] = useState(false);
   const [isDraggingFavicon, setIsDraggingFavicon] = useState(false);
 
@@ -334,7 +335,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
                   border: '1px solid var(--ds-color-neutral-border-default)',
                   borderRadius: 'var(--ds-border-radius-md)',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-mono)',
                 }}
               />
             </div>
@@ -368,7 +369,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
                   border: '1px solid var(--ds-color-neutral-border-default)',
                   borderRadius: 'var(--ds-border-radius-md)',
                   fontSize: 'var(--ds-font-size-sm)',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-mono)',
                 }}
               />
             </div>

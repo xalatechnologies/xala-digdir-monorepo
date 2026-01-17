@@ -22,7 +22,8 @@ export interface RealtimeCalendarOptions {
  * Wraps the SDK's useRealtimeCalendar hook and provides additional tracking
  */
 export function useRealtimeCalendar(options: RealtimeCalendarOptions = {}) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { enabled = true, onBookingEvent, trackUpdates = true } = options;
 
   // Track last update timestamp

@@ -132,8 +132,8 @@ export function SearchPage() {
         format: 'csv',
       });
       // Note: SDK should handle download automatically
-    } catch (error) {
-      // Export failed
+    } catch (_error) {
+      // Export failed - silently handled, SDK may show toast
     }
   }, [query, entityType, searchFilters, exportResults]);
 

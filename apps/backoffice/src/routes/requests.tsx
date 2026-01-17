@@ -321,7 +321,7 @@ export function RequestsPage() {
               onClear={() => setSearchQuery('')}
             />
           </div>
-          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')} type="button">
+          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')} type="button" aria-label={t('ui.filter')}>
             <FilterIcon />
             {filter === 'all' ? 'Alle' : filter === 'needs_info' ? 'Trenger info' : filter === 'urgent' ? 'Haster' : 'Ventende'}
           </Button>

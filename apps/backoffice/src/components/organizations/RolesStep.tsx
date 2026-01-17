@@ -102,7 +102,8 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
 // =============================================================================
 
 export function RolesStep({ actorType = 'municipality', selectedRoles = ['admin'], onChange, errors = [] }: RolesStepProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   // Get roles for the actor type (fallback to organization roles if actorType is not found)
   const availableRoles = DEFAULT_ROLES[actorType] || DEFAULT_ROLES.organization || [];
 

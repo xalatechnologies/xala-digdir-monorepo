@@ -52,7 +52,7 @@ export function DocsRightTOC({ items, onItemClick }: DocsRightTOCProps) {
             return rectA.top - rectB.top;
           });
 
-        if (intersecting.length > 0) {
+        if (intersecting.length > 0 && intersecting[0]?.target) {
           setActiveId(intersecting[0].target.id);
         }
       },

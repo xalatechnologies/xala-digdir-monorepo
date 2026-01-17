@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { Heading, Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 // Icons
@@ -59,15 +59,15 @@ function ChevronDownIcon({ size = 16 }: { size?: number }): React.ReactElement {
   );
 }
 
-// Activity type configuration with icons
-const ACTIVITY_TYPES = [
-  { id: 'meeting', label: 'Møte', icon: '👥', description: 'Styremøte, workshop' },
-  { id: 'event', label: 'Arrangement', icon: '🎉', description: 'Fest, feiring, konsert' },
-  { id: 'training', label: 'Trening', icon: '⚽', description: 'Sport, idrett' },
-  { id: 'class', label: 'Kurs/Undervisning', icon: '📚', description: 'Opplæring, foredrag' },
-  { id: 'rehearsal', label: 'Øving', icon: '🎭', description: 'Korøving, teater' },
-  { id: 'other', label: 'Annet', icon: '📌', description: 'Annen aktivitet' },
-];
+// Activity type configuration - labels are translated in component
+const ACTIVITY_TYPE_CONFIGS = [
+  { id: 'meeting', icon: '👥' },
+  { id: 'event', icon: '🎉' },
+  { id: 'training', icon: '⚽' },
+  { id: 'class', icon: '📚' },
+  { id: 'rehearsal', icon: '🎭' },
+  { id: 'other', icon: '📌' },
+] as const;
 
 export interface SlotDetail {
   duration: number;
@@ -102,7 +102,21 @@ export function BookingCartSidebar({
   const t = useT();
   const [expandedSlot, setExpandedSlot] = React.useState<string | null>(null);
 
-  const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+  // Translated month names
+  const monthNames = React.useMemo(() => [
+    t('months.full.jan'), t('months.full.feb'), t('months.full.mar'),
+    t('months.full.apr'), t('months.full.may'), t('months.full.jun'),
+    t('months.full.jul'), t('months.full.aug'), t('months.full.sep'),
+    t('months.full.oct'), t('months.full.nov'), t('months.full.dec'),
+  ], [t]);
+
+  // Translated activity types
+  const activityTypes = React.useMemo(() => ACTIVITY_TYPE_CONFIGS.map(config => ({
+    id: config.id,
+    icon: config.icon,
+    label: t(`bookingWidget.purpose.${config.id}`),
+    description: t(`bookingWidget.purpose.${config.id}Desc`),
+  })), [t]);
 
   // Format last updated timestamp
   const formatLastUpdated = (date: Date): string => {
@@ -113,17 +127,21 @@ export function BookingCartSidebar({
     const diffHours = Math.floor(diffMinutes / 60);
 
     if (diffSeconds < 10) {
-      return 'Akkurat nå';
+      return t('time.justNow');
     } else if (diffSeconds < 60) {
-      return `${diffSeconds} sekunder siden`;
+      return t('time.secondsAgo', { count: diffSeconds });
     } else if (diffMinutes < 60) {
-      return `${diffMinutes} ${diffMinutes === 1 ? 'minutt' : 'minutter'} siden`;
+      return diffMinutes === 1
+        ? t('time.minuteAgo', { count: diffMinutes })
+        : t('time.minutesAgo', { count: diffMinutes });
     } else if (diffHours < 24) {
-      return `${diffHours} ${diffHours === 1 ? 'time' : 'timer'} siden`;
+      return diffHours === 1
+        ? t('time.hourAgo', { count: diffHours })
+        : t('time.hoursAgo', { count: diffHours });
     } else {
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
-      return `${date.getDate()}. ${monthNames[date.getMonth()]} kl. ${hours}:${minutes}`;
+      return `${date.getDate()}. ${monthNames[date.getMonth()]} ${t('time.at')} ${hours}:${minutes}`;
     }
   };
 
@@ -162,7 +180,7 @@ export function BookingCartSidebar({
         >
           <ShoppingCartIcon size={20} />
           <Heading level={3} data-size="sm" style={{ margin: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            Valgte tidspunkter
+            {t('bookingCart.title')}
           </Heading>
           {slotCount > 0 && (
             <span
@@ -181,7 +199,7 @@ export function BookingCartSidebar({
         </div>
         {lastUpdated && (
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontStyle: 'italic' }}>
-            Oppdatert: {formatLastUpdated(lastUpdated)}
+            {t('bookingCart.updated')} {formatLastUpdated(lastUpdated)}
           </Paragraph>
         )}
       </div>
@@ -201,10 +219,10 @@ export function BookingCartSidebar({
           >
             <CalendarIcon size={32} />
             <Paragraph data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-              Ingen tidspunkter valgt
+              {t('bookingCart.empty.title')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
-              Klikk på et tidspunkt i kalenderen for å legge til
+              {t('bookingCart.empty.description')}
             </Paragraph>
           </div>
         ) : (
@@ -224,7 +242,7 @@ export function BookingCartSidebar({
             const slotDate = new Date(weekStart);
             slotDate.setDate(weekStart.getDate() + dayIdx);
 
-            const selectedActivity = ACTIVITY_TYPES.find(a => a.id === details.activityType);
+            const selectedActivity = activityTypes.find(a => a.id === details.activityType);
 
             return (
               <div
@@ -286,7 +304,7 @@ export function BookingCartSidebar({
                     {onChangeDuration && (
                       <div>
                         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          Varighet
+                          {t('bookingCart.duration')}
                         </Paragraph>
                         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
                           {[60, 90, 120, 180].map(dur => (
@@ -305,7 +323,7 @@ export function BookingCartSidebar({
                                 fontWeight: details.duration === dur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
                               }}
                             >
-                              {dur / 60} time{dur > 60 ? 'r' : ''}
+                              {dur / 60} {dur > 60 ? t('bookingCart.hours') : t('bookingCart.hour')}
                             </button>
                           ))}
                         </div>
@@ -317,7 +335,7 @@ export function BookingCartSidebar({
                       <div>
                         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                           <UsersIcon size={16} />
-                          Antall personer
+                          {t('bookingCart.attendeesLabel')}
                         </Paragraph>
                         <input
                           type="number"
@@ -325,7 +343,7 @@ export function BookingCartSidebar({
                           max="500"
                           value={details.attendees || ''}
                           onChange={(e) => onChangeAttendees(slotKey, e.target.value)}
-                          placeholder="Antall deltakere"
+                          placeholder={t('bookingCart.attendeesPlaceholder')}
                           style={{
                             width: '100%',
                             padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -342,10 +360,10 @@ export function BookingCartSidebar({
                     {onChangeActivityType && (
                       <div>
                         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          Type aktivitet
+                          {t('bookingCart.activityType')}
                         </Paragraph>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--ds-spacing-2)' }}>
-                          {ACTIVITY_TYPES.map(activity => (
+                          {activityTypes.map(activity => (
                             <button
                               key={activity.id}
                               type="button"
@@ -376,12 +394,12 @@ export function BookingCartSidebar({
                     {onChangePurpose && (
                       <div>
                         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          Beskrivelse (valgfritt)
+                          {t('bookingCart.descriptionLabel')}
                         </Paragraph>
                         <textarea
                           value={details.purpose || ''}
                           onChange={(e) => onChangePurpose(slotKey, e.target.value)}
-                          placeholder="Beskriv kort hva lokalet skal brukes til..."
+                          placeholder={t('bookingCart.descriptionPlaceholder')}
                           rows={3}
                           style={{
                             width: '100%',
@@ -416,7 +434,7 @@ export function BookingCartSidebar({
                       }}
                     >
                       <span>✕</span>
-                      Fjern tidspunkt
+                      {t('bookingCart.removeSlot')}
                     </button>
                   </div>
                 )}

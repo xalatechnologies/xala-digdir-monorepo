@@ -144,7 +144,7 @@ export function SavedFilters({
       await createSavedFilter.mutateAsync(filterData);
       setIsCreating(false);
       setNewFilterName('');
-    } catch (error) {
+    } catch {
       // Failed to create saved filter
     }
   }, [newFilterName, currentFilters, currentQuery, currentEntityType, createSavedFilter]);
@@ -174,7 +174,7 @@ export function SavedFilters({
       if (confirmed) {
         try {
           await deleteSavedFilter.mutateAsync(filter.id);
-        } catch (error) {
+        } catch {
           // Failed to delete saved filter
         }
       }

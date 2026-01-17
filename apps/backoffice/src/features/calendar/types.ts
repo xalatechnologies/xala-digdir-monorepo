@@ -4,7 +4,6 @@
  */
 
 import type { CalendarEvent, Block, BlockType, Conflict } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 
 export type CalendarViewType = 'day' | 'week' | 'month' | 'timeline';
 

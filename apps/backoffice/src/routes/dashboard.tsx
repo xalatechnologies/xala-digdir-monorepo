@@ -292,6 +292,7 @@ export function DashboardPage(): React.ReactElement {
                   variant="secondary"
                   style={{ justifyContent: 'flex-start' }}
                   onClick={() => navigate('/users')}
+                  aria-label={t('nav.users')}
                 >
                   <UsersIcon size={20} />
                   {t('dashboard.manageUsers')}

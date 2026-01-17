@@ -36,10 +36,10 @@ export function DocsHomePage() {
       {/* Hero Section */}
       <header className={styles.hero}>
         <Heading level={1}>
-          {t('docs.home.title') || 'Velkommen til dokumentasjonen'}
+          {t('docs.home.title')}
         </Heading>
         <Paragraph data-size="lg" className={styles.heroSubtitle}>
-          {t('docs.home.subtitle') || 'Finn svar, lær om funksjoner, og kom i gang med Digilist.'}
+          {t('docs.home.subtitle')}
         </Paragraph>
       </header>
 
@@ -56,10 +56,10 @@ export function DocsHomePage() {
               <Card className={styles.card} style={{ padding: 'var(--ds-spacing-4)' }}>
                 <div className={styles.sectionIcon}>{config.icon}</div>
                 <Heading level={3} className={styles.sectionTitle}>
-                  {t(`docs.sections.${section}.title`) || section}
+                  {t(`docs.sections.${section}.title`)}
                 </Heading>
                 <Paragraph data-size="sm" className={styles.sectionDescription}>
-                  {t(`docs.sections.${section}.description`) || `Les mer om ${section}`}
+                  {t(`docs.sections.${section}.description`)}
                 </Paragraph>
               </Card>
             </Link>
@@ -70,17 +70,17 @@ export function DocsHomePage() {
       {/* Quick Links */}
       <section className={styles.quickLinks}>
         <Heading level={2} className={styles.quickLinksTitle}>
-          {t('docs.home.quickLinks') || 'Hurtiglenker'}
+          {t('docs.home.quickLinks')}
         </Heading>
         <div className={styles.quickLinksGrid}>
           <Link to="/roles/web/end-user" className={styles.quickLink}>
             <span className={styles.quickLinkIcon}>👤</span>
             <div>
               <Paragraph data-size="sm" className={styles.quickLinkTitle}>
-                {t('docs.home.forEndUsers') || 'For sluttbrukere'}
+                {t('docs.home.forEndUsers')}
               </Paragraph>
               <Paragraph data-size="xs" className={styles.quickLinkDescription}>
-                {t('docs.home.forEndUsersDesc') || 'Kom i gang med booking'}
+                {t('docs.home.forEndUsersDesc')}
               </Paragraph>
             </div>
           </Link>
@@ -88,10 +88,10 @@ export function DocsHomePage() {
             <span className={styles.quickLinkIcon}>🏢</span>
             <div>
               <Paragraph data-size="sm" className={styles.quickLinkTitle}>
-                {t('docs.home.forOrgAdmins') || 'For organisasjonsadmins'}
+                {t('docs.home.forOrgAdmins')}
               </Paragraph>
               <Paragraph data-size="xs" className={styles.quickLinkDescription}>
-                {t('docs.home.forOrgAdminsDesc') || 'Administrer din organisasjon'}
+                {t('docs.home.forOrgAdminsDesc')}
               </Paragraph>
             </div>
           </Link>
@@ -99,10 +99,10 @@ export function DocsHomePage() {
             <span className={styles.quickLinkIcon}>🔍</span>
             <div>
               <Paragraph data-size="sm" className={styles.quickLinkTitle}>
-                {t('docs.home.searchDocs') || 'Søk i dokumentasjon'}
+                {t('docs.home.searchDocs')}
               </Paragraph>
               <Paragraph data-size="xs" className={styles.quickLinkDescription}>
-                {t('docs.home.searchDocsDesc') || 'Finn svar raskt'}
+                {t('docs.home.searchDocsDesc')}
               </Paragraph>
             </div>
           </Link>

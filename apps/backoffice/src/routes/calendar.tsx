@@ -731,7 +731,7 @@ export function CalendarPage() {
               }}
             >
               <option value="">Alle lokaler</option>
-              {listings.map((listing: Listing) => (
+              {listings.map((listing: RentalObject) => (
                 <option key={listing.id} value={listing.id}>
                   {listing.name}
                 </option>

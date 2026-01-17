@@ -41,15 +41,6 @@ import { SeasonApplicationManagement } from '../../components/seasons/SeasonAppl
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
 import { useT } from '@xala/i18n';
 
-const statusLabels: Record<SeasonStatus, string> = {
-  draft: 'Utkast',
-  open: 'Åpen',
-  closed: 'Lukket',
-  active: 'Aktiv',
-  completed: 'Fullført',
-  cancelled: 'Kansellert',
-};
-
 const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',
   open: 'info',
@@ -61,6 +52,19 @@ const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'suc
 
 export function SeasonDetailPage() {
   const t = useT();
+
+  // Status labels using translations
+  const getStatusLabel = (status: SeasonStatus): string => {
+    const labels: Record<SeasonStatus, string> = {
+      draft: t('seasons.status.draft'),
+      open: t('seasons.status.open'),
+      closed: t('seasons.status.closed'),
+      active: t('seasons.status.active'),
+      completed: t('seasons.status.completed'),
+      cancelled: t('seasons.status.cancelled'),
+    };
+    return labels[status];
+  };
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('info');
@@ -82,7 +86,7 @@ export function SeasonDetailPage() {
 
   // Handlers
   const handleDelete = async () => {
-    if (confirm('Er du sikker på at du vil slette denne sesongen?')) {
+    if (confirm(t('seasons.confirmDelete'))) {
       await deleteSeasonMutation.mutateAsync(id!);
       navigate('/seasons');
     }
@@ -90,16 +94,16 @@ export function SeasonDetailPage() {
 
   const handleOpenSeason = async () => {
     if (venues.length === 0) {
-      alert('Du må legge til minst ett lokale før sesongen kan åpnes.');
+      alert(t('seasons.mustAddVenues'));
       return;
     }
-    if (confirm('Er du sikker på at du vil åpne sesongen for søknader?')) {
+    if (confirm(t('seasons.confirmOpenSeason'))) {
       await openSeasonMutation.mutateAsync(id!);
     }
   };
 
   const handleCloseSeason = async () => {
-    if (confirm('Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert.')) {
+    if (confirm(t('seasons.confirmCloseSeason'))) {
       await closeSeasonMutation.mutateAsync(id!);
       setActiveTab('applications');
     }
@@ -128,14 +132,14 @@ export function SeasonDetailPage() {
   if (!season) {
     return (
       <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">Sesong ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('seasons.seasonNotFound')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
-          Sesongen eksisterer ikke eller er slettet.
+          {t('seasons.seasonNotFoundDesc')}
         </Paragraph>
         <Link to="/seasons">
           <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('seasons.backToOverview')}
           </Button>
         </Link>
       </div>
@@ -149,7 +153,7 @@ export function SeasonDetailPage() {
         <Link to="/seasons">
           <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('seasons.backToOverview')}
           </Button>
         </Link>
 
@@ -160,7 +164,7 @@ export function SeasonDetailPage() {
             </Heading>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-2)', alignItems: 'center' }}>
               <Badge color={statusVariants[season.status]}>
-                {statusLabels[season.status]}
+                {getStatusLabel(season.status)}
               </Badge>
               <span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {formatDate(season.startDate)} – {formatDate(season.endDate)}
@@ -178,7 +182,7 @@ export function SeasonDetailPage() {
                 </Link>
                 <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
-                  Åpne sesong
+                  {t('seasons.openSeason')}
                 </Button>
                 <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("ui.delete")}>
                   <TrashIcon />{t("ui.delete")}</Button>
@@ -193,7 +197,7 @@ export function SeasonDetailPage() {
                 </Link>
                 <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">
                   <LockIcon />
-                  Lukk sesong
+                  {t('seasons.closeSeason')}
                 </Button>
               </>
             )}
@@ -201,7 +205,7 @@ export function SeasonDetailPage() {
             {season.status === 'closed' && (
               <Button variant="primary" data-size="sm" onClick={handleStartAllocation} type="button">
                 <PlayIcon />
-                Start tildeling
+                {t('seasons.startAllocation')}
               </Button>
             )}
 
@@ -209,7 +213,7 @@ export function SeasonDetailPage() {
               <Link to={`/seasons/${id}/edit`}>
                 <Button variant="secondary" data-size="sm" type="button">
                   <EditIcon />
-                  Se detaljer
+                  {t('seasons.seeDetails')}
                 </Button>
               </Link>
             )}
@@ -224,10 +228,10 @@ export function SeasonDetailPage() {
             <UnlockIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-info-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                Sesongen er åpen for søknader
+                {t('seasons.seasonOpenForApplications')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Søknadsfrist: {formatDate(season.applicationDeadline)} • {applications.length} søknader mottatt
+                {t('seasons.applicationDeadline')}: {formatDate(season.applicationDeadline)} - {t('seasons.applicationsReceived', { count: applications.length })}
               </Paragraph>
             </div>
           </div>
@@ -240,10 +244,10 @@ export function SeasonDetailPage() {
             <LockIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-warning-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                Sesongen er lukket for søknader
+                {t('seasons.seasonClosedForApplications')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                {applications.length} søknader venter på tildeling
+                {t('seasons.applicationsAwaitingAllocation', { count: applications.length })}
               </Paragraph>
             </div>
           </div>
@@ -256,10 +260,10 @@ export function SeasonDetailPage() {
             <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-heading-md)', color: 'var(--ds-color-success-text-default)' }} />
             <div>
               <Paragraph style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                {season.status === 'active' ? 'Sesongen er aktiv' : 'Sesongen er fullført'}
+                {season.status === 'active' ? t('seasons.seasonIsActive') : t('seasons.seasonIsCompleted')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                Alle søknader er behandlet og bookinger er opprettet
+                {t('seasons.allApplicationsProcessed')}
               </Paragraph>
             </div>
           </div>
@@ -270,19 +274,19 @@ export function SeasonDetailPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <Tabs.List>
           <Tabs.Trigger value="info">
-            <FileTextIcon />{t("ui.info")}</Tabs.Trigger>
+            <FileTextIcon />{t('seasons.tabInfo')}</Tabs.Trigger>
           <Tabs.Trigger value="venues">
             <BuildingIcon />
-            Lokaler ({venues.length})
+            {t('seasons.tabVenues')} ({venues.length})
           </Tabs.Trigger>
           <Tabs.Trigger value="applications">
             <ClipboardListIcon />
-            Søknader ({applications.length})
+            {t('seasons.tabApplications')} ({applications.length})
           </Tabs.Trigger>
           {(season.status === 'closed' || season.status === 'active' || season.status === 'completed') && (
             <Tabs.Trigger value="allocation">
               <CalendarIcon />
-              Tildeling
+              {t('seasons.tabAllocation')}
             </Tabs.Trigger>
           )}
         </Tabs.List>
@@ -291,33 +295,33 @@ export function SeasonDetailPage() {
         <Tabs.Panel value="info">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
-              <FormSection title="Sesongdetaljer">
+              <FormSection title={t('seasons.seasonDetails')}>
                 <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Navn
+                      {t('seasons.name')}
                     </div>
                     <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{season.name}</div>
                   </div>
 
                   <div>
-                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>{t("timeMode.period")}</div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>{t('seasons.period')}</div>
                     <div>{formatDate(season.startDate)} – {formatDate(season.endDate)}</div>
                   </div>
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Søknadsfrist
+                      {t('seasons.applicationDeadline')}
                     </div>
                     <div>{formatDate(season.applicationDeadline)}</div>
                   </div>
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Status
+                      {t('common.status')}
                     </div>
                     <Badge color={statusVariants[season.status]}>
-                      {statusLabels[season.status]}
+                      {getStatusLabel(season.status)}
                     </Badge>
                   </div>
                 </Stack>
@@ -325,14 +329,14 @@ export function SeasonDetailPage() {
             </Card>
 
             <Card>
-              <FormSection title="Beskrivelse og retningslinjer">
+              <FormSection title={t('seasons.descriptionAndGuidelines')}>
                 {season.description ? (
                   <Paragraph data-size="sm" style={{ whiteSpace: 'pre-wrap' }}>
                     {season.description}
                   </Paragraph>
                 ) : (
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Ingen beskrivelse lagt til
+                    {t('seasons.noDescriptionAdded')}
                   </Paragraph>
                 )}
               </FormSection>

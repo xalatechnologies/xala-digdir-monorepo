@@ -229,7 +229,7 @@ export function BlockFormPage(): React.ReactElement {
         <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
           {t('common.accessDenied')}
         </Paragraph>
-        <Button type="button" variant="secondary" onClick={() => navigate('/blocks')}>
+        <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
           <ArrowLeftIcon />
           {t('blocks.backToList')}
         </Button>
@@ -401,11 +401,11 @@ export function BlockFormPage(): React.ReactElement {
 
         {/* Form actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-6)' }}>
-          <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')}>
+          <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('ui.cancel')}>
             <ArrowLeftIcon />
             {t('common.cancel')}
           </Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
+          <Button type="submit" variant="primary" disabled={isSubmitting} aria-label={t('ui.save')}>
             <SaveIcon />
             {isSubmitting
               ? t('common.saving')

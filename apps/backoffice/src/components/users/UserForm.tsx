@@ -27,7 +27,8 @@ const roleOptions = [
 ];
 
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateUserDTO>({
     name: '',
     email: '',
@@ -87,7 +88,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
       };
 
       await onSubmit(cleanData);
-    } catch (error) {
+    } catch {
       // Failed to save user
     } finally {
       setIsSubmitting(false);

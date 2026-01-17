@@ -29,6 +29,7 @@ import {
   BookingStatusBadge,
   PaymentStatusBadge,
   formatTimeAgo,
+  Link as DsLink,
 } from '@xala/ds';
 import {
   useOrganization,
@@ -43,19 +44,17 @@ import {
   type ActorType,
   type OrganizationStatus,
   type Booking,
+  type AuditLogEntry,
 } from '@digilist/client-sdk';
+import type { SeasonalLease } from '@digilist/client-sdk/services/seasonal-lease.service';
 import { MemberManagement } from '../../components/organizations/MemberManagement';
 import { FormSection } from '../../components/shared';
 import { useMemo } from 'react';
 import { useT } from '@xala/i18n';
 
-const actorTypeLabels: Record<ActorType, string> = {
-  private: 'Privatperson',
-  business: 'Bedrift',
-  sports_club: 'Idrettslag',
-  youth_organization: 'Ungdomsorganisasjon',
-  school: 'Skole',
-  municipality: 'Kommune',
+// Actor type labels are now provided via translation function
+const getActorTypeLabel = (t: (key: string) => string, type: ActorType): string => {
+  return t(`organizations.actorType.${type}`);
 };
 
 const actorTypeColors: Record<ActorType, 'neutral' | 'info' | 'success' | 'warning'> = {
@@ -125,7 +124,7 @@ export function OrganizationDetailPage() {
 
   // Handlers
   const handleDelete = async () => {
-    if (confirm('Er du sikker på at du vil slette denne organisasjonen?')) {
+    if (confirm(t('organizations.deleteConfirm'))) {
       await deleteOrgMutation.mutateAsync(id!);
       navigate('/organizations');
     }
@@ -146,14 +145,14 @@ export function OrganizationDetailPage() {
   if (!organization) {
     return (
       <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">Organisasjon ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('organizations.notFoundSingle')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
-          Organisasjonen eksisterer ikke eller er slettet.
+          {t('organizations.notFoundDescription')}
         </Paragraph>
         <Link to="/organizations">
           <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('organizations.backToList')}
           </Button>
         </Link>
       </div>
@@ -167,7 +166,7 @@ export function OrganizationDetailPage() {
         <Link to="/organizations">
           <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('organizations.backToList')}
           </Button>
         </Link>
 
@@ -197,14 +196,14 @@ export function OrganizationDetailPage() {
               </Heading>
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', marginBottom: 'var(--ds-spacing-2)' }}>
                 <Badge color={actorTypeColors[organization.actorType]}>
-                  {actorTypeLabels[organization.actorType]}
+                  {getActorTypeLabel(t, organization.actorType)}
                 </Badge>
                 <Badge color={statusColors[organization.status]}>
-                  {organization.status === 'active' ? 'Aktiv' : organization.status === 'inactive' ? 'Inaktiv' : 'Suspendert'}
+                  {t(`organizations.${organization.status}`)}
                 </Badge>
                 {organization.verified && (
                   <Badge color="success">
-                    <CheckCircleIcon /> Verifisert
+                    <CheckCircleIcon /> {t('organizations.verified')}
                   </Badge>
                 )}
               </div>
@@ -215,7 +214,7 @@ export function OrganizationDetailPage() {
               )}
               {website && (
                 <div style={{ marginTop: 'var(--ds-spacing-2)' }}>
-                  <a
+                  <DsLink
                     href={website.startsWith('http') ? website : `https://${website}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -223,13 +222,13 @@ export function OrganizationDetailPage() {
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: 'var(--ds-spacing-1)',
-                      color: 'var(--ds-color-accent-text-default)',
                       fontSize: 'var(--ds-font-size-sm)',
                     }}
+                    aria-label={`${t('ui.visitWebsite')}: ${website}`}
                   >
                     <GlobeIcon size={16} />
                     {website}
-                  </a>
+                  </DsLink>
                 </div>
               )}
             </div>
@@ -237,17 +236,19 @@ export function OrganizationDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
-              <Button variant="secondary" data-size="sm" type="button">
-                <EditIcon />{t("ui.edit")}</Button>
+              <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
+                <EditIcon /> {t("ui.edit")}
+              </Button>
             </Link>
             {!organization.verified && (
               <Button variant="secondary" data-size="sm" onClick={handleVerify} type="button">
                 <ShieldCheckIcon />
-                Verifiser
+                {t('organizations.verify')}
               </Button>
             )}
-            <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
-              <TrashIcon />{t("ui.delete")}</Button>
+            <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("ui.delete")}>
+              <TrashIcon /> {t("ui.delete")}
+            </Button>
           </div>
         </div>
       </div>
@@ -261,44 +262,44 @@ export function OrganizationDetailPage() {
         }}
       >
         <StatCard
-          title="Totale bookinger"
+          title={t('organizations.stats.totalBookings')}
           value={stats.totalBookings}
-          description="Alle tider"
+          description={t('organizations.stats.allTime')}
           color="var(--ds-color-info-text-default)"
           icon={<CalendarIcon />}
         />
         <StatCard
-          title="Aktive bookinger"
+          title={t('organizations.stats.activeBookings')}
           value={stats.activeBookings}
           description={t("status.confirmed")}
           color="var(--ds-color-success-text-default)"
           icon={<CheckCircleIcon />}
         />
         <StatCard
-          title="Ventende"
+          title={t('organizations.stats.pending')}
           value={stats.pendingBookings}
-          description="Krever godkjenning"
+          description={t('organizations.stats.requiresApproval')}
           color="var(--ds-color-warning-text-default)"
           icon={<ClockIcon />}
         />
         <StatCard
-          title="Total omsetning"
+          title={t('organizations.stats.totalRevenue')}
           value={`${stats.totalRevenue.toLocaleString('nb-NO')} kr`}
-          description="Totalt betalt"
+          description={t('organizations.stats.totalPaid')}
           color="var(--ds-color-accent-text-default)"
           icon={<TrendUpIcon />}
         />
         <StatCard
-          title="Sesongleie"
+          title={t('organizations.stats.seasonLease')}
           value={stats.totalSeasons}
-          description={`${stats.activeSeasons} aktive`}
+          description={t('organizations.stats.activeCount', { count: stats.activeSeasons })}
           color="var(--ds-color-info-text-default)"
           icon={<CalendarIcon />}
         />
         <StatCard
-          title="Medlemmer"
+          title={t('organizations.stats.members')}
           value={members.length}
-          description="Aktive brukere"
+          description={t('organizations.stats.activeUsers')}
           color="var(--ds-color-neutral-text-default)"
           icon={<UsersIcon />}
         />
@@ -307,38 +308,38 @@ export function OrganizationDetailPage() {
       {/* Content */}
       <Tabs defaultValue="info">
         <Tabs.List>
-          <Tabs.Tab value="info">{t("ui.info")}</Tabs.Tab>
+          <Tabs.Tab value="info">{t('organizations.tabs.info')}</Tabs.Tab>
           <Tabs.Tab value="members">
             <UsersIcon />
-            Medlemmer ({members.length})
+            {t('organizations.tabs.members')} ({members.length})
           </Tabs.Tab>
           <Tabs.Tab value="bookings">
             <CalendarIcon />
-            Bookinger ({stats.totalBookings})
+            {t('organizations.tabs.bookings')} ({stats.totalBookings})
           </Tabs.Tab>
-          <Tabs.Tab value="seasons">Sesongleie ({stats.totalSeasons})</Tabs.Tab>
-          <Tabs.Tab value="activity">Aktivitet</Tabs.Tab>
+          <Tabs.Tab value="seasons">{t('organizations.tabs.seasons')} ({stats.totalSeasons})</Tabs.Tab>
+          <Tabs.Tab value="activity">{t('organizations.tabs.activity')}</Tabs.Tab>
         </Tabs.List>
 
         {/* Information Tab */}
         <Tabs.Panel value="info">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
             <Card>
-              <FormSection title="Grunnleggende informasjon">
+              <FormSection title={t('organizations.detail.basicInfo')}>
                 <Stack spacing={3}>
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Type organisasjon
+                      {t('organizations.detail.organizationType')}
                     </div>
                     <Badge color={actorTypeColors[organization.actorType]}>
-                      {actorTypeLabels[organization.actorType]}
+                      {getActorTypeLabel(t, organization.actorType)}
                     </Badge>
                   </div>
 
                   {organization.organizationNumber && (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                        Organisasjonsnummer
+                        {t('organizations.detail.organizationNumber')}
                       </div>
                       <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-md)' }}>
                         {organization.organizationNumber}
@@ -348,16 +349,16 @@ export function OrganizationDetailPage() {
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Status
+                      {t('organizations.detail.status')}
                     </div>
                     <Badge color={statusColors[organization.status]}>
-                      {organization.status === 'active' ? 'Aktiv' : organization.status === 'inactive' ? 'Inaktiv' : 'Suspendert'}
+                      {t(`organizations.${organization.status}`)}
                     </Badge>
                   </div>
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Verifisert
+                      {t('organizations.detail.verified')}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                       {organization.verified ? (
@@ -376,7 +377,7 @@ export function OrganizationDetailPage() {
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Opprettet
+                      {t('organizations.detail.created')}
                     </div>
                     <div>{formatDate(organization.createdAt)}</div>
                     <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -386,7 +387,7 @@ export function OrganizationDetailPage() {
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      Sist oppdatert
+                      {t('organizations.detail.lastUpdated')}
                     </div>
                     <div>{formatDate(organization.updatedAt)}</div>
                     <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -398,38 +399,38 @@ export function OrganizationDetailPage() {
             </Card>
 
             <Card>
-              <FormSection title="Kontaktinformasjon">
+              <FormSection title={t('organizations.detail.contactInfo')}>
                 <Stack spacing={3}>
                   {organization.email ? (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                        E-post
+                        {t('organizations.detail.email')}
                       </div>
-                      <a href={`mailto:${organization.email}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
+                      <DsLink href={`mailto:${organization.email}`}>
                         {organization.email}
-                      </a>
+                      </DsLink>
                     </div>
                   ) : (
                     <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Ingen e-postadresse registrert
+                      {t('organizations.detail.noEmail')}
                     </Paragraph>
                   )}
 
                   {organization.phone && (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                        Telefon
+                        {t('organizations.detail.phone')}
                       </div>
-                      <a href={`tel:${organization.phone}`} style={{ color: 'var(--ds-color-accent-text-default)' }}>
+                      <DsLink href={`tel:${organization.phone}`}>
                         {organization.phone}
-                      </a>
+                      </DsLink>
                     </div>
                   )}
 
                   {(organization.address || organization.city || organization.postalCode) ? (
                     <div>
                       <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                        Adresse
+                        {t('organizations.detail.address')}
                       </div>
                       <div>
                         {organization.address && <div>{organization.address}</div>}
@@ -441,7 +442,7 @@ export function OrganizationDetailPage() {
                   ) : (
                     !organization.email && !organization.phone && (
                       <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Ingen adresse registrert
+                        {t('organizations.detail.noAddress')}
                       </Paragraph>
                     )
                   )}
@@ -463,35 +464,35 @@ export function OrganizationDetailPage() {
           <Card>
             {loadingBookings ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-6)' }}>
-                <Spinner aria-label="Laster bookinger..." />
+                <Spinner aria-label={t('organizations.bookings.loading')} />
               </div>
             ) : bookings.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
                 <CalendarIcon size={48} style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                  Ingen bookinger ennå
+                  {t('organizations.bookings.none')}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Denne organisasjonen har ikke gjort noen bookinger.
+                  {t('organizations.bookings.noneDescription')}
                 </Paragraph>
               </div>
             ) : (
               <>
                 <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                   <Heading level={3} data-size="sm">
-                    Bookinger ({bookings.length})
+                    {t('organizations.bookings.title')} ({bookings.length})
                   </Heading>
                 </div>
                 <div style={{ overflow: 'auto' }}>
                   <Table>
                     <Table.Head>
                       <Table.Row>
-                        <Table.HeaderCell>Booking</Table.HeaderCell>
-                        <Table.HeaderCell>Ressurs</Table.HeaderCell>
-                        <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                        <Table.HeaderCell>Status</Table.HeaderCell>
-                        <Table.HeaderCell>{t("rule.payment")}</Table.HeaderCell>
-                        <Table.HeaderCell style={{ textAlign: 'right' }}>Pris</Table.HeaderCell>
+                        <Table.HeaderCell>{t('organizations.bookings.table.booking')}</Table.HeaderCell>
+                        <Table.HeaderCell>{t('organizations.bookings.table.resource')}</Table.HeaderCell>
+                        <Table.HeaderCell>{t('organizations.bookings.table.time')}</Table.HeaderCell>
+                        <Table.HeaderCell>{t('organizations.bookings.table.status')}</Table.HeaderCell>
+                        <Table.HeaderCell>{t('organizations.bookings.table.payment')}</Table.HeaderCell>
+                        <Table.HeaderCell style={{ textAlign: 'right' }}>{t('organizations.bookings.table.price')}</Table.HeaderCell>
                       </Table.Row>
                     </Table.Head>
                     <Table.Body>
@@ -547,27 +548,27 @@ export function OrganizationDetailPage() {
           <Card>
             {loadingSeasons ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-6)' }}>
-                <Spinner aria-label="Laster sesongleie..." />
+                <Spinner aria-label={t('organizations.seasons.loading')} />
               </div>
             ) : seasonalLeases.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
                 <CalendarIcon size={48} style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                  Ingen sesongleie-avtaler
+                  {t('organizations.seasons.none')}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Denne organisasjonen har ingen sesongleie-avtaler.
+                  {t('organizations.seasons.noneDescription')}
                 </Paragraph>
               </div>
             ) : (
               <>
                 <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                   <Heading level={3} data-size="sm">
-                    Sesongleie-avtaler ({seasonalLeases.length})
+                    {t('organizations.seasons.title')} ({seasonalLeases.length})
                   </Heading>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                  {seasonalLeases.map((lease: any) => (
+                  {seasonalLeases.map((lease: SeasonalLease) => (
                     <div
                       key={lease.id}
                       style={{
@@ -606,49 +607,52 @@ export function OrganizationDetailPage() {
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
                 <ClockIcon size={48} style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                  Ingen aktivitet
+                  {t('organizations.activity.none')}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ingen hendelser er registrert for denne organisasjonen.
+                  {t('organizations.activity.noneDescription')}
                 </Paragraph>
               </div>
             ) : (
               <>
                 <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                   <Heading level={3} data-size="sm">
-                    Siste aktivitet
+                    {t('organizations.activity.recent')}
                   </Heading>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                  {auditEvents.map((event: any) => (
-                    <div
-                      key={event.id}
-                      style={{
-                        padding: 'var(--ds-spacing-3)',
-                        border: '1px solid var(--ds-color-neutral-border-subtle)',
-                        borderRadius: 'var(--ds-border-radius-sm)',
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-1)' }}>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {event.action}
-                        </Paragraph>
-                        <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          {formatTimeAgo(event.timestamp)}
-                        </Paragraph>
+                  {auditEvents.map((event: AuditLogEntry) => {
+                    const metadata = event.metadata as { description?: string; userName?: string } | undefined;
+                    return (
+                      <div
+                        key={event.id}
+                        style={{
+                          padding: 'var(--ds-spacing-3)',
+                          border: '1px solid var(--ds-color-neutral-border-subtle)',
+                          borderRadius: 'var(--ds-border-radius-sm)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-1)' }}>
+                          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                            {event.action}
+                          </Paragraph>
+                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                            {formatTimeAgo(event.timestamp)}
+                          </Paragraph>
+                        </div>
+                        {metadata?.description && (
+                          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                            {metadata.description}
+                          </Paragraph>
+                        )}
+                        {event.userId && (
+                          <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                            {t('organizations.activity.by')}: {metadata?.userName || event.userId}
+                          </Paragraph>
+                        )}
                       </div>
-                      {event.description && (
-                        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          {event.description}
-                        </Paragraph>
-                      )}
-                      {event.userId && (
-                        <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          Av: {event.userName || event.userId}
-                        </Paragraph>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </>
             )}

@@ -1,0 +1,5569 @@
+
+🔍 Starting i18n localization scan...
+📂 Scanning: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src
+
+
+========================================
+i18n LOCALIZATION SCAN REPORT
+========================================
+
+Files Scanned: 192
+Files Skipped: 21
+Total Files: 213
+
+----------------------------------------
+SUMMARY
+----------------------------------------
+Hardcoded Strings: 1227
+Missing t() Import: 4
+Total Issues: 1231
+
+----------------------------------------
+ISSUES BY FILE
+----------------------------------------
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/layout/Sidebar.tsx (67 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 416: hardcoded_prop
+     String: "Digilist"
+     Prop: alt
+     Context: alt="Digilist"
+
+  🟡 Line 215: hardcoded_object_value
+     String: "Dashboard"
+     Context: name: 'Dashboard',
+
+  🟡 Line 216: hardcoded_object_value
+     String: "Oversikt og statistikk"
+     Context: description: 'Oversikt og statistikk',
+
+  🟡 Line 225: hardcoded_object_value
+     String: "Arbeid"
+     Context: title: 'Arbeid',
+
+  🟡 Line 228: hardcoded_object_value
+     String: "Bookinger"
+     Context: name: 'Bookinger',
+
+  🟡 Line 229: hardcoded_object_value
+     String: "Forespørsler og reservasjoner"
+     Context: description: 'Forespørsler og reservasjoner',
+
+  🟡 Line 237: hardcoded_object_value
+     String: "Kalender"
+     Context: name: 'Kalender',
+
+  🟡 Line 238: hardcoded_object_value
+     String: "Visuell oversikt"
+     Context: description: 'Visuell oversikt',
+
+  🟡 Line 247: hardcoded_object_value
+     String: "Kommunikasjon"
+     Context: title: 'Kommunikasjon',
+
+  🟡 Line 250: hardcoded_object_value
+     String: "Meldinger"
+     Context: name: 'Meldinger',
+
+  🟡 Line 251: hardcoded_object_value
+     String: "Samtaler med brukere"
+     Context: description: 'Samtaler med brukere',
+
+  🟡 Line 262: hardcoded_object_value
+     String: "Økonomi"
+     Context: title: 'Økonomi',
+
+  🟡 Line 265: hardcoded_object_value
+     String: "Fakturaer"
+     Context: name: 'Fakturaer',
+
+  🟡 Line 266: hardcoded_object_value
+     String: "Fakturaoversikt"
+     Context: description: 'Fakturaoversikt',
+
+  🟡 Line 275: hardcoded_object_value
+     String: "Rapporter"
+     Context: title: 'Rapporter',
+
+  🟡 Line 278: hardcoded_object_value
+     String: "Rapporter"
+     Context: name: 'Rapporter',
+
+  🟡 Line 279: hardcoded_object_value
+     String: "Statistikk og eksport"
+     Context: description: 'Statistikk og eksport',
+
+  🟡 Line 288: hardcoded_object_value
+     String: "Hjelp"
+     Context: title: 'Hjelp',
+
+  🟡 Line 291: hardcoded_object_value
+     String: "Hjelp og støtte"
+     Context: name: 'Hjelp og støtte',
+
+  🟡 Line 292: hardcoded_object_value
+     String: "Veiledninger og FAQ"
+     Context: description: 'Veiledninger og FAQ',
+
+  🟡 Line 302: hardcoded_object_value
+     String: "Organisasjon"
+     Context: title: 'Organisasjon',
+
+  🟡 Line 305: hardcoded_object_value
+     String: "Blokkeringer"
+     Context: name: 'Blokkeringer',
+
+  🟡 Line 306: hardcoded_object_value
+     String: "Sperringer og vedlikehold"
+     Context: description: 'Sperringer og vedlikehold',
+
+  🟡 Line 316: hardcoded_object_value
+     String: "Administrasjon"
+     Context: title: 'Administrasjon',
+
+  🟡 Line 319: hardcoded_object_value
+     String: "Utleieobjekter"
+     Context: name: 'Utleieobjekter',
+
+  🟡 Line 320: hardcoded_object_value
+     String: "Lokaler, utstyr, kjøretøy og opplevelser"
+     Context: description: 'Lokaler, utstyr, kjøretøy og opplevelser',
+
+  🟡 Line 326: hardcoded_object_value
+     String: "Sesongleie"
+     Context: name: 'Sesongleie',
+
+  🟡 Line 327: hardcoded_object_value
+     String: "Faste avtaler"
+     Context: description: 'Faste avtaler',
+
+  🟡 Line 335: hardcoded_object_value
+     String: "Brukere & Org"
+     Context: title: 'Brukere & Org',
+
+  🟡 Line 337: hardcoded_object_value
+     String: "Organisasjoner"
+     Context: { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <
+
+  🟡 Line 337: hardcoded_object_value
+     String: "Administrer organisasjoner"
+     Context: { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <
+
+  🟡 Line 338: hardcoded_object_value
+     String: "Brukere"
+     Context: { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, capabili
+
+  🟡 Line 338: hardcoded_object_value
+     String: "Administrer brukere"
+     Context: { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, capabili
+
+  🟡 Line 342: hardcoded_object_value
+     String: "Saksbehandler"
+     Context: title: 'Saksbehandler',
+
+  🟡 Line 344: hardcoded_object_value
+     String: "Arbeidskø"
+     Context: { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />,
+
+  🟡 Line 344: hardcoded_object_value
+     String: "Ventende forespørsler"
+     Context: { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />,
+
+  🟡 Line 345: hardcoded_object_value
+     String: "Sesongsøknader"
+     Context: { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <Rep
+
+  🟡 Line 345: hardcoded_object_value
+     String: "Behandle søknader"
+     Context: { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <Rep
+
+  🟡 Line 346: hardcoded_object_value
+     String: "Allokeringsplan"
+     Context: { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <C
+
+  🟡 Line 346: hardcoded_object_value
+     String: "Fordele faste tider"
+     Context: { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <C
+
+  🟡 Line 347: hardcoded_object_value
+     String: "Vedtaksskjema"
+     Context: { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckC
+
+  🟡 Line 347: hardcoded_object_value
+     String: "Fatt formelle vedtak"
+     Context: { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckC
+
+  🟡 Line 348: hardcoded_object_value
+     String: "Revisjonslogg"
+     Context: { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon 
+
+  🟡 Line 348: hardcoded_object_value
+     String: "Vedtakshistorikk"
+     Context: { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon 
+
+  🟡 Line 352: hardcoded_object_value
+     String: "Admin"
+     Context: title: 'Admin',
+
+  🟡 Line 354: hardcoded_object_value
+     String: "Nytt utleieobjekt"
+     Context: { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <B
+
+  🟡 Line 354: hardcoded_object_value
+     String: "Opprett lokale"
+     Context: { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <B
+
+  🟡 Line 355: hardcoded_object_value
+     String: "Prisregler"
+     Context: { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon
+
+  🟡 Line 355: hardcoded_object_value
+     String: "Administrer priser"
+     Context: { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon
+
+  🟡 Line 356: hardcoded_object_value
+     String: "Brukeradmin"
+     Context: { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIc
+
+  🟡 Line 356: hardcoded_object_value
+     String: "Administrer tilgang"
+     Context: { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIc
+
+  🟡 Line 360: hardcoded_object_value
+     String: "Tenant"
+     Context: title: 'Tenant',
+
+  🟡 Line 363: hardcoded_object_value
+     String: "Funksjoner"
+     Context: { name: 'Funksjoner', description: 'Aktiver/deaktiver moduler', href: '/tenant/features', icon: <Set
+
+  🟡 Line 363: hardcoded_object_value
+     String: "Aktiver/deaktiver moduler"
+     Context: { name: 'Funksjoner', description: 'Aktiver/deaktiver moduler', href: '/tenant/features', icon: <Set
+
+  🟡 Line 364: hardcoded_object_value
+     String: "Plattforminnstillinger"
+     Context: { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: 
+
+  🟡 Line 364: hardcoded_object_value
+     String: "Konfigurer tenant"
+     Context: { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: 
+
+  🟡 Line 365: hardcoded_object_value
+     String: "Merkevare"
+     Context: { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />
+
+  🟡 Line 365: hardcoded_object_value
+     String: "Logo og farger"
+     Context: { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />
+
+  🟡 Line 366: hardcoded_object_value
+     String: "Systemlogg"
+     Context: { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <Cloc
+
+  🟡 Line 366: hardcoded_object_value
+     String: "Alle plattformhendelser"
+     Context: { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <Cloc
+
+  🟡 Line 370: hardcoded_object_value
+     String: "System"
+     Context: title: 'System',
+
+  🟡 Line 372: hardcoded_object_value
+     String: "GDPR-forespørsler"
+     Context: { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests',
+
+  🟡 Line 372: hardcoded_object_value
+     String: "Behandle personvernforespørsler"
+     Context: { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests',
+
+  🟡 Line 373: hardcoded_object_value
+     String: "Anmeldelser"
+     Context: { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <Check
+
+  🟡 Line 373: hardcoded_object_value
+     String: "Moderer anmeldelser"
+     Context: { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <Check
+
+  🟡 Line 374: hardcoded_object_value
+     String: "Audit Log"
+     Context: { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, capability
+
+  🟡 Line 374: hardcoded_object_value
+     String: "Systemhendelser"
+     Context: { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, capability
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx (50 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 36: hardcoded_object_value
+     String: "Kom i gang"
+     Context: title: 'Kom i gang',
+
+  🟡 Line 37: hardcoded_object_value
+     String: "Steg-for-steg guider for vanlige oppgaver"
+     Context: description: 'Steg-for-steg guider for vanlige oppgaver',
+
+  🟡 Line 42: hardcoded_object_value
+     String: "Vanlige spørsmål"
+     Context: title: 'Vanlige spørsmål',
+
+  🟡 Line 43: hardcoded_object_value
+     String: "Svar på ofte stilte spørsmål"
+     Context: description: 'Svar på ofte stilte spørsmål',
+
+  🟡 Line 48: hardcoded_object_value
+     String: "Kontakt support"
+     Context: title: 'Kontakt support',
+
+  🟡 Line 49: hardcoded_object_value
+     String: "Trenger du hjelp? Ta kontakt med oss"
+     Context: description: 'Trenger du hjelp? Ta kontakt med oss',
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Se dine tildelte utleieobjekter"
+     Context: { title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Gå til Dashboard for oversikt"
+     Context: { title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Behandle bookinger"
+     Context: { title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Bruk Bookinger-siden for å godkjenne eller avslå forespørsler"
+     Context: { title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp
+
+  🟡 Line 60: hardcoded_object_value
+     String: "Se kalenderen"
+     Context: { title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },
+
+  🟡 Line 60: hardcoded_object_value
+     String: "Kalender viser alle reservasjoner for dine objekter"
+     Context: { title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },
+
+  🟡 Line 61: hardcoded_object_value
+     String: "Kommuniser med brukere"
+     Context: { title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },
+
+  🟡 Line 61: hardcoded_object_value
+     String: "Bruk Meldinger for å svare på henvendelser"
+     Context: { title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Administrer brukere"
+     Context: { title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Gå til Brukere for å invitere og administrere medlemmer"
+     Context: { title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Opprett utleieobjekter"
+     Context: { title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Legg til nye lokaler og ressurser via Utleieobjekter"
+     Context: { title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Behandle bookinger"
+     Context: { title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Godkjenn forespørsler og håndter konflikter"
+     Context: { title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },
+
+  🟡 Line 67: hardcoded_object_value
+     String: "Se rapporter"
+     Context: { title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },
+
+  🟡 Line 67: hardcoded_object_value
+     String: "Analyser bruk og inntekter under Rapporter"
+     Context: { title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },
+
+  🟡 Line 68: hardcoded_object_value
+     String: "Administrer meldinger"
+     Context: { title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },
+
+  🟡 Line 68: hardcoded_object_value
+     String: "Kommuniser med brukere og se samtaleoversikt"
+     Context: { title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },
+
+  🟡 Line 71: hardcoded_object_value
+     String: "Konfigurer organisasjonen"
+     Context: { title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn
+
+  🟡 Line 71: hardcoded_object_value
+     String: "Sett opp logo, branding og kontaktinfo under Innstillinger"
+     Context: { title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn
+
+  🟡 Line 72: hardcoded_object_value
+     String: "Aktiver funksjoner"
+     Context: { title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },
+
+  🟡 Line 72: hardcoded_object_value
+     String: "Slå av/på moduler i Innstillinger > Funksjoner"
+     Context: { title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },
+
+  🟡 Line 73: hardcoded_object_value
+     String: "Administrer brukere"
+     Context: { title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },
+
+  🟡 Line 73: hardcoded_object_value
+     String: "Inviter og administrer alle brukere"
+     Context: { title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },
+
+  🟡 Line 74: hardcoded_object_value
+     String: "Sett opp integrasjoner"
+     Context: { title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' 
+
+  🟡 Line 74: hardcoded_object_value
+     String: "Koble til betalingsløsninger og eksterne systemer"
+     Context: { title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' 
+
+  🟡 Line 75: hardcoded_object_value
+     String: "Eksporter rapporter"
+     Context: { title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },
+
+  🟡 Line 75: hardcoded_object_value
+     String: "Generer og eksporter data for analyse"
+     Context: { title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },
+
+  🟡 Line 78: hardcoded_object_value
+     String: "Systemadministrasjon"
+     Context: { title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },
+
+  🟡 Line 78: hardcoded_object_value
+     String: "Full tilgang til alle funksjoner og innstillinger"
+     Context: { title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },
+
+  🟡 Line 79: hardcoded_object_value
+     String: "Bruker- og tilgangsstyring"
+     Context: { title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj
+
+  🟡 Line 79: hardcoded_object_value
+     String: "Administrer alle brukere på tvers av organisasjoner"
+     Context: { title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj
+
+  🟡 Line 80: hardcoded_object_value
+     String: "Funksjoner og moduler"
+     Context: { title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }
+
+  🟡 Line 80: hardcoded_object_value
+     String: "Kontroller hvilke funksjoner som er tilgjengelige"
+     Context: { title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }
+
+  🟡 Line 81: hardcoded_object_value
+     String: "Revisjonslogg"
+     Context: { title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },
+
+  🟡 Line 81: hardcoded_object_value
+     String: "Se alle handlinger utført i systemet"
+     Context: { title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },
+
+  🟡 Line 82: hardcoded_object_value
+     String: "Integrasjoner"
+     Context: { title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },
+
+  🟡 Line 82: hardcoded_object_value
+     String: "Konfigurer og overvåk systemintegrasjoner"
+     Context: { title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },
+
+  🟡 Line 264: hardcoded_object_value
+     String: "Vis hurtigtaster"
+     Context: { key: '?', description: 'Vis hurtigtaster' },
+
+  🟡 Line 265: hardcoded_object_value
+     String: "Gå til Dashboard"
+     Context: { key: 'g d', description: 'Gå til Dashboard' },
+
+  🟡 Line 266: hardcoded_object_value
+     String: "Gå til Bookinger"
+     Context: { key: 'g b', description: 'Gå til Bookinger' },
+
+  🟡 Line 267: hardcoded_object_value
+     String: "Gå til Kalender"
+     Context: { key: 'g c', description: 'Gå til Kalender' },
+
+  🟡 Line 268: hardcoded_object_value
+     String: "Gå til Meldinger"
+     Context: { key: 'g m', description: 'Gå til Meldinger' },
+
+  🟡 Line 269: hardcoded_object_value
+     String: "Gå til Hjelp"
+     Context: { key: 'g h', description: 'Gå til Hjelp' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationForm.tsx (34 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 23: hardcoded_jsx_text
+     String: "Promise"
+     Context: onSubmit: (data: CreateOrganizationDTO) => Promise<void>;
+
+  🔴 Line 135: hardcoded_prop
+     String: "Grunnleggende informasjon"
+     Prop: title
+     Context: <FormSection title="Grunnleggende informasjon">
+
+  🔴 Line 138: hardcoded_prop
+     String: "Navn"
+     Prop: label
+     Context: label="Navn"
+
+  🔴 Line 141: hardcoded_prop
+     String: "Organisasjonens fulle navn"
+     Prop: description
+     Context: description="Organisasjonens fulle navn"
+
+  🔴 Line 146: hardcoded_prop
+     String: "F.eks. Oslo Idrettslag"
+     Prop: placeholder
+     Context: placeholder="F.eks. Oslo Idrettslag"
+
+  🔴 Line 147: hardcoded_prop
+     String: "Navn"
+     Prop: aria-label
+     Context: aria-label="Navn"
+
+  🔴 Line 152: hardcoded_prop
+     String: "Type organisasjon"
+     Prop: label
+     Context: label="Type organisasjon"
+
+  🔴 Line 154: hardcoded_prop
+     String: "Organisasjonstype påvirker prisregler og rabatter"
+     Prop: description
+     Context: description="Organisasjonstype påvirker prisregler og rabatter"
+
+  🔴 Line 169: hardcoded_prop
+     String: "Organisasjonsnummer"
+     Prop: label
+     Context: label="Organisasjonsnummer"
+
+  🔴 Line 171: hardcoded_prop
+     String: "9 siffer (valgfritt)"
+     Prop: description
+     Context: description="9 siffer (valgfritt)"
+
+  🔴 Line 177: hardcoded_prop
+     String: "Organisasjonsnummer"
+     Prop: aria-label
+     Context: aria-label="Organisasjonsnummer"
+
+  🔴 Line 185: hardcoded_prop
+     String: "Kontaktinformasjon"
+     Prop: title
+     Context: <FormSection title="Kontaktinformasjon">
+
+  🔴 Line 188: hardcoded_prop
+     String: "E-post"
+     Prop: label
+     Context: label="E-post"
+
+  🔴 Line 190: hardcoded_prop
+     String: "Primær e-postadresse"
+     Prop: description
+     Context: description="Primær e-postadresse"
+
+  🔴 Line 197: hardcoded_prop
+     String: "E-post"
+     Prop: aria-label
+     Context: aria-label="E-post"
+
+  🔴 Line 202: hardcoded_prop
+     String: "Telefon"
+     Prop: label
+     Context: label="Telefon"
+
+  🔴 Line 203: hardcoded_prop
+     String: "Kontakttelefon"
+     Prop: description
+     Context: description="Kontakttelefon"
+
+  🔴 Line 210: hardcoded_prop
+     String: "Telefon"
+     Prop: aria-label
+     Context: aria-label="Telefon"
+
+  🔴 Line 217: hardcoded_prop
+     String: "Adresse"
+     Prop: title
+     Context: <FormSection title="Adresse">
+
+  🔴 Line 220: hardcoded_prop
+     String: "Gateadresse"
+     Prop: label
+     Context: label="Gateadresse"
+
+  🔴 Line 221: hardcoded_prop
+     String: "F.eks. Storgata 1"
+     Prop: description
+     Context: description="F.eks. Storgata 1"
+
+  🔴 Line 226: hardcoded_prop
+     String: "Gateadresse"
+     Prop: placeholder
+     Context: placeholder="Gateadresse"
+
+  🔴 Line 227: hardcoded_prop
+     String: "Gateadresse"
+     Prop: aria-label
+     Context: aria-label="Gateadresse"
+
+  🔴 Line 233: hardcoded_prop
+     String: "Postnummer"
+     Prop: label
+     Context: label="Postnummer"
+
+  🔴 Line 240: hardcoded_prop
+     String: "Postnummer"
+     Prop: aria-label
+     Context: aria-label="Postnummer"
+
+  🔴 Line 245: hardcoded_prop
+     String: "Poststed"
+     Prop: label
+     Context: <FormField label="Poststed">
+
+  🔴 Line 249: hardcoded_prop
+     String: "Oslo"
+     Prop: placeholder
+     Context: placeholder="Oslo"
+
+  🔴 Line 250: hardcoded_prop
+     String: "Poststed"
+     Prop: aria-label
+     Context: aria-label="Poststed"
+
+  🟡 Line 28: hardcoded_object_value
+     String: "Privatperson"
+     Context: { value: 'private', label: 'Privatperson' },
+
+  🟡 Line 29: hardcoded_object_value
+     String: "Bedrift"
+     Context: { value: 'business', label: 'Bedrift' },
+
+  🟡 Line 30: hardcoded_object_value
+     String: "Idrettslag"
+     Context: { value: 'sports_club', label: 'Idrettslag' },
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Ungdomsorganisasjon"
+     Context: { value: 'youth_organization', label: 'Ungdomsorganisasjon' },
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Skole"
+     Context: { value: 'school', label: 'Skole' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Kommune"
+     Context: { value: 'municipality', label: 'Kommune' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx (34 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 27: hardcoded_jsx_text
+     String: "Promise"
+     Context: onSubmit: (data: CreateSeasonalLeaseDTO) => Promise<void>;
+
+  🔴 Line 218: hardcoded_jsx_text
+     String: "Velg organisasjon..."
+     Context: <option value="">Velg organisasjon...</option>
+
+  🔴 Line 238: hardcoded_jsx_text
+     String: "Velg lokale..."
+     Context: <option value="">Velg lokale...</option>
+
+  🔴 Line 204: hardcoded_prop
+     String: "Grunnleggende informasjon"
+     Prop: title
+     Context: <FormSection title="Grunnleggende informasjon">
+
+  🔴 Line 207: hardcoded_prop
+     String: "Organisasjon"
+     Prop: label
+     Context: label="Organisasjon"
+
+  🔴 Line 210: hardcoded_prop
+     String: "Hvem leier lokalet?"
+     Prop: description
+     Context: description="Hvem leier lokalet?"
+
+  🔴 Line 228: hardcoded_prop
+     String: "Lokale"
+     Prop: label
+     Context: label="Lokale"
+
+  🔴 Line 231: hardcoded_prop
+     String: "Hvilket lokale skal leies?"
+     Prop: description
+     Context: description="Hvilket lokale skal leies?"
+
+  🔴 Line 250: hardcoded_prop
+     String: "Leieperiode"
+     Prop: title
+     Context: <FormSection title="Leieperiode">
+
+  🔴 Line 254: hardcoded_prop
+     String: "Startdato"
+     Prop: label
+     Context: label="Startdato"
+
+  🔴 Line 262: hardcoded_prop
+     String: "Startdato"
+     Prop: aria-label
+     Context: aria-label="Startdato"
+
+  🔴 Line 267: hardcoded_prop
+     String: "Sluttdato"
+     Prop: label
+     Context: label="Sluttdato"
+
+  🔴 Line 275: hardcoded_prop
+     String: "Sluttdato"
+     Prop: aria-label
+     Context: aria-label="Sluttdato"
+
+  🔴 Line 283: hardcoded_prop
+     String: "Ukedager"
+     Prop: title
+     Context: <FormSection title="Ukedager">
+
+  🔴 Line 315: hardcoded_prop
+     String: "Tidspunkt"
+     Prop: title
+     Context: <FormSection title="Tidspunkt">
+
+  🔴 Line 319: hardcoded_prop
+     String: "Starttid"
+     Prop: label
+     Context: label="Starttid"
+
+  🔴 Line 327: hardcoded_prop
+     String: "Starttid"
+     Prop: aria-label
+     Context: aria-label="Starttid"
+
+  🔴 Line 332: hardcoded_prop
+     String: "Sluttid"
+     Prop: label
+     Context: label="Sluttid"
+
+  🔴 Line 340: hardcoded_prop
+     String: "Sluttid"
+     Prop: aria-label
+     Context: aria-label="Sluttid"
+
+  🔴 Line 348: hardcoded_prop
+     String: "Prissetting"
+     Prop: title
+     Context: <FormSection title="Prissetting">
+
+  🔴 Line 351: hardcoded_prop
+     String: "Total pris"
+     Prop: label
+     Context: label="Total pris"
+
+  🔴 Line 354: hardcoded_prop
+     String: "Totalpris for hele leieperioden (NOK)"
+     Prop: description
+     Context: description="Totalpris for hele leieperioden (NOK)"
+
+  🔴 Line 361: hardcoded_prop
+     String: "Total pris"
+     Prop: aria-label
+     Context: aria-label="Total pris"
+
+  🔴 Line 368: hardcoded_prop
+     String: "Notater"
+     Prop: label
+     Context: label="Notater"
+
+  🔴 Line 369: hardcoded_prop
+     String: "Interne notater om avtalen"
+     Prop: description
+     Context: description="Interne notater om avtalen"
+
+  🔴 Line 374: hardcoded_prop
+     String: "F.eks. spesielle avtaler eller betingelser"
+     Prop: placeholder
+     Context: placeholder="F.eks. spesielle avtaler eller betingelser"
+
+  🔴 Line 375: hardcoded_prop
+     String: "Notater"
+     Prop: aria-label
+     Context: aria-label="Notater"
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Mandag"
+     Context: { value: 1, label: 'Mandag' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Tirsdag"
+     Context: { value: 2, label: 'Tirsdag' },
+
+  🟡 Line 34: hardcoded_object_value
+     String: "Onsdag"
+     Context: { value: 3, label: 'Onsdag' },
+
+  🟡 Line 35: hardcoded_object_value
+     String: "Torsdag"
+     Context: { value: 4, label: 'Torsdag' },
+
+  🟡 Line 36: hardcoded_object_value
+     String: "Fredag"
+     Context: { value: 5, label: 'Fredag' },
+
+  🟡 Line 37: hardcoded_object_value
+     String: "Lørdag"
+     Context: { value: 6, label: 'Lørdag' },
+
+  🟡 Line 38: hardcoded_object_value
+     String: "Søndag"
+     Context: { value: 0, label: 'Søndag' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/users/UserForm.tsx (29 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 20: hardcoded_jsx_text
+     String: "Promise"
+     Context: onSubmit: (data: CreateUserDTO) => Promise<void>;
+
+  🔴 Line 204: hardcoded_jsx_text
+     String: "Full tilgang til alle funksjoner"
+     Context: <li>Full tilgang til alle funksjoner</li>
+
+  🔴 Line 205: hardcoded_jsx_text
+     String: "Behandle bookinger og forespørsler"
+     Context: <li>Behandle bookinger og forespørsler</li>
+
+  🔴 Line 206: hardcoded_jsx_text
+     String: "Administrere organisasjoner og medlemmer"
+     Context: <li>Administrere organisasjoner og medlemmer</li>
+
+  🔴 Line 207: hardcoded_jsx_text
+     String: "Administrere brukere og roller"
+     Context: <li>Administrere brukere og roller</li>
+
+  🔴 Line 208: hardcoded_jsx_text
+     String: "Konfigurere systeminnstillinger"
+     Context: <li>Konfigurere systeminnstillinger</li>
+
+  🔴 Line 209: hardcoded_jsx_text
+     String: "Se rapporter og statistikk"
+     Context: <li>Se rapporter og statistikk</li>
+
+  🔴 Line 210: hardcoded_jsx_text
+     String: "Se revisjonslogger"
+     Context: <li>Se revisjonslogger</li>
+
+  🔴 Line 214: hardcoded_jsx_text
+     String: "Behandle bookinger og forespørsler"
+     Context: <li>Behandle bookinger og forespørsler</li>
+
+  🔴 Line 215: hardcoded_jsx_text
+     String: "Administrere lokaler og ressurser"
+     Context: <li>Administrere lokaler og ressurser</li>
+
+  🔴 Line 216: hardcoded_jsx_text
+     String: "Administrere sesongleie"
+     Context: <li>Administrere sesongleie</li>
+
+  🔴 Line 217: hardcoded_jsx_text
+     String: "Behandle meldinger fra brukere"
+     Context: <li>Behandle meldinger fra brukere</li>
+
+  🔴 Line 218: hardcoded_jsx_text
+     String: "Se kalender og rapporter"
+     Context: <li>Se kalender og rapporter</li>
+
+  🔴 Line 219: hardcoded_jsx_text
+     String: "Kan ikke administrere brukere eller innstillinger"
+     Context: <li>Kan ikke administrere brukere eller innstillinger</li>
+
+  🔴 Line 222: hardcoded_jsx_text
+     String: "Ingen tilganger"
+     Context: <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>Ingen tilganger</div>
+
+  🔴 Line 122: hardcoded_prop
+     String: "Brukerinformasjon"
+     Prop: title
+     Context: <FormSection title="Brukerinformasjon">
+
+  🔴 Line 125: hardcoded_prop
+     String: "Fullt navn"
+     Prop: label
+     Context: label="Fullt navn"
+
+  🔴 Line 128: hardcoded_prop
+     String: "Brukerens fulle navn"
+     Prop: description
+     Context: description="Brukerens fulle navn"
+
+  🔴 Line 133: hardcoded_prop
+     String: "F.eks. Ola Nordmann"
+     Prop: placeholder
+     Context: placeholder="F.eks. Ola Nordmann"
+
+  🔴 Line 139: hardcoded_prop
+     String: "E-post"
+     Prop: label
+     Context: label="E-post"
+
+  🔴 Line 155: hardcoded_prop
+     String: "Telefon"
+     Prop: label
+     Context: label="Telefon"
+
+  🔴 Line 156: hardcoded_prop
+     String: "Valgfri kontaktinformasjon"
+     Prop: description
+     Context: description="Valgfri kontaktinformasjon"
+
+  🔴 Line 169: hardcoded_prop
+     String: "Tilgangsnivå"
+     Prop: title
+     Context: <FormSection title="Tilgangsnivå">
+
+  🔴 Line 172: hardcoded_prop
+     String: "Rolle"
+     Prop: label
+     Context: label="Rolle"
+
+  🔴 Line 175: hardcoded_prop
+     String: "Velg brukerens rolle og tilgangsnivå"
+     Prop: description
+     Context: description="Velg brukerens rolle og tilgangsnivå"
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Administrator"
+     Context: { value: 'admin', label: 'Administrator', description: 'Full tilgang til alle funksjoner' },
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Full tilgang til alle funksjoner"
+     Context: { value: 'admin', label: 'Administrator', description: 'Full tilgang til alle funksjoner' },
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Saksbehandler"
+     Context: { value: 'saksbehandler', label: 'Saksbehandler', description: 'Behandle bookinger og forespørsler' 
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Behandle bookinger og forespørsler"
+     Context: { value: 'saksbehandler', label: 'Saksbehandler', description: 'Behandle bookinger og forespørsler' 
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/tenant/settings.tsx (29 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 108: hardcoded_jsx_text
+     String: "Tenant-navn"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tenant-nav
+
+  🔴 Line 116: hardcoded_jsx_text
+     String: "Slug (URL)"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Slug (URL)
+
+  🔴 Line 126: hardcoded_jsx_text
+     String: "Språk"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</lab
+
+  🔴 Line 132: hardcoded_jsx_text
+     String: "Norsk (bokmål)"
+     Context: <option value="nb">Norsk (bokmål)</option>
+
+  🔴 Line 133: hardcoded_jsx_text
+     String: "Norsk (nynorsk)"
+     Context: <option value="nn">Norsk (nynorsk)</option>
+
+  🔴 Line 134: hardcoded_jsx_text
+     String: "English"
+     Context: <option value="en">English</option>
+
+  🔴 Line 138: hardcoded_jsx_text
+     String: "Tidssone"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tidssone</
+
+  🔴 Line 144: hardcoded_jsx_text
+     String: "Europe/Oslo (CET)"
+     Context: <option value="Europe/Oslo">Europe/Oslo (CET)</option>
+
+  🔴 Line 145: hardcoded_jsx_text
+     String: "UTC"
+     Context: <option value="UTC">UTC</option>
+
+  🔴 Line 149: hardcoded_jsx_text
+     String: "Valuta"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Valuta</la
+
+  🔴 Line 155: hardcoded_jsx_text
+     String: "NOK"
+     Context: <option value="NOK">NOK</option>
+
+  🔴 Line 156: hardcoded_jsx_text
+     String: "EUR"
+     Context: <option value="EUR">EUR</option>
+
+  🔴 Line 157: hardcoded_jsx_text
+     String: "SEK"
+     Context: <option value="SEK">SEK</option>
+
+  🟡 Line 171: hardcoded_object_value
+     String: "Booking aktivert"
+     Context: { key: 'bookingEnabled', label: 'Booking aktivert', description: 'Tillat brukere å booke lokaler' },
+
+  🟡 Line 171: hardcoded_object_value
+     String: "Tillat brukere å booke lokaler"
+     Context: { key: 'bookingEnabled', label: 'Booking aktivert', description: 'Tillat brukere å booke lokaler' },
+
+  🟡 Line 172: hardcoded_object_value
+     String: "Sesongbooking aktivert"
+     Context: { key: 'seasonalLeaseEnabled', label: 'Sesongbooking aktivert', description: 'Tillat organisasjoner 
+
+  🟡 Line 172: hardcoded_object_value
+     String: "Tillat organisasjoner å søke om faste tider"
+     Context: { key: 'seasonalLeaseEnabled', label: 'Sesongbooking aktivert', description: 'Tillat organisasjoner 
+
+  🟡 Line 173: hardcoded_object_value
+     String: "Organisasjonsportal"
+     Context: { key: 'organizationPortalEnabled', label: 'Organisasjonsportal', description: 'Aktiver portal for o
+
+  🟡 Line 173: hardcoded_object_value
+     String: "Aktiver portal for organisasjoner"
+     Context: { key: 'organizationPortalEnabled', label: 'Organisasjonsportal', description: 'Aktiver portal for o
+
+  🟡 Line 174: hardcoded_object_value
+     String: "Offentlig visnting"
+     Context: { key: 'publicListingsEnabled', label: 'Offentlig visnting', description: 'Vis lokaler offentlig' },
+
+  🟡 Line 174: hardcoded_object_value
+     String: "Vis lokaler offentlig"
+     Context: { key: 'publicListingsEnabled', label: 'Offentlig visnting', description: 'Vis lokaler offentlig' },
+
+  🟡 Line 175: hardcoded_object_value
+     String: "Anmeldelser"
+     Context: { key: 'reviewsEnabled', label: 'Anmeldelser', description: 'Tillat brukere å legge igjen anmeldelse
+
+  🟡 Line 175: hardcoded_object_value
+     String: "Tillat brukere å legge igjen anmeldelser"
+     Context: { key: 'reviewsEnabled', label: 'Anmeldelser', description: 'Tillat brukere å legge igjen anmeldelse
+
+  🟡 Line 208: hardcoded_object_value
+     String: "Vipps"
+     Context: { key: 'vippsIntegration', label: 'Vipps', description: 'Integrasjon med Vipps for betaling' },
+
+  🟡 Line 208: hardcoded_object_value
+     String: "Integrasjon med Vipps for betaling"
+     Context: { key: 'vippsIntegration', label: 'Vipps', description: 'Integrasjon med Vipps for betaling' },
+
+  🟡 Line 209: hardcoded_object_value
+     String: "E-postvarsler"
+     Context: { key: 'emailNotifications', label: 'E-postvarsler', description: 'Send varsler via e-post' },
+
+  🟡 Line 209: hardcoded_object_value
+     String: "Send varsler via e-post"
+     Context: { key: 'emailNotifications', label: 'E-postvarsler', description: 'Send varsler via e-post' },
+
+  🟡 Line 210: hardcoded_object_value
+     String: "SMS-varsler"
+     Context: { key: 'smsNotifications', label: 'SMS-varsler', description: 'Send varsler via SMS' },
+
+  🟡 Line 210: hardcoded_object_value
+     String: "Send varsler via SMS"
+     Context: { key: 'smsNotifications', label: 'SMS-varsler', description: 'Send varsler via SMS' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/IntegrationConfigModal.tsx (27 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 96: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: return <Badge color="success">Aktiv</Badge>;
+
+  🔴 Line 100: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: return <Badge color="neutral">Inaktiv</Badge>;
+
+  🔴 Line 158: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <option value="active">Aktiv</option>
+
+  🔴 Line 153: hardcoded_prop
+     String: "Status"
+     Prop: label
+     Context: <FormField label="Status" description="Aktivering/deaktivering av integrasjonen">
+
+  🔴 Line 153: hardcoded_prop
+     String: "Aktivering/deaktivering av integrasjonen"
+     Prop: description
+     Context: <FormField label="Status" description="Aktivering/deaktivering av integrasjonen">
+
+  🟡 Line 43: hardcoded_object_value
+     String: "Base URL"
+     Context: { key: 'baseUrl', label: 'Base URL', placeholder: 'https://digilist.sandbox.signicat.com' },
+
+  🟡 Line 44: hardcoded_object_value
+     String: "Client ID"
+     Context: { key: 'clientId', label: 'Client ID', sensitive: true },
+
+  🟡 Line 45: hardcoded_object_value
+     String: "Client Secret"
+     Context: { key: 'clientSecret', label: 'Client Secret', type: 'password', sensitive: true },
+
+  🟡 Line 46: hardcoded_object_value
+     String: "Redirect URI"
+     Context: { key: 'redirectUri', label: 'Redirect URI', placeholder: 'https://api.digilist.no/api/auth/idporten
+
+  🟡 Line 47: hardcoded_object_value
+     String: "Scopes"
+     Context: { key: 'scopes', label: 'Scopes', placeholder: 'signicat-api' },
+
+  🟡 Line 48: hardcoded_object_value
+     String: "ACR Values"
+     Context: { key: 'acrValues', label: 'ACR Values', placeholder: 'idp:nbid' },
+
+  🟡 Line 51: hardcoded_object_value
+     String: "Base URL"
+     Context: { key: 'baseUrl', label: 'Base URL', placeholder: 'https://apitest.vipps.no' },
+
+  🟡 Line 52: hardcoded_object_value
+     String: "Client ID"
+     Context: { key: 'clientId', label: 'Client ID', sensitive: true },
+
+  🟡 Line 53: hardcoded_object_value
+     String: "Client Secret"
+     Context: { key: 'clientSecret', label: 'Client Secret', type: 'password', sensitive: true },
+
+  🟡 Line 54: hardcoded_object_value
+     String: "Merchant Serial Number"
+     Context: { key: 'merchantSerialNumber', label: 'Merchant Serial Number', sensitive: true },
+
+  🟡 Line 55: hardcoded_object_value
+     String: "Subscription Key (Ocp-Apim-Subscription-Key)"
+     Context: { key: 'subscriptionKey', label: 'Subscription Key (Ocp-Apim-Subscription-Key)', type: 'password', s
+
+  🟡 Line 56: hardcoded_object_value
+     String: "Webhook Secret"
+     Context: { key: 'webhookSecret', label: 'Webhook Secret', type: 'password', sensitive: true },
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Base URL"
+     Context: { key: 'baseUrl', label: 'Base URL', placeholder: 'https://api.visma.com' },
+
+  🟡 Line 60: hardcoded_object_value
+     String: "API Key"
+     Context: { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
+
+  🟡 Line 61: hardcoded_object_value
+     String: "Company ID"
+     Context: { key: 'companyId', label: 'Company ID' },
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Base URL"
+     Context: { key: 'baseUrl', label: 'Base URL' },
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Username"
+     Context: { key: 'username', label: 'Username', sensitive: true },
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Password"
+     Context: { key: 'password', label: 'Password', type: 'password', sensitive: true },
+
+  🟡 Line 67: hardcoded_object_value
+     String: "API Key"
+     Context: { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
+
+  🟡 Line 70: hardcoded_object_value
+     String: "Base URL"
+     Context: { key: 'baseUrl', label: 'Base URL' },
+
+  🟡 Line 71: hardcoded_object_value
+     String: "API Key"
+     Context: { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
+
+  🟡 Line 72: hardcoded_object_value
+     String: "Archive ID"
+     Context: { key: 'archiveId', label: 'Archive ID' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx (27 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 336: hardcoded_jsx_text
+     String: "Regel"
+     Context: <Table.HeaderCell>Regel</Table.HeaderCell>
+
+  🔴 Line 337: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 338: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell>Prioritet</Table.HeaderCell>
+
+  🔴 Line 339: hardcoded_jsx_text
+     String: "Betingelser"
+     Context: <Table.HeaderCell>Betingelser</Table.HeaderCell>
+
+  🔴 Line 340: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 342: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: {canEdit && <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>}
+
+  🔴 Line 517: hardcoded_jsx_text
+     String: "Ungdomsprioritet"
+     Context: <option value="youth_priority">Ungdomsprioritet</option>
+
+  🔴 Line 518: hardcoded_jsx_text
+     String: "Seniorprioritet"
+     Context: <option value="senior_priority">Seniorprioritet</option>
+
+  🔴 Line 519: hardcoded_jsx_text
+     String: "Lokal prioritet"
+     Context: <option value="local_priority">Lokal prioritet</option>
+
+  🔴 Line 520: hardcoded_jsx_text
+     String: "Regional prioritet"
+     Context: <option value="regional_priority">Regional prioritet</option>
+
+  🔴 Line 521: hardcoded_jsx_text
+     String: "Tilpasset regel"
+     Context: <option value="custom">Tilpasset regel</option>
+
+  🔴 Line 552: hardcoded_jsx_text
+     String: "Velg aldersgruppe"
+     Context: <option value="">Velg aldersgruppe</option>
+
+  🔴 Line 553: hardcoded_jsx_text
+     String: "Ungdom"
+     Context: <option value="youth">Ungdom</option>
+
+  🔴 Line 554: hardcoded_jsx_text
+     String: "Senior"
+     Context: <option value="senior">Senior</option>
+
+  🔴 Line 555: hardcoded_jsx_text
+     String: "Voksen"
+     Context: <option value="adult">Voksen</option>
+
+  🔴 Line 578: hardcoded_jsx_text
+     String: "Velg lokalitet"
+     Context: <option value="">Velg lokalitet</option>
+
+  🔴 Line 579: hardcoded_jsx_text
+     String: "Lokal"
+     Context: <option value="local">Lokal</option>
+
+  🔴 Line 580: hardcoded_jsx_text
+     String: "Regional"
+     Context: <option value="regional">Regional</option>
+
+  🔴 Line 581: hardcoded_jsx_text
+     String: "Nasjonal"
+     Context: <option value="national">Nasjonal</option>
+
+  🔴 Line 588: hardcoded_jsx_text
+     String: "Beskrivelse:"
+     Context: <strong>Beskrivelse:</strong> {ruleTypeDescriptions[formData.ruleType]}
+
+  🔴 Line 377: hardcoded_prop
+     String: "Øk prioritet"
+     Prop: aria-label
+     Context: aria-label="Øk prioritet"
+
+  🔴 Line 386: hardcoded_prop
+     String: "Senk prioritet"
+     Prop: aria-label
+     Context: aria-label="Senk prioritet"
+
+  🔴 Line 485: hardcoded_prop
+     String: "Navn"
+     Prop: label
+     Context: label="Navn"
+
+  🔴 Line 488: hardcoded_prop
+     String: "F.eks. "
+     Prop: placeholder
+     Context: placeholder="F.eks. 'Ungdomsprioritet 2024'"
+
+  🔴 Line 527: hardcoded_prop
+     String: "Prioritetsverdi"
+     Prop: label
+     Context: label="Prioritetsverdi"
+
+  🔴 Line 531: hardcoded_prop
+     String: "Høyere verdi gir høyere prioritet"
+     Prop: description
+     Context: description="Høyere verdi gir høyere prioritet"
+
+  🟡 Line 237: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne prioriteringsregelen?"
+     Context: if (confirm('Er du sikker på at du vil slette denne prioriteringsregelen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx (27 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 157: hardcoded_jsx_text
+     String: "Norge"
+     Context: <option value="Norge">Norge</option>
+
+  🔴 Line 158: hardcoded_jsx_text
+     String: "Sverige"
+     Context: <option value="Sverige">Sverige</option>
+
+  🔴 Line 159: hardcoded_jsx_text
+     String: "Danmark"
+     Context: <option value="Danmark">Danmark</option>
+
+  🔴 Line 160: hardcoded_jsx_text
+     String: "Finland"
+     Context: <option value="Finland">Finland</option>
+
+  🔴 Line 234: hardcoded_jsx_text
+     String: "Norge"
+     Context: <option value="Norge">Norge</option>
+
+  🔴 Line 235: hardcoded_jsx_text
+     String: "Sverige"
+     Context: <option value="Sverige">Sverige</option>
+
+  🔴 Line 236: hardcoded_jsx_text
+     String: "Danmark"
+     Context: <option value="Danmark">Danmark</option>
+
+  🔴 Line 237: hardcoded_jsx_text
+     String: "Finland"
+     Context: <option value="Finland">Finland</option>
+
+  🔴 Line 113: hardcoded_prop
+     String: "Gateadresse"
+     Prop: label
+     Context: <FormField label="Gateadresse" required>
+
+  🔴 Line 114: hardcoded_prop
+     String: "Gateadresse"
+     Prop: aria-label
+     Context: <Textfield aria-label="Gateadresse"
+
+  🔴 Line 120: hardcoded_prop
+     String: "Storgata 1"
+     Prop: placeholder
+     Context: placeholder="Storgata 1"
+
+  🔴 Line 125: hardcoded_prop
+     String: "Poststed"
+     Prop: label
+     Context: <FormField label="Poststed" required>
+
+  🔴 Line 126: hardcoded_prop
+     String: "Poststed"
+     Prop: aria-label
+     Context: <Textfield aria-label="Poststed"
+
+  🔴 Line 132: hardcoded_prop
+     String: "Oslo"
+     Prop: placeholder
+     Context: placeholder="Oslo"
+
+  🔴 Line 136: hardcoded_prop
+     String: "Postnummer"
+     Prop: label
+     Context: <FormField label="Postnummer" required>
+
+  🔴 Line 137: hardcoded_prop
+     String: "Postnummer bosted"
+     Prop: aria-label
+     Context: <Textfield aria-label="Postnummer bosted"
+
+  🔴 Line 149: hardcoded_prop
+     String: "Land"
+     Prop: label
+     Context: <FormField label="Land" required>
+
+  🔴 Line 190: hardcoded_prop
+     String: "Gateadresse"
+     Prop: label
+     Context: <FormField label="Gateadresse" required>
+
+  🔴 Line 191: hardcoded_prop
+     String: "Gateadresse"
+     Prop: aria-label
+     Context: <Textfield aria-label="Gateadresse"
+
+  🔴 Line 197: hardcoded_prop
+     String: "Storgata 1"
+     Prop: placeholder
+     Context: placeholder="Storgata 1"
+
+  🔴 Line 202: hardcoded_prop
+     String: "Poststed"
+     Prop: label
+     Context: <FormField label="Poststed" required>
+
+  🔴 Line 203: hardcoded_prop
+     String: "Poststed"
+     Prop: aria-label
+     Context: <Textfield aria-label="Poststed"
+
+  🔴 Line 209: hardcoded_prop
+     String: "Oslo"
+     Prop: placeholder
+     Context: placeholder="Oslo"
+
+  🔴 Line 213: hardcoded_prop
+     String: "Postnummer"
+     Prop: label
+     Context: <FormField label="Postnummer" required>
+
+  🔴 Line 214: hardcoded_prop
+     String: "Postnummer faktura"
+     Prop: aria-label
+     Context: <Textfield aria-label="Postnummer faktura"
+
+  🔴 Line 226: hardcoded_prop
+     String: "Land"
+     Prop: label
+     Context: <FormField label="Land" required>
+
+  🔴 Line 264: hardcoded_prop
+     String: "Lagre adresser"
+     Prop: aria-label
+     Context: <Button onClick={handleSaveAddresses} disabled={isSaving} type="button" aria-label="Lagre adresser">
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/bookings.tsx (27 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 742: hardcoded_jsx_text
+     String: "Booking"
+     Context: <Table.HeaderCell style={{ width: '110px' }}>Booking</Table.HeaderCell>
+
+  🔴 Line 743: hardcoded_jsx_text
+     String: "Ressurs"
+     Context: <Table.HeaderCell>Ressurs</Table.HeaderCell>
+
+  🔴 Line 744: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <Table.HeaderCell>Bruker</Table.HeaderCell>
+
+  🔴 Line 745: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 361: hardcoded_prop
+     String: "Filter og sortering"
+     Prop: title
+     Context: title="Filter og sortering"
+
+  🔴 Line 429: hardcoded_prop
+     String: "Datoperiode"
+     Prop: title
+     Context: <DrawerSection title="Datoperiode" collapsible defaultCollapsed>
+
+  🔴 Line 469: hardcoded_prop
+     String: "Sortering"
+     Prop: title
+     Context: <DrawerSection title="Sortering" collapsible defaultCollapsed>
+
+  🔴 Line 576: hardcoded_prop
+     String: "Søk etter lokale, bruker, booking-ID..."
+     Prop: placeholder
+     Context: placeholder="Søk etter lokale, bruker, booking-ID..."
+
+  🔴 Line 788: hardcoded_prop
+     String: "Kopier ID"
+     Prop: aria-label
+     Context: aria-label="Kopier ID"
+
+  🔴 Line 857: hardcoded_prop
+     String: "Godkjenn"
+     Prop: aria-label
+     Context: aria-label="Godkjenn"
+
+  🔴 Line 858: hardcoded_prop
+     String: "Godkjenn booking"
+     Prop: title
+     Context: title="Godkjenn booking"
+
+  🔴 Line 870: hardcoded_prop
+     String: "Avvis"
+     Prop: aria-label
+     Context: aria-label="Avvis"
+
+  🔴 Line 871: hardcoded_prop
+     String: "Avvis booking"
+     Prop: title
+     Context: title="Avvis booking"
+
+  🔴 Line 882: hardcoded_prop
+     String: "Flere valg"
+     Prop: aria-label
+     Context: aria-label="Flere valg"
+
+  🟡 Line 57: hardcoded_object_value
+     String: "Ventende"
+     Context: { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Bekreftet"
+     Context: { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Fullført"
+     Context: { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
+
+  🟡 Line 60: hardcoded_object_value
+     String: "Kansellert"
+     Context: { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
+
+  🟡 Line 61: hardcoded_object_value
+     String: "Alle"
+     Context: { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Alle betalinger"
+     Context: { id: 'all', label: 'Alle betalinger' },
+
+  🟡 Line 67: hardcoded_object_value
+     String: "Betalt"
+     Context: { id: 'paid', label: 'Betalt' },
+
+  🟡 Line 68: hardcoded_object_value
+     String: "Ikke betalt"
+     Context: { id: 'unpaid', label: 'Ikke betalt' },
+
+  🟡 Line 69: hardcoded_object_value
+     String: "Refundert"
+     Context: { id: 'refunded', label: 'Refundert' },
+
+  🟡 Line 74: hardcoded_object_value
+     String: "Nyeste først"
+     Context: { id: 'date-desc', label: 'Nyeste først', field: 'startTime', order: 'desc' },
+
+  🟡 Line 75: hardcoded_object_value
+     String: "Eldste først"
+     Context: { id: 'date-asc', label: 'Eldste først', field: 'startTime', order: 'asc' },
+
+  🟡 Line 76: hardcoded_object_value
+     String: "Høyeste pris"
+     Context: { id: 'price-desc', label: 'Høyeste pris', field: 'totalPrice', order: 'desc' },
+
+  🟡 Line 77: hardcoded_object_value
+     String: "Laveste pris"
+     Context: { id: 'price-asc', label: 'Laveste pris', field: 'totalPrice', order: 'asc' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx (26 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 146: hardcoded_jsx_text
+     String: "Søket feilet"
+     Context: <Heading level={3}>Søket feilet</Heading>
+
+  🔴 Line 231: hardcoded_jsx_text
+     String: "ID"
+     Context: <th>ID</th>
+
+  🔴 Line 232: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <th>Lokale</th>
+
+  🔴 Line 233: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <th>Organisasjon</th>
+
+  🔴 Line 234: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <th>Tidspunkt</th>
+
+  🔴 Line 235: hardcoded_jsx_text
+     String: "Status"
+     Context: <th>Status</th>
+
+  🔴 Line 236: hardcoded_jsx_text
+     String: "Pris"
+     Context: <th>Pris</th>
+
+  🔴 Line 310: hardcoded_jsx_text
+     String: "ID"
+     Context: <th>ID</th>
+
+  🔴 Line 311: hardcoded_jsx_text
+     String: "Navn"
+     Context: <th>Navn</th>
+
+  🔴 Line 312: hardcoded_jsx_text
+     String: "Type"
+     Context: <th>Type</th>
+
+  🔴 Line 313: hardcoded_jsx_text
+     String: "Lokasjon"
+     Context: <th>Lokasjon</th>
+
+  🔴 Line 314: hardcoded_jsx_text
+     String: "Kapasitet"
+     Context: <th>Kapasitet</th>
+
+  🔴 Line 315: hardcoded_jsx_text
+     String: "Pris/time"
+     Context: <th>Pris/time</th>
+
+  🔴 Line 385: hardcoded_jsx_text
+     String: "ID"
+     Context: <th>ID</th>
+
+  🔴 Line 386: hardcoded_jsx_text
+     String: "Navn"
+     Context: <th>Navn</th>
+
+  🔴 Line 387: hardcoded_jsx_text
+     String: "Org.nr"
+     Context: <th>Org.nr</th>
+
+  🔴 Line 388: hardcoded_jsx_text
+     String: "Type"
+     Context: <th>Type</th>
+
+  🔴 Line 389: hardcoded_jsx_text
+     String: "E-post"
+     Context: <th>E-post</th>
+
+  🔴 Line 390: hardcoded_jsx_text
+     String: "Telefon"
+     Context: <th>Telefon</th>
+
+  🔴 Line 285: hardcoded_prop
+     String: "Åpne booking"
+     Prop: aria-label
+     Context: aria-label="Åpne booking" type="button"
+
+  🔴 Line 360: hardcoded_prop
+     String: "Åpne lokale"
+     Prop: aria-label
+     Context: aria-label="Åpne lokale" type="button"
+
+  🔴 Line 433: hardcoded_prop
+     String: "Åpne organisasjon"
+     Prop: aria-label
+     Context: aria-label="Åpne organisasjon" type="button"
+
+  🟡 Line 56: hardcoded_object_value
+     String: "Alle"
+     Context: { id: 'all', label: 'Alle', icon: '🔍' },
+
+  🟡 Line 57: hardcoded_object_value
+     String: "Bookinger"
+     Context: { id: 'booking', label: 'Bookinger', icon: '📅' },
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Lokaler"
+     Context: { id: 'listing', label: 'Lokaler', icon: '🏢' },
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Organisasjoner"
+     Context: { id: 'organization', label: 'Organisasjoner', icon: '👥' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/audit.tsx (26 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 703: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 704: hardcoded_jsx_text
+     String: "Handling"
+     Context: <Table.HeaderCell>Handling</Table.HeaderCell>
+
+  🔴 Line 705: hardcoded_jsx_text
+     String: "Ressurs"
+     Context: <Table.HeaderCell>Ressurs</Table.HeaderCell>
+
+  🔴 Line 706: hardcoded_jsx_text
+     String: "Ressurs-ID"
+     Context: <Table.HeaderCell>Ressurs-ID</Table.HeaderCell>
+
+  🔴 Line 707: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <Table.HeaderCell>Bruker</Table.HeaderCell>
+
+  🔴 Line 241: hardcoded_prop
+     String: "Filtrer hendelser"
+     Prop: title
+     Context: title="Filtrer hendelser"
+
+  🔴 Line 243: hardcoded_prop
+     String: "Ressurstype"
+     Prop: title
+     Context: <DrawerSection title="Ressurstype">
+
+  🔴 Line 275: hardcoded_prop
+     String: "Handling"
+     Prop: title
+     Context: <DrawerSection title="Handling">
+
+  🔴 Line 307: hardcoded_prop
+     String: "Tidsperiode"
+     Prop: title
+     Context: <DrawerSection title="Tidsperiode">
+
+  🔴 Line 366: hardcoded_prop
+     String: "Hendelsesdetaljer"
+     Prop: title
+     Context: title="Hendelsesdetaljer"
+
+  🔴 Line 407: hardcoded_prop
+     String: "Utført av"
+     Prop: title
+     Context: <DrawerSection title="Utført av">
+
+  🔴 Line 441: hardcoded_prop
+     String: "Metadata"
+     Prop: title
+     Context: <DrawerSection title="Metadata">
+
+  🔴 Line 466: hardcoded_prop
+     String: "System"
+     Prop: title
+     Context: <DrawerSection title="System">
+
+  🔴 Line 543: hardcoded_prop
+     String: "Søk i hendelser..."
+     Prop: placeholder
+     Context: placeholder="Søk i hendelser..."
+
+  🔴 Line 759: hardcoded_prop
+     String: "Se detaljer"
+     Prop: aria-label
+     Context: aria-label="Se detaljer"
+
+  🟡 Line 53: hardcoded_object_value
+     String: "Alle ressurser"
+     Context: { id: 'all', label: 'Alle ressurser' },
+
+  🟡 Line 54: hardcoded_object_value
+     String: "Lokaler"
+     Context: { id: 'listing', label: 'Lokaler' },
+
+  🟡 Line 55: hardcoded_object_value
+     String: "Bookinger"
+     Context: { id: 'booking', label: 'Bookinger' },
+
+  🟡 Line 56: hardcoded_object_value
+     String: "Brukere"
+     Context: { id: 'user', label: 'Brukere' },
+
+  🟡 Line 57: hardcoded_object_value
+     String: "Organisasjoner"
+     Context: { id: 'organization', label: 'Organisasjoner' },
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Allokeringer"
+     Context: { id: 'allocation', label: 'Allokeringer' },
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Alle handlinger"
+     Context: { id: 'all', label: 'Alle handlinger' },
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Opprettet"
+     Context: { id: 'create', label: 'Opprettet' },
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Lest"
+     Context: { id: 'read', label: 'Lest' },
+
+  🟡 Line 67: hardcoded_object_value
+     String: "Oppdatert"
+     Context: { id: 'update', label: 'Oppdatert' },
+
+  🟡 Line 68: hardcoded_object_value
+     String: "Slettet"
+     Context: { id: 'delete', label: 'Slettet' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/AllocationProposal.tsx (25 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 178: hardcoded_jsx_text
+     String: "Godkjenn"
+     Context: return <Badge variant="success">Godkjenn</Badge>;
+
+  🔴 Line 180: hardcoded_jsx_text
+     String: "Avslå"
+     Context: return <Badge variant="danger">Avslå</Badge>;
+
+  🔴 Line 182: hardcoded_jsx_text
+     String: "Juster"
+     Context: return <Badge variant="warning">Juster</Badge>;
+
+  🔴 Line 364: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 365: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 366: hardcoded_jsx_text
+     String: "Dag"
+     Context: <Table.HeaderCell>Dag</Table.HeaderCell>
+
+  🔴 Line 367: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 368: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell>Prioritet</Table.HeaderCell>
+
+  🔴 Line 369: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 370: hardcoded_jsx_text
+     String: "Begrunnelse"
+     Context: <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+
+  🔴 Line 410: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 411: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 412: hardcoded_jsx_text
+     String: "Dag"
+     Context: <Table.HeaderCell>Dag</Table.HeaderCell>
+
+  🔴 Line 413: hardcoded_jsx_text
+     String: "Opprinnelig tidspunkt"
+     Context: <Table.HeaderCell>Opprinnelig tidspunkt</Table.HeaderCell>
+
+  🔴 Line 414: hardcoded_jsx_text
+     String: "Foreslått tidspunkt"
+     Context: <Table.HeaderCell>Foreslått tidspunkt</Table.HeaderCell>
+
+  🔴 Line 415: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell>Prioritet</Table.HeaderCell>
+
+  🔴 Line 416: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 417: hardcoded_jsx_text
+     String: "Begrunnelse"
+     Context: <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+
+  🔴 Line 468: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 469: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 470: hardcoded_jsx_text
+     String: "Dag"
+     Context: <Table.HeaderCell>Dag</Table.HeaderCell>
+
+  🔴 Line 471: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 472: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell>Prioritet</Table.HeaderCell>
+
+  🔴 Line 473: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 474: hardcoded_jsx_text
+     String: "Begrunnelse"
+     Context: <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx (25 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 26: hardcoded_jsx_text
+     String: "Promise"
+     Context: onToggle: (provider: string, enabled: boolean) => Promise<void>;
+
+  🔴 Line 46: hardcoded_jsx_text
+     String: "BankID"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Ban
+
+  🔴 Line 51: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 53: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 64: hardcoded_jsx_text
+     String: "ID-porten"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>ID-
+
+  🔴 Line 69: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 71: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 93: hardcoded_jsx_text
+     String: "Vipps"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Vip
+
+  🔴 Line 98: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 100: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 124: hardcoded_jsx_text
+     String: "RCO"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>RCO
+
+  🔴 Line 129: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 131: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 155: hardcoded_jsx_text
+     String: "Google Calendar"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Goo
+
+  🔴 Line 160: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 162: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 173: hardcoded_jsx_text
+     String: "Outlook"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Out
+
+  🔴 Line 178: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 180: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 204: hardcoded_jsx_text
+     String: "Visma"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Vis
+
+  🔴 Line 209: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 211: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 235: hardcoded_jsx_text
+     String: "Brønnøysundregistrene"
+     Context: <div style={{ fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>Brø
+
+  🔴 Line 240: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 242: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/archive.tsx (25 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 64: hardcoded_jsx_text
+     String: "Sendt"
+     Context: return <Badge color="success">Sendt</Badge>;
+
+  🔴 Line 66: hardcoded_jsx_text
+     String: "Feilet"
+     Context: return <Badge color="danger">Feilet</Badge>;
+
+  🔴 Line 164: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Badge color="success">Aktiv</Badge>
+
+  🔴 Line 166: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Badge color="neutral">Inaktiv</Badge>
+
+  🔴 Line 237: hardcoded_jsx_text
+     String: "Alle typer"
+     Context: <option value="all">Alle typer</option>
+
+  🔴 Line 238: hardcoded_jsx_text
+     String: "Booking"
+     Context: <option value="booking">Booking</option>
+
+  🔴 Line 239: hardcoded_jsx_text
+     String: "Dokument"
+     Context: <option value="document">Dokument</option>
+
+  🔴 Line 240: hardcoded_jsx_text
+     String: "Kontrakt"
+     Context: <option value="contract">Kontrakt</option>
+
+  🔴 Line 241: hardcoded_jsx_text
+     String: "Faktura"
+     Context: <option value="invoice">Faktura</option>
+
+  🔴 Line 249: hardcoded_jsx_text
+     String: "Alle statuser"
+     Context: <option value="all">Alle statuser</option>
+
+  🔴 Line 250: hardcoded_jsx_text
+     String: "Sendt"
+     Context: <option value="sent">Sendt</option>
+
+  🔴 Line 259: hardcoded_jsx_text
+     String: "Type"
+     Context: <th>Type</th>
+
+  🔴 Line 260: hardcoded_jsx_text
+     String: "Tittel"
+     Context: <th>Tittel</th>
+
+  🔴 Line 261: hardcoded_jsx_text
+     String: "Saksnummer"
+     Context: <th>Saksnummer</th>
+
+  🔴 Line 262: hardcoded_jsx_text
+     String: "Status"
+     Context: <th>Status</th>
+
+  🔴 Line 263: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <th>Tidspunkt</th>
+
+  🔴 Line 264: hardcoded_jsx_text
+     String: "Handling"
+     Context: <th>Handling</th>
+
+  🔴 Line 226: hardcoded_prop
+     String: "Søk etter tittel eller saksnummer..."
+     Prop: placeholder
+     Context: placeholder="Søk etter tittel eller saksnummer..."
+
+  🔴 Line 232: hardcoded_prop
+     String: "Filter type"
+     Prop: aria-label
+     Context: aria-label="Filter type"
+
+  🔴 Line 244: hardcoded_prop
+     String: "Filter status"
+     Prop: aria-label
+     Context: aria-label="Filter status"
+
+  🟡 Line 86: hardcoded_object_value
+     String: "Booking #12345 - Kulturhuset Stor sal"
+     Context: title: 'Booking #12345 - Kulturhuset Stor sal',
+
+  🟡 Line 94: hardcoded_object_value
+     String: "Leiekontrakt - Oslo IL"
+     Context: title: 'Leiekontrakt - Oslo IL',
+
+  🟡 Line 102: hardcoded_object_value
+     String: "Faktura INV-2024-001"
+     Context: title: 'Faktura INV-2024-001',
+
+  🟡 Line 110: hardcoded_object_value
+     String: "Vedlegg til booking #12340"
+     Context: title: 'Vedlegg til booking #12340',
+
+  🟡 Line 117: hardcoded_object_value
+     String: "Booking #12346 - Idrettshall A"
+     Context: title: 'Booking #12346 - Idrettshall A',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/AppealProcess.tsx (23 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 299: hardcoded_jsx_text
+     String: "Alle"
+     Context: <option value="all">Alle</option>
+
+  🔴 Line 300: hardcoded_jsx_text
+     String: "Ingen klage"
+     Context: <option value="no_appeal">Ingen klage</option>
+
+  🔴 Line 301: hardcoded_jsx_text
+     String: "Klage venter"
+     Context: <option value="appeal_pending">Klage venter</option>
+
+  🔴 Line 302: hardcoded_jsx_text
+     String: "Klage godkjent"
+     Context: <option value="appeal_approved">Klage godkjent</option>
+
+  🔴 Line 303: hardcoded_jsx_text
+     String: "Klage avslått"
+     Context: <option value="appeal_rejected">Klage avslått</option>
+
+  🔴 Line 325: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 326: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 327: hardcoded_jsx_text
+     String: "Ukedag"
+     Context: <Table.HeaderCell>Ukedag</Table.HeaderCell>
+
+  🔴 Line 328: hardcoded_jsx_text
+     String: "Tid"
+     Context: <Table.HeaderCell>Tid</Table.HeaderCell>
+
+  🔴 Line 329: hardcoded_jsx_text
+     String: "Avslagsgrunn"
+     Context: <Table.HeaderCell>Avslagsgrunn</Table.HeaderCell>
+
+  🔴 Line 330: hardcoded_jsx_text
+     String: "Klagestatus"
+     Context: <Table.HeaderCell>Klagestatus</Table.HeaderCell>
+
+  🔴 Line 331: hardcoded_jsx_text
+     String: "Dato"
+     Context: <Table.HeaderCell>Dato</Table.HeaderCell>
+
+  🔴 Line 332: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 513: hardcoded_jsx_text
+     String: "Organisasjon:"
+     Context: <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Organisasjon:</span>{' '}
+
+  🔴 Line 517: hardcoded_jsx_text
+     String: "Lokale:"
+     Context: <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Lokale:</span>{' '}
+
+  🔴 Line 521: hardcoded_jsx_text
+     String: "Tid:"
+     Context: <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Tid:</span>{' '}
+
+  🔴 Line 526: hardcoded_jsx_text
+     String: "Avslagsgrunn:"
+     Context: <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Avslagsgrunn:</span>
+
+  🔴 Line 413: hardcoded_prop
+     String: "Send klage"
+     Prop: title
+     Context: title="Send klage"
+
+  🔴 Line 425: hardcoded_prop
+     String: "Godkjenn klage"
+     Prop: title
+     Context: title="Godkjenn klage"
+
+  🔴 Line 434: hardcoded_prop
+     String: "Avslå klage"
+     Prop: title
+     Context: title="Avslå klage"
+
+  🔴 Line 445: hardcoded_prop
+     String: "Se detaljer"
+     Prop: title
+     Context: title="Se detaljer"
+
+  🔴 Line 552: hardcoded_prop
+     String: "Beskriv hvorfor du ønsker å klage på avslaget..."
+     Prop: placeholder
+     Context: placeholder="Beskriv hvorfor du ønsker å klage på avslaget..."
+
+  🟡 Line 193: hardcoded_alert
+     String: "Godkjenn denne klagen? Søknaden vil bli godkjent."
+     Context: if (confirm('Godkjenn denne klagen? Søknaden vil bli godkjent.')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx (23 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 227: hardcoded_prop
+     String: "Veiledninger"
+     Prop: title
+     Context: title="Veiledninger"
+
+  🔴 Line 228: hardcoded_prop
+     String: "Steg-for-steg guider for vanlige oppgaver"
+     Prop: description
+     Context: description="Steg-for-steg guider for vanlige oppgaver"
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Behandle bookingforespørsler"
+     Context: title: 'Behandle bookingforespørsler',
+
+  🟡 Line 34: hardcoded_object_value
+     String: "Lær hvordan du godkjenner eller avslår bookingforespørsler"
+     Context: description: 'Lær hvordan du godkjenner eller avslår bookingforespørsler',
+
+  🟡 Line 49: hardcoded_object_value
+     String: "Bruke kalenderen"
+     Context: title: 'Bruke kalenderen',
+
+  🟡 Line 50: hardcoded_object_value
+     String: "Oversikt over reservasjoner for dine tildelte objekter"
+     Context: description: 'Oversikt over reservasjoner for dine tildelte objekter',
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Svare på meldinger"
+     Context: title: 'Svare på meldinger',
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Kommuniser med brukere om bookinger"
+     Context: description: 'Kommuniser med brukere om bookinger',
+
+  🟡 Line 80: hardcoded_object_value
+     String: "Administrere brukere"
+     Context: title: 'Administrere brukere',
+
+  🟡 Line 81: hardcoded_object_value
+     String: "Inviter og administrer brukere i din organisasjon"
+     Context: description: 'Inviter og administrer brukere i din organisasjon',
+
+  🟡 Line 97: hardcoded_object_value
+     String: "Opprette utleieobjekt"
+     Context: title: 'Opprette utleieobjekt',
+
+  🟡 Line 98: hardcoded_object_value
+     String: "Legg til et nytt utleieobjekt i systemet"
+     Context: description: 'Legg til et nytt utleieobjekt i systemet',
+
+  🟡 Line 115: hardcoded_object_value
+     String: "Generere rapporter"
+     Context: title: 'Generere rapporter',
+
+  🟡 Line 116: hardcoded_object_value
+     String: "Eksporter booking- og inntektsdata"
+     Context: description: 'Eksporter booking- og inntektsdata',
+
+  🟡 Line 132: hardcoded_object_value
+     String: "Organisasjonsinnstillinger"
+     Context: title: 'Organisasjonsinnstillinger',
+
+  🟡 Line 133: hardcoded_object_value
+     String: "Konfigurer organisasjonsprofil og branding"
+     Context: description: 'Konfigurer organisasjonsprofil og branding',
+
+  🟡 Line 149: hardcoded_object_value
+     String: "Sette opp integrasjoner"
+     Context: title: 'Sette opp integrasjoner',
+
+  🟡 Line 150: hardcoded_object_value
+     String: "Koble til eksterne systemer"
+     Context: description: 'Koble til eksterne systemer',
+
+  🟡 Line 166: hardcoded_object_value
+     String: "Administrere funksjoner"
+     Context: title: 'Administrere funksjoner',
+
+  🟡 Line 167: hardcoded_object_value
+     String: "Aktiver og deaktiver systemfunksjoner"
+     Context: description: 'Aktiver og deaktiver systemfunksjoner',
+
+  🟡 Line 190: hardcoded_object_value
+     String: "Nybegynner"
+     Context: beginner: { label: 'Nybegynner', color: 'success' as const },
+
+  🟡 Line 191: hardcoded_object_value
+     String: "Middels"
+     Context: intermediate: { label: 'Middels', color: 'warning' as const },
+
+  🟡 Line 192: hardcoded_object_value
+     String: "Avansert"
+     Context: advanced: { label: 'Avansert', color: 'danger' as const },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx (22 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 161: hardcoded_jsx_text
+     String: "Tillatelsesstyring"
+     Context: <h1>Tillatelsesstyring</h1>
+
+  🔴 Line 162: hardcoded_jsx_text
+     String: "Detaljert tilgangskontroll for utleieobjekter"
+     Context: <p>Detaljert tilgangskontroll for utleieobjekter</p>
+
+  🔴 Line 190: hardcoded_jsx_text
+     String: "Ingen tillatelser funnet"
+     Context: <p>Ingen tillatelser funnet</p>
+
+  🔴 Line 199: hardcoded_jsx_text
+     String: "Utleieobjekt"
+     Context: <th>Utleieobjekt</th>
+
+  🔴 Line 200: hardcoded_jsx_text
+     String: "Gitt til"
+     Context: <th>Gitt til</th>
+
+  🔴 Line 201: hardcoded_jsx_text
+     String: "Tillatelser"
+     Context: <th>Tillatelser</th>
+
+  🔴 Line 202: hardcoded_jsx_text
+     String: "Gyldig periode"
+     Context: <th>Gyldig periode</th>
+
+  🔴 Line 203: hardcoded_jsx_text
+     String: "Status"
+     Context: <th>Status</th>
+
+  🔴 Line 204: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <th>Handlinger</th>
+
+  🔴 Line 270: hardcoded_jsx_text
+     String: "Gi tillatelse"
+     Context: <h2>Gi tillatelse</h2>
+
+  🔴 Line 303: hardcoded_jsx_text
+     String: "Utleieobjekt"
+     Context: <label>Utleieobjekt</label>
+
+  🔴 Line 308: hardcoded_jsx_text
+     String: "Gi til"
+     Context: <label>Gi til</label>
+
+  🔴 Line 310: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <option value="USER">Bruker</option>
+
+  🔴 Line 311: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <option value="ORGANIZATION">Organisasjon</option>
+
+  🔴 Line 316: hardcoded_jsx_text
+     String: "Bruker/Organisasjon ID"
+     Context: <label>Bruker/Organisasjon ID</label>
+
+  🔴 Line 321: hardcoded_jsx_text
+     String: "Tillatelser"
+     Context: <h3>Tillatelser</h3>
+
+  🔴 Line 359: hardcoded_jsx_text
+     String: "Gyldig periode (valgfritt)"
+     Context: <h3>Gyldig periode (valgfritt)</h3>
+
+  🔴 Line 362: hardcoded_jsx_text
+     String: "Fra"
+     Context: <label>Fra</label>
+
+  🔴 Line 366: hardcoded_jsx_text
+     String: "Til"
+     Context: <label>Til</label>
+
+  🔴 Line 172: hardcoded_prop
+     String: "Filtrer etter objekt..."
+     Prop: placeholder
+     Context: placeholder="Filtrer etter objekt..."
+
+  🔴 Line 179: hardcoded_prop
+     String: "Filtrer etter bruker/organisasjon..."
+     Prop: placeholder
+     Context: placeholder="Filtrer etter bruker/organisasjon..."
+
+  🔴 Line 1: missing_t_import
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/hooks/useRentalObjectFilters.ts (20 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 10: hardcoded_object_value
+     String: "Alle"
+     Context: { value: 'all', label: 'Alle' },
+
+  🟡 Line 11: hardcoded_object_value
+     String: "Publisert"
+     Context: { value: 'published', label: 'Publisert' },
+
+  🟡 Line 12: hardcoded_object_value
+     String: "Utkast"
+     Context: { value: 'draft', label: 'Utkast' },
+
+  🟡 Line 13: hardcoded_object_value
+     String: "Arkivert"
+     Context: { value: 'archived', label: 'Arkivert' },
+
+  🟡 Line 17: hardcoded_object_value
+     String: "Alle kategorier"
+     Context: { value: 'all', label: 'Alle kategorier' },
+
+  🟡 Line 18: hardcoded_object_value
+     String: "Lokaler og baner"
+     Context: { value: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
+
+  🟡 Line 19: hardcoded_object_value
+     String: "Utstyr og inventar"
+     Context: { value: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar' },
+
+  🟡 Line 20: hardcoded_object_value
+     String: "Kjøretøy og transport"
+     Context: { value: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport' },
+
+  🟡 Line 21: hardcoded_object_value
+     String: "Opplevelser og arrangement"
+     Context: { value: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement' },
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Alle bookingtyper"
+     Context: { value: 'all', label: 'Alle bookingtyper' },
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Tidsperiode"
+     Context: { value: 'PERIOD', label: 'Tidsperiode' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Tidsluke"
+     Context: { value: 'SLOT', label: 'Tidsluke' },
+
+  🟡 Line 28: hardcoded_object_value
+     String: "Heldags"
+     Context: { value: 'ALL_DAY', label: 'Heldags' },
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Navn (A-Å)"
+     Context: { value: 'name_asc', label: 'Navn (A-Å)' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Navn (Å-A)"
+     Context: { value: 'name_desc', label: 'Navn (Å-A)' },
+
+  🟡 Line 34: hardcoded_object_value
+     String: "Nyeste først"
+     Context: { value: 'created_desc', label: 'Nyeste først' },
+
+  🟡 Line 35: hardcoded_object_value
+     String: "Eldste først"
+     Context: { value: 'created_asc', label: 'Eldste først' },
+
+  🟡 Line 36: hardcoded_object_value
+     String: "Pris (lav-høy)"
+     Context: { value: 'price_asc', label: 'Pris (lav-høy)' },
+
+  🟡 Line 37: hardcoded_object_value
+     String: "Pris (høy-lav)"
+     Context: { value: 'price_desc', label: 'Pris (høy-lav)' },
+
+  🟡 Line 77: hardcoded_object_value
+     String: "Alle byer"
+     Context: { value: 'all', label: 'Alle byer' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/access-grants/NewAccessGrantPage.tsx (20 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 184: hardcoded_jsx_text
+     String: "Velg organisasjon..."
+     Context: <option value="">Velg organisasjon...</option>
+
+  🔴 Line 210: hardcoded_jsx_text
+     String: "Velg utleieobjekt..."
+     Context: <option value="">Velg utleieobjekt...</option>
+
+  🔴 Line 171: hardcoded_prop
+     String: "Organisasjon"
+     Prop: title
+     Context: title="Organisasjon"
+
+  🔴 Line 172: hardcoded_prop
+     String: "Velg organisasjonen som skal få tilgang"
+     Prop: description
+     Context: description="Velg organisasjonen som skal få tilgang"
+
+  🔴 Line 175: hardcoded_prop
+     String: "Organisasjon"
+     Prop: label
+     Context: label="Organisasjon"
+
+  🔴 Line 182: hardcoded_prop
+     String: "Velg organisasjon"
+     Prop: aria-label
+     Context: aria-label="Velg organisasjon"
+
+  🔴 Line 197: hardcoded_prop
+     String: "Utleieobjekt"
+     Prop: title
+     Context: title="Utleieobjekt"
+
+  🔴 Line 198: hardcoded_prop
+     String: "Velg utleieobjektet organisasjonen skal få tilgang til"
+     Prop: description
+     Context: description="Velg utleieobjektet organisasjonen skal få tilgang til"
+
+  🔴 Line 201: hardcoded_prop
+     String: "Utleieobjekt"
+     Prop: label
+     Context: label="Utleieobjekt"
+
+  🔴 Line 208: hardcoded_prop
+     String: "Velg utleieobjekt"
+     Prop: aria-label
+     Context: aria-label="Velg utleieobjekt"
+
+  🔴 Line 223: hardcoded_prop
+     String: "Gyldighetsperiode"
+     Prop: title
+     Context: title="Gyldighetsperiode"
+
+  🔴 Line 224: hardcoded_prop
+     String: "Valgfritt: Angi når tilgangen utløper"
+     Prop: description
+     Context: description="Valgfritt: Angi når tilgangen utløper"
+
+  🔴 Line 228: hardcoded_prop
+     String: "Utløpsdato"
+     Prop: label
+     Context: label="Utløpsdato"
+
+  🔴 Line 235: hardcoded_prop
+     String: "Utløpsdato"
+     Prop: aria-label
+     Context: aria-label="Utløpsdato"
+
+  🔴 Line 247: hardcoded_prop
+     String: "Notater"
+     Prop: title
+     Context: title="Notater"
+
+  🔴 Line 248: hardcoded_prop
+     String: "Valgfritt: Legg til interne notater om tildelingen"
+     Prop: description
+     Context: description="Valgfritt: Legg til interne notater om tildelingen"
+
+  🔴 Line 250: hardcoded_prop
+     String: "Notater"
+     Prop: label
+     Context: <FormField label="Notater">
+
+  🔴 Line 254: hardcoded_prop
+     String: "F.eks. Avtale gjelder sesong 2024/2025"
+     Prop: placeholder
+     Context: placeholder="F.eks. Avtale gjelder sesong 2024/2025"
+
+  🔴 Line 255: hardcoded_prop
+     String: "Notater"
+     Prop: aria-label
+     Context: aria-label="Notater"
+
+  🔴 Line 1: missing_t_import
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/organizations/OrganizationsListPage.tsx (20 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 147: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 150: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+
+  🔴 Line 153: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+
+  🔴 Line 156: hardcoded_jsx_text
+     String: "Suspendert"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+
+  🔴 Line 170: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 173: hardcoded_jsx_text
+     String: "Privatperson"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('private')}>Privatperson</Dropdown.Button>
+
+  🔴 Line 176: hardcoded_jsx_text
+     String: "Bedrift"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('business')}>Bedrift</Dropdown.Button>
+
+  🔴 Line 179: hardcoded_jsx_text
+     String: "Idrettslag"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('sports_club')}>Idrettslag</Dropdown.Button>
+
+  🔴 Line 182: hardcoded_jsx_text
+     String: "Ungdomsorganisasjon"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('youth_organization')}>Ungdomsorganisasjon</Dropd
+
+  🔴 Line 185: hardcoded_jsx_text
+     String: "Skole"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('school')}>Skole</Dropdown.Button>
+
+  🔴 Line 188: hardcoded_jsx_text
+     String: "Kommune"
+     Context: <Dropdown.Button onClick={() => setActorTypeFilter('municipality')}>Kommune</Dropdown.Button>
+
+  🔴 Line 226: hardcoded_jsx_text
+     String: "Navn"
+     Context: <Table.HeaderCell>Navn</Table.HeaderCell>
+
+  🔴 Line 227: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 228: hardcoded_jsx_text
+     String: "Org.nr"
+     Context: <Table.HeaderCell>Org.nr</Table.HeaderCell>
+
+  🔴 Line 229: hardcoded_jsx_text
+     String: "Kontakt"
+     Context: <Table.HeaderCell>Kontakt</Table.HeaderCell>
+
+  🔴 Line 230: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 231: hardcoded_jsx_text
+     String: "Verifisert"
+     Context: <Table.HeaderCell>Verifisert</Table.HeaderCell>
+
+  🔴 Line 232: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 133: hardcoded_prop
+     String: "Søk etter organisasjon..."
+     Prop: placeholder
+     Context: placeholder="Søk etter organisasjon..."
+
+  🟡 Line 92: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne organisasjonen?"
+     Context: if (confirm('Er du sikker på at du vil slette denne organisasjonen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx (19 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 56: hardcoded_jsx_text
+     String: "Norsk bokmål"
+     Context: <option value="nb">Norsk bokmål</option>
+
+  🔴 Line 57: hardcoded_jsx_text
+     String: "Norsk nynorsk"
+     Context: <option value="nn">Norsk nynorsk</option>
+
+  🔴 Line 58: hardcoded_jsx_text
+     String: "English"
+     Context: <option value="en">English</option>
+
+  🔴 Line 67: hardcoded_jsx_text
+     String: "Europa/Oslo (CET)"
+     Context: <option value="Europe/Oslo">Europa/Oslo (CET)</option>
+
+  🔴 Line 68: hardcoded_jsx_text
+     String: "Europa/London (GMT)"
+     Context: <option value="Europe/London">Europa/London (GMT)</option>
+
+  🔴 Line 69: hardcoded_jsx_text
+     String: "Amerika/New York (EST)"
+     Context: <option value="America/New_York">Amerika/New York (EST)</option>
+
+  🔴 Line 78: hardcoded_jsx_text
+     String: "Norske kroner (NOK)"
+     Context: <option value="NOK">Norske kroner (NOK)</option>
+
+  🔴 Line 79: hardcoded_jsx_text
+     String: "Euro (EUR)"
+     Context: <option value="EUR">Euro (EUR)</option>
+
+  🔴 Line 80: hardcoded_jsx_text
+     String: "US Dollar (USD)"
+     Context: <option value="USD">US Dollar (USD)</option>
+
+  🔴 Line 42: hardcoded_prop
+     String: "Systemnavn"
+     Prop: label
+     Context: <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
+
+  🔴 Line 42: hardcoded_prop
+     String: "Navn på systemet som vises til brukere"
+     Prop: description
+     Context: <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
+
+  🔴 Line 44: hardcoded_prop
+     String: "Systemnavn"
+     Prop: aria-label
+     Context: aria-label="Systemnavn"
+
+  🔴 Line 47: hardcoded_prop
+     String: "Digilist Booking"
+     Prop: placeholder
+     Context: placeholder="Digilist Booking"
+
+  🔴 Line 51: hardcoded_prop
+     String: "Språk"
+     Prop: label
+     Context: <FormField label="Språk">
+
+  🔴 Line 62: hardcoded_prop
+     String: "Tidssone"
+     Prop: label
+     Context: <FormField label="Tidssone">
+
+  🔴 Line 73: hardcoded_prop
+     String: "Valuta"
+     Prop: label
+     Context: <FormField label="Valuta">
+
+  🔴 Line 85: hardcoded_prop
+     String: "Datoformat"
+     Prop: label
+     Context: <FormField label="Datoformat">
+
+  🔴 Line 96: hardcoded_prop
+     String: "Tidsformat"
+     Prop: label
+     Context: <FormField label="Tidsformat">
+
+  🔴 Line 109: hardcoded_prop
+     String: "Lagre endringer"
+     Prop: aria-label
+     Context: <Button onClick={saveGeneralSettings} disabled={isSaving} type="button" aria-label="Lagre endringer"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/organizations/OrganizationDetailPage.tsx (19 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 325: hardcoded_jsx_text
+     String: "Aktivitet"
+     Context: <Tabs.Tab value="activity">Aktivitet</Tabs.Tab>
+
+  🔴 Line 494: hardcoded_jsx_text
+     String: "Booking"
+     Context: <Table.HeaderCell>Booking</Table.HeaderCell>
+
+  🔴 Line 495: hardcoded_jsx_text
+     String: "Ressurs"
+     Context: <Table.HeaderCell>Ressurs</Table.HeaderCell>
+
+  🔴 Line 496: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 269: hardcoded_prop
+     String: "Totale bookinger"
+     Prop: title
+     Context: title="Totale bookinger"
+
+  🔴 Line 271: hardcoded_prop
+     String: "Alle tider"
+     Prop: description
+     Context: description="Alle tider"
+
+  🔴 Line 276: hardcoded_prop
+     String: "Aktive bookinger"
+     Prop: title
+     Context: title="Aktive bookinger"
+
+  🔴 Line 283: hardcoded_prop
+     String: "Ventende"
+     Prop: title
+     Context: title="Ventende"
+
+  🔴 Line 285: hardcoded_prop
+     String: "Krever godkjenning"
+     Prop: description
+     Context: description="Krever godkjenning"
+
+  🔴 Line 290: hardcoded_prop
+     String: "Total omsetning"
+     Prop: title
+     Context: title="Total omsetning"
+
+  🔴 Line 292: hardcoded_prop
+     String: "Totalt betalt"
+     Prop: description
+     Context: description="Totalt betalt"
+
+  🔴 Line 297: hardcoded_prop
+     String: "Sesongleie"
+     Prop: title
+     Context: title="Sesongleie"
+
+  🔴 Line 304: hardcoded_prop
+     String: "Medlemmer"
+     Prop: title
+     Context: title="Medlemmer"
+
+  🔴 Line 306: hardcoded_prop
+     String: "Aktive brukere"
+     Prop: description
+     Context: description="Aktive brukere"
+
+  🔴 Line 332: hardcoded_prop
+     String: "Grunnleggende informasjon"
+     Prop: title
+     Context: <FormSection title="Grunnleggende informasjon">
+
+  🔴 Line 406: hardcoded_prop
+     String: "Kontaktinformasjon"
+     Prop: title
+     Context: <FormSection title="Kontaktinformasjon">
+
+  🔴 Line 471: hardcoded_prop
+     String: "Laster bookinger..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster bookinger..." />
+
+  🔴 Line 555: hardcoded_prop
+     String: "Laster sesongleie..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster sesongleie..." />
+
+  🟡 Line 131: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne organisasjonen?"
+     Context: if (confirm('Er du sikker på at du vil slette denne organisasjonen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/seasons/SeasonFormPage.tsx (19 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 212: hardcoded_prop
+     String: "Grunnleggende informasjon"
+     Prop: title
+     Context: <FormSection title="Grunnleggende informasjon">
+
+  🔴 Line 215: hardcoded_prop
+     String: "Navn"
+     Prop: label
+     Context: label="Navn"
+
+  🔴 Line 218: hardcoded_prop
+     String: "F.eks. "
+     Prop: description
+     Context: description="F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'"
+
+  🔴 Line 220: hardcoded_prop
+     String: "Navn"
+     Prop: aria-label
+     Context: <Textfield aria-label="Navn"
+
+  🔴 Line 223: hardcoded_prop
+     String: "Vårsesong 2026"
+     Prop: placeholder
+     Context: placeholder="Vårsesong 2026"
+
+  🔴 Line 229: hardcoded_prop
+     String: "Beskrivelse"
+     Prop: label
+     Context: label="Beskrivelse"
+
+  🔴 Line 230: hardcoded_prop
+     String: "Retningslinjer og informasjon til søkere (valgfritt)"
+     Prop: description
+     Context: description="Retningslinjer og informasjon til søkere (valgfritt)"
+
+  🔴 Line 232: hardcoded_prop
+     String: "Beskrivelse"
+     Prop: aria-label
+     Context: <Textfield aria-label="Beskrivelse"
+
+  🔴 Line 235: hardcoded_prop
+     String: "Legg til beskrivelse og retningslinjer..."
+     Prop: placeholder
+     Context: placeholder="Legg til beskrivelse og retningslinjer..."
+
+  🔴 Line 244: hardcoded_prop
+     String: "Periode og frister"
+     Prop: title
+     Context: <FormSection title="Periode og frister">
+
+  🔴 Line 248: hardcoded_prop
+     String: "Startdato"
+     Prop: label
+     Context: label="Startdato"
+
+  🔴 Line 251: hardcoded_prop
+     String: "Når sesongen starter"
+     Prop: description
+     Context: description="Når sesongen starter"
+
+  🔴 Line 253: hardcoded_prop
+     String: "Startdato"
+     Prop: aria-label
+     Context: <Textfield aria-label="Startdato"
+
+  🔴 Line 262: hardcoded_prop
+     String: "Sluttdato"
+     Prop: label
+     Context: label="Sluttdato"
+
+  🔴 Line 265: hardcoded_prop
+     String: "Når sesongen slutter"
+     Prop: description
+     Context: description="Når sesongen slutter"
+
+  🔴 Line 267: hardcoded_prop
+     String: "Sluttdato"
+     Prop: aria-label
+     Context: <Textfield aria-label="Sluttdato"
+
+  🔴 Line 278: hardcoded_prop
+     String: "Søknadsfrist"
+     Prop: label
+     Context: label="Søknadsfrist"
+
+  🔴 Line 281: hardcoded_prop
+     String: "Siste dag for å sende inn søknader"
+     Prop: description
+     Context: description="Siste dag for å sende inn søknader"
+
+  🔴 Line 283: hardcoded_prop
+     String: "Søknadsfrist"
+     Prop: aria-label
+     Context: <Textfield aria-label="Søknadsfrist"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/bookings/EditBookingForm.tsx (18 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 24: hardcoded_jsx_text
+     String: "Promise"
+     Context: onSubmit: (data: UpdateBookingDTO) => Promise<void>;
+
+  🔴 Line 178: hardcoded_jsx_text
+     String: "Velg lokale..."
+     Context: <option value="">Velg lokale...</option>
+
+  🔴 Line 165: hardcoded_prop
+     String: "Bookingdetaljer"
+     Prop: title
+     Context: <FormSection title="Bookingdetaljer">
+
+  🔴 Line 168: hardcoded_prop
+     String: "Lokale"
+     Prop: label
+     Context: label="Lokale"
+
+  🔴 Line 171: hardcoded_prop
+     String: "Hvilket lokale skal bookes?"
+     Prop: description
+     Context: description="Hvilket lokale skal bookes?"
+
+  🔴 Line 189: hardcoded_prop
+     String: "Starttid"
+     Prop: label
+     Context: label="Starttid"
+
+  🔴 Line 197: hardcoded_prop
+     String: "Starttid"
+     Prop: aria-label
+     Context: aria-label="Starttid"
+
+  🔴 Line 202: hardcoded_prop
+     String: "Sluttid"
+     Prop: label
+     Context: label="Sluttid"
+
+  🔴 Line 210: hardcoded_prop
+     String: "Sluttid"
+     Prop: aria-label
+     Context: aria-label="Sluttid"
+
+  🔴 Line 225: hardcoded_prop
+     String: "Prissetting"
+     Prop: title
+     Context: <FormSection title="Prissetting">
+
+  🔴 Line 227: hardcoded_prop
+     String: "Total pris"
+     Prop: label
+     Context: label="Total pris"
+
+  🔴 Line 230: hardcoded_prop
+     String: "Pris i NOK (inkl. mva)"
+     Prop: description
+     Context: description="Pris i NOK (inkl. mva)"
+
+  🔴 Line 237: hardcoded_prop
+     String: "Total pris"
+     Prop: aria-label
+     Context: aria-label="Total pris"
+
+  🔴 Line 245: hardcoded_prop
+     String: "Notater"
+     Prop: title
+     Context: <FormSection title="Notater">
+
+  🔴 Line 247: hardcoded_prop
+     String: "Interne notater"
+     Prop: label
+     Context: label="Interne notater"
+
+  🔴 Line 248: hardcoded_prop
+     String: "Notater synlige for saksbehandler"
+     Prop: description
+     Context: description="Notater synlige for saksbehandler"
+
+  🔴 Line 253: hardcoded_prop
+     String: "Legg til eventuelle notater..."
+     Prop: placeholder
+     Context: placeholder="Legg til eventuelle notater..."
+
+  🔴 Line 254: hardcoded_prop
+     String: "Interne notater"
+     Prop: aria-label
+     Context: aria-label="Interne notater"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx (18 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 89: hardcoded_jsx_text
+     String: "Kommune"
+     Context: <option value="municipality">Kommune</option>
+
+  🔴 Line 90: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <option value="organization">Organisasjon</option>
+
+  🔴 Line 91: hardcoded_jsx_text
+     String: "Bedrift"
+     Context: <option value="business">Bedrift</option>
+
+  🔴 Line 92: hardcoded_jsx_text
+     String: "Idrettslag"
+     Context: <option value="sports_club">Idrettslag</option>
+
+  🔴 Line 93: hardcoded_jsx_text
+     String: "Ungdomsorganisasjon"
+     Context: <option value="youth_organization">Ungdomsorganisasjon</option>
+
+  🔴 Line 94: hardcoded_jsx_text
+     String: "Skole"
+     Context: <option value="school">Skole</option>
+
+  🔴 Line 72: hardcoded_prop
+     String: "Organisasjonsnavn"
+     Prop: label
+     Context: <FormField label="Organisasjonsnavn" htmlFor="org-name">
+
+  🔴 Line 77: hardcoded_prop
+     String: "Skriv inn organisasjonsnavn"
+     Prop: placeholder
+     Context: placeholder="Skriv inn organisasjonsnavn"
+
+  🔴 Line 83: hardcoded_prop
+     String: "Organisasjonstype"
+     Prop: label
+     Context: <FormField label="Organisasjonstype" htmlFor="actor-type">
+
+  🔴 Line 99: hardcoded_prop
+     String: "Organisasjonsnummer"
+     Prop: label
+     Context: <FormField label="Organisasjonsnummer" htmlFor="org-number">
+
+  🔴 Line 104: hardcoded_prop
+     String: "9 siffer"
+     Prop: placeholder
+     Context: placeholder="9 siffer"
+
+  🔴 Line 115: hardcoded_prop
+     String: "E-post"
+     Prop: label
+     Context: <FormField label="E-post" htmlFor="email">
+
+  🔴 Line 125: hardcoded_prop
+     String: "Telefon"
+     Prop: label
+     Context: <FormField label="Telefon" htmlFor="phone">
+
+  🔴 Line 144: hardcoded_prop
+     String: "Gateadresse"
+     Prop: label
+     Context: <FormField label="Gateadresse" htmlFor="address">
+
+  🔴 Line 149: hardcoded_prop
+     String: "Gateadresse"
+     Prop: placeholder
+     Context: placeholder="Gateadresse"
+
+  🔴 Line 154: hardcoded_prop
+     String: "Postnummer"
+     Prop: label
+     Context: <FormField label="Postnummer" htmlFor="postal-code" style={{ flex: '0 0 120px' }}>
+
+  🔴 Line 164: hardcoded_prop
+     String: "Poststed"
+     Prop: label
+     Context: <FormField label="Poststed" htmlFor="city" style={{ flex: '1' }}>
+
+  🔴 Line 169: hardcoded_prop
+     String: "Oslo"
+     Prop: placeholder
+     Context: placeholder="Oslo"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/index.tsx (17 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 84: hardcoded_jsx_text
+     String: "Avvik"
+     Context: return <Badge color="warning">Avvik</Badge>;
+
+  🔴 Line 87: hardcoded_jsx_text
+     String: "Deaktivert"
+     Context: return <Badge color="neutral">Deaktivert</Badge>;
+
+  🔴 Line 375: hardcoded_jsx_text
+     String: "Integrasjon"
+     Context: <th>Integrasjon</th>
+
+  🔴 Line 376: hardcoded_jsx_text
+     String: "Type"
+     Context: <th>Type</th>
+
+  🔴 Line 377: hardcoded_jsx_text
+     String: "Beskrivelse"
+     Context: <th>Beskrivelse</th>
+
+  🔴 Line 378: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <th>Tidspunkt</th>
+
+  🔴 Line 379: hardcoded_jsx_text
+     String: "Handling"
+     Context: <th>Handling</th>
+
+  🟡 Line 217: hardcoded_object_value
+     String: "RCO Adgangskontroll"
+     Context: name: 'RCO Adgangskontroll',
+
+  🟡 Line 218: hardcoded_object_value
+     String: "Låser og tilgangskoder"
+     Context: description: 'Låser og tilgangskoder',
+
+  🟡 Line 228: hardcoded_object_value
+     String: "Visma"
+     Context: name: 'Visma',
+
+  🟡 Line 229: hardcoded_object_value
+     String: "Fakturering og regnskap"
+     Context: description: 'Fakturering og regnskap',
+
+  🟡 Line 245: hardcoded_object_value
+     String: "Acos WebSak"
+     Context: name: 'Acos WebSak',
+
+  🟡 Line 246: hardcoded_object_value
+     String: "Arkivering og dokumenthåndtering"
+     Context: description: 'Arkivering og dokumenthåndtering',
+
+  🟡 Line 256: hardcoded_object_value
+     String: "Vipps"
+     Context: name: 'Vipps',
+
+  🟡 Line 257: hardcoded_object_value
+     String: "Betalingsløsning"
+     Context: description: 'Betalingsløsning',
+
+  🟡 Line 267: hardcoded_object_value
+     String: "Microsoft Outlook"
+     Context: name: 'Microsoft Outlook',
+
+  🟡 Line 268: hardcoded_object_value
+     String: "Kalenderintegrasjon"
+     Context: description: 'Kalenderintegrasjon',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users.tsx (17 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 141: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setRoleFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 144: hardcoded_jsx_text
+     String: "Administrator"
+     Context: <Dropdown.Button onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Button>
+
+  🔴 Line 147: hardcoded_jsx_text
+     String: "Saksbehandler"
+     Context: <Dropdown.Button onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Button>
+
+  🔴 Line 161: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 164: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+
+  🔴 Line 167: hardcoded_jsx_text
+     String: "Inaktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+
+  🔴 Line 170: hardcoded_jsx_text
+     String: "Suspendert"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+
+  🔴 Line 200: hardcoded_jsx_text
+     String: "Navn"
+     Context: <Table.HeaderCell>Navn</Table.HeaderCell>
+
+  🔴 Line 201: hardcoded_jsx_text
+     String: "E-post"
+     Context: <Table.HeaderCell>E-post</Table.HeaderCell>
+
+  🔴 Line 202: hardcoded_jsx_text
+     String: "Telefon"
+     Context: <Table.HeaderCell>Telefon</Table.HeaderCell>
+
+  🔴 Line 203: hardcoded_jsx_text
+     String: "Rolle"
+     Context: <Table.HeaderCell>Rolle</Table.HeaderCell>
+
+  🔴 Line 204: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 205: hardcoded_jsx_text
+     String: "Sist innlogget"
+     Context: <Table.HeaderCell>Sist innlogget</Table.HeaderCell>
+
+  🔴 Line 206: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 244: hardcoded_jsx_text
+     String: "Aldri"
+     Context: <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Aldri</span>
+
+  🔴 Line 127: hardcoded_prop
+     String: "Søk etter bruker..."
+     Prop: placeholder
+     Context: placeholder="Søk etter bruker..."
+
+  🟡 Line 88: hardcoded_alert
+     String: "Er du sikker på at du vil deaktivere denne brukeren?"
+     Context: if (confirm('Er du sikker på at du vil deaktivere denne brukeren?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/BookingTab.tsx (16 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 44: hardcoded_prop
+     String: "Automatisk bekreftelse"
+     Prop: label
+     Context: <FormField label="Automatisk bekreftelse">
+
+  🔴 Line 54: hardcoded_prop
+     String: "Krev godkjenning"
+     Prop: label
+     Context: <FormField label="Krev godkjenning">
+
+  🔴 Line 64: hardcoded_prop
+     String: "Tillat kansellering"
+     Prop: label
+     Context: <FormField label="Tillat kansellering">
+
+  🔴 Line 75: hardcoded_prop
+     String: "Kanselleringsfrist"
+     Prop: label
+     Context: label="Kanselleringsfrist"
+
+  🔴 Line 76: hardcoded_prop
+     String: "Antall timer før bookingstart kansellering er tillatt"
+     Prop: description
+     Context: description="Antall timer før bookingstart kansellering er tillatt"
+
+  🔴 Line 79: hardcoded_prop
+     String: "Kanselleringsfrist"
+     Prop: aria-label
+     Context: aria-label="Kanselleringsfrist"
+
+  🔴 Line 90: hardcoded_prop
+     String: "Maksimal forhåndsbooking"
+     Prop: label
+     Context: label="Maksimal forhåndsbooking"
+
+  🔴 Line 91: hardcoded_prop
+     String: "Hvor langt frem i tid kan man booke?"
+     Prop: description
+     Context: description="Hvor langt frem i tid kan man booke?"
+
+  🔴 Line 94: hardcoded_prop
+     String: "Maksimal forhåndsbooking"
+     Prop: aria-label
+     Context: aria-label="Maksimal forhåndsbooking"
+
+  🔴 Line 104: hardcoded_prop
+     String: "Minimum forhåndstid"
+     Prop: label
+     Context: label="Minimum forhåndstid"
+
+  🔴 Line 105: hardcoded_prop
+     String: "Hvor kort tid før kan man booke?"
+     Prop: description
+     Context: description="Hvor kort tid før kan man booke?"
+
+  🔴 Line 108: hardcoded_prop
+     String: "Minimum forhåndstid"
+     Prop: aria-label
+     Context: aria-label="Minimum forhåndstid"
+
+  🔴 Line 118: hardcoded_prop
+     String: "Buffertid mellom bookinger"
+     Prop: label
+     Context: label="Buffertid mellom bookinger"
+
+  🔴 Line 119: hardcoded_prop
+     String: "Automatisk pause mellom påfølgende bookinger"
+     Prop: description
+     Context: description="Automatisk pause mellom påfølgende bookinger"
+
+  🔴 Line 122: hardcoded_prop
+     String: "Buffertid mellom bookinger"
+     Prop: aria-label
+     Context: aria-label="Buffertid mellom bookinger"
+
+  🔴 Line 133: hardcoded_prop
+     String: "Lagre endringer"
+     Prop: aria-label
+     Context: <Button onClick={saveBookingSettings} disabled={isSaving} type="button" aria-label="Lagre endringer"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/hooks/useIntegrationSettings.ts (16 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 103: hardcoded_object_value
+     String: "BankID"
+     Context: bankid: { name: 'BankID', description: 'Norsk e-ID for sikker pålogging' },
+
+  🟡 Line 103: hardcoded_object_value
+     String: "Norsk e-ID for sikker pålogging"
+     Context: bankid: { name: 'BankID', description: 'Norsk e-ID for sikker pålogging' },
+
+  🟡 Line 104: hardcoded_object_value
+     String: "ID-porten"
+     Context: idporten: { name: 'ID-porten', description: 'Offentlig påloggingsløsning' },
+
+  🟡 Line 104: hardcoded_object_value
+     String: "Offentlig påloggingsløsning"
+     Context: idporten: { name: 'ID-porten', description: 'Offentlig påloggingsløsning' },
+
+  🟡 Line 105: hardcoded_object_value
+     String: "Vipps"
+     Context: vipps: { name: 'Vipps', description: 'Mobilbetaling med Vipps' },
+
+  🟡 Line 105: hardcoded_object_value
+     String: "Mobilbetaling med Vipps"
+     Context: vipps: { name: 'Vipps', description: 'Mobilbetaling med Vipps' },
+
+  🟡 Line 106: hardcoded_object_value
+     String: "RCO"
+     Context: rco: { name: 'RCO', description: 'Digital låssystem' },
+
+  🟡 Line 106: hardcoded_object_value
+     String: "Digital låssystem"
+     Context: rco: { name: 'RCO', description: 'Digital låssystem' },
+
+  🟡 Line 107: hardcoded_object_value
+     String: "Google Calendar"
+     Context: googleCalendar: { name: 'Google Calendar', description: 'Synkroniser med Google Calendar' },
+
+  🟡 Line 107: hardcoded_object_value
+     String: "Synkroniser med Google Calendar"
+     Context: googleCalendar: { name: 'Google Calendar', description: 'Synkroniser med Google Calendar' },
+
+  🟡 Line 108: hardcoded_object_value
+     String: "Outlook"
+     Context: outlook: { name: 'Outlook', description: 'Synkroniser med Outlook/Exchange' },
+
+  🟡 Line 108: hardcoded_object_value
+     String: "Synkroniser med Outlook/Exchange"
+     Context: outlook: { name: 'Outlook', description: 'Synkroniser med Outlook/Exchange' },
+
+  🟡 Line 109: hardcoded_object_value
+     String: "Visma"
+     Context: visma: { name: 'Visma', description: 'Fakturering via Visma' },
+
+  🟡 Line 109: hardcoded_object_value
+     String: "Fakturering via Visma"
+     Context: visma: { name: 'Visma', description: 'Fakturering via Visma' },
+
+  🟡 Line 110: hardcoded_object_value
+     String: "Brønnøysundregistrene"
+     Context: brreg: { name: 'Brønnøysundregistrene', description: 'Verifiser organisasjoner' },
+
+  🟡 Line 110: hardcoded_object_value
+     String: "Verifiser organisasjoner"
+     Context: brreg: { name: 'Brønnøysundregistrene', description: 'Verifiser organisasjoner' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/reports.tsx (16 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 272: hardcoded_jsx_text
+     String: "Periode:"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Per
+
+  🔴 Line 319: hardcoded_jsx_text
+     String: "Filtre:"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fil
+
+  🔴 Line 355: hardcoded_prop
+     String: "Laster rapporter..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster rapporter..." />
+
+  🟡 Line 30: hardcoded_object_value
+     String: "Alle lokaler"
+     Context: { id: 'all', label: 'Alle lokaler' },
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Møterom A"
+     Context: { id: 'facility-1', label: 'Møterom A' },
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Konferansesal B"
+     Context: { id: 'facility-2', label: 'Konferansesal B' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Fellesareal C"
+     Context: { id: 'facility-3', label: 'Fellesareal C' },
+
+  🟡 Line 37: hardcoded_object_value
+     String: "Alle organisasjoner"
+     Context: { id: 'all', label: 'Alle organisasjoner' },
+
+  🟡 Line 38: hardcoded_object_value
+     String: "Kulturhuset"
+     Context: { id: 'org-1', label: 'Kulturhuset' },
+
+  🟡 Line 39: hardcoded_object_value
+     String: "Idrettslaget"
+     Context: { id: 'org-2', label: 'Idrettslaget' },
+
+  🟡 Line 40: hardcoded_object_value
+     String: "Frivilligsentralen"
+     Context: { id: 'org-3', label: 'Frivilligsentralen' },
+
+  🟡 Line 44: hardcoded_object_value
+     String: "Alle typer"
+     Context: { id: 'all', label: 'Alle typer' },
+
+  🟡 Line 45: hardcoded_object_value
+     String: "Møte"
+     Context: { id: 'meeting', label: 'Møte' },
+
+  🟡 Line 46: hardcoded_object_value
+     String: "Arrangement"
+     Context: { id: 'event', label: 'Arrangement' },
+
+  🟡 Line 47: hardcoded_object_value
+     String: "Trening"
+     Context: { id: 'training', label: 'Trening' },
+
+  🟡 Line 48: hardcoded_object_value
+     String: "Annet"
+     Context: { id: 'other', label: 'Annet' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/tenant/features.tsx (15 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 25: hardcoded_object_value
+     String: "Kjernefunksjoner"
+     Context: core: { name: 'Kjernefunksjoner', description: 'Nødvendige systemfunksjoner som ikke kan deaktiveres
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Nødvendige systemfunksjoner som ikke kan deaktiveres"
+     Context: core: { name: 'Kjernefunksjoner', description: 'Nødvendige systemfunksjoner som ikke kan deaktiveres
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Booking"
+     Context: booking: { name: 'Booking', description: 'Funksjoner relatert til booking og reservasjoner' },
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Funksjoner relatert til booking og reservasjoner"
+     Context: booking: { name: 'Booking', description: 'Funksjoner relatert til booking og reservasjoner' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Kommunikasjon"
+     Context: communication: { name: 'Kommunikasjon', description: 'Meldinger, varsler og notifikasjoner' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Meldinger, varsler og notifikasjoner"
+     Context: communication: { name: 'Kommunikasjon', description: 'Meldinger, varsler og notifikasjoner' },
+
+  🟡 Line 28: hardcoded_object_value
+     String: "Økonomi"
+     Context: economy: { name: 'Økonomi', description: 'Betalinger, fakturering og priser' },
+
+  🟡 Line 28: hardcoded_object_value
+     String: "Betalinger, fakturering og priser"
+     Context: economy: { name: 'Økonomi', description: 'Betalinger, fakturering og priser' },
+
+  🟡 Line 29: hardcoded_object_value
+     String: "Brukere"
+     Context: users: { name: 'Brukere', description: 'Brukeradministrasjon og RBAC' },
+
+  🟡 Line 29: hardcoded_object_value
+     String: "Brukeradministrasjon og RBAC"
+     Context: users: { name: 'Brukere', description: 'Brukeradministrasjon og RBAC' },
+
+  🟡 Line 30: hardcoded_object_value
+     String: "Innhold"
+     Context: content: { name: 'Innhold', description: 'Anmeldelser, ratings og brukerinnhold' },
+
+  🟡 Line 30: hardcoded_object_value
+     String: "Anmeldelser, ratings og brukerinnhold"
+     Context: content: { name: 'Innhold', description: 'Anmeldelser, ratings og brukerinnhold' },
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Avansert"
+     Context: advanced: { name: 'Avansert', description: 'Avanserte funksjoner og integrasjoner' },
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Avanserte funksjoner og integrasjoner"
+     Context: advanced: { name: 'Avansert', description: 'Avanserte funksjoner og integrasjoner' },
+
+  🔴 Line 1: missing_t_import
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx (14 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 335: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <Table.HeaderCell>Bruker</Table.HeaderCell>
+
+  🔴 Line 336: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 337: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 338: hardcoded_jsx_text
+     String: "Forespurt"
+     Context: <Table.HeaderCell>Forespurt</Table.HeaderCell>
+
+  🔴 Line 339: hardcoded_jsx_text
+     String: "Dager igjen"
+     Context: <Table.HeaderCell>Dager igjen</Table.HeaderCell>
+
+  🔴 Line 340: hardcoded_jsx_text
+     String: "ID"
+     Context: <Table.HeaderCell>ID</Table.HeaderCell>
+
+  🔴 Line 235: hardcoded_prop
+     String: "Laster forespørsler..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster forespørsler..." />
+
+  🔴 Line 293: hardcoded_prop
+     String: "Søk etter bruker, type eller ID..."
+     Prop: placeholder
+     Context: placeholder="Søk etter bruker, type eller ID..."
+
+  🔴 Line 418: hardcoded_prop
+     String: "Kopier ID"
+     Prop: title
+     Context: title="Kopier ID" type="button"
+
+  🔴 Line 438: hardcoded_prop
+     String: "Handlinger"
+     Prop: aria-label
+     Context: aria-label="Handlinger" type="button"
+
+  🟡 Line 93: hardcoded_object_value
+     String: "Mest haster først"
+     Context: { id: 'urgency-asc', label: 'Mest haster først', field: 'daysRemaining', order: 'asc' },
+
+  🟡 Line 94: hardcoded_object_value
+     String: "Minst haster først"
+     Context: { id: 'urgency-desc', label: 'Minst haster først', field: 'daysRemaining', order: 'desc' },
+
+  🟡 Line 95: hardcoded_object_value
+     String: "Nyeste først"
+     Context: { id: 'date-desc', label: 'Nyeste først', field: 'requestedAt', order: 'desc' },
+
+  🟡 Line 96: hardcoded_object_value
+     String: "Eldste først"
+     Context: { id: 'date-asc', label: 'Eldste først', field: 'requestedAt', order: 'asc' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/requests.tsx (14 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 353: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Prioritet</Table.HeaderCell>
+
+  🔴 Line 354: hardcoded_jsx_text
+     String: "Søker"
+     Context: <Table.HeaderCell>Søker</Table.HeaderCell>
+
+  🔴 Line 355: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 356: hardcoded_jsx_text
+     String: "Tidsrom"
+     Context: <Table.HeaderCell>Tidsrom</Table.HeaderCell>
+
+  🔴 Line 357: hardcoded_jsx_text
+     String: "Opprettet"
+     Context: <Table.HeaderCell>Opprettet</Table.HeaderCell>
+
+  🔴 Line 358: hardcoded_jsx_text
+     String: "Tildelt"
+     Context: <Table.HeaderCell>Tildelt</Table.HeaderCell>
+
+  🔴 Line 359: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 318: hardcoded_prop
+     String: "Søk etter søker, organisasjon, lokale..."
+     Prop: placeholder
+     Context: placeholder="Søk etter søker, organisasjon, lokale..."
+
+  🔴 Line 424: hardcoded_prop
+     String: "Godkjenn"
+     Prop: title
+     Context: title="Godkjenn" type="button"
+
+  🔴 Line 432: hardcoded_prop
+     String: "Avslå"
+     Prop: title
+     Context: title="Avslå" type="button"
+
+  🟡 Line 161: hardcoded_object_value
+     String: "Godkjenn forespørsel"
+     Context: title: 'Godkjenn forespørsel',
+
+  🟡 Line 162: hardcoded_object_value
+     String: "Er du sikker på at du vil godkjenne denne forespørselen?"
+     Context: description: 'Er du sikker på at du vil godkjenne denne forespørselen?',
+
+  🟡 Line 174: hardcoded_object_value
+     String: "Avslå forespørsel"
+     Context: title: 'Avslå forespørsel',
+
+  🟡 Line 175: hardcoded_object_value
+     String: "Er du sikker på at du vil avslå denne forespørselen?"
+     Context: description: 'Er du sikker på at du vil avslå denne forespørselen?',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx (13 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 175: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Item onClick={() => setFilterStatus('all')}>Alle</Dropdown.Item>
+
+  🔴 Line 176: hardcoded_jsx_text
+     String: "Venter"
+     Context: <Dropdown.Item onClick={() => setFilterStatus('pending')}>Venter</Dropdown.Item>
+
+  🔴 Line 177: hardcoded_jsx_text
+     String: "Godkjent"
+     Context: <Dropdown.Item onClick={() => setFilterStatus('approved')}>Godkjent</Dropdown.Item>
+
+  🔴 Line 178: hardcoded_jsx_text
+     String: "Avslått"
+     Context: <Dropdown.Item onClick={() => setFilterStatus('rejected')}>Avslått</Dropdown.Item>
+
+  🔴 Line 190: hardcoded_jsx_text
+     String: "Alle lokaler"
+     Context: <Dropdown.Item onClick={() => setFilterVenue('all')}>Alle lokaler</Dropdown.Item>
+
+  🔴 Line 217: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 218: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 219: hardcoded_jsx_text
+     String: "Ukedag"
+     Context: <Table.HeaderCell>Ukedag</Table.HeaderCell>
+
+  🔴 Line 220: hardcoded_jsx_text
+     String: "Tid"
+     Context: <Table.HeaderCell>Tid</Table.HeaderCell>
+
+  🔴 Line 221: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 222: hardcoded_jsx_text
+     String: "Innsendt"
+     Context: <Table.HeaderCell>Innsendt</Table.HeaderCell>
+
+  🔴 Line 223: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: {canProcess && <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>}
+
+  🟡 Line 100: hardcoded_alert
+     String: "Godkjenn denne søknaden?"
+     Context: if (confirm('Godkjenn denne søknaden?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/BrandingTab.tsx (13 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 42: hardcoded_prop
+     String: "Logo URL"
+     Prop: label
+     Context: label="Logo URL"
+
+  🔴 Line 43: hardcoded_prop
+     String: "URL til logo (vil vises i toppen av siden)"
+     Prop: description
+     Context: description="URL til logo (vil vises i toppen av siden)"
+
+  🔴 Line 46: hardcoded_prop
+     String: "Logo URL"
+     Prop: aria-label
+     Context: aria-label="Logo URL"
+
+  🔴 Line 54: hardcoded_prop
+     String: "Primærfarge"
+     Prop: label
+     Context: label="Primærfarge"
+
+  🔴 Line 55: hardcoded_prop
+     String: "Hovedfarge for knapper og UI-elementer"
+     Prop: description
+     Context: description="Hovedfarge for knapper og UI-elementer"
+
+  🔴 Line 58: hardcoded_prop
+     String: "Primærfarge"
+     Prop: aria-label
+     Context: aria-label="Primærfarge"
+
+  🔴 Line 65: hardcoded_prop
+     String: "Sekundærfarge"
+     Prop: label
+     Context: label="Sekundærfarge"
+
+  🔴 Line 66: hardcoded_prop
+     String: "Farge for mindre fremtredende elementer"
+     Prop: description
+     Context: description="Farge for mindre fremtredende elementer"
+
+  🔴 Line 69: hardcoded_prop
+     String: "Sekundærfarge"
+     Prop: aria-label
+     Context: aria-label="Sekundærfarge"
+
+  🔴 Line 76: hardcoded_prop
+     String: "Favicon URL"
+     Prop: label
+     Context: label="Favicon URL"
+
+  🔴 Line 77: hardcoded_prop
+     String: "URL til favicon (vises i nettleserens fane)"
+     Prop: description
+     Context: description="URL til favicon (vises i nettleserens fane)"
+
+  🔴 Line 80: hardcoded_prop
+     String: "Favicon URL"
+     Prop: aria-label
+     Context: aria-label="Favicon URL"
+
+  🔴 Line 89: hardcoded_prop
+     String: "Lagre endringer"
+     Prop: aria-label
+     Context: <Button onClick={saveBrandingSettings} disabled={isSaving} type="button" aria-label="Lagre endringer
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/ProfileTab.tsx (13 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 155: hardcoded_prop
+     String: "Avatar"
+     Prop: alt
+     Context: alt="Avatar"
+
+  🔴 Line 205: hardcoded_prop
+     String: "Fullt navn"
+     Prop: label
+     Context: <FormField label="Fullt navn" required>
+
+  🔴 Line 206: hardcoded_prop
+     String: "Fullt navn"
+     Prop: aria-label
+     Context: <Textfield aria-label="Fullt navn"
+
+  🔴 Line 209: hardcoded_prop
+     String: "Ola Nordmann"
+     Prop: placeholder
+     Context: placeholder="Ola Nordmann"
+
+  🔴 Line 213: hardcoded_prop
+     String: "E-postadresse"
+     Prop: label
+     Context: <FormField label="E-postadresse" required>
+
+  🔴 Line 214: hardcoded_prop
+     String: "E-postadresse"
+     Prop: aria-label
+     Context: <Textfield aria-label="E-postadresse"
+
+  🔴 Line 221: hardcoded_prop
+     String: "Telefonnummer"
+     Prop: label
+     Context: <FormField label="Telefonnummer">
+
+  🔴 Line 222: hardcoded_prop
+     String: "Telefonnummer"
+     Prop: aria-label
+     Context: <Textfield aria-label="Telefonnummer"
+
+  🔴 Line 230: hardcoded_prop
+     String: "Fødselsdato"
+     Prop: label
+     Context: <FormField label="Fødselsdato">
+
+  🔴 Line 231: hardcoded_prop
+     String: "Fødselsdato"
+     Prop: aria-label
+     Context: <Textfield aria-label="Fødselsdato"
+
+  🔴 Line 238: hardcoded_prop
+     String: "Fødselsnummer"
+     Prop: label
+     Context: <FormField label="Fødselsnummer">
+
+  🔴 Line 239: hardcoded_prop
+     String: "Fødselsnummer"
+     Prop: aria-label
+     Context: <Textfield aria-label="Fødselsnummer"
+
+  🔴 Line 242: hardcoded_prop
+     String: "11 siffer"
+     Prop: placeholder
+     Context: placeholder="11 siffer"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/seasons/SeasonsListPage.tsx (13 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 127: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 130: hardcoded_jsx_text
+     String: "Utkast"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('draft')}>Utkast</Dropdown.Button>
+
+  🔴 Line 133: hardcoded_jsx_text
+     String: "Åpen"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('open')}>Åpen</Dropdown.Button>
+
+  🔴 Line 136: hardcoded_jsx_text
+     String: "Lukket"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('closed')}>Lukket</Dropdown.Button>
+
+  🔴 Line 139: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+
+  🔴 Line 142: hardcoded_jsx_text
+     String: "Fullført"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('completed')}>Fullført</Dropdown.Button>
+
+  🔴 Line 145: hardcoded_jsx_text
+     String: "Kansellert"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('cancelled')}>Kansellert</Dropdown.Button>
+
+  🔴 Line 186: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 187: hardcoded_jsx_text
+     String: "Lokaler"
+     Context: <Table.HeaderCell>Lokaler</Table.HeaderCell>
+
+  🔴 Line 188: hardcoded_jsx_text
+     String: "Søknader"
+     Context: <Table.HeaderCell>Søknader</Table.HeaderCell>
+
+  🔴 Line 189: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 114: hardcoded_prop
+     String: "Søk etter sesong..."
+     Prop: placeholder
+     Context: placeholder="Søk etter sesong..."
+
+  🟡 Line 73: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne sesongen?"
+     Context: if (confirm('Er du sikker på at du vil slette denne sesongen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/integrations/CredentialsManager.tsx (12 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 108: hardcoded_jsx_text
+     String: "Kunne ikke hente legitimasjoner. Prøv igjen senere."
+     Context: <Paragraph>Kunne ikke hente legitimasjoner. Prøv igjen senere.</Paragraph>
+
+  🔴 Line 276: hardcoded_jsx_text
+     String: "Verdi:"
+     Context: <span>Verdi:</span>
+
+  🔴 Line 99: hardcoded_prop
+     String: "Laster legitimasjoner..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster legitimasjoner..." />
+
+  🔴 Line 337: hardcoded_prop
+     String: "Kopier"
+     Prop: title
+     Context: title="Kopier"
+
+  🔴 Line 351: hardcoded_prop
+     String: "Roter"
+     Prop: title
+     Context: title="Roter"
+
+  🔴 Line 418: hardcoded_prop
+     String: "Type"
+     Prop: label
+     Context: label="Type"
+
+  🔴 Line 428: hardcoded_prop
+     String: "Navn"
+     Prop: label
+     Context: label="Navn"
+
+  🔴 Line 429: hardcoded_prop
+     String: "f.eks. Production API Key"
+     Prop: placeholder
+     Context: placeholder="f.eks. Production API Key"
+
+  🔴 Line 436: hardcoded_prop
+     String: "Verdi"
+     Prop: label
+     Context: label="Verdi"
+
+  🔴 Line 437: hardcoded_prop
+     String: "API-nøkkel eller hemmelighet"
+     Prop: placeholder
+     Context: placeholder="API-nøkkel eller hemmelighet"
+
+  🔴 Line 519: hardcoded_prop
+     String: "Ny verdi"
+     Prop: label
+     Context: label="Ny verdi"
+
+  🔴 Line 520: hardcoded_prop
+     String: "Ny API-nøkkel eller hemmelighet"
+     Prop: placeholder
+     Context: placeholder="Ny API-nøkkel eller hemmelighet"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/access-grants/AccessGrantsPage.tsx (12 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 134: hardcoded_jsx_text
+     String: "Alle"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+
+  🔴 Line 137: hardcoded_jsx_text
+     String: "Aktiv"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+
+  🔴 Line 140: hardcoded_jsx_text
+     String: "Tilbakekalt"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('revoked')}>Tilbakekalt</Dropdown.Button>
+
+  🔴 Line 143: hardcoded_jsx_text
+     String: "Utl\u00F8pt"
+     Context: <Dropdown.Button onClick={() => setStatusFilter('expired')}>Utl\u00F8pt</Dropdown.Button>
+
+  🔴 Line 190: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 191: hardcoded_jsx_text
+     String: "Utleieobjekt"
+     Context: <Table.HeaderCell>Utleieobjekt</Table.HeaderCell>
+
+  🔴 Line 192: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 193: hardcoded_jsx_text
+     String: "Tildelt"
+     Context: <Table.HeaderCell>Tildelt</Table.HeaderCell>
+
+  🔴 Line 194: hardcoded_jsx_text
+     String: "Utl\u00F8per"
+     Context: <Table.HeaderCell>Utl\u00F8per</Table.HeaderCell>
+
+  🔴 Line 195: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 120: hardcoded_prop
+     String: "S\u00F8k etter organisasjon eller utleieobjekt..."
+     Prop: placeholder
+     Context: placeholder="S\u00F8k etter organisasjon eller utleieobjekt..."
+
+  🟡 Line 76: hardcoded_alert
+     String: "Er du sikker p\u00E5 at du vil tilbakekalle denne tilgangen?"
+     Context: if (confirm('Er du sikker p\u00E5 at du vil tilbakekalle denne tilgangen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/admin-reports.tsx (12 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 119: hardcoded_jsx_text
+     String: "Rapporttype"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 127: hardcoded_jsx_text
+     String: "Inntekter"
+     Context: <option value="revenue">Inntekter</option>
+
+  🔴 Line 128: hardcoded_jsx_text
+     String: "Lokaler"
+     Context: <option value="listings">Lokaler</option>
+
+  🔴 Line 132: hardcoded_jsx_text
+     String: "Fra dato"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 136: hardcoded_jsx_text
+     String: "Til dato"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 188: hardcoded_jsx_text
+     String: "Lokale"
+     Context: <Table.HeaderCell>Lokale</Table.HeaderCell>
+
+  🔴 Line 189: hardcoded_jsx_text
+     String: "Bookinger"
+     Context: <Table.HeaderCell>Bookinger</Table.HeaderCell>
+
+  🔴 Line 190: hardcoded_jsx_text
+     String: "Omsetning"
+     Context: <Table.HeaderCell>Omsetning</Table.HeaderCell>
+
+  🔴 Line 191: hardcoded_jsx_text
+     String: "Utnyttelse"
+     Context: <Table.HeaderCell>Utnyttelse</Table.HeaderCell>
+
+  🟡 Line 43: hardcoded_object_value
+     String: "Idrettshall A"
+     Context: { name: 'Idrettshall A', bookings: 312, revenue: 223000, utilization: 78 },
+
+  🟡 Line 44: hardcoded_object_value
+     String: "Fotballbane 1"
+     Context: { name: 'Fotballbane 1', bookings: 289, revenue: 145000, utilization: 65 },
+
+  🟡 Line 46: hardcoded_object_value
+     String: "Idrettshall B"
+     Context: { name: 'Idrettshall B', bookings: 176, revenue: 126000, utilization: 54 },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/season-applications.tsx (12 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 216: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 217: hardcoded_jsx_text
+     String: "Sesong"
+     Context: <Table.HeaderCell>Sesong</Table.HeaderCell>
+
+  🔴 Line 218: hardcoded_jsx_text
+     String: "Timer"
+     Context: <Table.HeaderCell>Timer</Table.HeaderCell>
+
+  🔴 Line 219: hardcoded_jsx_text
+     String: "Prioritet"
+     Context: <Table.HeaderCell>Prioritet</Table.HeaderCell>
+
+  🔴 Line 220: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 221: hardcoded_jsx_text
+     String: "Mottatt"
+     Context: <Table.HeaderCell>Mottatt</Table.HeaderCell>
+
+  🔴 Line 222: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '180px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 280: hardcoded_prop
+     String: "Søknadsdetaljer"
+     Prop: aria-label
+     Context: aria-label="Søknadsdetaljer"
+
+  🟡 Line 112: hardcoded_object_value
+     String: "Godkjenn søknad"
+     Context: title: 'Godkjenn søknad',
+
+  🟡 Line 113: hardcoded_object_value
+     String: "Er du sikker på at du vil godkjenne denne sesongsøknaden?"
+     Context: description: 'Er du sikker på at du vil godkjenne denne sesongsøknaden?',
+
+  🟡 Line 126: hardcoded_object_value
+     String: "Avslå søknad"
+     Context: title: 'Avslå søknad',
+
+  🟡 Line 127: hardcoded_object_value
+     String: "Er du sikker på at du vil avslå denne sesongsøknaden?"
+     Context: description: 'Er du sikker på at du vil avslå denne sesongsøknaden?',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users-management.tsx (12 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 218: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <Table.HeaderCell>Bruker</Table.HeaderCell>
+
+  🔴 Line 219: hardcoded_jsx_text
+     String: "Rolle"
+     Context: <Table.HeaderCell>Rolle</Table.HeaderCell>
+
+  🔴 Line 220: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 221: hardcoded_jsx_text
+     String: "Sist innlogget"
+     Context: <Table.HeaderCell>Sist innlogget</Table.HeaderCell>
+
+  🔴 Line 222: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Administrator"
+     Context: { id: 'admin', label: 'Administrator' },
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Saksbehandler"
+     Context: { id: 'saksbehandler', label: 'Saksbehandler' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Leser"
+     Context: { id: 'viewer', label: 'Leser' },
+
+  🟡 Line 40: hardcoded_object_value
+     String: "Ola Nordmann"
+     Context: name: 'Ola Nordmann',
+
+  🟡 Line 48: hardcoded_object_value
+     String: "Kari Hansen"
+     Context: name: 'Kari Hansen',
+
+  🟡 Line 56: hardcoded_object_value
+     String: "Per Olsen"
+     Context: name: 'Per Olsen',
+
+  🟡 Line 83: hardcoded_object_value
+     String: "Deaktiver bruker"
+     Context: title: 'Deaktiver bruker',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx (11 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 123: hardcoded_jsx_text
+     String: "Velg en bruker..."
+     Context: <option value="">Velg en bruker...</option>
+
+  🔴 Line 138: hardcoded_jsx_text
+     String: "Medlem"
+     Context: <option value="member">Medlem</option>
+
+  🔴 Line 139: hardcoded_jsx_text
+     String: "Administrator"
+     Context: <option value="admin">Administrator</option>
+
+  🔴 Line 192: hardcoded_jsx_text
+     String: "Navn"
+     Context: <Table.HeaderCell>Navn</Table.HeaderCell>
+
+  🔴 Line 193: hardcoded_jsx_text
+     String: "E-post"
+     Context: <Table.HeaderCell>E-post</Table.HeaderCell>
+
+  🔴 Line 194: hardcoded_jsx_text
+     String: "Rolle"
+     Context: <Table.HeaderCell>Rolle</Table.HeaderCell>
+
+  🔴 Line 195: hardcoded_jsx_text
+     String: "Medlem siden"
+     Context: <Table.HeaderCell>Medlem siden</Table.HeaderCell>
+
+  🔴 Line 196: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+
+  🔴 Line 117: hardcoded_prop
+     String: "Velg bruker"
+     Prop: label
+     Context: <FormField label="Velg bruker" required>
+
+  🔴 Line 132: hardcoded_prop
+     String: "Rolle"
+     Prop: label
+     Context: <FormField label="Rolle" required>
+
+  🟡 Line 73: hardcoded_alert
+     String: "Er du sikker på at du vil fjerne dette medlemmet?"
+     Context: if (!confirm('Er du sikker på at du vil fjerne dette medlemmet?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx (11 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 174: hardcoded_prop
+     String: "Filter og sortering"
+     Prop: title
+     Context: title="Filter og sortering"
+
+  🔴 Line 213: hardcoded_prop
+     String: "Status"
+     Prop: title
+     Context: <DrawerSection title="Status" collapsible>
+
+  🔴 Line 243: hardcoded_prop
+     String: "Kapasitet"
+     Prop: title
+     Context: <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
+
+  🔴 Line 273: hardcoded_prop
+     String: "Sortering"
+     Prop: title
+     Context: <DrawerSection title="Sortering" collapsible defaultCollapsed>
+
+  🔴 Line 356: hardcoded_prop
+     String: "Søk etter utleieobjekter..."
+     Prop: placeholder
+     Context: placeholder="Søk etter utleieobjekter..."
+
+  🔴 Line 379: hardcoded_prop
+     String: "Rutenettvisning"
+     Prop: aria-label
+     Context: aria-label="Rutenettvisning"
+
+  🔴 Line 392: hardcoded_prop
+     String: "Listevisning"
+     Prop: aria-label
+     Context: aria-label="Listevisning"
+
+  🔴 Line 500: hardcoded_prop
+     String: "Forrige side"
+     Prop: aria-label
+     Context: aria-label="Forrige side"
+
+  🔴 Line 515: hardcoded_prop
+     String: "Neste side"
+     Prop: aria-label
+     Context: aria-label="Neste side"
+
+  🟡 Line 36: hardcoded_object_value
+     String: "Alle størrelser"
+     Context: { id: 'all', label: 'Alle størrelser', min: 0, max: 999999 },
+
+  🟡 Line 41: hardcoded_object_value
+     String: "Over 100 personer"
+     Context: { id: '100+', label: 'Over 100 personer', min: 101, max: 999999 },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/calendar.tsx (11 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 65: hardcoded_jsx_text
+     String: "Sendt"
+     Context: return <Badge color="success">Sendt</Badge>;
+
+  🔴 Line 67: hardcoded_jsx_text
+     String: "Feilet"
+     Context: return <Badge color="danger">Feilet</Badge>;
+
+  🔴 Line 152: hardcoded_jsx_text
+     String: "Tilkoblet"
+     Context: <Badge color="success">Tilkoblet</Badge>
+
+  🔴 Line 154: hardcoded_jsx_text
+     String: "Ikke tilkoblet"
+     Context: <Badge color="neutral">Ikke tilkoblet</Badge>
+
+  🔴 Line 271: hardcoded_jsx_text
+     String: "Type"
+     Context: <th>Type</th>
+
+  🔴 Line 272: hardcoded_jsx_text
+     String: "Mottaker"
+     Context: <th>Mottaker</th>
+
+  🔴 Line 273: hardcoded_jsx_text
+     String: "Booking"
+     Context: <th>Booking</th>
+
+  🔴 Line 274: hardcoded_jsx_text
+     String: "Status"
+     Context: <th>Status</th>
+
+  🔴 Line 275: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <th>Tidspunkt</th>
+
+  🔴 Line 197: hardcoded_prop
+     String: "Aktiver kalenderinvitasjoner"
+     Prop: aria-label
+     Context: aria-label="Aktiver kalenderinvitasjoner"
+
+  🔴 Line 230: hardcoded_prop
+     String: "Aktiver ressurskalender"
+     Prop: aria-label
+     Context: aria-label="Aktiver ressurskalender"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/pricing-rules.tsx (11 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 163: hardcoded_jsx_text
+     String: "Navn"
+     Context: <Table.HeaderCell>Navn</Table.HeaderCell>
+
+  🔴 Line 164: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 165: hardcoded_jsx_text
+     String: "Beløp"
+     Context: <Table.HeaderCell>Beløp</Table.HeaderCell>
+
+  🔴 Line 166: hardcoded_jsx_text
+     String: "Betingelser"
+     Context: <Table.HeaderCell>Betingelser</Table.HeaderCell>
+
+  🔴 Line 167: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 168: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: <Table.HeaderCell style={{ width: '140px' }}>Handlinger</Table.HeaderCell>
+
+  🟡 Line 30: hardcoded_object_value
+     String: "Standard timepris"
+     Context: name: 'Standard timepris',
+
+  🟡 Line 39: hardcoded_object_value
+     String: "Kveldspris"
+     Context: name: 'Kveldspris',
+
+  🟡 Line 48: hardcoded_object_value
+     String: "Helgpris"
+     Context: name: 'Helgpris',
+
+  🟡 Line 57: hardcoded_object_value
+     String: "Organisasjonsrabatt"
+     Context: name: 'Organisasjonsrabatt',
+
+  🟡 Line 82: hardcoded_object_value
+     String: "Slett prisregel"
+     Context: title: 'Slett prisregel',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/tenant/audit-log.tsx (11 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 183: hardcoded_jsx_text
+     String: "Type"
+     Context: <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 185: hardcoded_jsx_text
+     String: "Alle typer"
+     Context: <option value="all">Alle typer</option>
+
+  🔴 Line 186: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <option value="user">Bruker</option>
+
+  🔴 Line 187: hardcoded_jsx_text
+     String: "Booking"
+     Context: <option value="booking">Booking</option>
+
+  🔴 Line 193: hardcoded_jsx_text
+     String: "Alvorlighet"
+     Context: <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 195: hardcoded_jsx_text
+     String: "Alle"
+     Context: <option value="all">Alle</option>
+
+  🔴 Line 202: hardcoded_jsx_text
+     String: "Fra dato"
+     Context: <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 206: hardcoded_jsx_text
+     String: "Til dato"
+     Context: <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 225: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 226: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 230: hardcoded_jsx_text
+     String: "Alvorlighet"
+     Context: <Table.HeaderCell>Alvorlighet</Table.HeaderCell>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationWizard.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 52: hardcoded_jsx_text
+     String: "Promise"
+     Context: onComplete?: (data: OrganizationWizardData) => Promise<void>;
+
+  🔴 Line 476: hardcoded_prop
+     String: "Lagre utkast"
+     Prop: aria-label
+     Context: aria-label="Lagre utkast"
+
+  🔴 Line 478: hardcoded_prop
+     String: "Lagrer..."
+     Prop: aria-label
+     Context: {isSaving ? <Spinner aria-label="Lagrer..." /> : 'Lagre utkast'}
+
+  🔴 Line 489: hardcoded_prop
+     String: "Forrige steg"
+     Prop: aria-label
+     Context: aria-label="Forrige steg"
+
+  🔴 Line 500: hardcoded_prop
+     String: "Neste steg"
+     Prop: aria-label
+     Context: aria-label="Neste steg"
+
+  🔴 Line 510: hardcoded_prop
+     String: "Fullfør"
+     Prop: aria-label
+     Context: aria-label="Fullfør"
+
+  🔴 Line 512: hardcoded_prop
+     String: "Lagrer..."
+     Prop: aria-label
+     Context: {isSaving ? <Spinner aria-label="Lagrer..." /> : 'Fullfør'}
+
+  🟡 Line 62: hardcoded_object_value
+     String: "Grunnleggende"
+     Context: { id: 'basics', label: 'Grunnleggende', required: true },
+
+  🟡 Line 63: hardcoded_object_value
+     String: "Visuell identitet"
+     Context: { id: 'branding', label: 'Visuell identitet', required: false },
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Roller"
+     Context: { id: 'roles', label: 'Roller', required: false },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/RolesStep.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 40: hardcoded_object_value
+     String: "Administrator"
+     Context: name: 'Administrator',
+
+  🟡 Line 41: hardcoded_object_value
+     String: "Full tilgang til alle organisasjonsfunksjoner og innstillinger"
+     Context: description: 'Full tilgang til alle organisasjonsfunksjoner og innstillinger',
+
+  🟡 Line 54: hardcoded_object_value
+     String: "Manager"
+     Context: name: 'Manager',
+
+  🟡 Line 55: hardcoded_object_value
+     String: "Administrer anlegg og bookinger, se rapporter"
+     Context: description: 'Administrer anlegg og bookinger, se rapporter',
+
+  🟡 Line 64: hardcoded_object_value
+     String: "Medlem"
+     Context: name: 'Medlem',
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Grunnleggende medlem med visnings- og bookingtillatelser"
+     Context: description: 'Grunnleggende medlem med visnings- og bookingtillatelser',
+
+  🟡 Line 77: hardcoded_object_value
+     String: "Administrator"
+     Context: name: 'Administrator',
+
+  🟡 Line 78: hardcoded_object_value
+     String: "Full tilgang til organisasjonsfunksjoner"
+     Context: description: 'Full tilgang til organisasjonsfunksjoner',
+
+  🟡 Line 88: hardcoded_object_value
+     String: "Medlem"
+     Context: name: 'Medlem',
+
+  🟡 Line 89: hardcoded_object_value
+     String: "Standard medlem med bookingtilgang"
+     Context: description: 'Standard medlem med bookingtilgang',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 223: hardcoded_jsx_text
+     String: "Velg lokale..."
+     Context: <option value="">Velg lokale...</option>
+
+  🔴 Line 447: hardcoded_jsx_text
+     String: "Gjenta blokkering"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>Gjenta blokkering</span>
+
+  🔴 Line 489: hardcoded_jsx_text
+     String: "Daglig"
+     Context: <option value="daily">Daglig</option>
+
+  🔴 Line 490: hardcoded_jsx_text
+     String: "Ukentlig"
+     Context: <option value="weekly">Ukentlig</option>
+
+  🔴 Line 491: hardcoded_jsx_text
+     String: "Månedlig"
+     Context: <option value="monthly">Månedlig</option>
+
+  🔴 Line 605: hardcoded_jsx_text
+     String: "Varsle berørte brukere"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>Varsle berørte brukere</span>
+
+  🔴 Line 302: hardcoded_prop
+     String: "F.eks. Vedlikehold av varmeanlegg"
+     Prop: placeholder
+     Context: placeholder="F.eks. Vedlikehold av varmeanlegg"
+
+  🔴 Line 445: hardcoded_prop
+     String: "Gjenta blokkering"
+     Prop: aria-label
+     Context: aria-label="Gjenta blokkering"
+
+  🔴 Line 585: hardcoded_prop
+     String: "Valgfritt notat..."
+     Prop: placeholder
+     Context: placeholder="Valgfritt notat..."
+
+  🔴 Line 603: hardcoded_prop
+     String: "Varsle berørte brukere"
+     Prop: aria-label
+     Context: aria-label="Varsle berørte brukere"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/types.ts (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 92: hardcoded_object_value
+     String: "Vedlikehold"
+     Context: label: 'Vedlikehold',
+
+  🟡 Line 93: hardcoded_object_value
+     String: "Planlagt vedlikehold av lokalet"
+     Context: description: 'Planlagt vedlikehold av lokalet',
+
+  🟡 Line 99: hardcoded_object_value
+     String: "Stengt"
+     Context: label: 'Stengt',
+
+  🟡 Line 100: hardcoded_object_value
+     String: "Lokalet er stengt for bookinger"
+     Context: description: 'Lokalet er stengt for bookinger',
+
+  🟡 Line 106: hardcoded_object_value
+     String: "Intern reservasjon"
+     Context: label: 'Intern reservasjon',
+
+  🟡 Line 107: hardcoded_object_value
+     String: "Reservert for intern bruk"
+     Context: description: 'Reservert for intern bruk',
+
+  🟡 Line 113: hardcoded_object_value
+     String: "Nødstenging"
+     Context: label: 'Nødstenging',
+
+  🟡 Line 114: hardcoded_object_value
+     String: "Akutt stenging av lokalet"
+     Context: description: 'Akutt stenging av lokalet',
+
+  🟡 Line 120: hardcoded_object_value
+     String: "Intern aktivitet"
+     Context: label: 'Intern aktivitet',
+
+  🟡 Line 121: hardcoded_object_value
+     String: "Internt arrangement eller møte"
+     Context: description: 'Internt arrangement eller møte',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/RequirementsStep.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 23: hardcoded_object_value
+     String: "Klasse B"
+     Context: { value: 'B', label: 'Klasse B', icon: '🚗', description: 'Personbil' },
+
+  🟡 Line 23: hardcoded_object_value
+     String: "Personbil"
+     Context: { value: 'B', label: 'Klasse B', icon: '🚗', description: 'Personbil' },
+
+  🟡 Line 24: hardcoded_object_value
+     String: "Klasse BE"
+     Context: { value: 'BE', label: 'Klasse BE', icon: '🚗🔗', description: 'Personbil med tilhenger' },
+
+  🟡 Line 24: hardcoded_object_value
+     String: "Personbil med tilhenger"
+     Context: { value: 'BE', label: 'Klasse BE', icon: '🚗🔗', description: 'Personbil med tilhenger' },
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Klasse C"
+     Context: { value: 'C', label: 'Klasse C', icon: '🚚', description: 'Lastebil' },
+
+  🟡 Line 25: hardcoded_object_value
+     String: "Lastebil"
+     Context: { value: 'C', label: 'Klasse C', icon: '🚚', description: 'Lastebil' },
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Klasse D"
+     Context: { value: 'D', label: 'Klasse D', icon: '🚌', description: 'Buss' },
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Buss"
+     Context: { value: 'D', label: 'Klasse D', icon: '🚌', description: 'Buss' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Klasse AM"
+     Context: { value: 'AM', label: 'Klasse AM', icon: '🛵', description: 'Moped' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Moped"
+     Context: { value: 'AM', label: 'Klasse AM', icon: '🛵', description: 'Moped' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 201: hardcoded_jsx_text
+     String: "Godkjenn"
+     Context: <Dropdown.Button onClick={handleApprove}>Godkjenn</Dropdown.Button>
+
+  🔴 Line 377: hardcoded_jsx_text
+     String: "Vurdering"
+     Context: <Table.HeaderCell>Vurdering</Table.HeaderCell>
+
+  🔴 Line 378: hardcoded_jsx_text
+     String: "Anmeldelse"
+     Context: <Table.HeaderCell>Anmeldelse</Table.HeaderCell>
+
+  🔴 Line 379: hardcoded_jsx_text
+     String: "Objekt"
+     Context: <Table.HeaderCell>Objekt</Table.HeaderCell>
+
+  🔴 Line 380: hardcoded_jsx_text
+     String: "Bruker"
+     Context: <Table.HeaderCell>Bruker</Table.HeaderCell>
+
+  🔴 Line 381: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 382: hardcoded_jsx_text
+     String: "Opprettet"
+     Context: <Table.HeaderCell>Opprettet</Table.HeaderCell>
+
+  🔴 Line 193: hardcoded_prop
+     String: "Handlinger"
+     Prop: aria-label
+     Context: <Dropdown.Trigger aria-label="Handlinger" disabled={isLoading}>
+
+  🟡 Line 56: hardcoded_object_value
+     String: "Godkjent"
+     Context: approved: { color: 'success', label: 'Godkjent' },
+
+  🟡 Line 57: hardcoded_object_value
+     String: "Avslått"
+     Context: rejected: { color: 'danger', label: 'Avslått' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx (10 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 237: hardcoded_prop
+     String: "Vanlige spørsmål (FAQ)"
+     Prop: title
+     Context: title="Vanlige spørsmål (FAQ)"
+
+  🔴 Line 238: hardcoded_prop
+     String: "Svar på ofte stilte spørsmål"
+     Prop: description
+     Context: description="Svar på ofte stilte spørsmål"
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Bookinger"
+     Context: title: 'Bookinger',
+
+  🟡 Line 59: hardcoded_object_value
+     String: "Kalender"
+     Context: title: 'Kalender',
+
+  🟡 Line 76: hardcoded_object_value
+     String: "Meldinger"
+     Context: title: 'Meldinger',
+
+  🟡 Line 93: hardcoded_object_value
+     String: "Brukere og tilgang"
+     Context: title: 'Brukere og tilgang',
+
+  🟡 Line 115: hardcoded_object_value
+     String: "Utleieobjekter"
+     Context: title: 'Utleieobjekter',
+
+  🟡 Line 137: hardcoded_object_value
+     String: "Rapporter"
+     Context: title: 'Rapporter',
+
+  🟡 Line 156: hardcoded_object_value
+     String: "Innstillinger og system"
+     Context: title: 'Innstillinger og system',
+
+  🟡 Line 179: hardcoded_object_value
+     String: "Sikkerhet og innlogging"
+     Context: title: 'Sikkerhet og innlogging',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx (9 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 43: hardcoded_prop
+     String: "E-postvarsler"
+     Prop: label
+     Context: <FormField label="E-postvarsler">
+
+  🔴 Line 52: hardcoded_prop
+     String: "SMS-varsler"
+     Prop: label
+     Context: <FormField label="SMS-varsler">
+
+  🔴 Line 61: hardcoded_prop
+     String: "Push-varsler"
+     Prop: label
+     Context: <FormField label="Push-varsler">
+
+  🔴 Line 81: hardcoded_prop
+     String: "Bookingbekreftelse"
+     Prop: label
+     Context: <FormField label="Bookingbekreftelse">
+
+  🔴 Line 90: hardcoded_prop
+     String: "Booking-påminnelse"
+     Prop: label
+     Context: <FormField label="Booking-påminnelse">
+
+  🔴 Line 101: hardcoded_prop
+     String: "Påminnelsestidspunkt"
+     Prop: label
+     Context: label="Påminnelsestidspunkt"
+
+  🔴 Line 102: hardcoded_prop
+     String: "Hvor lenge før booking skal påminnelse sendes?"
+     Prop: description
+     Context: description="Hvor lenge før booking skal påminnelse sendes?"
+
+  🔴 Line 105: hardcoded_prop
+     String: "Påminnelsestidspunkt"
+     Prop: aria-label
+     Context: aria-label="Påminnelsestidspunkt"
+
+  🔴 Line 119: hardcoded_prop
+     String: "Lagre endringer"
+     Prop: aria-label
+     Context: <Button onClick={saveNotificationSettings} disabled={isSaving} type="button" aria-label="Lagre endri
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/pages/PaymentReconciliationPage.tsx (9 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 30: hardcoded_object_value
+     String: "Alle betalinger"
+     Context: { id: 'all', label: 'Alle betalinger' },
+
+  🟡 Line 31: hardcoded_object_value
+     String: "Betalt"
+     Context: { id: 'paid', label: 'Betalt' },
+
+  🟡 Line 32: hardcoded_object_value
+     String: "Ikke betalt"
+     Context: { id: 'unpaid', label: 'Ikke betalt' },
+
+  🟡 Line 33: hardcoded_object_value
+     String: "Delvis betalt"
+     Context: { id: 'partial', label: 'Delvis betalt' },
+
+  🟡 Line 34: hardcoded_object_value
+     String: "Refundert"
+     Context: { id: 'refunded', label: 'Refundert' },
+
+  🟡 Line 39: hardcoded_object_value
+     String: "Alle betalingsleverandører"
+     Context: { id: 'all', label: 'Alle betalingsleverandører' },
+
+  🟡 Line 40: hardcoded_object_value
+     String: "Vipps"
+     Context: { id: 'vipps', label: 'Vipps' },
+
+  🟡 Line 41: hardcoded_object_value
+     String: "Stripe"
+     Context: { id: 'stripe', label: 'Stripe' },
+
+  🟡 Line 42: hardcoded_object_value
+     String: "Manuell"
+     Context: { id: 'manual', label: 'Manuell' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BrandingStep.tsx (8 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 266: hardcoded_prop
+     String: "Logo preview"
+     Prop: alt
+     Context: alt="Logo preview"
+
+  🔴 Line 310: hardcoded_prop
+     String: "Primærfarge"
+     Prop: label
+     Context: label="Primærfarge"
+
+  🔴 Line 311: hardcoded_prop
+     String: "Hovedfarge for organisasjonens profil"
+     Prop: description
+     Context: description="Hovedfarge for organisasjonens profil"
+
+  🔴 Line 330: hardcoded_prop
+     String: "#0062BA"
+     Prop: placeholder
+     Context: placeholder="#0062BA"
+
+  🔴 Line 344: hardcoded_prop
+     String: "Sekundærfarge"
+     Prop: label
+     Context: label="Sekundærfarge"
+
+  🔴 Line 345: hardcoded_prop
+     String: "Komplementær farge til primærfargen"
+     Prop: description
+     Context: description="Komplementær farge til primærfargen"
+
+  🔴 Line 364: hardcoded_prop
+     String: "#004C93"
+     Prop: placeholder
+     Context: placeholder="#004C93"
+
+  🔴 Line 455: hardcoded_prop
+     String: "Favicon preview"
+     Prop: alt
+     Context: alt="Favicon preview"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/economy.tsx (8 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 35: hardcoded_jsx_text
+     String: "Fakturagrunnlag"
+     Context: <Tabs.Tab value="invoice-basis">Fakturagrunnlag</Tabs.Tab>
+
+  🔴 Line 36: hardcoded_jsx_text
+     String: "Salgsbilag"
+     Context: <Tabs.Tab value="sales-documents">Salgsbilag</Tabs.Tab>
+
+  🔴 Line 37: hardcoded_jsx_text
+     String: "Kreditnota"
+     Context: <Tabs.Tab value="credit-notes">Kreditnota</Tabs.Tab>
+
+  🔴 Line 38: hardcoded_jsx_text
+     String: "Eksport"
+     Context: <Tabs.Tab value="export">Eksport</Tabs.Tab>
+
+  🔴 Line 45: hardcoded_jsx_text
+     String: "Generer og administrer fakturagrunnlag fra godkjente bookinger"
+     Context: <Paragraph>Generer og administrer fakturagrunnlag fra godkjente bookinger</Paragraph>
+
+  🔴 Line 73: hardcoded_jsx_text
+     String: "Administrer salgsbilag og fakturaer"
+     Context: <Paragraph>Administrer salgsbilag og fakturaer</Paragraph>
+
+  🔴 Line 97: hardcoded_jsx_text
+     String: "Opprett og administrer kreditnotar"
+     Context: <Paragraph>Opprett og administrer kreditnotar</Paragraph>
+
+  🔴 Line 122: hardcoded_jsx_text
+     String: "Eksporter økonomiske data til CSV, Excel eller PDF"
+     Context: <Paragraph>Eksporter økonomiske data til CSV, Excel eller PDF</Paragraph>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/messages.tsx (8 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 908: hardcoded_jsx_text
+     String: "Ikke tildelt"
+     Context: <option value="">Ikke tildelt</option>
+
+  🔴 Line 274: hardcoded_prop
+     String: "Søk etter samtaler..."
+     Prop: placeholder
+     Context: placeholder="Søk etter samtaler..."
+
+  🔴 Line 734: hardcoded_prop
+     String: "Legg til vedlegg"
+     Prop: title
+     Context: title="Legg til vedlegg" type="button"
+
+  🔴 Line 741: hardcoded_prop
+     String: "Skriv et svar..."
+     Prop: placeholder
+     Context: placeholder="Skriv et svar..."
+
+  🟡 Line 301: hardcoded_object_value
+     String: "Alle"
+     Context: { key: 'all' as FilterType, label: 'Alle' },
+
+  🟡 Line 302: hardcoded_object_value
+     String: "Uleste"
+     Context: { key: 'unread' as FilterType, label: 'Uleste' },
+
+  🟡 Line 303: hardcoded_object_value
+     String: "Aktive"
+     Context: { key: 'active' as FilterType, label: 'Aktive' },
+
+  🟡 Line 304: hardcoded_object_value
+     String: "Løst"
+     Context: { key: 'resolved' as FilterType, label: 'Løst' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/tenant/branding.tsx (8 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 147: hardcoded_jsx_text
+     String: "Primærfarge"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Primærfarg
+
+  🔴 Line 163: hardcoded_jsx_text
+     String: "Aksentfarge"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Aksentfarg
+
+  🔴 Line 235: hardcoded_jsx_text
+     String: "Header-tekst"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Header-tek
+
+  🔴 Line 243: hardcoded_jsx_text
+     String: "Footer-tekst"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Footer-tek
+
+  🟡 Line 26: hardcoded_object_value
+     String: "Blå"
+     Context: { name: 'Blå', primary: '#2563eb', accent: '#3b82f6' },
+
+  🟡 Line 27: hardcoded_object_value
+     String: "Grønn"
+     Context: { name: 'Grønn', primary: '#16a34a', accent: '#22c55e' },
+
+  🟡 Line 28: hardcoded_object_value
+     String: "Lilla"
+     Context: { name: 'Lilla', primary: '#7c3aed', accent: '#8b5cf6' },
+
+  🟡 Line 29: hardcoded_object_value
+     String: "Oransje"
+     Context: { name: 'Oransje', primary: '#ea580c', accent: '#f97316' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx (7 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 224: hardcoded_jsx_text
+     String: "Organisasjon"
+     Context: <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+
+  🔴 Line 225: hardcoded_jsx_text
+     String: "Ukedag"
+     Context: <Table.HeaderCell>Ukedag</Table.HeaderCell>
+
+  🔴 Line 226: hardcoded_jsx_text
+     String: "Tid"
+     Context: <Table.HeaderCell>Tid</Table.HeaderCell>
+
+  🔴 Line 227: hardcoded_jsx_text
+     String: "Bookinger"
+     Context: <Table.HeaderCell>Bookinger</Table.HeaderCell>
+
+  🔴 Line 228: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell>Status</Table.HeaderCell>
+
+  🔴 Line 229: hardcoded_jsx_text
+     String: "Handling"
+     Context: <Table.HeaderCell style={{ width: '120px' }}>Handling</Table.HeaderCell>
+
+  🟡 Line 110: hardcoded_alert
+     String: "Fullfør sesongtildelingen? Sesongen vil bli markert som "
+     Context: if (confirm('Fullfør sesongtildelingen? Sesongen vil bli markert som "Tildelt" og kan ikke endres.')
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx (7 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 234: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell style={{ width: '100px' }}>Type</Table.HeaderCell>
+
+  🔴 Line 235: hardcoded_jsx_text
+     String: "Mottaker"
+     Context: <Table.HeaderCell>Mottaker</Table.HeaderCell>
+
+  🔴 Line 236: hardcoded_jsx_text
+     String: "Emne"
+     Context: <Table.HeaderCell>Emne</Table.HeaderCell>
+
+  🔴 Line 237: hardcoded_jsx_text
+     String: "Status"
+     Context: <Table.HeaderCell style={{ width: '120px' }}>Status</Table.HeaderCell>
+
+  🔴 Line 238: hardcoded_jsx_text
+     String: "Forsøk"
+     Context: <Table.HeaderCell style={{ width: '100px' }}>Forsøk</Table.HeaderCell>
+
+  🔴 Line 239: hardcoded_jsx_text
+     String: "Siste forsøk"
+     Context: <Table.HeaderCell style={{ width: '180px' }}>Siste forsøk</Table.HeaderCell>
+
+  🔴 Line 176: hardcoded_prop
+     String: "Søk etter mottaker eller emne..."
+     Prop: placeholder
+     Context: placeholder="Søk etter mottaker eller emne..."
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/audit-timeline.tsx (7 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 148: hardcoded_jsx_text
+     String: "Vedtak"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 154: hardcoded_jsx_text
+     String: "Alle vedtak"
+     Context: <option value="all">Alle vedtak</option>
+
+  🔴 Line 155: hardcoded_jsx_text
+     String: "Godkjent"
+     Context: <option value="approved">Godkjent</option>
+
+  🔴 Line 156: hardcoded_jsx_text
+     String: "Avslått"
+     Context: <option value="rejected">Avslått</option>
+
+  🔴 Line 157: hardcoded_jsx_text
+     String: "Returnert"
+     Context: <option value="returned">Returnert</option>
+
+  🔴 Line 161: hardcoded_jsx_text
+     String: "Fra dato"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+  🔴 Line 170: hardcoded_jsx_text
+     String: "Til dato"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/CalendarSection.tsx (6 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 275: hardcoded_object_value
+     String: "Ledig"
+     Context: { status: 'AVAILABLE' as const, label: 'Ledig' },
+
+  🟡 Line 276: hardcoded_object_value
+     String: "Reservert"
+     Context: { status: 'RESERVED' as const, label: 'Reservert' },
+
+  🟡 Line 277: hardcoded_object_value
+     String: "Booket"
+     Context: { status: 'BOOKED' as const, label: 'Booket' },
+
+  🟡 Line 278: hardcoded_object_value
+     String: "Blokkert"
+     Context: { status: 'BLOCKED' as const, label: 'Blokkert' },
+
+  🟡 Line 279: hardcoded_object_value
+     String: "Utilgjengelig"
+     Context: { status: 'BLACKOUT' as const, label: 'Utilgjengelig' },
+
+  🟡 Line 280: hardcoded_object_value
+     String: "Stengt"
+     Context: { status: 'CLOSED' as const, label: 'Stengt' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/dashboard/OrgMemberDashboard.tsx (6 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 57: hardcoded_object_value
+     String: "Ny bookingforespørsel"
+     Context: title: 'Ny bookingforespørsel',
+
+  🟡 Line 58: hardcoded_object_value
+     String: "Ønsker å leie 15. jan kl 10:00-14:00"
+     Context: description: 'Ønsker å leie 15. jan kl 10:00-14:00',
+
+  🟡 Line 65: hardcoded_object_value
+     String: "Bookingforespørsel"
+     Context: title: 'Bookingforespørsel',
+
+  🟡 Line 66: hardcoded_object_value
+     String: "Arrangement 20. jan hele dagen"
+     Context: description: 'Arrangement 20. jan hele dagen',
+
+  🟡 Line 166: hardcoded_object_value
+     String: "Booking - Møterom A"
+     Context: title: 'Booking - Møterom A',
+
+  🟡 Line 174: hardcoded_object_value
+     String: "Booking - Kulturhuset"
+     Context: title: 'Booking - Kulturhuset',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/ConflictViewer.tsx (6 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 184: hardcoded_jsx_text
+     String: "Søknad 1"
+     Context: <Table.HeaderCell>Søknad 1</Table.HeaderCell>
+
+  🔴 Line 185: hardcoded_jsx_text
+     String: "Søknad 2"
+     Context: <Table.HeaderCell>Søknad 2</Table.HeaderCell>
+
+  🔴 Line 186: hardcoded_jsx_text
+     String: "Ukedag"
+     Context: <Table.HeaderCell>Ukedag</Table.HeaderCell>
+
+  🔴 Line 187: hardcoded_jsx_text
+     String: "Tidspunkt"
+     Context: <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+
+  🔴 Line 188: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 189: hardcoded_jsx_text
+     String: "Alvorlighet"
+     Context: <Table.HeaderCell>Alvorlighet</Table.HeaderCell>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx (6 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 176: hardcoded_jsx_text
+     String: "Navn"
+     Context: <Table.HeaderCell>Navn</Table.HeaderCell>
+
+  🔴 Line 177: hardcoded_jsx_text
+     String: "Type"
+     Context: <Table.HeaderCell>Type</Table.HeaderCell>
+
+  🔴 Line 178: hardcoded_jsx_text
+     String: "Kapasitet"
+     Context: <Table.HeaderCell>Kapasitet</Table.HeaderCell>
+
+  🔴 Line 179: hardcoded_jsx_text
+     String: "Adresse"
+     Context: <Table.HeaderCell>Adresse</Table.HeaderCell>
+
+  🔴 Line 180: hardcoded_jsx_text
+     String: "Handlinger"
+     Context: {canEdit && <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>}
+
+  🟡 Line 65: hardcoded_alert
+     String: "Er du sikker på at du vil fjerne dette lokalet fra sesongen?"
+     Context: if (confirm('Er du sikker på at du vil fjerne dette lokalet fra sesongen?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/decision-forms.tsx (6 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 213: hardcoded_jsx_text
+     String: "Vedtak"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Vedtak</la
+
+  🔴 Line 219: hardcoded_jsx_text
+     String: "Godkjent"
+     Context: <option value="approved">Godkjent</option>
+
+  🔴 Line 220: hardcoded_jsx_text
+     String: "Avslått"
+     Context: <option value="rejected">Avslått</option>
+
+  🔴 Line 221: hardcoded_jsx_text
+     String: "Returnert for utfyllende info"
+     Context: <option value="returned">Returnert for utfyllende info</option>
+
+  🔴 Line 227: hardcoded_jsx_text
+     String: "Vilkår (valgfritt)"
+     Context: <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Vilkår (va
+
+  🔴 Line 231: hardcoded_prop
+     String: "Legg til eventuelle vilkår for godkjenningen..."
+     Prop: placeholder
+     Context: placeholder="Legg til eventuelle vilkår for godkjenningen..."
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/EventDrawer.tsx (5 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 83: hardcoded_alert
+     String: "Er du sikker på at du vil avslå denne forespørselen?"
+     Context: if (window.confirm('Er du sikker på at du vil avslå denne forespørselen?')) {
+
+  🟡 Line 90: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne blokkeringen?"
+     Context: if (window.confirm('Er du sikker på at du vil slette denne blokkeringen?')) {
+
+  🟡 Line 49: hardcoded_object_value
+     String: "Venter godkjenning"
+     Context: return { color: 'warning', label: 'Venter godkjenning' };
+
+  🟡 Line 52: hardcoded_object_value
+     String: "Sperret"
+     Context: return { color: 'neutral', label: 'Sperret' };
+
+  🟡 Line 54: hardcoded_object_value
+     String: "Kansellert"
+     Context: return { color: 'danger', label: 'Kansellert' };
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/ReviewModerationPage.tsx (5 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 162: hardcoded_prop
+     String: "Søk etter anmeldelse, objekt, bruker..."
+     Prop: placeholder
+     Context: placeholder="Søk etter anmeldelse, objekt, bruker..."
+
+  🔴 Line 188: hardcoded_prop
+     String: "Laster anmeldelser..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster anmeldelser..." />
+
+  🟡 Line 20: hardcoded_object_value
+     String: "Alle"
+     Context: { id: 'all', label: 'Alle' },
+
+  🟡 Line 22: hardcoded_object_value
+     String: "Godkjent"
+     Context: { id: 'approved', label: 'Godkjent' },
+
+  🟡 Line 23: hardcoded_object_value
+     String: "Avslått"
+     Context: { id: 'rejected', label: 'Avslått' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/hooks/useCapabilities.ts (5 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 14: hardcoded_jsx_text
+     String: "View"
+     Context: *       <Button disabled={!hasCapability('CAP_LISTING_READ')}>View</Button>
+
+  🔴 Line 15: hardcoded_jsx_text
+     String: "Create"
+     Context: *       <Button disabled={!hasCapability('CAP_LISTING_CREATE')}>Create</Button>
+
+  🔴 Line 112: hardcoded_jsx_text
+     String: "Edit Listing"
+     Context: *   return <Button>Edit Listing</Button>;
+
+  🔴 Line 139: hardcoded_jsx_text
+     String: "Delete"
+     Context: *   return <Button onClick={handleDelete}>Delete</Button>;
+
+  🔴 Line 194: hardcoded_jsx_text
+     String: "Create Listing"
+     Context: *   return <Button>Create Listing</Button>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/gdpr-requests.tsx (5 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 206: hardcoded_prop
+     String: "Laster forespørsler..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster forespørsler..." />
+
+  🟡 Line 34: hardcoded_object_value
+     String: "Ventende"
+     Context: { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
+
+  🟡 Line 35: hardcoded_object_value
+     String: "Behandles"
+     Context: { id: 'processing', label: 'Behandles', icon: '⚙️', color: 'info' },
+
+  🟡 Line 37: hardcoded_object_value
+     String: "Avslått"
+     Context: { id: 'rejected', label: 'Avslått', icon: '✕', color: 'danger' },
+
+  🟡 Line 38: hardcoded_object_value
+     String: "Alle"
+     Context: { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/seasons/SeasonDetailPage.tsx (5 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 294: hardcoded_prop
+     String: "Sesongdetaljer"
+     Prop: title
+     Context: <FormSection title="Sesongdetaljer">
+
+  🔴 Line 328: hardcoded_prop
+     String: "Beskrivelse og retningslinjer"
+     Prop: title
+     Context: <FormSection title="Beskrivelse og retningslinjer">
+
+  🟡 Line 85: hardcoded_alert
+     String: "Er du sikker på at du vil slette denne sesongen?"
+     Context: if (confirm('Er du sikker på at du vil slette denne sesongen?')) {
+
+  🟡 Line 96: hardcoded_alert
+     String: "Er du sikker på at du vil åpne sesongen for søknader?"
+     Context: if (confirm('Er du sikker på at du vil åpne sesongen for søknader?')) {
+
+  🟡 Line 102: hardcoded_alert
+     String: "Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert."
+     Context: if (confirm('Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert.')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/RoleSwitcher.tsx (4 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 69: hardcoded_object_value
+     String: "Administrator"
+     Context: name: 'Administrator',
+
+  🟡 Line 70: hardcoded_object_value
+     String: "Full tilgang til alle funksjoner"
+     Context: description: 'Full tilgang til alle funksjoner',
+
+  🟡 Line 73: hardcoded_object_value
+     String: "Saksbehandler"
+     Context: name: 'Saksbehandler',
+
+  🟡 Line 74: hardcoded_object_value
+     String: "Behandle søknader og vedtak"
+     Context: description: 'Behandle søknader og vedtak',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/layout/Header.tsx (4 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 119: hardcoded_prop
+     String: "Digilist"
+     Prop: alt
+     Context: alt="Digilist"
+
+  🔴 Line 139: hardcoded_prop
+     String: "Søk i bookinger, lokaler, organisasjoner..."
+     Prop: placeholder
+     Context: placeholder="Søk i bookinger, lokaler, organisasjoner..."
+
+  🔴 Line 261: hardcoded_prop
+     String: "Varsler"
+     Prop: title
+     Context: title="Varsler"
+
+  🔴 Line 285: hardcoded_prop
+     String: "Logg ut"
+     Prop: aria-label
+     Context: aria-label="Logg ut"
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/calendar.tsx (4 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 477: hardcoded_jsx_text
+     String: "Tid"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>T
+
+  🔴 Line 733: hardcoded_jsx_text
+     String: "Alle lokaler"
+     Context: <option value="">Alle lokaler</option>
+
+  🔴 Line 770: hardcoded_jsx_text
+     String: "Sperret"
+     Context: <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>Sperret</span>
+
+  🔴 Line 780: hardcoded_prop
+     String: "Laster kalender..."
+     Prop: aria-label
+     Context: <Spinner aria-label="Laster kalender..." />
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx (4 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 180: hardcoded_object_value
+     String: "Admin"
+     Context: admin: { label: 'Admin', color: 'var(--ds-color-danger-base-default)' },
+
+  🟡 Line 181: hardcoded_object_value
+     String: "Leietaker Admin"
+     Context: tenant_admin: { label: 'Leietaker Admin', color: 'var(--ds-color-warning-base-default)' },
+
+  🟡 Line 182: hardcoded_object_value
+     String: "Org Admin"
+     Context: org_admin: { label: 'Org Admin', color: 'var(--ds-color-info-base-default)' },
+
+  🟡 Line 183: hardcoded_object_value
+     String: "Medlem"
+     Context: org_member: { label: 'Medlem', color: 'var(--ds-color-success-base-default)' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectDetailView.tsx (3 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 273: hardcoded_object_value
+     String: "Bookinger"
+     Context: { id: 'bookings', label: 'Bookinger' },
+
+  🟡 Line 274: hardcoded_object_value
+     String: "Tilgjengelighet"
+     Context: { id: 'availability', label: 'Tilgjengelighet' },
+
+  🟡 Line 275: hardcoded_object_value
+     String: "Endringslogg"
+     Context: { id: 'audit', label: 'Endringslogg' },
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/hooks/useRentalObjectWizard.ts (3 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 68: hardcoded_jsx_text
+     String: "Promise"
+     Context: saveDraft: () => Promise<void>;
+
+  🔴 Line 69: hardcoded_jsx_text
+     String: "Promise"
+     Context: publish: () => Promise<void>;
+
+  🟡 Line 388: hardcoded_alert
+     String: "Du har ulagrede endringer. Vil du virkelig avbryte?"
+     Context: const confirmed = window.confirm('Du har ulagrede endringer. Vil du virkelig avbryte?');
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx (3 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 520: hardcoded_jsx_text
+     String: "Medlem"
+     Context: <Table.HeaderCell style={{ minWidth: '200px' }}>Medlem</Table.HeaderCell>
+
+  🔴 Line 403: hardcoded_prop
+     String: "Søk etter medlem..."
+     Prop: placeholder
+     Context: placeholder="Søk etter medlem..."
+
+  🔴 Line 1: missing_t_import
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users/UserDetailPage.tsx (3 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 205: hardcoded_prop
+     String: "Kopier e-post"
+     Prop: aria-label
+     Context: aria-label="Kopier e-post" type="button"
+
+  🔴 Line 228: hardcoded_prop
+     String: "Kopier telefon"
+     Prop: aria-label
+     Context: aria-label="Kopier telefon" type="button"
+
+  🟡 Line 78: hardcoded_alert
+     String: "Er du sikker på at du vil deaktivere denne brukeren?"
+     Context: if (user && confirm('Er du sikker på at du vil deaktivere denne brukeren?')) {
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/work-queue.tsx (3 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🟡 Line 31: hardcoded_object_value
+     String: "Idrettshall A - 2 timer"
+     Context: title: 'Idrettshall A - 2 timer',
+
+  🟡 Line 42: hardcoded_object_value
+     String: "Sesongbooking Vår 2026"
+     Context: title: 'Sesongbooking Vår 2026',
+
+  🟡 Line 53: hardcoded_object_value
+     String: "Fotballbane 1 - 4 timer"
+     Context: title: 'Fotballbane 1 - 4 timer',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SavedFilters.tsx (2 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 425: hardcoded_prop
+     String: "Filternavn (f.eks. "
+     Prop: placeholder
+     Context: placeholder="Filternavn (f.eks. 'Ventende bookinger denne uken')"
+
+  🟡 Line 167: hardcoded_object_value
+     String: "Slett lagret filter"
+     Context: title: 'Slett lagret filter',
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/search.tsx (2 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 161: hardcoded_jsx_text
+     String: "Søkeresultater"
+     Context: <Heading level={1}>Søkeresultater</Heading>
+
+  🔴 Line 278: hardcoded_jsx_text
+     String: "Alle statuser"
+     Context: <option value="">Alle statuser</option>
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/.auth-backup-20260116/useAuth.ts (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 61: hardcoded_jsx_text
+     String: "Promise"
+     Context: logout: () => Promise<void>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/TimelineView.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 113: hardcoded_jsx_text
+     String: "= start && now"
+     Context: return now >= start && now <= end;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 6: hardcoded_jsx_text
+     String: "TODO: Implement RentalObjectAuditTab"
+     Context: return <Paragraph>TODO: Implement RentalObjectAuditTab</Paragraph>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAvailabilityTab.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 6: hardcoded_jsx_text
+     String: "TODO: Implement RentalObjectAvailabilityTab"
+     Context: return <Paragraph>TODO: Implement RentalObjectAvailabilityTab</Paragraph>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectBookingsTab.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 6: hardcoded_jsx_text
+     String: "TODO: Implement RentalObjectBookingsTab"
+     Context: return <Paragraph>TODO: Implement RentalObjectBookingsTab</Paragraph>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectHeader.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 6: hardcoded_jsx_text
+     String: "TODO: Implement RentalObjectHeader"
+     Context: return <Paragraph>TODO: Implement RentalObjectHeader</Paragraph>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectOverviewTab.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 6: hardcoded_jsx_text
+     String: "TODO: Implement RentalObjectOverviewTab"
+     Context: return <Paragraph>TODO: Implement RentalObjectOverviewTab</Paragraph>;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/list/RentalObjectsTable.tsx (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 97: hardcoded_jsx_text
+     String: "0 && selectedIds.length"
+     Context: const someSelected = selectedIds.length > 0 && selectedIds.length < items.length;
+
+
+📄 /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/hooks/useBackofficeRole.ts (1 issues)
+────────────────────────────────────────────────────────────────────────────────
+  🔴 Line 91: hardcoded_jsx_text
+     String: "Switch Role"
+     Context: *   return <button onClick={handleSwitch}>Switch Role</button>;
+
+
+----------------------------------------
+REPORT SAVED
+----------------------------------------
+JSON report: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/packages/ds/i18n-scan-report.json
+
+========================================
+

@@ -72,27 +72,27 @@ export function SeasonFormPage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Navn er påkrevd';
+      newErrors.name = t('seasons.validation.nameRequired');
     }
 
     if (!formData.startDate) {
-      newErrors.startDate = 'Startdato er påkrevd';
+      newErrors.startDate = t('seasons.validation.startDateRequired');
     }
 
     if (!formData.endDate) {
-      newErrors.endDate = 'Sluttdato er påkrevd';
+      newErrors.endDate = t('seasons.validation.endDateRequired');
     }
 
     if (formData.startDate && formData.endDate && formData.startDate >= formData.endDate) {
-      newErrors.endDate = 'Sluttdato må være etter startdato';
+      newErrors.endDate = t('seasons.validation.endDateAfterStart');
     }
 
     if (!formData.applicationDeadline) {
-      newErrors.applicationDeadline = 'Søknadsfrist er påkrevd';
+      newErrors.applicationDeadline = t('seasons.validation.deadlineRequired');
     }
 
     if (formData.applicationDeadline && formData.startDate && formData.applicationDeadline >= formData.startDate) {
-      newErrors.applicationDeadline = 'Søknadsfrist må være før startdato';
+      newErrors.applicationDeadline = t('seasons.validation.deadlineBeforeStart');
     }
 
     setErrors(newErrors);
@@ -121,7 +121,7 @@ export function SeasonFormPage() {
         const result = await createSeasonMutation.mutateAsync(cleanData);
         navigate(`/seasons/${result.data.id}`);
       }
-    } catch (_error) {
+    } catch {
       // Failed to save season
     } finally {
       setIsSubmitting(false);
@@ -159,14 +159,14 @@ export function SeasonFormPage() {
   if (isEditing && !season) {
     return (
       <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">Sesong ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('seasons.seasonNotFound')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
-          Sesongen eksisterer ikke eller er slettet.
+          {t('seasons.seasonNotFoundDesc')}
         </Paragraph>
         <Link to="/seasons">
           <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
-            Tilbake til oversikt
+            {t('seasons.backToOverview')}
           </Button>
         </Link>
       </div>
@@ -178,29 +178,29 @@ export function SeasonFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button" aria-label={isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}>
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button" aria-label={isEditing ? t('seasons.backToSeason') : t('seasons.backToOverview')}>
             <ArrowLeftIcon />
-            {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
+            {isEditing ? t('seasons.backToSeason') : t('seasons.backToOverview')}
           </Button>
         </Link>
 
         <Heading level={2} data-size="lg">
-          {isEditing ? 'Rediger sesong' : 'Ny sesong'}
+          {isEditing ? t('seasons.editSeason') : t('seasons.newSeasonTitle')}
         </Heading>
         <Paragraph
           data-size="sm"
           style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
         >
           {isEditing
-            ? 'Oppdater informasjon om sesongen'
-            : 'Opprett en ny sesong for sesongleie'}
+            ? t('seasons.updateSeasonDesc')
+            : t('seasons.createSeasonDesc')}
         </Paragraph>
       </div>
 
       {/* Info Alert */}
       {!isEditing && (
         <Alert>
-          Sesongen opprettes som <strong>{t("status.draft")}</strong>. Du må legge til lokaler før du kan åpne den for søknader.
+          {t('seasons.draftInfo')} <strong>{t('seasons.status.draft')}</strong>. {t('seasons.draftInfoAddVenues')}
         </Alert>
       )}
 
@@ -209,30 +209,30 @@ export function SeasonFormPage() {
         <form onSubmit={handleSubmit}>
           <Stack spacing={5}>
             {/* Basic Information */}
-            <FormSection title="Grunnleggende informasjon">
+            <FormSection title={t('seasons.basicInfo')}>
               <Stack spacing={4}>
                 <FormField
-                  label="Navn"
+                  label={t('seasons.name')}
                   required
                   error={errors.name || undefined}
-                  description="F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'"
+                  description={t('seasons.nameDescription')}
                 >
-                  <Textfield aria-label="Navn"
+                  <Textfield aria-label={t('seasons.name')}
                     value={formData.name}
                     onChange={(e) => handleChange('name')(e.target.value)}
-                    placeholder="Vårsesong 2026"
-                    
+                    placeholder={t('seasons.namePlaceholder')}
+
                   />
                 </FormField>
 
                 <FormField
-                  label="Beskrivelse"
-                  description="Retningslinjer og informasjon til søkere (valgfritt)"
+                  label={t('seasons.description')}
+                  description={t('seasons.descriptionHint')}
                 >
-                  <Textfield aria-label="Beskrivelse"
+                  <Textfield aria-label={t('seasons.description')}
                     value={formData.description || ''}
                     onChange={(e) => handleChange('description')(e.target.value)}
-                    placeholder="Legg til beskrivelse og retningslinjer..."
+                    placeholder={t('seasons.descriptionPlaceholder')}
                     multiline
                     rows={4}
                   />
@@ -241,50 +241,50 @@ export function SeasonFormPage() {
             </FormSection>
 
             {/* Period */}
-            <FormSection title="Periode og frister">
+            <FormSection title={t('seasons.periodAndDeadlines')}>
               <Stack spacing={4}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
                   <FormField
-                    label="Startdato"
+                    label={t('seasons.startDate')}
                     required
                     error={errors.startDate || undefined}
-                    description="Når sesongen starter"
+                    description={t('seasons.startDateHint')}
                   >
-                    <Textfield aria-label="Startdato"
+                    <Textfield aria-label={t('seasons.startDate')}
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => handleChange('startDate')(e.target.value)}
-                      
+
                     />
                   </FormField>
 
                   <FormField
-                    label="Sluttdato"
+                    label={t('seasons.endDate')}
                     required
                     error={errors.endDate || undefined}
-                    description="Når sesongen slutter"
+                    description={t('seasons.endDateHint')}
                   >
-                    <Textfield aria-label="Sluttdato"
+                    <Textfield aria-label={t('seasons.endDate')}
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => handleChange('endDate')(e.target.value)}
-                      
+
                       min={formData.startDate}
                     />
                   </FormField>
                 </div>
 
                 <FormField
-                  label="Søknadsfrist"
+                  label={t('seasons.applicationDeadline')}
                   required
                   error={errors.applicationDeadline || undefined}
-                  description="Siste dag for å sende inn søknader"
+                  description={t('seasons.applicationDeadlineHint')}
                 >
-                  <Textfield aria-label="Søknadsfrist"
+                  <Textfield aria-label={t('seasons.applicationDeadline')}
                     type="date"
                     value={formData.applicationDeadline}
                     onChange={(e) => handleChange('applicationDeadline')(e.target.value)}
-                    
+
                     max={formData.startDate}
                   />
                 </FormField>
@@ -293,7 +293,7 @@ export function SeasonFormPage() {
 
             {/* Actions */}
             <FormActions
-              submitText={isEditing ? 'Lagre endringer' : 'Opprett sesong'}
+              submitText={isEditing ? t('seasons.saveChanges') : t('seasons.createSeason')}
               onCancel={handleCancel}
               isSubmitting={isSubmitting}
             />

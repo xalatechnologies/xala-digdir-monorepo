@@ -5,7 +5,6 @@
  */
 
 import { Button } from '@xala/ds';
-import { useT } from '@xala/i18n';
 
 export interface FormActionsProps {
   /** Text for the primary submit button */
@@ -22,7 +21,7 @@ export interface FormActionsProps {
 
 export function FormActions({
   submitText,
-  cancelText = t("ui.cancel"),
+  cancelText = 'Avbryt',
   onCancel,
   isSubmitting = false,
   submittingText = 'Lagrer...',

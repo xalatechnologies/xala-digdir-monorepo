@@ -42,7 +42,8 @@ const CAPACITY_OPTIONS = [
 ];
 
 export function RentalObjectsListView() {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   const { permissions } = useRentalObjectPermissions();
 

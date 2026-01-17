@@ -1,4 +1,4 @@
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex messaging interface */
+/* eslint-disable digdir/require-interactive-labels -- Complex messaging interface with native inputs */
 
 import { useState, useEffect, useRef, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
 import {
@@ -33,8 +33,6 @@ import {
   type Conversation,
   type Message,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
-
 // Time ago formatting  
 function formatTimeAgo(dateStr: string): string {
   const date = new Date(dateStr);
@@ -66,7 +64,6 @@ function formatMessageDate(dateStr: string): string {
 type FilterType = 'all' | 'unread' | 'active' | 'resolved';
 
 export function MessagesPage() {
-  const t = useT();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -303,27 +300,27 @@ export function MessagesPage() {
                 { key: 'active' as FilterType, label: 'Aktive' },
                 { key: 'resolved' as FilterType, label: 'Løst' },
               ].map((tab) => (
-                <button
+                <Button
                   key={tab.key}
+                  type="button"
+                  variant="tertiary"
                   onClick={() => setFilter(tab.key)}
                   style={{
                     flex: 1,
                     padding: 'var(--ds-spacing-2)',
-                    border: 'none',
                     borderRadius: 'var(--ds-border-radius-md)',
-                    backgroundColor: filter === tab.key 
-                      ? 'var(--ds-color-brand-1-surface-default)' 
+                    backgroundColor: filter === tab.key
+                      ? 'var(--ds-color-brand-1-surface-default)'
                       : 'transparent',
-                    color: filter === tab.key 
-                      ? 'var(--ds-color-brand-1-text-default)' 
+                    color: filter === tab.key
+                      ? 'var(--ds-color-brand-1-text-default)'
                       : 'var(--ds-color-neutral-text-default)',
                     fontSize: 'var(--ds-font-size-xs)',
                     fontWeight: filter === tab.key ? 600 : 400,
-                    cursor: 'pointer',
-                  }} type="button"
+                  }}
                 >
                   {tab.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -686,19 +683,18 @@ export function MessagesPage() {
                         <Paragraph data-size="xs" style={{ margin: 0 }}>
                           {file.name}
                         </Paragraph>
-                        <button
+                        <Button
+                          type="button"
+                          variant="tertiary"
+                          data-size="sm"
                           onClick={() => handleRemoveFile(index)}
+                          aria-label="Fjern vedlegg"
                           style={{
-                            border: 'none',
-                            background: 'none',
-                            cursor: 'pointer',
                             padding: '2px',
-                            display: 'flex',
-                            alignItems: 'center',
-                          }} type="button"
+                          }}
                         >
                           <XIcon style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }} />
-                        </button>
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -720,21 +716,19 @@ export function MessagesPage() {
                     onChange={handleFileSelect}
                     style={{ display: 'none' }}
                   />
-                  <button
+                  <Button
+                    type="button"
+                    variant="tertiary"
                     onClick={() => fileInputRef.current?.click()}
+                    aria-label="Legg til vedlegg"
+                    title="Legg til vedlegg"
                     style={{
-                      border: 'none',
-                      background: 'none',
-                      cursor: 'pointer',
                       padding: 'var(--ds-spacing-1)',
-                      display: 'flex',
-                      alignItems: 'center',
                       color: 'var(--ds-color-neutral-text-subtle)',
                     }}
-                    title="Legg til vedlegg" type="button"
                   >
                     <PaperclipIcon />
-                  </button>
+                  </Button>
                   <input
                     ref={inputRef}
                     type="text"

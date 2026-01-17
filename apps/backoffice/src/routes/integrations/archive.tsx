@@ -40,42 +40,46 @@ interface ArchiveEvent {
   caseNumber?: string;
 }
 
-const EVENT_TYPE_LABELS: Record<ArchiveEvent['type'], string> = {
-  booking: 'Booking',
-  document: 'Dokument',
-  contract: 'Kontrakt',
-  invoice: 'Faktura',
-};
-
 function formatTimestamp(timestamp: string): string {
   const date = new Date(timestamp);
-  return date.toLocaleDateString('nb-NO', { 
-    day: 'numeric', 
-    month: 'short', 
+  return date.toLocaleDateString('nb-NO', {
+    day: 'numeric',
+    month: 'short',
     year: 'numeric',
-    hour: '2-digit', 
-    minute: '2-digit' 
+    hour: '2-digit',
+    minute: '2-digit'
   });
 }
 
-function getStatusBadge(status: ArchiveEvent['status']): React.ReactElement {
-  switch (status) {
-    case 'sent':
-      return <Badge color="success">Sendt</Badge>;
-    case 'failed':
-      return <Badge color="danger">Feilet</Badge>;
-    case 'pending':
-    default:
-      return <Badge color="warning">{t("status.pending")}</Badge>;
-  }
-}
-
 export function ArchivePage(): React.ReactElement {
+  const t = useT();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRetrying, setIsRetrying] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const getEventTypeLabel = (type: ArchiveEvent['type']): string => {
+    const labels: Record<ArchiveEvent['type'], string> = {
+      booking: t('integrations.archive.type.booking'),
+      document: t('integrations.archive.type.document'),
+      contract: t('integrations.archive.type.contract'),
+      invoice: t('integrations.archive.type.invoice'),
+    };
+    return labels[type];
+  };
+
+  const getStatusBadge = (status: ArchiveEvent['status']): React.ReactElement => {
+    switch (status) {
+      case 'sent':
+        return <Badge color="success">{t('integrations.archive.status.sent')}</Badge>;
+      case 'failed':
+        return <Badge color="danger">{t('integrations.archive.status.failed')}</Badge>;
+      case 'pending':
+      default:
+        return <Badge color="warning">{t('integrations.archive.status.pending')}</Badge>;
+    }
+  };
 
   // Mock data - in real implementation, this would come from useAcosArchiveEvents()
   const isActive = true;
@@ -154,30 +158,30 @@ export function ArchivePage(): React.ReactElement {
         <div>
           <Link to="/integrations" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 'var(--ds-spacing-1)', marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-accent-text-default)' }}>
             <ChevronLeftIcon />
-            Tilbake til oversikt
+            {t('integrations.archive.backToOverview')}
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                <Heading level={1} data-size="lg">Acos WebSak - Arkiv</Heading>
+                <Heading level={1} data-size="lg">{t('integrations.archive.title')}</Heading>
                 {isActive ? (
-                  <Badge color="success">Aktiv</Badge>
+                  <Badge color="success">{t('integrations.archive.statusActive')}</Badge>
                 ) : (
-                  <Badge color="neutral">Inaktiv</Badge>
+                  <Badge color="neutral">{t('integrations.archive.statusInactive')}</Badge>
                 )}
               </div>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Se hva som arkiveres og status på arkivering
+                {t('integrations.archive.description')}
               </Paragraph>
             </div>
-            <Button 
-              variant="secondary" 
-              onClick={handleRefresh} 
+            <Button
+              variant="secondary"
+              onClick={handleRefresh}
               disabled={isRefreshing}
               type="button"
             >
               {isRefreshing ? <Spinner aria-hidden="true" /> : <RefreshIcon />}
-              Oppdater
+              {t('integrations.archive.refresh')}
             </Button>
           </div>
         </div>
@@ -188,7 +192,7 @@ export function ArchivePage(): React.ReactElement {
               {stats.total}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-              Totalt
+              {t('integrations.archive.stats.total')}
             </Paragraph>
           </Card>
           <Card style={{ textAlign: 'center', padding: 'var(--ds-spacing-4)' }}>
@@ -196,7 +200,7 @@ export function ArchivePage(): React.ReactElement {
               {stats.sent}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-              Sendt
+              {t('integrations.archive.stats.sent')}
             </Paragraph>
           </Card>
           <Card style={{ textAlign: 'center', padding: 'var(--ds-spacing-4)' }}>
@@ -204,71 +208,73 @@ export function ArchivePage(): React.ReactElement {
               {stats.failed}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-              Feilet
+              {t('integrations.archive.stats.failed')}
             </Paragraph>
           </Card>
           <Card style={{ textAlign: 'center', padding: 'var(--ds-spacing-4)' }}>
             <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
               {stats.pending}
             </Heading>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("status.pending")}</Paragraph>
+            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              {t('integrations.archive.stats.pending')}
+            </Paragraph>
           </Card>
         </div>
 
         <Card>
           <Stack spacing={4}>
-            <Heading level={3} data-size="sm">Arkiverte hendelser</Heading>
-            
+            <Heading level={3} data-size="sm">{t('integrations.archive.events.title')}</Heading>
+
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: '200px' }}>
                 <Textfield
-                  aria-label={t("ui.search")}
-                  placeholder="Søk etter tittel eller saksnummer..."
+                  aria-label={t('common.search')}
+                  placeholder={t('integrations.archive.events.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Select
-                aria-label="Filter type"
+                aria-label={t('integrations.archive.events.filterType')}
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
                 style={{ minWidth: '150px' }}
               >
-                <option value="all">Alle typer</option>
-                <option value="booking">Booking</option>
-                <option value="document">Dokument</option>
-                <option value="contract">Kontrakt</option>
-                <option value="invoice">Faktura</option>
+                <option value="all">{t('integrations.archive.events.allTypes')}</option>
+                <option value="booking">{t('integrations.archive.type.booking')}</option>
+                <option value="document">{t('integrations.archive.type.document')}</option>
+                <option value="contract">{t('integrations.archive.type.contract')}</option>
+                <option value="invoice">{t('integrations.archive.type.invoice')}</option>
               </Select>
               <Select
-                aria-label="Filter status"
+                aria-label={t('integrations.archive.events.filterStatus')}
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 style={{ minWidth: '150px' }}
               >
-                <option value="all">Alle statuser</option>
-                <option value="sent">Sendt</option>
-                <option value="failed">Feilet</option>
-                <option value="pending">{t("status.pending")}</option>
+                <option value="all">{t('integrations.archive.events.allStatuses')}</option>
+                <option value="sent">{t('integrations.archive.status.sent')}</option>
+                <option value="failed">{t('integrations.archive.status.failed')}</option>
+                <option value="pending">{t('integrations.archive.status.pending')}</option>
               </Select>
             </div>
 
             <Table>
               <thead>
                 <tr>
-                  <th>Type</th>
-                  <th>Tittel</th>
-                  <th>Saksnummer</th>
-                  <th>Status</th>
-                  <th>Tidspunkt</th>
-                  <th>Handling</th>
+                  <th>{t('integrations.archive.table.type')}</th>
+                  <th>{t('integrations.archive.table.title')}</th>
+                  <th>{t('integrations.archive.table.caseNumber')}</th>
+                  <th>{t('integrations.archive.table.status')}</th>
+                  <th>{t('integrations.archive.table.timestamp')}</th>
+                  <th>{t('integrations.archive.table.action')}</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredEvents.map(event => (
                   <tr key={event.id}>
                     <td>
-                      <Badge color="neutral">{EVENT_TYPE_LABELS[event.type]}</Badge>
+                      <Badge color="neutral">{getEventTypeLabel(event.type)}</Badge>
                     </td>
                     <td>
                       <div>
@@ -293,9 +299,9 @@ export function ArchivePage(): React.ReactElement {
                     </td>
                     <td>
                       {event.status === 'failed' && (
-                        <Button 
-                          variant="tertiary" 
-                          data-size="sm" 
+                        <Button
+                          variant="tertiary"
+                          data-size="sm"
                           onClick={() => handleRetry(event.id)}
                           disabled={isRetrying === event.id}
                           type="button"
@@ -305,7 +311,7 @@ export function ArchivePage(): React.ReactElement {
                           ) : (
                             <RefreshIcon />
                           )}
-                          Prøv igjen
+                          {t('integrations.archive.events.retry')}
                         </Button>
                       )}
                     </td>
@@ -317,7 +323,7 @@ export function ArchivePage(): React.ReactElement {
             {filteredEvents.length === 0 && (
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-6)' }}>
                 <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ingen hendelser funnet
+                  {t('integrations.archive.events.noResults')}
                 </Paragraph>
               </div>
             )}
@@ -326,26 +332,26 @@ export function ArchivePage(): React.ReactElement {
 
         <Card>
           <Stack spacing={3}>
-            <Heading level={3} data-size="sm">Arkiverte hendelsestyper</Heading>
+            <Heading level={3} data-size="sm">{t('integrations.archive.eventTypes.title')}</Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Følgende hendelsestyper arkiveres automatisk til Acos WebSak:
+              {t('integrations.archive.eventTypes.description')}
             </Paragraph>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <CheckCircleIcon style={{ color: 'var(--ds-color-success-icon-default)' }} />
-                <Paragraph data-size="sm" style={{ margin: 0 }}>Bookinger og reservasjoner</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('integrations.archive.eventTypes.bookings')}</Paragraph>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <CheckCircleIcon style={{ color: 'var(--ds-color-success-icon-default)' }} />
-                <Paragraph data-size="sm" style={{ margin: 0 }}>Leiekontrakter</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('integrations.archive.eventTypes.contracts')}</Paragraph>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <CheckCircleIcon style={{ color: 'var(--ds-color-success-icon-default)' }} />
-                <Paragraph data-size="sm" style={{ margin: 0 }}>Fakturaer</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('integrations.archive.eventTypes.invoices')}</Paragraph>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <CheckCircleIcon style={{ color: 'var(--ds-color-success-icon-default)' }} />
-                <Paragraph data-size="sm" style={{ margin: 0 }}>Dokumenter og vedlegg</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('integrations.archive.eventTypes.documents')}</Paragraph>
               </div>
             </div>
           </Stack>

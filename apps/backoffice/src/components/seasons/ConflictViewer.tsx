@@ -79,7 +79,8 @@ const overlapTypeLabels: Record<ApplicationConflict['overlapType'], string> = {
 };
 
 export function ConflictViewer({ seasonId }: ConflictViewerProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   // Queries
   const { data: conflictsData, isLoading } = useSeasonConflicts(seasonId);
   const conflicts = conflictsData?.data?.conflicts ?? [];

@@ -26,7 +26,8 @@ interface EditBookingFormProps {
 }
 
 export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingFormProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState({
     listingId: booking.listingId,
     startTime: '',
@@ -121,7 +122,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
       };
 
       await onSubmit(updateData);
-    } catch (error) {
+    } catch {
       // Failed to update booking
     } finally {
       setIsSubmitting(false);

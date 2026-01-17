@@ -3,7 +3,7 @@
  * Admin view for viewing system audit trail with filters and details
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form with native elements */
+/* eslint-disable digdir/require-interactive-labels -- Complex filter form with native date inputs */
 
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -17,6 +17,7 @@ import {
   DrawerSection,
   Stack,
   Badge,
+  Label,
   FilterIcon,
   CloseIcon,
   ChevronLeftIcon,
@@ -48,25 +49,11 @@ function formatTime(timestamp: string, locale: string): string {
   });
 }
 
-// Resource type options
-const RESOURCE_OPTIONS = [
-  { id: 'all', label: 'Alle ressurser' },
-  { id: 'listing', label: 'Lokaler' },
-  { id: 'booking', label: 'Bookinger' },
-  { id: 'user', label: 'Brukere' },
-  { id: 'organization', label: 'Organisasjoner' },
-  { id: 'allocation', label: 'Allokeringer' },
-  { id: 'settings', label: t("ui.settings") },
-];
+// Resource type option IDs
+const RESOURCE_OPTION_IDS = ['all', 'listing', 'booking', 'user', 'organization', 'allocation', 'settings'] as const;
 
-// Action type options
-const ACTION_OPTIONS = [
-  { id: 'all', label: 'Alle handlinger' },
-  { id: 'create', label: 'Opprettet' },
-  { id: 'read', label: 'Lest' },
-  { id: 'update', label: 'Oppdatert' },
-  { id: 'delete', label: 'Slettet' },
-];
+// Action type option IDs
+const ACTION_OPTION_IDS = ['all', 'create', 'read', 'update', 'delete'] as const;
 
 // Helper to get action badge color
 function getActionColor(action: string): 'success' | 'info' | 'warning' | 'danger' | 'neutral' {
@@ -84,46 +71,63 @@ function getActionColor(action: string): 'success' | 'info' | 'warning' | 'dange
   }
 }
 
-// Helper to get action label
-function getActionLabel(action: string): string {
-  switch (action) {
-    case 'create':
-      return 'Opprettet';
-    case 'read':
-      return 'Lest';
-    case 'update':
-      return 'Oppdatert';
-    case 'delete':
-      return 'Slettet';
-    default:
-      return action;
-  }
-}
+// Translation key maps for actions and resources
+const ACTION_TRANSLATION_KEYS: Record<string, string> = {
+  all: 'audit.actions.all',
+  create: 'audit.actions.create',
+  read: 'audit.actions.read',
+  update: 'audit.actions.update',
+  delete: 'audit.actions.delete',
+};
 
-// Helper to get resource label
-function getResourceLabel(resource: string): string {
-  switch (resource) {
-    case 'listing':
-      return 'Lokale';
-    case 'booking':
-      return 'Booking';
-    case 'user':
-      return 'Bruker';
-    case 'organization':
-      return 'Organisasjon';
-    case 'allocation':
-      return 'Allokering';
-    case 'settings':
-      return t("ui.settings");
-    default:
-      return resource;
-  }
-}
+const RESOURCE_TRANSLATION_KEYS: Record<string, string> = {
+  all: 'audit.resources.all',
+  listing: 'audit.resources.listing',
+  booking: 'audit.resources.booking',
+  user: 'audit.resources.user',
+  organization: 'audit.resources.organization',
+  allocation: 'audit.resources.allocation',
+  settings: 'audit.resources.settings',
+};
+
+const RESOURCE_SINGULAR_KEYS: Record<string, string> = {
+  listing: 'audit.resource.listing',
+  booking: 'audit.resource.booking',
+  user: 'audit.resource.user',
+  organization: 'audit.resource.organization',
+  allocation: 'audit.resource.allocation',
+  settings: 'audit.resource.settings',
+};
 
 export function AuditPage() {
   const t = useT();
   const { locale } = useLocale();
   const formatLocale = locale === 'en' ? 'en-US' : 'nb-NO';
+
+  // Build translated options
+  const resourceOptions = useMemo(() =>
+    RESOURCE_OPTION_IDS.map(id => ({
+      id,
+      label: t(RESOURCE_TRANSLATION_KEYS[id] || id)
+    })), [t]);
+
+  const actionOptions = useMemo(() =>
+    ACTION_OPTION_IDS.map(id => ({
+      id,
+      label: t(ACTION_TRANSLATION_KEYS[id] || id)
+    })), [t]);
+
+  // Helper to get translated action label
+  const getActionLabel = useCallback((action: string): string => {
+    const key = ACTION_TRANSLATION_KEYS[action];
+    return key ? t(key) : action;
+  }, [t]);
+
+  // Helper to get translated resource label (singular)
+  const getResourceLabel = useCallback((resource: string): string => {
+    const key = RESOURCE_SINGULAR_KEYS[resource];
+    return key ? t(key) : resource;
+  }, [t]);
 
   // State
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -160,10 +164,10 @@ export function AuditPage() {
   const userNameMap = useMemo(() => {
     const map = new Map<string, string>();
     usersData?.data?.forEach((user: { id: string; name?: string; email?: string }) => {
-      map.set(user.id, user.name || user.email || 'Ukjent');
+      map.set(user.id, user.name || user.email || t('audit.unknownUser'));
     });
     return map;
-  }, [usersData]);
+  }, [usersData, t]);
 
   const listingNameMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -237,13 +241,13 @@ export function AuditPage() {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         position="right"
-       
-        title="Filtrer hendelser"
+
+        title={t('audit.filterEvents')}
       >
-        <DrawerSection title="Ressurstype">
+        <DrawerSection title={t('audit.resourceType')}>
           <Stack spacing="var(--ds-spacing-2)">
-            {RESOURCE_OPTIONS.map((option) => (
-              <label
+            {resourceOptions.map((option) => (
+              <Label
                 key={option.id}
                 style={{
                   display: 'flex',
@@ -267,15 +271,15 @@ export function AuditPage() {
                   style={{ accentColor: 'var(--ds-color-accent-base-default)' }}
                 />
                 <span>{option.label}</span>
-              </label>
+              </Label>
             ))}
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Handling">
+        <DrawerSection title={t('audit.actionType')}>
           <Stack spacing="var(--ds-spacing-2)">
-            {ACTION_OPTIONS.map((option) => (
-              <label
+            {actionOptions.map((option) => (
+              <Label
                 key={option.id}
                 style={{
                   display: 'flex',
@@ -299,16 +303,16 @@ export function AuditPage() {
                   style={{ accentColor: 'var(--ds-color-accent-base-default)' }}
                 />
                 <span>{option.label}</span>
-              </label>
+              </Label>
             ))}
           </Stack>
         </DrawerSection>
 
-        <DrawerSection title="Tidsperiode">
+        <DrawerSection title={t('audit.timePeriod')}>
           <Stack spacing="var(--ds-spacing-2)">
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-                Fra dato
+                {t('audit.fromDate')}
               </Paragraph>
               <input
                 type="date"
@@ -325,7 +329,7 @@ export function AuditPage() {
             </div>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-                Til dato
+                {t('audit.toDate')}
               </Paragraph>
               <input
                 type="date"
@@ -351,7 +355,7 @@ export function AuditPage() {
               onClick={handleClearFilters}
               style={{ width: '100%' }}
             >
-              Nullstill filtre
+              {t('audit.resetFilters')}
             </Button>
           </div>
         )}
@@ -362,8 +366,8 @@ export function AuditPage() {
         isOpen={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
         position="right"
-       
-        title="Hendelsesdetaljer"
+
+        title={t('audit.eventDetails')}
       >
         {selectedEvent && (
           <>
@@ -371,7 +375,7 @@ export function AuditPage() {
               <Stack spacing="var(--ds-spacing-3)">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Handling
+                    {t('audit.table.action')}
                   </Paragraph>
                   <Badge data-color={getActionColor(selectedEvent.action)}>
                     {getActionLabel(selectedEvent.action)}
@@ -379,7 +383,7 @@ export function AuditPage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Ressurs
+                    {t('audit.table.resource')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                     {getResourceLabel(selectedEvent.resource)}
@@ -387,7 +391,7 @@ export function AuditPage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Ressurs-ID
+                    {t('audit.resourceId')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.resourceId || '-'}
@@ -395,7 +399,7 @@ export function AuditPage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Tidspunkt
+                    {t('audit.timestamp')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
                     {formatTimestamp(selectedEvent.timestamp).date} {formatTimestamp(selectedEvent.timestamp).time}
@@ -404,20 +408,20 @@ export function AuditPage() {
               </Stack>
             </DrawerSection>
 
-            <DrawerSection title="Utført av">
+            <DrawerSection title={t('audit.performedBy')}>
               <Stack spacing="var(--ds-spacing-2)">
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Bruker
+                    {t('audit.table.user')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    {userNameMap.get(selectedEvent.userId || '') || 'System'}
+                    {userNameMap.get(selectedEvent.userId || '') || t('audit.systemUser')}
                   </Paragraph>
                 </div>
                 {selectedEvent.userId && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Bruker-ID
+                      {t('audit.userId')}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.userId.slice(0, 8)}...
@@ -427,7 +431,7 @@ export function AuditPage() {
                 {selectedEvent.ipAddress && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      IP-adresse
+                      {t('audit.ipAddress')}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.ipAddress}
@@ -438,7 +442,7 @@ export function AuditPage() {
             </DrawerSection>
 
             {selectedEvent.metadata && Object.keys(selectedEvent.metadata).length > 0 && (
-              <DrawerSection title="Metadata">
+              <DrawerSection title={t('audit.metadata')}>
                 <div
                   style={{
                     backgroundColor: 'var(--ds-color-neutral-surface-default)',
@@ -463,11 +467,11 @@ export function AuditPage() {
               </DrawerSection>
             )}
 
-            <DrawerSection title="System">
+            <DrawerSection title={t('audit.system')}>
               <Stack spacing="var(--ds-spacing-2)">
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Hendelse-ID
+                    {t('audit.eventId')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                     {selectedEvent.id.slice(0, 8)}...
@@ -476,7 +480,7 @@ export function AuditPage() {
                 {selectedEvent.tenantId && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Tenant-ID
+                      {t('audit.tenantId')}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)' }}>
                       {selectedEvent.tenantId.slice(0, 8)}...
@@ -485,7 +489,7 @@ export function AuditPage() {
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Alvorlighetsgrad
+                    {t('audit.severity')}
                   </Paragraph>
                   <Badge data-color={selectedEvent.severity === 'error' || selectedEvent.severity === 'critical' ? 'danger' : 'neutral'}>
                     {selectedEvent.severity}
@@ -494,7 +498,7 @@ export function AuditPage() {
                 {selectedEvent.userAgent && (
                   <div>
                     <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      User Agent
+                      {t('audit.userAgent')}
                     </Paragraph>
                     <Paragraph data-size="xs" style={{ margin: 0, fontFamily: 'var(--ds-font-family-monospace)', wordBreak: 'break-all' }}>
                       {selectedEvent.userAgent}
@@ -520,10 +524,10 @@ export function AuditPage() {
         >
           <div>
             <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-              Revisjonslogg
+              {t('audit.title')}
             </Heading>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Oversikt over alle systemhendelser og endringer
+              {t('audit.subtitle')}
             </Paragraph>
           </div>
         </div>
@@ -540,7 +544,7 @@ export function AuditPage() {
         >
           <div style={{ flex: 1, minWidth: '200px', maxWidth: '400px' }}>
             <HeaderSearch
-              placeholder="Søk i hendelser..."
+              placeholder={t('audit.searchPlaceholder')}
               value={searchValue}
               onSearchChange={handleSearchChange}
               onSearch={handleSearch}
@@ -554,7 +558,7 @@ export function AuditPage() {
             style={{ position: 'relative' }}
           >
             <FilterIcon />
-            Filter
+            {t('audit.filterButton')}
             {hasActiveFilters && (
               <span
                 style={{
@@ -571,7 +575,7 @@ export function AuditPage() {
           </Button>
 
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {totalCount} hendelser
+            {t('audit.eventsCount', { count: totalCount })}
           </Paragraph>
         </div>
 
@@ -587,62 +591,56 @@ export function AuditPage() {
           >
             {resourceFilter !== 'all' && (
               <Badge data-color="neutral">
-                {RESOURCE_OPTIONS.find((o) => o.id === resourceFilter)?.label}
-                <button
+                {resourceOptions.find((o) => o.id === resourceFilter)?.label}
+                <Button
                   type="button"
+                  variant="tertiary"
                   onClick={() => setResourceFilter('all')}
+                  aria-label={t('audit.aria.removeResourceFilter')}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
                     marginLeft: 'var(--ds-spacing-1)',
                     padding: 0,
-                    display: 'flex',
                   }}
                 >
                   <CloseIcon style={{ width: '12px', height: '12px' }} />
-                </button>
+                </Button>
               </Badge>
             )}
             {actionFilter !== 'all' && (
               <Badge data-color="neutral">
-                {ACTION_OPTIONS.find((o) => o.id === actionFilter)?.label}
-                <button
+                {actionOptions.find((o) => o.id === actionFilter)?.label}
+                <Button
                   type="button"
+                  variant="tertiary"
                   onClick={() => setActionFilter('all')}
+                  aria-label={t('audit.aria.removeActionFilter')}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
                     marginLeft: 'var(--ds-spacing-1)',
                     padding: 0,
-                    display: 'flex',
                   }}
                 >
                   <CloseIcon style={{ width: '12px', height: '12px' }} />
-                </button>
+                </Button>
               </Badge>
             )}
             {(startDate || endDate) && (
               <Badge data-color="neutral">
                 {startDate || '...'} - {endDate || '...'}
-                <button
+                <Button
                   type="button"
+                  variant="tertiary"
                   onClick={() => {
                     setStartDate('');
                     setEndDate('');
                   }}
+                  aria-label={t('audit.aria.removeDateFilter')}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
                     marginLeft: 'var(--ds-spacing-1)',
                     padding: 0,
-                    display: 'flex',
                   }}
                 >
                   <CloseIcon style={{ width: '12px', height: '12px' }} />
-                </button>
+                </Button>
               </Badge>
             )}
           </div>
@@ -676,7 +674,7 @@ export function AuditPage() {
               }}
             >
               <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
-                Kunne ikke laste revisjonslogg
+                {t('audit.loadingError')}
               </Paragraph>
             </div>
           ) : events.length === 0 ? (
@@ -687,12 +685,12 @@ export function AuditPage() {
               }}
             >
               <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                Ingen hendelser funnet
+                {t('audit.noEvents')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {hasActiveFilters
-                  ? 'Prøv å justere filtrene dine'
-                  : 'Ingen hendelser er registrert ennå'}
+                  ? t('audit.adjustFilters')
+                  : t('audit.noEventsDesc')}
               </Paragraph>
             </div>
           ) : (
@@ -700,11 +698,11 @@ export function AuditPage() {
               <Table>
                 <Table.Head>
                   <Table.Row>
-                    <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                    <Table.HeaderCell>Handling</Table.HeaderCell>
-                    <Table.HeaderCell>Ressurs</Table.HeaderCell>
-                    <Table.HeaderCell>Ressurs-ID</Table.HeaderCell>
-                    <Table.HeaderCell>Bruker</Table.HeaderCell>
+                    <Table.HeaderCell>{t('audit.table.timestamp')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('audit.table.action')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('audit.table.resource')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('audit.table.resourceId')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('audit.table.user')}</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: 'var(--ds-spacing-12)' }}></Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>
@@ -744,7 +742,7 @@ export function AuditPage() {
                         </Table.Cell>
                         <Table.Cell>
                           <Paragraph data-size="sm" style={{ margin: 0 }}>
-                            {userNameMap.get(event.userId || '') || 'System'}
+                            {userNameMap.get(event.userId || '') || t('audit.systemUser')}
                           </Paragraph>
                         </Table.Cell>
                         <Table.Cell>
@@ -756,7 +754,7 @@ export function AuditPage() {
                               e.stopPropagation();
                               setSelectedEvent(event);
                             }}
-                            aria-label="Se detaljer"
+                            aria-label={t('audit.viewDetails')}
                           >
                             &rarr;
                           </Button>
@@ -788,7 +786,7 @@ export function AuditPage() {
                   >
                     <ChevronLeftIcon />{t("ui.previous")}</Button>
                   <Paragraph data-size="sm" style={{ margin: 0 }}>
-                    Side {page} av {totalPages}
+                    {t('audit.pageOf', { page, total: totalPages })}
                   </Paragraph>
                   <Button
                     type="button"
@@ -797,7 +795,7 @@ export function AuditPage() {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                   >
-                    Neste
+                    {t('audit.next')}
                     <ChevronRightIcon />
                   </Button>
                 </div>

@@ -254,7 +254,7 @@ export function BookingStep({ wizard }: BookingStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
-            <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>💡</span>
+            <span style={{ fontSize: 'var(--ds-font-size-lg)', flexShrink: 0 }}>💡</span>
             <span>{t('rentalObjects.bookingInfo')}</span>
           </Paragraph>
         </div>

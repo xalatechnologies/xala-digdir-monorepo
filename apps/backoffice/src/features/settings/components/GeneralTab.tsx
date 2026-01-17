@@ -18,7 +18,8 @@ import { useGeneralSettings } from '../hooks/useGeneralSettings';
 import { useT } from '@xala/i18n';
 
 export function GeneralTab() {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
     generalData,
     updateField,

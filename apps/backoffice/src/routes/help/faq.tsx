@@ -5,7 +5,7 @@
  * Different roles see different FAQs based on their permissions.
  */
 import * as React from 'react';
-import { Paragraph, Button } from '@xala/ds';
+import { Paragraph, Button, Heading, Link } from '@xala/ds';
 import { useAuth } from '@xala/auth';
 import { HelpLayout, HelpFAQItem, type TocItem } from './components';
 
@@ -279,26 +279,26 @@ export default function FAQPage(): React.ReactElement {
           borderRadius: 'var(--ds-border-radius-lg)',
         }}
       >
-        <h2
+        <Heading
+          level={2}
+          data-size="sm"
           style={{
             margin: 0,
             marginBottom: 'var(--ds-spacing-2)',
-            fontSize: 'var(--ds-font-size-md)',
-            fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
           Fant du ikke svar på spørsmålet ditt?
-        </h2>
+        </Heading>
         <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           Ta kontakt med support så hjelper vi deg.
         </Paragraph>
         <Button
           asChild
-          data-color="accent" type="button"
+          data-color="accent"
         >
-          <a href="mailto:support@digilist.no">
+          <Link href="mailto:support@digilist.no">
             Kontakt support
-          </a>
+          </Link>
         </Button>
       </section>
     </HelpLayout>

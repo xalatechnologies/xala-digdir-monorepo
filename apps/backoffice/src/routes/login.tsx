@@ -213,7 +213,7 @@ export function LoginPage(): React.ReactElement {
     >
       {accessDeniedError && (
         <Alert variant="error" style={{ marginBottom: 24 }}>
-          <div style={{ fontWeight: 600, marginBottom: 4 }}>
+          <div style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 4 }}>
             {t('auth.noAccess')}
           </div>
           <div>

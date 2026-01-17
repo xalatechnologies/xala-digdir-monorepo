@@ -143,7 +143,7 @@ export function UsersManagementPage() {
             alignItems: 'end',
           }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 E-post
               </label>
               <Input
@@ -155,7 +155,7 @@ export function UsersManagementPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 Rolle
               </label>
               <Select
@@ -241,7 +241,7 @@ export function UsersManagementPage() {
                         {user.name.charAt(0)}
                       </div>
                       <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>{user.name}</Paragraph>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{user.name}</Paragraph>
                         <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{user.email}</Paragraph>
                       </div>
                     </div>

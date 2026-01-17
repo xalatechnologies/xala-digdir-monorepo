@@ -63,8 +63,9 @@ export function CredentialsManager({
   integrationId,
   integrationName,
   onClose: _onClose,
-}: CredentialsManagerProps):
-  const t = useT(); React.ReactElement {
+}: CredentialsManagerProps): React.ReactElement {
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [showAddModal, setShowAddModal] = useState(false);
   const [showRotateModal, setShowRotateModal] = useState<CredentialInfo | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<CredentialInfo | null>(null);

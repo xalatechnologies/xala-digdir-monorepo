@@ -4,7 +4,6 @@
  * Displays pending requests with 30-day GDPR timeline tracking
  */
 
-/* eslint-disable digdir/prefer-ds-components -- Complex filter form */
 
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -101,7 +100,8 @@ interface GdprRequestQueueProps {
 }
 
 export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   // State
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -303,21 +303,21 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
           }
         >
           {SORT_OPTIONS.map((option) => (
-            <button
+            <Button
               key={option.id}
+              type="button"
+              variant="tertiary"
               onClick={() => setSelectedSort(option.id)}
               style={{
                 padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                border: 'none',
                 background: selectedSort === option.id ? 'var(--ds-color-neutral-background-subtle)' : 'transparent',
-                cursor: 'pointer',
                 width: '100%',
                 textAlign: 'left',
                 fontWeight: selectedSort === option.id ? 'var(--ds-font-weight-medium)' : 'normal',
-              }} type="button"
+              }}
             >
               {option.label}
-            </button>
+            </Button>
           ))}
         </Dropdown>
       </div>
@@ -398,65 +398,63 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                     </Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <button
+                    <Button
+                      type="button"
+                      variant="tertiary"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCopyId(request.id);
                       }}
+                      aria-label="Kopier ID"
+                      title="Kopier ID"
                       style={{
-                        border: 'none',
-                        background: 'transparent',
-                        cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: 'var(--ds-spacing-2)',
                         padding: 'var(--ds-spacing-2)',
                         color: isCopied ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-subtle)',
                         fontSize: 'var(--ds-font-size-xs)',
-                        fontFamily: 'monospace',
+                        fontFamily: 'var(--ds-font-family-mono)',
                       }}
-                      title="Kopier ID" type="button"
                     >
                       {request.id.slice(0, 8)}...
                       <CopyIcon size={12} />
-                    </button>
+                    </Button>
                   </Table.Cell>
                   <Table.Cell>
                     <Dropdown
                       trigger={
-                        <button
+                        <Button
+                          type="button"
+                          variant="tertiary"
                           onClick={(e) => e.stopPropagation()}
+                          aria-label="Handlinger"
                           style={{
-                            border: 'none',
-                            background: 'transparent',
-                            cursor: 'pointer',
                             padding: 'var(--ds-spacing-2)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}
-                          aria-label="Handlinger" type="button"
                         >
                           <MoreVerticalIcon size={16} />
-                        </button>
+                        </Button>
                       }
                     >
-                      <button
+                      <Button
+                        type="button"
+                        variant="tertiary"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRowClick(request);
                         }}
                         style={{
                           padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                          border: 'none',
-                          background: 'transparent',
-                          cursor: 'pointer',
                           width: '100%',
                           textAlign: 'left',
-                        }} type="button"
+                        }}
                       >
                         Vis detaljer
-                      </button>
+                      </Button>
                     </Dropdown>
                   </Table.Cell>
                 </Table.Row>

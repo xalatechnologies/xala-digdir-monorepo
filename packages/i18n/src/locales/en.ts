@@ -326,6 +326,90 @@ export const en: Record<string, string> = {
   'bookings.viewInvoice': 'View invoice basis',
   'bookings.viewAccess': 'View access (lock system)',
   'bookings.cancelBooking': 'Cancel booking',
+  'bookings.cancel': 'Cancel',
+  'bookings.bulkConfirm': 'Confirm multiple bookings',
+  'bookings.bulkCancel': 'Cancel multiple bookings',
+
+  // Bookings page - Status tabs
+  'bookings.status.pending': 'Pending',
+  'bookings.status.confirmed': 'Confirmed',
+  'bookings.status.completed': 'Completed',
+  'bookings.status.cancelled': 'Cancelled',
+  'bookings.status.all': 'All',
+
+  // Bookings page - Payment options
+  'bookings.payment.all': 'All payments',
+  'bookings.payment.paid': 'Paid',
+  'bookings.payment.unpaid': 'Unpaid',
+  'bookings.payment.refunded': 'Refunded',
+
+  // Bookings page - Sort options
+  'bookings.sort.newestFirst': 'Newest first',
+  'bookings.sort.oldestFirst': 'Oldest first',
+  'bookings.sort.highestPrice': 'Highest price',
+  'bookings.sort.lowestPrice': 'Lowest price',
+
+  // Bookings page - Time units
+  'bookings.time.minutes': '{{count}} min',
+  'bookings.time.hours': '{{count}} h',
+
+  // Bookings page - Filter drawer
+  'bookings.filter.title': 'Filter and sorting',
+  'bookings.filter.showingCount': 'Showing {{count}} bookings',
+  'bookings.filter.reset': 'Reset',
+  'bookings.filter.apply': 'Apply filter',
+  'bookings.filter.datePeriod': 'Date period',
+  'bookings.filter.sorting': 'Sorting',
+  'bookings.filter.fromDate': 'From date',
+  'bookings.filter.toDate': 'To date',
+
+  // Bookings page - Search
+  'bookings.search.placeholder': 'Search for listing, user, booking ID...',
+
+  // Bookings page - Bulk actions
+  'bookings.bulk.selected': '{{count}} selected',
+  'bookings.bulk.approve': 'Approve',
+  'bookings.bulk.reject': 'Reject',
+  'bookings.bulk.export': 'Export',
+  'bookings.bulk.confirmApprove': 'Approve {{count}} bookings?',
+  'bookings.bulk.approveAll': 'Approve all',
+  'bookings.bulk.confirmReject': 'Reject {{count}} bookings?',
+  'bookings.bulk.rejectAll': 'Reject all',
+
+  // Bookings page - CSV export headers
+  'bookings.csv.id': 'ID',
+  'bookings.csv.listing': 'Listing',
+  'bookings.csv.user': 'User',
+  'bookings.csv.startTime': 'Start time',
+  'bookings.csv.endTime': 'End time',
+  'bookings.csv.status': 'Status',
+  'bookings.csv.price': 'Price',
+
+  // Bookings page - Table headers
+  'bookings.table.booking': 'Booking',
+  'bookings.table.resource': 'Resource',
+  'bookings.table.user': 'User',
+  'bookings.table.time': 'Time',
+  'bookings.table.status': 'Status',
+  'bookings.table.price': 'Price',
+
+  // Bookings page - Empty states
+  'bookings.empty.noPending': 'No pending requests',
+  'bookings.empty.allProcessed': 'All booking requests have been processed',
+  'bookings.empty.noCancelled': 'No cancelled bookings',
+  'bookings.empty.noCancelledDescription': 'There are no cancelled bookings',
+  'bookings.empty.noBookings': 'No bookings found',
+  'bookings.empty.tryDifferentSearch': 'Try changing your search criteria',
+  'bookings.empty.noBookingsInCategory': 'There are no bookings in this category',
+
+  // Bookings page - Actions
+  'bookings.action.selectBooking': 'Select booking {{ref}}',
+  'bookings.action.copyId': 'Copy ID',
+  'bookings.action.approve': 'Approve',
+  'bookings.action.reject': 'Reject',
+  'bookings.action.moreOptions': 'More options',
+  'bookings.action.approveBooking': 'Approve booking',
+  'bookings.action.rejectBooking': 'Reject booking',
 
   // Calendar
   'calendar.title': 'Calendar',
@@ -389,7 +473,9 @@ export const en: Record<string, string> = {
   // Organizations
   'organizations.title': 'Organizations',
   'organizations.subtitle': 'Manage registered organizations and their members.',
+  'organizations.subtitleAdmin': 'Manage organizations, members and verification',
   'organizations.add': 'Add organization',
+  'organizations.new': 'New organization',
   'organizations.totalOrgs': 'Total organizations',
   'organizations.activeOrgs': 'Active organizations',
   'organizations.totalMembers': 'Total members',
@@ -401,9 +487,93 @@ export const en: Record<string, string> = {
   'organizations.registered': 'Registered',
   'organizations.active': 'Active',
   'organizations.inactive': 'Inactive',
+  'organizations.suspended': 'Suspended',
   'organizations.viewBookings': 'View bookings',
+  'organizations.viewDetails': 'View details',
   'organizations.deactivate': 'Deactivate',
   'organizations.activate': 'Activate',
+  'organizations.verify': 'Verify',
+  'organizations.verified': 'Verified',
+  'organizations.deleteConfirm': 'Are you sure you want to delete this organization?',
+  'organizations.searchPlaceholder': 'Search for organization...',
+  'organizations.notFound': 'No organizations found',
+  'organizations.notFoundSingle': 'Organization not found',
+  'organizations.notFoundDescription': 'The organization does not exist or has been deleted.',
+  'organizations.tryDifferentSearch': 'Try different search criteria',
+  'organizations.createFirst': 'Create your first organization to get started',
+  'organizations.backToList': 'Back to overview',
+  // Actor types
+  'organizations.actorType.private': 'Private person',
+  'organizations.actorType.business': 'Business',
+  'organizations.actorType.sportsClub': 'Sports club',
+  'organizations.actorType.youthOrganization': 'Youth organization',
+  'organizations.actorType.school': 'School',
+  'organizations.actorType.municipality': 'Municipality',
+  // Table headers
+  'organizations.table.name': 'Name',
+  'organizations.table.type': 'Type',
+  'organizations.table.orgNumber': 'Org. no.',
+  'organizations.table.contact': 'Contact',
+  'organizations.table.status': 'Status',
+  'organizations.table.verified': 'Verified',
+  'organizations.table.actions': 'Actions',
+  // Filter labels
+  'organizations.filter.status': 'Status',
+  'organizations.filter.type': 'Type',
+  'organizations.filter.all': 'All',
+  // Detail page
+  'organizations.detail.basicInfo': 'Basic information',
+  'organizations.detail.contactInfo': 'Contact information',
+  'organizations.detail.organizationType': 'Organization type',
+  'organizations.detail.organizationNumber': 'Organization number',
+  'organizations.detail.status': 'Status',
+  'organizations.detail.verified': 'Verified',
+  'organizations.detail.created': 'Created',
+  'organizations.detail.lastUpdated': 'Last updated',
+  'organizations.detail.email': 'Email',
+  'organizations.detail.phone': 'Phone',
+  'organizations.detail.address': 'Address',
+  'organizations.detail.noEmail': 'No email address registered',
+  'organizations.detail.noAddress': 'No address registered',
+  // Statistics
+  'organizations.stats.totalBookings': 'Total bookings',
+  'organizations.stats.allTime': 'All time',
+  'organizations.stats.activeBookings': 'Active bookings',
+  'organizations.stats.pending': 'Pending',
+  'organizations.stats.requiresApproval': 'Requires approval',
+  'organizations.stats.totalRevenue': 'Total revenue',
+  'organizations.stats.totalPaid': 'Total paid',
+  'organizations.stats.seasonLease': 'Season lease',
+  'organizations.stats.activeCount': '{{count}} active',
+  'organizations.stats.members': 'Members',
+  'organizations.stats.activeUsers': 'Active users',
+  // Tabs
+  'organizations.tabs.info': 'Information',
+  'organizations.tabs.members': 'Members',
+  'organizations.tabs.bookings': 'Bookings',
+  'organizations.tabs.seasons': 'Season lease',
+  'organizations.tabs.activity': 'Activity',
+  // Bookings section
+  'organizations.bookings.loading': 'Loading bookings...',
+  'organizations.bookings.none': 'No bookings yet',
+  'organizations.bookings.noneDescription': 'This organization has not made any bookings.',
+  'organizations.bookings.title': 'Bookings',
+  'organizations.bookings.table.booking': 'Booking',
+  'organizations.bookings.table.resource': 'Resource',
+  'organizations.bookings.table.time': 'Time',
+  'organizations.bookings.table.status': 'Status',
+  'organizations.bookings.table.payment': 'Payment',
+  'organizations.bookings.table.price': 'Price',
+  // Seasons section
+  'organizations.seasons.loading': 'Loading season leases...',
+  'organizations.seasons.none': 'No season lease agreements',
+  'organizations.seasons.noneDescription': 'This organization has no season lease agreements.',
+  'organizations.seasons.title': 'Season lease agreements',
+  // Activity section
+  'organizations.activity.none': 'No activity',
+  'organizations.activity.noneDescription': 'No events have been registered for this organization.',
+  'organizations.activity.recent': 'Recent activity',
+  'organizations.activity.by': 'By',
 
   // Users
   'users.title': 'Users',
@@ -634,6 +804,88 @@ export const en: Record<string, string> = {
   'seasons.viewInCalendar': 'View in calendar',
   'seasons.extendAgreement': 'Extend agreement',
   'seasons.endAgreement': 'End agreement',
+  // Seasons - List page
+  'seasons.pageTitle': 'Season leases',
+  'seasons.pageSubtitle': 'Manage seasons, applications and allocations',
+  'seasons.newSeason': 'New season',
+  'seasons.searchPlaceholder': 'Search for season...',
+  'seasons.statusAll': 'All',
+  'seasons.noSeasonsFound': 'No seasons found',
+  'seasons.tryDifferentCriteria': 'Try changing the search criteria',
+  'seasons.createFirstSeason': 'Create your first season to get started',
+  'seasons.viewDetails': 'View details',
+  'seasons.venues': 'venues',
+  'seasons.applications': 'applications',
+  'seasons.applicationDeadline': 'Application deadline',
+  'seasons.confirmDelete': 'Are you sure you want to delete this season?',
+  'seasons.tableHeaderName': 'Name',
+  'seasons.tableHeaderApplicationDeadline': 'Application deadline',
+  'seasons.tableHeaderStatus': 'Status',
+  'seasons.tableHeaderVenues': 'Venues',
+  'seasons.tableHeaderApplications': 'Applications',
+  'seasons.tableHeaderActions': 'Actions',
+  // Seasons - Status labels
+  'seasons.status.draft': 'Draft',
+  'seasons.status.open': 'Open',
+  'seasons.status.closed': 'Closed',
+  'seasons.status.active': 'Active',
+  'seasons.status.completed': 'Completed',
+  'seasons.status.cancelled': 'Cancelled',
+  // Seasons - Form page
+  'seasons.backToSeason': 'Back to season',
+  'seasons.backToOverview': 'Back to overview',
+  'seasons.editSeason': 'Edit season',
+  'seasons.newSeasonTitle': 'New season',
+  'seasons.updateSeasonDesc': 'Update information about the season',
+  'seasons.createSeasonDesc': 'Create a new season for seasonal leases',
+  'seasons.seasonNotFound': 'Season not found',
+  'seasons.seasonNotFoundDesc': 'The season does not exist or has been deleted.',
+  'seasons.draftInfo': 'The season will be created as',
+  'seasons.draftInfoAddVenues': 'You must add venues before you can open it for applications.',
+  'seasons.basicInfo': 'Basic information',
+  'seasons.name': 'Name',
+  'seasons.nameDescription': "E.g. 'Spring season 2026' or 'Fall season 2025'",
+  'seasons.namePlaceholder': 'Spring season 2026',
+  'seasons.description': 'Description',
+  'seasons.descriptionHint': 'Guidelines and information for applicants (optional)',
+  'seasons.descriptionPlaceholder': 'Add description and guidelines...',
+  'seasons.periodAndDeadlines': 'Period and deadlines',
+  'seasons.startDate': 'Start date',
+  'seasons.startDateHint': 'When the season starts',
+  'seasons.endDate': 'End date',
+  'seasons.endDateHint': 'When the season ends',
+  'seasons.applicationDeadlineHint': 'Last day to submit applications',
+  'seasons.saveChanges': 'Save changes',
+  'seasons.createSeason': 'Create season',
+  // Seasons - Form validation
+  'seasons.validation.nameRequired': 'Name is required',
+  'seasons.validation.startDateRequired': 'Start date is required',
+  'seasons.validation.endDateRequired': 'End date is required',
+  'seasons.validation.endDateAfterStart': 'End date must be after start date',
+  'seasons.validation.deadlineRequired': 'Application deadline is required',
+  'seasons.validation.deadlineBeforeStart': 'Application deadline must be before start date',
+  // Seasons - Detail page
+  'seasons.openSeason': 'Open season',
+  'seasons.closeSeason': 'Close season',
+  'seasons.startAllocation': 'Start allocation',
+  'seasons.seeDetails': 'See details',
+  'seasons.seasonOpenForApplications': 'Season is open for applications',
+  'seasons.applicationsReceived': '{{count}} applications received',
+  'seasons.seasonClosedForApplications': 'Season is closed for applications',
+  'seasons.applicationsAwaitingAllocation': '{{count}} applications awaiting allocation',
+  'seasons.seasonIsActive': 'Season is active',
+  'seasons.seasonIsCompleted': 'Season is completed',
+  'seasons.allApplicationsProcessed': 'All applications have been processed and bookings created',
+  'seasons.tabInfo': 'Info',
+  'seasons.tabVenues': 'Venues',
+  'seasons.tabApplications': 'Applications',
+  'seasons.tabAllocation': 'Allocation',
+  'seasons.seasonDetails': 'Season details',
+  'seasons.descriptionAndGuidelines': 'Description and guidelines',
+  'seasons.noDescriptionAdded': 'No description added',
+  'seasons.confirmOpenSeason': 'Are you sure you want to open the season for applications?',
+  'seasons.confirmCloseSeason': 'Are you sure you want to close the season? No more applications will be accepted.',
+  'seasons.mustAddVenues': 'You must add at least one venue before the season can be opened.',
 
   // Requests
   'requests.title': 'Requests',
@@ -1401,6 +1653,82 @@ export const en: Record<string, string> = {
   'event.types': 'Arrangementer',
   'event.organizer': 'Arrangør',
   'audit.log': 'Audit Log',
+
+  // Audit Page - Main
+  'audit.title': 'Audit Log',
+  'audit.subtitle': 'Overview of all system events and changes',
+  'audit.eventsCount': '{{count}} events',
+  'audit.searchPlaceholder': 'Search events...',
+  'audit.filterButton': 'Filter',
+  'audit.loadingError': 'Could not load audit log',
+  'audit.noEvents': 'No events found',
+  'audit.noEventsDesc': 'No events have been recorded yet',
+  'audit.adjustFilters': 'Try adjusting your filters',
+  'audit.pageOf': 'Page {{page}} of {{total}}',
+  'audit.next': 'Next',
+
+  // Audit Page - Filter Drawer
+  'audit.filterEvents': 'Filter events',
+  'audit.resourceType': 'Resource type',
+  'audit.actionType': 'Action',
+  'audit.timePeriod': 'Time period',
+  'audit.fromDate': 'From date',
+  'audit.toDate': 'To date',
+  'audit.resetFilters': 'Reset filters',
+
+  // Audit Page - Resource Options
+  'audit.resources.all': 'All resources',
+  'audit.resources.listing': 'Listings',
+  'audit.resources.booking': 'Bookings',
+  'audit.resources.user': 'Users',
+  'audit.resources.organization': 'Organizations',
+  'audit.resources.allocation': 'Allocations',
+  'audit.resources.settings': 'Settings',
+
+  // Audit Page - Action Options
+  'audit.actions.all': 'All actions',
+  'audit.actions.create': 'Created',
+  'audit.actions.read': 'Read',
+  'audit.actions.update': 'Updated',
+  'audit.actions.delete': 'Deleted',
+
+  // Audit Page - Resource Labels (singular)
+  'audit.resource.listing': 'Listing',
+  'audit.resource.booking': 'Booking',
+  'audit.resource.user': 'User',
+  'audit.resource.organization': 'Organization',
+  'audit.resource.allocation': 'Allocation',
+  'audit.resource.settings': 'Settings',
+
+  // Audit Page - Event Details Drawer
+  'audit.eventDetails': 'Event details',
+  'audit.performedBy': 'Performed by',
+  'audit.metadata': 'Metadata',
+  'audit.system': 'System',
+  'audit.resourceId': 'Resource ID',
+  'audit.timestamp': 'Timestamp',
+  'audit.userId': 'User ID',
+  'audit.ipAddress': 'IP address',
+  'audit.eventId': 'Event ID',
+  'audit.tenantId': 'Tenant ID',
+  'audit.severity': 'Severity',
+  'audit.userAgent': 'User Agent',
+  'audit.unknownUser': 'Unknown',
+  'audit.systemUser': 'System',
+
+  // Audit Page - Table Headers
+  'audit.table.timestamp': 'Timestamp',
+  'audit.table.action': 'Action',
+  'audit.table.resource': 'Resource',
+  'audit.table.resourceId': 'Resource ID',
+  'audit.table.user': 'User',
+  'audit.viewDetails': 'View details',
+
+  // Audit Page - Aria Labels
+  'audit.aria.removeResourceFilter': 'Remove resource filter',
+  'audit.aria.removeActionFilter': 'Remove action filter',
+  'audit.aria.removeDateFilter': 'Remove date filter',
+
   'automatisk.bekreftelse': 'Automatisk bekreftelse',
   'automatisk.pause.mellom.påfølgende.bookinger': 'Automatisk pause mellom påfølgende bookinger',
   'user.avatar': 'Avatar',
@@ -2256,6 +2584,12 @@ export const en: Record<string, string> = {
   'ui.next': 'Next',
   'ui.submit': 'Submit',
   'ui.confirm': 'Confirm',
+  'ui.visitWebsite': 'Visit website',
+  'ui.view': 'View',
+  'ui.approve': 'Approve',
+  'ui.reject': 'Reject',
+  'ui.refresh': 'Refresh',
+  'ui.moreOptions': 'More options',
 
   // Policy reason keys - explain why an action is not allowed
   'policy.role.insufficient-permissions': 'You do not have sufficient permissions for this action',
@@ -2295,13 +2629,13 @@ export const en: Record<string, string> = {
 
   // SDK placeholders - rental object card
   'sdk.rentalObject.category.undefined': 'Space',
-  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Spaces and venues',
-  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Equipment and inventory',
-  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Vehicles and transport',
-  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Experiences and events',
-  'sdk.timeMode.PERIOD': 'Period',
-  'sdk.timeMode.SLOT': 'Time slot',
-  'sdk.timeMode.ALL_DAY': 'All day',
+  'sdk.rentalObject.category.lokalerOgBaner': 'Spaces and venues',
+  'sdk.rentalObject.category.utstyrOgInventar': 'Equipment and inventory',
+  'sdk.rentalObject.category.kjoretoyOgTransport': 'Vehicles and transport',
+  'sdk.rentalObject.category.opplevelserOgArrangement': 'Experiences and events',
+  'sdk.timeMode.period': 'Period',
+  'sdk.timeMode.slot': 'Time slot',
+  'sdk.timeMode.allDay': 'All day',
 
   // Standalone filter/form keys
   filtrer: 'Filter',
@@ -2960,4 +3294,825 @@ export const en: Record<string, string> = {
   'common.saveChanges': 'Save changes',
   'common.accessDenied': 'You do not have access to this page',
   'common.viewCalendar': 'View calendar',
+
+  // App section names
+  'app.name': 'Digilist',
+  'app.section.backoffice': 'Backoffice',
+  'app.section.minside': 'My Page',
+  'app.section.web': 'Web',
+
+  // Backoffice Navigation Sections
+  'nav.sections.work': 'Work',
+  'nav.sections.communication': 'Communication',
+  'nav.sections.economy': 'Economy',
+  'nav.sections.reports': 'Reports',
+  'nav.sections.help': 'Help',
+  'nav.sections.organization': 'Organization',
+  'nav.sections.administration': 'Administration',
+  'nav.sections.usersAndOrganizations': 'Users & Organizations',
+  'nav.sections.caseHandler': 'Case Handler',
+  'nav.sections.admin': 'Admin',
+  'nav.sections.tenant': 'Tenant',
+  'nav.sections.system': 'System',
+
+  // Backoffice Navigation - Dashboard
+  'nav.dashboardDesc': 'Overview and statistics',
+
+  // Backoffice Navigation - Work Section
+  'nav.bookingsDesc': 'Requests and reservations',
+  'nav.calendarDesc': 'Visual overview',
+
+  // Backoffice Navigation - Communication Section
+  'nav.messagesDesc': 'Conversations with users',
+
+  // Backoffice Navigation - Economy Section
+  'nav.invoices': 'Invoices',
+  'nav.invoicesDesc': 'Invoice overview',
+
+  // Backoffice Navigation - Reports Section
+  'nav.reportsDesc': 'Statistics and export',
+
+  // Backoffice Navigation - Help Section
+  'nav.help': 'Help and Support',
+  'nav.helpDesc': 'Guides and FAQ',
+
+  // Backoffice Navigation - Organization Section
+  'nav.blocks': 'Blocks',
+  'nav.blocksDesc': 'Blockages and maintenance',
+
+  // Backoffice Navigation - Administration Section
+  'nav.rentalObjectsDesc': 'Spaces, equipment, vehicles and experiences',
+  'nav.seasonsDesc': 'Fixed agreements',
+
+  // Backoffice Navigation - Users & Organizations Section
+  'nav.organizationsDesc': 'Manage organizations',
+  'nav.usersDesc': 'Manage users',
+
+  // Backoffice Navigation - Case Handler Section
+  'nav.workQueue': 'Work Queue',
+  'nav.workQueueDesc': 'Pending requests',
+  'nav.seasonApplications': 'Season Applications',
+  'nav.seasonApplicationsDesc': 'Process applications',
+  'nav.allocationPlanner': 'Allocation Planner',
+  'nav.allocationPlannerDesc': 'Allocate fixed times',
+  'nav.decisionForms': 'Decision Forms',
+  'nav.decisionFormsDesc': 'Make formal decisions',
+  'nav.auditTimeline': 'Audit Timeline',
+  'nav.auditTimelineDesc': 'Decision history',
+
+  // Backoffice Navigation - Admin Section
+  'nav.newRentalObject': 'New Rental Object',
+  'nav.newRentalObjectDesc': 'Create space',
+  'nav.pricingRules': 'Pricing Rules',
+  'nav.pricingRulesDesc': 'Manage prices',
+  'nav.userManagement': 'User Management',
+  'nav.userManagementDesc': 'Manage access',
+
+  // Backoffice Navigation - Tenant Section
+  'nav.features': 'Features',
+  'nav.featuresDesc': 'Enable/disable modules',
+  'nav.platformSettings': 'Platform Settings',
+  'nav.platformSettingsDesc': 'Configure tenant',
+  'nav.branding': 'Branding',
+  'nav.brandingDesc': 'Logo and colors',
+  'nav.systemLog': 'System Log',
+  'nav.systemLogDesc': 'All platform events',
+
+  // Backoffice Navigation - System Section
+  'nav.gdprRequests': 'GDPR Requests',
+  'nav.gdprRequestsDesc': 'Process privacy requests',
+  'nav.reviews': 'Reviews',
+  'nav.reviewsDesc': 'Moderate reviews',
+  'nav.auditLog': 'Audit Log',
+  'nav.auditLogDesc': 'System events',
+  'nav.settingsDesc': 'System configuration',
+
+  // User role labels
+  'role.admin': 'Administrator',
+  'role.orgAdmin': 'Organization Administrator',
+  'role.orgMember': 'Organization Member',
+  'role.user': 'User',
+
+  // Booking Widget Steps
+  'bookingWidget.steps.calendar': 'Select times',
+  'bookingWidget.steps.details': 'Details and terms',
+  'bookingWidget.steps.confirm': 'Confirm',
+  'bookingWidget.steps.done': 'Sent',
+
+  // Price Groups
+  'bookingWidget.priceGroup.standard': 'Standard',
+  'bookingWidget.priceGroup.standardDesc': 'Standard price for all',
+  'bookingWidget.priceGroup.member': 'Member',
+  'bookingWidget.priceGroup.memberDesc': 'Discounted price for members',
+  'bookingWidget.priceGroup.youth': 'Youth under 26',
+  'bookingWidget.priceGroup.youthDesc': 'Reduced price for youth',
+
+  // Additional Services
+  'bookingWidget.service.cleaning': 'Cleaning',
+  'bookingWidget.service.cleaningDesc': 'Professional cleaning after use',
+  'bookingWidget.service.equipment': 'Equipment package',
+  'bookingWidget.service.equipmentDesc': 'Includes tables, chairs and projector',
+
+  // Purpose Types
+  'bookingWidget.purpose.meeting': 'Meeting',
+  'bookingWidget.purpose.meetingDesc': 'Board meeting, workshop',
+  'bookingWidget.purpose.event': 'Event',
+  'bookingWidget.purpose.eventDesc': 'Party, celebration, concert',
+  'bookingWidget.purpose.training': 'Training',
+  'bookingWidget.purpose.trainingDesc': 'Sports, athletics',
+  'bookingWidget.purpose.class': 'Course/Teaching',
+  'bookingWidget.purpose.classDesc': 'Training, lectures',
+  'bookingWidget.purpose.rehearsal': 'Rehearsal',
+  'bookingWidget.purpose.rehearsalDesc': 'Choir practice, theater',
+  'bookingWidget.purpose.other': 'Other',
+  'bookingWidget.purpose.otherDesc': 'Other activity',
+
+  // Participants and Description
+  'bookingWidget.participants.placeholder': 'Number of participants',
+  'bookingWidget.description.placeholder': 'Briefly describe what the space will be used for...',
+
+  // Slot Status
+  'slot.available': 'Available',
+  'slot.conflict': 'Conflict',
+  'slot.reserved': 'Reserved',
+  'slot.blocked': 'Blocked',
+  'slot.blackout': 'Closed',
+  'slot.closed': 'Closed',
+
+  // Visibility Options
+  'visibility.public': 'Public',
+  'visibility.publicDesc': 'The booking is shown with title on the public calendar',
+  'visibility.privateTitle': 'Private title',
+  'visibility.privateTitleDesc': 'The title is only visible to you and administrator',
+  'visibility.anonymous': 'Anonymous',
+  'visibility.anonymousDesc': 'Only the time is shown as occupied, no details visible',
+
+  // Day Abbreviations
+  'days.short.monday': 'Mo',
+  'days.short.tuesday': 'Tu',
+  'days.short.wednesday': 'We',
+  'days.short.thursday': 'Th',
+  'days.short.friday': 'Fr',
+  'days.short.saturday': 'Sa',
+  'days.short.sunday': 'Su',
+
+  // Recurring Options
+  'recurring.endType.never': 'Never',
+  'recurring.endType.afterOccurrences': 'After a number of times',
+  'recurring.endType.untilDate': 'Until a specific date',
+
+  // Default Description
+  'rentalObject.defaultDescription': 'No description available',
+  'rentalObject.noDescription': 'No description available.',
+
+  // Activity Calendar
+  'activityCalendar.title': 'Activity Calendar',
+  'activityCalendar.subtitle': 'Find classes, events and activities',
+  'activityCalendar.noActivities': 'No activities found',
+
+  // Booking widget - Calendar navigation
+  'bookingWidget.today': 'Today',
+  'bookingWidget.previousWeek': 'Previous week',
+  'bookingWidget.nextWeek': 'Next week',
+  'bookingWidget.showMore': 'Show more',
+  'bookingWidget.showLess': 'Show less',
+
+  // Booking widget - Legend
+  'bookingWidget.legend.available': 'Available',
+  'bookingWidget.legend.occupied': 'Occupied',
+  'bookingWidget.legend.selected': 'Selected',
+
+  // Booking widget - Recurring mode
+  'bookingWidget.recurring.selectFirstTime': 'Select first time',
+  'bookingWidget.recurring.selectFirstTimeDesc': 'Click on a time slot in the calendar to select the base time for recurring booking.',
+  'bookingWidget.recurring.generatePreview': 'Generate preview',
+  'bookingWidget.recurring.backToPattern': 'Back to pattern',
+  'bookingWidget.recurring.continueWith': 'Continue with {{count}} time slots',
+
+  // Booking widget - Season mode
+  'bookingWidget.season.title': 'Season booking',
+  'bookingWidget.season.description': 'To apply for a fixed time slot for an entire season, go to the season booking page.',
+  'bookingWidget.season.goToPage': 'Go to season booking',
+
+  // Booking widget - Success
+  'bookingWidget.success.title': 'Booking sent!',
+  'bookingWidget.success.message': 'Your booking request has been sent to the landlord for approval.',
+  'bookingWidget.success.bookMore': 'Book more time slots',
+
+  // Booking widget - Buttons
+  'bookingWidget.back': 'Back',
+  'bookingWidget.continueToConfirmation': 'Continue to confirmation',
+  'bookingWidget.sendRequest': 'Send booking request',
+  'bookingWidget.submitting': 'Sending booking...',
+  'bookingWidget.selectTimeToContiue': 'Select a time slot to continue',
+  'bookingWidget.continueWithSlots': 'Continue with {{count}} time slot',
+  'bookingWidget.continueWithSlotsPlural': 'Continue with {{count}} time slots',
+  'bookingWidget.confirmBookingType': 'Confirm booking type',
+  'bookingWidget.selectBookingType': 'Select booking type',
+  'bookingWidget.loginToContinue': 'Log in to continue',
+  'bookingWidget.done': 'Done',
+
+  // Booking widget - Errors
+  'bookingWidget.error.missingListingId': 'Missing listing ID',
+  'bookingWidget.error.bookingFailed': 'An error occurred during booking',
+  'bookingWidget.error.slotUnavailable': 'The selected time slot is not available. Please choose a different time.',
+  'bookingWidget.error.timeOccupied': 'Time slot is occupied',
+
+  // Day names short
+  'days.short.sun': 'Sun',
+  'days.short.mon': 'Mon',
+  'days.short.tue': 'Tue',
+  'days.short.wed': 'Wed',
+  'days.short.thu': 'Thu',
+  'days.short.fri': 'Fri',
+  'days.short.sat': 'Sat',
+
+  // Month names short
+  'months.short.jan': 'Jan',
+  'months.short.feb': 'Feb',
+  'months.short.mar': 'Mar',
+  'months.short.apr': 'Apr',
+  'months.short.may': 'May',
+  'months.short.jun': 'Jun',
+  'months.short.jul': 'Jul',
+  'months.short.aug': 'Aug',
+  'months.short.sep': 'Sep',
+  'months.short.oct': 'Oct',
+  'months.short.nov': 'Nov',
+  'months.short.dec': 'Dec',
+
+  // Month names full
+  'months.full.jan': 'January',
+  'months.full.feb': 'February',
+  'months.full.mar': 'March',
+  'months.full.apr': 'April',
+  'months.full.may': 'May',
+  'months.full.jun': 'June',
+  'months.full.jul': 'July',
+  'months.full.aug': 'August',
+  'months.full.sep': 'September',
+  'months.full.oct': 'October',
+  'months.full.nov': 'November',
+  'months.full.dec': 'December',
+
+  // Booking cart sidebar
+  'bookingCart.title': 'Selected time slots',
+  'bookingCart.updated': 'Updated:',
+  'bookingCart.empty.title': 'No time slots selected',
+  'bookingCart.empty.description': 'Click on a time slot in the calendar to add',
+  'bookingCart.duration': 'Duration',
+  'bookingCart.hour': 'hour',
+  'bookingCart.hours': 'hours',
+  'bookingCart.attendeesLabel': 'Number of people',
+  'bookingCart.attendeesPlaceholder': 'Number of attendees',
+  'bookingCart.activityType': 'Activity type',
+  'bookingCart.descriptionLabel': 'Description (optional)',
+  'bookingCart.descriptionPlaceholder': 'Briefly describe what the space will be used for...',
+  'bookingCart.removeSlot': 'Remove time slot',
+
+  // Time ago strings
+  'time.justNow': 'Just now',
+  'time.secondsAgo': '{{count}} seconds ago',
+  'time.minuteAgo': '{{count}} minute ago',
+  'time.minutesAgo': '{{count}} minutes ago',
+  'time.hourAgo': '{{count}} hour ago',
+  'time.hoursAgo': '{{count}} hours ago',
+  'time.at': 'at',
+
+  // Booking modes
+  'bookingMode.singleSlot': 'Single booking',
+  'bookingMode.singleSlotDesc': 'Book one or more individual time slots',
+  'bookingMode.recurring': 'Recurring',
+  'bookingMode.recurringDesc': 'Fixed time slot every week or month',
+  'bookingMode.seasonRental': 'Season',
+  'bookingMode.seasonRentalDesc': 'Apply for a fixed time slot for a whole season',
+  'bookingMode.inGame': 'Quick booking',
+  'bookingMode.inGameDesc': 'Book on short notice',
+  'bookingMode.range': 'Period',
+  'bookingMode.rangeDesc': 'Book a continuous period',
+  'bookingMode.allDay': 'All day',
+  'bookingMode.allDayDesc': 'Book entire days',
+  'bookingMode.activityRegistration': 'Activity',
+  'bookingMode.activityRegistrationDesc': 'Register for an activity',
+  'bookingMode.max': 'max',
+
+  // Recurring pattern builder
+  'recurringPattern.title': 'Recurring pattern',
+  'recurringPattern.frequency': 'Frequency',
+  'recurringPattern.frequencyWeekly': 'Weekly',
+  'recurringPattern.frequencyMonthly': 'Monthly',
+  'recurringPattern.weekdays': 'Weekdays',
+  'recurringPattern.daysSelected': '{{count}} days selected',
+  'recurringPattern.timeSlot': 'Time slot',
+  'recurringPattern.from': 'From',
+  'recurringPattern.to': 'To',
+  'recurringPattern.duration': 'Duration:',
+  'recurringPattern.endCondition': 'End condition',
+  'recurringPattern.ends': 'Ends',
+  'recurringPattern.afterOccurrences': 'After number of occurrences',
+  'recurringPattern.untilDate': 'Until a specific date',
+  'recurringPattern.occurrences': 'Number of times',
+  'recurringPattern.maxOccurrences': '(max {{count}})',
+  'recurringPattern.endDate': 'End date',
+  'recurringPattern.summary': 'Summary',
+  'recurringPattern.everyWeek': 'Every week',
+  'recurringPattern.everyMonth': 'Every month',
+  'recurringPattern.onDays': 'on',
+  'recurringPattern.times': 'time',
+  'recurringPattern.timesPlural': 'times',
+  'recurringPattern.until': 'until',
+
+  // Weekday names full
+  'weekdays.monday': 'Monday',
+  'weekdays.tuesday': 'Tuesday',
+  'weekdays.wednesday': 'Wednesday',
+  'weekdays.thursday': 'Thursday',
+  'weekdays.friday': 'Friday',
+  'weekdays.saturday': 'Saturday',
+  'weekdays.sunday': 'Sunday',
+
+  // Weekday names short
+  'weekdays.short.mon': 'Mon',
+  'weekdays.short.tue': 'Tue',
+  'weekdays.short.wed': 'Wed',
+  'weekdays.short.thu': 'Thu',
+  'weekdays.short.fri': 'Fri',
+  'weekdays.short.sat': 'Sat',
+  'weekdays.short.sun': 'Sun',
+
+  // ================================================
+  // Documentation Portal (docs-learning)
+  // ================================================
+
+  // Navigation
+  'docs.title': 'Documentation',
+  'docs.nav.home': 'Overview',
+  'docs.nav.homeDesc': 'Getting started with Digilist',
+  'docs.nav.search': 'Search',
+  'docs.nav.searchDesc': 'Search documentation',
+  'docs.nav.sections': 'Sections',
+  'docs.nav.booking': 'Booking System',
+  'docs.nav.bookingDesc': 'Create and manage bookings',
+  'docs.nav.rbac': 'Roles and Access',
+  'docs.nav.rbacDesc': 'Understand user roles and access',
+  'docs.nav.payments': 'Payments',
+  'docs.nav.paymentsDesc': 'Payments and invoicing',
+  'docs.nav.admin': 'Administration',
+  'docs.nav.adminDesc': 'Settings and configuration',
+  'docs.nav.api': 'API Documentation',
+  'docs.nav.apiDesc': 'Technical reference for developers',
+  'docs.nav.integrations': 'Integrations',
+  'docs.nav.integrationsDesc': 'Connect to other systems',
+  'docs.nav.faq': 'Frequently Asked Questions',
+  'docs.nav.faqDesc': 'Common questions and answers',
+  'docs.nav.roleGuides': 'Role Guides',
+  'docs.nav.roleEndUser': 'For End Users',
+  'docs.nav.roleOrgMember': 'For Org Members',
+  'docs.nav.roleOrgAdmin': 'For Org Admins',
+  'docs.nav.releases': 'Changelog',
+  'docs.nav.releasesDesc': "What's new in the latest update",
+
+  // Home Page
+  'docs.home.title': 'Welcome to the Documentation',
+  'docs.home.subtitle': 'Find answers, learn about features, and get started with Digilist.',
+  'docs.home.quickLinks': 'Quick Links',
+  'docs.home.forEndUsers': 'For End Users',
+  'docs.home.forEndUsersDesc': 'Get started with booking',
+  'docs.home.forOrgAdmins': 'For Organization Admins',
+  'docs.home.forOrgAdminsDesc': 'Manage your organization',
+  'docs.home.searchDocs': 'Search Documentation',
+  'docs.home.searchDocsDesc': 'Find answers quickly',
+
+  // Section Pages
+  'docs.sections.booking.title': 'Booking System',
+  'docs.sections.booking.description': 'Learn how to create and manage bookings',
+  'docs.sections.rbac.title': 'Roles and Access',
+  'docs.sections.rbac.description': 'Understand user roles and permissions in the system',
+  'docs.sections.payments.title': 'Payments',
+  'docs.sections.payments.description': 'Payment methods and invoicing',
+  'docs.sections.admin.title': 'Administration',
+  'docs.sections.admin.description': 'System settings and configuration',
+  'docs.sections.api.title': 'API Documentation',
+  'docs.sections.api.description': 'Technical reference for developers',
+  'docs.sections.integrations.title': 'Integrations',
+  'docs.sections.integrations.description': 'Connect to other systems',
+  'docs.sections.faq.title': 'Frequently Asked Questions',
+  'docs.sections.faq.description': 'Common questions and answers',
+
+  // Search
+  'docs.search.title': 'Search Documentation',
+  'docs.search.label': 'Search',
+  'docs.search.placeholder': 'Type to search...',
+  'docs.search.results': 'results',
+  'docs.search.noResults': 'No results found.',
+
+  // Article
+  'docs.updatedAt': 'Last updated',
+  'docs.noArticles': 'No articles found in this section.',
+
+  // Role Guide Page
+  'docs.roleGuide.gettingStarted': 'Getting Started',
+  'docs.roleGuide.relevantArticles': 'Relevant Articles',
+  'docs.roleGuide.guideFor': 'Guide for',
+  'docs.roles.endUser': 'End User',
+  'docs.roles.orgMember': 'Organization Member',
+  'docs.roles.orgAdmin': 'Organization Administrator',
+  'docs.roles.tenantAdmin': 'Tenant Administrator',
+  'docs.roles.saasAdmin': 'SaaS Administrator',
+  'docs.apps.web': 'Website',
+  'docs.apps.backoffice': 'Backoffice',
+  'docs.apps.minside': 'My Page',
+  'docs.apps.tenantAdmin': 'Tenant Admin',
+  'docs.apps.saasAdmin': 'SaaS Admin',
+
+  // Checklist items
+  'docs.checklist.login': 'Log in to the platform',
+  'docs.checklist.explore': 'Explore available venues',
+  'docs.checklist.firstBooking': 'Create your first booking',
+  'docs.checklist.addPayment': 'Add payment information',
+
+  // Releases Page
+  'docs.releases.title': 'Changelog',
+  'docs.releases.subtitle': "See what's new in Digilist",
+  'docs.releases.latest': 'Latest',
+
+  // TOC
+  'docs.toc.title': 'On this page',
+
+  // Related articles
+  'docs.article.gettingStartedBooking': 'Getting Started with Booking',
+  'docs.article.gettingStartedBookingDesc': 'Learn basic booking',
+  'docs.article.paymentMethods': 'Payment Methods',
+  'docs.article.paymentMethodsDesc': 'Available payment options',
+
+  // Help Page
+  'help.title': 'Help and Support',
+  'help.subtitle': 'Find answers to questions and learn how to use the system',
+  'help.readMore': 'Read more',
+  'help.openLink': 'Open',
+
+  // Help Sections
+  'help.sections.gettingStarted.title': 'Getting Started',
+  'help.sections.gettingStarted.description': 'Step-by-step guides for common tasks',
+  'help.sections.faq.title': 'Frequently Asked Questions',
+  'help.sections.faq.description': 'Answers to commonly asked questions',
+  'help.sections.support.title': 'Contact Support',
+  'help.sections.support.description': 'Need help? Get in touch with us',
+
+  // Help Roles
+  'help.roles.orgMember': 'Member',
+  'help.roles.orgAdmin': 'Organization Administrator',
+  'help.roles.tenantAdmin': 'Tenant Administrator',
+  'help.roles.admin': 'System Administrator',
+
+  // Help Quick Start Guide
+  'help.quickStartGuide.title': 'Quick Start Guide',
+  'help.quickStartGuide.subtitle': 'Customized for your role as {{role}}',
+
+  // Help Quick Start - org_member
+  'help.quickStart.orgMember.viewRentalObjects.title': 'View your assigned rental objects',
+  'help.quickStart.orgMember.viewRentalObjects.description': 'Go to Dashboard for an overview',
+  'help.quickStart.orgMember.processBookings.title': 'Process bookings',
+  'help.quickStart.orgMember.processBookings.description': 'Use the Bookings page to approve or reject requests',
+  'help.quickStart.orgMember.viewCalendar.title': 'View the calendar',
+  'help.quickStart.orgMember.viewCalendar.description': 'Calendar shows all reservations for your objects',
+  'help.quickStart.orgMember.communicate.title': 'Communicate with users',
+  'help.quickStart.orgMember.communicate.description': 'Use Messages to respond to inquiries',
+
+  // Help Quick Start - org_admin
+  'help.quickStart.orgAdmin.manageUsers.title': 'Manage users',
+  'help.quickStart.orgAdmin.manageUsers.description': 'Go to Users to invite and manage members',
+  'help.quickStart.orgAdmin.createRentalObjects.title': 'Create rental objects',
+  'help.quickStart.orgAdmin.createRentalObjects.description': 'Add new venues and resources via Rental Objects',
+  'help.quickStart.orgAdmin.processBookings.title': 'Process bookings',
+  'help.quickStart.orgAdmin.processBookings.description': 'Approve requests and handle conflicts',
+  'help.quickStart.orgAdmin.viewReports.title': 'View reports',
+  'help.quickStart.orgAdmin.viewReports.description': 'Analyze usage and revenue under Reports',
+  'help.quickStart.orgAdmin.manageMessages.title': 'Manage messages',
+  'help.quickStart.orgAdmin.manageMessages.description': 'Communicate with users and view conversation overview',
+
+  // Help Quick Start - tenant_admin
+  'help.quickStart.tenantAdmin.configureOrg.title': 'Configure the organization',
+  'help.quickStart.tenantAdmin.configureOrg.description': 'Set up logo, branding and contact info under Settings',
+  'help.quickStart.tenantAdmin.activateFeatures.title': 'Activate features',
+  'help.quickStart.tenantAdmin.activateFeatures.description': 'Toggle modules in Settings > Features',
+  'help.quickStart.tenantAdmin.manageUsers.title': 'Manage users',
+  'help.quickStart.tenantAdmin.manageUsers.description': 'Invite and manage all users',
+  'help.quickStart.tenantAdmin.setupIntegrations.title': 'Set up integrations',
+  'help.quickStart.tenantAdmin.setupIntegrations.description': 'Connect to payment solutions and external systems',
+  'help.quickStart.tenantAdmin.exportReports.title': 'Export reports',
+  'help.quickStart.tenantAdmin.exportReports.description': 'Generate and export data for analysis',
+
+  // Help Quick Start - admin
+  'help.quickStart.admin.systemAdmin.title': 'System administration',
+  'help.quickStart.admin.systemAdmin.description': 'Full access to all features and settings',
+  'help.quickStart.admin.userAccess.title': 'User and access management',
+  'help.quickStart.admin.userAccess.description': 'Manage all users across organizations',
+  'help.quickStart.admin.featuresModules.title': 'Features and modules',
+  'help.quickStart.admin.featuresModules.description': 'Control which features are available',
+  'help.quickStart.admin.auditLog.title': 'Audit log',
+  'help.quickStart.admin.auditLog.description': 'View all actions performed in the system',
+  'help.quickStart.admin.integrations.title': 'Integrations',
+  'help.quickStart.admin.integrations.description': 'Configure and monitor system integrations',
+
+  // Help Keyboard Shortcuts
+  'help.keyboardShortcuts.title': 'Keyboard Shortcuts',
+  'help.shortcuts.showShortcuts': 'Show shortcuts',
+  'help.shortcuts.goToDashboard': 'Go to Dashboard',
+  'help.shortcuts.goToBookings': 'Go to Bookings',
+  'help.shortcuts.goToCalendar': 'Go to Calendar',
+  'help.shortcuts.goToMessages': 'Go to Messages',
+  'help.shortcuts.goToHelp': 'Go to Help',
+
+  // Help Guides Page
+  'help.guides.title': 'Guides',
+  'help.guides.description': 'Step-by-step guides for common tasks',
+  'help.guides.availableFor': 'Available for:',
+  'help.guides.noGuidesAvailable': 'No guides available for your role.',
+  'help.guides.difficulty.beginner': 'Beginner',
+  'help.guides.difficulty.intermediate': 'Intermediate',
+  'help.guides.difficulty.advanced': 'Advanced',
+
+  // Guide: Booking Approval
+  'help.guides.bookingApproval.title': 'Process booking requests',
+  'help.guides.bookingApproval.description': 'Learn how to approve or reject booking requests',
+  'help.guides.bookingApproval.step1': 'Go to the Bookings page from the menu',
+  'help.guides.bookingApproval.step2': 'Find the request you want to process in the list',
+  'help.guides.bookingApproval.step3': 'Click on the request to see details',
+  'help.guides.bookingApproval.step4': 'Review information about the booker and time',
+  'help.guides.bookingApproval.step5': 'Select "Approve" to confirm the booking',
+  'help.guides.bookingApproval.step6': 'Select "Reject" with a reason to decline',
+  'help.guides.bookingApproval.step7': 'The user will automatically be notified of the result',
+
+  // Guide: Calendar View
+  'help.guides.calendarView.title': 'Using the calendar',
+  'help.guides.calendarView.description': 'Overview of reservations for your assigned objects',
+  'help.guides.calendarView.step1': 'Go to Calendar from the menu',
+  'help.guides.calendarView.step2': 'Select view type: day, week, or month',
+  'help.guides.calendarView.step3': 'See all bookings for your assigned objects',
+  'help.guides.calendarView.step4': 'Click on a booking to see details',
+  'help.guides.calendarView.step5': 'Use filters to show specific objects',
+  'help.guides.calendarView.step6': 'Drag and drop to change time (if allowed)',
+
+  // Guide: Messages
+  'help.guides.messages.title': 'Replying to messages',
+  'help.guides.messages.description': 'Communicate with users about bookings',
+  'help.guides.messages.step1': 'Go to Messages from the menu',
+  'help.guides.messages.step2': 'Open the conversation you want to reply to',
+  'help.guides.messages.step3': 'Read the message history for context',
+  'help.guides.messages.step4': 'Write your reply in the text field',
+  'help.guides.messages.step5': 'Add attachments if needed',
+  'help.guides.messages.step6': 'Click Send to send the message',
+
+  // Guide: User Management
+  'help.guides.userManagement.title': 'Managing users',
+  'help.guides.userManagement.description': 'Invite and manage users in your organization',
+  'help.guides.userManagement.step1': 'Go to the Users page from the menu',
+  'help.guides.userManagement.step2': 'Click "Invite user" to add a new user',
+  'help.guides.userManagement.step3': 'Enter the user\'s email address and name',
+  'help.guides.userManagement.step4': 'Select role and access level',
+  'help.guides.userManagement.step5': 'Assign rental objects the user should have access to',
+  'help.guides.userManagement.step6': 'Send the invitation - the user will receive an email',
+  'help.guides.userManagement.step7': 'Monitor "Pending" for unprocessed invitations',
+
+  // Guide: Rental Object Create
+  'help.guides.rentalObjectCreate.title': 'Creating a rental object',
+  'help.guides.rentalObjectCreate.description': 'Add a new rental object to the system',
+  'help.guides.rentalObjectCreate.step1': 'Go to Rental Objects from the menu',
+  'help.guides.rentalObjectCreate.step2': 'Click "New rental object"',
+  'help.guides.rentalObjectCreate.step3': 'Fill in basic information (name, description, category)',
+  'help.guides.rentalObjectCreate.step4': 'Upload images of the object',
+  'help.guides.rentalObjectCreate.step5': 'Set up availability and opening hours',
+  'help.guides.rentalObjectCreate.step6': 'Configure prices and payment options',
+  'help.guides.rentalObjectCreate.step7': 'Define booking rules and restrictions',
+  'help.guides.rentalObjectCreate.step8': 'Preview and publish the object',
+
+  // Guide: Reports Export
+  'help.guides.reportsExport.title': 'Generating reports',
+  'help.guides.reportsExport.description': 'Export booking and revenue data',
+  'help.guides.reportsExport.step1': 'Go to Reports from the menu',
+  'help.guides.reportsExport.step2': 'Select report type (bookings, revenue, usage)',
+  'help.guides.reportsExport.step3': 'Specify period for the report',
+  'help.guides.reportsExport.step4': 'Select which rental objects to include',
+  'help.guides.reportsExport.step5': 'Click "Generate report" to see preview',
+  'help.guides.reportsExport.step6': 'Export to CSV or PDF as needed',
+
+  // Guide: Organization Settings
+  'help.guides.orgSettings.title': 'Organization settings',
+  'help.guides.orgSettings.description': 'Configure organization profile and branding',
+  'help.guides.orgSettings.step1': 'Go to Settings > Organization',
+  'help.guides.orgSettings.step2': 'Update organization logo and name',
+  'help.guides.orgSettings.step3': 'Set up contact information',
+  'help.guides.orgSettings.step4': 'Configure default settings for bookings',
+  'help.guides.orgSettings.step5': 'Set up email templates for communication',
+  'help.guides.orgSettings.step6': 'Enable or disable features',
+  'help.guides.orgSettings.step7': 'Save the changes',
+
+  // Guide: Integrations
+  'help.guides.integrations.title': 'Setting up integrations',
+  'help.guides.integrations.description': 'Connect to external systems',
+  'help.guides.integrations.step1': 'Go to Settings > Integrations',
+  'help.guides.integrations.step2': 'Select the integration you want to set up',
+  'help.guides.integrations.step3': 'Follow the steps to connect to the service',
+  'help.guides.integrations.step4': 'Test the integration to confirm it works',
+  'help.guides.integrations.step5': 'Configure synchronization settings',
+  'help.guides.integrations.step6': 'Activate the integration',
+
+  // Guide: Feature Flags
+  'help.guides.featureFlags.title': 'Managing features',
+  'help.guides.featureFlags.description': 'Enable and disable system features',
+  'help.guides.featureFlags.step1': 'Go to Settings > Features',
+  'help.guides.featureFlags.step2': 'See list of available modules',
+  'help.guides.featureFlags.step3': 'Click the toggle to enable/disable',
+  'help.guides.featureFlags.step4': 'See dependencies between modules',
+  'help.guides.featureFlags.step5': 'Remember that some modules require others to be enabled',
+  'help.guides.featureFlags.step6': 'Changes take effect immediately',
+
+  // Integrations - Archive
+  'integrations.archive.backToOverview': 'Back to overview',
+  'integrations.archive.title': 'Acos WebSak - Archive',
+  'integrations.archive.description': 'View what is being archived and archiving status',
+  'integrations.archive.statusActive': 'Active',
+  'integrations.archive.statusInactive': 'Inactive',
+  'integrations.archive.refresh': 'Refresh',
+  'integrations.archive.stats.total': 'Total',
+  'integrations.archive.stats.sent': 'Sent',
+  'integrations.archive.stats.failed': 'Failed',
+  'integrations.archive.stats.pending': 'Pending',
+  'integrations.archive.events.title': 'Archived events',
+  'integrations.archive.events.searchPlaceholder': 'Search by title or case number...',
+  'integrations.archive.events.filterType': 'Filter type',
+  'integrations.archive.events.filterStatus': 'Filter status',
+  'integrations.archive.events.allTypes': 'All types',
+  'integrations.archive.events.allStatuses': 'All statuses',
+  'integrations.archive.events.noResults': 'No events found',
+  'integrations.archive.events.retry': 'Retry',
+  'integrations.archive.eventTypes.title': 'Archived event types',
+  'integrations.archive.eventTypes.description': 'The following event types are automatically archived to Acos WebSak:',
+  'integrations.archive.eventTypes.bookings': 'Bookings and reservations',
+  'integrations.archive.eventTypes.contracts': 'Rental contracts',
+  'integrations.archive.eventTypes.invoices': 'Invoices',
+  'integrations.archive.eventTypes.documents': 'Documents and attachments',
+  'integrations.archive.table.type': 'Type',
+  'integrations.archive.table.title': 'Title',
+  'integrations.archive.table.caseNumber': 'Case number',
+  'integrations.archive.table.status': 'Status',
+  'integrations.archive.table.timestamp': 'Timestamp',
+  'integrations.archive.table.action': 'Action',
+  'integrations.archive.type.booking': 'Booking',
+  'integrations.archive.type.document': 'Document',
+  'integrations.archive.type.contract': 'Contract',
+  'integrations.archive.type.invoice': 'Invoice',
+  'integrations.archive.status.sent': 'Sent',
+  'integrations.archive.status.failed': 'Failed',
+  'integrations.archive.status.pending': 'Pending',
+
+  // Integrations Overview Page
+  'integrations.overview.title': 'Integrations',
+  'integrations.overview.description': 'Overview of operational status and deviations for all integrations',
+  'integrations.overview.refresh': 'Refresh',
+  'integrations.overview.activeIntegrations': 'Active integrations',
+  'integrations.overview.operationalStatus': 'Operational status',
+  'integrations.overview.deviationsToFollow': 'Deviations to follow up',
+  'integrations.overview.archiveButton': 'Archive (Acos WebSak)',
+  'integrations.overview.calendarButton': 'Calendar (Outlook)',
+  'integrations.overview.viewDetails': 'View details',
+  'integrations.overview.retry': 'Retry',
+
+  // Integration statuses
+  'integrations.status.warning': 'Warning',
+  'integrations.status.disabled': 'Disabled',
+
+  // Integration card
+  'integrations.card.lastSync': 'Last synced',
+  'integrations.card.lastEvent': 'Last event',
+  'integrations.card.deviationsRequireFollowup': '{{count}} deviations require follow-up',
+  'integrations.card.contactPoint': 'Contact point',
+
+  // Time formatting
+  'integrations.time.never': 'Never',
+  'integrations.time.justNow': 'Just now',
+  'integrations.time.minutesAgo': '{{count}} min ago',
+  'integrations.time.hoursAgo': '{{count}} hours ago',
+
+  // Deviations table
+  'integrations.deviations.title': 'Deviations list',
+  'integrations.deviations.integration': 'Integration',
+  'integrations.deviations.type': 'Type',
+  'integrations.deviations.description': 'Description',
+  'integrations.deviations.timestamp': 'Timestamp',
+  'integrations.deviations.action': 'Action',
+
+  // Integration providers
+  'integrations.provider.rco.name': 'RCO Access Control',
+  'integrations.provider.rco.description': 'Locks and access codes',
+  'integrations.provider.visma.name': 'Visma',
+  'integrations.provider.visma.description': 'Invoicing and accounting',
+  'integrations.provider.visma.pendingInvoices': '{{count}} invoices pending processing',
+  'integrations.provider.acos.name': 'Acos WebSak',
+  'integrations.provider.acos.description': 'Archiving and document management',
+  'integrations.provider.vipps.name': 'Vipps',
+  'integrations.provider.vipps.description': 'Payment solution',
+  'integrations.provider.outlook.name': 'Microsoft Outlook',
+  'integrations.provider.outlook.description': 'Calendar integration',
+
+  // Access Grants (Backoffice)
+  'accessGrants.title': 'Access Grants',
+  'accessGrants.subtitle': 'Manage organization access to rental objects',
+  'accessGrants.newGrant': 'New grant',
+  'accessGrants.backToOverview': 'Back to overview',
+  'accessGrants.newAccessGrant': 'New access grant',
+  'accessGrants.newAccessGrantDescription': 'Grant an organization access to a rental object',
+  'accessGrants.loadingData': 'Loading data...',
+  'accessGrants.searchPlaceholder': 'Search for organization or rental object...',
+  'accessGrants.loading': 'Loading...',
+  'accessGrants.noGrantsFound': 'No access grants found',
+  'accessGrants.tryDifferentSearch': 'Try changing the search criteria',
+  'accessGrants.createFirstGrant': 'Create your first access grant to get started',
+  'accessGrants.errorCreating': 'Error creating',
+  'accessGrants.createError': 'Could not create access grant',
+  // Access Grants - Status
+  'accessGrants.status.all': 'All',
+  'accessGrants.status.active': 'Active',
+  'accessGrants.status.revoked': 'Revoked',
+  'accessGrants.status.expired': 'Expired',
+  'accessGrants.statusLabel': 'Status',
+  // Access Grants - Table
+  'accessGrants.table.organization': 'Organization',
+  'accessGrants.table.rentalObject': 'Rental Object',
+  'accessGrants.table.status': 'Status',
+  'accessGrants.table.grantedAt': 'Granted',
+  'accessGrants.table.expiresAt': 'Expires',
+  'accessGrants.table.actions': 'Actions',
+  'accessGrants.table.grantedBy': 'by {{name}}',
+  'accessGrants.table.noExpiry': 'No expiration date',
+  // Access Grants - Actions
+  'accessGrants.action.viewOrganization': 'View organization',
+  'accessGrants.action.revokeAccess': 'Revoke access',
+  'accessGrants.confirmRevoke': 'Are you sure you want to revoke this access?',
+  'accessGrants.revokeReason': 'Manually revoked',
+  // Access Grants - Form
+  'accessGrants.form.organizationSection': 'Organization',
+  'accessGrants.form.organizationDescription': 'Select the organization to grant access to',
+  'accessGrants.form.organizationLabel': 'Organization',
+  'accessGrants.form.selectOrganization': 'Select organization...',
+  'accessGrants.form.selectOrganizationAria': 'Select organization',
+  'accessGrants.form.rentalObjectSection': 'Rental Object',
+  'accessGrants.form.rentalObjectDescription': 'Select the rental object to grant access to',
+  'accessGrants.form.rentalObjectLabel': 'Rental Object',
+  'accessGrants.form.selectRentalObject': 'Select rental object...',
+  'accessGrants.form.selectRentalObjectAria': 'Select rental object',
+  'accessGrants.form.validitySection': 'Validity Period',
+  'accessGrants.form.validityDescription': 'Optional: Specify when the access expires',
+  'accessGrants.form.expiryLabel': 'Expiration date',
+  'accessGrants.form.expiryAria': 'Expiration date',
+  'accessGrants.form.noExpiryNote': 'If no date is specified, access will be granted indefinitely.',
+  'accessGrants.form.notesSection': 'Notes',
+  'accessGrants.form.notesDescription': 'Optional: Add internal notes about the grant',
+  'accessGrants.form.notesLabel': 'Notes',
+  'accessGrants.form.notesPlaceholder': 'E.g. Agreement valid for season 2024/2025',
+  'accessGrants.form.notesAria': 'Notes',
+  'accessGrants.form.submit': 'Create access grant',
+  'accessGrants.form.submitting': 'Creating...',
+  // Access Grants - Validation
+  'accessGrants.validation.organizationRequired': 'Select an organization',
+  'accessGrants.validation.rentalObjectRequired': 'Select a rental object',
+  'accessGrants.validation.expiryFuture': 'Expiration date must be in the future',
+
+  // ================================================
+  // Documentation Portal - Articles
+  // ================================================
+
+  // Article titles and descriptions
+  'docs.article.createBooking': 'Create a Booking',
+  'docs.article.createBookingDesc': 'Step-by-step guide to creating a booking',
+  'docs.article.manageBookings': 'Manage Bookings',
+  'docs.article.manageBookingsDesc': 'Overview and management of your bookings',
+  'docs.article.rbacOverview': 'Role-Based Access',
+  'docs.article.rbacOverviewDesc': 'Introduction to roles and permissions',
+  'docs.article.rolesExplained': 'Understanding Roles',
+  'docs.article.rolesExplainedDesc': 'Detailed description of all roles',
+  'docs.article.invoicing': 'Invoicing',
+  'docs.article.invoicingDesc': 'Guide to invoicing and payment history',
+  'docs.article.settingsOverview': 'Settings',
+  'docs.article.settingsOverviewDesc': 'Overview of system settings',
+  'docs.article.apiAuth': 'API Authentication',
+  'docs.article.apiAuthDesc': 'How to authenticate with the API',
+  'docs.article.apiEndpoints': 'API Endpoints',
+  'docs.article.apiEndpointsDesc': 'Complete API reference',
+  'docs.article.integrationsOverview': 'Integrations Overview',
+  'docs.article.integrationsOverviewDesc': 'Available integrations',
+  'docs.article.faqGeneral': 'General Questions',
+  'docs.article.faqGeneralDesc': 'Common questions and answers',
+  'docs.article.troubleshooting': 'Troubleshooting',
+  'docs.article.troubleshootingDesc': 'Solutions to common problems',
+
+  // Release notes
+  'docs.releases.v250.date': 'January 15, 2026',
+  'docs.releases.v250.change1': '✨ New documentation platform',
+  'docs.releases.v250.change2': '🔧 Improved search functionality',
+  'docs.releases.v250.change3': '🐛 Various bug fixes',
+  'docs.releases.v240.date': 'January 1, 2026',
+  'docs.releases.v240.change1': '📊 New reports module',
+  'docs.releases.v240.change2': '🔐 Improved security',
 };

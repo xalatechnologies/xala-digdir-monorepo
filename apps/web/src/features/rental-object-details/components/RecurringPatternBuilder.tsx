@@ -119,32 +119,33 @@ export interface RecurringPatternBuilderProps {
 // =============================================================================
 
 /**
- * Weekday options with ISO weekday numbers (1=Monday, 7=Sunday)
+ * Weekday values with ISO weekday numbers (1=Monday, 7=Sunday)
+ * Labels are generated dynamically with i18n
  */
-const WEEKDAY_OPTIONS: Array<{ value: number; label: string; shortLabel: string }> = [
-  { value: 1, label: 'Mandag', shortLabel: 'Man' },
-  { value: 2, label: 'Tirsdag', shortLabel: 'Tir' },
-  { value: 3, label: 'Onsdag', shortLabel: 'Ons' },
-  { value: 4, label: 'Torsdag', shortLabel: 'Tor' },
-  { value: 5, label: 'Fredag', shortLabel: 'Fre' },
-  { value: 6, label: 'Lørdag', shortLabel: 'Lør' },
-  { value: 7, label: 'Søndag', shortLabel: 'Søn' },
+const WEEKDAY_VALUES: Array<{ value: number; key: string; shortKey: string }> = [
+  { value: 1, key: 'monday', shortKey: 'mon' },
+  { value: 2, key: 'tuesday', shortKey: 'tue' },
+  { value: 3, key: 'wednesday', shortKey: 'wed' },
+  { value: 4, key: 'thursday', shortKey: 'thu' },
+  { value: 5, key: 'friday', shortKey: 'fri' },
+  { value: 6, key: 'saturday', shortKey: 'sat' },
+  { value: 7, key: 'sunday', shortKey: 'sun' },
 ];
 
 /**
- * Frequency options with labels
+ * Frequency values - labels are generated dynamically with i18n
  */
-const FREQUENCY_OPTIONS: Array<{ value: RecurringFrequency; label: string }> = [
-  { value: 'WEEKLY', label: 'Ukentlig' },
-  { value: 'MONTHLY', label: 'Månedlig' },
+const FREQUENCY_VALUES: Array<{ value: RecurringFrequency; key: string }> = [
+  { value: 'WEEKLY', key: 'weekly' },
+  { value: 'MONTHLY', key: 'monthly' },
 ];
 
 /**
- * End condition type options with labels
+ * End condition type values - labels are generated dynamically with i18n
  */
-const END_CONDITION_OPTIONS: Array<{ value: RecurringEndConditionType; label: string }> = [
-  { value: 'AFTER_OCCURRENCES', label: 'Etter antall ganger' },
-  { value: 'UNTIL_DATE', label: 'Til en bestemt dato' },
+const END_CONDITION_VALUES: Array<{ value: RecurringEndConditionType; key: string }> = [
+  { value: 'AFTER_OCCURRENCES', key: 'afterOccurrences' },
+  { value: 'UNTIL_DATE', key: 'untilDate' },
 ];
 
 /**
@@ -221,15 +222,50 @@ export function RecurringPatternBuilder({
   const t = useT();
   const timeOptions = React.useMemo(() => generateTimeOptions(), []);
 
+  // Generate translated weekday options
+  const weekdayOptions = React.useMemo(() => WEEKDAY_VALUES.map(({ value: val, key, shortKey }) => ({
+    value: val,
+    label: t(`weekdays.${key}`),
+    shortLabel: t(`weekdays.short.${shortKey}`),
+  })), [t]);
+
+  // Generate translated frequency options - uses existing keys like 'recurringPattern.frequencyWeekly'
+  const frequencyOptions = React.useMemo(() => FREQUENCY_VALUES.map(({ value: val, key }) => ({
+    value: val,
+    label: t(`recurringPattern.frequency${key.charAt(0).toUpperCase()}${key.slice(1)}`),
+  })), [t]);
+
+  // Generate translated end condition options - uses existing keys like 'recurringPattern.afterOccurrences'
+  const endConditionOptions = React.useMemo(() => END_CONDITION_VALUES.map(({ value: val, key }) => ({
+    value: val,
+    label: t(`recurringPattern.${key}`),
+  })), [t]);
+
+  // Generate translated month names for formatDate
+  const monthNames = React.useMemo(() => [
+    t('months.short.jan'),
+    t('months.short.feb'),
+    t('months.short.mar'),
+    t('months.short.apr'),
+    t('months.short.may'),
+    t('months.short.jun'),
+    t('months.short.jul'),
+    t('months.short.aug'),
+    t('months.short.sep'),
+    t('months.short.oct'),
+    t('months.short.nov'),
+    t('months.short.dec'),
+  ], [t]);
+
   // Get allowed frequencies from constraints, or default to all
   const allowedFrequencies = constraints?.allowedFrequencies ?? ['WEEKLY', 'MONTHLY'];
-  const filteredFrequencyOptions = FREQUENCY_OPTIONS.filter((opt) =>
+  const filteredFrequencyOptions = frequencyOptions.filter((opt) =>
     allowedFrequencies.includes(opt.value)
   );
 
   // Get allowed weekdays from constraints, or default to all
   const allowedWeekdays = constraints?.allowedWeekdays ?? [1, 2, 3, 4, 5, 6, 7];
-  const filteredWeekdayOptions = WEEKDAY_OPTIONS.filter((opt) =>
+  const filteredWeekdayOptions = weekdayOptions.filter((opt) =>
     allowedWeekdays.includes(opt.value)
   );
 
@@ -317,13 +353,20 @@ export function RecurringPatternBuilder({
     return ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
   };
 
-  // Format duration for display
+  // Format duration for display - uses existing bookings.time keys
   const formatDuration = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    if (hours === 0) return `${mins} min`;
-    if (mins === 0) return `${hours} time${hours > 1 ? 'r' : ''}`;
-    return `${hours} t ${mins} min`;
+    if (hours === 0) return t('bookings.time.minutes', { count: mins });
+    if (mins === 0) return t('bookings.time.hours', { count: hours });
+    return `${t('bookings.time.hours', { count: hours })} ${t('bookings.time.minutes', { count: mins })}`;
+  };
+
+  // Format date for display
+  const formatDateLocalized = (dateString: string): string => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return `${date.getDate()}. ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
   };
 
   // Get padding based on size
@@ -379,7 +422,7 @@ export function RecurringPatternBuilder({
             fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
-          Gjentakende mønster
+          {t('recurringPattern.title')}
         </Heading>
       </div>
 
@@ -394,7 +437,7 @@ export function RecurringPatternBuilder({
             color: 'var(--ds-color-neutral-text-default)',
           }}
         >
-          Frekvens
+          {t('recurringPattern.frequency')}
         </Paragraph>
         <select
           value={value.frequency}
@@ -432,7 +475,7 @@ export function RecurringPatternBuilder({
             color: 'var(--ds-color-neutral-text-default)',
           }}
         >
-          Ukedager
+          {t('recurringPattern.weekdays')}
         </Paragraph>
         <div
           style={{
@@ -493,7 +536,7 @@ export function RecurringPatternBuilder({
               color: 'var(--ds-color-neutral-text-subtle)',
             }}
           >
-            {value.weekdays.length} dager valgt
+            {t('recurringPattern.daysSelected', { count: value.weekdays.length })}
           </Paragraph>
         )}
       </div>
@@ -513,7 +556,7 @@ export function RecurringPatternBuilder({
           }}
         >
           <ClockIcon size={14} />
-          Tidspunkt
+          {t('recurringPattern.timeSlot')}
         </Paragraph>
         <div
           style={{
@@ -531,7 +574,7 @@ export function RecurringPatternBuilder({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              Fra
+              {t('recurringPattern.from')}
             </Paragraph>
             <select
               value={value.startTime}
@@ -566,7 +609,7 @@ export function RecurringPatternBuilder({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              Til
+              {t('recurringPattern.to')}
             </Paragraph>
             <select
               value={value.endTime}
@@ -603,7 +646,7 @@ export function RecurringPatternBuilder({
             color: 'var(--ds-color-neutral-text-subtle)',
           }}
         >
-          Varighet: {formatDuration(getDurationMinutes())}
+          {t('recurringPattern.duration')}: {formatDuration(getDurationMinutes())}
         </Paragraph>
       </div>
 
@@ -622,7 +665,7 @@ export function RecurringPatternBuilder({
           }}
         >
           <CalendarIcon size={14} />
-          Sluttbetingelse
+          {t('recurringPattern.endCondition')}
         </Paragraph>
         <div style={{ marginBottom: 'var(--ds-spacing-3)' }}>
           <Paragraph
@@ -633,7 +676,7 @@ export function RecurringPatternBuilder({
               color: 'var(--ds-color-neutral-text-subtle)',
             }}
           >
-            Avsluttes
+            {t('recurringPattern.ends')}
           </Paragraph>
           <select
             value={value.endCondition.type}
@@ -652,7 +695,7 @@ export function RecurringPatternBuilder({
               opacity: disabled ? 0.5 : 1,
             }}
           >
-            {END_CONDITION_OPTIONS.map((opt) => (
+            {endConditionOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
               </option>
@@ -678,7 +721,7 @@ export function RecurringPatternBuilder({
                   color: 'var(--ds-color-neutral-text-subtle)',
                 }}
               >
-                Antall ganger
+                {t('recurringPattern.occurrences')}
               </Paragraph>
               <input
                 type="number"
@@ -709,7 +752,7 @@ export function RecurringPatternBuilder({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              (maks {maxOccurrences})
+              {t('recurringPattern.maxOccurrences', { count: maxOccurrences })}
             </Paragraph>
           </div>
         )}
@@ -725,7 +768,7 @@ export function RecurringPatternBuilder({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              Sluttdato
+              {t('recurringPattern.endDate')}
             </Paragraph>
             <input
               type="date"
@@ -768,7 +811,7 @@ export function RecurringPatternBuilder({
             marginBottom: 'var(--ds-spacing-1)',
           }}
         >
-          Oppsummering
+          {t('recurringPattern.summary')}
         </Paragraph>
         <Paragraph
           data-size="sm"
@@ -777,28 +820,19 @@ export function RecurringPatternBuilder({
             color: 'var(--ds-color-neutral-text-subtle)',
           }}
         >
-          {value.frequency === 'WEEKLY' ? 'Hver uke' : 'Hver måned'} på{' '}
+          {value.frequency === 'WEEKLY' ? t('recurringPattern.everyWeek') : t('recurringPattern.everyMonth')}{' '}
+          {t('recurringPattern.onDays')}{' '}
           {value.weekdays
-            .map((w) => WEEKDAY_OPTIONS.find((opt) => opt.value === w)?.shortLabel ?? '')
+            .map((w) => weekdayOptions.find((opt) => opt.value === w)?.shortLabel ?? '')
             .join(', ')}{' '}
-          fra {value.startTime} til {value.endTime}
+          {t('recurringPattern.from')} {value.startTime} {t('recurringPattern.to')} {value.endTime}
           {value.endCondition.type === 'AFTER_OCCURRENCES'
-            ? `, ${value.endCondition.occurrences} gang${(value.endCondition.occurrences ?? 0) > 1 ? 'er' : ''}`
-            : `, til ${formatDate(value.endCondition.untilDate ?? '')}`}
+            ? `, ${value.endCondition.occurrences ?? 0} ${(value.endCondition.occurrences ?? 0) > 1 ? t('recurringPattern.timesPlural') : t('recurringPattern.times')}`
+            : `, ${t('recurringPattern.until')} ${formatDateLocalized(value.endCondition.untilDate ?? '')}`}
         </Paragraph>
       </div>
     </div>
   );
-}
-
-/**
- * Format date for display (Norwegian format)
- */
-function formatDate(dateString: string): string {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  const months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-  return `${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export default RecurringPatternBuilder;

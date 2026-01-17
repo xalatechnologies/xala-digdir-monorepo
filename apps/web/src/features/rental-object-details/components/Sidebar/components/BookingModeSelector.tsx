@@ -73,47 +73,26 @@ function LayersIcon(): React.ReactElement {
 // Constants
 // =============================================================================
 
-const MODE_CONFIG: Record<BookingMode, {
-  label: string;
-  description: string;
-  icon: React.ReactElement;
-}> = {
-  SINGLE_SLOT: {
-    label: 'Enkeltbooking',
-    description: 'Book ett eller flere enkelttidspunkter',
-    icon: <CalendarIcon />,
-  },
-  RECURRING: {
-    label: 'Gjentakende',
-    description: 'Fast tidspunkt hver uke eller måned',
-    icon: <RepeatIcon />,
-  },
-  SEASON_RENTAL: {
-    label: 'Sesong',
-    description: 'Søk om fast tid i en hel sesong',
-    icon: <LayersIcon />,
-  },
-  // These are less common but included for completeness
-  IN_GAME: {
-    label: 'Hurtigbooking',
-    description: 'Book kort tid i forveien',
-    icon: <CalendarIcon />,
-  },
-  RANGE: {
-    label: 'Periode',
-    description: 'Book en sammenhengende periode',
-    icon: <CalendarIcon />,
-  },
-  ALL_DAY: {
-    label: 'Heldag',
-    description: 'Book hele dager',
-    icon: <CalendarIcon />,
-  },
-  ACTIVITY_REGISTRATION: {
-    label: 'Aktivitet',
-    description: 'Meld deg på en aktivitet',
-    icon: <CalendarIcon />,
-  },
+// Mode icons - labels are created dynamically with t()
+const MODE_ICONS: Record<BookingMode, React.ReactElement> = {
+  SINGLE_SLOT: <CalendarIcon />,
+  RECURRING: <RepeatIcon />,
+  SEASON_RENTAL: <LayersIcon />,
+  IN_GAME: <CalendarIcon />,
+  RANGE: <CalendarIcon />,
+  ALL_DAY: <CalendarIcon />,
+  ACTIVITY_REGISTRATION: <CalendarIcon />,
+};
+
+// Map mode to translation key
+const MODE_TRANSLATION_KEYS: Record<BookingMode, string> = {
+  SINGLE_SLOT: 'singleSlot',
+  RECURRING: 'recurring',
+  SEASON_RENTAL: 'seasonRental',
+  IN_GAME: 'inGame',
+  RANGE: 'range',
+  ALL_DAY: 'allDay',
+  ACTIVITY_REGISTRATION: 'activityRegistration',
 };
 
 // =============================================================================
@@ -129,6 +108,16 @@ export function BookingModeSelector({
   className,
 }: BookingModeSelectorProps): React.ReactElement {
   const t = useT();
+
+  // Create mode config with translated labels
+  const getModeConfig = React.useCallback((mode: BookingMode) => {
+    const key = MODE_TRANSLATION_KEYS[mode];
+    return {
+      label: t(`bookingMode.${key}`),
+      description: t(`bookingMode.${key}Desc`),
+      icon: MODE_ICONS[mode],
+    };
+  }, [t]);
 
   // Only show the main three modes in the tabs
   const displayModes = availableModes.filter(
@@ -153,7 +142,7 @@ export function BookingModeSelector({
       }}
     >
       {displayModes.map((mode) => {
-        const config = MODE_CONFIG[mode];
+        const config = getModeConfig(mode);
         const isSelected = value === mode;
 
         return (
@@ -211,7 +200,7 @@ export function BookingModeSelector({
             {/* Show constraint hint for recurring */}
             {mode === 'RECURRING' && recurringConstraints?.maxOccurrences && (
               <Badge data-color="info" data-size="sm">
-                maks {recurringConstraints.maxOccurrences}
+                {t('bookingMode.max')} {recurringConstraints.maxOccurrences}
               </Badge>
             )}
           </button>

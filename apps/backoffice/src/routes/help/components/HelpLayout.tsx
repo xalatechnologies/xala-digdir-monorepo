@@ -9,7 +9,7 @@
  * - Role-aware content filtering
  */
 import * as React from 'react';
-import { Heading, Paragraph } from '@xala/ds';
+import { Heading, Paragraph, Button } from '@xala/ds';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
 
@@ -253,8 +253,9 @@ export function HelpLayout({
 
                 return (
                   <li key={item.id}>
-                    <button
+                    <Button
                       type="button"
+                      variant="tertiary"
                       onClick={() => scrollToSection(item.id)}
                       style={{
                         display: 'block',
@@ -262,7 +263,6 @@ export function HelpLayout({
                         textAlign: 'left',
                         padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                         borderRadius: 'var(--ds-border-radius-sm)',
-                        border: 'none',
                         backgroundColor: isActive
                           ? 'var(--ds-color-accent-surface-default)'
                           : 'transparent',
@@ -273,26 +273,13 @@ export function HelpLayout({
                         fontWeight: isActive
                           ? 'var(--ds-font-weight-medium)'
                           : 'var(--ds-font-weight-regular)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
                         borderLeft: isActive
                           ? '2px solid var(--ds-color-accent-base-default)'
                           : '2px solid transparent',
                       }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.backgroundColor =
-                            'var(--ds-color-neutral-surface-hover)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }
-                      }}
                     >
                       {item.title}
-                    </button>
+                    </Button>
                   </li>
                 );
               })}

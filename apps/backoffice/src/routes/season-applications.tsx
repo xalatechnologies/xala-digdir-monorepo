@@ -107,7 +107,7 @@ export function SeasonApplicationsReviewPage() {
     return new Date(dateStr).toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (_id: string) => {
     const confirmed = await confirm({
       title: 'Godkjenn søknad',
       description: 'Er du sikker på at du vil godkjenne denne sesongsøknaden?',
@@ -116,12 +116,12 @@ export function SeasonApplicationsReviewPage() {
       variant: 'success',
     });
     if (confirmed) {
-      // Application approved
+      // TODO: Call SDK to approve application using _id
       setSelectedApp(null);
     }
   };
 
-  const handleReject = async (id: string) => {
+  const handleReject = async (_id: string) => {
     const confirmed = await confirm({
       title: 'Avslå søknad',
       description: 'Er du sikker på at du vil avslå denne sesongsøknaden?',
@@ -130,7 +130,7 @@ export function SeasonApplicationsReviewPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      // Application rejected
+      // TODO: Call SDK to reject application using _id
       setSelectedApp(null);
     }
   };

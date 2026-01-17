@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -14,6 +14,7 @@ import {
   Spinner,
   Stack,
   Tabs,
+  Link,
   ArrowLeftIcon,
   EditIcon,
   XCircleIcon,
@@ -90,7 +91,7 @@ export function UserDetailPage() {
       await navigator.clipboard.writeText(text);
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
-    } catch (err) {
+    } catch {
       // Failed to copy to clipboard
     }
   };
@@ -110,12 +111,12 @@ export function UserDetailPage() {
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
           Brukeren eksisterer ikke eller er slettet.
         </Paragraph>
-        <Link to="/users">
+        <RouterLink to="/users">
           <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
-        </Link>
+        </RouterLink>
       </div>
     );
   }
@@ -124,12 +125,12 @@ export function UserDetailPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)', maxWidth: '1200px', margin: '0 auto' }}>
       {/* Breadcrumb */}
       <div>
-        <Link to="/users">
+        <RouterLink to="/users">
           <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til brukere
           </Button>
-        </Link>
+        </RouterLink>
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -148,7 +149,7 @@ export function UserDetailPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button">
+            <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button" aria-label={t("ui.edit")}>
               <EditIcon />{t("ui.edit")}</Button>
             {user.status === 'active' ? (
               <Button variant="secondary" data-size="sm" onClick={handleDeactivate} type="button">
@@ -194,9 +195,9 @@ export function UserDetailPage() {
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                    <a href={`mailto:${user.email}`} style={{ color: 'var(--ds-color-accent-text-default)', flex: 1 }}>
+                    <Link href={`mailto:${user.email}`} style={{ color: 'var(--ds-color-accent-text-default)', flex: 1 }}>
                       {user.email}
-                    </a>
+                    </Link>
                     <Button
                       variant="tertiary"
                       data-size="sm"
@@ -217,9 +218,9 @@ export function UserDetailPage() {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                      <a href={`tel:${user.phone}`} style={{ color: 'var(--ds-color-accent-text-default)', flex: 1 }}>
+                      <Link href={`tel:${user.phone}`} style={{ color: 'var(--ds-color-accent-text-default)', flex: 1 }}>
                         {user.phone}
-                      </a>
+                      </Link>
                       <Button
                         variant="tertiary"
                         data-size="sm"

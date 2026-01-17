@@ -15,7 +15,8 @@ export interface FormSectionProps {
 }
 
 export function FormSection({ title, children, description }: FormSectionProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   return (
     <div>
       <Paragraph

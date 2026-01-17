@@ -75,12 +75,12 @@ const generateRentalObjects = (count: number) =>
 }));
 
 // vi.mock('../../hooks/useListingPermissions', () => ({
-  useListingPermissions: () => ({
-    canCreateListing: () => true,
-    canEditListing: () => true,
-    canPublishListing: () => true,
-  }),
-}));
+//   useListingPermissions: () => ({
+//     canCreateListing: () => true,
+//     canEditListing: () => true,
+//     canPublishListing: () => true,
+//   }),
+// }));
 
 export const Default: Story = {
   name: 'Default View',

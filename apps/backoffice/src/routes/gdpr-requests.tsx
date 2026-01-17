@@ -4,7 +4,6 @@
  * Shows pending requests with 30-day GDPR timeline tracking
  */
 
-/* eslint-disable digdir/prefer-ds-components -- Complex filter form */
 
 import { useState, useMemo } from 'react';
 import {
@@ -132,15 +131,16 @@ export function GdprRequestsPage() {
             const isActive = activeTab === tab.id;
 
             return (
-              <button
+              <Button
                 key={tab.id}
+                type="button"
+                variant={isActive ? 'primary' : 'secondary'}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-2)',
                   padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                  border: '1px solid',
                   borderColor: isActive
                     ? 'var(--ds-color-brand-border-default)'
                     : 'var(--ds-color-neutral-border-default)',
@@ -148,15 +148,13 @@ export function GdprRequestsPage() {
                     ? 'var(--ds-color-brand-surface-subtle)'
                     : 'var(--ds-color-neutral-background-default)',
                   borderRadius: 'var(--ds-border-radius-md)',
-                  cursor: 'pointer',
                   fontWeight: isActive ? 'var(--ds-font-weight-medium)' : 'normal',
                   color: isActive
                     ? 'var(--ds-color-brand-text-default)'
                     : 'var(--ds-color-neutral-text-default)',
                   fontSize: 'var(--ds-font-size-sm)',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                }} type="button"
+                }}
               >
                 <span>{tab.icon}</span>
                 <span>{tab.label}</span>
@@ -171,7 +169,7 @@ export function GdprRequestsPage() {
                 >
                   {count}
                 </Badge>
-              </button>
+              </Button>
             );
           })}
         </div>

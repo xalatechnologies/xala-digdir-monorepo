@@ -212,8 +212,9 @@ export function Header({ title: _title }: HeaderProps) {
                           {user.email}
                         </div>
                       </div>
-                      <button
+                      <Button
                         type="button"
+                        variant="tertiary"
                         onClick={() => {
                           logout();
                           setIsUserMenuOpen(false);
@@ -221,26 +222,19 @@ export function Header({ title: _title }: HeaderProps) {
                         style={{
                           width: '100%',
                           padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                          border: 'none',
                           backgroundColor: 'transparent',
                           color: 'var(--ds-color-neutral-text-default)',
                           textAlign: 'left',
-                          cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           gap: 'var(--ds-spacing-3)',
                           fontSize: 'var(--ds-font-size-sm)',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
+                          borderRadius: 0,
                         }}
                       >
                         <LogOutIcon size={18} />
                         Logg ut
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </div>

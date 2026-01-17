@@ -211,10 +211,10 @@ export function Sidebar() {
     // [Overview] - Dashboard (always visible to authenticated users)
     {
       items: [
-        { 
-          name: 'Dashboard', 
-          description: 'Oversikt og statistikk', 
-          href: '/', 
+        {
+          name: t('nav.dashboard'),
+          description: t('nav.dashboardDesc'),
+          href: '/',
           icon: <HomeIcon />,
           capability: 'CAP_NAV_DASHBOARD',
         },
@@ -222,21 +222,21 @@ export function Sidebar() {
     },
     // [Work] - Bookings, Calendar (org_member scope)
     {
-      title: 'Arbeid',
+      title: t('nav.sections.work'),
       items: [
-        { 
-          name: 'Bookinger', 
-          description: 'Forespørsler og reservasjoner', 
-          href: '/bookings', 
-          icon: <BookOpenIcon />, 
-          badge: 20, 
+        {
+          name: t('nav.bookings'),
+          description: t('nav.bookingsDesc'),
+          href: '/bookings',
+          icon: <BookOpenIcon />,
+          badge: 20,
           badgeColor: 'accent',
           capability: 'CAP_NAV_BOOKINGS',
         },
-        { 
-          name: 'Kalender', 
-          description: 'Visuell oversikt', 
-          href: '/calendar', 
+        {
+          name: t('nav.calendar'),
+          description: t('nav.calendarDesc'),
+          href: '/calendar',
           icon: <CalendarIcon />,
           capability: 'CAP_NAV_CALENDAR',
         },
@@ -244,14 +244,14 @@ export function Sidebar() {
     },
     // [Communication] - Messages (feature-gated for org_member)
     {
-      title: 'Kommunikasjon',
+      title: t('nav.sections.communication'),
       items: [
-        { 
-          name: 'Meldinger', 
-          description: 'Samtaler med brukere', 
-          href: '/messages', 
-          icon: <MessageIcon />, 
-          badge: 3, 
+        {
+          name: t('nav.messages'),
+          description: t('nav.messagesDesc'),
+          href: '/messages',
+          icon: <MessageIcon />,
+          badge: 3,
           badgeColor: 'danger',
           capability: 'CAP_NAV_MESSAGES',
         },
@@ -259,12 +259,12 @@ export function Sidebar() {
     },
     // [Economy] - Invoices (feature-gated for org_member with økonomi role)
     {
-      title: 'Økonomi',
+      title: t('nav.sections.economy'),
       items: [
-        { 
-          name: 'Fakturaer', 
-          description: 'Fakturaoversikt', 
-          href: '/economy/invoices', 
+        {
+          name: t('nav.invoices'),
+          description: t('nav.invoicesDesc'),
+          href: '/economy/invoices',
           icon: <ChartIcon />,
           capability: 'CAP_NAV_ECONOMY',
         },
@@ -272,12 +272,12 @@ export function Sidebar() {
     },
     // [Reports] - Reports/Exports (feature-gated)
     {
-      title: 'Rapporter',
+      title: t('nav.sections.reports'),
       items: [
-        { 
-          name: 'Rapporter', 
-          description: 'Statistikk og eksport', 
-          href: '/reports', 
+        {
+          name: t('nav.reports'),
+          description: t('nav.reportsDesc'),
+          href: '/reports',
           icon: <ChartIcon />,
           capability: 'CAP_NAV_REPORTS',
         },
@@ -285,12 +285,12 @@ export function Sidebar() {
     },
     // [Help] - Help & Support (always visible to org_member)
     {
-      title: 'Hjelp',
+      title: t('nav.sections.help'),
       items: [
-        { 
-          name: 'Hjelp og støtte', 
-          description: 'Veiledninger og FAQ', 
-          href: '/help', 
+        {
+          name: t('nav.help'),
+          description: t('nav.helpDesc'),
+          href: '/help',
           icon: <BookOpenIcon />,
           capability: 'CAP_NAV_HELP',
         },
@@ -299,11 +299,11 @@ export function Sidebar() {
     // === ORG ADMIN SECTION ===
     // Visible to org_admin and org_member roles for managing assigned objects
     {
-      title: 'Organisasjon',
+      title: t('nav.sections.organization'),
       items: [
         {
-          name: 'Blokkeringer',
-          description: 'Sperringer og vedlikehold',
+          name: t('nav.blocks'),
+          description: t('nav.blocksDesc'),
           href: '/blocks',
           icon: <ShieldIcon />,
           capability: 'CAP_NAV_BLOCKS',
@@ -313,18 +313,18 @@ export function Sidebar() {
     // === ADMIN-ONLY SECTIONS BELOW ===
     // These sections are NOT visible to org_member
     {
-      title: 'Administrasjon',
+      title: t('nav.sections.administration'),
       items: [
         {
-          name: 'Utleieobjekter',
-          description: 'Lokaler, utstyr, kjøretøy og opplevelser',
+          name: t('nav.rentalObjects'),
+          description: t('nav.rentalObjectsDesc'),
           href: '/rental-objects',
           icon: <BuildingIcon />,
           capability: 'CAP_LISTING_EDIT',
         },
         {
-          name: 'Sesongleie',
-          description: 'Faste avtaler',
+          name: t('nav.seasons'),
+          description: t('nav.seasonsDesc'),
           href: '/seasons',
           icon: <RepeatIcon />,
           capability: 'CAP_BOOKING_MANAGE',
@@ -332,47 +332,47 @@ export function Sidebar() {
       ],
     },
     {
-      title: 'Brukere & Org',
+      title: t('nav.sections.usersAndOrganizations'),
       items: [
-        { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, capability: 'CAP_ORG_ADMIN' },
-        { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
+        { name: t('nav.organizations'), description: t('nav.organizationsDesc'), href: '/organizations', icon: <OrganizationIcon />, capability: 'CAP_ORG_ADMIN' },
+        { name: t('nav.users'), description: t('nav.usersDesc'), href: '/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
       ],
     },
     {
-      title: 'Saksbehandler',
+      title: t('nav.sections.caseHandler'),
       items: [
-        { name: 'Arbeidskø', description: 'Ventende forespørsler', href: '/work-queue', icon: <ClockIcon />, capability: 'CAP_BOOKING_APPROVE' },
-        { name: 'Sesongsøknader', description: 'Behandle søknader', href: '/season-applications', icon: <RepeatIcon />, capability: 'CAP_BOOKING_APPROVE' },
-        { name: 'Allokeringsplan', description: 'Fordele faste tider', href: '/allocation-planner', icon: <CalendarIcon />, capability: 'CAP_BOOKING_MANAGE' },
-        { name: 'Vedtaksskjema', description: 'Fatt formelle vedtak', href: '/decision-forms', icon: <CheckCircleIcon />, capability: 'CAP_BOOKING_APPROVE' },
-        { name: 'Revisjonslogg', description: 'Vedtakshistorikk', href: '/audit-timeline', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
+        { name: t('nav.workQueue'), description: t('nav.workQueueDesc'), href: '/work-queue', icon: <ClockIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: t('nav.seasonApplications'), description: t('nav.seasonApplicationsDesc'), href: '/season-applications', icon: <RepeatIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: t('nav.allocationPlanner'), description: t('nav.allocationPlannerDesc'), href: '/allocation-planner', icon: <CalendarIcon />, capability: 'CAP_BOOKING_MANAGE' },
+        { name: t('nav.decisionForms'), description: t('nav.decisionFormsDesc'), href: '/decision-forms', icon: <CheckCircleIcon />, capability: 'CAP_BOOKING_APPROVE' },
+        { name: t('nav.auditTimeline'), description: t('nav.auditTimelineDesc'), href: '/audit-timeline', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
       ],
     },
     {
-      title: 'Admin',
+      title: t('nav.sections.admin'),
       items: [
-        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, capability: 'CAP_LISTING_CREATE' },
-        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
+        { name: t('nav.newRentalObject'), description: t('nav.newRentalObjectDesc'), href: '/rental-objects/wizard', icon: <BuildingIcon />, capability: 'CAP_LISTING_CREATE' },
+        { name: t('nav.pricingRules'), description: t('nav.pricingRulesDesc'), href: '/pricing-rules', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.userManagement'), description: t('nav.userManagementDesc'), href: '/users-management', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
       ],
     },
     {
-      title: 'Tenant',
+      title: t('nav.sections.tenant'),
       items: [
         { name: t('tenantAdmin.nav.users'), description: t('tenantAdmin.nav.usersDesc'), href: '/tenant/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
-        { name: 'Funksjoner', description: 'Aktiver/deaktiver moduler', href: '/tenant/features', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
+        { name: t('nav.features'), description: t('nav.featuresDesc'), href: '/tenant/features', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.platformSettings'), description: t('nav.platformSettingsDesc'), href: '/tenant/settings', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.branding'), description: t('nav.brandingDesc'), href: '/tenant/branding', icon: <BuildingIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.systemLog'), description: t('nav.systemLogDesc'), href: '/tenant/audit-log', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
       ],
     },
     {
-      title: 'System',
+      title: t('nav.sections.system'),
       items: [
-        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
-        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, capability: 'CAP_SYSTEM_CONFIG' },
+        { name: t('nav.gdprRequests'), description: t('nav.gdprRequestsDesc'), href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.reviews'), description: t('nav.reviewsDesc'), href: '/reviews/moderation', icon: <CheckCircleIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: t('nav.auditLog'), description: t('nav.auditLogDesc'), href: '/audit', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
+        { name: t('nav.settings'), description: t('nav.settingsDesc'), href: '/settings', icon: <SettingsIcon />, capability: 'CAP_SYSTEM_CONFIG' },
       ],
     },
   ];
@@ -413,7 +413,7 @@ export function Sidebar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
           <img
             src="/logo.svg"
-            alt="Digilist"
+            alt={t('app.name')}
             style={{
               height: '40px',
               width: 'auto',
@@ -429,7 +429,7 @@ export function Sidebar() {
                 letterSpacing: 'var(--ds-font-letter-spacing-sm)',
               }}
             >
-              DIGILIST
+              {t('app.name').toUpperCase()}
             </div>
             <div
               style={{
@@ -440,7 +440,7 @@ export function Sidebar() {
                 textTransform: 'uppercase',
               }}
             >
-              Backoffice
+              {t('app.section.backoffice')}
             </div>
           </div>
         </div>
@@ -525,7 +525,7 @@ export function Sidebar() {
                   marginTop: '2px',
                 }}
               >
-                {user.role === 'admin' ? 'Administrator' : 'Saksbehandler'}
+                {user.role === 'admin' ? t('role.admin') : t('role.caseHandler')}
               </Paragraph>
             </div>
           </div>

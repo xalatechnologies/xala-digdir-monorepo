@@ -227,6 +227,7 @@ export function PackagesStep({ wizard }: PackagesStepProps) {
               alignItems: 'center',
               gap: 'var(--ds-spacing-2)',
             }}
+            aria-label={t('form.packages.addPackage')}
           >
             <PlusIcon
               style={{ width: '1.25rem', height: '1.25rem' }}
@@ -246,7 +247,7 @@ export function PackagesStep({ wizard }: PackagesStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
-            <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>💡</span>
+            <span style={{ fontSize: 'var(--ds-font-size-lg)', flexShrink: 0 }}>💡</span>
             <span>{t('rentalObjects.packagesInfo')}</span>
           </Paragraph>
         </div>

@@ -108,7 +108,7 @@ export function WorkQueuePage() {
     return new Date(dateStr).toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (_id: string) => {
     const confirmed = await confirm({
       title: t('workQueue.approveRequest'),
       description: t('workQueue.confirmApprove'),
@@ -117,11 +117,11 @@ export function WorkQueuePage() {
       variant: 'default',
     });
     if (confirmed) {
-      // Request approved
+      // TODO: Call SDK to approve request using _id
     }
   };
 
-  const handleReject = async (id: string) => {
+  const handleReject = async (_id: string) => {
     const confirmed = await confirm({
       title: t('workQueue.rejectRequest'),
       description: t('workQueue.confirmReject'),
@@ -130,7 +130,7 @@ export function WorkQueuePage() {
       variant: 'danger',
     });
     if (confirmed) {
-      // Request rejected
+      // TODO: Call SDK to reject request using _id
     }
   };
 

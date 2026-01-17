@@ -6,6 +6,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import {
+  Button,
   Heading,
   Paragraph,
   HeaderSearch,
@@ -24,7 +25,8 @@ const STATUS_OPTIONS = [
 ] as const;
 
 export function ReviewModerationPage() {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   // State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ReviewStatus | 'all'>('pending');
@@ -119,16 +121,16 @@ export function ReviewModerationPage() {
           const isActive = statusFilter === status.id;
 
           return (
-            <button
+            <Button
               key={status.id}
               type="button"
+              variant="tertiary"
               onClick={() => setStatusFilter(status.id as ReviewStatus | 'all')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 'var(--ds-spacing-2)',
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                border: 'none',
                 borderRadius: 'var(--ds-border-radius-md) var(--ds-border-radius-md) 0 0',
                 backgroundColor: isActive
                   ? 'var(--ds-color-neutral-surface-default)'
@@ -140,8 +142,6 @@ export function ReviewModerationPage() {
                   ? 'var(--ds-font-weight-semibold)'
                   : 'var(--ds-font-weight-regular)',
                 fontSize: 'var(--ds-font-size-sm)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
                 borderBottom: isActive
                   ? '2px solid var(--ds-color-accent-base-default)'
                   : '2px solid transparent',
@@ -150,7 +150,7 @@ export function ReviewModerationPage() {
               }}
             >
               <span>{status.label}</span>
-            </button>
+            </Button>
           );
         })}
       </div>

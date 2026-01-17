@@ -29,7 +29,8 @@ interface MemberManagementProps {
 }
 
 export function MemberManagement({ organizationId, members }: MemberManagementProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const queryClient = useQueryClient();
   const [isAdding, setIsAdding] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -62,7 +63,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
       setSelectedUserId('');
       setSelectedRole('member');
       setIsAdding(false);
-    } catch (error) {
+    } catch {
       // Failed to add member
     } finally {
       setIsSubmitting(false);
@@ -77,7 +78,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
     try {
       await organizationService.removeMember(organizationId, memberId);
       queryClient.invalidateQueries({ queryKey: ['organizations', organizationId, 'members'] });
-    } catch (error) {
+    } catch {
       // Failed to remove member
     }
   };
@@ -86,7 +87,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
     try {
       await organizationService.updateMember(organizationId, memberId, { role: newRole });
       queryClient.invalidateQueries({ queryKey: ['organizations', organizationId, 'members'] });
-    } catch (error) {
+    } catch {
       // Failed to update member role
     }
   };

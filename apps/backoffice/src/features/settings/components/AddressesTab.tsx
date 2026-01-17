@@ -30,7 +30,8 @@ interface AddressData {
 }
 
 export function AddressesTab() {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [isSaving, setIsSaving] = useState(false);
 
   // Queries

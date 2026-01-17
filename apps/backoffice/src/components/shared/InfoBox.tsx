@@ -45,7 +45,8 @@ const variantStyles: Record<InfoBoxVariant, { bg: string; border: string; text: 
 };
 
 export function InfoBox({ variant = 'info', children, title }: InfoBoxProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const styles = variantStyles[variant];
 
   return (

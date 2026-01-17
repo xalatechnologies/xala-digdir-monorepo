@@ -8,7 +8,7 @@
  * - Email templates
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex branding form with custom styling */
+/* eslint-disable digdir/no-hardcoded-typography -- Complex branding form preview with custom styling */
 
 import { useState, useEffect } from 'react';
 import {
@@ -17,6 +17,7 @@ import {
   Paragraph,
   Button,
   Input,
+  Label,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -30,7 +31,8 @@ const COLOR_PRESETS = [
 ];
 
 export function TenantBrandingPage() {
-  const t = useT();
+  // TODO: Use t() for all hardcoded Norwegian strings (i18n compliance)
+  const _t = useT();
   const [isSaving, setIsSaving] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -107,26 +109,26 @@ export function TenantBrandingPage() {
         </Heading>
         
         {/* Presets */}
-        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 500 }}>
+        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 'var(--ds-font-weight-medium)' }}>
           Hurtigvalg
         </Paragraph>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap', marginBottom: 'var(--ds-spacing-4)' }}>
           {COLOR_PRESETS.map(preset => (
-            <button
+            <Button
               key={preset.name}
               type="button"
+              variant="tertiary"
               onClick={() => applyPreset(preset)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 'var(--ds-spacing-2)',
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                border: branding.primaryColor === preset.primary 
+                border: branding.primaryColor === preset.primary
                   ? '2px solid var(--ds-color-accent-border-default)'
                   : '1px solid var(--ds-color-neutral-border-default)',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'transparent',
-                cursor: 'pointer',
               }}
             >
               <div style={{
@@ -136,14 +138,14 @@ export function TenantBrandingPage() {
                 backgroundColor: preset.primary,
               }} />
               {preset.name}
-            </button>
+            </Button>
           ))}
         </div>
 
         {/* Custom colors */}
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Primærfarge</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Primærfarge</Label>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <input
                 type="color"
@@ -159,7 +161,7 @@ export function TenantBrandingPage() {
             </div>
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Aksentfarge</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Aksentfarge</Label>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <input
                 type="color"
@@ -184,7 +186,7 @@ export function TenantBrandingPage() {
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
               Hovedlogo
             </Paragraph>
             <div style={{
@@ -203,7 +205,7 @@ export function TenantBrandingPage() {
             </div>
           </div>
           <div>
-            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
               Favicon
             </Paragraph>
             <div style={{
@@ -231,7 +233,7 @@ export function TenantBrandingPage() {
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Header-tekst</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Header-tekst</Label>
             <Input
               value={branding.headerText}
               onChange={(e) => updateBranding('headerText', e.target.value)}
@@ -239,7 +241,7 @@ export function TenantBrandingPage() {
             />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Footer-tekst</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Footer-tekst</Label>
             <Input
               value={branding.footerText}
               onChange={(e) => updateBranding('footerText', e.target.value)}
@@ -272,7 +274,7 @@ export function TenantBrandingPage() {
             }}
           >
             { }
-            <span style={{ fontWeight: 600 }}>{branding.headerText}</span>
+            <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{branding.headerText}</span>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               { }
               <div style={{ width: '24px', height: '24px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'rgba(255,255,255,0.2)' }} />

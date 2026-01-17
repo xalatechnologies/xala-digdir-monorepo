@@ -104,23 +104,26 @@ export interface BookingWidgetPlacementProps {
 // Constants
 // =============================================================================
 
-const BOOKING_STEPS: BookingStep[] = [
-  { id: 'calendar', label: 'Velg tidspunkter', icon: 'calendar' },
-  { id: 'details', label: 'Detaljer og vilkår', icon: 'pricing' },
-  { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
-  { id: 'done', label: 'Sendt', icon: 'success' },
-];
+// Booking steps are now created dynamically in the component using t()
+const BOOKING_STEP_IDS = ['calendar', 'details', 'confirm', 'done'] as const;
+const BOOKING_STEP_ICONS: Record<string, string> = {
+  calendar: 'calendar',
+  details: 'pricing',
+  confirm: 'confirm',
+  done: 'success',
+};
 
-const DEFAULT_PRICE_GROUPS: PriceGroup[] = [
-  { id: 'standard', label: 'Standard', pricePerHour: 500, description: 'Vanlig pris for alle' },
-  { id: 'member', label: 'Medlem', pricePerHour: 350, description: 'Rabattert pris for medlemmer' },
-  { id: 'youth', label: 'Ungdom under 26', pricePerHour: 250, description: 'Redusert pris for unge' },
-];
+// Price groups and services are computed in the component using t()
+const PRICE_GROUP_CONFIGS = [
+  { id: 'standard', pricePerHour: 500 },
+  { id: 'member', pricePerHour: 350 },
+  { id: 'youth', pricePerHour: 250 },
+] as const;
 
-const DEFAULT_ADDITIONAL_SERVICES: AdditionalService[] = [
-  { id: 'cleaning', label: 'Rengjøring', description: 'Profesjonell rengjøring etter bruk', price: 500 },
-  { id: 'equipment', label: 'Utstyrspakke', description: 'Inkluderer bord, stoler og projektor', price: 300 },
-];
+const SERVICE_CONFIGS = [
+  { id: 'cleaning', price: 500 },
+  { id: 'equipment', price: 300 },
+] as const;
 
 const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
   0: { open: '10:00', close: '18:00' },
@@ -219,6 +222,29 @@ export function BookingWidgetPlacement({
   recurringConstraints,
 }: BookingWidgetPlacementProps): React.ReactElement {
   const t = useT();
+
+  // Create booking steps with translated labels
+  const bookingSteps: BookingStep[] = React.useMemo(() => BOOKING_STEP_IDS.map(id => ({
+    id,
+    label: t(`bookingWidget.steps.${id}`),
+    icon: BOOKING_STEP_ICONS[id] ?? 'calendar',
+  })), [t]);
+
+  // Create price groups with translated labels
+  const priceGroups: PriceGroup[] = React.useMemo(() => PRICE_GROUP_CONFIGS.map(config => ({
+    id: config.id,
+    label: t(`bookingWidget.priceGroup.${config.id}`),
+    pricePerHour: config.pricePerHour,
+    description: t(`bookingWidget.priceGroup.${config.id}Desc`),
+  })), [t]);
+
+  // Create additional services with translated labels
+  const additionalServices: AdditionalService[] = React.useMemo(() => SERVICE_CONFIGS.map(config => ({
+    id: config.id,
+    label: t(`bookingWidget.service.${config.id}`),
+    description: t(`bookingWidget.service.${config.id}Desc`),
+    price: config.price,
+  })), [t]);
   const [isMobile, setIsMobile] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [weekStart, setWeekStart] = React.useState(() => getStartOfWeek(new Date()));
@@ -323,8 +349,6 @@ export function BookingWidgetPlacement({
   }, []);
 
   const isBookable = bookingConfig?.enabled !== false;
-  const priceGroups = DEFAULT_PRICE_GROUPS;
-  const additionalServices = DEFAULT_ADDITIONAL_SERVICES;
 
   const calendarData = React.useMemo(
     () => generateTimeSlots(openingHours, busySlots, weekStart, selectedSlots),
@@ -530,7 +554,7 @@ export function BookingWidgetPlacement({
 
   const handleSubmitBooking = async (): Promise<void> => {
     if (!rentalObjectId) {
-      setBookingError('Mangler listing ID');
+      setBookingError(t('bookingWidget.error.missingListingId'));
       return;
     }
 
@@ -573,7 +597,7 @@ export function BookingWidgetPlacement({
 
       setCurrentStep(3);
     } catch (error) {
-      setBookingError(error instanceof Error ? error.message : 'En feil oppstod ved booking');
+      setBookingError(error instanceof Error ? error.message : t('bookingWidget.error.bookingFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -633,7 +657,7 @@ export function BookingWidgetPlacement({
         startTime: timeStr ?? '',
         endTime,
         isAvailable: !isConflicting,
-        conflictReason: isConflicting ? 'Tidspunktet er opptatt' : undefined,
+        conflictReason: isConflicting ? t('bookingWidget.error.timeOccupied') : undefined,
       };
     });
   };
@@ -648,7 +672,7 @@ export function BookingWidgetPlacement({
       setConflictDialogOpen(true);
     } else if (hasConflicts && availabilities.length === 1) {
       // Single slot with conflict - show error
-      setBookingError('Det valgte tidspunktet er ikke tilgjengelig. Vennligst velg et annet tidspunkt.');
+      setBookingError(t('bookingWidget.error.slotUnavailable'));
     } else {
       // No conflicts - proceed to next step
       setCurrentStep(1);
@@ -680,7 +704,7 @@ export function BookingWidgetPlacement({
     >
       {/* Header */}
       <BookingStepperHeader
-        steps={BOOKING_STEPS}
+        steps={bookingSteps}
         currentStep={currentStep}
         listingTitle={listingTitle}
         isMobile={isMobile}
@@ -732,7 +756,7 @@ export function BookingWidgetPlacement({
                 }}
               >
                 <Button type="button" variant="tertiary" data-size="sm" onClick={goToToday}>
-                  I dag
+                  {t('bookingWidget.today')}
                 </Button>
 
                 <div
@@ -753,7 +777,7 @@ export function BookingWidgetPlacement({
                       backgroundColor: 'var(--ds-color-neutral-background-default)',
                       cursor: 'pointer',
                     }}
-                    aria-label={t('forrige.uke')}
+                    aria-label={t('bookingWidget.previousWeek')}
                   >
                     <ChevronLeftIcon size={16} />
                   </button>
@@ -777,7 +801,7 @@ export function BookingWidgetPlacement({
                       backgroundColor: 'var(--ds-color-neutral-background-default)',
                       cursor: 'pointer',
                     }}
-                    aria-label={t('neste.uke')}
+                    aria-label={t('bookingWidget.nextWeek')}
                   >
                     <ChevronRightIcon size={16} />
                   </button>
@@ -787,15 +811,15 @@ export function BookingWidgetPlacement({
                 <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', fontSize: 'var(--ds-font-size-xs)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-success-surface-default)', border: '1px solid var(--ds-color-success-border-default)' }} />
-                    <span>{t('status.available')}</span>
+                    <span>{t('bookingWidget.legend.available')}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-danger-surface-default)', border: '1px solid var(--ds-color-danger-border-default)' }} />
-                    <span>{t('opptatt')}</span>
+                    <span>{t('bookingWidget.legend.occupied')}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                     <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-accent-base-default)' }} />
-                    <span>{t('valgt')}</span>
+                    <span>{t('bookingWidget.legend.selected')}</span>
                   </div>
                 </div>
               </div>
@@ -921,7 +945,7 @@ export function BookingWidgetPlacement({
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
-                      Vis flere
+                      {t('bookingWidget.showMore')}
                     </button>
                   </div>
                 )}
@@ -945,7 +969,7 @@ export function BookingWidgetPlacement({
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="18 15 12 9 6 15" />
                       </svg>
-                      Vis færre
+                      {t('bookingWidget.showLess')}
                     </button>
                   </div>
                 )}
@@ -960,10 +984,10 @@ export function BookingWidgetPlacement({
                   {!recurringBaseSlot && (
                     <div style={{ padding: 'var(--ds-spacing-4)' }}>
                       <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                        Velg første tidspunkt
+                        {t('bookingWidget.recurring.selectFirstTime')}
                       </Heading>
                       <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        Klikk på et tidspunkt i kalenderen for å velge basistidspunktet for gjentakende booking.
+                        {t('bookingWidget.recurring.selectFirstTimeDesc')}
                       </Paragraph>
                       {/* Calendar for selecting base slot */}
                       <div
@@ -977,7 +1001,7 @@ export function BookingWidgetPlacement({
                         }}
                       >
                         <Button type="button" variant="tertiary" data-size="sm" onClick={goToToday}>
-                          I dag
+                          {t('bookingWidget.today')}
                         </Button>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                           <button
@@ -991,7 +1015,7 @@ export function BookingWidgetPlacement({
                               backgroundColor: 'var(--ds-color-neutral-background-default)',
                               cursor: 'pointer',
                             }}
-                            aria-label="Forrige uke"
+                            aria-label={t('bookingWidget.previousWeek')}
                           >
                             <ChevronLeftIcon size={16} />
                           </button>
@@ -1009,7 +1033,7 @@ export function BookingWidgetPlacement({
                               backgroundColor: 'var(--ds-color-neutral-background-default)',
                               cursor: 'pointer',
                             }}
-                            aria-label="Neste uke"
+                            aria-label={t('bookingWidget.nextWeek')}
                           >
                             <ChevronRightIcon size={16} />
                           </button>
@@ -1083,7 +1107,7 @@ export function BookingWidgetPlacement({
                           data-size="sm"
                           onClick={() => setRecurringBaseSlot(null)}
                         >
-                          Tilbake
+                          {t('bookingWidget.back')}
                         </Button>
                         <Button
                           type="button"
@@ -1122,7 +1146,7 @@ export function BookingWidgetPlacement({
                             }, 1000);
                           }}
                         >
-                          Generer forhåndsvisning
+                          {t('bookingWidget.recurring.generatePreview')}
                         </Button>
                       </div>
                     </div>
@@ -1162,7 +1186,7 @@ export function BookingWidgetPlacement({
                             setSelectedRecurringIndices(new Set());
                           }}
                         >
-                          Tilbake til mønster
+                          {t('bookingWidget.recurring.backToPattern')}
                         </Button>
                         <Button
                           type="button"
@@ -1171,7 +1195,7 @@ export function BookingWidgetPlacement({
                           disabled={selectedRecurringIndices.size === 0}
                           onClick={() => setCurrentStep(1)}
                         >
-                          Fortsett med {selectedRecurringIndices.size} tidspunkter
+                          {t('bookingWidget.recurring.continueWith', { count: selectedRecurringIndices.size })}
                         </Button>
                       </div>
                     </div>
@@ -1183,10 +1207,10 @@ export function BookingWidgetPlacement({
               {bookingMode === 'SEASON_RENTAL' && (
                 <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
                   <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                    Sesongbooking
+                    {t('bookingWidget.season.title')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    For å søke om fast tid i en hel sesong, gå til sesongbooking-siden.
+                    {t('bookingWidget.season.description')}
                   </Paragraph>
                   <Button
                     type="button"
@@ -1196,7 +1220,7 @@ export function BookingWidgetPlacement({
                       window.location.href = '/minside/seasons';
                     }}
                   >
-                    Gå til sesongbooking
+                    {t('bookingWidget.season.goToPage')}
                   </Button>
                 </div>
               )}
@@ -1266,10 +1290,10 @@ export function BookingWidgetPlacement({
                 <CheckCircleIcon size={40} />
               </div>
               <Heading level={2} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                Booking sendt!
+                {t('bookingWidget.success.title')}
               </Heading>
               <Paragraph data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Din bookingforespørsel er sendt til utleier for godkjenning.
+                {t('bookingWidget.success.message')}
               </Paragraph>
             </div>
           )}
@@ -1321,7 +1345,7 @@ export function BookingWidgetPlacement({
             data-size="lg"
             onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
           >
-            Tilbake
+            {t('bookingWidget.back')}
           </Button>
         )}
         {currentStep < 3 && (
@@ -1350,22 +1374,24 @@ export function BookingWidgetPlacement({
             style={{ flex: 1 }}
           >
             {isSubmitting
-              ? 'Sender booking...'
+              ? t('bookingWidget.submitting')
               : currentStep === 0
                 ? selectedSlots.size > 0
-                  ? `Fortsett med ${selectedSlots.size} tidspunkt${selectedSlots.size > 1 ? 'er' : ''}`
-                  : 'Velg tidspunkt for å fortsette'
+                  ? selectedSlots.size > 1
+                    ? t('bookingWidget.continueWithSlotsPlural', { count: selectedSlots.size })
+                    : t('bookingWidget.continueWithSlots', { count: selectedSlots.size })
+                  : t('bookingWidget.selectTimeToContiue')
                 : currentStep === 1
-                  ? 'Fortsett til bekreftelse'
+                  ? t('bookingWidget.continueToConfirmation')
                   : currentStep === 2
                     ? isAuthenticated && isAccountTypeConfirmed
-                      ? 'Send bookingforespørsel'
+                      ? t('bookingWidget.sendRequest')
                       : isAuthenticated && bookingAccountType
-                        ? 'Bekreft bookingtype'
+                        ? t('bookingWidget.confirmBookingType')
                         : isAuthenticated
-                          ? 'Velg bookingtype'
-                          : 'Logg inn for å fortsette'
-                    : 'Ferdig'}
+                          ? t('bookingWidget.selectBookingType')
+                          : t('bookingWidget.loginToContinue')
+                    : t('bookingWidget.done')}
           </Button>
         )}
         {currentStep === 3 && (
@@ -1383,7 +1409,7 @@ export function BookingWidgetPlacement({
             }}
             style={{ flex: 1 }}
           >
-            Book flere tidspunkter
+            {t('bookingWidget.success.bookMore')}
           </Button>
         )}
       </div>

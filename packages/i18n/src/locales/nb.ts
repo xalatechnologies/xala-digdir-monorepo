@@ -327,6 +327,90 @@ export const nb: Record<string, string> = {
   'bookings.viewInvoice': 'Se fakturagrunnlag',
   'bookings.viewAccess': 'Se tilgang (låssystem)',
   'bookings.cancelBooking': 'Avbryt booking',
+  'bookings.cancel': 'Kanseller',
+  'bookings.bulkConfirm': 'Bekreft flere bookinger',
+  'bookings.bulkCancel': 'Kanseller flere bookinger',
+
+  // Bookings page - Status tabs
+  'bookings.status.pending': 'Ventende',
+  'bookings.status.confirmed': 'Bekreftet',
+  'bookings.status.completed': 'Fullført',
+  'bookings.status.cancelled': 'Kansellert',
+  'bookings.status.all': 'Alle',
+
+  // Bookings page - Payment options
+  'bookings.payment.all': 'Alle betalinger',
+  'bookings.payment.paid': 'Betalt',
+  'bookings.payment.unpaid': 'Ikke betalt',
+  'bookings.payment.refunded': 'Refundert',
+
+  // Bookings page - Sort options
+  'bookings.sort.newestFirst': 'Nyeste først',
+  'bookings.sort.oldestFirst': 'Eldste først',
+  'bookings.sort.highestPrice': 'Høyeste pris',
+  'bookings.sort.lowestPrice': 'Laveste pris',
+
+  // Bookings page - Time units
+  'bookings.time.minutes': '{{count}} min',
+  'bookings.time.hours': '{{count}} t',
+
+  // Bookings page - Filter drawer
+  'bookings.filter.title': 'Filter og sortering',
+  'bookings.filter.showingCount': 'Viser {{count}} bookinger',
+  'bookings.filter.reset': 'Nullstill',
+  'bookings.filter.apply': 'Bruk filter',
+  'bookings.filter.datePeriod': 'Datoperiode',
+  'bookings.filter.sorting': 'Sortering',
+  'bookings.filter.fromDate': 'Fra dato',
+  'bookings.filter.toDate': 'Til dato',
+
+  // Bookings page - Search
+  'bookings.search.placeholder': 'Søk etter lokale, bruker, booking-ID...',
+
+  // Bookings page - Bulk actions
+  'bookings.bulk.selected': '{{count}} valgt',
+  'bookings.bulk.approve': 'Godkjenn',
+  'bookings.bulk.reject': 'Avslå',
+  'bookings.bulk.export': 'Eksporter',
+  'bookings.bulk.confirmApprove': 'Godkjenn {{count}} bookinger?',
+  'bookings.bulk.approveAll': 'Godkjenn alle',
+  'bookings.bulk.confirmReject': 'Avslå {{count}} bookinger?',
+  'bookings.bulk.rejectAll': 'Avslå alle',
+
+  // Bookings page - CSV export headers
+  'bookings.csv.id': 'ID',
+  'bookings.csv.listing': 'Lokale',
+  'bookings.csv.user': 'Bruker',
+  'bookings.csv.startTime': 'Starttid',
+  'bookings.csv.endTime': 'Sluttid',
+  'bookings.csv.status': 'Status',
+  'bookings.csv.price': 'Pris',
+
+  // Bookings page - Table headers
+  'bookings.table.booking': 'Booking',
+  'bookings.table.resource': 'Ressurs',
+  'bookings.table.user': 'Bruker',
+  'bookings.table.time': 'Tidspunkt',
+  'bookings.table.status': 'Status',
+  'bookings.table.price': 'Pris',
+
+  // Bookings page - Empty states
+  'bookings.empty.noPending': 'Ingen ventende forespørsler',
+  'bookings.empty.allProcessed': 'Alle bookingforespørsler er behandlet',
+  'bookings.empty.noCancelled': 'Ingen kansellerte bookinger',
+  'bookings.empty.noCancelledDescription': 'Det finnes ingen kansellerte bookinger',
+  'bookings.empty.noBookings': 'Ingen bookinger funnet',
+  'bookings.empty.tryDifferentSearch': 'Prøv å endre søkekriteriene',
+  'bookings.empty.noBookingsInCategory': 'Det finnes ingen bookinger i denne kategorien',
+
+  // Bookings page - Actions
+  'bookings.action.selectBooking': 'Velg booking {{ref}}',
+  'bookings.action.copyId': 'Kopier ID',
+  'bookings.action.approve': 'Godkjenn',
+  'bookings.action.reject': 'Avvis',
+  'bookings.action.moreOptions': 'Flere valg',
+  'bookings.action.approveBooking': 'Godkjenn booking',
+  'bookings.action.rejectBooking': 'Avvis booking',
 
   // Calendar
   'calendar.title': 'Kalender',
@@ -390,7 +474,9 @@ export const nb: Record<string, string> = {
   // Organizations
   'organizations.title': 'Organisasjoner',
   'organizations.subtitle': 'Administrer registrerte organisasjoner og deres medlemmer.',
+  'organizations.subtitleAdmin': 'Administrer organisasjoner, medlemmer og verifisering',
   'organizations.add': 'Legg til organisasjon',
+  'organizations.new': 'Ny organisasjon',
   'organizations.totalOrgs': 'Totalt organisasjoner',
   'organizations.activeOrgs': 'Aktive organisasjoner',
   'organizations.totalMembers': 'Totalt medlemmer',
@@ -402,9 +488,93 @@ export const nb: Record<string, string> = {
   'organizations.registered': 'Registrert',
   'organizations.active': 'Aktiv',
   'organizations.inactive': 'Inaktiv',
+  'organizations.suspended': 'Suspendert',
   'organizations.viewBookings': 'Se bookinger',
+  'organizations.viewDetails': 'Vis detaljer',
   'organizations.deactivate': 'Deaktiver',
   'organizations.activate': 'Aktiver',
+  'organizations.verify': 'Verifiser',
+  'organizations.verified': 'Verifisert',
+  'organizations.deleteConfirm': 'Er du sikker på at du vil slette denne organisasjonen?',
+  'organizations.searchPlaceholder': 'Søk etter organisasjon...',
+  'organizations.notFound': 'Ingen organisasjoner funnet',
+  'organizations.notFoundSingle': 'Organisasjon ikke funnet',
+  'organizations.notFoundDescription': 'Organisasjonen eksisterer ikke eller er slettet.',
+  'organizations.tryDifferentSearch': 'Prøv å endre søkekriteriene',
+  'organizations.createFirst': 'Opprett din første organisasjon for å komme i gang',
+  'organizations.backToList': 'Tilbake til oversikt',
+  // Actor types
+  'organizations.actorType.private': 'Privatperson',
+  'organizations.actorType.business': 'Bedrift',
+  'organizations.actorType.sportsClub': 'Idrettslag',
+  'organizations.actorType.youthOrganization': 'Ungdomsorganisasjon',
+  'organizations.actorType.school': 'Skole',
+  'organizations.actorType.municipality': 'Kommune',
+  // Table headers
+  'organizations.table.name': 'Navn',
+  'organizations.table.type': 'Type',
+  'organizations.table.orgNumber': 'Org.nr',
+  'organizations.table.contact': 'Kontakt',
+  'organizations.table.status': 'Status',
+  'organizations.table.verified': 'Verifisert',
+  'organizations.table.actions': 'Handlinger',
+  // Filter labels
+  'organizations.filter.status': 'Status',
+  'organizations.filter.type': 'Type',
+  'organizations.filter.all': 'Alle',
+  // Detail page
+  'organizations.detail.basicInfo': 'Grunnleggende informasjon',
+  'organizations.detail.contactInfo': 'Kontaktinformasjon',
+  'organizations.detail.organizationType': 'Type organisasjon',
+  'organizations.detail.organizationNumber': 'Organisasjonsnummer',
+  'organizations.detail.status': 'Status',
+  'organizations.detail.verified': 'Verifisert',
+  'organizations.detail.created': 'Opprettet',
+  'organizations.detail.lastUpdated': 'Sist oppdatert',
+  'organizations.detail.email': 'E-post',
+  'organizations.detail.phone': 'Telefon',
+  'organizations.detail.address': 'Adresse',
+  'organizations.detail.noEmail': 'Ingen e-postadresse registrert',
+  'organizations.detail.noAddress': 'Ingen adresse registrert',
+  // Statistics
+  'organizations.stats.totalBookings': 'Totale bookinger',
+  'organizations.stats.allTime': 'Alle tider',
+  'organizations.stats.activeBookings': 'Aktive bookinger',
+  'organizations.stats.pending': 'Ventende',
+  'organizations.stats.requiresApproval': 'Krever godkjenning',
+  'organizations.stats.totalRevenue': 'Total omsetning',
+  'organizations.stats.totalPaid': 'Totalt betalt',
+  'organizations.stats.seasonLease': 'Sesongleie',
+  'organizations.stats.activeCount': '{{count}} aktive',
+  'organizations.stats.members': 'Medlemmer',
+  'organizations.stats.activeUsers': 'Aktive brukere',
+  // Tabs
+  'organizations.tabs.info': 'Informasjon',
+  'organizations.tabs.members': 'Medlemmer',
+  'organizations.tabs.bookings': 'Bookinger',
+  'organizations.tabs.seasons': 'Sesongleie',
+  'organizations.tabs.activity': 'Aktivitet',
+  // Bookings section
+  'organizations.bookings.loading': 'Laster bookinger...',
+  'organizations.bookings.none': 'Ingen bookinger ennå',
+  'organizations.bookings.noneDescription': 'Denne organisasjonen har ikke gjort noen bookinger.',
+  'organizations.bookings.title': 'Bookinger',
+  'organizations.bookings.table.booking': 'Booking',
+  'organizations.bookings.table.resource': 'Ressurs',
+  'organizations.bookings.table.time': 'Tidspunkt',
+  'organizations.bookings.table.status': 'Status',
+  'organizations.bookings.table.payment': 'Betaling',
+  'organizations.bookings.table.price': 'Pris',
+  // Seasons section
+  'organizations.seasons.loading': 'Laster sesongleie...',
+  'organizations.seasons.none': 'Ingen sesongleie-avtaler',
+  'organizations.seasons.noneDescription': 'Denne organisasjonen har ingen sesongleie-avtaler.',
+  'organizations.seasons.title': 'Sesongleie-avtaler',
+  // Activity section
+  'organizations.activity.none': 'Ingen aktivitet',
+  'organizations.activity.noneDescription': 'Ingen hendelser er registrert for denne organisasjonen.',
+  'organizations.activity.recent': 'Siste aktivitet',
+  'organizations.activity.by': 'Av',
 
   // Users
   'users.title': 'Brukere',
@@ -635,6 +805,88 @@ export const nb: Record<string, string> = {
   'seasons.viewInCalendar': 'Se i kalender',
   'seasons.extendAgreement': 'Forleng avtale',
   'seasons.endAgreement': 'Avslutt avtale',
+  // Seasons - List page
+  'seasons.pageTitle': 'Sesongleie',
+  'seasons.pageSubtitle': 'Administrer sesonger, søknader og tildelinger',
+  'seasons.newSeason': 'Ny sesong',
+  'seasons.searchPlaceholder': 'Søk etter sesong...',
+  'seasons.statusAll': 'Alle',
+  'seasons.noSeasonsFound': 'Ingen sesonger funnet',
+  'seasons.tryDifferentCriteria': 'Prøv å endre søkekriteriene',
+  'seasons.createFirstSeason': 'Opprett din første sesong for å komme i gang',
+  'seasons.viewDetails': 'Vis detaljer',
+  'seasons.venues': 'lokaler',
+  'seasons.applications': 'søknader',
+  'seasons.applicationDeadline': 'Søknadsfrist',
+  'seasons.confirmDelete': 'Er du sikker på at du vil slette denne sesongen?',
+  'seasons.tableHeaderName': 'Navn',
+  'seasons.tableHeaderApplicationDeadline': 'Søknadsfrist',
+  'seasons.tableHeaderStatus': 'Status',
+  'seasons.tableHeaderVenues': 'Lokaler',
+  'seasons.tableHeaderApplications': 'Søknader',
+  'seasons.tableHeaderActions': 'Handlinger',
+  // Seasons - Status labels
+  'seasons.status.draft': 'Utkast',
+  'seasons.status.open': 'Åpen',
+  'seasons.status.closed': 'Lukket',
+  'seasons.status.active': 'Aktiv',
+  'seasons.status.completed': 'Fullført',
+  'seasons.status.cancelled': 'Kansellert',
+  // Seasons - Form page
+  'seasons.backToSeason': 'Tilbake til sesong',
+  'seasons.backToOverview': 'Tilbake til oversikt',
+  'seasons.editSeason': 'Rediger sesong',
+  'seasons.newSeasonTitle': 'Ny sesong',
+  'seasons.updateSeasonDesc': 'Oppdater informasjon om sesongen',
+  'seasons.createSeasonDesc': 'Opprett en ny sesong for sesongleie',
+  'seasons.seasonNotFound': 'Sesong ikke funnet',
+  'seasons.seasonNotFoundDesc': 'Sesongen eksisterer ikke eller er slettet.',
+  'seasons.draftInfo': 'Sesongen opprettes som',
+  'seasons.draftInfoAddVenues': 'Du må legge til lokaler før du kan åpne den for søknader.',
+  'seasons.basicInfo': 'Grunnleggende informasjon',
+  'seasons.name': 'Navn',
+  'seasons.nameDescription': "F.eks. 'Vårsesong 2026' eller 'Høstsesong 2025'",
+  'seasons.namePlaceholder': 'Vårsesong 2026',
+  'seasons.description': 'Beskrivelse',
+  'seasons.descriptionHint': 'Retningslinjer og informasjon til søkere (valgfritt)',
+  'seasons.descriptionPlaceholder': 'Legg til beskrivelse og retningslinjer...',
+  'seasons.periodAndDeadlines': 'Periode og frister',
+  'seasons.startDate': 'Startdato',
+  'seasons.startDateHint': 'Når sesongen starter',
+  'seasons.endDate': 'Sluttdato',
+  'seasons.endDateHint': 'Når sesongen slutter',
+  'seasons.applicationDeadlineHint': 'Siste dag for å sende inn søknader',
+  'seasons.saveChanges': 'Lagre endringer',
+  'seasons.createSeason': 'Opprett sesong',
+  // Seasons - Form validation
+  'seasons.validation.nameRequired': 'Navn er påkrevd',
+  'seasons.validation.startDateRequired': 'Startdato er påkrevd',
+  'seasons.validation.endDateRequired': 'Sluttdato er påkrevd',
+  'seasons.validation.endDateAfterStart': 'Sluttdato må være etter startdato',
+  'seasons.validation.deadlineRequired': 'Søknadsfrist er påkrevd',
+  'seasons.validation.deadlineBeforeStart': 'Søknadsfrist må være før startdato',
+  // Seasons - Detail page
+  'seasons.openSeason': 'Åpne sesong',
+  'seasons.closeSeason': 'Lukk sesong',
+  'seasons.startAllocation': 'Start tildeling',
+  'seasons.seeDetails': 'Se detaljer',
+  'seasons.seasonOpenForApplications': 'Sesongen er åpen for søknader',
+  'seasons.applicationsReceived': '{{count}} søknader mottatt',
+  'seasons.seasonClosedForApplications': 'Sesongen er lukket for søknader',
+  'seasons.applicationsAwaitingAllocation': '{{count}} søknader venter på tildeling',
+  'seasons.seasonIsActive': 'Sesongen er aktiv',
+  'seasons.seasonIsCompleted': 'Sesongen er fullført',
+  'seasons.allApplicationsProcessed': 'Alle søknader er behandlet og bookinger er opprettet',
+  'seasons.tabInfo': 'Info',
+  'seasons.tabVenues': 'Lokaler',
+  'seasons.tabApplications': 'Søknader',
+  'seasons.tabAllocation': 'Tildeling',
+  'seasons.seasonDetails': 'Sesongdetaljer',
+  'seasons.descriptionAndGuidelines': 'Beskrivelse og retningslinjer',
+  'seasons.noDescriptionAdded': 'Ingen beskrivelse lagt til',
+  'seasons.confirmOpenSeason': 'Er du sikker på at du vil åpne sesongen for søknader?',
+  'seasons.confirmCloseSeason': 'Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert.',
+  'seasons.mustAddVenues': 'Du må legge til minst ett lokale før sesongen kan åpnes.',
 
   // Requests
   'requests.title': 'Forespørsler',
@@ -1572,6 +1824,82 @@ export const nb: Record<string, string> = {
   'event.types': 'Arrangementer',
   'event.organizer': 'Arrangør',
   'audit.log': 'Audit Log',
+
+  // Audit Page - Main
+  'audit.title': 'Revisjonslogg',
+  'audit.subtitle': 'Oversikt over alle systemhendelser og endringer',
+  'audit.eventsCount': '{{count}} hendelser',
+  'audit.searchPlaceholder': 'Sok i hendelser...',
+  'audit.filterButton': 'Filter',
+  'audit.loadingError': 'Kunne ikke laste revisjonslogg',
+  'audit.noEvents': 'Ingen hendelser funnet',
+  'audit.noEventsDesc': 'Ingen hendelser er registrert ennå',
+  'audit.adjustFilters': 'Prov a justere filtrene dine',
+  'audit.pageOf': 'Side {{page}} av {{total}}',
+  'audit.next': 'Neste',
+
+  // Audit Page - Filter Drawer
+  'audit.filterEvents': 'Filtrer hendelser',
+  'audit.resourceType': 'Ressurstype',
+  'audit.actionType': 'Handling',
+  'audit.timePeriod': 'Tidsperiode',
+  'audit.fromDate': 'Fra dato',
+  'audit.toDate': 'Til dato',
+  'audit.resetFilters': 'Nullstill filtre',
+
+  // Audit Page - Resource Options
+  'audit.resources.all': 'Alle ressurser',
+  'audit.resources.listing': 'Lokaler',
+  'audit.resources.booking': 'Bookinger',
+  'audit.resources.user': 'Brukere',
+  'audit.resources.organization': 'Organisasjoner',
+  'audit.resources.allocation': 'Allokeringer',
+  'audit.resources.settings': 'Innstillinger',
+
+  // Audit Page - Action Options
+  'audit.actions.all': 'Alle handlinger',
+  'audit.actions.create': 'Opprettet',
+  'audit.actions.read': 'Lest',
+  'audit.actions.update': 'Oppdatert',
+  'audit.actions.delete': 'Slettet',
+
+  // Audit Page - Resource Labels (singular)
+  'audit.resource.listing': 'Lokale',
+  'audit.resource.booking': 'Booking',
+  'audit.resource.user': 'Bruker',
+  'audit.resource.organization': 'Organisasjon',
+  'audit.resource.allocation': 'Allokering',
+  'audit.resource.settings': 'Innstillinger',
+
+  // Audit Page - Event Details Drawer
+  'audit.eventDetails': 'Hendelsesdetaljer',
+  'audit.performedBy': 'Utfort av',
+  'audit.metadata': 'Metadata',
+  'audit.system': 'System',
+  'audit.resourceId': 'Ressurs-ID',
+  'audit.timestamp': 'Tidspunkt',
+  'audit.userId': 'Bruker-ID',
+  'audit.ipAddress': 'IP-adresse',
+  'audit.eventId': 'Hendelse-ID',
+  'audit.tenantId': 'Tenant-ID',
+  'audit.severity': 'Alvorlighetsgrad',
+  'audit.userAgent': 'User Agent',
+  'audit.unknownUser': 'Ukjent',
+  'audit.systemUser': 'System',
+
+  // Audit Page - Table Headers
+  'audit.table.timestamp': 'Tidspunkt',
+  'audit.table.action': 'Handling',
+  'audit.table.resource': 'Ressurs',
+  'audit.table.resourceId': 'Ressurs-ID',
+  'audit.table.user': 'Bruker',
+  'audit.viewDetails': 'Se detaljer',
+
+  // Audit Page - Aria Labels
+  'audit.aria.removeResourceFilter': 'Fjern ressursfilter',
+  'audit.aria.removeActionFilter': 'Fjern handlingsfilter',
+  'audit.aria.removeDateFilter': 'Fjern datofilter',
+
   'automatisk.bekreftelse': 'Automatisk bekreftelse',
   'automatisk.pause.mellom.påfølgende.bookinger': 'Automatisk pause mellom påfølgende bookinger',
   'user.avatar': 'Avatar',
@@ -2404,6 +2732,12 @@ export const nb: Record<string, string> = {
   'ui.next': 'Neste',
   'ui.submit': 'Send inn',
   'ui.confirm': 'Bekreft',
+  'ui.visitWebsite': 'Besøk nettsted',
+  'ui.view': 'Vis',
+  'ui.approve': 'Godkjenn',
+  'ui.reject': 'Avslå',
+  'ui.refresh': 'Oppdater',
+  'ui.moreOptions': 'Flere valg',
 
   // Policy reason keys - explain why an action is not allowed
   'policy.role.insufficient-permissions': 'Du har ikke tilstrekkelige rettigheter for denne handlingen',
@@ -2443,13 +2777,13 @@ export const nb: Record<string, string> = {
 
   // SDK placeholders - rental object card
   'sdk.rentalObject.category.undefined': 'Lokale',
-  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Lokaler og baner',
-  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
-  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
-  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
-  'sdk.timeMode.PERIOD': 'Periode',
-  'sdk.timeMode.SLOT': 'Tidsluke',
-  'sdk.timeMode.ALL_DAY': 'Hele dagen',
+  'sdk.rentalObject.category.lokalerOgBaner': 'Lokaler og baner',
+  'sdk.rentalObject.category.utstyrOgInventar': 'Utstyr og inventar',
+  'sdk.rentalObject.category.kjoretoyOgTransport': 'Kjøretøy og transport',
+  'sdk.rentalObject.category.opplevelserOgArrangement': 'Opplevelser og arrangement',
+  'sdk.timeMode.period': 'Periode',
+  'sdk.timeMode.slot': 'Tidsluke',
+  'sdk.timeMode.allDay': 'Hele dagen',
 
   // Standalone filter/form keys
   filtrer: 'Filtrer',
@@ -2985,4 +3319,829 @@ export const nb: Record<string, string> = {
   'common.saveChanges': 'Lagre endringer',
   'common.accessDenied': 'Du har ikke tilgang til denne siden',
   'common.viewCalendar': 'Vis kalender',
+
+  // =============================================================================
+  // Web App - Booking Widget
+  // =============================================================================
+
+  // Booking steps
+  'bookingWidget.steps.calendar': 'Velg tidspunkter',
+  'bookingWidget.steps.details': 'Detaljer og vilkår',
+  'bookingWidget.steps.confirm': 'Bekreft',
+  'bookingWidget.steps.done': 'Sendt',
+
+  // Price groups
+  'bookingWidget.priceGroup.standard': 'Standard',
+  'bookingWidget.priceGroup.standardDesc': 'Vanlig pris for alle',
+  'bookingWidget.priceGroup.member': 'Medlem',
+  'bookingWidget.priceGroup.memberDesc': 'Rabattert pris for medlemmer',
+  'bookingWidget.priceGroup.youth': 'Ungdom under 26',
+  'bookingWidget.priceGroup.youthDesc': 'Redusert pris for unge',
+
+  // Additional services
+  'bookingWidget.service.cleaning': 'Rengjøring',
+  'bookingWidget.service.cleaningDesc': 'Profesjonell rengjøring etter bruk',
+  'bookingWidget.service.equipment': 'Utstyrspakke',
+  'bookingWidget.service.equipmentDesc': 'Inkluderer bord, stoler og projektor',
+
+  // Purpose types
+  'bookingWidget.purpose.meeting': 'Møte',
+  'bookingWidget.purpose.meetingDesc': 'Styremøte, workshop',
+  'bookingWidget.purpose.event': 'Arrangement',
+  'bookingWidget.purpose.eventDesc': 'Fest, feiring, konsert',
+  'bookingWidget.purpose.training': 'Trening',
+  'bookingWidget.purpose.trainingDesc': 'Sport, idrett',
+  'bookingWidget.purpose.class': 'Kurs/Undervisning',
+  'bookingWidget.purpose.classDesc': 'Opplæring, foredrag',
+  'bookingWidget.purpose.rehearsal': 'Øving',
+  'bookingWidget.purpose.rehearsalDesc': 'Korøving, teater',
+  'bookingWidget.purpose.other': 'Annet',
+  'bookingWidget.purpose.otherDesc': 'Annen aktivitet',
+
+  // Booking form placeholders
+  'bookingWidget.participants.placeholder': 'Antall deltakere',
+  'bookingWidget.description.placeholder': 'Beskriv kort hva lokalet skal brukes til...',
+
+  // Slot status
+  'slot.available': 'Ledig',
+  'slot.conflict': 'Konflikt',
+  'slot.reserved': 'Reservert',
+  'slot.blocked': 'Blokkert',
+  'slot.blackout': 'Stengt',
+  'slot.closed': 'Lukket',
+
+  // Visibility options
+  'visibility.public': 'Offentlig',
+  'visibility.publicDesc': 'Bookingen vises med tittel på den offentlige kalenderen',
+  'visibility.privateTitle': 'Privat tittel',
+  'visibility.privateTitleDesc': 'Tittelen er kun synlig for deg og administrator',
+  'visibility.anonymous': 'Anonym',
+  'visibility.anonymousDesc': 'Kun tidspunktet vises som opptatt, ingen detaljer synlige',
+
+  // Day abbreviations (short)
+  'days.short.monday': 'Ma',
+  'days.short.tuesday': 'Ti',
+  'days.short.wednesday': 'On',
+  'days.short.thursday': 'To',
+  'days.short.friday': 'Fr',
+  'days.short.saturday': 'Lø',
+  'days.short.sunday': 'Sø',
+
+  // Recurring options
+  'recurring.endType.never': 'Aldri',
+  'recurring.endType.afterOccurrences': 'Etter antall ganger',
+  'recurring.endType.untilDate': 'Til en bestemt dato',
+
+  // Default descriptions
+  'rentalObject.noDescription': 'Ingen beskrivelse tilgjengelig.',
+  'rentalObject.defaultDescription': 'Ingen beskrivelse tilgjengelig',
+
+  // Activity calendar
+  'activityCalendar.title': 'Aktivitetskalender',
+  'activityCalendar.subtitle': 'Finn klasser, arrangementer og aktiviteter',
+  'activityCalendar.noActivities': 'Ingen aktiviteter funnet',
+
+  // Booking widget - Calendar navigation
+  'bookingWidget.today': 'I dag',
+  'bookingWidget.previousWeek': 'Forrige uke',
+  'bookingWidget.nextWeek': 'Neste uke',
+  'bookingWidget.showMore': 'Vis flere',
+  'bookingWidget.showLess': 'Vis færre',
+
+  // Booking widget - Legend
+  'bookingWidget.legend.available': 'Ledig',
+  'bookingWidget.legend.occupied': 'Opptatt',
+  'bookingWidget.legend.selected': 'Valgt',
+
+  // Booking widget - Recurring mode
+  'bookingWidget.recurring.selectFirstTime': 'Velg første tidspunkt',
+  'bookingWidget.recurring.selectFirstTimeDesc': 'Klikk på et tidspunkt i kalenderen for å velge basistidspunktet for gjentakende booking.',
+  'bookingWidget.recurring.generatePreview': 'Generer forhåndsvisning',
+  'bookingWidget.recurring.backToPattern': 'Tilbake til mønster',
+  'bookingWidget.recurring.continueWith': 'Fortsett med {{count}} tidspunkter',
+
+  // Booking widget - Season mode
+  'bookingWidget.season.title': 'Sesongbooking',
+  'bookingWidget.season.description': 'For å søke om fast tid i en hel sesong, gå til sesongbooking-siden.',
+  'bookingWidget.season.goToPage': 'Gå til sesongbooking',
+
+  // Booking widget - Success
+  'bookingWidget.success.title': 'Booking sendt!',
+  'bookingWidget.success.message': 'Din bookingforespørsel er sendt til utleier for godkjenning.',
+  'bookingWidget.success.bookMore': 'Book flere tidspunkter',
+
+  // Booking widget - Buttons
+  'bookingWidget.back': 'Tilbake',
+  'bookingWidget.continueToConfirmation': 'Fortsett til bekreftelse',
+  'bookingWidget.sendRequest': 'Send bookingforespørsel',
+  'bookingWidget.submitting': 'Sender booking...',
+  'bookingWidget.selectTimeToContiue': 'Velg tidspunkt for å fortsette',
+  'bookingWidget.continueWithSlots': 'Fortsett med {{count}} tidspunkt',
+  'bookingWidget.continueWithSlotsPlural': 'Fortsett med {{count}} tidspunkter',
+  'bookingWidget.confirmBookingType': 'Bekreft bookingtype',
+  'bookingWidget.selectBookingType': 'Velg bookingtype',
+  'bookingWidget.loginToContinue': 'Logg inn for å fortsette',
+  'bookingWidget.done': 'Ferdig',
+
+  // Booking widget - Errors
+  'bookingWidget.error.missingListingId': 'Mangler listing ID',
+  'bookingWidget.error.bookingFailed': 'En feil oppstod ved booking',
+  'bookingWidget.error.slotUnavailable': 'Det valgte tidspunktet er ikke tilgjengelig. Vennligst velg et annet tidspunkt.',
+  'bookingWidget.error.timeOccupied': 'Tidspunktet er opptatt',
+
+  // Day names short
+  'days.short.sun': 'Søn',
+  'days.short.mon': 'Man',
+  'days.short.tue': 'Tir',
+  'days.short.wed': 'Ons',
+  'days.short.thu': 'Tor',
+  'days.short.fri': 'Fre',
+  'days.short.sat': 'Lør',
+
+  // Month names short
+  'months.short.jan': 'jan',
+  'months.short.feb': 'feb',
+  'months.short.mar': 'mar',
+  'months.short.apr': 'apr',
+  'months.short.may': 'mai',
+  'months.short.jun': 'jun',
+  'months.short.jul': 'jul',
+  'months.short.aug': 'aug',
+  'months.short.sep': 'sep',
+  'months.short.oct': 'okt',
+  'months.short.nov': 'nov',
+  'months.short.dec': 'des',
+
+  // Month names full
+  'months.full.jan': 'januar',
+  'months.full.feb': 'februar',
+  'months.full.mar': 'mars',
+  'months.full.apr': 'april',
+  'months.full.may': 'mai',
+  'months.full.jun': 'juni',
+  'months.full.jul': 'juli',
+  'months.full.aug': 'august',
+  'months.full.sep': 'september',
+  'months.full.oct': 'oktober',
+  'months.full.nov': 'november',
+  'months.full.dec': 'desember',
+
+  // Booking cart sidebar
+  'bookingCart.title': 'Valgte tidspunkter',
+  'bookingCart.updated': 'Oppdatert:',
+  'bookingCart.empty.title': 'Ingen tidspunkter valgt',
+  'bookingCart.empty.description': 'Klikk på et tidspunkt i kalenderen for å legge til',
+  'bookingCart.duration': 'Varighet',
+  'bookingCart.hour': 'time',
+  'bookingCart.hours': 'timer',
+  'bookingCart.attendeesLabel': 'Antall personer',
+  'bookingCart.attendeesPlaceholder': 'Antall deltakere',
+  'bookingCart.activityType': 'Type aktivitet',
+  'bookingCart.descriptionLabel': 'Beskrivelse (valgfritt)',
+  'bookingCart.descriptionPlaceholder': 'Beskriv kort hva lokalet skal brukes til...',
+  'bookingCart.removeSlot': 'Fjern tidspunkt',
+
+  // Time ago strings
+  'time.justNow': 'Akkurat nå',
+  'time.secondsAgo': '{{count}} sekunder siden',
+  'time.minuteAgo': '{{count}} minutt siden',
+  'time.minutesAgo': '{{count}} minutter siden',
+  'time.hourAgo': '{{count}} time siden',
+  'time.hoursAgo': '{{count}} timer siden',
+  'time.at': 'kl.',
+
+  // Booking modes
+  'bookingMode.singleSlot': 'Enkeltbooking',
+  'bookingMode.singleSlotDesc': 'Book ett eller flere enkelttidspunkter',
+  'bookingMode.recurring': 'Gjentakende',
+  'bookingMode.recurringDesc': 'Fast tidspunkt hver uke eller måned',
+  'bookingMode.seasonRental': 'Sesong',
+  'bookingMode.seasonRentalDesc': 'Søk om fast tid i en hel sesong',
+  'bookingMode.inGame': 'Hurtigbooking',
+  'bookingMode.inGameDesc': 'Book kort tid i forveien',
+  'bookingMode.range': 'Periode',
+  'bookingMode.rangeDesc': 'Book en sammenhengende periode',
+  'bookingMode.allDay': 'Heldag',
+  'bookingMode.allDayDesc': 'Book hele dager',
+  'bookingMode.activityRegistration': 'Aktivitet',
+  'bookingMode.activityRegistrationDesc': 'Meld deg på en aktivitet',
+  'bookingMode.max': 'maks',
+
+  // Recurring pattern builder
+  'recurringPattern.title': 'Gjentakende mønster',
+  'recurringPattern.frequency': 'Frekvens',
+  'recurringPattern.frequencyWeekly': 'Ukentlig',
+  'recurringPattern.frequencyMonthly': 'Månedlig',
+  'recurringPattern.weekdays': 'Ukedager',
+  'recurringPattern.daysSelected': '{{count}} dager valgt',
+  'recurringPattern.timeSlot': 'Tidspunkt',
+  'recurringPattern.from': 'Fra',
+  'recurringPattern.to': 'Til',
+  'recurringPattern.duration': 'Varighet:',
+  'recurringPattern.endCondition': 'Sluttbetingelse',
+  'recurringPattern.ends': 'Avsluttes',
+  'recurringPattern.afterOccurrences': 'Etter antall ganger',
+  'recurringPattern.untilDate': 'Til en bestemt dato',
+  'recurringPattern.occurrences': 'Antall ganger',
+  'recurringPattern.maxOccurrences': '(maks {{count}})',
+  'recurringPattern.endDate': 'Sluttdato',
+  'recurringPattern.summary': 'Oppsummering',
+  'recurringPattern.everyWeek': 'Hver uke',
+  'recurringPattern.everyMonth': 'Hver måned',
+  'recurringPattern.onDays': 'på',
+  'recurringPattern.times': 'gang',
+  'recurringPattern.timesPlural': 'ganger',
+  'recurringPattern.until': 'til',
+
+  // Weekday names full
+  'weekdays.monday': 'Mandag',
+  'weekdays.tuesday': 'Tirsdag',
+  'weekdays.wednesday': 'Onsdag',
+  'weekdays.thursday': 'Torsdag',
+  'weekdays.friday': 'Fredag',
+  'weekdays.saturday': 'Lørdag',
+  'weekdays.sunday': 'Søndag',
+
+  // Weekday names short
+  'weekdays.short.mon': 'Man',
+  'weekdays.short.tue': 'Tir',
+  'weekdays.short.wed': 'Ons',
+  'weekdays.short.thu': 'Tor',
+  'weekdays.short.fri': 'Fre',
+  'weekdays.short.sat': 'Lør',
+  'weekdays.short.sun': 'Søn',
+
+  // App section names
+  'app.name': 'Digilist',
+  'app.section.backoffice': 'Backoffice',
+  'app.section.minside': 'Min Side',
+  'app.section.web': 'Web',
+
+  // Backoffice Navigation Sections
+  'nav.sections.work': 'Arbeid',
+  'nav.sections.communication': 'Kommunikasjon',
+  'nav.sections.economy': 'Økonomi',
+  'nav.sections.reports': 'Rapporter',
+  'nav.sections.help': 'Hjelp',
+  'nav.sections.organization': 'Organisasjon',
+  'nav.sections.administration': 'Administrasjon',
+  'nav.sections.usersAndOrganizations': 'Brukere & Org',
+  'nav.sections.caseHandler': 'Saksbehandler',
+  'nav.sections.admin': 'Admin',
+  'nav.sections.tenant': 'Tenant',
+  'nav.sections.system': 'System',
+
+  // Backoffice Navigation - Dashboard
+  'nav.dashboardDesc': 'Oversikt og statistikk',
+
+  // Backoffice Navigation - Work Section
+  'nav.bookingsDesc': 'Forespørsler og reservasjoner',
+  'nav.calendarDesc': 'Visuell oversikt',
+
+  // Backoffice Navigation - Communication Section
+  'nav.messagesDesc': 'Samtaler med brukere',
+
+  // Backoffice Navigation - Economy Section
+  'nav.invoices': 'Fakturaer',
+  'nav.invoicesDesc': 'Fakturaoversikt',
+
+  // Backoffice Navigation - Reports Section
+  'nav.reportsDesc': 'Statistikk og eksport',
+
+  // Backoffice Navigation - Help Section
+  'nav.help': 'Hjelp og støtte',
+  'nav.helpDesc': 'Veiledninger og FAQ',
+
+  // Backoffice Navigation - Organization Section
+  'nav.blocks': 'Blokkeringer',
+  'nav.blocksDesc': 'Sperringer og vedlikehold',
+
+  // Backoffice Navigation - Administration Section
+  'nav.rentalObjectsDesc': 'Lokaler, utstyr, kjøretøy og opplevelser',
+  'nav.seasonsDesc': 'Faste avtaler',
+
+  // Backoffice Navigation - Users & Organizations Section
+  'nav.organizationsDesc': 'Administrer organisasjoner',
+  'nav.usersDesc': 'Administrer brukere',
+
+  // Backoffice Navigation - Case Handler Section
+  'nav.workQueue': 'Arbeidskø',
+  'nav.workQueueDesc': 'Ventende forespørsler',
+  'nav.seasonApplications': 'Sesongsøknader',
+  'nav.seasonApplicationsDesc': 'Behandle søknader',
+  'nav.allocationPlanner': 'Allokeringsplan',
+  'nav.allocationPlannerDesc': 'Fordele faste tider',
+  'nav.decisionForms': 'Vedtaksskjema',
+  'nav.decisionFormsDesc': 'Fatt formelle vedtak',
+  'nav.auditTimeline': 'Revisjonslogg',
+  'nav.auditTimelineDesc': 'Vedtakshistorikk',
+
+  // Backoffice Navigation - Admin Section
+  'nav.newRentalObject': 'Nytt utleieobjekt',
+  'nav.newRentalObjectDesc': 'Opprett lokale',
+  'nav.pricingRules': 'Prisregler',
+  'nav.pricingRulesDesc': 'Administrer priser',
+  'nav.userManagement': 'Brukeradmin',
+  'nav.userManagementDesc': 'Administrer tilgang',
+
+  // Backoffice Navigation - Tenant Section
+  'nav.features': 'Funksjoner',
+  'nav.featuresDesc': 'Aktiver/deaktiver moduler',
+  'nav.platformSettings': 'Plattforminnstillinger',
+  'nav.platformSettingsDesc': 'Konfigurer tenant',
+  'nav.branding': 'Merkevare',
+  'nav.brandingDesc': 'Logo og farger',
+  'nav.systemLog': 'Systemlogg',
+  'nav.systemLogDesc': 'Alle plattformhendelser',
+
+  // Backoffice Navigation - System Section
+  'nav.gdprRequests': 'GDPR-forespørsler',
+  'nav.gdprRequestsDesc': 'Behandle personvernforespørsler',
+  'nav.reviews': 'Anmeldelser',
+  'nav.reviewsDesc': 'Moderer anmeldelser',
+  'nav.auditLog': 'Audit Log',
+  'nav.auditLogDesc': 'Systemhendelser',
+  'nav.settingsDesc': 'Systemkonfigurasjon',
+
+  // User role labels
+  'role.admin': 'Administrator',
+  'role.orgAdmin': 'Organisasjonsadministrator',
+  'role.orgMember': 'Organisasjonsmedlem',
+  'role.user': 'Bruker',
+
+  // ================================================
+  // Documentation Portal (docs-learning)
+  // ================================================
+
+  // Navigation
+  'docs.title': 'Dokumentasjon',
+  'docs.nav.home': 'Oversikt',
+  'docs.nav.homeDesc': 'Kom i gang med Digilist',
+  'docs.nav.search': 'Søk',
+  'docs.nav.searchDesc': 'Søk i dokumentasjon',
+  'docs.nav.sections': 'Seksjoner',
+  'docs.nav.booking': 'Bookingsystem',
+  'docs.nav.bookingDesc': 'Opprett og administrer bookinger',
+  'docs.nav.rbac': 'Roller og tilgang',
+  'docs.nav.rbacDesc': 'Forstå brukerroller og tilgang',
+  'docs.nav.payments': 'Betalinger',
+  'docs.nav.paymentsDesc': 'Betalinger og fakturering',
+  'docs.nav.admin': 'Administrasjon',
+  'docs.nav.adminDesc': 'Innstillinger og konfigurasjon',
+  'docs.nav.api': 'API-dokumentasjon',
+  'docs.nav.apiDesc': 'Teknisk referanse for utviklere',
+  'docs.nav.integrations': 'Integrasjoner',
+  'docs.nav.integrationsDesc': 'Koble til andre systemer',
+  'docs.nav.faq': 'Ofte stilte spørsmål',
+  'docs.nav.faqDesc': 'Vanlige spørsmål og svar',
+  'docs.nav.roleGuides': 'Rolleguider',
+  'docs.nav.roleEndUser': 'For sluttbrukere',
+  'docs.nav.roleOrgMember': 'For org-medlemmer',
+  'docs.nav.roleOrgAdmin': 'For org-admins',
+  'docs.nav.releases': 'Endringslogg',
+  'docs.nav.releasesDesc': 'Nytt i siste oppdatering',
+
+  // Home Page
+  'docs.home.title': 'Velkommen til dokumentasjonen',
+  'docs.home.subtitle': 'Finn svar, lær om funksjoner, og kom i gang med Digilist.',
+  'docs.home.quickLinks': 'Hurtiglenker',
+  'docs.home.forEndUsers': 'For sluttbrukere',
+  'docs.home.forEndUsersDesc': 'Kom i gang med booking',
+  'docs.home.forOrgAdmins': 'For organisasjonsadmins',
+  'docs.home.forOrgAdminsDesc': 'Administrer din organisasjon',
+  'docs.home.searchDocs': 'Søk i dokumentasjon',
+  'docs.home.searchDocsDesc': 'Finn svar raskt',
+
+  // Section Pages
+  'docs.sections.booking.title': 'Bookingsystem',
+  'docs.sections.booking.description': 'Lær hvordan du oppretter og administrerer bookinger',
+  'docs.sections.rbac.title': 'Roller og tilgang',
+  'docs.sections.rbac.description': 'Forstå brukerroller og tillatelser i systemet',
+  'docs.sections.payments.title': 'Betalinger',
+  'docs.sections.payments.description': 'Betalingsmåter og fakturering',
+  'docs.sections.admin.title': 'Administrasjon',
+  'docs.sections.admin.description': 'Systeminnstillinger og konfigurasjon',
+  'docs.sections.api.title': 'API-dokumentasjon',
+  'docs.sections.api.description': 'Teknisk referanse for utviklere',
+  'docs.sections.integrations.title': 'Integrasjoner',
+  'docs.sections.integrations.description': 'Koble til andre systemer',
+  'docs.sections.faq.title': 'Ofte stilte spørsmål',
+  'docs.sections.faq.description': 'Vanlige spørsmål og svar',
+
+  // Search
+  'docs.search.title': 'Søk i dokumentasjon',
+  'docs.search.label': 'Søk',
+  'docs.search.placeholder': 'Skriv for å søke...',
+  'docs.search.results': 'resultater',
+  'docs.search.noResults': 'Ingen resultater funnet.',
+
+  // Article
+  'docs.updatedAt': 'Sist oppdatert',
+  'docs.noArticles': 'Ingen artikler funnet i denne seksjonen.',
+
+  // Role Guide Page
+  'docs.roleGuide.gettingStarted': 'Kom i gang',
+  'docs.roleGuide.relevantArticles': 'Relevante artikler',
+  'docs.roleGuide.guideFor': 'Guide for',
+  'docs.roles.endUser': 'Sluttbruker',
+  'docs.roles.orgMember': 'Organisasjonsmedlem',
+  'docs.roles.orgAdmin': 'Organisasjonsadministrator',
+  'docs.roles.tenantAdmin': 'Leieradministrator',
+  'docs.roles.saasAdmin': 'SaaS-administrator',
+  'docs.apps.web': 'Nettside',
+  'docs.apps.backoffice': 'Backoffice',
+  'docs.apps.minside': 'Min side',
+  'docs.apps.tenantAdmin': 'Leieradmin',
+  'docs.apps.saasAdmin': 'SaaS Admin',
+
+  // Checklist items
+  'docs.checklist.login': 'Logg inn på plattformen',
+  'docs.checklist.explore': 'Utforsk tilgjengelige lokaler',
+  'docs.checklist.firstBooking': 'Opprett din første booking',
+  'docs.checklist.addPayment': 'Legg til betalingsinformasjon',
+
+  // Releases Page
+  'docs.releases.title': 'Endringslogg',
+  'docs.releases.subtitle': 'Se hva som er nytt i Digilist',
+  'docs.releases.latest': 'Nyeste',
+
+  // TOC
+  'docs.toc.title': 'På denne siden',
+
+  // Related articles
+  'docs.article.gettingStartedBooking': 'Kom i gang med booking',
+  'docs.article.gettingStartedBookingDesc': 'Lær grunnleggende booking',
+  'docs.article.paymentMethods': 'Betalingsmetoder',
+  'docs.article.paymentMethodsDesc': 'Tilgjengelige betalingsmåter',
+
+  // Help Page
+  'help.title': 'Hjelp og støtte',
+  'help.subtitle': 'Finn svar på spørsmål og lær hvordan du bruker systemet',
+  'help.readMore': 'Les mer',
+  'help.openLink': 'Åpne',
+
+  // Help Sections
+  'help.sections.gettingStarted.title': 'Kom i gang',
+  'help.sections.gettingStarted.description': 'Steg-for-steg guider for vanlige oppgaver',
+  'help.sections.faq.title': 'Vanlige spørsmål',
+  'help.sections.faq.description': 'Svar på ofte stilte spørsmål',
+  'help.sections.support.title': 'Kontakt support',
+  'help.sections.support.description': 'Trenger du hjelp? Ta kontakt med oss',
+
+  // Help Roles
+  'help.roles.orgMember': 'Medlem',
+  'help.roles.orgAdmin': 'Organisasjonsadministrator',
+  'help.roles.tenantAdmin': 'Leietakeradministrator',
+  'help.roles.admin': 'Systemadministrator',
+
+  // Help Quick Start Guide
+  'help.quickStartGuide.title': 'Hurtigstartsguide',
+  'help.quickStartGuide.subtitle': 'Tilpasset for din rolle som {{role}}',
+
+  // Help Quick Start - org_member
+  'help.quickStart.orgMember.viewRentalObjects.title': 'Se dine tildelte utleieobjekter',
+  'help.quickStart.orgMember.viewRentalObjects.description': 'Gå til Dashboard for oversikt',
+  'help.quickStart.orgMember.processBookings.title': 'Behandle bookinger',
+  'help.quickStart.orgMember.processBookings.description': 'Bruk Bookinger-siden for å godkjenne eller avslå forespørsler',
+  'help.quickStart.orgMember.viewCalendar.title': 'Se kalenderen',
+  'help.quickStart.orgMember.viewCalendar.description': 'Kalender viser alle reservasjoner for dine objekter',
+  'help.quickStart.orgMember.communicate.title': 'Kommuniser med brukere',
+  'help.quickStart.orgMember.communicate.description': 'Bruk Meldinger for å svare på henvendelser',
+
+  // Help Quick Start - org_admin
+  'help.quickStart.orgAdmin.manageUsers.title': 'Administrer brukere',
+  'help.quickStart.orgAdmin.manageUsers.description': 'Gå til Brukere for å invitere og administrere medlemmer',
+  'help.quickStart.orgAdmin.createRentalObjects.title': 'Opprett utleieobjekter',
+  'help.quickStart.orgAdmin.createRentalObjects.description': 'Legg til nye lokaler og ressurser via Utleieobjekter',
+  'help.quickStart.orgAdmin.processBookings.title': 'Behandle bookinger',
+  'help.quickStart.orgAdmin.processBookings.description': 'Godkjenn forespørsler og håndter konflikter',
+  'help.quickStart.orgAdmin.viewReports.title': 'Se rapporter',
+  'help.quickStart.orgAdmin.viewReports.description': 'Analyser bruk og inntekter under Rapporter',
+  'help.quickStart.orgAdmin.manageMessages.title': 'Administrer meldinger',
+  'help.quickStart.orgAdmin.manageMessages.description': 'Kommuniser med brukere og se samtaleoversikt',
+
+  // Help Quick Start - tenant_admin
+  'help.quickStart.tenantAdmin.configureOrg.title': 'Konfigurer organisasjonen',
+  'help.quickStart.tenantAdmin.configureOrg.description': 'Sett opp logo, branding og kontaktinfo under Innstillinger',
+  'help.quickStart.tenantAdmin.activateFeatures.title': 'Aktiver funksjoner',
+  'help.quickStart.tenantAdmin.activateFeatures.description': 'Slå av/på moduler i Innstillinger > Funksjoner',
+  'help.quickStart.tenantAdmin.manageUsers.title': 'Administrer brukere',
+  'help.quickStart.tenantAdmin.manageUsers.description': 'Inviter og administrer alle brukere',
+  'help.quickStart.tenantAdmin.setupIntegrations.title': 'Sett opp integrasjoner',
+  'help.quickStart.tenantAdmin.setupIntegrations.description': 'Koble til betalingsløsninger og eksterne systemer',
+  'help.quickStart.tenantAdmin.exportReports.title': 'Eksporter rapporter',
+  'help.quickStart.tenantAdmin.exportReports.description': 'Generer og eksporter data for analyse',
+
+  // Help Quick Start - admin
+  'help.quickStart.admin.systemAdmin.title': 'Systemadministrasjon',
+  'help.quickStart.admin.systemAdmin.description': 'Full tilgang til alle funksjoner og innstillinger',
+  'help.quickStart.admin.userAccess.title': 'Bruker- og tilgangsstyring',
+  'help.quickStart.admin.userAccess.description': 'Administrer alle brukere på tvers av organisasjoner',
+  'help.quickStart.admin.featuresModules.title': 'Funksjoner og moduler',
+  'help.quickStart.admin.featuresModules.description': 'Kontroller hvilke funksjoner som er tilgjengelige',
+  'help.quickStart.admin.auditLog.title': 'Revisjonslogg',
+  'help.quickStart.admin.auditLog.description': 'Se alle handlinger utført i systemet',
+  'help.quickStart.admin.integrations.title': 'Integrasjoner',
+  'help.quickStart.admin.integrations.description': 'Konfigurer og overvåk systemintegrasjoner',
+
+  // Help Keyboard Shortcuts
+  'help.keyboardShortcuts.title': 'Tastatursnarveier',
+  'help.shortcuts.showShortcuts': 'Vis hurtigtaster',
+  'help.shortcuts.goToDashboard': 'Gå til Dashboard',
+  'help.shortcuts.goToBookings': 'Gå til Bookinger',
+  'help.shortcuts.goToCalendar': 'Gå til Kalender',
+  'help.shortcuts.goToMessages': 'Gå til Meldinger',
+  'help.shortcuts.goToHelp': 'Gå til Hjelp',
+
+  // Help Guides Page
+  'help.guides.title': 'Veiledninger',
+  'help.guides.description': 'Steg-for-steg guider for vanlige oppgaver',
+  'help.guides.availableFor': 'Tilgjengelig for:',
+  'help.guides.noGuidesAvailable': 'Ingen veiledninger tilgjengelig for din rolle.',
+  'help.guides.difficulty.beginner': 'Nybegynner',
+  'help.guides.difficulty.intermediate': 'Middels',
+  'help.guides.difficulty.advanced': 'Avansert',
+
+  // Guide: Booking Approval
+  'help.guides.bookingApproval.title': 'Behandle bookingforespørsler',
+  'help.guides.bookingApproval.description': 'Lær hvordan du godkjenner eller avslår bookingforespørsler',
+  'help.guides.bookingApproval.step1': 'Gå til Bookinger-siden fra menyen',
+  'help.guides.bookingApproval.step2': 'Finn forespørselen du vil behandle i listen',
+  'help.guides.bookingApproval.step3': 'Klikk på forespørselen for å se detaljer',
+  'help.guides.bookingApproval.step4': 'Se gjennom informasjon om booker og tidspunkt',
+  'help.guides.bookingApproval.step5': 'Velg "Godkjenn" for å bekrefte bookingen',
+  'help.guides.bookingApproval.step6': 'Velg "Avslå" med begrunnelse for å avvise',
+  'help.guides.bookingApproval.step7': 'Brukeren får automatisk beskjed om resultatet',
+
+  // Guide: Calendar View
+  'help.guides.calendarView.title': 'Bruke kalenderen',
+  'help.guides.calendarView.description': 'Oversikt over reservasjoner for dine tildelte objekter',
+  'help.guides.calendarView.step1': 'Gå til Kalender fra menyen',
+  'help.guides.calendarView.step2': 'Velg visningstype: dag, uke eller måned',
+  'help.guides.calendarView.step3': 'Se alle bookinger for dine tildelte objekter',
+  'help.guides.calendarView.step4': 'Klikk på en booking for å se detaljer',
+  'help.guides.calendarView.step5': 'Bruk filtre for å vise spesifikke objekter',
+  'help.guides.calendarView.step6': 'Dra og slipp for å endre tidspunkt (hvis tillatt)',
+
+  // Guide: Messages
+  'help.guides.messages.title': 'Svare på meldinger',
+  'help.guides.messages.description': 'Kommuniser med brukere om bookinger',
+  'help.guides.messages.step1': 'Gå til Meldinger fra menyen',
+  'help.guides.messages.step2': 'Åpne samtalen du vil svare på',
+  'help.guides.messages.step3': 'Les meldingshistorikken for kontekst',
+  'help.guides.messages.step4': 'Skriv svaret ditt i tekstfeltet',
+  'help.guides.messages.step5': 'Legg til vedlegg om nødvendig',
+  'help.guides.messages.step6': 'Klikk Send for å sende meldingen',
+
+  // Guide: User Management
+  'help.guides.userManagement.title': 'Administrere brukere',
+  'help.guides.userManagement.description': 'Inviter og administrer brukere i din organisasjon',
+  'help.guides.userManagement.step1': 'Gå til Brukere-siden fra menyen',
+  'help.guides.userManagement.step2': 'Klikk "Inviter bruker" for å legge til ny bruker',
+  'help.guides.userManagement.step3': 'Fyll inn brukerens e-postadresse og navn',
+  'help.guides.userManagement.step4': 'Velg rolle og tilgangsnivå',
+  'help.guides.userManagement.step5': 'Tildel utleieobjekter brukeren skal ha tilgang til',
+  'help.guides.userManagement.step6': 'Send invitasjonen - brukeren får e-post',
+  'help.guides.userManagement.step7': 'Følg med på "Ventende" for ubehandlede invitasjoner',
+
+  // Guide: Rental Object Create
+  'help.guides.rentalObjectCreate.title': 'Opprette utleieobjekt',
+  'help.guides.rentalObjectCreate.description': 'Legg til et nytt utleieobjekt i systemet',
+  'help.guides.rentalObjectCreate.step1': 'Gå til Utleieobjekter fra menyen',
+  'help.guides.rentalObjectCreate.step2': 'Klikk "Nytt utleieobjekt"',
+  'help.guides.rentalObjectCreate.step3': 'Fyll ut grunnleggende informasjon (navn, beskrivelse, kategori)',
+  'help.guides.rentalObjectCreate.step4': 'Last opp bilder av objektet',
+  'help.guides.rentalObjectCreate.step5': 'Sett opp tilgjengelighet og åpningstider',
+  'help.guides.rentalObjectCreate.step6': 'Konfigurer priser og betalingsalternativer',
+  'help.guides.rentalObjectCreate.step7': 'Definer bookingsregler og begrensninger',
+  'help.guides.rentalObjectCreate.step8': 'Forhåndsvis og publiser objektet',
+
+  // Guide: Reports Export
+  'help.guides.reportsExport.title': 'Generere rapporter',
+  'help.guides.reportsExport.description': 'Eksporter booking- og inntektsdata',
+  'help.guides.reportsExport.step1': 'Gå til Rapporter fra menyen',
+  'help.guides.reportsExport.step2': 'Velg rapporttype (bookinger, inntekter, bruk)',
+  'help.guides.reportsExport.step3': 'Angi periode for rapporten',
+  'help.guides.reportsExport.step4': 'Velg hvilke utleieobjekter som skal inkluderes',
+  'help.guides.reportsExport.step5': 'Klikk "Generer rapport" for å se forhåndsvisning',
+  'help.guides.reportsExport.step6': 'Eksporter til CSV eller PDF ved behov',
+
+  // Guide: Organization Settings
+  'help.guides.orgSettings.title': 'Organisasjonsinnstillinger',
+  'help.guides.orgSettings.description': 'Konfigurer organisasjonsprofil og branding',
+  'help.guides.orgSettings.step1': 'Gå til Innstillinger > Organisasjon',
+  'help.guides.orgSettings.step2': 'Oppdater organisasjonslogo og navn',
+  'help.guides.orgSettings.step3': 'Sett opp kontaktinformasjon',
+  'help.guides.orgSettings.step4': 'Konfigurer standardinnstillinger for bookinger',
+  'help.guides.orgSettings.step5': 'Sett opp e-postmaler for kommunikasjon',
+  'help.guides.orgSettings.step6': 'Aktiver eller deaktiver funksjoner',
+  'help.guides.orgSettings.step7': 'Lagre endringene',
+
+  // Guide: Integrations
+  'help.guides.integrations.title': 'Sette opp integrasjoner',
+  'help.guides.integrations.description': 'Koble til eksterne systemer',
+  'help.guides.integrations.step1': 'Gå til Innstillinger > Integrasjoner',
+  'help.guides.integrations.step2': 'Velg integrasjonen du vil sette opp',
+  'help.guides.integrations.step3': 'Følg stegene for å koble til tjenesten',
+  'help.guides.integrations.step4': 'Test integrasjonen for å bekrefte at den fungerer',
+  'help.guides.integrations.step5': 'Konfigurer synkroniseringsinnstillinger',
+  'help.guides.integrations.step6': 'Aktiver integrasjonen',
+
+  // Guide: Feature Flags
+  'help.guides.featureFlags.title': 'Administrere funksjoner',
+  'help.guides.featureFlags.description': 'Aktiver og deaktiver systemfunksjoner',
+  'help.guides.featureFlags.step1': 'Gå til Innstillinger > Funksjoner',
+  'help.guides.featureFlags.step2': 'Se liste over tilgjengelige moduler',
+  'help.guides.featureFlags.step3': 'Klikk på bryteren for å aktivere/deaktivere',
+  'help.guides.featureFlags.step4': 'Se avhengigheter mellom moduler',
+  'help.guides.featureFlags.step5': 'Husk at noen moduler krever at andre er aktivert',
+  'help.guides.featureFlags.step6': 'Endringer trer i kraft umiddelbart',
+
+  // Integrations - Archive
+  'integrations.archive.backToOverview': 'Tilbake til oversikt',
+  'integrations.archive.title': 'Acos WebSak - Arkiv',
+  'integrations.archive.description': 'Se hva som arkiveres og status på arkivering',
+  'integrations.archive.statusActive': 'Aktiv',
+  'integrations.archive.statusInactive': 'Inaktiv',
+  'integrations.archive.refresh': 'Oppdater',
+  'integrations.archive.stats.total': 'Totalt',
+  'integrations.archive.stats.sent': 'Sendt',
+  'integrations.archive.stats.failed': 'Feilet',
+  'integrations.archive.stats.pending': 'Venter',
+  'integrations.archive.events.title': 'Arkiverte hendelser',
+  'integrations.archive.events.searchPlaceholder': 'Søk etter tittel eller saksnummer...',
+  'integrations.archive.events.filterType': 'Filter type',
+  'integrations.archive.events.filterStatus': 'Filter status',
+  'integrations.archive.events.allTypes': 'Alle typer',
+  'integrations.archive.events.allStatuses': 'Alle statuser',
+  'integrations.archive.events.noResults': 'Ingen hendelser funnet',
+  'integrations.archive.events.retry': 'Prøv igjen',
+  'integrations.archive.eventTypes.title': 'Arkiverte hendelsestyper',
+  'integrations.archive.eventTypes.description': 'Følgende hendelsestyper arkiveres automatisk til Acos WebSak:',
+  'integrations.archive.eventTypes.bookings': 'Bookinger og reservasjoner',
+  'integrations.archive.eventTypes.contracts': 'Leiekontrakter',
+  'integrations.archive.eventTypes.invoices': 'Fakturaer',
+  'integrations.archive.eventTypes.documents': 'Dokumenter og vedlegg',
+  'integrations.archive.table.type': 'Type',
+  'integrations.archive.table.title': 'Tittel',
+  'integrations.archive.table.caseNumber': 'Saksnummer',
+  'integrations.archive.table.status': 'Status',
+  'integrations.archive.table.timestamp': 'Tidspunkt',
+  'integrations.archive.table.action': 'Handling',
+  'integrations.archive.type.booking': 'Booking',
+  'integrations.archive.type.document': 'Dokument',
+  'integrations.archive.type.contract': 'Kontrakt',
+  'integrations.archive.type.invoice': 'Faktura',
+  'integrations.archive.status.sent': 'Sendt',
+  'integrations.archive.status.failed': 'Feilet',
+  'integrations.archive.status.pending': 'Venter',
+
+  // Integrations Overview Page
+  'integrations.overview.title': 'Integrasjoner',
+  'integrations.overview.description': 'Oversikt over driftstilstand og avvik for alle integrasjoner',
+  'integrations.overview.refresh': 'Oppdater',
+  'integrations.overview.activeIntegrations': 'Aktive integrasjoner',
+  'integrations.overview.operationalStatus': 'Driftstatus',
+  'integrations.overview.deviationsToFollow': 'Avvik til oppfølging',
+  'integrations.overview.archiveButton': 'Arkiv (Acos WebSak)',
+  'integrations.overview.calendarButton': 'Kalender (Outlook)',
+  'integrations.overview.viewDetails': 'Se detaljer',
+  'integrations.overview.retry': 'Prøv igjen',
+
+  // Integration statuses
+  'integrations.status.warning': 'Avvik',
+  'integrations.status.disabled': 'Deaktivert',
+
+  // Integration card
+  'integrations.card.lastSync': 'Sist synkronisert',
+  'integrations.card.lastEvent': 'Siste hendelse',
+  'integrations.card.deviationsRequireFollowup': '{{count}} avvik krever oppfølging',
+  'integrations.card.contactPoint': 'Kontaktpunkt',
+
+  // Time formatting
+  'integrations.time.never': 'Aldri',
+  'integrations.time.justNow': 'Akkurat nå',
+  'integrations.time.minutesAgo': '{{count}} min siden',
+  'integrations.time.hoursAgo': '{{count}} timer siden',
+
+  // Deviations table
+  'integrations.deviations.title': 'Avviksliste',
+  'integrations.deviations.integration': 'Integrasjon',
+  'integrations.deviations.type': 'Type',
+  'integrations.deviations.description': 'Beskrivelse',
+  'integrations.deviations.timestamp': 'Tidspunkt',
+  'integrations.deviations.action': 'Handling',
+
+  // Integration providers
+  'integrations.provider.rco.name': 'RCO Adgangskontroll',
+  'integrations.provider.rco.description': 'Låser og tilgangskoder',
+  'integrations.provider.visma.name': 'Visma',
+  'integrations.provider.visma.description': 'Fakturering og regnskap',
+  'integrations.provider.visma.pendingInvoices': '{{count}} fakturaer venter på behandling',
+  'integrations.provider.acos.name': 'Acos WebSak',
+  'integrations.provider.acos.description': 'Arkivering og dokumenthåndtering',
+  'integrations.provider.vipps.name': 'Vipps',
+  'integrations.provider.vipps.description': 'Betalingsløsning',
+  'integrations.provider.outlook.name': 'Microsoft Outlook',
+  'integrations.provider.outlook.description': 'Kalenderintegrasjon',
+
+  // Access Grants (Backoffice)
+  'accessGrants.title': 'Tilgangstildelinger',
+  'accessGrants.subtitle': 'Administrer organisasjoners tilgang til utleieobjekter',
+  'accessGrants.newGrant': 'Ny tildeling',
+  'accessGrants.backToOverview': 'Tilbake til oversikt',
+  'accessGrants.newAccessGrant': 'Ny tilgangstildeling',
+  'accessGrants.newAccessGrantDescription': 'Gi en organisasjon tilgang til et utleieobjekt',
+  'accessGrants.loadingData': 'Laster data...',
+  'accessGrants.searchPlaceholder': 'Søk etter organisasjon eller utleieobjekt...',
+  'accessGrants.loading': 'Laster...',
+  'accessGrants.noGrantsFound': 'Ingen tilgangstildelinger funnet',
+  'accessGrants.tryDifferentSearch': 'Prøv å endre søkekriteriene',
+  'accessGrants.createFirstGrant': 'Opprett din første tilgangstildeling for å komme i gang',
+  'accessGrants.errorCreating': 'Feil ved oppretting',
+  'accessGrants.createError': 'Kunne ikke opprette tilgangstildeling',
+  // Access Grants - Status
+  'accessGrants.status.all': 'Alle',
+  'accessGrants.status.active': 'Aktiv',
+  'accessGrants.status.revoked': 'Tilbakekalt',
+  'accessGrants.status.expired': 'Utløpt',
+  'accessGrants.statusLabel': 'Status',
+  // Access Grants - Table
+  'accessGrants.table.organization': 'Organisasjon',
+  'accessGrants.table.rentalObject': 'Utleieobjekt',
+  'accessGrants.table.status': 'Status',
+  'accessGrants.table.grantedAt': 'Tildelt',
+  'accessGrants.table.expiresAt': 'Utløper',
+  'accessGrants.table.actions': 'Handlinger',
+  'accessGrants.table.grantedBy': 'av {{name}}',
+  'accessGrants.table.noExpiry': 'Ingen utløpsdato',
+  // Access Grants - Actions
+  'accessGrants.action.viewOrganization': 'Vis organisasjon',
+  'accessGrants.action.revokeAccess': 'Tilbakekall tilgang',
+  'accessGrants.confirmRevoke': 'Er du sikker på at du vil tilbakekalle denne tilgangen?',
+  'accessGrants.revokeReason': 'Manuelt tilbakekalt',
+  // Access Grants - Form
+  'accessGrants.form.organizationSection': 'Organisasjon',
+  'accessGrants.form.organizationDescription': 'Velg organisasjonen som skal få tilgang',
+  'accessGrants.form.organizationLabel': 'Organisasjon',
+  'accessGrants.form.selectOrganization': 'Velg organisasjon...',
+  'accessGrants.form.selectOrganizationAria': 'Velg organisasjon',
+  'accessGrants.form.rentalObjectSection': 'Utleieobjekt',
+  'accessGrants.form.rentalObjectDescription': 'Velg utleieobjektet organisasjonen skal få tilgang til',
+  'accessGrants.form.rentalObjectLabel': 'Utleieobjekt',
+  'accessGrants.form.selectRentalObject': 'Velg utleieobjekt...',
+  'accessGrants.form.selectRentalObjectAria': 'Velg utleieobjekt',
+  'accessGrants.form.validitySection': 'Gyldighetsperiode',
+  'accessGrants.form.validityDescription': 'Valgfritt: Angi når tilgangen utløper',
+  'accessGrants.form.expiryLabel': 'Utløpsdato',
+  'accessGrants.form.expiryAria': 'Utløpsdato',
+  'accessGrants.form.noExpiryNote': 'Hvis ingen dato angis, vil tilgangen gjelde uten utløpsdato.',
+  'accessGrants.form.notesSection': 'Notater',
+  'accessGrants.form.notesDescription': 'Valgfritt: Legg til interne notater om tildelingen',
+  'accessGrants.form.notesLabel': 'Notater',
+  'accessGrants.form.notesPlaceholder': 'F.eks. Avtale gjelder sesong 2024/2025',
+  'accessGrants.form.notesAria': 'Notater',
+  'accessGrants.form.submit': 'Opprett tilgangstildeling',
+  'accessGrants.form.submitting': 'Oppretter...',
+  // Access Grants - Validation
+  'accessGrants.validation.organizationRequired': 'Velg en organisasjon',
+  'accessGrants.validation.rentalObjectRequired': 'Velg et utleieobjekt',
+  'accessGrants.validation.expiryFuture': 'Utløpsdato må være i fremtiden',
+
+  // ================================================
+  // Documentation Portal - Articles
+  // ================================================
+
+  // Article titles and descriptions
+  'docs.article.createBooking': 'Opprett en booking',
+  'docs.article.createBookingDesc': 'Steg-for-steg guide til opprettelse av booking',
+  'docs.article.manageBookings': 'Administrer bookinger',
+  'docs.article.manageBookingsDesc': 'Oversikt og håndtering av dine bookinger',
+  'docs.article.rbacOverview': 'Rollebasert tilgang',
+  'docs.article.rbacOverviewDesc': 'Introduksjon til roller og tillatelser',
+  'docs.article.rolesExplained': 'Forstå rollene',
+  'docs.article.rolesExplainedDesc': 'Detaljert beskrivelse av alle roller',
+  'docs.article.invoicing': 'Fakturering',
+  'docs.article.invoicingDesc': 'Guide til fakturering og betalingshistorikk',
+  'docs.article.settingsOverview': 'Innstillinger',
+  'docs.article.settingsOverviewDesc': 'Oversikt over systeminnstillinger',
+  'docs.article.apiAuth': 'API-autentisering',
+  'docs.article.apiAuthDesc': 'Hvordan autentisere mot API-et',
+  'docs.article.apiEndpoints': 'API-endepunkter',
+  'docs.article.apiEndpointsDesc': 'Fullstendig API-referanse',
+  'docs.article.integrationsOverview': 'Integrasjonsoversikt',
+  'docs.article.integrationsOverviewDesc': 'Tilgjengelige integrasjoner',
+  'docs.article.faqGeneral': 'Generelle spørsmål',
+  'docs.article.faqGeneralDesc': 'Vanlige spørsmål og svar',
+  'docs.article.troubleshooting': 'Feilsøking',
+  'docs.article.troubleshootingDesc': 'Løsninger på vanlige problemer',
+
+  // Release notes
+  'docs.releases.v250.date': '15. januar 2026',
+  'docs.releases.v250.change1': '✨ Ny dokumentasjonsplattform',
+  'docs.releases.v250.change2': '🔧 Forbedret søkefunksjon',
+  'docs.releases.v250.change3': '🐛 Diverse feilrettinger',
+  'docs.releases.v240.date': '1. januar 2026',
+  'docs.releases.v240.change1': '📊 Ny rapportmodul',
+  'docs.releases.v240.change2': '🔐 Forbedret sikkerhet',
 };

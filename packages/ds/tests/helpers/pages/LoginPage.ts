@@ -10,7 +10,8 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.demoLoginButton = page.getByTestId('login-option-demo-innlogging').or(page.getByTestId('login-option-demo-login'));
+    // Use Norwegian testid (app is in Norwegian)
+    this.demoLoginButton = page.getByTestId('login-option-demo-innlogging');
     this.nameInput = page.getByTestId('demo-name');
     this.emailInput = page.getByTestId('demo-email');
     this.tokenInput = page.getByTestId('demo-token');

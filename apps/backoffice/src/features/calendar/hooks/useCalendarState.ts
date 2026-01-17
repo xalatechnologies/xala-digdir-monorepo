@@ -15,7 +15,8 @@ interface CalendarStateOptions {
 }
 
 export function useCalendarState(options: CalendarStateOptions = {}) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { initialView = 'week', initialDate = new Date(), initialListing } = options;
 
   // View state

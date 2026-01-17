@@ -161,6 +161,7 @@ export function ContentStep({ wizard }: ContentStepProps) {
                 alignItems: 'center',
                 gap: 'var(--ds-spacing-2)',
               }}
+              aria-label={t('form.content.addFAQ')}
             >
               <PlusIcon
                 style={{ width: '1rem', height: '1rem' }}
@@ -259,7 +260,7 @@ export function ContentStep({ wizard }: ContentStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
-            <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>💡</span>
+            <span style={{ fontSize: 'var(--ds-font-size-lg)', flexShrink: 0 }}>💡</span>
             <span>{t('rentalObjects.contentInfo')}</span>
           </Paragraph>
         </div>

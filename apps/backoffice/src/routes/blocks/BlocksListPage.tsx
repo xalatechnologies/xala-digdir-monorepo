@@ -160,7 +160,7 @@ export function BlocksListPage(): React.ReactElement {
           </Paragraph>
         </div>
         {canCreateBlock && (
-          <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')}>
+          <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')} aria-label={t('ui.create')}>
             <PlusIcon />
             {t('blocks.createBlock')}
           </Button>
@@ -207,7 +207,7 @@ export function BlocksListPage(): React.ReactElement {
               {t('blocks.noBlocks')}
             </Paragraph>
             {canCreateBlock && (
-              <Button type="button" variant="secondary" onClick={() => navigate('/blocks/new')} style={{ marginTop: 'var(--ds-spacing-4)' }}>
+              <Button type="button" variant="secondary" onClick={() => navigate('/blocks/new')} style={{ marginTop: 'var(--ds-spacing-4)' }} aria-label={t('ui.create')}>
                 <PlusIcon />
                 {t('blocks.createFirstBlock')}
               </Button>

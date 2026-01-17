@@ -116,7 +116,7 @@ export function AdminReportsPage() {
           alignItems: isMobile ? 'stretch' : 'flex-end',
         }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Rapporttype</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Rapporttype</label>
             <Select
               value={reportType}
               onChange={(e) => setReportType(e.target.value as typeof reportType)}
@@ -129,11 +129,11 @@ export function AdminReportsPage() {
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Fra dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fra dato</label>
             <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} style={{ width: '100%' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Til dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Til dato</label>
             <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} style={{ width: '100%' }} />
           </div>
           <Button type="button" variant="primary" data-size="md" style={{ minHeight: '44px' }}>
@@ -194,7 +194,7 @@ export function AdminReportsPage() {
             <Table.Body>
               {mockReports.topListings.map((listing) => (
                 <Table.Row key={listing.name}>
-                  <Table.Cell><span style={{ fontWeight: 600 }}>{listing.name}</span></Table.Cell>
+                  <Table.Cell><span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{listing.name}</span></Table.Cell>
                   <Table.Cell>{listing.bookings}</Table.Cell>
                   <Table.Cell>{formatCurrency(listing.revenue)}</Table.Cell>
                   <Table.Cell>

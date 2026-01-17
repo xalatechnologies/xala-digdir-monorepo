@@ -62,6 +62,111 @@ export const ModuleKey = {
 export type ModuleKeyType = (typeof ModuleKey)[keyof typeof ModuleKey];
 
 // =============================================================================
+// Domain Groups (Logical Groupings of Modules)
+// =============================================================================
+
+/**
+ * DomainGroup
+ * Logical groupings of modules that form a complete domain.
+ * Used for high-level enablement and menu organization.
+ */
+export const DomainGroup = {
+  /** Core platform functionality - always enabled */
+  CORE: 'CORE',
+  /** Booking & Rentals domain - the primary domain */
+  BOOKING_RENTALS: 'BOOKING_RENTALS',
+  /** Communication features */
+  COMMUNICATION: 'COMMUNICATION',
+  /** Payment & Economy features */
+  ECONOMY: 'ECONOMY',
+  /** User experience enhancements */
+  EXPERIENCE: 'EXPERIENCE',
+  /** Third-party integrations */
+  INTEGRATIONS: 'INTEGRATIONS',
+  /** Compliance & administrative tools */
+  COMPLIANCE: 'COMPLIANCE',
+} as const;
+
+export type DomainGroupType = (typeof DomainGroup)[keyof typeof DomainGroup];
+
+/**
+ * Mapping of domain groups to their constituent modules
+ */
+export const DOMAIN_GROUP_MODULES: Record<DomainGroupType, ModuleKeyType[]> = {
+  [DomainGroup.CORE]: [
+    ModuleKey.CORE_AUTH,
+    ModuleKey.CORE_TENANTS,
+    ModuleKey.CORE_USERS,
+  ],
+  [DomainGroup.BOOKING_RENTALS]: [
+    ModuleKey.RENTAL_OBJECTS,
+    ModuleKey.BOOKINGS,
+    ModuleKey.CALENDAR,
+    ModuleKey.PRICING,
+    ModuleKey.AVAILABILITY,
+    ModuleKey.SEASON_RENTAL,
+    ModuleKey.ALLOCATIONS,
+  ],
+  [DomainGroup.COMMUNICATION]: [
+    ModuleKey.MESSAGING,
+    ModuleKey.NOTIFICATIONS,
+    ModuleKey.INTERNAL_NOTES,
+  ],
+  [DomainGroup.ECONOMY]: [
+    ModuleKey.PAYMENTS,
+    ModuleKey.INVOICING,
+    ModuleKey.PAYMENTS_VIPPS,
+    ModuleKey.PAYMENTS_STRIPE,
+  ],
+  [DomainGroup.EXPERIENCE]: [
+    ModuleKey.RATINGS,
+    ModuleKey.FAVORITES,
+    ModuleKey.SEARCH,
+    ModuleKey.SEO,
+    ModuleKey.GEO,
+    ModuleKey.HELP,
+    ModuleKey.RAG_SUPPORT,
+  ],
+  [DomainGroup.INTEGRATIONS]: [
+    ModuleKey.INTEGRATIONS_IDPORTEN,
+    ModuleKey.INTEGRATIONS_BANKID,
+    ModuleKey.INTEGRATIONS_VIPPS,
+  ],
+  [DomainGroup.COMPLIANCE]: [
+    ModuleKey.AUDIT_LOGGING,
+    ModuleKey.COMPLIANCE_GDPR,
+    ModuleKey.ACTIVITIES,
+    ModuleKey.REPORTING,
+  ],
+};
+
+/**
+ * Get the domain group for a module
+ */
+export function getModuleDomainGroup(moduleKey: ModuleKeyType): DomainGroupType | null {
+  for (const [group, modules] of Object.entries(DOMAIN_GROUP_MODULES)) {
+    if ((modules as ModuleKeyType[]).includes(moduleKey)) {
+      return group as DomainGroupType;
+    }
+  }
+  return null;
+}
+
+/**
+ * Check if a domain group is fully enabled
+ */
+export function isDomainGroupEnabled(
+  group: DomainGroupType,
+  enabledModules: Set<ModuleKeyType>
+): boolean {
+  const groupModules = DOMAIN_GROUP_MODULES[group];
+  // At least the core modules of the group must be enabled
+  // For BOOKING_RENTALS: RENTAL_OBJECTS + BOOKINGS
+  const coreGroupModules = groupModules.slice(0, 2);
+  return coreGroupModules.every((m) => enabledModules.has(m));
+}
+
+// =============================================================================
 // Module Categories
 // =============================================================================
 

@@ -57,7 +57,8 @@ interface DragPreview {
 }
 
 export function useDragAndDrop(options: DragAndDropOptions = {}) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
     startHour = 7,
     endHour = 21,

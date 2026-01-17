@@ -185,7 +185,7 @@ describe('ScheduleStep', () => {
       render(<ScheduleStep wizard={mockWizard} />);
 
       const endTimeInput = screen.getByLabelText('form.schedule.endTime');
-      fireEvent.change(endTimeInput, { target: { value' => '12:00' } });
+      fireEvent.change(endTimeInput, { target: { value: '12:00' } });
 
       expect(mockWizard.updateFormData).toHaveBeenCalledWith({
         endTime: '12:00',

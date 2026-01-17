@@ -34,7 +34,8 @@ export interface ConflictDetectionOptions {
  * Supports buffer time detection to prevent back-to-back bookings
  */
 export function useConflictDetection(options: ConflictDetectionOptions) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { events, enabled = true, bufferMinutes = 0 } = options;
 
   // Map of event IDs to their conflict info

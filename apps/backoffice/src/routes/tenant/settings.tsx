@@ -105,7 +105,7 @@ export function TenantSettingsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tenant-navn</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Tenant-navn</label>
               <Input
                 value={settings.tenantName}
                 onChange={(e) => updateSetting('tenantName', e.target.value)}
@@ -113,7 +113,7 @@ export function TenantSettingsPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Slug (URL)</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Slug (URL)</label>
               <Input
                 value={settings.tenantSlug}
                 onChange={(e) => updateSetting('tenantSlug', e.target.value)}
@@ -123,7 +123,7 @@ export function TenantSettingsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Språk</label>
               <Select
                 value={settings.defaultLanguage}
                 onChange={(e) => updateSetting('defaultLanguage', e.target.value)}
@@ -135,7 +135,7 @@ export function TenantSettingsPage() {
               </Select>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tidssone</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Tidssone</label>
               <Select
                 value={settings.timezone}
                 onChange={(e) => updateSetting('timezone', e.target.value)}
@@ -146,7 +146,7 @@ export function TenantSettingsPage() {
               </Select>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Valuta</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Valuta</label>
               <Select
                 value={settings.currency}
                 onChange={(e) => updateSetting('currency', e.target.value)}
@@ -183,7 +183,7 @@ export function TenantSettingsPage() {
               backgroundColor: 'var(--ds-color-neutral-surface-hover)',
             }}>
               <div>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>{feature.label}</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{feature.label}</Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {feature.description}
                 </Paragraph>
@@ -218,7 +218,7 @@ export function TenantSettingsPage() {
               backgroundColor: 'var(--ds-color-neutral-surface-hover)',
             }}>
               <div>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>{integration.label}</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{integration.label}</Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {integration.description}
                 </Paragraph>
@@ -239,7 +239,7 @@ export function TenantSettingsPage() {
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
               Maks. forhåndsbooking (dager)
             </label>
             <Input
@@ -250,7 +250,7 @@ export function TenantSettingsPage() {
             />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
               Avbudsvarsel (timer før)
             </label>
             <Input

@@ -5,11 +5,10 @@
 
 import { useMemo } from 'react';
 import { Paragraph, Spinner } from '@xala/ds';
-import type { CalendarEvent, Listing } from '@digilist/client-sdk';
+import type { CalendarEvent } from '@digilist/client-sdk';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useConflictDetection } from '../hooks/useConflictDetection';
 import { ConflictIndicator, getConflictColors } from './ConflictIndicator';
-import { useT } from '@xala/i18n';
 
 interface TimelineViewProps {
   events: CalendarEvent[];

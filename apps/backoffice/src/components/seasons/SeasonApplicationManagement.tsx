@@ -278,7 +278,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
                     <Table.Cell>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" data-size="sm" type="button">
+                          <Button variant="tertiary" data-size="sm" type="button" aria-label={t('ui.moreOptions')}>
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>

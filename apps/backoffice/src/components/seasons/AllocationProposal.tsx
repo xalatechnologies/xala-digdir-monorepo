@@ -113,7 +113,8 @@ function useApplyAllocationProposal() {
 }
 
 export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProposalProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [applyOptions, setApplyOptions] = useState({
     autoApproveNoConflicts: true,
     autoAdjustTimes: false,

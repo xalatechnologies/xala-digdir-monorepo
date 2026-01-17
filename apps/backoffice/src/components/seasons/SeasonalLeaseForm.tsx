@@ -39,7 +39,8 @@ const weekdayOptions = [
 ];
 
 export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFormProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateSeasonalLeaseDTO>({
     listingId: '',
     organizationId: '',
@@ -144,7 +145,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
       };
 
       await onSubmit(cleanData);
-    } catch (error) {
+    } catch {
       // Failed to save seasonal lease
     } finally {
       setIsSubmitting(false);

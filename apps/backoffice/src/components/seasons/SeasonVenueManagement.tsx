@@ -203,7 +203,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
                   <Table.Cell>
                     <Dropdown>
                       <Dropdown.Trigger asChild>
-                        <Button variant="tertiary" data-size="sm" type="button">
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t('ui.moreOptions')}>
                           <MoreVerticalIcon />
                         </Button>
                       </Dropdown.Trigger>

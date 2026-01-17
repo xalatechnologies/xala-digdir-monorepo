@@ -95,7 +95,8 @@ function getDefaultFormData(category?: RentalObjectCategory): Partial<RentalObje
 export function useRentalObjectWizard(
   options: UseRentalObjectWizardOptions = {}
 ): UseRentalObjectWizardReturn {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { slug, initialCategory, onComplete } = options;
   const navigate = useNavigate();
   const isEditMode = !!slug;

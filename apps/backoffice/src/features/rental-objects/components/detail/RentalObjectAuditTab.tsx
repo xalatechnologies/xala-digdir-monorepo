@@ -1,7 +1,6 @@
-import { useT } from '@xala/i18n';
 import { Paragraph } from '@xala/ds';
 
 export function RentalObjectAuditTab() {
-  const t = useT();
+  // TODO: Implement with translations
   return <Paragraph>TODO: Implement RentalObjectAuditTab</Paragraph>;
 }

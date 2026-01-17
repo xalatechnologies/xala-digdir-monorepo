@@ -36,13 +36,9 @@ import {
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
-const actorTypeLabels: Record<ActorType, string> = {
-  private: 'Privatperson',
-  business: 'Bedrift',
-  sports_club: 'Idrettslag',
-  youth_organization: 'Ungdomsorganisasjon',
-  school: 'Skole',
-  municipality: 'Kommune',
+// Actor type labels are now provided via translation function
+const getActorTypeLabel = (t: (key: string) => string, type: ActorType): string => {
+  return t(`organizations.actorType.${type}`);
 };
 
 const actorTypeColors: Record<ActorType, 'neutral' | 'info' | 'success' | 'warning'> = {
@@ -89,7 +85,7 @@ export function OrganizationsListPage() {
 
   // Handlers
   const handleDelete = async (id: string) => {
-    if (confirm('Er du sikker på at du vil slette denne organisasjonen?')) {
+    if (confirm(t('organizations.deleteConfirm'))) {
       await deleteOrgMutation.mutateAsync(id);
     }
   };
@@ -108,19 +104,19 @@ export function OrganizationsListPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={2} data-size="md">
-            Organisasjoner
+            {t('organizations.title')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
           >
-            Administrer organisasjoner, medlemmer og verifisering
+            {t('organizations.subtitleAdmin')}
           </Paragraph>
         </div>
         <Link to="/organizations/new">
           <Button type="button">
             <PlusIcon />
-            Ny organisasjon
+            {t('organizations.new')}
           </Button>
         </Link>
       </div>
@@ -130,7 +126,7 @@ export function OrganizationsListPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="Søk etter organisasjon..."
+              placeholder={t('organizations.searchPlaceholder')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -139,21 +135,21 @@ export function OrganizationsListPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Status: {statusFilter === 'all' ? 'Alle' : statusFilter}
+              {t('organizations.filter.status')}: {statusFilter === 'all' ? t('organizations.filter.all') : t(`organizations.${statusFilter}`)}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('organizations.filter.all')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('organizations.active')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('organizations.inactive')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>{t('organizations.suspended')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -162,30 +158,30 @@ export function OrganizationsListPage() {
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
               <FilterIcon />
-              Type: {actorTypeFilter === 'all' ? 'Alle' : actorTypeLabels[actorTypeFilter]}
+              {t('organizations.filter.type')}: {actorTypeFilter === 'all' ? t('organizations.filter.all') : getActorTypeLabel(t, actorTypeFilter)}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('all')}>{t('organizations.filter.all')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('private')}>Privatperson</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('private')}>{t('organizations.actorType.private')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('business')}>Bedrift</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('business')}>{t('organizations.actorType.business')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('sports_club')}>Idrettslag</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('sports_club')}>{t('organizations.actorType.sports_club')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('youth_organization')}>Ungdomsorganisasjon</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('youth_organization')}>{t('organizations.actorType.youth_organization')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('school')}>Skole</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('school')}>{t('organizations.actorType.school')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setActorTypeFilter('municipality')}>Kommune</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setActorTypeFilter('municipality')}>{t('organizations.actorType.municipality')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -203,18 +199,18 @@ export function OrganizationsListPage() {
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
             <BuildingIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }} />
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Ingen organisasjoner funnet
+              {t('organizations.notFound')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || statusFilter !== 'all' || actorTypeFilter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
-                : 'Opprett din første organisasjon for å komme i gang'}
+                ? t('organizations.tryDifferentSearch')
+                : t('organizations.createFirst')}
             </Paragraph>
             {!searchQuery && statusFilter === 'all' && actorTypeFilter === 'all' && (
               <Link to="/organizations/new">
                 <Button data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
                   <PlusIcon />
-                  Ny organisasjon
+                  {t('organizations.new')}
                 </Button>
               </Link>
             )}
@@ -223,13 +219,13 @@ export function OrganizationsListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell>Org.nr</Table.HeaderCell>
-                <Table.HeaderCell>Kontakt</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Verifisert</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.type')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.orgNumber')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.contact')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('organizations.table.verified')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('organizations.table.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -240,7 +236,7 @@ export function OrganizationsListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={actorTypeColors[org.actorType]}>
-                      {actorTypeLabels[org.actorType]}
+                      {getActorTypeLabel(t, org.actorType)}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
@@ -260,7 +256,7 @@ export function OrganizationsListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={statusColors[org.status]}>
-                      {org.status === 'active' ? 'Aktiv' : org.status === 'inactive' ? 'Inaktiv' : 'Suspendert'}
+                      {t(`organizations.${org.status}`)}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
@@ -280,7 +276,7 @@ export function OrganizationsListPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleViewDetail(org)}>
                               <EyeIcon />
-                              Vis detaljer
+                              {t('organizations.viewDetails')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           <Dropdown.Item>
@@ -291,7 +287,7 @@ export function OrganizationsListPage() {
                             <Dropdown.Item>
                               <Dropdown.Button onClick={() => handleVerify(org.id)}>
                                 <ShieldCheckIcon />
-                                Verifiser
+                                {t('organizations.verify')}
                               </Dropdown.Button>
                             </Dropdown.Item>
                           )}

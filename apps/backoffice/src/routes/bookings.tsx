@@ -4,7 +4,7 @@
  * Styled consistently with ListingsListView
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form */
+/* eslint-disable digdir/require-interactive-labels -- Complex filter form with native inputs */
 
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -52,40 +52,30 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
   </svg>
 );
 
-// Status tabs for main navigation
+// Status tabs for main navigation (labels are i18n keys)
 const STATUS_TABS = [
-  { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
-  { id: 'confirmed', label: 'Bekreftet', icon: '✓', color: 'success' },
-  { id: 'completed', label: 'Fullført', icon: '✓', color: 'info' },
-  { id: 'cancelled', label: 'Kansellert', icon: '✕', color: 'danger' },
-  { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
+  { id: 'pending', labelKey: 'bookings.status.pending', icon: '⏳', color: 'warning' },
+  { id: 'confirmed', labelKey: 'bookings.status.confirmed', icon: '✓', color: 'success' },
+  { id: 'completed', labelKey: 'bookings.status.completed', icon: '✓', color: 'info' },
+  { id: 'cancelled', labelKey: 'bookings.status.cancelled', icon: '✕', color: 'danger' },
+  { id: 'all', labelKey: 'bookings.status.all', icon: '📋', color: 'neutral' },
 ] as const;
 
-// Payment status filter options
+// Payment status filter options (labels are i18n keys)
 const PAYMENT_OPTIONS = [
-  { id: 'all', label: 'Alle betalinger' },
-  { id: 'paid', label: 'Betalt' },
-  { id: 'unpaid', label: 'Ikke betalt' },
-  { id: 'refunded', label: 'Refundert' },
-];
+  { id: 'all', labelKey: 'bookings.payment.all' },
+  { id: 'paid', labelKey: 'bookings.payment.paid' },
+  { id: 'unpaid', labelKey: 'bookings.payment.unpaid' },
+  { id: 'refunded', labelKey: 'bookings.payment.refunded' },
+] as const;
 
-// Sort options
+// Sort options (labels are i18n keys)
 const SORT_OPTIONS = [
-  { id: 'date-desc', label: 'Nyeste først', field: 'startTime', order: 'desc' },
-  { id: 'date-asc', label: 'Eldste først', field: 'startTime', order: 'asc' },
-  { id: 'price-desc', label: 'Høyeste pris', field: 'totalPrice', order: 'desc' },
-  { id: 'price-asc', label: 'Laveste pris', field: 'totalPrice', order: 'asc' },
-];
-
-// Helper to calculate duration
-function calculateDuration(startTime: string, endTime: string): string {
-  const start = new Date(startTime);
-  const end = new Date(endTime);
-  const diffMs = end.getTime() - start.getTime();
-  const hours = diffMs / (1000 * 60 * 60);
-  if (hours < 1) return `${Math.round(hours * 60)} min`;
-  return hours % 1 === 0 ? `${hours} t` : `${hours.toFixed(1)} t`;
-}
+  { id: 'date-desc', labelKey: 'bookings.sort.newestFirst', field: 'startTime', order: 'desc' },
+  { id: 'date-asc', labelKey: 'bookings.sort.oldestFirst', field: 'startTime', order: 'asc' },
+  { id: 'price-desc', labelKey: 'bookings.sort.highestPrice', field: 'totalPrice', order: 'desc' },
+  { id: 'price-asc', labelKey: 'bookings.sort.lowestPrice', field: 'totalPrice', order: 'asc' },
+] as const;
 
 
 export function BookingsPage() {
@@ -139,14 +129,14 @@ export function BookingsPage() {
   const userNameMap = useMemo(() => {
     const map = new Map<string, { name: string; email?: string }>();
     usersData?.data?.forEach((user: { id: string; name?: string; email?: string }) => {
-      const entry: { name: string; email?: string } = { name: user.name || 'Ukjent' };
+      const entry: { name: string; email?: string } = { name: user.name || t('common.unknown') };
       if (user.email) {
         entry.email = user.email;
       }
       map.set(user.id, entry);
     });
     return map;
-  }, [usersData]);
+  }, [usersData, t]);
 
   // Fetch bookings
   const { data: bookingsData, isLoading } = useBookings(bookingParams);
@@ -269,8 +259,8 @@ export function BookingsPage() {
   const handleBulkConfirm = async () => {
     const confirmed = await confirm({
       title: t('bookings.bulkConfirm'),
-      description: `Godkjenn ${selectedIds.length} bookinger?`,
-      confirmText: 'Godkjenn alle',
+      description: t('bookings.bulk.confirmApprove', { count: selectedIds.length }),
+      confirmText: t('bookings.bulk.approveAll'),
       cancelText: t('common.abort'),
       variant: 'primary',
     });
@@ -285,8 +275,8 @@ export function BookingsPage() {
   const handleBulkCancel = async () => {
     const confirmed = await confirm({
       title: t('bookings.bulkCancel'),
-      description: `Avslå ${selectedIds.length} bookinger?`,
-      confirmText: 'Avslå alle',
+      description: t('bookings.bulk.confirmReject', { count: selectedIds.length }),
+      confirmText: t('bookings.bulk.rejectAll'),
       cancelText: t('common.abort'),
       variant: 'danger',
     });
@@ -302,7 +292,7 @@ export function BookingsPage() {
     // Export selected bookings to CSV
     const selectedBookings = bookings.filter(b => selectedIds.includes(b.id));
     const csvContent = [
-      ['ID', 'Lokale', 'Bruker', 'Starttid', 'Sluttid', 'Status', 'Pris'].join(','),
+      [t('bookings.csv.id'), t('bookings.csv.listing'), t('bookings.csv.user'), t('bookings.csv.startTime'), t('bookings.csv.endTime'), t('bookings.csv.status'), t('bookings.csv.price')].join(','),
       ...selectedBookings.map(b => [
         b.id,
         b.listingName || b.listingId,
@@ -317,7 +307,7 @@ export function BookingsPage() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `bookinger-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `bookings-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
@@ -358,18 +348,18 @@ export function BookingsPage() {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title="Filter og sortering"
+        title={t('bookings.filter.title')}
         icon={<FilterIcon size={20} />}
         position="right"
-       
+
         footer={
           <Stack spacing="var(--ds-spacing-3)">
             <Text
-             
+
               color="var(--ds-color-neutral-text-subtle)"
               style={{ textAlign: 'center' }}
             >
-              Viser {totalCount} bookinger
+              {t('bookings.filter.showingCount', { count: totalCount })}
             </Text>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <Button
@@ -381,7 +371,7 @@ export function BookingsPage() {
                   setIsFilterOpen(false);
                 }}
               >
-                Nullstill
+                {t('bookings.filter.reset')}
               </Button>
               <Button
                 type="button"
@@ -389,7 +379,7 @@ export function BookingsPage() {
                 style={{ flex: 1 }}
                 onClick={applyFilters}
               >
-                Bruk filter
+                {t('bookings.filter.apply')}
               </Button>
             </div>
           </Stack>
@@ -418,7 +408,7 @@ export function BookingsPage() {
                 selected={selectedPayment === payment.id}
               >
                 <Text color="var(--ds-color-neutral-text-default)">
-                  {payment.label}
+                  {t(payment.labelKey)}
                 </Text>
               </DrawerItem>
             ))}
@@ -426,11 +416,11 @@ export function BookingsPage() {
         </DrawerSection>
 
         {/* Date Range Section */}
-        <DrawerSection title="Datoperiode" collapsible defaultCollapsed>
+        <DrawerSection title={t('bookings.filter.datePeriod')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-3)">
             <div>
               <Text color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
-                Fra dato
+                {t('bookings.filter.fromDate')}
               </Text>
               <input
                 type="date"
@@ -447,7 +437,7 @@ export function BookingsPage() {
             </div>
             <div>
               <Text color="var(--ds-color-neutral-text-subtle)" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
-                Til dato
+                {t('bookings.filter.toDate')}
               </Text>
               <input
                 type="date"
@@ -466,7 +456,7 @@ export function BookingsPage() {
         </DrawerSection>
 
         {/* Sort Section */}
-        <DrawerSection title="Sortering" collapsible defaultCollapsed>
+        <DrawerSection title={t('bookings.filter.sorting')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {SORT_OPTIONS.map((sort) => (
               <DrawerItem
@@ -488,7 +478,7 @@ export function BookingsPage() {
                 selected={selectedSort === sort.id}
               >
                 <Text color="var(--ds-color-neutral-text-default)">
-                  {sort.label}
+                  {t(sort.labelKey)}
                 </Text>
               </DrawerItem>
             ))}
@@ -518,30 +508,28 @@ export function BookingsPage() {
             };
 
             return (
-              <button
+              <Button
                 key={tab.id}
                 data-testid={`status-${tab.id}`}
                 type="button"
+                variant="tertiary"
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-2)',
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                  border: 'none',
                   borderRadius: 'var(--ds-border-radius-md) var(--ds-border-radius-md) 0 0',
                   backgroundColor: isActive ? 'var(--ds-color-neutral-surface-default)' : 'transparent',
                   color: isActive ? colorMap[tab.color] : 'var(--ds-color-neutral-text-subtle)',
                   fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
                   fontSize: 'var(--ds-font-size-sm)',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
                   borderBottom: isActive ? `2px solid ${colorMap[tab.color]}` : '2px solid transparent',
                   marginBottom: '-1px',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span>{tab.label}</span>
+                <span>{t(tab.labelKey)}</span>
                 {count > 0 && (
                   <span style={{
                     minWidth: '20px',
@@ -564,7 +552,7 @@ export function BookingsPage() {
                     {count}
                   </span>
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -573,7 +561,7 @@ export function BookingsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
           <HeaderSearch
             data-testid="search-input"
-            placeholder="Søk etter lokale, bruker, booking-ID..."
+            placeholder={t('bookings.search.placeholder')}
             value={searchValue}
             onSearchChange={handleSearchChange}
             onSearch={handleSearch}
@@ -594,7 +582,7 @@ export function BookingsPage() {
               border: '1px solid var(--ds-color-accent-border-default)',
             }}>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {selectedIds.length} valgt
+                {t('bookings.bulk.selected', { count: selectedIds.length })}
               </Paragraph>
               {activeTab === 'pending' && (
                 <>
@@ -606,7 +594,7 @@ export function BookingsPage() {
                     disabled={confirmBooking.isPending}
                     style={{ color: 'var(--ds-color-success-text-default)' }}
                   >
-                    <CheckIcon /> Godkjenn
+                    <CheckIcon /> {t('bookings.bulk.approve')}
                   </Button>
                   <Button
                     type="button"
@@ -616,7 +604,7 @@ export function BookingsPage() {
                     disabled={cancelBooking.isPending}
                     style={{ color: 'var(--ds-color-danger-text-default)' }}
                   >
-                    <CloseIcon /> Avslå
+                    <CloseIcon /> {t('bookings.bulk.reject')}
                   </Button>
                 </>
               )}
@@ -626,7 +614,7 @@ export function BookingsPage() {
                 data-size="sm"
                 onClick={handleBulkExport}
               >
-                <DownloadIcon /> Eksporter
+                <DownloadIcon /> {t('bookings.bulk.export')}
               </Button>
               <Button
                 type="button"
@@ -696,28 +684,28 @@ export function BookingsPage() {
                 <>
                   <div style={{ fontSize: 'var(--ds-font-size-heading-lg)', marginBottom: 'var(--ds-spacing-3)' }}>✓</div>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-success-text-default)' }}>
-                    Ingen ventende forespørsler
+                    {t('bookings.empty.noPending')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Alle bookingforespørsler er behandlet
+                    {t('bookings.empty.allProcessed')}
                   </Paragraph>
                 </>
               ) : activeTab === 'cancelled' ? (
                 <>
                   <Paragraph data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Ingen kansellerte bookinger
+                    {t('bookings.empty.noCancelled')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Det finnes ingen kansellerte bookinger
+                    {t('bookings.empty.noCancelledDescription')}
                   </Paragraph>
                 </>
               ) : (
                 <>
                   <Paragraph data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Ingen bookinger funnet
+                    {t('bookings.empty.noBookings')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {searchQuery ? 'Prøv å endre søkekriteriene' : 'Det finnes ingen bookinger i denne kategorien'}
+                    {searchQuery ? t('bookings.empty.tryDifferentSearch') : t('bookings.empty.noBookingsInCategory')}
                   </Paragraph>
                 </>
               )}
@@ -739,13 +727,13 @@ export function BookingsPage() {
                         onChange={(e) => handleSelectAll(e.target.checked)}
                       />
                     </Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '110px' }}>Booking</Table.HeaderCell>
-                    <Table.HeaderCell>Ressurs</Table.HeaderCell>
-                    <Table.HeaderCell>Bruker</Table.HeaderCell>
-                    <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '100px' }}>Status</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '110px' }}>{t('bookings.table.booking')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('bookings.table.resource')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('bookings.table.user')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('bookings.table.time')}</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '100px' }}>{t('bookings.table.status')}</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '100px' }}>{t("rule.payment")}</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '100px', textAlign: 'right' }}>Pris</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '100px', textAlign: 'right' }}>{t('bookings.table.price')}</Table.HeaderCell>
                     <Table.HeaderCell style={{ width: '60px' }} />
                   </Table.Row>
                 </Table.Head>
@@ -763,7 +751,7 @@ export function BookingsPage() {
                       >
                         <Table.Cell onClick={(e) => e.stopPropagation()}>
                           <Checkbox
-                            aria-label={`Velg booking ${bookingRef}`}
+                            aria-label={t('bookings.action.selectBooking', { ref: bookingRef })}
                             checked={selectedIds.includes(booking.id)}
                             onChange={(e) => handleSelectOne(booking.id, e.target.checked)}
                           />
@@ -785,7 +773,7 @@ export function BookingsPage() {
                                 e.stopPropagation();
                                 handleCopyId(booking.id);
                               }}
-                              aria-label="Kopier ID"
+                              aria-label={t('bookings.action.copyId')}
                               style={{ padding: '2px' }}
                             >
                               <CopyIcon style={{
@@ -854,8 +842,8 @@ export function BookingsPage() {
                                   data-size="md"
                                   onClick={() => handleConfirm(booking.id)}
                                   disabled={confirmBooking.isPending}
-                                  aria-label="Godkjenn"
-                                  title="Godkjenn booking"
+                                  aria-label={t('bookings.action.approve')}
+                                  title={t('bookings.action.approveBooking')}
                                 >
                                   <CheckIcon />
                                 </Button>
@@ -867,8 +855,8 @@ export function BookingsPage() {
                                   data-size="md"
                                   onClick={() => handleCancel(booking.id)}
                                   disabled={cancelBooking.isPending}
-                                  aria-label="Avvis"
-                                  title="Avvis booking"
+                                  aria-label={t('bookings.action.reject')}
+                                  title={t('bookings.action.rejectBooking')}
                                 >
                                   <CloseIcon />
                                 </Button>
@@ -879,7 +867,7 @@ export function BookingsPage() {
                               variant="primary"
                               data-size="md"
                               icon
-                              aria-label="Flere valg"
+                              aria-label={t('bookings.action.moreOptions')}
                               popovertarget={`dropdown-${booking.id}`}
                             >
                               <MoreVerticalIcon />
@@ -888,13 +876,13 @@ export function BookingsPage() {
                               <Dropdown.List>
                                 <Dropdown.Item>
                                   <Dropdown.Button onClick={() => handleView(booking)}>
-                                    Se detaljer
+                                    {t('bookings.viewDetails')}
                                   </Dropdown.Button>
                                 </Dropdown.Item>
                                 {booking.status !== 'cancelled' && (
                                   <Dropdown.Item>
                                     <Dropdown.Button onClick={() => handleCancel(booking.id)}>
-                                      Kanseller
+                                      {t('bookings.cancel')}
                                     </Dropdown.Button>
                                   </Dropdown.Item>
                                 )}

@@ -283,7 +283,7 @@ export function RequestDetailModal({
                   style={{
                     fontSize: 'var(--ds-font-size-xs)',
                     color: 'var(--ds-color-neutral-text-subtle)',
-                    fontFamily: 'monospace',
+                    fontFamily: 'var(--ds-font-family-mono)',
                   }}
                 >
                   Bruker-ID: {request.userId}
@@ -410,7 +410,7 @@ export function RequestDetailModal({
                 style={{
                   fontSize: 'var(--ds-font-size-xs)',
                   color: 'var(--ds-color-neutral-text-subtle)',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-mono)',
                 }}
               >
                 {request.id}

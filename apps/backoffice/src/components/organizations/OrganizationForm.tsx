@@ -34,7 +34,8 @@ const actorTypeOptions = [
 ];
 
 export function OrganizationForm({ organization, onSubmit, onCancel }: OrganizationFormProps) {
-  const t = useT();
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateOrganizationDTO>({
     name: '',
     actorType: 'business',
@@ -109,7 +110,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
       };
 
       await onSubmit(cleanData);
-    } catch (error) {
+    } catch {
       // Failed to save organization
     } finally {
       setIsSubmitting(false);

@@ -107,7 +107,7 @@ export function BlockDetailPage(): React.ReactElement {
           <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
             {error?.message || t('blocks.notFound')}
           </Paragraph>
-          <Button type="button" variant="secondary" onClick={() => navigate('/blocks')}>
+          <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
             <ArrowLeftIcon />
             {t('blocks.backToList')}
           </Button>
@@ -145,7 +145,7 @@ export function BlockDetailPage(): React.ReactElement {
         </div>
         {canManageBlocks && (
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-            <Button type="button" variant="secondary" onClick={() => navigate(`/blocks/${block.id}/edit`)}>
+            <Button type="button" variant="secondary" onClick={() => navigate(`/blocks/${block.id}/edit`)} aria-label={t('ui.edit')}>
               <EditIcon />
               {t('common.edit')}
             </Button>
@@ -155,6 +155,7 @@ export function BlockDetailPage(): React.ReactElement {
               data-color="danger"
               onClick={handleDelete}
               disabled={deleteBlockMutation.isPending}
+              aria-label={t('ui.delete')}
             >
               <TrashIcon />
               {t('common.delete')}
@@ -315,7 +316,7 @@ export function BlockDetailPage(): React.ReactElement {
 
       {/* Back button */}
       <div>
-        <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')}>
+        <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
           <ArrowLeftIcon />
           {t('blocks.backToList')}
         </Button>

@@ -172,8 +172,9 @@ export function CalendarSection({
   className,
   title,
   subtitle,
-}: CalendarSectionProps):
-  const t = useT(); React.ReactElement {
+}: CalendarSectionProps): React.ReactElement {
+  // Translation function available for future localization
+  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 

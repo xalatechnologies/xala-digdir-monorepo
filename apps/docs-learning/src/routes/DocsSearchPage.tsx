@@ -8,12 +8,12 @@ import { Heading, Paragraph, Textfield, Card } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import styles from './DocsSearchPage.module.css';
 
-// Mock search results for MVP
+// Mock search results for MVP - article titles/snippets would come from MDX content
 const MOCK_RESULTS = [
-  { section: 'booking', slug: 'create-booking', title: 'Opprett en booking', description: 'Steg-for-steg guide til opprettelse', snippet: 'Lær hvordan du oppretter en booking...' },
-  { section: 'booking', slug: 'manage-bookings', title: 'Administrer bookinger', description: 'Oversikt og håndtering', snippet: 'Administrer dine bookinger fra...' },
-  { section: 'rbac', slug: 'roles-explained', title: 'Forstå rollene', description: 'Detaljert beskrivelse', snippet: 'Rollene definerer tilgang til...' },
-  { section: 'payments', slug: 'invoicing', title: 'Fakturering', description: 'Guide til faktura', snippet: 'Fakturaer sendes automatisk...' },
+  { section: 'booking', slug: 'create-booking', titleKey: 'docs.article.createBooking', snippet: '' },
+  { section: 'booking', slug: 'manage-bookings', titleKey: 'docs.article.manageBookings', snippet: '' },
+  { section: 'rbac', slug: 'roles-explained', titleKey: 'docs.article.rolesExplained', snippet: '' },
+  { section: 'payments', slug: 'invoicing', titleKey: 'docs.article.invoicing', snippet: '' },
 ];
 
 export function DocsSearchPage() {
@@ -26,12 +26,12 @@ export function DocsSearchPage() {
     if (!query.trim()) return [];
     const lower = query.toLowerCase();
     return MOCK_RESULTS.filter(
-      (r) =>
-        r.title.toLowerCase().includes(lower) ||
-        r.description.toLowerCase().includes(lower) ||
-        r.snippet.toLowerCase().includes(lower)
+      (r) => {
+        const title = t(r.titleKey) || r.section;
+        return title.toLowerCase().includes(lower) || r.section.toLowerCase().includes(lower);
+      }
     );
-  }, [query]);
+  }, [query, t]);
 
   const handleSearch = (value: string) => {
     setQuery(value);
@@ -45,14 +45,14 @@ export function DocsSearchPage() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <Heading level={1}>{t('docs.search.title') || 'Søk i dokumentasjon'}</Heading>
+        <Heading level={1}>{t('docs.search.title')}</Heading>
       </header>
 
       <div className={styles.searchBox}>
         <Textfield
           type="search"
-          label={t('docs.search.label') || 'Søk'}
-          placeholder={t('docs.search.placeholder') || 'Skriv for å søke...'}
+          label={t('docs.search.label')}
+          placeholder={t('docs.search.placeholder')}
           value={query}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
           className={styles.searchInput}
@@ -63,7 +63,7 @@ export function DocsSearchPage() {
       <div className={styles.results}>
         {query.trim() && (
           <Paragraph className={styles.resultCount}>
-            {results.length} {t('docs.search.results') || 'resultater'} for "{query}"
+            {results.length} {t('docs.search.results')} "{query}"
           </Paragraph>
         )}
 
@@ -75,21 +75,18 @@ export function DocsSearchPage() {
           >
             <Card className={styles.resultCard} style={{ padding: 'var(--ds-spacing-4)' }}>
               <Paragraph data-size="xs" className={styles.resultSection}>
-                {t(`docs.sections.${result.section}.title`) || result.section}
+                {t(`docs.sections.${result.section}.title`)}
               </Paragraph>
               <Heading level={3} className={styles.resultTitle}>
-                {result.title}
+                {t(result.titleKey)}
               </Heading>
-              <Paragraph data-size="sm" className={styles.resultSnippet}>
-                {result.snippet}
-              </Paragraph>
             </Card>
           </Link>
         ))}
 
         {query.trim() && results.length === 0 && (
           <div className={styles.noResults}>
-            <Paragraph>{t('docs.search.noResults') || 'Ingen resultater funnet.'}</Paragraph>
+            <Paragraph>{t('docs.search.noResults')}</Paragraph>
           </div>
         )}
       </div>

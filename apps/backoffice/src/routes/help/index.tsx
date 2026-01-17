@@ -8,87 +8,93 @@ import * as React from 'react';
 import { Heading, Paragraph, Card, Badge } from '@xala/ds';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
-// Types
+// Types (for translation lookup)
 // =============================================================================
 
-interface HelpSection {
-  title: string;
-  description: string;
+interface HelpSectionKey {
+  titleKey: string;
+  descriptionKey: string;
   href: string;
   icon: string;
   external?: boolean;
 }
 
-interface QuickStartItem {
-  title: string;
-  description: string;
-  roles?: string[];
+interface QuickStartItemKey {
+  titleKey: string;
+  descriptionKey: string;
 }
 
-// =============================================================================
-// Data
-// =============================================================================
-
-const helpSections: HelpSection[] = [
+const helpSectionKeys: HelpSectionKey[] = [
   {
-    title: 'Kom i gang',
-    description: 'Steg-for-steg guider for vanlige oppgaver',
+    titleKey: 'help.sections.gettingStarted.title',
+    descriptionKey: 'help.sections.gettingStarted.description',
     href: '/help/guides',
     icon: '📚',
   },
   {
-    title: 'Vanlige spørsmål',
-    description: 'Svar på ofte stilte spørsmål',
+    titleKey: 'help.sections.faq.title',
+    descriptionKey: 'help.sections.faq.description',
     href: '/help/faq',
     icon: '❓',
   },
   {
-    title: 'Kontakt support',
-    description: 'Trenger du hjelp? Ta kontakt med oss',
+    titleKey: 'help.sections.support.title',
+    descriptionKey: 'help.sections.support.description',
     href: 'mailto:support@digilist.no',
     icon: '📧',
     external: true,
   },
 ];
 
-const quickStartByRole: Record<string, QuickStartItem[]> = {
+const quickStartKeysByRole: Record<string, QuickStartItemKey[]> = {
   org_member: [
-    { title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },
-    { title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå forespørsler' },
-    { title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },
-    { title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },
+    { titleKey: 'help.quickStart.orgMember.viewRentalObjects.title', descriptionKey: 'help.quickStart.orgMember.viewRentalObjects.description' },
+    { titleKey: 'help.quickStart.orgMember.processBookings.title', descriptionKey: 'help.quickStart.orgMember.processBookings.description' },
+    { titleKey: 'help.quickStart.orgMember.viewCalendar.title', descriptionKey: 'help.quickStart.orgMember.viewCalendar.description' },
+    { titleKey: 'help.quickStart.orgMember.communicate.title', descriptionKey: 'help.quickStart.orgMember.communicate.description' },
   ],
   org_admin: [
-    { title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemmer' },
-    { title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekter' },
-    { title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },
-    { title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },
-    { title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },
+    { titleKey: 'help.quickStart.orgAdmin.manageUsers.title', descriptionKey: 'help.quickStart.orgAdmin.manageUsers.description' },
+    { titleKey: 'help.quickStart.orgAdmin.createRentalObjects.title', descriptionKey: 'help.quickStart.orgAdmin.createRentalObjects.description' },
+    { titleKey: 'help.quickStart.orgAdmin.processBookings.title', descriptionKey: 'help.quickStart.orgAdmin.processBookings.description' },
+    { titleKey: 'help.quickStart.orgAdmin.viewReports.title', descriptionKey: 'help.quickStart.orgAdmin.viewReports.description' },
+    { titleKey: 'help.quickStart.orgAdmin.manageMessages.title', descriptionKey: 'help.quickStart.orgAdmin.manageMessages.description' },
   ],
   tenant_admin: [
-    { title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Innstillinger' },
-    { title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },
-    { title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },
-    { title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' },
-    { title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },
+    { titleKey: 'help.quickStart.tenantAdmin.configureOrg.title', descriptionKey: 'help.quickStart.tenantAdmin.configureOrg.description' },
+    { titleKey: 'help.quickStart.tenantAdmin.activateFeatures.title', descriptionKey: 'help.quickStart.tenantAdmin.activateFeatures.description' },
+    { titleKey: 'help.quickStart.tenantAdmin.manageUsers.title', descriptionKey: 'help.quickStart.tenantAdmin.manageUsers.description' },
+    { titleKey: 'help.quickStart.tenantAdmin.setupIntegrations.title', descriptionKey: 'help.quickStart.tenantAdmin.setupIntegrations.description' },
+    { titleKey: 'help.quickStart.tenantAdmin.exportReports.title', descriptionKey: 'help.quickStart.tenantAdmin.exportReports.description' },
   ],
   admin: [
-    { title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },
-    { title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasjoner' },
-    { title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' },
-    { title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },
-    { title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },
+    { titleKey: 'help.quickStart.admin.systemAdmin.title', descriptionKey: 'help.quickStart.admin.systemAdmin.description' },
+    { titleKey: 'help.quickStart.admin.userAccess.title', descriptionKey: 'help.quickStart.admin.userAccess.description' },
+    { titleKey: 'help.quickStart.admin.featuresModules.title', descriptionKey: 'help.quickStart.admin.featuresModules.description' },
+    { titleKey: 'help.quickStart.admin.auditLog.title', descriptionKey: 'help.quickStart.admin.auditLog.description' },
+    { titleKey: 'help.quickStart.admin.integrations.title', descriptionKey: 'help.quickStart.admin.integrations.description' },
   ],
 };
 
-const roleLabels: Record<string, string> = {
-  org_member: 'Medlem',
-  org_admin: 'Organisasjonsadministrator',
-  tenant_admin: 'Leietakeradministrator',
-  admin: 'Systemadministrator',
+const roleLabelKeys: Record<string, string> = {
+  org_member: 'help.roles.orgMember',
+  org_admin: 'help.roles.orgAdmin',
+  tenant_admin: 'help.roles.tenantAdmin',
+  admin: 'help.roles.admin',
 };
+
+// Keyboard shortcut keys for translation
+const keyboardShortcutKeys = [
+  { key: '?', descriptionKey: 'help.shortcuts.showShortcuts' },
+  { key: 'g d', descriptionKey: 'help.shortcuts.goToDashboard' },
+  { key: 'g b', descriptionKey: 'help.shortcuts.goToBookings' },
+  { key: 'g c', descriptionKey: 'help.shortcuts.goToCalendar' },
+  { key: 'g m', descriptionKey: 'help.shortcuts.goToMessages' },
+  { key: 'g h', descriptionKey: 'help.shortcuts.goToHelp' },
+];
 
 // =============================================================================
 // Icons
@@ -116,10 +122,12 @@ function ChevronRightIcon(): React.ReactElement {
 // =============================================================================
 
 export default function HelpPage(): React.ReactElement {
+  const t = useT();
   const { data: session } = useAuth();
   const userRole = session?.user?.role ?? 'org_member';
-  const quickStartItems = quickStartByRole[userRole] ?? quickStartByRole.org_member;
-  const roleLabel = roleLabels[userRole] ?? userRole;
+  const quickStartItemKeys = quickStartKeysByRole[userRole] ?? quickStartKeysByRole.org_member;
+  const roleLabelKey = roleLabelKeys[userRole] ?? roleLabelKeys.org_member;
+  const roleLabel = t(roleLabelKey);
 
   return (
     <div style={{ padding: 'var(--ds-spacing-6)', maxWidth: '1200px' }}>
@@ -127,14 +135,14 @@ export default function HelpPage(): React.ReactElement {
       <header style={{ marginBottom: 'var(--ds-spacing-8)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
           <Heading level={1} data-size="lg">
-            Hjelp og støtte
+            {t('help.title')}
           </Heading>
           <Badge data-color="info" data-size="sm">
             {roleLabel}
           </Badge>
         </div>
         <Paragraph data-size="md" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Finn svar på spørsmål og lær hvordan du bruker systemet
+          {t('help.subtitle')}
         </Paragraph>
       </header>
 
@@ -147,9 +155,9 @@ export default function HelpPage(): React.ReactElement {
             gap: 'var(--ds-spacing-5)',
           }}
         >
-          {helpSections.map((section) => (
+          {helpSectionKeys.map((section) => (
             <Link
-              key={section.title}
+              key={section.titleKey}
               to={section.href}
               style={{ textDecoration: 'none' }}
               {...(section.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
@@ -176,13 +184,13 @@ export default function HelpPage(): React.ReactElement {
                   {section.icon}
                 </div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                  {section.title}
+                  {t(section.titleKey)}
                 </Heading>
                 <Paragraph
                   data-size="sm"
                   style={{ color: 'var(--ds-color-neutral-text-subtle)', flex: 1 }}
                 >
-                  {section.description}
+                  {t(section.descriptionKey)}
                 </Paragraph>
                 <div
                   style={{
@@ -195,7 +203,7 @@ export default function HelpPage(): React.ReactElement {
                     fontWeight: 'var(--ds-font-weight-medium)',
                   }}
                 >
-                  {section.external ? 'Åpne' : 'Les mer'}
+                  {section.external ? t('help.openLink') : t('help.readMore')}
                   <ChevronRightIcon />
                 </div>
               </Card>
@@ -207,7 +215,7 @@ export default function HelpPage(): React.ReactElement {
       {/* Quick Start Guide - Role Aware */}
       <section>
         <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-          Hurtigstartsguide
+          {t('help.quickStartGuide.title')}
         </Heading>
         <Paragraph
           data-size="sm"
@@ -216,7 +224,7 @@ export default function HelpPage(): React.ReactElement {
             marginBottom: 'var(--ds-spacing-4)',
           }}
         >
-          Tilpasset for din rolle som {roleLabel.toLowerCase()}
+          {t('help.quickStartGuide.subtitle', { role: roleLabel.toLowerCase() })}
         </Paragraph>
         <div
           style={{
@@ -234,13 +242,13 @@ export default function HelpPage(): React.ReactElement {
               gap: 'var(--ds-spacing-4)',
             }}
           >
-            {quickStartItems.map((item, index) => (
+            {quickStartItemKeys.map((item, index) => (
               <li key={index}>
                 <strong style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)' }}>
-                  {item.title}
+                  {t(item.titleKey)}
                 </strong>
                 <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }}>
-                  {item.description}
+                  {t(item.descriptionKey)}
                 </span>
               </li>
             ))}
@@ -251,7 +259,7 @@ export default function HelpPage(): React.ReactElement {
       {/* Keyboard Shortcuts */}
       <section style={{ marginTop: 'var(--ds-spacing-10)' }}>
         <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-          Tastatursnarveier
+          {t('help.keyboardShortcuts.title')}
         </Heading>
         <div
           style={{
@@ -260,14 +268,7 @@ export default function HelpPage(): React.ReactElement {
             gap: 'var(--ds-spacing-3)',
           }}
         >
-          {[
-            { key: '?', description: 'Vis hurtigtaster' },
-            { key: 'g d', description: 'Gå til Dashboard' },
-            { key: 'g b', description: 'Gå til Bookinger' },
-            { key: 'g c', description: 'Gå til Kalender' },
-            { key: 'g m', description: 'Gå til Meldinger' },
-            { key: 'g h', description: 'Gå til Hjelp' },
-          ].map((shortcut) => (
+          {keyboardShortcutKeys.map((shortcut) => (
             <div
               key={shortcut.key}
               style={{
@@ -285,7 +286,7 @@ export default function HelpPage(): React.ReactElement {
                   padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                   backgroundColor: 'var(--ds-color-neutral-surface-hover)',
                   borderRadius: 'var(--ds-border-radius-sm)',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--ds-font-family-mono)',
                   fontSize: 'var(--ds-font-size-sm)',
                   border: '1px solid var(--ds-color-neutral-border-subtle)',
                   minWidth: '40px',
@@ -295,7 +296,7 @@ export default function HelpPage(): React.ReactElement {
                 {shortcut.key}
               </kbd>
               <span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {shortcut.description}
+                {t(shortcut.descriptionKey)}
               </span>
             </div>
           ))}
