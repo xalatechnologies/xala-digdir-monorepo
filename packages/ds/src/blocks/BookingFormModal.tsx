@@ -556,7 +556,7 @@ export function BookingFormModal({
       {/* Modal Styles */}
       <style>{`
         .booking-form-modal::backdrop {
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: var(--ds-color-neutral-background-overlay);
           backdrop-filter: blur(4px);
         }
 

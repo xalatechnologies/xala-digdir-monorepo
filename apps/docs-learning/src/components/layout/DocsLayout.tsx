@@ -10,7 +10,7 @@
 
 import { Outlet, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { BottomNavigation, type BottomNavigationItem, HomeIcon, SearchIcon, BookOpenIcon, SettingsIcon } from '@xala/ds';
+import { BottomNavigation, type BottomNavigationItem, HomeIcon, SearchIcon, BookOpenIcon } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { DocsSidebar } from './DocsSidebar';
 import { DocsHeader } from './DocsHeader';

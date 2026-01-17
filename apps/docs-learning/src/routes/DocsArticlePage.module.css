@@ -1,0 +1,105 @@
+.container {
+  padding: var(--ds-spacing-4) 0;
+}
+
+.contentWrapper {
+  display: flex;
+  gap: var(--ds-spacing-8);
+}
+
+.article {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  margin-bottom: var(--ds-spacing-6);
+  padding-bottom: var(--ds-spacing-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.header h1 {
+  margin-bottom: var(--ds-spacing-2);
+}
+
+.meta {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.content {
+  line-height: 1.7;
+}
+
+.content section {
+  margin-bottom: var(--ds-spacing-8);
+}
+
+.content h2 {
+  margin-top: var(--ds-spacing-8);
+  margin-bottom: var(--ds-spacing-4);
+  scroll-margin-top: calc(var(--ds-spacing-6) + 60px);
+}
+
+.content h3 {
+  margin-top: var(--ds-spacing-6);
+  margin-bottom: var(--ds-spacing-3);
+  scroll-margin-top: calc(var(--ds-spacing-6) + 60px);
+}
+
+.content p {
+  margin-bottom: var(--ds-spacing-4);
+}
+
+.imagePlaceholder,
+.videoPlaceholder {
+  background-color: var(--ds-color-neutral-surface-default);
+  border: 2px dashed var(--ds-color-neutral-border-default);
+  border-radius: var(--ds-border-radius-md);
+  padding: var(--ds-spacing-8);
+  text-align: center;
+  margin: var(--ds-spacing-4) 0;
+}
+
+.imagePlaceholder {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoPlaceholder {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ds-color-neutral-background-subtle);
+}
+
+.callout {
+  padding: var(--ds-spacing-4);
+  border-radius: var(--ds-border-radius-md);
+  margin: var(--ds-spacing-4) 0;
+}
+
+.callout[data-type="tip"] {
+  background-color: var(--ds-color-success-surface-default);
+  border-left: 4px solid var(--ds-color-success-base-default);
+}
+
+.callout[data-type="warning"] {
+  background-color: var(--ds-color-warning-surface-default);
+  border-left: 4px solid var(--ds-color-warning-base-default);
+}
+
+.tocSidebar {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+/* Hide TOC on smaller screens */
+@media (max-width: 1024px) {
+  .tocSidebar {
+    display: none;
+  }
+}

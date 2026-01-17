@@ -158,6 +158,22 @@ export {
   useSetOrgContext,
 } from './use-advanced-contracts';
 
+// Backoffice Organization Management hooks
+export {
+  backofficeOrgKeys,
+  useBackofficeOrganizations,
+  useBackofficeOrganization,
+  useCreateBackofficeOrganization,
+  useUpdateBackofficeOrganization,
+  useDeleteBackofficeOrganization,
+  useBackofficeOrganizationMembers,
+  useAddBackofficeOrganizationMember,
+  useRemoveBackofficeOrganizationMember,
+  useBackofficeAssignedRentalObjects,
+  useAssignRentalObjectToOrg,
+  useUnassignRentalObjectFromOrg,
+} from './use-backoffice-orgs';
+
 // Discount Code hooks
 export {
   useDiscountCodes,
@@ -170,33 +186,12 @@ export {
 } from './use-discount-codes';
 
 // Organization & User hooks
-export {
-  useOrganizations,
-  useOrganization,
-  useOrganizationMembers,
-  useCreateOrganization,
-  useUpdateOrganization,
-  useDeleteOrganization,
-  useVerifyOrganization,
-  useUploadOrganizationLogo,
-  // Organization settings & branding (TODO: implement backend)
-  useOrganizationSettings,
-  useUpdateOrganizationSettings,
-  useUpdateOrganizationBranding,
-  useUsers,
-  useUser,
-  useCurrentUser,
-  useCreateUser,
-  useUpdateUser,
-  useUpdateCurrentUser,
-  useDeactivateUser,
-  useReactivateUser,
-  useUploadUserAvatar,
-  useExportData,
-  useDeleteAccount,
-  useConsents,
-  useUpdateConsents,
-} from './use-organizations';
+// TODO: Implement MinSide organization hooks when backend is ready
+// export {
+//   useOrganizations,
+//   useOrganization,
+//   ...
+// } from './use-organizations';
 
 // Integration hooks
 export {

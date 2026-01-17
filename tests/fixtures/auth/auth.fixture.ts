@@ -11,17 +11,20 @@ export type AuthFixtures = {
 
 /**
  * Test credentials for demo login
+ * Demo login uses name/email/token instead of email/password
  */
 export const TEST_CREDENTIALS = {
   user: {
+    name: 'Test User',
     email: 'user@test.com',
-    password: 'password123',
+    token: 'demo-token-user',
     role: 'user',
     baseUrl: 'http://localhost:5174', // Minside
   },
   admin: {
+    name: 'Test Admin',
     email: 'admin@test.com',
-    password: 'admin123',
+    token: 'demo-token-admin',
     role: 'admin',
     baseUrl: 'http://localhost:5175', // Backoffice
   },
@@ -55,10 +58,10 @@ export const test = base.extend<AuthFixtures>({
     });
     const page = await context.newPage();
 
-    // Login as user
+    // Login as user (demo login with name/email/token)
     const loginPage = new LoginPage(page);
     await loginPage.goto(TEST_CREDENTIALS.user.baseUrl);
-    await loginPage.login(TEST_CREDENTIALS.user.email, TEST_CREDENTIALS.user.password);
+    await loginPage.login(TEST_CREDENTIALS.user.name, TEST_CREDENTIALS.user.email, TEST_CREDENTIALS.user.token);
     await loginPage.waitForLoginSuccess();
 
     // Use the authenticated page
@@ -77,10 +80,10 @@ export const test = base.extend<AuthFixtures>({
     });
     const page = await context.newPage();
 
-    // Login as admin
+    // Login as admin (demo login with name/email/token)
     const loginPage = new LoginPage(page);
     await loginPage.goto(TEST_CREDENTIALS.admin.baseUrl);
-    await loginPage.login(TEST_CREDENTIALS.admin.email, TEST_CREDENTIALS.admin.password);
+    await loginPage.login(TEST_CREDENTIALS.admin.name, TEST_CREDENTIALS.admin.email, TEST_CREDENTIALS.admin.token);
     await loginPage.waitForLoginSuccess();
 
     // Use the authenticated page

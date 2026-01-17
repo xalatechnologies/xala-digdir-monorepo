@@ -154,28 +154,28 @@ const stepperStyles = {
     justifyContent: 'center' as const,
     backgroundColor:
       state === 'active'
-        ? '#1E3A5F'
+        ? 'var(--ds-color-accent-base-default)'
         : state === 'completed'
-        ? '#ECFDF5'
-        : '#F5F7FA',
+        ? 'var(--ds-color-success-surface-default)'
+        : 'var(--ds-color-neutral-surface-hover)',
     color:
       state === 'active'
-        ? '#FFFFFF'
+        ? 'var(--ds-color-neutral-text-on-inverted)'
         : state === 'completed'
-        ? '#059669'
-        : '#94A3B8',
+        ? 'var(--ds-color-success-base-default)'
+        : 'var(--ds-color-neutral-text-subtle)',
     border:
       state === 'active'
-        ? '2px solid #1E3A5F'
+        ? '2px solid var(--ds-color-accent-base-default)'
         : state === 'completed'
-        ? '2px solid #A7F3D0'
-        : '2px solid #E2E8F0',
+        ? '2px solid var(--ds-color-success-border-default)'
+        : '2px solid var(--ds-color-neutral-border-default)',
     transition: 'all 0.3s ease',
     boxShadow:
       state === 'active'
-        ? '0 4px 12px rgba(30, 58, 95, 0.25)'
+        ? 'var(--ds-shadow-md)'
         : state === 'completed'
-        ? '0 2px 6px rgba(5, 150, 105, 0.15)'
+        ? 'var(--ds-shadow-sm)'
         : 'none',
     fontWeight: 600,
     fontSize: 'var(--ds-font-size-sm)',
@@ -184,10 +184,10 @@ const stepperStyles = {
     margin: 0,
     color:
       state === 'active'
-        ? '#1E3A5F'
+        ? 'var(--ds-color-accent-text-default)'
         : state === 'completed'
-        ? '#059669'
-        : '#94A3B8',
+        ? 'var(--ds-color-success-text-default)'
+        : 'var(--ds-color-neutral-text-subtle)',
     fontWeight:
       state === 'active'
         ? 'var(--ds-font-weight-semibold)'
@@ -203,8 +203,8 @@ const stepperStyles = {
     height: '3px',
     backgroundColor:
       state === 'completed'
-        ? '#A7F3D0'
-        : '#E2E8F0',
+        ? 'var(--ds-color-success-border-default)'
+        : 'var(--ds-color-neutral-border-default)',
     marginTop: '24px',
     marginLeft: 'var(--ds-spacing-2)',
     marginRight: 'var(--ds-spacing-2)',
@@ -260,8 +260,8 @@ export function BookingStepper({
             data-size="sm"
             style={{
               margin: 0,
-              color: '#64748B',
-              backgroundColor: '#F1F5F9',
+              color: 'var(--ds-color-neutral-text-subtle)',
+              backgroundColor: 'var(--ds-color-neutral-surface-hover)',
               padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
               borderRadius: 'var(--ds-border-radius-full)',
               fontWeight: 'var(--ds-font-weight-medium)',

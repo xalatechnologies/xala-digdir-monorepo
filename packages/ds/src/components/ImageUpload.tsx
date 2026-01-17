@@ -276,23 +276,23 @@ export function ImageUpload({
         }
 
         .dropzone {
-          border: 2px dashed #cbd5e1;
-          border-radius: 8px;
-          padding: 48px 24px;
+          border: 2px dashed var(--ds-color-neutral-border-default);
+          border-radius: var(--ds-border-radius-md);
+          padding: var(--ds-spacing-8) var(--ds-spacing-4);
           text-align: center;
           cursor: pointer;
           transition: all 0.2s;
-          background: #f8fafc;
+          background: var(--ds-color-neutral-surface-hover);
         }
 
         .dropzone:hover {
-          border-color: #3b82f6;
-          background: #eff6ff;
+          border-color: var(--ds-color-accent-base-default);
+          background: var(--ds-color-accent-surface-default);
         }
 
         .dropzone.drag-active {
-          border-color: #3b82f6;
-          background: #dbeafe;
+          border-color: var(--ds-color-accent-base-default);
+          background: var(--ds-color-accent-surface-hover);
         }
 
         .dropzone.uploading {
@@ -301,20 +301,20 @@ export function ImageUpload({
         }
 
         .dropzone-content svg {
-          margin: 0 auto 16px;
-          color: #64748b;
+          margin: 0 auto var(--ds-spacing-3);
+          color: var(--ds-color-neutral-text-subtle);
         }
 
         .dropzone-title {
-          font-size: 16px;
-          font-weight: 600;
-          color: #1e293b;
-          margin: 0 0 8px;
+          font-size: var(--ds-font-size-md);
+          font-weight: var(--ds-font-weight-semibold);
+          color: var(--ds-color-neutral-text-default);
+          margin: 0 0 var(--ds-spacing-2);
         }
 
         .dropzone-subtitle {
-          font-size: 14px;
-          color: #64748b;
+          font-size: var(--ds-font-size-sm);
+          color: var(--ds-color-neutral-text-subtle);
           margin: 0;
         }
 
@@ -322,14 +322,14 @@ export function ImageUpload({
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 12px;
+          gap: var(--ds-spacing-3);
         }
 
         .spinner {
           width: 40px;
           height: 40px;
-          border: 4px solid #e2e8f0;
-          border-top-color: #3b82f6;
+          border: 4px solid var(--ds-color-neutral-border-default);
+          border-top-color: var(--ds-color-accent-base-default);
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -339,35 +339,35 @@ export function ImageUpload({
         }
 
         .errors {
-          margin-top: 16px;
+          margin-top: var(--ds-spacing-3);
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: var(--ds-spacing-2);
         }
 
         .error-message {
-          padding: 12px 16px;
-          background: #fef2f2;
-          border: 1px solid #fecaca;
-          border-radius: 6px;
-          color: #dc2626;
-          font-size: 14px;
+          padding: var(--ds-spacing-3) var(--ds-spacing-4);
+          background: var(--ds-color-danger-surface-default);
+          border: 1px solid var(--ds-color-danger-border-default);
+          border-radius: var(--ds-border-radius-sm);
+          color: var(--ds-color-danger-base-default);
+          font-size: var(--ds-font-size-sm);
         }
 
         .image-grid {
-          margin-top: 24px;
+          margin-top: var(--ds-spacing-4);
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-          gap: 16px;
+          gap: var(--ds-spacing-3);
         }
 
         .image-card {
           position: relative;
           aspect-ratio: 1;
-          border-radius: 8px;
+          border-radius: var(--ds-border-radius-md);
           overflow: hidden;
-          background: #f1f5f9;
-          border: 1px solid #e2e8f0;
+          background: var(--ds-color-neutral-surface-default);
+          border: 1px solid var(--ds-color-neutral-border-default);
         }
 
         .image-card img {
@@ -382,13 +382,13 @@ export function ImageUpload({
           right: 0;
           left: 0;
           bottom: 0;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 40%);
+          background: linear-gradient(to bottom, var(--ds-color-neutral-background-overlay) 0%, transparent 40%);
           opacity: 0;
           transition: opacity 0.2s;
           display: flex;
           align-items: flex-start;
           justify-content: flex-end;
-          padding: 8px;
+          padding: var(--ds-spacing-2);
         }
 
         .image-card:hover .image-overlay {
@@ -396,22 +396,22 @@ export function ImageUpload({
         }
 
         .delete-btn {
-          background: #ef4444;
-          color: white;
+          background: var(--ds-color-danger-base-default);
+          color: var(--ds-color-neutral-text-on-inverted);
           border: none;
-          border-radius: 4px;
+          border-radius: var(--ds-border-radius-sm);
           width: 32px;
           height: 32px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          font-size: 18px;
+          font-size: var(--ds-font-size-lg);
           transition: background 0.2s;
         }
 
         .delete-btn:hover {
-          background: #dc2626;
+          background: var(--ds-color-danger-base-hover);
         }
 
         .image-meta {
@@ -419,17 +419,17 @@ export function ImageUpload({
           bottom: 0;
           left: 0;
           right: 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-          padding: 8px;
+          background: linear-gradient(to top, var(--ds-color-neutral-background-overlay), transparent);
+          padding: var(--ds-spacing-2);
           display: flex;
           justify-content: space-between;
           align-items: center;
         }
 
         .file-size {
-          font-size: 12px;
-          color: white;
-          font-weight: 500;
+          font-size: var(--ds-font-size-xs);
+          color: var(--ds-color-neutral-text-on-inverted);
+          font-weight: var(--ds-font-weight-medium);
         }
       `}</style>
     </div>

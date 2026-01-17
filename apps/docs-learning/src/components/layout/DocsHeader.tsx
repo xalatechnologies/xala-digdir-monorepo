@@ -5,15 +5,14 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Textfield, Button, LanguageSwitcher, SearchIcon } from '@xala/ds';
+import { useNavigate } from 'react-router-dom';
+import { Textfield, Button, SearchIcon } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
 import styles from './DocsHeader.module.css';
 
 export function DocsHeader() {
   const t = useT();
   const navigate = useNavigate();
-  const location = useLocation();
   const { locale, setLocale } = useLocale();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -27,12 +26,9 @@ export function DocsHeader() {
     [searchQuery, navigate]
   );
 
-  const handleLanguageChange = useCallback(
-    (newLocale: string) => {
-      setLocale(newLocale as 'nb' | 'en');
-    },
-    [setLocale]
-  );
+  const toggleLocale = useCallback(() => {
+    setLocale(locale === 'nb' ? 'en' : 'nb');
+  }, [locale, setLocale]);
 
   return (
     <header className={styles.header}>
@@ -57,14 +53,15 @@ export function DocsHeader() {
 
         {/* Actions */}
         <div className={styles.headerActions}>
-          <LanguageSwitcher
-            currentLocale={locale}
-            onLocaleChange={handleLanguageChange}
-            locales={[
-              { code: 'nb', label: 'Norsk' },
-              { code: 'en', label: 'English' },
-            ]}
-          />
+          <Button
+            type="button"
+            data-size="sm"
+            data-color="neutral"
+            variant="tertiary"
+            onClick={toggleLocale}
+          >
+            {locale === 'nb' ? 'EN' : 'NO'}
+          </Button>
         </div>
       </div>
     </header>

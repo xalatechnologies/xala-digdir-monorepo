@@ -229,7 +229,7 @@ export function ImageSlider({
                 left: 0,
                 width: '120px',
                 height: '100%',
-                background: 'linear-gradient(to right, rgba(0,0,0,0.3), transparent)',
+                background: 'linear-gradient(to right, var(--ds-color-neutral-background-overlay), transparent)',
                 pointerEvents: 'none',
               }}
             />
@@ -240,7 +240,7 @@ export function ImageSlider({
                 right: 0,
                 width: '120px',
                 height: '100%',
-                background: 'linear-gradient(to left, rgba(0,0,0,0.3), transparent)',
+                background: 'linear-gradient(to left, var(--ds-color-neutral-background-overlay), transparent)',
                 pointerEvents: 'none',
               }}
             />
@@ -254,6 +254,7 @@ export function ImageSlider({
               type="button"
               onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
               aria-label="Forrige bilde"
+              className="image-slider-nav-btn image-slider-nav-prev"
               style={{
                 position: 'absolute',
                 top: '50%',
@@ -262,7 +263,7 @@ export function ImageSlider({
                 width: '48px',
                 height: '48px',
                 borderRadius: 'var(--ds-border-radius-full)',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
@@ -271,14 +272,6 @@ export function ImageSlider({
                 boxShadow: 'var(--ds-shadow-md)',
                 transition: 'all 0.2s ease',
                 zIndex: 10,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-                e.currentTarget.style.backgroundColor = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%)';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
               }}
             >
               <ChevronLeftIcon size={24} style={{ color: 'var(--ds-color-neutral-text-default)' }} />
@@ -287,6 +280,7 @@ export function ImageSlider({
               type="button"
               onClick={(e) => { e.stopPropagation(); goToNext(); }}
               aria-label="Neste bilde"
+              className="image-slider-nav-btn image-slider-nav-next"
               style={{
                 position: 'absolute',
                 top: '50%',
@@ -295,7 +289,7 @@ export function ImageSlider({
                 width: '48px',
                 height: '48px',
                 borderRadius: 'var(--ds-border-radius-full)',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: 'var(--ds-color-neutral-background-default)',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
@@ -304,14 +298,6 @@ export function ImageSlider({
                 boxShadow: 'var(--ds-shadow-md)',
                 transition: 'all 0.2s ease',
                 zIndex: 10,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-                e.currentTarget.style.backgroundColor = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%)';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
               }}
             >
               <ChevronRightIcon size={24} style={{ color: 'var(--ds-color-neutral-text-default)' }} />
@@ -327,9 +313,9 @@ export function ImageSlider({
               bottom: 'var(--ds-spacing-4)',
               right: 'var(--ds-spacing-4)',
               padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'var(--ds-color-neutral-background-overlay)',
               borderRadius: 'var(--ds-border-radius-full)',
-              color: 'white',
+              color: 'var(--ds-color-neutral-text-on-inverted)',
               fontSize: 'var(--ds-font-size-sm)',
               fontWeight: 'var(--ds-font-weight-medium)',
               backdropFilter: 'blur(4px)',
@@ -359,11 +345,14 @@ export function ImageSlider({
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goToSlide(index); }}
                 aria-label={`Gå til bilde ${index + 1}`}
+                className={`image-slider-dot ${index === currentIndex ? 'active' : ''}`}
                 style={{
                   width: index === currentIndex ? '24px' : '8px',
                   height: '8px',
                   borderRadius: 'var(--ds-border-radius-full)',
-                  backgroundColor: index === currentIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                  backgroundColor: index === currentIndex
+                    ? 'var(--ds-color-neutral-text-on-inverted)'
+                    : 'var(--ds-color-neutral-border-subtle)',
                   border: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
@@ -457,7 +446,7 @@ export function ImageSlider({
             right: 0,
             bottom: 0,
             zIndex: 9999,
-            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            backgroundColor: 'var(--ds-color-neutral-background-overlay)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -471,6 +460,7 @@ export function ImageSlider({
             type="button"
             onClick={() => setIsFullscreen(false)}
             aria-label="Lukk fullskjerm"
+            className="image-slider-fullscreen-close"
             style={{
               position: 'absolute',
               top: 'var(--ds-spacing-4)',
@@ -478,21 +468,15 @@ export function ImageSlider({
               width: '48px',
               height: '48px',
               borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'var(--ds-color-neutral-surface-hover)',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'white',
+              color: 'var(--ds-color-neutral-text-on-inverted)',
               transition: 'background-color 0.2s ease',
               zIndex: 10,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
             }}
           >
             <CloseIcon size={24} />

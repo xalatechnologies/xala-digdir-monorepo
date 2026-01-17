@@ -116,6 +116,22 @@ export {
 
 export * from './booking';
 export * from './organization';
+
+// Backoffice Organization Contracts (export selectively to avoid conflicts)
+export type {
+  BackofficeOrganizationDTO,
+  CreateOrganizationRequest,
+  UpdateOrganizationRequest,
+  OrganizationMemberDTO,
+  AddMemberRequest,
+  UpdateMemberRequest,
+  RentalObjectAssignmentDTO,
+  AssignRentalObjectRequest,
+  UpdateAssignmentRequest,
+  OrganizationListParams,
+  OrganizationStatsDTO,
+} from './organization-contracts';
+
 export * from './gdpr';
 export * from './auth';
 export * from './rbac';

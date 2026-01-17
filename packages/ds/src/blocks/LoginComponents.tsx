@@ -102,14 +102,14 @@ export function FeatureItem({
   variant = 'light',
   className,
 }: FeatureItemProps): React.ReactElement {
-  const textColor = variant === 'light' 
-    ? 'var(--digilist-login-overlay-text, #ffffff)' 
+  const textColor = variant === 'light'
+    ? 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))'
     : 'var(--ds-color-neutral-text-default)';
   const subtleColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.8))'
+    ? 'var(--digilist-login-overlay-text-muted, var(--ds-color-neutral-text-subtle))'
     : 'var(--ds-color-neutral-text-subtle)';
   const iconBg = variant === 'light'
-    ? 'rgba(255, 255, 255, 0.15)'
+    ? 'var(--ds-color-neutral-surface-hover)'
     : 'var(--ds-color-neutral-surface-hover)';
 
   return (
@@ -181,10 +181,10 @@ export function IntegrationBadge({
   className,
 }: IntegrationBadgeProps): React.ReactElement {
   const bgColor = variant === 'light'
-    ? 'rgba(255, 255, 255, 0.15)'
+    ? 'var(--ds-color-neutral-surface-hover)'
     : 'var(--ds-color-neutral-surface-hover)';
   const textColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text, #ffffff)'
+    ? 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))'
     : 'var(--ds-color-neutral-text-default)';
 
   return (
@@ -362,7 +362,7 @@ export function LoginLayout({
                 <div>
                   <div
                     style={{
-                      fontSize: '1.75rem',
+                      fontSize: 'var(--ds-font-size-2xl)',
                       fontWeight: 'var(--ds-font-weight-bold)',
                       color: 'var(--ds-color-accent-base-default)',
                       lineHeight: 1.1,
@@ -398,7 +398,7 @@ export function LoginLayout({
                 <div>
                   <div
                     style={{
-                      fontSize: '1.75rem',
+                      fontSize: 'var(--ds-font-size-2xl)',
                       fontWeight: 'var(--ds-font-weight-bold)',
                       color: 'var(--ds-color-accent-base-default)',
                       lineHeight: 1.1,
@@ -485,7 +485,7 @@ export function LoginLayout({
           flexDirection: 'column',
           justifyContent: 'center',
           padding: 'var(--ds-spacing-12)',
-          background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, #1a3a6e 100%)',
+          background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-hover) 100%)',
         }}
       >
         <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%' }}>
@@ -494,7 +494,7 @@ export function LoginLayout({
             <Paragraph
               data-size="xs"
               style={{
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'var(--ds-color-neutral-text-subtle)',
                 textTransform: 'uppercase',
                 letterSpacing: 'var(--ds-letter-spacing-wider, 0.1em)',
                 fontWeight: 'var(--ds-font-weight-medium)',
@@ -507,7 +507,7 @@ export function LoginLayout({
               level={2}
               data-size="2xl"
               style={{
-                color: 'var(--digilist-login-overlay-text, #ffffff)',
+                color: 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))',
                 marginBottom: 'var(--ds-spacing-4)',
                 lineHeight: 'var(--ds-line-height-condensed)',
               }}
@@ -518,7 +518,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="md"
                 style={{
-                  color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.8))',
+                  color: 'var(--digilist-login-overlay-text-muted, var(--ds-color-neutral-text-subtle))',
                   lineHeight: 1.6,
                 }}
               >
@@ -555,7 +555,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="xs"
                 style={{
-                  color: 'rgba(255, 255, 255, 0.6)',
+                  color: 'var(--ds-color-neutral-text-subtle)',
                   marginBottom: 'var(--ds-spacing-3)',
                   textTransform: 'uppercase',
                   letterSpacing: 'var(--ds-letter-spacing-wide, 0.05em)',

@@ -1,0 +1,58 @@
+.container {
+  padding: var(--ds-spacing-4) 0;
+}
+
+.header {
+  margin-bottom: var(--ds-spacing-8);
+}
+
+.header h1 {
+  margin-bottom: var(--ds-spacing-2);
+}
+
+.description {
+  color: var(--ds-color-neutral-text-subtle);
+  margin: 0;
+}
+
+.articlesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-3);
+}
+
+.articleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.articleCard {
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.articleCard:hover {
+  box-shadow: var(--ds-shadow-md);
+  transform: translateY(-1px);
+}
+
+.articleContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--ds-spacing-4);
+}
+
+.articleTitle {
+  margin: 0 0 var(--ds-spacing-1) 0;
+}
+
+.articleDescription {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.articleDate {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  white-space: nowrap;
+}
