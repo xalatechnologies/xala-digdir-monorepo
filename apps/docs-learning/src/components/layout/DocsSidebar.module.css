@@ -1,0 +1,128 @@
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+  background-color: var(--ds-color-neutral-surface-default);
+  border-right: 1px solid var(--ds-color-neutral-border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.logoSection {
+  padding: var(--ds-spacing-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+}
+
+.logoImage {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.brandName {
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-md);
+  color: var(--ds-color-neutral-text-default);
+}
+
+.brandTagline {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.navigation {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ds-spacing-4);
+}
+
+.navSection {
+  margin-bottom: var(--ds-spacing-4);
+}
+
+.navSectionTitle {
+  padding: var(--ds-spacing-2) var(--ds-spacing-3);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-neutral-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarNavItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-spacing-3);
+  padding: var(--ds-spacing-3);
+  border-radius: var(--ds-border-radius-md);
+  text-decoration: none;
+  color: var(--ds-color-neutral-text-default);
+  transition: background-color 0.15s ease;
+}
+
+.sidebarNavItem:hover {
+  background-color: var(--ds-color-neutral-surface-hover);
+}
+
+.sidebarNavItem.active {
+  background-color: var(--ds-color-accent-surface-default);
+  color: var(--ds-color-accent-text-default);
+}
+
+.sidebarNavIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.sidebarNavTextContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebarNavName {
+  margin: 0;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.sidebarNavDescription {
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebarNavArrow {
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.sidebarNavItem:hover .sidebarNavArrow {
+  opacity: 1;
+}
+
+.sidebarNavItem.active .sidebarNavArrow {
+  opacity: 1;
+  color: var(--ds-color-accent-text-default);
+}

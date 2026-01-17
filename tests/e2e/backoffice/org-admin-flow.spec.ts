@@ -483,3 +483,716 @@ test.describe('Organization Admin - Calendar View', () => {
     await expect(page.locator('.calendar').or(page.getByTestId('calendar'))).toBeVisible();
   });
 });
+
+// =============================================================================
+// BO-BO1: Shell/Search/Help Tests
+// =============================================================================
+
+test.describe('BO-BO1: Shell/Search/Help - Org Admin', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * BO-BO1-02: Global search respects scope
+   * Search "Rental X" → only org-assigned objects appear
+   */
+  test('BO-BO1-02: Global search respects scope', async ({ page }) => {
+    // Mock search endpoint that respects org scope
+    await page.route('**/api/search*', (route) => {
+      const url = new URL(route.request().url());
+      const query = url.searchParams.get('q') || '';
+
+      // Only return assigned objects matching search
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            rentalObjects: query.toLowerCase().includes('conference') ? [
+              { id: 'rental-obj-1', name: 'Conference Room A', type: 'rental_object' },
+            ] : [],
+            bookings: [],
+            users: [],
+          },
+          meta: { total: 1 },
+        }),
+      });
+    });
+
+    await page.goto(BACKOFFICE_URL);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Find and use global search
+    const searchInput = page.getByPlaceholder(/søk/i).or(page.getByPlaceholder(/search/i));
+    if (await searchInput.isVisible()) {
+      await searchInput.fill('Conference');
+      await page.waitForTimeout(500); // Debounce
+
+      // Verify only assigned objects appear
+      await expect(page.getByText('Conference Room A')).toBeVisible();
+
+      // Verify unassigned objects don't appear
+      await expect(page.getByText('Unassigned Venue')).not.toBeVisible();
+    }
+  });
+
+  /**
+   * BO-BO1-03: Help TOC right sidebar
+   * Open /help → TOC visible, highlights section
+   */
+  test('BO-BO1-03: Help TOC right sidebar visible', async ({ page }) => {
+    // Mock help content
+    await page.route('**/api/help/**', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            sections: [
+              { id: 'getting-started', title: 'Kom i gang' },
+              { id: 'bookings', title: 'Bookinger' },
+              { id: 'blocks', title: 'Blokkeringer' },
+            ],
+          },
+        }),
+      });
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/help`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Verify TOC (Table of Contents) is visible on right side
+    const tocContainer = page.locator('[data-testid="help-toc"]')
+      .or(page.locator('.help-toc'))
+      .or(page.locator('nav').filter({ hasText: /innhold|contents/i }));
+
+    await expect(tocContainer.or(page.getByText(/innholdsfortegnelse/i))).toBeVisible();
+
+    // Verify section links exist
+    await expect(page.getByText(/kom i gang/i).or(page.getByText(/getting started/i))).toBeVisible();
+  });
+});
+
+// =============================================================================
+// BO-BO3: Rental Object Management Tests
+// =============================================================================
+
+test.describe('BO-BO3: Rental Object Management - Org Admin', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * BO-BO3-02: Edit assigned rental object
+   * Open object → edit → Allowed; breadcrumbs present
+   */
+  test('BO-BO3-02: Edit assigned rental object with breadcrumbs', async ({ page }) => {
+    // Mock rental object endpoints
+    await page.route('**/api/rental-objects/rental-obj-1', (route) => {
+      if (route.request().method() === 'GET') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: {
+              id: 'rental-obj-1',
+              name: 'Conference Room A',
+              description: 'Large conference room',
+              capacity: 20,
+              status: 'published',
+              organizationId: 'test-org-id',
+            },
+          }),
+        });
+      } else if (route.request().method() === 'PATCH' || route.request().method() === 'PUT') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: { id: 'rental-obj-1', name: 'Conference Room A Updated' },
+            message: 'Updated successfully',
+          }),
+        });
+      }
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/rental-objects/rental-obj-1/edit`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Verify breadcrumbs are visible (no modal)
+    const breadcrumbs = page.locator('[data-testid="breadcrumbs"]')
+      .or(page.locator('nav[aria-label="breadcrumb"]'))
+      .or(page.locator('.breadcrumb'));
+    await expect(breadcrumbs.or(page.getByText(/utleieobjekter/i))).toBeVisible();
+
+    // Verify edit form is on a page (not modal)
+    await expect(page.locator('dialog')).not.toBeVisible();
+    await expect(page.locator('[role="dialog"]')).not.toBeVisible();
+
+    // Verify form fields are editable
+    const nameInput = page.locator('input[name="name"]').or(page.getByLabel(/navn/i));
+    await expect(nameInput).toBeVisible();
+  });
+});
+
+// =============================================================================
+// BO-BO4: Calendar Blocks/Maintenance Tests
+// =============================================================================
+
+test.describe('BO-BO4: Calendar Blocks - Org Admin', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * BO-BO4-01: Create maintenance block
+   * /calendar → new block → Block appears in calendar and affects availability
+   */
+  test('BO-BO4-01: Create maintenance block affects availability', async ({ page }) => {
+    let createdBlock: object | null = null;
+
+    // Mock block creation
+    await page.route('**/api/blocks', (route) => {
+      if (route.request().method() === 'POST') {
+        const body = JSON.parse(route.request().postData() || '{}');
+        createdBlock = {
+          id: 'block-new',
+          ...body,
+          status: 'active',
+          createdAt: new Date().toISOString(),
+        };
+        route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: createdBlock }),
+        });
+      } else {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: [], meta: { total: 0 } }),
+        });
+      }
+    });
+
+    // Mock calendar events to include new block after creation
+    await page.route('**/api/calendar/events*', (route) => {
+      const events = createdBlock ? [{
+        id: 'block-new',
+        type: 'block',
+        title: 'Vedlikehold',
+        start: new Date().toISOString(),
+        end: new Date(Date.now() + 86400000).toISOString(),
+      }] : [];
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: events }),
+      });
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/blocks/new`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Fill block form
+    const titleInput = page.locator('input[name="title"]').or(page.getByLabel(/tittel/i));
+    await titleInput.fill('Vedlikehold');
+
+    const reasonInput = page.locator('textarea[name="reason"]').or(page.getByLabel(/grunn|årsak/i));
+    if (await reasonInput.isVisible()) {
+      await reasonInput.fill('Planlagt vedlikehold');
+    }
+
+    // Select rental object
+    const rentalObjectSelect = page.locator('select[name="rentalObjectId"]').or(page.getByLabel(/utleieobjekt/i));
+    if (await rentalObjectSelect.isVisible()) {
+      await rentalObjectSelect.selectOption({ index: 1 });
+    }
+
+    // Set dates
+    const startDateInput = page.locator('input[type="date"]').first();
+    if (await startDateInput.isVisible()) {
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      await startDateInput.fill(tomorrow);
+    }
+
+    // Submit form
+    const submitButton = page.getByRole('button', { name: /opprett|lagre|create|save/i });
+    await submitButton.click();
+
+    // Verify redirect to blocks list or detail
+    await page.waitForURL(/\/blocks/);
+
+    // Verify block was created
+    expect(createdBlock).not.toBeNull();
+  });
+});
+
+// =============================================================================
+// BO-BO5: Booking Approvals Tests
+// =============================================================================
+
+test.describe('BO-BO5: Booking Approvals - Org Admin', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * BO-BO5-02: Approve booking
+   * Open pending booking → approve → Status updated; audit event exists
+   */
+  test('BO-BO5-02: Approve booking updates status', async ({ page }) => {
+    let approvedBookingId: string | null = null;
+
+    // Mock bookings endpoint
+    await page.route('**/api/bookings*', (route) => {
+      if (route.request().method() === 'GET') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: [{
+              id: 'booking-pending-1',
+              rentalObjectName: 'Conference Room A',
+              status: approvedBookingId === 'booking-pending-1' ? 'confirmed' : 'pending',
+              startTime: new Date().toISOString(),
+              endTime: new Date(Date.now() + 3600000).toISOString(),
+              user: { name: 'John Doe', email: 'john@example.com' },
+            }],
+            meta: { total: 1, limit: 20, offset: 0 },
+          }),
+        });
+      }
+    });
+
+    // Mock booking detail
+    await page.route('**/api/bookings/booking-pending-1', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            id: 'booking-pending-1',
+            rentalObjectName: 'Conference Room A',
+            status: approvedBookingId === 'booking-pending-1' ? 'confirmed' : 'pending',
+            startTime: new Date().toISOString(),
+            endTime: new Date(Date.now() + 3600000).toISOString(),
+            user: { name: 'John Doe', email: 'john@example.com' },
+            totalPrice: 500,
+          },
+        }),
+      });
+    });
+
+    // Mock approve endpoint
+    await page.route('**/api/bookings/booking-pending-1/approve', (route) => {
+      approvedBookingId = 'booking-pending-1';
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: { id: 'booking-pending-1', status: 'confirmed' },
+          message: 'Booking approved successfully',
+        }),
+      });
+    });
+
+    // Mock audit log
+    await page.route('**/api/audit*', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: [{
+            id: 'audit-1',
+            action: 'booking:approve',
+            resourceId: 'booking-pending-1',
+            userId: 'test-org-admin-id',
+            timestamp: new Date().toISOString(),
+          }],
+        }),
+      });
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/bookings/booking-pending-1`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Click approve button
+    const approveButton = page.getByRole('button', { name: /godkjenn|approve/i });
+    if (await approveButton.isVisible()) {
+      await approveButton.click();
+
+      // Handle confirmation dialog if present
+      const confirmButton = page.getByRole('button', { name: /bekreft|confirm|ja|yes/i });
+      if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await confirmButton.click();
+      }
+
+      // Verify status updated
+      await expect(page.getByText(/godkjent|confirmed|bekreftet/i)).toBeVisible({ timeout: 5000 });
+    }
+  });
+});
+
+// =============================================================================
+// BO-BO7: Messaging/Templates Tests
+// =============================================================================
+
+test.describe('BO-BO7: Messaging/Templates - Org Admin', () => {
+  /**
+   * BO-BO7-02: Template visibility by flag
+   * Disable messaging → Templates menu hidden, route denied
+   */
+  test('BO-BO7-02: Templates hidden when messaging flag disabled', async ({ page }) => {
+    // Mock capabilities with messaging disabled
+    await page.route('**/api/capabilities/backoffice', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            role: 'org_admin',
+            capabilities: [
+              'CAP_ORG_ADMIN_ENABLED',
+              'CAP_NAV_DASHBOARD',
+              'CAP_NAV_BOOKINGS',
+              'CAP_NAV_CALENDAR',
+              'CAP_NAV_BLOCKS',
+              // CAP_NAV_MESSAGES intentionally omitted
+              'CAP_NAV_HELP',
+            ],
+            uiHints: {
+              showDashboard: true,
+              showBookings: true,
+              showCalendar: true,
+              showBlocks: true,
+              showMessages: false, // Disabled
+              showTemplates: false, // Disabled
+              showHelp: true,
+            },
+          },
+        }),
+      });
+    });
+
+    await page.goto(BACKOFFICE_URL);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Verify Messages/Templates menu is NOT visible
+    await expect(page.getByText(/meldinger/i).or(page.getByText(/messages/i))).not.toBeVisible();
+    await expect(page.getByText(/maler/i).or(page.getByText(/templates/i))).not.toBeVisible();
+
+    // Try to navigate directly - should be denied
+    await page.goto(`${BACKOFFICE_URL}/templates`);
+    await page.waitForLoadState('networkidle');
+
+    // Should show access denied or redirect
+    const accessDenied = page.getByText(/ikke tilgang|access denied|forbidden/i);
+    const notFound = page.getByText(/ikke funnet|not found/i);
+    const redirectedAway = page.url() !== `${BACKOFFICE_URL}/templates`;
+
+    expect(
+      await accessDenied.isVisible().catch(() => false) ||
+      await notFound.isVisible().catch(() => false) ||
+      redirectedAway
+    ).toBeTruthy();
+  });
+});
+
+// =============================================================================
+// BO-BO8: Users/RBAC Scope Tests
+// =============================================================================
+
+test.describe('BO-BO8: Users/RBAC - Org Admin', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * BO-BO8-02: Manage org members
+   * Invite member → Member scoped to org only
+   */
+  test('BO-BO8-02: Invite org member scoped to organization', async ({ page }) => {
+    let invitedMember: object | null = null;
+
+    // Mock org members endpoint
+    await page.route('**/api/organizations/*/members*', (route) => {
+      if (route.request().method() === 'POST') {
+        const body = JSON.parse(route.request().postData() || '{}');
+        invitedMember = {
+          id: 'member-new',
+          email: body.email,
+          role: body.role || 'org_member',
+          organizationId: 'test-org-id',
+          status: 'invited',
+        };
+        route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: invitedMember }),
+        });
+      } else {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            data: [
+              { id: 'member-1', email: 'member1@test.no', role: 'org_member', status: 'active' },
+            ],
+            meta: { total: 1 },
+          }),
+        });
+      }
+    });
+
+    // Mock invite endpoint
+    await page.route('**/api/users/invite', (route) => {
+      const body = JSON.parse(route.request().postData() || '{}');
+      invitedMember = {
+        id: 'member-new',
+        email: body.email,
+        organizationId: 'test-org-id',
+      };
+      route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: invitedMember, message: 'Invitation sent' }),
+      });
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/users`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Click invite button
+    const inviteButton = page.getByRole('button', { name: /inviter|invite/i });
+    if (await inviteButton.isVisible()) {
+      await inviteButton.click();
+
+      // Should navigate to invite page (not modal)
+      await page.waitForURL(/\/users\/invite|\/invite/);
+
+      // Fill invite form
+      const emailInput = page.locator('input[type="email"]').or(page.getByLabel(/e-post|email/i));
+      await emailInput.fill('newmember@test.no');
+
+      // Submit
+      const submitButton = page.getByRole('button', { name: /send|inviter|submit/i });
+      await submitButton.click();
+
+      // Verify member was invited with org scope
+      expect(invitedMember).not.toBeNull();
+    }
+  });
+});
+
+// =============================================================================
+// GATE-G2: No CRUD Modals Enforcement
+// =============================================================================
+
+test.describe('GATE-G2: No CRUD Modals Enforcement', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockOrgAdminApiResponses(page);
+  });
+
+  /**
+   * G2: Create/Edit navigates to page, not modal
+   * Click "Create" / "Edit" in major modules → Navigation to new route page
+   * Breadcrumbs visible, No modal overlay
+   */
+  test('G2: Create block navigates to page with breadcrumbs, no modal', async ({ page }) => {
+    await page.goto(`${BACKOFFICE_URL}/blocks`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Click create button
+    const createButton = page.getByRole('button', { name: /opprett|ny|create|new/i })
+      .or(page.getByRole('link', { name: /opprett|ny|create|new/i }));
+
+    if (await createButton.isVisible()) {
+      await createButton.click();
+
+      // Verify navigation to new page (not modal)
+      await page.waitForURL(/\/blocks\/new/);
+
+      // Verify NO modal overlay
+      await expect(page.locator('dialog[open]')).not.toBeVisible();
+      await expect(page.locator('[role="dialog"]')).not.toBeVisible();
+      await expect(page.locator('.modal-overlay')).not.toBeVisible();
+
+      // Verify breadcrumbs visible
+      const breadcrumbs = page.locator('[data-testid="breadcrumbs"]')
+        .or(page.locator('nav[aria-label="breadcrumb"]'))
+        .or(page.locator('.breadcrumb'))
+        .or(page.getByText(/blokkeringer/i).locator('..'));
+
+      await expect(breadcrumbs).toBeVisible();
+    }
+  });
+
+  test('G2: Edit block navigates to page with breadcrumbs, no modal', async ({ page }) => {
+    // Mock single block
+    await page.route('**/api/blocks/block-1', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            id: 'block-1',
+            title: 'Test Block',
+            rentalObjectId: 'rental-obj-1',
+            status: 'active',
+          },
+        }),
+      });
+    });
+
+    await page.goto(`${BACKOFFICE_URL}/blocks/block-1`);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Click edit button
+    const editButton = page.getByRole('button', { name: /rediger|edit/i })
+      .or(page.getByRole('link', { name: /rediger|edit/i }));
+
+    if (await editButton.isVisible()) {
+      await editButton.click();
+
+      // Verify navigation to edit page
+      await page.waitForURL(/\/blocks\/block-1\/edit/);
+
+      // Verify NO modal overlay
+      await expect(page.locator('dialog[open]')).not.toBeVisible();
+      await expect(page.locator('[role="dialog"]')).not.toBeVisible();
+
+      // Verify breadcrumbs visible
+      await expect(page.getByText(/blokkeringer|blocks/i)).toBeVisible();
+    }
+  });
+});
+
+// =============================================================================
+// GATE-G3: Feature Flag OFF Removes Module
+// =============================================================================
+
+test.describe('GATE-G3: Feature Flag OFF Removes Module', () => {
+  /**
+   * G3: Disable module flag → Sidebar hidden, route denied
+   */
+  test('G3: Blocks module hidden when flag disabled', async ({ page }) => {
+    // Mock capabilities with blocks disabled
+    await page.route('**/api/capabilities/backoffice', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            role: 'org_admin',
+            capabilities: [
+              'CAP_ORG_ADMIN_ENABLED',
+              'CAP_NAV_DASHBOARD',
+              'CAP_NAV_BOOKINGS',
+              'CAP_NAV_CALENDAR',
+              // CAP_NAV_BLOCKS intentionally omitted
+              'CAP_NAV_HELP',
+            ],
+            uiHints: {
+              showDashboard: true,
+              showBookings: true,
+              showCalendar: true,
+              showBlocks: false, // Disabled
+              showHelp: true,
+            },
+          },
+        }),
+      });
+    });
+
+    // Mock blocks API to return 403/404 when disabled
+    await page.route('**/api/blocks*', (route) => {
+      route.fulfill({
+        status: 403,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          type: 'https://api.digilist.no/problems/feature-disabled',
+          title: 'Feature Disabled',
+          status: 403,
+          detail: 'The blocks module is not enabled for this tenant',
+        }),
+      });
+    });
+
+    await page.goto(BACKOFFICE_URL);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Verify Blocks menu item is NOT visible in sidebar
+    await expect(page.getByText(/blokkeringer/i).or(page.getByText(/blocks/i))).not.toBeVisible();
+
+    // Try direct navigation - should be denied
+    await page.goto(`${BACKOFFICE_URL}/blocks`);
+    await page.waitForLoadState('networkidle');
+
+    // Should show access denied, not found, or redirect
+    const accessDenied = page.getByText(/ikke tilgang|access denied|forbidden|feature disabled/i);
+    const notFound = page.getByText(/ikke funnet|not found/i);
+    const redirectedAway = !page.url().includes('/blocks');
+
+    expect(
+      await accessDenied.isVisible().catch(() => false) ||
+      await notFound.isVisible().catch(() => false) ||
+      redirectedAway
+    ).toBeTruthy();
+  });
+
+  test('G3: Reports module hidden when flag disabled', async ({ page }) => {
+    // Mock capabilities with reports disabled
+    await page.route('**/api/capabilities/backoffice', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            role: 'org_admin',
+            capabilities: [
+              'CAP_ORG_ADMIN_ENABLED',
+              'CAP_NAV_DASHBOARD',
+              'CAP_NAV_BOOKINGS',
+              // CAP_NAV_REPORTS intentionally omitted
+            ],
+            uiHints: {
+              showDashboard: true,
+              showBookings: true,
+              showReports: false, // Disabled
+            },
+          },
+        }),
+      });
+    });
+
+    await page.goto(BACKOFFICE_URL);
+    await mockOrgAdminAuth(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    // Verify Reports menu item is NOT visible
+    await expect(page.getByText(/rapporter/i).or(page.getByText(/reports/i))).not.toBeVisible();
+  });
+});

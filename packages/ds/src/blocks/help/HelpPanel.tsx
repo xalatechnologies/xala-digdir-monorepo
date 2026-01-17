@@ -23,20 +23,17 @@ import {
   Paragraph,
   Button,
   Badge,
-  Accordion,
-  Search,
-  Box,
-  Stack,
   Alert,
   Link,
-} from '../../primitives';
+} from '@digdir/designsystemet-react';
+import { Stack } from '../../primitives';
 import {
-  QuestionMarkCircleIcon,
+  InfoIcon,
   BookOpenIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
   CloseIcon,
-} from '../../primitives';
+} from '../../primitives/icons';
 
 export type HelpLevel = 1 | 2 | 3;
 
@@ -50,11 +47,17 @@ export type HelpCategory =
   | 'settings'
   | 'integrations';
 
-export interface HelpTooltip {
+/**
+ * Tooltip content (Level 1)
+ */
+export interface TooltipContent {
   content: string;
   learnMoreUrl?: string;
 }
 
+/**
+ * Guide content (Level 2)
+ */
 export interface HelpGuideStep {
   title: string;
   content: string;
@@ -62,70 +65,38 @@ export interface HelpGuideStep {
   code?: string;
 }
 
-export interface HelpGuide {
+export interface GuideContent {
   title: string;
   description: string;
-  category: HelpCategory;
   steps: HelpGuideStep[];
-  relatedGuides?: string[];
+  estimatedTime?: string;
 }
 
-export interface HelpFAQItem {
+/**
+ * FAQ content (Level 3)
+ */
+export interface FAQItem {
   question: string;
   answer: string;
   category: HelpCategory;
   tags?: string[];
-  relatedQuestions?: string[];
 }
 
 export interface HelpPanelProps {
-  /**
-   * Help level
-   * 1 = Tooltip (inline contextual help)
-   * 2 = Guide (step-by-step walkthrough)
-   * 3 = FAQ (comprehensive searchable help)
-   */
+  /** Help level (1=tooltip, 2=guide, 3=FAQ) */
   level: HelpLevel;
-
-  /**
-   * Title for the help content
-   */
+  /** Help title */
   title?: string;
-
-  /**
-   * Help content (varies by level)
-   */
-  content: HelpTooltip | HelpGuide | HelpFAQItem[];
-
-  /**
-   * Category for filtering and navigation
-   */
+  /** Help content (varies by level) */
+  content: TooltipContent | GuideContent | FAQItem[];
+  /** Help category */
   category?: HelpCategory;
-
-  /**
-   * Position for tooltip (level 1 only)
-   */
+  /** Position (for Level 1 tooltip) */
   position?: 'top' | 'bottom' | 'left' | 'right';
-
-  /**
-   * Size of the help panel
-   */
-  size?: 'sm' | 'md' | 'lg';
-
-  /**
-   * Show close button
-   */
+  /** Allow closing */
   closeable?: boolean;
-
-  /**
-   * Callback when help is closed
-   */
+  /** Close callback */
   onClose?: () => void;
-
-  /**
-   * Custom CSS class
-   */
-  className?: string;
 }
 
 /**
@@ -133,17 +104,17 @@ export interface HelpPanelProps {
  */
 function TooltipHelp({
   content,
-  position = 'top',
-  closeable,
+  position = 'bottom',
+  closeable = true,
   onClose,
 }: {
-  content: HelpTooltip;
+  content: TooltipContent;
   position?: 'top' | 'bottom' | 'left' | 'right';
   closeable?: boolean;
   onClose?: () => void;
 }) {
   return (
-    <Box
+    <div
       style={{
         position: 'relative',
         display: 'inline-block',
@@ -151,16 +122,15 @@ function TooltipHelp({
       }}
     >
       <Card
-        variant="outlined"
         style={{
           padding: 'var(--ds-spacing-4)',
           backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
-          borderColor: 'var(--ds-color-neutral-border-default)',
+          border: '1px solid var(--ds-color-neutral-border-default)',
         }}
       >
         <Stack gap={3}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
-            <QuestionMarkCircleIcon
+            <InfoIcon
               style={{
                 color: 'var(--ds-color-accent-base-default)',
                 flexShrink: 0,
@@ -171,7 +141,6 @@ function TooltipHelp({
               style={{
                 margin: 0,
                 flex: 1,
-                color: 'var(--ds-color-neutral-text-default)',
               }}
             >
               {content.content}
@@ -197,7 +166,7 @@ function TooltipHelp({
           )}
         </Stack>
       </Card>
-    </Box>
+    </div>
   );
 }
 
@@ -206,15 +175,15 @@ function TooltipHelp({
  */
 function GuideHelp({
   content,
-  closeable,
+  closeable = true,
   onClose,
 }: {
-  content: HelpGuide;
+  content: GuideContent;
   closeable?: boolean;
   onClose?: () => void;
 }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const { steps } = content;
+  const { title, description, steps, estimatedTime } = content;
   const step = steps[currentStep];
 
   const handleNext = () => {
@@ -232,31 +201,28 @@ function GuideHelp({
   return (
     <Card
       style={{
-        maxWidth: '720px',
+        padding: 'var(--ds-spacing-6)',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
       }}
     >
       <Stack gap={4}>
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingBottom: 'var(--ds-spacing-4)',
-            borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <BookOpenIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
-            <div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
+              <BookOpenIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
               <Heading size="sm" style={{ margin: 0 }}>
-                {content.title}
+                {title}
               </Heading>
-              <Paragraph size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {content.description}
-              </Paragraph>
             </div>
+            <Paragraph size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {description}
+            </Paragraph>
+            {estimatedTime && (
+              <Badge size="sm" style={{ marginTop: 'var(--ds-spacing-2)' }}>
+                {estimatedTime}
+              </Badge>
+            )}
           </div>
           {closeable && onClose && (
             <Button variant="tertiary" size="sm" onClick={onClose}>
@@ -265,15 +231,15 @@ function GuideHelp({
           )}
         </div>
 
-        {/* Progress */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+        {/* Progress indicators */}
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           {steps.map((_, index) => (
             <div
               key={index}
               style={{
                 flex: 1,
                 height: '4px',
-                borderRadius: 'var(--ds-border-radius-full)',
+                borderRadius: '2px',
                 backgroundColor:
                   index <= currentStep
                     ? 'var(--ds-color-accent-base-default)'
@@ -284,31 +250,32 @@ function GuideHelp({
           ))}
         </div>
 
-        {/* Step Content */}
+        {/* Step content */}
         <div>
-          <Badge color="accent" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Badge size="sm">
             Step {currentStep + 1} of {steps.length}
           </Badge>
-          <Heading size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+          <Heading size="xs" style={{ marginTop: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-3)' }}>
             {step.title}
           </Heading>
-          <Paragraph style={{ marginBottom: 'var(--ds-spacing-4)' }}>{step.content}</Paragraph>
+          <Paragraph style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            {step.content}
+          </Paragraph>
 
           {step.screenshot && (
             <img
               src={step.screenshot}
-              alt={step.title}
+              alt={`Step ${currentStep + 1} screenshot`}
               style={{
                 width: '100%',
                 borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-subtle)',
                 marginBottom: 'var(--ds-spacing-4)',
               }}
             />
           )}
 
           {step.code && (
-            <Box
+            <div
               style={{
                 padding: 'var(--ds-spacing-4)',
                 backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
@@ -319,7 +286,7 @@ function GuideHelp({
               }}
             >
               <code>{step.code}</code>
-            </Box>
+            </div>
           )}
         </div>
 
@@ -334,6 +301,7 @@ function GuideHelp({
         >
           <Button
             variant="secondary"
+            size="sm"
             onClick={handlePrevious}
             disabled={currentStep === 0}
           >
@@ -341,27 +309,13 @@ function GuideHelp({
           </Button>
           <Button
             variant="primary"
+            size="sm"
             onClick={handleNext}
             disabled={currentStep === steps.length - 1}
           >
-            Next <ChevronRightIcon />
+            {currentStep === steps.length - 1 ? 'Done' : 'Next'} <ChevronRightIcon />
           </Button>
         </div>
-
-        {/* Related Guides */}
-        {content.relatedGuides && content.relatedGuides.length > 0 && (
-          <Alert variant="info" size="sm">
-            <div>
-              <strong>Related guides:</strong>{' '}
-              {content.relatedGuides.map((guide, index) => (
-                <React.Fragment key={guide}>
-                  <Link href={`/help/guides/${guide}`}>{guide}</Link>
-                  {index < content.relatedGuides!.length - 1 && ', '}
-                </React.Fragment>
-              ))}
-            </div>
-          </Alert>
-        )}
       </Stack>
     </Card>
   );
@@ -373,30 +327,26 @@ function GuideHelp({
 function FAQHelp({
   content,
   category,
-  closeable,
+  closeable = true,
   onClose,
 }: {
-  content: HelpFAQItem[];
+  content: FAQItem[];
   category?: HelpCategory;
   closeable?: boolean;
   onClose?: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<HelpCategory | 'all'>(
-    category || 'all'
-  );
+  const [selectedCategory, setSelectedCategory] = useState<HelpCategory | 'all'>(category || 'all');
+  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   // Filter FAQs
   const filteredFAQs = content.filter((faq) => {
-    const matchesCategory =
-      selectedCategory === 'all' || faq.category === selectedCategory;
     const matchesSearch =
-      searchQuery === '' ||
+      !searchQuery ||
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesSearch;
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
   // Group by category
@@ -406,27 +356,38 @@ function FAQHelp({
     }
     acc[faq.category].push(faq);
     return acc;
-  }, {} as Record<HelpCategory, HelpFAQItem[]>);
+  }, {} as Record<HelpCategory, FAQItem[]>);
+
+  const toggleItem = (index: number) => {
+    setExpandedItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <Card
       style={{
-        maxWidth: '960px',
+        padding: 'var(--ds-spacing-6)',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
       }}
     >
       <Stack gap={4}>
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Heading size="md" style={{ margin: 0 }}>
-            Frequently Asked Questions
-          </Heading>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div>
+            <Heading size="sm" style={{ margin: 0 }}>
+              Frequently Asked Questions
+            </Heading>
+            <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+              Find answers to common questions
+            </Paragraph>
+          </div>
           {closeable && onClose && (
             <Button variant="tertiary" size="sm" onClick={onClose}>
               <CloseIcon />
@@ -434,80 +395,89 @@ function FAQHelp({
           )}
         </div>
 
-        {/* Search */}
-        <Search
+        {/* Search - simplified input */}
+        <input
+          type="text"
           placeholder="Search help articles..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: '100%' }}
+          style={{
+            width: '100%',
+            padding: 'var(--ds-spacing-3)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            border: '1px solid var(--ds-color-neutral-border-default)',
+            fontSize: 'var(--ds-font-size-md)',
+          }}
         />
 
-        {/* Category Filter */}
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-          <Button
-            variant={selectedCategory === 'all' ? 'primary' : 'tertiary'}
-            size="sm"
-            onClick={() => setSelectedCategory('all')}
-          >
-            All
-          </Button>
-          {Array.from(new Set(content.map((f) => f.category))).map((cat) => (
-            <Button
-              key={cat}
-              variant={selectedCategory === cat ? 'primary' : 'tertiary'}
-              size="sm"
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat.charAt(0).toUpperCase() + cat.slice(1).replace('-', ' ')}
-            </Button>
-          ))}
-        </div>
+        {/* FAQ Items */}
+        {Object.entries(categorizedFAQs).map(([cat, faqs]) => (
+          <div key={cat}>
+            <Heading size="xs" style={{ marginBottom: 'var(--ds-spacing-3)', textTransform: 'capitalize' }}>
+              {cat} ({faqs.length})
+            </Heading>
+            <Stack gap={2}>
+              {faqs.map((faq, index) => {
+                const globalIndex = content.indexOf(faq);
+                const isExpanded = expandedItems.has(globalIndex);
 
-        {/* FAQ List */}
-        {filteredFAQs.length === 0 ? (
-          <Alert variant="info">No help articles found matching your search.</Alert>
-        ) : (
-          Object.entries(categorizedFAQs).map(([category, faqs]) => (
-            <div key={category}>
-              <Heading size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                {category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
-              </Heading>
-              <Accordion>
-                {faqs.map((faq, index) => (
-                  <Accordion.Item key={index} value={`${category}-${index}`}>
-                    <Accordion.Trigger>{faq.question}</Accordion.Trigger>
-                    <Accordion.Content>
-                      <Paragraph style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                        {faq.answer}
-                      </Paragraph>
-                      {faq.tags && faq.tags.length > 0 && (
-                        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                          {faq.tags.map((tag) => (
-                            <Badge key={tag} size="sm" color="neutral">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                      {faq.relatedQuestions && faq.relatedQuestions.length > 0 && (
-                        <div style={{ marginTop: 'var(--ds-spacing-3)' }}>
-                          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                            <strong>Related:</strong>{' '}
-                            {faq.relatedQuestions.map((q, i) => (
-                              <React.Fragment key={q}>
-                                <Link href="#" size="sm">{q}</Link>
-                                {i < faq.relatedQuestions!.length - 1 && ', '}
-                              </React.Fragment>
+                return (
+                  <div
+                    key={globalIndex}
+                    style={{
+                      border: '1px solid var(--ds-color-neutral-border-subtle)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <button
+                      onClick={() => toggleItem(globalIndex)}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--ds-spacing-4)',
+                        textAlign: 'left',
+                        background: 'var(--ds-color-neutral-surface-default)',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        fontWeight: 'var(--ds-font-weight-semibold)',
+                      }}
+                    >
+                      <span>{faq.question}</span>
+                      <ChevronRightIcon
+                        style={{
+                          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s',
+                        }}
+                      />
+                    </button>
+                    {isExpanded && (
+                      <div style={{ padding: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+                        <Paragraph>{faq.answer}</Paragraph>
+                        {faq.tags && faq.tags.length > 0 && (
+                          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-3)' }}>
+                            {faq.tags.map((tag) => (
+                              <Badge key={tag} size="sm">
+                                {tag}
+                              </Badge>
                             ))}
-                          </Paragraph>
-                        </div>
-                      )}
-                    </Accordion.Content>
-                  </Accordion.Item>
-                ))}
-              </Accordion>
-            </div>
-          ))
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </Stack>
+          </div>
+        ))}
+
+        {filteredFAQs.length === 0 && (
+          <Alert variant="info">
+            No help articles found. Try a different search term or category.
+          </Alert>
         )}
       </Stack>
     </Card>
@@ -515,23 +485,21 @@ function FAQHelp({
 }
 
 /**
- * Main HelpPanel Component
+ * HelpPanel - Main component
  */
 export function HelpPanel({
   level,
+  title,
   content,
   category,
-  position = 'top',
-  size = 'md',
-  closeable = false,
+  position,
+  closeable = true,
   onClose,
-  className,
-  ...props
 }: HelpPanelProps) {
   if (level === 1) {
     return (
       <TooltipHelp
-        content={content as HelpTooltip}
+        content={content as TooltipContent}
         position={position}
         closeable={closeable}
         onClose={onClose}
@@ -542,7 +510,7 @@ export function HelpPanel({
   if (level === 2) {
     return (
       <GuideHelp
-        content={content as HelpGuide}
+        content={content as GuideContent}
         closeable={closeable}
         onClose={onClose}
       />
@@ -552,7 +520,7 @@ export function HelpPanel({
   if (level === 3) {
     return (
       <FAQHelp
-        content={content as HelpFAQItem[]}
+        content={content as FAQItem[]}
         category={category}
         closeable={closeable}
         onClose={onClose}
@@ -562,6 +530,3 @@ export function HelpPanel({
 
   return null;
 }
-
-// Export types
-export type { HelpTooltip as TooltipContent, HelpGuide as GuideContent, HelpFAQItem as FAQItem };

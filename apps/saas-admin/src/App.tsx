@@ -5,7 +5,22 @@ import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
 import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage, AISeedGeneratorPage, FeatureFlagsCatalogPage, BillingPage, UsersPage, AuditLogPage, SettingsPage } from './routes';
+import {
+  LoginPage,
+  TenantsListPage,
+  TenantDetailPage,
+  TenantCreatePage,
+  TenantEditPage,
+  PlansListPage,
+  PlanCreatePage,
+  PlanDetailPage,
+  AISeedGeneratorPage,
+  FeatureFlagsCatalogPage,
+  BillingPage,
+  UsersPage,
+  AuditLogPage,
+  SettingsPage,
+} from './routes';
 
 function DashboardPage() {
   const t = useT();
@@ -41,9 +56,16 @@ export function App() {
                     }
                   >
                     <Route path="/" element={<DashboardPage />} />
+                    {/* Tenant routes */}
                     <Route path="/tenants" element={<TenantsListPage />} />
+                    <Route path="/tenants/new" element={<TenantCreatePage />} />
                     <Route path="/tenants/:id" element={<TenantDetailPage />} />
+                    <Route path="/tenants/:id/edit" element={<TenantEditPage />} />
+                    {/* Plan routes */}
                     <Route path="/plans" element={<PlansListPage />} />
+                    <Route path="/plans/new" element={<PlanCreatePage />} />
+                    <Route path="/plans/:id" element={<PlanDetailPage />} />
+                    {/* Other routes */}
                     <Route path="/feature-flags" element={<FeatureFlagsCatalogPage />} />
                     <Route path="/billing" element={<BillingPage />} />
                     <Route path="/users" element={<UsersPage />} />

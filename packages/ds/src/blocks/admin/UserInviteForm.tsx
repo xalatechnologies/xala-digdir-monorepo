@@ -22,21 +22,20 @@ import {
   Heading,
   Paragraph,
   Button,
-  TextField,
+  Textfield,
   Select,
   Checkbox,
-  Stack,
-  Box,
   Alert,
   Label,
-} from '../../primitives';
+} from '@digdir/designsystemet-react';
+import { Stack } from '../../primitives';
 import {
-  EnvelopeIcon,
+  MailIcon,
   UserIcon,
   BuildingIcon,
   ShieldIcon,
   CheckIcon,
-} from '../../primitives';
+} from '../../primitives/icons';
 
 export interface InviteUserFormData {
   email: string;
@@ -206,7 +205,7 @@ export function UserInviteForm({
         {/* Header */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <EnvelopeIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
+            <MailIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
             <Heading size="sm" style={{ margin: 0 }}>
               Invite User
             </Heading>
@@ -221,7 +220,7 @@ export function UserInviteForm({
           <Label htmlFor="email">
             Email Address *
           </Label>
-          <TextField
+          <Textfield
             id="email"
             type="email"
             placeholder="user@example.com"
@@ -308,7 +307,7 @@ export function UserInviteForm({
             <Label htmlFor="message">
               Custom Message (Optional)
             </Label>
-            <TextField
+            <Textfield
               id="message"
               as="textarea"
               placeholder="Add a personalized message to the invitation email..."
@@ -322,7 +321,7 @@ export function UserInviteForm({
         )}
 
         {/* Options */}
-        <Box
+        <div
           style={{
             padding: 'var(--ds-spacing-4)',
             backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
@@ -363,7 +362,7 @@ export function UserInviteForm({
               />
             )}
           </Stack>
-        </Box>
+        </div>
 
         {/* Actions */}
         <div

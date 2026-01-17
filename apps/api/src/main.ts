@@ -69,10 +69,10 @@ import { TenantAdminController } from './modules/tenant-admin';
 import { TenantAdminUserController } from './modules/user-management';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
-// TODO: These routes exist but have broken imports - need refactoring
-// import { amenitiesRoutes } from './modules/amenities/amenities.routes';
-// import { addonsRoutes } from './modules/addons/addons.routes';
-// import { favoritesRoutes } from './modules/favorites/favorites.routes';
+// Amenities, Addons, Favorites (refactored with DI)
+import { amenitiesRoutes } from './modules/amenities/amenities.routes';
+import { addonsRoutes } from './modules/addons/addons.routes';
+import { favoritesRoutes } from './modules/favorites/favorites.routes';
 // Storage
 import { StorageController } from './modules/storage/storage.controller';
 import { StorageService } from './modules/storage/storage.service';
@@ -299,12 +299,11 @@ async function bootstrap() {
   console.log('✓ REST routes registered');
 
   // Register Fastify plugin routes
-  // TODO: Enable after refactoring amenities/addons/favorites services to use DI pattern
-  // await app.register(amenitiesRoutes, { prefix: '/api' });
-  // await app.register(addonsRoutes, { prefix: '/api' });
-  // await app.register(favoritesRoutes, { prefix: '/api' });
+  await app.register(amenitiesRoutes, { prefix: '/api' });
+  await app.register(addonsRoutes, { prefix: '/api' });
+  await app.register(favoritesRoutes, { prefix: '/api' });
   await app.register(featuresRoutes, { prefix: '/api' });
-  console.log('✓ Feature flags routes registered');
+  console.log('✓ Fastify plugin routes registered (amenities, addons, favorites, features)');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);

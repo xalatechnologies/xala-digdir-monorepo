@@ -35,7 +35,9 @@ import {
   ClockIcon,
   Grid,
   Text,
+  ListIcon,
 } from '@xala/ds';
+import { CategoryEntitlementsTab } from '../../components/CategoryEntitlementsTab';
 import styles from './TenantDetailPage.module.css';
 import {
   useSaasTenant,
@@ -365,6 +367,10 @@ export function TenantDetailPage() {
           <Tabs.Tab value="license">
             <KeyIcon />
             Lisens
+          </Tabs.Tab>
+          <Tabs.Tab value="categories">
+            <ListIcon />
+            Kategorier
           </Tabs.Tab>
         </Tabs.List>
 
@@ -730,6 +736,11 @@ export function TenantDetailPage() {
               </div>
             </div>
           </Card>
+        </Tabs.Panel>
+
+        {/* Categories Tab */}
+        <Tabs.Panel value="categories">
+          <CategoryEntitlementsTab tenantId={id!} />
         </Tabs.Panel>
       </Tabs>
     </div>

@@ -1,0 +1,69 @@
+.tocContainer {
+  position: sticky;
+  top: var(--ds-spacing-6);
+  width: 220px;
+  max-height: calc(100vh - var(--ds-spacing-12));
+  overflow-y: auto;
+  padding-right: var(--ds-spacing-4);
+}
+
+.tocTitle {
+  margin: 0 0 var(--ds-spacing-3) 0;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-neutral-text-default);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--ds-font-size-xs);
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--ds-color-neutral-border-subtle);
+}
+
+.tocItem {
+  margin: 0;
+}
+
+.tocLink {
+  display: block;
+  padding: var(--ds-spacing-2) var(--ds-spacing-3);
+  margin-left: -2px;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-neutral-text-subtle);
+  transition: all 0.15s ease;
+  line-height: 1.4;
+}
+
+.tocLink:hover {
+  color: var(--ds-color-neutral-text-default);
+}
+
+.tocLink.active {
+  color: var(--ds-color-accent-text-default);
+  border-left-color: var(--ds-color-accent-base-default);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.tocLink.level3 {
+  padding-left: var(--ds-spacing-6);
+  font-size: var(--ds-font-size-xs);
+}
+
+/* Scrollbar styling */
+.tocContainer::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tocContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tocContainer::-webkit-scrollbar-thumb {
+  background: var(--ds-color-neutral-border-default);
+  border-radius: 2px;
+}

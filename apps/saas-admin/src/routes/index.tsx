@@ -8,10 +8,15 @@
 export * from './login';
 export * from './tenants';
 export { TenantDetailPage } from './tenants/[id]';
+export { TenantCreatePage } from './tenants/new';
+export { TenantEditPage } from './tenants/edit';
 export * from './plans';
+export { PlanCreatePage } from './plans/new';
+export { PlanDetailPage } from './plans/[id]';
 export * from './feature-flags';
 export * from './billing';
 export * from './users';
 export * from './audit';
 export * from './settings';
 export * from './ai-seed-generator';
+
