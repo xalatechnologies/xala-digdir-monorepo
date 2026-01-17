@@ -3,6 +3,8 @@
  * Exports all React Query hooks
  */
 
+import { useMutation } from '@tanstack/react-query';
+
 // Query keys factory
 export { queryKeys } from './query-keys';
 
@@ -220,7 +222,6 @@ export {
 
 // Organization branding hook (stub)
 export function useUpdateOrganizationBranding() {
-  const { useMutation } = require('@tanstack/react-query');
   return useMutation({
     mutationFn: async ({ id, branding }: { id: string; branding: { logo?: string; primaryColor?: string } }) => {
       return { id, ...branding };
@@ -230,7 +231,6 @@ export function useUpdateOrganizationBranding() {
 
 // Verify organization hook (stub for Brreg verification)
 export function useVerifyOrganization() {
-  const { useMutation } = require('@tanstack/react-query');
   return useMutation({
     mutationFn: async (orgNumber: string) => {
       return { verified: true, name: `Org ${orgNumber}`, orgNumber };

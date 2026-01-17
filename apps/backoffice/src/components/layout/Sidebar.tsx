@@ -351,15 +351,12 @@ export function Sidebar() {
     {
       title: t('nav.sections.admin'),
       items: [
-        { name: t('nav.newRentalObject'), description: t('nav.newRentalObjectDesc'), href: '/rental-objects/wizard', icon: <BuildingIcon />, capability: 'CAP_LISTING_CREATE' },
         { name: t('nav.pricingRules'), description: t('nav.pricingRulesDesc'), href: '/pricing-rules', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: t('nav.userManagement'), description: t('nav.userManagementDesc'), href: '/users-management', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
       ],
     },
     {
       title: t('nav.sections.tenant'),
       items: [
-        { name: t('tenantAdmin.nav.users'), description: t('tenantAdmin.nav.usersDesc'), href: '/tenant/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
         { name: t('nav.features'), description: t('nav.featuresDesc'), href: '/tenant/features', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
         { name: t('nav.platformSettings'), description: t('nav.platformSettingsDesc'), href: '/tenant/settings', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
         { name: t('nav.branding'), description: t('nav.brandingDesc'), href: '/tenant/branding', icon: <BuildingIcon />, capability: 'CAP_SETTINGS_ADMIN' },
@@ -371,7 +368,6 @@ export function Sidebar() {
       items: [
         { name: t('nav.gdprRequests'), description: t('nav.gdprRequestsDesc'), href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', capability: 'CAP_SETTINGS_ADMIN' },
         { name: t('nav.reviews'), description: t('nav.reviewsDesc'), href: '/reviews/moderation', icon: <CheckCircleIcon />, capability: 'CAP_SETTINGS_ADMIN' },
-        { name: t('nav.auditLog'), description: t('nav.auditLogDesc'), href: '/audit', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
         { name: t('nav.settings'), description: t('nav.settingsDesc'), href: '/settings', icon: <SettingsIcon />, capability: 'CAP_SYSTEM_CONFIG' },
       ],
     },
