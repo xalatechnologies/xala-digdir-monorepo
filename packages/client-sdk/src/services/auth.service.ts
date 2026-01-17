@@ -316,6 +316,25 @@ export class AuthService extends BaseService {
     // 6. Return session data to frontend
     return this.client.get(this.buildPath('/idporten-oidc/callback'), { params });
   }
+
+  /**
+   * Test Login with National ID (BankID/Vipps simulation)
+   *
+   * Authenticates a test user using their Norwegian national ID.
+   * This is for testing purposes only - simulates BankID/Vipps authentication.
+   *
+   * @param nationalId - Norwegian national identity number (11 digits)
+   * @returns Session data with HTTP-only cookies set
+   *
+   * @example
+   *   const session = await authService.loginWithNationalId('15860771346');
+   */
+  async loginWithNationalId(nationalId: string): Promise<SingleResponse<AuthSession>> {
+    return this.client.post(this.buildPath('/callback'), {
+      nationalId,
+      code: 'test-' + Date.now(),
+    });
+  }
 }
 
 // Singleton instance

@@ -17,6 +17,7 @@ import {
   ShieldCheckIcon,
   KeyIcon,
   DemoLoginDialog,
+  Button,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
@@ -54,9 +55,36 @@ export function LoginPage(): React.ReactElement {
   // Demo login hook
   const { showDialog, openDemoLogin, closeDemoLogin, handleDemoLogin } = useDemoLogin();
 
+  // Test login state
+  const [showTestLogin, setShowTestLogin] = useState(false);
+  const [testNationalId, setTestNationalId] = useState('');
+  const [isTestLoginLoading, setIsTestLoginLoading] = useState(false);
+
   // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
   // Default to dashboard - user context will be loaded from database automatically
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+
+  /**
+   * Handle test login with national ID
+   */
+  const handleTestLogin = useCallback(async () => {
+    if (!testNationalId || testNationalId.length !== 11) {
+      alert('Please enter a valid 11-digit Norwegian national ID');
+      return;
+    }
+
+    setIsTestLoginLoading(true);
+    try {
+      const { authService } = await import('@digilist/client-sdk');
+      await authService.loginWithNationalId(testNationalId);
+      // Reload page to trigger session detection
+      window.location.href = from;
+    } catch (error) {
+      console.error('Test login failed:', error);
+      alert('Login failed. Please check the national ID and try again.');
+      setIsTestLoginLoading(false);
+    }
+  }, [testNationalId, from]);
 
   /**
    * Handle navigation after authentication
@@ -210,6 +238,13 @@ export function LoginPage(): React.ReactElement {
         onClick={openDemoLogin}
       />
 
+      <LoginOption
+        icon={<ShieldCheckIcon />}
+        title="Test Login (National ID)"
+        description="BankID/Vipps test login (11-digit national ID)"
+        onClick={() => setShowTestLogin(true)}
+      />
+
       <DemoLoginDialog
         open={showDialog}
         onClose={closeDemoLogin}
@@ -236,6 +271,78 @@ export function LoginPage(): React.ReactElement {
           token: t('auth.demoForm.tokenPlaceholder'),
         }}
       />
+
+      {showTestLogin && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+          onClick={() => !isTestLoginLoading && setShowTestLogin(false)}
+        >
+          <div
+            style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '8px',
+              maxWidth: '400px',
+              width: '90%',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Test Login</h2>
+            <p style={{ marginBottom: '16px' }}>
+              Enter a Norwegian national ID (11 digits) to test BankID/Vipps authentication.
+            </p>
+            <p style={{ marginBottom: '16px', fontSize: '14px', color: '#666' }}>
+              Example test IDs:
+              <br />
+              • 15860771346 (BankID Bruker)
+              <br />
+              • 24014005907 (Vipps Bruker)
+              <br />• 30916326773 (BankID Admin)
+            </p>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>National ID</label>
+              <input
+                type="text"
+                value={testNationalId}
+                onChange={(e) => setTestNationalId(e.target.value)}
+                placeholder="11 digits"
+                maxLength={11}
+                disabled={isTestLoginLoading}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '16px',
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <Button
+                onClick={handleTestLogin}
+                disabled={isTestLoginLoading || !testNationalId}
+                style={{ flex: 1 }}
+              >
+                {isTestLoginLoading ? 'Logging in...' : 'Login'}
+              </Button>
+              <Button onClick={() => setShowTestLogin(false)} disabled={isTestLoginLoading}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </LoginLayout>
   );
 }

@@ -19,9 +19,12 @@ const PUBLIC_ENDPOINTS = [
   '/api/auth/login',
   '/api/auth/callback',
   '/api/auth/demo-token',
+  '/api/auth/national-id',
+  '/api/auth/email',
   '/api/auth/oauth/initiate',
   '/api/auth/idporten',
   '/api/auth/signicat',
+  '/api/auth/providers',
   '/health',
   '/graphql',
 ];

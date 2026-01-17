@@ -121,24 +121,43 @@ export class AuthController {
     // For demo/testing: Exchange code for user
     // In production, this would validate the OAuth code with the provider
     const code = body.code;
-    
-    if (!code) {
+    const nationalId = body.nationalId;
+    const email = body.email;
+
+    if (!code && !nationalId && !email) {
       reply.code(400);
-      return createErrorResponse(request, 'BAD_REQUEST', 'auth.code_required');
+      return createErrorResponse(request, 'BAD_REQUEST', 'auth.code_or_identifier_required');
     }
 
-    // Demo: Find user by demo token (in production, validate OAuth code)
-    // For now, use a default user for testing
-    // Use lars.andersen@example.com for Minside (role: user)
-    const userResult = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, 'lars.andersen@example.com'))
-      .limit(1);
+    // Demo: Find user by national ID, email, or fallback to first admin
+    let userResult;
+
+    if (nationalId) {
+      // Look up by national ID (for BankID/Vipps test users)
+      userResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.nationalId, nationalId))
+        .limit(1);
+    } else if (email) {
+      // Look up by email
+      userResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+    } else {
+      // Fallback: Use first active admin user for testing
+      userResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.role, 'admin'))
+        .limit(1);
+    }
 
     if (!userResult.length) {
       reply.code(401);
-      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.invalid_code');
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.invalid_credentials');
     }
 
     const user = userResult[0];
@@ -185,6 +204,7 @@ export class AuthController {
     await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
 
     // Audit OAuth callback event
+    const authMethod = nationalId ? (user.metadata?.auth_method || 'national-id') : 'oauth-callback';
     getAuditService().log({
       tenantId: user.tenantId,
       userId: user.id,
@@ -195,8 +215,9 @@ export class AuthController {
       userAgent: request.headers['user-agent'],
       metadata: {
         email: user.email,
-        method: 'oauth-callback',
-        code: code.substring(0, 10) + '...',
+        method: authMethod,
+        nationalId: nationalId || undefined,
+        code: code ? code.substring(0, 10) + '...' : undefined,
         sessionId: session.sessionId,
       },
     });

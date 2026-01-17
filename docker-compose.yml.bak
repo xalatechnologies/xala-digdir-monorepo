@@ -42,6 +42,22 @@ services:
       dockerfile: apps/api/Dockerfile
     container_name: digilist-api
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://digilist:digilist_secure_2026@postgres:5432/digilist_prod
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3002,http://localhost:3003
+    ports:
+      - "8085:3001"
+    volumes:
+      - ./apps/api/uploads:/app/uploads
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
       interval: 30s
@@ -53,6 +69,8 @@ services:
     image: nginx:alpine
     container_name: digilist-web
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "8080:80"
     volumes:
@@ -69,6 +87,8 @@ services:
     image: nginx:alpine
     container_name: digilist-backoffice
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "8081:80"
     volumes:
@@ -85,6 +105,8 @@ services:
     image: nginx:alpine
     container_name: digilist-minside
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "8082:80"
     volumes:
@@ -101,6 +123,8 @@ services:
     image: nginx:alpine
     container_name: digilist-saas-admin
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "8083:80"
     volumes:
@@ -117,6 +141,8 @@ services:
     image: nginx:alpine
     container_name: digilist-tenant-admin
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "8084:80"
     volumes:
