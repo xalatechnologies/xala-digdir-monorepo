@@ -61,6 +61,18 @@ export {
   useAnnotatedNavItems,
 } from './use-navigation';
 
+// Domain Navigation hooks (manifest-driven)
+export {
+  type DomainNavItem,
+  type NavSource,
+  type CombinedNavItem,
+  PLATFORM_NAV,
+  useDomainNavigation,
+  useAnnotatedDomainNavigation,
+  useDomainGroupStatus,
+  useIsDomainGroupEnabled,
+} from './use-domain-navigation';
+
 // Rental Object hooks (primary - single source of truth)
 export {
   rentalObjectKeys,
