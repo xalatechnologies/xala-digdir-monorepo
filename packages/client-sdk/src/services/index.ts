@@ -7,6 +7,9 @@
 // Base service for extending
 export { BaseService } from './base.service';
 
+// Amenities
+export { AmenitiesService, amenitiesService } from './amenities.service';
+
 // Auth
 export { AuthService, authService } from './auth.service';
 

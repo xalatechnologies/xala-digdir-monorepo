@@ -35,14 +35,12 @@ import {
   OrganizationSchema,
   CreateOrganizationSchema,
   UpdateOrganizationSchema,
-  OrganizationQuerySchema,
 } from '../schemas/organization.schema';
 
 import {
   UserSchema,
   CreateUserSchema,
   UpdateUserSchema,
-  UserQuerySchema,
 } from '../schemas/user.schema';
 
 import {

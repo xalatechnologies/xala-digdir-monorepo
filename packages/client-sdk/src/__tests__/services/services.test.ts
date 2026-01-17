@@ -5,9 +5,6 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 
-// Skip tests - service exports have been refactored
-const describeSkip = describe.skip;
-
 // Mock the client factory before importing services
 vi.mock('../../core/client-factory', () => ({
   getClient: () => ({
@@ -19,10 +16,6 @@ vi.mock('../../core/client-factory', () => ({
   }),
 }));
 
-import { 
-  listingService, 
-  publicListingService 
-} from '../../services/listing.service';
 import { 
   bookingService, 
   calendarService, 

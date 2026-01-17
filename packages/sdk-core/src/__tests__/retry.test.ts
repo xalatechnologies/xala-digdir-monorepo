@@ -39,7 +39,7 @@ describe('Retry Infrastructure', () => {
 
     it('should return true for network errors', () => {
       const error = new Error('Network error');
-      (error as any).code = 'NETWORK_ERROR';
+      (error as Error & { code?: string }).code = 'NETWORK_ERROR';
 
       expect(isRetryableError(error, DEFAULT_RETRY_POLICY)).toBe(true);
     });

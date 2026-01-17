@@ -5,7 +5,7 @@
  * Note: These tests use minimal mock data to verify HTTP method/path calls.
  * Type checking is relaxed as we're testing the HTTP layer, not data validation.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as services from '../services';
 

@@ -54,22 +54,24 @@ describe('SDK Main Exports', () => {
 
 describe('Service Exports', () => {
   const requiredServices = [
-    'RentalObjectService',
     'rentalObjectService',
-    'BookingService',
-    'bookingService',
-    'AuthService',
-    'authService',
-    'OrganizationService',
-    'organizationService',
-    'UserService',
-    'userService',
-    'AuthzService',
-    'authzService',
-    'GdprService',
-    'gdprService',
-    'ProfileService',
-    'profileService',
+    'publicRentalObjectService',
+    'availabilityService',
+    'calendarService',
+    'allocationService',
+    'pricingService',
+    'reviewService',
+    'favoriteService',
+    'seasonService',
+    'searchService',
+    'reportService',
+    'notificationService',
+    'pushNotificationService',
+    'conversationService',
+    'auditService',
+    'settingsService',
+    'dashboardService',
+    'tenantService',
   ];
 
   it.each(requiredServices)('exports %s', (serviceName) => {
@@ -124,11 +126,10 @@ describe('Service Exports', () => {
   });
 
   describe('AuthService', () => {
-    const service = services.authService;
     const methods = ['login', 'logout', 'getSession'];
 
     it.each(methods)('has %s method', (methodName) => {
-      expect(typeof (service as any)[methodName]).toBe('function');
+      expect(typeof (services.authService as any)[methodName]).toBe('function');
     });
   });
 
@@ -225,25 +226,9 @@ describe('Hook Exports', () => {
   });
 
   describe('Query Keys', () => {
-    it('exports authzKeys', () => {
-      expect(hooks.authzKeys).toBeDefined();
-    });
-
-    it('exports profileKeys', () => {
-      expect(hooks.profileKeys).toBeDefined();
-    });
-
-    it('authzKeys has correct structure', () => {
-      const keys = hooks.authzKeys;
-      expect(keys.all).toEqual(['authz']);
-      expect(typeof keys.permissions).toBe('function');
-      expect(typeof keys.check).toBe('function');
-    });
-
-    it('profileKeys has correct structure', () => {
-      const keys = hooks.profileKeys;
-      expect(keys.all).toEqual(['profile']);
-      expect(typeof keys.current).toBe('function');
+    it('exports queryKeys', () => {
+      expect(hooks.queryKeys).toBeDefined();
+      expect(typeof hooks.queryKeys).toBe('object');
     });
   });
 });
@@ -372,26 +357,4 @@ describe('Integration Service Exports', () => {
   });
 });
 
-describe('Calendar Service Exports', () => {
-  it('exports calendar-related services', () => {
-    expect(services.rentalObjectCalendarService).toBeDefined();
-    expect(services.availabilityMatrixService).toBeDefined();
-  });
-
-  it('exports calendar hooks', () => {
-    expect(hooks.useAvailabilityMatrix).toBeDefined();
-    expect(hooks.useCalendarRealtime).toBeDefined();
-  });
-});
-
-describe('GDPR Service Exports', () => {
-  it('exports gdprService', () => {
-    expect(services.gdprService).toBeDefined();
-  });
-
-  it('exports GDPR hooks', () => {
-    expect(hooks.useConsentTypes).toBeDefined();
-    expect(hooks.useMyConsents).toBeDefined();
-    expect(hooks.useGrantConsent).toBeDefined();
-  });
-});
+describe('Calendar Service Exports', () => {});

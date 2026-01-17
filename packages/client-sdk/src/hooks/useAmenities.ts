@@ -6,16 +6,13 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type {
-  AmenityDTO,
-  AmenityGroupDTO,
-} from '@digilist/types';
+import { queryKeys } from './query-keys';
+import { amenitiesService } from '../services';
 import type {
   CreateAmenityRequest,
   UpdateAmenityRequest,
   AssignAmenitiesRequest,
 } from '../services/amenities.service';
-import { useApiClient } from './useApiClient';
 
 // Query keys factory
 export const amenitiesKeys = {
@@ -32,12 +29,10 @@ export const amenitiesKeys = {
  * List all amenities
  */
 export function useAmenities() {
-  const { amenities } = useApiClient();
-
   return useQuery({
     queryKey: amenitiesKeys.list(),
     queryFn: async () => {
-      const response = await amenities.list();
+      const response = await amenitiesService.list();
       return response.data;
     },
   });
@@ -47,12 +42,10 @@ export function useAmenities() {
  * List amenities grouped by category
  */
 export function useAmenitiesGrouped() {
-  const { amenities } = useApiClient();
-
   return useQuery({
     queryKey: amenitiesKeys.grouped(),
     queryFn: async () => {
-      const response = await amenities.listGrouped();
+      const response = await amenitiesService.listGrouped();
       return response.data;
     },
   });
@@ -62,12 +55,10 @@ export function useAmenitiesGrouped() {
  * Get single amenity
  */
 export function useAmenity(id: string) {
-  const { amenities } = useApiClient();
-
   return useQuery({
     queryKey: amenitiesKeys.detail(id),
     queryFn: async () => {
-      const response = await amenities.get(id);
+      const response = await amenitiesService.get(id);
       return response.data;
     },
     enabled: !!id,
@@ -78,12 +69,10 @@ export function useAmenity(id: string) {
  * Get amenities for rental object
  */
 export function useRentalObjectAmenities(rentalObjectId: string) {
-  const { amenities } = useApiClient();
-
   return useQuery({
     queryKey: amenitiesKeys.rentalObject(rentalObjectId),
     queryFn: async () => {
-      const response = await amenities.getForRentalObject(rentalObjectId);
+      const response = await amenitiesService.getForRentalObject(rentalObjectId);
       return response.data;
     },
     enabled: !!rentalObjectId,
@@ -94,14 +83,12 @@ export function useRentalObjectAmenities(rentalObjectId: string) {
  * Create amenity (admin only)
  */
 export function useCreateAmenity() {
-  const { amenities } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateAmenityRequest) => amenities.create(data),
+    mutationFn: (data: CreateAmenityRequest) => amenitiesService.create(data),
     onSuccess: () => {
-      // Invalidate all amenity queries
-      queryClient.invalidateQueries({ queryKey: amenitiesKeys.all });
+      queryClient.invalidateQueries({ queryKey: amenitiesKeys.lists() });
     },
   });
 }
@@ -110,16 +97,14 @@ export function useCreateAmenity() {
  * Update amenity (admin only)
  */
 export function useUpdateAmenity() {
-  const { amenities } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateAmenityRequest }) =>
-      amenities.update(id, data),
-    onSuccess: (_, variables) => {
-      // Invalidate specific amenity and list
-      queryClient.invalidateQueries({ queryKey: amenitiesKeys.detail(variables.id) });
+      amenitiesService.update(id, data),
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: amenitiesKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: amenitiesKeys.detail(id) });
     },
   });
 }
@@ -128,33 +113,27 @@ export function useUpdateAmenity() {
  * Delete amenity (admin only)
  */
 export function useDeleteAmenity() {
-  const { amenities } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => amenities.deleteById(id),
+    mutationFn: (id: string) => amenitiesService.deleteById(id),
     onSuccess: () => {
-      // Invalidate all amenity queries
-      queryClient.invalidateQueries({ queryKey: amenitiesKeys.all });
+      queryClient.invalidateQueries({ queryKey: amenitiesKeys.lists() });
     },
   });
 }
 
 /**
- * Assign amenities to rental object (admin only)
+ * Assign amenities to rental object
  */
 export function useAssignAmenities() {
-  const { amenities } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ rentalObjectId, data }: { rentalObjectId: string; data: AssignAmenitiesRequest }) =>
-      amenities.assignToRentalObject(rentalObjectId, data),
-    onSuccess: (_, variables) => {
-      // Invalidate rental object amenities
-      queryClient.invalidateQueries({ queryKey: amenitiesKeys.rentalObject(variables.rentalObjectId) });
-      // Invalidate rental object details
-      queryClient.invalidateQueries({ queryKey: ['rental-objects', 'detail', variables.rentalObjectId] });
+      amenitiesService.assignToRentalObject(rentalObjectId, data),
+    onSuccess: (_, { rentalObjectId }) => {
+      queryClient.invalidateQueries({ queryKey: amenitiesKeys.rentalObject(rentalObjectId) });
     },
   });
 }

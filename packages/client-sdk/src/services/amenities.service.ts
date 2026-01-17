@@ -9,7 +9,7 @@ import type {
   AmenityDTO,
   AmenityGroupDTO,
   ProblemDetailsDTO,
-} from '@digilist/types';
+} from '@xala/contracts';
 
 export interface CreateAmenityRequest {
   code: string;
@@ -181,3 +181,6 @@ export class AmenitiesService {
     };
   }
 }
+
+// Export singleton instance
+export const amenitiesService = new AmenitiesService();
