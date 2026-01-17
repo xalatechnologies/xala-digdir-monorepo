@@ -96,7 +96,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+    <div data-testid="dashboard" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Welcome section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
@@ -121,7 +121,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
       </div>
 
       {/* Stats grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-4)' }}>
+      <div data-testid="stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-4)' }}>
         <StatCard
           title={t('orgAdmin.dashboard.pendingBookings')}
           value={stats?.pendingBookings ?? 0}

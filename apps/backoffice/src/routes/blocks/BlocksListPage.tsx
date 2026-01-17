@@ -148,7 +148,7 @@ export function BlocksListPage(): React.ReactElement {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+    <div data-testid="blocks-list" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>

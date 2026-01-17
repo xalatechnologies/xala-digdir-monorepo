@@ -447,7 +447,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>
+      <nav data-testid="sidebar-nav" style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>
         {filteredSections.map((section, sectionIndex) => (
           <div key={sectionIndex} style={{ marginBottom: 'var(--ds-spacing-6)' }}>
             {section.title && (

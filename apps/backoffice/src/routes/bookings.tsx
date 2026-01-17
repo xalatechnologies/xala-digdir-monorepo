@@ -497,7 +497,7 @@ export function BookingsPage() {
       </Drawer>
 
       {/* Main Content Area */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', flex: 1, overflow: 'hidden' }}>
+      <div data-testid="bookings-list" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', flex: 1, overflow: 'hidden' }}>
         {/* Status Tabs */}
         <div style={{
           display: 'flex',

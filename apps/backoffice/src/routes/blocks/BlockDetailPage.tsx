@@ -117,7 +117,7 @@ export function BlockDetailPage(): React.ReactElement {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+    <div data-testid="block-detail" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Breadcrumbs */}
       <Breadcrumb
         breadcrumbs={[
