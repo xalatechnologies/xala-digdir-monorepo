@@ -1,161 +1,256 @@
 /**
  * Packages Step Component
- * For event packages and pricing tiers
+ * For configuring additional packages (experiences only)
  */
 
 import { useT } from '@xala/i18n';
-import { Textfield, Textarea, Heading, Paragraph, Button, Alert, NativeSelect } from '@xala/ds';
-import type { RentalObject, RentalObjectPackage } from '../../../types';
+import {
+  Heading,
+  Paragraph,
+  Alert,
+  Card,
+  Textfield,
+  Textarea,
+  Checkbox,
+  Button,
+  Badge,
+  PlusIcon,
+  TrashIcon,
+  CreditCardIcon,
+} from '@xala/ds';
+import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
 
-interface PackagesStepProps {
-  data: Partial<RentalObject>;
-  onChange: (data: Partial<RentalObject>) => void;
-  errors: string[];
+export interface PackagesStepProps {
+  wizard: UseRentalObjectWizardReturn;
 }
 
-export function PackagesStep({ data, onChange, errors }: PackagesStepProps): React.ReactElement {
-  const t = useT();
-  const packages = data.packages || [];
+interface Package {
+  id: string;
+  name: string;
+  description: string;
+  price: number; // in NOK øre
+  includedInBasePrice: boolean;
+}
 
-  const addPackage = (): void => {
-    const newPackage: RentalObjectPackage = {
+export function PackagesStep({ wizard }: PackagesStepProps) {
+  const t = useT();
+  const { formData, updateFormData, errors } = wizard;
+  const currentStepErrors = errors['packages'] || [];
+
+  const packages = (formData.packages || []) as Package[];
+
+  const addPackage = () => {
+    const newPackage: Package = {
       id: `pkg-${Date.now()}`,
       name: '',
+      description: '',
       price: 0,
-      currency: 'NOK',
+      includedInBasePrice: false,
     };
-    onChange({ packages: [...packages, newPackage] });
+    updateFormData({ packages: [...packages, newPackage] });
   };
 
-  const updatePackage = (index: number, updates: Partial<RentalObjectPackage>): void => {
-    const updated = packages.map((pkg, i) =>
-      i === index ? { ...pkg, ...updates } : pkg
-    );
-    onChange({ packages: updated });
+  const removePackage = (id: string) => {
+    updateFormData({ packages: packages.filter((pkg) => pkg.id !== id) });
   };
 
-  const removePackage = (index: number): void => {
-    onChange({ packages: packages.filter((_, i) => i !== index) });
+  const updatePackage = (id: string, field: keyof Package, value: string | number | boolean) => {
+    updateFormData({
+      packages: packages.map((pkg) =>
+        pkg.id === id ? { ...pkg, [field]: value } : pkg
+      ),
+    });
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      <div>
-        <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {t('rentalObjects.step.packages.title')}
-        </Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('rentalObjects.step.packages.description')}
-        </Paragraph>
-      </div>
+    <Card
+      style={{
+        padding: 'var(--ds-spacing-6)',
+        backgroundColor: 'var(--ds-color-neutral-surface-default)',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Header */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-3)',
+              marginBottom: 'var(--ds-spacing-2)',
+            }}
+          >
+            <CreditCardIcon
+              style={{
+                width: '2rem',
+                height: '2rem',
+                color: 'var(--ds-color-accent-text-default)',
+              }}
+              aria-hidden="true"
+            />
+            <Heading level={2} data-size="md" style={{ margin: 0 }}>
+              {t('wizard.step.packages')}
+            </Heading>
+          </div>
+          <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            {t('rentalObjects.packagesDescription')}
+          </Paragraph>
+        </div>
 
-      {errors.length > 0 && (
-        <Alert severity="danger">
-          <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
-            {errors.map((error, i) => (
-              <li key={i}>{error}</li>
+        {/* Error Display */}
+        {currentStepErrors.length > 0 && (
+          <Alert severity="danger">
+            <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
+              {currentStepErrors.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+
+        {/* Packages List */}
+        {packages.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+            {packages.map((pkg, index) => (
+              <div
+                key={pkg.id}
+                style={{
+                  padding: 'var(--ds-spacing-5)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                  border: '1px solid var(--ds-color-neutral-border-subtle)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                }}
+              >
+                {/* Package Header */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 'var(--ds-spacing-4)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <Badge color="info" size="sm">
+                      {t('form.packages.package')} {index + 1}
+                    </Badge>
+                    {pkg.includedInBasePrice && (
+                      <Badge color="success" size="sm">
+                        {t('form.packages.included')}
+                      </Badge>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="tertiary"
+                    size="sm"
+                    color="danger"
+                    onClick={() => removePackage(pkg.id)}
+                    aria-label={t('form.packages.removePackage')}
+                  >
+                    <TrashIcon
+                      style={{ width: '1rem', height: '1rem' }}
+                      aria-hidden="true"
+                    />
+                    {t('form.packages.remove')}
+                  </Button>
+                </div>
+
+                {/* Package Fields */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                  <Textfield
+                    label={t('form.packages.name')}
+                    value={pkg.name}
+                    onChange={(e) => updatePackage(pkg.id, 'name', e.target.value)}
+                    required
+                    placeholder={t('form.packages.namePlaceholder')}
+                  />
+
+                  <Textarea
+                    label={t('form.packages.description')}
+                    value={pkg.description}
+                    onChange={(e) => updatePackage(pkg.id, 'description', e.target.value)}
+                    rows={3}
+                    placeholder={t('form.packages.descriptionPlaceholder')}
+                  />
+
+                  <Textfield
+                    label={t('form.packages.price')}
+                    type="number"
+                    value={pkg.price.toString()}
+                    onChange={(e) =>
+                      updatePackage(pkg.id, 'price', e.target.value ? parseInt(e.target.value, 10) : 0)
+                    }
+                    min={0}
+                    step={100}
+                    placeholder="0"
+                    description={t('form.packages.priceDescription')}
+                  />
+
+                  <Checkbox
+                    checked={pkg.includedInBasePrice}
+                    onChange={(e) => updatePackage(pkg.id, 'includedInBasePrice', e.target.checked)}
+                  >
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {t('form.packages.includedInBasePrice')}
+                    </span>
+                  </Checkbox>
+                </div>
+              </div>
             ))}
-          </ul>
-        </Alert>
-      )}
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: 'var(--ds-spacing-8)',
+              textAlign: 'center',
+              backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+              borderRadius: 'var(--ds-border-radius-md)',
+              border: '1px dashed var(--ds-color-neutral-border-subtle)',
+            }}
+          >
+            <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {t('form.packages.noPackages')}
+            </Paragraph>
+          </div>
+        )}
 
-      {/* Package list */}
-      {packages.map((pkg, index) => (
+        {/* Add Package Button */}
+        <div>
+          <Button
+            type="button"
+            variant="secondary"
+            size="md"
+            onClick={addPackage}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-2)',
+            }}
+          >
+            <PlusIcon
+              style={{ width: '1.25rem', height: '1.25rem' }}
+              aria-hidden="true"
+            />
+            {t('form.packages.addPackage')}
+          </Button>
+        </div>
+
+        {/* Info Message */}
         <div
-          key={pkg.id}
           style={{
             padding: 'var(--ds-spacing-4)',
-            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+            backgroundColor: 'var(--ds-color-info-surface-default)',
+            borderLeft: '4px solid var(--ds-color-info-border-default)',
             borderRadius: 'var(--ds-border-radius-md)',
-            border: '1px solid var(--ds-color-neutral-border-subtle)',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-4)' }}>
-            <Heading level={4} data-size="xs">
-              {t('rentalObjects.package')} {index + 1}
-            </Heading>
-            <Button
-              type="button"
-              variant="tertiary"
-              color="danger"
-              size="sm"
-              onClick={() => removePackage(index)}
-            >
-              {t('common.delete')}
-            </Button>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            <Textfield
-              label={t('rentalObjects.field.packageName')}
-              value={pkg.name}
-              onChange={(e) => updatePackage(index, { name: e.target.value })}
-              required
-            />
-
-            <Textarea
-              label={t('rentalObjects.field.packageDescription')}
-              value={pkg.description || ''}
-              onChange={(e) => updatePackage(index, { description: e.target.value })}
-              rows={2}
-            />
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
-              <Textfield
-                type="number"
-                label={t('rentalObjects.field.price')}
-                value={pkg.price.toString()}
-                onChange={(e) => updatePackage(index, { price: parseFloat(e.target.value) || 0 })}
-                min={0}
-                required
-              />
-
-              <NativeSelect
-                label={t('rentalObjects.field.currency')}
-                value={pkg.currency}
-                onChange={(e) => updatePackage(index, { currency: e.target.value })}
-              >
-                <option value="NOK">NOK</option>
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-              </NativeSelect>
-
-              <Textfield
-                type="number"
-                label={t('rentalObjects.field.maxParticipants')}
-                value={pkg.maxParticipants?.toString() || ''}
-                onChange={(e) => updatePackage(index, { maxParticipants: parseInt(e.target.value, 10) || undefined })}
-                min={1}
-              />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
-              <Textfield
-                type="number"
-                label={t('rentalObjects.field.duration')}
-                value={pkg.duration?.toString() || ''}
-                onChange={(e) => updatePackage(index, { duration: parseInt(e.target.value, 10) || undefined })}
-                min={1}
-              />
-
-              <NativeSelect
-                label={t('rentalObjects.field.durationUnit')}
-                value={pkg.durationUnit || 'hours'}
-                onChange={(e) => updatePackage(index, { durationUnit: e.target.value as 'minutes' | 'hours' | 'days' })}
-              >
-                <option value="minutes">{t('timeUnit.minutes')}</option>
-                <option value="hours">{t('timeUnit.hours')}</option>
-                <option value="days">{t('timeUnit.days')}</option>
-              </NativeSelect>
-            </div>
-          </div>
+          <Paragraph data-size="sm" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
+            <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>💡</span>
+            <span>{t('rentalObjects.packagesInfo')}</span>
+          </Paragraph>
         </div>
-      ))}
-
-      {/* Add package button */}
-      <Button type="button" variant="secondary" onClick={addPackage}>
-        + {t('rentalObjects.addPackage')}
-      </Button>
-    </div>
+      </div>
+    </Card>
   );
 }
