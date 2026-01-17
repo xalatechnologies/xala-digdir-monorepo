@@ -1,0 +1,163 @@
+name: Backoffice E2E Quality
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Nightly at 3 AM UTC
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Backoffice URL to test'
+        default: 'https://backoffice.digilist.no'
+        required: true
+
+env:
+  BACKOFFICE_URL: ${{ github.event.inputs.target_url || 'https://backoffice.digilist.no' }}
+  ADMIN_EMAIL: ${{ secrets.TEST_ADMIN_EMAIL }}
+  ADMIN_PASSWORD: ${{ secrets.TEST_ADMIN_PASSWORD }}
+  SAKSBEHANDLER_EMAIL: ${{ secrets.TEST_SAKSBEHANDLER_EMAIL }}
+  SAKSBEHANDLER_PASSWORD: ${{ secrets.TEST_SAKSBEHANDLER_PASSWORD }}
+
+jobs:
+  smoke:
+    name: 🚀 Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright
+        run: pnpm playwright install --with-deps chromium
+      - name: Run smoke tests
+        run: pnpm playwright test --config=playwright.backoffice.config.ts --project=smoke
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: smoke-report
+          path: playwright-report/backoffice/
+
+  sidebar-crawl:
+    name: 🔍 Sidebar Crawl
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: smoke
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright
+        run: pnpm playwright install --with-deps chromium
+      - name: Run sidebar crawl
+        run: pnpm playwright test --config=playwright.backoffice.config.ts tests/e2e/backoffice/sidebar-crawl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sidebar-crawl-report
+          path: playwright-report/backoffice/
+
+  rbac:
+    name: 🔒 RBAC Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: smoke
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright
+        run: pnpm playwright install --with-deps chromium
+      - name: Run RBAC tests
+        run: pnpm playwright test --config=playwright.backoffice.config.ts tests/e2e/backoffice/rbac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rbac-report
+          path: playwright-report/backoffice/
+
+  workflows:
+    name: 📋 Workflow Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: rbac
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright
+        run: pnpm playwright install --with-deps chromium
+      - name: Run workflow tests
+        run: pnpm playwright test --config=playwright.backoffice.config.ts tests/e2e/backoffice/workflows
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workflows-report
+          path: playwright-report/backoffice/
+
+  compliance:
+    name: ✅ Compliance Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: smoke
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright
+        run: pnpm playwright install --with-deps chromium
+      - name: Run compliance tests
+        run: pnpm playwright test --config=playwright.backoffice.config.ts tests/e2e/backoffice/compliance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compliance-report
+          path: playwright-report/backoffice/
+
+  summary:
+    name: 📊 Summary
+    runs-on: ubuntu-latest
+    needs: [smoke, sidebar-crawl, rbac, workflows, compliance]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          echo "# Backoffice E2E Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Smoke | ${{ needs.smoke.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Sidebar Crawl | ${{ needs.sidebar-crawl.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| RBAC | ${{ needs.rbac.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflows | ${{ needs.workflows.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Compliance | ${{ needs.compliance.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Target: ${{ env.BACKOFFICE_URL }}" >> $GITHUB_STEP_SUMMARY
