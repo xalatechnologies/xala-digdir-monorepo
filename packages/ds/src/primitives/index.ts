@@ -122,5 +122,8 @@ export type { LayoutGridProps } from './layout-grid';
 export { FormField } from './FormField';
 export type { FormFieldProps } from './FormField';
 
-export { Progress } from './progress';
-export type { ProgressProps } from './progress';
+export { Progress } from './Progress';
+export type { ProgressProps } from './Progress';
+
+export { CodeBlock } from './CodeBlock';
+export type { CodeBlockProps } from './CodeBlock';

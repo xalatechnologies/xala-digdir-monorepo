@@ -94,8 +94,8 @@ function getDefaultFormData(category?: RentalObjectCategory): Partial<RentalObje
 
 export function useRentalObjectWizard(
   options: UseRentalObjectWizardOptions = {}
-):
-  const t = useT(); UseRentalObjectWizardReturn {
+): UseRentalObjectWizardReturn {
+  const t = useT();
   const { slug, initialCategory, onComplete } = options;
   const navigate = useNavigate();
   const isEditMode = !!slug;

@@ -579,9 +579,18 @@ importers:
       '@digdir/designsystemet-react':
         specifier: ^1.9.0
         version: 1.9.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@digilist/client-sdk':
+        specifier: workspace:*
+        version: link:../client-sdk
+      '@xala/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../ds-themes
+      '@xala/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       mapbox-gl:
         specifier: ^3.17.0
         version: 3.17.0
@@ -594,6 +603,9 @@ importers:
       react-map-gl:
         specifier: ^8.1.0
         version: 8.1.0(mapbox-gl@3.17.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.22.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/mapbox-gl':
         specifier: ^3.4.1

@@ -20,7 +20,7 @@ import {
   SettingsIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { GlobalSearch } from '../GlobalSearch';
+// import { GlobalSearch } from '../GlobalSearch'; // TODO: Implement GlobalSearch component
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -34,11 +34,11 @@ export function AppLayout() {
   );
   
   const pageTitles: Record<string, string> = {
-    '/': 'Dashboard',
-    '/bookings': 'Bookinger',
-    '/reports': 'Rapporter',
-    '/users': 'Brukere',
-    '/settings': t('ui.settings') || 'Innstillinger',
+    '/': t('nav.dashboard'),
+    '/bookings': t('nav.bookings'),
+    '/reports': t('nav.reports'),
+    '/users': t('nav.users'),
+    '/settings': t('nav.settings'),
   };
   
   const title = pageTitles[location.pathname] ?? '';
@@ -57,42 +57,42 @@ export function AppLayout() {
   const bottomNavItems: BottomNavigationItem[] = [
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: t('nav.dashboard'),
       icon: <HomeIcon />,
       href: '/',
       active: location.pathname === '/',
     },
     {
       id: 'rental-objects',
-      label: 'Utleieobjekter',
+      label: t('nav.rentalObjects'),
       icon: <BuildingIcon />,
       href: '/rental-objects',
       active: location.pathname.startsWith('/rental-objects'),
     },
     {
       id: 'calendar',
-      label: 'Kalender',
+      label: t('nav.calendar'),
       icon: <CalendarIcon />,
       href: '/calendar',
       active: location.pathname.startsWith('/calendar'),
     },
     {
       id: 'bookings',
-      label: 'Bookinger',
+      label: t('nav.bookings'),
       icon: <BookOpenIcon />,
       href: '/bookings',
       active: location.pathname.startsWith('/bookings'),
     },
     {
       id: 'messages',
-      label: 'Meldinger',
+      label: t('nav.messages'),
       icon: <MessageIcon />,
       href: '/messages',
       active: location.pathname.startsWith('/messages'),
     },
     {
       id: 'settings',
-      label: t('ui.settings') || 'Innstillinger',
+      label: t('nav.settings'),
       icon: <SettingsIcon />,
       href: '/settings',
       active: location.pathname.startsWith('/settings'),
@@ -121,15 +121,17 @@ export function AppLayout() {
         <Header title={title} />
 
         {/* Mobile Search - Below header */}
+        {/* TODO: Re-enable when GlobalSearch component is implemented
         {isMobile && (
           <div style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <GlobalSearch
-              placeholder="Søk i bookinger, lokaler, organisasjoner..."
+              placeholder={t('common.searchPlaceholder')}
               showShortcut={false}
               enableGlobalShortcut={false}
             />
           </div>
         )}
+        */}
 
         <main
           style={{

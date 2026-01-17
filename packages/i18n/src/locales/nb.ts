@@ -51,12 +51,14 @@ export const nb: Record<string, string> = {
   'common.tryDifferentSearch': 'Prøv å endre søkekriteriene',
   'common.notifications': 'Varsler',
   'common.brandName': 'DIGILIST',
+  'common.searchPlaceholder': 'Søk i bookinger, lokaler, organisasjoner...',
 
   // Navigation
   'nav.home': 'Hjem',
   'nav.menu': 'Meny',
   'nav.dashboard': 'Dashboard',
   'nav.listings': 'Lokaler',
+  'nav.rentalObjects': 'Utleieobjekter',
   'nav.calendar': 'Kalender',
   'nav.requests': 'Søknader',
   'nav.bookings': 'Bookinger',

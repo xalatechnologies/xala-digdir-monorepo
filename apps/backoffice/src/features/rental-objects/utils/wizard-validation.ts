@@ -21,8 +21,8 @@ export function validateStep(
   stepId: WizardStepId,
   data: Partial<RentalObject>,
   category: RentalObjectCategory
-):
-  const t = useT(); StepValidationResult {
+): StepValidationResult {
+  const t = useT();
   const errors: ValidationError[] = [];
 
   switch (stepId) {

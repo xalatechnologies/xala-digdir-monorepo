@@ -47,6 +47,12 @@
 export * from '@digdir/designsystemet-react';
 
 // =============================================================================
+// Custom Primitives
+// =============================================================================
+export { NativeSelect } from './primitives/NativeSelect';
+export type { NativeSelectProps } from './primitives/NativeSelect';
+
+// =============================================================================
 // Provider
 // =============================================================================
 export * from './provider';
@@ -275,6 +281,7 @@ export {
   StorageIcon,
   FormField,
   Progress,
+  CodeBlock,
 } from './primitives';
 export type {
   ContainerProps,
@@ -287,6 +294,7 @@ export type {
   LayoutGridProps,
   FormFieldProps,
   ProgressProps,
+  CodeBlockProps,
 } from './primitives';
 
 // Blocks - Business logic components

@@ -50,12 +50,14 @@ export const en: Record<string, string> = {
   'common.tryDifferentSearch': 'Try different search criteria',
   'common.notifications': 'Notifications',
   'common.brandName': 'DIGILIST',
+  'common.searchPlaceholder': 'Search in bookings, listings, organizations...',
 
   // Navigation
   'nav.home': 'Home',
   'nav.menu': 'Menu',
   'nav.dashboard': 'Dashboard',
   'nav.listings': 'Listings',
+  'nav.rentalObjects': 'Rental Objects',
   'nav.calendar': 'Calendar',
   'nav.requests': 'Requests',
   'nav.bookings': 'Bookings',
