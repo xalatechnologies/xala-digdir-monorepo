@@ -117,6 +117,47 @@ export {
   usePaymentReconciliation,
 } from './use-bookings';
 
+// Booking Contracts hooks (Contract-First)
+export {
+  bookingContractsKeys,
+  usePricePreview,
+  useRecurringPreview,
+  usePreviewPriceMutation,
+  usePreviewRecurringMutation,
+} from './use-booking-contracts';
+
+// Calendar Contracts hooks (Contract-First)
+export {
+  calendarContractsKeys,
+  useCalendar as useCalendarContracts,
+  useBlocks as useBlocksContracts,
+  useCreateBlock as useCreateBlockContract,
+  useDeleteBlock as useDeleteBlockContract,
+} from './use-calendar-contracts';
+
+// Advanced Contracts hooks (Contract-First)
+export {
+  advancedContractsKeys,
+  useHelpTOC,
+  useHelpArticle,
+  useHelpSearch,
+  useGlobalSearch as useGlobalSearchContract,
+  useGlobalSearchMutation,
+  useCreateDSAR,
+  useDSAR,
+  useUpdateConsent as useUpdateConsentContract,
+  useReportTemplates,
+  useGenerateReport,
+  useReport,
+  useReportsList,
+  useSeason as useSeasonContract,
+  useApplyForSeason,
+  useSeasonAllocations,
+  useSeasonsList,
+  useOrgContext,
+  useSetOrgContext,
+} from './use-advanced-contracts';
+
 // Discount Code hooks
 export {
   useDiscountCodes,
@@ -528,6 +569,32 @@ export {
   useBulkDeactivateUsers,
   useBulkAssignRole,
 } from './use-tenant-admin-users';
+
+// Scope Assignment hooks (Case handler scope delegation)
+export {
+  scopeAssignmentKeys,
+  useScopeAssignments,
+  useScopeAssignment,
+  useUserScopes,
+  useEffectiveScope,
+  useScopeDelegationTree,
+  useCreateScopeAssignment,
+  useUpdateScopeAssignment,
+  useDeleteScopeAssignment,
+  useAssignScopes,
+  useAddRentalObjectScope,
+  useRemoveRentalObjectScope,
+  useSetOrganizationScope,
+  useSetCategoryScope,
+  useSetGlobalScope,
+  useClearScopes,
+  useSuspendScope,
+  useReactivateScope,
+  useValidateAccess,
+  useBulkAssignScopes,
+  useBulkRemoveScopes,
+} from './use-scope-assignment';
+
 // RBAC hooks (Role-Based Access Control)
 export {
   // Capabilities

@@ -19,6 +19,11 @@ import { BookingPricingStep, type PriceGroup, type AdditionalService } from './c
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
 import type { BookingVisibility } from './components/BookingVisibilitySelector';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
+import { BookingModeSelector } from './components/BookingModeSelector';
+import { RecurringBuilder, type RecurringPattern } from './components/RecurringBuilder';
+import { RecurringPreview } from './components/RecurringPreview';
+import { ConflictResolver, type ConflictResolution, type AlternativeSlot } from './components/ConflictResolver';
+import type { BookingMode, RecurringConstraintsDTO, RecurringOccurrenceDTO, RecurringSummary } from '@digilist/client-sdk';
 
 // =============================================================================
 // Icons
@@ -89,6 +94,10 @@ export interface BookingWidgetPlacementProps {
   listingTitle?: string;
   openingHours?: Record<number, OpeningHours>;
   busySlots?: Array<{ date: string; startTime: string; endTime: string }>;
+  /** Available booking modes for this rental object */
+  availableBookingModes?: BookingMode[];
+  /** Recurring booking constraints */
+  recurringConstraints?: RecurringConstraintsDTO;
 }
 
 // =============================================================================
@@ -206,6 +215,8 @@ export function BookingWidgetPlacement({
   listingTitle,
   openingHours = DEFAULT_OPENING_HOURS,
   busySlots = [],
+  availableBookingModes = ['SINGLE_SLOT'],
+  recurringConstraints,
 }: BookingWidgetPlacementProps): React.ReactElement {
   const t = useT();
   const [isMobile, setIsMobile] = React.useState(false);
@@ -221,6 +232,25 @@ export function BookingWidgetPlacement({
   const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
   const [visibility, setVisibility] = React.useState<BookingVisibility>('PUBLIC_TITLE');
+
+  // Booking mode state
+  const [bookingMode, setBookingMode] = React.useState<BookingMode>(availableBookingModes[0] ?? 'SINGLE_SLOT');
+
+  // Recurring booking state
+  const [recurringPattern, setRecurringPattern] = React.useState<RecurringPattern>({
+    frequency: 'WEEKLY',
+    interval: 1,
+    weekdays: [],
+    endCondition: { type: 'AFTER_OCCURRENCES', occurrences: 10 },
+  });
+  const [recurringBaseSlot, setRecurringBaseSlot] = React.useState<{ startTime: string; endTime: string; date: string } | null>(null);
+  const [recurringOccurrences, setRecurringOccurrences] = React.useState<RecurringOccurrenceDTO[]>([]);
+  const [recurringSummary, setRecurringSummary] = React.useState<RecurringSummary | undefined>(undefined);
+  const [isLoadingRecurringPreview, setIsLoadingRecurringPreview] = React.useState(false);
+  const [recurringPreviewError, setRecurringPreviewError] = React.useState<string | undefined>(undefined);
+  const [selectedRecurringIndices, setSelectedRecurringIndices] = React.useState<Set<number>>(new Set());
+  const [conflictResolutions, setConflictResolutions] = React.useState<ConflictResolution[]>([]);
+  const [conflictAlternatives, setConflictAlternatives] = React.useState<Map<number, AlternativeSlot[]>>(new Map());
   
   // Use real authentication state with flow context support
   const { isAuthenticated: authIsAuthenticated, user, login: authLogin, loginWithFlowContext } = useAuth();
@@ -389,6 +419,27 @@ export function BookingWidgetPlacement({
     setSlotDetails(prev => ({
       ...prev,
       [slotKey]: { ...prev[slotKey], duration } as SlotDetail,
+    }));
+  };
+
+  const handleChangeAttendees = (slotKey: string, attendees: string): void => {
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: { ...prev[slotKey], attendees } as SlotDetail,
+    }));
+  };
+
+  const handleChangeActivityType = (slotKey: string, activityType: string): void => {
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: { ...prev[slotKey], activityType } as SlotDetail,
+    }));
+  };
+
+  const handleChangePurpose = (slotKey: string, purpose: string): void => {
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: { ...prev[slotKey], purpose } as SlotDetail,
     }));
   };
 
@@ -656,7 +707,17 @@ export function BookingWidgetPlacement({
           {/* Step 0: Calendar Selection */}
           {currentStep === 0 && (
             <>
-              {/* Calendar Header */}
+              {/* Booking Mode Selector (Single / Recurring / Seasonal) */}
+              <BookingModeSelector
+                value={bookingMode}
+                onChange={setBookingMode}
+                availableModes={availableBookingModes}
+                recurringConstraints={recurringConstraints}
+              />
+
+              {/* SINGLE_SLOT Mode: Calendar Header */}
+              {bookingMode === 'SINGLE_SLOT' && (
+              <>
               <div
                 style={{
                   padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
@@ -889,6 +950,256 @@ export function BookingWidgetPlacement({
                   </div>
                 )}
               </div>
+              </>
+              )}
+
+              {/* RECURRING Mode: Pattern Builder + Preview */}
+              {bookingMode === 'RECURRING' && (
+                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+                  {/* Step 1: Select base slot */}
+                  {!recurringBaseSlot && (
+                    <div style={{ padding: 'var(--ds-spacing-4)' }}>
+                      <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                        Velg første tidspunkt
+                      </Heading>
+                      <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        Klikk på et tidspunkt i kalenderen for å velge basistidspunktet for gjentakende booking.
+                      </Paragraph>
+                      {/* Calendar for selecting base slot */}
+                      <div
+                        style={{
+                          padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+                          gap: 'var(--ds-spacing-3)',
+                        }}
+                      >
+                        <Button type="button" variant="tertiary" data-size="sm" onClick={goToToday}>
+                          I dag
+                        </Button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                          <button
+                            type="button"
+                            onClick={() => navigateWeek('prev')}
+                            style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              width: '32px', height: '32px',
+                              border: '1px solid var(--ds-color-neutral-border-default)',
+                              borderRadius: 'var(--ds-border-radius-md)',
+                              backgroundColor: 'var(--ds-color-neutral-background-default)',
+                              cursor: 'pointer',
+                            }}
+                            aria-label="Forrige uke"
+                          >
+                            <ChevronLeftIcon size={16} />
+                          </button>
+                          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', minWidth: '180px', textAlign: 'center' }}>
+                            {getDateRangeString()}
+                          </Paragraph>
+                          <button
+                            type="button"
+                            onClick={() => navigateWeek('next')}
+                            style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              width: '32px', height: '32px',
+                              border: '1px solid var(--ds-color-neutral-border-default)',
+                              borderRadius: 'var(--ds-border-radius-md)',
+                              backgroundColor: 'var(--ds-color-neutral-background-default)',
+                              cursor: 'pointer',
+                            }}
+                            aria-label="Neste uke"
+                          >
+                            <ChevronRightIcon size={16} />
+                          </button>
+                        </div>
+                      </div>
+                      {/* Simplified slot picker for recurring base */}
+                      <div style={{ padding: 'var(--ds-spacing-4)', maxHeight: '300px', overflow: 'auto' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 'var(--ds-spacing-2)' }}>
+                          {calendarData.map((day, dayIdx) => (
+                            <div key={dayIdx} style={{ textAlign: 'center' }}>
+                              <Paragraph data-size="xs" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-1)' }}>
+                                {day.dayName}
+                              </Paragraph>
+                              <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: day.isToday ? 'var(--ds-color-accent-text-default)' : 'inherit' }}>
+                                {day.dayNumber}
+                              </Paragraph>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
+                                {day.slots.slice(0, 6).map((slot) => (
+                                  <button
+                                    key={`${dayIdx}-${slot.time}`}
+                                    type="button"
+                                    disabled={slot.status === 'unavailable' || slot.status === 'occupied'}
+                                    onClick={() => {
+                                      const slotDate = new Date(weekStart);
+                                      slotDate.setDate(weekStart.getDate() + dayIdx);
+                                      const [h, m] = slot.time.split(':').map(Number);
+                                      const endMins = ((h ?? 0) * 60 + (m ?? 0)) + 60;
+                                      const endH = Math.floor(endMins / 60);
+                                      const endM = endMins % 60;
+                                      const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+                                      setRecurringBaseSlot({
+                                        date: slotDate.toISOString().split('T')[0] ?? '',
+                                        startTime: slot.time,
+                                        endTime,
+                                      });
+                                    }}
+                                    style={{
+                                      padding: 'var(--ds-spacing-1)',
+                                      fontSize: 'var(--ds-font-size-xs)',
+                                      border: '1px solid var(--ds-color-neutral-border-default)',
+                                      borderRadius: 'var(--ds-border-radius-sm)',
+                                      backgroundColor: slot.status === 'available' ? 'var(--ds-color-success-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
+                                      cursor: slot.status === 'available' ? 'pointer' : 'not-allowed',
+                                      opacity: slot.status === 'unavailable' || slot.status === 'occupied' ? 0.5 : 1,
+                                    }}
+                                  >
+                                    {slot.time}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 2: Configure pattern */}
+                  {recurringBaseSlot && recurringOccurrences.length === 0 && (
+                    <div style={{ padding: 'var(--ds-spacing-4)', overflow: 'auto', flex: 1 }}>
+                      <RecurringBuilder
+                        baseSlot={recurringBaseSlot}
+                        constraints={recurringConstraints}
+                        value={recurringPattern}
+                        onChange={setRecurringPattern}
+                      />
+                      <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', marginTop: 'var(--ds-spacing-4)' }}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          data-size="sm"
+                          onClick={() => setRecurringBaseSlot(null)}
+                        >
+                          Tilbake
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          data-size="sm"
+                          onClick={() => {
+                            // TODO: Call API to get preview
+                            setIsLoadingRecurringPreview(true);
+                            // Simulate preview generation
+                            setTimeout(() => {
+                              const occurrences: RecurringOccurrenceDTO[] = [];
+                              const baseDate = new Date(recurringBaseSlot.date);
+                              const count = recurringPattern.endCondition.occurrences ?? 10;
+                              for (let i = 0; i < count; i++) {
+                                const occDate = new Date(baseDate);
+                                occDate.setDate(baseDate.getDate() + (i * 7));
+                                occurrences.push({
+                                  index: i,
+                                  startTime: `${occDate.toISOString().split('T')[0]}T${recurringBaseSlot.startTime}:00`,
+                                  endTime: `${occDate.toISOString().split('T')[0]}T${recurringBaseSlot.endTime}:00`,
+                                  status: Math.random() > 0.8 ? 'CONFLICT' : 'AVAILABLE',
+                                });
+                              }
+                              setRecurringOccurrences(occurrences);
+                              setRecurringSummary({
+                                totalOccurrences: occurrences.length,
+                                availableCount: occurrences.filter(o => o.status === 'AVAILABLE').length,
+                                conflictCount: occurrences.filter(o => o.status === 'CONFLICT').length,
+                                blockedCount: 0,
+                                blackoutCount: 0,
+                                totalPrice: occurrences.filter(o => o.status === 'AVAILABLE').length * 500,
+                                currency: 'NOK',
+                              });
+                              setSelectedRecurringIndices(new Set(occurrences.filter(o => o.status === 'AVAILABLE').map(o => o.index)));
+                              setIsLoadingRecurringPreview(false);
+                            }, 1000);
+                          }}
+                        >
+                          Generer forhåndsvisning
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 3: Preview occurrences */}
+                  {recurringBaseSlot && recurringOccurrences.length > 0 && (
+                    <div style={{ padding: 'var(--ds-spacing-4)', overflow: 'auto', flex: 1 }}>
+                      <RecurringPreview
+                        occurrences={recurringOccurrences}
+                        summary={recurringSummary}
+                        isLoading={isLoadingRecurringPreview}
+                        error={recurringPreviewError}
+                        selectedIndices={selectedRecurringIndices}
+                        onSelectionChange={setSelectedRecurringIndices}
+                        allowSelection={true}
+                      />
+                      {/* Conflict resolution if there are conflicts */}
+                      {recurringOccurrences.some(o => o.status === 'CONFLICT') && (
+                        <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
+                          <ConflictResolver
+                            conflicts={recurringOccurrences.filter(o => o.status === 'CONFLICT')}
+                            alternatives={conflictAlternatives}
+                            resolutions={conflictResolutions}
+                            onResolutionsChange={setConflictResolutions}
+                          />
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', marginTop: 'var(--ds-spacing-4)' }}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          data-size="sm"
+                          onClick={() => {
+                            setRecurringOccurrences([]);
+                            setRecurringSummary(undefined);
+                            setSelectedRecurringIndices(new Set());
+                          }}
+                        >
+                          Tilbake til mønster
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          data-size="sm"
+                          disabled={selectedRecurringIndices.size === 0}
+                          onClick={() => setCurrentStep(1)}
+                        >
+                          Fortsett med {selectedRecurringIndices.size} tidspunkter
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* SEASON_RENTAL Mode: Redirect to seasons page */}
+              {bookingMode === 'SEASON_RENTAL' && (
+                <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
+                  <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
+                    Sesongbooking
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    For å søke om fast tid i en hel sesong, gå til sesongbooking-siden.
+                  </Paragraph>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => {
+                      // Navigate to MinSide seasons page
+                      window.location.href = '/minside/seasons';
+                    }}
+                  >
+                    Gå til sesongbooking
+                  </Button>
+                </div>
+              )}
             </>
           )}
 
@@ -983,13 +1294,11 @@ export function BookingWidgetPlacement({
               selectedSlots={selectedSlots}
               slotDetails={slotDetails}
               weekStart={weekStart}
-              priceGroups={priceGroups}
-              additionalServices={additionalServices}
-              selectedPriceGroup={selectedPriceGroup}
-              selectedServices={selectedServices}
               onRemoveSlot={handleRemoveSlot}
-              onAdjustTime={handleAdjustTime}
               onChangeDuration={handleChangeDuration}
+              onChangeAttendees={handleChangeAttendees}
+              onChangeActivityType={handleChangeActivityType}
+              onChangePurpose={handleChangePurpose}
               lastUpdated={lastUpdated}
             />
           </div>

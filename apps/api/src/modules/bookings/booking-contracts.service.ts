@@ -8,6 +8,7 @@
  * Reference: packages/client-sdk/src/types/booking-contracts.ts
  */
 import { Injectable, Inject } from '../../core/decorators';
+import { BadRequestError } from '../../core/errors/problem-details';
 
 interface PricePreviewRequest {
   rentalObjectId: string;
@@ -44,10 +45,31 @@ export class BookingContractsService {
    * Returns PricePreviewDTO
    */
   async previewPrice(request: PricePreviewRequest): Promise<any> {
-    // TODO: Real pricing calculation
-    // For now, return minimal DTO structure
+    // Validate date range
+    const start = new Date(request.startDate);
+    const end = new Date(request.endDate);
+    
+    if (end < start) {
+      throw new BadRequestError('endDate must be after startDate');
+    }
+    
+    const daysDiff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysDiff > 365) {
+      throw new BadRequestError('Date range cannot exceed 365 days');
+    }
+    
+    // Validate org context
+    if (request.context === 'MEMBERSHIP_ORG' && !request.contextOrgId) {
+      throw new BadRequestError('contextOrgId is required when context is MEMBERSHIP_ORG');
+    }
+    
+    // TODO: Real pricing calculation with rental object lookup
+    // For now, return demo data with proper structure
     
     const basePriceCents = 50000; // 500 NOK
+    const discountPercent = request.context === 'MEMBERSHIP_ORG' ? 20 : 0;
+    const discountCents = Math.floor(basePriceCents * (discountPercent / 100));
+    
     const breakdown = [
       {
         label: 'Basispris (2 timer)',
@@ -56,18 +78,32 @@ export class BookingContractsService {
         description: 'Grunnpris for leie',
       },
     ];
+    
+    if (discountCents > 0) {
+      breakdown.push({
+        label: 'Medlemsrabatt (20%)',
+        amountCents: -discountCents,
+        type: 'DISCOUNT' as any,
+        description: 'Organisasjonsmedlem rabatt',
+      });
+    }
 
     return {
       rentalObjectId: request.rentalObjectId,
       basePriceCents,
       breakdown,
-      totalCents: basePriceCents,
+      totalCents: basePriceCents - discountCents,
       depositCents: 0,
       currency: 'NOK',
       pricingGroupApplied: request.context === 'MEMBERSHIP_ORG' ? 'ORG_MEMBER' : 'CITIZEN',
       context: request.context,
       contextOrgId: request.contextOrgId,
-      discountsApplied: [],
+      discountsApplied: discountCents > 0 ? [{
+        code: 'ORG_MEMBER',
+        name: 'Medlemsrabatt',
+        amountCents: discountCents,
+        reason: 'Organisasjonsmedlemskap',
+      }] : [],
     };
   }
 
@@ -76,11 +112,38 @@ export class BookingContractsService {
    * Returns RecurringPreviewDTO
    */
   async previewRecurring(request: RecurringPreviewRequest): Promise<any> {
-    // TODO: Real conflict detection
-    // For now, return minimal DTO structure with sample conflicts
+    // Validate date range
+    const start = new Date(request.startDate);
+    const end = new Date(request.endDate);
     
+    if (end < start) {
+      throw new BadRequestError('endDate must be after startDate');
+    }
+    
+    // Validate time range
+    const [startHour, startMin] = request.startTime.split(':').map(Number);
+    const [endHour, endMin] = request.endTime.split(':').map(Number);
+    const startMinutes = startHour * 60 + startMin;
+    const endMinutes = endHour * 60 + endMin;
+    
+    if (endMinutes <= startMinutes) {
+      throw new BadRequestError('endTime must be after startTime');
+    }
+    
+    // Validate weekly frequency has days
+    if (request.frequency === 'WEEKLY' && (!request.daysOfWeek || request.daysOfWeek.length === 0)) {
+      throw new BadRequestError('daysOfWeek is required for WEEKLY frequency');
+    }
+    
+    // Generate occurrences
     const occurrences = this.generateOccurrences(request);
     
+    if (occurrences.length === 0) {
+      throw new BadRequestError('No valid occurrences found for the given pattern');
+    }
+    
+    // TODO: Real conflict detection from database
+    // For now, simulate some conflicts
     const results = occurrences.map((date, index) => ({
       date,
       startTime: request.startTime,
@@ -130,7 +193,7 @@ export class BookingContractsService {
     const end = new Date(request.endDate);
     const occurrences: string[] = [];
     
-    let current = new Date(start);
+    const current = new Date(start);
     let count = 0;
     const maxOccurrences = request.maxOccurrences || 100;
 

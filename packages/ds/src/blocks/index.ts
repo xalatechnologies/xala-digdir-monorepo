@@ -253,3 +253,37 @@ export {
   ConsentSettings,
   DataSubjectRequestForm,
 } from './gdpr';
+
+// Help System Components
+export { HelpPanel } from './help';
+export type {
+  HelpPanelProps,
+  HelpLevel,
+  HelpCategory,
+  TooltipContent,
+  GuideContent,
+  FAQItem,
+} from './help';
+
+// Admin Components
+export {
+  ScopeSelector,
+  PermissionMatrix,
+  EffectivePermissionsView,
+  UserInviteForm,
+} from './admin';
+export type {
+  ScopeSelectorProps,
+  ScopeType as AdminScopeType,
+  ScopeAssignment,
+  RentalObject as ScopeRentalObject,
+  Organization as ScopeOrganization,
+  PermissionMatrixProps,
+  Permission,
+  Role as AdminRole,
+  EffectivePermissionsViewProps,
+  EffectivePermission,
+  PermissionSource,
+  UserInviteFormProps,
+  InviteUserFormData,
+} from './admin';

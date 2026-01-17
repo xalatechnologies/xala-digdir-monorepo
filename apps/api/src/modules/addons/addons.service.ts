@@ -12,23 +12,37 @@
  */
 
 import { eq, and } from 'drizzle-orm';
-import { db } from '../../database/connection';
 import { 
   addons,
   rentalObjectAddons,
   bookingAddons,
 } from '../../database/schema';
 import type { AddOnDTO, AddOnLineItemDTO, MoneyDTO } from '../../types/dtos';
-import { AuditService } from '../../core/audit.service';
+
+// AuditService interface for type safety
+interface AuditService {
+  log(params: {
+    tenantId: string;
+    userId: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    oldValue?: any;
+    newValue?: any;
+  }): Promise<void>;
+}
 
 export class AddOnsService {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(
+    private readonly db: any,
+    private readonly auditService: AuditService
+  ) {}
 
   /**
    * List all add-ons for tenant
    */
   async listAddOns(tenantId: string): Promise<AddOnDTO[]> {
-    const results = await db
+    const results = await this.db
       .select()
       .from(addons)
       .where(
@@ -39,14 +53,14 @@ export class AddOnsService {
       )
       .orderBy(addons.name);
 
-    return results.map(this.toDTO);
+    return results.map((a: any) => this.toDTO(a));
   }
 
   /**
    * Get single add-on
    */
   async getAddOn(id: string, tenantId: string): Promise<AddOnDTO | null> {
-    const [result] = await db
+    const [result] = await this.db
       .select()
       .from(addons)
       .where(and(eq(addons.id, id), eq(addons.tenantId, tenantId)))
@@ -71,7 +85,7 @@ export class AddOnsService {
     tenantId: string,
     userId: string
   ): Promise<AddOnDTO> {
-    const [created] = await db
+    const [created] = await this.db
       .insert(addons)
       .values({
         tenantId,
@@ -114,7 +128,7 @@ export class AddOnsService {
     tenantId: string,
     userId: string
   ): Promise<AddOnDTO> {
-    const [existing] = await db
+    const [existing] = await this.db
       .select()
       .from(addons)
       .where(and(eq(addons.id, id), eq(addons.tenantId, tenantId)));
@@ -123,9 +137,9 @@ export class AddOnsService {
       throw new Error('Add-on not found');
     }
 
-    const [updated] = await db
+    const [updated] = await this.db
       .update(addons)
-      .set({ ...data, updatedAt: new Date() })
+      .set({ ...data })
       .where(eq(addons.id, id))
       .returning();
 
@@ -146,7 +160,7 @@ export class AddOnsService {
    * Delete add-on (soft delete)
    */
   async deleteAddOn(id: string, tenantId: string, userId: string): Promise<void> {
-    const [existing] = await db
+    const [existing] = await this.db
       .select()
       .from(addons)
       .where(and(eq(addons.id, id), eq(addons.tenantId, tenantId)));
@@ -155,9 +169,9 @@ export class AddOnsService {
       throw new Error('Add-on not found');
     }
 
-    await db
+    await this.db
       .update(addons)
-      .set({ isActive: false, updatedAt: new Date() })
+      .set({ isActive: false })
       .where(eq(addons.id, id));
 
     await this.auditService.log({
@@ -177,7 +191,7 @@ export class AddOnsService {
     rentalObjectId: string,
     tenantId: string
   ): Promise<AddOnDTO[]> {
-    const results = await db
+    const results = await this.db
       .select({ addon: addons })
       .from(rentalObjectAddons)
       .innerJoin(addons, eq(rentalObjectAddons.addonId, addons.id))
@@ -188,7 +202,7 @@ export class AddOnsService {
         )
       );
 
-    return results.map(r => this.toDTO(r.addon));
+    return results.map((r: any) => this.toDTO(r.addon));
   }
 
   /**
@@ -201,7 +215,7 @@ export class AddOnsService {
     userId: string
   ): Promise<void> {
     // Remove existing
-    await db
+    await this.db
       .delete(rentalObjectAddons)
       .where(
         and(
@@ -212,7 +226,7 @@ export class AddOnsService {
 
     // Insert new
     if (addonIds.length > 0) {
-      await db.insert(rentalObjectAddons).values(
+      await this.db.insert(rentalObjectAddons).values(
         addonIds.map(addonId => ({
           tenantId,
           rentalObjectId,

@@ -190,6 +190,23 @@ export type {
   CancelInvitationDTO,
 } from './tenant-admin-user.service';
 
+// Scope Assignment - Case handler scope delegation
+export {
+  ScopeAssignmentService,
+  scopeAssignmentService
+} from './scope-assignment.service';
+export type {
+  ScopeType,
+  ScopeStatus,
+  // CaseHandlerScope - already exported from ./types/rbac
+  CreateScopeAssignmentDTO,
+  UpdateScopeAssignmentDTO,
+  AssignScopesDTO,
+  ScopeQueryParams,
+  EffectiveScope,
+  ScopeDelegationNode,
+} from './scope-assignment.service';
+
 // Modules - Feature flags
 export { modulesService, ModulesService } from './modules.service';
 export type {

@@ -5,55 +5,71 @@
 import type { FastifyInstance } from 'fastify';
 import { AddOnsController } from './addons.controller';
 import { AddOnsService } from './addons.service';
-import { AuditService } from '../../core/audit.service';
-import { requirePermission } from '../../core/guards/permission.guard';
-import { requireAuth } from '../../core/guards/auth.guard';
-import { PERMISSIONS } from '../../core/permissions';
+import { getAuditService } from '../../core/audit/audit.service';
+import { requireAuth, requireRole, UserRole } from '../../middleware/rbac';
+import { container } from '../../core/container';
 
 export async function addonsRoutes(fastify: FastifyInstance) {
-  const auditService = new AuditService(fastify.db);
-  const service = new AddOnsService(auditService);
+  // Get db from container
+  const db = container.resolve<any>('Database');
+  
+  // Create audit service adapter
+  const auditServiceAdapter = {
+    async log(params: { tenantId: string; userId: string; action: string; entityType: string; entityId: string; oldValue?: any; newValue?: any; }) {
+      const auditService = getAuditService();
+      return auditService.log({
+        tenantId: params.tenantId,
+        userId: params.userId,
+        action: params.action as any,
+        resource: params.entityType as any,
+        resourceId: params.entityId,
+        metadata: { oldValue: params.oldValue, newValue: params.newValue },
+      });
+    }
+  };
+
+  const service = new AddOnsService(db, auditServiceAdapter);
   const controller = new AddOnsController(service);
 
   fastify.get(
     '/addons',
-    { preHandler: [requireAuth], schema: { tags: ['Add-ons'] } },
+    { preHandler: [requireAuth] },
     controller.listAddOns.bind(controller)
   );
 
   fastify.get(
     '/addons/:id',
-    { preHandler: [requireAuth], schema: { tags: ['Add-ons'] } },
+    { preHandler: [requireAuth] },
     controller.getAddOn.bind(controller)
   );
 
   fastify.post(
     '/addons',
-    { preHandler: [requireAuth, requirePermission(PERMISSIONS.ADDONS_MANAGE)], schema: { tags: ['Add-ons'] } },
+    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
     controller.createAddOn.bind(controller)
   );
 
   fastify.put(
     '/addons/:id',
-    { preHandler: [requireAuth, requirePermission(PERMISSIONS.ADDONS_MANAGE)], schema: { tags: ['Add-ons'] } },
+    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
     controller.updateAddOn.bind(controller)
   );
 
   fastify.delete(
     '/addons/:id',
-    { preHandler: [requireAuth, requirePermission(PERMISSIONS.ADDONS_MANAGE)], schema: { tags: ['Add-ons'] } },
+    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
     controller.deleteAddOn.bind(controller)
   );
 
   fastify.get(
     '/rental-objects/:id/addons',
-    { preHandler: [requireAuth], schema: { tags: ['Rental Objects', 'Add-ons'] } },
+    { preHandler: [requireAuth] },
     controller.getAddOnsForRentalObject.bind(controller)
   );
 
   fastify.put(
     '/rental-objects/:id/addons',
-    { preHandler: [requireAuth, requirePermission(PERMISSIONS.ADDONS_MANAGE)], schema: { tags: ['Rental Objects', 'Add-ons'] } },
+    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
     controller.assignAddOnsToRentalObject.bind(controller)
   );
 }

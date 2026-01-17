@@ -5,6 +5,10 @@
  * Reference: packages/client-sdk/src/types/advanced-contracts.ts
  */
 import { Injectable, Inject } from '../../core/decorators';
+import { eq } from 'drizzle-orm';
+import { gdprRequests } from '../../database/schema/gdpr-requests';
+import { users } from '../../database/schema/index';
+import { NotFoundError, BadRequestError } from '../../core/errors/problem-details';
 
 interface CreateDSARRequest {
   email: string;
@@ -24,17 +28,50 @@ export class GDPRService {
    * Returns DSARRequestDTO
    */
   async createDSAR(request: CreateDSARRequest): Promise<any> {
-    const requestId = `dsar_${Date.now()}`;
+    // Validate email format
+    if (!request.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(request.email)) {
+      throw new BadRequestError('Valid email is required');
+    }
     
-    // TODO: Queue background job to process DSAR
+    // Find user by email
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, request.email))
+      .limit(1);
+    
+    if (!user) {
+      throw new NotFoundError(`User with email ${request.email} not found`);
+    }
+    
+    // Create DSAR request
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days from now
+    
+    const [dsarRequest] = await this.db
+      .insert(gdprRequests)
+      .values({
+        tenantId: user.tenantId,
+        userId: user.id,
+        requestType: 'export',
+        status: 'pending',
+        expiresAt,
+        metadata: {
+          categories: request.categories || ['personal_data', 'bookings', 'audit_log'],
+          reason: request.reason,
+        },
+      })
+      .returning();
+    
+    this.adapters?.log?.info('DSAR request created', { requestId: dsarRequest.id, userId: user.id });
     
     return {
-      requestId,
-      userId: 'user-id',
+      requestId: dsarRequest.id,
+      userId: user.id,
       email: request.email,
       status: 'PENDING',
-      requestedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+      requestedAt: dsarRequest.requestedAt.toISOString(),
+      expiresAt: dsarRequest.expiresAt.toISOString(),
       categories: [
         {
           category: 'personal_data',
@@ -63,19 +100,42 @@ export class GDPRService {
    * Returns DSARRequestDTO
    */
   async getDSAR(requestId: string): Promise<any> {
-    // TODO: Load from database
+    const [request] = await this.db
+      .select()
+      .from(gdprRequests)
+      .where(eq(gdprRequests.id, requestId))
+      .limit(1);
+    
+    if (!request) {
+      throw new NotFoundError(`DSAR request ${requestId} not found`);
+    }
+    
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.id, request.userId))
+      .limit(1);
+    
+    const statusMap: Record<string, string> = {
+      'pending': 'PENDING',
+      'processing': 'PROCESSING',
+      'completed': 'READY',
+      'rejected': 'EXPIRED',
+    };
     
     return {
-      requestId,
-      userId: 'user-id',
-      email: 'user@example.com',
-      status: 'READY',
-      requestedAt: new Date().toISOString(),
-      processedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      requestId: request.id,
+      userId: request.userId,
+      email: user?.email || 'unknown',
+      status: statusMap[request.status] || 'PENDING',
+      requestedAt: request.requestedAt.toISOString(),
+      processedAt: request.processedAt?.toISOString(),
+      expiresAt: request.expiresAt.toISOString(),
       categories: [],
-      downloadUrl: `/api/gdpr/dsar/${requestId}/download`,
-      downloadExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      downloadUrl: request.status === 'completed' ? `/api/gdpr/dsar/${requestId}/download` : undefined,
+      downloadExpiresAt: request.status === 'completed' 
+        ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+        : undefined,
     };
   }
 

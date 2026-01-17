@@ -608,6 +608,122 @@ export const messages = domainSchema.table('messages', {
 }));
 
 // ============================================================================
+// Amenities & Add-ons
+// ============================================================================
+
+export const amenityGroups = domainSchema.table('amenity_groups', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  sortOrder: integer('sort_order').notNull().default(0),
+}, (table) => ({
+  tenantCodeIdx: unique('amenity_groups_tenant_code').on(table.tenantId, table.code),
+}));
+
+export const amenities = domainSchema.table('amenities', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  groupId: uuid('group_id').references(() => amenityGroups.id, { onDelete: 'set null' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  iconKey: varchar('icon_key', { length: 50 }),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+}, (table) => ({
+  tenantCodeIdx: unique('amenities_tenant_code').on(table.tenantId, table.code),
+  groupIdx: index('amenities_group_idx').on(table.groupId),
+}));
+
+export const rentalObjectAmenities = domainSchema.table('rental_object_amenities', {
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  amenityId: uuid('amenity_id').notNull().references(() => amenities.id, { onDelete: 'cascade' }),
+}, (table) => ({
+  pk: unique('rental_object_amenities_pk').on(table.tenantId, table.rentalObjectId, table.amenityId),
+  roIdx: index('rental_object_amenities_ro_idx').on(table.rentalObjectId),
+}));
+
+export const addons = domainSchema.table('addons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  pricingModel: varchar('pricing_model', { length: 20 }).notNull().default('PER_BOOKING'),
+  basePriceCents: integer('base_price_cents').notNull().default(0),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+  isRequired: boolean('is_required').notNull().default(false),
+  maxUnits: integer('max_units'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantCodeIdx: unique('addons_tenant_code').on(table.tenantId, table.code),
+}));
+
+export const rentalObjectAddons = domainSchema.table('rental_object_addons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  addonId: uuid('addon_id').notNull().references(() => addons.id, { onDelete: 'cascade' }),
+  isRequired: boolean('is_required').notNull().default(false),
+  maxUnits: integer('max_units'),
+  sortOrder: integer('sort_order').notNull().default(0),
+}, (table) => ({
+  roAddonIdx: unique('rental_object_addons_unique').on(table.tenantId, table.rentalObjectId, table.addonId),
+}));
+
+export const bookingAddons = domainSchema.table('booking_addons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  bookingId: uuid('booking_id').notNull().references(() => bookings.id, { onDelete: 'cascade' }),
+  addonId: uuid('addon_id').notNull().references(() => addons.id, { onDelete: 'restrict' }),
+  units: integer('units').notNull().default(1),
+  priceCents: integer('price_cents').notNull(),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+}, (table) => ({
+  bookingAddonIdx: unique('booking_addons_unique').on(table.tenantId, table.bookingId, table.addonId),
+}));
+
+// ============================================================================
+// Favorites
+// ============================================================================
+
+export const favorites = domainSchema.table('favorites', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  notes: text('notes'),
+  tags: text('tags').array().default([]),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  userRoIdx: unique('favorites_user_ro_unique').on(table.userId, table.rentalObjectId),
+  userIdx: index('favorites_user_idx').on(table.userId),
+  tenantIdx: index('favorites_tenant_idx').on(table.tenantId),
+}));
+
+// ============================================================================
+// Categories (for rental objects)
+// ============================================================================
+
+export const categories = domainSchema.table('rental_object_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  parentId: uuid('parent_id'), // Self-reference handled at application level
+  code: varchar('code', { length: 50 }).notNull(),
+  key: varchar('key', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  isActive: boolean('is_active').notNull().default(true),
+}, (table) => ({
+  tenantCodeIdx: unique('categories_tenant_code').on(table.tenantId, table.code),
+}));
+
+// ============================================================================
 // Branding & White-Label
 // ============================================================================
 

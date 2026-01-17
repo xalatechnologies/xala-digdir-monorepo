@@ -1,0 +1,1590 @@
+{
+  "timestamp": "2026-01-17T18:49:20.910Z",
+  "summary": {
+    "filesScanned": 6,
+    "filesSkipped": 0,
+    "totalFiles": 6,
+    "totalIssues": 87,
+    "hardcodedStrings": 87,
+    "missingT": 0,
+    "suspiciousPatterns": 0
+  },
+  "issuesByFile": {
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+        "line": 180,
+        "type": "hardcoded_object_value",
+        "string": "Admin",
+        "key": "label",
+        "context": "admin: { label: 'Admin', color: 'var(--ds-color-danger-base-default)' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+        "line": 181,
+        "type": "hardcoded_object_value",
+        "string": "Leietaker Admin",
+        "key": "label",
+        "context": "tenant_admin: { label: 'Leietaker Admin', color: 'var(--ds-color-warning-base-default)' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+        "line": 182,
+        "type": "hardcoded_object_value",
+        "string": "Org Admin",
+        "key": "label",
+        "context": "org_admin: { label: 'Org Admin', color: 'var(--ds-color-info-base-default)' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+        "line": 183,
+        "type": "hardcoded_object_value",
+        "string": "Medlem",
+        "key": "label",
+        "context": "org_member: { label: 'Medlem', color: 'var(--ds-color-success-base-default)' },",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 237,
+        "type": "hardcoded_prop",
+        "string": "Vanlige spørsmål (FAQ)",
+        "prop": "title",
+        "context": "title=\"Vanlige spørsmål (FAQ)\"",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 238,
+        "type": "hardcoded_prop",
+        "string": "Svar på ofte stilte spørsmål",
+        "prop": "description",
+        "context": "description=\"Svar på ofte stilte spørsmål\"",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 33,
+        "type": "hardcoded_object_value",
+        "string": "Bookinger",
+        "key": "title",
+        "context": "title: 'Bookinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 59,
+        "type": "hardcoded_object_value",
+        "string": "Kalender",
+        "key": "title",
+        "context": "title: 'Kalender',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 76,
+        "type": "hardcoded_object_value",
+        "string": "Meldinger",
+        "key": "title",
+        "context": "title: 'Meldinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 93,
+        "type": "hardcoded_object_value",
+        "string": "Brukere og tilgang",
+        "key": "title",
+        "context": "title: 'Brukere og tilgang',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 115,
+        "type": "hardcoded_object_value",
+        "string": "Utleieobjekter",
+        "key": "title",
+        "context": "title: 'Utleieobjekter',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 137,
+        "type": "hardcoded_object_value",
+        "string": "Rapporter",
+        "key": "title",
+        "context": "title: 'Rapporter',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 156,
+        "type": "hardcoded_object_value",
+        "string": "Innstillinger og system",
+        "key": "title",
+        "context": "title: 'Innstillinger og system',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+        "line": 179,
+        "type": "hardcoded_object_value",
+        "string": "Sikkerhet og innlogging",
+        "key": "title",
+        "context": "title: 'Sikkerhet og innlogging',",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 227,
+        "type": "hardcoded_prop",
+        "string": "Veiledninger",
+        "prop": "title",
+        "context": "title=\"Veiledninger\"",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 228,
+        "type": "hardcoded_prop",
+        "string": "Steg-for-steg guider for vanlige oppgaver",
+        "prop": "description",
+        "context": "description=\"Steg-for-steg guider for vanlige oppgaver\"",
+        "severity": "high"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 33,
+        "type": "hardcoded_object_value",
+        "string": "Behandle bookingforespørsler",
+        "key": "title",
+        "context": "title: 'Behandle bookingforespørsler',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 34,
+        "type": "hardcoded_object_value",
+        "string": "Lær hvordan du godkjenner eller avslår bookingforespørsler",
+        "key": "description",
+        "context": "description: 'Lær hvordan du godkjenner eller avslår bookingforespørsler',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 49,
+        "type": "hardcoded_object_value",
+        "string": "Bruke kalenderen",
+        "key": "title",
+        "context": "title: 'Bruke kalenderen',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 50,
+        "type": "hardcoded_object_value",
+        "string": "Oversikt over reservasjoner for dine tildelte objekter",
+        "key": "description",
+        "context": "description: 'Oversikt over reservasjoner for dine tildelte objekter',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 64,
+        "type": "hardcoded_object_value",
+        "string": "Svare på meldinger",
+        "key": "title",
+        "context": "title: 'Svare på meldinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 65,
+        "type": "hardcoded_object_value",
+        "string": "Kommuniser med brukere om bookinger",
+        "key": "description",
+        "context": "description: 'Kommuniser med brukere om bookinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 80,
+        "type": "hardcoded_object_value",
+        "string": "Administrere brukere",
+        "key": "title",
+        "context": "title: 'Administrere brukere',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 81,
+        "type": "hardcoded_object_value",
+        "string": "Inviter og administrer brukere i din organisasjon",
+        "key": "description",
+        "context": "description: 'Inviter og administrer brukere i din organisasjon',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 97,
+        "type": "hardcoded_object_value",
+        "string": "Opprette utleieobjekt",
+        "key": "title",
+        "context": "title: 'Opprette utleieobjekt',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 98,
+        "type": "hardcoded_object_value",
+        "string": "Legg til et nytt utleieobjekt i systemet",
+        "key": "description",
+        "context": "description: 'Legg til et nytt utleieobjekt i systemet',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 115,
+        "type": "hardcoded_object_value",
+        "string": "Generere rapporter",
+        "key": "title",
+        "context": "title: 'Generere rapporter',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 116,
+        "type": "hardcoded_object_value",
+        "string": "Eksporter booking- og inntektsdata",
+        "key": "description",
+        "context": "description: 'Eksporter booking- og inntektsdata',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 132,
+        "type": "hardcoded_object_value",
+        "string": "Organisasjonsinnstillinger",
+        "key": "title",
+        "context": "title: 'Organisasjonsinnstillinger',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 133,
+        "type": "hardcoded_object_value",
+        "string": "Konfigurer organisasjonsprofil og branding",
+        "key": "description",
+        "context": "description: 'Konfigurer organisasjonsprofil og branding',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 149,
+        "type": "hardcoded_object_value",
+        "string": "Sette opp integrasjoner",
+        "key": "title",
+        "context": "title: 'Sette opp integrasjoner',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 150,
+        "type": "hardcoded_object_value",
+        "string": "Koble til eksterne systemer",
+        "key": "description",
+        "context": "description: 'Koble til eksterne systemer',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 166,
+        "type": "hardcoded_object_value",
+        "string": "Administrere funksjoner",
+        "key": "title",
+        "context": "title: 'Administrere funksjoner',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 167,
+        "type": "hardcoded_object_value",
+        "string": "Aktiver og deaktiver systemfunksjoner",
+        "key": "description",
+        "context": "description: 'Aktiver og deaktiver systemfunksjoner',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 190,
+        "type": "hardcoded_object_value",
+        "string": "Nybegynner",
+        "key": "label",
+        "context": "beginner: { label: 'Nybegynner', color: 'success' as const },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 191,
+        "type": "hardcoded_object_value",
+        "string": "Middels",
+        "key": "label",
+        "context": "intermediate: { label: 'Middels', color: 'warning' as const },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+        "line": 192,
+        "type": "hardcoded_object_value",
+        "string": "Avansert",
+        "key": "label",
+        "context": "advanced: { label: 'Avansert', color: 'danger' as const },",
+        "severity": "medium"
+      }
+    ],
+    "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx": [
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 36,
+        "type": "hardcoded_object_value",
+        "string": "Kom i gang",
+        "key": "title",
+        "context": "title: 'Kom i gang',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 37,
+        "type": "hardcoded_object_value",
+        "string": "Steg-for-steg guider for vanlige oppgaver",
+        "key": "description",
+        "context": "description: 'Steg-for-steg guider for vanlige oppgaver',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 42,
+        "type": "hardcoded_object_value",
+        "string": "Vanlige spørsmål",
+        "key": "title",
+        "context": "title: 'Vanlige spørsmål',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 43,
+        "type": "hardcoded_object_value",
+        "string": "Svar på ofte stilte spørsmål",
+        "key": "description",
+        "context": "description: 'Svar på ofte stilte spørsmål',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 48,
+        "type": "hardcoded_object_value",
+        "string": "Kontakt support",
+        "key": "title",
+        "context": "title: 'Kontakt support',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 49,
+        "type": "hardcoded_object_value",
+        "string": "Trenger du hjelp? Ta kontakt med oss",
+        "key": "description",
+        "context": "description: 'Trenger du hjelp? Ta kontakt med oss',",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 58,
+        "type": "hardcoded_object_value",
+        "string": "Se dine tildelte utleieobjekter",
+        "key": "title",
+        "context": "{ title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 58,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Dashboard for oversikt",
+        "key": "description",
+        "context": "{ title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 59,
+        "type": "hardcoded_object_value",
+        "string": "Behandle bookinger",
+        "key": "title",
+        "context": "{ title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 59,
+        "type": "hardcoded_object_value",
+        "string": "Bruk Bookinger-siden for å godkjenne eller avslå forespørsler",
+        "key": "description",
+        "context": "{ title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 60,
+        "type": "hardcoded_object_value",
+        "string": "Se kalenderen",
+        "key": "title",
+        "context": "{ title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 60,
+        "type": "hardcoded_object_value",
+        "string": "Kalender viser alle reservasjoner for dine objekter",
+        "key": "description",
+        "context": "{ title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 61,
+        "type": "hardcoded_object_value",
+        "string": "Kommuniser med brukere",
+        "key": "title",
+        "context": "{ title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 61,
+        "type": "hardcoded_object_value",
+        "string": "Bruk Meldinger for å svare på henvendelser",
+        "key": "description",
+        "context": "{ title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 64,
+        "type": "hardcoded_object_value",
+        "string": "Administrer brukere",
+        "key": "title",
+        "context": "{ title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 64,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Brukere for å invitere og administrere medlemmer",
+        "key": "description",
+        "context": "{ title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 65,
+        "type": "hardcoded_object_value",
+        "string": "Opprett utleieobjekter",
+        "key": "title",
+        "context": "{ title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 65,
+        "type": "hardcoded_object_value",
+        "string": "Legg til nye lokaler og ressurser via Utleieobjekter",
+        "key": "description",
+        "context": "{ title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 66,
+        "type": "hardcoded_object_value",
+        "string": "Behandle bookinger",
+        "key": "title",
+        "context": "{ title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 66,
+        "type": "hardcoded_object_value",
+        "string": "Godkjenn forespørsler og håndter konflikter",
+        "key": "description",
+        "context": "{ title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 67,
+        "type": "hardcoded_object_value",
+        "string": "Se rapporter",
+        "key": "title",
+        "context": "{ title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 67,
+        "type": "hardcoded_object_value",
+        "string": "Analyser bruk og inntekter under Rapporter",
+        "key": "description",
+        "context": "{ title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 68,
+        "type": "hardcoded_object_value",
+        "string": "Administrer meldinger",
+        "key": "title",
+        "context": "{ title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 68,
+        "type": "hardcoded_object_value",
+        "string": "Kommuniser med brukere og se samtaleoversikt",
+        "key": "description",
+        "context": "{ title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 71,
+        "type": "hardcoded_object_value",
+        "string": "Konfigurer organisasjonen",
+        "key": "title",
+        "context": "{ title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 71,
+        "type": "hardcoded_object_value",
+        "string": "Sett opp logo, branding og kontaktinfo under Innstillinger",
+        "key": "description",
+        "context": "{ title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 72,
+        "type": "hardcoded_object_value",
+        "string": "Aktiver funksjoner",
+        "key": "title",
+        "context": "{ title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 72,
+        "type": "hardcoded_object_value",
+        "string": "Slå av/på moduler i Innstillinger > Funksjoner",
+        "key": "description",
+        "context": "{ title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 73,
+        "type": "hardcoded_object_value",
+        "string": "Administrer brukere",
+        "key": "title",
+        "context": "{ title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 73,
+        "type": "hardcoded_object_value",
+        "string": "Inviter og administrer alle brukere",
+        "key": "description",
+        "context": "{ title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 74,
+        "type": "hardcoded_object_value",
+        "string": "Sett opp integrasjoner",
+        "key": "title",
+        "context": "{ title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' ",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 74,
+        "type": "hardcoded_object_value",
+        "string": "Koble til betalingsløsninger og eksterne systemer",
+        "key": "description",
+        "context": "{ title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' ",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 75,
+        "type": "hardcoded_object_value",
+        "string": "Eksporter rapporter",
+        "key": "title",
+        "context": "{ title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 75,
+        "type": "hardcoded_object_value",
+        "string": "Generer og eksporter data for analyse",
+        "key": "description",
+        "context": "{ title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 78,
+        "type": "hardcoded_object_value",
+        "string": "Systemadministrasjon",
+        "key": "title",
+        "context": "{ title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 78,
+        "type": "hardcoded_object_value",
+        "string": "Full tilgang til alle funksjoner og innstillinger",
+        "key": "description",
+        "context": "{ title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 79,
+        "type": "hardcoded_object_value",
+        "string": "Bruker- og tilgangsstyring",
+        "key": "title",
+        "context": "{ title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 79,
+        "type": "hardcoded_object_value",
+        "string": "Administrer alle brukere på tvers av organisasjoner",
+        "key": "description",
+        "context": "{ title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 80,
+        "type": "hardcoded_object_value",
+        "string": "Funksjoner og moduler",
+        "key": "title",
+        "context": "{ title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 80,
+        "type": "hardcoded_object_value",
+        "string": "Kontroller hvilke funksjoner som er tilgjengelige",
+        "key": "description",
+        "context": "{ title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 81,
+        "type": "hardcoded_object_value",
+        "string": "Revisjonslogg",
+        "key": "title",
+        "context": "{ title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 81,
+        "type": "hardcoded_object_value",
+        "string": "Se alle handlinger utført i systemet",
+        "key": "description",
+        "context": "{ title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 82,
+        "type": "hardcoded_object_value",
+        "string": "Integrasjoner",
+        "key": "title",
+        "context": "{ title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 82,
+        "type": "hardcoded_object_value",
+        "string": "Konfigurer og overvåk systemintegrasjoner",
+        "key": "description",
+        "context": "{ title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 264,
+        "type": "hardcoded_object_value",
+        "string": "Vis hurtigtaster",
+        "key": "description",
+        "context": "{ key: '?', description: 'Vis hurtigtaster' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 265,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Dashboard",
+        "key": "description",
+        "context": "{ key: 'g d', description: 'Gå til Dashboard' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 266,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Bookinger",
+        "key": "description",
+        "context": "{ key: 'g b', description: 'Gå til Bookinger' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 267,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Kalender",
+        "key": "description",
+        "context": "{ key: 'g c', description: 'Gå til Kalender' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 268,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Meldinger",
+        "key": "description",
+        "context": "{ key: 'g m', description: 'Gå til Meldinger' },",
+        "severity": "medium"
+      },
+      {
+        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+        "line": 269,
+        "type": "hardcoded_object_value",
+        "string": "Gå til Hjelp",
+        "key": "description",
+        "context": "{ key: 'g h', description: 'Gå til Hjelp' },",
+        "severity": "medium"
+      }
+    ]
+  },
+  "allIssues": [
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+      "line": 180,
+      "type": "hardcoded_object_value",
+      "string": "Admin",
+      "key": "label",
+      "context": "admin: { label: 'Admin', color: 'var(--ds-color-danger-base-default)' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+      "line": 181,
+      "type": "hardcoded_object_value",
+      "string": "Leietaker Admin",
+      "key": "label",
+      "context": "tenant_admin: { label: 'Leietaker Admin', color: 'var(--ds-color-warning-base-default)' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+      "line": 182,
+      "type": "hardcoded_object_value",
+      "string": "Org Admin",
+      "key": "label",
+      "context": "org_admin: { label: 'Org Admin', color: 'var(--ds-color-info-base-default)' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/components/HelpSection.tsx",
+      "line": 183,
+      "type": "hardcoded_object_value",
+      "string": "Medlem",
+      "key": "label",
+      "context": "org_member: { label: 'Medlem', color: 'var(--ds-color-success-base-default)' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 237,
+      "type": "hardcoded_prop",
+      "string": "Vanlige spørsmål (FAQ)",
+      "prop": "title",
+      "context": "title=\"Vanlige spørsmål (FAQ)\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 238,
+      "type": "hardcoded_prop",
+      "string": "Svar på ofte stilte spørsmål",
+      "prop": "description",
+      "context": "description=\"Svar på ofte stilte spørsmål\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 33,
+      "type": "hardcoded_object_value",
+      "string": "Bookinger",
+      "key": "title",
+      "context": "title: 'Bookinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 59,
+      "type": "hardcoded_object_value",
+      "string": "Kalender",
+      "key": "title",
+      "context": "title: 'Kalender',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 76,
+      "type": "hardcoded_object_value",
+      "string": "Meldinger",
+      "key": "title",
+      "context": "title: 'Meldinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 93,
+      "type": "hardcoded_object_value",
+      "string": "Brukere og tilgang",
+      "key": "title",
+      "context": "title: 'Brukere og tilgang',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 115,
+      "type": "hardcoded_object_value",
+      "string": "Utleieobjekter",
+      "key": "title",
+      "context": "title: 'Utleieobjekter',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 137,
+      "type": "hardcoded_object_value",
+      "string": "Rapporter",
+      "key": "title",
+      "context": "title: 'Rapporter',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 156,
+      "type": "hardcoded_object_value",
+      "string": "Innstillinger og system",
+      "key": "title",
+      "context": "title: 'Innstillinger og system',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/faq.tsx",
+      "line": 179,
+      "type": "hardcoded_object_value",
+      "string": "Sikkerhet og innlogging",
+      "key": "title",
+      "context": "title: 'Sikkerhet og innlogging',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 227,
+      "type": "hardcoded_prop",
+      "string": "Veiledninger",
+      "prop": "title",
+      "context": "title=\"Veiledninger\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 228,
+      "type": "hardcoded_prop",
+      "string": "Steg-for-steg guider for vanlige oppgaver",
+      "prop": "description",
+      "context": "description=\"Steg-for-steg guider for vanlige oppgaver\"",
+      "severity": "high"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 33,
+      "type": "hardcoded_object_value",
+      "string": "Behandle bookingforespørsler",
+      "key": "title",
+      "context": "title: 'Behandle bookingforespørsler',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 34,
+      "type": "hardcoded_object_value",
+      "string": "Lær hvordan du godkjenner eller avslår bookingforespørsler",
+      "key": "description",
+      "context": "description: 'Lær hvordan du godkjenner eller avslår bookingforespørsler',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 49,
+      "type": "hardcoded_object_value",
+      "string": "Bruke kalenderen",
+      "key": "title",
+      "context": "title: 'Bruke kalenderen',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 50,
+      "type": "hardcoded_object_value",
+      "string": "Oversikt over reservasjoner for dine tildelte objekter",
+      "key": "description",
+      "context": "description: 'Oversikt over reservasjoner for dine tildelte objekter',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 64,
+      "type": "hardcoded_object_value",
+      "string": "Svare på meldinger",
+      "key": "title",
+      "context": "title: 'Svare på meldinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 65,
+      "type": "hardcoded_object_value",
+      "string": "Kommuniser med brukere om bookinger",
+      "key": "description",
+      "context": "description: 'Kommuniser med brukere om bookinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 80,
+      "type": "hardcoded_object_value",
+      "string": "Administrere brukere",
+      "key": "title",
+      "context": "title: 'Administrere brukere',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 81,
+      "type": "hardcoded_object_value",
+      "string": "Inviter og administrer brukere i din organisasjon",
+      "key": "description",
+      "context": "description: 'Inviter og administrer brukere i din organisasjon',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 97,
+      "type": "hardcoded_object_value",
+      "string": "Opprette utleieobjekt",
+      "key": "title",
+      "context": "title: 'Opprette utleieobjekt',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 98,
+      "type": "hardcoded_object_value",
+      "string": "Legg til et nytt utleieobjekt i systemet",
+      "key": "description",
+      "context": "description: 'Legg til et nytt utleieobjekt i systemet',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 115,
+      "type": "hardcoded_object_value",
+      "string": "Generere rapporter",
+      "key": "title",
+      "context": "title: 'Generere rapporter',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 116,
+      "type": "hardcoded_object_value",
+      "string": "Eksporter booking- og inntektsdata",
+      "key": "description",
+      "context": "description: 'Eksporter booking- og inntektsdata',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 132,
+      "type": "hardcoded_object_value",
+      "string": "Organisasjonsinnstillinger",
+      "key": "title",
+      "context": "title: 'Organisasjonsinnstillinger',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 133,
+      "type": "hardcoded_object_value",
+      "string": "Konfigurer organisasjonsprofil og branding",
+      "key": "description",
+      "context": "description: 'Konfigurer organisasjonsprofil og branding',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 149,
+      "type": "hardcoded_object_value",
+      "string": "Sette opp integrasjoner",
+      "key": "title",
+      "context": "title: 'Sette opp integrasjoner',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 150,
+      "type": "hardcoded_object_value",
+      "string": "Koble til eksterne systemer",
+      "key": "description",
+      "context": "description: 'Koble til eksterne systemer',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 166,
+      "type": "hardcoded_object_value",
+      "string": "Administrere funksjoner",
+      "key": "title",
+      "context": "title: 'Administrere funksjoner',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 167,
+      "type": "hardcoded_object_value",
+      "string": "Aktiver og deaktiver systemfunksjoner",
+      "key": "description",
+      "context": "description: 'Aktiver og deaktiver systemfunksjoner',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 190,
+      "type": "hardcoded_object_value",
+      "string": "Nybegynner",
+      "key": "label",
+      "context": "beginner: { label: 'Nybegynner', color: 'success' as const },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 191,
+      "type": "hardcoded_object_value",
+      "string": "Middels",
+      "key": "label",
+      "context": "intermediate: { label: 'Middels', color: 'warning' as const },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/guides.tsx",
+      "line": 192,
+      "type": "hardcoded_object_value",
+      "string": "Avansert",
+      "key": "label",
+      "context": "advanced: { label: 'Avansert', color: 'danger' as const },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 36,
+      "type": "hardcoded_object_value",
+      "string": "Kom i gang",
+      "key": "title",
+      "context": "title: 'Kom i gang',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 37,
+      "type": "hardcoded_object_value",
+      "string": "Steg-for-steg guider for vanlige oppgaver",
+      "key": "description",
+      "context": "description: 'Steg-for-steg guider for vanlige oppgaver',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 42,
+      "type": "hardcoded_object_value",
+      "string": "Vanlige spørsmål",
+      "key": "title",
+      "context": "title: 'Vanlige spørsmål',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 43,
+      "type": "hardcoded_object_value",
+      "string": "Svar på ofte stilte spørsmål",
+      "key": "description",
+      "context": "description: 'Svar på ofte stilte spørsmål',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 48,
+      "type": "hardcoded_object_value",
+      "string": "Kontakt support",
+      "key": "title",
+      "context": "title: 'Kontakt support',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 49,
+      "type": "hardcoded_object_value",
+      "string": "Trenger du hjelp? Ta kontakt med oss",
+      "key": "description",
+      "context": "description: 'Trenger du hjelp? Ta kontakt med oss',",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 58,
+      "type": "hardcoded_object_value",
+      "string": "Se dine tildelte utleieobjekter",
+      "key": "title",
+      "context": "{ title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 58,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Dashboard for oversikt",
+      "key": "description",
+      "context": "{ title: 'Se dine tildelte utleieobjekter', description: 'Gå til Dashboard for oversikt' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 59,
+      "type": "hardcoded_object_value",
+      "string": "Behandle bookinger",
+      "key": "title",
+      "context": "{ title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 59,
+      "type": "hardcoded_object_value",
+      "string": "Bruk Bookinger-siden for å godkjenne eller avslå forespørsler",
+      "key": "description",
+      "context": "{ title: 'Behandle bookinger', description: 'Bruk Bookinger-siden for å godkjenne eller avslå foresp",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 60,
+      "type": "hardcoded_object_value",
+      "string": "Se kalenderen",
+      "key": "title",
+      "context": "{ title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 60,
+      "type": "hardcoded_object_value",
+      "string": "Kalender viser alle reservasjoner for dine objekter",
+      "key": "description",
+      "context": "{ title: 'Se kalenderen', description: 'Kalender viser alle reservasjoner for dine objekter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 61,
+      "type": "hardcoded_object_value",
+      "string": "Kommuniser med brukere",
+      "key": "title",
+      "context": "{ title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 61,
+      "type": "hardcoded_object_value",
+      "string": "Bruk Meldinger for å svare på henvendelser",
+      "key": "description",
+      "context": "{ title: 'Kommuniser med brukere', description: 'Bruk Meldinger for å svare på henvendelser' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 64,
+      "type": "hardcoded_object_value",
+      "string": "Administrer brukere",
+      "key": "title",
+      "context": "{ title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 64,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Brukere for å invitere og administrere medlemmer",
+      "key": "description",
+      "context": "{ title: 'Administrer brukere', description: 'Gå til Brukere for å invitere og administrere medlemme",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 65,
+      "type": "hardcoded_object_value",
+      "string": "Opprett utleieobjekter",
+      "key": "title",
+      "context": "{ title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 65,
+      "type": "hardcoded_object_value",
+      "string": "Legg til nye lokaler og ressurser via Utleieobjekter",
+      "key": "description",
+      "context": "{ title: 'Opprett utleieobjekter', description: 'Legg til nye lokaler og ressurser via Utleieobjekte",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 66,
+      "type": "hardcoded_object_value",
+      "string": "Behandle bookinger",
+      "key": "title",
+      "context": "{ title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 66,
+      "type": "hardcoded_object_value",
+      "string": "Godkjenn forespørsler og håndter konflikter",
+      "key": "description",
+      "context": "{ title: 'Behandle bookinger', description: 'Godkjenn forespørsler og håndter konflikter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 67,
+      "type": "hardcoded_object_value",
+      "string": "Se rapporter",
+      "key": "title",
+      "context": "{ title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 67,
+      "type": "hardcoded_object_value",
+      "string": "Analyser bruk og inntekter under Rapporter",
+      "key": "description",
+      "context": "{ title: 'Se rapporter', description: 'Analyser bruk og inntekter under Rapporter' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 68,
+      "type": "hardcoded_object_value",
+      "string": "Administrer meldinger",
+      "key": "title",
+      "context": "{ title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 68,
+      "type": "hardcoded_object_value",
+      "string": "Kommuniser med brukere og se samtaleoversikt",
+      "key": "description",
+      "context": "{ title: 'Administrer meldinger', description: 'Kommuniser med brukere og se samtaleoversikt' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 71,
+      "type": "hardcoded_object_value",
+      "string": "Konfigurer organisasjonen",
+      "key": "title",
+      "context": "{ title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 71,
+      "type": "hardcoded_object_value",
+      "string": "Sett opp logo, branding og kontaktinfo under Innstillinger",
+      "key": "description",
+      "context": "{ title: 'Konfigurer organisasjonen', description: 'Sett opp logo, branding og kontaktinfo under Inn",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 72,
+      "type": "hardcoded_object_value",
+      "string": "Aktiver funksjoner",
+      "key": "title",
+      "context": "{ title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 72,
+      "type": "hardcoded_object_value",
+      "string": "Slå av/på moduler i Innstillinger > Funksjoner",
+      "key": "description",
+      "context": "{ title: 'Aktiver funksjoner', description: 'Slå av/på moduler i Innstillinger > Funksjoner' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 73,
+      "type": "hardcoded_object_value",
+      "string": "Administrer brukere",
+      "key": "title",
+      "context": "{ title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 73,
+      "type": "hardcoded_object_value",
+      "string": "Inviter og administrer alle brukere",
+      "key": "description",
+      "context": "{ title: 'Administrer brukere', description: 'Inviter og administrer alle brukere' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 74,
+      "type": "hardcoded_object_value",
+      "string": "Sett opp integrasjoner",
+      "key": "title",
+      "context": "{ title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' ",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 74,
+      "type": "hardcoded_object_value",
+      "string": "Koble til betalingsløsninger og eksterne systemer",
+      "key": "description",
+      "context": "{ title: 'Sett opp integrasjoner', description: 'Koble til betalingsløsninger og eksterne systemer' ",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 75,
+      "type": "hardcoded_object_value",
+      "string": "Eksporter rapporter",
+      "key": "title",
+      "context": "{ title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 75,
+      "type": "hardcoded_object_value",
+      "string": "Generer og eksporter data for analyse",
+      "key": "description",
+      "context": "{ title: 'Eksporter rapporter', description: 'Generer og eksporter data for analyse' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 78,
+      "type": "hardcoded_object_value",
+      "string": "Systemadministrasjon",
+      "key": "title",
+      "context": "{ title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 78,
+      "type": "hardcoded_object_value",
+      "string": "Full tilgang til alle funksjoner og innstillinger",
+      "key": "description",
+      "context": "{ title: 'Systemadministrasjon', description: 'Full tilgang til alle funksjoner og innstillinger' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 79,
+      "type": "hardcoded_object_value",
+      "string": "Bruker- og tilgangsstyring",
+      "key": "title",
+      "context": "{ title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 79,
+      "type": "hardcoded_object_value",
+      "string": "Administrer alle brukere på tvers av organisasjoner",
+      "key": "description",
+      "context": "{ title: 'Bruker- og tilgangsstyring', description: 'Administrer alle brukere på tvers av organisasj",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 80,
+      "type": "hardcoded_object_value",
+      "string": "Funksjoner og moduler",
+      "key": "title",
+      "context": "{ title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 80,
+      "type": "hardcoded_object_value",
+      "string": "Kontroller hvilke funksjoner som er tilgjengelige",
+      "key": "description",
+      "context": "{ title: 'Funksjoner og moduler', description: 'Kontroller hvilke funksjoner som er tilgjengelige' }",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 81,
+      "type": "hardcoded_object_value",
+      "string": "Revisjonslogg",
+      "key": "title",
+      "context": "{ title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 81,
+      "type": "hardcoded_object_value",
+      "string": "Se alle handlinger utført i systemet",
+      "key": "description",
+      "context": "{ title: 'Revisjonslogg', description: 'Se alle handlinger utført i systemet' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 82,
+      "type": "hardcoded_object_value",
+      "string": "Integrasjoner",
+      "key": "title",
+      "context": "{ title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 82,
+      "type": "hardcoded_object_value",
+      "string": "Konfigurer og overvåk systemintegrasjoner",
+      "key": "description",
+      "context": "{ title: 'Integrasjoner', description: 'Konfigurer og overvåk systemintegrasjoner' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 264,
+      "type": "hardcoded_object_value",
+      "string": "Vis hurtigtaster",
+      "key": "description",
+      "context": "{ key: '?', description: 'Vis hurtigtaster' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 265,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Dashboard",
+      "key": "description",
+      "context": "{ key: 'g d', description: 'Gå til Dashboard' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 266,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Bookinger",
+      "key": "description",
+      "context": "{ key: 'g b', description: 'Gå til Bookinger' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 267,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Kalender",
+      "key": "description",
+      "context": "{ key: 'g c', description: 'Gå til Kalender' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 268,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Meldinger",
+      "key": "description",
+      "context": "{ key: 'g m', description: 'Gå til Meldinger' },",
+      "severity": "medium"
+    },
+    {
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/help/index.tsx",
+      "line": 269,
+      "type": "hardcoded_object_value",
+      "string": "Gå til Hjelp",
+      "key": "description",
+      "context": "{ key: 'g h', description: 'Gå til Hjelp' },",
+      "severity": "medium"
+    }
+  ]
+}

@@ -1,4 +1,14 @@
-import { db } from '../../database/connection';
+/**
+ * Favorites Service
+ * 
+ * Business logic for managing user favorites (wishlist)
+ * Features:
+ * - Add/remove favorites
+ * - List with filters and pagination
+ * - Check if object is favorited
+ * - Bulk operations
+ */
+
 import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 import { favorites, rentalObjects, categories } from '../../database/schema';
 import type {
@@ -12,17 +22,9 @@ import type {
   BulkFavoritesResponse,
 } from '../../schemas/favorites.schema';
 
-/**
- * Favorites Service
- * 
- * Business logic for managing user favorites (wishlist)
- * Features:
- * - Add/remove favorites
- * - List with filters and pagination
- * - Check if object is favorited
- * - Bulk operations
- */
 export class FavoritesService {
+  constructor(private readonly db: any) {}
+
   /**
    * Add rental object to user's favorites
    */
@@ -32,7 +34,7 @@ export class FavoritesService {
     data: CreateFavoriteDTO
   ): Promise<FavoriteDetail> {
     // Check if already favorited
-    const existing = await db
+    const existing = await this.db
       .select()
       .from(favorites)
       .where(
@@ -48,7 +50,7 @@ export class FavoritesService {
     }
 
     // Verify rental object exists and belongs to tenant
-    const rentalObject = await db
+    const rentalObject = await this.db
       .select()
       .from(rentalObjects)
       .where(
@@ -64,7 +66,7 @@ export class FavoritesService {
     }
 
     // Create favorite
-    const [favorite] = await db
+    const [favorite] = await this.db
       .insert(favorites)
       .values({
         userId,
@@ -83,7 +85,7 @@ export class FavoritesService {
    * Remove favorite
    */
   async removeFavorite(favoriteId: string, userId: string): Promise<void> {
-    const result = await db
+    const result = await this.db
       .delete(favorites)
       .where(
         and(
@@ -105,7 +107,7 @@ export class FavoritesService {
     rentalObjectId: string,
     userId: string
   ): Promise<void> {
-    const result = await db
+    const result = await this.db
       .delete(favorites)
       .where(
         and(
@@ -128,7 +130,7 @@ export class FavoritesService {
     userId: string,
     data: UpdateFavoriteDTO
   ): Promise<FavoriteDetail> {
-    const [updated] = await db
+    const [updated] = await this.db
       .update(favorites)
       .set({
         notes: data.notes,
@@ -157,7 +159,7 @@ export class FavoritesService {
     favoriteId: string,
     userId: string
   ): Promise<FavoriteDetail> {
-    const result = await db
+    const result = await this.db
       .select({
         id: favorites.id,
         userId: favorites.userId,
@@ -175,24 +177,13 @@ export class FavoritesService {
           slug: rentalObjects.slug,
           categoryKey: rentalObjects.categoryKey,
           categoryName: categories.name,
-          address: rentalObjects.address,
-          city: rentalObjects.city,
-          postalCode: rentalObjects.postalCode,
           capacity: rentalObjects.capacity,
-          pricePerHour: rentalObjects.pricePerHour,
-          imageUrl: sql<string>`(
-            SELECT url FROM domain.rental_object_media 
-            WHERE rental_object_id = ${rentalObjects.id} 
-            AND is_primary = true 
-            LIMIT 1
-          )`,
-          isActive: rentalObjects.isActive,
-          isAvailable: rentalObjects.status,
+          status: rentalObjects.status,
         },
       })
       .from(favorites)
       .innerJoin(rentalObjects, eq(favorites.rentalObjectId, rentalObjects.id))
-      .innerJoin(categories, eq(rentalObjects.categoryKey, categories.key))
+      .leftJoin(categories, eq(rentalObjects.categoryKey, categories.key))
       .where(
         and(
           eq(favorites.id, favoriteId),
@@ -233,14 +224,14 @@ export class FavoritesService {
     }
 
     // Get total count
-    const [{ count }] = await db
+    const [{ count }] = await this.db
       .select({ count: sql<number>`count(*)` })
       .from(favorites)
       .innerJoin(rentalObjects, eq(favorites.rentalObjectId, rentalObjects.id))
       .where(and(...conditions));
 
     // Get data
-    const data = await db
+    const data = await this.db
       .select({
         id: favorites.id,
         userId: favorites.userId,
@@ -257,24 +248,13 @@ export class FavoritesService {
           slug: rentalObjects.slug,
           categoryKey: rentalObjects.categoryKey,
           categoryName: categories.name,
-          address: rentalObjects.address,
-          city: rentalObjects.city,
-          postalCode: rentalObjects.postalCode,
           capacity: rentalObjects.capacity,
-          pricePerHour: rentalObjects.pricePerHour,
-          imageUrl: sql<string>`(
-            SELECT url FROM domain.rental_object_media 
-            WHERE rental_object_id = ${rentalObjects.id} 
-            AND is_primary = true 
-            LIMIT 1
-          )`,
-          isActive: rentalObjects.isActive,
-          isAvailable: rentalObjects.status,
+          status: rentalObjects.status,
         },
       })
       .from(favorites)
       .innerJoin(rentalObjects, eq(favorites.rentalObjectId, rentalObjects.id))
-      .innerJoin(categories, eq(rentalObjects.categoryKey, categories.key))
+      .leftJoin(categories, eq(rentalObjects.categoryKey, categories.key))
       .where(and(...conditions))
       .orderBy(
         query.sortOrder === 'desc'
@@ -302,7 +282,7 @@ export class FavoritesService {
     rentalObjectId: string,
     userId: string
   ): Promise<{ isFavorited: boolean; favoriteId?: string }> {
-    const result = await db
+    const result = await this.db
       .select({ id: favorites.id })
       .from(favorites)
       .where(
@@ -358,7 +338,7 @@ export class FavoritesService {
     userId: string,
     data: BulkRemoveFavoritesDTO
   ): Promise<BulkFavoritesResponse> {
-    const result = await db
+    const result = await this.db
       .delete(favorites)
       .where(
         and(
@@ -378,7 +358,7 @@ export class FavoritesService {
    * Get favorite count for user
    */
   async getFavoriteCount(userId: string): Promise<number> {
-    const [{ count }] = await db
+    const [{ count }] = await this.db
       .select({ count: sql<number>`count(*)` })
       .from(favorites)
       .where(eq(favorites.userId, userId));
@@ -387,5 +367,7 @@ export class FavoritesService {
   }
 }
 
-// Export singleton instance
-export const favoritesService = new FavoritesService();
+// Export factory function for creating service with db
+export function createFavoritesService(db: any): FavoritesService {
+  return new FavoritesService(db);
+}

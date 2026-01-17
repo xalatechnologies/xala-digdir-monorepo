@@ -12,8 +12,7 @@
  * - Manage: TENANT_ADMIN, SUPER_ADMIN
  */
 
-import { eq, and, inArray } from 'drizzle-orm';
-import { db } from '../../database/connection';
+import { eq, and } from 'drizzle-orm';
 import { 
   amenities,
   amenityGroups,
@@ -23,19 +22,31 @@ import type {
   AmenityDTO,
   AmenityGroupDTO,
 } from '../../types/dtos';
-import { PERMISSIONS } from '../../core/permissions';
-import { AuditService } from '../../core/audit.service';
+
+// AuditService interface for type safety
+interface AuditService {
+  log(params: {
+    tenantId: string;
+    userId: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    oldValue?: any;
+    newValue?: any;
+  }): Promise<void>;
+}
 
 export class AmenitiesService {
   constructor(
+    private readonly db: any,
     private readonly auditService: AuditService
   ) {}
 
   /**
    * List all amenities for tenant
    */
-  async listAmenities(tenantId: string, userId: string): Promise<AmenityDTO[]> {
-    const results = await db
+  async listAmenities(tenantId: string, _userId: string): Promise<AmenityDTO[]> {
+    const results = await this.db
       .select()
       .from(amenities)
       .where(
@@ -44,16 +55,16 @@ export class AmenitiesService {
           eq(amenities.isActive, true)
         )
       )
-      .orderBy(amenities.groupCode, amenities.name);
+      .orderBy(amenities.groupId, amenities.name);
 
-    return results.map(this.toDTO);
+    return results.map((a: any) => this.toDTO(a));
   }
 
   /**
    * Get amenities grouped by category
    */
   async listAmenitiesByGroup(tenantId: string): Promise<AmenityGroupDTO[]> {
-    const allAmenities = await db
+    const allAmenities = await this.db
       .select()
       .from(amenities)
       .where(
@@ -62,9 +73,9 @@ export class AmenitiesService {
           eq(amenities.isActive, true)
         )
       )
-      .orderBy(amenities.groupCode, amenities.name);
+      .orderBy(amenities.groupId, amenities.name);
 
-    const groups = await db
+    const groups = await this.db
       .select()
       .from(amenityGroups)
       .where(eq(amenityGroups.tenantId, tenantId));
@@ -73,7 +84,7 @@ export class AmenitiesService {
     const grouped = new Map<string, AmenityDTO[]>();
     
     for (const amenity of allAmenities) {
-      const groupCode = amenity.groupCode || 'other';
+      const groupCode = amenity.groupId || 'other';
       if (!grouped.has(groupCode)) {
         grouped.set(groupCode, []);
       }
@@ -81,10 +92,10 @@ export class AmenitiesService {
     }
 
     // Build response
-    return groups.map(group => ({
+    return groups.map((group: any) => ({
       code: group.code,
       name: group.name,
-      amenities: grouped.get(group.code) || [],
+      amenities: grouped.get(group.id) || [],
     }));
   }
 
@@ -92,7 +103,7 @@ export class AmenitiesService {
    * Get single amenity
    */
   async getAmenity(id: string, tenantId: string): Promise<AmenityDTO | null> {
-    const [result] = await db
+    const [result] = await this.db
       .select()
       .from(amenities)
       .where(
@@ -114,20 +125,20 @@ export class AmenitiesService {
       code: string;
       name: string;
       description?: string;
-      groupCode?: string;
+      groupId?: string;
       iconKey?: string;
     },
     tenantId: string,
     userId: string
   ): Promise<AmenityDTO> {
-    const [created] = await db
+    const [created] = await this.db
       .insert(amenities)
       .values({
         tenantId,
         code: data.code,
         name: data.name,
         description: data.description,
-        groupCode: data.groupCode,
+        groupId: data.groupId,
         iconKey: data.iconKey,
         isActive: true,
       })
@@ -154,14 +165,14 @@ export class AmenitiesService {
     data: {
       name?: string;
       description?: string;
-      groupCode?: string;
+      groupId?: string;
       iconKey?: string;
       isActive?: boolean;
     },
     tenantId: string,
     userId: string
   ): Promise<AmenityDTO> {
-    const [existing] = await db
+    const [existing] = await this.db
       .select()
       .from(amenities)
       .where(
@@ -175,11 +186,10 @@ export class AmenitiesService {
       throw new Error('Amenity not found');
     }
 
-    const [updated] = await db
+    const [updated] = await this.db
       .update(amenities)
       .set({
         ...data,
-        updatedAt: new Date(),
       })
       .where(eq(amenities.id, id))
       .returning();
@@ -206,7 +216,7 @@ export class AmenitiesService {
     tenantId: string,
     userId: string
   ): Promise<void> {
-    const [existing] = await db
+    const [existing] = await this.db
       .select()
       .from(amenities)
       .where(
@@ -220,11 +230,10 @@ export class AmenitiesService {
       throw new Error('Amenity not found');
     }
 
-    await db
+    await this.db
       .update(amenities)
       .set({
         isActive: false,
-        updatedAt: new Date(),
       })
       .where(eq(amenities.id, id));
 
@@ -246,7 +255,7 @@ export class AmenitiesService {
     rentalObjectId: string,
     tenantId: string
   ): Promise<AmenityDTO[]> {
-    const results = await db
+    const results = await this.db
       .select({
         amenity: amenities,
       })
@@ -262,7 +271,7 @@ export class AmenitiesService {
         )
       );
 
-    return results.map(r => this.toDTO(r.amenity));
+    return results.map((r: any) => this.toDTO(r.amenity));
   }
 
   /**
@@ -275,7 +284,7 @@ export class AmenitiesService {
     userId: string
   ): Promise<void> {
     // Remove existing
-    await db
+    await this.db
       .delete(rentalObjectAmenities)
       .where(
         and(
@@ -286,7 +295,7 @@ export class AmenitiesService {
 
     // Insert new
     if (amenityIds.length > 0) {
-      await db
+      await this.db
         .insert(rentalObjectAmenities)
         .values(
           amenityIds.map(amenityId => ({
@@ -318,8 +327,8 @@ export class AmenitiesService {
       code: amenity.code,
       name: amenity.name,
       description: amenity.description,
-      groupCode: amenity.groupCode,
-      groupName: amenity.groupName, // TODO: Join from amenity_groups
+      groupCode: amenity.groupId, // Map groupId to groupCode for DTO
+      groupName: undefined, // TODO: Join from amenity_groups
       iconKey: amenity.iconKey,
       isActive: amenity.isActive,
     };

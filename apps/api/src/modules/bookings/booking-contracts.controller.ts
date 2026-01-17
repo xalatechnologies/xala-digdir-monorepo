@@ -10,6 +10,11 @@
 import { Controller, Post } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { BookingContractsService } from './booking-contracts.service';
+import { validate } from '../../core/validation/zod-pipe';
+import {
+  PricePreviewRequestSchema,
+  RecurringPreviewRequestSchema,
+} from '../../schemas/booking-contracts.schema';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller('/api/bookings')
@@ -27,7 +32,7 @@ export class BookingContractsController {
    */
   @Post('/preview-price')
   async previewPrice(request: FastifyRequest, _reply: FastifyReply) {
-    const body = request.body as any;
+    const body = validate(PricePreviewRequestSchema, request.body);
     const preview = await this.service.previewPrice(body);
     return { data: preview };
   }
@@ -41,7 +46,7 @@ export class BookingContractsController {
    */
   @Post('/recurring/preview')
   async previewRecurring(request: FastifyRequest, _reply: FastifyReply) {
-    const body = request.body as any;
+    const body = validate(RecurringPreviewRequestSchema, request.body);
     const preview = await this.service.previewRecurring(body);
     return { data: preview };
   }
