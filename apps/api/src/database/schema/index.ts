@@ -776,11 +776,49 @@ export const brandingVersions = platformSchema.table('branding_versions', {
 export { gdprRequests } from './gdpr-requests';
 
 // ============================================================================
-// Notification Preferences
+// Notification Preferences (defined inline to avoid circular dependency)
 // ============================================================================
 
-export { notificationPreferences } from './notification-preferences';
-export type { NotificationPreference, NewNotificationPreference } from './notification-preferences';
+export const notificationPreferences = domainSchema.table('notification_preferences', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+
+  // Channel preferences (global toggles)
+  inAppEnabled: boolean('in_app_enabled').notNull().default(true),
+  emailEnabled: boolean('email_enabled').notNull().default(true),
+  smsEnabled: boolean('sms_enabled').notNull().default(false),
+  pushEnabled: boolean('push_enabled').notNull().default(true),
+
+  // Notification type preferences
+  bookingCreated: boolean('booking_created').notNull().default(true),
+  bookingApproved: boolean('booking_approved').notNull().default(true),
+  bookingRejected: boolean('booking_rejected').notNull().default(true),
+  bookingCancelled: boolean('booking_cancelled').notNull().default(true),
+  bookingChanged: boolean('booking_changed').notNull().default(true),
+
+  reminder24h: boolean('reminder_24h').notNull().default(true),
+  reminder2h: boolean('reminder_2h').notNull().default(true),
+
+  systemNotifications: boolean('system_notifications').notNull().default(true),
+  adminMessages: boolean('admin_messages').notNull().default(true),
+
+  invoiceAvailable: boolean('invoice_available').notNull().default(true),
+  paymentStatus: boolean('payment_status').notNull().default(true),
+
+  // Metadata & Timestamps
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  userIdx: index('notification_preferences_user_idx').on(table.userId),
+  tenantIdx: index('notification_preferences_tenant_idx').on(table.tenantId),
+  userTenantIdx: index('notification_preferences_user_tenant_idx').on(table.userId, table.tenantId),
+  userTenantUnique: unique('notification_preferences_user_tenant_unique').on(table.userId, table.tenantId),
+}));
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type NewNotificationPreference = typeof notificationPreferences.$inferInsert;
 
 // ============================================================================
 // Type Exports
