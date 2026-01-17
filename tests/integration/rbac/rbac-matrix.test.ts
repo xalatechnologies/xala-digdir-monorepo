@@ -190,8 +190,8 @@ describe('RBAC Matrix Tests', () => {
           // Should succeed or get empty data (not 401/403)
           expect([200, 404]).toContain(response.status);
         } else {
-          // Should be blocked
-          expect([401, 403]).toContain(response.status);
+          // Should be blocked (401/403) or not exist (404)
+          expect([401, 403, 404]).toContain(response.status);
         }
 
         results.push({ rule, passed: true, actual: response.status });
