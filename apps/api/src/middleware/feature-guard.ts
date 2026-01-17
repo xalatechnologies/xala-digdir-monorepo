@@ -4,7 +4,6 @@
  */
 
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { featureFlagsService } from '../services/feature-flags.service';
 
 /**
  * Middleware to require a specific feature flag
@@ -36,15 +35,105 @@ export function requireFeature(featureKey: string) {
       });
     }
 
+    // Check if feature is enabled via featureFlagsService (attached to request in main.ts)
+    const featureFlagsService = (request as any).featureFlagsService;
+    if (featureFlagsService) {
+      try {
+        await featureFlagsService.requireFeature(user.tenantId, featureKey);
+        return;
+      } catch (error: any) {
+        return reply.status(error.statusCode || 403).send({
+          type: error.type || 'https://api.digilist.no/errors/feature-disabled',
+          title: error.title || 'Feature Disabled',
+          status: error.statusCode || 403,
+          detail: error.detail || `Feature '${featureKey}' is not enabled`,
+          instance: request.url,
+        });
+      }
+    }
+
+    // Fallback: check in user.featureFlags if service not available
+    const featureFlags = user.featureFlags || {};
+    if (featureFlags[featureKey] !== true) {
+      return reply.status(403).send({
+        type: 'https://api.digilist.no/errors/feature-disabled',
+        title: 'Feature Disabled',
+        status: 403,
+        detail: `Feature '${featureKey}' is not enabled for this tenant.`,
+        instance: request.url,
+        feature: featureKey,
+        tenantId: user.tenantId,
+      });
+    }
+  };
+}
+
+/**
+ * Middleware to require a specific module to be enabled
+ * Returns RFC7807 error if module is not enabled for the tenant
+ * 
+ * @param moduleKey - The module key to check (e.g., 'RATINGS', 'MESSAGING')
+ * 
+ * @example
+ * ```typescript
+ * fastify.get('/api/ratings', {
+ *   preHandler: [requireAuth, requireModule('RATINGS')],
+ *   handler: async (request, reply) => {
+ *     // Only accessible if RATINGS module is enabled
+ *   },
+ * });
+ * ```
+ */
+export function requireModule(moduleKey: string) {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = request.user as any;
+    
+    if (!user || !user.tenantId) {
+      return reply.status(401).send({
+        type: 'https://api.digilist.no/errors/unauthorized',
+        title: 'Unauthorized',
+        status: 401,
+        detail: 'Authentication required',
+        instance: request.url,
+      });
+    }
+
+    // Check if module is enabled via modulesService (attached to request in main.ts)
+    const modulesService = (request as any).modulesService;
+    if (!modulesService) {
+      // Fallback: if modulesService not available, check in user.capabilities
+      const capabilities = user.capabilities || {};
+      const modules = user.modules || [];
+      const targetModule = modules.find((m: any) => m.key === moduleKey);
+      
+      if (!targetModule?.enabled) {
+        return reply.status(403).send({
+          type: 'https://api.digilist.no/errors/feature-disabled',
+          title: 'Feature Disabled',
+          status: 403,
+          detail: `The module '${moduleKey}' is not enabled for this tenant.`,
+          instance: request.url,
+          module: moduleKey,
+          tenantId: user.tenantId,
+        });
+      }
+      return;
+    }
+
     try {
-      await featureFlagsService.requireFeature(user.tenantId, featureKey);
+      await modulesService.requireModule(
+        { tenantId: user.tenantId, orgId: user.organizationId },
+        moduleKey
+      );
     } catch (error: any) {
-      return reply.status(error.statusCode || 403).send({
+      return reply.status(error.status || 403).send({
         type: error.type || 'https://api.digilist.no/errors/feature-disabled',
         title: error.title || 'Feature Disabled',
-        status: error.statusCode || 403,
-        detail: error.detail || `Feature '${featureKey}' is not enabled`,
+        status: error.status || 403,
+        detail: error.detail || `Module '${moduleKey}' is not enabled`,
         instance: request.url,
+        module: moduleKey,
+        tenantId: user.tenantId,
       });
     }
   };
@@ -81,7 +170,16 @@ export function requireCategory(category: string) {
     }
 
     try {
-      await featureFlagsService.requireCategory(user.tenantId, category);
+      const featureFlagsService = (request as any).featureFlagsService;
+      if (featureFlagsService) {
+        await featureFlagsService.requireCategory(user.tenantId, category);
+        return;
+      }
+      // Fallback: check in user.enabledCategories
+      const enabledCategories = user.enabledCategories || [];
+      if (!enabledCategories.includes(category)) {
+        throw { statusCode: 403, detail: `Category '${category}' is not enabled` };
+      }
     } catch (error: any) {
       return reply.status(error.statusCode || 403).send({
         type: error.type || 'https://api.digilist.no/errors/category-disabled',
@@ -136,7 +234,16 @@ export async function validateCategoryInBody(
   }
 
   try {
-    await featureFlagsService.requireCategory(user.tenantId, body.category);
+    const featureFlagsService = (request as any).featureFlagsService;
+    if (featureFlagsService) {
+      await featureFlagsService.requireCategory(user.tenantId, body.category);
+      return;
+    }
+    // Fallback: check in user.enabledCategories
+    const enabledCategories = user.enabledCategories || [];
+    if (!enabledCategories.includes(body.category)) {
+      throw { statusCode: 403, detail: `Category '${body.category}' is not enabled` };
+    }
   } catch (error: any) {
     return reply.status(error.statusCode || 403).send({
       type: error.type || 'https://api.digilist.no/errors/category-disabled',
@@ -171,7 +278,12 @@ export async function checkFeature(
   }
 
   try {
-    return await featureFlagsService.isFeatureEnabled(user.tenantId, featureKey);
+    const featureFlagsService = (request as any).featureFlagsService;
+    if (featureFlagsService) {
+      return await featureFlagsService.isFeatureEnabled(user.tenantId, featureKey);
+    }
+    // Fallback: check in user.featureFlags
+    return (user.featureFlags || {})[featureKey] === true;
   } catch {
     return false;
   }
@@ -200,7 +312,12 @@ export async function checkCategory(
   }
 
   try {
-    return await featureFlagsService.isCategoryEnabled(user.tenantId, category);
+    const featureFlagsService = (request as any).featureFlagsService;
+    if (featureFlagsService) {
+      return await featureFlagsService.isCategoryEnabled(user.tenantId, category);
+    }
+    // Fallback: check in user.enabledCategories
+    return (user.enabledCategories || []).includes(category);
   } catch {
     return false;
   }

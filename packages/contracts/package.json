@@ -25,6 +25,11 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.mjs",
       "require": "./dist/types/index.js"
+    },
+    "./modules": {
+      "types": "./dist/modules/index.d.ts",
+      "import": "./dist/modules/index.mjs",
+      "require": "./dist/modules/index.js"
     }
   },
   "files": [

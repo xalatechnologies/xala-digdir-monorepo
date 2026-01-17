@@ -43,6 +43,9 @@ export * from './projections';
 // Storage
 export * from './storage';
 
+// Modules
+export * from './modules';
+
 // Types (re-export for convenience)
 export type {
   // Common

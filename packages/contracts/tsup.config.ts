@@ -6,6 +6,7 @@ export default defineConfig({
     'schemas/index': 'src/schemas/index.ts',
     'projections/index': 'src/projections/index.ts',
     'types/index': 'src/types/index.ts',
+    'modules/index': 'src/modules/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
