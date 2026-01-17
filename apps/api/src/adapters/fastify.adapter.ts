@@ -129,6 +129,15 @@ export async function createFastifyApp(
     decorateReply: false, // Don't decorate to avoid conflicts
   });
 
+  // Register seed-images static file serving
+  // Serves files from apps/api/storage/seed-images/ at /seed-images route
+  const seedImagesDir = path.join(process.cwd(), 'storage', 'seed-images');
+  await app.register(fastifyStatic, {
+    root: seedImagesDir,
+    prefix: '/seed-images/',
+    decorateReply: false,
+  });
+
   // Register multipart for file uploads
   await app.register(fastifyMultipart, {
     limits: {
