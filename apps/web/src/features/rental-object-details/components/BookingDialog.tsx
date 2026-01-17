@@ -17,7 +17,7 @@ import {
   Label,
   Select,
   SelectOption,
-} from '@digdir/designsystemet-react';
+} from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { PaymentSection } from './PaymentSection';
 
@@ -136,17 +136,14 @@ export interface BookingDialogProps {
 // Constants
 // =============================================================================
 
-const WEEKDAYS = [
-  { key: 'ma', label: 'Ma' },
-  { key: 'ti', label: 'Ti' },
-  { key: 'on', label: 'On' },
-  { key: 'to', label: 'To' },
-  { key: 'fr', label: 'Fr' },
-  { key: 'lo', label: 'Lø' },
-];
+// Weekday keys for calendar header (Monday-Saturday for booking week view)
+const WEEKDAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
-const DAY_NAMES = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
-const MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
+// Day name keys for date formatting (Sunday first, matching JS Date.getDay())
+const DAY_NAME_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+
+// Month keys for date formatting
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
 
 // =============================================================================
 // Helper Functions
@@ -187,6 +184,24 @@ export function BookingDialog({
   const [isMounted, setIsMounted] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
   const closeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Generate translated weekday labels for calendar header
+  const weekdays = React.useMemo(() =>
+    WEEKDAY_KEYS.map(key => ({ key, label: t(`weekdays.tiny.${key}`) })),
+    [t]
+  );
+
+  // Generate translated day names for date display
+  const dayNames = React.useMemo(() =>
+    DAY_NAME_KEYS.map(key => t(`weekdays.short.${key}`)),
+    [t]
+  );
+
+  // Generate translated month names for date display
+  const monthNames = React.useMemo(() =>
+    MONTH_KEYS.map(key => t(`months.short.${key}`)),
+    [t]
+  );
 
   // Parse opening hours
   const openHour = parseInt(openingHours.open.split(':')[0] ?? '8', 10);
@@ -429,7 +444,7 @@ export function BookingDialog({
             >
               <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.calendar}</span>
               <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-accent-text-default)' }}>
-                {DAY_NAMES[selectedDate.getDay()]} {selectedDate.getDate()}. {MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getFullYear()}
+                {dayNames[selectedDate.getDay()]} {selectedDate.getDate()}. {monthNames[selectedDate.getMonth()]} {selectedDate.getFullYear()}
               </Paragraph>
             </div>
 
@@ -700,7 +715,7 @@ export function BookingDialog({
                   <div>
                     <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('velg.ukedager')}</Label>
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-                      {WEEKDAYS.map((day) => (
+                      {weekdays.map((day) => (
                         <button
                           key={day.key}
                           type="button"

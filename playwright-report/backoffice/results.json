@@ -1,0 +1,1161 @@
+{
+  "config": {
+    "configFile": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/playwright.backoffice.config.ts",
+    "rootDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report/backoffice"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/backoffice/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "admin-setup",
+        "name": "admin-setup",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [],
+        "testMatch": [
+          "/auth\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "saksbehandler-setup",
+        "name": "saksbehandler-setup",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [],
+        "testMatch": [
+          "/saksbehandler\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "admin-chromium",
+        "name": "admin-chromium",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [
+          "/saksbehandler/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "saksbehandler-chromium",
+        "name": "saksbehandler-chromium",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [],
+        "testMatch": [
+          "/saksbehandler|shared/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "smoke",
+        "name": "smoke",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [],
+        "testMatch": [
+          "/smoke\\.spec\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "wcag",
+        "name": "wcag",
+        "testDir": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice",
+        "testIgnore": [],
+        "testMatch": [
+          "/wcag\\.spec\\.ts/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 7,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "fixtures/auth.setup.ts",
+      "file": "fixtures/auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticate as admin",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "admin-setup",
+              "projectName": "admin-setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6202,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-01-17T22:45:55.331Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6db7255f214771fc958b-d28c47a3900fe5ab81de",
+          "file": "fixtures/auth.setup.ts",
+          "line": 12,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "title": "workflows/admin/bookings.spec.ts",
+      "file": "workflows/admin/bookings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Admin - Booking Management",
+          "file": "workflows/admin/bookings.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Bookings List",
+              "file": "workflows/admin/bookings.spec.ts",
+              "line": 15,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display bookings page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 10295,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m12\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.2770000000000001, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.563Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.238, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, {\"duration\": -1.207, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=confirmed\"}, {\"duration\": -1.176, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=completed\"}, {\"duration\": -1.15, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.124, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.566Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.126, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.620Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.078, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.621Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.258, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.622Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.223, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.624Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, …]\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m12\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.2770000000000001, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.563Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.238, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, {\"duration\": -1.207, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=confirmed\"}, {\"duration\": -1.176, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=completed\"}, {\"duration\": -1.15, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.124, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.566Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.126, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.620Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.078, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.621Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.258, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.622Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.223, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.624Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, …]\u001b[39m\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts:26:39",
+                            "location": {
+                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts",
+                              "column": 39,
+                              "line": 26
+                            },
+                            "snippet": "  24 |       expect(hasContent).toBe(true);\n  25 |\n> 26 |       expect(evidence.getApiErrors()).toHaveLength(0);\n     |                                       ^\n  27 |     });\n  28 |\n  29 |     test('should have filter or search options', async ({ page }) => {"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts",
+                                "column": 39,
+                                "line": 26
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m12\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.2770000000000001, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.563Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.238, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, {\"duration\": -1.207, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=confirmed\"}, {\"duration\": -1.176, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=completed\"}, {\"duration\": -1.15, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.564Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.124, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.566Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.126, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.620Z\", \"url\": \"https://api.digilist.no/api/bookings?status=cancelled\"}, {\"duration\": -1.078, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.621Z\", \"url\": \"https://api.digilist.no/api/bookings\"}, {\"duration\": -1.258, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.622Z\", \"url\": \"https://api.digilist.no/api/rental-objects?limit=100\"}, {\"duration\": -1.223, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:11.624Z\", \"url\": \"https://api.digilist.no/api/bookings?status=pending\"}, …]\u001b[39m\n\n  24 |       expect(hasContent).toBe(true);\n  25 |\n> 26 |       expect(evidence.getApiErrors()).toHaveLength(0);\n     |                                       ^\n  27 |     });\n  28 |\n  29 |     test('should have filter or search options', async ({ page }) => {\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts:26:39"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.230Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-bookings-A-20247-hould-display-bookings-page-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-bookings-A-20247-hould-display-bookings-page-admin-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts",
+                            "column": 39,
+                            "line": 26
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-cb8cba723fb7d4ebc3d3",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 16,
+                  "column": 9
+                },
+                {
+                  "title": "should have filter or search options",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 7128,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Booking filters visible: true\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.240Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-8b6e782016b7993a262b",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 29,
+                  "column": 9
+                },
+                {
+                  "title": "should display booking content or empty state",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 9724,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.238Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-2512ceae823d77dfaf0f",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 41,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Booking Details",
+              "file": "workflows/admin/bookings.spec.ts",
+              "line": 52,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should navigate to booking detail if exists",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "No bookings available",
+                          "location": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts",
+                            "line": 68,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 3,
+                          "status": "skipped",
+                          "duration": 7786,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "No booking links found\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.237Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "No bookings available",
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/bookings.spec.ts",
+                                "line": 68,
+                                "column": 14
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-ef6c8d527b2d259cc411",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 53,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Work Queue",
+              "file": "workflows/admin/bookings.spec.ts",
+              "line": 73,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display work queue page",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 7952,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.235Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-d30080e54cedfec50dfe",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 74,
+                  "column": 9
+                },
+                {
+                  "title": "should show pending items or empty state",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 5,
+                          "status": "passed",
+                          "duration": 10558,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.237Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "c5a9ed84c6f1768b2b79-16035679f7a032b3d47c",
+                  "file": "workflows/admin/bookings.spec.ts",
+                  "line": 95,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "workflows/admin/calendar.spec.ts",
+      "file": "workflows/admin/calendar.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Admin - Calendar Management",
+          "file": "workflows/admin/calendar.spec.ts",
+          "line": 11,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Calendar View",
+              "file": "workflows/admin/calendar.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display calendar page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 6,
+                          "status": "failed",
+                          "duration": 9712,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m4\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.156, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.730Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.188, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.731Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}, {\"duration\": -1.133, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.779Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.068, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.784Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}]\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m4\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.156, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.730Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.188, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.731Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}, {\"duration\": -1.133, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.779Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.068, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.784Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}]\u001b[39m\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts:27:39",
+                            "location": {
+                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                              "column": 39,
+                              "line": 27
+                            },
+                            "snippet": "  25 |\n  26 |       expect(hasContent, 'Should display calendar content').toBe(true);\n> 27 |       expect(evidence.getApiErrors()).toHaveLength(0);\n     |                                       ^\n  28 |     });\n  29 |\n  30 |     test('should have calendar navigation', async ({ page }) => {"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                                "column": 39,
+                                "line": 27
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m4\u001b[39m\nReceived array:  \u001b[31m[{\"duration\": -1.156, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.730Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.188, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:09.731Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}, {\"duration\": -1.133, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.779Z\", \"url\": \"https://api.digilist.no/api/calendar/events?startDate=2026-01-12&endDate=2026-01-18\"}, {\"duration\": -1.068, \"method\": \"GET\", \"status\": 500, \"timestamp\": \"2026-01-17T22:46:10.784Z\", \"url\": \"https://api.digilist.no/api/rental-objects?status=published\"}]\u001b[39m\n\n  25 |\n  26 |       expect(hasContent, 'Should display calendar content').toBe(true);\n> 27 |       expect(evidence.getApiErrors()).toHaveLength(0);\n     |                                       ^\n  28 |     });\n  29 |\n  30 |     test('should have calendar navigation', async ({ page }) => {\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts:27:39"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:02.235Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-calendar-A-d1775-hould-display-calendar-page-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-calendar-A-d1775-hould-display-calendar-page-admin-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                            "column": 39,
+                            "line": 27
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d41702ab4633f8fbd714-d8d8a730e65e99b40836",
+                  "file": "workflows/admin/calendar.spec.ts",
+                  "line": 15,
+                  "column": 9
+                },
+                {
+                  "title": "should have calendar navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 5548,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Calendar navigation visible: false\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:09.540Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d41702ab4633f8fbd714-f900eca4698f8e5a31a4",
+                  "file": "workflows/admin/calendar.spec.ts",
+                  "line": 30,
+                  "column": 9
+                },
+                {
+                  "title": "should load calendar content",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 3,
+                          "status": "timedOut",
+                          "duration": 60079,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                                "column": 74,
+                                "line": 46
+                              },
+                              "message": "Error: locator.textContent: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('main, [role=\"main\"]').first()\u001b[22m\n\n\n  44 |       await page.waitForTimeout(3000);\n  45 |\n> 46 |       const bodyText = await page.locator('main, [role=\"main\"]').first().textContent() || '';\n     |                                                                          ^\n  47 |       expect(bodyText.length).toBeGreaterThan(10);\n  48 |     });\n  49 |   });\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts:46:74"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:10.195Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-calendar-A-f0254-hould-load-calendar-content-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-calendar-A-f0254-hould-load-calendar-content-admin-chromium/error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d41702ab4633f8fbd714-44aa59ff58a4343e1926",
+                  "file": "workflows/admin/calendar.spec.ts",
+                  "line": 42,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Blocks/Blackouts",
+              "file": "workflows/admin/calendar.spec.ts",
+              "line": 51,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should access blocks page",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Blocks route not available",
+                          "location": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                            "line": 60,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 4,
+                          "status": "skipped",
+                          "duration": 9252,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Blocks page redirected to login\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:10.363Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "Blocks route not available",
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                                "line": 60,
+                                "column": 14
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d41702ab4633f8fbd714-0ca14b31d689d345b33b",
+                  "file": "workflows/admin/calendar.spec.ts",
+                  "line": 52,
+                  "column": 9
+                },
+                {
+                  "title": "blocks page should have content",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "Blocks route not available",
+                          "location": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                            "line": 76,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 2,
+                          "status": "skipped",
+                          "duration": 6788,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:12.130Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "Blocks route not available",
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/calendar.spec.ts",
+                                "line": 76,
+                                "column": 14
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d41702ab4633f8fbd714-8678df73102b426068ed",
+                  "file": "workflows/admin/calendar.spec.ts",
+                  "line": 71,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "workflows/admin/listings.spec.ts",
+      "file": "workflows/admin/listings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Admin - Listings Management",
+          "file": "workflows/admin/listings.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "List View",
+              "file": "workflows/admin/listings.spec.ts",
+              "line": 16,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display listings list",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 6,
+                          "status": "failed",
+                          "duration": 11469,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/rental-objects\"\u001b[39m\nReceived string:    \u001b[31m\"https://backoffice.digilist.no/login\"\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/rental-objects\"\u001b[39m\nReceived string:    \u001b[31m\"https://backoffice.digilist.no/login\"\u001b[39m\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts:22:26",
+                            "location": {
+                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                              "column": 26,
+                              "line": 22
+                            },
+                            "snippet": "  20 |\n  21 |       // Page should load\n> 22 |       expect(page.url()).toContain('/rental-objects');\n     |                          ^\n  23 |       \n  24 |       // Should have content (table, cards, or list)\n  25 |       const hasContent = await page.locator("
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                                "column": 26,
+                                "line": 22
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/rental-objects\"\u001b[39m\nReceived string:    \u001b[31m\"https://backoffice.digilist.no/login\"\u001b[39m\n\n  20 |\n  21 |       // Page should load\n> 22 |       expect(page.url()).toContain('/rental-objects');\n     |                          ^\n  23 |       \n  24 |       // Should have content (table, cards, or list)\n  25 |       const hasContent = await page.locator(\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts:22:26"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:12.471Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-1d9e3-hould-display-listings-list-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-1d9e3-hould-display-listings-list-admin-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                            "column": 26,
+                            "line": 22
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "da7da004e54512a2c959-256646e3103e98000041",
+                  "file": "workflows/admin/listings.spec.ts",
+                  "line": 17,
+                  "column": 9
+                },
+                {
+                  "title": "should have filter or search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 11576,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Filter controls visible: false\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:13.006Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "da7da004e54512a2c959-ca3d984a80ed110587f7",
+                  "file": "workflows/admin/listings.spec.ts",
+                  "line": 35,
+                  "column": 9
+                },
+                {
+                  "title": "should load page content",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 5,
+                          "status": "timedOut",
+                          "duration": 60082,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                                "column": 74,
+                                "line": 52
+                              },
+                              "message": "Error: locator.textContent: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('main, [role=\"main\"]').first()\u001b[22m\n\n\n  50 |\n  51 |       // Page should not be blank\n> 52 |       const bodyText = await page.locator('main, [role=\"main\"]').first().textContent() || '';\n     |                                                                          ^\n  53 |       expect(bodyText.length).toBeGreaterThan(10);\n  54 |     });\n  55 |   });\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts:52:74"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:12.972Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-c822d-ew-should-load-page-content-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-c822d-ew-should-load-page-content-admin-chromium/error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "da7da004e54512a2c959-ec2058d616fee5bc6f5a",
+                  "file": "workflows/admin/listings.spec.ts",
+                  "line": 47,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Create Listing (Wizard)",
+              "file": "workflows/admin/listings.spec.ts",
+              "line": 57,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should access creation page or wizard",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 9134,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts:80:27",
+                            "location": {
+                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                              "column": 27,
+                              "line": 80
+                            },
+                            "snippet": "  78 |         \n  79 |         const hasWizard = await page.locator('form, main').isVisible();\n> 80 |         expect(hasWizard).toBe(true);\n     |                           ^\n  81 |       }\n  82 |     });\n  83 |   });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                                "column": 27,
+                                "line": 80
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  78 |         \n  79 |         const hasWizard = await page.locator('form, main').isVisible();\n> 80 |         expect(hasWizard).toBe(true);\n     |                           ^\n  81 |       }\n  82 |     });\n  83 |   });\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts:80:27"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:15.096Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-7fe5c-ess-creation-page-or-wizard-admin-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/workflows-admin-listings-A-7fe5c-ess-creation-page-or-wizard-admin-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                            "column": 27,
+                            "line": 80
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "da7da004e54512a2c959-aef5f8db8a479ca68107",
+                  "file": "workflows/admin/listings.spec.ts",
+                  "line": 58,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Listing Detail",
+              "file": "workflows/admin/listings.spec.ts",
+              "line": 85,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should access listing detail if listings exist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "No listings available",
+                          "location": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                            "line": 106,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "admin-chromium",
+                      "projectName": "admin-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 2,
+                          "status": "skipped",
+                          "duration": 5688,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "No listing links found\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-17T22:46:18.926Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "No listings available",
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/workflows/admin/listings.spec.ts",
+                                "line": 106,
+                                "column": 14
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "da7da004e54512a2c959-bfff3e32d03419d3149e",
+                  "file": "workflows/admin/listings.spec.ts",
+                  "line": 86,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-17T22:45:55.042Z",
+    "duration": 78045.8,
+    "expected": 7,
+    "skipped": 4,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

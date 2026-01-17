@@ -1,0 +1,72 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - img "DIGILIST" [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]: DIGILIST
+          - generic [ref=e12]: ENKEL BOOKING
+      - generic [ref=e13]:
+        - heading "Logg inn" [level=1] [ref=e14]
+        - paragraph [ref=e15]: Velg innloggingsmetode i henhold til kommunens retningslinjer.
+        - generic [ref=e16]:
+          - button "ID-porten ID-porten Personlig innlogging med BankID" [ref=e17] [cursor=pointer]:
+            - img "ID-porten" [ref=e19]
+            - generic [ref=e24]:
+              - generic [ref=e25]: ID-porten
+              - generic [ref=e26]: Personlig innlogging med BankID
+          - button "Microsoft Microsoft Single Sign-On (SSO) kommer snart" [disabled] [ref=e27]:
+            - img "Microsoft" [ref=e29]
+            - generic [ref=e35]:
+              - generic [ref=e36]: Microsoft
+              - generic [ref=e37]: Single Sign-On (SSO) kommer snart
+          - button "Admin Demo Logg inn med demo token for testing" [ref=e38] [cursor=pointer]:
+            - img [ref=e40]
+            - generic [ref=e42]:
+              - generic [ref=e43]: Admin Demo
+              - generic [ref=e44]: Logg inn med demo token for testing
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - link "Personvern" [ref=e47] [cursor=pointer]:
+          - /url: https://digilist.no/personvern
+        - generic [ref=e48]: ·
+        - link "Vilkår for bruk" [ref=e49] [cursor=pointer]:
+          - /url: https://digilist.no/cookies
+        - generic [ref=e50]: ·
+        - link "Kontakt support" [ref=e51] [cursor=pointer]:
+          - /url: https://digilist.no/#book-demo
+      - paragraph [ref=e52]: © 2026 Digilist. Alle rettigheter reservert.
+  - generic [ref=e54]:
+    - generic [ref=e55]:
+      - paragraph [ref=e56]: Backoffice
+      - heading "En helhetlig bookingløsning" [level=2] [ref=e57]
+      - paragraph [ref=e58]: Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering.
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - img [ref=e62]
+        - generic [ref=e67]:
+          - paragraph [ref=e68]: Komplett plattform
+          - paragraph [ref=e69]: Booking, betaling, kalender og rapportering i én løsning
+      - generic [ref=e70]:
+        - img [ref=e72]
+        - generic [ref=e78]:
+          - paragraph [ref=e79]: Automatisering
+          - paragraph [ref=e80]: Regelbasert godkjenning reduserer manuelt arbeid
+      - generic [ref=e81]:
+        - img [ref=e83]
+        - generic [ref=e86]:
+          - paragraph [ref=e87]: GDPR-klar & Sikker
+          - paragraph [ref=e88]: Full etterlevelse av personvernregler og norske standarder
+    - generic [ref=e89]:
+      - paragraph [ref=e90]: Integrasjoner & Sertifiseringer
+      - generic [ref=e91]:
+        - generic [ref=e92]: BankID
+        - generic [ref=e93]: Vipps
+        - generic [ref=e94]: Visma
+        - generic [ref=e95]: RCO
+        - generic [ref=e96]: ISO 27001
+        - generic [ref=e97]: ISO 27701
+```

@@ -38,6 +38,9 @@ pnpm build
 echo -e "\n${YELLOW}Step 2: Creating deployment package${NC}"
 DEPLOY_DIR=$(mktemp -d)
 cp -r dist "${DEPLOY_DIR}/"
+cp -r src "${DEPLOY_DIR}/"
+cp -r db "${DEPLOY_DIR}/"
+cp -r storage "${DEPLOY_DIR}/"
 cp package.json "${DEPLOY_DIR}/"
 cp .env.example "${DEPLOY_DIR}/.env.example"
 
@@ -64,7 +67,8 @@ cat > "${DEPLOY_DIR}/package.json" << 'EOF'
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
     "redis": "^4.7.0",
-    "dotenv": "^17.0.0"
+    "dotenv": "^17.0.0",
+    "tsx": "^4.19.0"
   }
 }
 EOF
@@ -101,13 +105,36 @@ ssh "${VPS_USER}@${VPS_HOST}" << REMOTE
   
   # Install dependencies
   npm install --omit=dev
-  
+
   # Generate .env if not exists
   if [ ! -f .env ]; then
     cp .env.example .env
     echo "⚠️  Created .env from template - please configure!"
   fi
-  
+
+  # Check if database needs seeding
+  echo "🔍 Checking if database needs seeding..."
+  RENTAL_COUNT=\$(psql "\${DATABASE_URL}" -t -c "SELECT COUNT(*) FROM domain.rental_objects;" 2>/dev/null | xargs || echo "0")
+  USER_COUNT=\$(psql "\${DATABASE_URL}" -t -c "SELECT COUNT(*) FROM platform.users;" 2>/dev/null | xargs || echo "0")
+
+  if [ "\${RENTAL_COUNT}" = "0" ] || [ "\${USER_COUNT}" = "0" ]; then
+    echo "📦 Database needs seeding (users: \${USER_COUNT}, rental objects: \${RENTAL_COUNT})..."
+    cd db/seed-data-bank
+
+    # Import demo users first
+    echo "👥 Importing demo users..."
+    node import-demo-users.cjs
+
+    # Import rental objects
+    echo "🏠 Importing rental objects..."
+    node import-rental-objects.cjs
+
+    cd ../..
+    echo "✅ Seed complete"
+  else
+    echo "✅ Database has \${USER_COUNT} users and \${RENTAL_COUNT} rental objects, skipping seed"
+  fi
+
   # Restart with PM2
   pm2 delete ${APP_NAME} 2>/dev/null || true
   pm2 start ecosystem.config.cjs

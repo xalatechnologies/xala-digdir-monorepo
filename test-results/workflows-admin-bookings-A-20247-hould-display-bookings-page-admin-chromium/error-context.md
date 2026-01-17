@@ -1,0 +1,239 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - complementary [ref=e5]:
+    - generic [ref=e7]:
+      - img "Digilist"
+      - generic [ref=e8]:
+        - generic [ref=e9]: DIGILIST
+        - generic [ref=e10]: Backoffice
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - paragraph [ref=e13]: Administrasjon
+        - list [ref=e14]:
+          - listitem [ref=e15]:
+            - link "Utleieobjekter Lokaler, utstyr, kjøretøy og opplevelser" [ref=e16] [cursor=pointer]:
+              - /url: /rental-objects
+              - img [ref=e18]
+              - generic [ref=e21]:
+                - paragraph [ref=e22]: Utleieobjekter
+                - paragraph [ref=e23]: Lokaler, utstyr, kjøretøy og opplevelser
+              - img [ref=e26]
+          - listitem [ref=e28]:
+            - link "Sesonger Faste avtaler" [ref=e29] [cursor=pointer]:
+              - /url: /seasons
+              - img [ref=e31]
+              - generic [ref=e36]:
+                - paragraph [ref=e37]: Sesonger
+                - paragraph [ref=e38]: Faste avtaler
+              - img [ref=e41]
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: Brukere & Org
+        - list [ref=e45]:
+          - listitem [ref=e46]:
+            - link "Organisasjoner Administrer organisasjoner" [ref=e47] [cursor=pointer]:
+              - /url: /organizations
+              - img [ref=e49]
+              - generic [ref=e54]:
+                - paragraph [ref=e55]: Organisasjoner
+                - paragraph [ref=e56]: Administrer organisasjoner
+              - img [ref=e59]
+          - listitem [ref=e61]:
+            - link "Brukere Administrer brukere" [ref=e62] [cursor=pointer]:
+              - /url: /users
+              - img [ref=e64]
+              - generic [ref=e69]:
+                - paragraph [ref=e70]: Brukere
+                - paragraph [ref=e71]: Administrer brukere
+              - img [ref=e74]
+      - generic [ref=e76]:
+        - paragraph [ref=e77]: Saksbehandler
+        - list [ref=e78]:
+          - listitem [ref=e79]:
+            - link "Arbeidskø Ventende forespørsler" [ref=e80] [cursor=pointer]:
+              - /url: /work-queue
+              - img [ref=e82]
+              - generic [ref=e85]:
+                - paragraph [ref=e86]: Arbeidskø
+                - paragraph [ref=e87]: Ventende forespørsler
+              - img [ref=e90]
+          - listitem [ref=e92]:
+            - link "Sesongsøknader Behandle søknader" [ref=e93] [cursor=pointer]:
+              - /url: /season-applications
+              - img [ref=e95]
+              - generic [ref=e100]:
+                - paragraph [ref=e101]: Sesongsøknader
+                - paragraph [ref=e102]: Behandle søknader
+              - img [ref=e105]
+          - listitem [ref=e107]:
+            - link "Allokeringsplan Fordele faste tider" [ref=e108] [cursor=pointer]:
+              - /url: /allocation-planner
+              - img [ref=e110]
+              - generic [ref=e112]:
+                - paragraph [ref=e113]: Allokeringsplan
+                - paragraph [ref=e114]: Fordele faste tider
+              - img [ref=e117]
+          - listitem [ref=e119]:
+            - link "Vedtaksskjema Fatt formelle vedtak" [ref=e120] [cursor=pointer]:
+              - /url: /decision-forms
+              - img [ref=e122]
+              - generic [ref=e125]:
+                - paragraph [ref=e126]: Vedtaksskjema
+                - paragraph [ref=e127]: Fatt formelle vedtak
+              - img [ref=e130]
+          - listitem [ref=e132]:
+            - link "Revisjonslogg Vedtakshistorikk" [ref=e133] [cursor=pointer]:
+              - /url: /audit-timeline
+              - img [ref=e135]
+              - generic [ref=e138]:
+                - paragraph [ref=e139]: Revisjonslogg
+                - paragraph [ref=e140]: Vedtakshistorikk
+              - img [ref=e143]
+      - generic [ref=e145]:
+        - paragraph [ref=e146]: Admin
+        - list [ref=e147]:
+          - listitem [ref=e148]:
+            - link "Nytt utleieobjekt Opprett lokale" [ref=e149] [cursor=pointer]:
+              - /url: /rental-objects/wizard
+              - img [ref=e151]
+              - generic [ref=e154]:
+                - paragraph [ref=e155]: Nytt utleieobjekt
+                - paragraph [ref=e156]: Opprett lokale
+              - img [ref=e159]
+          - listitem [ref=e161]:
+            - link "Prisregler Administrer priser" [ref=e162] [cursor=pointer]:
+              - /url: /pricing-rules
+              - img [ref=e164]
+              - generic [ref=e167]:
+                - paragraph [ref=e168]: Prisregler
+                - paragraph [ref=e169]: Administrer priser
+              - img [ref=e172]
+          - listitem [ref=e174]:
+            - link "Brukeradmin Administrer tilgang" [ref=e175] [cursor=pointer]:
+              - /url: /users-management
+              - img [ref=e177]
+              - generic [ref=e182]:
+                - paragraph [ref=e183]: Brukeradmin
+                - paragraph [ref=e184]: Administrer tilgang
+              - img [ref=e187]
+      - generic [ref=e189]:
+        - paragraph [ref=e190]: Tenant
+        - list [ref=e191]:
+          - listitem [ref=e192]:
+            - link "Brukere Administrer brukere" [ref=e193] [cursor=pointer]:
+              - /url: /tenant/users
+              - img [ref=e195]
+              - generic [ref=e200]:
+                - paragraph [ref=e201]: Brukere
+                - paragraph [ref=e202]: Administrer brukere
+              - img [ref=e205]
+          - listitem [ref=e207]:
+            - link "Funksjoner Aktiver/deaktiver moduler" [ref=e208] [cursor=pointer]:
+              - /url: /tenant/features
+              - img [ref=e210]
+              - generic [ref=e213]:
+                - paragraph [ref=e214]: Funksjoner
+                - paragraph [ref=e215]: Aktiver/deaktiver moduler
+              - img [ref=e218]
+          - listitem [ref=e220]:
+            - link "Plattforminnstillinger Konfigurer tenant" [ref=e221] [cursor=pointer]:
+              - /url: /tenant/settings
+              - img [ref=e223]
+              - generic [ref=e226]:
+                - paragraph [ref=e227]: Plattforminnstillinger
+                - paragraph [ref=e228]: Konfigurer tenant
+              - img [ref=e231]
+          - listitem [ref=e233]:
+            - link "Merkevare Logo og farger" [ref=e234] [cursor=pointer]:
+              - /url: /tenant/branding
+              - img [ref=e236]
+              - generic [ref=e239]:
+                - paragraph [ref=e240]: Merkevare
+                - paragraph [ref=e241]: Logo og farger
+              - img [ref=e244]
+          - listitem [ref=e246]:
+            - link "Systemlogg Alle plattformhendelser" [ref=e247] [cursor=pointer]:
+              - /url: /tenant/audit-log
+              - img [ref=e249]
+              - generic [ref=e252]:
+                - paragraph [ref=e253]: Systemlogg
+                - paragraph [ref=e254]: Alle plattformhendelser
+              - img [ref=e257]
+      - generic [ref=e259]:
+        - paragraph [ref=e260]: System
+        - list [ref=e261]:
+          - listitem [ref=e262]:
+            - link "GDPR-forespørsler Behandle personvernforespørsler 0" [ref=e263] [cursor=pointer]:
+              - /url: /gdpr-requests
+              - img [ref=e265]
+              - generic [ref=e267]:
+                - paragraph [ref=e268]: GDPR-forespørsler
+                - paragraph [ref=e269]: Behandle personvernforespørsler
+              - generic [ref=e270]:
+                - text: "0"
+                - img [ref=e272]
+          - listitem [ref=e274]:
+            - link "Anmeldelser Moderer anmeldelser" [ref=e275] [cursor=pointer]:
+              - /url: /reviews/moderation
+              - img [ref=e277]
+              - generic [ref=e280]:
+                - paragraph [ref=e281]: Anmeldelser
+                - paragraph [ref=e282]: Moderer anmeldelser
+              - img [ref=e285]
+          - listitem [ref=e287]:
+            - link "Audit Log Systemhendelser" [ref=e288] [cursor=pointer]:
+              - /url: /audit
+              - img [ref=e290]
+              - generic [ref=e293]:
+                - paragraph [ref=e294]: Audit Log
+                - paragraph [ref=e295]: Systemhendelser
+              - img [ref=e298]
+    - generic [ref=e301]:
+      - generic [ref=e302]: A
+      - generic [ref=e303]:
+        - paragraph [ref=e304]: Admin Skien
+        - paragraph [ref=e305]: Administrator
+  - generic [ref=e306]:
+    - banner [ref=e307]:
+      - generic [ref=e308]:
+        - generic [ref=e312]:
+          - img [ref=e313]
+          - combobox "Søk i bookinger, lokaler, organisasjoner..." [ref=e316]
+          - generic [ref=e317]:
+            - generic [ref=e318]: ⌘
+            - generic [ref=e319]: K
+        - generic [ref=e321]:
+          - button "Bytt til mørkt tema" [ref=e322] [cursor=pointer]:
+            - img [ref=e324]
+          - button "Varsler" [ref=e326] [cursor=pointer]:
+            - img [ref=e328]
+          - button "Innstillinger" [ref=e331] [cursor=pointer]:
+            - img [ref=e333]
+          - button "Logg ut" [ref=e337] [cursor=pointer]:
+            - img [ref=e338]
+            - text: Logg ut
+    - main [ref=e341]:
+      - generic [ref=e343]:
+        - generic [ref=e344]:
+          - button "Ventende" [ref=e345] [cursor=pointer]:
+            - generic [ref=e346]: Ventende
+          - button "Bekreftet" [ref=e347] [cursor=pointer]:
+            - generic [ref=e348]: Bekreftet
+          - button "Fullført" [ref=e349] [cursor=pointer]:
+            - generic [ref=e350]: Fullført
+          - button "Kansellert" [ref=e351] [cursor=pointer]:
+            - generic [ref=e352]: Kansellert
+          - button "Alle" [ref=e353] [cursor=pointer]:
+            - generic [ref=e354]: Alle
+        - generic [ref=e355]:
+          - generic [ref=e358]:
+            - img [ref=e359]
+            - combobox "Søk etter lokale, bruker, booking-ID..." [ref=e362]
+          - button [ref=e363] [cursor=pointer]:
+            - img [ref=e364]
+        - generic [ref=e367]:
+          - generic [ref=e368]: ✓
+          - paragraph [ref=e369]: Ingen ventende forespørsler
+          - paragraph [ref=e370]: Alle bookingforespørsler er behandlet
+```

@@ -22,7 +22,18 @@ export class PublicController {
    */
   @Get('/rental-objects')
   async getRentalObjects(request: FastifyRequest, reply: FastifyReply) {
-    return this.getListings(request, reply);
+    try {
+      return await this.getListings(request, reply);
+    } catch (error) {
+      request.log.error({ error }, 'Failed to fetch rental objects');
+      return reply.status(500).send({
+        type: '/errors/database',
+        title: 'Database Error',
+        status: 500,
+        detail: error instanceof Error ? error.message : 'Failed to query rental objects. Database may need seeding.',
+        hint: 'Run: pnpm db:seed:v3',
+      });
+    }
   }
 
   /**
@@ -177,28 +188,39 @@ export class PublicController {
    */
   @Get('/cities')
   async getCities(request: FastifyRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
+    try {
+      const db = container.resolve<any>('Database');
 
-    // Get distinct cities from rentalObjects metadata
-    const result = await db
-      .select({
-        metadata: rentalObjects.metadata,
-      })
-      .from(rentalObjects)
-      .where(eq(rentalObjects.status, 'published'));
+      // Get distinct cities from rentalObjects metadata
+      const result = await db
+        .select({
+          metadata: rentalObjects.metadata,
+        })
+        .from(rentalObjects)
+        .where(eq(rentalObjects.status, 'published'));
 
-    const cities = new Set<string>();
-    for (const row of result) {
-      const city = row.metadata?.city || row.metadata?.location?.city;
-      if (city) cities.add(city);
+      const cities = new Set<string>();
+      for (const row of result) {
+        const city = row.metadata?.city || row.metadata?.location?.city;
+        if (city) cities.add(city);
+      }
+
+      return {
+        data: Array.from(cities).map((city) => ({
+          name: city,
+          slug: city.toLowerCase().replace(/\s+/g, '-'),
+        })),
+      };
+    } catch (error) {
+      request.log.error({ error }, 'Failed to fetch cities');
+      return reply.status(500).send({
+        type: '/errors/database',
+        title: 'Database Error',
+        status: 500,
+        detail: error instanceof Error ? error.message : 'Failed to query cities. Database may need seeding.',
+        hint: 'Run: pnpm db:seed:v3',
+      });
     }
-
-    return {
-      data: Array.from(cities).map((city) => ({
-        name: city,
-        slug: city.toLowerCase().replace(/\s+/g, '-'),
-      })),
-    };
   }
 
   /**

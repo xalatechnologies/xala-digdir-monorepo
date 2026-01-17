@@ -143,11 +143,11 @@ const facilityConfig: RentalObjectTypeConfig = {
   amenityCategories: ['equipment', 'comfort', 'technology', 'accessibility'],
   defaultBookingMode: 'SLOTS',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig.',
-    amenities: 'Ingen fasiliteter er registrert for dette lokalet.',
-    rules: 'Ingen regler er spesifisert for dette lokalet.',
-    faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
-    activity: 'Ingen arrangementer er registrert for dette lokalet.',
+    description: 'rentalObject.emptyState.description',
+    amenities: 'rentalObject.emptyState.amenities.facility',
+    rules: 'rentalObject.emptyState.rules.facility',
+    faq: 'rentalObject.emptyState.faq',
+    activity: 'rentalObject.emptyState.activity.facility',
   },
 };
 
@@ -209,11 +209,11 @@ const equipmentConfig: RentalObjectTypeConfig = {
   amenityCategories: ['included', 'accessories'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig.',
-    amenities: 'Ingen tilleggsutstyr er registrert.',
-    rules: 'Ingen regler er spesifisert for dette utstyret.',
-    faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
-    activity: 'Ingen utleiehistorikk er tilgjengelig.',
+    description: 'rentalObject.emptyState.description',
+    amenities: 'rentalObject.emptyState.amenities.equipment',
+    rules: 'rentalObject.emptyState.rules.equipment',
+    faq: 'rentalObject.emptyState.faq',
+    activity: 'rentalObject.emptyState.activity.equipment',
   },
 };
 
@@ -268,11 +268,11 @@ const eventConfig: RentalObjectTypeConfig = {
   amenityCategories: ['included', 'accessibility'],
   defaultBookingMode: 'TICKETS',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig.',
-    amenities: 'Ingen fasiliteter er registrert.',
-    rules: 'Ingen regler er spesifisert for dette arrangementet.',
-    faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
-    activity: 'Ingen økter er planlagt.',
+    description: 'rentalObject.emptyState.description',
+    amenities: 'rentalObject.emptyState.amenities.event',
+    rules: 'rentalObject.emptyState.rules.event',
+    faq: 'rentalObject.emptyState.faq',
+    activity: 'rentalObject.emptyState.activity.event',
   },
 };
 
@@ -328,11 +328,11 @@ const otherConfig: RentalObjectTypeConfig = {
   amenityCategories: ['general'],
   defaultBookingMode: 'DURATION',
   emptyStates: {
-    description: 'Ingen beskrivelse tilgjengelig.',
-    amenities: 'Ingen fasiliteter er registrert.',
-    rules: 'Ingen regler er spesifisert.',
-    faq: 'Ingen ofte stilte spørsmål er tilgjengelig.',
-    activity: 'Ingen aktivitetshistorikk er tilgjengelig.',
+    description: 'rentalObject.emptyState.description',
+    amenities: 'rentalObject.emptyState.amenities.other',
+    rules: 'rentalObject.emptyState.rules.other',
+    faq: 'rentalObject.emptyState.faq',
+    activity: 'rentalObject.emptyState.activity.other',
   },
 };
 

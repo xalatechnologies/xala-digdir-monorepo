@@ -2778,9 +2778,13 @@ export const nb: Record<string, string> = {
   // SDK placeholders - rental object card
   'sdk.rentalObject.category.undefined': 'Lokale',
   'sdk.rentalObject.category.lokalerOgBaner': 'Lokaler og baner',
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Lokaler og baner',
   'sdk.rentalObject.category.utstyrOgInventar': 'Utstyr og inventar',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Utstyr og inventar',
   'sdk.rentalObject.category.kjoretoyOgTransport': 'Kjøretøy og transport',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Kjøretøy og transport',
   'sdk.rentalObject.category.opplevelserOgArrangement': 'Opplevelser og arrangement',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Opplevelser og arrangement',
   'sdk.timeMode.period': 'Periode',
   'sdk.timeMode.slot': 'Tidsluke',
   'sdk.timeMode.allDay': 'Hele dagen',
@@ -3400,6 +3404,16 @@ export const nb: Record<string, string> = {
   'activityCalendar.title': 'Aktivitetskalender',
   'activityCalendar.subtitle': 'Finn klasser, arrangementer og aktiviteter',
   'activityCalendar.noActivities': 'Ingen aktiviteter funnet',
+  'activityCalendar.loading': 'Laster aktiviteter...',
+  'activityCalendar.all': 'Alle',
+  'activityCalendar.free': 'Gratis',
+  'activityCalendar.availability.full': 'Fullt',
+  'activityCalendar.availability.limited': 'Kun {{count}} igjen',
+  'activityCalendar.availability.available': 'Ledig',
+  'activityCalendar.register': 'Meld deg på',
+
+  // Favorites
+  'favorites.error.updateFailed': 'Kunne ikke oppdatere favoritter',
 
   // Booking widget - Calendar navigation
   'bookingWidget.today': 'I dag',
@@ -3412,6 +3426,55 @@ export const nb: Record<string, string> = {
   'bookingWidget.legend.available': 'Ledig',
   'bookingWidget.legend.occupied': 'Opptatt',
   'bookingWidget.legend.selected': 'Valgt',
+
+  // Slot status labels
+  'slotStatus.available': 'Ledig',
+  'slotStatus.conflict': 'Konflikt',
+  'slotStatus.reserved': 'Reservert',
+  'slotStatus.blocked': 'Blokkert',
+  'slotStatus.blackout': 'Stengt',
+  'slotStatus.closed': 'Lukket',
+
+  // Rental object empty states
+  'rentalObject.emptyState.description': 'Ingen beskrivelse tilgjengelig.',
+  'rentalObject.emptyState.amenities.facility': 'Ingen fasiliteter er registrert for dette lokalet.',
+  'rentalObject.emptyState.amenities.equipment': 'Ingen tilleggsutstyr er registrert.',
+  'rentalObject.emptyState.amenities.event': 'Ingen fasiliteter er registrert.',
+  'rentalObject.emptyState.amenities.other': 'Ingen fasiliteter er registrert.',
+  'rentalObject.emptyState.rules.facility': 'Ingen regler er spesifisert for dette lokalet.',
+  'rentalObject.emptyState.rules.equipment': 'Ingen regler er spesifisert for dette utstyret.',
+  'rentalObject.emptyState.rules.event': 'Ingen regler er spesifisert for dette arrangementet.',
+  'rentalObject.emptyState.rules.other': 'Ingen regler er spesifisert.',
+  'rentalObject.emptyState.faq': 'Ingen ofte stilte spørsmål er tilgjengelig.',
+  'rentalObject.emptyState.activity.facility': 'Ingen arrangementer er registrert for dette lokalet.',
+  'rentalObject.emptyState.activity.equipment': 'Ingen utleiehistorikk er tilgjengelig.',
+  'rentalObject.emptyState.activity.event': 'Ingen økter er planlagt.',
+  'rentalObject.emptyState.activity.other': 'Ingen aktivitetshistorikk er tilgjengelig.',
+
+  // Recurring preview
+  'recurringPreview.loading': 'Laster forhåndsvisning...',
+  'recurringPreview.noOccurrences': 'Ingen forekomster funnet. Juster gjentakelsesmønsteret.',
+  'recurringPreview.title': 'Forhåndsvisning',
+  'recurringPreview.occurrenceCount': '{{count}} forekomster',
+  'recurringPreview.availableCount': '{{count}} ledige',
+  'recurringPreview.conflictCount': '{{count}} konflikter',
+  'recurringPreview.total': 'Totalt',
+  'recurringPreview.estimatedPrice': 'Estimert pris',
+  'recurringPreview.selectAllAvailable': 'Velg alle ledige',
+  'recurringPreview.deselectAll': 'Fjern alle',
+  'recurringPreview.selectedCount': '{{count}} valgt',
+  'recurringPreview.conflictWarning.title': '{{count}} forekomst har konflikter',
+  'recurringPreview.conflictWarning.titlePlural': '{{count}} forekomster har konflikter',
+  'recurringPreview.conflictWarning.description': 'Du kan velge å booke kun de ledige tidspunktene, eller prøve alternative tidspunkter.',
+
+  // Booking visibility options
+  'bookingVisibility.public.label': 'Offentlig',
+  'bookingVisibility.public.description': 'Bookingen vises med tittel på den offentlige kalenderen',
+  'bookingVisibility.private.label': 'Privat tittel',
+  'bookingVisibility.private.description': 'Tittelen er kun synlig for deg og administrator',
+  'bookingVisibility.anonymous.label': 'Anonym',
+  'bookingVisibility.anonymous.description': 'Kun tidspunktet vises som opptatt, ingen detaljer synlige',
+  'bookingVisibility.title': 'Kalendersynlighet',
 
   // Booking widget - Recurring mode
   'bookingWidget.recurring.selectFirstTime': 'Velg første tidspunkt',
@@ -3570,6 +3633,15 @@ export const nb: Record<string, string> = {
   'weekdays.short.fri': 'Fre',
   'weekdays.short.sat': 'Lør',
   'weekdays.short.sun': 'Søn',
+
+  // Weekday names tiny (2 characters for compact calendars)
+  'weekdays.tiny.mon': 'Ma',
+  'weekdays.tiny.tue': 'Ti',
+  'weekdays.tiny.wed': 'On',
+  'weekdays.tiny.thu': 'To',
+  'weekdays.tiny.fri': 'Fr',
+  'weekdays.tiny.sat': 'Lø',
+  'weekdays.tiny.sun': 'Sø',
 
   // App section names
   'app.name': 'Digilist',

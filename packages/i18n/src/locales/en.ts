@@ -2630,9 +2630,13 @@ export const en: Record<string, string> = {
   // SDK placeholders - rental object card
   'sdk.rentalObject.category.undefined': 'Space',
   'sdk.rentalObject.category.lokalerOgBaner': 'Spaces and venues',
+  'sdk.rentalObject.category.LOKALER_OG_BANER': 'Spaces and venues',
   'sdk.rentalObject.category.utstyrOgInventar': 'Equipment and inventory',
+  'sdk.rentalObject.category.UTSTYR_OG_INVENTAR': 'Equipment and inventory',
   'sdk.rentalObject.category.kjoretoyOgTransport': 'Vehicles and transport',
+  'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT': 'Vehicles and transport',
   'sdk.rentalObject.category.opplevelserOgArrangement': 'Experiences and events',
+  'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT': 'Experiences and events',
   'sdk.timeMode.period': 'Period',
   'sdk.timeMode.slot': 'Time slot',
   'sdk.timeMode.allDay': 'All day',
@@ -3469,6 +3473,16 @@ export const en: Record<string, string> = {
   'activityCalendar.title': 'Activity Calendar',
   'activityCalendar.subtitle': 'Find classes, events and activities',
   'activityCalendar.noActivities': 'No activities found',
+  'activityCalendar.loading': 'Loading activities...',
+  'activityCalendar.all': 'All',
+  'activityCalendar.free': 'Free',
+  'activityCalendar.availability.full': 'Full',
+  'activityCalendar.availability.limited': 'Only {{count}} left',
+  'activityCalendar.availability.available': 'Available',
+  'activityCalendar.register': 'Register',
+
+  // Favorites
+  'favorites.error.updateFailed': 'Could not update favorites',
 
   // Booking widget - Calendar navigation
   'bookingWidget.today': 'Today',
@@ -3481,6 +3495,55 @@ export const en: Record<string, string> = {
   'bookingWidget.legend.available': 'Available',
   'bookingWidget.legend.occupied': 'Occupied',
   'bookingWidget.legend.selected': 'Selected',
+
+  // Slot status labels
+  'slotStatus.available': 'Available',
+  'slotStatus.conflict': 'Conflict',
+  'slotStatus.reserved': 'Reserved',
+  'slotStatus.blocked': 'Blocked',
+  'slotStatus.blackout': 'Blackout',
+  'slotStatus.closed': 'Closed',
+
+  // Rental object empty states
+  'rentalObject.emptyState.description': 'No description available.',
+  'rentalObject.emptyState.amenities.facility': 'No amenities have been registered for this venue.',
+  'rentalObject.emptyState.amenities.equipment': 'No additional equipment has been registered.',
+  'rentalObject.emptyState.amenities.event': 'No amenities have been registered.',
+  'rentalObject.emptyState.amenities.other': 'No amenities have been registered.',
+  'rentalObject.emptyState.rules.facility': 'No rules have been specified for this venue.',
+  'rentalObject.emptyState.rules.equipment': 'No rules have been specified for this equipment.',
+  'rentalObject.emptyState.rules.event': 'No rules have been specified for this event.',
+  'rentalObject.emptyState.rules.other': 'No rules have been specified.',
+  'rentalObject.emptyState.faq': 'No frequently asked questions are available.',
+  'rentalObject.emptyState.activity.facility': 'No events have been registered for this venue.',
+  'rentalObject.emptyState.activity.equipment': 'No rental history is available.',
+  'rentalObject.emptyState.activity.event': 'No sessions are scheduled.',
+  'rentalObject.emptyState.activity.other': 'No activity history is available.',
+
+  // Recurring preview
+  'recurringPreview.loading': 'Loading preview...',
+  'recurringPreview.noOccurrences': 'No occurrences found. Adjust the recurrence pattern.',
+  'recurringPreview.title': 'Preview',
+  'recurringPreview.occurrenceCount': '{{count}} occurrences',
+  'recurringPreview.availableCount': '{{count}} available',
+  'recurringPreview.conflictCount': '{{count}} conflicts',
+  'recurringPreview.total': 'Total',
+  'recurringPreview.estimatedPrice': 'Estimated price',
+  'recurringPreview.selectAllAvailable': 'Select all available',
+  'recurringPreview.deselectAll': 'Deselect all',
+  'recurringPreview.selectedCount': '{{count}} selected',
+  'recurringPreview.conflictWarning.title': '{{count}} occurrence has conflicts',
+  'recurringPreview.conflictWarning.titlePlural': '{{count}} occurrences have conflicts',
+  'recurringPreview.conflictWarning.description': 'You can choose to book only the available slots, or try alternative times.',
+
+  // Booking visibility options
+  'bookingVisibility.public.label': 'Public',
+  'bookingVisibility.public.description': 'The booking will be displayed with title on the public calendar',
+  'bookingVisibility.private.label': 'Private title',
+  'bookingVisibility.private.description': 'The title is only visible to you and the administrator',
+  'bookingVisibility.anonymous.label': 'Anonymous',
+  'bookingVisibility.anonymous.description': 'Only the time slot is shown as busy, no details visible',
+  'bookingVisibility.title': 'Calendar visibility',
 
   // Booking widget - Recurring mode
   'bookingWidget.recurring.selectFirstTime': 'Select first time',
@@ -3639,6 +3702,15 @@ export const en: Record<string, string> = {
   'weekdays.short.fri': 'Fri',
   'weekdays.short.sat': 'Sat',
   'weekdays.short.sun': 'Sun',
+
+  // Weekday names tiny (2 characters for compact calendars)
+  'weekdays.tiny.mon': 'Mo',
+  'weekdays.tiny.tue': 'Tu',
+  'weekdays.tiny.wed': 'We',
+  'weekdays.tiny.thu': 'Th',
+  'weekdays.tiny.fri': 'Fr',
+  'weekdays.tiny.sat': 'Sa',
+  'weekdays.tiny.sun': 'Su',
 
   // ================================================
   // Documentation Portal (docs-learning)

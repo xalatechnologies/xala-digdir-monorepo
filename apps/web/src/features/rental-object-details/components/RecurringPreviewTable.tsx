@@ -164,51 +164,57 @@ const WEEKDAY_NAMES = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fre
 const MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
 
 /**
- * Status display configuration
+ * Status display configuration (styling only - labels are translated dynamically)
  */
-const STATUS_CONFIG: Record<OccurrenceStatus, StatusConfig> = {
+const STATUS_STYLES: Record<OccurrenceStatus, Omit<StatusConfig, 'label'>> = {
   AVAILABLE: {
-    label: 'Ledig',
     color: 'var(--ds-color-success-text-default)',
     backgroundColor: 'var(--ds-color-success-surface-default)',
     borderColor: 'var(--ds-color-success-border-default)',
     icon: <CheckCircleIcon size={14} />,
   },
   CONFLICT: {
-    label: 'Konflikt',
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   RESERVED: {
-    label: 'Reservert',
     color: 'var(--ds-color-warning-text-default)',
     backgroundColor: 'var(--ds-color-warning-surface-default)',
     borderColor: 'var(--ds-color-warning-border-default)',
     icon: <ClockIcon size={14} />,
   },
   BLOCKED: {
-    label: 'Blokkert',
     color: 'var(--ds-color-danger-text-default)',
     backgroundColor: 'var(--ds-color-danger-surface-default)',
     borderColor: 'var(--ds-color-danger-border-default)',
     icon: <XCircleIcon size={14} />,
   },
   BLACKOUT: {
-    label: 'Stengt',
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',
     icon: <AlertCircleIcon size={14} />,
   },
   CLOSED: {
-    label: 'Stengt',
     color: 'var(--ds-color-neutral-text-subtle)',
     backgroundColor: 'var(--ds-color-neutral-surface-default)',
     borderColor: 'var(--ds-color-neutral-border-default)',
     icon: <AlertCircleIcon size={14} />,
   },
+};
+
+/**
+ * Status translation key mapping
+ */
+const STATUS_KEYS: Record<OccurrenceStatus, string> = {
+  AVAILABLE: 'available',
+  CONFLICT: 'conflict',
+  RESERVED: 'reserved',
+  BLOCKED: 'blocked',
+  BLACKOUT: 'blackout',
+  CLOSED: 'closed',
 };
 
 // =============================================================================
@@ -249,12 +255,16 @@ function formatPrice(price: number, currency: string): string {
 }
 
 /**
- * Get status configuration by status type
- * All OccurrenceStatus values are defined in STATUS_CONFIG, so we can safely access them.
+ * Get status configuration by status type with translated label
+ * Combines static styles with dynamically translated label
  */
-function getStatusConfig(status: OccurrenceStatus): StatusConfig {
-  // Use type assertion since we know all OccurrenceStatus values are in STATUS_CONFIG
-  return STATUS_CONFIG[status] as StatusConfig;
+function getStatusConfig(status: OccurrenceStatus, t: (key: string) => string): StatusConfig {
+  const styles = STATUS_STYLES[status];
+  const key = STATUS_KEYS[status];
+  return {
+    ...styles,
+    label: t(`slotStatus.${key}`),
+  };
 }
 
 // =============================================================================
@@ -454,7 +464,7 @@ export function RecurringPreviewTable({
           </div>
         ) : (
           occurrences.map((occurrence) => {
-            const statusConfig = getStatusConfig(occurrence.status);
+            const statusConfig = getStatusConfig(occurrence.status, t);
             const isAvailable = occurrence.status === 'AVAILABLE';
             const isSelected = selectedSet.has(occurrence.index);
 

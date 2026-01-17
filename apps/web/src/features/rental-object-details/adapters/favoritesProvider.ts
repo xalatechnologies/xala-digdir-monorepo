@@ -123,7 +123,6 @@ class LocalStorageFavoritesProvider implements FavoritesProvider {
 let favoritesProviderInstance: FavoritesProvider | null = null;
 
 export function getFavoritesProvider(): FavoritesProvider {
-  const t = useT();
   if (!favoritesProviderInstance) {
     favoritesProviderInstance = new LocalStorageFavoritesProvider();
   }
@@ -155,6 +154,7 @@ export function useFavorites(
   userId: string | null,
   onAuthRequired: () => void
 ): UseFavoritesResult {
+  const t = useT();
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -179,11 +179,11 @@ export function useFavorites(
     } catch (err) {
       // Revert on error
       setIsFavorited(previousState);
-      setError(err instanceof Error ? err.message : 'Kunne ikke oppdatere favoritter');
+      setError(err instanceof Error ? err.message : t('favorites.error.updateFailed'));
     } finally {
       setIsLoading(false);
     }
-  }, [rentalObjectId, tenantId, isAuthenticated, userId, isFavorited, onAuthRequired]);
+  }, [rentalObjectId, tenantId, isAuthenticated, userId, isFavorited, onAuthRequired, t]);
 
   return { isFavorited, isLoading, error, toggle };
 }

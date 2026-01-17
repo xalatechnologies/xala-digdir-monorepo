@@ -102,25 +102,13 @@ interface VisibilityOption {
   icon: React.ReactNode;
 }
 
-const VISIBILITY_OPTIONS: VisibilityOption[] = [
-  {
-    value: 'PUBLIC_TITLE',
-    label: 'Offentlig',
-    description: 'Bookingen vises med tittel på den offentlige kalenderen',
-    icon: <EyeIcon size={20} />,
-  },
-  {
-    value: 'PRIVATE_TITLE',
-    label: 'Privat tittel',
-    description: 'Tittelen er kun synlig for deg og administrator',
-    icon: <EyeOffIcon size={20} />,
-  },
-  {
-    value: 'ANONYMOUS',
-    label: 'Anonym',
-    description: 'Kun tidspunktet vises som opptatt, ingen detaljer synlige',
-    icon: <LockIcon size={20} />,
-  },
+/**
+ * Visibility option configs (icons only - labels/descriptions are translated)
+ */
+const VISIBILITY_CONFIGS: Array<{ value: BookingVisibility; key: string; icon: React.ReactNode }> = [
+  { value: 'PUBLIC_TITLE', key: 'public', icon: <EyeIcon size={20} /> },
+  { value: 'PRIVATE_TITLE', key: 'private', icon: <EyeOffIcon size={20} /> },
+  { value: 'ANONYMOUS', key: 'anonymous', icon: <LockIcon size={20} /> },
 ];
 
 // =============================================================================
@@ -136,6 +124,17 @@ export function BookingVisibilitySelector({
 }: BookingVisibilitySelectorProps): React.ReactElement {
   const t = useT();
 
+  // Generate translated visibility options
+  const visibilityOptions: VisibilityOption[] = React.useMemo(() =>
+    VISIBILITY_CONFIGS.map(({ value: val, key, icon }) => ({
+      value: val,
+      label: t(`bookingVisibility.${key}.label`),
+      description: t(`bookingVisibility.${key}.description`),
+      icon,
+    })),
+    [t]
+  );
+
   return (
     <div className={className}>
       <Paragraph
@@ -147,7 +146,7 @@ export function BookingVisibilitySelector({
           color: 'var(--ds-color-neutral-text-default)',
         }}
       >
-        Kalendersynlighet
+        {t('bookingVisibility.title')}
       </Paragraph>
 
       <fieldset
@@ -162,7 +161,7 @@ export function BookingVisibilitySelector({
       >
         <legend className="sr-only">Velg kalendersynlighet</legend>
 
-        {VISIBILITY_OPTIONS.map((option) => {
+        {visibilityOptions.map((option) => {
           const isSelected = value === option.value;
 
           return (

@@ -45,43 +45,64 @@ export interface RecurringPreviewProps {
 // Constants
 // =============================================================================
 
-const STATUS_CONFIG: Record<
+/** Status styles (static, no translation needed) */
+const STATUS_STYLES: Record<
   OccurrenceStatus,
-  { label: string; color: 'success' | 'danger' | 'warning' | 'neutral' | 'info'; icon: string }
+  { color: 'success' | 'danger' | 'warning' | 'neutral' | 'info'; icon: string }
 > = {
-  AVAILABLE: { label: 'Ledig', color: 'success', icon: '✓' },
-  CONFLICT: { label: 'Konflikt', color: 'danger', icon: '✗' },
-  RESERVED: { label: 'Reservert', color: 'warning', icon: '⏳' },
-  BLOCKED: { label: 'Blokkert', color: 'neutral', icon: '⊘' },
-  BLACKOUT: { label: 'Stengt', color: 'info', icon: '☾' },
-  CLOSED: { label: 'Lukket', color: 'neutral', icon: '—' },
+  AVAILABLE: { color: 'success', icon: '✓' },
+  CONFLICT: { color: 'danger', icon: '✗' },
+  RESERVED: { color: 'warning', icon: '⏳' },
+  BLOCKED: { color: 'neutral', icon: '⊘' },
+  BLACKOUT: { color: 'info', icon: '☾' },
+  CLOSED: { color: 'neutral', icon: '—' },
 };
 
-const WEEKDAY_LABELS: Record<number, string> = {
-  0: 'Søn',
-  1: 'Man',
-  2: 'Tir',
-  3: 'Ons',
-  4: 'Tor',
-  5: 'Fre',
-  6: 'Lør',
+/** Status keys for translation lookup */
+const STATUS_KEYS: Record<OccurrenceStatus, string> = {
+  AVAILABLE: 'available',
+  CONFLICT: 'conflict',
+  RESERVED: 'reserved',
+  BLOCKED: 'blocked',
+  BLACKOUT: 'blackout',
+  CLOSED: 'closed',
 };
 
-const MONTH_LABELS = [
-  'jan', 'feb', 'mar', 'apr', 'mai', 'jun',
-  'jul', 'aug', 'sep', 'okt', 'nov', 'des',
+/** Weekday index to translation key mapping */
+const WEEKDAY_KEYS: Record<number, string> = {
+  0: 'sun',
+  1: 'mon',
+  2: 'tue',
+  3: 'wed',
+  4: 'thu',
+  5: 'fri',
+  6: 'sat',
+};
+
+/** Month index to translation key mapping */
+const MONTH_KEYS = [
+  'jan', 'feb', 'mar', 'apr', 'may', 'jun',
+  'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
 ];
 
 // =============================================================================
 // Helper Functions
 // =============================================================================
 
-function formatOccurrenceDate(startTime: string): string {
+function formatOccurrenceDate(startTime: string, t: (key: string) => string): string {
   const date = new Date(startTime);
-  const weekday = WEEKDAY_LABELS[date.getDay()];
+  const weekdayKey = WEEKDAY_KEYS[date.getDay()];
+  const weekday = t(`weekdays.short.${weekdayKey}`);
   const day = date.getDate();
-  const month = MONTH_LABELS[date.getMonth()];
+  const monthKey = MONTH_KEYS[date.getMonth()];
+  const month = t(`months.short.${monthKey}`);
   return `${weekday} ${day}. ${month}`;
+}
+
+function getStatusConfig(status: OccurrenceStatus, t: (key: string) => string) {
+  const styles = STATUS_STYLES[status];
+  const key = STATUS_KEYS[status];
+  return { ...styles, label: t(`slotStatus.${key}`) };
 }
 
 function formatOccurrenceTime(startTime: string, endTime: string): string {
@@ -149,7 +170,7 @@ export function RecurringPreview({
       >
         <Spinner data-size="lg" />
         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Laster forhåndsvisning...
+          {t('recurringPreview.loading')}
         </Paragraph>
       </div>
     );
@@ -187,7 +208,7 @@ export function RecurringPreview({
         }}
       >
         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Ingen forekomster funnet. Juster gjentakelsesmønsteret.
+          {t('recurringPreview.noOccurrences')}
         </Paragraph>
       </div>
     );
@@ -208,15 +229,15 @@ export function RecurringPreview({
         }}
       >
         <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-          Forhåndsvisning ({occurrences.length} forekomster)
+          {t('recurringPreview.title')} ({t('recurringPreview.occurrenceCount', { count: occurrences.length })})
         </Heading>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           <Badge data-color="success" data-size="sm">
-            {availableCount} ledige
+            {t('recurringPreview.availableCount', { count: availableCount })}
           </Badge>
           {conflictCount > 0 && (
             <Badge data-color="danger" data-size="sm">
-              {conflictCount} konflikter
+              {t('recurringPreview.conflictCount', { count: conflictCount })}
             </Badge>
           )}
         </div>
@@ -234,15 +255,15 @@ export function RecurringPreview({
           <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--ds-spacing-3)' }}>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Totalt
+                {t('recurringPreview.total')}
               </Paragraph>
               <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {summary.totalOccurrences} forekomster
+                {t('recurringPreview.occurrenceCount', { count: summary.totalOccurrences })}
               </Paragraph>
             </div>
             <div>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Estimert pris
+                {t('recurringPreview.estimatedPrice')}
               </Paragraph>
               <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 {new Intl.NumberFormat('nb-NO', {
@@ -278,7 +299,7 @@ export function RecurringPreview({
               textDecoration: 'underline',
             }}
           >
-            Velg alle ledige
+            {t('recurringPreview.selectAllAvailable')}
           </button>
           <button
             type="button"
@@ -293,7 +314,7 @@ export function RecurringPreview({
               textDecoration: 'underline',
             }}
           >
-            Fjern alle
+            {t('recurringPreview.deselectAll')}
           </button>
           {selectedIndices && (
             <Paragraph
@@ -304,7 +325,7 @@ export function RecurringPreview({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              {selectedIndices.size} valgt
+              {t('recurringPreview.selectedCount', { count: selectedIndices.size })}
             </Paragraph>
           )}
         </div>
@@ -322,7 +343,7 @@ export function RecurringPreview({
         }}
       >
         {occurrences.map((occurrence) => {
-          const statusConfig = STATUS_CONFIG[occurrence.status];
+          const statusConfig = getStatusConfig(occurrence.status, t);
           const isSelected = selectedIndices?.has(occurrence.index);
           const canSelect = allowSelection && occurrence.status === 'AVAILABLE';
 
@@ -401,7 +422,7 @@ export function RecurringPreview({
                         : 'var(--ds-color-neutral-text-default)',
                   }}
                 >
-                  {formatOccurrenceDate(occurrence.startTime)}
+                  {formatOccurrenceDate(occurrence.startTime, t)}
                 </Paragraph>
                 <Paragraph
                   data-size="xs"
@@ -442,7 +463,9 @@ export function RecurringPreview({
               fontWeight: 'var(--ds-font-weight-medium)',
             }}
           >
-            {conflictCount} forekomst{conflictCount > 1 ? 'er' : ''} har konflikter
+            {conflictCount > 1
+              ? t('recurringPreview.conflictWarning.titlePlural', { count: conflictCount })
+              : t('recurringPreview.conflictWarning.title', { count: conflictCount })}
           </Paragraph>
           <Paragraph
             data-size="xs"
@@ -452,7 +475,7 @@ export function RecurringPreview({
               color: 'var(--ds-color-warning-text-default)',
             }}
           >
-            Du kan velge å booke kun de ledige tidspunktene, eller prøve alternative tidspunkter.
+            {t('recurringPreview.conflictWarning.description')}
           </Paragraph>
         </div>
       )}

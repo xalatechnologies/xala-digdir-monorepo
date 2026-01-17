@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
+import { useT } from '@xala/i18n';
 import './ActivityCalendar.css';
 
 /**
@@ -32,6 +33,7 @@ interface Activity {
 }
 
 export const ActivityCalendar: React.FC = () => {
+  const t = useT();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -66,8 +68,8 @@ export const ActivityCalendar: React.FC = () => {
   return (
     <div className="activity-calendar">
       <div className="activity-header">
-        <h1>Aktivitetskalender</h1>
-        <p>Finn klasser, arrangementer og aktiviteter</p>
+        <h1>{t('activityCalendar.title')}</h1>
+        <p>{t('activityCalendar.subtitle')}</p>
       </div>
 
       {/* Filters */}
@@ -76,7 +78,7 @@ export const ActivityCalendar: React.FC = () => {
           onClick={() => setSelectedCategory(null)}
           className={!selectedCategory ? 'filter-btn active' : 'filter-btn'}
         >
-          Alle
+          {t('activityCalendar.all')}
         </button>
         {categories.map(cat => (
           <button
@@ -91,10 +93,10 @@ export const ActivityCalendar: React.FC = () => {
 
       {/* Activities Grid */}
       {isLoading ? (
-        <div className="loading">Laster aktiviteter...</div>
+        <div className="loading">{t('activityCalendar.loading')}</div>
       ) : activities.length === 0 ? (
         <div className="empty-state">
-          <p>Ingen aktiviteter funnet</p>
+          <p>{t('activityCalendar.noActivities')}</p>
         </div>
       ) : (
         <div className="activities-grid">
@@ -121,20 +123,20 @@ export const ActivityCalendar: React.FC = () => {
 
                   <div className="activity-footer">
                     <div className="activity-price">
-                      {activity.registrationFee > 0 
-                        ? `${activity.registrationFee} kr` 
-                        : 'Gratis'}
+                      {activity.registrationFee > 0
+                        ? `${activity.registrationFee} kr`
+                        : t('activityCalendar.free')}
                     </div>
-                    
+
                     <div className="activity-availability">
                       {availability.status === 'FULL' ? (
-                        <span className="availability-full">Fullt</span>
+                        <span className="availability-full">{t('activityCalendar.availability.full')}</span>
                       ) : availability.status === 'LIMITED' ? (
                         <span className="availability-limited">
-                          Kun {availability.spotsLeft} igjen
+                          {t('activityCalendar.availability.limited', { count: availability.spotsLeft })}
                         </span>
                       ) : (
-                        <span className="availability-available">Ledig</span>
+                        <span className="availability-available">{t('activityCalendar.availability.available')}</span>
                       )}
                     </div>
                   </div>
@@ -143,7 +145,7 @@ export const ActivityCalendar: React.FC = () => {
                     className="btn-register"
                     disabled={availability.status === 'FULL'}
                   >
-                    {availability.status === 'FULL' ? 'Fullt' : 'Meld deg på'}
+                    {availability.status === 'FULL' ? t('activityCalendar.availability.full') : t('activityCalendar.register')}
                   </button>
                 </div>
               </div>
