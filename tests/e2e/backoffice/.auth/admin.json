@@ -2,30 +2,30 @@
   "cookies": [
     {
       "name": "dl_rt",
-      "value": "Hv_WZPGnwL9OZChJM2vdYzcZX61TeVrzwYtsN964tyY",
+      "value": "LN4qtxlMZHtYXu9k3sMSY0y80JzZ2SDCAogp_iKTC0Y",
       "domain": ".digilist.no",
       "path": "/api/auth/refresh",
-      "expires": 1769293195.704113,
+      "expires": 1769294694.010087,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
     },
     {
       "name": "dl_at",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0ZW5hbnRJZCI6ImY0N2FjMTBiLTU4Y2MtNDM3Mi1hNTY3LTBlMDJiMmMzZDQ3OSIsInRlbmFudFNsdWciOiJza2llbiIsInN1YnNjcmlwdGlvbiI6eyJwbGFuSWQiOm51bGwsInN0YXR1cyI6ImFjdGl2ZSIsInNlYXRMaW1pdHMiOnsibWF4VXNlcnMiOjUsIm1heExpc3RpbmdzIjoxMCwibWF4U3RvcmFnZU1iIjo1MDAsIm1heE9yZ2FuaXphdGlvbnMiOjEsIm1heEJvb2tpbmdzUGVyTW9udGgiOjEwMH0sImVuYWJsZWRDYXRlZ29yaWVzIjpbIkxPQ0FMRSIsIkFSUkFOR0VNRU5UIl19LCJmZWF0dXJlRmxhZ3MiOnt9LCJpYXQiOjE3Njg2ODgzOTUsImV4cCI6MTc2ODY4OTI5NSwiYXVkIjoieGFsYS1hcGkiLCJpc3MiOiJ4YWxhLWRpZ2lsaXN0In0.0BUu8m7Ioi_Ey5Mnecskgs0Jz698xl4_TvFnwi_1b_s",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0ZW5hbnRJZCI6ImY0N2FjMTBiLTU4Y2MtNDM3Mi1hNTY3LTBlMDJiMmMzZDQ3OSIsInRlbmFudFNsdWciOiJza2llbiIsInN1YnNjcmlwdGlvbiI6eyJwbGFuSWQiOm51bGwsInN0YXR1cyI6ImFjdGl2ZSIsInNlYXRMaW1pdHMiOnsibWF4VXNlcnMiOjUsIm1heExpc3RpbmdzIjoxMCwibWF4U3RvcmFnZU1iIjo1MDAsIm1heE9yZ2FuaXphdGlvbnMiOjEsIm1heEJvb2tpbmdzUGVyTW9udGgiOjEwMH0sImVuYWJsZWRDYXRlZ29yaWVzIjpbIkxPQ0FMRSIsIkFSUkFOR0VNRU5UIl19LCJmZWF0dXJlRmxhZ3MiOnt9LCJpYXQiOjE3Njg2ODk4OTQsImV4cCI6MTc2ODY5MDc5NCwiYXVkIjoieGFsYS1hcGkiLCJpc3MiOiJ4YWxhLWRpZ2lsaXN0In0.kcDFbIdV-qN-A3eXXkeQtyClS1r8C78DPqz6TMLaRZM",
       "domain": ".digilist.no",
       "path": "/",
-      "expires": 1768689295.704036,
+      "expires": 1768690794.010027,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
     },
     {
       "name": "dl_csrf",
-      "value": "DBn8hDgCTT91GLJVa7y_U4oBqw0nU6COkjUQG-mGL_U",
+      "value": "nKK0bPZ0EPePEz0bJHHy351JaypWQNQxIlR28FVPoo4",
       "domain": ".digilist.no",
       "path": "/",
-      "expires": 1769293195.704121,
+      "expires": 1769294694.010097,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"
@@ -42,6 +42,10 @@
         {
           "name": "backoffice_user",
           "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"name\":\"Admin Skien\",\"email\":\"admin@skien.kommune.no\",\"role\":\"admin\",\"tenantId\":\"f47ac10b-58cc-4372-a567-0e02b2c3d479\"}"
+        },
+        {
+          "name": "backoffice_mock_user",
+          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@skien.kommune.no\",\"name\":\"Admin Skien\",\"role\":\"admin\",\"tenantId\":\"f47ac10b-58cc-4372-a567-0e02b2c3d479\"}"
         }
       ]
     }

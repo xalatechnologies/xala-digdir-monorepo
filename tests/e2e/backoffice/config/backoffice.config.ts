@@ -71,8 +71,8 @@ export const config = {
   
   // Selectors
   selectors: {
-    sidebar: 'nav, aside, [role="navigation"], [data-testid="sidebar-nav"], .sidebar',
-    sidebarItem: 'a[href]',
+    sidebar: 'nav[data-testid="sidebar-nav"]',
+    sidebarItem: 'a.sidebar-nav-item',
     pageTitle: 'h1, h2, [data-testid="page-title"]',
     dataTable: '[data-testid="data-table"], table',
     loadingSpinner: '[data-testid="loading"], .loading, [aria-busy="true"]',

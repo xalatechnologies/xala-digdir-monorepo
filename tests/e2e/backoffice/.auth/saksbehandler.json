@@ -2,30 +2,30 @@
   "cookies": [
     {
       "name": "dl_rt",
-      "value": "Ni0R-hS1NqAYwPDlWkZVSV12p5ji57VhSMvNf1-AF9w",
+      "value": "sn2Pg7qrXnBIHs3xXIOe5MoBj0glxRGKyP-TVaUskz8",
       "domain": ".digilist.no",
       "path": "/api/auth/refresh",
-      "expires": 1769293012.228476,
+      "expires": 1769294692.496571,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
     },
     {
       "name": "dl_at",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDUiLCJ0ZW5hbnRJZCI6ImY0N2FjMTBiLTU4Y2MtNDM3Mi1hNTY3LTBlMDJiMmMzZDQ3OSIsInRlbmFudFNsdWciOiJza2llbiIsInN1YnNjcmlwdGlvbiI6eyJwbGFuSWQiOm51bGwsInN0YXR1cyI6ImFjdGl2ZSIsInNlYXRMaW1pdHMiOnsibWF4VXNlcnMiOjUsIm1heExpc3RpbmdzIjoxMCwibWF4U3RvcmFnZU1iIjo1MDAsIm1heE9yZ2FuaXphdGlvbnMiOjEsIm1heEJvb2tpbmdzUGVyTW9udGgiOjEwMH0sImVuYWJsZWRDYXRlZ29yaWVzIjpbIkxPQ0FMRSIsIkFSUkFOR0VNRU5UIl19LCJmZWF0dXJlRmxhZ3MiOnt9LCJpYXQiOjE3Njg2ODgyMTIsImV4cCI6MTc2ODY4OTExMiwiYXVkIjoieGFsYS1hcGkiLCJpc3MiOiJ4YWxhLWRpZ2lsaXN0In0.max0u_hD7Tri8cOoeJyKJ0xwcjjjhe4uV3-DNWYsChc",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDUiLCJ0ZW5hbnRJZCI6ImY0N2FjMTBiLTU4Y2MtNDM3Mi1hNTY3LTBlMDJiMmMzZDQ3OSIsInRlbmFudFNsdWciOiJza2llbiIsInN1YnNjcmlwdGlvbiI6eyJwbGFuSWQiOm51bGwsInN0YXR1cyI6ImFjdGl2ZSIsInNlYXRMaW1pdHMiOnsibWF4VXNlcnMiOjUsIm1heExpc3RpbmdzIjoxMCwibWF4U3RvcmFnZU1iIjo1MDAsIm1heE9yZ2FuaXphdGlvbnMiOjEsIm1heEJvb2tpbmdzUGVyTW9udGgiOjEwMH0sImVuYWJsZWRDYXRlZ29yaWVzIjpbIkxPQ0FMRSIsIkFSUkFOR0VNRU5UIl19LCJmZWF0dXJlRmxhZ3MiOnt9LCJpYXQiOjE3Njg2ODk4OTIsImV4cCI6MTc2ODY5MDc5MiwiYXVkIjoieGFsYS1hcGkiLCJpc3MiOiJ4YWxhLWRpZ2lsaXN0In0.6EoUDaoP8jfzYQu6YSAbXysR-Tmpc1utNDuZKKKP5WI",
       "domain": ".digilist.no",
       "path": "/",
-      "expires": 1768689112.227872,
+      "expires": 1768690792.496396,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
     },
     {
       "name": "dl_csrf",
-      "value": "2b4Rimn-_A3XdRi5TT7rcEbGvbTdwenhro3mTvpf-G8",
+      "value": "NO0TM92sszALu3SSNbczWriNCw3oKswoMJ9KEQRWa-o",
       "domain": ".digilist.no",
       "path": "/",
-      "expires": 1769293012.228486,
+      "expires": 1769294692.496581,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"

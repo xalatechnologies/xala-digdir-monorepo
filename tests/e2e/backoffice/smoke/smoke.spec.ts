@@ -42,24 +42,18 @@ test.describe('Backoffice Smoke Tests', () => {
 
     test('should display sidebar navigation', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(4000); // Longer wait for full render
       
-      // Try multiple selectors
-      const sidebar = page.locator('nav, aside, [role="navigation"]').first();
-      const hasSidebar = await sidebar.isVisible().catch(() => false);
+      // Wait specifically for sidebar-nav (confirmed data-testid exists)
+      const sidebar = page.locator('nav[data-testid="sidebar-nav"]');
+      await expect(sidebar).toBeVisible({ timeout: 30000 });
       
-      if (hasSidebar) {
-        const navItems = page.locator('a[href]');
-        const count = await navItems.count();
-        console.log(`Admin nav items: ${count}`);
-        expect(count).toBeGreaterThan(3);
-      } else {
-        // Page might not have traditional sidebar - just check for nav links
-        const navLinks = page.locator('a[href]');
-        const count = await navLinks.count();
-        console.log(`Total links on page: ${count}`);
-        expect(count).toBeGreaterThan(5);
-      }
+      // Admin should see multiple nav items
+      const navItems = sidebar.locator('a.sidebar-nav-item');
+      await expect(navItems.first()).toBeVisible({ timeout: 5000 });
+      
+      const count = await navItems.count();
+      console.log(`Admin nav items: ${count}`);
+      expect(count).toBeGreaterThan(10);
     });
 
     test('should load bookings page', async ({ page }) => {
@@ -98,24 +92,18 @@ test.describe('Backoffice Smoke Tests', () => {
 
     test('should display sidebar', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(4000); // Longer wait
       
-      // Try multiple selectors
-      const sidebar = page.locator('nav, aside, [role="navigation"]').first();
-      const hasSidebar = await sidebar.isVisible().catch(() => false);
+      // Wait specifically for sidebar-nav
+      const sidebar = page.locator('nav[data-testid="sidebar-nav"]');
+      await expect(sidebar).toBeVisible({ timeout: 30000 });
       
-      if (hasSidebar) {
-        const navItems = page.locator('a[href]');
-        const count = await navItems.count();
-        console.log(`Saksbehandler nav items: ${count}`);
-        expect(count).toBeGreaterThan(0);
-      } else {
-        // Just check for any navigation links
-        const navLinks = page.locator('a[href]');
-        const count = await navLinks.count();
-        console.log(`Total links: ${count}`);
-        expect(count).toBeGreaterThan(3);
-      }
+      // Staff should see nav items
+      const navItems = sidebar.locator('a.sidebar-nav-item');
+      await expect(navItems.first()).toBeVisible({ timeout: 5000 });
+      
+      const count = await navItems.count();
+      console.log(`Saksbehandler nav items: ${count}`);
+      expect(count).toBeGreaterThan(3);
     });
 
     test('should access work queue', async ({ page }) => {
