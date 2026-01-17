@@ -6,7 +6,6 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from './query-keys';
 import { amenitiesService } from '../services';
 import type {
   CreateAmenityRequest,
@@ -58,7 +57,7 @@ export function useAmenity(id: string) {
   return useQuery({
     queryKey: amenitiesKeys.detail(id),
     queryFn: async () => {
-      const response = await amenitiesService.get(id);
+      const response = await amenitiesService.getById(id);
       return response.data;
     },
     enabled: !!id,

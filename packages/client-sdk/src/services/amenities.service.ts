@@ -5,11 +5,27 @@
  * Used by React Query hooks.
  */
 
-import type {
-  AmenityDTO,
-  AmenityGroupDTO,
-  ProblemDetailsDTO,
-} from '@xala/contracts';
+import { BaseService } from './base.service';
+
+// Define types locally since they don't exist in contracts yet
+export interface AmenityDTO {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  groupCode?: string;
+  iconKey?: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AmenityGroupDTO {
+  code: string;
+  name: string;
+  description?: string;
+  amenities: AmenityDTO[];
+}
 
 export interface CreateAmenityRequest {
   code: string;
@@ -17,6 +33,7 @@ export interface CreateAmenityRequest {
   description?: string;
   groupCode?: string;
   iconKey?: string;
+  isActive?: boolean;
 }
 
 export interface UpdateAmenityRequest {
@@ -31,117 +48,58 @@ export interface AssignAmenitiesRequest {
   amenityIds: string[];
 }
 
-export class AmenitiesService {
-  constructor(private readonly baseUrl: string, private readonly fetch: typeof window.fetch) {}
+export class AmenitiesService extends BaseService {
+  constructor() {
+    super('/amenities');
+  }
 
   /**
    * List all amenities
    */
   async list(): Promise<{ data: AmenityDTO[]; meta: { total: number } }> {
-    const response = await this.fetch(`${this.baseUrl}/amenities`, {
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+    return this.client.get<{ data: AmenityDTO[]; meta: { total: number } }>('');
   }
 
   /**
    * List amenities grouped by category
    */
   async listGrouped(): Promise<{ data: AmenityGroupDTO[] }> {
-    const response = await this.fetch(`${this.baseUrl}/amenities/grouped`, {
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+    return this.client.get<{ data: AmenityGroupDTO[] }>('/grouped');
   }
 
   /**
    * Get single amenity
    */
-  async get(id: string): Promise<{ data: AmenityDTO }> {
-    const response = await this.fetch(`${this.baseUrl}/amenities/${id}`, {
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+  async getById(id: string): Promise<{ data: AmenityDTO }> {
+    return this.client.get<{ data: AmenityDTO }>(`/${id}`);
   }
 
   /**
    * Create amenity (admin only)
    */
   async create(data: CreateAmenityRequest): Promise<{ data: AmenityDTO }> {
-    const response = await this.fetch(`${this.baseUrl}/amenities`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+    return this.client.post<{ data: AmenityDTO }>('' , data);
   }
 
   /**
    * Update amenity (admin only)
    */
   async update(id: string, data: UpdateAmenityRequest): Promise<{ data: AmenityDTO }> {
-    const response = await this.fetch(`${this.baseUrl}/amenities/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+    return this.client.put<{ data: AmenityDTO }>(`/${id}`, data);
   }
 
   /**
    * Delete amenity (admin only)
    */
   async deleteById(id: string): Promise<void> {
-    const response = await this.fetch(`${this.baseUrl}/amenities/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
+    return this.client.delete(`/${id}`);
   }
 
   /**
    * Get amenities for rental object
    */
   async getForRentalObject(rentalObjectId: string): Promise<{ data: AmenityDTO[] }> {
-    const response = await this.fetch(`${this.baseUrl}/rental-objects/${rentalObjectId}/amenities`, {
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-
-    return response.json();
+    return this.client.get<{ data: AmenityDTO[] }>(`/rental-objects/${rentalObjectId}/amenities`);
   }
 
   /**
@@ -151,34 +109,7 @@ export class AmenitiesService {
     rentalObjectId: string,
     data: AssignAmenitiesRequest
   ): Promise<void> {
-    const response = await this.fetch(`${this.baseUrl}/rental-objects/${rentalObjectId}/amenities`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw await this.handleError(response);
-    }
-  }
-
-  /**
-   * Error handler
-   */
-  private async handleError(response: Response): Promise<ProblemDetailsDTO> {
-    const contentType = response.headers.get('content-type');
-    
-    if (contentType?.includes('application/json')) {
-      return response.json();
-    }
-
-    return {
-      type: 'https://api.digilist.no/errors/unknown',
-      title: 'Unknown Error',
-      status: response.status,
-      detail: await response.text(),
-    };
+    return this.client.post(`/rental-objects/${rentalObjectId}/amenities/assign`, data);
   }
 }
 
