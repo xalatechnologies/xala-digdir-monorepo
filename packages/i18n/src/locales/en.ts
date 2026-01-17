@@ -2520,13 +2520,15 @@ export const en: Record<string, string> = {
   'form.inventory.concurrentDescription': 'Best for consumables or items with multiple identical copies',
 
   // Form Labels - Opening Hours Step
+  'rentalObjects.openingHoursDescription': 'Specify opening hours for each day of the week',
   'form.openingHours.title': 'Opening hours',
   'form.openingHours.closed': 'Closed',
-  'form.openingHours.opening': 'Opening time',
-  'form.openingHours.closing': 'Closing time',
+  'form.openingHours.opening': 'Opens',
+  'form.openingHours.closing': 'Closes',
   'form.openingHours.applyToWeekdays': 'Apply to all weekdays',
-  'form.openingHours.applyToWeekend': 'Apply to weekend days',
+  'form.openingHours.applyToWeekend': 'Apply to weekend',
   'form.openingHours.copyFromMonday': 'Copy from Monday',
+  'rentalObjects.openingHoursInfo': 'Opening hours are used to show when the object is available for booking. Note that closing time must be after opening time.',
 
   // Form Labels - Pickup Step
   'form.pickup.enabled': 'Pickup enabled',

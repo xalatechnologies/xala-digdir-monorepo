@@ -16,6 +16,9 @@ import {
   Stack,
   Button,
   PlusIcon,
+  EmptyState,
+  DataPageHeader,
+  UsersIcon,
 } from '@xala/ds';
 import { useUsers } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
@@ -53,20 +56,22 @@ export function UsersPage() {
   return (
     <Stack direction="column" gap={20}>
       {/* Header */}
-      <Stack direction="horizontal" justify="space-between" align="flex-start">
-        <Stack direction="column" gap={1}>
-          <Heading level={2} data-size="md">
-            {t('tenantAdmin.nav.users')}
-          </Heading>
-          <Paragraph data-size="sm" data-color="subtle">
-            {t('tenantAdmin.nav.usersDesc')}
-          </Paragraph>
-        </Stack>
-        <Button variant="primary" data-size="sm">
-          <PlusIcon />
-          {t('common.create', { defaultValue: 'Create' })}
-        </Button>
-      </Stack>
+      <DataPageHeader
+        title={t('tenantAdmin.nav.users')}
+        count={usersData?.meta?.total ?? filteredUsers.length}
+        countLabel={`{{count}} ${t('tenantAdmin.nav.users').toLowerCase()}`}
+        actions={
+          <Button variant="primary" data-size="sm">
+            <PlusIcon />
+            {t('common.create', { defaultValue: 'Create' })}
+          </Button>
+        }
+      />
+      {t('tenantAdmin.nav.usersDesc') && (
+        <Paragraph data-size="sm" data-color="subtle" style={{ marginTop: 'var(--ds-spacing-2)' }}>
+          {t('tenantAdmin.nav.usersDesc')}
+        </Paragraph>
+      )}
 
       {/* Search */}
       <Card>
@@ -80,11 +85,17 @@ export function UsersPage() {
       {/* Users Table */}
       <Card>
         {filteredUsers.length === 0 ? (
-          <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Paragraph data-size="sm" data-color="subtle">
-              {t('common.noResults')}
-            </Paragraph>
-          </Stack>
+          <EmptyState
+            icon={<UsersIcon size={48} />}
+            title={t('common.noResults')}
+            description={
+              searchQuery
+                ? t('dataPage.emptyState.tryDifferentFilters')
+                : t('common.noResults')
+            }
+            size="md"
+            bordered
+          />
         ) : (
           <Table>
             <Table.Head>

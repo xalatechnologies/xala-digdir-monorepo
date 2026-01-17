@@ -10,6 +10,8 @@ import {
   Badge,
   Spinner,
   Stack,
+  EmptyState,
+  SettingsIcon,
 } from '@xala/ds';
 import { useTenantFeatures } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
@@ -43,11 +45,13 @@ export function FeatureFlagsPage() {
       {/* Feature Flags List */}
       <Card>
         {features.length === 0 ? (
-          <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Paragraph data-size="sm" data-color="subtle">
-              {t('common.noResults')}
-            </Paragraph>
-          </Stack>
+          <EmptyState
+            icon={<SettingsIcon size={48} />}
+            title={t('common.noResults')}
+            description={t('dataPage.emptyState.noData')}
+            size="md"
+            bordered
+          />
         ) : (
           <Stack direction="column" gap={12}>
             {features.map((feature) => (

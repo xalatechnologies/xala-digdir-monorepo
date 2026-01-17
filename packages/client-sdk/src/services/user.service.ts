@@ -61,8 +61,8 @@ export class UserService extends BaseService {
   /**
    * Delete user (admin only)
    */
-  async delete(id: string): Promise<void> {
-    return this.delete(`/admin/users/${id}`);
+  async deleteUser(id: string): Promise<void> {
+    await this.delete(`/admin/users/${id}`);
   }
 
   /**
@@ -132,12 +132,12 @@ export class UserService extends BaseService {
   /**
    * Export users to CSV (admin only)
    */
-  async exportToCsv(query?: Partial<ListUsersQuery>): Promise<Blob> {
+  async exportToCsv(query?: Partial<ListUsersQuery>): Promise<Blob> {  
     const response = await this.client.get('/admin/users/export', {
       params: query,
       responseType: 'blob',
     });
-    return response.data;
+    return response as unknown as Blob;
   }
 }
 

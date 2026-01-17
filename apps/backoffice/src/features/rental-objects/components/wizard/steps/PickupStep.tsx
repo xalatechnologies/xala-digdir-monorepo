@@ -1,140 +1,231 @@
 /**
  * Pickup Step Component
- * For configuring pickup and return locations
+ * For configuring pickup/return locations (equipment and vehicles)
  */
 
 import { useT } from '@xala/i18n';
-import { Textfield, Textarea, Heading, Paragraph, Switch, Alert, Checkbox } from '@xala/ds';
-import type { RentalObject } from '../../../types';
+import {
+  Heading,
+  Paragraph,
+  Alert,
+  Card,
+  Textfield,
+  Textarea,
+  Checkbox,
+} from '@xala/ds';
+import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
 
-interface PickupStepProps {
-  data: Partial<RentalObject>;
-  onChange: (data: Partial<RentalObject>) => void;
-  errors: string[];
+export interface PickupStepProps {
+  wizard: UseRentalObjectWizardReturn;
 }
 
-export function PickupStep({ data, onChange, errors }: PickupStepProps): React.ReactElement {
+export function PickupStep({ wizard }: PickupStepProps) {
   const t = useT();
-  const pickup = data.pickup || { enabled: true, sameAsPickup: true };
+  const { formData, updateFormData, errors } = wizard;
+  const currentStepErrors = errors['pickup'] || [];
 
-  const updatePickup = (updates: Partial<typeof pickup>): void => {
-    onChange({
-      pickup: {
-        ...pickup,
-        ...updates,
+  const pickupLocation = formData.pickupLocation || {};
+  const returnLocation = formData.returnLocation || {};
+
+  const updatePickupLocation = (field: string, value: string) => {
+    updateFormData({
+      pickupLocation: {
+        ...pickupLocation,
+        [field]: value || undefined,
+      },
+    });
+  };
+
+  const updateReturnLocation = (field: string, value: string) => {
+    updateFormData({
+      returnLocation: {
+        ...returnLocation,
+        [field]: value || undefined,
       },
     });
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      <div>
-        <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {t('rentalObjects.step.pickup.title')}
-        </Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('rentalObjects.step.pickup.description')}
-        </Paragraph>
-      </div>
+    <Card
+      style={{
+        padding: 'var(--ds-spacing-6)',
+        backgroundColor: 'var(--ds-color-neutral-surface-default)',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+        {/* Header */}
+        <div>
+          <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+            {t('wizard.step.pickup')}
+          </Heading>
+          <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            {t('rentalObjects.pickupDescription')}
+          </Paragraph>
+        </div>
 
-      {errors.length > 0 && (
-        <Alert severity="danger">
-          <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
-            {errors.map((error, i) => (
-              <li key={i}>{error}</li>
-            ))}
-          </ul>
-        </Alert>
-      )}
+        {/* Error Display */}
+        {currentStepErrors.length > 0 && (
+          <Alert severity="danger">
+            <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
+              {currentStepErrors.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
 
-      {/* Pickup Location */}
-      <div>
-        <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-          {t('rentalObjects.field.pickupLocation')}
-        </Heading>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-          <Textfield
-            label={t('rentalObjects.field.address')}
-            value={pickup.pickupLocation?.address || ''}
-            onChange={(e) => updatePickup({
-              pickupLocation: {
-                ...pickup.pickupLocation,
-                address: e.target.value,
-              },
-            })}
-            required
-          />
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
-            <Textfield
-              label={t('rentalObjects.field.postalCode')}
-              value={pickup.pickupLocation?.postalCode || ''}
-              onChange={(e) => updatePickup({
-                pickupLocation: {
-                  ...pickup.pickupLocation,
-                  postalCode: e.target.value,
-                },
-              })}
-            />
-            <Textfield
-              label={t('rentalObjects.field.city')}
-              value={pickup.pickupLocation?.city || ''}
-              onChange={(e) => updatePickup({
-                pickupLocation: {
-                  ...pickup.pickupLocation,
-                  city: e.target.value,
-                },
-              })}
-            />
+        {/* Pickup Location */}
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--ds-spacing-2)',
+              marginBottom: 'var(--ds-spacing-4)',
+            }}
+          >
+            <div style={{ fontSize: '1.5rem' }}>📍</div>
+            <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+              {t('form.pickup.location')}
+            </Heading>
           </div>
 
-          <Textarea
-            label={t('rentalObjects.field.pickupInstructions')}
-            value={pickup.pickupInstructions || ''}
-            onChange={(e) => updatePickup({ pickupInstructions: e.target.value })}
-            rows={3}
-            description={t('rentalObjects.field.pickupInstructionsDescription')}
-          />
-        </div>
-      </div>
-
-      {/* Return Location */}
-      <div>
-        <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-          {t('rentalObjects.field.returnLocation')}
-        </Heading>
-
-        <Checkbox
-          checked={pickup.sameAsPickup}
-          onChange={(e) => updatePickup({ sameAsPickup: e.target.checked })}
-          style={{ marginBottom: 'var(--ds-spacing-4)' }}
-        >
-          {t('rentalObjects.field.sameAsPickup')}
-        </Checkbox>
-
-        {!pickup.sameAsPickup && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
             <Textfield
-              label={t('rentalObjects.field.address')}
-              value={pickup.returnLocation?.address || ''}
-              onChange={(e) => updatePickup({
-                returnLocation: {
-                  ...pickup.returnLocation,
-                  address: e.target.value,
-                },
-              })}
+              label={t('form.location.address')}
+              value={pickupLocation.address || ''}
+              onChange={(e) => updatePickupLocation('address', e.target.value)}
+              required
+              placeholder={t('form.location.addressPlaceholder')}
             />
 
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 2fr',
+                gap: 'var(--ds-spacing-4)',
+              }}
+            >
+              <Textfield
+                label={t('form.location.postalCode')}
+                value={pickupLocation.postalCode || ''}
+                onChange={(e) => updatePickupLocation('postalCode', e.target.value)}
+                required
+                placeholder="0001"
+                maxLength={4}
+              />
+              <Textfield
+                label={t('form.location.city')}
+                value={pickupLocation.city || ''}
+                onChange={(e) => updatePickupLocation('city', e.target.value)}
+                required
+                placeholder={t('form.location.cityPlaceholder')}
+              />
+            </div>
+
             <Textarea
-              label={t('rentalObjects.field.returnInstructions')}
-              value={pickup.returnInstructions || ''}
-              onChange={(e) => updatePickup({ returnInstructions: e.target.value })}
+              label={t('form.pickup.instructions')}
+              value={formData.pickupInstructions || ''}
+              onChange={(e) => updateFormData({ pickupInstructions: e.target.value })}
               rows={3}
+              placeholder={t('form.pickup.instructionsPlaceholder')}
             />
           </div>
+        </div>
+
+        {/* Same as Pickup Checkbox */}
+        <div
+          style={{
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+            borderRadius: 'var(--ds-border-radius-md)',
+          }}
+        >
+          <Checkbox
+            checked={formData.returnSameAsPickup !== false}
+            onChange={(e) => updateFormData({ returnSameAsPickup: e.target.checked })}
+          >
+            <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+              {t('form.pickup.returnSameAsPickup')}
+            </span>
+          </Checkbox>
+        </div>
+
+        {/* Return Location (only if different) */}
+        {formData.returnSameAsPickup === false && (
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+                marginBottom: 'var(--ds-spacing-4)',
+              }}
+            >
+              <div style={{ fontSize: '1.5rem' }}>🔙</div>
+              <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+                {t('form.pickup.returnLocation')}
+              </Heading>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+              <Textfield
+                label={t('form.location.address')}
+                value={returnLocation.address || ''}
+                onChange={(e) => updateReturnLocation('address', e.target.value)}
+                required
+                placeholder={t('form.location.addressPlaceholder')}
+              />
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 2fr',
+                  gap: 'var(--ds-spacing-4)',
+                }}
+              >
+                <Textfield
+                  label={t('form.location.postalCode')}
+                  value={returnLocation.postalCode || ''}
+                  onChange={(e) => updateReturnLocation('postalCode', e.target.value)}
+                  required
+                  placeholder="0001"
+                  maxLength={4}
+                />
+                <Textfield
+                  label={t('form.location.city')}
+                  value={returnLocation.city || ''}
+                  onChange={(e) => updateReturnLocation('city', e.target.value)}
+                  required
+                  placeholder={t('form.location.cityPlaceholder')}
+                />
+              </div>
+
+              <Textarea
+                label={t('form.pickup.returnInstructions')}
+                value={formData.returnInstructions || ''}
+                onChange={(e) => updateFormData({ returnInstructions: e.target.value })}
+                rows={3}
+                placeholder={t('form.pickup.returnInstructionsPlaceholder')}
+              />
+            </div>
+          </div>
         )}
+
+        {/* Info Message */}
+        <div
+          style={{
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-info-surface-default)',
+            borderLeft: '4px solid var(--ds-color-info-border-default)',
+            borderRadius: 'var(--ds-border-radius-md)',
+          }}
+        >
+          <Paragraph data-size="sm" style={{ margin: 0 }}>
+            💡 {t('rentalObjects.pickupInfo')}
+          </Paragraph>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }

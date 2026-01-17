@@ -2544,13 +2544,15 @@ export const nb: Record<string, string> = {
   'form.inventory.concurrentDescription': 'Best for forbruksvarer eller gjenstander med flere identiske kopier',
 
   // Form Labels - Opening Hours Step
+  'rentalObjects.openingHoursDescription': 'Angi åpningstider for hver dag i uken',
   'form.openingHours.title': 'Åpningstider',
   'form.openingHours.closed': 'Stengt',
-  'form.openingHours.opening': 'Åpningstid',
-  'form.openingHours.closing': 'Stengetid',
-  'form.openingHours.applyToWeekdays': 'Bruk på alle ukedager',
-  'form.openingHours.applyToWeekend': 'Bruk på helgedager',
+  'form.openingHours.opening': 'Åpner',
+  'form.openingHours.closing': 'Stenger',
+  'form.openingHours.applyToWeekdays': 'Bruk på alle hverdager',
+  'form.openingHours.applyToWeekend': 'Bruk på helg',
   'form.openingHours.copyFromMonday': 'Kopier fra mandag',
+  'rentalObjects.openingHoursInfo': 'Åpningstider brukes til å vise når objektet er tilgjengelig for booking. Legg merke til at stengetid må være etter åpningstid.',
 
   // Form Labels - Pickup Step
   'form.pickup.enabled': 'Henting aktivert',
