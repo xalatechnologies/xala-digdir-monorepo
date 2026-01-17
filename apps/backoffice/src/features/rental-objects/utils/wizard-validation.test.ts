@@ -5,8 +5,6 @@
 
 import { describe, it, expect } from 'vitest';
 import { validateStep, validateAllSteps, canPublish } from './wizard-validation';
-import type { RentalObject, RentalObjectCategory } from '../types';
-import { useT } from '@xala/i18n';
 
 describe('wizard-validation', () => {
   describe('validateStep - basics', () => {
@@ -85,13 +83,13 @@ describe('wizard-validation', () => {
 
   describe('validateStep - openingHours', () => {
     it('should require at least one day for LOKALER_OG_BANER', () => {
-      const result = validateStep('openingHours', {}, 'LOKALER_OG_BANER');
+      const result = validateStep('opening-hours', {}, 'LOKALER_OG_BANER');
       expect(result.isValid).toBe(false);
     });
 
     it('should accept valid opening hours', () => {
       const result = validateStep(
-        'openingHours',
+        'opening-hours',
         { openingHours: { monday: { open: '09:00', close: '17:00' } } },
         'LOKALER_OG_BANER'
       );
@@ -309,8 +307,8 @@ describe('wizard-validation', () => {
   describe('validateAllSteps', () => {
     it('should validate all steps and return all errors', () => {
       const steps = [
-        { id: 'basics' as const, label: 'Basics', order: 0 },
-        { id: 'location' as const, label: 'Location', order: 1 },
+        { id: 'basics' as const, titleKey: 'basics', completed: false, hasErrors: false },
+        { id: 'location' as const, titleKey: 'location', completed: false, hasErrors: false },
       ];
 
       const result = validateAllSteps(steps, {}, 'LOKALER_OG_BANER');
@@ -322,8 +320,8 @@ describe('wizard-validation', () => {
 
     it('should return empty errors for valid data', () => {
       const steps = [
-        { id: 'basics' as const, label: 'Basics', order: 0 },
-        { id: 'capacity' as const, label: 'Capacity', order: 1 },
+        { id: 'basics' as const, titleKey: 'basics', completed: false, hasErrors: false },
+        { id: 'capacity' as const, titleKey: 'capacity', completed: false, hasErrors: false },
       ];
 
       const result = validateAllSteps(

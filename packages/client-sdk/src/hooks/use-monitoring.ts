@@ -10,7 +10,6 @@ import type {
   LogEntry,
   LogQueryParams,
   Incident,
-  PaginatedResponse,
 } from '../services/monitoring.service';
 import { queryKeys } from './query-keys';
 

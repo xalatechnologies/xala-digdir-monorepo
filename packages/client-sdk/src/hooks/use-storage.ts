@@ -4,7 +4,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from '@tanstack/react-query';
-import { useSDK } from '../providers/SDKProvider';
+import { StorageService } from '../services/storage.service';
 import { storageKeys } from '../query-keys/storage.keys';
 import type {
   UploadFileResponse,
@@ -13,7 +13,10 @@ import type {
   ListFilesResponse,
   UpdateFileMetadataRequest,
   FileUploadInput,
-} from '@xala/contracts/storage';
+} from '../types/storage.types';
+
+// Create storage service instance
+const storageService = new StorageService();
 
 /**
  * Upload a single file
@@ -33,11 +36,10 @@ import type {
  * ```
  */
 export function useUploadFile(): UseMutationResult<UploadFileResponse, Error, FileUploadInput> {
-  const { storage } = useSDK();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: FileUploadInput) => storage.uploadFile(input),
+    mutationFn: (input: FileUploadInput) => storageService.uploadFile(input),
     onSuccess: () => {
       // Invalidate file lists
       queryClient.invalidateQueries({ queryKey: storageKeys.lists() });
@@ -58,11 +60,10 @@ export function useUploadFile(): UseMutationResult<UploadFileResponse, Error, Fi
  * ```
  */
 export function useUploadMultipleFiles(): UseMutationResult<UploadMultipleFilesResponse, Error, File[]> {
-  const { storage } = useSDK();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (files: File[]) => storage.uploadMultipleFiles(files),
+    mutationFn: (files: File[]) => storageService.uploadMultipleFiles(files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storageKeys.lists() });
     },
@@ -85,11 +86,9 @@ export function useListFiles(
   query: ListFilesQuery = {},
   options?: { enabled?: boolean }
 ): UseQueryResult<ListFilesResponse, Error> {
-  const { storage } = useSDK();
-
   return useQuery({
     queryKey: storageKeys.list(query),
-    queryFn: () => storage.listFiles(query),
+    queryFn: () => storageService.listFiles(query),
     ...options,
   });
 }
@@ -107,11 +106,10 @@ export function useListFiles(
  * ```
  */
 export function useDeleteFile(): UseMutationResult<void, Error, string> {
-  const { storage } = useSDK();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (fileId: string) => storage.deleteFile(fileId),
+    mutationFn: (fileId: string) => storageService.deleteFile(fileId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: storageKeys.lists() });
     },
@@ -141,11 +139,10 @@ export function useUpdateFileMetadata(): UseMutationResult<
   Error,
   { fileId: string; updates: UpdateFileMetadataRequest }
 > {
-  const { storage } = useSDK();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ fileId, updates }) => storage.updateFileMetadata(fileId, updates),
+    mutationFn: ({ fileId, updates }) => storageService.updateFileMetadata(fileId, updates),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: storageKeys.detail(variables.fileId) });
       queryClient.invalidateQueries({ queryKey: storageKeys.lists() });
@@ -164,6 +161,5 @@ export function useUpdateFileMetadata(): UseMutationResult<
  * ```
  */
 export function useFileUrl(): (path: string) => string {
-  const { storage } = useSDK();
-  return (path: string) => storage.getFileUrl(path);
+  return (path: string) => storageService.getFileUrl(path);
 }

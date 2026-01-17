@@ -61,7 +61,7 @@ export function useCheckPermission(
 ) {
   return useQuery({
     queryKey: authzKeys.check(resource, action),
-    queryFn: () => authzService.checkPermission(resource, action),
+    queryFn: () => authzService.checkPermissionSimple(resource, action),
     enabled: (options?.enabled ?? true) && !!resource && !!action,
     staleTime: 5 * 60 * 1000,
   });
@@ -98,7 +98,11 @@ export function useCan(resource: AuthzResource, action: AuthzAction): boolean {
  * ```
  */
 export function useRole(): string | undefined {
-  const { data } = usePermissions();
+  const { data } = useQuery({
+    queryKey: [...authzKeys.all, 'role'],
+    queryFn: () => authzService.getEffectiveRole(),
+    staleTime: 5 * 60 * 1000,
+  });
   return data?.data.role;
 }
 
@@ -116,8 +120,8 @@ export function useRole(): string | undefined {
  */
 export function useHasAnyPermission(permissions: string[]): boolean {
   const { data } = usePermissions();
-  if (!data?.data.permissions) return false;
-  const permissionSet = new Set(data.data.permissions);
+  if (!data?.data || !Array.isArray(data.data)) return false;
+  const permissionSet = new Set(data.data);
   return permissions.some(p => permissionSet.has(p));
 }
 
@@ -135,8 +139,8 @@ export function useHasAnyPermission(permissions: string[]): boolean {
  */
 export function useHasAllPermissions(permissions: string[]): boolean {
   const { data } = usePermissions();
-  if (!data?.data.permissions) return false;
-  const permissionSet = new Set(data.data.permissions);
+  if (!data?.data || !Array.isArray(data.data)) return false;
+  const permissionSet = new Set(data.data);
   return permissions.every(p => permissionSet.has(p));
 }
 

@@ -16,6 +16,10 @@ import type {
  * Note: For current user operations, use ProfileService
  */
 export class UserService extends BaseService {
+  constructor() {
+    super(''); // No base path prefix since paths are already absolute
+  }
+
   /**
    * List all users with filters (admin only)
    */

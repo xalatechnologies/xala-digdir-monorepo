@@ -117,6 +117,7 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.bookings.details(), id] as const,
     my: (params?: BookingQueryParams) => [...queryKeys.bookings.all, 'my', params] as const,
     recurring: () => [...queryKeys.bookings.all, 'recurring'] as const,
+    recurringPreview: (hash: string) => [...queryKeys.bookings.all, 'recurringPreview', hash] as const,
     pricing: (rentalObjectId: string, start: string, end: string) =>
       [...queryKeys.bookings.all, 'pricing', rentalObjectId, start, end] as const,
     paymentReconciliation: (params?: { startDate?: string; endDate?: string; status?: string; provider?: string }) =>

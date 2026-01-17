@@ -1,11 +1,23 @@
 /**
  * Pricing Service
- * Server-side pricing quote requests
- * All pricing logic lives in the API (SDK-first principle)
+ * Complete pricing management for groups and rental object pricing
  */
 
 import { BaseService } from './base.service';
-import type { SingleResponse } from '../types/enums';
+import type { SingleResponse, PaginatedResponse } from '../types/enums';
+import type {
+  PricingGroup,
+  PricingGroupListResponse,
+  CreatePricingGroupDTO,
+  UpdatePricingGroupDTO,
+  ListPricingGroupsQuery,
+  RentalObjectPricing,
+  UpdateRentalObjectPricingDTO,
+  BookingQuoteRequest,
+  BookingQuoteResponse,
+  BulkUpdatePricingDTO,
+  BulkUpdatePricingResponse,
+} from '../types/pricing.types';
 
 // =============================================================================
 // Types
@@ -22,15 +34,15 @@ export interface PricingQuoteRequest {
 export interface QuoteLineItem {
   description: string;
   quantity: number;
-  unitPrice: number; // in øre
+  unitPrice: number;
   unit: 'HOUR' | 'DAY' | 'PACKAGE';
-  subtotal: number; // in øre
+  subtotal: number;
   ruleId?: string;
 }
 
 export interface PricingQuoteResponse {
   lineItems: QuoteLineItem[];
-  totalAmount: number; // in øre
+  totalAmount: number;
   currency: string;
   ruleApplied: {
     id: string;
@@ -51,34 +63,102 @@ export class PricingService extends BaseService {
     super('/pricing');
   }
 
+  // ===========================================================================
+  // PRICING GROUPS
+  // ===========================================================================
+
+  /**
+   * List pricing groups with optional filtering
+   */
+  async listGroups(query?: Partial<ListPricingGroupsQuery>): Promise<PricingGroupListResponse> {
+    const params = new URLSearchParams();
+    if (query?.page) params.set('page', String(query.page));
+    if (query?.limit) params.set('limit', String(query.limit));
+    if (query?.search) params.set('search', query.search);
+    if (query?.isActive !== undefined) params.set('isActive', String(query.isActive));
+    if (query?.sortBy) params.set('sortBy', query.sortBy);
+    if (query?.sortOrder) params.set('sortOrder', query.sortOrder);
+    
+    const queryString = params.toString();
+    return this.client.get(this.buildPath(`/groups${queryString ? `?${queryString}` : ''}`));
+  }
+
+  /**
+   * Get a single pricing group by ID
+   */
+  async getGroup(id: string): Promise<SingleResponse<PricingGroup>> {
+    return this.client.get(this.buildPath(`/groups/${id}`));
+  }
+
+  /**
+   * Get all active pricing groups (for dropdowns)
+   */
+  async getActiveGroups(): Promise<PaginatedResponse<PricingGroup>> {
+    return this.client.get(this.buildPath('/groups?isActive=true&limit=100'));
+  }
+
+  /**
+   * Create a new pricing group
+   */
+  async createGroup(data: CreatePricingGroupDTO): Promise<SingleResponse<PricingGroup>> {
+    return this.client.post(this.buildPath('/groups'), data);
+  }
+
+  /**
+   * Update a pricing group
+   */
+  async updateGroup(id: string, data: UpdatePricingGroupDTO): Promise<SingleResponse<PricingGroup>> {
+    return this.client.patch(this.buildPath(`/groups/${id}`), data);
+  }
+
+  /**
+   * Delete a pricing group
+   */
+  async deleteGroup(id: string): Promise<void> {
+    return this.client.delete(this.buildPath(`/groups/${id}`));
+  }
+
+  // ===========================================================================
+  // RENTAL OBJECT PRICING
+  // ===========================================================================
+
+  /**
+   * Get pricing configuration for a rental object
+   */
+  async getRentalObjectPricing(rentalObjectId: string): Promise<SingleResponse<RentalObjectPricing>> {
+    return this.client.get(this.buildPath(`/rental-objects/${rentalObjectId}`));
+  }
+
+  /**
+   * Get all pricing variations for a rental object
+   */
+  async getPricingVariations(rentalObjectId: string): Promise<PaginatedResponse<RentalObjectPricing>> {
+    return this.client.get(this.buildPath(`/rental-objects/${rentalObjectId}/variations`));
+  }
+
+  /**
+   * Update pricing for a rental object
+   */
+  async updateRentalObjectPricing(
+    rentalObjectId: string,
+    data: UpdateRentalObjectPricingDTO
+  ): Promise<SingleResponse<RentalObjectPricing>> {
+    return this.client.patch(this.buildPath(`/rental-objects/${rentalObjectId}`), data);
+  }
+
+  /**
+   * Bulk update pricing for multiple rental objects
+   */
+  async bulkUpdatePricing(data: BulkUpdatePricingDTO): Promise<BulkUpdatePricingResponse> {
+    return this.client.post(this.buildPath('/rental-objects/bulk'), data);
+  }
+
+  // ===========================================================================
+  // QUOTES
+  // ===========================================================================
+
   /**
    * Get a pricing quote for a booking
-   * All pricing logic is calculated server-side to ensure consistency and prevent manipulation
-   *
-   * @param request - Quote request parameters
-   * @returns Promise resolving to pricing quote with line items and total amount
-   *
-   * @example
-   * ```typescript
-   * // Get quote for hourly booking
-   * const quote = await pricingService.quote({
-   *   listingId: 'listing-123',
-   *   start: '2024-03-20T10:00:00Z',
-   *   end: '2024-03-20T14:00:00Z',
-   *   userGroupId: 'group-456'
-   * });
-   *
-   * console.log(`Total: ${quote.data.totalAmount / 100} kr`);
-   * console.log(`Rule applied: ${quote.data.ruleApplied?.description}`);
-   *
-   * // Get quote for weekend booking with multiple units
-   * const weekendQuote = await pricingService.quote({
-   *   listingId: 'listing-789',
-   *   start: new Date('2024-03-23T10:00:00'),
-   *   end: new Date('2024-03-23T16:00:00'),
-   *   units: 2
-   * });
-   * ```
    */
   async quote(request: PricingQuoteRequest): Promise<SingleResponse<PricingQuoteResponse>> {
     return this.client.post(this.buildPath('/quote'), {
@@ -88,6 +168,32 @@ export class PricingService extends BaseService {
       userGroupId: request.userGroupId,
       units: request.units,
     });
+  }
+
+  /**
+   * Get a booking quote (alias for quote with different request format)
+   */
+  async getBookingQuote(data: BookingQuoteRequest): Promise<SingleResponse<BookingQuoteResponse>> {
+    return this.client.post(this.buildPath('/quote'), data);
+  }
+
+  // ===========================================================================
+  // USER PRICING GROUPS
+  // ===========================================================================
+
+  /**
+   * Get the pricing group for a specific user
+   */
+  async getUserPricingGroup(userId?: string): Promise<SingleResponse<PricingGroup | null>> {
+    const path = userId ? `/users/${userId}/group` : '/users/me/group';
+    return this.client.get(this.buildPath(path));
+  }
+
+  /**
+   * Get member count for a pricing group
+   */
+  async getGroupMembersCount(groupId: string): Promise<SingleResponse<{ count: number }>> {
+    return this.client.get(this.buildPath(`/groups/${groupId}/members/count`));
   }
 }
 

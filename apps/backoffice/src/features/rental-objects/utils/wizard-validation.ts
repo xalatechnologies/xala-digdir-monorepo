@@ -10,19 +10,17 @@ import type {
   WizardStepId,
   ValidationError,
   StepValidationResult,
-  CATEGORY_CONFIGS,
 } from '../types';
-import { useT } from '@xala/i18n';
 
 /**
  * Validates a single wizard step
+ * Note: Messages are hardcoded in Norwegian as this is a pure validation utility
  */
 export function validateStep(
   stepId: WizardStepId,
   data: Partial<RentalObject>,
   category: RentalObjectCategory
 ): StepValidationResult {
-  const t = useT();
   const errors: ValidationError[] = [];
 
   switch (stepId) {
@@ -50,7 +48,7 @@ export function validateStep(
       }
       break;
 
-    case 'openingHours':
+    case 'opening-hours':
       // Opening hours validation - at least one day should be set for LOKALER_OG_BANER
       if (category === 'LOKALER_OG_BANER') {
         const hasOpeningHours = data.openingHours && Object.values(data.openingHours).some(
@@ -93,7 +91,7 @@ export function validateStep(
       // Packages validation for OPPLEVELSER_OG_ARRANGEMENT
       if (category === 'OPPLEVELSER_OG_ARRANGEMENT') {
         if (data.packages) {
-          data.packages.forEach((pkg, index) => {
+          data.packages.forEach((pkg: { name?: string; price: number }, index: number) => {
             if (!pkg.name?.trim()) {
               errors.push({ field: `packages[${index}].name`, message: `Pakke ${index + 1}: Navn er påkrevd` });
             }

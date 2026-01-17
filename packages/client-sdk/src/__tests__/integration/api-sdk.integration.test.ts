@@ -223,7 +223,7 @@ const server = setupServer(...handlers);
 import { initializeClient, resetClient } from '../../core/client-factory';
 import { rentalObjectService } from '../../services/rental-object.service';
 import { bookingService } from '../../services/booking.service';
-import { authService } from '../../services/auth.service';
+// import { authService } from '../../services/auth.service'; // Skipped tests
 import { authzService } from '../../services/authz.service';
 import { ApiError } from '../../core/http-client.interface';
 

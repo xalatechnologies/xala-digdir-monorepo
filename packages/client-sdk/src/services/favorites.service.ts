@@ -17,6 +17,10 @@ import type {
  * Client SDK for favorites/wishlist operations
  */
 export class FavoritesService extends BaseService {
+  constructor() {
+    super('/api');
+  }
+
   /**
    * List current user's favorites
    */

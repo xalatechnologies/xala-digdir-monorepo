@@ -60,26 +60,51 @@ psql -d digilist_prod -c "\dn"  # Should show all 5 schemas
 psql -d digilist_prod -c "SELECT schemaname, COUNT(*) FROM pg_tables WHERE schemaname IN ('platform', 'domain', 'compliance') GROUP BY schemaname;"
 ```
 
-### 2. Authentication System (LOCKED)
+### 2. BankID / Signicat Authentication (LOCKED ✅)
 
 **🔒 HARD LINE - NO CHANGES WITHOUT APPROVAL**
 
-Authentication is **STABLE AND WORKING**. Do not modify without explicit approval.
+**Status:** ✅ WORKING AND TESTED (2026-01-17)
+
+Authentication is **STABLE AND WORKING**. It took **4+ hours** to debug and configure correctly. Do not modify without explicit approval.
+
+**✅ WORKING CONFIGURATION (LOCKED):**
+
+```bash
+# Environment Variables (Production VPS)
+IDPORTEN_BASE_URL=https://digilist.sandbox.signicat.com          # OAuth token endpoint
+IDPORTEN_API_URL=https://api.signicat.com                        # REST API (PRODUCTION, not sandbox!)
+IDPORTEN_CALLBACK_URL=https://api.digilist.no/api/auth/idporten/callback
+IDPORTEN_CLIENT_ID=sandbox-fantastic-house-812
+IDPORTEN_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
+```
+
+**🔑 KEY INSIGHT:** The REST API sessions endpoint uses **production API** (`https://api.signicat.com`) even when using sandbox credentials. This is by design.
 
 **Critical Files (DO NOT CHANGE):**
-- `apps/api/src/modules/auth/idporten.controller.ts` - BankID REST API
+- `apps/api/src/modules/auth/idporten.controller.ts` - BankID REST API (ONLY ONE)
 - `apps/api/src/modules/auth/session.service.ts` - Session management
 - `apps/api/src/config/cookies.ts` - Cookie configuration
 - `packages/client-sdk/src/services/idporten.service.ts` - Frontend SDK
 
-**Key Requirements:**
-1. Use `/api/auth/idporten` endpoint (REST), NOT `/api/auth/idporten-oidc`
-2. Three HTTP-only cookies: `dl_at`, `dl_rt`, `dl_csrf`
-3. Cookie domain MUST be `.digilist.no` for cross-subdomain SSO
-4. Redirect to frontend domain (extract origin from returnTo URL)
-5. Audit logging with `action: 'login'`
+**Authentication Flow:**
+1. User clicks "Logg inn med BankID"
+2. API gets OAuth access token from `https://digilist.sandbox.signicat.com/oauth/token`
+3. API creates session at `https://api.signicat.com/auth/rest/sessions` (production API!)
+4. User completes BankID authentication
+5. Callback to `https://api.digilist.no/api/auth/idporten/callback`
+6. API sets 3 HTTP-only cookies: `dl_at`, `dl_rt`, `dl_csrf` with domain `.digilist.no`
+7. User redirected to original page (preserves full URL path)
 
-**Documentation:** See `docs/architecture/AUTHENTICATION_SYSTEM.md` for complete details.
+**Testing Checklist:**
+- [ ] BankID login → Dashboard (not login page)
+- [ ] Cookies visible in dev tools with domain `.digilist.no`
+- [ ] Session API returns user data (not 401)
+- [ ] Deep link preserved (e.g., `/bookings/create/step-2`)
+- [ ] Logout clears cookies
+- [ ] Cross-subdomain SSO works
+
+**📚 Complete Documentation:** `docs/guides/SIGNICAT_BANKID_AUTHENTICATION.md` (comprehensive 400+ line guide)
 
 ### 3. Deployment Checklist (MANDATORY)
 
@@ -405,9 +430,32 @@ pnpm scan:compliance
 # JSON output for CI/CD
 pnpm scan:compliance:json
 
-# Run all scans
+# Run all scans (design system + i18n + duplicates)
 pnpm scan:all
 ```
+
+### Duplicate Code Scanner
+
+```bash
+# Scan for duplicate controllers, seeds, schemas
+pnpm scan:duplicates
+
+# Strict mode (exit code 1 if issues found)
+pnpm scan:duplicates:strict
+```
+
+**Exit codes:**
+- 0: No code duplication issues found
+- 1: Duplicate code detected (MUST fix before committing)
+
+**What it detects:**
+- Multiple controllers for the same feature domain
+- Controller naming aliases (e.g., "signicat" instead of "idporten")
+- Duplicate seed files
+- Duplicate schema definitions
+- Registration inconsistencies in main.ts
+
+**See:** [docs/guides/DUPLICATE_CODE_SCANNER.md](./docs/guides/DUPLICATE_CODE_SCANNER.md) for complete documentation.
 
 ### i18n Localization Compliance
 
@@ -664,6 +712,61 @@ node scripts/scan-i18n.js apps/minside/src/routes/settings.tsx
 **If scanner finds issues → FIX them before committing.**
 
 See `docs/I18N_SCAN_REPORT_2026-01-15.md` for detailed analysis.
+
+### 9. SINGLE SOURCE OF TRUTH (No Duplicates)
+
+```
+❌ NEVER create duplicate controllers for the same feature domain
+❌ NEVER use alias names (use canonical names: "idporten" not "signicat")
+❌ NEVER create duplicate seed files or schema definitions
+✅ ALWAYS keep ONE controller per feature
+✅ ALWAYS use canonical names consistently
+✅ ALWAYS consolidate duplicates immediately
+```
+
+**Critical Rule:** Each feature domain must have exactly ONE controller, ONE seed file, ONE schema definition.
+
+**Example:**
+
+```typescript
+// ❌ WRONG - Multiple controllers for authentication
+apps/api/src/modules/auth/
+├── idporten.controller.ts
+├── signicat.controller.ts      // ❌ Duplicate!
+└── idporten-oidc.controller.ts // ❌ Duplicate!
+
+// ✅ CORRECT - Single source of truth
+apps/api/src/modules/auth/
+└── idporten.controller.ts       // ✅ Only one
+```
+
+**Canonical Names (use these, not aliases):**
+- `idporten` (not signicat, bankid, eid-hub)
+- `rental-object` (not listing, facility, resource)
+- `organization` (not kommune, municipality)
+
+**Before committing, ALWAYS run the duplicate scanner:**
+
+```bash
+# Scan for duplicates
+pnpm scan:duplicates
+
+# Strict mode (blocks commit if issues found)
+pnpm scan:duplicates:strict
+```
+
+**The scanner detects:**
+- ✅ Duplicate controllers for same feature
+- ✅ Controller naming aliases
+- ✅ Duplicate seed files
+- ✅ Duplicate schema definitions
+- ✅ Registration inconsistencies in main.ts
+
+**If scanner finds issues → FIX them before committing.**
+
+**See:** [docs/guides/DUPLICATE_CODE_SCANNER.md](./docs/guides/DUPLICATE_CODE_SCANNER.md) for complete documentation.
+
+**History:** This rule was added after a 4-hour debugging session on 2026-01-17 where duplicate authentication controllers caused significant confusion. User directive: "make it to one !!! only call it idporten, and never do that mistake again with anything seeds, schema, controllers anything !!!"
 
 ## Architecture Layers
 

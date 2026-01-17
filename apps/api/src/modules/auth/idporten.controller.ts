@@ -35,12 +35,13 @@ interface IdPortenConfig {
 
 function getConfig(): IdPortenConfig {
   const tenantUrl = process.env.IDPORTEN_BASE_URL || 'https://digilist.sandbox.signicat.com';
+  const apiUrl = process.env.IDPORTEN_API_URL || 'https://api.signicat.com'; // Production API (works for both sandbox and production auth)
 
   return {
     clientId: process.env.IDPORTEN_CLIENT_ID || 'sandbox-fantastic-house-812',
     clientSecret: process.env.IDPORTEN_CLIENT_SECRET || 'US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB',
-    tenantUrl, // For OIDC/token endpoints
-    apiUrl: 'https://api.signicat.com', // For REST API sessions (production: api.signicat.com, sandbox: api.sandbox.signicat.com with same endpoint)
+    tenantUrl, // For OAuth token endpoint (tenant-specific)
+    apiUrl, // For REST API sessions (production API endpoint)
     callbackUrl: process.env.IDPORTEN_CALLBACK_URL || 'http://localhost:4000/api/auth/idporten/callback',
     privateKey: {
       kty: 'RSA',
@@ -83,6 +84,12 @@ async function getAccessToken(): Promise<string> {
   // Get new token using client credentials (uses tenant-specific URL)
   const tokenUrl = `${config.tenantUrl}/auth/open/connect/token`;
 
+  console.log('[ID-PORTEN TOKEN] Requesting access token:');
+  console.log('  Token URL:', tokenUrl);
+  console.log('  Client ID:', config.clientId);
+  console.log('  Tenant URL:', config.tenantUrl);
+  console.log('  API URL:', config.apiUrl);
+
   const response = await fetch(tokenUrl, {
     method: 'POST',
     headers: {
@@ -97,8 +104,13 @@ async function getAccessToken(): Promise<string> {
 
   if (!response.ok) {
     const error = await response.text();
+    console.error('[ID-PORTEN TOKEN] Failed to get access token:');
+    console.error('  Status:', response.status, response.statusText);
+    console.error('  Error:', error);
     throw new Error(`Failed to get access token: ${error}`);
   }
+
+  console.log('[ID-PORTEN TOKEN] ✅ Access token received successfully');
 
   const data = await response.json() as { access_token: string; expires_in: number };
 
@@ -130,6 +142,11 @@ async function fetchSessionWithFallback(
   // Try tenant URL first (original working method)
   const tenantUrl = `${config.tenantUrl}/auth/rest/sessions${method === 'GET' ? `/${sessionId}` : ''}`;
 
+  console.log('[SIGNICAT SESSION] Creating session:');
+  console.log('  Method:', method);
+  console.log('  Tenant URL:', tenantUrl);
+  console.log('  API URL (fallback):', `${config.apiUrl}/auth/rest/sessions`);
+
   try {
     const response = await fetch(tenantUrl, {
       method,
@@ -140,18 +157,25 @@ async function fetchSessionWithFallback(
       body: body ? JSON.stringify(body) : undefined,
     });
 
+    console.log('  Tenant URL response:', response.status, response.statusText);
+
     // If successful or any error other than 404, return this response
     if (response.ok || response.status !== 404) {
       return response;
     }
+
+    console.log('  Got 404 from tenant URL, trying fallback...');
   } catch (error) {
+    console.error('  Tenant URL error:', error);
     // Network errors - try fallback
   }
 
   // Fallback to generic API URL
   const apiUrl = `${config.apiUrl}/auth/rest/sessions${method === 'GET' ? `/${sessionId}` : ''}`;
 
-  return fetch(apiUrl, {
+  console.log('  Trying fallback URL:', apiUrl);
+
+  const fallbackResponse = await fetch(apiUrl, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -159,6 +183,10 @@ async function fetchSessionWithFallback(
     },
     body: body ? JSON.stringify(body) : undefined,
   });
+
+  console.log('  Fallback URL response:', fallbackResponse.status, fallbackResponse.statusText);
+
+  return fallbackResponse;
 }
 
 // =============================================================================
@@ -665,11 +693,8 @@ export class IdPortenAuthController {
         },
       });
 
-      // Redirect to dashboard on the frontend domain (extract origin from returnTo)
-      const returnToUrl = new URL(returnTo);
-      const dashboardUrl = `${returnToUrl.origin}/`;
-
-      const redirectUrl = buildRedirectUrl(dashboardUrl, {
+      // Redirect back to the exact page the user was on (preserve full path)
+      const redirectUrl = buildRedirectUrl(returnTo, {
         auth_success: 'true',
         auth_provider: 'bankid',
       });
@@ -677,8 +702,7 @@ export class IdPortenAuthController {
       console.log('[ID-PORTEN CALLBACK] Success redirect:');
       console.log('  userId:', userId);
       console.log('  userEmail:', user.email);
-      console.log('  returnTo origin:', returnToUrl.origin);
-      console.log('  redirecting to:', dashboardUrl);
+      console.log('  returnTo:', returnTo);
       console.log('  final redirectUrl:', redirectUrl);
 
       return reply.redirect(redirectUrl);

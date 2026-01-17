@@ -3,7 +3,8 @@
  * Client SDK service for file upload/download operations
  */
 
-import { BaseService } from '../core/base-service';
+import { BaseService } from './base.service';
+import { getClientConfig } from '../core/client-factory';
 import type {
   UploadFileResponse,
   UploadMultipleFilesResponse,
@@ -11,34 +12,30 @@ import type {
   ListFilesResponse,
   UpdateFileMetadataRequest,
   FileUploadInput,
-} from '@xala/contracts/storage';
+} from '../types/storage.types';
 
 export class StorageService extends BaseService {
+  constructor() {
+    super('/api/storage');
+  }
+
   /**
    * Upload a single file
    */
   async uploadFile(input: FileUploadInput): Promise<UploadFileResponse> {
     const formData = new FormData();
     formData.append('file', input.file);
-    
+
     if (input.category) formData.append('category', input.category);
     if (input.entityType) formData.append('entityType', input.entityType);
     if (input.entityId) formData.append('entityId', input.entityId);
     if (input.altText) formData.append('altText', input.altText);
     if (input.caption) formData.append('caption', input.caption);
 
-    const response = await this.http.post<UploadFileResponse>(
+    return this.client.post<UploadFileResponse>(
       '/api/storage/upload',
-      formData,
-      {
-        headers: {
-          // Let browser set Content-Type with boundary for multipart
-          'Content-Type': undefined,
-        },
-      }
+      formData
     );
-
-    return response.data;
   }
 
   /**
@@ -46,41 +43,32 @@ export class StorageService extends BaseService {
    */
   async uploadMultipleFiles(files: File[]): Promise<UploadMultipleFilesResponse> {
     const formData = new FormData();
-    
+
     files.forEach((file) => {
       formData.append('files', file);
     });
 
-    const response = await this.http.post<UploadMultipleFilesResponse>(
+    return this.client.post<UploadMultipleFilesResponse>(
       '/api/storage/upload-multiple',
-      formData,
-      {
-        headers: {
-          'Content-Type': undefined,
-        },
-      }
+      formData
     );
-
-    return response.data;
   }
 
   /**
    * List files
    */
   async listFiles(query: ListFilesQuery = {}): Promise<ListFilesResponse> {
-    const response = await this.http.get<ListFilesResponse>(
+    return this.client.get<ListFilesResponse>(
       '/api/storage/files',
-      { params: query }
+      { params: query as Record<string, string | number | boolean | undefined> }
     );
-
-    return response.data;
   }
 
   /**
    * Delete a file
    */
   async deleteFile(fileId: string): Promise<void> {
-    await this.http.delete(`/api/storage/files/${fileId}`);
+    await this.client.delete(`/api/storage/files/${fileId}`);
   }
 
   /**
@@ -90,12 +78,10 @@ export class StorageService extends BaseService {
     fileId: string,
     updates: UpdateFileMetadataRequest
   ): Promise<UploadFileResponse> {
-    const response = await this.http.patch<UploadFileResponse>(
+    return this.client.patch<UploadFileResponse>(
       `/api/storage/files/${fileId}`,
       updates
     );
-
-    return response.data;
   }
 
   /**
@@ -106,16 +92,19 @@ export class StorageService extends BaseService {
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
     }
-    
+
+    const config = getClientConfig();
+    const baseURL = config?.baseUrl || '';
+
     // Handle both /storage/... and /seed-images/... formats
     if (path.startsWith('/storage/')) {
-      return `${this.http.defaults.baseURL}${path}`;
+      return `${baseURL}${path}`;
     }
-    
+
     if (path.startsWith('/seed-images/')) {
-      return `${this.http.defaults.baseURL}/storage${path}`;
+      return `${baseURL}/storage${path}`;
     }
-    
-    return `${this.http.defaults.baseURL}/storage${path}`;
+
+    return `${baseURL}/storage${path}`;
   }
 }

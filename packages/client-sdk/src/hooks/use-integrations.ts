@@ -311,7 +311,7 @@ export function useSyncCalendar() {
 // Manage integration credentials and settings (ID-porten, Vipps, Visma, RCO, ACOS)
 // ============================================================================
 
-import { integrationsService, type Integration, type IntegrationUpdate } from '../services';
+import { integrationsService, type IntegrationUpdate } from '../services';
 
 const INTEGRATION_CONFIG_KEYS = {
   all: ['integration-configs'] as const,

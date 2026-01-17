@@ -203,7 +203,7 @@ export function useAddVenueToSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
+    mutationFn: ({ seasonId: _seasonId, rentalObjectId: _rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
       throw new Error('useAddVenueToSeason: Backend service not yet implemented. Please implement seasonService.addVenue(seasonId, rentalObjectId)');
     },
     onSuccess: (_, { seasonId }) => {
@@ -220,7 +220,7 @@ export function useRemoveVenueFromSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
+    mutationFn: ({ seasonId: _seasonId, rentalObjectId: _rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
       throw new Error('useRemoveVenueFromSeason: Backend service not yet implemented. Please implement seasonService.removeVenue(seasonId, rentalObjectId)');
     },
     onSuccess: (_, { seasonId }) => {

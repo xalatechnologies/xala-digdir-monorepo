@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { favoritesService } from '../services/favorites.service';
 import type {
-  FavoritesListResponse,
-  FavoriteDetail,
   CreateFavoriteDTO,
   UpdateFavoriteDTO,
   ListFavoritesQuery,

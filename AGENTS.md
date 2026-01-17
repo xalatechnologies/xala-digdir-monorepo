@@ -240,6 +240,73 @@ rsync -avz --delete apps/*/dist/ root@server:/var/www/digilist/
 
 ---
 
+### **Lesson 8: Signicat API Architecture (Critical)**
+
+**Problem:** Session creation returning 404 "Not found" error
+
+**Symptoms:**
+```json
+{
+  "error": "session_creation_failed",
+  "message": "Failed to create authentication session",
+  "details": "<!DOCTYPE html>...Not found..."
+}
+```
+
+**Root Cause:** Using **sandbox API URL** instead of **production API URL** for REST sessions
+
+**What Went Wrong:**
+1. ❌ Tried: `https://api.sandbox.signicat.com/auth/rest/sessions` → 404
+2. ❌ Tried: `https://digilist.sandbox.signicat.com/auth/rest/sessions` → 404
+3. ✅ Correct: `https://api.signicat.com/auth/rest/sessions` → SUCCESS
+
+**Key Insight:** Signicat's architecture uses:
+- **Tenant-specific URL** for OAuth: `https://digilist.sandbox.signicat.com/oauth/token`
+- **Production API** for REST sessions: `https://api.signicat.com/auth/rest/sessions`
+
+This is **by design** and documented in Signicat's REST API documentation.
+
+**Working Configuration:**
+```bash
+# Environment Variables (LOCKED)
+IDPORTEN_BASE_URL=https://digilist.sandbox.signicat.com     # OAuth token
+IDPORTEN_API_URL=https://api.signicat.com                   # REST API (production!)
+IDPORTEN_CALLBACK_URL=https://api.digilist.no/api/auth/idporten/callback
+IDPORTEN_CLIENT_ID=sandbox-fantastic-house-812
+IDPORTEN_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
+```
+
+**Why It Matters:**
+- The REST API base URL is **NOT** the same as the OAuth base URL
+- Using sandbox API URL gives cryptic 404 errors (looks like HTML "Not found" page)
+- This took 2+ hours to debug because error didn't indicate wrong URL
+
+**Prevention:**
+```bash
+# Always verify Signicat API endpoints
+curl -H "Authorization: Bearer $TOKEN" https://api.signicat.com/auth/rest/sessions
+
+# NOT sandbox URL
+curl -H "Authorization: Bearer $TOKEN" https://api.sandbox.signicat.com/auth/rest/sessions  # 404!
+```
+
+**Reference Implementation:**
+The working `signicat.controller.ts` had the correct URL all along:
+```typescript
+// Line 32 in signicat.controller.ts
+baseUrl: process.env.SIGNICAT_BASE_URL || 'https://api.signicat.com',  // Production API
+```
+
+**Documentation:**
+- Complete guide: `docs/guides/SIGNICAT_BANKID_AUTHENTICATION.md`
+- Updated CLAUDE.md: Section 2 "BankID / Signicat Authentication (LOCKED)"
+
+**Time Wasted:** 2 hours debugging cryptic 404 errors
+**Time to Fix:** 5 minutes once root cause identified
+**Lesson:** Third-party API architecture may not match expectations. Always check reference implementations and documentation.
+
+---
+
 ## 🎯 **DEPLOYMENT CHECKLIST (MANDATORY)**
 
 Before deploying ANY changes:

@@ -21,7 +21,9 @@
     "scan:compliance": "node ./scripts/scan-compliance.mjs",
     "scan:compliance:json": "node ./scripts/scan-compliance.mjs --json",
     "scan:compliance:strict": "node ./scripts/scan-compliance.mjs --strict",
-    "scan:all": "pnpm scan && pnpm scan:compliance",
+    "scan:duplicates": "node ./scripts/scan-duplicates.js",
+    "scan:duplicates:strict": "node ./scripts/scan-duplicates.js --strict",
+    "scan:all": "pnpm scan && pnpm scan:compliance && pnpm scan:duplicates",
     "i18n:check": "node scripts/check-i18n-keys.js",
     "i18n:check:strict": "node scripts/check-i18n-keys.js --strict",
     "i18n:unused": "node scripts/check-unused-keys.js",
@@ -45,6 +47,18 @@
     ],
     "apps/*/src/**/*.{ts,tsx}": [
       "node scripts/scan-i18n.js"
+    ],
+    "apps/api/src/modules/**/*.controller.{ts,js}": [
+      "node scripts/scan-duplicates.js --strict"
+    ],
+    "apps/api/src/database/seeds/**/*.{ts,js}": [
+      "node scripts/scan-duplicates.js --strict"
+    ],
+    "apps/api/src/database/schema/**/*.{ts,js}": [
+      "node scripts/scan-duplicates.js --strict"
+    ],
+    "apps/api/src/main.ts": [
+      "node scripts/scan-duplicates.js --strict"
     ]
   },
   "devDependencies": {

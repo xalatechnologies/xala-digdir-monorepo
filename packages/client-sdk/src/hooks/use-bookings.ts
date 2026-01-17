@@ -315,3 +315,41 @@ export function useRejectBooking() {
     },
   });
 }
+
+// ============================================================================
+// Recurring Booking Hooks
+// ============================================================================
+
+/**
+ * Preview recurring booking before creation
+ * Shows all occurrences that would be created based on the recurrence pattern
+ */
+export function useRecurringPreview(hash: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.bookings.recurringPreview(hash),
+    queryFn: () => bookingService.getRecurringPreview({ hash }),
+    enabled: !!hash && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Create recurring booking mutation
+ * Creates a series of bookings based on a recurrence pattern
+ */
+export function useCreateRecurringBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: CreateBookingDTO & {
+      frequency: string;
+      endDate: string;
+      weekdays?: number[];
+    }) => bookingService.createRecurring(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+    },
+  });
+}
+
+

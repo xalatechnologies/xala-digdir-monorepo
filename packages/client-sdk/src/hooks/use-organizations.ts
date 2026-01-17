@@ -387,7 +387,7 @@ export function useUpdateOrganizationSettings() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizationId, settings }: { organizationId: string; settings: any }) => {
+    mutationFn: ({ organizationId: _organizationId, settings: _settings }: { organizationId: string; settings: any }) => {
       throw new Error("useUpdateOrganizationSettings: Backend service not yet implemented. Please implement organizationService.updateSettings(organizationId, settings)");
     },
     onSuccess: (_, { organizationId }) => {
@@ -404,7 +404,7 @@ export function useUpdateOrganizationBranding() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizationId, branding }: { organizationId: string; branding: any }) => {
+    mutationFn: ({ organizationId: _organizationId, branding: _branding }: { organizationId: string; branding: any }) => {
       throw new Error("useUpdateOrganizationBranding: Backend service not yet implemented. Please implement organizationService.updateBranding(organizationId, branding)");
     },
     onSuccess: (_, { organizationId }) => {

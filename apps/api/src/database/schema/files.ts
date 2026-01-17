@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
-import { platformSchema } from './schemas';
+import { platformSchema } from './index';
 
 /**
  * Files Table
@@ -41,8 +41,7 @@ export const files = platformSchema.table('files', {
   metadata: jsonb('metadata'), // Additional metadata (dimensions, EXIF, etc.)
   
   // Who uploaded it
-  uploadedBy: uuid('uploaded_by
-').notNull(),
+  uploadedBy: uuid('uploaded_by').notNull(),
   
   // Lifecycle
   createdAt: timestamp('created_at').defaultNow().notNull(),

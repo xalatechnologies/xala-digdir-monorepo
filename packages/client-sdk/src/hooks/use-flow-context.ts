@@ -6,7 +6,7 @@
 
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import { authService } from '../services/auth.service';
-import type { RequireAuthOptions, RequireAuthResult, ResumeFlowResult } from '../services/auth.service';
+import type { RequireAuthResult, ResumeFlowResult } from '../services/auth.service';
 import type { FlowContext } from '../types/auth';
 import {
   FLOW_CONTEXT_KEY,
@@ -114,7 +114,7 @@ function subscribe(callback: () => void): () => void {
   }
 
   return () => {
-    subscribers.deleteById(callback);
+    subscribers.delete(callback);
     if (typeof window !== 'undefined') {
       window.removeEventListener('storage', handleStorageChange);
     }
