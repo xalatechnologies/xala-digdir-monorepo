@@ -16,19 +16,19 @@ const cities = [
   { name: 'Kragerø', code: '3770', lat: 58.8694, lon: 9.4128 }
 ];
 
-// Actual working REAL Unsplash image IDs for sports/venues
-const venueImages = [
-  'tDO-lyGYVjM', // Basketball court
-  'fCk1A3hPJGo', // Tennis court
-  'o4c2zoVhjSw', // Indoor sports hall
-  'bLdqToywNF0', // Swimming pool
-  'VviFtDJakYk', // Gym/fitness
-  'WvDYdXDzkhs', // Soccer field
-  'NkcncrQQzgc', // Volleyball court
-  'xKhtkhc9HbQ', // Meeting room
-  '3l3RwQdHRHg', // Conference room
-  'KdeqA3aTnBY', // Equipment/storage
-];
+// Local image paths - stored in apps/api/public/seed-images/
+const localImages = {
+  LOKALER_OG_BANER: [
+    'sports-hall.png',
+    'soccer-field.png',
+    'tennis-court.png',
+    'swimming-pool.png',
+    'gymnasium.png'
+  ],
+  MØTEROM: ['meeting-room.png'],
+  UTSTYR: ['sports-hall.png'], // Reuse sports images for equipment
+  ARRANGEMENT: ['sports-hall.png'] // Reuse for arrangement venues
+};
 
 // Venue types for LOKALER_OG_BANER (40 objects)
 const lokaler = [
@@ -44,16 +44,24 @@ const lokaler = [
   { type: 'Ishall', capacity: 500, basePrice: 1500 }
 ];
 
-function getImageUrl(index) {
-  const imageId = venueImages[index % venueImages.length];
-  // CRITICAL: Unsplash requires "photo-" prefix before the ID
-  return `https://images.unsplash.com/photo-${imageId}?w=1200&q=80`;
+/**
+ * Generate local static file URL
+ * Images are served from apps/api/public/seed-images/
+ * API serves them at /seed-images/ route
+ */
+function getImageUrl(category, index, venueType = null) {
+  const images = localImages[category] || localImages.LOKALER_OG_BANER;
+  const fileName = images[index % images.length];
+  const categoryFolder = category === 'LOKALER_OG_BANER' ? 'lokaler-og-baner' : 
+                         category === 'MØTEROM' ? 'møterom' :
+                         category === 'UTSTYR' ? 'utstyr' : 'arrangement';
+  
+  return `/seed-images/${categoryFolder}/${fileName}`;
 }
 
-function getThumbnailUrl(index) {
-  const imageId = venueImages[index % venueImages.length];
-  // CRITICAL: Unsplash requires "photo-" prefix before the ID
-  return `https://images.unsplash.com/photo-${imageId}?w=400&q=80`;
+function getThumbnailUrl(category, index, venueType = null) {
+  // Use same image for thumbnail (will be resized by frontend if needed)
+  return getImageUrl(category, index, venueType);
 }
 
 function generateRentalObject(index, category, cityIndex) {
@@ -97,23 +105,23 @@ function generateRentalObject(index, category, cityIndex) {
     capacity,
     images: [
       {
-        url: getImageUrl(index),
+        url: getImageUrl(category, index, typeName),
         alt: `${typeName} hovedbilde`,
-        thumbnail: getThumbnailUrl(index),
+        thumbnail: getThumbnailUrl(category, index, typeName),
         is_primary: true,
         sort_order: 1
       },
       {
-        url: getImageUrl(index + 1),
+        url: getImageUrl(category, index + 1, typeName),
         alt: `${typeName} interiør`,
-        thumbnail: getThumbnailUrl(index + 1),
+        thumbnail: getThumbnailUrl(category, index + 1, typeName),
         is_primary: false,
         sort_order: 2
       },
       {
-        url: getImageUrl(index + 2),
+        url: getImageUrl(category, index + 2, typeName),
         alt: `${typeName} fasiliteter`,
-        thumbnail: getThumbnailUrl(index + 2),
+        thumbnail: getThumbnailUrl(category, index + 2, typeName),
         is_primary: false,
         sort_order: 3
       }
@@ -246,10 +254,10 @@ const seedData = {
 
 const outputPath = './rental-objects-comprehensive.json';
 fs.writeFileSync(outputPath, JSON.stringify(seedData, null, 2));
-console.log('✅ Generated comprehensive seed data with REAL working images:');
+console.log('✅ Generated comprehensive seed data with Picsum Photos placeholder images:');
 console.log(`   - ${seedData.rental_objects.length} rental objects`);
 console.log(`   - ${seedData.users.length} users`);
 console.log(`   - ${seedData.organizations.length} organizations`);
 console.log(`   - ${seedData.tenants.length} tenants`);
-console.log(`   - Using ${venueImages.length} real Unsplash image IDs`);
+console.log(`   - Using Picsum Photos API (https://picsum.photos)`);
 console.log(`   - Saved to: ${outputPath}`);

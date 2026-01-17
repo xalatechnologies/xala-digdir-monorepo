@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.1",
-    "created": "2026-01-17T10:45:51.635Z",
+    "created": "2026-01-17T11:45:25.830Z",
     "description": "Comprehensive seed data for Digilist Platform - FIXED IMAGES",
     "schema_version": "v3",
     "total_objects": 70
@@ -73,23 +73,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Fotballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Fotballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Fotballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -201,23 +201,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Tennisbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Tennisbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Tennisbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -329,23 +329,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Svømmehall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Svømmehall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Svømmehall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -457,23 +457,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Gymnastikksal interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -585,23 +585,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Basketballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Basketballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Basketballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -713,23 +713,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Volleyballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -841,23 +841,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Badmintonhall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -969,23 +969,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Håndballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Håndballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Håndballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1097,23 +1097,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Ishall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Ishall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Ishall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1225,23 +1225,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Idrettshall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Idrettshall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Idrettshall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1353,23 +1353,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Fotballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Fotballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Fotballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1481,23 +1481,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Tennisbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Tennisbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Tennisbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1609,23 +1609,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Svømmehall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Svømmehall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Svømmehall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1737,23 +1737,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Gymnastikksal interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1865,23 +1865,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Basketballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Basketballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Basketballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1993,23 +1993,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Volleyballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2121,23 +2121,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Badmintonhall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2249,23 +2249,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Håndballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Håndballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Håndballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2377,23 +2377,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Ishall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Ishall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Ishall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2505,23 +2505,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Idrettshall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Idrettshall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Idrettshall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2633,23 +2633,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Fotballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Fotballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Fotballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2761,23 +2761,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Tennisbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Tennisbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Tennisbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2889,23 +2889,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Svømmehall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Svømmehall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Svømmehall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3017,23 +3017,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Gymnastikksal interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3145,23 +3145,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Basketballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Basketballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Basketballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3273,23 +3273,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Volleyballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3401,23 +3401,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Badmintonhall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3529,23 +3529,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Håndballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Håndballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Håndballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3657,23 +3657,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Ishall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Ishall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Ishall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3785,23 +3785,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Idrettshall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Idrettshall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Idrettshall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3913,23 +3913,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Fotballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Fotballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Fotballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4041,23 +4041,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Tennisbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Tennisbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Tennisbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4169,23 +4169,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Svømmehall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Svømmehall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Svømmehall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4297,23 +4297,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Gymnastikksal interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4425,23 +4425,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Basketballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Basketballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Basketballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4553,23 +4553,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Volleyballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4681,23 +4681,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Badmintonhall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4809,23 +4809,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "alt": "Håndballbane hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Håndballbane interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Håndballbane fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4937,23 +4937,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
           "alt": "Ishall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Ishall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Ishall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5065,23 +5065,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
           "alt": "Idrettshall hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
           "alt": "Idrettshall interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
           "alt": "Idrettshall fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5193,23 +5193,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom P hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom P interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom P fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5321,23 +5321,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Q hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Q interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Q fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5449,23 +5449,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom R hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom R interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom R fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5577,23 +5577,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom S hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom S interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom S fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5705,23 +5705,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom T hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom T interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom T fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5833,23 +5833,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom U hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom U interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom U fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5961,23 +5961,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom V hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom V interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom V fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6089,23 +6089,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom W hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom W interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom W fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6217,23 +6217,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom X hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom X interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom X fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6345,23 +6345,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Y hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Y interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/møterom/meeting-room.png",
           "alt": "Møterom Y fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/møterom/meeting-room.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6473,23 +6473,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6601,23 +6601,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6729,23 +6729,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6857,23 +6857,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6985,23 +6985,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7113,23 +7113,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Duker og Stoler fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7241,23 +7241,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Lydutstyr fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7369,23 +7369,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Projektorer fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7497,23 +7497,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Telt fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7625,23 +7625,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/utstyr/sports-hall.png",
           "alt": "Fotballutstyr fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/utstyr/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7753,23 +7753,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 62 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 62 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 62 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7881,23 +7881,23 @@
       "capacity": 400,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 63 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 63 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 63 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8009,23 +8009,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-bLdqToywNF0?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 64 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-bLdqToywNF0?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 64 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 64 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8137,23 +8137,23 @@
       "capacity": 600,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-VviFtDJakYk?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 65 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-VviFtDJakYk?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 65 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 65 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8265,23 +8265,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 66 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-WvDYdXDzkhs?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 66 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 66 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8393,23 +8393,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-NkcncrQQzgc?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 67 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-NkcncrQQzgc?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 67 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 67 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8521,23 +8521,23 @@
       "capacity": 400,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 68 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-xKhtkhc9HbQ?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 68 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 68 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8649,23 +8649,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 69 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-3l3RwQdHRHg?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 69 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 69 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8777,23 +8777,23 @@
       "capacity": 600,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 70 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-KdeqA3aTnBY?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 70 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 70 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8905,23 +8905,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 71 hovedbilde",
-          "thumbnail": "https://images.unsplash.com/photo-tDO-lyGYVjM?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 71 interiør",
-          "thumbnail": "https://images.unsplash.com/photo-fCk1A3hPJGo?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=1200&q=80",
+          "url": "/seed-images/arrangement/sports-hall.png",
           "alt": "Arrangementssted 71 fasiliteter",
-          "thumbnail": "https://images.unsplash.com/photo-o4c2zoVhjSw?w=400&q=80",
+          "thumbnail": "/seed-images/arrangement/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }

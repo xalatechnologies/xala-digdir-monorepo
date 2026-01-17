@@ -6,6 +6,9 @@ import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply }
 import cors from '@fastify/cors';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
+import fastifyStatic from '@fastify/static';
+import fastifyMultipart from '@fastify/multipart';
+import path from 'path';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
 import { getControllerMetadata } from '../core/decorators';
@@ -114,6 +117,27 @@ export async function createFastifyApp(
             detail: `Rate limit exceeded.`,
             instance: request.url,
           };
+    },
+  });
+
+  // Register static file serving for storage
+  // Serves files from apps/api/storage/ at /storage route
+  const storageDir = path.join(process.cwd(), 'storage');
+  await app.register(fastifyStatic, {
+    root: storageDir,
+    prefix: '/storage/',
+    decorateReply: false, // Don't decorate to avoid conflicts
+  });
+
+  // Register multipart for file uploads
+  await app.register(fastifyMultipart, {
+    limits: {
+      fieldNameSize: 100, // Max field name size in bytes
+      fieldSize: 1000000, // Max field value size in bytes (1MB)
+      fields: 10, // Max number of non-file fields
+      fileSize: 10000000, // Max file size in bytes (10MB)
+      files: 10, // Max number of file fields
+      headerPairs: 2000, // Max number of header key=>value pairs
     },
   });
 
