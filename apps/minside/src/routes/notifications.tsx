@@ -136,7 +136,7 @@ export function NotificationsPage() {
             {t('notifications.title')}
           </Heading>
           {unreadCount > 0 && (
-            <Badge style={{ backgroundColor: 'var(--ds-color-danger-surface-default)', color: 'var(--ds-color-danger-text-default)' }}>
+            <Badge data-testid="notification-badge" style={{ backgroundColor: 'var(--ds-color-danger-surface-default)', color: 'var(--ds-color-danger-text-default)' }}>
               {unreadCount} {t('notifications.unread')}
             </Badge>
           )}
@@ -175,12 +175,13 @@ export function NotificationsPage() {
             </Paragraph>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+          <div data-testid="notification-dropdown" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
             {filteredNotifications.map((notif) => {
               const color = getTypeColor(notif.type);
               return (
                 <button
                   key={notif.id}
+                  data-testid={`notification-item-${notif.id}`}
                   type="button"
                   onClick={() => markAsRead(notif.id)}
                   style={{
@@ -207,7 +208,7 @@ export function NotificationsPage() {
                         {notif.title}
                       </Paragraph>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                        <Badge style={{ backgroundColor: color.bg, color: color.text }}>
+                        <Badge data-testid="notification-type" data-type={notif.type} style={{ backgroundColor: color.bg, color: color.text }}>
                           {getTypeLabel(notif.type)}
                         </Badge>
                         <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>

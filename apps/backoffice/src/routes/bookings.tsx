@@ -520,6 +520,7 @@ export function BookingsPage() {
             return (
               <button
                 key={tab.id}
+                data-testid={`status-${tab.id}`}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 style={{
@@ -571,6 +572,7 @@ export function BookingsPage() {
         {/* Toolbar Row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
           <HeaderSearch
+            data-testid="search-input"
             placeholder="Søk etter lokale, bruker, booking-ID..."
             value={searchValue}
             onSearchChange={handleSearchChange}
@@ -755,6 +757,7 @@ export function BookingsPage() {
                     return (
                       <Table.Row
                         key={booking.id}
+                        data-testid={`booking-row-${booking.id}`}
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleView(booking)}
                       >
@@ -794,12 +797,12 @@ export function BookingsPage() {
                           </div>
                         </Table.Cell>
                         <Table.Cell>
-                          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          <Paragraph data-testid="booking-title" data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                             {listingName}
                           </Paragraph>
                         </Table.Cell>
                         <Table.Cell>
-                          <div>
+                          <div data-testid="booking-user">
                             <Paragraph data-size="sm" style={{
                               margin: 0,
                               fontWeight: userName && !String(userName).includes('-') ? 'var(--ds-font-weight-medium)' : 'normal',
@@ -827,7 +830,9 @@ export function BookingsPage() {
                           </div>
                         </Table.Cell>
                         <Table.Cell>
-                          <BookingStatusBadge status={booking.status} />
+                          <div data-testid="booking-status">
+                            <BookingStatusBadge status={booking.status} />
+                          </div>
                         </Table.Cell>
                         <Table.Cell>
                           <PaymentStatusBadge status={booking.paymentStatus || 'unpaid'} />
@@ -842,6 +847,7 @@ export function BookingsPage() {
                             {booking.status === 'pending' && (
                               <>
                                 <Button
+                                  data-testid="approve-button"
                                   type="button"
                                   variant="secondary"
                                   data-color="brand1"
@@ -854,6 +860,7 @@ export function BookingsPage() {
                                   <CheckIcon />
                                 </Button>
                                 <Button
+                                  data-testid="deny-button"
                                   type="button"
                                   variant="secondary"
                                   data-color="danger"

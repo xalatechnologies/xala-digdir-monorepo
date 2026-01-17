@@ -170,6 +170,7 @@ export function BookingsPage() {
         </div>
         <Link href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ width: isMobile ? '100%' : 'auto' }}>
           <Button
+            data-testid="create-booking-button"
             type="button"
             variant="primary"
             data-size="md"
@@ -346,7 +347,7 @@ export function BookingsPage() {
         // Mobile: Card-based layout
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {bookings.map((booking: Booking) => (
-            <Card key={booking.id} style={{ padding: 'var(--ds-spacing-4)' }}>
+            <Card key={booking.id} data-testid={`booking-row-${booking.id}`} style={{ padding: 'var(--ds-spacing-4)' }}>
               {/* Resource Name & Status */}
               <div style={{
                 display: 'flex',
@@ -354,10 +355,12 @@ export function BookingsPage() {
                 alignItems: 'flex-start',
                 marginBottom: 'var(--ds-spacing-3)',
               }}>
-                <Heading level={3} data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                <Heading level={3} data-size="sm" data-testid="booking-title" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                   {booking.listingName || booking.listingId}
                 </Heading>
-                <BookingStatusBadge status={booking.status} />
+                <div data-testid="booking-status-badge">
+                  <BookingStatusBadge status={booking.status} />
+                </div>
               </div>
 
               {/* Date & Time */}
@@ -399,6 +402,7 @@ export function BookingsPage() {
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', width: '100%' }}>
                 {booking.status !== 'cancelled' && (
                   <Button
+                    data-testid="cancel-button"
                     type="button"
                     variant="secondary"
                     data-size="sm"
@@ -413,6 +417,7 @@ export function BookingsPage() {
                   </Button>
                 )}
                 <Button
+                  data-testid="view-details-button"
                   type="button"
                   variant="tertiary"
                   data-size="sm"
@@ -442,9 +447,9 @@ export function BookingsPage() {
             </Table.Head>
             <Table.Body>
               {bookings.map((booking: Booking) => (
-                <Table.Row key={booking.id}>
+                <Table.Row key={booking.id} data-testid={`booking-row-${booking.id}`}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                    <span data-testid="booking-title" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {booking.listingName || booking.listingId}
                     </span>
                   </Table.Cell>
@@ -459,7 +464,9 @@ export function BookingsPage() {
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <BookingStatusBadge status={booking.status} />
+                    <div data-testid="booking-status-badge">
+                      <BookingStatusBadge status={booking.status} />
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     {(booking.totalPrice ?? 0).toLocaleString(locale === 'en' ? 'en-US' : 'nb-NO')} kr
@@ -468,6 +475,7 @@ export function BookingsPage() {
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                       {booking.status !== 'cancelled' && (
                         <Button
+                          data-testid="cancel-button"
                           type="button"
                           variant="secondary"
                           data-size="sm"
@@ -478,6 +486,7 @@ export function BookingsPage() {
                         </Button>
                       )}
                       <Button
+                        data-testid="view-details-button"
                         type="button"
                         variant="tertiary"
                         data-size="sm"

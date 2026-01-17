@@ -292,6 +292,27 @@ export class AuthController {
 
     const permissions = getPermissionsForRole(user.role);
 
+    // Fetch effective modules and capabilities
+    let modules: Array<{ key: string; enabled: boolean }> = [];
+    let capabilities: Record<string, boolean> = {};
+
+    try {
+      // Import ModulesService dynamically to avoid circular dependencies
+      const { ModulesService } = await import('../../services/modules.service');
+      const modulesService = new ModulesService(db);
+      
+      const effective = await modulesService.getEffectiveModules({ 
+        tenantId: tenantId as string,
+        orgId: user.organizationId 
+      });
+      
+      modules = effective.modules.map(m => ({ key: m.key, enabled: m.enabled }));
+      capabilities = effective.capabilities;
+    } catch (error) {
+      // If modules service fails, continue without modules (graceful degradation)
+      console.warn('Failed to fetch modules for session:', error);
+    }
+
     return {
       data: {
         user: {
@@ -300,9 +321,12 @@ export class AuthController {
           name: user.name,
           role: user.role,
           tenantId: user.tenantId,
+          organizationId: user.organizationId,
         },
         expiresAt: decoded.exp ? new Date(decoded.exp * 1000).toISOString() : new Date(Date.now() + 86400000).toISOString(),
         permissions,
+        modules,
+        capabilities,
       },
     };
   }

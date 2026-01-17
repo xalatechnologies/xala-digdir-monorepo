@@ -340,6 +340,7 @@ export function Header({ title: _title }: HeaderProps) {
                   onToggle={toggleTheme}
                 />
                 <NotificationBell
+                  data-testid="notification-bell"
                   count={unreadCount}
                   onClick={openNotificationCenter}
                   aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}

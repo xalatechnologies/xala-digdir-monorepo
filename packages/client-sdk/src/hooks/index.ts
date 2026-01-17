@@ -48,6 +48,16 @@ export {
   useModulesManager,
 } from './use-modules';
 
+// Navigation hooks (module-aware filtering)
+export {
+  type NavItem,
+  type FilteredNavItem,
+  filterNavItemsByCapabilities,
+  annotateNavItems,
+  useFilteredNavItems,
+  useAnnotatedNavItems,
+} from './use-navigation';
+
 // Rental Object hooks (primary - single source of truth)
 export {
   rentalObjectKeys,

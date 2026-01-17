@@ -253,6 +253,7 @@ export function Header({ title: _title }: HeaderProps) {
                   onToggle={toggleTheme}
                 />
                 <HeaderIconButton
+                  data-testid="notification-bell"
                   icon={<BellIcon size={22} />}
                   {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
                   size="md"
