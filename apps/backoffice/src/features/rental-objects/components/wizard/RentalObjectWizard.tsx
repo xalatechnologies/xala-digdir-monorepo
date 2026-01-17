@@ -175,7 +175,7 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              }} type="button"
             >
               <div
                 style={{

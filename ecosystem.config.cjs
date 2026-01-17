@@ -28,7 +28,7 @@ module.exports = {
         JWT_REFRESH_EXPIRES_IN: '7d',
 
         // CORS
-        CORS_ORIGIN: 'https://web.digilist.no,https://backoffice.digilist.no,https://minside.digilist.no,https://saas-admin.digilist.no,https://tenant-admin.digilist.no,https://web-test.digilist.no',
+        CORS_ORIGIN: 'https://web.digilist.no,https://backoffice.digilist.no,https://minside.digilist.no,https://saas-admin.digilist.no,https://tenant-admin.digilist.no,https://docs.digilist.no,https://web-test.digilist.no',
 
         // Tenant
         VITE_TENANT_ID: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
@@ -42,6 +42,25 @@ module.exports = {
       },
       error_file: '/root/.pm2/logs/digilist-api-error.log',
       out_file: '/root/.pm2/logs/digilist-api-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      merge_logs: true,
+    },
+    {
+      name: 'digilist-docs',
+      script: 'serve',
+      cwd: '/var/www/digilist-docs',
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      watch: false,
+      env_production: {
+        PM2_SERVE_PATH: '/var/www/digilist-docs/dist',
+        PM2_SERVE_PORT: 5178,
+        PM2_SERVE_SPA: 'true',
+        PM2_SERVE_HOMEPAGE: '/index.html',
+      },
+      error_file: '/root/.pm2/logs/digilist-docs-error.log',
+      out_file: '/root/.pm2/logs/digilist-docs-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
     },

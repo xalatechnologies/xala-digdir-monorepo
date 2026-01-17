@@ -4,7 +4,7 @@
  * Displays pending requests with 30-day GDPR timeline tracking
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form */
+/* eslint-disable digdir/prefer-ds-components -- Complex filter form */
 
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -314,7 +314,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                 width: '100%',
                 textAlign: 'left',
                 fontWeight: selectedSort === option.id ? 'var(--ds-font-weight-medium)' : 'normal',
-              }}
+              }} type="button"
             >
               {option.label}
             </button>
@@ -415,7 +415,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                         fontSize: 'var(--ds-font-size-xs)',
                         fontFamily: 'monospace',
                       }}
-                      title="Kopier ID"
+                      title="Kopier ID" type="button"
                     >
                       {request.id.slice(0, 8)}...
                       <CopyIcon size={12} />
@@ -435,7 +435,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}
-                          aria-label="Handlinger"
+                          aria-label="Handlinger" type="button"
                         >
                           <MoreVerticalIcon size={16} />
                         </button>
@@ -453,7 +453,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                           cursor: 'pointer',
                           width: '100%',
                           textAlign: 'left',
-                        }}
+                        }} type="button"
                       >
                         Vis detaljer
                       </button>

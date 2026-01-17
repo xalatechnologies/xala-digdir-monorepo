@@ -14,20 +14,23 @@ interface FeatureFlagContext {
 
 /**
  * Extract feature flag context from request
- * TODO: Integrate with real tenant settings and subscription
+ * Uses subscription and feature flags populated by authCookieMiddleware from JWT payload
  */
 function extractFeatureFlagContext(request: FastifyRequest): FeatureFlagContext | null {
-  const user = (request as any).user;
+  const tenantId = (request as any).tenantId;
   
-  if (!user) {
+  if (!tenantId) {
     return null;
   }
 
-  // Placeholder - real implementation would load from database
+  // authCookieMiddleware populates subscription and featureFlags from JWT
+  const subscription = (request as any).subscription || {};
+  const featureFlags = (request as any).featureFlags || {};
+
   return {
-    tenantId: user.tenantId,
-    entitlements: user.entitlements || {},
-    flags: user.tenantFlags || {},
+    tenantId,
+    entitlements: subscription.entitlements || {},
+    flags: featureFlags,
   };
 }
 

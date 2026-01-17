@@ -32,7 +32,7 @@ export function App() {
                 v7_relativeSplatPath: true,
               }}
             >
-              <AuthProvider config={{ appType: 'docs-learning', debug: import.meta.env.DEV }}>
+              <AuthProvider config={{ appType: 'tenant-admin', debug: import.meta.env.DEV }}>
                 <Routes>
                   <Route element={<DocsLayout />}>
                     {/* Home/Overview */}

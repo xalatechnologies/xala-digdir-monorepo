@@ -273,7 +273,7 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
           variant="secondary"
           size="sm"
           onClick={handleViewClick}
-          style={{ flex: 1 }}
+          style={{ flex: 1 }} type="button"
         >
           {t('common.viewDetails')}
         </Button>
@@ -282,7 +282,7 @@ function RentalObjectCard({ item, canEdit, onItemClick }: RentalObjectCardProps)
             variant="primary"
             size="sm"
             onClick={handleEditClick}
-            style={{ flex: 1 }}
+            style={{ flex: 1 }} type="button"
           >
             {t('common.edit')}
           </Button>

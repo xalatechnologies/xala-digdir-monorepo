@@ -19,4 +19,7 @@ export * from './users';
 export * from './audit';
 export * from './settings';
 export * from './ai-seed-generator';
+export { BrandingListPage } from './branding';
+export { BrandingEditorPage } from './branding/[tenantId]';
+export { MonitoringPage } from './monitoring';
 

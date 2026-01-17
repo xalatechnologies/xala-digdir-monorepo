@@ -294,7 +294,7 @@ export default function FAQPage(): React.ReactElement {
         </Paragraph>
         <Button
           asChild
-          data-color="accent"
+          data-color="accent" type="button"
         >
           <a href="mailto:support@digilist.no">
             Kontakt support

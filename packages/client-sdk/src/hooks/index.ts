@@ -16,6 +16,9 @@ export {
   useRefreshToken
 } from './use-auth';
 
+// Current User hook (alias for useSession)
+export { useCurrentUser } from './use-current-user';
+
 // Auth guard hooks
 export {
   useAuthRedirectGuard,
@@ -185,13 +188,26 @@ export {
   useToggleActive,
 } from './use-discount-codes';
 
-// Organization & User hooks
-// TODO: Implement MinSide organization hooks when backend is ready
-// export {
-//   useOrganizations,
-//   useOrganization,
-//   ...
-// } from './use-organizations';
+// Organization hooks (MinSide) - TEMPORARY STUB
+export {
+  useOrganizations,
+  useOrganization,
+  useOrganizationMembers,
+  useAddOrganizationMember,
+  useRemoveOrganizationMember,
+  useUpdateOrganizationMember,
+} from './use-organizations';
+
+// User Management hooks (MinSide) - TEMPORARY STUB
+export {
+  useUserPreferences,
+  useUpdateUserPreferences,
+  useUpdateCurrentUser,
+  useDeleteAccount,
+  useUploadUserAvatar,
+  useExportData,
+  type UserPreferences,
+} from './use-user';
 
 // Integration hooks
 export {
@@ -643,6 +659,14 @@ export {
   useCancelGdprRequest,
   useUpdateGdprRequestStatus,
 } from './use-gdpr';
+
+// Consent hooks (GDPR) - TEMPORARY STUB
+export {
+  useConsents,
+  useUpdateConsents,
+  useHasConsent,
+  type Consent,
+} from './use-consents';
 
 // Integration Credentials hooks
 export {

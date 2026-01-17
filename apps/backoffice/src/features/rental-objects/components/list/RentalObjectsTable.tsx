@@ -450,16 +450,16 @@ function TableRow({
       {/* Actions */}
       <td style={{ padding: 'var(--ds-spacing-4)', textAlign: 'right' }}>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end' }}>
-          <Button variant="tertiary" size="sm" onClick={handleView}>
+          <Button variant="tertiary" size="sm" onClick={handleView} type="button">
             {t('common.view')}
           </Button>
           {canEdit && (
-            <Button variant="secondary" size="sm" onClick={handleEdit}>
+            <Button variant="secondary" size="sm" onClick={handleEdit} type="button">
               {t('common.edit')}
             </Button>
           )}
           {canDelete && (
-            <Button variant="danger" size="sm" onClick={handleDelete}>
+            <Button variant="danger" size="sm" onClick={handleDelete} type="button">
               {t('common.delete')}
             </Button>
           )}

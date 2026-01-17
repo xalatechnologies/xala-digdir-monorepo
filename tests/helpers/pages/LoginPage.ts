@@ -14,12 +14,12 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    // Find Demo Login button by partial text match (supports both Norwegian and English)
-    this.demoLoginButton = page.locator('button.login-option').filter({ hasText: /Demo.*[Ll]ogin|Demo.*[Ii]nnlogging/i });
-    this.nameInput = page.locator('[data-testid="name"], [name="name"], input[name="name"]');
-    this.emailInput = page.locator('[data-testid="email"], [name="email"], input[type="email"]');
-    this.tokenInput = page.locator('[data-testid="token"], [name="token"], input[name="token"]');
-    this.loginButton = page.locator('[data-testid="login-button"], button[type="submit"]:has-text("Logg inn"), button:has-text("Login")');
+    // Use testid for reliable locator (works with both Norwegian and English)
+    this.demoLoginButton = page.getByTestId('login-option-demo-innlogging').or(page.getByTestId('login-option-demo-login'));
+    this.nameInput = page.getByTestId('demo-name');
+    this.emailInput = page.getByTestId('demo-email');
+    this.tokenInput = page.getByTestId('demo-token');
+    this.loginButton = page.getByTestId('demo-submit');
   }
 
   /**

@@ -27,12 +27,17 @@
 }
 
 .articleCard {
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow var(--ds-transition-duration-fast) ease, transform var(--ds-transition-duration-fast) ease;
 }
 
 .articleCard:hover {
   box-shadow: var(--ds-shadow-md);
   transform: translateY(-1px);
+}
+
+.articleLink:focus-visible .articleCard {
+  outline: 2px solid var(--ds-color-accent-base-default);
+  outline-offset: 2px;
 }
 
 .articleContent {

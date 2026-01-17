@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-01-17T19:11:57.266Z",
+  "timestamp": "2026-01-17T19:31:31.340Z",
   "summary": {
-    "filesScanned": 0,
-    "filesSkipped": 1,
+    "filesScanned": 1,
+    "filesSkipped": 0,
     "totalFiles": 1,
     "totalIssues": 0,
     "hardcodedStrings": 0,

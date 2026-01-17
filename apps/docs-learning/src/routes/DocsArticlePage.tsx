@@ -29,7 +29,7 @@ const MOCK_ARTICLE = {
 };
 
 export function DocsArticlePage() {
-  const { section, articleSlug } = useParams<{ section: string; articleSlug: string }>();
+  const { section } = useParams<{ section: string; articleSlug: string }>();
   const t = useT();
   const flags = useFeatureFlags();
   const activeFlags = Object.keys(flags).length > 0 ? flags : { ...DOCS_FEATURE_FLAGS, 'docs.enabled': true };
@@ -39,7 +39,7 @@ export function DocsArticlePage() {
     return <Navigate to="/" replace />;
   }
 
-  const sectionTitle = t(`docs.sections.${section}.title`) || section;
+  const sectionTitle = t(`docs.sections.${section}.title`) || section || '';
 
   const breadcrumbItems = [
     { label: t('docs.nav.home') || 'Dokumentasjon', href: '/' },

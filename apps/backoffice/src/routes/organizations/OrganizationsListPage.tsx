@@ -61,7 +61,7 @@ const statusColors: Record<OrganizationStatus, 'success' | 'warning' | 'danger'>
 };
 
 export function OrganizationsListPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const t = useT();
   const navigate = useNavigate();
 

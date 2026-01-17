@@ -69,7 +69,7 @@ vi.mock('../../../rental-objects/components/detail/DetailHeader', () => ({
     return (
       <div data-testid="detail-header">
         <h1>{listing?.name || 'Loading...'}</h1>
-        <button onClick={() => onEditSuccess?.()}>Edit</button>
+        <button onClick={() => onEditSuccess?.()} type="button">Edit</button>
       </div>
     );
   },

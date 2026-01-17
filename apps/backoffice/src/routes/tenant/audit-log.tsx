@@ -19,6 +19,7 @@ import {
   Badge,
   Table,
   Spinner,
+  Label,
 } from '@xala/ds';
 import { useLocale, useT } from '@xala/i18n';
 
@@ -179,7 +180,7 @@ export function TenantAuditLogPage() {
           alignItems: isMobile ? 'stretch' : 'flex-end',
         }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Type</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Type</Label>
             <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as EventType | 'all')} style={{ width: '100%' }}>
               <option value="all">Alle typer</option>
               <option value="user">Bruker</option>
@@ -189,7 +190,7 @@ export function TenantAuditLogPage() {
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Alvorlighet</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Alvorlighet</Label>
             <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value as EventSeverity | 'all')} style={{ width: '100%' }}>
               <option value="all">Alle</option>
               <option value="info">Info</option>
@@ -198,11 +199,11 @@ export function TenantAuditLogPage() {
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Fra dato</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fra dato</Label>
             <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} style={{ width: '100%' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 500 }}>Til dato</label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Til dato</Label>
             <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} style={{ width: '100%' }} />
           </div>
           <Button type="button" variant="primary" data-size="md" style={{ minHeight: '44px' }}>
@@ -236,7 +237,7 @@ export function TenantAuditLogPage() {
                   <Table.Row key={event.id}>
                     <Table.Cell><span style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDateTime(event.timestamp)}</span></Table.Cell>
                     <Table.Cell><Badge>{getTypeLabel(event.type)}</Badge></Table.Cell>
-                    <Table.Cell><span style={{ fontWeight: 600 }}>{event.action}</span></Table.Cell>
+                    <Table.Cell><span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{event.action}</span></Table.Cell>
                     <Table.Cell><span style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>{event.details}</span></Table.Cell>
                     <Table.Cell><code style={{ fontSize: 'var(--ds-font-size-xs)' }}>{event.ip}</code></Table.Cell>
                     <Table.Cell>

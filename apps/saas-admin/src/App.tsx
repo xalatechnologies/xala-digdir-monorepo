@@ -20,6 +20,9 @@ import {
   UsersPage,
   AuditLogPage,
   SettingsPage,
+  BrandingListPage,
+  BrandingEditorPage,
+  MonitoringPage,
 } from './routes';
 
 function DashboardPage() {
@@ -72,6 +75,11 @@ export function App() {
                     <Route path="/audit" element={<AuditLogPage />} />
                     <Route path="/settings" element={<SettingsPage />} />
                     <Route path="/ai-seeds" element={<AISeedGeneratorPage />} />
+                    {/* Branding routes */}
+                    <Route path="/branding" element={<BrandingListPage />} />
+                    <Route path="/branding/:tenantId" element={<BrandingEditorPage />} />
+                    {/* Monitoring routes */}
+                    <Route path="/monitoring" element={<MonitoringPage />} />
                   </Route>
                 </Routes>
               </AuthProvider>

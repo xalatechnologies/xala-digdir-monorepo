@@ -18,7 +18,7 @@
 }
 
 .maxWidthWrapper {
-  max-width: 1200px;
+  max-width: var(--docs-content-max-width);
   margin: 0 auto;
 }
 

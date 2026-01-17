@@ -190,7 +190,7 @@ export function GDPRManagementPage() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          onClick={() => handleOpenModal(request)}
+                          onClick={() => handleOpenModal(request)} type="button"
                         >
                           {t('gdpr.admin.manage')}
                         </Button>
@@ -300,14 +300,14 @@ export function GDPRManagementPage() {
               <Button
                 variant="secondary"
                 onClick={handleCloseModal}
-                disabled={isUpdating}
+                disabled={isUpdating} type="button"
               >
                 {t('common.cancel')}
               </Button>
               <Button
                 variant="primary"
                 onClick={handleUpdateStatus}
-                disabled={isUpdating}
+                disabled={isUpdating} type="button"
               >
                 {isUpdating ? t('common.saving') : t('common.save')}
               </Button>

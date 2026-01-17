@@ -16,7 +16,6 @@ import {
   Spinner,
   Alert,
 } from '@xala/ds';
-import { useT } from '@xala/i18n';
 import { useModulesManager, useModuleCatalog, useEffectiveModules } from '@digilist/client-sdk/hooks';
 
 const MOBILE_BREAKPOINT = 768;
@@ -33,14 +32,13 @@ const categoryInfo: Record<string, { name: string; description: string }> = {
 };
 
 export function TenantFeaturesPage() {
-  const t = useT();
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['core', 'booking']));
 
   // Use SDK hooks for module management
-  const { catalog, effective, isLoading, error, toggleModule, isToggling } = useModulesManager();
+  const { catalog: _catalog, effective: _effective, isLoading, error, toggleModule, isToggling } = useModulesManager();
   const { data: catalogData } = useModuleCatalog();
   const { data: effectiveData, refetch } = useEffectiveModules();
 
@@ -166,8 +164,9 @@ export function TenantFeaturesPage() {
         return (
           <Card key={category} style={{ padding: 0, overflow: 'hidden' }}>
             {/* Category Header */}
-            <button
+            <Button
               type="button"
+              variant="tertiary"
               onClick={() => toggleCategory(category)}
               style={{
                 width: '100%',
@@ -179,6 +178,7 @@ export function TenantFeaturesPage() {
                 border: 'none',
                 cursor: 'pointer',
                 borderBottom: isExpanded ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
+                borderRadius: 0,
               }}
             >
               <div style={{ textAlign: 'left' }}>
@@ -196,12 +196,12 @@ export function TenantFeaturesPage() {
                 <span style={{
                   transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s ease',
-                  fontSize: '1.25rem',
+                  fontSize: 'var(--ds-font-size-lg)',
                 }}>
                   ▼
                 </span>
               </div>
-            </button>
+            </Button>
 
             {/* Category Modules */}
             {isExpanded && (
@@ -231,7 +231,7 @@ export function TenantFeaturesPage() {
                     >
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
-                          <Paragraph data-size="md" style={{ margin: 0, fontWeight: 600 }}>
+                          <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                             {module.name?.no ?? module.key}
                           </Paragraph>
                           {module.isCore && (

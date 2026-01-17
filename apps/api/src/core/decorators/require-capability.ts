@@ -16,22 +16,31 @@ interface UserContext {
 
 /**
  * Extract user context from request
- * TODO: Integrate with real auth middleware
+ * Extracts authentication data populated by authCookieMiddleware
  */
 function extractUserContext(request: FastifyRequest): UserContext | null {
-  // Placeholder - real implementation would extract from JWT/session
-  const user = (request as any).user;
+  // authCookieMiddleware populates these fields from JWT
+  const userId = (request as any).userId;
+  const tenantId = (request as any).tenantId;
   
-  if (!user) {
+  if (!userId || !tenantId) {
     return null;
   }
 
+  // Fetch user object if attached by RBAC middleware
+  const user = (request as any).user;
+  const roles = user?.role ? [user.role] : [];
+  
+  // Capabilities can be computed from roles
+  // For now, return empty set - capabilities will be loaded from database if needed
+  const capabilities = new Set<string>();
+
   return {
     authenticated: true,
-    tenantId: user.tenantId,
-    userId: user.id,
-    roles: user.roles || [],
-    capabilities: new Set(user.capabilities || []),
+    tenantId,
+    userId,
+    roles,
+    capabilities,
   };
 }
 

@@ -6,6 +6,7 @@
  */
 import { Injectable, Inject } from '../../core/decorators';
 import { eq, and } from 'drizzle-orm';
+import { organizations, orgMemberships, accessGrants } from '../../database/schema/index';
 import { NotFoundError, BadRequestError } from '../../core/errors/problem-details';
 
 interface CreateOrganizationRequest {
@@ -49,26 +50,42 @@ export class OrganizationsService {
   ) {}
 
   /**
-   * List organizations
+   * List organizations with scope filtering based on user role
+   * KOMMUNE_ADMIN/admin sees all, ORG_ADMIN sees only own org
    */
-  async list(params: any): Promise<any[]> {
-    // TODO: Apply scope filtering based on user role
-    // KOMMUNE_ADMIN sees all, ORG_ADMIN sees only own org
+  async list(params: any, requestContext?: { userId?: string; role?: string; organizationId?: string }): Promise<any[]> {
+    const whereConditions: any[] = [];
     
-    const organizations = await this.db.query.backofficeOrganizations.findMany({
-      where: (orgs: any, { eq }: any) => 
-        params.status ? eq(orgs.status, params.status) : undefined,
+    if (params.status) {
+      whereConditions.push(eq(organizations.status, params.status));
+    }
+    
+    // Apply scope filtering based on role
+    if (requestContext?.role && requestContext.role !== 'admin' && requestContext.role !== 'KOMMUNE_ADMIN') {
+      // ORG_ADMIN and below: can only see their own organization
+      if (requestContext.organizationId) {
+        whereConditions.push(eq(organizations.id, requestContext.organizationId));
+      } else {
+        // No organization assigned - return empty list
+        return [];
+      }
+    }
+    
+    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+    
+    const result = await this.db.query.organizations.findMany({
+      where: whereClause,
       orderBy: (orgs: any, { asc }: any) => [asc(orgs.name)],
     });
 
-    return organizations.map((org: any) => this.mapToDTO(org));
+    return result.map((org: any) => this.mapToDTO(org));
   }
 
   /**
    * Get organization by ID
    */
   async getById(id: string): Promise<any> {
-    const organization = await this.db.query.backofficeOrganizations.findFirst({
+    const organization = await this.db.query.organizations.findFirst({
       where: (orgs: any, { eq }: any) => eq(orgs.id, id),
     });
 
@@ -82,7 +99,7 @@ export class OrganizationsService {
   /**
    * Create organization
    */
-  async create(request: CreateOrganizationRequest): Promise<any> {
+  async create(request: CreateOrganizationRequest, requestContext: { tenantId: string; userId: string }): Promise<any> {
     // Validation
     if (!request.name || request.name.trim().length === 0) {
       throw new BadRequestError('Organization name is required');
@@ -92,23 +109,24 @@ export class OrganizationsService {
       throw new BadRequestError('Organization type is required');
     }
 
-    // TODO: Get tenantId and userId from context
-    const tenantId = 'placeholder-tenant-id';
-    const userId = 'placeholder-user-id';
+    const { tenantId } = requestContext;
+    // Note: userId would be used for audit/created_by if schema supports it
 
     // Create organization
     const [organization] = await this.db
-      .insert('backofficeOrganizations')
+      .insert(organizations)
       .values({
         tenantId,
         name: request.name,
+        slug: request.name.toLowerCase().replace(/\s+/g, '-'),
         type: request.type,
-        description: request.description,
-        email: request.email,
-        phone: request.phone,
-        address: request.address,
-        status: 'ACTIVE',
-        createdBy: userId,
+        status: 'active',
+        settings: {
+          description: request.description,
+          email: request.email,
+          phone: request.phone,
+          address: request.address,
+        },
       })
       .returning();
 
@@ -120,24 +138,38 @@ export class OrganizationsService {
   /**
    * Update organization
    */
-  async update(id: string, request: UpdateOrganizationRequest): Promise<any> {
+  async update(id: string, request: UpdateOrganizationRequest, _requestContext: { userId: string }): Promise<any> {
     const existing = await this.getById(id);
 
     if (!existing) {
       throw new NotFoundError(`Organization ${id} not found`);
     }
 
-    // TODO: Get userId from context
-    const userId = 'placeholder-user-id';
+    // Note: userId from _requestContext would be used for audit/updated_by if schema supports it
+
+    const updateData: any = {
+      updatedAt: new Date(),
+    };
+
+    if (request.name !== undefined) updateData.name = request.name;
+    if (request.status !== undefined) updateData.status = request.status;
+    
+    // Update settings object for other fields
+    if (request.description || request.email || request.phone || request.address) {
+      const currentSettings = existing.settings || {};
+      updateData.settings = {
+        ...currentSettings,
+        ...(request.description && { description: request.description }),
+        ...(request.email && { email: request.email }),
+        ...(request.phone && { phone: request.phone }),
+        ...(request.address && { address: request.address }),
+      };
+    }
 
     const [updated] = await this.db
-      .update('backofficeOrganizations')
-      .set({
-        ...request,
-        updatedBy: userId,
-        updatedAt: new Date(),
-      })
-      .where(eq('id', id))
+      .update(organizations)
+      .set(updateData)
+      .where(eq(organizations.id, id))
       .returning();
 
     this.adapters?.log?.info('Organization updated', { organizationId: id });
@@ -157,9 +189,9 @@ export class OrganizationsService {
 
     // Soft delete by archiving
     await this.db
-      .update('backofficeOrganizations')
-      .set({ status: 'ARCHIVED', updatedAt: new Date() })
-      .where(eq('id', id));
+      .update(organizations)
+      .set({ status: 'archived', updatedAt: new Date() })
+      .where(eq(organizations.id, id));
 
     this.adapters?.log?.info('Organization archived', { organizationId: id });
   }
@@ -168,8 +200,8 @@ export class OrganizationsService {
    * List organization members
    */
   async listMembers(organizationId: string): Promise<any[]> {
-    const members = await this.db.query.organizationMembers.findMany({
-      where: (members: any, { eq }: any) => eq(members.organizationId, organizationId),
+    const members = await this.db.query.orgMemberships.findMany({
+      where: (members: any, { eq }: any) => eq(members.orgId, organizationId),
       with: {
         user: true,
       },
@@ -180,17 +212,16 @@ export class OrganizationsService {
       userId: member.userId,
       userName: member.user?.name || 'Unknown',
       userEmail: member.user?.email || '',
-      role: member.role,
-      capabilities: member.capabilities,
+      role: member.orgRole,
       status: member.status,
-      joinedAt: member.joinedAt?.toISOString(),
+      joinedAt: member.createdAt?.toISOString(),
     }));
   }
 
   /**
    * Add member to organization
    */
-  async addMember(organizationId: string, request: AddMemberRequest): Promise<any> {
+  async addMember(organizationId: string, request: AddMemberRequest, _requestContext: { userId: string }): Promise<any> {
     if (!request.userId) {
       throw new BadRequestError('userId is required');
     }
@@ -200,10 +231,10 @@ export class OrganizationsService {
     }
 
     // Check if already a member
-    const existing = await this.db.query.organizationMembers.findFirst({
+    const existing = await this.db.query.orgMemberships.findFirst({
       where: (members: any, { eq, and }: any) =>
         and(
-          eq(members.organizationId, organizationId),
+          eq(members.orgId, organizationId),
           eq(members.userId, request.userId)
         ),
     });
@@ -212,18 +243,16 @@ export class OrganizationsService {
       throw new BadRequestError('User is already a member of this organization');
     }
 
-    // TODO: Get invitedBy from context
-    const invitedBy = 'placeholder-user-id';
+    // Note: userId from _requestContext would be used for invited_by if schema supports it
 
     const [member] = await this.db
-      .insert('organizationMembers')
+      .insert(orgMemberships)
       .values({
-        organizationId,
         userId: request.userId,
-        role: request.role,
-        capabilities: request.capabilities || [],
-        status: 'ACTIVE',
-        invitedBy,
+        orgId: organizationId,
+        orgRole: request.role,
+        status: 'active',
+        metadata: request.capabilities ? { capabilities: request.capabilities } : {},
       })
       .returning();
 
@@ -235,10 +264,9 @@ export class OrganizationsService {
     return {
       id: member.id,
       userId: member.userId,
-      role: member.role,
-      capabilities: member.capabilities,
+      role: member.orgRole,
       status: member.status,
-      joinedAt: member.joinedAt?.toISOString(),
+      joinedAt: member.createdAt?.toISOString(),
     };
   }
 
@@ -247,12 +275,12 @@ export class OrganizationsService {
    */
   async removeMember(organizationId: string, userId: string): Promise<void> {
     await this.db
-      .update('organizationMembers')
-      .set({ status: 'SUSPENDED', leftAt: new Date() })
+      .update(orgMemberships)
+      .set({ status: 'inactive', updatedAt: new Date() })
       .where(
         and(
-          eq('organizationId', organizationId),
-          eq('userId', userId)
+          eq(orgMemberships.orgId, organizationId),
+          eq(orgMemberships.userId, userId)
         )
       );
 
@@ -263,40 +291,38 @@ export class OrganizationsService {
    * List assigned rental objects
    */
   async listAssignedRentalObjects(organizationId: string): Promise<any[]> {
-    const assignments = await this.db.query.rentalObjectAssignments.findMany({
-      where: (assignments: any, { eq }: any) => eq(assignments.organizationId, organizationId),
+    const assignments = await this.db.query.accessGrants.findMany({
+      where: (grants: any, { eq }: any) => eq(grants.orgId, organizationId),
       with: {
         rentalObject: true,
       },
     });
 
-    return assignments.map((assignment: any) => ({
-      id: assignment.id,
-      rentalObjectId: assignment.rentalObjectId,
-      rentalObjectName: assignment.rentalObject?.name || 'Unknown',
-      assignmentType: assignment.assignmentType,
-      canEdit: assignment.canEdit,
-      canApproveBookings: assignment.canApproveBookings,
-      canManageAvailability: assignment.canManageAvailability,
-      canManagePricing: assignment.canManagePricing,
-      assignedAt: assignment.assignedAt?.toISOString(),
+    return assignments.map((grant: any) => ({
+      id: grant.id,
+      rentalObjectId: grant.rentalObjectId,
+      rentalObjectName: grant.rentalObject?.name || 'Unknown',
+      status: grant.status,
+      validFrom: grant.validFrom?.toISOString(),
+      validUntil: grant.validUntil?.toISOString(),
+      assignedAt: grant.createdAt?.toISOString(),
     }));
   }
 
   /**
    * Assign rental object to organization
    */
-  async assignRentalObject(organizationId: string, request: AssignRentalObjectRequest): Promise<any> {
+  async assignRentalObject(organizationId: string, request: AssignRentalObjectRequest, requestContext: { userId: string }): Promise<any> {
     if (!request.rentalObjectId) {
       throw new BadRequestError('rentalObjectId is required');
     }
 
     // Check if already assigned
-    const existing = await this.db.query.rentalObjectAssignments.findFirst({
-      where: (assignments: any, { eq, and }: any) =>
+    const existing = await this.db.query.accessGrants.findFirst({
+      where: (grants: any, { eq, and }: any) =>
         and(
-          eq(assignments.organizationId, organizationId),
-          eq(assignments.rentalObjectId, request.rentalObjectId)
+          eq(grants.orgId, organizationId),
+          eq(grants.rentalObjectId, request.rentalObjectId)
         ),
     });
 
@@ -304,21 +330,26 @@ export class OrganizationsService {
       throw new BadRequestError('Rental object is already assigned to this organization');
     }
 
-    // TODO: Get assignedBy from context
-    const assignedBy = 'placeholder-user-id';
+    const { userId: grantedBy } = requestContext;
 
-    const [assignment] = await this.db
-      .insert('rentalObjectAssignments')
+    // Get tenant ID from organization
+    const org = await this.getById(organizationId);
+
+    const [grant] = await this.db
+      .insert(accessGrants)
       .values({
+        tenantId: org.tenantId,
+        orgId: organizationId,
         rentalObjectId: request.rentalObjectId,
-        organizationId,
-        assignmentType: request.assignmentType || 'MANAGED',
-        canEdit: request.canEdit ?? true,
-        canApproveBookings: request.canApproveBookings ?? true,
-        canManageAvailability: request.canManageAvailability ?? true,
-        canManagePricing: request.canManagePricing ?? false,
-        status: 'ACTIVE',
-        assignedBy,
+        grantedBy,
+        status: 'active',
+        metadata: {
+          assignmentType: request.assignmentType || 'MANAGED',
+          canEdit: request.canEdit ?? true,
+          canApproveBookings: request.canApproveBookings ?? true,
+          canManageAvailability: request.canManageAvailability ?? true,
+          canManagePricing: request.canManagePricing ?? false,
+        },
       })
       .returning();
 
@@ -328,12 +359,10 @@ export class OrganizationsService {
     });
 
     return {
-      id: assignment.id,
-      rentalObjectId: assignment.rentalObjectId,
-      assignmentType: assignment.assignmentType,
-      canEdit: assignment.canEdit,
-      canApproveBookings: assignment.canApproveBookings,
-      assignedAt: assignment.assignedAt?.toISOString(),
+      id: grant.id,
+      rentalObjectId: grant.rentalObjectId,
+      status: grant.status,
+      assignedAt: grant.createdAt?.toISOString(),
     };
   }
 
@@ -342,12 +371,12 @@ export class OrganizationsService {
    */
   async unassignRentalObject(organizationId: string, rentalObjectId: string): Promise<void> {
     await this.db
-      .update('rentalObjectAssignments')
-      .set({ status: 'EXPIRED' })
+      .update(accessGrants)
+      .set({ status: 'revoked', updatedAt: new Date() })
       .where(
         and(
-          eq('organizationId', organizationId),
-          eq('rentalObjectId', rentalObjectId)
+          eq(accessGrants.orgId, organizationId),
+          eq(accessGrants.rentalObjectId, rentalObjectId)
         )
       );
 
@@ -361,15 +390,16 @@ export class OrganizationsService {
    * Map database entity to DTO
    */
   private mapToDTO(org: any): any {
+    const settings = org.settings || {};
     return {
       id: org.id,
       tenantId: org.tenantId,
       name: org.name,
       type: org.type,
-      description: org.description,
-      email: org.email,
-      phone: org.phone,
-      address: org.address,
+      description: settings.description,
+      email: settings.email,
+      phone: settings.phone,
+      address: settings.address,
       status: org.status,
       createdAt: org.createdAt?.toISOString(),
       updatedAt: org.updatedAt?.toISOString(),

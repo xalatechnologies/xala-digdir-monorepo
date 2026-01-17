@@ -8,7 +8,6 @@
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { RequireCapability } from '../../core/decorators/require-capability';
-import { RequireFeature } from '../../core/decorators/require-feature';
 import { OrganizationsService } from './organizations.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -29,7 +28,17 @@ export class OrganizationsController {
   @RequireCapability('backoffice_orgs.read')
   async list(request: FastifyRequest, _reply: FastifyReply) {
     const params = request.query as any;
-    const organizations = await this.service.list(params);
+    
+    // Extract user context for scope filtering
+    const userId = (request as any).userId;
+    const user = (request as any).user;
+    const requestContext = {
+      userId,
+      role: user?.role,
+      organizationId: user?.organizationId,
+    };
+    
+    const organizations = await this.service.list(params, requestContext);
     return { data: organizations };
   }
 
@@ -58,7 +67,12 @@ export class OrganizationsController {
   @RequireCapability('backoffice_orgs.write')
   async create(request: FastifyRequest, _reply: FastifyReply) {
     const body = request.body as any;
-    const organization = await this.service.create(body);
+    
+    // Extract user context
+    const tenantId = (request as any).tenantId;
+    const userId = (request as any).userId;
+    
+    const organization = await this.service.create(body, { tenantId, userId });
     return { data: organization };
   }
 
@@ -73,7 +87,11 @@ export class OrganizationsController {
   async update(request: FastifyRequest, _reply: FastifyReply) {
     const { id } = request.params as any;
     const body = request.body as any;
-    const organization = await this.service.update(id, body);
+    
+    // Extract user context
+    const userId = (request as any).userId;
+    
+    const organization = await this.service.update(id, body, { userId });
     return { data: organization };
   }
 
@@ -117,7 +135,11 @@ export class OrganizationsController {
   async addMember(request: FastifyRequest, _reply: FastifyReply) {
     const { id } = request.params as any;
     const body = request.body as any;
-    const member = await this.service.addMember(id, body);
+    
+    // Extract user context
+    const userId = (request as any).userId;
+    
+    const member = await this.service.addMember(id, body, { userId });
     return { data: member };
   }
 
@@ -161,7 +183,11 @@ export class OrganizationsController {
   async assignRentalObject(request: FastifyRequest, _reply: FastifyReply) {
     const { id } = request.params as any;
     const body = request.body as any;
-    const assignment = await this.service.assignRentalObject(id, body);
+    
+    // Extract user context
+    const userId = (request as any).userId;
+    
+    const assignment = await this.service.assignRentalObject(id, body, { userId });
     return { data: assignment };
   }
 

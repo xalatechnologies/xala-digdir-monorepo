@@ -5,11 +5,10 @@
  */
 
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { Heading, Paragraph, Breadcrumb, Card, CardContent } from '@xala/ds';
+import { Heading, Paragraph, Breadcrumb, Card } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
-import type { DocsSection } from '../types';
 import styles from './DocsSectionPage.module.css';
 
 // Mock articles for MVP (would come from content loader)
@@ -55,7 +54,7 @@ export function DocsSectionPage() {
   }
 
   const articles = section ? MOCK_ARTICLES[section] || [] : [];
-  const sectionTitle = t(`docs.sections.${section}.title`) || section;
+  const sectionTitle = t(`docs.sections.${section}.title`) || section || '';
 
   const breadcrumbItems = [
     { label: t('docs.nav.home') || 'Dokumentasjon', href: '/' },
@@ -84,22 +83,20 @@ export function DocsSectionPage() {
               to={`/${section}/${article.slug}`}
               className={styles.articleLink}
             >
-              <Card className={styles.articleCard}>
-                <CardContent>
-                  <div className={styles.articleContent}>
-                    <div>
-                      <Heading level={3} className={styles.articleTitle}>
-                        {article.title}
-                      </Heading>
-                      <Paragraph data-size="sm" className={styles.articleDescription}>
-                        {article.description}
-                      </Paragraph>
-                    </div>
-                    <Paragraph data-size="xs" className={styles.articleDate}>
-                      {t('docs.updatedAt') || 'Oppdatert'}: {article.updatedAt}
+              <Card className={styles.articleCard} style={{ padding: 'var(--ds-spacing-4)' }}>
+                <div className={styles.articleContent}>
+                  <div>
+                    <Heading level={3} className={styles.articleTitle}>
+                      {article.title}
+                    </Heading>
+                    <Paragraph data-size="sm" className={styles.articleDescription}>
+                      {article.description}
                     </Paragraph>
                   </div>
-                </CardContent>
+                  <Paragraph data-size="xs" className={styles.articleDate}>
+                    {t('docs.updatedAt') || 'Oppdatert'}: {article.updatedAt}
+                  </Paragraph>
+                </div>
               </Card>
             </Link>
           ))

@@ -1,0 +1,84 @@
+/**
+ * Docs Learning CSS Token Extensions
+ *
+ * Extended design tokens for documentation-specific layout needs.
+ * Uses @layer ds.app pattern for proper cascade.
+ * All values semantically derived from DS primitives.
+ */
+
+@layer ds.app {
+  :root {
+    /* =================================================================
+     * LAYOUT DIMENSIONS
+     * Semantic aliases for documentation layout
+     * ================================================================= */
+
+    /* Sidebar - based on DS spacing scale */
+    --docs-sidebar-width: calc(var(--ds-spacing-6) * 12); /* 280px equivalent */
+    --docs-sidebar-width-mobile: 0;
+
+    /* Content max-width - based on readable measure */
+    --docs-content-max-width: calc(var(--ds-spacing-6) * 50); /* 1200px equivalent */
+    --docs-search-max-width: calc(var(--ds-spacing-6) * 21); /* 500px equivalent */
+    --docs-hero-max-width: calc(var(--ds-spacing-6) * 25); /* 600px equivalent */
+
+    /* TOC sidebar */
+    --docs-toc-width: calc(var(--ds-spacing-6) * 9); /* 220px equivalent */
+
+    /* =================================================================
+     * BREAKPOINTS (for reference, used in media queries)
+     * ================================================================= */
+
+    /* Mobile: < 768px */
+    /* Tablet: < 1024px */
+    /* Desktop: >= 1024px */
+
+    /* =================================================================
+     * ICON SIZING (based on spacing scale)
+     * ================================================================= */
+
+    --docs-icon-size-sm: var(--ds-spacing-5); /* 18px */
+    --docs-icon-size-md: var(--ds-spacing-6); /* 24px */
+    --docs-icon-size-lg: var(--ds-spacing-10); /* 40px */
+
+    /* =================================================================
+     * TYPOGRAPHY EXTENSIONS
+     * ================================================================= */
+
+    --docs-line-height-prose: 1.7;
+    --docs-letter-spacing-caps: 0.05em;
+
+    /* =================================================================
+     * GRID SETTINGS
+     * ================================================================= */
+
+    --docs-grid-min-card: calc(var(--ds-spacing-6) * 12); /* 280px */
+    --docs-grid-min-link: calc(var(--ds-spacing-6) * 10); /* 250px */
+
+    /* =================================================================
+     * PLACEHOLDER HEIGHTS
+     * ================================================================= */
+
+    --docs-placeholder-image: calc(var(--ds-spacing-6) * 8); /* 200px */
+    --docs-placeholder-video: calc(var(--ds-spacing-6) * 10); /* 250px */
+
+    /* =================================================================
+     * SCROLL OFFSET (for sticky headers)
+     * ================================================================= */
+
+    --docs-scroll-offset: calc(var(--ds-spacing-6) + 60px);
+
+    /* =================================================================
+     * OPACITY
+     * ================================================================= */
+
+    --docs-opacity-subtle: 0.8;
+
+    /* =================================================================
+     * SCROLLBAR (for custom scrollbar styling)
+     * ================================================================= */
+
+    --docs-scrollbar-width: var(--ds-spacing-1);
+    --docs-scrollbar-radius: var(--ds-border-radius-xs);
+  }
+}

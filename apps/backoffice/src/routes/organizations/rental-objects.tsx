@@ -254,7 +254,7 @@ export function OrganizationRentalObjectsPage() {
           <Button
             variant="tertiary"
             icon={<ArrowLeftIcon aria-hidden />}
-            onClick={handleBack}
+            onClick={handleBack} type="button"
           >
             {t('common.back')}
           </Button>
@@ -338,7 +338,7 @@ export function OrganizationRentalObjectsPage() {
               icon={<ArrowRightIcon aria-hidden />}
               onClick={handleAssignSelected}
               disabled={selectedAvailable.size === 0 || grantAccessMutation.isPending || bulkGrantAccessMutation.isPending}
-              fullWidth
+              fullWidth type="button"
             >
               {t('tenantAdmin.rentalObjects.assign')} ({selectedAvailable.size})
             </Button>
@@ -421,7 +421,7 @@ export function OrganizationRentalObjectsPage() {
               icon={<XCircleIcon aria-hidden />}
               onClick={handleRevokeSelected}
               disabled={selectedAssigned.size === 0 || revokeAccessMutation.isPending}
-              fullWidth
+              fullWidth type="button"
             >
               {t('tenantAdmin.rentalObjects.revoke')} ({selectedAssigned.size})
             </Button>

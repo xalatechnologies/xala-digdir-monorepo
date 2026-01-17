@@ -121,7 +121,7 @@ export function SeasonFormPage() {
         const result = await createSeasonMutation.mutateAsync(cleanData);
         navigate(`/seasons/${result.data.id}`);
       }
-    } catch (error) {
+    } catch (_error) {
       // Failed to save season
     } finally {
       setIsSubmitting(false);
@@ -136,7 +136,7 @@ export function SeasonFormPage() {
     }
   };
 
-  const handleChange = (field: keyof CreateSeasonDTO) => (value: any) => {
+  const handleChange = (field: keyof CreateSeasonDTO) => (value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error for this field
     if (errors[field]) {
@@ -178,7 +178,7 @@ export function SeasonFormPage() {
       {/* Header */}
       <div>
         <Link to={isEditing && id ? `/seasons/${id}` : '/seasons'}>
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
+          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button" aria-label={isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}>
             <ArrowLeftIcon />
             {isEditing ? 'Tilbake til sesong' : 'Tilbake til oversikt'}
           </Button>

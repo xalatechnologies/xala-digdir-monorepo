@@ -285,7 +285,7 @@ export function DashboardPage(): React.ReactElement {
                 <CalendarIcon />
                 {t('dashboard.viewAllBookings')}
               </Button>
-              {/* eslint-disable-next-line digdir/require-interactive-labels -- Button has text content */}
+              { }
               {isAdmin && (
                 <Button
                   type="button"

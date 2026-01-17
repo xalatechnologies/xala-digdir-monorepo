@@ -160,7 +160,7 @@ export const PermissionManagement: React.FC = () => {
       <div className="permission-header">
         <h1>Tillatelsesstyring</h1>
         <p>Detaljert tilgangskontroll for utleieobjekter</p>
-        <button onClick={() => setShowForm(true)} className="btn-primary">
+        <button onClick={() => setShowForm(true)} className="btn-primary" type="button">
           + Gi tillatelse
         </button>
       </div>
@@ -188,7 +188,7 @@ export const PermissionManagement: React.FC = () => {
         {permissions.length === 0 ? (
           <div className="empty-state">
             <p>Ingen tillatelser funnet</p>
-            <button onClick={() => setShowForm(true)} className="btn-secondary">
+            <button onClick={() => setShowForm(true)} className="btn-secondary" type="button">
               Opprett første tillatelse
             </button>
           </div>
@@ -251,7 +251,7 @@ export const PermissionManagement: React.FC = () => {
                     <button
                       onClick={() => revokePermission.mutate(permission.id)}
                       className="btn-danger-sm"
-                      disabled={!isActive(permission)}
+                      disabled={!isActive(permission)} type="button"
                     >
                       Tilbakekall
                     </button>

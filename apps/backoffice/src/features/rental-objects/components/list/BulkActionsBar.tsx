@@ -64,19 +64,19 @@ export function BulkActionsBar({
 
       {/* Action Buttons */}
       <Stack direction="row" gap={3}>
-        <Button variant="secondary" size="sm" onClick={onPublish}>
+        <Button variant="secondary" size="sm" onClick={onPublish} type="button">
           {t('bulk.publishSelected')}
         </Button>
 
-        <Button variant="secondary" size="sm" onClick={onUnpublish}>
+        <Button variant="secondary" size="sm" onClick={onUnpublish} type="button">
           {t('bulk.unpublishSelected')}
         </Button>
 
-        <Button variant="secondary" size="sm" onClick={onArchive}>
+        <Button variant="secondary" size="sm" onClick={onArchive} type="button">
           {t('bulk.archiveSelected')}
         </Button>
 
-        <Button variant="danger" size="sm" onClick={onDelete}>
+        <Button variant="danger" size="sm" onClick={onDelete} type="button">
           {t('bulk.deleteSelected')}
         </Button>
       </Stack>
@@ -91,7 +91,7 @@ export function BulkActionsBar({
       />
 
       {/* Clear Selection */}
-      <Button variant="tertiary" size="sm" onClick={onClearSelection}>
+      <Button variant="tertiary" size="sm" onClick={onClearSelection} type="button">
         {t('common.cancel')}
       </Button>
 

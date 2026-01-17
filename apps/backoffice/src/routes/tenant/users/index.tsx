@@ -14,7 +14,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
-  Heading,
   Paragraph,
   Button,
   Badge,
@@ -26,10 +25,8 @@ import {
   SearchIcon,
   Dropdown,
   DropdownTrigger,
-  DropdownTriggerContext,
   DropdownList,
   DropdownItem,
-  DropdownButton,
   MoreVerticalIcon,
   EditIcon,
   EmptyState,
@@ -45,7 +42,6 @@ import {
 } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 import type {
-  TenantUser,
   TenantUserRole as UserRole,
   TenantUserStatus as UserStatus,
 } from '@digilist/client-sdk';
@@ -164,7 +160,7 @@ export function TenantUsersListPage() {
           <Button
             variant="primary"
             icon={<PlusIcon aria-hidden />}
-            onClick={handleInviteUser}
+            onClick={handleInviteUser} type="button"
           >
             {t('tenantAdmin.users.inviteUser')}
           </Button>
@@ -189,7 +185,7 @@ export function TenantUsersListPage() {
               {/* Role Filter */}
               <Dropdown>
                 <DropdownTrigger asChild>
-                  <Button variant="secondary" icon={<FilterIcon aria-hidden />}>
+                  <Button variant="secondary" icon={<FilterIcon aria-hidden />} type="button">
                     {roleFilter === 'all' ? t('tenantAdmin.users.allRoles') : roleLabels[roleFilter]}
                   </Button>
                 </DropdownTrigger>
@@ -212,7 +208,7 @@ export function TenantUsersListPage() {
               {/* Status Filter */}
               <Dropdown>
                 <DropdownTrigger asChild>
-                  <Button variant="secondary" icon={<FilterIcon aria-hidden />}>
+                  <Button variant="secondary" icon={<FilterIcon aria-hidden />} type="button">
                     {statusFilter === 'all' ? t('tenantAdmin.users.allStatuses') : statusLabels[statusFilter]}
                   </Button>
                 </DropdownTrigger>
@@ -243,7 +239,7 @@ export function TenantUsersListPage() {
               title={t('tenantAdmin.users.noUsers')}
               description={t('tenantAdmin.users.noUsersDescription')}
               action={
-                <Button variant="primary" onClick={handleInviteUser}>
+                <Button variant="primary" onClick={handleInviteUser} type="button">
                   {t('tenantAdmin.users.inviteUser')}
                 </Button>
               }
@@ -293,7 +289,7 @@ export function TenantUsersListPage() {
                       <Table.Cell>
                         <Dropdown>
                           <DropdownTrigger asChild>
-                            <Button variant="tertiary" size="sm" icon={<MoreVerticalIcon aria-hidden />}>
+                            <Button variant="tertiary" size="sm" icon={<MoreVerticalIcon aria-hidden />} type="button">
                               {t('common.actions')}
                             </Button>
                           </DropdownTrigger>
@@ -338,7 +334,7 @@ export function TenantUsersListPage() {
                       variant="secondary"
                       size="sm"
                       onClick={() => setPage(p => Math.max(1, p - 1))}
-                      disabled={page === 1}
+                      disabled={page === 1} type="button"
                     >
                       {t('common.previous')}
                     </Button>
@@ -349,7 +345,7 @@ export function TenantUsersListPage() {
                       variant="secondary"
                       size="sm"
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                      disabled={page === totalPages}
+                      disabled={page === totalPages} type="button"
                     >
                       {t('common.next')}
                     </Button>

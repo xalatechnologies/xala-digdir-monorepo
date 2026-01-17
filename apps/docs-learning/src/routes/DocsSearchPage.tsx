@@ -4,7 +4,7 @@
 
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Heading, Paragraph, Textfield, Card, CardContent, SearchIcon } from '@xala/ds';
+import { Heading, Paragraph, Textfield, Card } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import styles from './DocsSearchPage.module.css';
 
@@ -51,9 +51,10 @@ export function DocsSearchPage() {
       <div className={styles.searchBox}>
         <Textfield
           type="search"
+          label={t('docs.search.label') || 'Søk'}
           placeholder={t('docs.search.placeholder') || 'Skriv for å søke...'}
           value={query}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
           className={styles.searchInput}
           autoFocus
         />
@@ -72,18 +73,16 @@ export function DocsSearchPage() {
             to={`/${result.section}/${result.slug}`}
             className={styles.resultLink}
           >
-            <Card className={styles.resultCard}>
-              <CardContent>
-                <Paragraph data-size="xs" className={styles.resultSection}>
-                  {t(`docs.sections.${result.section}.title`) || result.section}
-                </Paragraph>
-                <Heading level={3} className={styles.resultTitle}>
-                  {result.title}
-                </Heading>
-                <Paragraph data-size="sm" className={styles.resultSnippet}>
-                  {result.snippet}
-                </Paragraph>
-              </CardContent>
+            <Card className={styles.resultCard} style={{ padding: 'var(--ds-spacing-4)' }}>
+              <Paragraph data-size="xs" className={styles.resultSection}>
+                {t(`docs.sections.${result.section}.title`) || result.section}
+              </Paragraph>
+              <Heading level={3} className={styles.resultTitle}>
+                {result.title}
+              </Heading>
+              <Paragraph data-size="sm" className={styles.resultSnippet}>
+                {result.snippet}
+              </Paragraph>
             </Card>
           </Link>
         ))}

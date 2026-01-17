@@ -4,7 +4,7 @@
  * Shows pending requests with 30-day GDPR timeline tracking
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- Complex filter form */
+/* eslint-disable digdir/prefer-ds-components -- Complex filter form */
 
 import { useState, useMemo } from 'react';
 import {
@@ -156,7 +156,7 @@ export function GdprRequestsPage() {
                   fontSize: 'var(--ds-font-size-sm)',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',
-                }}
+                }} type="button"
               >
                 <span>{tab.icon}</span>
                 <span>{tab.label}</span>

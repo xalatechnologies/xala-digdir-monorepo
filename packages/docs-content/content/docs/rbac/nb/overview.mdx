@@ -1,0 +1,55 @@
+---
+title: Roller og tilgang
+description: Introduksjon til rolle-basert tilgangskontroll i Digilist.
+updatedAt: 2026-01-17
+audiences: [backoffice, saas-admin]
+roles: [org-admin, tenant-admin, saas-admin]
+featureTags: [rbac]
+order: 1
+---
+
+# Roller og tilgang
+
+Digilist bruker rollebasert tilgangskontroll (RBAC) for å styre hvem som har tilgang til hva.
+
+## Oversikt over roller
+
+| Rolle | Beskrivelse |
+|-------|-------------|
+| Sluttbruker | Kan booke lokaler og se egne bookinger |
+| Org-medlem | Kan se organisasjonens lokaler og bookinger |
+| Org-admin | Full tilgang til organisasjonens innstillinger |
+| Tenant-admin | Administrerer hele leierorganisasjonen |
+| SaaS-admin | Plattformadministrator (kun for driftsansvarlige) |
+
+## Sluttbruker
+
+Den mest grunnleggende rollen. Sluttbrukere kan:
+
+- Søke etter og booke lokaler
+- Administrere egne bookinger
+- Oppdatere egen profil
+
+## Org-medlem
+
+Et mellomtrinn for ansatte i organisasjoner:
+
+- Alt sluttbrukere kan
+- Se organisasjonens lokaler
+- Booke på vegne av organisasjonen
+
+## Org-admin
+
+Full administratortilgang for organisasjonen:
+
+- Alt org-medlemmer kan
+- Administrere medlemmer
+- Konfigurere betalingsinnstillinger
+- Se rapporter og statistikk
+
+## Hvordan tildele roller
+
+1. Gå til "Brukere" i Backoffice
+2. Finn brukeren
+3. Klikk "Endre rolle"
+4. Velg ny rolle og bekreft

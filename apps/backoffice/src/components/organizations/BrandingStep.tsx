@@ -3,7 +3,7 @@
  * Logo and color configuration for organization branding
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/require-interactive-labels -- File upload component */
+/* eslint-disable digdir/prefer-ds-components -- File upload component */
 
 import { useCallback, useState } from 'react';
 import { Stack, FormField, Paragraph, Heading, Card, Button } from '@xala/ds';

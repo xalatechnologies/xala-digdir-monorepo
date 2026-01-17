@@ -112,6 +112,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
             type="button"
             variant="primary"
             data-color="accent"
+            aria-label={t('orgAdmin.dashboard.processPending', { count: pendingItems.length })}
             onClick={() => navigate('/bookings?status=pending&scope=assigned')}
           >
             {t('orgAdmin.dashboard.processPending', { count: pendingItems.length })}
@@ -277,6 +278,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
                 type="button"
                 variant="secondary"
                 style={{ justifyContent: 'flex-start' }}
+                aria-label={t('orgAdmin.dashboard.processPendingBtn')}
                 onClick={() => navigate('/bookings?status=pending&scope=assigned')}
               >
                 <ClockIcon />
@@ -286,6 +288,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
                 type="button"
                 variant="secondary"
                 style={{ justifyContent: 'flex-start' }}
+                aria-label={t('orgAdmin.dashboard.manageBlocks')}
                 onClick={() => navigate('/blocks')}
               >
                 <CalendarIcon />
@@ -296,6 +299,7 @@ export function OrgAdminDashboardPage(): React.ReactElement {
                   type="button"
                   variant="secondary"
                   style={{ justifyContent: 'flex-start' }}
+                  aria-label={t('orgAdmin.dashboard.viewMessages')}
                   onClick={() => navigate('/messages')}
                 >
                   <MessageIcon />

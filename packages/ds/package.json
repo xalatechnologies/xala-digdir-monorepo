@@ -23,6 +23,7 @@
     "@digdir/designsystemet-css": "^1.0.0",
     "@digdir/designsystemet-react": "^1.9.0",
     "@digilist/client-sdk": "workspace:*",
+    "@sentry/react": "^8.42.0",
     "@xala/auth": "workspace:*",
     "@xala/ds-themes": "workspace:*",
     "@xala/i18n": "workspace:*",

@@ -19,14 +19,14 @@ export const TEST_CREDENTIALS = {
     email: 'user@test.com',
     token: 'demo-token-user',
     role: 'user',
-    baseUrl: 'http://localhost:5174', // Minside
+    baseUrl: 'http://localhost:5176', // Minside
   },
   admin: {
     name: 'Test Admin',
     email: 'admin@test.com',
     token: 'demo-token-admin',
     role: 'admin',
-    baseUrl: 'http://localhost:5175', // Backoffice
+    baseUrl: 'http://localhost:5177', // Backoffice
   },
 };
 

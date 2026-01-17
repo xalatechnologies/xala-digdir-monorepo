@@ -4,7 +4,7 @@
  * Overview page with section cards and quick links.
  */
 
-import { Heading, Paragraph, Card, CardContent } from '@xala/ds';
+import { Heading, Paragraph, Card } from '@xala/ds';
 import { Link } from 'react-router-dom';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
@@ -53,16 +53,14 @@ export function DocsHomePage() {
               to={`/${section}`}
               className={styles.sectionCard}
             >
-              <Card className={styles.card}>
-                <CardContent>
-                  <div className={styles.sectionIcon}>{config.icon}</div>
-                  <Heading level={3} className={styles.sectionTitle}>
-                    {t(`docs.sections.${section}.title`) || section}
-                  </Heading>
-                  <Paragraph data-size="sm" className={styles.sectionDescription}>
-                    {t(`docs.sections.${section}.description`) || `Les mer om ${section}`}
-                  </Paragraph>
-                </CardContent>
+              <Card className={styles.card} style={{ padding: 'var(--ds-spacing-4)' }}>
+                <div className={styles.sectionIcon}>{config.icon}</div>
+                <Heading level={3} className={styles.sectionTitle}>
+                  {t(`docs.sections.${section}.title`) || section}
+                </Heading>
+                <Paragraph data-size="sm" className={styles.sectionDescription}>
+                  {t(`docs.sections.${section}.description`) || `Les mer om ${section}`}
+                </Paragraph>
               </Card>
             </Link>
           );

@@ -198,6 +198,7 @@ export function DemoLoginDialog({
             <Stack direction="vertical" spacing={20}>
               {/* Name Field */}
               <Textfield
+                data-testid="demo-name"
                 label={labels.name}
                 value={formData.name}
                 onChange={(e) => handleFieldChange('name', e.target.value)}
@@ -210,6 +211,7 @@ export function DemoLoginDialog({
 
               {/* Email Field */}
               <Textfield
+                data-testid="demo-email"
                 label={labels.email}
                 type="email"
                 value={formData.email}
@@ -223,6 +225,7 @@ export function DemoLoginDialog({
 
               {/* Token Field */}
               <Textfield
+                data-testid="demo-token"
                 label={labels.token}
                 value={formData.token}
                 onChange={(e) => handleFieldChange('token', e.target.value)}
@@ -255,6 +258,7 @@ export function DemoLoginDialog({
               {cancelText}
             </Button>
             <Button
+              data-testid="demo-submit"
               type="submit"
               variant="primary"
               disabled={isLoading || !formData.name || !formData.email || !formData.token}

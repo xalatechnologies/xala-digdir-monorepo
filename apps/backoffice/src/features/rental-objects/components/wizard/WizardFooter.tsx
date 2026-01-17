@@ -42,7 +42,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
       <Button
         variant="tertiary"
         onClick={cancel}
-        disabled={isSaving}
+        disabled={isSaving} type="button"
       >
         {t('common.cancel')}
       </Button>
@@ -53,7 +53,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
         <Button
           variant="secondary"
           onClick={prevStep}
-          disabled={!canGoPrev || isSaving}
+          disabled={!canGoPrev || isSaving} type="button"
         >
           {t('wizard.goToPreviousStep')}
         </Button>
@@ -63,7 +63,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
           <Button
             variant="primary"
             onClick={nextStep}
-            disabled={!canGoNext || isSaving}
+            disabled={!canGoNext || isSaving} type="button"
           >
             {isSaving ? (
               <Stack direction="row" gap={2} align="center">
@@ -83,7 +83,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
         <Button
           variant="secondary"
           onClick={saveDraft}
-          disabled={isSaving}
+          disabled={isSaving} type="button"
         >
           {isSaving ? (
             <Stack direction="row" gap={2} align="center">
@@ -100,7 +100,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
           <Button
             variant="primary"
             onClick={publish}
-            disabled={isSaving}
+            disabled={isSaving} type="button"
           >
             {isSaving ? (
               <Stack direction="row" gap={2} align="center">

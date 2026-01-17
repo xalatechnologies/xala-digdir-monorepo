@@ -58,7 +58,7 @@ vi.mock('../../../hooks/useAuth', () => ({
 vi.mock('./steps/CategorySelector', () => ({
   CategorySelector: ({ onCategoryChange, category }: any) => (
     <div data-testid="category-selector">
-      <button onClick={() => onCategoryChange('LOKALER_OG_BANER')}>Select Category</button>
+      <button onClick={() => onCategoryChange('LOKALER_OG_BANER')} type="button">Select Category</button>
       <span>{category}</span>
     </div>
   ),
@@ -120,7 +120,7 @@ vi.mock('./steps/ReviewStep', () => ({
   ReviewStep: ({ data, onPublish }: any) => (
     <div data-testid="review-step">
       <div data-testid="review-name">{data.name}</div>
-      <button data-testid="publish-button" onClick={onPublish}>
+      <button data-testid="publish-button" onClick={onPublish} type="button">
         Publish
       </button>
     </div>
@@ -135,7 +135,7 @@ vi.mock('./WizardStepper', () => ({
           key={step.id}
           data-testid={`step-${step.id}`}
           onClick={() => onStepClick(index)}
-          aria-current={index === currentStep ? 'step' : undefined}
+          aria-current={index === currentStep ? 'step' : undefined} type="button"
         >
           {step.label}
         </button>

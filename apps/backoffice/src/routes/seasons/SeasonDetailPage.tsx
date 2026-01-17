@@ -173,14 +173,14 @@ export function SeasonDetailPage() {
             {season.status === 'draft' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm" type="button">
+                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
                     <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
                   Åpne sesong
                 </Button>
-                <Button variant="danger" data-size="sm" onClick={handleDelete} type="button">
+                <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("ui.delete")}>
                   <TrashIcon />{t("ui.delete")}</Button>
               </>
             )}
@@ -188,7 +188,7 @@ export function SeasonDetailPage() {
             {season.status === 'open' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm" type="button">
+                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
                     <EditIcon />{t("ui.edit")}</Button>
                 </Link>
                 <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">

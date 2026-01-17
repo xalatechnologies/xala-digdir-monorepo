@@ -35,8 +35,12 @@ export function LoginOption({
   disabled = false,
   className,
 }: LoginOptionProps): React.ReactElement {
+  // Generate testid from title (e.g., "Demo Innlogging" -> "login-option-demo-innlogging")
+  const testId = `login-option-${title.toLowerCase().replace(/\s+/g, '-')}`;
+
   return (
     <Button
+      data-testid={testId}
       type="button"
       variant="secondary"
       onClick={onClick}

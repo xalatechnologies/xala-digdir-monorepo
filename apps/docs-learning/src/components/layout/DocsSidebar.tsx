@@ -16,7 +16,7 @@ import {
   SettingsIcon,
   MapIcon,
   ExternalLinkIcon,
-  HelpIcon,
+  InfoIcon,
   BookOpenIcon,
   ArrowRightIcon,
   UsersIcon,

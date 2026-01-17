@@ -2,7 +2,7 @@
  * Docs Releases Page - Placeholder for release notes
  */
 
-import { Heading, Paragraph, Card, CardContent, Badge } from '@xala/ds';
+import { Heading, Paragraph, Card, Badge } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import styles from './DocsReleasesPage.module.css';
 
@@ -19,32 +19,28 @@ export function DocsReleasesPage() {
       </header>
 
       <div className={styles.releases}>
-        <Card className={styles.releaseCard}>
-          <CardContent>
-            <div className={styles.releaseHeader}>
-              <Heading level={3}>v2.5.0</Heading>
-              <Badge data-color="accent">Nyeste</Badge>
-            </div>
-            <Paragraph data-size="sm" className={styles.releaseDate}>15. januar 2026</Paragraph>
-            <ul className={styles.releaseList}>
-              <li>✨ Ny dokumentasjonsplattform</li>
-              <li>🔧 Forbedret søkefunksjon</li>
-              <li>🐛 Diverse feilrettinger</li>
-            </ul>
-          </CardContent>
+        <Card className={styles.releaseCard} style={{ padding: 'var(--ds-spacing-4)' }}>
+          <div className={styles.releaseHeader}>
+            <Heading level={3}>v2.5.0</Heading>
+            <Badge data-color="accent">Nyeste</Badge>
+          </div>
+          <Paragraph data-size="sm" className={styles.releaseDate}>15. januar 2026</Paragraph>
+          <ul className={styles.releaseList}>
+            <li>✨ Ny dokumentasjonsplattform</li>
+            <li>🔧 Forbedret søkefunksjon</li>
+            <li>🐛 Diverse feilrettinger</li>
+          </ul>
         </Card>
 
-        <Card className={styles.releaseCard}>
-          <CardContent>
-            <div className={styles.releaseHeader}>
-              <Heading level={3}>v2.4.0</Heading>
-            </div>
-            <Paragraph data-size="sm" className={styles.releaseDate}>1. januar 2026</Paragraph>
-            <ul className={styles.releaseList}>
-              <li>📊 Ny rapportmodul</li>
-              <li>🔐 Forbedret sikkerhet</li>
-            </ul>
-          </CardContent>
+        <Card className={styles.releaseCard} style={{ padding: 'var(--ds-spacing-4)' }}>
+          <div className={styles.releaseHeader}>
+            <Heading level={3}>v2.4.0</Heading>
+          </div>
+          <Paragraph data-size="sm" className={styles.releaseDate}>1. januar 2026</Paragraph>
+          <ul className={styles.releaseList}>
+            <li>📊 Ny rapportmodul</li>
+            <li>🔐 Forbedret sikkerhet</li>
+          </ul>
         </Card>
       </div>
     </div>

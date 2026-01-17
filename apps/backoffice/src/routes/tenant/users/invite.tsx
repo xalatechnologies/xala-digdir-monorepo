@@ -159,7 +159,7 @@ export function TenantUserInvitePage() {
           <Button
             variant="tertiary"
             icon={<ArrowLeftIcon aria-hidden />}
-            onClick={handleCancel}
+            onClick={handleCancel} type="button"
           >
             {t('common.back')}
           </Button>
