@@ -298,8 +298,8 @@ async complete(id: string, version?: number): Promise<Booking> {
         return true;
       }
 
-      // For case handlers (saksbehandler), check case_handler_scopes
-      if (user.role === 'saksbehandler') {
+      // For case handlers (saksbehandler) and org members, check case_handler_scopes
+      if (user.role === 'saksbehandler' || user.role === 'org_member') {
         const scopes = await db
           .select()
           .from(caseHandlerScopes)
@@ -1136,6 +1136,15 @@ async complete(id: string, version?: number): Promise<Booking> {
    */
   async approve(id: string, userId: string, reason?: string): Promise<Booking> {
     const booking = await this.repository.findByIdOrFail(id);
+    
+    // Enforce case handler / org_member scope
+    const hasScope = await this.hasCaseHandlerScope(userId, booking.rentalObjectId, booking.tenantId);
+    if (!hasScope) {
+      throw new ForbiddenError(
+        'You do not have scope to approve bookings for this rental object. ' +
+        'Case handlers and org members must be assigned scope for specific rental objects.'
+      );
+    }
     
     // Update status to approved
     const updated = await this.repository.update(id, {

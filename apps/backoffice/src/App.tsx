@@ -62,6 +62,17 @@ const AdminReportsPage = React.lazy(() => import('./routes/admin-reports').then(
 const TenantSettingsPage = React.lazy(() => import('./routes/tenant/settings').then(m => ({ default: m.TenantSettingsPage })));
 const TenantBrandingPage = React.lazy(() => import('./routes/tenant/branding').then(m => ({ default: m.TenantBrandingPage })));
 const TenantAuditLogPage = React.lazy(() => import('./routes/tenant/audit-log').then(m => ({ default: m.TenantAuditLogPage })));
+const TenantUsersListPage = React.lazy(() => import('./routes/tenant/users').then(m => ({ default: m.TenantUsersListPage })));
+const TenantUserInvitePage = React.lazy(() => import('./routes/tenant/users/invite').then(m => ({ default: m.TenantUserInvitePage })));
+const OrganizationRentalObjectsPage = React.lazy(() => import('./routes/organizations/rental-objects').then(m => ({ default: m.OrganizationRentalObjectsPage })));
+
+// OrgAdmin pages
+const OrgAdminDashboardPage = React.lazy(() => import('./routes/org-admin').then(m => ({ default: m.OrgAdminDashboardPage })));
+
+// Blocks pages
+const BlocksListPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlocksListPage })));
+const BlockDetailPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlockDetailPage })));
+const BlockFormPage = React.lazy(() => import('./routes/blocks').then(m => ({ default: m.BlockFormPage })));
 
 // Initialize Sentry error tracking before React rendering
 initSentry();
@@ -205,6 +216,14 @@ function AppContent() {
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <PermissionAssignmentPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="organizations/:id/rental-objects"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <OrganizationRentalObjectsPage />
                   </ProtectedRoute>
                 }
               />
@@ -360,6 +379,38 @@ function AppContent() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="tenant/users"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantUsersListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tenant/users/invite"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <TenantUserInvitePage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* OrgAdmin routes */}
+              <Route
+                path="org-admin/dashboard"
+                element={
+                  <ProtectedRoute requiredRole="org_admin">
+                    <OrgAdminDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Blocks routes - accessible to org_admin, org_member, case_handler, and admin */}
+              <Route path="blocks" element={<BlocksListPage />} />
+              <Route path="blocks/new" element={<BlockFormPage />} />
+              <Route path="blocks/:id" element={<BlockDetailPage />} />
+              <Route path="blocks/:id/edit" element={<BlockFormPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

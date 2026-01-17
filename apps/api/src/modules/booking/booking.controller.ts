@@ -247,6 +247,32 @@ export class BookingController {
   }
 
   /**
+   * POST /api/bookings/recurring/preview - Preview recurring booking with conflicts
+   * Returns list of occurrences with conflict status and alternative suggestions
+   * PRD: W-5 Recurring conflicts + alternatives
+   */
+  @Post('/recurring/preview')
+  async previewRecurring(request: TenantRequest, reply: FastifyReply) {
+    const tenantId = getTenantId(request);
+    const selection = request.body as any;
+
+    if (!selection.rentalObjectId || !selection.startTime) {
+      reply.code(400);
+      return {
+        type: 'https://api.digilist.no/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'rentalObjectId and startTime are required',
+      };
+    }
+
+    // Delegate to existing service method with full conflict detection
+    const preview = await this.service.previewRecurring(tenantId, selection);
+    
+    return { data: preview };
+  }
+
+  /**
    * GET /api/bookings/:id/receipt - Get booking receipt/bilag
    * KRAV-ADM-07: Salgsbilag iht bokføringskrav
    */

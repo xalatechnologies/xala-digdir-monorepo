@@ -15,6 +15,7 @@ import {
   ClockIcon,
   CheckCircleIcon,
   ShieldIcon,
+  BlockIcon,
 } from '@xala/ds';
 import { useAuth } from '@xala/auth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
@@ -208,11 +209,110 @@ export function Sidebar() {
   const pendingGdprCount = pendingGdprData?.meta?.total ?? pendingGdprData?.data?.length ?? 0;
 
   const navSections: NavSection[] = [
+    // [Overview] - Dashboard (always visible to authenticated users)
     {
       items: [
-        { name: 'Dashboard', description: 'Oversikt og statistikk', href: '/', icon: <HomeIcon /> },
+        { 
+          name: 'Dashboard', 
+          description: 'Oversikt og statistikk', 
+          href: '/', 
+          icon: <HomeIcon />,
+          capability: 'CAP_NAV_DASHBOARD',
+        },
       ],
     },
+    // [Work] - Bookings, Calendar (org_member scope)
+    {
+      title: 'Arbeid',
+      items: [
+        { 
+          name: 'Bookinger', 
+          description: 'Forespørsler og reservasjoner', 
+          href: '/bookings', 
+          icon: <BookOpenIcon />, 
+          badge: 20, 
+          badgeColor: 'accent',
+          capability: 'CAP_NAV_BOOKINGS',
+        },
+        { 
+          name: 'Kalender', 
+          description: 'Visuell oversikt', 
+          href: '/calendar', 
+          icon: <CalendarIcon />,
+          capability: 'CAP_NAV_CALENDAR',
+        },
+      ],
+    },
+    // [Communication] - Messages (feature-gated for org_member)
+    {
+      title: 'Kommunikasjon',
+      items: [
+        { 
+          name: 'Meldinger', 
+          description: 'Samtaler med brukere', 
+          href: '/messages', 
+          icon: <MessageIcon />, 
+          badge: 3, 
+          badgeColor: 'danger',
+          capability: 'CAP_NAV_MESSAGES',
+        },
+      ],
+    },
+    // [Economy] - Invoices (feature-gated for org_member with økonomi role)
+    {
+      title: 'Økonomi',
+      items: [
+        { 
+          name: 'Fakturaer', 
+          description: 'Fakturaoversikt', 
+          href: '/economy/invoices', 
+          icon: <ChartIcon />,
+          capability: 'CAP_NAV_ECONOMY',
+        },
+      ],
+    },
+    // [Reports] - Reports/Exports (feature-gated)
+    {
+      title: 'Rapporter',
+      items: [
+        { 
+          name: 'Rapporter', 
+          description: 'Statistikk og eksport', 
+          href: '/reports', 
+          icon: <ChartIcon />,
+          capability: 'CAP_NAV_REPORTS',
+        },
+      ],
+    },
+    // [Help] - Help & Support (always visible to org_member)
+    {
+      title: 'Hjelp',
+      items: [
+        { 
+          name: 'Hjelp og støtte', 
+          description: 'Veiledninger og FAQ', 
+          href: '/help', 
+          icon: <BookOpenIcon />,
+          capability: 'CAP_NAV_HELP',
+        },
+      ],
+    },
+    // === ORG ADMIN SECTION ===
+    // Visible to org_admin and org_member roles for managing assigned objects
+    {
+      title: 'Organisasjon',
+      items: [
+        {
+          name: 'Blokkeringer',
+          description: 'Sperringer og vedlikehold',
+          href: '/blocks',
+          icon: <BlockIcon />,
+          capability: 'CAP_NAV_BLOCKS',
+        },
+      ],
+    },
+    // === ADMIN-ONLY SECTIONS BELOW ===
+    // These sections are NOT visible to org_member
     {
       title: 'Administrasjon',
       items: [
@@ -221,17 +321,15 @@ export function Sidebar() {
           description: 'Lokaler, utstyr, kjøretøy og opplevelser',
           href: '/rental-objects',
           icon: <BuildingIcon />,
-          capability: 'rental_objects:read'
+          capability: 'CAP_LISTING_EDIT',
         },
-        { name: 'Kalender', description: 'Visuell oversikt', href: '/calendar', icon: <CalendarIcon /> },
-        { name: 'Bookinger', description: 'Forespørsler og reservasjoner', href: '/bookings', icon: <BookOpenIcon />, badge: 20, badgeColor: 'accent' },
-        { name: 'Sesongleie', description: 'Faste avtaler', href: '/seasons', icon: <RepeatIcon /> },
-      ],
-    },
-    {
-      title: 'Kommunikasjon',
-      items: [
-        { name: 'Meldinger', description: 'Samtaler med brukere', href: '/messages', icon: <MessageIcon />, badge: 3, badgeColor: 'danger' },
+        {
+          name: 'Sesongleie',
+          description: 'Faste avtaler',
+          href: '/seasons',
+          icon: <RepeatIcon />,
+          capability: 'CAP_BOOKING_MANAGE',
+        },
       ],
     },
     {
@@ -239,12 +337,6 @@ export function Sidebar() {
       items: [
         { name: 'Organisasjoner', description: 'Administrer organisasjoner', href: '/organizations', icon: <OrganizationIcon />, capability: 'CAP_ORG_ADMIN' },
         { name: 'Brukere', description: 'Administrer brukere', href: '/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
-      ],
-    },
-    {
-      title: 'Innsikt',
-      items: [
-        { name: 'Rapporter', description: 'Statistikk og eksport', href: '/reports', icon: <ChartIcon /> },
       ],
     },
     {
@@ -260,27 +352,27 @@ export function Sidebar() {
     {
       title: 'Admin',
       items: [
-        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, roles: ['admin'] },
-        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, roles: ['admin'] },
-        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, roles: ['admin'] },
-        { name: 'Rapporter', description: 'Statistikk og analyser', href: '/reports', icon: <ChartIcon />, roles: ['admin'] },
+        { name: 'Nytt utleieobjekt', description: 'Opprett lokale', href: '/rental-objects/wizard', icon: <BuildingIcon />, capability: 'CAP_LISTING_CREATE' },
+        { name: 'Prisregler', description: 'Administrer priser', href: '/pricing-rules', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: 'Brukeradmin', description: 'Administrer tilgang', href: '/users-management', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
       ],
     },
     {
       title: 'Tenant',
       items: [
-        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, roles: ['admin'] },
-        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, roles: ['admin'] },
-        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, roles: ['admin'] },
+        { name: t('tenantAdmin.nav.users'), description: t('tenantAdmin.nav.usersDesc'), href: '/tenant/users', icon: <UsersIcon />, capability: 'CAP_USER_ADMIN' },
+        { name: 'Plattforminnstillinger', description: 'Konfigurer tenant', href: '/tenant/settings', icon: <SettingsIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: 'Merkevare', description: 'Logo og farger', href: '/tenant/branding', icon: <BuildingIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: 'Systemlogg', description: 'Alle plattformhendelser', href: '/tenant/audit-log', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
       ],
     },
     {
       title: 'System',
       items: [
-        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', roles: ['admin'] },
-        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, roles: ['admin'] },
-        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, roles: ['admin'] },
-        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, roles: ['admin'] },
+        { name: 'GDPR-forespørsler', description: 'Behandle personvernforespørsler', href: '/gdpr-requests', icon: <ShieldIcon />, badge: pendingGdprCount, badgeColor: 'warning', capability: 'CAP_SETTINGS_ADMIN' },
+        { name: 'Anmeldelser', description: 'Moderer anmeldelser', href: '/reviews/moderation', icon: <CheckCircleIcon />, capability: 'CAP_SETTINGS_ADMIN' },
+        { name: 'Audit Log', description: 'Systemhendelser', href: '/audit', icon: <ClockIcon />, capability: 'CAP_AUDIT_VIEW' },
+        { name: t("ui.settings"), description: 'Systemkonfigurasjon', href: '/settings', icon: <SettingsIcon />, capability: 'CAP_SYSTEM_CONFIG' },
       ],
     },
   ];

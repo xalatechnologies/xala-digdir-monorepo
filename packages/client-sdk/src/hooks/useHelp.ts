@@ -10,6 +10,7 @@ import { helpService } from '../services/help.service';
 export const helpKeys = {
   all: ['help'] as const,
   faq: (category?: string) => [...helpKeys.all, 'faq', category] as const,
+  toc: (app: string, role: string) => [...helpKeys.all, 'toc', app, role] as const,
   guides: (role: string) => [...helpKeys.all, 'guides', role] as const,
   training: () => [...helpKeys.all, 'training'] as const,
   tooltips: () => [...helpKeys.all, 'tooltips'] as const,
@@ -24,6 +25,19 @@ export function useFaq(category?: string) {
     queryKey: helpKeys.faq(category),
     queryFn: () => helpService.getFaq(category),
     staleTime: 15 * 60 * 1000, // 15 minutes - FAQs are relatively static
+  });
+}
+
+/**
+ * Get Table of Contents for help pages (right-side TOC)
+ * @param app Application context (minside, backoffice, web)
+ * @param role User role for filtering admin sections
+ */
+export function useHelpToc(app = 'minside', role = 'user') {
+  return useQuery({
+    queryKey: helpKeys.toc(app, role),
+    queryFn: () => helpService.getToc(app, role),
+    staleTime: 30 * 60 * 1000, // 30 minutes - TOC is very static
   });
 }
 

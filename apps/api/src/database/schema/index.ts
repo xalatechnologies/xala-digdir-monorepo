@@ -490,6 +490,39 @@ export const usage = saasSchema.table('usage', {
 }));
 
 // ============================================================================
+// Blocks (Calendar Blocking for Rental Objects)
+// ============================================================================
+
+export const blocks = domainSchema.table('blocks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  title: varchar('title', { length: 255 }).notNull(),
+  reason: text('reason'),
+  startDate: timestamp('start_date', { withTimezone: true }).notNull(),
+  endDate: timestamp('end_date', { withTimezone: true }).notNull(),
+  allDay: boolean('all_day').notNull().default(false),
+  recurring: boolean('recurring').notNull().default(false),
+  recurrenceRule: text('recurrence_rule'),
+  visibility: varchar('visibility', { length: 20 }).notNull().default('public'),
+  status: varchar('status', { length: 50 }).notNull().default('active'),
+  createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('blocks_tenant_idx').on(table.tenantId),
+  rentalObjectIdx: index('blocks_rental_object_idx').on(table.rentalObjectId),
+  timeRangeIdx: index('blocks_time_range_idx').on(table.startDate, table.endDate),
+  statusIdx: index('blocks_status_idx').on(table.status),
+  tenantRentalObjectTimeIdx: index('blocks_tenant_ro_time_idx').on(
+    table.tenantId,
+    table.rentalObjectId,
+    table.startDate,
+    table.endDate
+  ),
+}));
+
+// ============================================================================
 // Allocations (Calendar Events, Time Blocking)
 // ============================================================================
 
@@ -620,10 +653,18 @@ export const brandingVersions = platformSchema.table('branding_versions', {
   statusIdx: index('branding_versions_status_idx').on(table.status),
   tenantVersionUnique: unique('branding_versions_tenant_version_unique').on(table.tenantId, table.version),
 }));
+// ============================================================================
 // GDPR Requests
 // ============================================================================
 
 export { gdprRequests } from './gdpr-requests';
+
+// ============================================================================
+// Notification Preferences
+// ============================================================================
+
+export { notificationPreferences } from './notification-preferences';
+export type { NotificationPreference, NewNotificationPreference } from './notification-preferences';
 
 // ============================================================================
 // Type Exports
@@ -659,6 +700,8 @@ export type Incident = typeof incidents.$inferSelect;
 export type NewIncident = typeof incidents.$inferInsert;
 export type Usage = typeof usage.$inferSelect;
 export type NewUsage = typeof usage.$inferInsert;
+export type Block = typeof blocks.$inferSelect;
+export type NewBlock = typeof blocks.$inferInsert;
 export type Allocation = typeof allocations.$inferSelect;
 export type NewAllocation = typeof allocations.$inferInsert;
 export type SeasonalLease = typeof seasonalLeases.$inferSelect;

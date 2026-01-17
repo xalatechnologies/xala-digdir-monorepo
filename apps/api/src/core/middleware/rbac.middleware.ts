@@ -304,6 +304,89 @@ export const requireTenantContext: preHandlerHookHandler = async function (
 };
 
 /**
+ * Middleware: Require user has assigned scope for the rental object
+ * 
+ * This middleware enforces that org_member users can only access resources
+ * (bookings, calendar entries, etc.) for rental objects they are assigned to.
+ * 
+ * Usage:
+ * ```typescript
+ * fastify.get('/api/bookings/:id', {
+ *   preHandler: [requireAssignedScope('rentalObjectId')],
+ *   handler: async (request, reply) => { ... }
+ * });
+ * ```
+ * 
+ * @param rentalObjectIdParam - Name of the param/body field containing rental object ID
+ * @param skipForRoles - Roles that bypass scope check (default: admin, super_admin)
+ */
+export function requireAssignedScope(
+  rentalObjectIdParam: string = 'rentalObjectId',
+  skipForRoles: SystemRole[] = ['admin', 'super_admin']
+): preHandlerHookHandler {
+  return async function (request: RBACRequest, reply: FastifyReply) {
+    const userId = getUserId(request);
+    const tenantId = getTenantId(request);
+
+    if (!userId) {
+      throw new UnauthorizedError('Authentication required');
+    }
+
+    if (!tenantId) {
+      throw new ForbiddenError('Tenant context required');
+    }
+
+    const user = await fetchUser(userId);
+
+    if (!user) {
+      throw new UnauthorizedError('User not found');
+    }
+
+    // Attach user to request
+    (request as any).user = user;
+
+    // Admin roles bypass scope checks
+    if (skipForRoles.includes(user.role as SystemRole)) {
+      return;
+    }
+
+    // Extract rental object ID from params, query, or body
+    const params = request.params as Record<string, string>;
+    const query = request.query as Record<string, string>;
+    const body = request.body as Record<string, string> | undefined;
+    
+    const rentalObjectId = 
+      params?.[rentalObjectIdParam] || 
+      query?.[rentalObjectIdParam] || 
+      body?.[rentalObjectIdParam];
+
+    if (!rentalObjectId) {
+      // If no rental object ID is provided, allow the request
+      // (for list endpoints, filtering should happen at the service level)
+      return;
+    }
+
+    // Import case handler scope service lazily to avoid circular dependencies
+    const { getCaseHandlerScopeService } = await import(
+      '../../modules/case-handler-scope/case-handler-scope.service'
+    );
+    
+    const scopeService = getCaseHandlerScopeService();
+    const hasScope = await scopeService.hasScope(userId, rentalObjectId, tenantId);
+
+    if (!hasScope) {
+      throw new ForbiddenError(
+        'Access denied. You do not have permission to access this rental object.'
+      );
+    }
+
+    // Attach scope info to request for downstream use
+    (request as any).hasAssignedScope = true;
+    (request as any).scopedRentalObjectId = rentalObjectId;
+  };
+}
+
+/**
  * Utility exports - re-exported from shared permission-matrix module
  */
 export const getPermissionsForRole = getPermissionsForRoleUtil;
@@ -311,3 +394,4 @@ export const hasPermission = hasPermissionUtil;
 
 // Export permission matrix for use in other modules
 export { PERMISSION_MATRIX };
+

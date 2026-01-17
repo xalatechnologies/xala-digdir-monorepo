@@ -27,6 +27,7 @@ import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
 import { PrivacyPage } from './routes/privacy';
+import { FavoritesPage } from './routes/favorites';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -147,6 +148,7 @@ function AppWithTheme() {
               <Route path="billing" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><BillingPage /></ProtectedRoute>} />
               <Route path="calendar" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><CalendarPage /></ProtectedRoute>} />
               <Route path="messages" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><MessagesPage /></ProtectedRoute>} />
+              <Route path="favorites" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><FavoritesPage /></ProtectedRoute>} />
 
               {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />

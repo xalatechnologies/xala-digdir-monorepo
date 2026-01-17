@@ -125,6 +125,26 @@ export interface ContactResponse {
 }
 
 // =============================================================================
+// TOC Types
+// =============================================================================
+
+export interface HelpTocNode {
+  id: string;
+  title: string;
+  slug?: string;
+  children?: HelpTocNode[];
+}
+
+export interface HelpTocResponse {
+  data: HelpTocNode;
+  meta: {
+    app: string;
+    role: string;
+    totalSections: number;
+  };
+}
+
+// =============================================================================
 // Help Service
 // =============================================================================
 
@@ -178,6 +198,15 @@ class HelpService {
    */
   async submitContact(data: ContactRequest): Promise<ContactResponse> {
     return getClient().post<ContactResponse>(`${this.basePath}/contact`, data);
+  }
+
+  /**
+   * Get Table of Contents for help pages (right-side TOC)
+   * @param app Application context (minside, backoffice, web)
+   * @param role User role for filtering admin sections
+   */
+  async getToc(app = 'minside', role = 'user'): Promise<HelpTocResponse> {
+    return getClient().get<HelpTocResponse>(`${this.basePath}/toc?app=${app}&role=${role}`);
   }
 }
 

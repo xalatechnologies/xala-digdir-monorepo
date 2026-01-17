@@ -179,3 +179,10 @@ export type {
   UpdateModuleDTO,
   FeatureDisabledError,
 } from './modules.service';
+
+// Org Dashboard - For org_admin/org_member roles
+export { orgDashboardService } from './org-dashboard.service';
+
+// Blocks - Calendar blocks management
+export { blocksService } from './blocks.service';
+export type { BlockQueryParams, BlockListResponse } from './blocks.service';

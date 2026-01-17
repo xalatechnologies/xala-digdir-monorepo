@@ -259,12 +259,23 @@ export {
 export {
   blockKeys,
   useBlocks,
+  useAssignedBlocks,
   useBlock,
   useCreateBlock,
   useUpdateBlock,
   useDeleteBlock,
   useCheckConflicts,
 } from './use-blocks';
+
+// Org Dashboard hooks (for org_admin/org_member)
+export {
+  orgDashboardKeys,
+  useOrgDashboardStats,
+  useOrgPendingItems,
+  useOrgCalendarPreview,
+  useOrgAlerts,
+  useAssignedRentalObjects,
+} from './use-org-dashboard';
 
 // Seasonal Lease hooks
 export {
@@ -295,6 +306,23 @@ export {
   useApproveReview,
   useRejectReview,
 } from './use-reviews';
+
+// Favorites hooks
+export {
+  useFavorites,
+  useFavorite,
+  useIsFavorited,
+  useFavoriteCount,
+  useAddFavorite,
+  useUpdateFavorite,
+  useRemoveFavorite,
+  useRemoveFavoriteByObjectId,
+  useToggleFavorite,
+  useBulkAddFavorites,
+  useBulkRemoveFavorites,
+  useFavoritedIds,
+  useAreFavorited,
+} from './use-favorites';
 
 // Report & Dashboard hooks
 export {

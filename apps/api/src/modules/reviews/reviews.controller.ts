@@ -373,6 +373,121 @@ export class ReviewsController {
       message: 'Review deleted successfully',
     };
   }
+
+  // ===================================================================
+  // MODERATION ENDPOINTS
+  // ===================================================================
+
+  /**
+   * GET /api/reviews/moderation/pending - Get pending reviews for moderation
+   */
+  @Get('/moderation/pending')
+  async getPendingReviews(request: TenantRequest, reply: FastifyReply) {
+    const pending = mockReviews.filter(r => r.status === 'pending');
+    
+    return {
+      data: pending,
+      meta: {
+        total: pending.length,
+        oldest: pending.length > 0 ? pending[pending.length - 1].createdAt : null,
+      },
+    };
+  }
+
+  /**
+   * POST /api/reviews/:id/approve - Approve a review
+   */
+  @Post('/:id/approve')
+  async approveReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Review Not Found',
+        status: 404,
+      };
+    }
+
+    const updatedReview = {
+      ...review,
+      status: 'approved',
+      moderatedAt: new Date().toISOString(),
+      moderatedBy: request.userId || 'admin',
+    };
+
+    return { data: updatedReview };
+  }
+
+  /**
+   * POST /api/reviews/:id/reject - Reject a review
+   */
+  @Post('/:id/reject')
+  async rejectReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const { reason } = request.body as { reason?: string };
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Review Not Found',
+        status: 404,
+      };
+    }
+
+    if (!reason) {
+      reply.code(400);
+      return {
+        type: 'https://api.digilist.no/errors/validation-error',
+        title: 'Validation Error',
+        status: 400,
+        detail: 'Rejection reason is required',
+      };
+    }
+
+    const updatedReview = {
+      ...review,
+      status: 'rejected',
+      rejectionReason: reason,
+      moderatedAt: new Date().toISOString(),
+      moderatedBy: request.userId || 'admin',
+    };
+
+    return { data: updatedReview };
+  }
+
+  /**
+   * POST /api/reviews/:id/flag - Flag a review for attention
+   */
+  @Post('/:id/flag')
+  async flagReview(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as any;
+    const { reason } = request.body as { reason?: string };
+    const review = mockReviews.find(r => r.id === id);
+
+    if (!review) {
+      reply.code(404);
+      return {
+        type: 'https://api.digilist.no/errors/not-found',
+        title: 'Review Not Found',
+        status: 404,
+      };
+    }
+
+    const updatedReview = {
+      ...review,
+      flagged: true,
+      flagReason: reason,
+      flaggedAt: new Date().toISOString(),
+      flaggedBy: request.userId || 'anonymous',
+    };
+
+    return { data: updatedReview };
+  }
 }
 
 // Backward compatibility alias (deprecated - use ReviewsController instead)

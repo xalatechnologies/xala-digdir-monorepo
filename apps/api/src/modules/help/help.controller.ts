@@ -95,6 +95,96 @@ export class HelpController {
   }
 
   /**
+   * GET /api/help/toc - Get Table of Contents for help pages
+   * Returns hierarchical structure for right-side TOC navigation
+   */
+  @Get('/toc')
+  async getTableOfContents(request: TenantRequest, reply: FastifyReply) {
+    const { app = 'minside', role = 'user' } = request.query as any;
+
+    // Define TOC structure per app and role
+    const toc = {
+      id: 'help-root',
+      title: 'Hjelp og støtte',
+      children: [
+        {
+          id: 'getting-started',
+          title: 'Kom i gang',
+          slug: 'getting-started',
+          children: [
+            { id: 'login', title: 'Innlogging', slug: 'getting-started/login' },
+            { id: 'navigation', title: 'Navigasjon', slug: 'getting-started/navigation' },
+            { id: 'profile', title: 'Min profil', slug: 'getting-started/profile' },
+          ],
+        },
+        {
+          id: 'booking',
+          title: 'Booking',
+          slug: 'booking',
+          children: [
+            { id: 'search', title: 'Søk og finn lokaler', slug: 'booking/search' },
+            { id: 'create-booking', title: 'Opprett booking', slug: 'booking/create' },
+            { id: 'my-bookings', title: 'Mine bookinger', slug: 'booking/my-bookings' },
+            { id: 'cancel', title: 'Kansellering', slug: 'booking/cancel' },
+          ],
+        },
+        {
+          id: 'payment',
+          title: 'Betaling',
+          slug: 'payment',
+          children: [
+            { id: 'methods', title: 'Betalingsmetoder', slug: 'payment/methods' },
+            { id: 'invoices', title: 'Fakturaer', slug: 'payment/invoices' },
+            { id: 'refunds', title: 'Refusjoner', slug: 'payment/refunds' },
+          ],
+        },
+        {
+          id: 'seasonal',
+          title: 'Sesongleie',
+          slug: 'seasonal',
+          children: [
+            { id: 'apply', title: 'Søk om sesongleie', slug: 'seasonal/apply' },
+            { id: 'status', title: 'Søknadsstatus', slug: 'seasonal/status' },
+          ],
+        },
+        {
+          id: 'support',
+          title: 'Kontakt og støtte',
+          slug: 'support',
+          children: [
+            { id: 'faq', title: 'Ofte stilte spørsmål', slug: 'support/faq' },
+            { id: 'contact', title: 'Kontakt oss', slug: 'support/contact' },
+          ],
+        },
+      ],
+    };
+
+    // Filter TOC based on role (admin gets additional sections)
+    if (role === 'admin' || role === 'kommune_admin') {
+      toc.children.push({
+        id: 'admin',
+        title: 'Administrasjon',
+        slug: 'admin',
+        children: [
+          { id: 'manage-objects', title: 'Administrer lokaler', slug: 'admin/objects' },
+          { id: 'approvals', title: 'Godkjenninger', slug: 'admin/approvals' },
+          { id: 'users', title: 'Brukere', slug: 'admin/users' },
+          { id: 'reports', title: 'Rapporter', slug: 'admin/reports' },
+        ],
+      });
+    }
+
+    return {
+      data: toc,
+      meta: {
+        app,
+        role,
+        totalSections: toc.children.length,
+      },
+    };
+  }
+
+  /**
    * GET /api/help/guides - Get user guides/tutorials
    */
   @Get('/guides')

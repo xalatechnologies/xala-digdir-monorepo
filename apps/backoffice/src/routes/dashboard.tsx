@@ -20,6 +20,8 @@ import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentAc
 import { useT, useLocale } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useNavigate } from 'react-router-dom';
+import { useBackofficeRole } from '../hooks/useBackofficeRole';
+import { OrgMemberDashboard } from '../components/dashboard/OrgMemberDashboard';
 
 // Map activity type to activity status
 function mapActivityTypeToStatus(type: string): ActivityStatus {
