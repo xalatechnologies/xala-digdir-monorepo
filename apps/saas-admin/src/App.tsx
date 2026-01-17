@@ -1,18 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DesignsystemetProvider, ErrorBoundary, Heading, Paragraph } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
+import { I18nProvider, useT } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage } from './routes';
+import { LoginPage, TenantsListPage, TenantDetailPage, PlansListPage, AISeedGeneratorPage } from './routes';
 
 function DashboardPage() {
+  const t = useT();
   return (
     <div>
-      <Heading level={1} data-size="lg">SaaS Admin Dashboard</Heading>
-      <Paragraph>Welcome to the Digilist SaaS Administration Portal.</Paragraph>
-      <Paragraph>This application is used for platform-wide tenant management.</Paragraph>
+      <Heading level={1} data-size="lg">{t('saasAdmin.dashboard.title')}</Heading>
+      <Paragraph>{t('saasAdmin.dashboard.welcome')}</Paragraph>
+      <Paragraph>{t('saasAdmin.dashboard.description')}</Paragraph>
     </div>
   );
 }
@@ -43,6 +44,7 @@ export function App() {
                     <Route path="/tenants" element={<TenantsListPage />} />
                     <Route path="/tenants/:id" element={<TenantDetailPage />} />
                     <Route path="/plans" element={<PlansListPage />} />
+                    <Route path="/ai-seeds" element={<AISeedGeneratorPage />} />
                   </Route>
                 </Routes>
               </AuthProvider>

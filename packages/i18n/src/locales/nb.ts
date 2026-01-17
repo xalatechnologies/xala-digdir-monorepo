@@ -767,6 +767,8 @@ export const nb: Record<string, string> = {
   // SaaS Admin Dashboard
   'saasAdmin.dashboard.title': 'Plattformoversikt',
   'saasAdmin.dashboard.subtitle': 'Oversikt over plattformmetrikker og helse',
+  'saasAdmin.dashboard.welcome': 'Velkommen til Digilist SaaS-administrasjonspanelet.',
+  'saasAdmin.dashboard.description': 'Denne applikasjonen brukes til plattformomfattende leietakeradministrasjon.',
   'saasAdmin.dashboard.totalTenants': 'Totalt leietakere',
   'saasAdmin.dashboard.activeTenants': 'Aktive leietakere',
   'saasAdmin.dashboard.suspendedTenants': 'Suspenderte leietakere',

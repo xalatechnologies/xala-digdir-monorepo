@@ -16,6 +16,7 @@ import {
   ShieldIcon,
   ClockIcon,
   UsersIcon,
+  SparklesIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '@xala/auth';
@@ -150,6 +151,13 @@ export function Sidebar() {
     {
       title: t('saasAdmin.nav.sections.system'),
       items: [
+        {
+          name: '🤖 AI Seed Generator',
+          description: 'Generate production seed data with AI',
+          href: '/ai-seeds',
+          icon: <SparklesIcon />,
+          roles: ['SAAS_SUPER_ADMIN'],
+        },
         {
           name: t('saasAdmin.nav.auditLog'),
           description: t('saasAdmin.nav.auditLogDesc'),

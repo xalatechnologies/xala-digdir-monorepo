@@ -733,6 +733,8 @@ export const en: Record<string, string> = {
   // SaaS Admin - Dashboard
   'saasAdmin.dashboard.title': 'Platform Overview',
   'saasAdmin.dashboard.subtitle': 'Monitor platform health and tenant activity.',
+  'saasAdmin.dashboard.welcome': 'Welcome to the Digilist SaaS Administration Portal.',
+  'saasAdmin.dashboard.description': 'This application is used for platform-wide tenant management.',
   'saasAdmin.dashboard.totalTenants': 'Total tenants',
   'saasAdmin.dashboard.activeTenants': 'Active tenants',
   'saasAdmin.dashboard.suspendedTenants': 'Suspended tenants',

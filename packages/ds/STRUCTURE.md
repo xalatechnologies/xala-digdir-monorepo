@@ -10,13 +10,22 @@ src/
 │   ├── container.tsx
 │   ├── grid.tsx
 │   ├── stack.tsx
+│   ├── icons.tsx
 │   └── index.ts
 ├── composed/       # Mid-level components
 │   ├── content-layout.tsx
 │   ├── content-section.tsx
 │   ├── page-header.tsx
+│   ├── FormSection.tsx
+│   ├── FormActions.tsx
+│   ├── InfoBox.tsx
+│   ├── LoadingFallback.tsx
+│   ├── SkipLinks.tsx
 │   └── index.ts
-├── blocks/         # Business logic components (coming soon)
+├── blocks/         # Business logic components
+│   ├── StatusBadges.tsx
+│   ├── DashboardComponents.tsx
+│   ├── ErrorBoundary.tsx
 │   └── index.ts
 ├── shells/         # Application-level layouts
 │   ├── shell.tsx
@@ -39,12 +48,17 @@ Built from primitives:
 - **ContentLayout**: Page layout with optional grid and header offset
 - **ContentSection**: Section wrapper with title, subtitle, and spacing
 - **PageHeader**: Page header with actions and breadcrumbs
+- **FormSection**: Form section wrapper with title and description
+- **FormActions**: Form submit/cancel button group
+- **InfoBox**: Colored info/status boxes (info, success, warning, danger)
+- **LoadingFallback**: Full-page loading state for Suspense
+- **SkipLinks**: Accessibility skip navigation links
 
 ### 3. Blocks (Business logic)
-Coming soon:
-- StatsGrid, KPICard, DataCard
-- FormBlock, ToolbarBlock
-- EmptyState, etc.
+Domain-specific components:
+- **StatusBadges**: Booking, Payment, RentalObject status badges
+- **DashboardComponents**: StatCard, ActivityFeed, QuickActionCard
+- **ErrorBoundary**: React error boundary with retry
 
 ### 4. Shells (Application level)
 - **AppShell**: Complete application layout with header/footer

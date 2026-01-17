@@ -329,7 +329,7 @@ SELECT 'Amenities', COUNT(*) FROM domain.amenities;
 # Expected output:
 # Tenants         | 3
 # Users           | 7
-# Rental Objects  | 10
+# Rental Objects  | 40  ✅ ALL 40 FROM JSON
 # Bookings        | 4
 # Amenities       | 10-20
 ```
