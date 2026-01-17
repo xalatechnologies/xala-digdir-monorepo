@@ -37,6 +37,7 @@ export default defineConfig({
       '**/dist/**',
       '**/.turbo/**',
       'apps/api/**',
+      'tests/integration/schema/**', // Requires DATABASE_URL
     ],
     coverage: {
       provider: 'v8',

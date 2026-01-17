@@ -1,0 +1,408 @@
+{
+  "timestamp": "2026-01-17T21:52:02.580Z",
+  "totalRules": 62,
+  "testedRules": 6,
+  "coverage": "10%",
+  "matrix": [
+    {
+      "role": "public",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "public",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "public",
+      "resource": "bookings",
+      "action": "create",
+      "allowed": false
+    },
+    {
+      "role": "public",
+      "resource": "users",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "public",
+      "resource": "organizations",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "public",
+      "resource": "audit",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": true,
+      "scope": "own"
+    },
+    {
+      "role": "user",
+      "resource": "bookings",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "resource": "bookings",
+      "action": "update",
+      "allowed": true,
+      "scope": "own"
+    },
+    {
+      "role": "user",
+      "resource": "bookings",
+      "action": "delete",
+      "allowed": true,
+      "scope": "own"
+    },
+    {
+      "role": "user",
+      "resource": "users",
+      "action": "read",
+      "allowed": true,
+      "scope": "own"
+    },
+    {
+      "role": "user",
+      "resource": "users",
+      "action": "update",
+      "allowed": true,
+      "scope": "own"
+    },
+    {
+      "role": "user",
+      "resource": "organizations",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "resource": "audit",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "org_member",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_member",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_member",
+      "resource": "bookings",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "org_member",
+      "resource": "calendar",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_member",
+      "resource": "organizations",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_member",
+      "resource": "organizations",
+      "action": "update",
+      "allowed": false
+    },
+    {
+      "role": "org_member",
+      "resource": "audit",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "org_leader",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_leader",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_leader",
+      "resource": "bookings",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "org_leader",
+      "resource": "bookings",
+      "action": "approve",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_leader",
+      "resource": "organizations",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_leader",
+      "resource": "organizations",
+      "action": "update",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "org_leader",
+      "resource": "users",
+      "action": "read",
+      "allowed": true,
+      "scope": "org"
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "rental_objects",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "rental_objects",
+      "action": "update",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "bookings",
+      "action": "approve",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "calendar",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "calendar",
+      "action": "update",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "pricing",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "reports",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "audit",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "saksbehandler",
+      "resource": "settings",
+      "action": "read",
+      "allowed": false
+    },
+    {
+      "role": "admin",
+      "resource": "rental_objects",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "admin",
+      "resource": "rental_objects",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "rental_objects",
+      "action": "update",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "rental_objects",
+      "action": "delete",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "bookings",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "admin",
+      "resource": "bookings",
+      "action": "approve",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "bookings",
+      "action": "delete",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "users",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "admin",
+      "resource": "users",
+      "action": "update",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "organizations",
+      "action": "read",
+      "allowed": true,
+      "scope": "tenant"
+    },
+    {
+      "role": "admin",
+      "resource": "organizations",
+      "action": "create",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "organizations",
+      "action": "update",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "organizations",
+      "action": "delete",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "pricing",
+      "action": "admin",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "reports",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "audit",
+      "action": "read",
+      "allowed": true
+    },
+    {
+      "role": "admin",
+      "resource": "settings",
+      "action": "admin",
+      "allowed": true
+    },
+    {
+      "role": "super_admin",
+      "resource": "rental_objects",
+      "action": "admin",
+      "allowed": true,
+      "scope": "all"
+    },
+    {
+      "role": "super_admin",
+      "resource": "bookings",
+      "action": "admin",
+      "allowed": true,
+      "scope": "all"
+    },
+    {
+      "role": "super_admin",
+      "resource": "users",
+      "action": "admin",
+      "allowed": true,
+      "scope": "all"
+    },
+    {
+      "role": "super_admin",
+      "resource": "organizations",
+      "action": "admin",
+      "allowed": true,
+      "scope": "all"
+    },
+    {
+      "role": "super_admin",
+      "resource": "settings",
+      "action": "admin",
+      "allowed": true,
+      "scope": "all"
+    }
+  ]
+}

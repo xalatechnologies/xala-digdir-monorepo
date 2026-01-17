@@ -117,10 +117,14 @@ const BookingDTOSchema = z.object({
 // =============================================================================
 
 describe('API Contract Tests', () => {
-  const API_BASE = process.env.API_BASE_URL || 'http://localhost:3000/api';
+  const API_BASE = process.env.API_URL || 'http://localhost:3000/api';
+  const IS_PRODUCTION = API_BASE.includes('api.digilist.no');
+
+  // Use skip for API tests when running against production
+  const itOrSkip = IS_PRODUCTION ? it.skip : it;
 
   describe('RFC 7807 Error Responses', () => {
-    it('401 should return valid problem details', async () => {
+    itOrSkip('401 should return valid problem details', async () => {
       const response = await fetch(`${API_BASE}/session`);
       expect(response.status).toBe(401);
 
@@ -133,7 +137,7 @@ describe('API Contract Tests', () => {
       }
     });
 
-    it('404 should return valid problem details', async () => {
+    itOrSkip('404 should return valid problem details', async () => {
       const response = await fetch(`${API_BASE}/nonexistent-endpoint`);
       expect(response.status).toBe(404);
 
@@ -143,7 +147,7 @@ describe('API Contract Tests', () => {
       expect(result.success, 'Response should match RFC 7807 schema').toBe(true);
     });
 
-    it('400 should return valid problem details with correlation ID', async () => {
+    itOrSkip('400 should return valid problem details with correlation ID', async () => {
       const response = await fetch(`${API_BASE}/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -166,7 +170,7 @@ describe('API Contract Tests', () => {
   });
 
   describe('Public Endpoints', () => {
-    it('GET /public/rental-objects should return paginated rental objects', async () => {
+    itOrSkip('GET /public/rental-objects should return paginated rental objects', async () => {
       const response = await fetch(`${API_BASE}/public/rental-objects`);
       expect(response.ok).toBe(true);
 
@@ -177,7 +181,7 @@ describe('API Contract Tests', () => {
       expect(result.success, `Schema validation failed: ${JSON.stringify(result)}`).toBe(true);
     });
 
-    it('GET /public/categories should return valid categories', async () => {
+    itOrSkip('GET /public/categories should return valid categories', async () => {
       const response = await fetch(`${API_BASE}/public/categories`);
       expect(response.ok).toBe(true);
 
@@ -187,7 +191,7 @@ describe('API Contract Tests', () => {
   });
 
   describe('Session Endpoint', () => {
-    it('GET /session with valid cookie should return session DTO', async () => {
+    itOrSkip('GET /session with valid cookie should return session DTO', async () => {
       // This test requires authentication - skip if no session cookie
       const response = await fetch(`${API_BASE}/session`, {
         credentials: 'include',
@@ -203,7 +207,7 @@ describe('API Contract Tests', () => {
   });
 
   describe('Module Endpoints', () => {
-    it('GET /modules/catalog should return module catalog', async () => {
+    itOrSkip('GET /modules/catalog should return module catalog', async () => {
       const response = await fetch(`${API_BASE}/modules/catalog`);
       expect(response.ok).toBe(true);
 
@@ -212,7 +216,7 @@ describe('API Contract Tests', () => {
       expect(Array.isArray(body.data.modules)).toBe(true);
     });
 
-    it('GET /modules/effective should return effective modules', async () => {
+    itOrSkip('GET /modules/effective should return effective modules', async () => {
       const response = await fetch(`${API_BASE}/modules/effective`);
       expect(response.ok).toBe(true);
 

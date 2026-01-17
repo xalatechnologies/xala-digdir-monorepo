@@ -20,8 +20,12 @@ import type { FastifyInstance } from 'fastify';
 // Test configuration
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
+const IS_PRODUCTION = API_URL.includes('api.digilist.no') || API_URL.includes('production');
 
-describe('RBAC Flow Integration Tests', () => {
+// Skip all tests if running against production (no test-login endpoint)
+const describeOrSkip = IS_PRODUCTION ? describe.skip : describe;
+
+describeOrSkip('RBAC Flow Integration Tests', () => {
   let sessionCookies: Map<string, string> = new Map();
 
   /**

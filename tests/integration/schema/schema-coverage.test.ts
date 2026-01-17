@@ -8,27 +8,33 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
-import { sql } from 'drizzle-orm';
 
 // =============================================================================
 // Configuration
 // =============================================================================
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://localhost:5432/digilist_test';
+const DATABASE_URL = process.env.DATABASE_URL;
 
-let pool: Pool;
-let db: ReturnType<typeof drizzle>;
+// Skip all tests if no database connection configured
+const hasDatabase = !!DATABASE_URL;
 
-beforeAll(async () => {
-  pool = new Pool({ connectionString: DATABASE_URL });
-  db = drizzle(pool);
-});
+let pool: any;
+let db: any;
 
-afterAll(async () => {
-  await pool.end();
-});
+if (hasDatabase) {
+  // Only import if we have a database
+  const { drizzle } = require('drizzle-orm/node-postgres');
+  const { Pool } = require('pg');
+  
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: DATABASE_URL });
+    db = drizzle(pool);
+  });
+
+  afterAll(async () => {
+    await pool?.end();
+  });
+}
 
 // =============================================================================
 // Schema Info Helpers

@@ -18,6 +18,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
 const TEST_ORG_ID = 'test-org';
+const IS_PRODUCTION = API_URL.includes('api.digilist.no') || API_URL.includes('production');
 
 // Mock user data
 const mockOrgAdmin = {
@@ -28,7 +29,10 @@ const mockOrgAdmin = {
   organizationId: TEST_ORG_ID,
 };
 
-describe('Organization Admin Flow Integration Tests', () => {
+// Skip all tests if running against production (no test-login endpoint)
+const describeOrSkip = IS_PRODUCTION ? describe.skip : describe;
+
+describeOrSkip('Organization Admin Flow Integration Tests', () => {
   let sessionCookie: string | null = null;
   let assignedRentalObjectId: string | null = null;
   let unassignedRentalObjectId: string | null = null;
