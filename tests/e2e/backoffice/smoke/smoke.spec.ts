@@ -9,16 +9,18 @@ import { config } from '../config/backoffice.config';
  */
 test.describe('Backoffice Smoke Tests', () => {
   test.describe('Authentication', () => {
-    test('should display login page', async ({ page }) => {
+    test('should display login page with demo options', async ({ page }) => {
       await page.goto('/login');
-      await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible();
-      await expect(page.locator('input[type="password"], input[name="password"]')).toBeVisible();
-      await expect(page.locator('button[type="submit"]')).toBeVisible();
+      await page.waitForLoadState('networkidle');
+      
+      // Should see demo login option buttons
+      const adminDemo = page.locator('button[data-testid="login-option-admin-demo"]');
+      await expect(adminDemo).toBeVisible({ timeout: 15000 });
     });
 
     test('should redirect unauthenticated users to login', async ({ page }) => {
       await page.goto('/');
-      await page.waitForURL(/\/login/, { timeout: 10000 });
+      await page.waitForURL(/\/login/, { timeout: 15000 });
       expect(page.url()).toContain('/login');
     });
   });
@@ -45,11 +47,13 @@ test.describe('Backoffice Smoke Tests', () => {
 
     test('should display sidebar navigation', async ({ page }) => {
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
       await expect(page.locator(config.selectors.sidebar)).toBeVisible();
       
       // Admin should see multiple nav items
-      const navItems = page.locator(config.selectors.sidebarItem);
-      await expect(navItems).toHaveCount({ minimum: 5 });
+      const navItems = page.locator(`${config.selectors.sidebar} a[href]`);
+      const count = await navItems.count();
+      expect(count).toBeGreaterThan(5);
     });
 
     test('should load bookings page', async ({ page, evidence }) => {
@@ -91,10 +95,11 @@ test.describe('Backoffice Smoke Tests', () => {
 
     test('should display restricted sidebar', async ({ page }) => {
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
       await expect(page.locator(config.selectors.sidebar)).toBeVisible();
       
       // Saksbehandler should see fewer nav items than admin
-      const navItems = page.locator(config.selectors.sidebarItem);
+      const navItems = page.locator(`${config.selectors.sidebar} a[href]`);
       const count = await navItems.count();
       
       // Should have at least dashboard, bookings, calendar

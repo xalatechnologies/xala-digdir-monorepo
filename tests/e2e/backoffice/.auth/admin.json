@@ -1,1 +1,49 @@
-{}
+{
+  "cookies": [
+    {
+      "name": "dl_rt",
+      "value": "S99fRTgDEMXe6n8ilQFtP5SaQFXUrIVPnQE9dSNdbvw",
+      "domain": ".digilist.no",
+      "path": "/api/auth/refresh",
+      "expires": 1769292993.592674,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dl_at",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0ZW5hbnRJZCI6ImY0N2FjMTBiLTU4Y2MtNDM3Mi1hNTY3LTBlMDJiMmMzZDQ3OSIsInRlbmFudFNsdWciOiJza2llbiIsInN1YnNjcmlwdGlvbiI6eyJwbGFuSWQiOm51bGwsInN0YXR1cyI6ImFjdGl2ZSIsInNlYXRMaW1pdHMiOnsibWF4VXNlcnMiOjUsIm1heExpc3RpbmdzIjoxMCwibWF4U3RvcmFnZU1iIjo1MDAsIm1heE9yZ2FuaXphdGlvbnMiOjEsIm1heEJvb2tpbmdzUGVyTW9udGgiOjEwMH0sImVuYWJsZWRDYXRlZ29yaWVzIjpbIkxPQ0FMRSIsIkFSUkFOR0VNRU5UIl19LCJmZWF0dXJlRmxhZ3MiOnt9LCJpYXQiOjE3Njg2ODgxOTMsImV4cCI6MTc2ODY4OTA5MywiYXVkIjoieGFsYS1hcGkiLCJpc3MiOiJ4YWxhLWRpZ2lsaXN0In0.ebHEXKzrQx3ArNrRb_8pZ5vv5pwlMS2OtInDbTiUlrU",
+      "domain": ".digilist.no",
+      "path": "/",
+      "expires": 1768689093.591836,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dl_csrf",
+      "value": "3vzoOV_0l_gf5FjHsUDjVq1M7kaa9VEzPwDRFsXO2hg",
+      "domain": ".digilist.no",
+      "path": "/",
+      "expires": 1769292993.592685,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://backoffice.digilist.no",
+      "localStorage": [
+        {
+          "name": "backoffice_effective_role",
+          "value": "admin"
+        },
+        {
+          "name": "backoffice_user",
+          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"name\":\"Admin Skien\",\"email\":\"admin@skien.kommune.no\",\"role\":\"admin\",\"tenantId\":\"f47ac10b-58cc-4372-a567-0e02b2c3d479\"}"
+        }
+      ]
+    }
+  ]
+}

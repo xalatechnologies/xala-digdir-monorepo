@@ -20,12 +20,12 @@ export const config = {
   // Demo credentials (use environment variables in CI)
   credentials: {
     admin: {
-      email: process.env.ADMIN_EMAIL || 'admin@demo.digilist.no',
-      password: process.env.ADMIN_PASSWORD || 'demo-admin-2026',
+      email: process.env.ADMIN_EMAIL || 'admin@skien.kommune.no',
+      password: process.env.ADMIN_PASSWORD || 'skien-admin-001',
     },
     saksbehandler: {
-      email: process.env.SAKSBEHANDLER_EMAIL || 'saksbehandler@demo.digilist.no',
-      password: process.env.SAKSBEHANDLER_PASSWORD || 'demo-saks-2026',
+      email: process.env.SAKSBEHANDLER_EMAIL || 'staff@skien.kommune.no',
+      password: process.env.SAKSBEHANDLER_PASSWORD || 'skien-staff-001',
     },
   },
   
