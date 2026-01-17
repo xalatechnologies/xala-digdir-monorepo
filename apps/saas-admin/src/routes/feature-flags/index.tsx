@@ -20,6 +20,9 @@ import {
   Stack,
   Grid,
   Text,
+  EmptyState,
+  FilterChips,
+  DataPageToolbar,
 } from '@xala/ds';
 import { useSaasFeatureFlagsCatalog } from '@digilist/client-sdk/hooks';
 import type { FeatureFlagCatalogItem, FeatureFlagCategory } from '@digilist/client-sdk/types';
@@ -167,59 +170,66 @@ export function FeatureFlagsCatalogPage() {
 
       {/* Filters */}
       <Card>
-        <Stack direction="horizontal" gap={12} wrap align="center">
-          <div style={{ flex: '1 1 var(--ds-size-container-sm, 300px)', minWidth: 'var(--ds-size-20, 200px)' }}>
-            <HeaderSearch
-              placeholder={t('saasAdmin.featureFlagsCatalog.searchPlaceholder')}
-              value={searchQuery}
-              onSearchChange={(value) => setSearchQuery(value)}
-            />
-          </div>
-
-          <Dropdown.TriggerContext>
-            <Dropdown.Trigger variant="secondary" data-size="sm">
-              <FilterIcon />
-              {t('saasAdmin.featureFlagsCatalog.category')}: {categoryFilter === 'all' ? t('saasAdmin.featureFlagsCatalog.categoryAll') : categoryLabels[categoryFilter]}
-            </Dropdown.Trigger>
-            <Dropdown>
-              <Dropdown.List>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('all')}>{t('saasAdmin.featureFlagsCatalog.categoryAll')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('module')}>{t('saasAdmin.featureFlagsCatalog.categoryModule')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('integration')}>{t('saasAdmin.featureFlagsCatalog.categoryIntegration')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setCategoryFilter('policy')}>{t('saasAdmin.featureFlagsCatalog.categoryPolicy')}</Dropdown.Button>
-                </Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </Dropdown.TriggerContext>
-
-          <Dropdown.TriggerContext>
-            <Dropdown.Trigger variant="secondary" data-size="sm">
-              <FilterIcon />
-              {t('saasAdmin.featureFlagsCatalog.status')}: {statusFilter === 'all' ? t('saasAdmin.featureFlagsCatalog.statusAll') : statusLabels[statusFilter]}
-            </Dropdown.Trigger>
-            <Dropdown>
-              <Dropdown.List>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('saasAdmin.featureFlagsCatalog.statusAll')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('saasAdmin.featureFlagsCatalog.statusActive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>{t('saasAdmin.featureFlagsCatalog.statusDeprecated')}</Dropdown.Button>
-                </Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </Dropdown.TriggerContext>
-        </Stack>
+        <DataPageToolbar
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchPlaceholder={t('saasAdmin.featureFlagsCatalog.searchPlaceholder')}
+          filters={[
+            {
+              label: t('saasAdmin.featureFlagsCatalog.category'),
+              value: categoryFilter,
+              onChange: (value) => setCategoryFilter(value as FeatureFlagCategory | 'all'),
+              options: [
+                { value: 'all', label: t('saasAdmin.featureFlagsCatalog.categoryAll') },
+                { value: 'module', label: categoryLabels.module },
+                { value: 'integration', label: categoryLabels.integration },
+                { value: 'policy', label: categoryLabels.policy },
+              ],
+            },
+            {
+              label: t('saasAdmin.featureFlagsCatalog.status'),
+              value: statusFilter,
+              onChange: (value) => setStatusFilter(value as 'active' | 'deprecated' | 'all'),
+              options: [
+                { value: 'all', label: t('saasAdmin.featureFlagsCatalog.statusAll') },
+                { value: 'active', label: statusLabels.active },
+                { value: 'deprecated', label: statusLabels.deprecated },
+              ],
+            },
+          ]}
+        />
       </Card>
+
+      {/* Filter Chips */}
+      {(() => {
+        const chips = [];
+        if (categoryFilter !== 'all') {
+          chips.push({
+            key: 'category',
+            label: `${t('saasAdmin.featureFlagsCatalog.category')}: ${categoryLabels[categoryFilter]}`,
+            onRemove: () => setCategoryFilter('all'),
+          });
+        }
+        if (statusFilter !== 'all') {
+          chips.push({
+            key: 'status',
+            label: `${t('saasAdmin.featureFlagsCatalog.status')}: ${statusLabels[statusFilter]}`,
+            onRemove: () => setStatusFilter('all'),
+          });
+        }
+        return chips.length > 0 ? (
+          <FilterChips
+            chips={chips}
+            onResetAll={() => {
+              setCategoryFilter('all');
+              setStatusFilter('all');
+              setSearchQuery('');
+            }}
+            resetLabel={t('dataPage.filterChips.resetAll')}
+            activeFiltersLabel={t('dataPage.filterChips.activeFilters')}
+          />
+        ) : null;
+      })()}
 
       {/* Results */}
       <Card>
@@ -228,26 +238,17 @@ export function FeatureFlagsCatalogPage() {
             <Spinner data-size="lg" aria-label={t('saasAdmin.featureFlagsCatalog.loading')} />
           </div>
         ) : filteredFlags.length === 0 ? (
-          <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Stack direction="column" gap={3} align="center">
-              <SettingsIcon
-                style={{
-                  fontSize: 'var(--ds-font-size-heading-lg)',
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                }}
-              />
-              <Stack direction="column" gap={2} align="center">
-                <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-                  {t('saasAdmin.featureFlagsCatalog.empty.title')}
-                </Heading>
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                  {searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
-                    ? t('saasAdmin.featureFlagsCatalog.empty.tryDifferentSearch')
-                    : t('saasAdmin.featureFlagsCatalog.empty.noFlags')}
-                </Paragraph>
-              </Stack>
-            </Stack>
-          </Stack>
+          <EmptyState
+            icon={<SettingsIcon size={48} />}
+            title={t('saasAdmin.featureFlagsCatalog.empty.title')}
+            description={
+              searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
+                ? t('dataPage.emptyState.tryDifferentFilters')
+                : t('saasAdmin.featureFlagsCatalog.empty.noFlags')
+            }
+            size="md"
+            bordered
+          />
         ) : (
           <Table>
             <Table.Head>

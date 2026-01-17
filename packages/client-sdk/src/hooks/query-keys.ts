@@ -174,6 +174,46 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.users.details(), id] as const,
     me: () => [...queryKeys.users.all, 'me'] as const,
     consents: () => [...queryKeys.users.me(), 'consents'] as const,
+    
+    // Admin user management
+    byOrganization: (organizationId: string) => [...queryKeys.users.all, 'byOrg', organizationId] as const,
+    byTenant: (tenantId: string) => [...queryKeys.users.all, 'byTenant', tenantId] as const,
+    stats: () => [...queryKeys.users.all, 'stats'] as const,
+    search: (searchTerm: string) => [...queryKeys.users.all, 'search', searchTerm] as const,
+  },
+
+  // =========================================================================
+  // Favorites Keys
+  // =========================================================================
+  favorites: {
+    all: ['favorites'] as const,
+    lists: () => [...queryKeys.favorites.all, 'list'] as const,
+    list: (params?: { page?: number; limit?: number; tag?: string; categoryKey?: string }) =>
+      [...queryKeys.favorites.lists(), params] as const,
+    details: () => [...queryKeys.favorites.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.favorites.details(), id] as const,
+    isFavorited: (rentalObjectId: string) => [...queryKeys.favorites.all, 'isFavorited', rentalObjectId] as const,
+    count: () => [...queryKeys.favorites.all, 'count'] as const,
+  },
+
+  // =========================================================================
+  // Pricing Keys
+  // =========================================================================
+  pricing: {
+    all: ['pricing'] as const,
+    groups: {
+      all: () => [...queryKeys.pricing.all, 'groups'] as const,
+      lists: () => [...queryKeys.pricing.groups.all(), 'list'] as const,
+      list: (params?: { page?: number; limit?: number; search?: string; isActive?: boolean }) =>
+        [...queryKeys.pricing.groups.lists(), params] as const,
+      details: () => [...queryKeys.pricing.groups.all(), 'detail'] as const,
+      detail: (id: string) => [...queryKeys.pricing.groups.details(), id] as const,
+      active: () => [...queryKeys.pricing.groups.all(), 'active'] as const,
+    },
+    rentalObject: (rentalObjectId: string) => [...queryKeys.pricing.all, 'rentalObject', rentalObjectId] as const,
+    variations: (rentalObjectId: string) => [...queryKeys.pricing.all, 'variations', rentalObjectId] as const,
+    userGroup: (userId?: string) => [...queryKeys.pricing.all, 'userGroup', userId] as const,
+    groupMembers: (groupId: string) => [...queryKeys.pricing.all, 'groupMembers', groupId] as const,
   },
 
   // =========================================================================

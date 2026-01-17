@@ -23,6 +23,10 @@ import {
   PlayIcon,
   ChartIcon,
   HeaderSearch,
+  EmptyState,
+  StatusTabs,
+  FilterChips,
+  DataPageHeader,
 } from '@xala/ds';
 import {
   useSaasPlans,
@@ -59,11 +63,27 @@ export function PlansListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<PlanStatus | 'all'>('all');
 
-  // Queries
+  // Queries - fetch all statuses for counts
   const { data: plansData, isLoading } = useSaasPlans({
     status: statusFilter === 'all' ? undefined : statusFilter,
   });
   const plans = plansData?.data ?? [];
+
+  // Fetch counts for each status
+  const { data: allPlansData } = useSaasPlans();
+  const { data: activePlansData } = useSaasPlans({ status: 'active' });
+  const { data: inactivePlansData } = useSaasPlans({ status: 'inactive' });
+  const { data: deprecatedPlansData } = useSaasPlans({ status: 'deprecated' });
+
+  // Calculate tab counts
+  const tabCounts = useMemo(() => {
+    return {
+      all: allPlansData?.meta?.total ?? allPlansData?.data?.length ?? 0,
+      active: activePlansData?.meta?.total ?? activePlansData?.data?.length ?? 0,
+      inactive: inactivePlansData?.meta?.total ?? inactivePlansData?.data?.length ?? 0,
+      deprecated: deprecatedPlansData?.meta?.total ?? deprecatedPlansData?.data?.length ?? 0,
+    };
+  }, [allPlansData, activePlansData, inactivePlansData, deprecatedPlansData]);
 
   // Mutations
   const updatePlanMutation = useUpdateSaasPlan();
@@ -113,27 +133,63 @@ export function PlansListPage() {
     });
   };
 
+  // Status tabs configuration
+  const statusTabs = useMemo(() => [
+    { id: 'all', label: t('common.all'), count: tabCounts.all },
+    { id: 'active', label: statusLabels.active, count: tabCounts.active, color: 'success' as const },
+    { id: 'inactive', label: statusLabels.inactive, count: tabCounts.inactive, color: 'warning' as const },
+    { id: 'deprecated', label: statusLabels.deprecated, count: tabCounts.deprecated, color: 'danger' as const },
+  ], [tabCounts, statusLabels, t]);
+
+  // Filter chips
+  const filterChips = useMemo(() => {
+    const chips = [];
+    if (statusFilter !== 'all') {
+      chips.push({
+        key: 'status',
+        label: `${t('common.status')}: ${statusLabels[statusFilter]}`,
+        onRemove: () => setStatusFilter('all'),
+      });
+    }
+    return chips;
+  }, [statusFilter, statusLabels, t]);
+
+  const handleResetFilters = () => {
+    setStatusFilter('all');
+    setSearchQuery('');
+  };
+
   return (
     <div className={styles.page}>
       {/* Header */}
-      <div className={styles.header}>
-        <div>
-          <Heading level={2} data-size="md">
-            {t('saasAdmin.plans.title')}
-          </Heading>
-          <Paragraph data-size="sm" className={styles.subtitle}>
-            {t('saasAdmin.plans.subtitle')}
-          </Paragraph>
-        </div>
-        <Link to="/plans/new">
-          <Button type="button">
-            <PlusIcon />
-            {t('saasAdmin.plans.createPlan')}
-          </Button>
-        </Link>
-      </div>
+      <DataPageHeader
+        title={t('saasAdmin.plans.title')}
+        count={plansData?.meta?.total ?? filteredPlans.length}
+        countLabel={`{{count}} ${t('saasAdmin.nav.plans').toLowerCase()}`}
+        actions={
+          <Link to="/plans/new">
+            <Button type="button">
+              <PlusIcon />
+              {t('saasAdmin.plans.createPlan')}
+            </Button>
+          </Link>
+        }
+      />
+      {t('saasAdmin.plans.subtitle') && (
+        <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+          {t('saasAdmin.plans.subtitle')}
+        </Paragraph>
+      )}
 
-      {/* Filters */}
+      {/* Status Tabs */}
+      <StatusTabs
+        tabs={statusTabs}
+        activeTab={statusFilter}
+        onChange={(tabId) => setStatusFilter(tabId as PlanStatus | 'all')}
+        style={{ marginBottom: 'var(--ds-spacing-4)' }}
+      />
+
+      {/* Search */}
       <Card>
         <div className={styles.filters}>
           <div className={styles.searchWrapper}>
@@ -143,31 +199,19 @@ export function PlansListPage() {
               onSearchChange={(value) => setSearchQuery(value)}
             />
           </div>
-
-          <Dropdown.TriggerContext>
-            <Dropdown.Trigger variant="secondary" data-size="sm">
-              <FilterIcon />
-              {t('common.status')}: {statusFilter === 'all' ? t('common.all') : statusLabels[statusFilter]}
-            </Dropdown.Trigger>
-            <Dropdown>
-              <Dropdown.List>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('common.all')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('saasAdmin.tenants.statusActive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('status.inactive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('deprecated')}>{t('saasAdmin.plans.deprecated')}</Dropdown.Button>
-                </Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </Dropdown.TriggerContext>
         </div>
       </Card>
+
+      {/* Filter Chips */}
+      {filterChips.length > 0 && (
+        <FilterChips
+          chips={filterChips}
+          onResetAll={handleResetFilters}
+          resetLabel={t('dataPage.filterChips.resetAll')}
+          activeFiltersLabel={t('dataPage.filterChips.activeFilters')}
+          style={{ marginBottom: 'var(--ds-spacing-4)' }}
+        />
+      )}
 
       {/* Results */}
       <Card>
@@ -176,25 +220,26 @@ export function PlansListPage() {
             <Spinner data-size="lg" aria-label={t('common.loading')} />
           </div>
         ) : filteredPlans.length === 0 ? (
-          <div className={styles.emptyState}>
-            <ChartIcon className={styles.emptyIcon} />
-            <Heading level={3} data-size="sm" className={styles.emptyTitle}>
-              {t('saasAdmin.plans.noPlans')}
-            </Heading>
-            <Paragraph data-size="sm" className={styles.emptyDescription}>
-              {searchQuery || statusFilter !== 'all'
-                ? t('common.tryDifferentSearch')
-                : t('saasAdmin.plans.createFirstPlan')}
-            </Paragraph>
-            {!searchQuery && statusFilter === 'all' && (
-              <Link to="/plans/new">
-                <Button data-size="sm" className={styles.emptyAction} type="button">
-                  <PlusIcon />
-                  {t('saasAdmin.plans.createPlan')}
-                </Button>
-              </Link>
-            )}
-          </div>
+          <EmptyState
+            icon={<ChartIcon size={48} />}
+            title={t('saasAdmin.plans.noPlans')}
+            description={
+              searchQuery || statusFilter !== 'all'
+                ? t('dataPage.emptyState.tryDifferentFilters')
+                : t('saasAdmin.plans.createFirstPlan')
+            }
+            action={
+              !searchQuery && statusFilter === 'all'
+                ? {
+                    label: t('saasAdmin.plans.createPlan'),
+                    onClick: () => navigate('/plans/new'),
+                    variant: 'primary' as const,
+                  }
+                : undefined
+            }
+            size="md"
+            bordered
+          />
         ) : (
           <Table>
             <Table.Head>

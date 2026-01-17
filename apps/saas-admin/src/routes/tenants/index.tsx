@@ -25,6 +25,10 @@ import {
   PlayIcon,
   PauseIcon,
   HeaderSearch,
+  EmptyState,
+  StatusTabs,
+  FilterChips,
+  DataPageHeader,
 } from '@xala/ds';
 import {
   useSaasTenants,
@@ -58,12 +62,30 @@ export function TenantsListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<SaasTenantStatus | 'all'>('all');
 
-  // Queries
+  // Queries - fetch all statuses for counts
   const { data: tenantsData, isLoading } = useSaasTenants({
     status: statusFilter === 'all' ? undefined : statusFilter,
     search: searchQuery || undefined,
   });
   const tenants = tenantsData?.data ?? [];
+
+  // Fetch counts for each status
+  const { data: allTenantsData } = useSaasTenants();
+  const { data: activeData } = useSaasTenants({ status: 'active' });
+  const { data: inactiveData } = useSaasTenants({ status: 'inactive' });
+  const { data: suspendedData } = useSaasTenants({ status: 'suspended' });
+  const { data: pendingData } = useSaasTenants({ status: 'pending' });
+
+  // Calculate tab counts
+  const tabCounts = useMemo(() => {
+    return {
+      all: allTenantsData?.meta?.total ?? allTenantsData?.data?.length ?? 0,
+      active: activeData?.meta?.total ?? activeData?.data?.length ?? 0,
+      inactive: inactiveData?.meta?.total ?? inactiveData?.data?.length ?? 0,
+      suspended: suspendedData?.meta?.total ?? suspendedData?.data?.length ?? 0,
+      pending: pendingData?.meta?.total ?? pendingData?.data?.length ?? 0,
+    };
+  }, [allTenantsData, activeData, inactiveData, suspendedData, pendingData]);
 
   // Mutations
   const suspendMutation = useSuspendSaasTenant();
@@ -107,27 +129,64 @@ export function TenantsListPage() {
     });
   };
 
+  // Status tabs configuration
+  const statusTabs = useMemo(() => [
+    { id: 'all', label: t('common.all'), count: tabCounts.all },
+    { id: 'active', label: statusLabels.active, count: tabCounts.active, color: 'success' as const },
+    { id: 'inactive', label: statusLabels.inactive, count: tabCounts.inactive, color: 'warning' as const },
+    { id: 'suspended', label: statusLabels.suspended, count: tabCounts.suspended, color: 'danger' as const },
+    { id: 'pending', label: statusLabels.pending, count: tabCounts.pending, color: 'info' as const },
+  ], [tabCounts, statusLabels, t]);
+
+  // Filter chips
+  const filterChips = useMemo(() => {
+    const chips = [];
+    if (statusFilter !== 'all') {
+      chips.push({
+        key: 'status',
+        label: `${t('common.status')}: ${statusLabels[statusFilter]}`,
+        onRemove: () => setStatusFilter('all'),
+      });
+    }
+    return chips;
+  }, [statusFilter, statusLabels, t]);
+
+  const handleResetFilters = () => {
+    setStatusFilter('all');
+    setSearchQuery('');
+  };
+
   return (
     <div className={styles.page}>
       {/* Header */}
-      <div className={styles.header}>
-        <div>
-          <Heading level={2} data-size="md">
-            {t('saasAdmin.tenants.title')}
-          </Heading>
-          <Paragraph data-size="sm" className={styles.subtitle}>
-            {t('saasAdmin.tenants.subtitle')}
-          </Paragraph>
-        </div>
-        <Link to="/tenants/new">
-          <Button type="button">
-            <PlusIcon />
-            {t('saasAdmin.tenants.createTenant')}
-          </Button>
-        </Link>
-      </div>
+      <DataPageHeader
+        title={t('saasAdmin.tenants.title')}
+        count={tenantsData?.meta?.total ?? filteredTenants.length}
+        countLabel={`{{count}} ${t('saasAdmin.nav.tenants').toLowerCase()}`}
+        actions={
+          <Link to="/tenants/new">
+            <Button type="button">
+              <PlusIcon />
+              {t('saasAdmin.tenants.createTenant')}
+            </Button>
+          </Link>
+        }
+      />
+      {t('saasAdmin.tenants.subtitle') && (
+        <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+          {t('saasAdmin.tenants.subtitle')}
+        </Paragraph>
+      )}
 
-      {/* Filters */}
+      {/* Status Tabs */}
+      <StatusTabs
+        tabs={statusTabs}
+        activeTab={statusFilter}
+        onChange={(tabId) => setStatusFilter(tabId as SaasTenantStatus | 'all')}
+        style={{ marginBottom: 'var(--ds-spacing-4)' }}
+      />
+
+      {/* Search and Filters */}
       <Card>
         <div className={styles.filters}>
           <div className={styles.searchWrapper}>
@@ -137,34 +196,19 @@ export function TenantsListPage() {
               onSearchChange={(value) => setSearchQuery(value)}
             />
           </div>
-
-          <Dropdown.TriggerContext>
-            <Dropdown.Trigger variant="secondary" data-size="sm">
-              <FilterIcon />
-              {t('common.status')}: {statusFilter === 'all' ? t('common.all') : statusLabels[statusFilter]}
-            </Dropdown.Trigger>
-            <Dropdown>
-              <Dropdown.List>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('common.all')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('saasAdmin.tenants.statusActive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('status.inactive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>{t('saasAdmin.tenants.statusSuspended')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('pending')}>{t('saasAdmin.tenants.statusPending')}</Dropdown.Button>
-                </Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </Dropdown.TriggerContext>
         </div>
       </Card>
+
+      {/* Filter Chips */}
+      {filterChips.length > 0 && (
+        <FilterChips
+          chips={filterChips}
+          onResetAll={handleResetFilters}
+          resetLabel={t('dataPage.filterChips.resetAll')}
+          activeFiltersLabel={t('dataPage.filterChips.activeFilters')}
+          style={{ marginBottom: 'var(--ds-spacing-4)' }}
+        />
+      )}
 
       {/* Results */}
       <Card>
@@ -173,25 +217,26 @@ export function TenantsListPage() {
             <Spinner data-size="lg" aria-label={t('common.loading')} />
           </div>
         ) : filteredTenants.length === 0 ? (
-          <div className={styles.emptyState}>
-            <BuildingIcon className={styles.emptyIcon} />
-            <Heading level={3} data-size="sm" className={styles.emptyTitle}>
-              {t('saasAdmin.tenants.noTenants')}
-            </Heading>
-            <Paragraph data-size="sm" className={styles.emptyDescription}>
-              {searchQuery || statusFilter !== 'all'
-                ? t('common.tryDifferentSearch')
-                : t('saasAdmin.tenants.createFirstTenant')}
-            </Paragraph>
-            {!searchQuery && statusFilter === 'all' && (
-              <Link to="/tenants/new">
-                <Button data-size="sm" className={styles.emptyAction} type="button">
-                  <PlusIcon />
-                  {t('saasAdmin.tenants.createTenant')}
-                </Button>
-              </Link>
-            )}
-          </div>
+          <EmptyState
+            icon={<BuildingIcon size={48} />}
+            title={t('saasAdmin.tenants.noTenants')}
+            description={
+              searchQuery || statusFilter !== 'all'
+                ? t('dataPage.emptyState.tryDifferentFilters')
+                : t('saasAdmin.tenants.createFirstTenant')
+            }
+            action={
+              !searchQuery && statusFilter === 'all'
+                ? {
+                    label: t('saasAdmin.tenants.createTenant'),
+                    onClick: () => navigate('/tenants/new'),
+                    variant: 'primary' as const,
+                  }
+                : undefined
+            }
+            size="md"
+            bordered
+          />
         ) : (
           <Table>
             <Table.Head>

@@ -24,6 +24,46 @@ export abstract class BaseService {
   }
 
   /**
+   * HTTP GET request
+   */
+  protected async get<T>(path: string, config?: { params?: any }): Promise<T> {
+    const url = this.buildPath(path);
+    return this.client.get<T>(url, config);
+  }
+
+  /**
+   * HTTP POST request
+   */
+  protected async post<T>(path: string, data?: any, config?: any): Promise<T> {
+    const url = this.buildPath(path);
+    return this.client.post<T>(url, data, config);
+  }
+
+  /**
+   * HTTP PUT request
+   */
+  protected async put<T>(path: string, data?: any, config?: any): Promise<T> {
+    const url = this.buildPath(path);
+    return this.client.put<T>(url, data, config);
+  }
+
+  /**
+   * HTTP PATCH request
+   */
+  protected async patch<T>(path: string, data?: any, config?: any): Promise<T> {
+    const url = this.buildPath(path);
+    return this.client.patch<T>(url, data, config);
+  }
+
+  /**
+   * HTTP DELETE request
+   */
+  protected async delete<T = void>(path: string, config?: { data?: any }): Promise<T> {
+    const url = this.buildPath(path);
+    return this.client.delete<T>(url, config);
+  }
+
+  /**
    * Upload media files to the API
    * @param path - API path (e.g., '/:id/media')
    * @param files - Files to upload
