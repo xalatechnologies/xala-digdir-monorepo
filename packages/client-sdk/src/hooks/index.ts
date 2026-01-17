@@ -35,6 +35,19 @@ export {
   useAllFeatures,
 } from './use-features';
 
+// Module flags hooks
+export {
+  moduleKeys,
+  useModuleCatalog,
+  useEffectiveModules,
+  useModule,
+  useIsModuleEnabled,
+  // Note: useHasCapability and useCapabilities exported from use-capabilities
+  useEnabledModules,
+  useToggleModule,
+  useModulesManager,
+} from './use-modules';
+
 // Rental Object hooks (primary - single source of truth)
 export {
   rentalObjectKeys,

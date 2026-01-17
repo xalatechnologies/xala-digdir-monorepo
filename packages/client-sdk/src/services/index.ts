@@ -169,3 +169,13 @@ export { saasService } from './saas.service';
 // Tenant Admin - Service only (types from ./types)
 export { tenantAdminService } from './tenant-admin.service';
 
+// Modules - Feature flags
+export { modulesService, ModulesService } from './modules.service';
+export type {
+  ModuleDTO,
+  ModuleInfoDTO,
+  EffectiveModulesDTO,
+  ModuleCatalogDTO,
+  UpdateModuleDTO,
+  FeatureDisabledError,
+} from './modules.service';
