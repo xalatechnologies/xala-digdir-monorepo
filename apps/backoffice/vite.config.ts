@@ -4,6 +4,11 @@ import path from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 5175,
+    strictPort: true,
+  },
   plugins: [
     react(),
     // Upload source maps to Sentry on production builds
