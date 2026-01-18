@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useCapabilities } from '@digilist/client-sdk/hooks';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
-import {
 import { useT } from '@xala/i18n';
+import {
   type Capability,
   type EffectiveBackofficeRole,
   getCapabilitiesForRole,
