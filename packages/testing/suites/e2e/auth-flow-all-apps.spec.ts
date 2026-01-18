@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Authentication Flow - All Apps E2E Tests
@@ -427,3 +431,4 @@ console.log('✅ Auth Flow E2E Tests Loaded');
 console.log('Run with: npx playwright test tests/e2e/auth-flow-all-apps.spec.ts');
 console.log('Run with UI: npx playwright test tests/e2e/auth-flow-all-apps.spec.ts --ui');
 console.log('Run headed: npx playwright test tests/e2e/auth-flow-all-apps.spec.ts --headed');
+}

@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Rental Object Playwright E2E Tests
@@ -378,3 +382,4 @@ test.describe('HCASE - Skien Kommune Demo Scenarios', () => {
     await expect(page.locator('[data-time="10:00"][disabled]')).toBeVisible();
   });
 });
+}

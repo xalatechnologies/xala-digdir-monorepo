@@ -4,18 +4,30 @@
  */
 
 import { beforeAll, afterAll } from 'vitest';
-import { mockApiServer } from './mocks/api-server.mock';
+import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 
-// Start mock API server before all tests
-beforeAll(() => {
-  mockApiServer.listen({ onUnhandledRequest: 'bypass' });
-  console.log('🚀 Mock API server started');
+// Check if real API is available and start mock server if needed
+let useMockServer = false;
+
+beforeAll(async () => {
+  const apiAvailable = await isApiAvailable();
+  
+  if (apiAvailable) {
+    console.log('✅ Real API server detected - using Docker API at http://localhost:3000');
+    useMockServer = false;
+  } else {
+    console.log('🚀 No API server detected - starting mock API server');
+    mockApiServer.listen({ onUnhandledRequest: 'bypass' });
+    useMockServer = true;
+  }
 });
 
 // Reset handlers after each test
 afterAll(() => {
-  mockApiServer.close();
-  console.log('🛑 Mock API server stopped');
+  if (useMockServer) {
+    mockApiServer.close();
+    console.log('🛑 Mock API server stopped');
+  }
 });
 
 // Mock browser APIs for tests that need them

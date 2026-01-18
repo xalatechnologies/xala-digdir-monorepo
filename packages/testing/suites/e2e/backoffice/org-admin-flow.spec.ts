@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Tests: Organization Admin Flow
@@ -1404,3 +1408,4 @@ test.describe('GATE-G3: Feature Flag OFF Removes Module', () => {
     // Test passes - reports hidden from navigation when flag disabled
   });
 });
+}

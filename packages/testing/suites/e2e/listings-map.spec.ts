@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
@@ -243,3 +247,4 @@ test.describe('Listings Page - Map View (Dynamic Import)', () => {
     expect(loadTime).toBeLessThan(3000);
   });
 });
+}

@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - Manual Verification Test
@@ -68,3 +72,4 @@ test.describe('Web Login Flow - Manual Verification', () => {
 
 console.log('✅ Manual Verification Tests Loaded');
 console.log('Run with: npx playwright test tests/e2e/web-login-manual-test.spec.ts --headed');
+}

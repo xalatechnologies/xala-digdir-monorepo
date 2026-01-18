@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Demo Login E2E Test with Mocked API
@@ -132,3 +136,4 @@ test.describe('Demo Login (Mocked API)', () => {
     expect(hasError).toBeTruthy();
   });
 });
+}

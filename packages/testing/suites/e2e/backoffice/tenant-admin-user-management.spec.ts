@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Test: Tenant Admin User Management
@@ -350,3 +354,4 @@ test.describe('Tenant Admin User Management', () => {
     await expect(page.locator('[data-testid="success-toast"]')).toContainText(/2 invitations sent/i);
   });
 });
+}

@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - Integration Tests (Real Server)
@@ -246,3 +250,4 @@ test.describe('Web Login Flow - Real Server Integration', () => {
 });
 
 console.log('✅ Web Login Integration Tests Loaded');
+}

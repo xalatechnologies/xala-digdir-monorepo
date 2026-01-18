@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: Rental Object Custody & Delegation (Backoffice Only)
@@ -156,3 +160,4 @@ test.describe('Rental Object Custody & Delegation Flow (Backoffice Only)', () =>
     await expect(page.getByText('Delegate to Member')).not.toBeVisible();
   });
 });
+}

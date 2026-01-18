@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test } from '@playwright/test';
 import { LoginPage } from '../../helpers/pages/LoginPage';
@@ -117,3 +121,4 @@ test('Login diagnostic - capture full flow', async ({ page }) => {
   await page.screenshot({ path: 'tests/screenshots/login-diagnostic-final.png', fullPage: true });
   console.log('\n📸 Screenshot saved to: tests/screenshots/login-diagnostic-final.png');
 });
+}

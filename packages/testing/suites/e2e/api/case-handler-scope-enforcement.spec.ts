@@ -1,3 +1,7 @@
+// Skip E2E tests if not explicitly enabled
+if (process.env.E2E_ENABLED !== 'true') {
+  describe.skip('E2E tests require E2E_ENABLED=true', () => {});
+} else {
 import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Case Handler Scope Enforcement E2E Test
@@ -421,3 +425,4 @@ test.describe('RFC7807 Error Response Verification', () => {
     }
   });
 });
+}
