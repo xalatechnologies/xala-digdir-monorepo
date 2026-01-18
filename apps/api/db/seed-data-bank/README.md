@@ -2,13 +2,41 @@
 
 Centralized repository for all seed data JSON files used across the platform.
 
+## Seed Data Bank
+
+This directory contains **production-ready seed data** for the Digilist Platform and the **unified seeding system**.
+
+## 🚀 Quick Start
+
+### Seed Database (Development/Production)
+```bash
+# From repository root
+pnpm --filter @digilist/api db:seed
+
+# Or directly from apps/api
+cd apps/api
+DATABASE_URL=postgresql://... node db/seed-data-bank/import-all.cjs
+```
+
+This will import **all critical business tables** in the correct order:
+1. **platform.tenants** - Tenant organizations
+2. **platform.organizations** - Sub-organizations within tenants
+3. **platform.users** - Demo users with role-based access
+4. **domain.rental_objects** - Rental objects (70 comprehensive examples)
+5. **domain.bookings** - Booking calendar data (50 bookings)
+6. **compliance.audit_logs** - Activity history (100 entries)
+
+**Note:** Feature flags are seeded automatically via `scripts/migrate.ts` (not via import-all.cjs).
+
+---
+
 ## Purpose
 
-This directory contains comprehensive, production-like seed data that can be used for:
-1. **Database Seeding**: Direct import into PostgreSQL via import scripts
-2. **SaaS Admin**: Interactive seed management UI in `apps/saas-admin`
-3. **Testing**: Realistic data for integration and E2E tests
-4. **Development**: Local staging environment with full data
+Seed data can be used for:
+- **Database seeding** (development, staging, production)
+- **SaaS Admin** (pre-populating tenant data)
+- **Testing** (E2E tests, integration tests)
+- **Development** (local development with realistic data)
 
 ## Structure
 

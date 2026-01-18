@@ -40,26 +40,23 @@ ssh "${VPS_USER}@${VPS_HOST}" << 'REMOTE'
   fi
 
   # Count existing rental objects
-  echo "📊 Checking rental objects..."
-  RENTAL_COUNT=$(psql "${DATABASE_URL}" -t -c "SELECT COUNT(*) FROM platform.rental_objects;" 2>/dev/null | xargs || echo "0")
-
-  echo "Current rental objects: ${RENTAL_COUNT}"
-
-  if [ "${RENTAL_COUNT}" = "0" ]; then
-    echo ""
-    echo "📦 Running seed script..."
-    npx tsx src/database/seeds/demo-seed-v3.ts
+  echo "🔍 Checking if rental objects exist..."
+  RENTAL_COUNT=$(PGPASSWORD="$DB_PASSWORD" psql -h localhost -U "$DB_USER" -d "$DB_NAME" -t -c 'SELECT COUNT(*) FROM domain.rental_objects;' 2>/dev/null | xargs || echo "0")
+  
+  if [ "$RENTAL_COUNT" = "0" ] || [ -z "$RENTAL_COUNT" ]; then
+    echo "📦 No rental objects found. Running seed script..."
+    node db/seed-data-bank/import-all.cjs
 
     echo ""
     echo "✅ Seed complete!"
 
     # Verify
-    NEW_COUNT=$(psql "${DATABASE_URL}" -t -c "SELECT COUNT(*) FROM platform.rental_objects;" 2>/dev/null | xargs || echo "0")
+    NEW_COUNT=$(PGPASSWORD="$DB_PASSWORD" psql -h localhost -U "$DB_USER" -d "$DB_NAME" -t -c "SELECT COUNT(*) FROM domain.rental_objects;" 2>/dev/null | xargs || echo "0")
     echo "New rental objects count: ${NEW_COUNT}"
 
   else
     echo ""
-    echo "⚠️  Database already has data. Skipping seed."
+    echo "✅ Database already has $RENTAL_COUNT rental objects"
     echo "To force re-seed, manually truncate tables first."
   fi
 
