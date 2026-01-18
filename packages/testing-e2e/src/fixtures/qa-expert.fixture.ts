@@ -36,6 +36,7 @@ interface EvidenceCollector {
   // Network tracking
   networkRequests: NetworkRequest[];
   failedRequests: NetworkRequest[];
+  apiCalls: NetworkRequest[]; // Alias for compatibility
   
   // Page errors
   pageErrors: QualityGateError[];
@@ -46,6 +47,10 @@ interface EvidenceCollector {
   has5xxResponses(): boolean;
   hasForbiddenTerminology(): boolean;
   hasMissingI18nKeys(): boolean;
+  getApi4xxErrors(): NetworkRequest[];
+  getConsoleErrors(): QualityGateError[];
+  getApiErrors(): NetworkRequest[];
+  reset(): void;
   
   // Evidence capture
   captureEvidence(testInfo: any): Promise<void>;
@@ -161,10 +166,31 @@ function createEvidenceCollector(page: Page): EvidenceCollector {
     consoleWarnings,
     networkRequests,
     failedRequests,
+    apiCalls: networkRequests, // Alias
     pageErrors,
     featureFlags,
     userRole,
     capabilities,
+
+    getApi4xxErrors(): NetworkRequest[] {
+      return networkRequests.filter(r => r.status >= 400 && r.status < 500);
+    },
+
+    getConsoleErrors(): QualityGateError[] {
+      return consoleErrors;
+    },
+
+    getApiErrors(): NetworkRequest[] {
+      return networkRequests.filter(r => r.status >= 500);
+    },
+
+    reset(): void {
+      consoleErrors.length = 0;
+      consoleWarnings.length = 0;
+      networkRequests.length = 0;
+      failedRequests.length = 0;
+      pageErrors.length = 0;
+    },
 
     hasPageErrors(): boolean {
       return pageErrors.length > 0;

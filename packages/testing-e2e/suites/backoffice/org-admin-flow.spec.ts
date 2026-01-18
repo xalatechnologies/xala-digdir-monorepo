@@ -247,6 +247,7 @@ async function mockOrgAdminApiResponses(page: Page) {
       }),
     });
   });
+}
 
 test.describe('Organization Admin Flow', () => {
   setupMockApi(test);

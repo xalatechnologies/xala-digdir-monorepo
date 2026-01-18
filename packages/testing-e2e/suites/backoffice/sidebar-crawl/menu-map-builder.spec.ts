@@ -15,11 +15,13 @@ interface DiscoveredMenuItem {
   label: string;
   href: string;
   section?: string;
+}
 
 interface MenuDiscoveryResult {
   items: DiscoveredMenuItem[];
   sections: string[];
   totalItems: number;
+}
 
 test.describe('Menu Map Builder', () => {
   setupMockApi(test);

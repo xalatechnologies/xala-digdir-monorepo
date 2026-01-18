@@ -32,10 +32,10 @@ export interface ApiCall {
 }
 
 export class EvidenceCollector {
-  private consoleLogs: LocalConsoleMessage[] = [];
-  private apiCalls: ApiCall[] = [];
-  private pageErrors: string[] = [];
-  private page: Page;
+  public consoleLogs: LocalConsoleMessage[] = [];
+  public apiCalls: ApiCall[] = [];
+  public pageErrors: string[] = [];
+  public page: Page;
 
   constructor(page: Page) {
     this.page = page;

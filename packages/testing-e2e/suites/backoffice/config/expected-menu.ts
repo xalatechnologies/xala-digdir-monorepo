@@ -10,6 +10,7 @@ export interface MenuSection {
   title: string;  // Expected Norwegian label
   titleEn?: string; // English label
   items: MenuItem[];
+}
 
 export interface MenuItem {
   id: string;
@@ -20,6 +21,7 @@ export interface MenuItem {
   featureFlag?: string;  // Required feature flag to be visible
   adminOnly?: boolean;
   saksbehandlerAllowed?: boolean;
+}
 
 /**
  * Expected Menu Structure
@@ -356,6 +358,7 @@ export function getItemsForRole(role: 'admin' | 'saksbehandler'): MenuItem[] {
   }
   
   return items;
+}
 
 /**
  * Get items blocked for a specific role
@@ -372,6 +375,7 @@ export function getBlockedItemsForRole(role: 'admin' | 'saksbehandler'): MenuIte
   }
   
   return items;
+}
 
 /**
  * Get items affected by a feature flag
@@ -389,3 +393,4 @@ export function getItemsForFlag(flagId: FeatureFlagId): MenuItem[] {
   }
   
   return items;
+}

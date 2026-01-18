@@ -2,7 +2,7 @@
  * Rental object test fixtures
  */
 
-import { mockTenant, mockOrganization } from './index.js';
+import { mockTenant, mockOrganization } from './tenants.js';
 
 export const mockRentalObject = {
   id: 'rental-1',

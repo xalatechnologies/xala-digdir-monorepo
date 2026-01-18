@@ -14,7 +14,8 @@ export const STATUS_OPTIONS = [
   { id: 'archived', label: 'Arkivert', value: 'archived' },
 ];
 
-export const CATEGORY_OPTIONS = [
+// Category options factory - call this inside component with t()
+export const getCategoryOptions = (t: ReturnType<typeof useT>) => [
   { id: 'all', label: t('common.alle_kategorier'), value: 'all' },
   { id: 'LOKALER_OG_BANER', label: t('common.lokaler_og_baner'), value: 'LOKALER_OG_BANER' },
   { id: 'UTSTYR_OG_INVENTAR', label: t('common.utstyr_og_inventar'), value: 'UTSTYR_OG_INVENTAR' },
@@ -22,14 +23,16 @@ export const CATEGORY_OPTIONS = [
   { id: 'OPPLEVELSER_OG_ARRANGEMENT', label: t('common.opplevelser_og_arrangement'), value: 'OPPLEVELSER_OG_ARRANGEMENT' },
 ];
 
-export const TIME_MODE_OPTIONS = [
+// Time mode options factory
+export const getTimeModeOptions = (t: ReturnType<typeof useT>) => [
   { id: 'all', label: t('common.alle_bookingtyper'), value: 'all' },
   { id: 'PERIOD', label: 'Tidsperiode', value: 'PERIOD' },
   { id: 'SLOT', label: 'Tidsluke', value: 'SLOT' },
   { id: 'ALL_DAY', label: 'Heldags', value: 'ALL_DAY' },
 ];
 
-export const SORT_OPTIONS = [
+// Sort options factory
+export const getSortOptions = (t: ReturnType<typeof useT>) => [
   { id: 'updated-desc', label: t('common.sist_oppdatert'), value: 'updated-desc', field: 'updatedAt', order: 'desc' },
   { id: 'updated-asc', label: t('common.eldste_oppdatering'), value: 'updated-asc', field: 'updatedAt', order: 'asc' },
   { id: 'name-asc', label: t('common.navn_aaa'), value: 'name-asc', field: 'name', order: 'asc' },

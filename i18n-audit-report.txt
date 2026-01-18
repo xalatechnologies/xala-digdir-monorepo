@@ -1,0 +1,641 @@
+# i18n Audit Report - Sun Jan 18 19:27:06 CET 2026
+================================================
+
+
+## App: Web
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+
+### Pattern 5: Table Headers
+
+### Pattern 6: Heading Text
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts:246:      format: (v) => `${v} økter`,
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts:260:    labelKey: 'Økter',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts:501:      statusText: 'Åpent nå',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts:507:      statusText: 'Stengt nå',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts:508:      nextChange: `Åpner ${todayHours.open}`,
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx:159:const WEEKDAY_NAMES = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx:388:            Forhåndsvisning ({occurrences.length} datoer)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx:160:  const dayNames = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/PriceBreakdown.tsx:129:          Velg tidspunkt for å se pris
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx:106:          Utleier tilbyr egne priser til enkelte kundegrupper. Valg av prisgruppe medfører en godkjenningsprosess.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx:325:          Vilkår og betingelser
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx:337:            Les viktige vilkår
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx:340:            <li>{t('avbestillingsregler.og.refusjonsvilkår')}</li>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingStepperHeader.tsx:102:          Følg stegene for å fullføre bookingen
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:141:  const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:253:          Logg inn for å fullføre
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:256:          For å sende din bookingforespørsel må du være innlogget. Vi bruker sikker autentisering for å verifisere din identitet.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:317:            Din informasjon behandles sikkert og i henhold til personvernlovgivningen. Ved å logge inn godtar du at vi lagrer nødvendige opplysninger for å behandle din booking.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:334:            Velg om du vil booke som privatperson eller på vegne av en organisasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:440:                    På vegne av organisasjon
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:466:                    Du er ikke tilknyttet noen organisasjoner ennå. Kontakt din administrator for å bli lagt til i en organisasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:530:                ? `Du har valgt å booke på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:531:                : 'Du har valgt å booke på vegne av en organisasjon.'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:574:                      : 'På vegne av organisasjon'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:616:                ? `Du booker på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:617:                : 'Du booker på vegne av en organisasjon.'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:676:              Vennligst bekreft at følgende informasjon er korrekt:
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:723:            Velg om du vil booke som privatperson eller på vegne av en organisasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx:755:                På vegne av organisasjon
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:90:  0: 'Søn',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:96:  6: 'Lør',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:534:          Løs konflikter ({conflicts.length})
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:537:          {resolvedCount}/{conflicts.length} løst
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:638:          {allResolved ? '✓ Alle konflikter løst' : 'Oppsummering'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx:677:              {pendingCount} uløst
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx:402:          Fakturaen sendes til {value.organizationName}. Priser kan være forskjellig fra privatpriser.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx:53:  const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx:257:                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Formål</Paragraph>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:62:  6: 'Lør',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:63:  7: 'Søn',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:72:  6: 'Lørdag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:73:  7: 'Søndag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:78:  MONTHLY: 'Månedlig',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:214:          Basert på: {WEEKDAY_FULL_LABELS[baseWeekday]} {baseSlot.date}, kl. {baseSlot.startTime} - {baseSlot.endTime}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:471:            ? `Hver uke på ${value.weekdays.map((w) => WEEKDAY_LABELS[w]).join(', ')}`
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx:472:            : `Hver måned på samme dag`}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx:65:const dayNames = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx:217:            Følgende datoer er ikke tilgjengelig på ønsket tidspunkt
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/Sidebar/MapWidget.tsx:211:          Åpne i kart
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/features/rental-object-details/components/PaymentSection.tsx:230:              Kunne ikke starte betaling. Vennligst prøv igjen.
+
+### Pattern 8: Alert/Toast Messages
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/components/SentryTestComponent.tsx:62:    alert('Tenant context set! Next error will include tenant information.');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/components/SentryTestComponent.tsx:71:    alert('User context set! Next error will include user information.');
+
+================================================
+
+
+## App: MinSide
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PrivacyTab.tsx:196:                aria-label="Analyse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:81:              <FormField label="Bookingbekreftelse">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/ProfileTab.tsx:226:            <FormField label="Telefonnummer">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/ProfileTab.tsx:232:                aria-label="Telefonnummer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:113:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:114:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:125:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:126:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:132:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:136:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:149:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:190:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:191:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:202:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:203:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:209:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:213:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:226:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/layout/Header.tsx:353:                  aria-label="Innstillinger"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/layout/Header.tsx:354:                  title="Innstillinger"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:258:        <Spinner data-size="lg" aria-label="Laster..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/calendar.tsx:128:            <Spinner aria-label="Loading" data-size="md" />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/season-detail.tsx:193:        aria-label="Breadcrumb"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/privacy.tsx:129:        <Spinner data-size="lg" aria-label="Laster personverninnstillinger..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/privacy.tsx:253:                aria-label="Analyse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx:296:              aria-label="Bookingbekreftelser"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx:386:              aria-label="Kanselleringer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/notification-settings.tsx:407:              aria-label="Endringer"
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+
+### Pattern 5: Table Headers
+
+### Pattern 6: Heading Text
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/SentryTestComponent.tsx:90:          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Context Setup</h3>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/SentryTestComponent.tsx:105:          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Error Tests</h3>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/SentryTestComponent.tsx:128:          <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Testing Instructions:</h4>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/org/managed-objects.tsx:37:        <Heading level={1} data-size="md">Administrer utleieobjekter</Heading>
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/providers/AccountContextProvider.tsx:218:        'Du har ikke lenger tilgang til den valgte organisasjonen. Du er nå i personlig modus.'
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PrivacyTab.tsx:124:              I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PrivacyTab.tsx:164:                  Markedsføring
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PrivacyTab.tsx:167:                  Motta tips, tilbud og nyheter på e-post
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:48:              Send varsler på e-post
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:57:              Send varsler på SMS
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:86:                  Send bekreftelse når booking er godkjent
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:95:                  Send påminnelse før booking starter
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/NotificationsTab.tsx:110:                    suffix="timer før"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:254:                Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/AddressesTab.tsx:255:                Endringer i adresse kan ta opptil 24 timer å tre i kraft.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PreferencesTab.tsx:31:              Språk
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PreferencesTab.tsx:34:              Velg språk for brukergrensesnittet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PreferencesTab.tsx:77:              Økt og sikkerhet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PreferencesTab.tsx:80:              Administrer din pålogging og sikkerhet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/components/PreferencesTab.tsx:97:                Logg ut av din konto på denne enheten
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/hooks/usePreferenceSettings.ts:154:      nb: 'Norsk (Bokmål)',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/settings/hooks/usePreferenceSettings.ts:165:      dark: 'Mørk',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/components/ApplicationCard.tsx:118:            Søknad sendt {formatDate(application.createdAt)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/components/ApplicationCard.tsx:257:              Årsak til avslag
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/constants.ts:74:  'Søndag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/constants.ts:80:  'Lørdag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/constants.ts:84:  'Søn',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/features/seasons/constants.ts:90:  'Lør',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:52:        return 'Din forespørsel er mottatt og venter på behandling.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:58:        return 'Forespørselen din ble avvist. Kontakt support for mer informasjon.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:70:      return 'Denne nedlastingen har utløpt.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:72:      return `Denne nedlastingen utløper om ${daysRemaining} dag${daysRemaining !== 1 ? 'er' : ''}.`;
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:170:                Årsak: {String(exportRequest.metadata.rejectionReason)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:180:            Det oppstod en feil ved opprettelse av forespørselen. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DataExportCard.tsx:191:            <strong>Viktig:</strong> Dataeksporten vil være tilgjengelig for nedlasting i 30 dager fra den er klar. Av sikkerhetshensyn må du være innlogget for å laste ned dataene.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/ConsentManager.tsx:120:              Administrer dine personvernpreferanser. Du kan når som helst endre eller trekke tilbake dine samtykker.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/ConsentManager.tsx:161:                  Nødvendig for at tjenesten skal fungere. Kan ikke deaktiveres.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/ConsentManager.tsx:230:              Det oppstod en feil ved lagring av samtykker. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/ConsentManager.tsx:242:            <strong>{t('common.om_samtykker')}</strong> Du kan når som helst endre eller trekke tilbake dine samtykker. Nødvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:68:        return 'Din forespørsel om sletting av konto er mottatt og venter på behandling.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:70:        return 'Vi behandler forespørselen din. Dette kan ta noen dager.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:74:        return 'Forespørselen din ble avvist. Kontakt support for mer informasjon.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:91:            Be om permanent sletting av kontoen din og alle tilhørende data. Dette er en irreversibel handling.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:116:                Sletting av kontoen din vil føre til:
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:156:              Denne handlingen kan ikke angres. En administrator vil behandle forespørselen din innen 30 dager i henhold til GDPR-forskriftene.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:226:                  Årsak: {String(deletionRequest.metadata.rejectionReason)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:241:                    {cancelRequest.isPending ? t('common.kansellerer') : 'Angre forespørsel'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:252:            Det oppstod en feil. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/gdpr/DeleteAccountCard.tsx:263:            <strong>{t('common.gdprrettigheter')}</strong> I henhold til GDPR har du rett til å bli glemt. Forespørselen din vil bli behandlet innen 30 dager. Du kan angre forespørselen før den er behandlet.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:715:                    I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:867:                    Administrer hvordan og når du mottar varsler
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:873:                    Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:895:                    Språk
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/settings.tsx:898:                    Velg språk for brukergrensesnittet
+
+### Pattern 8: Alert/Toast Messages
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/SentryTestComponent.tsx:61:    alert('Tenant context set! Next error will include tenant information.');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/components/SentryTestComponent.tsx:70:    alert('User context set! Next error will include user information.');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/minside/src/routes/season-detail.tsx:144:    alert('Søknad sendt! Du vil motta en bekreftelse når søknaden er behandlet.');
+
+================================================
+
+
+## App: Backoffice
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/BookingTab.tsx:77:              label="Kanselleringsfrist"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/BookingTab.tsx:81:                aria-label="Kanselleringsfrist"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:44:          <FormField label="Systemnavn" description={t('common.navn_paa_systemet_som')}>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:46:              aria-label="Systemnavn"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:64:          <FormField label="Tidssone">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:75:          <FormField label="Valuta">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:87:            <FormField label="Datoformat">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/GeneralTab.tsx:98:            <FormField label="Tidsformat">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:83:              <FormField label="Bookingbekreftelse">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/ProfileTab.tsx:223:            <FormField label="Telefonnummer">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/ProfileTab.tsx:224:              <Textfield aria-label="Telefonnummer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:115:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:116:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:127:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:128:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:134:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:138:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:151:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:192:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:193:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:204:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:205:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:211:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:215:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:228:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/EventDrawer.tsx:200:                {cancelBooking.isPending ? <Spinner data-data-size="sm" aria-label="Avslår..." /> : 'Avslå'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/EventDrawer.tsx:208:                {confirmBooking.isPending ? <Spinner data-data-size="sm" aria-label="Godkjenner..." /> : 'Godkjenn'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/EventDrawer.tsx:232:                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : t("ui.delete")}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx:611:              <Spinner data-data-size="sm" aria-label="Sjekker konflikter..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx:217:        <DrawerSection title="Status" collapsible>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx:247:        <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx:277:        <DrawerSection title="Sortering" collapsible defaultCollapsed>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx:383:                aria-label="Rutenettvisning"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx:396:                aria-label="Listevisning"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:193:        <Dropdown.Trigger aria-label="Handlinger" disabled={isLoading}>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:74:        <FormField label="Organisasjonsnavn" htmlFor="org-name">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:85:        <FormField label="Organisasjonstype" htmlFor="actor-type">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:101:        <FormField label="Organisasjonsnummer" htmlFor="org-number">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:127:            <FormField label="Telefon" htmlFor="phone">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:146:            <FormField label="Gateadresse" htmlFor="address">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:151:                placeholder="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:156:              <FormField label="Postnummer" htmlFor="postal-code" style={{ flex: '0 0 120px' }}>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:166:              <FormField label="Poststed" htmlFor="city" style={{ flex: '1' }}>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/BasicStep.tsx:171:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:134:              <FormField label="Rolle" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:228:                      <Button variant="tertiary" data-size="sm" aria-label="Handlinger" type="button">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationForm.tsx:138:              label="Navn"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationForm.tsx:147:                aria-label="Navn"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationForm.tsx:169:              label="Organisasjonsnummer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/OrganizationForm.tsx:177:                aria-label="Organisasjonsnummer"
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx:123:            <Button type="button" variant="secondary" onClick={onClose}>Avbryt</Button>
+
+### Pattern 5: Table Headers
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:234:                  <Table.HeaderCell style={{ width: '100px' }}>Type</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:235:                  <Table.HeaderCell>Mottaker</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:236:                  <Table.HeaderCell>Emne</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:237:                  <Table.HeaderCell style={{ width: '120px' }}>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:103:                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Grantee</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:104:                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Type</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:105:                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Scopes</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:106:                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Status</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:107:                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>Actions</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:41:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Tidspunkt</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:42:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Bruker</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:43:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Handling</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:44:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Detaljer</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:106:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Mottaker</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:107:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Type</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:109:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Periode</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:110:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Status</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:111:              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>Handlinger</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:377:            <Table.HeaderCell>Vurdering</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:378:            <Table.HeaderCell>Anmeldelse</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:379:            <Table.HeaderCell>Objekt</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:380:            <Table.HeaderCell>Bruker</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:381:            <Table.HeaderCell>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx:382:            <Table.HeaderCell>Opprettet</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:194:              <Table.HeaderCell>Navn</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:195:              <Table.HeaderCell>E-post</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:196:              <Table.HeaderCell>Rolle</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/organizations/MemberManagement.tsx:198:              <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx:336:              <Table.HeaderCell>Bruker</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx:337:              <Table.HeaderCell>Type</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx:338:              <Table.HeaderCell>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx:339:              <Table.HeaderCell>Forespurt</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx:341:              <Table.HeaderCell>ID</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:231:                  <th>ID</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:232:                  <th>Lokale</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:233:                  <th>Organisasjon</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:234:                  <th>Tidspunkt</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:235:                  <th>Status</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:236:                  <th>Pris</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:310:                  <th>ID</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:311:                  <th>Navn</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:312:                  <th>Type</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:313:                  <th>Lokasjon</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:314:                  <th>Kapasitet</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:315:                  <th>Pris/time</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:385:                  <th>ID</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:386:                  <th>Navn</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:388:                  <th>Type</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SearchResults.tsx:390:                  <th>Telefon</th>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/seasons/ConflictViewer.tsx:188:                    <Table.HeaderCell>Ukedag</Table.HeaderCell>
+
+### Pattern 6: Heading Text
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:31:        <Heading level={3} data-size="sm">Endringshistorikk</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:85:          <Heading level={3} data-size="sm" style={{ margin: 0 }}>Ansvar og delegasjon</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/integrations/CredentialsManager.tsx:109:        <Heading level={4} data-size="xs">Feil ved lasting av legitimasjoner</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/integrations/CredentialsManager.tsx:119:          <Heading level={3} data-size="sm">Legitimasjoner</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/integrations/CredentialsManager.tsx:149:          <Heading level={4} data-size="xs">Ingen legitimasjoner</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx:162:        <h1>Tillatelsesstyring</h1>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx:322:                <h3>Tillatelser</h3>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/tenant/features.tsx:103:        <Heading level={3} data-size="xs">Feil ved lasting av moduler</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/organizations/OrganizationFormPage.tsx:110:        <Heading level={3} data-size="sm">Organisasjon ikke funnet</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/organizations/OrganizationMembersPage.tsx:73:        <Heading level={3} data-size="sm">Organisasjon ikke funnet</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/decision-forms.tsx:164:            <Heading level={2} data-size="sm" style={{ margin: 0 }}>Saker til behandling</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/admin-reports.tsx:178:          <Heading level={2} data-size="sm" style={{ margin: 0 }}>Topp lokaler</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/calendar.tsx:151:                <Heading level={1} data-size="lg">Microsoft Outlook - Kalender</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/calendar.tsx:190:                  <Heading level={3} data-size="sm">Kalenderinvitasjoner (ICS)</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/calendar.tsx:223:                  <Heading level={3} data-size="sm">Ressurskalender</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/integrations/calendar.tsx:256:              <Heading level={3} data-size="sm">Siste utsendelser</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users/UserDetailPage.tsx:110:        <Heading level={3} data-size="sm">Bruker ikke funnet</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users/UserDetailPage.tsx:188:                <Heading level={3} data-size="sm">Kontaktinformasjon</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users/UserDetailPage.tsx:241:                <Heading level={3} data-size="sm">Rolle og tilgang</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/routes/users/UserDetailPage.tsx:285:                <Heading level={3} data-size="sm">Kontoinformasjon</Heading>
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/BookingTab.tsx:61:                Alle bookinger må godkjennes av saksbehandler
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:40:              ID-løsninger og pålogging
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:47:              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Norsk e-ID for sikker pålogging</Paragraph>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:65:              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Offentlig påloggingsløsning</Paragraph>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:87:              Betalingsløsninger
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:118:              Låssystemer og adgangskontroll
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:125:              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Digital låssystem</Paragraph>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:195:              Økonomi & ERP
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/IntegrationsTab.tsx:198:              Økonomisystemer og fakturering
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:50:              Send varsler på e-post
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:59:              Send varsler på SMS
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:88:                  Send bekreftelse når booking er godkjent
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:97:                  Send påminnelse før booking starter
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/NotificationsTab.tsx:112:                    suffix="timer før"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:256:                Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/components/AddressesTab.tsx:257:                Endringer i adresse kan ta opptil 24 timer å tre i kraft.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/settings/hooks/useGeneralSettings.ts:156:      nb: 'Norsk bokmål',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:85:          ? `${retriedCount} varsling${retriedCount === 1 ? '' : 'er'} blir prøvd på nytt`
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:86:          : 'Ingen feilede varsler å prøve på nytt'
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:111:          Overvåk leveringsstatus for e-post, SMS og push-varsler
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:193:            {retryFailed.isPending ? t('common.prover_igjen') : 'Prøv feilede på nytt'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx:221:              {searchQuery ? t('common.prov_aa_endre_sokekriteriene') : 'Det finnes ingen varsler ennå'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/types.ts:129:export const WEEKDAY_LABELS = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/types.ts:130:export const WEEKDAY_FULL_LABELS = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/EventDrawer.tsx:200:                {cancelBooking.isPending ? <Spinner data-data-size="sm" aria-label="Avslår..." /> : 'Avslå'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx:637:                  Du har ikke tilgang til å opprette blokkeringer som overlapper med eksisterende bookinger.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:29:        errors.push({ field: 'name', message: 'Navn er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:32:        errors.push({ field: 'category', message: 'Kategori er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:40:          errors.push({ field: 'location.address', message: 'Adresse er påkrevd for denne kategori' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:47:        errors.push({ field: 'capacity', message: 'Kapasitet kan ikke være negativ' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:58:          errors.push({ field: 'openingHours', message: 'Minst én dag med åpningstider er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:67:          errors.push({ field: 'inventory.totalQuantity', message: 'Antall enheter er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:76:          errors.push({ field: 'pickup.pickupLocation', message: 'Hentelokasjon er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:85:          errors.push({ field: 'requirements.licenseTypes', message: 'Førerkorttype er påkrevd når førerkort kreves' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:96:              errors.push({ field: `packages[${index}].name`, message: `Pakke ${index + 1}: Navn er påkrevd` });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:99:              errors.push({ field: `packages[${index}].price`, message: `Pakke ${index + 1}: Pris kan ikke være negativ` });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:110:          errors.push({ field: 'schedule.sessions', message: 'Minst én økt er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:126:          errors.push({ field: 'bookingConfig.slotDurationMinutes', message: 'Tidsluke-varighet må være positiv' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:129:          errors.push({ field: 'bookingConfig.minLeadTimeHours', message: 'Minimum ledetid kan ikke være negativ' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:132:          errors.push({ field: 'bookingConfig.maxAdvanceDays', message: 'Maks forhåndsbestilling må være positiv' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:145:        errors.push({ field: 'name', message: 'Navn er påkrevd' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/utils/wizard-validation.ts:198:        missingFields.push('Åpningstider');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/ReviewStep.tsx:271:          <Field label={t('form.booking.basePrice')} value={`${formData.basePrice} øre`} />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/PackagesStep.tsx:31:  price: number; // in NOK øre
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CategorySelector.tsx:24:  LOKALER_OG_BANER: 'Idrettshaller, møterom, kontorplasser og baner',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CategorySelector.tsx:25:  UTSTYR_OG_INVENTAR: 'Verktøy, utstyr og inventar til utlån',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx:33:          Logg over alle endringer gjort på dette utleieobjektet.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectDetailView.tsx:196:          Det oppstod en feil ved lasting av objektet. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectDetailView.tsx:244:            Det oppstod en uventet feil ved visning av objektet. Vennligst prøv igjen.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectDetailView.tsx:248:              Last inn på nytt
+
+### Pattern 8: Alert/Toast Messages
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx:47:      alert('Please select a grantee and ensure the rental object is saved');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx:37:      alert('Vennligst velg en mottaker');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx:52:      alert('Feil ved tildeling: ' + err.message);
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx:54:      alert('Vennligst velg en mottaker');
+
+================================================
+
+
+## App: Monitoring
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PrivacyTab.tsx:196:                aria-label="Analyse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:81:              <FormField label="Bookingbekreftelse">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/ProfileTab.tsx:226:            <FormField label="Telefonnummer">
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/ProfileTab.tsx:232:                aria-label="Telefonnummer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:113:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:114:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:125:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:126:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:132:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:136:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:149:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:190:            <FormField label="Gateadresse" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:191:              <Textfield aria-label="Gateadresse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:202:              <FormField label="Poststed" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:203:                <Textfield aria-label="Poststed"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:209:                  placeholder="Oslo"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:213:              <FormField label="Postnummer" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:226:            <FormField label="Land" required>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:82:          <Spinner aria-label="Loading test results" />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/layout/Header.tsx:353:                  aria-label="Innstillinger"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/layout/Header.tsx:354:                  title="Innstillinger"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:258:        <Spinner data-size="lg" aria-label="Laster..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/calendar.tsx:128:            <Spinner aria-label="Loading" data-size="md" />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/season-detail.tsx:193:        aria-label="Breadcrumb"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/privacy.tsx:129:        <Spinner data-size="lg" aria-label="Laster personverninnstillinger..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/privacy.tsx:253:                aria-label="Analyse"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/notification-settings.tsx:296:              aria-label="Bookingbekreftelser"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/notification-settings.tsx:386:              aria-label="Kanselleringer"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/notification-settings.tsx:407:              aria-label="Endringer"
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+
+### Pattern 5: Table Headers
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:142:            <Table.HeaderCell>Category</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:143:            <Table.HeaderCell>Passed</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:144:            <Table.HeaderCell>Failed</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:145:            <Table.HeaderCell>Skipped</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:146:            <Table.HeaderCell>Status</Table.HeaderCell>
+
+### Pattern 6: Heading Text
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:80:        <Heading level={2} size="sm">Test Results</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:91:        <Heading level={2} size="sm">Test Results</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/testing/TestResultsWidget.tsx:106:        <Heading level={2} size="sm">Test Results</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/SentryTestComponent.tsx:90:          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Context Setup</h3>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/SentryTestComponent.tsx:105:          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Error Tests</h3>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/SentryTestComponent.tsx:128:          <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Testing Instructions:</h4>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/org/managed-objects.tsx:37:        <Heading level={1} data-size="md">Administrer utleieobjekter</Heading>
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/providers/AccountContextProvider.tsx:218:        'Du har ikke lenger tilgang til den valgte organisasjonen. Du er nå i personlig modus.'
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PrivacyTab.tsx:124:              I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PrivacyTab.tsx:164:                  Markedsføring
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PrivacyTab.tsx:167:                  Motta tips, tilbud og nyheter på e-post
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:48:              Send varsler på e-post
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:57:              Send varsler på SMS
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:86:                  Send bekreftelse når booking er godkjent
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:95:                  Send påminnelse før booking starter
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/NotificationsTab.tsx:110:                    suffix="timer før"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:254:                Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/AddressesTab.tsx:255:                Endringer i adresse kan ta opptil 24 timer å tre i kraft.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PreferencesTab.tsx:31:              Språk
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PreferencesTab.tsx:34:              Velg språk for brukergrensesnittet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PreferencesTab.tsx:77:              Økt og sikkerhet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PreferencesTab.tsx:80:              Administrer din pålogging og sikkerhet
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/components/PreferencesTab.tsx:97:                Logg ut av din konto på denne enheten
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/hooks/usePreferenceSettings.ts:154:      nb: 'Norsk (Bokmål)',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/settings/hooks/usePreferenceSettings.ts:165:      dark: 'Mørk',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/components/ApplicationCard.tsx:118:            Søknad sendt {formatDate(application.createdAt)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/components/ApplicationCard.tsx:257:              Årsak til avslag
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/constants.ts:74:  'Søndag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/constants.ts:80:  'Lørdag',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/constants.ts:84:  'Søn',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/features/seasons/constants.ts:90:  'Lør',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:52:        return 'Din forespørsel er mottatt og venter på behandling.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:58:        return 'Forespørselen din ble avvist. Kontakt support for mer informasjon.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:70:      return 'Denne nedlastingen har utløpt.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:72:      return `Denne nedlastingen utløper om ${daysRemaining} dag${daysRemaining !== 1 ? 'er' : ''}.`;
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:170:                Årsak: {String(exportRequest.metadata.rejectionReason)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:180:            Det oppstod en feil ved opprettelse av forespørselen. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DataExportCard.tsx:191:            <strong>Viktig:</strong> Dataeksporten vil være tilgjengelig for nedlasting i 30 dager fra den er klar. Av sikkerhetshensyn må du være innlogget for å laste ned dataene.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/ConsentManager.tsx:120:              Administrer dine personvernpreferanser. Du kan når som helst endre eller trekke tilbake dine samtykker.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/ConsentManager.tsx:161:                  Nødvendig for at tjenesten skal fungere. Kan ikke deaktiveres.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/ConsentManager.tsx:230:              Det oppstod en feil ved lagring av samtykker. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/ConsentManager.tsx:242:            <strong>{t('common.om_samtykker')}</strong> Du kan når som helst endre eller trekke tilbake dine samtykker. Nødvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:68:        return 'Din forespørsel om sletting av konto er mottatt og venter på behandling.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:70:        return 'Vi behandler forespørselen din. Dette kan ta noen dager.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:74:        return 'Forespørselen din ble avvist. Kontakt support for mer informasjon.';
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:91:            Be om permanent sletting av kontoen din og alle tilhørende data. Dette er en irreversibel handling.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:116:                Sletting av kontoen din vil føre til:
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:156:              Denne handlingen kan ikke angres. En administrator vil behandle forespørselen din innen 30 dager i henhold til GDPR-forskriftene.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:226:                  Årsak: {String(deletionRequest.metadata.rejectionReason)}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:241:                    {cancelRequest.isPending ? t('common.kansellerer') : 'Angre forespørsel'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:252:            Det oppstod en feil. Vennligst prøv igjen senere.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx:263:            <strong>{t('common.gdprrettigheter')}</strong> I henhold til GDPR har du rett til å bli glemt. Forespørselen din vil bli behandlet innen 30 dager. Du kan angre forespørselen før den er behandlet.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:715:                    I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:867:                    Administrer hvordan og når du mottar varsler
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:873:                    Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:895:                    Språk
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/settings.tsx:898:                    Velg språk for brukergrensesnittet
+
+### Pattern 8: Alert/Toast Messages
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/SentryTestComponent.tsx:61:    alert('Tenant context set! Next error will include tenant information.');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/components/SentryTestComponent.tsx:70:    alert('User context set! Next error will include user information.');
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/monitoring/src/routes/season-detail.tsx:144:    alert('Søknad sendt! Du vil motta en bekreftelse når søknaden er behandlet.');
+
+================================================
+
+
+## App: SaaS Admin
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/CategoryEntitlementsTab.tsx:201:              <Spinner size="sm" aria-label="Lagrer..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/ProtectedRoute.tsx:52:        <Spinner aria-label="Laster..." size="lg" />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:250:                    <Spinner size="sm" aria-label="Genererer..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:168:              <Spinner size="sm" aria-label="Lagrer..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/plans/new.tsx:267:                label="Slug"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/new.tsx:212:              label="Slug"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:199:        <Spinner size="lg" aria-label="Laster..." />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:287:          title="Brukere"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:294:          title="Organisasjoner"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:296:          description="Aktive organisasjoner"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:301:          title="Leieobjekter"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:315:          title="Lagring"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/edit.tsx:233:              label="Slug"
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:203:          title="MRR"
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+
+### Pattern 5: Table Headers
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/index.tsx:120:              <Table.HeaderCell>Tenant</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/index.tsx:121:              <Table.HeaderCell>Slug</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/index.tsx:122:              <Table.HeaderCell>Branding</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/index.tsx:124:              <Table.HeaderCell>Handlinger</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/plans/[id].tsx:307:                <Table.HeaderCell>Slug</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/index.tsx:245:                <Table.HeaderCell>Slug</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:589:                          <Table.HeaderCell>Nummer</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:591:                          <Table.HeaderCell>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:592:                          <Table.HeaderCell>Forfallsdato</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:655:                    <Table.HeaderCell>Provider</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:657:                    <Table.HeaderCell>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:658:                    <Table.HeaderCell>Fingerprint</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:473:              <Table.HeaderCell>Tenant</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:474:              <Table.HeaderCell>Status</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:475:              <Table.HeaderCell>Brukere</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:476:              <Table.HeaderCell>Organisasjoner</Table.HeaderCell>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:477:              <Table.HeaderCell>Leieobjekter</Table.HeaderCell>
+
+### Pattern 6: Heading Text
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/CategoryEntitlementsTab.tsx:23:  { key: 'LOKALER_OG_BANER', name: 'Lokaler og baner', description: 'Idrettshaller, gymsaler, møterom' },
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/CategoryEntitlementsTab.tsx:28:  { key: 'KJØRETØY', name: 'Kjøretøy', description: 'Biler, båter, sykler' },
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/layout/Sidebar.tsx:169:          name: t('saasAdmin.nav.monitoring', { defaultValue: 'Overvåking' }),
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/components/layout/Sidebar.tsx:170:          description: t('saasAdmin.nav.monitoringDesc', { defaultValue: 'Plattformovervåking og helse' }),
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:89:      setResult({ success: false, message: 'Velg en tenant først' });
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:116:        setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`]);
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:224:                Forhåndsinnstillinger
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:269:              Forhåndsvisning
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx:348:          Du kan også bruke API-et direkte:
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/index.tsx:105:              placeholder={t('common.search', { defaultValue: 'Søk etter tenant...' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:191:                  Primærfarge
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:213:                  Sekundærfarge
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:316:                  Brødtekst-font
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:337:              Forhåndsvisning
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:378:                  Dette er eksempel på brødtekst med valgt font.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:392:                    Primær
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/branding/[tenantId].tsx:405:                    Sekundær
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/new.tsx:218:              description={t('saasAdmin.tenantCreate.slugDescription', { defaultValue: 'Unik identifikator (kun små bokstaver, tall og bindestrek)' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:154:    if (confirm(`Er du sikker på at du vil suspendere ${tenant?.name}?`)) {
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:329:                Ny lisensnøkkel generert
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:332:                Kopier denne nøkkelen nå. Den vil ikke vises igjen.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:558:                    <div className={styles.billingLabel}>Nåværende plan</div>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:633:                Konfigurerte API-nøkler og integrasjonshemmeligheter (maskert for sikkerhet)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:648:                  Integrasjonsnøkler vil vises her når de er konfigurert.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:694:              Lisensnøkkel
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:729:                  {tenant.licenseKeyFingerprint ? t('common.roter_lisensnokkel') : 'Generer lisensnøkkel'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:735:                  <strong>{t('common.advarsel')}</strong> Når du roterer lisensnøkkelen vil den gamle nøkkelen bli ugyldig umiddelbart.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/[id].tsx:736:                  Alle systemer som bruker den gamle nøkkelen må oppdateres med den nye.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/tenants/edit.tsx:238:              description={t('saasAdmin.tenantCreate.slugDescription', { defaultValue: 'Unik identifikator (kun små bokstaver, tall og bindestrek)' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:167:              {t('saasAdmin.monitoring.title', { defaultValue: 'Plattformovervåking' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:376:              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:417:              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:458:              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/translations/index.tsx:44:  { value: 'nb', label: 'Norsk Bokmål' },
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/services/ai-seed-generator.service.ts:83:- Use real Norwegian cities (Skien, Porsgrunn, Bamble, Notodden, Kragerø, etc.)
+
+### Pattern 8: Alert/Toast Messages
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/saas-admin/src/routes/monitoring/index.tsx:123:      alert(`Scanner failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
+================================================
+
+
+## App: Docs Learning
+Path: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src
+---
+
+### Pattern 1: JSX Text Content
+
+### Pattern 2: Props with Hardcoded Strings
+
+### Pattern 3: Error/Success Messages
+
+### Pattern 4: Button Text
+
+### Pattern 5: Table Headers
+
+### Pattern 6: Heading Text
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:69:              <Heading level={2} id="introduksjon">Introduksjon</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:76:              <Heading level={2} id="trinn-1">Trinn 1: Velg lokale</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:88:              <Heading level={2} id="trinn-2">Trinn 2: Velg dato og tid</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:93:              <Heading level={3} id="ekstra-alternativer">Ekstra alternativer</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:105:              <Heading level={2} id="trinn-3">Trinn 3: Bekreft booking</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:118:              <Heading level={2} id="ofte-stilte-sporsmal">Ofte stilte spørsmål</Heading>
+
+### Pattern 7: Norwegian Text (æ, ø, å)
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/toc/DocsRightTOC.tsx:111:        {t('docs.toc.title') || 'På denne siden'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsSidebar.tsx:98:          label: t('docs.nav.search') || 'Søk',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsSidebar.tsx:99:          description: t('docs.nav.searchDesc') || 'Søk i dokumentasjon',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsSidebar.tsx:120:          description: t('docs.nav.rbacDesc') || 'Forstå brukerroller og tilgang',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsSidebar.tsx:159:          label: t('docs.nav.faq') || 'Ofte stilte spørsmål',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsSidebar.tsx:160:          description: t('docs.nav.faqDesc') || 'Vanlige spørsmål og svar',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsLayout.tsx:49:      label: t('docs.nav.search') || 'Søk',
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsHeader.tsx:42:              placeholder={t('docs.search.placeholder') || 'Søk i dokumentasjon...'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsHeader.tsx:46:              aria-label={t('docs.search.label') || 'Søk'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/components/layout/DocsHeader.tsx:50:            {t('docs.search.button') || 'Søk'}
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:113:                fra "Mine bookinger" frem til 24 timer før starttidspunktet.
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:118:              <Heading level={2} id="ofte-stilte-sporsmal">Ofte stilte spørsmål</Heading>
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:120:                <strong>Kan jeg booke på vegne av andre?</strong><br />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:124:                <strong>Hva skjer hvis jeg trenger å kansellere?</strong><br />
+/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/docs-learning/src/routes/DocsArticlePage.tsx:125:                Du kan kansellere gratis opp til 24 timer før.
+
+### Pattern 8: Alert/Toast Messages
+
+================================================
+
+
+# Summary
+================================================
+Total apps scanned: 6
+Report generated: Sun Jan 18 19:27:08 CET 2026
+
