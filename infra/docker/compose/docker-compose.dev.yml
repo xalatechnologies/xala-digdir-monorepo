@@ -126,7 +126,7 @@ services:
       - "5173:5173"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/web dev
+    command: pnpm --filter @xala/web dev --host 0.0.0.0
 
   # MinSide App (User Portal)
   minside:
@@ -148,7 +148,7 @@ services:
       - "5174:5174"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/minside dev
+    command: pnpm --filter @xala/minside dev --host 0.0.0.0
 
   # Backoffice App (Admin Portal)
   backoffice:
@@ -170,7 +170,7 @@ services:
       - "5175:5175"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/backoffice dev
+    command: pnpm --filter @xala/backoffice dev --host 0.0.0.0
 
   # SaaS Admin App
   saas-admin:
@@ -192,7 +192,7 @@ services:
       - "5177:5177"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/saas-admin dev
+    command: pnpm --filter @xala/saas-admin dev --host 0.0.0.0
 
   # Monitoring App
   monitoring:
@@ -214,7 +214,7 @@ services:
       - "5178:5178"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/monitoring dev
+    command: pnpm --filter @xala/monitoring dev --host 0.0.0.0
 
   # Docs & Learning App
   docs-learning:
@@ -236,7 +236,7 @@ services:
       - "5179:5179"
     networks:
       - digilist-dev
-    command: pnpm --filter @xala/docs-learning dev
+    command: pnpm --filter @xala/docs-learning dev --host 0.0.0.0
 
   # Adminer (Database GUI)
   adminer:
