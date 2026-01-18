@@ -1,74 +1,99 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright E2E Test Configuration for Minside App
- * @see https://playwright.dev/docs/test-configuration
+ * MinSide E2E Test Configuration
  */
 export default defineConfig({
-  testDir: './tests/e2e',
-  /* Run tests in files in parallel */
+  testDir: './tests/e2e/minside',
+  
+  // Run tests in files in parallel
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  
+  // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+  
+  // Retry on CI only
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  
+  // Opt out of parallel tests on CI
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  
+  // Reporter to use
   reporter: [
-    ['html', { outputFolder: 'tests/reports/e2e' }],
     ['list'],
+    ['html', { outputFolder: 'playwright-report-minside', open: 'never' }],
+    ['json', { outputFile: 'test-results/minside-results.json' }],
   ],
-
-  /* Output folders for artifacts */
-  outputDir: 'tests/artifacts',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  
+  // Shared settings for all the projects below
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:5174',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    // Base URL
+    baseURL: process.env.MINSIDE_URL || 'https://minside.digilist.no',
+    
+    // Collect trace when retrying the failed test
     trace: 'on-first-retry',
-    /* Take screenshot on failure */
-    screenshot: {
-      mode: 'only-on-failure',
-      fullPage: true,
-    },
+    
+    // Screenshot on failure
+    screenshot: 'only-on-failure',
+    
+    // Video on first retry
+    video: 'on-first-retry',
+    
+    // Locale
+    locale: 'nb-NO',
+    timezoneId: 'Europe/Oslo',
   },
-
-  /* Configure projects for major browsers */
+  
+  // Configure projects for major browsers
   projects: [
+    // Setup project for authentication
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'user-setup',
+      testMatch: /.*\.setup\.ts/,
     },
-
+    
+    // Authenticated user tests
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: 'user-chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/e2e/minside/.auth/user.json',
+      },
+      dependencies: ['user-setup'],
     },
-
+    
+    // Org admin tests
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'org-admin-chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/e2e/minside/.auth/org-admin.json',
+      },
+      dependencies: ['user-setup'],
     },
-
-    /* Test against mobile viewports. */
+    
+    // Mobile viewport
     {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      name: 'user-mobile',
+      use: {
+        ...devices['iPhone 13'],
+        storageState: 'tests/e2e/minside/.auth/user.json',
+      },
+      dependencies: ['user-setup'],
     },
   ],
-
-  /* Run your local dev server before starting the tests */
-  webServer: {
+  
+  // Output directory
+  outputDir: 'test-results/minside',
+  
+  // Global timeout
+  timeout: 60000,
+  expect: { timeout: 10000 },
+  
+  // Web server for local dev
+  webServer: process.env.MINSIDE_URL ? undefined : {
     command: 'pnpm --filter @xala/minside dev',
     url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
   },
 });

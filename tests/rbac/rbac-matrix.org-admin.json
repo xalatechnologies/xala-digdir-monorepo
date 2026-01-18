@@ -1,0 +1,266 @@
+{
+  "$schema": "./rbac-matrix.schema.json",
+  "role": "org_admin",
+  "displayName": "Organization Administrator",
+  "description": "Manages org members, assigns permissions & case handlers",
+  "level": 40,
+  "inherits": ["org_saksbehandler"],
+  "scope": "organization",
+  "capabilities": [
+    {
+      "id": "OA-DASH-VIEW",
+      "action": "read",
+      "resource": "dashboard",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/dashboard",
+      "sdkMethod": "useDashboard",
+      "uiRoute": "/"
+    },
+    {
+      "id": "OA-LIST-VIEW",
+      "action": "read",
+      "resource": "listings",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/listings",
+      "sdkMethod": "useListings",
+      "uiRoute": "/listings"
+    },
+    {
+      "id": "OA-LIST-CREATE",
+      "action": "create",
+      "resource": "listings",
+      "scope": "org",
+      "expected": "DENY",
+      "endpoint": "POST /api/listings",
+      "sdkMethod": "useCreateListing",
+      "uiRoute": "/listings/new"
+    },
+    {
+      "id": "OA-BOOK-VIEW",
+      "action": "read",
+      "resource": "bookings",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId/bookings",
+      "sdkMethod": "useOrgBookings",
+      "uiRoute": "/bookings"
+    },
+    {
+      "id": "OA-BOOK-CREATE",
+      "action": "create",
+      "resource": "bookings",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "POST /api/organizations/:orgId/bookings",
+      "sdkMethod": "useCreateBooking",
+      "uiRoute": "/bookings/new"
+    },
+    {
+      "id": "OA-BOOK-APPROVE",
+      "action": "approve",
+      "resource": "bookings",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "POST /api/bookings/:id/approve",
+      "sdkMethod": "useApproveBooking",
+      "uiRoute": "/work-queue"
+    },
+    {
+      "id": "OA-BOOK-CANCEL",
+      "action": "delete",
+      "resource": "bookings",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "DELETE /api/bookings/:id",
+      "sdkMethod": "useCancelBooking",
+      "uiRoute": "/bookings/:id"
+    },
+    {
+      "id": "OA-MEMBER-VIEW",
+      "action": "read",
+      "resource": "members",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId/members",
+      "sdkMethod": "useOrgMembers",
+      "uiRoute": "/org/members"
+    },
+    {
+      "id": "OA-MEMBER-INVITE",
+      "action": "create",
+      "resource": "members",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "POST /api/organizations/:orgId/members/invite",
+      "sdkMethod": "useInviteMember",
+      "uiRoute": "/org/members"
+    },
+    {
+      "id": "OA-MEMBER-REMOVE",
+      "action": "delete",
+      "resource": "members",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "DELETE /api/organizations/:orgId/members/:userId",
+      "sdkMethod": "useRemoveMember",
+      "uiRoute": "/org/members"
+    },
+    {
+      "id": "OA-MEMBER-ROLE",
+      "action": "update",
+      "resource": "members",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "PATCH /api/organizations/:orgId/members/:userId",
+      "sdkMethod": "useUpdateMemberRole",
+      "uiRoute": "/org/members"
+    },
+    {
+      "id": "OA-ORG-VIEW",
+      "action": "read",
+      "resource": "organization",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId",
+      "sdkMethod": "useOrganization",
+      "uiRoute": "/org/settings"
+    },
+    {
+      "id": "OA-ORG-UPDATE",
+      "action": "update",
+      "resource": "organization",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "PATCH /api/organizations/:orgId",
+      "sdkMethod": "useUpdateOrganization",
+      "uiRoute": "/org/settings"
+    },
+    {
+      "id": "OA-CAL-VIEW",
+      "action": "read",
+      "resource": "calendar",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/calendar",
+      "sdkMethod": "useCalendar",
+      "uiRoute": "/calendar"
+    },
+    {
+      "id": "OA-CAL-BLOCK",
+      "action": "create",
+      "resource": "blocks",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "POST /api/blocks",
+      "sdkMethod": "useCreateBlock",
+      "uiRoute": "/calendar"
+    },
+    {
+      "id": "OA-MSG-VIEW",
+      "action": "read",
+      "resource": "messages",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/messages",
+      "sdkMethod": "useMessages",
+      "uiRoute": "/messages",
+      "featureFlag": "FEATURE_MESSAGING"
+    },
+    {
+      "id": "OA-MSG-SEND",
+      "action": "create",
+      "resource": "messages",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "POST /api/messages",
+      "sdkMethod": "useSendMessage",
+      "uiRoute": "/messages",
+      "featureFlag": "FEATURE_MESSAGING"
+    },
+    {
+      "id": "OA-REPORT-VIEW",
+      "action": "read",
+      "resource": "reports",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId/reports",
+      "sdkMethod": "useOrgReports",
+      "uiRoute": "/reports",
+      "featureFlag": "FEATURE_REPORTS"
+    },
+    {
+      "id": "OA-REPORT-EXPORT",
+      "action": "export",
+      "resource": "reports",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId/exports/:type",
+      "sdkMethod": "useExport",
+      "uiRoute": "/reports",
+      "featureFlag": "FEATURE_REPORTS"
+    },
+    {
+      "id": "OA-AUDIT-VIEW",
+      "action": "read",
+      "resource": "audit",
+      "scope": "org",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/organizations/:orgId/audit",
+      "sdkMethod": "useOrgAudit",
+      "uiRoute": "/org/audit"
+    },
+    {
+      "id": "OA-SETTINGS-VIEW",
+      "action": "read",
+      "resource": "settings",
+      "scope": "tenant",
+      "expected": "DENY",
+      "endpoint": "GET /api/settings",
+      "sdkMethod": "useSettings",
+      "uiRoute": "/settings"
+    },
+    {
+      "id": "OA-USERS-MANAGE",
+      "action": "manage",
+      "resource": "users",
+      "scope": "tenant",
+      "expected": "DENY",
+      "endpoint": "GET /api/users",
+      "sdkMethod": "useUsers",
+      "uiRoute": "/users"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "OA-BOUNDARY-CROSS-ORG",
+      "description": "Org A admin cannot access Org B data",
+      "expected": "403"
+    },
+    {
+      "id": "OA-BOUNDARY-CROSS-TENANT",
+      "description": "Cannot access different tenant",
+      "expected": "403"
+    },
+    {
+      "id": "OA-BOUNDARY-IDOR-BOOKING",
+      "description": "Cannot read booking from different org",
+      "expected": "403"
+    },
+    {
+      "id": "OA-BOUNDARY-IDOR-MEMBER",
+      "description": "Cannot modify member from different org",
+      "expected": "403"
+    }
+  ],
+  "auditRequirements": [
+    "member.invite",
+    "member.remove",
+    "member.role_change",
+    "organization.update",
+    "booking.create",
+    "booking.approve",
+    "booking.cancel"
+  ]
+}

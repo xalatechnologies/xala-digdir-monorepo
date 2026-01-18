@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MinSide RBAC Matrix",
+  "description": "Role × Capability × Scope matrix for MinSide app",
+  "version": "1.0.0",
+  "generated": "2026-01-18",
+  
+  "roles": {
+    "authenticated_user": {
+      "description": "Base authenticated user (private context)",
+      "context": "personal"
+    },
+    "org_member": {
+      "description": "Organization member",
+      "context": "organization"
+    },
+    "org_admin": {
+      "description": "Organization administrator",
+      "context": "organization"
+    }
+  },
+  
+  "capabilities": {
+    "CAP_AUTH_LOGIN": {
+      "description": "Can log in to MinSide",
+      "endpoint": "POST /auth/*",
+      "roles": ["*"],
+      "scope": "global"
+    },
+    "CAP_AUTH_LOGOUT": {
+      "description": "Can log out",
+      "endpoint": "POST /auth/logout",
+      "roles": ["authenticated_user", "org_member", "org_admin"],
+      "scope": "session"
+    },
+    "CAP_PROFILE_VIEW": {
+      "description": "View own profile",
+      "endpoint": "GET /me",
+      "roles": ["authenticated_user", "org_member", "org_admin"],
+      "scope": "self"
+    },
+    "CAP_PROFILE_EDIT": {
+      "description": "Edit own profile",
+      "endpoint": "PATCH /me",
+      "roles": ["authenticated_user", "org_member", "org_admin"],
+      "scope": "self"
+    },
+    "CAP_DASHBOARD_VIEW": {
+      "description": "View personal dashboard",
+      "endpoint": "GET /me/stats",
+      "roles": ["authenticated_user"],
+      "scope": "self",
+      "context": "personal"
+    },
+    "CAP_BOOKINGS_VIEW": {
+      "description": "View own bookings",
+      "endpoint": "GET /me/bookings",
+      "roles": ["authenticated_user"],
+      "scope": "self",
+      "context": "personal"
+    },
+    "CAP_BOOKINGS_CANCEL": {
+      "description": "Cancel own booking",
+      "endpoint": "POST /bookings/:id/cancel",
+      "roles": ["authenticated_user"],
+      "scope": "self",
+      "constraints": ["within_cancellation_policy"]
+    },
+    "CAP_BILLING_VIEW": {
+      "description": "View billing/invoices",
+      "endpoint": "GET /me/invoices",
+      "roles": ["authenticated_user"],
+      "scope": "self",
+      "context": "personal"
+    },
+    "CAP_MESSAGES_VIEW": {
+      "description": "View messages",
+      "endpoint": "GET /me/conversations",
+      "roles": ["authenticated_user"],
+      "scope": "self"
+    },
+    "CAP_MESSAGES_SEND": {
+      "description": "Send messages",
+      "endpoint": "POST /conversations/:id/messages",
+      "roles": ["authenticated_user"],
+      "scope": "self"
+    },
+    "CAP_FAVORITES_VIEW": {
+      "description": "View favorites",
+      "endpoint": "GET /me/favorites",
+      "roles": ["authenticated_user"],
+      "scope": "self",
+      "context": "personal"
+    },
+    "CAP_FAVORITES_MANAGE": {
+      "description": "Add/remove favorites",
+      "endpoint": "POST /me/favorites/:id",
+      "roles": ["authenticated_user"],
+      "scope": "self"
+    },
+    "CAP_ORG_DASHBOARD_VIEW": {
+      "description": "View organization dashboard",
+      "endpoint": "GET /organizations/:id",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_BOOKINGS_VIEW": {
+      "description": "View organization bookings",
+      "endpoint": "GET /organizations/:id/bookings",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_BOOKINGS_CREATE": {
+      "description": "Create booking for organization",
+      "endpoint": "POST /organizations/:id/bookings",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_MEMBERS_VIEW": {
+      "description": "View organization members",
+      "endpoint": "GET /organizations/:id/members",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_MEMBERS_MANAGE": {
+      "description": "Manage organization members",
+      "endpoint": "POST /organizations/:id/members",
+      "roles": ["org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_INVOICES_VIEW": {
+      "description": "View organization invoices",
+      "endpoint": "GET /organizations/:id/invoices",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_SETTINGS_VIEW": {
+      "description": "View organization settings",
+      "endpoint": "GET /organizations/:id/settings",
+      "roles": ["org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_SETTINGS_EDIT": {
+      "description": "Edit organization settings",
+      "endpoint": "PATCH /organizations/:id/settings",
+      "roles": ["org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_SEASONS_VIEW": {
+      "description": "View season rental options",
+      "endpoint": "GET /organizations/:id/seasons",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    },
+    "CAP_ORG_SEASONS_APPLY": {
+      "description": "Apply for season rental",
+      "endpoint": "POST /organizations/:id/season-applications",
+      "roles": ["org_member", "org_admin"],
+      "scope": "organization",
+      "context": "organization"
+    }
+  },
+  
+  "routes": {
+    "/": {
+      "capability": "CAP_DASHBOARD_VIEW",
+      "context": "personal"
+    },
+    "/bookings": {
+      "capability": "CAP_BOOKINGS_VIEW",
+      "context": "personal"
+    },
+    "/billing": {
+      "capability": "CAP_BILLING_VIEW",
+      "context": "personal"
+    },
+    "/calendar": {
+      "capability": "CAP_BOOKINGS_VIEW",
+      "context": "personal"
+    },
+    "/messages": {
+      "capability": "CAP_MESSAGES_VIEW",
+      "context": "personal"
+    },
+    "/favorites": {
+      "capability": "CAP_FAVORITES_VIEW",
+      "context": "personal"
+    },
+    "/settings": {
+      "capability": "CAP_PROFILE_EDIT",
+      "context": "any"
+    },
+    "/preferences": {
+      "capability": "CAP_PROFILE_EDIT",
+      "context": "any"
+    },
+    "/notifications": {
+      "capability": "CAP_PROFILE_VIEW",
+      "context": "any"
+    },
+    "/privacy": {
+      "capability": "CAP_PROFILE_VIEW",
+      "context": "any"
+    },
+    "/help": {
+      "capability": null,
+      "context": "any"
+    },
+    "/org": {
+      "capability": "CAP_ORG_DASHBOARD_VIEW",
+      "context": "organization"
+    },
+    "/org/bookings": {
+      "capability": "CAP_ORG_BOOKINGS_VIEW",
+      "context": "organization"
+    },
+    "/org/invoices": {
+      "capability": "CAP_ORG_INVOICES_VIEW",
+      "context": "organization"
+    },
+    "/org/members": {
+      "capability": "CAP_ORG_MEMBERS_VIEW",
+      "context": "organization"
+    },
+    "/org/season-rental": {
+      "capability": "CAP_ORG_SEASONS_VIEW",
+      "context": "organization"
+    },
+    "/org/settings": {
+      "capability": "CAP_ORG_SETTINGS_VIEW",
+      "context": "organization"
+    },
+    "/org/activity": {
+      "capability": "CAP_ORG_DASHBOARD_VIEW",
+      "context": "organization"
+    }
+  },
+  
+  "testCases": {
+    "positive": [
+      {
+        "id": "auth_user_dashboard",
+        "role": "authenticated_user",
+        "context": "personal",
+        "action": "GET /me/stats",
+        "expected": 200
+      },
+      {
+        "id": "auth_user_bookings",
+        "role": "authenticated_user",
+        "context": "personal",
+        "action": "GET /me/bookings",
+        "expected": 200
+      },
+      {
+        "id": "org_member_org_dashboard",
+        "role": "org_member",
+        "context": "organization",
+        "action": "GET /organizations/:id",
+        "expected": 200
+      },
+      {
+        "id": "org_admin_manage_members",
+        "role": "org_admin",
+        "context": "organization",
+        "action": "POST /organizations/:id/members",
+        "expected": 201
+      }
+    ],
+    "negative": [
+      {
+        "id": "auth_user_no_org_dashboard",
+        "role": "authenticated_user",
+        "context": "personal",
+        "action": "GET /organizations/:id",
+        "expected": 403,
+        "reason": "User has no org membership"
+      },
+      {
+        "id": "org_member_no_manage_members",
+        "role": "org_member",
+        "context": "organization",
+        "action": "POST /organizations/:id/members",
+        "expected": 403,
+        "reason": "Only org_admin can manage members"
+      },
+      {
+        "id": "org_member_no_edit_settings",
+        "role": "org_member",
+        "context": "organization",
+        "action": "PATCH /organizations/:id/settings",
+        "expected": 403,
+        "reason": "Only org_admin can edit settings"
+      }
+    ]
+  }
+}
