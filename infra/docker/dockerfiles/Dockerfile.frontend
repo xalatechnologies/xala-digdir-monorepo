@@ -82,8 +82,11 @@ EXPOSE ${APP_PORT}
 # Set environment
 ENV NODE_ENV=development
 
-# Start development server
-CMD pnpm --filter "@xala/${APP_NAME}" dev
+# Set working directory to workspace root
+WORKDIR /app
+
+# Start development server from workspace root
+CMD ["sh", "-c", "pnpm --filter @xala/${APP_NAME} dev"]
 
 # ==============================================================================
 # PRODUCTION STAGE (nginx)
