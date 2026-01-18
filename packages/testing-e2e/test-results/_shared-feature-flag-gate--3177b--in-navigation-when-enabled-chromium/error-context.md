@@ -4,12 +4,12 @@
 - generic [ref=e4]:
   - generic [ref=e5]:
     - generic [ref=e6]:
-      - link "DIGILIST DIGILIST ENKEL BOOKING" [ref=e8] [cursor=pointer]:
+      - link "name name tagline" [ref=e8] [cursor=pointer]:
         - /url: /
-        - img "DIGILIST" [ref=e9]
+        - img "name" [ref=e9]
         - generic [ref=e10]:
-          - generic [ref=e11]: DIGILIST
-          - generic [ref=e12]: ENKEL BOOKING
+          - generic [ref=e11]: name
+          - generic [ref=e12]: tagline
       - generic [ref=e13]:
         - heading "Logg inn" [level=1] [ref=e14]
         - paragraph [ref=e15]: Velg innloggingsmetode for å fortsette.
@@ -36,24 +36,24 @@
   - generic [ref=e34]:
     - generic [ref=e35]:
       - paragraph [ref=e36]: Backoffice
-      - heading "adminPortal" [level=2] [ref=e37]
-      - paragraph [ref=e38]: backofficeDesc
+      - heading "Administrasjonsportal" [level=2] [ref=e37]
+      - paragraph [ref=e38]: Komplett verktøy for administrasjon av bookinger, brukere og rapporter
     - generic [ref=e39]:
       - generic [ref=e40]:
         - img [ref=e42]
         - generic [ref=e47]:
-          - paragraph [ref=e48]: bookingAdmin
-          - paragraph [ref=e49]: bookingAdminDesc
+          - paragraph [ref=e48]: Booking Administrasjon
+          - paragraph [ref=e49]: Administrer bookinger, godkjenninger og kalender
       - generic [ref=e50]:
         - img [ref=e52]
         - generic [ref=e58]:
-          - paragraph [ref=e59]: userAdmin
-          - paragraph [ref=e60]: userAdminDesc
+          - paragraph [ref=e59]: Brukeradministrasjon
+          - paragraph [ref=e60]: Administrer brukere, roller og tilganger
       - generic [ref=e61]:
         - img [ref=e63]
         - generic [ref=e66]:
-          - paragraph [ref=e67]: reportsStats
-          - paragraph [ref=e68]: reportsStatsDesc
+          - paragraph [ref=e67]: Rapporter & Statistikk
+          - paragraph [ref=e68]: Innsikt i bookinger, inntekter og bruksmønstre
     - generic [ref=e69]:
       - paragraph [ref=e70]: Integrasjoner & Sertifiseringer
       - generic [ref=e71]:

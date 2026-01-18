@@ -41,6 +41,25 @@ async function setupCommonMocks(page: Page) {
     await route.fulfill({ status: 200, json: { data: [] } });
   });
 
+  // Mock Auth Session (Critical for AuthProvider)
+  await page.route('**/api/auth/session', async route => {
+    await route.fulfill({
+      json: {
+        data: {
+          user: {
+            id: 'test-user',
+            name: 'Test User',
+            email: 'test@digilist.no',
+            role: 'org_admin',
+            grantedRoles: [],
+            tenantId: 'test-tenant'
+          },
+          expiresAt: new Date(Date.now() + 3600 * 1000).toISOString()
+        }
+      }
+    });
+  });
+
   // Mock User Me (Specific - added AFTER so it wins)
   await page.route('**/api/users/me', async route => {
     await route.fulfill({

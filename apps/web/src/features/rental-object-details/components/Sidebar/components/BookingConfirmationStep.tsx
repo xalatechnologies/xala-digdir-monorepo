@@ -393,10 +393,10 @@ export function BookingConfirmationStep({
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                    t('common.som_privatperson')
+                    {t('common.som.privatperson')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    t('common.booke_for_deg_selv')
+                    {t('common.booke.for.deg.selv')}
                   </Paragraph>
                 </div>
               </div>
@@ -445,10 +445,10 @@ export function BookingConfirmationStep({
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                    På vegne av organisasjon
+                    {t('common.paa.vegne.av.organisasjon')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Booke for en organisasjon du representerer
+                    {t('common.booke.for.organisasjon.du.representerer')}
                   </Paragraph>
                 </div>
               </div>
@@ -471,7 +471,7 @@ export function BookingConfirmationStep({
                   }}
                 >
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-info-text-default)' }}>
-                    Du er ikke tilknyttet noen organisasjoner ennå. Kontakt din administrator for å bli lagt til i en organisasjon.
+                    {t('common.du.ikke.tilknyttet.organisasjoner')}
                   </Paragraph>
                 </div>
               ) : (
