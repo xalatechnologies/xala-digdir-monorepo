@@ -97,7 +97,16 @@ export function shareEmail(data: ShareData): ShareResult {
   const url = buildShareUrl(data.url, 'email');
   const subject = encodeURIComponent(data.title);
   const body = encodeURIComponent(`${data.description || ''}\n\n${url}`);
-  window.open(`mailto:?subject=${subject}&body=${body}`t('common.blank_return_success_true')`${data.title}\n${url}`);
+  window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+  return { success: true, medium: 'email' };
+}
+
+/**
+ * Share via WhatsApp
+ */
+export function shareWhatsApp(data: ShareData): ShareResult {
+  const url = buildShareUrl(data.url, 'whatsapp');
+  const text = encodeURIComponent(`${data.title}\n${url}`);
   window.open(`https://wa.me/?text=${text}`, '_blank');
   return { success: true, medium: 'whatsapp' };
 }
