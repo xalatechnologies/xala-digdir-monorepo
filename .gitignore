@@ -50,3 +50,6 @@ logs/security/
 .env.staging
 apps/web/.env.local
 tests/artifacts/*
+
+tests/playwright-report/*
+tests/test-results/*
