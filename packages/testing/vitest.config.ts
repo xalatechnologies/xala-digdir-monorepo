@@ -48,10 +48,17 @@ export default defineConfig({
     
     // Alias for easier imports
     alias: {
-      '@testing': resolve(__dirname, './src'),
-      '@fixtures': resolve(__dirname, './src/fixtures'),
-      '@mocks': resolve(__dirname, './src/mocks'),
-      '@utils': resolve(__dirname, './src/utils'),
+      '@testing': resolve(__dirname, './'),
+      '@digilist/database-schema': resolve(__dirname, '../database-schema/src'),
+      '@digilist/client-sdk': resolve(__dirname, '../client-sdk/src'),
+      '@digilist/contracts': resolve(__dirname, '../contracts/src'),
+      '@xala/i18n': resolve(__dirname, '../i18n/src'),
+      '@xala/ds': resolve(__dirname, '../ds/src'),
+      // Stub API imports for tests
+      '../../apps/api/src': resolve(__dirname, './stubs/api-imports'),
+      '../projections': resolve(__dirname, './stubs/api-imports'),
+      '../schemas': resolve(__dirname, './stubs/api-imports'),
+      'yaml': resolve(__dirname, './stubs/yaml-stub'),
     },
     
     // Pool configuration for faster tests
