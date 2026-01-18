@@ -97,7 +97,7 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true,
+        enabled: false, // Disabled - causes Vite dev server issues
       },
     }),
   ],
