@@ -356,7 +356,7 @@ export function RequestsPage() {
                 <Table.HeaderCell>{t('backoffice.text.tidsrom')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.opprettet')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.tildelt')}</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '160px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

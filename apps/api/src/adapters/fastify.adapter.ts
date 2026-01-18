@@ -196,7 +196,7 @@ export async function createFastifyApp(
       docExpansion: 'list',
       deepLinking: true,
     },
-    staticCSP: true,
+    staticCSP: false, // Disable Swagger's CSP, use our custom relaxed CSP instead
   });
 
   // Register cookie plugin for HTTP-only cookie support

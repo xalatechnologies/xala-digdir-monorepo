@@ -322,8 +322,8 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-              <Table.HeaderCell>Lokale</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.organization')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.lokale')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.ukedag')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.time')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.avslagsgrunn')}</Table.HeaderCell>

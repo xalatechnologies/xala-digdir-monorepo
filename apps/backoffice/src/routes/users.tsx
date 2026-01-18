@@ -161,10 +161,10 @@ export function UsersPage() {
                   <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('backoffice.text.alle')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('active')}>{t('backoffice.status.active')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('backoffice.status.inactive')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Dropdown.Button onClick={() => setStatusFilter('suspended')}>{t('backoffice.text.suspendert')}</Dropdown.Button>

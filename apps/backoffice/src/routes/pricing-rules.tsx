@@ -163,10 +163,10 @@ export function PricingRulesPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>{t('backoffice.label.name')}</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.type')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.belop')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.betingelser')}</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.status')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '140px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>

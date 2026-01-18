@@ -1,9 +1,9 @@
 # Translation Conversion Guide
 
-**Generated:** 2026-01-18T21:45:37.638Z  
-**Total Hard-coded Strings:** 570  
-**Unique Translation Keys:** 385  
-**New Keys Added:** 385
+**Generated:** 2026-01-18T22:22:01.277Z  
+**Total Hard-coded Strings:** 58  
+**Unique Translation Keys:** 20  
+**New Keys Added:** 0
 
 ---
 
@@ -11,26 +11,26 @@
 
 | Key | Norwegian | English | Usage Count | Files |
 |-----|-----------|---------|-------------|-------|
-| `backoffice.text.status` | Status | Status | 9 | 9 |
-| `backoffice.text.user` | Bruker | User | 8 | 7 |
-| `settings.status.active` | Aktiv | Active | 8 | 1 |
-| `settings.status.inactive` | Inaktiv | Inactive | 8 | 1 |
-| `backoffice.text.handlinger` | Handlinger | Handlinger | 7 | 7 |
-| `seasons.text.organization` | Organisasjon | Organization | 6 | 4 |
-| `seasons.text.status` | Status | Status | 6 | 4 |
-| `backoffice.text.type` | Type | Type | 6 | 5 |
-| `settings.placeholder.oslo` | Oslo | Oslo | 6 | 3 |
-| `settings.text.norge` | Norge | Norge | 6 | 3 |
-| `settings.text.sverige` | Sverige | Sverige | 6 | 3 |
-| `settings.text.danmark` | Danmark | Danmark | 6 | 3 |
-| `settings.text.finland` | Finland | Finland | 6 | 3 |
-| `seasons.text.lokale` | Lokale | Lokale | 5 | 3 |
-| `backoffice.text.organization` | Organisasjon | Organization | 5 | 4 |
-| `backoffice.status.active` | Aktiv | Active | 4 | 3 |
-| `backoffice.status.inactive` | Inaktiv | Inactive | 4 | 3 |
-| `seasons.text.prioritet` | Prioritet | Prioritet | 4 | 2 |
-| `seasons.text.ukedag` | Ukedag | Ukedag | 4 | 4 |
-| `seasons.text.handlinger` | Handlinger | Handlinger | 4 | 4 |
+| `backoffice.text.status` | Status | Status | 6 | 6 |
+| `backoffice.text.user` | Bruker | User | 5 | 4 |
+| `backoffice.text.handlinger` | Handlinger | Handlinger | 4 | 4 |
+| `seasons.text.organization` | Organisasjon | Organization | 3 | 3 |
+| `seasons.text.status` | Status | Status | 3 | 3 |
+| `backoffice.text.type` | Type | Type | 3 | 2 |
+| `seasons.text.lokale` | Lokale | Lokale | 2 | 2 |
+| `settings.placeholder.oslo` | Oslo | Oslo | 2 | 1 |
+| `settings.text.norge` | Norge | Norge | 2 | 1 |
+| `settings.text.sverige` | Sverige | Sverige | 2 | 1 |
+| `settings.text.danmark` | Danmark | Danmark | 2 | 1 |
+| `settings.text.finland` | Finland | Finland | 2 | 1 |
+| `organizations.placeholder.4712345678` | +47 12 34 56 78 | +47 12 34 56 78 | 1 | 1 |
+| `seasons.text.prioritet` | Prioritet | Prioritet | 1 | 1 |
+| `seasons.text.ukedag` | Ukedag | Ukedag | 1 | 1 |
+| `seasons.text.handlinger` | Handlinger | Handlinger | 1 | 1 |
+| `backoffice.text.ventende` | Ventende | Ventende | 1 | 1 |
+| `backoffice.text.organization` | Organisasjon | Organization | 1 | 1 |
+| `backoffice.status.active` | Aktiv | Active | 1 | 1 |
+| `backoffice.status.inactive` | Inaktiv | Inactive | 1 | 1 |
 
 ---
 
@@ -54,7 +54,7 @@ Use the conversion guide to replace hard-coded strings with translation keys.
 Example conversions:
 
 
-**File:** `apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx`
+**File:** `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx`
 ```tsx
 // ❌ Before
 <div>Status</div>
@@ -64,7 +64,7 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx`
+**File:** `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx`
 ```tsx
 // ❌ Before
 <div>Bruker</div>
@@ -74,27 +74,7 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/features/settings/components/IntegrationsTab.tsx`
-```tsx
-// ❌ Before
-<div>Aktiv</div>
-
-// ✅ After
-<div>{t('settings.status.active')}</div>
-```
-
-
-**File:** `apps/backoffice/src/features/settings/components/IntegrationsTab.tsx`
-```tsx
-// ❌ Before
-<div>Inaktiv</div>
-
-// ✅ After
-<div>{t('settings.status.inactive')}</div>
-```
-
-
-**File:** `apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx`
+**File:** `apps/backoffice/src/routes/requests.tsx`
 ```tsx
 // ❌ Before
 <div>Handlinger</div>
@@ -104,7 +84,7 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/components/seasons/AllocationProposal.tsx`
+**File:** `apps/backoffice/src/components/seasons/AppealProcess.tsx`
 ```tsx
 // ❌ Before
 <div>Organisasjon</div>
@@ -114,7 +94,7 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/components/seasons/AllocationProposal.tsx`
+**File:** `apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx`
 ```tsx
 // ❌ Before
 <div>Status</div>
@@ -124,7 +104,7 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx`
+**File:** `apps/backoffice/src/routes/pricing-rules.tsx`
 ```tsx
 // ❌ Before
 <div>Type</div>
@@ -134,7 +114,17 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/features/settings/components/AddressesTab.tsx`
+**File:** `apps/backoffice/src/components/seasons/AppealProcess.tsx`
+```tsx
+// ❌ Before
+<div>Lokale</div>
+
+// ✅ After
+<div>{t('seasons.text.lokale')}</div>
+```
+
+
+**File:** `apps/monitoring/src/features/settings/components/AddressesTab.tsx`
 ```tsx
 // ❌ Before
 <input placeholder="Oslo" />
@@ -144,13 +134,23 @@ Example conversions:
 ```
 
 
-**File:** `apps/backoffice/src/features/settings/components/AddressesTab.tsx`
+**File:** `apps/monitoring/src/features/settings/components/AddressesTab.tsx`
 ```tsx
 // ❌ Before
 <div>Norge</div>
 
 // ✅ After
 <div>{t('settings.text.norge')}</div>
+```
+
+
+**File:** `apps/monitoring/src/features/settings/components/AddressesTab.tsx`
+```tsx
+// ❌ Before
+<div>Sverige</div>
+
+// ✅ After
+<div>{t('settings.text.sverige')}</div>
 ```
 
 

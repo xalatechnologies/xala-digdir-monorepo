@@ -38,12 +38,21 @@ export {
   rentalObjects,
   listings,
   bookings,
+  allocations,
+  blocks,
+  seasonalLeases,
   type RentalObject,
   type NewRentalObject,
   type Listing,
   type NewListing,
   type Booking,
   type NewBooking,
+  type Allocation,
+  type NewAllocation,
+  type Block,
+  type NewBlock,
+  type SeasonalLease,
+  type NewSeasonalLease,
 } from '@digilist/database-schema';
 
 // Platform tables
@@ -115,10 +124,8 @@ export {
   seasonApplications,
   priorityRules,
   
-  // Allocations & Blocks
-  allocations,
-  blocks,
-  seasonalLeases,
+  // Allocations & Blocks (now in database-schema package, but keep legacy for backward compat)
+  // allocations, blocks, seasonalLeases - moved to @digilist/database-schema
   
   // Amenities
   amenities,

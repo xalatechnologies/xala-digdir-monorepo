@@ -202,7 +202,7 @@ export const PermissionManagement: React.FC = () => {
                 <th>{t('common.gitt_til')}</th>
                 <th>{t('backoffice.text.tillatelser')}</th>
                 <th>{t('common.gyldig_periode')}</th>
-                <th>Status</th>
+                <th>{t('backoffice.text.status')}</th>
                 <th>{t('backoffice.text.handlinger')}</th>
               </tr>
             </thead>
@@ -215,7 +215,7 @@ export const PermissionManagement: React.FC = () => {
                   <td>
                     {permission.userId ? (
                       <div>
-                        <span className="tag tag-user">Bruker</span>
+                        <span className="tag tag-user">{t('backoffice.text.user')}</span>
                         {permission.userName}
                       </div>
                     ) : (
@@ -309,7 +309,7 @@ export const PermissionManagement: React.FC = () => {
               <div className="form-group">
                 <label>{t('common.gi_til')}</label>
                 <select name="grantTo" className="form-select">
-                  <option value="USER">Bruker</option>
+                  <option value="USER">{t('backoffice.text.user')}</option>
                   <option value="ORGANIZATION">{t('backoffice.text.organization')}</option>
                 </select>
               </div>

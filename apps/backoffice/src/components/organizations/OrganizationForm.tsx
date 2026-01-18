@@ -206,7 +206,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
-                placeholder="+47 12 34 56 78"
+                placeholder={t('organizations.placeholder.4712345678')}
                 aria-label={t('organizations.ariaLabel.phone')}
               />
             </FormField>

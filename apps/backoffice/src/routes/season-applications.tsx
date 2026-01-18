@@ -166,7 +166,7 @@ export function SeasonApplicationsReviewPage() {
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.total}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Ventende</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.ventende')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: stats.pending > 0 ? 'var(--ds-color-warning-text-default)' : undefined }}>
             {stats.pending}
           </Heading>
@@ -213,13 +213,13 @@ export function SeasonApplicationsReviewPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Organisasjon</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.organization')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.season')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.timer')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.prioritet')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.mottatt')}</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '180px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '180px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

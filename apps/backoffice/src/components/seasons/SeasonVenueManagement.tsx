@@ -177,7 +177,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
               <Table.HeaderCell>{t('seasons.text.type')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.kapasitet')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.address')}</Table.HeaderCell>
-              {canEdit && <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>}
+              {canEdit && <Table.HeaderCell style={{ width: '80px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>}
             </Table.Row>
           </Table.Head>
           <Table.Body>

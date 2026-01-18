@@ -331,9 +331,9 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
               <Table.Row>
                 <Table.HeaderCell>{t('seasons.text.regel')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('seasons.text.type')}</Table.HeaderCell>
-                <Table.HeaderCell>Prioritet</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.text.prioritet')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('seasons.text.betingelser')}</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.text.status')}</Table.HeaderCell>
                 {/* Table column width requires specific pixel value for consistent layout */}
                 {canEdit && <Table.HeaderCell style={{ width: '100px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>}
               </Table.Row>

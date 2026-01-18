@@ -1,0 +1,165 @@
+# i18n Inventory Report
+
+**Generated:** 2026-01-18 22:21:35  
+**App Filter:** backoffice  
+**Include Packages:** false
+
+---
+
+## 📊 Summary
+
+| Metric | Count |
+|--------|-------|
+| Total Files Scanned | 202 |
+| Files with Translations | 143 |
+| Files with Hard-coded Strings | 20 |
+| Total Translation Keys Used | 2649 |
+| Unique Translation Keys | 1924 |
+| Unique Namespaces | 52 |
+| Total Hard-coded Strings | 44 |
+| Violations | 11 |
+
+---
+
+## 🔑 Translation Keys by Namespace
+
+| Namespace | Usage Count |
+|-----------|-------------|
+| common | 524 |
+| settings | 235 |
+| seasons | 184 |
+| backoffice | 170 |
+| form | 169 |
+| organizations | 128 |
+| action | 112 |
+| integrations | 102 |
+| state | 100 |
+| nav | 78 |
+| blocks | 77 |
+| tenantAdmin | 74 |
+| rentalObjects | 69 |
+| accessGrants | 59 |
+| bookings | 53 |
+| audit | 44 |
+| payments | 40 |
+| gdpr | 39 |
+| wizard | 39 |
+| orgAdmin | 32 |
+| ui | 29 |
+| auth | 27 |
+| status | 23 |
+| label | 22 |
+| workQueue | 21 |
+| dashboard | 20 |
+| help | 18 |
+| security | 18 |
+| countries | 18 |
+| error | 16 |
+| refund | 16 |
+| media | 13 |
+| validation | 12 |
+| users | 12 |
+| rule | 10 |
+| actions | 9 |
+| app | 5 |
+| bulk | 5 |
+| country | 5 |
+| messages | 4 |
+| timeMode | 3 |
+| role | 2 |
+| day | 2 |
+| errors | 2 |
+| brand | 2 |
+| aktiveringdeaktivering | 1 |
+| sensitiv | 1 |
+| tilkobling | 1 |
+| confirm | 1 |
+| category | 1 |
+| table | 1 |
+| pagination | 1 |
+
+---
+
+## ⚠️ Top Violations
+
+| File | Type | Message | Severity |
+|------|------|---------|----------|
+| `apps/backoffice/src/components/seasons/AppealProcess.tsx` | mixed-approach | File uses translations but also contains 2 hard-coded strings | warning |
+| `apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx` | mixed-approach | File uses translations but also contains 2 hard-coded strings | warning |
+| `apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx` | mixed-approach | File uses translations but also contains 4 hard-coded strings | warning |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx` | mixed-approach | File uses translations but also contains 1 hard-coded strings | warning |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/RequirementsStep.tsx` | mixed-approach | File uses translations but also contains 1 hard-coded strings | warning |
+| `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx` | mixed-approach | File uses translations but also contains 2 hard-coded strings | warning |
+| `apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx` | mixed-approach | File uses translations but also contains 3 hard-coded strings | warning |
+| `apps/backoffice/src/routes/requests.tsx` | mixed-approach | File uses translations but also contains 1 hard-coded strings | warning |
+| `apps/backoffice/src/routes/season-applications.tsx` | mixed-approach | File uses translations but also contains 4 hard-coded strings | warning |
+| `apps/backoffice/src/routes/tenant/audit-log.tsx` | mixed-approach | File uses translations but also contains 3 hard-coded strings | warning |
+| `apps/backoffice/src/routes/users-management.tsx` | mixed-approach | File uses translations but also contains 3 hard-coded strings | warning |
+
+---
+
+## 📝 Files with Most Hard-coded Strings
+
+| File | Count | Uses i18n? |
+|------|-------|------------|
+| `apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx` | 4 | ✅ |
+| `apps/backoffice/src/routes/season-applications.tsx` | 4 | ✅ |
+| `apps/backoffice/src/routes/users.tsx` | 4 | ❌ |
+| `apps/backoffice/src/components/organizations/OrganizationForm.tsx` | 3 | ❌ |
+| `apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx` | 3 | ✅ |
+| `apps/backoffice/src/routes/tenant/audit-log.tsx` | 3 | ✅ |
+| `apps/backoffice/src/routes/users-management.tsx` | 3 | ✅ |
+| `apps/backoffice/src/components/seasons/AppealProcess.tsx` | 2 | ✅ |
+| `apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx` | 2 | ✅ |
+| `apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx` | 2 | ❌ |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/PickupStep.tsx` | 2 | ❌ |
+| `apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx` | 2 | ✅ |
+| `apps/backoffice/src/features/settings/components/AddressesTab.tsx` | 2 | ❌ |
+| `apps/backoffice/src/routes/pricing-rules.tsx` | 2 | ❌ |
+| `apps/backoffice/src/components/organizations/BasicStep.tsx` | 1 | ❌ |
+| `apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx` | 1 | ❌ |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/BasicsStep.tsx` | 1 | ❌ |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx` | 1 | ✅ |
+| `apps/backoffice/src/features/rental-objects/components/wizard/steps/RequirementsStep.tsx` | 1 | ✅ |
+| `apps/backoffice/src/routes/requests.tsx` | 1 | ✅ |
+
+---
+
+## 🎯 Most Used Translation Keys
+
+| Key | Usage Count |
+|-----|-------------|
+| `state.loading` | 59 |
+| `action.cancel` | 34 |
+| `action.delete` | 21 |
+| `state.saving` | 19 |
+| `action.edit` | 19 |
+| `error.generic` | 15 |
+| `common.er_du_sikker_paa` | 14 |
+| `status.pending` | 12 |
+| `common.lagre_endringer` | 11 |
+| `settings.status.active` | 8 |
+| `settings.status.inactive` | 8 |
+| `state.active` | 8 |
+| `state.inactive` | 8 |
+| `common.actions` | 7 |
+| `action.save` | 6 |
+| `rule.payment` | 6 |
+| `nav.dashboard` | 6 |
+| `common.avslaatt` | 6 |
+| `action.approve` | 6 |
+| `countries.norway` | 6 |
+| `action.close` | 5 |
+| `status.completed` | 5 |
+| `label.email` | 5 |
+| `ui.settings` | 5 |
+| `status.confirmed` | 5 |
+| `action.back` | 5 |
+| `action.search` | 5 |
+| `seasons.backToOverview` | 5 |
+| `common.full_tilgang_til_alle` | 4 |
+| `label.status` | 4 |
+
+---
+
+*End of Report*

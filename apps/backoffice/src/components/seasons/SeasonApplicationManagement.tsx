@@ -213,11 +213,11 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-              <Table.HeaderCell>Lokale</Table.HeaderCell>
-              <Table.HeaderCell>Ukedag</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.organization')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.lokale')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.ukedag')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.time')}</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.status')}</Table.HeaderCell>
               <Table.HeaderCell>{t('seasons.text.innsendt')}</Table.HeaderCell>
               {canProcess && <Table.HeaderCell style={{ width: '100px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>}
             </Table.Row>

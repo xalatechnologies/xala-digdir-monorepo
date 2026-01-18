@@ -1,0 +1,110 @@
+# i18n Inventory Report
+
+**Generated:** 2026-01-18 22:21:30  
+**App Filter:** minside  
+**Include Packages:** false
+
+---
+
+## 📊 Summary
+
+| Metric | Count |
+|--------|-------|
+| Total Files Scanned | 73 |
+| Files with Translations | 50 |
+| Files with Hard-coded Strings | 1 |
+| Total Translation Keys Used | 901 |
+| Unique Translation Keys | 685 |
+| Unique Namespaces | 26 |
+| Total Hard-coded Strings | 2 |
+| Violations | 1 |
+
+---
+
+## 🔑 Translation Keys by Namespace
+
+| Namespace | Usage Count |
+|-----------|-------------|
+| common | 214 |
+| org | 117 |
+| minside | 87 |
+| settings | 84 |
+| notifications | 60 |
+| seasons | 53 |
+| components | 35 |
+| state | 34 |
+| help | 32 |
+| messages | 27 |
+| auth | 22 |
+| action | 21 |
+| favorites | 15 |
+| validation | 12 |
+| billing | 12 |
+| bookings | 12 |
+| label | 11 |
+| actions | 8 |
+| invoice | 8 |
+| calendar | 5 |
+| gdpr | 4 |
+| booking | 4 |
+| requests | 4 |
+| app | 2 |
+| error | 1 |
+| brand | 1 |
+
+---
+
+## ⚠️ Top Violations
+
+| File | Type | Message | Severity |
+|------|------|---------|----------|
+| `apps/minside/src/features/settings/components/AddressesTab.tsx` | mixed-approach | File uses translations but also contains 2 hard-coded strings | warning |
+
+---
+
+## 📝 Files with Most Hard-coded Strings
+
+| File | Count | Uses i18n? |
+|------|-------|------------|
+| `apps/minside/src/features/settings/components/AddressesTab.tsx` | 2 | ✅ |
+
+---
+
+## 🎯 Most Used Translation Keys
+
+| Key | Usage Count |
+|-----|-------------|
+| `state.loading` | 22 |
+| `state.saving` | 10 |
+| `common.markedsforing` | 5 |
+| `action.cancel` | 5 |
+| `common.deling_med_tredjeparter` | 4 |
+| `minside.myBookings` | 4 |
+| `org.members` | 4 |
+| `notifications.channels.inApp` | 4 |
+| `notifications.channels.email` | 4 |
+| `notifications.channels.sms` | 4 |
+| `common.gateadresse` | 4 |
+| `common.poststed` | 4 |
+| `bookings.all` | 4 |
+| `billing.dueDate` | 4 |
+| `action.download` | 4 |
+| `label.status` | 4 |
+| `common.actions` | 4 |
+| `minside.bookNow` | 4 |
+| `requests.pending` | 4 |
+| `action.remove` | 4 |
+| `settings.address.street` | 4 |
+| `settings.address.city` | 4 |
+| `settings.address.postalCode` | 4 |
+| `norge` | 4 |
+| `sverige` | 4 |
+| `danmark` | 4 |
+| `finland` | 4 |
+| `action.back` | 3 |
+| `validation.failed_to_update_consents` | 3 |
+| `minside.myCalendar` | 3 |
+
+---
+
+*End of Report*

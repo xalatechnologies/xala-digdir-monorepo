@@ -180,7 +180,7 @@ export function TenantAuditLogPage() {
           alignItems: isMobile ? 'stretch' : 'flex-end',
         }}>
           <div style={{ flex: 1 }}>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Type</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.type')}</Label>
             <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as EventType | 'all')} style={{ width: '100%' }}>
               <option value="all">{t('common.alle_typer')}</option>
               <option value="user">Bruker</option>
@@ -223,7 +223,7 @@ export function TenantAuditLogPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>{t('backoffice.text.tidspunkt')}</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.type')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.handling')}</Table.HeaderCell>
                 <Table.HeaderCell>{t("ui.details")}</Table.HeaderCell>
                 <Table.HeaderCell>IP</Table.HeaderCell>

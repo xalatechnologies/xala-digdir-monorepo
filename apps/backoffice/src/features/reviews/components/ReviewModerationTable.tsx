@@ -377,8 +377,8 @@ export function ReviewModerationTable({
             <Table.HeaderCell>{t('backoffice.text.vurdering')}</Table.HeaderCell>
             <Table.HeaderCell>{t('backoffice.text.anmeldelse')}</Table.HeaderCell>
             <Table.HeaderCell>{t('backoffice.text.objekt')}</Table.HeaderCell>
-            <Table.HeaderCell>Bruker</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.user')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.status')}</Table.HeaderCell>
             <Table.HeaderCell>{t('backoffice.text.opprettet')}</Table.HeaderCell>
             <Table.HeaderCell style={{ width: '60px' }} />
           </Table.Row>
