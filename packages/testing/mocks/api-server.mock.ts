@@ -5,8 +5,10 @@
 
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+import { beforeAll, afterEach, afterAll } from 'vitest';
 
 const API_BASE_URL = process.env.API_URL || 'http://localhost:3000';
+const WS_BASE_URL = process.env.WS_URL || 'http://localhost:3002';
 
 // Mock handlers for common API endpoints
 export const handlers = [
@@ -91,6 +93,58 @@ export const handlers = [
   // Audit endpoint
   http.get(`${API_BASE_URL}/api/audit`, () => {
     return HttpResponse.json({ data: [] });
+  }),
+
+  // RBAC endpoints
+  http.get(`${API_BASE_URL}/api/rbac/matrix`, () => {
+    return HttpResponse.json({ data: [] });
+  }),
+
+  http.get(`${API_BASE_URL}/api/rbac/roles`, () => {
+    return HttpResponse.json({ data: [] });
+  }),
+
+  // Feature flags
+  http.get(`${API_BASE_URL}/api/feature-flags`, () => {
+    return HttpResponse.json({ data: [] });
+  }),
+
+  // I18n endpoints
+  http.get(`${API_BASE_URL}/api/i18n/:lang`, () => {
+    return HttpResponse.json({ data: {} });
+  }),
+
+  // Metadata
+  http.get(`${API_BASE_URL}/api/metadata`, () => {
+    return HttpResponse.json({ data: {} });
+  }),
+
+  // WebSocket health (mock as HTTP for testing)
+  http.get(`${WS_BASE_URL}/health`, () => {
+    return HttpResponse.json({ status: 'healthy' });
+  }),
+
+  // GDPR/DSAR endpoints
+  http.get(`${API_BASE_URL}/api/gdpr/export`, () => {
+    return HttpResponse.json({ data: {} });
+  }),
+
+  // Vipps endpoints
+  http.post(`${API_BASE_URL}/api/vipps/login`, () => {
+    return HttpResponse.json({ redirectUrl: 'https://mock-vipps.no' });
+  }),
+
+  http.post(`${API_BASE_URL}/api/vipps/payment`, () => {
+    return HttpResponse.json({ orderId: 'mock-order' });
+  }),
+
+  // Catch-all for unhandled requests
+  http.get(`${API_BASE_URL}/*`, () => {
+    return HttpResponse.json({ data: [] }, { status: 200 });
+  }),
+
+  http.post(`${API_BASE_URL}/*`, () => {
+    return HttpResponse.json({ success: true }, { status: 200 });
   }),
 ];
 
