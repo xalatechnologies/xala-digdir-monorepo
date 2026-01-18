@@ -1,0 +1,362 @@
+version: '3.8'
+
+# ==============================================================================
+# DIGILIST PLATFORM - TEST DOCKER COMPOSE
+# ==============================================================================
+# Test environment for QA and pre-production testing
+# URLs: backoffice-test.digilist.no, minside-test.digilist.no, web-test.digilist.no
+# ==============================================================================
+
+services:
+  # ===========================================================================
+  # INFRASTRUCTURE SERVICES
+  # ===========================================================================
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: digilist-test-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    ports:
+      - "127.0.0.1:5432:5432"  # Only localhost access
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ../postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis (for sessions and queues)
+  redis:
+    image: redis:7-alpine
+    container_name: digilist-test-redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"  # Only localhost access
+    volumes:
+      - redis_test_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================================================
+  # BACKEND API
+  # ===========================================================================
+
+  api:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.api
+      target: production
+    container_name: digilist-test-api
+    restart: always
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      API_PORT: 4000
+      API_HOST: 0.0.0.0
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      CSRF_SECRET: ${CSRF_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      
+      # CORS - Test environment URLs
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      
+      # Monitoring
+      SENTRY_DSN: ${SENTRY_DSN}
+      SENTRY_ENVIRONMENT: test
+      SENTRY_RELEASE: ${SENTRY_RELEASE}
+      
+      # OAuth
+      IDPORTEN_CLIENT_ID: ${IDPORTEN_CLIENT_ID}
+      IDPORTEN_CLIENT_SECRET: ${IDPORTEN_CLIENT_SECRET}
+      IDPORTEN_BASE_URL: ${IDPORTEN_BASE_URL}
+      IDPORTEN_CALLBACK_URL: ${IDPORTEN_CALLBACK_URL}
+      
+      VIPPS_CLIENT_ID: ${VIPPS_CLIENT_ID}
+      VIPPS_CLIENT_SECRET: ${VIPPS_CLIENT_SECRET}
+      VIPPS_SUBSCRIPTION_KEY: ${VIPPS_SUBSCRIPTION_KEY}
+      
+      # Email
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      EMAIL_FROM: ${EMAIL_FROM}
+      
+      # Storage
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION:-eu-north-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+      
+      # Rate Limiting
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-900000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_FORMAT: json
+      
+    ports:
+      - "127.0.0.1:4000:4000"  # Only localhost access (use reverse proxy)
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ===========================================================================
+  # FRONTEND APPLICATIONS (Production Builds with Nginx)
+  # ===========================================================================
+
+  # Web App (Public Website)
+  web:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: web
+    container_name: digilist-test-web
+    restart: always
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # MinSide App (User Portal)
+  minside:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: minside
+    container_name: digilist-test-minside
+    restart: always
+    ports:
+      - "8081:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Backoffice App (Admin Portal)
+  backoffice:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: backoffice
+    container_name: digilist-test-backoffice
+    restart: always
+    ports:
+      - "8082:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Tenant Admin App
+  tenant-admin:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: tenant-admin
+    container_name: digilist-test-tenant-admin
+    restart: always
+    ports:
+      - "8083:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # SaaS Admin App
+  saas-admin:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: saas-admin
+    container_name: digilist-test-saas-admin
+    restart: always
+    ports:
+      - "8084:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Monitoring App
+  monitoring:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: monitoring
+    container_name: digilist-test-monitoring
+    restart: always
+    ports:
+      - "8085:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Docs & Learning App
+  docs-learning:
+    build:
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
+      target: production
+      args:
+        APP_NAME: docs-learning
+    container_name: digilist-test-docs-learning
+    restart: always
+    ports:
+      - "8086:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-test
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_test_data:
+    driver: local
+  redis_test_data:
+    driver: local
+
+networks:
+  digilist-test:
+    name: digilist-test-network
+    driver: bridge
+
+# ==============================================================================
+# TEST ENVIRONMENT DEPLOYMENT
+# ==============================================================================
+#
+# URLs:
+# - Web:        https://web-test.digilist.no
+# - MinSide:    https://minside-test.digilist.no
+# - Backoffice: https://backoffice-test.digilist.no
+# - API:        https://api-test.digilist.no
+#
+# DEPLOYMENT:
+# 1. Build all images:
+#    docker-compose -f docker-compose.test.yml build --no-cache
+#
+# 2. Run database migrations:
+#    docker-compose -f docker-compose.test.yml run --rm api pnpm db:migrate
+#
+# 3. Start all services:
+#    docker-compose -f docker-compose.test.yml up -d
+#
+# 4. Verify all services are healthy:
+#    docker-compose -f docker-compose.test.yml ps
+#
+# ==============================================================================
