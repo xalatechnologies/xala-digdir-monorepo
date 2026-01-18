@@ -58,13 +58,43 @@ async function importSeeds(): Promise<void> {
     console.log('   └─ Organizations...');
     for (const o of rentalData.organizations || []) {
       await sql`
-        INSERT INTO platform.organizations (id, tenant_id, name, status)
-        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, 'ACTIVE')
+        INSERT INTO platform.organizations (id, tenant_id, name, org_number, status)
+        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, ${o.org_number || null}, 'ACTIVE')
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
       `;
       organizations++;
     }
-    console.log(`      ✅ ${organizations} organizations`);
+    console.log(`      ✅ ${rentalData.organizations?.length || 0} organizations`);
+
+    // Demo Users (after tenants and organizations)
+    console.log('   └─ Demo Users...');
+    const demoUsersData = JSON.parse(
+      readFileSync(join(__dirname, 'platform/demo-users.json'), 'utf-8')
+    );
+    for (const user of demoUsersData) {
+      await sql`
+        INSERT INTO platform.users (id, tenant_id, email, name, national_id, role, status, demo_token, metadata)
+        VALUES (
+          ${user.id}, 
+          ${user.tenant_id}, 
+          ${user.email}, 
+          ${user.name}, 
+          ${user.national_id},
+          ${user.role},
+          ${user.status},
+          ${user.demo_token},
+          ${JSON.stringify(user.metadata)}::jsonb
+        )
+        ON CONFLICT (id) DO UPDATE SET 
+          email = EXCLUDED.email,
+          name = EXCLUDED.name,
+          national_id = EXCLUDED.national_id,
+          demo_token = EXCLUDED.demo_token,
+          metadata = EXCLUDED.metadata
+      `;
+      users++;
+    }
+    console.log(`      ✅ ${demoUsersData.length} demo users`);
 
     // Users
     console.log('   └─ Users...');
