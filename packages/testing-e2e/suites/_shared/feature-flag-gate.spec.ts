@@ -24,7 +24,14 @@ async function mockAuth(page: Page) {
   });
 }
 
+  });
+}
+
 async function setupCommonMocks(page: Page) {
+  // Capture Browser Console
+  page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
+  page.on('pageerror', err => console.log(`BROWSER ERROR: ${err.toString()}`));
+
   // Mock User Me
   await page.route('**/api/users/me', async route => {
     await route.fulfill({
@@ -74,11 +81,23 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
 
     test('SEASONS module shows in navigation when enabled', async ({ page }) => {
       await page.goto('/backoffice');
-      const navLink = page.getByRole('link', { name: /sesong|seasons/i });
-      await expect(navLink).toBeVisible();
       
-      await navLink.click();
-      await expect(page).toHaveURL(/\/seasons/);
+      console.log('Current URL:', page.url());
+      
+      try {
+        const navLink = page.getByRole('link', { name: /sesong|seasons/i });
+        await expect(navLink).toBeVisible({ timeout: 5000 });
+        
+        await navLink.click();
+        await expect(page).toHaveURL(/\/seasons/);
+      } catch (e) {
+        console.log('Test Failed. Values in LocalStorage:');
+        const storage = await page.evaluate(() => JSON.stringify(localStorage));
+        console.log(storage);
+        console.log('Page Title:', await page.title());
+        console.log('Body Text:', await page.locator('body').innerText());
+        throw e;
+      }
     });
 
     test('RATINGS module shows when enabled', async ({ page }) => {
