@@ -189,32 +189,6 @@ services:
       - digilist-dev
     command: pnpm --filter @xala/backoffice dev
 
-  # Tenant Admin App
-  tenant-admin:
-    build:
-      context: ../../..
-      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
-      target: development
-      args:
-        APP_NAME: tenant-admin
-        APP_PORT: 5176
-    container_name: digilist-dev-tenant-admin
-    restart: unless-stopped
-    env_file:
-      - ../../env/.env.docker.dev
-    environment:
-      VITE_API_URL: http://localhost:4000
-      VITE_WS_URL: ws://localhost:4000/ws/events
-    ports:
-      - "5176:5176"
-    volumes:
-      - ../apps/tenant-admin:/app/apps/tenant-admin
-      - ../packages:/app/packages
-      - /app/node_modules
-    networks:
-      - digilist-dev
-    command: pnpm --filter @xala/tenant-admin dev
-
   # SaaS Admin App
   saas-admin:
     build:
