@@ -49,7 +49,9 @@ logs/security/
 # Staging environment (local only)
 .env.staging
 apps/web/.env.local
+# Test artifacts and reports
 tests/artifacts/*
-
 tests/playwright-report/*
 tests/test-results/*
+tests/reports/
+tests/e2e/backoffice/reports/
