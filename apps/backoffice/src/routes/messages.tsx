@@ -349,7 +349,7 @@ export function MessagesPage() {
                   <MessageSquareIcon />
                 </div>
                 <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                  {searchQuery ? 't('common.ingen_samtaler_funnet')' : 'Ingen samtaler ennå'}
+                  {searchQuery ? t('common.ingen_samtaler_funnet') : 'Ingen samtaler ennå'}
                 </Paragraph>
               </div>
             ) : (
@@ -504,7 +504,7 @@ export function MessagesPage() {
                       {String(selectedConversation.userName || selectedConversation.subject || 'Ukjent bruker')}
                     </Heading>
                     <Paragraph data-size="xs" style={{ margin: 0, color: selectedConversation.status === 'active' ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-subtle)' }}>
-                      {selectedConversation.status === 'active' ? 't('common.aktiv_samtale')' : 'Løst'}
+                      {selectedConversation.status === 'active' ? t('common.aktiv_samtale') : 'Løst'}
                     </Paragraph>
                   </div>
                 </div>
@@ -755,7 +755,7 @@ export function MessagesPage() {
                     disabled={!messageInput.trim() || sendMessage.isPending}
                   >
                     <SendIcon />
-                    {sendMessage.isPending ? 't('common.sender')' : 'Send'}
+                    {sendMessage.isPending ? t('common.sender') : 'Send'}
                   </Button>
                 </div>
               </div>
@@ -815,7 +815,7 @@ export function MessagesPage() {
                 data-size="sm"
                 style={{ marginTop: 'var(--ds-spacing-2)' }}
               >
-                {selectedConversation.status === 'active' ? 't('common.aktiv_bruker')' : 'Inaktiv'}
+                {selectedConversation.status === 'active' ? t('common.aktiv_bruker') : 'Inaktiv'}
               </Badge>
             </div>
 
@@ -936,7 +936,7 @@ export function MessagesPage() {
                     disabled={resolveConversation.isPending || reopenConversation.isPending}
                   >
                     <CheckCircleIcon />
-                    {selectedConversation.status === 'active' ? 't('common.marker_som_lost')' : 'Gjenåpne'}
+                    {selectedConversation.status === 'active' ? t('common.marker_som_lost') : 'Gjenåpne'}
                   </Button>
                 </div>
               </div>

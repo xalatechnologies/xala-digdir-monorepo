@@ -36,6 +36,13 @@
       "when": 1737198004000,
       "tag": "0004_monitoring",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768748242367,
+      "tag": "0005_free_the_watchers",
+      "breakpoints": true
     }
   ]
 }

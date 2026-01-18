@@ -507,7 +507,7 @@ export function RequestDetailModal({
                   onClick={handleApprove}
                   disabled={updateStatus.isPending}
                 >
-                  {updateStatus.isPending ? 't('common.godkjenner')' : 'Godkjenn'}
+                  {updateStatus.isPending ? t('common.godkjenner') : 'Godkjenn'}
                 </Button>
               </>
             )}
@@ -521,7 +521,7 @@ export function RequestDetailModal({
                 onClick={handleRejectSubmit}
                 disabled={updateStatus.isPending || !rejectionReason.trim()}
               >
-                {updateStatus.isPending ? 't('common.avslaar')' : 'Bekreft avslag'}
+                {updateStatus.isPending ? t('common.avslaar') : 'Bekreft avslag'}
               </Button>
             )}
           </div>

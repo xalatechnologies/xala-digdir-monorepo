@@ -100,7 +100,7 @@ export function AuditTimelinePage() {
   const getOutcomeLabel = (outcome: DecisionOutcome) => {
     switch (outcome) {
       case 'approved': return 'Godkjent';
-      case 'rejected': return 't('common.avslaatt')';
+      case 'rejected': return t('common.avslaatt');
       case 'returned': return 'Returnert';
     }
   };

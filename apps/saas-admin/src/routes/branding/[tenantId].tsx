@@ -105,7 +105,7 @@ export function BrandingEditorPage() {
       setHasChanges(false);
       // Show success toast
     } catch (error) {
-      console.error('t('validation.failed_to_save_branding')', error);
+      console.error(t('validation.failed_to_save_branding'), error);
     } finally {
       setIsSaving(false);
     }

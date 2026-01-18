@@ -62,7 +62,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   };
 
   const handleRemoveVenue = async (listingId: string) => {
-    if (confirm('t('common.er_du_sikker_paa')')) {
+    if (confirm(t('common.er_du_sikker_paa'))) {
       await removeVenueMutation.mutateAsync({ seasonId, listingId });
     }
   };

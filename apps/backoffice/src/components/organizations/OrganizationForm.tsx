@@ -258,7 +258,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Actions */}
         <FormActions
-          submitText={organization ? 't('common.lagre_endringer')' : 'Opprett organisasjon'}
+          submitText={organization ? t('common.lagre_endringer') : 'Opprett organisasjon'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

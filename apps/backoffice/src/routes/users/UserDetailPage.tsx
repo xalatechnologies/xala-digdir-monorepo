@@ -75,7 +75,7 @@ export function UserDetailPage() {
   };
 
   const handleDeactivate = async () => {
-    if (user && confirm('t('common.er_du_sikker_paa')')) {
+    if (user && confirm(t('common.er_du_sikker_paa'))) {
       await deactivateUserMutation.mutateAsync(user.id);
     }
   };

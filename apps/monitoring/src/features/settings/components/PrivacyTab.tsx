@@ -83,7 +83,7 @@ export function PrivacyTab() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm('t('common.er_du_sikker_paa')')) {
+    if (confirm(t('common.er_du_sikker_paa'))) {
       try {
         await deleteAccountMutation.mutateAsync();
         logout();
@@ -133,7 +133,7 @@ export function PrivacyTab() {
             aria-label={t('common.eksporter_mine_data')}
           >
             <DownloadIcon />
-            {isExporting ? 't('common.eksporterer')' : 'Last ned mine data'}
+            {isExporting ? t('common.eksporterer') : 'Last ned mine data'}
           </Button>
         </Stack>
       </Card>

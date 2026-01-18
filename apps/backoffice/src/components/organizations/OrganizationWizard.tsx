@@ -157,7 +157,7 @@ export function OrganizationWizard({
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      console.error('t('validation.failed_to_save_draft')', error);
+      console.error(t('validation.failed_to_save_draft'), error);
       setSaveStatus('error');
     } finally {
       setIsSaving(false);
@@ -169,7 +169,7 @@ export function OrganizationWizard({
     try {
       await onComplete?.(formData);
     } catch (error) {
-      console.error('t('validation.failed_to_complete_wizard')', error);
+      console.error(t('validation.failed_to_complete_wizard'), error);
       setSaveStatus('error');
     } finally {
       setIsSaving(false);
@@ -240,11 +240,11 @@ export function OrganizationWizard({
       {/* Page header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {isEditMode ? 't('common.rediger_organisasjon')' : 'Opprett ny organisasjon'}
+          {isEditMode ? t('common.rediger_organisasjon') : 'Opprett ny organisasjon'}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {isEditMode
-            ? 't('common.gjor_endringer_i_organisasjonen')'
+            ? t('common.gjor_endringer_i_organisasjonen')
             : 'Fyll ut informasjon om organisasjonen. Du kan lagre som utkast og fortsette senere.'}
         </Paragraph>
       </div>
@@ -270,7 +270,7 @@ export function OrganizationWizard({
             }}
           >
             <Heading level={2} data-size="sm">
-              {isEditMode ? 't('common.rediger_organisasjon')' : 'Opprett organisasjon'}
+              {isEditMode ? t('common.rediger_organisasjon') : 'Opprett organisasjon'}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Steg {currentStep + 1} av {steps.length}
@@ -439,7 +439,7 @@ export function OrganizationWizard({
                   : 'var(--ds-color-danger-text-default)',
             }}
           >
-            {saveStatus === 'success' ? 't('common.endringene_er_lagret')' : 'Kunne ikke lagre. Prøv igjen.'}
+            {saveStatus === 'success' ? t('common.endringene_er_lagret') : 'Kunne ikke lagre. Prøv igjen.'}
           </Paragraph>
         </div>
       )}

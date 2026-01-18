@@ -181,7 +181,7 @@ export function ProfileTab() {
                 disabled={isUploadingAvatar} type="button"
               >
                 <CameraIcon />
-                {isUploadingAvatar ? 't('common.laster_opp')' : 'Endre bilde'}
+                {isUploadingAvatar ? t('common.laster_opp') : 'Endre bilde'}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 JPG, PNG eller GIF (maks 5MB)
@@ -251,7 +251,7 @@ export function ProfileTab() {
           <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
               <SaveIcon />
-              {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
+              {isSaving ? t('common.lagrer') : 'Lagre endringer'}
             </Button>
           </div>
         </Stack>

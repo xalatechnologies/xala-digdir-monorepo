@@ -111,10 +111,10 @@ interface AppealProcessProps {
 }
 
 const appealStatusLabels: Record<AppealStatus, string> = {
-  no_appeal: 't('common.ingen_klage')',
-  appeal_pending: 't('common.klage_venter')',
-  appeal_approved: 't('common.klage_godkjent')',
-  appeal_rejected: 't('common.klage_avslaatt')',
+  no_appeal: t('common.ingen_klage'),
+  appeal_pending: t('common.klage_venter'),
+  appeal_approved: t('common.klage_godkjent'),
+  appeal_rejected: t('common.klage_avslaatt'),
 };
 
 const appealStatusVariants: Record<AppealStatus, 'neutral' | 'warning' | 'success' | 'danger'> = {
@@ -190,7 +190,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
   };
 
   const handleApproveAppeal = async (applicationId: string) => {
-    if (confirm('t('common.godkjenn_denne_klagen_soknaden')')) {
+    if (confirm(t('common.godkjenn_denne_klagen_soknaden'))) {
       await approveAppealMutation.mutateAsync(applicationId);
     }
   };
@@ -310,11 +310,11 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
         <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
           <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-success-text-default)', marginBottom: 'var(--ds-spacing-3)' }} />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-            {rejectedApplications.length === 0 ? 't('common.ingen_avslaatte_soknader')' : 'Ingen søknader funnet'}
+            {rejectedApplications.length === 0 ? t('common.ingen_avslaatte_soknader') : 'Ingen søknader funnet'}
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {rejectedApplications.length === 0
-              ? 't('common.det_er_ingen_avslaatte')'
+              ? t('common.det_er_ingen_avslaatte')
               : 'Ingen søknader matcher valgte filter'}
           </Paragraph>
         </div>

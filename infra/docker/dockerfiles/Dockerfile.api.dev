@@ -39,6 +39,9 @@ COPY packages ./packages
 # Re-run install to create proper symlinks in app node_modules
 RUN pnpm install --frozen-lockfile
 
+# Build packages that the API depends on
+RUN pnpm build --filter @digilist/database-schema --filter @xala/contracts --filter @xala/i18n --filter @xala/observability
+
 # Expose port
 EXPOSE 4000
 

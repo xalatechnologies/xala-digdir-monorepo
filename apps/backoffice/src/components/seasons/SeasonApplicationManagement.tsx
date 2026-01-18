@@ -97,7 +97,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
 
   // Handlers
   const handleApprove = async (applicationId: string) => {
-    if (confirm('t('common.godkjenn_denne_soknaden')')) {
+    if (confirm(t('common.godkjenn_denne_soknaden'))) {
       await approveMutation.mutateAsync(applicationId);
     }
   };
@@ -206,7 +206,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {applications.length === 0
-              ? 't('common.ingen_soknader_er_mottatt')'
+              ? t('common.ingen_soknader_er_mottatt')
               : 'Ingen søknader matcher valgte filtre'}
           </Paragraph>
         </div>

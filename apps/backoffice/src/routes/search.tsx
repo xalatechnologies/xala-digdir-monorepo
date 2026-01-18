@@ -187,7 +187,7 @@ export function SearchPage() {
             disabled={exportResults.isPending || !query} type="button"
           >
             <DownloadIcon size={16} />
-            {exportResults.isPending ? 't('common.eksporterer')' : 'Eksporter'}
+            {exportResults.isPending ? t('common.eksporterer') : 'Eksporter'}
           </Button>
         </Stack>
       </Stack>

@@ -108,7 +108,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
       bookingTitle: 'Booking #12338 - Gymsal',
       status: 'failed',
       timestamp: new Date(Date.now() - 7200000).toISOString(),
-      errorMessage: 't('errors.ugyldig_epostadresse')',
+      errorMessage: t('errors.ugyldig_epostadresse'),
     },
     {
       id: '4',

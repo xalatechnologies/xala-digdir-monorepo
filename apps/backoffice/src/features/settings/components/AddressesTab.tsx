@@ -265,7 +265,7 @@ export function AddressesTab() {
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button onClick={handleSaveAddresses} disabled={isSaving} type="button" aria-label={t('common.lagre_adresser')}>
           <SaveIcon />
-          {isSaving ? 't('common.lagrer')' : 'Lagre adresser'}
+          {isSaving ? t('common.lagrer') : 'Lagre adresser'}
         </Button>
       </div>
     </Stack>

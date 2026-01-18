@@ -255,7 +255,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
         }}
       >
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {searchQuery ? 't('common.ingen_foresporsler_funnet')' : 'Ingen ventende forespørsler'}
+          {searchQuery ? t('common.ingen_foresporsler_funnet') : 'Ingen ventende forespørsler'}
         </Paragraph>
         {searchQuery && (
           <Button

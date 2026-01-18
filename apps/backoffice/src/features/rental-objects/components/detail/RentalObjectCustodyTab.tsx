@@ -69,7 +69,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
   };
 
   const handleRevoke = async (grantId: string) => {
-    if (window.confirm('t('common.er_du_sikker_paa')')) {
+    if (window.confirm(t('common.er_du_sikker_paa'))) {
       await revokeGrant.mutateAsync({ grantId, _rentalObjectId: rentalObjectId });
     }
   };
@@ -303,7 +303,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                   onClick={handleCreate}
                   disabled={createGrant.isPending}
                 >
-                  {createGrant.isPending ? 't('common.tildeler')' : 'Tildel'}
+                  {createGrant.isPending ? t('common.tildeler') : 'Tildel'}
                 </Button>
               </div>
             </div>

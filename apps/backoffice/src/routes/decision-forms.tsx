@@ -77,9 +77,9 @@ export function DecisionFormsPage() {
     if (!selectedDecision) return;
     
     const confirmed = await confirm({
-      title: outcome === 'approved' ? 't('common.bekreft_godkjenning')' : outcome === 'rejected' ? 't('common.bekreft_avslag')' : 'Bekreft retur',
+      title: outcome === 'approved' ? t('common.bekreft_godkjenning') : outcome === 'rejected' ? t('common.bekreft_avslag') : 'Bekreft retur',
       description: `Er du sikker på at du vil ${outcome === 'approved' ? 'godkjenne' : outcome === 'rejected' ? 'avslå' : 'returnere'} denne saken?`,
-      confirmText: outcome === 'approved' ? 'Godkjenn' : outcome === 'rejected' ? 't('common.avslaa')' : 'Returner',
+      confirmText: outcome === 'approved' ? 'Godkjenn' : outcome === 'rejected' ? t('common.avslaa') : 'Returner',
       cancelText: t("ui.cancel"),
       variant: outcome === 'approved' ? 'success' : outcome === 'rejected' ? 'danger' : 'warning',
     });
@@ -99,7 +99,7 @@ export function DecisionFormsPage() {
   const getOutcomeLabel = (status: DecisionType) => {
     switch (status) {
       case 'approved': return 'Godkjent';
-      case 'rejected': return 't('common.avslaatt')';
+      case 'rejected': return t('common.avslaatt');
       case 'returned': return 'Returnert';
       case 'pending': return t("status.pending");
     }
@@ -237,12 +237,12 @@ export function DecisionFormsPage() {
               
               <div>
                 <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  {outcome === 'rejected' ? 't('common.begrunnelse')' : 'Intern kommentar'}
+                  {outcome === 'rejected' ? t('common.begrunnelse') : 'Intern kommentar'}
                 </label>
                 <Textarea
                   value={comments}
                   onChange={(e) => setComments(e.target.value)}
-                  placeholder={outcome === 'rejected' ? 't('common.begrunn_avslaget')' : 'Eventuell kommentar...'}
+                  placeholder={outcome === 'rejected' ? t('common.begrunn_avslaget') : 'Eventuell kommentar...'}
                   rows={3}
                   style={{ width: '100%' }}
                 />
@@ -257,7 +257,7 @@ export function DecisionFormsPage() {
                   disabled={isSubmitting || (outcome === 'rejected' && !comments.trim())}
                   style={{ flex: 1, minHeight: '44px' }}
                 >
-                  {isSubmitting ? 't('common.sender')' : 'Fatt vedtak'}
+                  {isSubmitting ? t('common.sender') : 'Fatt vedtak'}
                 </Button>
                 <Button
                   type="button"

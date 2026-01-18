@@ -137,7 +137,7 @@ export function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('t('validation.failed_to_save_profile')', error);
+      console.error(t('validation.failed_to_save_profile'), error);
     } finally {
       setIsSaving(false);
     }
@@ -163,7 +163,7 @@ export function SettingsPage() {
         options: { compress: true },
       });
     } catch (error) {
-      console.error('t('validation.failed_to_upload_avatar')', error);
+      console.error(t('validation.failed_to_upload_avatar'), error);
     } finally {
       setIsUploadingAvatar(false);
     }
@@ -190,7 +190,7 @@ export function SettingsPage() {
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('t('validation.failed_to_export_data')', error);
+      console.error(t('validation.failed_to_export_data'), error);
     } finally {
       setIsExporting(false);
     }
@@ -203,7 +203,7 @@ export function SettingsPage() {
         logout();
         navigate('/');
       } catch (error) {
-        console.error('t('validation.failed_to_delete_account')', error);
+        console.error(t('validation.failed_to_delete_account'), error);
       }
     }
   };
@@ -214,7 +214,7 @@ export function SettingsPage() {
     try {
       await updateConsentsMutation.mutateAsync(newConsents);
     } catch (error) {
-      console.error('t('validation.failed_to_update_consents')', error);
+      console.error(t('validation.failed_to_update_consents'), error);
     }
   };
 

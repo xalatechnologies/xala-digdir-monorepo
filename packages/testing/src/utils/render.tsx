@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Create a new QueryClient for each test
-function createTestQueryClient() {
+function createTestQueryClient(): QueryClient {
   return new QueryClient({
     defaultOptions: {
       queries: {
@@ -26,16 +26,20 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   queryClient?: QueryClient;
 }
 
+interface RenderWithProvidersResult extends RenderResult {
+  queryClient: QueryClient;
+}
+
 /**
  * Custom render function that wraps component with all necessary providers
  */
 export function renderWithProviders(
   ui: React.ReactElement,
   options: CustomRenderOptions = {}
-) {
+): RenderWithProvidersResult {
   const { queryClient = createTestQueryClient(), ...renderOptions } = options;
 
-  function AllProviders({ children }: { children: React.ReactNode }) {
+  function AllProviders({ children }: { children: React.ReactNode }): React.ReactElement {
     return (
       <QueryClientProvider client={queryClient}>
         {children}

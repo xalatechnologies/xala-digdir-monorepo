@@ -46,7 +46,7 @@ export function DeleteAccountCard() {
       await createRequest.mutateAsync({ requestType: 'deletion' });
       setShowConfirmation(false);
     } catch (error) {
-      console.error('t('validation.failed_to_create_deletion')', error);
+      console.error(t('validation.failed_to_create_deletion'), error);
     } finally {
       setIsDeleting(false);
     }
@@ -58,7 +58,7 @@ export function DeleteAccountCard() {
     try {
       await cancelRequest.mutateAsync(deletionRequest.id);
     } catch (error) {
-      console.error('t('validation.failed_to_cancel_deletion')', error);
+      console.error(t('validation.failed_to_cancel_deletion'), error);
     }
   };
 
@@ -168,7 +168,7 @@ export function DeleteAccountCard() {
                   borderColor: 'var(--ds-color-danger-base)',
                 }}
               >
-                {isDeleting || createRequest.isPending ? 't('common.sender_foresporsel')' : 'Ja, slett kontoen min'}
+                {isDeleting || createRequest.isPending ? t('common.sender_foresporsel') : 'Ja, slett kontoen min'}
               </Button>
               <Button
                 type="button"
@@ -238,7 +238,7 @@ export function DeleteAccountCard() {
                     disabled={cancelRequest.isPending}
                     style={{ minHeight: '40px' }}
                   >
-                    {cancelRequest.isPending ? 't('common.kansellerer')' : 'Angre forespørsel'}
+                    {cancelRequest.isPending ? t('common.kansellerer') : 'Angre forespørsel'}
                   </Button>
                 </div>
               )}

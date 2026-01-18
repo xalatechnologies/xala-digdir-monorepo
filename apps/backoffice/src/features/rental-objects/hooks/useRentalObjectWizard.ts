@@ -367,7 +367,7 @@ export function useRentalObjectWizard(
       }
       setIsDirty(false);
     } catch (error) {
-      console.error('t('validation.failed_to_save_draft')', error);
+      console.error(t('validation.failed_to_save_draft'), error);
       throw error;
     }
   }, [formData.id, toCreateDTO, createMutation, updateMutation, navigate]);
@@ -379,7 +379,7 @@ export function useRentalObjectWizard(
       onComplete?.(formData as RentalObject);
       navigate('/rental-objects');
     } catch (error) {
-      console.error('t('validation.failed_to_publish')', error);
+      console.error(t('validation.failed_to_publish'), error);
       throw error;
     }
   }, [saveDraft, formData, onComplete, navigate]);

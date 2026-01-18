@@ -106,7 +106,7 @@ export function ArchivePage(): React.ReactElement {
       title: t('common.faktura_inv2024001'),
       status: 'failed',
       timestamp: new Date(Date.now() - 10800000).toISOString(),
-      errorMessage: 't('errors.kunne_ikke_koble_til')',
+      errorMessage: t('errors.kunne_ikke_koble_til'),
     },
     {
       id: '4',

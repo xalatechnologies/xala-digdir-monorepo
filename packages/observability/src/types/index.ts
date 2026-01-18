@@ -15,7 +15,7 @@ export interface MetricDefinition {
 }
 
 export interface MetricLabels {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
 }
 
 export interface ApiMetricLabels extends MetricLabels {

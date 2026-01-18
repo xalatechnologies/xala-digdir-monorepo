@@ -64,7 +64,7 @@ export function ConsentManager() {
       await updateConsents.mutateAsync(consents);
       setHasChanges(false);
     } catch (error) {
-      console.error('t('validation.failed_to_update_consents')', error);
+      console.error(t('validation.failed_to_update_consents'), error);
     }
   };
 
@@ -129,7 +129,7 @@ export function ConsentManager() {
               disabled={updateConsents.isPending}
               style={{ minHeight: '44px', alignSelf: isMobile ? 'stretch' : 'flex-start' }}
             >
-              {updateConsents.isPending ? 't('common.lagrer')' : 'Lagre endringer'}
+              {updateConsents.isPending ? t('common.lagrer') : 'Lagre endringer'}
             </Button>
           )}
         </div>

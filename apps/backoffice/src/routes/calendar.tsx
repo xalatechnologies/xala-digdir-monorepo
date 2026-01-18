@@ -749,7 +749,7 @@ export function CalendarPage() {
                   onClick={() => setView(v)}
                   style={{ borderRadius: 'var(--ds-border-radius-sm)' }}
                 >
-                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : v === 'month' ? 't('common.maaned')' : 'Tidslinje'}
+                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : v === 'month' ? t('common.maaned') : 'Tidslinje'}
                 </Button>
               ))}
             </div>

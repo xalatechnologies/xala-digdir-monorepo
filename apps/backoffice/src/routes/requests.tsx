@@ -342,7 +342,7 @@ export function RequestsPage() {
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || filter !== 'all'
-                ? 't('common.prov_aa_endre_sokekriteriene')'
+                ? t('common.prov_aa_endre_sokekriteriene')
                 : 'Ingen ventende forespørsler å behandle'}
             </Paragraph>
           </div>

@@ -309,7 +309,7 @@ export function ReviewForm({
             variant="primary"
             disabled={isSubmitting || rating === 0}
           >
-            {isSubmitting ? 't('common.sender_inn')' : 'Send inn anmeldelse'}
+            {isSubmitting ? t('common.sender_inn') : 'Send inn anmeldelse'}
           </Button>
         </div>
       </Stack>

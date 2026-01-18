@@ -331,11 +331,11 @@ export function SeasonApplicationsPage() {
       ) : filteredApplications.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            {statusFilter === 'all' ? 't('common.ingen_soknader_ennaa')' : 'Ingen søknader funnet'}
+            {statusFilter === 'all' ? t('common.ingen_soknader_ennaa') : 'Ingen søknader funnet'}
           </Heading>
           <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-4)' }}>
             {statusFilter === 'all'
-              ? 't('common.du_har_ikke_sendt')'
+              ? t('common.du_har_ikke_sendt')
               : `t('common.du_har_ingen_soknader')`}
           </Paragraph>
           {statusFilter === 'all' && (

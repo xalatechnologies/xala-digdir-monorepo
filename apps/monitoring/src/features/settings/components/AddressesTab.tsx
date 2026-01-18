@@ -265,10 +265,10 @@ export function AddressesTab() {
           onClick={handleSaveAddresses}
           disabled={isSaving}
           type="button"
-          aria-label={isSaving ? 't('common.lagrer_adresser')' : 'Lagre adresser'}
+          aria-label={isSaving ? t('common.lagrer_adresser') : 'Lagre adresser'}
         >
           <SaveIcon />
-          {isSaving ? 't('common.lagrer')' : 'Lagre adresser'}
+          {isSaving ? t('common.lagrer') : 'Lagre adresser'}
         </Button>
       </div>
     </Stack>

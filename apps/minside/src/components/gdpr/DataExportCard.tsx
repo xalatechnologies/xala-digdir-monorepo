@@ -34,7 +34,7 @@ export function DataExportCard() {
     try {
       await createRequest.mutateAsync({ requestType: 'export' });
     } catch (error) {
-      console.error('t('validation.failed_to_create_export')', error);
+      console.error(t('validation.failed_to_create_export'), error);
     } finally {
       setIsRequesting(false);
     }
@@ -104,7 +104,7 @@ export function DataExportCard() {
             disabled={isRequesting || createRequest.isPending}
             style={{ minHeight: '44px', alignSelf: 'flex-start' }}
           >
-            {isRequesting || createRequest.isPending ? 't('common.oppretter_foresporsel')' : 'Eksporter mine data'}
+            {isRequesting || createRequest.isPending ? t('common.oppretter_foresporsel') : 'Eksporter mine data'}
           </Button>
         )}
 

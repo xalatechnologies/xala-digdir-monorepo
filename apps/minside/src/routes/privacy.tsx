@@ -10,7 +10,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -28,6 +27,7 @@ import {
   useUpdateConsents,
 } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -84,7 +84,7 @@ export function PrivacyPage() {
       setExportSuccess(true);
       setTimeout(() => setExportSuccess(false), 5000);
     } catch (error) {
-      console.error('t('validation.failed_to_request_data')', error);
+      console.error(t('validation.failed_to_request_data'), error);
     } finally {
       setIsExporting(false);
     }
@@ -93,7 +93,7 @@ export function PrivacyPage() {
   const handleDeleteAccount = async () => {
     if (
       window.confirm(
-        't('common.er_du_sikker_paa')'
+        t('common.er_du_sikker_paa')
       )
     ) {
       try {
@@ -107,7 +107,7 @@ export function PrivacyPage() {
         await logout();
         navigate('/');
       } catch (error) {
-        console.error('t('validation.failed_to_request_account')', error);
+        console.error(t('validation.failed_to_request_account'), error);
       }
     }
   };
@@ -118,7 +118,7 @@ export function PrivacyPage() {
     try {
       await updateConsentsMutation.mutateAsync(newConsents);
     } catch (error) {
-      console.error('t('validation.failed_to_update_consents')', error);
+      console.error(t('validation.failed_to_update_consents'), error);
       setConsentSettings(consentSettings);
     }
   };
@@ -186,7 +186,7 @@ export function PrivacyPage() {
               style={{ minHeight: '44px' }}
             >
               <DownloadIcon />
-              {isExporting ? 't('common.behandler_foresporsel')' : 'Be om dataeksport'}
+              {isExporting ? t('common.behandler_foresporsel') : 'Be om dataeksport'}
             </Button>
             <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               Du vil motta en e-post med en nedlastingslenke når eksporten er klar (innen 30 dager)

@@ -456,7 +456,7 @@ function AddCredentialModal({
             type="submit"
             disabled={createCredential.isPending}
           >
-            {createCredential.isPending ? 't('common.lagrer')' : 'Legg til'}
+            {createCredential.isPending ? t('common.lagrer') : 'Legg til'}
           </Button>
         </div>
       </form>
@@ -539,7 +539,7 @@ function RotateCredentialModal({
             type="submit"
             disabled={rotateCredential.isPending}
           >
-            {rotateCredential.isPending ? 't('common.roterer')' : 'Roter'}
+            {rotateCredential.isPending ? t('common.roterer') : 'Roter'}
           </Button>
         </div>
       </form>

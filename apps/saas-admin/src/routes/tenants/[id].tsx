@@ -179,7 +179,7 @@ export function TenantDetailPage() {
   };
 
   const handleRotateLicense = async () => {
-    if (confirm('t('common.er_du_sikker_paa')')) {
+    if (confirm(t('common.er_du_sikker_paa'))) {
       const result = await rotateLicenseMutation.mutateAsync(id!);
       setNewLicenseKey(result.data.licenseKey);
     }
@@ -720,7 +720,7 @@ export function TenantDetailPage() {
                   type="button"
                 >
                   <RefreshCwIcon />
-                  {tenant.licenseKeyFingerprint ? 't('common.roter_lisensnokkel')' : 'Generer lisensnøkkel'}
+                  {tenant.licenseKeyFingerprint ? t('common.roter_lisensnokkel') : 'Generer lisensnøkkel'}
                 </Button>
               </div>
 

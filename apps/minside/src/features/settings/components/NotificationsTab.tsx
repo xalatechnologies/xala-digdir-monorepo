@@ -120,10 +120,10 @@ export function NotificationsTab() {
             onClick={saveNotificationSettings}
             disabled={isSaving}
             type="button"
-            aria-label={isSaving ? 't('common.lagrer_endringer')' : 'Lagre endringer'}
+            aria-label={isSaving ? t('common.lagrer_endringer') : 'Lagre endringer'}
           >
             <SaveIcon />
-            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
+            {isSaving ? t('common.lagrer') : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

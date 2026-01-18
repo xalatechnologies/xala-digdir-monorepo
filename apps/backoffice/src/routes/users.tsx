@@ -85,7 +85,7 @@ export function UsersPage() {
   };
 
   const handleDeactivate = async (id: string) => {
-    if (confirm('t('common.er_du_sikker_paa')')) {
+    if (confirm(t('common.er_du_sikker_paa'))) {
       await deactivateUserMutation.mutateAsync(id);
     }
   };
@@ -189,7 +189,7 @@ export function UsersPage() {
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || roleFilter !== 'all' || statusFilter !== 'all'
-                ? 't('common.prov_aa_endre_sokekriteriene')'
+                ? t('common.prov_aa_endre_sokekriteriene')
                 : 'Inviter din første bruker for å komme i gang'}
             </Paragraph>
           </div>

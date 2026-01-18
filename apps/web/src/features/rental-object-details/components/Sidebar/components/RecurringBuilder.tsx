@@ -292,9 +292,9 @@ export function RecurringBuilder({
                   }}
                   title={
                     isBaseDay
-                      ? 't('common.basisdag_kan_ikke_fjernes')'
+                      ? t('common.basisdag_kan_ikke_fjernes')
                       : !isAllowed
-                        ? 't('common.ikke_tillatt_for_dette')'
+                        ? t('common.ikke_tillatt_for_dette')
                         : WEEKDAY_FULL_LABELS[weekday]
                   }
                 >

@@ -56,7 +56,7 @@ export function isNativeShareAvailable(): boolean {
  */
 export async function shareNative(data: ShareData): Promise<ShareResult> {
   if (!isNativeShareAvailable()) {
-    return { success: false, medium: 'native', error: 't('errors.native_share_not_available')' };
+    return { success: false, medium: 'native', error: t('errors.native_share_not_available') };
   }
 
   try {
@@ -71,9 +71,9 @@ export async function shareNative(data: ShareData): Promise<ShareResult> {
     return { success: true, medium: 'native' };
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      return { success: false, medium: 'native', error: 't('errors.share_cancelled')' };
+      return { success: false, medium: 'native', error: t('errors.share_cancelled') };
     }
-    return { success: false, medium: 'native', error: 't('errors.share_failed')' };
+    return { success: false, medium: 'native', error: t('errors.share_failed') };
   }
 }
 
@@ -86,7 +86,7 @@ export async function shareCopyLink(data: ShareData): Promise<ShareResult> {
     await navigator.clipboard.writeText(url);
     return { success: true, medium: 'copy' };
   } catch {
-    return { success: false, medium: 'copy', error: 't('errors.could_not_copy_to')' };
+    return { success: false, medium: 'copy', error: t('errors.could_not_copy_to') };
   }
 }
 
@@ -166,7 +166,7 @@ export async function shareWithAudit(
       result = shareLinkedIn(data);
       break;
     default:
-      result = { success: false, medium, error: 't('errors.unknown_share_medium')' };
+      result = { success: false, medium, error: t('errors.unknown_share_medium') };
   }
 
   // Log audit event (even for anonymous users)

@@ -103,7 +103,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
       });
       setHasChanges(false);
     } catch (error) {
-      console.error('t('validation.failed_to_update_categories')', error);
+      console.error(t('validation.failed_to_update_categories'), error);
     }
   };
 

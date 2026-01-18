@@ -190,7 +190,7 @@ export function NotificationDeliveryDashboard() {
             onClick={handleRetryFailed}
             disabled={retryFailed.isPending}
           >
-            {retryFailed.isPending ? 't('common.prover_igjen')' : 'Prøv feilede på nytt'}
+            {retryFailed.isPending ? t('common.prover_igjen') : 'Prøv feilede på nytt'}
           </Button>
         )}
       </div>
@@ -218,7 +218,7 @@ export function NotificationDeliveryDashboard() {
               Ingen varsler funnet
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {searchQuery ? 't('common.prov_aa_endre_sokekriteriene')' : 'Det finnes ingen varsler ennå'}
+              {searchQuery ? t('common.prov_aa_endre_sokekriteriene') : 'Det finnes ingen varsler ennå'}
             </Paragraph>
           </div>
         ) : (

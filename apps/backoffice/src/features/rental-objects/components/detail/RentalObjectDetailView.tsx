@@ -53,7 +53,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   componentDidCatch(error: Error, errorInfo: unknown) {
     // Log error to console for debugging (in development)
     if (import.meta.env.DEV) {
-      console.error('t('validation.errorboundary_caught_error')', error, errorInfo);
+      console.error(t('validation.errorboundary_caught_error'), error, errorInfo);
     }
   }
 

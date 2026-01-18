@@ -157,7 +157,7 @@ export function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('t('validation.failed_to_save_settings')', error);
+      console.error(t('validation.failed_to_save_settings'), error);
     } finally {
       setIsSaving(false);
     }
@@ -179,7 +179,7 @@ export function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('t('validation.failed_to_save_profile')', error);
+      console.error(t('validation.failed_to_save_profile'), error);
     } finally {
       setIsSaving(false);
     }
@@ -205,7 +205,7 @@ export function SettingsPage() {
         options: { compress: true },
       });
     } catch (error) {
-      console.error('t('validation.failed_to_upload_avatar')', error);
+      console.error(t('validation.failed_to_upload_avatar'), error);
     } finally {
       setIsUploadingAvatar(false);
     }

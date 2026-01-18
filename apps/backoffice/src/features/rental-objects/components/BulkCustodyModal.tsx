@@ -127,7 +127,7 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 't('common.tildeler')' : 'Tildel ansvar'}
+              {isSubmitting ? t('common.tildeler') : 'Tildel ansvar'}
             </Button>
           </div>
         </div>

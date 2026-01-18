@@ -93,7 +93,7 @@ export function TenantSettingsPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
+          {isSaving ? t('common.lagrer') : 'Lagre endringer'}
         </Button>
       </div>
 

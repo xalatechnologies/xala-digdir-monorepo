@@ -120,7 +120,7 @@ export function NotificationsTab() {
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
           <Button onClick={saveNotificationSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
+            {isSaving ? t('common.lagrer') : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

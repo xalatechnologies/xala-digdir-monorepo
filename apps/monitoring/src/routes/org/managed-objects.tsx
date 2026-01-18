@@ -156,7 +156,7 @@ function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: strin
                   onClick={handleCreateSubgrant}
                   disabled={createSubgrant.isPending || !selectedMemberId}
                 >
-                  {createSubgrant.isPending ? 't('common.lagrer')' : 'Gi tilgang'}
+                  {createSubgrant.isPending ? t('common.lagrer') : 'Gi tilgang'}
                 </Button>
               </div>
             </div>

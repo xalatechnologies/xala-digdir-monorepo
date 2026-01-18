@@ -222,7 +222,7 @@ export function GdprRequestsPage() {
             >
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {activeTab === 'all'
-                  ? 't('common.ingen_foresporsler_ennaa')'
+                  ? t('common.ingen_foresporsler_ennaa')
                   : `Ingen ${STATUS_TABS.find((t) => t.id === activeTab)?.label.toLowerCase()} forespørsler`}
               </Paragraph>
             </div>

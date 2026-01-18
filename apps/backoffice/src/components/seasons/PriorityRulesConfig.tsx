@@ -100,9 +100,9 @@ interface PriorityRulesConfigProps {
 const ruleTypeLabels: Record<RuleType, string> = {
   youth_priority: 'Ungdomsprioritet',
   senior_priority: 'Seniorprioritet',
-  local_priority: 't('common.lokal_prioritet')',
-  regional_priority: 't('common.regional_prioritet')',
-  custom: 't('common.tilpasset_regel')',
+  local_priority: t('common.lokal_prioritet'),
+  regional_priority: t('common.regional_prioritet'),
+  custom: t('common.tilpasset_regel'),
 };
 
 const ruleTypeDescriptions: Record<RuleType, string> = {
@@ -234,7 +234,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
   };
 
   const handleDelete = async (ruleId: string) => {
-    if (confirm('t('common.er_du_sikker_paa')')) {
+    if (confirm(t('common.er_du_sikker_paa'))) {
       await deleteMutation.mutateAsync(ruleId);
     }
   };
@@ -467,7 +467,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
               <Heading level={2} data-size="sm">
-                {editingRule ? 't('common.rediger_prioriteringsregel')' : 'Ny prioriteringsregel'}
+                {editingRule ? t('common.rediger_prioriteringsregel') : 'Ny prioriteringsregel'}
               </Heading>
               {/* eslint-disable-next-line digdir/prefer-ds-components -- Close icon button for dialog */}
               <button
@@ -598,7 +598,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 disabled={!formData.name || formData.priority < 0}
                 type="button"
               >
-                {editingRule ? 't('common.lagre_endringer')' : 'Opprett regel'}
+                {editingRule ? t('common.lagre_endringer') : 'Opprett regel'}
               </Button>
             </div>
           </Card>

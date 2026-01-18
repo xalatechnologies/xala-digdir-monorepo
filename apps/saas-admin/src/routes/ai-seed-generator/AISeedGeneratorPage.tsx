@@ -296,7 +296,7 @@ export function AISeedGeneratorPage() {
                   <XCircleIcon style={{ color: 'var(--ds-color-danger-text-default)' }} />
                 )}
                 <Heading level={3} data-size="xs">
-                  {result.success ? 't('common.fullfort')' : 'Feilet'}
+                  {result.success ? t('common.fullfort') : 'Feilet'}
                 </Heading>
               </div>
               <Paragraph data-size="sm">{result.message}</Paragraph>

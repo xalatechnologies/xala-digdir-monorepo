@@ -80,14 +80,14 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
 
   const handleReject = async () => {
     if (!event.bookingId) return;
-    if (window.confirm('t('common.er_du_sikker_paa')')) {
+    if (window.confirm(t('common.er_du_sikker_paa'))) {
       await cancelBooking.mutateAsync({ id: event.bookingId });
       onClose();
     }
   };
 
   const handleDeleteBlock = async () => {
-    if (window.confirm('t('common.er_du_sikker_paa')')) {
+    if (window.confirm(t('common.er_du_sikker_paa'))) {
       await deleteBlock.mutateAsync(event.id);
       onClose();
     }

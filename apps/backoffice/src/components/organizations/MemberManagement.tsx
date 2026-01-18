@@ -72,7 +72,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
   };
 
   const handleRemoveMember = async (memberId: string) => {
-    if (!confirm('t('common.er_du_sikker_paa')')) {
+    if (!confirm(t('common.er_du_sikker_paa'))) {
       return;
     }
 
@@ -147,7 +147,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                   onClick={handleAddMember}
                   disabled={!selectedUserId || isSubmitting} type="button"
                 >
-                  {isSubmitting ? 't('common.legger_til')' : 'Legg til'}
+                  {isSubmitting ? t('common.legger_til') : 'Legg til'}
                 </Button>
                 <Button
                   variant="secondary"
@@ -234,7 +234,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                         <Dropdown.Item>
                           <Dropdown.Button onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}>
                             <EditIcon />
-                            {member.role === 'admin' ? 't('common.gjor_til_medlem')' : 'Gjør til admin'}
+                            {member.role === 'admin' ? t('common.gjor_til_medlem') : 'Gjør til admin'}
                           </Dropdown.Button>
                         </Dropdown.Item>
                         <Dropdown.Item>

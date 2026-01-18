@@ -77,7 +77,7 @@ const formatDuration = (value: unknown): string => {
 };
 
 const formatAccessibility = (value: unknown): string => {
-  return value ? 't('common.universell_utforming')' : '';
+  return value ? t('common.universell_utforming') : '';
 };
 
 // =============================================================================

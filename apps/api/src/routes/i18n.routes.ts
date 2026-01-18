@@ -6,7 +6,7 @@
  */
 
 import { FastifyPluginAsync } from 'fastify';
-import { db } from '../db';
+import { container } from '../core/container';
 import { translations } from '@digilist/database-schema';
 import { eq, and, or, isNull } from 'drizzle-orm';
 

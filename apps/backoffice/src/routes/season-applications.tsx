@@ -73,7 +73,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
   };
   const labels: Record<ApplicationStatus, string> = {
     pending: t("status.pending"),
-    under_review: 't('common.under_behandling')',
+    under_review: t('common.under_behandling'),
     approved: 'Godkjent',
     rejected: 'Avslått',
     waitlist: 'Venteliste',

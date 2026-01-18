@@ -119,7 +119,7 @@ export function MediaStep({ wizard }: MediaStepProps) {
           )
         );
       } catch (error) {
-        console.error('t('validation.upload_failed')', error);
+        console.error(t('validation.upload_failed'), error);
         setImages(prev => prev.filter(img => img.id !== tempId));
         alert(t('error.uploadFailed'));
       }

@@ -167,7 +167,7 @@ export function IntegrationConfigModal({
                 <FormField
                   key={field.key}
                   label={field.label}
-                  description={field.sensitive ? 't('common.sensitiv_informasjon_vises_maskert')' : undefined}
+                  description={field.sensitive ? t('common.sensitiv_informasjon_vises_maskert') : undefined}
                 >
                   <Textfield
                     aria-label={field.label}
@@ -199,7 +199,7 @@ export function IntegrationConfigModal({
                   )}
                   <div>
                     <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                      {testResult.success ? 't('common.tilkobling_vellykket')' : 'Tilkobling feilet'}
+                      {testResult.success ? t('common.tilkobling_vellykket') : 'Tilkobling feilet'}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
                       {testResult.message}

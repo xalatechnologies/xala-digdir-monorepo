@@ -22,8 +22,8 @@ interface UserFormProps {
 }
 
 const roleOptions = [
-  { value: 'admin', label: 'Administrator', description: 't('common.full_tilgang_til_alle')' },
-  { value: 'saksbehandler', label: 'Saksbehandler', description: 't('common.behandle_bookinger_og_foresporsler')' },
+  { value: 'admin', label: 'Administrator', description: t('common.full_tilgang_til_alle') },
+  { value: 'saksbehandler', label: 'Saksbehandler', description: t('common.behandle_bookinger_og_foresporsler') },
 ];
 
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
@@ -141,7 +141,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
               label={t('common.epost')}
               required
               error={errors.email || undefined}
-              description={user ? 't('common.brukerens_epostadresse')' : 'Invitasjonen sendes til denne adressen'}
+              description={user ? t('common.brukerens_epostadresse') : 'Invitasjonen sendes til denne adressen'}
             >
               <Textfield
                 type="email"
@@ -228,7 +228,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
         {/* Actions */}
         <FormActions
-          submitText={user ? 't('common.lagre_endringer')' : 'Send invitasjon'}
+          submitText={user ? t('common.lagre_endringer') : 'Send invitasjon'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

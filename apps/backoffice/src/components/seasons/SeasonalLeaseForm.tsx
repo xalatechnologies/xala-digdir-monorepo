@@ -384,7 +384,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Actions */}
         <FormActions
-          submitText={lease ? 't('common.lagre_endringer')' : 'Opprett sesongleie'}
+          submitText={lease ? t('common.lagre_endringer') : 'Opprett sesongleie'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

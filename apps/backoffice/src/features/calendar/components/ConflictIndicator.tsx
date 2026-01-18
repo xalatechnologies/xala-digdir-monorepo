@@ -109,7 +109,7 @@ export function ConflictIndicator({
             cursor: 'help',
           }}
           aria-label={isBufferConflict ? 'Buffertid konflikt' : 'Konflikt'}
-          title={isBufferConflict ? 't('common.booking_har_buffertid_konflikt')' : 'Booking har konflikter'}
+          title={isBufferConflict ? t('common.booking_har_buffertid_konflikt') : 'Booking har konflikter'}
         >
           <XCircleIcon
             style={{

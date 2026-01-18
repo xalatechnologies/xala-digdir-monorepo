@@ -54,22 +54,22 @@
   },
   "lint-staged": {
     "packages/i18n/src/locales/*.ts": [
-      "node scripts/check-i18n-keys.js"
+      "node infra/scripts/legacy/check-i18n-keys.js"
     ],
     "apps/*/src/**/*.{ts,tsx}": [
-      "node scripts/scan-i18n.js"
+      "node infra/scripts/legacy/scan-i18n-comprehensive.js"
     ],
     "apps/api/src/modules/**/*.controller.{ts,js}": [
-      "node scripts/scan-duplicates.js --strict"
+      "node infra/scripts/legacy/scan-duplicates.js --strict"
     ],
     "apps/api/src/database/seeds/**/*.{ts,js}": [
-      "node scripts/scan-duplicates.js --strict"
+      "node infra/scripts/legacy/scan-duplicates.js --strict"
     ],
     "apps/api/src/database/schema/**/*.{ts,js}": [
-      "node scripts/scan-duplicates.js --strict"
+      "node infra/scripts/legacy/scan-duplicates.js --strict"
     ],
     "apps/api/src/main.ts": [
-      "node scripts/scan-duplicates.js --strict"
+      "node infra/scripts/legacy/scan-duplicates.js --strict"
     ]
   },
   "devDependencies": {

@@ -65,7 +65,7 @@ const permissionLabels: Record<RentalObjectPermission, string> = {
   [RentalObjectPermission.RO_BOOK_CANCEL]: 'Kanseller',
   [RentalObjectPermission.RO_ASSIGN_CASE_HANDLERS]: 'Tildel saksbehandlere',
   [RentalObjectPermission.RO_ASSIGN_PERMISSIONS]: 'Tildel rettigheter',
-  [RentalObjectPermission.RO_MANAGE_MEMBERS]: 't('actions.administrer_medlemmer')',
+  [RentalObjectPermission.RO_MANAGE_MEMBERS]: t('actions.administrer_medlemmer'),
 };
 
 // Permissions that can be assigned to regular members

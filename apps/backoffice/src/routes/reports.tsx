@@ -22,7 +22,7 @@ const periodLabels: Record<ReportPeriod, string> = {
   week: 'Uke',
   month: 'Måned',
   quarter: 'Kvartal',
-  year: 't('table.aar')',
+  year: t('table.aar'),
 };
 
 // Filter options
@@ -661,7 +661,7 @@ export function ReportsPage() {
                         data-color={yearOverYearData.change >= 0 ? 'success' : 'danger'}
                         data-size="sm"
                       >
-                        {yearOverYearData.change >= 0 ? 't('common.okning')' : 'Nedgang'}
+                        {yearOverYearData.change >= 0 ? t('common.okning') : 'Nedgang'}
                       </Badge>
                     </div>
                   </Card>

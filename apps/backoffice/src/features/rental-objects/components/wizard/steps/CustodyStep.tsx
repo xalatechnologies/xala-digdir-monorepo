@@ -63,7 +63,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
   };
 
   const handleRevoke = async (grantId: string) => {
-    if (window.confirm('t('common.are_you_sure_you')')) {
+    if (window.confirm(t('common.are_you_sure_you'))) {
       await revokeGrant.mutateAsync({ grantId, _rentalObjectId: rentalObjectId! });
     }
   };
