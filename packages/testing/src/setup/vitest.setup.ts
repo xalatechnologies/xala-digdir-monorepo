@@ -13,64 +13,75 @@ import { setupI18nMock } from '../mocks/i18n.mock.js';
 // Setup i18n mock globally
 setupI18nMock();
 
-// Cleanup after each test
-afterEach(() => {
-  cleanup();
-});
+// Cleanup after each test (only in DOM environments)
+if (typeof cleanup === 'function' && typeof window !== 'undefined') {
+  afterEach(() => {
+    cleanup();
+  });
+}
 
-// Mock matchMedia for responsive tests
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+// Only run DOM-related setup if window is defined
+if (typeof window !== 'undefined') {
+  // Mock matchMedia for responsive tests
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
 
-// Mock IntersectionObserver
-const mockIntersectionObserver = vi.fn();
-mockIntersectionObserver.mockReturnValue({
-  observe: () => null,
-  unobserve: () => null,
-  disconnect: () => null,
-});
-window.IntersectionObserver = mockIntersectionObserver as unknown as typeof IntersectionObserver;
+  // Mock IntersectionObserver
+  const mockIntersectionObserver = vi.fn();
+  mockIntersectionObserver.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null,
+  });
+  window.IntersectionObserver = mockIntersectionObserver as unknown as typeof IntersectionObserver;
+}
 
-// Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
-  observe = vi.fn();
-  unobserve = vi.fn();
-  disconnect = vi.fn();
-};
-
-// Mock document.getAnimations
-Document.prototype.getAnimations = vi.fn(() => []);
-
-// Mock HTMLDialogElement
-if (typeof HTMLDialogElement === 'undefined') {
-  (global as any).HTMLDialogElement = class HTMLDialogElement extends HTMLElement {
-    open = false;
-    returnValue = '';
-    showModal = vi.fn(function (this: any) { this.open = true; });
-    close = vi.fn(function (this: any) { this.open = false; });
-    show = vi.fn(function (this: any) { this.open = true; });
+// Mock ResizeObserver (works in both environments)
+if (typeof global !== 'undefined') {
+  global.ResizeObserver = class ResizeObserver {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
   };
-} else {
-  HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
-    this.open = true;
-  });
-  HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
-    this.open = false;
-  });
-  HTMLDialogElement.prototype.show = vi.fn(function (this: HTMLDialogElement) {
-    this.open = true;
-  });
+}
+
+// Mock document.getAnimations (only if Document exists)
+if (typeof Document !== 'undefined' && Document.prototype) {
+  Document.prototype.getAnimations = vi.fn(() => []);
+}
+
+// Mock HTMLDialogElement (only if window exists)
+if (typeof window !== 'undefined') {
+  if (typeof HTMLDialogElement === 'undefined') {
+    (global as any).HTMLDialogElement = class HTMLDialogElement extends HTMLElement {
+      open = false;
+      returnValue = '';
+      showModal = vi.fn(function (this: any) { this.open = true; });
+      close = vi.fn(function (this: any) { this.open = false; });
+      show = vi.fn(function (this: any) { this.open = true; });
+    };
+  } else {
+    HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.open = true;
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+      this.open = false;
+    });
+    HTMLDialogElement.prototype.show = vi.fn(function (this: HTMLDialogElement) {
+      this.open = true;
+    });
+  }
 }
 
 // Export setup function that can be called explicitly

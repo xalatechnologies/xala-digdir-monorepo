@@ -23,6 +23,8 @@ When working on a specific app or package, use the corresponding skill:
 | **packages/ds** | design-system-expert | `.claude/skills/design-system-expert/` |
 | **packages/i18n** | i18n-localization-expert | `.claude/skills/i18n-localization-expert/` |
 | **packages/eslint-config** | eslint-code-quality-expert | `.claude/skills/eslint-code-quality-expert/` |
+| **infra/** | infrastructure-deployment | `.agent/skills/infrastructure-deployment.md` |
+| **infra/docker/** | docker-management | `.agent/skills/docker-management.md` |
 
 ---
 
@@ -212,10 +214,44 @@ When working on a specific app or package, use the corresponding skill:
 
 ## 🚀 Cross-Cutting Tasks
 
-### Task: Deployment
-**Primary Skill:** `devops-deployment-expert`
-**Secondary Skills:** None
-**Why:** Specialized deployment knowledge
+### Task: Infrastructure & Deployment
+**Primary Skill:** `infrastructure-deployment`
+**Secondary Skills:** `docker-management`
+**Why:** Specialized infrastructure and deployment knowledge
+**Location:** `.agent/skills/infrastructure-deployment.md`
+
+**Key Areas:**
+- Secrets management (age encryption)
+- PM2 process management
+- VPS deployment
+- Environment configuration
+- GitHub Actions CI/CD
+
+### Task: Docker Management
+**Primary Skill:** `docker-management`
+**Secondary Skills:** `infrastructure-deployment`
+**Why:** Container orchestration expertise
+**Location:** `.agent/skills/docker-management.md`
+
+**Key Areas:**
+- Development environment (12 containers)
+- Staging environment (10 containers)
+- Production environment (10 containers)
+- Database migrations
+- Container troubleshooting
+
+### Task: Infrastructure
+**Primary Skill:** `infrastructure-expert`
+**Secondary Skills:** `docker-management`, `infrastructure-deployment`
+**Why:** Infrastructure expertise
+**Location:** `.agent/skills/infrastructure-expert.md`
+
+**Key Areas:**
+- Development environment setup
+- Staging environment setup
+- Production environment setup
+- Database setup
+- Server management
 
 ### Task: Testing
 **Primary Skill:** `testing-expert`
@@ -327,11 +363,15 @@ Skills are automatically available when working in the project. The system will 
 - **Project Guidelines:** `CLAUDE.md`
 - **AI Rules:** `AI_RULES.md`
 - **Agent Instructions:** `AGENTS.md`
+- **Infrastructure:** `infra/AGENTS.md`, `infra/CLAUDE.md`
 - **Architecture:** `docs/architecture/`
 - **Lessons Learned:** `docs/operations/LESSONS_LEARNED_AUTH_FIX_2026-01-17.md`
+- **Infrastructure Setup:** `infra/SETUP_GUIDE.md`
+- **Secrets Management:** `infra/docs/SECRETS_MANAGEMENT.md`
+- **Docker Deployment:** `infra/docker/docs/DEPLOYMENT_GUIDE.md`
 
 ---
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-01-18
 **Maintained By:** AI Agents + Human Developers
 **Status:** Production Ready

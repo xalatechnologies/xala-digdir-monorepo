@@ -23,6 +23,49 @@ municipal booking and resource management system.
 
 ---
 
+## 🏗️ INFRASTRUCTURE (NEW - 2026-01-18)
+
+**ALL infrastructure configuration is now in `infra/` directory:**
+
+```
+infra/
+├── docker/          # Docker configs (dev, staging, production)
+├── pm2/             # PM2 process manager configs
+├── env/             # Environment variable templates
+├── secrets/         # Encrypted secrets (age encryption)
+├── scripts/         # Deployment scripts
+└── docs/            # Infrastructure documentation
+```
+
+**Critical Infrastructure Rules:**
+
+1. **Secrets Management:**
+   - ALL secrets encrypted with `age` before committing
+   - Private key (`age.key`) NEVER committed
+   - Public key (`age.key.pub`) safe to commit
+   - Secrets decrypted at deploy-time, NOT runtime
+   - Stored on VPS at `/etc/digilist/<app>/<env>.env` (root:root 0600)
+
+2. **Deployment:**
+   - Staging: `./infra/scripts/deploy-staging.sh`
+   - Production: `./infra/scripts/deploy-production.sh`
+   - PM2 manages processes (zero-downtime with `pm2 reload`)
+   - Secrets injected via PM2 `env_file` parameter
+
+3. **Docker:**
+   - Development: `infra/docker/compose/docker-compose.dev.yml` (hot reload)
+   - Staging: `infra/docker/compose/docker-compose.staging.yml` (production builds)
+   - Production: `infra/docker/compose/docker-compose.production.yml` (optimized + secure)
+
+4. **Environment Files:**
+   - Templates in `infra/env/`
+   - NEVER commit `.env` files
+   - Use encrypted secrets in `infra/secrets/staging/` and `infra/secrets/production/`
+
+**See:** [infra/CLAUDE.md](infra/CLAUDE.md) for complete infrastructure context
+
+---
+
 ## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
 
 > **HARD LINE - READ THIS FIRST**

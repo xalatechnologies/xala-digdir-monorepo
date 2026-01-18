@@ -1,4 +1,6 @@
 /**
+ * @vitest-environment node
+ * 
  * Comprehensive Designsystemet Compliance Test Suite
  * 
  * Tests compliance with Norwegian public sector design system (Digdir):
@@ -16,8 +18,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { globSync } from 'glob';
 
-// Configuration
-const MONOREPO_ROOT = path.resolve(__dirname, '../../../../..');
+// Configuration - vitest runs from monorepo root via pnpm
+const MONOREPO_ROOT = process.cwd().includes('packages/testing') 
+  ? path.resolve(process.cwd(), '../..')
+  : process.cwd();
 const APPS_TO_SCAN = ['web', 'backoffice', 'minside', 'saas-admin', 'tenant-admin', 'docs-learning'];
 
 // Helper to get files
