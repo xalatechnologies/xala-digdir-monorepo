@@ -8,7 +8,7 @@ import postgres from 'postgres';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { routePolicies, navPolicies, planEntitlements } from '../src/saas/entitlements.js';
+import { plans, routePolicies, navPolicies, planEntitlements } from '../src/saas/entitlements.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -29,6 +29,9 @@ async function importSeeds() {
 
   try {
     // Load seed data
+    const plansData = JSON.parse(
+      readFileSync(join(__dirname, 'plans.json'), 'utf-8')
+    );
     const routePoliciesData = JSON.parse(
       readFileSync(join(__dirname, 'route-policies.json'), 'utf-8')
     );
@@ -38,6 +41,13 @@ async function importSeeds() {
     const planEntitlementsData = JSON.parse(
       readFileSync(join(__dirname, 'plan-entitlements.json'), 'utf-8')
     );
+
+    // Import plans first (required for plan entitlements)
+    console.log(`💼 Importing ${plansData.length} plans...`);
+    for (const plan of plansData) {
+      await db.insert(plans).values(plan).onConflictDoNothing();
+    }
+    console.log('✅ Plans imported\n');
 
     // Import route policies
     console.log(`📋 Importing ${routePoliciesData.length} route policies...`);

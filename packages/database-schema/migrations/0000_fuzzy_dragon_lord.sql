@@ -247,6 +247,24 @@ CREATE TABLE "saas"."plan_entitlements" (
 	CONSTRAINT "plan_entitlements_plan_key_unique" UNIQUE("plan_id","key_type","key")
 );
 --> statement-breakpoint
+CREATE TABLE "saas"."plans" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar(50) NOT NULL,
+	"display_name" varchar(100) NOT NULL,
+	"description" text,
+	"price_monthly" integer DEFAULT 0 NOT NULL,
+	"price_yearly" integer DEFAULT 0 NOT NULL,
+	"max_users" integer,
+	"max_listings" integer,
+	"features" jsonb DEFAULT '[]' NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
+	"sort_order" integer DEFAULT 0 NOT NULL,
+	"metadata" jsonb,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "plans_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
 CREATE TABLE "saas"."route_policies" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"app" varchar(50) NOT NULL,
@@ -313,6 +331,7 @@ ALTER TABLE "platform"."permission_assignments" ADD CONSTRAINT "permission_assig
 ALTER TABLE "platform"."permission_assignments" ADD CONSTRAINT "permission_assignments_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."permission_assignments" ADD CONSTRAINT "permission_assignments_assigned_by_users_id_fk" FOREIGN KEY ("assigned_by") REFERENCES "platform"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."translations" ADD CONSTRAINT "translations_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "saas"."plan_entitlements" ADD CONSTRAINT "plan_entitlements_plan_id_plans_id_fk" FOREIGN KEY ("plan_id") REFERENCES "saas"."plans"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "compliance"."audit_logs" ADD CONSTRAINT "audit_logs_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "compliance"."audit_logs" ADD CONSTRAINT "audit_logs_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "platform"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "tenants_slug_idx" ON "platform"."tenants" USING btree ("slug");--> statement-breakpoint
@@ -371,6 +390,9 @@ CREATE INDEX "integration_configs_status_idx" ON "saas"."integration_configs" US
 CREATE INDEX "nav_policies_app_nav_item_idx" ON "saas"."nav_policies" USING btree ("app","nav_item_key");--> statement-breakpoint
 CREATE INDEX "nav_policies_app_order_idx" ON "saas"."nav_policies" USING btree ("app","order");--> statement-breakpoint
 CREATE INDEX "plan_entitlements_plan_key_idx" ON "saas"."plan_entitlements" USING btree ("plan_id","key_type","key");--> statement-breakpoint
+CREATE INDEX "plans_name_idx" ON "saas"."plans" USING btree ("name");--> statement-breakpoint
+CREATE INDEX "plans_is_active_idx" ON "saas"."plans" USING btree ("is_active");--> statement-breakpoint
+CREATE INDEX "plans_sort_order_idx" ON "saas"."plans" USING btree ("sort_order");--> statement-breakpoint
 CREATE INDEX "route_policies_app_idx" ON "saas"."route_policies" USING btree ("app");--> statement-breakpoint
 CREATE INDEX "route_policies_route_key_idx" ON "saas"."route_policies" USING btree ("route_key");--> statement-breakpoint
 CREATE INDEX "tenant_overrides_tenant_key_idx" ON "saas"."tenant_entitlement_overrides" USING btree ("tenant_id","key_type","key");--> statement-breakpoint

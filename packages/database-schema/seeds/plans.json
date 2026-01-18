@@ -1,0 +1,44 @@
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "name": "Free",
+    "displayName": "Free Plan",
+    "description": "Basic features for small organizations",
+    "priceMonthly": 0,
+    "priceYearly": 0,
+    "maxUsers": 5,
+    "maxListings": 10,
+    "features": ["basic_booking", "calendar_view", "email_notifications"],
+    "isActive": true,
+    "sortOrder": 1,
+    "metadata": {}
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000002",
+    "name": "Pro",
+    "displayName": "Professional Plan",
+    "description": "Advanced features for growing organizations",
+    "priceMonthly": 4900,
+    "priceYearly": 49000,
+    "maxUsers": 50,
+    "maxListings": 100,
+    "features": ["basic_booking", "calendar_view", "email_notifications", "advanced_reporting", "custom_branding", "api_access"],
+    "isActive": true,
+    "sortOrder": 2,
+    "metadata": {}
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000003",
+    "name": "Enterprise",
+    "displayName": "Enterprise Plan",
+    "description": "Full features for large organizations",
+    "priceMonthly": 14900,
+    "priceYearly": 149000,
+    "maxUsers": null,
+    "maxListings": null,
+    "features": ["basic_booking", "calendar_view", "email_notifications", "advanced_reporting", "custom_branding", "api_access", "sso", "dedicated_support", "custom_integrations", "white_label"],
+    "isActive": true,
+    "sortOrder": 3,
+    "metadata": {}
+  }
+]

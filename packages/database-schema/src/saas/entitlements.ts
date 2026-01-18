@@ -8,12 +8,37 @@ import { uuid, varchar, boolean, timestamp, jsonb, integer, text, index, unique 
 import { saasSchema } from '../schemas';
 
 // =============================================================================
+// Plans
+// =============================================================================
+
+export const plans = saasSchema.table('plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 50 }).notNull().unique(),
+  displayName: varchar('display_name', { length: 100 }).notNull(),
+  description: text('description'),
+  priceMonthly: integer('price_monthly').notNull().default(0),
+  priceYearly: integer('price_yearly').notNull().default(0),
+  maxUsers: integer('max_users'),
+  maxListings: integer('max_listings'),
+  features: jsonb('features').notNull().default('[]'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  metadata: jsonb('metadata'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  nameIdx: index('plans_name_idx').on(table.name),
+  isActiveIdx: index('plans_is_active_idx').on(table.isActive),
+  sortOrderIdx: index('plans_sort_order_idx').on(table.sortOrder),
+}));
+
+// =============================================================================
 // Plan Entitlements
 // =============================================================================
 
 export const planEntitlements = saasSchema.table('plan_entitlements', {
   id: uuid('id').primaryKey().defaultRandom(),
-  planId: uuid('plan_id').notNull(),
+  planId: uuid('plan_id').notNull().references(() => plans.id, { onDelete: 'cascade' }),
   keyType: varchar('key_type', { length: 50 }).notNull(),
   key: varchar('key', { length: 100 }).notNull(),
   defaultEnabled: boolean('default_enabled').notNull().default(true),
