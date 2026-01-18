@@ -117462,5 +117462,165 @@
     "language": "en",
     "value": "Experiences & Events",
     "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.LOKALER_OG_BANER",
+    "language": "nb",
+    "value": "Lokaler og baner",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.LOKALER_OG_BANER",
+    "language": "en",
+    "value": "Venues and Courts",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT",
+    "language": "nb",
+    "value": "Opplevelser og arrangement",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT",
+    "language": "en",
+    "value": "Experiences and Events",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.UTSTYR_OG_INVENTAR",
+    "language": "nb",
+    "value": "Utstyr og inventar",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.UTSTYR_OG_INVENTAR",
+    "language": "en",
+    "value": "Equipment and Inventory",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.KJORETOY_OG_TRANSPORT",
+    "language": "nb",
+    "value": "Kjøretøy og transport",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "sdk.rentalObject.category.KJORETOY_OG_TRANSPORT",
+    "language": "en",
+    "value": "Vehicles and Transport",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Aircondition",
+    "language": "nb",
+    "value": "Aircondition",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Aircondition",
+    "language": "en",
+    "value": "Air Conditioning",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Dusjer",
+    "language": "nb",
+    "value": "Dusjer",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Dusjer",
+    "language": "en",
+    "value": "Showers",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Kaffe/te",
+    "language": "nb",
+    "value": "Kaffe/te",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Kaffe/te",
+    "language": "en",
+    "value": "Coffee/Tea",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Projektor",
+    "language": "nb",
+    "value": "Projektor",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Projektor",
+    "language": "en",
+    "value": "Projector",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Tilgjengelig for rullestol",
+    "language": "nb",
+    "value": "Tilgjengelig for rullestol",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Tilgjengelig for rullestol",
+    "language": "en",
+    "value": "Wheelchair Accessible",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Whiteboard",
+    "language": "nb",
+    "value": "Whiteboard",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "namespace": "common",
+    "key": "amenity.Whiteboard",
+    "language": "en",
+    "value": "Whiteboard",
+    "isSystemDefault": true
   }
 ]

@@ -4,6 +4,7 @@
  */
 import coreNested from './core.json';
 import common from './common.json';
+import allTranslationsNested from './all-translations.json';
 
 // Flatten nested JSON objects to dot-notation keys
 function flatten(obj: Record<string, unknown>, prefix = ''): Record<string, string> {
@@ -20,6 +21,7 @@ function flatten(obj: Record<string, unknown>, prefix = ''): Record<string, stri
 }
 
 const core = flatten(coreNested);
+const allTranslations = flatten(allTranslationsNested);
 import nav from './nav.json';
 import auth from './auth.json';
 import dashboard from './dashboard.json';
@@ -48,6 +50,9 @@ import integrations from './integrations.json';
 import misc from './misc.json';
 
 export const nb = {
+  // Comprehensive translations from database (14,683 keys)
+  ...allTranslations,
+  
   // Global/Common namespaces (exposed without prefix)
   ...core,
   ...common,

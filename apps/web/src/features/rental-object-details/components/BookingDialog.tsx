@@ -384,55 +384,30 @@ export function BookingDialog({
           </div>
         </div>
 
-        {/* Time Selection Section */}
+        {/* Compact Time Selection Section */}
         <div
           style={{
             borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
             backgroundColor: 'var(--ds-color-neutral-surface-default)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
             transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
             transitionDelay: `${baseDelay + 50}ms`,
           }}
         >
-          {/* Selected Date & Time Display */}
-          <div
-            style={{
-              padding: 'var(--ds-spacing-4)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--ds-spacing-4)',
-            }}
-          >
-            {/* Selected Date */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--ds-spacing-3)',
-                padding: 'var(--ds-spacing-3)',
-                backgroundColor: 'var(--ds-color-accent-surface-default)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-                border: '1px solid var(--ds-color-accent-border-subtle)',
-              }}
-            >
-              <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.calendar}</span>
-              <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-accent-text-default)' }}>
-                {dayNames[selectedDate.getDay()]} {selectedDate.getDate()}. {monthNames[selectedDate.getMonth()]} {selectedDate.getFullYear()}
+          {/* Date and Time in single row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
+            {/* Selected Date - Compact */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+              <span style={{ color: 'var(--ds-color-accent-text-default)', fontSize: 'var(--ds-font-size-sm)' }}>{Icons.calendar}</span>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                {dayNames[selectedDate.getDay()]} {selectedDate.getDate()}. {monthNames[selectedDate.getMonth()]}
               </Paragraph>
             </div>
 
-            {/* Time Selector with +/- 30 min */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--ds-spacing-3)',
-              }}
-            >
-              {/* Minus 30 min button */}
+            {/* Time Selector - Compact inline */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <button
                 type="button"
                 onClick={() => {
@@ -447,46 +422,37 @@ export function BookingDialog({
                 }}
                 aria-label={t('trekk.fra.30.minutter')}
                 style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  cursor: 'pointer',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontWeight: 'var(--ds-font-weight-bold)',
+                  color: 'var(--ds-color-neutral-text-default)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  border: '2px solid var(--ds-color-neutral-border-default)',
-                  backgroundColor: 'var(--ds-color-neutral-background-default)',
-                  cursor: 'pointer',
-                  fontSize: 'var(--ds-font-size-xl)',
-                  fontWeight: 'var(--ds-font-weight-bold)',
-                  color: 'var(--ds-color-neutral-text-default)',
-                  transition: 'all 150ms ease',
                 }}
               >
                 −
               </button>
 
-              {/* Current Time Display */}
               <div
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-1)',
-                  padding: 'var(--ds-spacing-3) var(--ds-spacing-6)',
+                  padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
                   backgroundColor: 'var(--ds-color-accent-base-default)',
-                  borderRadius: 'var(--ds-border-radius-lg)',
-                  minWidth: '140px',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  color: 'var(--ds-color-accent-contrast-default)',
+                  fontWeight: 'var(--ds-font-weight-semibold)',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontVariantNumeric: 'tabular-nums',
                 }}
               >
-                <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.8 }}>
-                  Starttid
-                </Paragraph>
-                <Heading level={3} data-size="lg" style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', fontVariantNumeric: 'tabular-nums' }}>
-                  {formData.startTime || '08:00'}
-                </Heading>
+                {formData.startTime || '08:00'}
               </div>
 
-              {/* Plus 30 min button */}
               <button
                 type="button"
                 onClick={() => {
@@ -501,69 +467,62 @@ export function BookingDialog({
                 }}
                 aria-label={t('legg.til.30.minutter')}
                 style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  border: '1px solid var(--ds-color-neutral-border-default)',
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  cursor: 'pointer',
+                  fontSize: 'var(--ds-font-size-md)',
+                  fontWeight: 'var(--ds-font-weight-bold)',
+                  color: 'var(--ds-color-neutral-text-default)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  border: '2px solid var(--ds-color-neutral-border-default)',
-                  backgroundColor: 'var(--ds-color-neutral-background-default)',
-                  cursor: 'pointer',
-                  fontSize: 'var(--ds-font-size-xl)',
-                  fontWeight: 'var(--ds-font-weight-bold)',
-                  color: 'var(--ds-color-neutral-text-default)',
-                  transition: 'all 150ms ease',
                 }}
               >
                 +
               </button>
             </div>
+          </div>
 
-            {/* Duration selector */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--ds-spacing-3)',
-              }}
-            >
-              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Varighet:
-              </Paragraph>
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                {['30 min', '1 time', '2 timer', '3 timer'].map((duration, i) => {
-                  const durationMinutes = [30, 60, 120, 180][i] ?? 60;
-                  const [startH, startM] = (formData.startTime || '08:00').split(':').map(Number);
-                  const endMinutes = ((startH ?? 8) * 60 + (startM ?? 0)) + durationMinutes;
-                  const endH = Math.floor(endMinutes / 60);
-                  const endM = endMinutes % 60;
-                  const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
-                  const isSelectedDur = formData.endTime === endTime;
+          {/* Duration selector - Compact */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-3)' }}>
+            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              Varighet:
+            </Paragraph>
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flex: 1 }}>
+              {['30m', '1t', '2t', '3t'].map((duration, i) => {
+                const durationMinutes = [30, 60, 120, 180][i] ?? 60;
+                const [startH, startM] = (formData.startTime || '08:00').split(':').map(Number);
+                const endMinutes = ((startH ?? 8) * 60 + (startM ?? 0)) + durationMinutes;
+                const endH = Math.floor(endMinutes / 60);
+                const endM = endMinutes % 60;
+                const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+                const isSelectedDur = formData.endTime === endTime;
 
-                  return (
-                    <button
-                      key={duration}
-                      type="button"
-                      onClick={() => updateField('endTime', endTime)}
-                      style={{
-                        padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        border: isSelectedDur ? '2px solid var(--ds-color-accent-base-default)' : '1px solid var(--ds-color-neutral-border-subtle)',
-                        backgroundColor: isSelectedDur ? 'var(--ds-color-accent-surface-default)' : 'transparent',
-                        color: isSelectedDur ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-default)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: isSelectedDur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
-                        cursor: 'pointer',
-                        transition: 'all 150ms ease',
-                      }}
-                    >
-                      {duration}
-                    </button>
-                  );
-                })}
-              </div>
+                return (
+                  <button
+                    key={duration}
+                    type="button"
+                    onClick={() => updateField('endTime', endTime)}
+                    style={{
+                      flex: 1,
+                      padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                      borderRadius: 'var(--ds-border-radius-sm)',
+                      border: isSelectedDur ? '2px solid var(--ds-color-accent-base-default)' : '1px solid var(--ds-color-neutral-border-subtle)',
+                      backgroundColor: isSelectedDur ? 'var(--ds-color-accent-surface-default)' : 'transparent',
+                      color: isSelectedDur ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-default)',
+                      fontSize: 'var(--ds-font-size-xs)',
+                      fontWeight: isSelectedDur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+                      cursor: 'pointer',
+                      transition: 'all 150ms ease',
+                    }}
+                  >
+                    {duration}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -574,10 +533,10 @@ export function BookingDialog({
             style={{
               flex: 1,
               overflow: 'auto',
-              padding: 'var(--ds-spacing-5)',
+              padding: 'var(--ds-spacing-4)',
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--ds-spacing-5)',
+              gap: 'var(--ds-spacing-4)',
             }}
           >
             {/* Purpose Field */}
@@ -688,7 +647,7 @@ export function BookingDialog({
           {/* Footer */}
           <div
             style={{
-              padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
+              padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
               borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
               backgroundColor: 'var(--ds-color-neutral-surface-default)',
               opacity: isVisible ? 1 : 0,
@@ -704,8 +663,8 @@ export function BookingDialog({
                   display: 'flex',
                   alignItems: 'center',
                   gap: 'var(--ds-spacing-2)',
-                  marginBottom: 'var(--ds-spacing-3)',
-                  padding: 'var(--ds-spacing-3)',
+                  marginBottom: 'var(--ds-spacing-2)',
+                  padding: 'var(--ds-spacing-2)',
                   backgroundColor: 'var(--ds-color-warning-surface-default)',
                   borderRadius: 'var(--ds-border-radius-md)',
                   border: '1px solid var(--ds-color-warning-border-subtle)',

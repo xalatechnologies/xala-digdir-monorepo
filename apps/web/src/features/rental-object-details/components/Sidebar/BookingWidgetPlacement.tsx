@@ -338,6 +338,48 @@ export function BookingWidgetPlacement({
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
   const [visibility, setVisibility] = React.useState<BookingVisibility>('PUBLIC_TITLE');
 
+  // Storage key for persisting booking state across login
+  const BOOKING_STATE_KEY = `booking_state_${rentalObjectId || 'default'}`;
+
+  // Restore booking state on mount (after login redirect)
+  React.useEffect(() => {
+    try {
+      const savedState = sessionStorage.getItem(BOOKING_STATE_KEY);
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        if (state.selectedSlots) setSelectedSlots(new Set(state.selectedSlots));
+        if (state.slotDetails) setSlotDetails(state.slotDetails);
+        if (state.selectedPriceGroup) setSelectedPriceGroup(state.selectedPriceGroup);
+        if (state.selectedServices) setSelectedServices(new Set(state.selectedServices));
+        if (state.weekStart) setWeekStart(new Date(state.weekStart));
+        if (state.currentStep !== undefined) setCurrentStep(state.currentStep);
+        if (state.visibility) setVisibility(state.visibility);
+        // Clear saved state after restoring
+        sessionStorage.removeItem(BOOKING_STATE_KEY);
+      }
+    } catch (error) {
+      console.warn('[BookingWidget] Failed to restore booking state:', error);
+    }
+  }, [BOOKING_STATE_KEY]);
+
+  // Function to save booking state before login redirect
+  const saveBookingState = React.useCallback(() => {
+    try {
+      const state = {
+        selectedSlots: Array.from(selectedSlots),
+        slotDetails,
+        selectedPriceGroup,
+        selectedServices: Array.from(selectedServices),
+        weekStart: weekStart.toISOString(),
+        currentStep,
+        visibility,
+      };
+      sessionStorage.setItem(BOOKING_STATE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.warn('[BookingWidget] Failed to save booking state:', error);
+    }
+  }, [BOOKING_STATE_KEY, selectedSlots, slotDetails, selectedPriceGroup, selectedServices, weekStart, currentStep, visibility]);
+
   // Booking mode state
   const [bookingMode, setBookingMode] = React.useState<BookingMode>(availableBookingModes[0] ?? 'SINGLE_SLOT');
   
@@ -627,28 +669,62 @@ export function BookingWidgetPlacement({
     });
   };
 
+  // Flag to enable demo/auto-login for testing
+  // Set to false when proper OAuth is implemented
+  const DEMO_MODE_ENABLED = true;
+
   const handleLoginVipps = async (): Promise<void> => {
     setIsLoggingIn(true);
+    // Save booking state before login redirect
+    saveBookingState();
     try {
-      // Use real auth login
-      authLogin('vipps');
-      // Note: Navigation will happen in useAuth hook
+      if (DEMO_MODE_ENABLED) {
+        // Demo mode: Simulate login with mock user
+        // This allows testing the booking flow without real OAuth
+        localStorage.setItem('web_user', JSON.stringify({
+          id: 'demo-user-vipps',
+          name: 'Demo Bruker',
+          email: 'demo@example.no',
+        }));
+        // Small delay to simulate authentication
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Reload to pick up the new user (state will be restored from sessionStorage)
+        window.location.reload();
+      } else {
+        // Production mode: Use real auth login with returnTo URL
+        const returnUrl = window.location.pathname + window.location.search;
+        authLogin('vipps', returnUrl);
+      }
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'vipps' });
-    } finally {
       setIsLoggingIn(false);
     }
   };
 
   const handleLoginEmployee = async (): Promise<void> => {
     setIsLoggingIn(true);
+    // Save booking state before login redirect
+    saveBookingState();
     try {
-      // Use real auth login for organization (ID-porten)
-      authLogin('idporten');
-      // Note: Navigation will happen in useAuth hook
+      if (DEMO_MODE_ENABLED) {
+        // Demo mode: Simulate login with mock user (organization)
+        // This allows testing the booking flow without real OAuth
+        localStorage.setItem('web_user', JSON.stringify({
+          id: 'demo-user-bankid',
+          name: 'Demo Ansatt',
+          email: 'ansatt@kommune.no',
+        }));
+        // Small delay to simulate authentication
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Reload to pick up the new user (state will be restored from sessionStorage)
+        window.location.reload();
+      } else {
+        // Production mode: Use real auth login for organization (ID-porten) with returnTo URL
+        const returnUrl = window.location.pathname + window.location.search;
+        authLogin('idporten', returnUrl);
+      }
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'idporten' });
-    } finally {
       setIsLoggingIn(false);
     }
   };
