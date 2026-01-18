@@ -134,6 +134,11 @@ export type {
   WizardNavigationProps,
 } from './composed';
 export { mockFilterData } from './composed';
+
+// Pages - Full-page layouts
+export { LoginPage } from './pages';
+export type { LoginPageProps } from './pages';
+
 export type {
   ContentLayoutProps,
   ContentSectionProps,

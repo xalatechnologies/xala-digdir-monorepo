@@ -11,7 +11,7 @@ export default defineConfig({
     'src/saas/entitlements.ts',
     'src/compliance/index.ts',
   ],
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   clean: true,
   sourcemap: true,

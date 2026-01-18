@@ -1,45 +1,32 @@
 /**
- * Login Page - Minside (User Dashboard)
- *
- * Uses reusable login components from @xala/ds
- * Supports session-safe return-to-flow authentication with flow context preservation
+ * Login Page - MinSide
+ * Uses centralized LoginPage component with minsideAuthConfig
  */
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { LoginPage as LoginPageComponent } from '@xala/ds';
+import { minsideAuthConfig } from '@xala/auth';
 import {
-  LoginLayout,
-  LoginOption,
-  IdPortenIcon,
-  MicrosoftIcon,
-  VippsIcon,
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
-  KeyIcon,
-  DemoLoginDialog,
-  Button,
 } from '@xala/ds';
-import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';
-import type { FlowContext } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
-/**
- * Navigation state passed when redirecting with flow context
- */
 export interface FlowContextNavigationState {
-  /** The restored flow context containing booking state */
-  flowContext: FlowContext;
-  /** Whether this navigation is from a flow restoration */
+  flowContext: {
+    returnTo: string;
+    tenantId?: string;
+    correlationId?: string;
+    [key: string]: any;
+  };
   isFlowRestoration: boolean;
 }
 
-/**
- * Navigation state passed when flow context was expired
- */
 export interface FlowContextExpiredState {
-  /** Indicates the booking session expired */
   flowContextExpired: true;
 }
 
@@ -49,50 +36,34 @@ export function LoginPage(): React.ReactElement {
   const location = useLocation();
   const t = useT();
 
-  // Track if we've already processed flow restoration to prevent double navigation
   const flowRestorationProcessed = useRef(false);
-
-  // Demo login hook
   const { showDialog, openDemoLogin, closeDemoLogin, handleDemoLogin } = useDemoLogin();
 
-  // Get fallback return path from location state (set by ProtectedRoute or direct navigation)
-  // Default to dashboard - user context will be loaded from database automatically
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
-  /**
-   * Handle navigation after authentication
-   * Prioritizes stored flow context over simple location state
-   */
   const handlePostAuthNavigation = useCallback(() => {
-    // Prevent double processing
     if (flowRestorationProcessed.current) {
       return;
     }
 
-    // Check for stored flow context first (higher priority than location state)
     if (hasStoredContext) {
-      const result = restoreFlowContext(true); // Clear after load
+      const result = restoreFlowContext(true);
 
       if (result.hasContext && result.flowContext) {
         flowRestorationProcessed.current = true;
-
-        // Navigate to the returnTo URL with complete flow context
         const navigationState: FlowContextNavigationState = {
-          flowContext: result.flowContext,
+          flowContext: result.flowContext as any,
           isFlowRestoration: true,
         };
-
-        navigate(result.flowContext.returnTo, {
+        navigate((result.flowContext as any).returnTo, {
           replace: true,
           state: navigationState,
         });
         return;
       }
 
-      // Handle expired flow context
       if (result.wasExpired) {
         flowRestorationProcessed.current = true;
-        // Navigate to dashboard with notification that session expired
         const expiredState: FlowContextExpiredState = {
           flowContextExpired: true,
         };
@@ -103,7 +74,6 @@ export function LoginPage(): React.ReactElement {
         return;
       }
 
-      // Handle invalid/corrupted flow context - gracefully fall back
       if (result.wasInvalid) {
         flowRestorationProcessed.current = true;
         navigate(from, { replace: true });
@@ -111,46 +81,60 @@ export function LoginPage(): React.ReactElement {
       }
     }
 
-    // No flow context - use simple location state fallback
     flowRestorationProcessed.current = true;
     navigate(from, { replace: true });
   }, [hasStoredContext, restoreFlowContext, navigate, from]);
 
-  // Navigate after successful authentication
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      // Add a small delay to ensure all auth state is properly set
-      const timer = setTimeout(() => {
-        handlePostAuthNavigation();
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      handlePostAuthNavigation();
     }
   }, [isAuthenticated, isLoading, handlePostAuthNavigation]);
+
+  const handleProviderClick = (providerId: string) => {
+    if (providerId === 'idporten') {
+      const returnTo = window.location.href;
+      idportenService.authorize(returnTo);
+    } else if (providerId === 'vipps') {
+      console.log('Vipps login is temporarily disabled');
+    } else if (providerId === 'microsoft') {
+      console.warn('Microsoft login is temporarily disabled');
+    }
+  };
 
   if (isLoading) {
     return <></>;
   }
 
-  const features = [
-    {
-      icon: <PlatformIcon size={20} />,
-      title: t('auth.completePlatform'),
-      description: t('auth.completePlatformDesc'),
-    },
-    {
-      icon: <AutomationIcon size={20} />,
-      title: t('auth.automation'),
-      description: t('auth.automationDesc'),
-    },
-    {
-      icon: <ShieldCheckIcon size={20} />,
-      title: t('auth.gdprSecure'),
-      description: t('auth.gdprSecureDesc'),
-    },
-  ];
+  const brandConfig = {
+    name: t('brand.name'),
+    tagline: t('brand.tagline'),
+    logoHref: '/',
+  };
 
-  const integrations = ['BankID', 'Vipps', 'Visma', 'RCO', 'ISO 27001', 'ISO 27701'];
+  const panelConfig = {
+    title: t('auth.minside'),
+    subtitle: t('auth.yourBookings'),
+    description: t('auth.minsideDesc'),
+    features: [
+      {
+        icon: <PlatformIcon size={20} />,
+        title: t('auth.myBookings'),
+        description: t('auth.myBookingsDesc'),
+      },
+      {
+        icon: <AutomationIcon size={20} />,
+        title: t('auth.bookingHistory'),
+        description: t('auth.bookingHistoryDesc'),
+      },
+      {
+        icon: <ShieldCheckIcon size={20} />,
+        title: t('auth.profileSettings'),
+        description: t('auth.profileSettingsDesc'),
+      },
+    ],
+    integrations: ['BankID', 'MinID', 'Vipps'],
+  };
 
   const footerLinks = [
     { href: 'https://digilist.no/personvern', label: t('auth.privacy') },
@@ -159,84 +143,20 @@ export function LoginPage(): React.ReactElement {
   ];
 
   return (
-    <LoginLayout
-      brandName={t('brand.name')}
-      brandTagline={t('brand.tagline')}
-      logoHref="/"
-      title={t('auth.login')}
-      subtitle={t('auth.selectMethod')}
-      panelTitle={t('minside.dashboard')}
-      panelSubtitle={t('auth.holisticSolution')}
-      panelDescription={t('auth.platformDesc')}
-      features={features}
-      integrations={integrations}
+    <LoginPageComponent
+      config={minsideAuthConfig}
+      brandConfig={brandConfig}
+      panelConfig={panelConfig}
       footerLinks={footerLinks}
-      copyright={t('auth.copyright')}
-    >
-      <LoginOption
-        icon={<IdPortenIcon />}
-        title={t('auth.idporten')}
-        description={t('auth.idportenDesc')}
-        onClick={() => {
-          // Pass current URL for session persistence
-          // Backend will auto-redirect to /minside or create user if needed
-          const returnTo = window.location.href;
-          idportenService.authorize(returnTo);
-        }}
-      />
-      <LoginOption
-        icon={<VippsIcon />}
-        title={t('auth.vipps')}
-        description={t('auth.temporarilyDisabled')}
-        disabled
-        onClick={() => {
-          // Vipps login temporarily disabled
-          console.log('Vipps login is temporarily disabled');
-        }}
-      />
-      <LoginOption
-        icon={<MicrosoftIcon />}
-        title={t('auth.microsoft')}
-        description={t('auth.microsoftComingSoon')}
-        disabled
-        onClick={() => {
-          // Microsoft login temporarily disabled
-          console.warn('Microsoft login is temporarily disabled');
-        }}
-      />
-      <LoginOption
-        icon={<KeyIcon />}
-        title={t('auth.demoLogin')}
-        description={t('auth.demoLoginDescription')}
-        onClick={openDemoLogin}
-      />
-
-      <DemoLoginDialog
-        open={showDialog}
-        onClose={closeDemoLogin}
-        onSubmit={handleDemoLogin}
-        title={t('auth.demoForm.title')}
-        description={t('auth.demoForm.description')}
-        cancelText={t('common.cancel')}
-        submitText={t('auth.login')}
-        loadingText={t('common.loading')}
-        validationMessages={{
-          nameRequired: t('auth.demoForm.nameRequired'),
-          emailRequired: t('auth.demoForm.emailRequired'),
-          tokenRequired: t('auth.demoForm.tokenRequired'),
-          invalidEmail: t('auth.demoForm.invalidEmail'),
-        }}
-        labels={{
-          name: t('auth.demoForm.name'),
-          email: t('auth.demoForm.email'),
-          token: t('auth.demoForm.token'),
-        }}
-        placeholders={{
-          name: t('auth.demoForm.namePlaceholder'),
-          email: t('auth.demoForm.emailPlaceholder'),
-          token: t('auth.demoForm.tokenPlaceholder'),
-        }}
-      />
-    </LoginLayout>
+      onProviderClick={handleProviderClick}
+      isAuthenticated={isAuthenticated}
+      isLoading={isLoading}
+      demoLoginOpen={showDialog}
+      onDemoLoginOpen={openDemoLogin}
+      onDemoLoginClose={closeDemoLogin}
+      onDemoLoginSubmit={handleDemoLogin}
+    />
   );
 }
+
+export default LoginPage;

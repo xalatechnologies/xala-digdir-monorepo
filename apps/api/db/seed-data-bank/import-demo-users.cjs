@@ -23,7 +23,7 @@ async function importDemoUsers() {
     console.log(`📄 Loaded ${users.length} demo users from demo-users.json`);
 
     // Get the first tenant ID
-    const tenantResult = await client.query('SELECT id FROM platform.tenants LIMIT 1');
+    const tenantResult = await client.query('SELECT id FROM public.tenants LIMIT 1');
     if (tenantResult.rows.length === 0) {
       throw new Error('No tenants found in database. Please create a tenant first.');
     }
@@ -38,14 +38,14 @@ async function importDemoUsers() {
       try {
         // Check if user exists
         const existingUser = await client.query(
-          'SELECT id FROM platform.users WHERE email = $1',
+          'SELECT id FROM public.users WHERE email = $1',
           [user.email]
         );
 
         if (existingUser.rows.length > 0) {
           // Update existing user (including tenant_id if missing)
           await client.query(
-            `UPDATE platform.users
+            `UPDATE public.users
              SET name = $1, role = $2, demo_token = $3, status = $4, national_id = $5, metadata = $6, tenant_id = COALESCE(tenant_id, $8)
              WHERE email = $7`,
             [
@@ -65,7 +65,7 @@ async function importDemoUsers() {
         } else {
           // Insert new user
           await client.query(
-            `INSERT INTO platform.users (id, email, name, role, tenant_id, status, demo_token, national_id, metadata, created_at)
+            `INSERT INTO public.users (id, email, name, role, tenant_id, status, demo_token, national_id, metadata, created_at)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
             [
               user.id,
@@ -95,7 +95,7 @@ async function importDemoUsers() {
 
     // Show final list of demo users
     const finalUsers = await client.query(
-      'SELECT email, name, role, demo_token FROM platform.users WHERE demo_token IS NOT NULL ORDER BY email'
+      'SELECT email, name, role, demo_token FROM public.users WHERE demo_token IS NOT NULL ORDER BY email'
     );
     console.log('\n✅ Current demo users in database:');
     for (const row of finalUsers.rows) {

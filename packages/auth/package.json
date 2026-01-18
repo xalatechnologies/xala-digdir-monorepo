@@ -10,7 +10,8 @@
     "./providers": "./src/providers/index.ts",
     "./hooks": "./src/hooks/index.ts",
     "./components": "./src/components/index.ts",
-    "./types": "./src/types/index.ts"
+    "./types": "./src/types/index.ts",
+    "./config": "./src/config/index.ts"
   },
   "scripts": {
     "test": "vitest",

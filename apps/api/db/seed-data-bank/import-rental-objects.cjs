@@ -21,7 +21,7 @@ async function importSeeds() {
     // Insert tenants
     for (const tenant of seedData.tenants) {
       await client.query(`
-        INSERT INTO platform.tenants (id, slug, name, status)
+        INSERT INTO public.tenants (id, slug, name, status)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -33,7 +33,7 @@ async function importSeeds() {
     // Insert organizations
     for (const org of seedData.organizations) {
       await client.query(`
-        INSERT INTO platform.organizations (id, tenant_id, name, slug, status)
+        INSERT INTO public.organizations (id, tenant_id, name, slug, status)
         VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -46,7 +46,7 @@ async function importSeeds() {
     // Insert users  
     for (const user of seedData.users) {
       await client.query(`
-        INSERT INTO platform.users (id, tenant_id, organization_id, email, name, role, status, demo_token)
+        INSERT INTO public.users (id, tenant_id, organization_id, email, name, role, status, demo_token)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         ON CONFLICT (id) DO UPDATE SET
           email = EXCLUDED.email,
@@ -60,7 +60,7 @@ async function importSeeds() {
     // Insert rental objects
     for (const obj of seedData.rental_objects) {
       await client.query(`
-        INSERT INTO platform.rental_objects (
+        INSERT INTO public.rental_objects (
           id, tenant_id, organization_id, name, slug, description,
           category_key, time_mode, features, status, requires_approval,
           capacity, images, pricing, metadata

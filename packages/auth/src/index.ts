@@ -27,3 +27,25 @@ export type {
   AuthContextType,
   RestoreFlowContextResult,
 } from './types';
+
+// Auth configuration exports
+export type {
+  AuthProvider as AuthProviderConfig,
+  AuthProviderId,
+  AppAuthConfig,
+  ProviderAvailability,
+} from './config';
+
+export {
+  idportenProvider,
+  vippsProvider,
+  microsoftProvider,
+  demoProvider,
+  getProvider,
+  getEnabledProviders,
+  webAuthConfig,
+  minsideAuthConfig,
+  backofficeAuthConfig,
+  saasAdminAuthConfig,
+  getAppAuthConfig,
+} from './config';

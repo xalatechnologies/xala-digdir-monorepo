@@ -47,7 +47,7 @@ async function importAll() {
     console.log('📦 Step 1: Importing tenants...');
     for (const tenant of rentalObjectsData.tenants) {
       await client.query(`
-        INSERT INTO platform.tenants (id, slug, name, status)
+        INSERT INTO public.tenants (id, slug, name, status)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -61,7 +61,7 @@ async function importAll() {
     console.log('📦 Step 2: Importing organizations...');
     for (const org of rentalObjectsData.organizations) {
       await client.query(`
-        INSERT INTO platform.organizations (id, tenant_id, name, slug, status)
+        INSERT INTO public.organizations (id, tenant_id, name, slug, status)
         VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -76,7 +76,7 @@ async function importAll() {
     console.log('📦 Step 3: Importing users...');
     for (const user of rentalObjectsData.users) {
       await client.query(`
-        INSERT INTO platform.users (id, tenant_id, organization_id, email, name, role, status, demo_token)
+        INSERT INTO public.users (id, tenant_id, organization_id, email, name, role, status, demo_token)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         ON CONFLICT (id) DO UPDATE SET
           email = EXCLUDED.email,
@@ -101,7 +101,7 @@ async function importAll() {
     console.log('📦 Step 4: Importing rental objects...');
     for (const obj of rentalObjectsData.rental_objects) {
       await client.query(`
-        INSERT INTO domain.rental_objects (
+        INSERT INTO public.rental_objects (
           id, tenant_id, organization_id, name, slug, description,
           category_key, time_mode, features, status, requires_approval,
           capacity, images, pricing, metadata
@@ -146,7 +146,7 @@ async function importAll() {
     console.log('📦 Step 5: Importing bookings...');
     for (const booking of bookingsData.bookings) {
       await client.query(`
-        INSERT INTO domain.bookings (
+        INSERT INTO public.bookings (
           id, tenant_id, rental_object_id, user_id,
           start_time, end_time, status, total_price, currency, notes,
           created_at, updated_at
@@ -178,7 +178,7 @@ async function importAll() {
     console.log('📦 Step 6: Importing audit logs...');
     for (const activity of activitiesData.activities) {
       await client.query(`
-        INSERT INTO compliance.audit_logs (
+        INSERT INTO public.audit_logs (
           id, tenant_id, user_id, action, resource, resource_id,
           metadata, timestamp
         )
